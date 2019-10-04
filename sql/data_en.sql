@@ -1610,7 +1610,6 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 --Inscrire ici les clauses de conversion spécifiques en cas de reprise
 --Update res_letterbox set status='VAL' where res_id=108;
 --Update res_letterbox set status='INIT', subject='', destination='COU', type_id=001;
---delete from mlb_coll_ext;
 --delete from res_attachments;
 --delete from listinstance;
 --delete from listinstance_history;

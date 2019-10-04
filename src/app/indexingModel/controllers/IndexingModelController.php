@@ -60,15 +60,69 @@ class IndexingModelController
 
         $categories = ResModel::getCategories();
         $categories = array_column($categories, 'id');
+
         if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['category']) || !in_array($body['category'], $categories)) {
             return $response->withStatus(400)->withJson(['errors' => "Body category is empty, not a string or not a valid category"]);
+        } elseif (!Validator::arrayType()->notEmpty()->validate($body['fields'])) {
+            return $response->withStatus(400)->withJson(['errors' => "Body fields is empty or not an array"]);
         }
+
+        $foundDoctype = false;
+        $foundSubject = false;
+
         foreach ($body['fields'] as $key => $field) {
             if (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
                 return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not a string"]);
             }
+
+            if ($field['identifier'] == 'doctype') {
+                $foundDoctype = true;
+            } elseif ($field['identifier'] == 'subject') {
+                $foundSubject = true;
+            }
+        }
+
+        if (!$foundDoctype) {
+            return $response->withStatus(400)->withJson(['errors' => "Mandatory 'doctype' field is missing"]);
+        }
+        if (!$foundSubject) {
+            return $response->withStatus(400)->withJson(['errors' => "Mandatory 'subject' field is missing"]);
+        }
+
+        if (Validator::intVal()->notEmpty()->validate($body['master'])) {
+            $masterModel = IndexingModelModel::getById(['id' => $body['master']]);
+            if (empty($masterModel)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Master model not found']);
+            }
+
+            $fieldsMaster = IndexingModelFieldModel::get(['select' => ['identifier', 'mandatory', 'default_value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$body['master']]]);
+            foreach ($fieldsMaster as $key => $value) {
+                $fieldsMaster[$key]['default_value'] = json_decode($value['default_value'], true);
+            }
+
+
+            // Look for fields in master model
+            // if field in master is not in child, return an error
+            // if field is not in master but in child, is ignored
+            $arrayTmp = [];
+            foreach ($fieldsMaster as $field) {
+                $found = false;
+                foreach ($body['fields'] as $value) {
+                    if ($value['identifier'] == $field['identifier'] && $value['mandatory'] == $field['mandatory'] && $value['unit'] == $field['unit']) {
+                        array_push($arrayTmp, $value);
+                        $found = true;
+                        break;
+                    }
+                }
+
+                if (!$found) {
+                    return $response->withStatus(400)->withJson(['errors' => "Field '" . $field['identifier'] . "' from master model is missing"]);
+                }
+            }
+            $body['fields'] = $arrayTmp;
+
         }
 
         if (ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
@@ -85,7 +139,8 @@ class IndexingModelController
             'category'  => $body['category'],
             'default'   => $body['default'],
             'owner'     => $GLOBALS['id'],
-            'private'   => $body['private']
+            'private'   => $body['private'],
+            'master'    => $body['master']
         ]);
 
         foreach ($body['fields'] as $field) {
@@ -94,7 +149,7 @@ class IndexingModelController
                 'identifier'    => $field['identifier'],
                 'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
                 'default_value' => empty($field['default_value']) ? null : json_encode($field['default_value']),
-                'unit'          => $field['unit'] ?? null
+                'unit'          => $field['unit']
             ]);
         }
 
@@ -122,12 +177,29 @@ class IndexingModelController
         } elseif (!Validator::stringType()->notEmpty()->validate($body['category'])) {
             return $response->withStatus(400)->withJson(['errors' => "Body category is empty or not a string"]);
         } elseif (!Validator::boolType()->validate($body['default'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body default is empty or not a boolean']);
         }
+
+        $foundDoctype = false;
+        $foundSubject = false;
+
         foreach ($body['fields'] as $key => $field) {
             if (!Validator::stringType()->notEmpty()->validate($field['identifier'])) {
                 return $response->withStatus(400)->withJson(['errors' => "Body fields[{$key}] identifier is empty or not a string"]);
             }
+
+            if ($field['identifier'] == 'doctype') {
+                $foundDoctype = true;
+            } elseif ($field['identifier'] == 'subject') {
+                $foundSubject = true;
+            }
+        }
+
+        if (!$foundDoctype) {
+            return $response->withStatus(400)->withJson(['errors' => "Mandatory 'doctype' field is missing"]);
+        }
+        if (!$foundSubject) {
+            return $response->withStatus(400)->withJson(['errors' => "Mandatory 'subject' field is missing"]);
         }
 
         $model = IndexingModelModel::getById(['select' => ['owner', 'private'], 'id' => $args['id']]);
@@ -153,6 +225,59 @@ class IndexingModelController
             'where' => ['id = ?'],
             'data'  => [$args['id']]
         ]);
+
+        $childrenModels = IndexingModelModel::get(['select' => ['id', 'label'], 'where' => ['"master" = ?'], 'data' => [$args['id']]]);
+
+        // If model has children, update the children
+        if (!empty($childrenModels)) {
+            // Update children models of master
+            foreach ($childrenModels as $child) {
+
+                $childFields = IndexingModelFieldModel::get(['select' => ['identifier', 'mandatory', 'default_value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$child['id']]]);
+                foreach ($childFields as $key => $value) {
+                    $childFields[$key]['default_value'] = json_decode($value['default_value'], true);
+                }
+
+                // Look for fields in master model
+                $fieldsToKeep = [];
+                foreach ($body['fields'] as $field) {
+                    $found = false;
+                    foreach ($childFields as $value) {
+                        // field in master found in child => not changed, keep this field
+                        if ($value['identifier'] == $field['identifier'] && $value['mandatory'] == $field['mandatory'] && $value['unit'] == $field['unit']) {
+                            array_push($fieldsToKeep, $value);
+                            $found = true;
+                        }
+                    }
+
+                    // field in master not found in child => new field to add
+                    if (!$found) {
+                        array_push($fieldsToKeep, $field);
+                    }
+                }
+
+                IndexingModelFieldModel::delete(['where' => ['model_id = ?'], 'data' => [$child['id']]]);
+
+                foreach ($fieldsToKeep as $field) {
+                    IndexingModelFieldModel::create([
+                        'model_id'      => $child['id'],
+                        'identifier'    => $field['identifier'],
+                        'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
+                        'default_value' => empty($field['default_value']) ? null : json_encode($field['default_value']),
+                        'unit'          => $field['unit'] ?? null
+                    ]);
+                }
+
+                HistoryController::add([
+                    'tableName' => 'indexing_models',
+                    'recordId'  => $child['id'],
+                    'eventType' => 'UP',
+                    'info'      => _INDEXINGMODEL_MODIFICATION . " : {$child['label']}",
+                    'moduleId'  => 'indexingModel',
+                    'eventId'   => 'indexingModelModification',
+                ]);
+            }
+        }
 
         IndexingModelFieldModel::delete(['where' => ['model_id = ?'], 'data' => [$args['id']]]);
 
@@ -183,7 +308,7 @@ class IndexingModelController
         if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Param id is empty or not an integer']);
         }
-        $model = IndexingModelModel::getById(['select' => ['owner', 'private', '"default"'], 'id' => $args['id']]);
+        $model = IndexingModelModel::getById(['select' => ['owner', 'private', '"default"', 'label'], 'id' => $args['id']]);
         if (empty($model)) {
             return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
         } elseif ($model['private'] && $model['owner'] != $GLOBALS['id']) {
@@ -194,7 +319,28 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => 'Default model can not be deleted']);
         }
 
-        $model = IndexingModelModel::getById(['select' => ['label'], 'id' => $args['id']]);
+        $childrenModels = IndexingModelModel::get(['select' => ['id', 'label'], 'where' => ['"master" = ?'], 'data' => [$args['id']]]);
+
+        // If model has children, delete the children
+        if (!empty($childrenModels)) {
+            foreach ($childrenModels as $child) {
+                IndexingModelModel::delete([
+                    'where' => ['id = ?'],
+                    'data'  => [$child['id']]
+                ]);
+
+                IndexingModelFieldModel::delete(['where' => ['model_id = ?'], 'data' => [$child['id']]]);
+
+                HistoryController::add([
+                    'tableName' => 'indexing_models',
+                    'recordId'  => $child['id'],
+                    'eventType' => 'DEL',
+                    'info'      => _INDEXINGMODEL_SUPPRESSION . " : {$child['label']}",
+                    'moduleId'  => 'indexingModel',
+                    'eventId'   => 'indexingModelSuppression',
+                ]);
+            }
+        }
 
         IndexingModelModel::delete([
             'where' => ['id = ?'],

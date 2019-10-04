@@ -259,14 +259,16 @@ $app->get('/listTemplates/{id}', \Entity\controllers\ListTemplateController::cla
 $app->put('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':update');
 $app->delete('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':delete');
 $app->get('/listTemplates/entities/{entityId}', \Entity\controllers\ListTemplateController::class . ':getByEntityId');
+$app->get('/listTemplates/entities/{entityId}/maarchParapheur', \Entity\controllers\ListTemplateController::class . ':getByEntityIdWithMaarchParapheur');
 $app->put('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':updateByUserWithEntityDest');
 $app->get('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':getTypeRoles');
 $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':updateTypeRoles');
 
 //Notes
 $app->get('/notes/templates', \Note\controllers\NoteController::class . ':getTemplates');
-$app->get('/res/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
-$app->post('/res/{resId}/notes', \Note\controllers\NoteController::class . ':create');
+$app->get('/resources/{resId}/notes', \Note\controllers\NoteController::class . ':get');
+$app->post('/resources/{resId}/notes', \Note\controllers\NoteController::class . ':create');
+$app->get('/resources/{resId}/notes/{id}', \Note\controllers\NoteController::class . ':getById');
 $app->put('/resources/{resId}/notes/{id}', \Note\controllers\NoteController::class . ':update');
 $app->delete('/resources/{resId}/notes/{id}', \Note\controllers\NoteController::class . ':delete');
 
@@ -290,10 +292,6 @@ $app->delete('/priorities/{id}', \Priority\controllers\PriorityController::class
 $app->get('/sortedPriorities', \Priority\controllers\PriorityController::class . ':getSorted');
 $app->put('/sortedPriorities', \Priority\controllers\PriorityController::class . ':updateSort');
 
-//Reconciliation
-$app->post('/reconciliation/add', \Attachment\controllers\ReconciliationController::class . ':create');
-$app->get('/reconciliation/check', \Attachment\controllers\ReconciliationController::class . ':checkAttachment');
-
 //Reports
 $app->get('/reports/groups', \Report\controllers\ReportController::class . ':getGroups');
 $app->get('/reports/groups/{groupId}', \Report\controllers\ReportController::class . ':getByGroupId');
@@ -301,8 +299,6 @@ $app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::cla
 
 //Resources
 $app->post('/resources', \Resource\controllers\ResController::class . ':create');
-$app->post('/res', \Resource\controllers\ResController::class . ':createRes');
-$app->post('/resExt', \Resource\controllers\ResController::class . ':createExt');
 $app->get('/res/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
 $app->get('/resources/{resId}/originalContent', \Resource\controllers\ResController::class . ':getOriginalFileContent');
 $app->get('/res/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
@@ -362,11 +358,11 @@ $app->delete('/statuses/{identifier}', \Status\controllers\StatusController::cla
 $app->get('/administration/statuses/new', \Status\controllers\StatusController::class . ':getNewInformations');
 
 //Tags
-$app->post('/tags', \Tag\controllers\TagController::class . ':create');
-$app->delete('/tags/{id}', \Tag\controllers\TagController::class . ':delete');
-$app->get('/tags/{id}', \Tag\controllers\TagController::class . ':getById');
 $app->get('/tags', \Tag\controllers\TagController::class . ':get');
+$app->post('/tags', \Tag\controllers\TagController::class . ':create');
+$app->get('/tags/{id}', \Tag\controllers\TagController::class . ':getById');
 $app->put('/tags/{id}', \Tag\controllers\TagController::class . ':update');
+$app->delete('/tags/{id}', \Tag\controllers\TagController::class . ':delete');
 
 //Templates
 $app->get('/templates', \Template\controllers\TemplateController::class . ':get');
@@ -422,6 +418,7 @@ $app->post('/currentUser/emailSignature', \User\controllers\UserController::clas
 $app->put('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \User\controllers\UserController::class . ':updateCurrentUserBasketPreferences');
+$app->get('/currentUser/privileges', \User\controllers\UserController::class . ':getPrivileges');
 
 //Notifications
 $app->get('/notifications', \Notification\controllers\NotificationController::class . ':get');

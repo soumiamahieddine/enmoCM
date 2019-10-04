@@ -128,7 +128,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 
     foreach ($arr_id as $res_id) {
         $result .= $res_id.'#';
-        \Resource\models\ResModel::updateExt(['set' => ['closing_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?'], 'data' => [$res_id]]);
+        \Resource\models\ResModel::update(['set' => ['closing_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?'], 'data' => [$res_id]]);
         
         # save note
         if ($formValues['note_content_to_users'] != '') {

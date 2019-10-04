@@ -183,8 +183,8 @@ abstract class ListInstanceModelAbstract
 
         $aListInstances = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['listinstance, res_letterbox, mlb_coll_ext'],
-            'where'     => ['listinstance.res_id = res_letterbox.res_id', 'mlb_coll_ext.res_id = res_letterbox.res_id', 'confidentiality = ?', 'destination = ?', 'item_id = ?', 'closing_date is null'],
+            'table'     => ['listinstance, res_letterbox'],
+            'where'     => ['listinstance.res_id = res_letterbox.res_id', 'confidentiality = ?', 'destination = ?', 'item_id = ?', 'closing_date is null'],
             'data'      => ['Y', $aArgs['entityId'], $aArgs['userId']]
         ]);
 
@@ -199,9 +199,9 @@ abstract class ListInstanceModelAbstract
 
         $listInstances = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['listinstance', 'res_letterbox', 'mlb_coll_ext'],
-            'left_join' => ['listinstance.res_id = res_letterbox.res_id', 'res_letterbox.res_id = mlb_coll_ext.res_id'],
-            'where'     => ['listinstance.item_id = ?', 'listinstance.difflist_type = ?', 'listinstance.item_type = ?', 'listinstance.item_mode = ?', 'mlb_coll_ext.closing_date is null', 'res_letterbox.status != ?'],
+            'table'     => ['listinstance', 'res_letterbox'],
+            'left_join' => ['listinstance.res_id = res_letterbox.res_id'],
+            'where'     => ['listinstance.item_id = ?', 'listinstance.difflist_type = ?', 'listinstance.item_type = ?', 'listinstance.item_mode = ?', 'res_letterbox.closing_date is null', 'res_letterbox.status != ?'],
             'data'      => [$aArgs['login'], 'entity_id', 'user_id', $aArgs['itemMode'], 'DEL']
         ]);
 

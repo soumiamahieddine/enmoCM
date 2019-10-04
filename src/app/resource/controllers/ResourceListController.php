@@ -102,25 +102,25 @@ class ResourceListController
             $listDisplay = json_decode($groupBasket[0]['list_display']);
 
             $select = [
-                'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'mlb_coll_ext.alt_identifier',
+                'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'res_letterbox.alt_identifier',
                 'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"', 'priorities.color AS "priorities.color"',
-                'mlb_coll_ext.closing_date', 'res_letterbox.locker_user_id', 'res_letterbox.locker_time', 'res_letterbox.confidentiality'
+                'res_letterbox.closing_date', 'res_letterbox.locker_user_id', 'res_letterbox.locker_time', 'res_letterbox.confidentiality'
             ];
-            $tableFunction = ['status', 'mlb_coll_ext', 'priorities'];
-            $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.res_id = mlb_coll_ext.res_id', 'res_letterbox.priority = priorities.id'];
+            $tableFunction = ['status', 'priorities'];
+            $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.priority = priorities.id'];
             foreach ($listDisplay as $value) {
                 $value = (array)$value;
                 if ($value['value'] == 'getPriority') {
                     $select[] = 'priorities.label AS "priorities.label"';
                 } elseif ($value['value'] == 'getCategory') {
-                    $select[] = 'mlb_coll_ext.category_id';
+                    $select[] = 'res_letterbox.category_id';
                 } elseif ($value['value'] == 'getDoctype') {
                     $select[] = 'doctypes.description AS "doctypes.description"';
                     $tableFunction[] = 'doctypes';
                     $leftJoinFunction[] = 'res_letterbox.type_id = doctypes.type_id';
                 } elseif ($value['value'] == 'getCreationAndProcessLimitDates') {
                     $select[] = 'res_letterbox.creation_date';
-                    $select[] = 'mlb_coll_ext.process_limit_date';
+                    $select[] = 'res_letterbox.process_limit_date';
                 } elseif ($value['value'] == 'getModificationDate') {
                     $select[] = 'res_letterbox.modification_date';
                 } elseif ($value['value'] == 'getOpinionLimitDate') {
@@ -669,18 +669,18 @@ class ResourceListController
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
-        $ext = ResModel::getExtById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $args['resId']]);
+        $resource = ResModel::getById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $args['resId']]);
 
         $senders = [];
-        if (!empty($ext)) {
-            if ($ext['category_id'] == 'outgoing') {
+        if (!empty($resource)) {
+            if ($resource['category_id'] == 'outgoing') {
                 $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $args['resId']]);
                 foreach ($resourcesContacts as $resourcesContact) {
                     $senders[] = $resourcesContact['restrictedFormat'];
                 }
             } else {
                 $rawContacts = [];
-                if ($ext['is_multicontacts'] == 'Y') {
+                if ($resource['is_multicontacts'] == 'Y') {
                     $multiContacts = DatabaseModel::select([
                         'select'    => ['contact_id', 'address_id'],
                         'table'     => ['contacts_res'],
@@ -695,8 +695,8 @@ class ResourceListController
                     }
                 } else {
                     $rawContacts[] = [
-                        'login'         => $ext['exp_user_id'],
-                        'address_id'    => $ext['address_id'],
+                        'login'         => $resource['exp_user_id'],
+                        'address_id'    => $resource['address_id'],
                     ];
                 }
                 foreach ($rawContacts as $rawContact) {
@@ -725,13 +725,13 @@ class ResourceListController
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
-        $ext = ResModel::getExtById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $args['resId']]);
+        $resource = ResModel::getById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $args['resId']]);
 
         $recipients = [];
-        if (!empty($ext)) {
-            if ($ext['category_id'] == 'outgoing') {
+        if (!empty($resource)) {
+            if ($resource['category_id'] == 'outgoing') {
                 $rawContacts = [];
-                if ($ext['is_multicontacts'] == 'Y') {
+                if ($resource['is_multicontacts'] == 'Y') {
                     $multiContacts = DatabaseModel::select([
                         'select'    => ['contact_id', 'address_id'],
                         'table'     => ['contacts_res'],
@@ -746,8 +746,8 @@ class ResourceListController
                     }
                 } else {
                     $rawContacts[] = [
-                        'login'         => $ext['dest_user_id'],
-                        'address_id'    => $ext['address_id'],
+                        'login'         => $resource['dest_user_id'],
+                        'address_id'    => $resource['address_id'],
                     ];
                 }
                 foreach ($rawContacts as $rawContact) {

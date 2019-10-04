@@ -126,7 +126,6 @@ abstract class indexing_searching_app_Abstract extends Database
         $func = new functions();
         $sec = new security();
         $data_res = array();
-        $data_ext = array();
         $request = new request();
         $core = new core_tools();
         $db = new Database();
@@ -134,7 +133,6 @@ abstract class indexing_searching_app_Abstract extends Database
         $table = $sec->retrieve_table_from_coll($coll_id);
         $view = $sec->retrieve_view_from_coll_id($coll_id);
         $ind_coll = $sec->get_ind_collection($coll_id);
-        $table_ext = $_SESSION['collections'][$ind_coll]['extensions'][0];
         if (!$table) {
             $_SESSION['error'] .= _COLL_HAS_NO_TABLE;
         }
@@ -176,11 +174,11 @@ abstract class indexing_searching_app_Abstract extends Database
                     if (!empty($post['contact'])) {
                         $catContact = explode('_', $post['contact_type']);
                         if (is_numeric($post[$key])) {
-                            array_push($data_ext, array('column' => $catContact[0].'_contact_id', 'value' => $post[$key], 'type' => 'string'));
-                            array_push($data_ext, array('column' => $catContact[0].'_user_id', 'value' => null, 'type' => 'string'));
+                            array_push($data_res, array('column' => $catContact[0].'_contact_id', 'value' => $post[$key], 'type' => 'string'));
+                            array_push($data_res, array('column' => $catContact[0].'_user_id', 'value' => null, 'type' => 'string'));
                         } else {
-                            array_push($data_ext, array('column' => $catContact[0].'_user_id', 'value' => $post[$key], 'type' => 'string'));
-                            array_push($data_ext, array('column' => $catContact[0].'_contact_id', 'value' => null, 'type' => 'string'));
+                            array_push($data_res, array('column' => $catContact[0].'_user_id', 'value' => $post[$key], 'type' => 'string'));
+                            array_push($data_res, array('column' => $catContact[0].'_contact_id', 'value' => null, 'type' => 'string'));
                         }
                     } else {
                         $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['contact']['label'].' '._IS_EMPTY;
@@ -190,7 +188,7 @@ abstract class indexing_searching_app_Abstract extends Database
                     if (empty(trim($post[$key]))) {
                         $post[$key] = null;
                     }
-                    array_push($data_ext, array('column' => 'address_id', 'value' => $post[$key], 'type' => 'string'));
+                    array_push($data_res, array('column' => 'address_id', 'value' => $post[$key], 'type' => 'string'));
                 }
             }
             if ($_ENV['categories'][$cat_id][$key]['modify'] == true) {
@@ -208,7 +206,7 @@ abstract class indexing_searching_app_Abstract extends Database
                     if ($_ENV['categories'][$cat_id][$key]['table'] == 'res') {
                         array_push($data_res, array('column' => $key, 'value' => $func->format_date_db($post[$key]), 'type' => 'date'));
                     } elseif ($_ENV['categories'][$cat_id][$key]['table'] == 'coll_ext') {
-                        array_push($data_ext, array('column' => $key, 'value' => $func->format_date_db($post[$key]), 'type' => 'date'));
+                        array_push($data_res, array('column' => $key, 'value' => $func->format_date_db($post[$key]), 'type' => 'date'));
                     }
                 }
                 if ($_ENV['categories'][$cat_id][$key]['type_form'] == 'integer' && preg_match('/^[0-9]+$/', $post[$key]) == 0) {
@@ -217,7 +215,7 @@ abstract class indexing_searching_app_Abstract extends Database
                     if ($_ENV['categories'][$cat_id][$key]['table'] == 'res') {
                         array_push($data_res, array('column' => $key, 'value' => $post[$key], 'type' => 'integer'));
                     } elseif ($_ENV['categories'][$cat_id][$key]['table'] == 'coll_ext') {
-                        array_push($data_ext, array('column' => $key, 'value' => $post[$key], 'type' => 'integer'));
+                        array_push($data_res, array('column' => $key, 'value' => $post[$key], 'type' => 'integer'));
                     }
                 }
                 if ($_ENV['categories'][$cat_id][$key]['type_form'] == 'radio' && !empty($post[$key]) && !in_array($post[$key], $_ENV['categories'][$cat_id][$key]['values'])) {
@@ -227,7 +225,7 @@ abstract class indexing_searching_app_Abstract extends Database
                     if ($_ENV['categories'][$cat_id][$key]['table'] == 'res') {
                         array_push($data_res, array('column' => $key, 'value' => $post[$key], 'type' => 'string'));
                     } elseif ($_ENV['categories'][$cat_id][$key]['table'] == 'coll_ext') {
-                        array_push($data_ext, array('column' => $key, 'value' => $post[$key], 'type' => 'string'));
+                        array_push($data_res, array('column' => $key, 'value' => $post[$key], 'type' => 'string'));
                     }
                 }
             }
@@ -261,7 +259,7 @@ abstract class indexing_searching_app_Abstract extends Database
             $processLimitDate = (array) $processLimitDate;
 
             array_push(
-                $data_ext,
+                $data_res,
                 array(
                     'column' => 'process_limit_date',
                     'value' => $func->format_date_db($processLimitDate['date'], 'true', '', 'true'),
@@ -270,7 +268,7 @@ abstract class indexing_searching_app_Abstract extends Database
             );
         } else {
             array_push(
-                $data_ext,
+                $data_res,
                 array(
                     'column' => 'process_limit_date',
                     'value' => null,
@@ -313,9 +311,6 @@ abstract class indexing_searching_app_Abstract extends Database
             //$request->show_array($data_res);
             //exit();
             $request->PDOupdate($table, $data_res, $where, $arrayPDO, $_SESSION['config']['databasetype']);
-            if (count($data_ext) > 0) {
-                $request->PDOupdate($table_ext, $data_ext, $where, $arrayPDO, $_SESSION['config']['databasetype']);
-            }
             $_SESSION['info'] = _INDEX_UPDATED.' ('.strtolower(_NUM).$id_to_update.')';
 
             //$hist->add($table, $id_to_update, "UP", $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');

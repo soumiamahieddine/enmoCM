@@ -419,11 +419,11 @@ class FolderController
                 ]);
 
                 $select = [
-                    'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'mlb_coll_ext.alt_identifier',
+                    'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'res_letterbox.alt_identifier',
                     'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"', 'priorities.color AS "priorities.color"'
                 ];
-                $tableFunction = ['status', 'mlb_coll_ext', 'priorities'];
-                $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.res_id = mlb_coll_ext.res_id', 'res_letterbox.priority = priorities.id'];
+                $tableFunction = ['status', 'priorities'];
+                $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.priority = priorities.id'];
 
                 $order = 'CASE res_letterbox.res_id ';
                 foreach ($resIds as $key => $resId) {

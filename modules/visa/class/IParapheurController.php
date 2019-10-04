@@ -110,7 +110,7 @@ class IParapheurController
             $dossierId              = $attachments[$i]['res_id'] . '_' . rand(0001, 9999);
             $dossierTitre           = _PROJECT_NUMBER . $attachments[$i]['res_id'];
 
-            $mainResource = \Resource\models\ResModel::getExtById(['resId' => $aArgs['resIdMaster'], 'select' => ['process_limit_date']]);
+            $mainResource = \Resource\models\ResModel::getById(['resId' => $aArgs['resIdMaster'], 'select' => ['process_limit_date']]);
             if (empty($mainResource['process_limit_date'])) {
                 $processLimitDate = $mainResource['process_limit_date'] = date('Y-m-d', strtotime(date("Y-m-d"). ' + 14 days'));
             } else {

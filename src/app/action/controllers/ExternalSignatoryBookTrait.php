@@ -53,7 +53,7 @@ trait ExternalSignatoryBookTrait
                     'data'      => [$args['resId'], ['converted_pdf', 'print_folder', 'signed_response']]
                 ]);
                 if ($attachments[0]['nb'] == 0 && $args['data']['objectSent'] == 'attachment') {
-                    $noAttachmentsResource = ResModel::getExtById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
+                    $noAttachmentsResource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
                     return ['errors' => ['No attachment for this mail : ' . $noAttachmentsResource['alt_identifier']]];
                 }
 
@@ -80,7 +80,7 @@ trait ExternalSignatoryBookTrait
                     'data'      => [$args['resId'], ['converted_pdf', 'print_folder', 'signed_response']]
                 ]);
                 if ($attachments[0]['nb'] == 0) {
-                    $noAttachmentsResource = ResModel::getExtById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
+                    $noAttachmentsResource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
                     return ['errors' => ['No attachment for this mail : ' . $noAttachmentsResource['alt_identifier']]];
                 }
 

@@ -31,7 +31,7 @@ use Resource\models\ResModel;
 
 class NoteController
 {
-    public function getByResId(Request $request, Response $response, array $aArgs)
+    public function get(Request $request, Response $response, array $aArgs)
     {
         $check = Validator::intVal()->notEmpty()->validate($aArgs['resId']);
         if (!$check) {
@@ -56,43 +56,55 @@ class NoteController
         return $response->withJson($aNotes);
     }
 
-    public function create(Request $request, Response $response, array $aArgs)
+    public function getById(Request $request, Response $response, array $args)
     {
-        $data = $request->getParams();
-
-        $check = Validator::stringType()->notEmpty()->validate($data['note_text']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data note_text is empty or not a string']);
+        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
+        if (!NoteController::hasRightById(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Note out of perimeter']);
+        }
+        $note = NoteModel::getById(['id' => $args['id']]);
+
+        $entities = NoteEntityModel::get(['select' => ['item_id'], 'where' => ['note_id = ?'], 'data' => [$args['id']]]);
+        $entities = array_column($entities, 'item_id');
+
+        $note['entities'] = $entities;
+
+        return $response->withJson($note);
+    }
+
+    public function create(Request $request, Response $response, array $aArgs)
+    {
         if (!ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
-        
-        if (isset($data['entities_chosen'])) {
-            if (!Validator::arrayType()->validate($data['entities_chosen'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'entities_chosen is not an array']);
+
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['value'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data value is empty or not a string']);
+        }
+
+        if (!empty($body['entities'])) {
+            if (!Validator::arrayType()->validate($body['entities'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body entities is not an array']);
             }
-            foreach ($data['entities_chosen'] as $entityId) {
-                if ($entityId == null) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Bad Request entities chosen']);
-                }
-                
-                $entity = Entitymodel::getByEntityId(['select' => ['id'], 'entityId' => $entityId]);
-                if (empty($entity['id'])) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Bad Request entities chosen']);
-                }
+            $entities = Entitymodel::get(['select' => ['count(1)'], 'where' => ['entity_id in (?)'], 'data' => [$body['entities']]]);
+            if ($entities[0]['count'] != count($body['entities'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body entities : one or more entities do not exist']);
             }
         }
 
         $noteId = NoteModel::create([
             'resId'     => $aArgs['resId'],
             'user_id'   => $GLOBALS['id'],
-            'note_text' => $data['note_text']
+            'note_text' => $body['value']
         ]);
     
-        if (!empty($noteId) && !empty($data['entities_chosen'])) {
-            foreach ($data['entities_chosen'] as $entity) {
+        if (!empty($noteId) && !empty($body['entities'])) {
+            foreach ($body['entities'] as $entity) {
                 NoteEntityModel::create(['item_id' => $entity, 'note_id' => $noteId]);
             }
         }
@@ -130,11 +142,9 @@ class NoteController
             if (!Validator::arrayType()->validate($body['entities'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Body entities is not an array']);
             }
-            foreach ($body['entities'] as $entityId) {
-                $entities = Entitymodel::get(['select' => ['count(1)'], 'where' => ['entity_id in (?)'], 'data' => [$body['entities']]]);
-                if ($entities[0]['count'] != count($body['entities'])) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Body entities : one or more entities do not exist']);
-                }
+            $entities = Entitymodel::get(['select' => ['count(1)'], 'where' => ['entity_id in (?)'], 'data' => [$body['entities']]]);
+            if ($entities[0]['count'] != count($body['entities'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body entities : one or more entities do not exist']);
             }
         }
 
@@ -184,7 +194,6 @@ class NoteController
             'where' => ['id = ?'],
             'data'  => [$args['id']]
         ]);
-
         NoteEntityModel::delete([
             'where' => ['note_id = ?'],
             'data'  => [$args['id']]
@@ -261,6 +270,9 @@ class NoteController
         ValidatorModel::intVal($args, ['id', 'userId']);
 
         $note = NoteModel::getById(['select' => ['user_id'], 'id' => $args['id']]);
+        if (empty($note)) {
+            return false;
+        }
         if ($note['user_id'] == $args['userId']) {
             return true;
         }

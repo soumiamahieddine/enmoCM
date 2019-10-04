@@ -482,7 +482,7 @@ if (!defined('_AJAX_PARAM_ERROR')) { define('_AJAX_PARAM_ERROR', 'Fout overgang 
 if (!defined('_ACTION_CONFIRM')) { define('_ACTION_CONFIRM', 'Wilt u de volgende actie uitvoeren:');}
 if (!defined('_ADD_ATTACHMENT_OR_NOTE')) { define('_ADD_ATTACHMENT_OR_NOTE', 'Voeg een bijlage of een nota toe voor deze brief/brieven');}
 if (!defined('_CLOSE_MAIL_WITH_ATTACHMENT')) { define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Een brief met een bijlage afsluiten');}
-//if (!defined('_CLOSE_MAIL_WITH_ATTACHMENT_DESC')) { define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', 'Om de afsluitingsdatum van een brief bij te werken (closing_date van tabel mlb_coll_ext) met VERPLICHTE aanwezigheid van bijlage(n) / nota(‘s).');}
+//if (!defined('_CLOSE_MAIL_WITH_ATTACHMENT_DESC')) { define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', 'Om de afsluitingsdatum van een brief bij te werken (closing_date van tabel res_letterbox) met VERPLICHTE aanwezigheid van bijlage(n) / nota(‘s).');}
 if (!defined('_ACTION_NOT_IN_DB')) { define('_ACTION_NOT_IN_DB', 'Actie niet bewaard in database');}
 if (!defined('_ERROR_PARAM_ACTION')) { define('_ERROR_PARAM_ACTION', 'Fout instelling van de actie');}
 if (!defined('_SQL_ERROR')) { define('_SQL_ERROR', 'SQL fout');}
@@ -962,7 +962,7 @@ if (!defined('_HELP_FULLTEXT_SEARCH_EXEMPLE2')) { define('_HELP_FULLTEXT_SEARCH_
 if (!defined('_HELP_FULLTEXT_SEARCH_EXEMPLE3')) { define('_HELP_FULLTEXT_SEARCH_EXEMPLE3', 'snel~ vindt uw snel');}
 if (!defined('_TIPS_FULLTEXT_TEXT')) { define('_TIPS_FULLTEXT_TEXT', 'Er kunnen ook getallen opgezocht worden');}
 if (!defined('_CLOSE_MAIL')) { define('_CLOSE_MAIL', 'Een brief afsluiten');}
-if (!defined('_CLOSE_MAIL_DESC')) { define('_CLOSE_MAIL_DESC', 'Om de afsluitingsdatum van een brief bij te werken (closing_date van tabel mlb_coll_ext). ESSENTIEEL om uw documentworkflow af te sluiten.');}
+if (!defined('_CLOSE_MAIL_DESC')) { define('_CLOSE_MAIL_DESC', 'Om de afsluitingsdatum van een brief bij te werken (closing_date van tabel res_letterbox). ESSENTIEEL om uw documentworkflow af te sluiten.');}
 if (!defined('_HELP_KEYWORD0')) { define('_HELP_KEYWORD0', 'Id van de verbonden gebruiker');}
 if (!defined('_HELP_BY_CORE')) { define('_HELP_BY_CORE', 'Sleutelwoorden van Maarch Core');}
 if (!defined('_FIRSTNAME_UPPERCASE')) { define('_FIRSTNAME_UPPERCASE', 'VOORNAAM');}
@@ -1321,7 +1321,7 @@ if (!defined('_VIEW_FULL_HISTORY')) { define('_VIEW_FULL_HISTORY', 'De volledige
 if (!defined('_ONLY_ALPHANUM')) { define('_ONLY_ALPHANUM', 'Enkel alfanumerieke tekens worden aanvaard');}
 if (!defined('_ONLY_ALPHABETIC')) { define('_ONLY_ALPHABETIC', 'Enkel alfabetische tekens worden aanvaard');}
 if (!defined('_CLOSE_MAIL_AND_INDEX')) { define('_CLOSE_MAIL_AND_INDEX', 'Een brief afsluiten en de indexering starten');}
-if (!defined('_CLOSE_MAIL_AND_INDEX_DESC')) { define('_CLOSE_MAIL_AND_INDEX_DESC', 'Om de afsluitingsdatum van een brief bij te werken (closing_date van tabel mlb_coll_ext) EN de indexeringspagina te openen om een nieuw document te bewaren.');}
+if (!defined('_CLOSE_MAIL_AND_INDEX_DESC')) { define('_CLOSE_MAIL_AND_INDEX_DESC', 'Om de afsluitingsdatum van een brief bij te werken (closing_date van tabel res_letterbox) EN de indexeringspagina te openen om een nieuw document te bewaren.');}
 if (!defined('_DOC_NOT_CLOSED')) { define('_DOC_NOT_CLOSED', 'Deze brief is niet afgesloten');}
 if (!defined('_SECURITY_MESSAGE')) { define('_SECURITY_MESSAGE', 'Veiligheidsboodschap');}
 if (!defined('_SECURITY_MESSAGE_DETAILS')) { define('_SECURITY_MESSAGE_DETAILS', 'Verzoek van XSS type niet toegestaan');}

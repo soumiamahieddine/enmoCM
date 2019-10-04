@@ -206,33 +206,31 @@ class PreProcessActionController
         $data['resources'] = $resourcesForProcess;
 
         foreach ($data['resources'] as $resId) {
-            $ext = ResModel::getExtById(['select' => ['res_id', 'category_id', 'address_id', 'is_multicontacts', 'alt_identifier'], 'resId' => $resId]);
+            $resource = ResModel::getById(['select' => ['res_id', 'category_id', 'address_id', 'is_multicontacts', 'alt_identifier', 'type_id', 'destination'], 'resId' => $resId]);
 
-            if (empty($ext)) {
+            if (empty($resource)) {
                 $noSendAR['number'] += 1;
-                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _DOCUMENT_NOT_FOUND ];
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => '', 'info' => _DOCUMENT_NOT_FOUND ];
                 continue;
             }
 
             if (!ResController::hasRightByResId(['resId' => [$resId], 'userId' => $GLOBALS['id']])) {
                 $noSendAR['number'] += 1;
-                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _DOCUMENT_OUT_PERIMETER ];
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'info' => _DOCUMENT_OUT_PERIMETER ];
                 continue;
             }
 
-            if ($ext['category_id'] != 'incoming') {
+            if ($resource['category_id'] != 'incoming') {
                 $noSendAR['number'] += 1;
-                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NOT_INCOMING_CATEGORY ];
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'info' => _NOT_INCOMING_CATEGORY ];
                 continue;
             }
 
-            //Verify template
-            $resource = ResModel::getById(['select' => ['type_id', 'destination'], 'resId' => $resId]);
             $doctype = DoctypeModel::getById(['id' => $resource['type_id'], 'select' => ['process_mode']]);
 
             if (empty($resource['destination'])) {
                 $noSendAR['number'] += 1;
-                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_ENTITY];
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'info' => _NO_ENTITY];
                 continue;
             }
 
@@ -254,7 +252,7 @@ class PreProcessActionController
 
             if (empty($template[0])) {
                 $noSendAR['number'] += 1;
-                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_TEMPLATE . ' \'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . ' ' .$entity['entity_label'] ];
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'info' => _NO_TEMPLATE . ' \'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . ' ' .$entity['entity_label'] ];
                 continue;
             }
 
@@ -282,18 +280,18 @@ class PreProcessActionController
 
                 if ($sended > 0) {
                     $alreadySend['number'] += $sended;
-                    $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier']];
+                    $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier']];
                 }
 
                 if ($generated > 0) {
                     $alreadyGenerated['number'] += $generated;
-                    $alreadyGenerated['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier']];
+                    $alreadyGenerated['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier']];
                 }
             }
 
             //Verify associated contact
             $contactsToProcess = [];
-            if ($ext['is_multicontacts'] == 'Y') {
+            if ($resource['is_multicontacts'] == 'Y') {
                 $multiContacts = DatabaseModel::select([
                     'select'    => ['address_id'],
                     'table'     => ['contacts_res'],
@@ -304,11 +302,11 @@ class PreProcessActionController
                     $contactsToProcess[] = $multiContact['address_id'];
                 }
             } else {
-                $contactsToProcess[] = $ext['address_id'];
+                $contactsToProcess[] = $resource['address_id'];
             }
             if (empty($contactsToProcess)) {
                 $noSendAR['number'] += 1;
-                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_CONTACT ];
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'info' => _NO_CONTACT ];
                 continue;
             }
 
@@ -318,7 +316,7 @@ class PreProcessActionController
             foreach ($contactsToProcess as $contactToProcess) {
                 if (empty($contactToProcess)) {
                     $noSendAR['number'] += 1;
-                    $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_CONTACT ];
+                    $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'info' => _NO_CONTACT ];
                     continue 2;
                 }
 
@@ -326,14 +324,14 @@ class PreProcessActionController
 
                 if (empty($contact['email']) && (empty($contact['address_street']) || empty($contact['address_town']) || empty($contact['address_postal_code']))) {
                     $noSendAR['number'] += 1;
-                    $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _USER_MISSING_INFORMATIONS ];
+                    $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'info' => _USER_MISSING_INFORMATIONS ];
                     continue 2;
                 }
 
                 if (!empty($contact['email'])) {
                     if (empty($template[0]['template_content'])) {
                         $noSendAR['number'] += 1;
-                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_EMAIL_TEMPLATE . ' \'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . ' ' . $entity['entity_label'] ];
+                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'info' => _NO_EMAIL_TEMPLATE . ' \'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . ' ' . $entity['entity_label'] ];
                         continue 2;
                     } else {
                         $email += 1;
@@ -341,7 +339,7 @@ class PreProcessActionController
                 } elseif (!empty($contact['address_street']) && !empty($contact['address_town']) && !empty($contact['address_postal_code'])) {
                     if (!file_exists($pathToDocument) || !is_file($pathToDocument)) {
                         $noSendAR['number'] += 1;
-                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $ext['alt_identifier'], 'info' => _NO_PAPER_TEMPLATE . ' \'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . ' ' . $entity['entity_label'] ];
+                        $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'info' => _NO_PAPER_TEMPLATE . ' \'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . ' ' . $entity['entity_label'] ];
                         continue 2;
                     } else {
                         $paper += 1;
@@ -439,7 +437,7 @@ class PreProcessActionController
                 }
 
                 foreach ($data['resources'] as $resId) {
-                    $noAttachmentsResource = ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);
+                    $noAttachmentsResource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier']]);
                     if (empty($noAttachmentsResource['alt_identifier'])) {
                         $noAttachmentsResource['alt_identifier'] = _UNDEFINED;
                     }
@@ -497,7 +495,7 @@ class PreProcessActionController
                 }
 
                 foreach ($data['resources'] as $resId) {
-                    $noAttachmentsResource = ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);
+                    $noAttachmentsResource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier']]);
                     if (empty($noAttachmentsResource['alt_identifier'])) {
                         $noAttachmentsResource['alt_identifier'] = _UNDEFINED;
                     }
@@ -618,7 +616,7 @@ class PreProcessActionController
             }
 
             foreach ($data['resources'] as $resId) {
-                $noAttachmentsResource = ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);
+                $noAttachmentsResource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier']]);
                 if (empty($noAttachmentsResource['alt_identifier'])) {
                     $noAttachmentsResource['alt_identifier'] = _UNDEFINED;
                 }
@@ -748,33 +746,33 @@ class PreProcessActionController
                             'isVersion' => $isVersion
                         ]);
                         if (empty($convertedDocument['docserver_id'])) {
-                            $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
+                            $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                             $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentConversion', 'attachmentIdentifier' => $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         if (empty($attachment['dest_address_id'])) {
-                            $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
+                            $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                             $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$attachment['dest_address_id']]]);
                         if (empty($contact[0])) {
-                            $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
+                            $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                             $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         if (!empty($contact[0]['address_country']) && strtoupper(trim($contact[0]['address_country'])) != 'FRANCE') {
-                            $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
+                            $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                             $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noFranceContact', 'attachmentIdentifier' => $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         $afnorAddress = ContactController::getContactAfnor($contact[0]);
                         if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6]) || !preg_match("/^\d{5}\s/", $afnorAddress[6])) {
-                            $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
+                            $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                             $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'incompleteAddressForPostal', 'attachmentIdentifier' => $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
@@ -786,7 +784,7 @@ class PreProcessActionController
                 }
 
                 if (!$resIdFound) {
-                    $resInfo = ResModel::getExtById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
+                    $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                     $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentToSend'];
                 }
             }

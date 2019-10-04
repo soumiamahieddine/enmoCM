@@ -137,16 +137,16 @@ $_ENV['categories']['incoming']['departure_date'] = array (
     'modify' => true,
     'form_show' => 'date'
 );
-$_ENV['categories']['incoming']['nature_id'] = array(
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _NATURE,
-    'table' => 'coll_ext',
-    'img' => 'envelope',
-    'modify' => false, //DO NOT MODIFY !
-    'form_show' => 'select',
-);
+// $_ENV['categories']['incoming']['nature_id'] = array(
+//     'type_form' => 'string',
+//     'type_field' => 'string',
+//     'mandatory' => true,
+//     'label' => _NATURE,
+//     'table' => 'coll_ext',
+//     'img' => 'envelope',
+//     'modify' => false, //DO NOT MODIFY !
+//     'form_show' => 'select',
+// );
 $_ENV['categories']['incoming']['reference_number'] = array(
     'type_form' => 'string',
     'type_field' => 'string',
@@ -309,16 +309,16 @@ $_ENV['categories']['outgoing']['departure_date'] = array (
     'modify' => true,
     'form_show' => 'date'
 );
-$_ENV['categories']['outgoing']['nature_id'] = array(
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _NATURE,
-    'table' => 'coll_ext',
-    'img' => 'envelope',
-    'modify' => false, //DO NOT MODIFY !
-    'form_show' => 'select',
-);
+// $_ENV['categories']['outgoing']['nature_id'] = array(
+//     'type_form' => 'string',
+//     'type_field' => 'string',
+//     'mandatory' => true,
+//     'label' => _NATURE,
+//     'table' => 'coll_ext',
+//     'img' => 'envelope',
+//     'modify' => false, //DO NOT MODIFY !
+//     'form_show' => 'select',
+// );
 $_ENV['categories']['outgoing']['reference_number'] = array(
     'type_form' => 'string',
     'type_field' => 'string',
@@ -472,16 +472,16 @@ $_ENV['categories']['internal']['doc_date'] = array(
     'modify' => true,
     'form_show' => 'date',
 );
-$_ENV['categories']['internal']['nature_id'] = array(
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _NATURE,
-    'table' => 'coll_ext',
-    'img' => 'envelope',
-    'modify' => false, //DO NOT MODIFY !
-    'form_show' => 'select',
-);
+// $_ENV['categories']['internal']['nature_id'] = array(
+//     'type_form' => 'string',
+//     'type_field' => 'string',
+//     'mandatory' => true,
+//     'label' => _NATURE,
+//     'table' => 'coll_ext',
+//     'img' => 'envelope',
+//     'modify' => false, //DO NOT MODIFY !
+//     'form_show' => 'select',
+// );
 $_ENV['categories']['internal']['reference_number'] = array(
     'type_form' => 'string',
     'type_field' => 'string',
@@ -1165,7 +1165,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                 }
             } elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
                 if (!empty($line->{$arr[$i]})) {
-                    $stmt2 = $db->query('SELECT address_id FROM mlb_coll_ext WHERE res_id = ?', array($res_id));
+                    $stmt2 = $db->query('SELECT address_id FROM res_letterbox WHERE res_id = ?', array($res_id));
                     $resAddress = $stmt2->fetchObject();
                     $addressId = $resAddress->address_id;
                     $data[$arr[$i]]['address_value'] = $addressId;
@@ -1309,7 +1309,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
             } elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
                 if (!empty($line->{$arr[$i]})) {
                     $data['type_contact'] = 'external';
-                    $stmt2 = $db->query('SELECT address_id FROM mlb_coll_ext WHERE res_id = ?', array($res_id));
+                    $stmt2 = $db->query('SELECT address_id FROM res_letterbox WHERE res_id = ?', array($res_id));
                     $resAddress = $stmt2->fetchObject();
                     $addressId = $resAddress->address_id;
                     $stmt2 = $db->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, contact_purpose_id, address_num, address_street, address_postal_code, address_town, lastname, firstname FROM view_contacts WHERE contact_id = ? and ca_id = ?', array($line->{$arr[$i]}, $addressId));

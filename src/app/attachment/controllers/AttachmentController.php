@@ -96,7 +96,7 @@ class AttachmentController
         $body['data'][] = ['column' => 'type_id', 'value' => '0'];
         $body['data'][] = ['column' => 'relation', 'value' => '1'];
         $body['fileFormat'] = $body['format'];
-        $resId = StoreController::storeResourceRes($body);
+        $resId = StoreController::storeAttachment($body);
 
         if (empty($resId) || !empty($resId['errors'])) {
             return $response->withStatus(500)->withJson(['errors' => '[AttachmentController create] ' . $resId['errors']]);
@@ -669,7 +669,7 @@ class AttachmentController
                         "status"      => 'A_TRA'
                     ];
 
-                    StoreController::storeResourceRes($allDatas);
+                    StoreController::storeAttachment($allDatas);
                 }
                 
                 AttachmentModel::update([

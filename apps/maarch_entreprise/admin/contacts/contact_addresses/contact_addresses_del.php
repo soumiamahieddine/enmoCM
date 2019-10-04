@@ -94,17 +94,17 @@ if ($_REQUEST['valid']) {
         // delete contact types
         $db->query("DELETE FROM ".$_SESSION['tablename']['contact_addresses']." WHERE id = ?", array($id));
 
-        $stmt = $db->query("SELECT res_id, exp_contact_id, dest_contact_id FROM mlb_coll_ext WHERE address_id = ?", array($id));
+        $stmt = $db->query("SELECT res_id, exp_contact_id, dest_contact_id FROM res_letterbox WHERE address_id = ?", array($id));
 
         while ($res = $stmt->fetchObject()) {
             if ($res->exp_contact_id <> "") {
-                $db->query("UPDATE mlb_coll_ext SET exp_contact_id = ? WHERE res_id = ?", array($new_contact_id, $res->res_id));
+                $db->query("UPDATE res_letterbox SET exp_contact_id = ? WHERE res_id = ?", array($new_contact_id, $res->res_id));
             } else {
-                $db->query("UPDATE mlb_coll_ext SET dest_contact_id = ? WHERE res_id = ?", array($new_contact_id, $res->res_id));
+                $db->query("UPDATE res_letterbox SET dest_contact_id = ? WHERE res_id = ?", array($new_contact_id, $res->res_id));
             }
         }
 
-        $db->query("UPDATE mlb_coll_ext SET address_id = ? WHERE address_id = ?", array($newid, $id));
+        $db->query("UPDATE res_letterbox SET address_id = ? WHERE address_id = ?", array($newid, $id));
         $db->query("UPDATE contacts_res SET contact_id = ?, address_id = ? WHERE address_id = ?", array($new_contact_id, $newid, $id));
         $db->query("UPDATE resource_contacts SET item_id = ? WHERE item_id = ?", array($newid, $id));
 
@@ -133,13 +133,13 @@ if ($_REQUEST['valid']) {
         $db->query("UPDATE contact_addresses set contact_id = ? WHERE id = ?", array($_POST['new_contact_id_reaffect'], $id));
         $db->query("UPDATE contacts_res set contact_id = ? WHERE address_id = ?", array($_POST['new_contact_id_reaffect'], $id));
 
-        $stmt = $db->query("SELECT res_id, exp_contact_id, dest_contact_id FROM mlb_coll_ext WHERE address_id = ?", array($id));
+        $stmt = $db->query("SELECT res_id, exp_contact_id, dest_contact_id FROM res_letterbox WHERE address_id = ?", array($id));
 
         while ($res = $stmt->fetchObject()) {
             if ($res->exp_contact_id <> "") {
-                $db->query("UPDATE mlb_coll_ext SET exp_contact_id = ? WHERE res_id = ?", array($_POST['new_contact_id_reaffect'], $res->res_id));
+                $db->query("UPDATE res_letterbox SET exp_contact_id = ? WHERE res_id = ?", array($_POST['new_contact_id_reaffect'], $res->res_id));
             } else {
-                $db->query("UPDATE mlb_coll_ext SET dest_contact_id = ? WHERE res_id = ?", array($_POST['new_contact_id_reaffect'], $res->res_id));
+                $db->query("UPDATE res_letterbox SET dest_contact_id = ? WHERE res_id = ?", array($_POST['new_contact_id_reaffect'], $res->res_id));
             }
         }
 

@@ -36,10 +36,7 @@ $rep->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 
 // RETRIEVE NB OF DOCUMENTS
 $stmt = $db->query(
-    'select count(1) as total from '.$_SESSION['collections'][0]['view']
-    .' inner join mlb_coll_ext on '.$_SESSION['collections'][0]['view']
-    .'.res_id = mlb_coll_ext.res_id where '.$_SESSION['collections'][0]['view']
-    .".status not in ('DEL','BAD')"
+    "select count(1) as total from ".$_SESSION['collections'][0]['view']." where status not in ('DEL','BAD')"
 );
 
 // RETRIEVE NB OF FOLDERS

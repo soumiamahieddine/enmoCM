@@ -1321,6 +1321,23 @@ class UserController
         return $response->withJson(['success' => 'success']);
     }
 
+    public function getPrivileges(Request $request, Response $response)
+    {
+        $privileges = [
+            'canManageTags'                                 => false,
+            'canUpdateDiffusionRecipientWhileIndexing'      => false,
+            'canUpdateDiffusionRolesWhileIndexing'          => false,
+            'canUpdateDiffusionRecipientWhileProcessing'    => false,
+            'canUpdateDiffusionRolesWhileProcessing'        => false
+        ];
+
+        if (ServiceModel::hasService(['id' => 'manage_tags_application', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use'])) {
+            $privileges['canManageTags'] = true;
+        }
+
+        return $response->withJson(['privileges' => $privileges]);
+    }
+
     public function updateCurrentUserBasketPreferences(Request $request, Response $response, array $aArgs)
     {
         $data = $request->getParams();

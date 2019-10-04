@@ -75,10 +75,8 @@ if(isset($_REQUEST['valid']))
         $new_address = $_REQUEST['address'];
 
         $i=0;
-        $db->query("UPDATE ".$_SESSION['collections'][$i]['extensions'][$i] 
-            . " SET exp_contact_id = ?, address_id = ? where exp_contact_id = ?", array($new_contact, $new_address, $s_id));
-        $db->query("UPDATE ".$_SESSION['collections'][$i]['extensions'][$i] 
-            . " SET dest_contact_id = ?, address_id = ? where dest_contact_id = ?", array($new_contact, $new_address, $s_id));
+        $db->query("UPDATE res_letterbox SET exp_contact_id = ?, address_id = ? where exp_contact_id = ?", array($new_contact, $new_address, $s_id));
+        $db->query("UPDATE res_letterbox SET dest_contact_id = ?, address_id = ? where dest_contact_id = ?", array($new_contact, $new_address, $s_id));
         $db->query("DELETE FROM " . $_SESSION['tablename']['contacts_v2'] . " WHERE contact_id = ?", array($s_id));
         $db->query("DELETE FROM " . $_SESSION['tablename']['contact_addresses'] . " WHERE contact_id = ?", array($s_id));
         if($_SESSION['history']['contactdel'])

@@ -29,8 +29,8 @@ export class NoteEditorComponent implements AfterViewInit {
     }
 
     addNote() {
-        this.loading = true
-        this.http.post("../../rest/res/" + this.resIds[0] + "/notes", { note_text: this.content })
+        this.loading = true;
+        this.http.post("../../rest/resources/" + this.resIds[0] + "/notes", { value: this.content })
             .subscribe((data: any) => {
                 this.refreshNotes.emit(this.resIds[0]);
                 this.loading = false;

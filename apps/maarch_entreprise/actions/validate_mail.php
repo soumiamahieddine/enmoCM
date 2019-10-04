@@ -50,10 +50,8 @@ function check_category($coll_id, $res_id)
     $res = $stmt->fetchObject();
 
     if (!isset($res->category_id)) {
-        $ind_coll = $sec->get_ind_collection($coll_id);
-        $table_ext = $_SESSION['collections'][$ind_coll]['extensions'][0];
-        $db->query('INSERT INTO '.$table_ext.' (res_id, category_id) VALUES (?, ?)',
-            array($res_id, $_SESSION['coll_categories']['letterbox_coll']['default_category']));
+        $db->query('UPDATE res_letterbox SET category_id = ? WHERE res_id = ?',
+            array('incoming', $res_id));
     }
 }
 
@@ -406,19 +404,6 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         .'index.php?display=true&dir=indexing_searching&page=change_category_actions'
         .'&resId='.$res_id.'&collId='.$coll_id.'\',\''.$res_id.'\',\''.$coll_id.'\',this.options[this.selectedIndex].value);">';
     $frm_str .= '<option value="">'._CHOOSE_CATEGORY.'</option>';
-    foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $cat_id) {
-        if ($cat_id != 'default_category') {
-            $frm_str .= '<option value="'.functions::xssafe($cat_id).'"';
-            if (
-                (isset($data['category_id']['value']) && $data['category_id']['value'] == $cat_id)
-                || $_SESSION['coll_categories']['letterbox_coll']['default_category'] == $cat_id
-                || $_SESSION['indexing']['category_id'] == $cat_id
-            ) {
-                $frm_str .= 'selected="selected"';
-            }
-            $frm_str .= '>'.functions::xssafe($_SESSION['coll_categories']['letterbox_coll'][$cat_id]).'</option>';
-        }
-    }
     $frm_str .= '</select></td>';
     $frm_str .= '<td><span class="red_asterisk" id="category_id_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frm_str .= '</tr>';
@@ -1685,7 +1670,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $table = $sec->retrieve_table_from_coll($coll_id);
     $ind_coll = $sec->get_ind_collection($coll_id);
     $cat_id = get_value_fields($values_form, 'category_id');
-    $table_ext = $_SESSION['collections'][$ind_coll]['extensions'][0];
+    $table_ext = 'res_letterbox';
     $res_id = $arr_id[0];
     $status_id = get_value_fields($values_form, 'status');
     $type_id = get_value_fields($values_form, 'type_id');

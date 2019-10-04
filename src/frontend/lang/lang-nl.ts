@@ -1158,4 +1158,17 @@ export const LANG_NL = {
     "noAvaiblableAction" : "<b>No available action</b>, please set an action in <b>Administration > User groups > Mail indexing</b>.", //_TO_TRANSLATE
     "eraseValue" : "Erase value", //_TO_TRANSLATE
     "todayDate" : "Today date", //_TO_TRANSLATE
+    "noDefaultIndexingModel" : "No default indexing model found, the first model of the list have been loaded.", //_TO_TRANSLATE
+    "indexing_incoming" : "incoming", //_TO_TRANSLATE
+    "indexing_outgoing" : "outgoing", //_TO_TRANSLATE
+    "indexing_internal" : "internal", //_TO_TRANSLATE
+    "indexing_ged_doc" : "GED", //_TO_TRANSLATE
+    "createMsg" : "Do want create", //_TO_TRANSLATE
+    "folderDeleteWarnMsg" : "Do want delete", //_TO_TRANSLATE
+    "folderDeleteWarnMsg2" : "previously created ?", //_TO_TRANSLATE
+    "noSelectedFolder" : "No selected folder", //_TO_TRANSLATE
+    "noSelectedTag" : "No selected tag", //_TO_TRANSLATE
+    "searchTag" : "Search tag", //_TO_TRANSLATE
+    "tagAdded" : "Tag added", //_TO_TRANSLATE
+    "tagDeleted" : "Tag deleted", //_TO_TRANSLATE
 };

@@ -11,7 +11,9 @@ use PHPUnit\Framework\TestCase;
 
 class IndexingModelControllerTest extends TestCase
 {
-    private static $id = null;
+    private static $masterId = null;
+    private static $childId = null;
+    private static $childId2 = null;
 
     public function testCreate()
     {
@@ -30,11 +32,18 @@ class IndexingModelControllerTest extends TestCase
                     'identifier'    => 'subject',
                     'mandatory'     => true,
                     'default_value' => 'tika',
+                    'unit'          => 'mail'
+                ], [
+                    'identifier'    => 'doctype',
+                    'mandatory'     => true,
+                    'default_value' => 'type_test',
+                    'unit'          => 'mail'
                 ],
                 [
                     'identifier'    => 'name',
                     'mandatory'     => true,
                     'default_value' => 'massala',
+                    'unit'          => 'contact'
                 ]
             ]
         ];
@@ -45,13 +54,13 @@ class IndexingModelControllerTest extends TestCase
 
         $this->assertSame(200, $response->getStatusCode());
 
-        self::$id = $responseBody->id;
+        self::$masterId = $responseBody->id;
 
         // GET BY ID
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $indexingModelController->getById($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $response     = $indexingModelController->getById($fullRequest, new \Slim\Http\Response(), ['id' => self::$masterId]);
         $this->assertSame(200, $response->getStatusCode());
 
         $responseBody = json_decode((string)$response->getBody());
@@ -62,12 +71,15 @@ class IndexingModelControllerTest extends TestCase
         $this->assertSame('subject', $responseBody->indexingModel->fields[0]->identifier);
         $this->assertSame(true, $responseBody->indexingModel->fields[0]->mandatory);
         $this->assertSame('tika', $responseBody->indexingModel->fields[0]->default_value);
-        $this->assertSame('name', $responseBody->indexingModel->fields[1]->identifier);
+        $this->assertSame('doctype', $responseBody->indexingModel->fields[1]->identifier);
         $this->assertSame(true, $responseBody->indexingModel->fields[1]->mandatory);
-        $this->assertSame('massala', $responseBody->indexingModel->fields[1]->default_value);
+        $this->assertSame('type_test', $responseBody->indexingModel->fields[1]->default_value);
+        $this->assertSame('name', $responseBody->indexingModel->fields[2]->identifier);
+        $this->assertSame(true, $responseBody->indexingModel->fields[2]->mandatory);
+        $this->assertSame('massala', $responseBody->indexingModel->fields[2]->default_value);
 
 
-        //  Errors
+        //  Errors label
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
@@ -79,6 +91,133 @@ class IndexingModelControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame('Body label is empty or not a string', $responseBody->errors);
+
+        //  Errors category
+        $args['label'] = 'mon model d indexation';
+        unset($args['category']);
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+
+        $response     = $indexingModelController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Body category is empty, not a string or not a valid category', $responseBody->errors);
+
+        $args['category'] = 'invalid_category';
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+
+        $response     = $indexingModelController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Body category is empty, not a string or not a valid category', $responseBody->errors);
+
+        // Errors fields
+        $args['category'] = 'incoming';
+        unset($args['fields']);
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+
+        $response     = $indexingModelController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Body fields is empty or not an array', $responseBody->errors);
+
+        $args['fields'] = [
+            [
+                'identifier'    => 'name',
+                'mandatory'     => true,
+                'default_value' => 'massala',
+                'unit'          => 'contact'
+            ]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+
+        $response     = $indexingModelController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Mandatory \'doctype\' field is missing', $responseBody->errors);
+
+        array_push($args['fields'], [
+            'identifier'    => 'doctype',
+            'mandatory'     => true,
+            'default_value' => 'type_test',
+            'unit'          => 'mail'
+        ]);
+
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+
+        $response     = $indexingModelController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame('Mandatory \'subject\' field is missing', $responseBody->errors);
+
+
+        // Create private model from master model
+        // Fail
+        $args = [
+            'label'     => 'mon sous model d indexation',
+            'category'  => 'incoming',
+            'private'   => true,
+            'master'    => -1,
+            'fields'    => [
+                [
+                    'identifier'    => 'subject',
+                    'mandatory'     => true,
+                    'default_value' => 'tika',
+                    'unit'          => 'mail'
+                ], [
+                    'identifier'    => 'doctype',
+                    'mandatory'     => true,
+                    'default_value' => 'type_test',
+                    'unit'          => 'mail'
+                ]
+            ]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+
+        $response     = $indexingModelController->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('Master model not found', $responseBody->errors);
+
+        $args['master'] = self::$masterId;
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+
+        $response     = $indexingModelController->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('Field \'name\' from master model is missing', $responseBody->errors);
+
+        // Success
+        array_push($args['fields'], [
+            'identifier'    => 'name',
+            'mandatory'     => true,
+            'default_value' => 'massala',
+            'unit'          => 'contact'
+        ]);
+
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+
+        $response     = $indexingModelController->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $this->assertInternalType('int', $responseBody->id);
+        self::$childId = $responseBody->id;
+
+        $response     = $indexingModelController->create($fullRequest, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(200, $response->getStatusCode());
+
+        $this->assertInternalType('int', $responseBody->id);
+        self::$childId2 = $responseBody->id;
     }
 
     public function testUpdate()
@@ -98,25 +237,33 @@ class IndexingModelControllerTest extends TestCase
                     'identifier'    => 'subject',
                     'mandatory'     => true,
                     'default_value' => 'butter',
+                    'unit'          => 'mail'
+                ],
+                [
+                    'identifier'    => 'doctype',
+                    'mandatory'     => true,
+                    'default_value' => 'type_test2',
+                    'unit'          => 'mail'
                 ],
                 [
                     'identifier'    => 'siret',
                     'mandatory'     => false,
                     'default_value' => 'chicken',
+                    'unit'          => 'classement'
                 ]
             ]
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
 
-        $response     = $indexingModelController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $response     = $indexingModelController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$masterId]);
         $this->assertSame(204, $response->getStatusCode());
 
         // GET BY ID
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $indexingModelController->getById($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$masterId]);
         $this->assertSame(200, $response->getStatusCode());
 
         $responseBody = json_decode((string)$response->getBody());
@@ -127,10 +274,55 @@ class IndexingModelControllerTest extends TestCase
         $this->assertSame('subject', $responseBody->indexingModel->fields[0]->identifier);
         $this->assertSame(true, $responseBody->indexingModel->fields[0]->mandatory);
         $this->assertSame('butter', $responseBody->indexingModel->fields[0]->default_value);
-        $this->assertSame('siret', $responseBody->indexingModel->fields[1]->identifier);
-        $this->assertSame(false, $responseBody->indexingModel->fields[1]->mandatory);
-        $this->assertSame('chicken', $responseBody->indexingModel->fields[1]->default_value);
+        $this->assertSame('mail', $responseBody->indexingModel->fields[0]->unit);
 
+        $this->assertSame('doctype', $responseBody->indexingModel->fields[1]->identifier);
+        $this->assertSame(true, $responseBody->indexingModel->fields[1]->mandatory);
+        $this->assertSame('type_test2', $responseBody->indexingModel->fields[1]->default_value);
+        $this->assertSame('mail', $responseBody->indexingModel->fields[1]->unit);
+
+        $this->assertSame('siret', $responseBody->indexingModel->fields[2]->identifier);
+        $this->assertSame(false, $responseBody->indexingModel->fields[2]->mandatory);
+        $this->assertSame('chicken', $responseBody->indexingModel->fields[2]->default_value);
+        $this->assertSame('classement', $responseBody->indexingModel->fields[2]->unit);
+
+        // Read child
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$childId]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBodyChild = json_decode((string)$response->getBody());
+
+        // check fields of child
+
+        $this->assertSame(3, count($responseBodyChild->indexingModel->fields));
+
+        $foundDoctype = false;
+        $foundSubject = false;
+        $foundSiret = false;
+        foreach ($responseBodyChild->indexingModel->fields as $field) {
+           if ($field->identifier == 'subject') {
+                $foundSubject = true;
+
+                $this->assertSame(true, $field->mandatory);
+                $this->assertSame('tika', $field->default_value);
+                $this->assertSame('mail', $field->unit);
+           } else if ($field->identifier == 'doctype') {
+                $foundDoctype = true;
+
+                $this->assertSame(true, $field->mandatory);
+                $this->assertSame('type_test', $field->default_value);
+                $this->assertSame('mail', $field->unit);
+           } else if ($field->identifier == 'siret') {
+                $foundSiret = true;
+
+                $this->assertSame(false, $field->mandatory);
+                $this->assertSame('chicken', $field->default_value);
+                $this->assertSame('classement', $field->unit);
+           }
+        }
+
+        $this->assertSame(true, $foundSubject);
+        $this->assertSame(true, $foundDoctype);
+        $this->assertSame(true, $foundSiret);
 
         //  Errors
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
@@ -139,7 +331,7 @@ class IndexingModelControllerTest extends TestCase
         unset($args['label']);
         $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
 
-        $response     = $indexingModelController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $response     = $indexingModelController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$masterId]);
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody());
 
@@ -166,16 +358,50 @@ class IndexingModelControllerTest extends TestCase
     {
         $indexingModelController = new \IndexingModel\controllers\IndexingModelController();
 
-        //  DELETE
+        //  DELETE 1 child model
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
 
-        $response     = $indexingModelController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $response     = $indexingModelController->delete($request, new \Slim\Http\Response(), ['id' => self::$childId2]);
         $this->assertSame(204, $response->getStatusCode());
 
+        //  GET
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$childId2]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('Model not found', $responseBody->errors);
+
+        //  DELETE master + child
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+
+        $response     = $indexingModelController->delete($request, new \Slim\Http\Response(), ['id' => self::$masterId]);
+        $this->assertSame(204, $response->getStatusCode());
+
+        //  GET
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$masterId]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('Model not found', $responseBody->errors);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$childId]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('Model not found', $responseBody->errors);
+
         //  Errors
-        $response     = $indexingModelController->delete($request, new \Slim\Http\Response(), ['id' => 99999]);
+        $response     = $indexingModelController->delete($request, new \Slim\Http\Response(), ['id' => self::$masterId]);
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody());
 

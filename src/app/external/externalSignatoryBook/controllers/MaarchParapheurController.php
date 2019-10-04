@@ -76,7 +76,7 @@ class MaarchParapheurController
         $arrivedMailMainfilePath = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
 
         $mainResource = ResModel::getOnView([
-            'select' => ['process_limit_date', 'status', 'category_id', 'alt_identifier', 'subject', 'priority', 'contact_firstname', 'contact_lastname', 'contact_society', 'res_id', 'nature_id', 'admission_date', 'creation_date', 'doc_date', 'initiator', 'typist', 'type_label', 'destination'],
+            'select' => ['process_limit_date', 'status', 'category_id', 'alt_identifier', 'subject', 'priority', 'contact_firstname', 'contact_lastname', 'contact_society', 'res_id', 'admission_date', 'creation_date', 'doc_date', 'initiator', 'typist', 'type_label', 'destination'],
             'where'  => ['res_id = ?'],
             'data'   => [$aArgs['resIdMaster']]
         ]);
@@ -132,7 +132,7 @@ class MaarchParapheurController
                     'orderBy' => ['listinstance_id']
                 ]);
             } elseif ($unit['unit'] == 'senderRecipientInformations') {
-                $data['mlbCollExt'] = ResModel::getExt([
+                $data['senderRecipient'] = ResModel::get([
                     'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
                     'where'  => ['res_id in (?)'],
                     'data'   => [$tmpIds]

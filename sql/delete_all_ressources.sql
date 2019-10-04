@@ -34,8 +34,6 @@ ALTER SEQUENCE notes_id_seq restart WITH 1;
 
 TRUNCATE TABLE note_entities;
 
-TRUNCATE TABLE mlb_coll_ext;
-
 TRUNCATE TABLE res_letterbox;
 ALTER SEQUENCE res_id_mlb_seq restart WITH 1;
 

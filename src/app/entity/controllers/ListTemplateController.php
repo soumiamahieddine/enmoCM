@@ -276,16 +276,41 @@ class ListTemplateController
                 $listTemplates[$key]['labelToDisplay'] = UserModel::getLabelledUserById(['login' => $value['item_id']]);
                 $listTemplates[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']])['entity_label'];
 
+                $userInfos = UserModel::getByLowerLogin(['login' => $value['item_id'], 'select' => ['id']]);
+                $listTemplates[$key]['userId'] = $userInfos['id'];
+            }
+        }
+
+        return $response->withJson(['listTemplate' => $listTemplates]);
+    }
+
+    public function getByEntityIdWithMaarchParapheur(Request $request, Response $response, array $args)
+    {
+        $entity = EntityModel::getById(['select' => ['entity_id'], 'id' => $args['entityId']]);
+        if (empty($entity)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Entity does not exist']);
+        }
+
+        $listTemplates = ListTemplateModel::get(['select' => ['*'], 'where' => ['object_id = ?'], 'data' => [$entity['entity_id']]]);
+
+        foreach ($listTemplates as $key => $value) {
+            if ($value['item_type'] == 'entity_id') {
+                $listTemplates[$key]['labelToDisplay'] = Entitymodel::getByEntityId(['entityId' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
+                $listTemplates[$key]['descriptionToDisplay'] = '';
+            } else {
+                $listTemplates[$key]['labelToDisplay'] = UserModel::getLabelledUserById(['login' => $value['item_id']]);
+                $listTemplates[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']])['entity_label'];
+
                 $userInfos = UserModel::getByLowerLogin(['login' => $value['item_id'], 'select' => ['external_id']]);
                 $listTemplates[$key]['externalId'] = json_decode($userInfos['external_id'], true);
                 if (!empty($listTemplates[$key]['externalId']['maarchParapheur'])) {
                     $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
                     if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
-                        foreach ($loadedXml->signatoryBook as $value) {
-                            if ($value->id == "maarchParapheur") {
-                                $url      = $value->url;
-                                $userId   = $value->userId;
-                                $password = $value->password;
+                        foreach ($loadedXml->signatoryBook as $signatoryBook) {
+                            if ($signatoryBook->id == "maarchParapheur") {
+                                $url      = $signatoryBook->url;
+                                $userId   = $signatoryBook->userId;
+                                $password = $signatoryBook->password;
                                 break;
                             }
                         }

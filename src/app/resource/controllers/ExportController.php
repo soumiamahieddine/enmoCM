@@ -151,8 +151,6 @@ class ExportController
                     $leftJoinFunction[] = 'res_view_letterbox.fold_parent_id = folders.folders_system_id';
                 } elseif ($value['value'] == 'getCategory') {
                     $select[] = 'res_view_letterbox.category_id';
-                } elseif ($value['value'] == 'getNature') {
-                    $select[] = 'res_view_letterbox.nature_id';
                 } elseif ($value['value'] == 'getInitiatorEntity') {
                     $select[] = 'enone.short_label AS "enone.short_label"';
                     $tableFunction[] = 'entities enone';
@@ -248,8 +246,6 @@ class ExportController
                         $csvContent[] = $resource['folders.folder_name'];
                     } elseif ($value['value'] == 'getCategory') {
                         $csvContent[] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
-                    } elseif ($value['value'] == 'getNature') {
-                        $csvContent[] = ResModel::getNatureLabel(['natureId' => $resource['nature_id']]);
                     } elseif ($value['value'] == 'getInitiatorEntity') {
                         $csvContent[] = $resource['enone.short_label'];
                     } elseif ($value['value'] == 'getDestinationEntity') {
@@ -356,8 +352,6 @@ class ExportController
                         $content[] = $resource['folders.folder_name'];
                     } elseif ($value['value'] == 'getCategory') {
                         $content[] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
-                    } elseif ($value['value'] == 'getNature') {
-                        $content[] = ResModel::getNatureLabel(['natureId' => $resource['nature_id']]);
                     } elseif ($value['value'] == 'getInitiatorEntity') {
                         $content[] = $resource['enone.short_label'];
                     } elseif ($value['value'] == 'getDestinationEntity') {
@@ -613,16 +607,16 @@ class ExportController
         }
 
         foreach ($args['chunkedResIds'] as $resIds) {
-            $exts = ResModel::getExt([
+            $resources = ResModel::get([
                 'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
                 'where' => ['res_id in (?)'],
                 'data' => [$resIds]
             ]);
 
-            if (!empty($exts)) {
+            if (!empty($resources)) {
                 $resId   = '';
                 $senders = [];
-                foreach ($exts as $key => $ext) {
+                foreach ($resources as $key => $ext) {
                     if ($key != 0 && $resId != $ext['res_id']) {
                         $aSenders[$resId] = $senders;
                         $senders = [];
@@ -698,16 +692,16 @@ class ExportController
         }
 
         foreach ($args['chunkedResIds'] as $resIds) {
-            $exts = ResModel::getExt([
+            $resources = ResModel::get([
                 'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
                 'where' => ['res_id in (?)'],
                 'data' => [$resIds]
             ]);
 
-            if (!empty($exts)) {
+            if (!empty($resources)) {
                 $resId      = '';
                 $recipients = [];
-                foreach ($exts as $key => $ext) {
+                foreach ($resources as $key => $ext) {
                     if ($key != 0 && $resId != $ext['res_id']) {
                         $aRecipients[$resId] = $recipients;
                         $recipients = [];

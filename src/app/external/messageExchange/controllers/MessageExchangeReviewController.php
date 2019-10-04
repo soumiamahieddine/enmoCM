@@ -29,6 +29,7 @@ class MessageExchangeReviewController
             return false;
         }
 
+        //TODO nature
         $resLetterboxData = ResModel::getOnView([
             'select' => ['nature_id, reference_number', 'entity_label', 'res_id', 'identifier'],
             'where' => ['res_id = ?'],

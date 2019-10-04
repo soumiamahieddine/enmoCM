@@ -102,93 +102,6 @@ class ResController
         return $response->withJson(['resId' => $resId]);
     }
 
-    public function createRes(Request $request, Response $response)
-    {
-        if (!ServiceModel::hasService(['id' => 'index_mlb', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $data = $request->getParams();
-
-        $check = Validator::notEmpty()->validate($data['encodedFile']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['fileFormat']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['status']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['collId']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['table']);
-        $check = $check && Validator::arrayType()->notEmpty()->validate($data['data']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
-
-        $mandatoryColumns = [];
-        if ($data['table'] == 'res_letterbox') {
-            $mandatoryColumns[] = 'type_id';
-        }
-
-        foreach ($data['data'] as $value) {
-            foreach ($mandatoryColumns as $columnKey => $column) {
-                if ($column == $value['column'] && !empty($value['value'])) {
-                    unset($mandatoryColumns[$columnKey]);
-                }
-            }
-        }
-        if (!empty($mandatoryColumns)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Data array needs column(s) [' . implode(', ', $mandatoryColumns) . ']']);
-        }
-
-        $resId = StoreController::storeResourceRes($data);
-
-        if (empty($resId) || !empty($resId['errors'])) {
-            return $response->withStatus(500)->withJson(['errors' => '[ResController create] ' . $resId['errors']]);
-        }
-
-        HistoryController::add([
-            'tableName' => 'res_letterbox',
-            'recordId'  => $resId,
-            'eventType' => 'ADD',
-            'info'      => _DOC_ADDED,
-            'moduleId'  => 'res',
-            'eventId'   => 'resadd',
-        ]);
-
-        return $response->withJson(['resId' => $resId]);
-    }
-
-    public function createExt(Request $request, Response $response)
-    {
-        if (!ServiceModel::hasService(['id' => 'index_mlb', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $data = $request->getParams();
-
-        $check = Validator::intVal()->notEmpty()->validate($data['resId']);
-        $check = $check && Validator::arrayType()->notEmpty()->validate($data['data']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
-
-        $document = ResModel::getById(['resId' => $data['resId'], 'select' => ['1']]);
-        if (empty($document)) {
-            return $response->withStatus(404)->withJson(['errors' => 'Document does not exist']);
-        }
-        $documentExt = ResModel::getExtById(['resId' => $data['resId'], 'select' => ['1']]);
-        if (!empty($documentExt)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Document already exists in mlb_coll_ext']);
-        }
-
-        $formatedData = StoreController::prepareExtStorage(['resId' => $data['resId'], 'data' => $data['data']]);
-
-        $check = Validator::stringType()->notEmpty()->validate($formatedData['category_id']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
-
-        ResModel::createExt($formatedData);
-
-        return $response->withJson(['status' => true]);
-    }
-
     public function updateStatus(Request $request, Response $response)
     {
         $data = $request->getParams();
@@ -213,7 +126,7 @@ class ResController
         $identifiers = !empty($data['chrono']) ? $data['chrono'] : $data['resId'];
         foreach ($identifiers as $id) {
             if (!empty($data['chrono'])) {
-                $document = ResModel::getResIdByAltIdentifier(['altIdentifier' => $id]);
+                $document = ResModel::getByAltIdentifier(['altIdentifier' => $id, 'select' => ['res_id']]);
             } else {
                 $document = ResModel::getById(['resId' => $id, 'select' => ['res_id']]);
             }
@@ -245,13 +158,12 @@ class ResController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'fingerprint'], 'resId' => $aArgs['resId']]);
-        $extDocument = ResModel::getExtById(['select' => ['category_id', 'alt_identifier'], 'resId' => $aArgs['resId']]);
-        if (empty($document) || empty($extDocument)) {
+        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'fingerprint', 'category_id', 'alt_identifier'], 'resId' => $aArgs['resId']]);
+        if (empty($document)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
         }
 
-        if ($extDocument['category_id'] == 'outgoing') {
+        if ($document['category_id'] == 'outgoing') {
             $attachment = AttachmentModel::getOnView([
                 'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename'],
                 'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
@@ -321,7 +233,7 @@ class ResController
                         } elseif ($value == 'hour_now') {
                             $tmp = date('H:i');
                         } elseif ($value == 'alt_identifier') {
-                            $tmp = $extDocument['alt_identifier'];
+                            $tmp = $document['alt_identifier'];
                         } else {
                             $backFromView = ResModel::getOnView(['select' => $value, 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
                             if (!empty($backFromView[0][$value])) {
@@ -409,13 +321,12 @@ class ResController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $aArgs['resId']]);
-        $extDocument = ResModel::getExtById(['select' => ['category_id', 'alt_identifier'], 'resId' => $aArgs['resId']]);
-        if (empty($document) || empty($extDocument)) {
+        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'category_id'], 'resId' => $aArgs['resId']]);
+        if (empty($document)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
         }
 
-        if ($extDocument['category_id'] == 'outgoing') {
+        if ($document['category_id'] == 'outgoing') {
             $attachment = AttachmentModel::getOnView([
                 'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename', 'fingerprint'],
                 'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
@@ -491,8 +402,8 @@ class ResController
                 'type'      => 'TNL'
             ]);
             if (empty($tnlAdr)) {
-                $extDocument = ResModel::getExtById(['select' => ['category_id'], 'resId' => $aArgs['resId']]);
-                if ($extDocument['category_id'] == 'outgoing') {
+                $document = ResModel::getById(['select' => ['category_id'], 'resId' => $aArgs['resId']]);
+                if ($document['category_id'] == 'outgoing') {
                     $attachment = AttachmentModel::getOnView([
                         'select'    => ['res_id', 'res_id_version'],
                         'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
@@ -593,11 +504,10 @@ class ResController
         ValidatorModel::intVal($aArgs, ['resId']);
         ValidatorModel::boolType($aArgs, ['original']);
 
-        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'subject'], 'resId' => $aArgs['resId']]);
-        $extDocument = ResModel::getExtById(['select' => ['category_id'], 'resId' => $aArgs['resId']]);
+        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'subject', 'category_id'], 'resId' => $aArgs['resId']]);
 
         if (empty($aArgs['original'])) {
-            if ($extDocument['category_id'] == 'outgoing') {
+            if ($document['category_id'] == 'outgoing') {
                 $attachment = AttachmentModel::getOnView([
                     'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename'],
                     'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],

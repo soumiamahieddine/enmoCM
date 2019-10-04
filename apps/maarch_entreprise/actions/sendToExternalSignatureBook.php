@@ -354,7 +354,7 @@ function hasAttachmentError()
             'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
         ]);
         if ($attachments[0]['nb'] == 0) {
-            $noAttachmentsResource = \Resource\models\ResModel::getExtById(['resId' => $resId, 'select' => ['alt_identifier']]);
+            $noAttachmentsResource = \Resource\models\ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier']]);
             $noAttachment[] = $noAttachmentsResource['alt_identifier'];
         }
     }

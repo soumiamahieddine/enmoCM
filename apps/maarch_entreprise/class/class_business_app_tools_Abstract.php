@@ -152,20 +152,8 @@ abstract class business_app_tools_Abstract extends Database
                 if (!empty($tmp) && defined($tmp) && constant($tmp) <> NULL) {
                     $tmp = constant($tmp);
                 }
-                $extensions = $col->extensions;
                 $collId = (string) $col->id;
-                $tab = array();
 
-                if ($extensions->count()) {
-                    $extensionTables = $extensions->table;
-                    if ($extensionTables->count() > 0) {
-                        foreach ($extensions->table as $table) {
-                            if (strlen($extensionTables) > 0) {
-                                array_push($tab, (string) $table);
-                            }
-                        }
-                    }
-                }
                 if (isset($col->table) && ! empty($col->table)) {
                     $_SESSION['collections'][$i] = array(
                         'id'                   => (string) $col->id,
@@ -179,23 +167,15 @@ abstract class business_app_tools_Abstract extends Database
                         'script_search'        => (string) $col->script_search,
                         'script_search_result' => (string) $col->script_search_result,
                         'script_details'       => (string) $col->script_details,
-                        'extensions'           => $tab,
                     );
-                    
-                    $categories = $col->categories;
-                    
-                    if (count($categories) > 0) {
-                        foreach ($categories->category as $cat) {
-                            $label = (string) $cat->label;
-                            if (!empty($label) && defined($label)
-                                && constant($label) <> NULL
-                             ) {
-                                $label = constant($label);
-                            }
-                            $_SESSION['coll_categories'][$collId][(string) $cat->id] = $label;
-                        }
-                        $_SESSION['coll_categories'][$collId]['default_category'] = (string) $categories->default_category;
-                    }
+
+                    $_SESSION['coll_categories']['letterbox_coll'] = [
+                        'incoming' => defined('_INCOMING') ? _INCOMING : '_INCOMING',
+                        'outgoing' => defined('_OUTGOING') ? _OUTGOING : '_OUTGOING',
+                        'internal' => defined('_INTERNAL') ? _INTERNAL : '_INTERNAL',
+                        'ged_doc' => defined('_GED_DOC') ? _GED_DOC : '_GED_DOC'
+                    ];
+
                     $i++;
                 } else {
                     $_SESSION['collections'][$i] = array(
@@ -208,7 +188,6 @@ abstract class business_app_tools_Abstract extends Database
                         'script_search' => (string) $col->script_search,
                         'script_search_result' => (string) $col->script_search_result,
                         'script_details' => (string) $col->script_details,
-                        'extensions' => $tab,
                     );
                 }
             }

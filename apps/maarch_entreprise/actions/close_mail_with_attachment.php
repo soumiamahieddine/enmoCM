@@ -67,10 +67,9 @@ function manage_close($arr_id, $history, $id_action, $label_action, $status)
     $db = new Database();
 
     $ind_coll = $sec->get_ind_collection($_POST['coll_id']);
-    $ext_table = $_SESSION['collections'][$ind_coll]['extensions'][0];
     for ($i=0; $i<count($arr_id); $i++) {
         $result .= $arr_id[$i].'#';
-        $db->query("UPDATE ".$ext_table. " SET closing_date = CURRENT_TIMESTAMP WHERE res_id = ?", array($arr_id[$i]));
+        $db->query("UPDATE res_letterbox SET closing_date = CURRENT_TIMESTAMP WHERE res_id = ?", array($arr_id[$i]));
     }
     return array('result' => $result, 'history_msg' => '');
 }

@@ -124,8 +124,7 @@ while ($state <> 'END') {
                             Bt_doQuery($db, $query);
                         }
                     }
-                    $query = "UPDATE " . $collExt
-                        . " SET flag_alarm1 = 'Y', alarm1_date = " . $db->current_datetime()
+                    $query = "UPDATE res_letterbox SET flag_alarm1 = 'Y', alarm1_date = " . $db->current_datetime()
                         . " WHERE res_id = " . $myDoc->res_id;
                     Bt_doQuery($db, $query);
                 }
@@ -152,8 +151,7 @@ while ($state <> 'END') {
                             Bt_doQuery($db, $query);
                         }
                     }
-                    $query = "UPDATE " . $collExt
-                        . " SET flag_alarm1 = 'Y', flag_alarm2 = 'Y', alarm2_date = " . $db->current_datetime()
+                    $query = "UPDATE res_letterbox SET flag_alarm1 = 'Y', flag_alarm2 = 'Y', alarm2_date = " . $db->current_datetime()
                         . " WHERE res_id = " . $myDoc->res_id;
                     Bt_doQuery($db, $query);
                 }

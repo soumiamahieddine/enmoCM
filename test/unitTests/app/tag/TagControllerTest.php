@@ -70,7 +70,7 @@ class TagControllerTest extends TestCase
         $this->assertSame('Body label is empty or not a string', $responseBody->errors);
     }
 
-    public function testGet()
+    public function testGetById()
     {
         $tagController = new \Tag\controllers\TagController();
 
@@ -85,6 +85,18 @@ class TagControllerTest extends TestCase
 
         $this->assertInternalType('int', $responseBody->id);
         $this->assertInternalType('string', $responseBody->label);
+
+        //  READ fail
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $tagController->getById($request, new \Slim\Http\Response(), ['id' => 'test']);
+
+        $this->assertSame(400, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertSame('Route id must be an integer val', $responseBody->errors);
     }
 
     public function testUpdate()
@@ -102,7 +114,7 @@ class TagControllerTest extends TestCase
 
         $response     = $tagController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
 
-        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame(204, $response->getStatusCode());
 
         // Update fail
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
@@ -121,6 +133,18 @@ class TagControllerTest extends TestCase
 
         $this->assertInternalType('string', $responseBody->errors);
         $this->assertSame('Body label is empty or not a string', $responseBody->errors);
+
+        //  Update fail
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $tagController->getById($request, new \Slim\Http\Response(), ['id' => 'test']);
+
+        $this->assertSame(400, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertSame('Route id must be an integer val', $responseBody->errors);
     }
 
     public function testDelete()
@@ -132,7 +156,7 @@ class TagControllerTest extends TestCase
         $tagController = new \Tag\controllers\TagController();
         $response         = $tagController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
 
-        $this->assertSame(201, $response->getStatusCode());
+        $this->assertSame(204, $response->getStatusCode());
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -153,9 +177,21 @@ class TagControllerTest extends TestCase
 
         $this->assertSame('Tag does not exist', $responseBody->errors);
         $this->assertSame(400, $response->getStatusCode());
+
+        //  DELETE fail
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $tagController->getById($request, new \Slim\Http\Response(), ['id' => 'test']);
+
+        $this->assertSame(400, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertSame('Route id must be an integer val', $responseBody->errors);
     }
 
-    public function testGetList()
+    public function testGet()
     {
         $tagController = new \Tag\controllers\TagController();
 

@@ -113,11 +113,11 @@ class HomeController
     {
         $lastResources = ResModel::getLastResources([
             'select'    => [
-                'mlb.alt_identifier',
-                'mlb.closing_date',
+                'r.alt_identifier',
+                'r.closing_date',
                 'r.creation_date',
                 'priorities.color as priority_color',
-                'mlb.process_limit_date',
+                'r.process_limit_date',
                 'r.res_id',
                 'r.confidentiality',
                 'status.img_filename as status_icon',

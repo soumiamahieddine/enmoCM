@@ -216,6 +216,9 @@ abstract class notes_Abstract
            $query = "SELECT id FROM ".NOTE_ENTITIES_TABLE." WHERE note_id = ?";
                     
            $stmt2 = $db->query($query, array($res->id));
+
+           $stmt3 = $db->query("SELECT id FROM USERS WHERE user_id = ?", array($_SESSION['user']['UserId']));
+           $userInfo = $stmt3->fetchObject();
                         
             if($stmt2->rowCount()==0) {
                 array_push($userNotes,
@@ -230,7 +233,7 @@ abstract class notes_Abstract
                 . "select note_id from ". NOTE_ENTITIES_TABLE. " where (item_id in ("
                       ."SELECT entity_id FROM users_entities WHERE user_id = ?) and note_id = ?))"
                 . "or (id = ? and user_id = ?)",
-                array($_SESSION['user']['UserId'], $res->id, $res->id, $_SESSION['user']['UserId']));
+                array($userInfo->id, $res->id, $res->id, $userInfo->id));
             
                 if($stmt2->rowCount()<>0) {
                     array_push($userNotes,

@@ -27,7 +27,7 @@ export class NotesListComponent implements OnInit {
     loadNotes(resId: number) {
         this.resIds[0] = resId;
         this.loading = true;
-        this.http.get("../../rest/res/" + this.resIds[0] + "/notes")
+        this.http.get("../../rest/resources/" + this.resIds[0] + "/notes")
         .subscribe((data: any) => {
             this.notes = data;
             this.reloadBadgeNotes.emit(`${this.notes.length}`);

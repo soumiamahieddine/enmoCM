@@ -11,6 +11,7 @@ CREATE INDEX res_letterbox_filename_idx ON res_letterbox (filename);
 CREATE INDEX res_departure_date_idx ON res_letterbox (departure_date);
 CREATE INDEX res_barcode_idx ON res_letterbox (barcode);
 CREATE INDEX external_signatory_book_id_idx ON res_letterbox (external_signatory_book_id);
+CREATE INDEX category_id_idx ON res_letterbox (category_id);
 
 -- res_attachments
 CREATE INDEX res_id_idx ON res_attachments (res_id);
@@ -22,15 +23,6 @@ CREATE INDEX res_id_version_attachments_idx ON res_version_attachments (res_id);
 CREATE INDEX res_id_master_version_attachments_idx ON res_version_attachments (res_id_master);
 CREATE INDEX attachment_id_master_idx ON res_version_attachments (attachment_id_master);
 CREATE INDEX res_vers_external_id_idx ON res_version_attachments (external_id);
-
--- mlb_coll_ext
-CREATE INDEX category_id_idx ON mlb_coll_ext (category_id);
-CREATE INDEX exp_contact_id_idx ON mlb_coll_ext (exp_contact_id);
-CREATE INDEX exp_user_id_idx ON mlb_coll_ext (exp_user_id);
-CREATE INDEX dest_contact_id_idx ON mlb_coll_ext (dest_contact_id);
-CREATE INDEX dest_user_id_idx ON mlb_coll_ext (dest_user_id);
-CREATE INDEX admission_date_idx ON mlb_coll_ext (admission_date);
-CREATE INDEX process_limit_date_idx ON mlb_coll_ext (process_limit_date);
 
 -- listinstance
 CREATE INDEX res_id_listinstance_idx ON listinstance (res_id);

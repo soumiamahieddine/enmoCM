@@ -18,9 +18,9 @@ if (isset($_REQUEST['contactId'])) {
         && $_REQUEST['replacedAddressId'] <> 'false' 
         && $_REQUEST['replacedAddressId'] <> ''
     ) {
-        $replaceQueryExpContact = "UPDATE mlb_coll_ext SET exp_contact_id = ?, address_id = ? WHERE exp_contact_id = ?";
+        $replaceQueryExpContact = "UPDATE res_letterbox SET exp_contact_id = ?, address_id = ? WHERE exp_contact_id = ?";
         $db->query($replaceQueryExpContact, array($_REQUEST['replacedContactId'], $_REQUEST['replacedAddressId'], $_REQUEST['contactId']));
-        $replaceQueryDestContact = "UPDATE mlb_coll_ext SET dest_contact_id = ?, address_id = ? WHERE dest_contact_id = ?";
+        $replaceQueryDestContact = "UPDATE res_letterbox SET dest_contact_id = ?, address_id = ? WHERE dest_contact_id = ?";
         $db->query($replaceQueryDestContact, array($_REQUEST['replacedContactId'], $_REQUEST['replacedAddressId'], $_REQUEST['contactId']));
         $db->query("UPDATE contacts_res SET contact_id = ?, address_id = ? WHERE contact_id = ?",
             array($_REQUEST['replacedContactId'], $_REQUEST['replacedAddressId'], $_REQUEST['contactId']));

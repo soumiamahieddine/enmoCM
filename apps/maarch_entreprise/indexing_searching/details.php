@@ -135,14 +135,6 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $s_id = addslashes($func->wash($_GET['id'], 'num', _THE_DOC));
 }
 
-//CHECK IF DATAS IN MLB_COLL_EXT
-$stmt = $db->query('SELECT res_id FROM mlb_coll_ext WHERE res_id = ?', array($s_id));
-if ($stmt->rowCount() <= 0) {
-    $_SESSION['error'] = _QUALIFY_FIRST;
-    echo "<script language=\"javascript\" type=\"text/javascript\">window.top.location.href='index.php';</script>";
-    exit();
-}
-
 $_SESSION['doc_id'] = $s_id;
 $user = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
 $right = \Resource\controllers\ResController::hasRightByResId(['resId' => [$s_id], 'userId' => $user['id']]);

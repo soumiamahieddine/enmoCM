@@ -38,7 +38,6 @@ function manage_markAsRead($arr_id, $history, $id_action, $label_action, $status
     $sec = new security();
 
     $ind_coll = $sec->get_ind_collection($_POST['coll_id']);
-    $ext_table = $_SESSION['collections'][$ind_coll]['extensions'][0];
 
     for ($i=0; $i<count($arr_id);$i++) {
         $result .= $arr_id[$i].'#';

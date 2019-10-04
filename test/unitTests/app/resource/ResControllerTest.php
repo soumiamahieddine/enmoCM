@@ -15,6 +15,10 @@ class ResControllerTest extends TestCase
 
     public function testCreate()
     {
+        $GLOBALS['userId'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
         $resController = new \Resource\controllers\ResController();
 
         //  CREATE
@@ -24,46 +28,21 @@ class ResControllerTest extends TestCase
         $fileContent = file_get_contents('test/unitTests/samples/test.txt');
         $encodedFile = base64_encode($fileContent);
 
-        $data = [
-            [
-                'column'    => 'subject',
-                'value'     => 'Breaking News : Superman is alive - PHP unit',
-                'type'      => 'string',
-            ],
-            [
-                'column'    => 'type_id',
-                'value'     => 102,
-                'type'      => 'integer',
-            ],
-            [
-                'column'    => 'typist',
-                'value'     => 'LLane',
-                'type'      => 'string',
-            ],
-            [
-                'column'    => 'dest_user',
-                'value'     => 'bbain',
-                'type'      => 'string',
-            ],
-            [
-                'column'    => 'priority',
-                'value'     => 'poiuytre1357nbvc',
-                'type'      => 'string',
-            ]
-        ];
-
         $aArgs = [
-            'collId'        => 'letterbox_coll',
-            'table'         => 'res_letterbox',
             'status'        => 'NEW',
             'encodedFile'   => $encodedFile,
-            'fileFormat'    => 'txt',
-            'data'          => $data
+            'format'        => 'txt',
+            'type_id'       => 102,
+            'category_id'   => 'incoming',
+            'subject'       => 'Breaking News : Superman is alive - PHP unit',
+            'typist'        => 'LLane',
+            'dest_user'     => 'bbain',
+            'priority'      => 'poiuytre1357nbvc',
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $resController->createRes($fullRequest, new \Slim\Http\Response());
+        $response     = $resController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
         self::$id = $responseBody->resId;
         $this->assertInternalType('int', self::$id);
@@ -81,71 +60,10 @@ class ResControllerTest extends TestCase
         $this->assertSame('NEW', $res['status']);
         $this->assertSame('LLane', $res['typist']);
         $this->assertSame(null, $res['destination']);
-    }
 
-    public function testCreateExt()
-    {
-        $resController = new \Resource\controllers\ResController();
-
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
-        $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        
-        $data = [
-            [
-                'column'    => 'category_id',
-                'value'     => 'incoming',
-                'type'      => 'string',
-            ]
-        ];
-
-        $aArgs = [
-            'resId' => self::$id,
-            'data'  => $data
-        ];
-
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-
-        $response     = $resController->createExt($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
-        
-        $this->assertSame(true, $responseBody->status);
-
-        $ext = \Resource\models\ResModel::getExtById(['resId' => self::$id, 'select' => ['category_id']]);
-
-        $this->assertSame('incoming', $ext['category_id']);
-
-        $data = [
-            [
-                'column'    => 'category_id',
-                'value'     => 'incoming',
-                'type'      => 'string',
-            ]
-        ];
-
-        $aArgs = [
-            'resId' => self::$id,
-            'data'  => $data
-        ];
-
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-
-        $response     = $resController->createExt($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertSame('Document already exists in mlb_coll_ext', $responseBody->errors);
-
-
-        $aArgs = [
-            'resId' => self::$id,
-            'data'  => null
-        ];
-
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-
-        $response     = $resController->createExt($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertSame('Bad Request', $responseBody->errors);
+        $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
     }
 
     public function testGetFileContent()
@@ -409,6 +327,10 @@ class ResControllerTest extends TestCase
 
     public function testCreateMultipleDocument()
     {
+        $GLOBALS['userId'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
         $resController = new \Resource\controllers\ResController();
 
         $aNewDocument = [
@@ -436,82 +358,31 @@ class ResControllerTest extends TestCase
             $fileContent = file_get_contents('test/unitTests/samples/test.txt');
             $encodedFile = base64_encode($fileContent);
     
-            $data = [
-                [
-                    'column'    => 'subject',
-                    'value'     => $key . ' Breaking News : 12345 Superman is alive - PHP unit',
-                    'type'      => 'string',
-                ],
-                [
-                    'column'    => 'type_id',
-                    'value'     => $value[0],
-                    'type'      => 'integer',
-                ],
-                [
-                    'column'    => 'typist',
-                    'value'     => 'LLane',
-                    'type'      => 'string',
-                ],
-                [
-                    'column'    => 'dest_user',
-                    'value'     => 'bbain',
-                    'type'      => 'string',
-                ],
-                [
-                    'column'    => 'priority',
-                    'value'     => $value[1],
-                    'type'      => 'string',
-                ],
-                [
-                    'column'    => 'destination',
-                    'value'     => 'PJS',
-                    'type'      => 'string',
-                ]
-            ];
-    
             $aArgs = [
-                'collId'        => 'letterbox_coll',
-                'table'         => 'res_letterbox',
                 'status'        => $value[2],
                 'encodedFile'   => $encodedFile,
-                'fileFormat'    => 'txt',
-                'data'          => $data
+                'format'        => 'txt',
+                'type_id'       => $value[0],
+                'category_id'   => 'incoming',
+                'subject'       => $key . ' Breaking News : 12345 Superman is alive - PHP unit',
+                'typist'        => 'LLane',
+                'dest_user'     => 'bbain',
+                'priority'      => $value[1],
+                'destination'   => 'PJS'
             ];
     
             $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-            $response     = $resController->createRes($fullRequest, new \Slim\Http\Response());
+            $response     = $resController->create($fullRequest, new \Slim\Http\Response());
             $responseBody = json_decode((string)$response->getBody());
             $newId = $responseBody->resId;
             $this->assertInternalType('int', $newId);
             if ($key < 2) {
                 $GLOBALS['resources'][] = $newId;
             }
-
-            $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
-            $request        = \Slim\Http\Request::createFromEnvironment($environment);
-            
-            $data = [
-                [
-                    'column'    => 'category_id',
-                    'value'     => 'incoming',
-                    'type'      => 'string',
-                ]
-            ];
-    
-            $aArgs = [
-                'resId' => $newId,
-                'data'  => $data
-            ];
-    
-            $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-            $response     = $resController->createExt($fullRequest, new \Slim\Http\Response());
-            $responseBody = json_decode((string)$response->getBody());
-            
-            $this->assertSame(true, $responseBody->status);
-
-            $ext = \Resource\models\ResModel::getExtById(['resId' => $newId, 'select' => ['category_id']]);
-    
-            $this->assertSame('incoming', $ext['category_id']);
         }
+
+        $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
     }
 }

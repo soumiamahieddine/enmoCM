@@ -3,6 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
+import { FormControl } from '@angular/forms';
+import { tap, exhaustMap, finalize, map, catchError } from 'rxjs/operators';
+import { of, forkJoin } from 'rxjs';
+import { filter } from 'minimatch';
 
 declare function $j(selector: any): any;
 
@@ -23,14 +27,71 @@ export class DiffusionsListComponent implements OnInit {
     currentEntityId: number = 0;
     userDestList: any[] = [];
 
-    diffList: any = {};
+    diffList: any = null;
 
 
     @Input('injectDatas') injectDatas: any;
 
+    /**
+     * Ressource identifier to load listinstance (Incompatible with templateId)
+     */
+    @Input('resId') resId: number;
+
+    /**
+     * Add previous dest in copy (Only compatible with resId)
+     */
+    @Input('keepDestForRedirection') keepDestForRedirection: boolean;
+
+    /**
+     * Entity identifier to load listModel of entity (Incompatible with resId)
+     */
+    @Input('entityId') entityId: any;
+
+    /**
+     * For manage current loaded list
+     */
+    @Input('adminMode') adminMode: boolean;
+
+    /**
+     * Ids of related allowed entities perimeters
+     */
+    @Input('allowedEntities') allowedEntities: number[];
+
+    /**
+     * To load privilege of current list management
+     * @param indexing
+     * @param process
+     */
+    @Input('target') target: string;
+
+    /**
+     * FormControl to use this component in form
+     */
+    @Input('diffFormControl') diffFormControl: FormControl;
+
     constructor(public http: HttpClient, private notify: NotificationService) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        this.adminMode = this.adminMode !== undefined ? this.adminMode : false;
+        this.keepDestForRedirection = this.keepDestForRedirection !== undefined ? this.keepDestForRedirection : false;
+
+        if (this.resId !== undefined) {
+
+            this.loadListinstance(this.resId);
+
+        } else if (this.entityId !== undefined && this.entityId !== '') {
+            this.loadListModel(this.entityId);
+        } else {
+            this.initRoles();
+        }
+
+        /*if (this.injectDatas === undefined) {
+            this.injectDatas = {};
+            this.injectDatas['editable'] = false;
+            this.loading = false;
+            this.loadListModel(6); 
+        }*/
+    }
 
     drop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
@@ -52,10 +113,98 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     loadListModel(entityId: number) {
+        this.diffList = {};
         this.loading = true;
         this.currentEntityId = entityId;
         this.userDestList = [];
+
+        let arrayRoutes: any = [];
+        let mergedRoutesDatas: any = {};
+
         if (this.availableRoles.length === 0) {
+            arrayRoutes.push(this.http.get('../../rest/listTemplates/types/entity_id/roles'));
+        }
+
+        arrayRoutes.push(this.http.get('../../rest/listTemplates/entities/' + entityId));
+
+        if (this.resId !== undefined) {
+            arrayRoutes.push(this.http.get('../../rest/resources/' + this.resId + '/listInstance'));
+        }
+
+        forkJoin(arrayRoutes).pipe(
+            map(data => {
+                let objectId = '';
+                let index = '';
+                for (var key in data) {
+                    index = key;
+                    objectId = Object.keys(data[key])[0];
+                    mergedRoutesDatas[Object.keys(data[key])[0]] = data[index][objectId]
+                }
+                return mergedRoutesDatas;
+            }),
+            tap((data) => {
+                if (data.roles !== undefined) {
+                    data['roles'].forEach((element: any) => {
+                        if (element.id == 'cc') {
+                            element.id = 'copy';
+                        }
+                        if (element.available) {
+                            this.availableRoles.push(element);
+                            this.diffList[element.id] = {
+                                'label': element.label,
+                                'items': []
+                            };
+                        }
+                        if (element.keepInListInstance) {
+                            this.keepRoles.push(element.id);
+                        }
+                    });
+                } else {
+                    this.availableRoles.forEach(element => {
+                        this.diffList[element.id] = {
+                            'label': element.label,
+                            'items': []
+                        };
+                    });
+                }
+            }),
+            tap((data: any) => {
+                data.listTemplate.forEach((element: any) => {
+                    if (element.item_mode == 'cc') {
+                        this.diffList['copy'].items.push(element);
+                    } else if (element.object_type != 'VISA_CIRCUIT') {
+                        this.diffList[element.item_mode].items.push(element);
+                    }
+                });
+            }),
+            tap((data: any) => {
+                if (data.listInstance !== undefined) {
+                    data.listInstance.forEach((element: any) => {
+                        if (element.item_mode == 'cc') {
+                            element.item_mode = 'copy';
+                        }
+                        if (this.keepRoles.indexOf(element.item_mode) > -1 && this.diffList[element.item_mode].items.map((e: any) => { return e.item_id; }).indexOf(element.item_id) == -1) {
+                            this.diffList[element.item_mode].items.push(element);
+                        }
+                        if (this.keepDestForRedirection && element.item_mode == "dest" && this.diffList["copy"].items.map((e: any) => { return e.item_id; }).indexOf(element.item_id) == -1) {
+                            this.diffList["copy"].items.push(element);
+                        }
+                    });
+                }
+            }),
+            tap((data: any) => {
+                if (this.diffFormControl !== undefined) {
+                    this.setFormValues();
+                }
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+
+        /*if (this.availableRoles.length === 0) {
             this.http.get("../../rest/listTemplates/types/entity_id/roles")
                 .subscribe((data: any) => {
                     data['roles'].forEach((element: any) => {
@@ -82,7 +231,7 @@ export class DiffusionsListComponent implements OnInit {
                 this.diffList[element.id].items = [];
             });
             this.getListmodel(entityId);
-        }
+        }*/
 
     }
 
@@ -170,6 +319,24 @@ export class DiffusionsListComponent implements OnInit {
         });
     }
 
+    initRoles() {
+        this.http.get('../../rest/listTemplates/types/entity_id/roles').pipe(
+            tap(() => {
+                this.availableRoles.forEach(element => {
+                    this.diffList[element.id] = {
+                        'label': element.label,
+                        'items': []
+                    };
+                });
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
     deleteItem(roleId: string, index: number) {
         this.diffList[roleId].items.splice(index, 1);
     }
@@ -246,5 +413,98 @@ export class DiffusionsListComponent implements OnInit {
             };
             this.diffList['copy'].items.unshift(newElemListModel);
         }
+    }
+
+    isEmptyList() {
+        let state = true;
+        if (this.diffList !== null) {
+            Object.keys(this.diffList).forEach((element: any) => {
+                if (this.diffList[element].items.length > 0) {
+                    state = false;
+                }
+            });
+        }
+        return state;
+    }
+
+    changeRole(user: any, oldRole: any, newRole: any) {
+
+        let indexFound = -1;
+
+        if (this.diffFormControl !== undefined) {
+            this.http.get("../../rest/users/9/entities").pipe(
+                map((data: any) => {
+                    data.entities = data.entities.map((entity: any) => entity.id)
+                    return data;
+                }),
+                tap((data: any) => {
+                    let isAllowed: boolean = false;
+                    this.allowedEntities.forEach(allowedEntity => {
+                        if (data.entities.indexOf(allowedEntity) > -1) {
+                            isAllowed = true;
+                        }
+                    });
+                    if (isAllowed) {
+                        if (newRole.id === 'dest') {
+                            if (this.keepDestForRedirection) {
+                                const destUser = this.diffList[oldRole.id].items[0];
+                                indexFound = this.diffList[oldRole.id].items.map((item: any) => item.id).indexOf(destUser.id);
+                
+                                if (indexFound > -1) {
+                                    this.diffList[oldRole.id].items.push(destUser);
+                                }
+                            }
+                            indexFound = this.diffList[oldRole.id].items.map((item: any) => item.id).indexOf(user.id);
+                
+                            if (indexFound > -1) {
+                                this.diffList[oldRole.id].items.splice(indexFound, 1);
+                            }
+                            this.diffList[newRole.id].items[0] = user;
+                
+                        } else {
+                            indexFound = this.diffList[oldRole.id].items.map((item: any) => item.id).indexOf(user.id);
+                
+                            if (indexFound > -1) {
+                                this.diffList[oldRole.id].items.splice(indexFound, 1);
+                            }
+                            this.diffList[newRole.id].items.push(user);
+                        }
+                    } else {
+                        alert('Non autorisé');
+                    }
+                }),
+            ).subscribe();
+        }
+
+        /*const newDest = {
+            difflist_type: "entity_id",
+            item_type: "user_id",
+            item_id: user.user_id,
+            labelToDisplay: user.labelToDisplay,
+            descriptionToDisplay: user.descriptionToDisplay,
+            item_mode: "dest"
+        };
+        this.diffList['dest'].items[0] = newDest;*/
+    }
+
+    switchMode() {
+        this.adminMode = !this.adminMode;
+    }
+
+    setFormValues() {
+        let arrValues: any[] = [];
+        Object.keys(this.diffList).forEach(role => {
+            arrValues = arrValues.concat(
+                this.diffList[role].items.map((item: any) => {
+                    return {
+                        id: item.item_id,
+                        mode: item.item_mode,
+                        type: item.item_type === 'user_id' ? 'user' : 'entity'
+                    }
+                })
+            );
+        });
+        this.diffFormControl.setValue(arrValues);
+        this.diffFormControl.markAsTouched();
     }
 }

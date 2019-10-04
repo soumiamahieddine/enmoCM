@@ -24,7 +24,7 @@ if (_ID_TO_DISPLAY == 'chrono_number') {
     $db = new Database();
     $arrayChrono = array();
     foreach ($_SESSION['stockCheckbox'] as $key => $value) {
-        $stmt = $db->query('SELECT alt_identifier FROM mlb_coll_ext WHERE res_id = ?', array($value));
+        $stmt = $db->query('SELECT alt_identifier FROM res_letterbox WHERE res_id = ?', array($value));
         $res = $stmt->fetchObject();
         $chrono = $res->alt_identifier;
         array_push($arrayChrono, $chrono);

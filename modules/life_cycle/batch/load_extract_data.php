@@ -204,7 +204,6 @@ foreach ($xmlconfig->COLLECTION as $col) {
         'id' => (string) $col->Id, 
         'table' => (string) $col->Table, 
         'view' => (string) $col->View, 
-        'extensionTable' => (string) $col->ExtTable, 
         'versionTable' => (string) $col->VersionTable, 
         'adr' => (string) $col->Adr,
     );
@@ -212,7 +211,6 @@ foreach ($xmlconfig->COLLECTION as $col) {
         $GLOBALS['table'] = $GLOBALS['collections'][$i]['table'];
         $GLOBALS['adrTable'] = $GLOBALS['collections'][$i]['adr'];
         $GLOBALS['view'] = $GLOBALS['collections'][$i]['view'];
-        $GLOBALS['extensionTable'] = $GLOBALS['collections'][$i]['extensionTable'];
         $GLOBALS['versionTable'] = $GLOBALS['collections'][$i]['versionTable'];
     }
     $i++;

@@ -70,12 +70,6 @@ abstract class notifications_Abstract {
 												"table" => utf8_decode((string) $COLLECTION->table),
 												"view" => utf8_decode((string) $COLLECTION->view)
 												);
-			$j=0;
-			foreach($COLLECTION->extensions as $EXTENSIONS)
-			{
-					$_SESSION['collection'][$i]['extensions'][$j] = utf8_decode((string) $EXTENSIONS->table);
-					$j++;
-			}
 			$i++;
 		}
 		
