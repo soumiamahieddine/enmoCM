@@ -96,7 +96,7 @@ class TagControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('string', $responseBody->errors);
-        $this->assertSame('Param id must be an integer val', $responseBody->errors);
+        $this->assertSame('Route id must be an integer val', $responseBody->errors);
     }
 
     public function testUpdate()
@@ -144,7 +144,7 @@ class TagControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('string', $responseBody->errors);
-        $this->assertSame('Param id must be an integer val', $responseBody->errors);
+        $this->assertSame('Route id must be an integer val', $responseBody->errors);
     }
 
     public function testDelete()
@@ -188,7 +188,7 @@ class TagControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('string', $responseBody->errors);
-        $this->assertSame('Param id must be an integer val', $responseBody->errors);
+        $this->assertSame('Route id must be an integer val', $responseBody->errors);
     }
 
     public function testGet()

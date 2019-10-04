@@ -40,7 +40,7 @@ class TagController
         }
 
         if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Param id must be an integer val']);
+            return $response->withStatus(400)->withJson(['errors' => 'Route id must be an integer val']);
         }
 
         $tag = TagModel::getById(['id' => $args['id']]);
@@ -85,7 +85,7 @@ class TagController
         }
 
         if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Param id must be an integer val']);
+            return $response->withStatus(400)->withJson(['errors' => 'Route id must be an integer val']);
         }
 
 
@@ -121,7 +121,7 @@ class TagController
         }
 
         if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Param id must be an integer val']);
+            return $response->withStatus(400)->withJson(['errors' => 'Route id must be an integer val']);
         }
 
 
