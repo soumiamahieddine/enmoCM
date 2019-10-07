@@ -900,7 +900,6 @@ export const LANG_EN = {
     "to"                                    : "to",
     "toAnUser"                              : "To an user",
     "toAService"                            : "To a service",
-    "toDefault"                             : "default",
     "toEntities"                            : "To entities",
     "toExport"                              : "Export",
     "toggleQrcode"                          : "Display / Hide mail identifier (qrcode)",

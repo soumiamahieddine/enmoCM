@@ -928,7 +928,6 @@ export const LANG_NL = {
     "to"                                    : "naar",
     "toAnUser"                              : "Naar een gebruiker", //_TO_TRANSLATE
     "toAService"                            : "Naar een dienst", //_TO_TRANSLATE
-    "toDefault"                             : "standaard",
     "toEntities"                            : "Naar de diensten",
     "toExport"                              : "_TO_TRANSLATE",
     "toggleQrcode"                          : "_TO_TRANSLATE",

@@ -933,7 +933,6 @@ export const LANG_FR = {
     "to"                                    : "vers",
     "toAnUser"                              : "Vers un utilisateur",
     "toAService"                            : "Vers un service",
-    "toDefault"                             : "par défaut",
     "toEntities"                            : "Vers les services",
     "toExport"                              : "Exporter",
     "toggleQrcode"                          : "Afficher / cacher le QRCode (identifiant courrier)",
