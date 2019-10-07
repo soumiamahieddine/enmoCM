@@ -301,6 +301,7 @@ UPDATE usergroups_services SET service_id = 'manage_tags_application' WHERE serv
 
 /* REFACTORING MODIFICATION */
 ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
+ALTER TABLE tags ALTER COLUMN label TYPE character varying(128);
 
 
 /* REFACTORING SUPPRESSION */

@@ -63,6 +63,10 @@ class TagController
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
         }
 
+        if (!Validator::length(1, 128)->validate($body['label'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body label has more than 128 characters']);
+        }
+
         $id = TagModel::create([
             'label' => $body['label']
         ]);
@@ -88,11 +92,14 @@ class TagController
             return $response->withStatus(400)->withJson(['errors' => 'Route id must be an integer val']);
         }
 
-
         $body = $request->getParsedBody();
 
         if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
+        }
+
+        if (!Validator::length(1, 128)->validate($body['label'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body label has more than 128 characters']);
         }
 
         TagModel::update([

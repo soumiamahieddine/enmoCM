@@ -1059,7 +1059,7 @@ WITH (OIDS=FALSE);
 CREATE TABLE tags
 (
   id serial NOT NULL,
-  label character varying(50) NOT NULL,
+  label character varying(128) NOT NULL,
   entity_id_owner character varying(32),
   CONSTRAINT tags_id_pkey PRIMARY KEY (id)
 )
