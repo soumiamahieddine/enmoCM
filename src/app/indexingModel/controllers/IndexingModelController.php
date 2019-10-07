@@ -167,6 +167,10 @@ class IndexingModelController
 
     public function update(Request $request, Response $response, array $args)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $body = $request->getParsedBody();
 
         if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
@@ -203,16 +207,13 @@ class IndexingModelController
         }
 
         $model = IndexingModelModel::getById(['select' => ['owner', 'private'], 'id' => $args['id']]);
-        $hasServiceAdmin = ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']);
         if (empty($model)) {
             return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
-        } elseif ($model['private'] && $model['owner'] != $GLOBALS['id']) {
-            return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
-        } elseif (!$model['private'] && !$hasServiceAdmin) {
+        } elseif ($model['private']) {
             return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
         }
 
-        if ($hasServiceAdmin && !$body['private'] && $body['default']) {
+        if ($body['default']) {
             IndexingModelModel::update(['set' => ['"default"' => 'false'], 'where' => ['"default" = ?'], 'data' => ['true']]);
         }
 
@@ -226,7 +227,7 @@ class IndexingModelController
             'data'  => [$args['id']]
         ]);
 
-        $childrenModels = IndexingModelModel::get(['select' => ['id', 'label'], 'where' => ['"master" = ?'], 'data' => [$args['id']]]);
+        $childrenModels = IndexingModelModel::get(['select' => ['id', 'label'], 'where' => ['master = ?'], 'data' => [$args['id']]]);
 
         // If model has children, update the children
         if (!empty($childrenModels)) {
@@ -243,16 +244,13 @@ class IndexingModelController
                 foreach ($body['fields'] as $field) {
                     $found = false;
                     foreach ($childFields as $value) {
-                        // field in master found in child => not changed, keep this field
                         if ($value['identifier'] == $field['identifier'] && $value['mandatory'] == $field['mandatory'] && $value['unit'] == $field['unit']) {
-                            array_push($fieldsToKeep, $value);
+                            $fieldsToKeep[] = $value;
                             $found = true;
                         }
                     }
-
-                    // field in master not found in child => new field to add
                     if (!$found) {
-                        array_push($fieldsToKeep, $field);
+                        $fieldsToKeep[] = $field;
                     }
                 }
 
@@ -264,7 +262,7 @@ class IndexingModelController
                         'identifier'    => $field['identifier'],
                         'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
                         'default_value' => empty($field['default_value']) ? null : json_encode($field['default_value']),
-                        'unit'          => $field['unit'] ?? null
+                        'unit'          => $field['unit']
                     ]);
                 }
 
@@ -287,7 +285,7 @@ class IndexingModelController
                 'identifier'    => $field['identifier'],
                 'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
                 'default_value' => empty($field['default_value']) ? null : json_encode($field['default_value']),
-                'unit'          => $field['unit'] ?? null
+                'unit'          => $field['unit']
             ]);
         }
 
@@ -321,7 +319,6 @@ class IndexingModelController
 
         $childrenModels = IndexingModelModel::get(['select' => ['id', 'label'], 'where' => ['"master" = ?'], 'data' => [$args['id']]]);
 
-        // If model has children, delete the children
         if (!empty($childrenModels)) {
             foreach ($childrenModels as $child) {
                 IndexingModelModel::delete([

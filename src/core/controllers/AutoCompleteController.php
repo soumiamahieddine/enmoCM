@@ -708,7 +708,8 @@ class AutoCompleteController
             $data[] = [
                 'id'            => $value['id'],
                 'idToDisplay'   => $value['label'],
-                'otherInfo'     => $value['public']
+                'isPublic'      => $value['public'],
+                'otherInfo'     => ''
             ];
         }
 

@@ -60,7 +60,7 @@ class IndexingModelModel
     {
         ValidatorModel::notEmpty($args, ['label', 'category', 'default', 'owner', 'private']);
         ValidatorModel::stringType($args, ['label', 'category', 'default', 'private']);
-        ValidatorModel::intVal($args, ['owner']);
+        ValidatorModel::intVal($args, ['owner', 'master']);
 
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'indexing_models_id_seq']);
 

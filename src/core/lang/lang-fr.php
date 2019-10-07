@@ -266,7 +266,7 @@ define("_USE_MAIL_SERVICES", "Utiliser les courriels de ses services en tant qu'
 define("_USE_MAIL_SERVICES_DESC", "Utiliser les courriels de ses services en tant qu'expéditeur");
 define("_TAG_DEFAULT", "Mot-clé");
 define("_MANAGE_TAGS_IN_APPLICATION", "Créer des mots-clés depuis les pages d'actions");
-define("_MANAGE_TAGS_IN_APPLICATION_DESC", "Créer des mots-clés depuis l'indexation, le traitement et la fiche détaillé");
+define("_MANAGE_TAGS_IN_APPLICATION_DESC", "Créer des mots-clés depuis l'indexation, le traitement et la fiche détaillée");
 define("_PRIVATE_TAGS", "Lier les Mots-clé à l'entité de l'utilisateur (Niveau direction)");
 define("_PRIVATE_TAGS_DESC", "L'utilisateur ne verra que les Mots-clé qui ont été restreints à sa direction (l'ajout / modification associera le mot clé automatiquement à sa direction).");
 define("_THESAURUS_VIEW", "Afficher le thésaurus dans les pages de traitement");
