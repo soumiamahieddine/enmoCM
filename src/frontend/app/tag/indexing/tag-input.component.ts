@@ -10,7 +10,6 @@ import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap, catchError } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
-import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 
 @Component({
     selector: 'app-tag-input',
@@ -151,17 +150,11 @@ export class TagInputComponent implements OnInit {
             this.controlAutocomplete.value.splice(index, 1);
             this.controlAutocomplete.setValue(arrValue);
         } else {
-            this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.folderDeleteWarnMsg + ' <b>' + this.valuesToDisplay[this.controlAutocomplete.value[index]] + '</b>&nbsp;' + this.lang.folderDeleteWarnMsg2 } });
-
-            this.dialogRef.afterClosed().pipe(
-                filter((data: string) => data === 'ok'),
-                exhaustMap(() => this.http.delete('../../rest/tags/' + this.controlAutocomplete.value[index])),
+            this.http.delete('../../rest/tags/' + this.controlAutocomplete.value[index]).pipe(
                 tap((data: any) => {
                     let arrValue = this.controlAutocomplete.value;
                     this.controlAutocomplete.value.splice(index, 1);
                     this.controlAutocomplete.setValue(arrValue);
-
-                    this.notify.success(this.lang.tagDeleted);
                 }),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
@@ -176,11 +169,7 @@ export class TagInputComponent implements OnInit {
 
         newElem[this.key] = this.myControl.value;
 
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.createMsg + '&nbsp;<b>' + newElem[this.key] + '</b>&nbsp;?' } });
-
-        this.dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.post('../../rest/tags', { label: newElem[this.key] })),
+        this.http.post('../../rest/tags', { label: newElem[this.key] }).pipe(
             tap((data: any) => {
                 for (var key in data) {
                     newElem['id'] = data[key];
@@ -188,7 +177,6 @@ export class TagInputComponent implements OnInit {
                 }
                 this.setFormValue(newElem);
                 this.myControl.setValue('');
-                this.notify.success(this.lang.tagAdded);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
