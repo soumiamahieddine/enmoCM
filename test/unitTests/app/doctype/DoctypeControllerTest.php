@@ -474,10 +474,6 @@ class DoctypeControllerTest extends TestCase
 
     public function testDeleteRedirectDoctype()
     {
-        $GLOBALS['userId'] = 'bbain';
-        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-        $GLOBALS['id'] = $userInfo['id'];
-
         $doctypeController = new \Doctype\controllers\DoctypeController();
 
         //  CREATE
@@ -545,7 +541,11 @@ class DoctypeControllerTest extends TestCase
 
         $resController = new \Resource\controllers\ResController();
 
-        //  CREATE
+        //  CREATE RESOURCE
+        $GLOBALS['userId'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
@@ -568,6 +568,11 @@ class DoctypeControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $resId = $responseBody->resId;
+
+        $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
 
         //  CAN NOT DELETE
         $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
