@@ -1178,4 +1178,6 @@ export const LANG_FR = {
     "searchTag" : "Rechercher un mot-clé",
     "tagAdded" : "Mot-clé ajouté",
     "tagDeleted" : "Mot-clé supprimé",
+    "modifyDiffusionList" : "Modifier la liste de diffusion",
+    "notInAuthorizedEntities" : "ne fait pas parti des <b>entités traitantes autorisées</b>.",
 };

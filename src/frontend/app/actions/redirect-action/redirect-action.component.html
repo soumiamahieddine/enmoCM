@@ -37,7 +37,7 @@
         <div class="redirectContent" style="flex:1;overflow: auto;">
             <h2 title="{{currentEntity.entity_label}}">{{lang.diffusionList}} "{{currentEntity.entity_label}}" :</h2>
             <div class="contentEntities">
-                <app-diffusions-list #appDiffusionsList [injectDatas]="injectDatasParam"></app-diffusions-list>
+                <app-diffusions-list #appDiffusionsList [adminMode]="true" [resId]="injectDatasParam.resId" [keepDestForRedirection]="injectDatasParam.keepDestForRedirection" [target]="'redirect'"></app-diffusions-list>
             </div>
         </div>
     </div>

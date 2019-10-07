@@ -1162,9 +1162,14 @@ export const LANG_NL = {
     "indexing_outgoing" : "outgoing", //_TO_TRANSLATE
     "indexing_internal" : "internal", //_TO_TRANSLATE
     "indexing_ged_doc" : "GED", //_TO_TRANSLATE
+    "createMsg" : "Do you want to create", //_TO_TRANSLATE
+    "folderDeleteWarnMsg" : "Do you want to delete", //_TO_TRANSLATE
+    "folderDeleteWarnMsg2" : "previously created ?", //_TO_TRANSLATE
     "noSelectedFolder" : "No selected folder", //_TO_TRANSLATE
     "noSelectedTag" : "No selected tag", //_TO_TRANSLATE
     "searchTag" : "Search tag", //_TO_TRANSLATE
     "tagAdded" : "Tag added", //_TO_TRANSLATE
     "tagDeleted" : "Tag deleted", //_TO_TRANSLATE
+    "modifyDiffusionList" : "Modify diffusion list", //_TO_TRANSLATE
+    "notInAuthorizedEntities" : "is not in one of the <b>authorized entities</b>.", //_TO_TRANSLATE
 };
