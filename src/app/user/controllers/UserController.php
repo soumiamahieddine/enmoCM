@@ -776,17 +776,7 @@ class UserController
         $type     = explode('/', $mimeType);
         $ext      = strtoupper(substr($data['name'], strrpos($data['name'], '.') + 1));
 
-        $fileAccepted = false;
-
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/extensions.xml']);
-        if ($loadedXml && count($loadedXml->FORMAT) > 0) {
-            foreach ($loadedXml->FORMAT as $value) {
-                if (strtoupper($value->name) == $ext && strtoupper($value->mime) == strtoupper($mimeType)) {
-                    $fileAccepted = true;
-                    break;
-                }
-            }
-        }
+        $fileAccepted  = StoreController::isFileAllowed(['extension' => $ext, 'type' => $mimeType]);
 
         if (!$fileAccepted || $type[0] != 'image') {
             return $response->withStatus(400)->withJson(['errors' => _WRONG_FILE_TYPE]);

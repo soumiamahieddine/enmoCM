@@ -128,6 +128,9 @@ $app->get('/contactsTypes', \Contact\controllers\ContactTypeController::class . 
 $app->get('/contactsFilling', \Contact\controllers\ContactController::class . ':getFilling');
 $app->put('/contactsFilling', \Contact\controllers\ContactController::class . ':updateFilling');
 
+//Convert
+$app->post('/convertedFile', \Convert\controllers\ConvertPdfController::class . ':convertedFile');
+
 //CustomFields
 $app->get('/customFields', \CustomField\controllers\CustomFieldController::class . ':get');
 $app->post('/customFields', \CustomField\controllers\CustomFieldController::class . ':create');

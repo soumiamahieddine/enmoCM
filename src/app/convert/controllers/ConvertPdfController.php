@@ -18,7 +18,11 @@ use Attachment\models\AttachmentModel;
 use Convert\models\AdrModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
+use Resource\controllers\StoreController;
 use Resource\models\ResModel;
+use Respect\Validation\Validator;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 
@@ -212,6 +216,42 @@ class ConvertPdfController
             $content = file_get_contents($filePath);
             $bom = chr(239) . chr(187) . chr(191); # use BOM to be on safe side
             file_put_contents($filePath, $bom.$content);
+        }
+    }
+
+    public function convertedFile(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::notEmpty()->validate($body['name'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body name is not an integer']);
+        }
+        if (!Validator::notEmpty()->validate($body['base64'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body base64 is not an integer']);
+        }
+        
+        $file     = base64_decode($body['base64']);
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($file);
+        $ext      = substr($body['name'], strrpos($body['name'], '.') + 1);
+        $size     = strlen($file);
+
+        $fileAccepted  = StoreController::isFileAllowed(['extension' => $ext, 'type' => $mimeType]);
+        $maxFilesizeMo = ini_get('upload_max_filesize');
+
+        if (!$fileAccepted) {
+            return $response->withStatus(400)->withJson(['errors' => 'File type not allowed. Extension : ' . $ext . '. Mime Type : ' . $mimeType . '.']);
+        } elseif ($size/1024 > $maxFilesizeMo*1024) {
+            return $response->withStatus(400)->withJson(['errors' => 'File maximum size is exceeded ('.$maxFilesizeMo.' Mo)']);
+        }
+
+        $convertion = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $body['base64']]);
+        if (empty($convertion['errors'])) {
+            return $response->withJson([
+                'encodedResource' => $convertion
+            ]);
+        } else {
+            return $response->withStatus(403)->withJson($convertion);
         }
     }
 }

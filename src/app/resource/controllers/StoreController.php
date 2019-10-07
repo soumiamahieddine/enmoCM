@@ -24,10 +24,8 @@ use Resource\models\ChronoModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use Respect\Validation\Validator;
-use Entity\models\EntityModel;
 use Resource\models\ResModel;
 use SrcCore\models\CoreConfigModel;
-use User\models\UserModel;
 
 class StoreController
 {
@@ -285,7 +283,7 @@ class StoreController
         return $response->withJson(['success']);
     }
 
-    private static function isFileAllowed(array $args)
+    public static function isFileAllowed(array $args)
     {
         ValidatorModel::notEmpty($args, ['extension', 'type']);
         ValidatorModel::stringType($args, ['extension', 'type']);
