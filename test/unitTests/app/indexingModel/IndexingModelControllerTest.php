@@ -26,7 +26,7 @@ class IndexingModelControllerTest extends TestCase
         $args = [
             'label'     => 'mon model d indexation',
             'category'  => 'incoming',
-            'private'   => true,
+            'private'   => false,
             'fields'    => [
                 [
                     'identifier'    => 'subject',
@@ -67,7 +67,7 @@ class IndexingModelControllerTest extends TestCase
 
         $this->assertSame('mon model d indexation', $responseBody->indexingModel->label);
         $this->assertSame(false, $responseBody->indexingModel->default);
-        $this->assertSame(true, $responseBody->indexingModel->private);
+        $this->assertSame(false, $responseBody->indexingModel->private);
         $this->assertSame('subject', $responseBody->indexingModel->fields[0]->identifier);
         $this->assertSame(true, $responseBody->indexingModel->fields[0]->mandatory);
         $this->assertSame('tika', $responseBody->indexingModel->fields[0]->default_value);
@@ -270,7 +270,7 @@ class IndexingModelControllerTest extends TestCase
 
         $this->assertSame('mon model d indexation modifié', $responseBody->indexingModel->label);
         $this->assertSame(false, $responseBody->indexingModel->default);
-        $this->assertSame(true, $responseBody->indexingModel->private);
+        $this->assertSame(false, $responseBody->indexingModel->private);
         $this->assertSame('subject', $responseBody->indexingModel->fields[0]->identifier);
         $this->assertSame(true, $responseBody->indexingModel->fields[0]->mandatory);
         $this->assertSame('butter', $responseBody->indexingModel->fields[0]->default_value);

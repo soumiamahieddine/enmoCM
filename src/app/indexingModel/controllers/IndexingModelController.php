@@ -91,11 +91,17 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => "Mandatory 'subject' field is missing"]);
         }
 
+        $master = null;
         if (Validator::intVal()->notEmpty()->validate($body['master'])) {
             $masterModel = IndexingModelModel::getById(['id' => $body['master']]);
             if (empty($masterModel)) {
                 return $response->withStatus(400)->withJson(['errors' => 'Master model not found']);
             }
+
+            if ($masterModel['private']) {
+                return $response->withStatus(400)->withJson(['errors' => 'Master model is a private model']);
+            }
+            $master = $body['master'];
 
             $fieldsMaster = IndexingModelFieldModel::get(['select' => ['identifier', 'mandatory', 'default_value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$body['master']]]);
             foreach ($fieldsMaster as $key => $value) {
@@ -140,7 +146,7 @@ class IndexingModelController
             'default'   => $body['default'],
             'owner'     => $GLOBALS['id'],
             'private'   => $body['private'],
-            'master'    => $body['master']
+            'master'    => $master
         ]);
 
         foreach ($body['fields'] as $field) {
@@ -321,11 +327,6 @@ class IndexingModelController
 
         if (!empty($childrenModels)) {
             foreach ($childrenModels as $child) {
-                IndexingModelModel::delete([
-                    'where' => ['id = ?'],
-                    'data'  => [$child['id']]
-                ]);
-
                 IndexingModelFieldModel::delete(['where' => ['model_id = ?'], 'data' => [$child['id']]]);
 
                 HistoryController::add([
@@ -340,8 +341,8 @@ class IndexingModelController
         }
 
         IndexingModelModel::delete([
-            'where' => ['id = ?'],
-            'data'  => [$args['id']]
+            'where' => ['(id = ? or master = ?)'],
+            'data'  => [$args['id'], $args['id']]
         ]);
 
         IndexingModelFieldModel::delete(['where' => ['model_id = ?'], 'data' => [$args['id']]]);
