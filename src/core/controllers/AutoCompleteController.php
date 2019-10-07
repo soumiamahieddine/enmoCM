@@ -87,9 +87,12 @@ class AutoCompleteController
 
         $excludedUsers = ['superadmin'];
 
+        $fields = ['firstname', 'lastname'];
+        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+
         $requestData = AutoCompleteController::getDataForRequest([
             'search'        => $data['search'],
-            'fields'        => '(firstname ilike ? OR lastname ilike ?)',
+            'fields'        => $fields,
             'where'         => ['status not in (?)', 'user_id not in (?)'],
             'data'          => [['DEL', 'SPD'], $excludedUsers],
             'fieldsNumber'  => 2,
@@ -232,9 +235,12 @@ class AutoCompleteController
 
         $excludedUsers = ['superadmin'];
 
+        $fields = ['firstname', 'lastname'];
+        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+
         $requestData = AutoCompleteController::getDataForRequest([
             'search'        => $data['search'],
-            'fields'        => '(firstname ilike ? OR lastname ilike ?)',
+            'fields'        => $fields,
             'where'         => ['status not in (?)', 'user_id not in (?)'],
             'data'          => [['DEL', 'SPD'], $excludedUsers],
             'fieldsNumber'  => 2,
@@ -273,9 +279,12 @@ class AutoCompleteController
         if ($GLOBALS['userId'] != 'superadmin') {
             $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
 
+            $fields = ['users.firstname', 'users.lastname'];
+            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+
             $requestData = AutoCompleteController::getDataForRequest([
                 'search'        => $data['search'],
-                'fields'        => '(users.firstname ilike ? OR users.lastname ilike ?)',
+                'fields'        => $fields,
                 'where'         => [
                     'users.user_id = users_entities.user_id',
                     'users_entities.entity_id in (?)',
@@ -294,9 +303,12 @@ class AutoCompleteController
             ]);
 
             if (count($users) < self::LIMIT) {
+                $fields = ['users.firstname', 'users.lastname'];
+                $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+
                 $requestData = AutoCompleteController::getDataForRequest([
                     'search'        => $data['search'],
-                    'fields'        => '(users.firstname ilike ? OR users.lastname ilike ?)',
+                    'fields'        => $fields,
                     'where'         => [
                         'users_entities IS NULL',
                         'users.user_id not in (?)',
@@ -358,9 +370,12 @@ class AutoCompleteController
 
         $excludedUsers = ['superadmin'];
 
+        $fields = ['users.firstname', 'users.lastname'];
+        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+
         $requestData = AutoCompleteController::getDataForRequest([
             'search'        => $data['search'],
-            'fields'        => '(users.firstname ilike ? OR users.lastname ilike ?)',
+            'fields'        => $fields,
             'where'         => [
                 'usergroup_content.group_id = usergroups_services.group_id',
                 'usergroup_content.user_id = users.user_id',
@@ -402,9 +417,12 @@ class AutoCompleteController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
+        $fields = ['entity_label'];
+        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+
         $requestData = AutoCompleteController::getDataForRequest([
             'search'        => $data['search'],
-            'fields'        => '(entity_label ilike ?)',
+            'fields'        => $fields,
             'where'         => ['enabled = ?'],
             'data'          => ['Y'],
             'fieldsNumber'  => 1,
@@ -555,6 +573,78 @@ class AutoCompleteController
         return $response->withJson($addresses);
     }
 
+    public static function getFolders(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+
+        if (!Validator::stringType()->notEmpty()->validate($data['search'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
+        }
+
+        $scopedFolders = FolderController::getScopeFolders(['login' => $GLOBALS['userId']]);
+
+        $arrScopedFoldersIds = array_column($scopedFolders, 'id');
+
+        $fields = ['label'];
+        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+
+        $selectedFolders = FolderModel::get([
+            'where'    => ["{$fields} AND id in (?)"],
+            'data'     => [ '%'.$data['search'].'%', $arrScopedFoldersIds],
+            'orderBy'  => ['label']
+        ]);
+
+        $data = [];
+        foreach ($selectedFolders as $value) {
+            $data[] = [
+                'id'            => $value['id'],
+                'idToDisplay'   => $value['label'],
+                'isPublic'      => $value['public'],
+                'otherInfo'     => ''
+            ];
+        }
+
+        return $response->withJson($data);
+    }
+
+    public static function getTags(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+
+        if (!Validator::stringType()->notEmpty()->validate($data['search'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
+        }
+
+        $fields = ['label'];
+        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+
+        $requestData = AutoCompleteController::getDataForRequest([
+            'search'        => $data['search'],
+            'fields'        => $fields,
+            'where'         => ['1 = ?'],
+            'data'          => ['1'],
+            'fieldsNumber'  => 1,
+        ]);
+
+        $tags = TagModel::get([
+            'select'    => ['id', 'label'],
+            'where'     => $requestData['where'],
+            'data'      => $requestData['data'],
+            'orderBy'   => ['label'],
+            'limit'     => self::LIMIT
+        ]);
+
+        $data = [];
+        foreach ($tags as $value) {
+            $data[] = [
+                'id'            => $value['id'],
+                'idToDisplay'   => $value['label']
+            ];
+        }
+
+        return $response->withJson($data);
+    }
+
     private static function getDataForRequest(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['search', 'fields', 'where', 'data', 'fieldsNumber']);
@@ -574,6 +664,22 @@ class AutoCompleteController
         }
 
         return ['where' => $aArgs['where'], 'data' => $aArgs['data']];
+    }
+
+    private static function getUnsensitiveFieldsForRequest(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['fields']);
+        ValidatorModel::arrayType($args, ['fields']);
+
+        $fields = [];
+        foreach ($args['fields'] as $key => $field) {
+            $fields[$key] = "translate({$field}, 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ', 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')";
+            $fields[$key] .= "ilike translate(?, 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ', 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')";
+        }
+        $fields = implode(' OR ', $fields);
+        $fields = "($fields)";
+
+        return $fields;
     }
 
     public static function getFormattedContact(array $aArgs)
@@ -682,72 +788,5 @@ class AutoCompleteController
         }
 
         return ['contact' => $contact];
-    }
-
-    public static function getFolders(Request $request, Response $response)
-    {
-        $data = $request->getQueryParams();
-
-        $check = Validator::stringType()->notEmpty()->validate($data['search']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
-
-        $scopedFolders = FolderController::getScopeFolders(['login' => $GLOBALS['userId']]);
-
-        $arrScopedFoldersIds = array_column($scopedFolders, 'id');
-
-        $selectedFolders = FolderModel::get([
-            'where'    => ['label ilike ? AND id in (?)'],
-            'data'     => [ '%'.$data['search'].'%', $arrScopedFoldersIds],
-            'orderBy'  => ['label']
-        ]);
-
-        $data = [];
-        foreach ($selectedFolders as $value) {
-            $data[] = [
-                'id'            => $value['id'],
-                'idToDisplay'   => $value['label'],
-                'isPublic'      => $value['public'],
-                'otherInfo'     => ''
-            ];
-        }
-
-        return $response->withJson($data);
-    }
-
-    public static function getTags(Request $request, Response $response)
-    {
-        $data = $request->getQueryParams();
-        $check = Validator::stringType()->notEmpty()->validate($data['search']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
-
-        $requestData = AutoCompleteController::getDataForRequest([
-            'search'        => $data['search'],
-            'fields'        => '(label ilike ?)',
-            'where'         => ['1 = ?'],
-            'data'          => ['1'],
-            'fieldsNumber'  => 1,
-        ]);
-
-        $tags = TagModel::get([
-            'select'    => ['id', 'label'],
-            'where'     => $requestData['where'],
-            'data'      => $requestData['data'],
-            'orderBy'   => ['label'],
-            'limit'     => self::LIMIT
-        ]);
-
-        $data = [];
-        foreach ($tags as $value) {
-            $data[] = [
-                'id'            => $value['id'],
-                'idToDisplay'   => $value['label']
-            ];
-        }
-
-        return $response->withJson($data);
     }
 }
