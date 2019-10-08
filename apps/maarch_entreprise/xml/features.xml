@@ -11,7 +11,6 @@
 			<font>helvetica,10</font> <!-- Setup the font name and her size, ex: helvetica,10 -->
 			<text_color>20,192,30</text_color> <!-- Setup the color of the text, ex: 192,192,192 -->
 		</watermark>
-		<type_calendar>workingDay</type_calendar><!-- calendar or workingDay -->
 		<send_to_contact_with_mandatory_attachment>true</send_to_contact_with_mandatory_attachment><!-- if true, requirement to had a attachment, if false, no mandatory to had a attachment -->
 		<notes_in_print_page><!-- Libellé des notes dans la fiche de liaison V1-->
 			<label>NOTE 1</label>

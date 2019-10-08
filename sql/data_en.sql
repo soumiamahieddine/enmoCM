@@ -918,7 +918,8 @@ INSERT INTO parameters (id, description, param_value_string, param_value_int, pa
 INSERT INTO parameters (id, description, param_value_string) VALUES ('homepage_message', 'Texte apparaissant dans la bannière sur la page d''accueil, mettre un espace pour supprimer la bannière.', 'Bienvenue dans votre <b>G</b>estion <b>E</b>lectronique du <b>C</b>ourrier.');
 INSERT INTO parameters (id, description, param_value_string) VALUES ('thumbnailsSize', 'Résolution des imagettes', '750x900');
 INSERT INTO parameters (id, description, param_value_int) VALUES ('keepDestForRedirection', 'If enabled (1), put recipient in copy for diffusion list when redirecting', 0);
-INSERT INTO parameters (id, description, param_value_int) VALUES ('QrCodePrefix', 'Si enabled (1), add "Maarch_" before the content in QrCode. (Can be use with MaarchCapture >= 1.4)', 0);
+INSERT INTO parameters (id, description, param_value_int) VALUES ('QrCodePrefix', 'If enabled (1), add "Maarch_" before the content in QrCode. (Can be use with MaarchCapture >= 1.4)', 0);
+INSERT INTO parameters (id, description, param_value_int) VALUES ('workingDays', 'If enabled (1), processing time are calculated in working days (Monday to Friday). Otherwise, in calendar days', 1);
 
 ------------
 --DIFFLIST_TYPES
@@ -1468,9 +1469,9 @@ Select setval('templates_seq', (select max(template_id)+1 from templates), false
 --PRIORITES
 ------------
 TRUNCATE TABLE priorities;
-INSERT INTO priorities (id, label, color, working_days, delays, default_priority, "order") VALUES ('poiuytre1357nbvc', 'Normal', '#009dc5', TRUE, null, TRUE, 1);
-INSERT INTO priorities (id, label, color, working_days, delays, default_priority, "order") VALUES ('poiuytre1379nbvc', 'Urgent', '#ffa500', TRUE, 8, FALSE, 2);
-INSERT INTO priorities (id, label, color, working_days, delays, default_priority, "order") VALUES ('poiuytre1391nbvc', 'Very urgent', '#ff0000', TRUE, 4, FALSE, 3);
+INSERT INTO priorities (id, label, color, delays, "order") VALUES ('poiuytre1357nbvc', 'Normal', '#009dc5', 0, 1);
+INSERT INTO priorities (id, label, color, delays, "order") VALUES ('poiuytre1379nbvc', 'Urgent', '#ffa500', 8, 2);
+INSERT INTO priorities (id, label, color, delays, "order") VALUES ('poiuytre1391nbvc', 'Very urgent', '#ff0000', 4, 3);
 
 ------------
 --NOTIFICATIONS

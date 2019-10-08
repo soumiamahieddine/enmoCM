@@ -13,7 +13,6 @@ foreach ($customs as $custom) {
         continue;
     }
 
-    $natures = [];
     $path = "custom/{$custom}/apps/maarch_entreprise/xml/config.xml";
     if (file_exists($path)) {
         if (!is_readable($path) || !is_writable($path)) {
@@ -78,6 +77,22 @@ foreach ($customs as $custom) {
             if ($fp) {
                 fwrite($fp, $res);
             }
+
+            //Default Priority
+            $defaultPriority = \Priority\models\PriorityModel::get([
+                'select' => ['id'],
+                'where'  => ['default_priority = ?'],
+                'data'   => [1]
+            ]);
+            if (!empty($defaultPriority)) {
+                \SrcCore\models\DatabaseModel::update([
+                    'set'   => ['default_value' => json_encode($defaultPriority[0]['id'])],
+                    'table' => 'indexing_models_fields',
+                    'where' => ['identifier = ?', 'model_id in (SELECT id FROM indexing_models WHERE private = FALSE)'],
+                    'data'  => ['priority']
+                ]);
+            }
+
             $migrated++;
         }
     }

@@ -18,6 +18,7 @@ use Action\models\ActionModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Group\models\GroupModel;
+use Parameter\models\ParameterModel;
 use Priority\models\PriorityModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -138,8 +139,8 @@ class IndexingController
             $priority = PriorityModel::getById(['id' => $queryParams['priority'], 'select' => ['delays']]);
             $delay = $priority['delays'];
         }
-        if (empty($delay)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Delay is empty']);
+        if (!Validator::intVal()->validate($delay)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Delay is not a numeric value']);
         }
 
         $processLimitDate = IndexingController::calculateProcessDate(['date' => date('c'), 'delay' => $delay]);
@@ -183,14 +184,15 @@ class IndexingController
 
     public static function calculateProcessDate(array $args)
     {
-        ValidatorModel::notEmpty($args, ['date', 'delay']);
+        ValidatorModel::notEmpty($args, ['date']);
         ValidatorModel::intVal($args, ['delay']);
 
         $date = new \DateTime($args['date']);
 
-        $calendarType = 'calendar';
+        $workingDays = ParameterModel::getById(['id' => 'workingDays', 'select' => ['param_value_int']]);
 
-        if ($calendarType == 'workingDay') {
+        // Working Day
+        if ($workingDays['param_value_int'] == 1 && !empty($args['delay'])) {
             $hollidays = [
                 '01-01',
                 '01-05',
@@ -207,16 +209,19 @@ class IndexingController
 
             $processDelayUpdated = 1;
             for ($i = 1; $i <= $args['delay']; $i++) {
-                $tmpDate = new \DateTime($args['delay']);
+                $tmpDate = new \DateTime($args['date']);
                 $tmpDate->add(new \DateInterval("P{$i}D"));
                 if (in_array($tmpDate->format('N'), [6, 7]) || in_array($tmpDate->format('d-m'), $hollidays)) {
                     ++$args['delay'];
                 }
-                ++$processDelayUpdated;
+                if ($i+1 <= $args['delay']) {
+                    ++$processDelayUpdated;
+                }
             }
 
             $date->add(new \DateInterval("P{$processDelayUpdated}D"));
         } else {
+            // Calendar or empty delay
             $date->add(new \DateInterval("P{$args['delay']}D"));
         }
 

@@ -25,11 +25,8 @@ export class PriorityAdministrationComponent implements OnInit {
     loading         : boolean   = false;
 
     priority        : any       = {
-        useDoctypeDelay : false,
         color           : "#135f7f",
         delays          : "0",
-        working_days    : "false",
-        default_priority: false
     };
 
     constructor( 
@@ -64,12 +61,6 @@ export class PriorityAdministrationComponent implements OnInit {
                     .subscribe((data: any) => {
                         this.priority = data.priority;
                         this.headerService.setHeader(this.lang.priorityModification, this.priority.label);
-                        this.priority.useDoctypeDelay = this.priority.delays != null;
-                        if (this.priority.working_days === true) {
-                            this.priority.working_days = "true";
-                        } else {
-                            this.priority.working_days = "false";
-                        }
                         this.loading = false;
                     }, () => {
                         location.href = "index.php";
@@ -79,10 +70,6 @@ export class PriorityAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
-        if (this.priority.useDoctypeDelay == false) {
-            this.priority.delays = null;
-        }
-        this.priority.working_days = this.priority.working_days == "true";
         if (this.creationMode) {
             this.http.post("../../rest/priorities", this.priority)
                 .subscribe(() => {
