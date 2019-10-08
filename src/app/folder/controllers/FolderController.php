@@ -114,7 +114,17 @@ class FolderController
         if ($folder['public']) {
             $entitiesFolder = EntityFolderModel::getByFolderId(['folder_id' => $args['id'], 'select' => ['entities_folders.entity_id', 'entities_folders.edition', 'entities.entity_label']]);
             foreach ($entitiesFolder as $value) {
-                $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition'], 'label' => $value['entity_label']];
+                $edition = $value['edition'];
+                // Check if parent is in perimeter
+                if ($edition) {
+                    $edition = !empty(FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $folder['parent_id'], 'edition' => true]));
+                }
+                // Check if children are in perimeter
+                if ($edition) {
+                    $edition = FolderController::areChildrenInPerimeter(['folderId' => $args['id']]);
+                }
+
+                $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $edition, 'label' => $value['entity_label']];
             }
         }
 
@@ -256,7 +266,7 @@ class FolderController
         $sharing = FolderController::folderSharing(['folderId' => $aArgs['id'], 'public' => $data['public'], 'sharing' => $data['sharing']]);
         if (!$sharing) {
             DatabaseModel::rollbackTransaction();
-            return $response->withStatus(400)->withJson(['errors' => 'Can not share/unshare folder because almost one folder is out of your perimeter']);
+            return $response->withStatus(400)->withJson(['errors' => 'Cannot share/unshare folder because at least one folder is out of your perimeter']);
         }
         DatabaseModel::commitTransaction();
 
@@ -324,7 +334,7 @@ class FolderController
         $deletion = FolderController::folderDeletion(['folderId' => $aArgs['id']]);
         if (!$deletion) {
             DatabaseModel::rollbackTransaction();
-            return $response->withStatus(400)->withJson(['errors' => 'Can not delete because almost one folder is out of your perimeter']);
+            return $response->withStatus(400)->withJson(['errors' => 'Cannot delete because at least one folder is out of your perimeter']);
         }
         DatabaseModel::commitTransaction();
 
@@ -356,6 +366,28 @@ class FolderController
             foreach ($folderChild as $child) {
                 $deletion = FolderController::folderDeletion(['folderId' => $child['id']]);
                 if (!$deletion) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static function areChildrenInPerimeter(array $aArgs = []) {
+        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['folderId'], 'edition' => true]);
+        if (empty($folder[0])) {
+            return false;
+        }
+
+        $children = FolderModel::getWithEntities([
+            'select' =>  ['distinct (folders.id), edition'],
+            'where'  =>  ['parent_id = ?'],
+            'data'   =>  [$aArgs['folderId']]
+        ]);
+
+        if (!empty($children)) {
+            foreach ($children as $child) {
+                if ($child['edition'] == false or $child['edition'] == null) {
                     return false;
                 }
             }
