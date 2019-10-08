@@ -60,6 +60,7 @@ export class DiffusionsListComponent implements OnInit {
      * To load privilege of current list management
      * @param indexing
      * @param process
+     * @param redirect
      */
     @Input('target') target: string;
 
@@ -81,6 +82,7 @@ export class DiffusionsListComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        this.target = this.target !== undefined ? this.target : 'indexing';
         this.adminMode = this.adminMode !== undefined ? this.adminMode : false;
         this.keepDestForRedirection = this.keepDestForRedirection !== undefined ? this.keepDestForRedirection : false;
 
@@ -232,7 +234,6 @@ export class DiffusionsListComponent implements OnInit {
                 return mergedRoutesDatas;
             }),
             tap((data) => {
-                console.log(data);
                 if (data.roles !== undefined) {
                     data['roles'].forEach((element: any) => {
                         if (element.id == 'cc') {
@@ -407,7 +408,6 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     switchUserWithOldDest(user: any, oldRole: any) {
-        console.log(user);
         this.http.get("../../rest/users/" + user.userId + "/entities").pipe(
             map((data: any) => {
                 data.entities = data.entities.map((entity: any) => entity.id)
