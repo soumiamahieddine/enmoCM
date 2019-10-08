@@ -40,7 +40,7 @@ class StoreController
                     unset($aArgs[$column]);
                 }
             }
-            $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $aArgs['encodedFile']));
+            $fileContent = base64_decode(str_replace(['-', '_'], ['+', '/'], $aArgs['encodedFile']));
 
             $storeResult = DocserverController::storeResourceOnDocServer([
                 'collId'            => 'letterbox_coll',

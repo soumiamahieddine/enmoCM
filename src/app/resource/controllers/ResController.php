@@ -74,6 +74,13 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => 'Body category_id is empty or not a string']);
         }
 
+        $file     = base64_decode($body['encodedFile']);
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($file);
+        if (!StoreController::isFileAllowed(['extension' => $body['format'], 'type' => $mimeType])) {
+            return $response->withStatus(400)->withJson(['errors' => _FILE_NOT_ALLOWED_INFO_1.' "'.$body['format'].'" '._FILE_NOT_ALLOWED_INFO_2.' "'. $mimeType. '" '._FILE_NOT_ALLOWED_INFO_3]);
+        }
+
         $resId = StoreController::storeResource($body);
         if (empty($resId) || !empty($resId['errors'])) {
             return $response->withStatus(500)->withJson(['errors' => '[ResController create] ' . $resId['errors']]);
