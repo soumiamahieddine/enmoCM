@@ -348,8 +348,6 @@ define('_AVIS_ANSWERS', 'Zijn mening geven');
 define('_AVIS_ANSWERS_DESC', 'Laat deze groep verschijnen in de lijst van de Consultants (berichtencircuit)');
 define('_VIEW_BASKETS_DESC', 'Mijn bakjes');
 define('_CHOOSE_ENTITY', 'Kies een eenheid');
-define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', '_TO_TRANSLATE in de verdelingslijst verbieden');
-define('_UPDATE_LIST_DIFF_IN_DETAILS', 'De verdelingslijst vanuit de detailpagina’s updaten');
 define('_ENTITIES_PRINT_SEP_MLB', 'De separatoren per dienst afdrukken');
 define('_EXPORT_SEDA_VIEW', 'Zie het borderel');
 define('_SEND_DOCS_TO_RECOMMENDATION', 'Een (parallelle) berichtenvraag verzenden');

@@ -350,8 +350,6 @@ define("_AVIS_ANSWERS", "Give oneself's opinion");
 define("_AVIS_ANSWERS_DESC", "Allows to this group to appear in the counsellor's list (recommendation workflow)");
 define("_VIEW_BASKETS_DESC", "My baskets");
 define('_CHOOSE_ENTITY', 'Choose a department');
-define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', 'Edit recipient on the diffusion list');
-define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Update diffusion list from the detailed page');
 define('_ENTITIES_PRINT_SEP_MLB', 'Print limiters by department/services');
 define("_EXPORT_SEDA_VIEW", "See message export");
 define("_SEND_DOCS_TO_RECOMMENDATION", "Sent a recommendation request (parallel)");

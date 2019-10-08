@@ -350,8 +350,6 @@ define("_AVIS_ANSWERS", "Donner son avis");
 define("_AVIS_ANSWERS_DESC", "Permet à ce groupe d'apparaître dans la liste des personnes Conseillers (circuit d'avis)");
 define("_VIEW_BASKETS_DESC", "Mes bannettes");
 define('_CHOOSE_ENTITY', 'Choisissez une entité');
-define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', "Modifier l'attributaire dans la liste de diffusion (hors traitement)");
-define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Mettre à jour la liste de diffusion depuis la fiche détaillée');
 define('_ENTITIES_PRINT_SEP_MLB', 'Impression des séparateurs');
 define('_EXPORT_SEDA_VIEW', 'Voir le bordereau');
 define('_SEND_DOCS_TO_RECOMMENDATION', 'Envoyer une demande d\'avis (parallèle)');
