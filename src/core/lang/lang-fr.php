@@ -285,6 +285,10 @@ define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Utile si le parahpeur sert en tant
 define('_PRINT_FOLDER_DOC', 'Imprimer le dossier complet');
 define('_USE_DATE_IN_SIGNBLOCK', 'Inclure la date dans la griffe de signature');
 define('_USE_DATE_IN_SIGNBLOCK_DESC', "La date de signature aparaîtra en haut de la griffe de signature (avec la ville si celle-ci a été inscrite dans le service racine de l'application).");
+define('_UPDATE_DIFFUSION_RECIPIENT_WHILE_INDEXING', "Pouvoir modifier toutes les parties de la liste de diffusion lors de l'enregistrement d'un courrier.");
+define('_UPDATE_DIFFUSION_ROLES_WHILE_INDEXING', "Pouvoir modifier la liste de diffusion hormis l'attributaire lors de l'enregistrement d'un courrier.");
+define('_UPDATE_DIFFUSION_RECIPIENT_WHILE_PROCESSING', "Pouvoir modifier toutes les parties de la liste de diffusion lors du traitement d'un courrier.");
+define('_UPDATE_DIFFUSION_ROLES_WHILE_PROCESSING', "Pouvoir modifier la liste de diffusion hormis l'attributaire lors du traitement d'un courrier.");
 
 // ACTIONS
 define('_REDIRECTION', 'Rediriger');
@@ -346,7 +350,6 @@ define("_AVIS_ANSWERS", "Donner son avis");
 define("_AVIS_ANSWERS_DESC", "Permet à ce groupe d'apparaître dans la liste des personnes Conseillers (circuit d'avis)");
 define("_VIEW_BASKETS_DESC", "Mes bannettes");
 define('_CHOOSE_ENTITY', 'Choisissez une entité');
-define('_EDIT_RECIPIENT_IN_PROCESS', 'Modifier l\'attributaire dans le traitement');
 define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', "Modifier l'attributaire dans la liste de diffusion (hors traitement)");
 define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Mettre à jour la liste de diffusion depuis la fiche détaillée');
 define('_ENTITIES_PRINT_SEP_MLB', 'Impression des séparateurs');

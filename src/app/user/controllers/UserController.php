@@ -1314,11 +1314,7 @@ class UserController
     public function getPrivileges(Request $request, Response $response)
     {
         $privileges = [
-            'canManageTags'                                 => false,
-            'canUpdateDiffusionRecipientWhileIndexing'      => false,
-            'canUpdateDiffusionRolesWhileIndexing'          => false,
-            'canUpdateDiffusionRecipientWhileProcessing'    => false,
-            'canUpdateDiffusionRolesWhileProcessing'        => false
+            'canManageTags' => false
         ];
 
         if (ServiceModel::hasService(['id' => 'manage_tags_application', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use'])) {

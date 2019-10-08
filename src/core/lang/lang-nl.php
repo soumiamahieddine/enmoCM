@@ -284,6 +284,10 @@ define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Nuttig indien het vloeiboek als co
 define('_PRINT_FOLDER_DOC', 'De volledige map afdrukken');
 define('_USE_DATE_IN_SIGNBLOCK', 'De datum in de handtekening insluiten');
 define('_USE_DATE_IN_SIGNBLOCK_DESC', 'De datum van ondertekening zal bovenaan de handtekening verschijnen (met de gemeente indien deze in de rootservice van de applicatie werd ingeschreven)');
+define('_UPDATE_DIFFUSION_RECIPIENT_WHILE_INDEXING', "Update all parts of diffusion list when indexing."); //translate
+define('_UPDATE_DIFFUSION_ROLES_WHILE_INDEXING', "Update diffusion list except Assignee when indexing."); //translate
+define('_UPDATE_DIFFUSION_RECIPIENT_WHILE_PROCESSING', "Update all parts of diffusion list when processing."); //translate
+define('_UPDATE_DIFFUSION_ROLES_WHILE_PROCESSING', "Update diffusion list except Assignee when processing."); //translate
 
 // ACTIONS
 define('_REDIRECTION', 'Doorsturen');
@@ -344,7 +348,6 @@ define('_AVIS_ANSWERS', 'Zijn mening geven');
 define('_AVIS_ANSWERS_DESC', 'Laat deze groep verschijnen in de lijst van de Consultants (berichtencircuit)');
 define('_VIEW_BASKETS_DESC', 'Mijn bakjes');
 define('_CHOOSE_ENTITY', 'Kies een eenheid');
-define('_EDIT_RECIPIENT_IN_PROCESS', '_TO_TRANSLATE in de verwerking');
 define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', '_TO_TRANSLATE in de verdelingslijst verbieden');
 define('_UPDATE_LIST_DIFF_IN_DETAILS', 'De verdelingslijst vanuit de detailpagina’s updaten');
 define('_ENTITIES_PRINT_SEP_MLB', 'De separatoren per dienst afdrukken');

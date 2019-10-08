@@ -266,6 +266,7 @@ $app->get('/listTemplates/entities/{entityId}/maarchParapheur', \Entity\controll
 $app->put('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':updateByUserWithEntityDest');
 $app->get('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':getTypeRoles');
 $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':updateTypeRoles');
+$app->get('/roles', \Entity\controllers\ListTemplateController::class . ':getRoles');
 
 //Notes
 $app->get('/notes/templates', \Note\controllers\NoteController::class . ':getTemplates');

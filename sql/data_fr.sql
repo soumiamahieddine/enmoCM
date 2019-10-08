@@ -53,7 +53,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'prin
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'print_doc_details_from_list');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'delete_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_document_in_detail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_recipient_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'entities_print_sep_mlb');
@@ -84,7 +83,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_do
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_links');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'print_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'print_doc_details_from_list');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'edit_recipient_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'sendmail');
@@ -118,7 +116,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'print_doc_details_from_list');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'delete_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'edit_document_in_detail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'edit_recipient_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'sendmail');
@@ -143,7 +140,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'v
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_links');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'print_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'print_doc_details_from_list');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'edit_recipient_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'sendmail');
@@ -202,7 +198,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'manage_entities');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_difflist_types');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_listmodels');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'edit_recipient_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'entities_print_sep_mlb');

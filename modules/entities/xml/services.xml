@@ -103,18 +103,6 @@
         </WHEREAMIUSED>
     </SERVICE>
     <SERVICE>
-        <id>edit_recipient_in_process</id>
-        <name>_EDIT_RECIPIENT_IN_PROCESS</name>
-        <servicepage>add_copy_in_process.php</servicepage>
-        <servicetype>use</servicetype>
-        <system_service>false</system_service>
-        <enabled>true</enabled>
-        <WHEREAMIUSED>
-            <page>process</page>
-            <nature>include</nature>
-        </WHEREAMIUSED>
-    </SERVICE>
-    <SERVICE>
         <id>edit_recipient_outside_process</id>
         <name>_EDIT_RECIPIENT_OUTSIDE_PROCESS</name>
         <servicepage>load_listinstance.php</servicepage>
