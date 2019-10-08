@@ -60,6 +60,11 @@ export class TagInputComponent implements OnInit {
 
     ngOnInit() {
         this.controlAutocomplete.setValue(this.controlAutocomplete.value === null || this.controlAutocomplete.value === '' ? [] : this.controlAutocomplete.value);
+        this.http.get('../../rest/currentUser/privileges').pipe(
+            tap((data: any) => {
+                this.canAdd = data.privileges.canManageTags;
+            })
+        ).subscribe();
         this.initFormValue();
         this.initAutocompleteRoute();
     }
@@ -69,7 +74,7 @@ export class TagInputComponent implements OnInit {
         this.options = [];
         this.myControl.valueChanges
             .pipe(
-                tap((value) => this.canAdd = value.length === 0 ? false : true),
+                //tap((value) => this.canAdd = value.length === 0 ? false : true),
                 debounceTime(300),
                 filter(value => value.length > 2),
                 distinctUntilChanged(),
