@@ -59,6 +59,8 @@ import { TagInputComponent }                        from '../app/tag/indexing/ta
 
 import { DiffusionsListComponent }             from './diffusions/diffusions-list.component';
 
+import { DocumentViewerComponent }             from './viewer/document-viewer.component';
+
 
 
 export class MyHammerConfig extends HammerGestureConfig {
@@ -107,7 +109,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         PluginSelectSearchComponent,
         FolderInputComponent,
         TagInputComponent,
-        DiffusionsListComponent
+        DiffusionsListComponent,
+        DocumentViewerComponent
     ],
     exports: [
         CommonModule,
@@ -143,7 +146,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         PluginSelectSearchComponent,
         FolderInputComponent,
         TagInputComponent,
-        DiffusionsListComponent
+        DiffusionsListComponent,
+        DocumentViewerComponent
     ],
     providers: [
         LatinisePipe,
