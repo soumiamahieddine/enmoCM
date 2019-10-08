@@ -236,22 +236,24 @@ class ConvertPdfController
         $ext      = substr($body['name'], strrpos($body['name'], '.') + 1);
         $size     = strlen($file);
 
-        $fileAccepted  = StoreController::isFileAllowed(['extension' => $ext, 'type' => $mimeType]);
-        $maxFilesizeMo = ini_get('upload_max_filesize');
-
-        if (!$fileAccepted) {
-            return $response->withStatus(400)->withJson(['errors' => 'File type not allowed. Extension : ' . $ext . '. Mime Type : ' . $mimeType . '.']);
-        } elseif ($size/1024 > $maxFilesizeMo*1024) {
-            return $response->withStatus(400)->withJson(['errors' => 'File maximum size is exceeded ('.$maxFilesizeMo.' Mo)']);
-        }
-
-        $convertion = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $body['base64']]);
-        if (empty($convertion['errors'])) {
-            return $response->withJson([
-                'encodedResource' => $convertion
-            ]);
+        if (strtolower($ext) == 'pdf' && strtolower($mimeType) == 'application/pdf') {
+            return $response->withJson(['encodedResource' => $body['base64']]);
         } else {
-            return $response->withStatus(403)->withJson($convertion);
+            $fileAccepted  = StoreController::isFileAllowed(['extension' => $ext, 'type' => $mimeType]);
+            $maxFilesizeMo = ini_get('upload_max_filesize');
+    
+            if (!$fileAccepted) {
+                return $response->withStatus(400)->withJson(['errors' => 'File type not allowed. Extension : ' . $ext . '. Mime Type : ' . $mimeType . '.']);
+            } elseif ($size/1024 > $maxFilesizeMo*1024) {
+                return $response->withStatus(400)->withJson(['errors' => 'File maximum size is exceeded ('.$maxFilesizeMo.' Mo)']);
+            }
+    
+            $convertion = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $body['base64']]);
+            if (empty($convertion['errors'])) {
+                return $response->withJson(['encodedResource' => $convertion]);
+            } else {
+                return $response->withStatus(403)->withJson($convertion);
+            }
         }
     }
 }
