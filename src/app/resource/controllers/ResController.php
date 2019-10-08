@@ -78,7 +78,7 @@ class ResController
         $finfo    = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->buffer($file);
         if (!StoreController::isFileAllowed(['extension' => $body['format'], 'type' => $mimeType])) {
-            return $response->withStatus(400)->withJson(['errors' => _FILE_NOT_ALLOWED_INFO_1.' "'.$body['format'].'" '._FILE_NOT_ALLOWED_INFO_2.' "'. $mimeType. '" '._FILE_NOT_ALLOWED_INFO_3]);
+            return $response->withStatus(400)->withJson(['errors' => "Format with this mimeType is not allowed : {$body['format']} {$mimeType}"]);
         }
 
         $resId = StoreController::storeResource($body);

@@ -45,12 +45,15 @@ class NoteController
         $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
         $aNotes = NoteModel::getByUserIdForResource(['select' => ['*'], 'resId' => $aArgs['resId'], 'userId' => $user['id']]);
         
-        foreach ($aNotes as $key => $aNote) {
-            $user = UserModel::getById(['select' => ['firstname', 'lastname', 'user_id'], 'id' => $aNote['user_id']]);
+        foreach ($aNotes as $key => $note) {
+            $user = UserModel::getById(['select' => ['firstname', 'lastname', 'user_id'], 'id' => $note['user_id']]);
             $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $user['user_id']]);
             $aNotes[$key]['firstname'] = $user['firstname'];
             $aNotes[$key]['lastname'] = $user['lastname'];
             $aNotes[$key]['entity_label'] = $primaryEntity['entity_label'];
+
+            $aNotes[$key]['value'] = $note['note_text'];
+            unset($aNotes[$key]['note_text']);
         }
 
         return $response->withJson($aNotes);
@@ -70,7 +73,10 @@ class NoteController
         $entities = NoteEntityModel::get(['select' => ['item_id'], 'where' => ['note_id = ?'], 'data' => [$args['id']]]);
         $entities = array_column($entities, 'item_id');
 
+        $note['value'] = $note['note_text'];
         $note['entities'] = $entities;
+
+        unset($note['note_text']);
 
         return $response->withJson($note);
     }
