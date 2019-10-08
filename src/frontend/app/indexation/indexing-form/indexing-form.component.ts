@@ -356,7 +356,10 @@ export class IndexingFormComponent implements OnInit {
                                     }
                                 });
                                 elem.event = 'loadDiffusionList';
-                                elem.allowedEntities = elem.values.filter((val: any) => val.disabled === false).map((entities: any) => entities.id)
+                                if (elem.default_value !== null && !this.adminMode) {
+                                    this.loadDiffusionList(elem, elem.default_value);
+                                }
+                                elem.allowedEntities = elem.values.filter((val: any) => val.disabled === false).map((entities: any) => entities.id);
                             }
                         } else if (elem.identifier === 'arrivalDate') {
                             elem.startDate = 'docDate';
@@ -709,7 +712,7 @@ export class IndexingFormComponent implements OnInit {
     }
 
     launchEvent(value: any, field: any) {
-        if (field.event !== undefined && value !== null) {
+        if (field.event !== undefined && value !== null && !this.adminMode) {
             this[field.event](field, value);
         }
     }
