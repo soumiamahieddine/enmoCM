@@ -131,7 +131,7 @@ abstract class PriorityModelAbstract
 
     public static function getByDelays(array $aArgs)
     {
-        ValidatorModel::intType($aArgs, ['delays']);
+        ValidatorModel::intVal($aArgs, ['delays']);
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $aPriority = PriorityModel::get([

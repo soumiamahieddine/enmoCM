@@ -24,7 +24,7 @@ class PriorityControllerTest extends TestCase
         $aArgs = [
             'label'             => 'TEST-OVER-URGENT',
             'color'             => '#ffffff',
-            'delays'            => '2',
+            'delays'            => '72',
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -44,7 +44,7 @@ class PriorityControllerTest extends TestCase
         $this->assertSame(self::$id, $responseBody->priority->id);
         $this->assertSame('TEST-OVER-URGENT', $responseBody->priority->label);
         $this->assertSame('#ffffff', $responseBody->priority->color);
-        $this->assertSame(2, $responseBody->priority->delays);
+        $this->assertSame(72, $responseBody->priority->delays);
     }
 
     public function testGet()
@@ -72,7 +72,7 @@ class PriorityControllerTest extends TestCase
         $aArgs = [
             'label'             => 'TEST-OVER-URGENT-UPDATED',
             'color'             => '#f2f2f2',
-            'delays'            => '4',
+            'delays'            => '64',
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -90,7 +90,7 @@ class PriorityControllerTest extends TestCase
         $this->assertSame(self::$id, $responseBody->priority->id);
         $this->assertSame('TEST-OVER-URGENT-UPDATED', $responseBody->priority->label);
         $this->assertSame('#f2f2f2', $responseBody->priority->color);
-        $this->assertSame(4, $responseBody->priority->delays);
+        $this->assertSame(64, $responseBody->priority->delays);
     }
 
     public function testDelete()
