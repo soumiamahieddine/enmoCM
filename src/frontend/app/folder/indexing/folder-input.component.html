@@ -5,7 +5,7 @@
         <input type="text" #autoCompleteInput [placeholder]="lang.searchFolder" matInput [formControl]="myControl"
             [matAutocomplete]="auto" (click)="$event.stopPropagation()" (focus)="resetAutocomplete()">
         <button [disabled]="!canAdd" type="button" matSuffix mat-icon-button (click)="addItem()">
-            <mat-icon class="fa fa-folder-plus" [title]="lang.add" [style.visibility]="canAdd ? 'visible' : 'hidden'"></mat-icon>
+            <mat-icon class="fa fa-folder-plus" [title]="lang.add" [style.visibility]="canAdd && myControl.value !== null && myControl.value.length > 0 ? 'visible' : 'hidden'"></mat-icon>
         </button>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOpt($event)">
             <ng-container *ngIf="options.length > 0 && !loading">
