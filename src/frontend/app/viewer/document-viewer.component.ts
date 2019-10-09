@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpEventType, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { HeaderService } from '../../service/header.service';
 import { AppService } from '../../service/app.service';
-import { tap, catchError, finalize } from 'rxjs/operators';
+import { tap, catchError, finalize, filter } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { ConfirmComponent } from '../../plugins/modal/confirm.component';
+import { MatDialogRef, MatDialog } from '@angular/material';
 
 
 @Component({
@@ -22,19 +24,23 @@ export class DocumentViewerComponent implements OnInit {
     lang: any = LANG;
 
     loading: boolean = false;
+    noConvertedFound: boolean = false;
 
     file: any = {
         name: '',
         type: '',
-        content: '',
+        content: null,
         src: null
     };
+
+    dialogRef: MatDialogRef<any>;
 
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
         private headerService: HeaderService,
         public appService: AppService,
+        private dialog: MatDialog,
     ) {
         (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
     }
@@ -44,7 +50,13 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     uploadTrigger(fileInput: any) {
-        console.log("upload");
+        this.file = {
+            name: '',
+            type: '',
+            content: null,
+            src: null
+        };
+        this.noConvertedFound = false;
         this.loading = true;
         if (fileInput.target.files && fileInput.target.files[0]) {
             var reader = new FileReader();
@@ -52,9 +64,6 @@ export class DocumentViewerComponent implements OnInit {
             this.file.name = fileInput.target.files[0].name;
             this.file.type = fileInput.target.files[0].type;
 
-            console.log(this.file.name);
-
-            //reader.readAsDataURL(fileInput.target.files[0]);
             reader.readAsArrayBuffer(fileInput.target.files[0]);
 
             reader.onload = (value: any) => {
@@ -64,15 +73,8 @@ export class DocumentViewerComponent implements OnInit {
                     this.convertDocument(this.file);
                 } else {
                     this.file.src = value.target.result;
-                    this.loading = false
+                    this.loading = false;
                 }
-
-                //this.file.content = value.target.result.toString().replace('data:' + this.file.type + ';base64,', '');
-
-                //console.log(this.file.content);
-                //this.file.src = value.target.result;
-                //window['angularUserAdministrationComponent'].componentAfterUpload(value.target.result);
-                //this.submitSignature();
             };
         }
     }
@@ -103,7 +105,8 @@ export class DocumentViewerComponent implements OnInit {
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
-                this.notify.handleErrors(err);
+                this.noConvertedFound = true;
+                //this.notify.handleErrors(err);
                 return of(false);
             })
         ).subscribe();
@@ -114,12 +117,39 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     cleanFile() {
-        this.file = {
-            name: '',
-            type: '',
-            content: '',
-            src: null
-        };
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            tap(() => {
+                this.file = {
+                    name: '',
+                    type: '',
+                    content: null,
+                    src: null
+                };
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+
+    }
+
+    getFile() {
+        return this.file;
+    }
+
+    dndUploadFile(event: any) {
+        const fileInput = {
+            target: {
+                files: [
+                    event[0]
+                ]
+            }
+        }
+        this.uploadTrigger(fileInput);
     }
 
 }

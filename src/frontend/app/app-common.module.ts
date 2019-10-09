@@ -56,6 +56,8 @@ import { PluginAutocomplete }                        from '../plugins/autocomple
 import { PluginSelectSearchComponent }                        from '../plugins/select-search/select-search.component';
 import { FolderInputComponent }                        from '../app/folder/indexing/folder-input.component';
 import { TagInputComponent }                        from '../app/tag/indexing/tag-input.component';
+import { DragDropDirective }                        from '../app/viewer/upload-file-dnd.directive';
+
 
 import { DiffusionsListComponent }             from './diffusions/diffusions-list.component';
 
@@ -110,7 +112,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         FolderInputComponent,
         TagInputComponent,
         DiffusionsListComponent,
-        DocumentViewerComponent
+        DocumentViewerComponent,
+        DragDropDirective
     ],
     exports: [
         CommonModule,
@@ -147,7 +150,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         FolderInputComponent,
         TagInputComponent,
         DiffusionsListComponent,
-        DocumentViewerComponent
+        DocumentViewerComponent,
+        DragDropDirective
     ],
     providers: [
         LatinisePipe,
