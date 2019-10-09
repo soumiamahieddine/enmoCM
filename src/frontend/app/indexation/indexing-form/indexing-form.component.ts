@@ -340,7 +340,7 @@ export class IndexingFormComponent implements OnInit {
                                 let title = '';
 
                                 let defaultVal = data.entities.filter((entity: any) => entity.enabled === true && entity.id === elem.default_value);
-                                elem.default_value = defaultVal.length > 0 ? defaultVal[0].id : '';
+                                elem.default_value = defaultVal.length > 0 ? defaultVal[0].id : null;
                                 this.arrFormControl[elem.identifier].setValue(defaultVal.length > 0 ? defaultVal[0].id : '');
                                 elem.values = data.entities.map((entity: any) => {
                                     title = entity.entity_label;

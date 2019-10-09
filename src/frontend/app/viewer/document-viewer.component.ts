@@ -58,6 +58,7 @@ export class DocumentViewerComponent implements OnInit {
                     return {
                         extension: '.' + ext.extension.toLowerCase(),
                         mimeType: ext.mimeType,
+                        canConvert: ext.canConvert
                     }
                 });
                 this.allowedExtensions = this.sortPipe.transform(this.allowedExtensions, 'extension');
@@ -72,16 +73,16 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     uploadTrigger(fileInput: any) {
-        this.file = {
-            name: '',
-            type: '',
-            content: null,
-            src: null
-        };
-        this.noConvertedFound = false;
-        this.loading = true;
-
         if (fileInput.target.files && fileInput.target.files[0] && this.checkFile(fileInput.target.files[0])) {
+            this.file = {
+                name: '',
+                type: '',
+                content: null,
+                src: null
+            };
+            this.noConvertedFound = false;
+            this.loading = true;
+
             var reader = new FileReader();
 
             this.file.name = fileInput.target.files[0].name;
@@ -124,17 +125,23 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     convertDocument(file: any) {
-        this.http.post('../../rest/convertedFile', { name: file.name, base64: file.content }).pipe(
-            tap((data: any) => {
-                this.file.src = this.base64ToArrayBuffer(data.encodedResource);
-            }),
-            finalize(() => this.loading = false),
-            catchError((err: any) => {
-                this.noConvertedFound = true;
-                //this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+        if (this.allowedExtensions.filter(ext => ext.canConvert === true && ext.mimeType === file.type).length > 0) {
+            this.http.post('../../rest/convertedFile', { name: file.name, base64: file.content }).pipe(
+                tap((data: any) => {
+                    this.file.src = this.base64ToArrayBuffer(data.encodedResource);
+                }),
+                finalize(() => this.loading = false),
+                catchError((err: any) => {
+                    this.noConvertedFound = true;
+                    //this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.noConvertedFound = true;
+            this.loading = false
+        }
+        
     }
 
     onError(error: any) {
