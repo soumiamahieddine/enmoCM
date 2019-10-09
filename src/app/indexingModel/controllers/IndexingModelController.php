@@ -32,9 +32,17 @@ class IndexingModelController
 {
     public function get(Request $request, Response $response)
     {
+        $query = $request->getQueryParams();
         $where = ['(owner = ? OR private = ?)'];
 
-        if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        $showDisabled = false;
+        if (Validator::notEmpty()->validate($query['showDisabled'])) {
+            $showDisabled = $query['showDisabled'] == 'true';
+        }
+
+        if (!$showDisabled) {
+            $where[] = 'enabled = TRUE';
+        } else if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             $where[] = 'enabled = TRUE';
         }
 
@@ -330,7 +338,7 @@ class IndexingModelController
         }
 
         $resources = ResModel::get([
-            'select'    => ['1'],
+            'select'    => [1],
             'where'     => ['model_id = ?'],
             'data'      => [$args['id']]
         ]);
