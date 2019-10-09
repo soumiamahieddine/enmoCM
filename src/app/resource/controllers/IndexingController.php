@@ -150,7 +150,7 @@ class IndexingController
 
     public function getFileInformations(Request $request, Response $response)
     {
-        $allowedFiles  = StoreController::getAllowedFiles();
+        $allowedFiles = StoreController::getAllowedFiles();
 
         $uploadMaxFilesize = ini_get('upload_max_filesize');
         $uploadMaxFilesize = StoreController::getOctetSizeFromPhpIni(['size' => $uploadMaxFilesize]);
@@ -160,7 +160,6 @@ class IndexingController
         $memoryLimit = StoreController::getOctetSizeFromPhpIni(['size' => $memoryLimit]);
 
         $maximumSize = min($uploadMaxFilesize, $postMaxSize, $memoryLimit);
-
 
         return $response->withJson(['informations' => ['maximumSize' => $maximumSize, 'allowedFiles' => $allowedFiles]]);
     }

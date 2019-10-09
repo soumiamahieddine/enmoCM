@@ -59,7 +59,7 @@ abstract class indexing_searching_app_Abstract extends Database
         $xmlconfig = simplexml_load_file($path);
         foreach ($xmlconfig->FORMAT as $FORMAT) {
             if (strtoupper($ext) == (string) $FORMAT->name) {
-                if ($FORMAT->index_frame_show == 'true') {
+                if ($FORMAT->canConvert == 'true') {
                     return true;
                 } else {
                     return false;
@@ -80,7 +80,7 @@ abstract class indexing_searching_app_Abstract extends Database
         $xmlconfig = simplexml_load_file($path);
         $ext_list = array();
         foreach ($xmlconfig->FORMAT as $FORMAT) {
-            if ((string) $FORMAT->index_frame_show == 'true') {
+            if ((string) $FORMAT->canConvert == 'true') {
                 array_push($ext_list, (string) $FORMAT->name);
             }
         }

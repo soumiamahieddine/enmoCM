@@ -308,8 +308,9 @@ class StoreController
         if ($loadedXml) {
             foreach ($loadedXml->FORMAT as $value) {
                 $allowedFiles[] = [
-                    'extension' => (string)$value->name,
-                    'mimeType'  => (string)$value->mime,
+                    'extension'     => (string)$value->name,
+                    'mimeType'      => (string)$value->mime,
+                    'canConvert'    => filter_var((string)$value->canConvert, FILTER_VALIDATE_BOOLEAN)
                 ];
             }
         }
