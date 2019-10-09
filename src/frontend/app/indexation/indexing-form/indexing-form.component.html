@@ -78,7 +78,7 @@
                                 <ng-container *ngIf="field.type === 'date'">
                                     <button mat-button color="primary" *ngIf="adminMode" matPrefix mat-icon-button
                                         (click)="$event.stopPropagation();toggleTodayDate(field);"
-                                        matTooltip="Jour d'aujourd'hui" style="position: absolute;left: -40px;">
+                                        [matTooltip]="lang.todayDate" style="position: absolute;left: -40px;">
                                         <mat-icon color="primary"
                                             class="{{field.today ? 'far fa-bell-slash' : 'far fa-bell'}}">
                                         </mat-icon>
