@@ -24,9 +24,7 @@ class PriorityControllerTest extends TestCase
         $aArgs = [
             'label'             => 'TEST-OVER-URGENT',
             'color'             => '#ffffff',
-            'working_days'      => true,
             'delays'            => '2',
-            'default_priority'  => true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -46,7 +44,6 @@ class PriorityControllerTest extends TestCase
         $this->assertSame(self::$id, $responseBody->priority->id);
         $this->assertSame('TEST-OVER-URGENT', $responseBody->priority->label);
         $this->assertSame('#ffffff', $responseBody->priority->color);
-        $this->assertSame(true, $responseBody->priority->working_days);
         $this->assertSame(2, $responseBody->priority->delays);
     }
 
@@ -75,9 +72,7 @@ class PriorityControllerTest extends TestCase
         $aArgs = [
             'label'             => 'TEST-OVER-URGENT-UPDATED',
             'color'             => '#f2f2f2',
-            'working_days'      => false,
             'delays'            => '4',
-            'default_priority'  => true
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -95,7 +90,6 @@ class PriorityControllerTest extends TestCase
         $this->assertSame(self::$id, $responseBody->priority->id);
         $this->assertSame('TEST-OVER-URGENT-UPDATED', $responseBody->priority->label);
         $this->assertSame('#f2f2f2', $responseBody->priority->color);
-        $this->assertSame(false, $responseBody->priority->working_days);
         $this->assertSame(4, $responseBody->priority->delays);
     }
 
