@@ -1158,9 +1158,6 @@ export const LANG_NL = {
     "indexing_outgoing" : "outgoing", //_TO_TRANSLATE
     "indexing_internal" : "internal", //_TO_TRANSLATE
     "indexing_ged_doc" : "GED", //_TO_TRANSLATE
-    "createMsg" : "Do you want to create", //_TO_TRANSLATE
-    "folderDeleteWarnMsg" : "Do you want to delete", //_TO_TRANSLATE
-    "folderDeleteWarnMsg2" : "previously created ?", //_TO_TRANSLATE
     "noSelectedFolder" : "No selected folder", //_TO_TRANSLATE
     "noSelectedTag" : "No selected tag", //_TO_TRANSLATE
     "searchTag" : "Search tag", //_TO_TRANSLATE

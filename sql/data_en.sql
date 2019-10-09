@@ -919,7 +919,7 @@ INSERT INTO parameters (id, description, param_value_string) VALUES ('homepage_m
 INSERT INTO parameters (id, description, param_value_string) VALUES ('thumbnailsSize', 'Résolution des imagettes', '750x900');
 INSERT INTO parameters (id, description, param_value_int) VALUES ('keepDestForRedirection', 'If enabled (1), put recipient in copy for diffusion list when redirecting', 0);
 INSERT INTO parameters (id, description, param_value_int) VALUES ('QrCodePrefix', 'If enabled (1), add "Maarch_" before the content in QrCode. (Can be use with MaarchCapture >= 1.4)', 0);
-INSERT INTO parameters (id, description, param_value_int) VALUES ('workingDays', 'If enabled (1), processing time are calculated in working days (Monday to Friday). Otherwise, in calendar days', 1);
+INSERT INTO parameters (id, description, param_value_int) VALUES ('workingDays', 'If enabled (1), processing time is calculated in working days (Monday to Friday). Otherwise, in calendar days', 1);
 
 ------------
 --DIFFLIST_TYPES
