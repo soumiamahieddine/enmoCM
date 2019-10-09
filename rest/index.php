@@ -230,6 +230,7 @@ $app->get('/home/maarchParapheurDocuments', \Home\controllers\HomeController::cl
 $app->get('/indexing/{groupId}/actions', \Resource\controllers\IndexingController::class . ':getIndexingActions');
 $app->get('/indexing/{groupId}/entities', \Resource\controllers\IndexingController::class . ':getIndexingEntities');
 $app->get('/indexing/processLimitDate', \Resource\controllers\IndexingController::class . ':getProcessLimitDate');
+$app->get('/indexing/fileInformations', \Resource\controllers\IndexingController::class . ':getFileInformations');
 
 //IndexingModels
 $app->get('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':get');
