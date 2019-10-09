@@ -8,6 +8,8 @@ import { tap, catchError, finalize, filter } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material';
+import { AlertComponent } from '../../plugins/modal/alert.component';
+import { SortPipe } from '../../plugins/sorting.pipe';
 
 
 @Component({
@@ -16,7 +18,7 @@ import { MatDialogRef, MatDialog } from '@angular/material';
     styleUrls: [
         'document-viewer.component.scss',
     ],
-    providers: [NotificationService, AppService]
+    providers: [NotificationService, AppService, SortPipe]
 })
 
 export class DocumentViewerComponent implements OnInit {
@@ -33,6 +35,9 @@ export class DocumentViewerComponent implements OnInit {
         src: null
     };
 
+    allowedExtensions: any[] = [];
+    maxFileSize: number = 0;
+
     dialogRef: MatDialogRef<any>;
 
     constructor(
@@ -41,12 +46,29 @@ export class DocumentViewerComponent implements OnInit {
         private headerService: HeaderService,
         public appService: AppService,
         private dialog: MatDialog,
+        private sortPipe: SortPipe
     ) {
         (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
     }
 
     ngOnInit() {
+        this.http.get('../../rest/indexing/fileInformations').pipe(
+            tap((data: any) => {
+                this.allowedExtensions = data.informations.allowedFiles.map((ext: any) => {
+                    return {
+                        extension: '.' + ext.extension.toLowerCase(),
+                        mimeType: ext.mimeType,
+                    }
+                });
+                this.allowedExtensions = this.sortPipe.transform(this.allowedExtensions, 'extension');
 
+                this.maxFileSize = data.informations.maximumSize;
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     uploadTrigger(fileInput: any) {
@@ -58,7 +80,8 @@ export class DocumentViewerComponent implements OnInit {
         };
         this.noConvertedFound = false;
         this.loading = true;
-        if (fileInput.target.files && fileInput.target.files[0]) {
+
+        if (fileInput.target.files && fileInput.target.files[0] && this.checkFile(fileInput.target.files[0])) {
             var reader = new FileReader();
 
             this.file.name = fileInput.target.files[0].name;
@@ -76,6 +99,8 @@ export class DocumentViewerComponent implements OnInit {
                     this.loading = false;
                 }
             };
+        } else {
+            this.loading = false;
         }
     }
 
@@ -150,6 +175,19 @@ export class DocumentViewerComponent implements OnInit {
             }
         }
         this.uploadTrigger(fileInput);
+    }
+
+    checkFile(file: any) {
+
+        if (this.allowedExtensions.map(ext => ext.mimeType).indexOf(file.type) === -1) {
+            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: 'Extension non autorisé !', msg: '<u>Extension autorisée</u> : <br/>' + this.allowedExtensions.map(ext => ext.extension).filter((elem: any, index: any, self: any) => index === self.indexOf(elem)).join(', ') } });
+            return false;
+        } else if (file.size > this.maxFileSize) {
+            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: 'Taille maximale dépassée ! ', msg: 'Taille maximale : ' + this.maxFileSize } });
+            return false;
+        } else {
+            return true;
+        }
     }
 
 }
