@@ -1684,10 +1684,10 @@ INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('COMMERCE
 INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('CLIENTS', FALSE, 1, 2, 1);
 
 TRUNCATE TABLE indexing_models;
-INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (1, 'incoming', 'Courrier arrivée', TRUE, 23, FALSE);
-INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (2, 'outgoing', 'Courrier départ', FALSE, 23, FALSE);
-INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (3, 'internal', 'Courrier interne', FALSE, 23, FALSE);
-INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (4, 'ged_doc', 'Document ged', FALSE, 23, FALSE);
+INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (1, 'incoming', 'Courrier arrivée', TRUE, 23, FALSE, TRUE);
+INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (2, 'outgoing', 'Courrier départ', FALSE, 23, FALSE, TRUE);
+INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (3, 'internal', 'Courrier interne', FALSE, 23, FALSE, TRUE);
+INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (4, 'ged_doc', 'Document ged', FALSE, 23, FALSE, TRUE);
 Select setval('indexing_models_id_seq', (select max(id)+1 from indexing_models), false);
 
 TRUNCATE TABLE indexing_models_fields;

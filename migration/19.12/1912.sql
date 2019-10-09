@@ -364,6 +364,7 @@ DROP TABLE IF EXISTS foldertypes_indexes;
 ALTER TABLE doctypes DROP COLUMN IF EXISTS coll_id;
 DROP TABLE IF EXISTS mlb_doctype_ext;
 ALTER TABLE priorities DROP COLUMN IF EXISTS working_days;
+ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
 
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS
