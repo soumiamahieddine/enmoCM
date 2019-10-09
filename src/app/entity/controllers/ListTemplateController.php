@@ -444,6 +444,52 @@ class ListTemplateController
         return $response->withJson(['success' => 'success']);
     }
 
+    public function getRoles(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+
+        $canUpdateDiffusionRecipient = false;
+        $canUpdateDiffusionRoles = false;
+        $triggerContext = false;
+
+        if ($data['context'] == 'indexation') {
+            $serviceRecipient = 'update_diffusion_recipient_indexing';
+            $serviceRoles = 'update_diffusion_roles_indexing';
+            $triggerContext = true;
+        } elseif ($data['context'] == 'details') {
+            $serviceRecipient = 'update_diffusion_recipient_indexing';
+            $serviceRoles = 'update_diffusion_roles_indexing';
+            $triggerContext = true;
+        }
+        if ($triggerContext) {
+            if (ServiceModel::hasService(['id' => $serviceRecipient, 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use'])) {
+                $canUpdateDiffusionRecipient = true;
+            }
+            if (!$canUpdateDiffusionRecipient && ServiceModel::hasService(['id' => $serviceRoles, 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use'])) {
+                $canUpdateDiffusionRoles = true;
+            }
+        }
+
+        $roles = EntityModel::getRoles();
+        foreach ($roles as $key => $role) {
+            if ($role['id'] == 'dest') {
+                $roles[$key]['label'] = _ASSIGNEE;
+                if ($triggerContext) {
+                    $roles[$key]['canUpdate'] = $canUpdateDiffusionRecipient;
+                }
+            } else {
+                if ($triggerContext) {
+                    $roles[$key]['canUpdate'] = $canUpdateDiffusionRecipient || $canUpdateDiffusionRoles;
+                }
+            }
+            if ($role['id'] == 'copy') {
+                $roles[$key]['id'] = 'cc';
+            }
+        }
+
+        return $response->withJson(['roles' => $roles]);
+    }
+
     private static function checkItems(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['items']);

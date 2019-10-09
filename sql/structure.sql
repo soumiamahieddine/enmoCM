@@ -1059,7 +1059,7 @@ WITH (OIDS=FALSE);
 CREATE TABLE tags
 (
   id serial NOT NULL,
-  label character varying(50) NOT NULL,
+  label character varying(128) NOT NULL,
   entity_id_owner character varying(32),
   CONSTRAINT tags_id_pkey PRIMARY KEY (id)
 )
@@ -1195,6 +1195,7 @@ CREATE TABLE res_letterbox
   flag_alarm2 char(1) default 'N'::character varying,
   is_multicontacts char(1),
   address_id bigint,
+  model_id integer,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1259,9 +1260,7 @@ CREATE TABLE priorities
   id character varying(16) NOT NULL,
   label character varying(128) NOT NULL,
   color character varying(128) NOT NULL,
-  working_days boolean NOT NULL,
-  delays integer,
-  default_priority boolean NOT NULL DEFAULT FALSE,
+  delays integer NOT NULL,
   "order" integer,
   CONSTRAINT priorities_pkey PRIMARY KEY (id)
 )
@@ -1877,6 +1876,7 @@ CREATE TABLE indexing_models
     owner INTEGER NOT NULL,
     private BOOLEAN NOT NULL,
     master INTEGER DEFAULT NULL,
+    enabled BOOLEAN DEFAULT TRUE NOT NULL,
     CONSTRAINT indexing_models_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);

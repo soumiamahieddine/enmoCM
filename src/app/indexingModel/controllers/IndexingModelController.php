@@ -32,7 +32,13 @@ class IndexingModelController
 {
     public function get(Request $request, Response $response)
     {
-        $models = IndexingModelModel::get(['where' => ['owner = ? OR private = ?'], 'data' => [$GLOBALS['id'], 'false']]);
+        $where = ['(owner = ? OR private = ?)'];
+
+        if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            $where[] = 'enabled = TRUE';
+        }
+
+        $models = IndexingModelModel::get(['where' => $where, 'data' => [$GLOBALS['id'], 'false']]);
         return $response->withJson(['indexingModels' => $models]);
     }
 
@@ -91,11 +97,17 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => "Mandatory 'subject' field is missing"]);
         }
 
+        $master = null;
         if (Validator::intVal()->notEmpty()->validate($body['master'])) {
             $masterModel = IndexingModelModel::getById(['id' => $body['master']]);
             if (empty($masterModel)) {
                 return $response->withStatus(400)->withJson(['errors' => 'Master model not found']);
             }
+
+            if ($masterModel['private']) {
+                return $response->withStatus(400)->withJson(['errors' => 'Master model is a private model']);
+            }
+            $master = $body['master'];
 
             $fieldsMaster = IndexingModelFieldModel::get(['select' => ['identifier', 'mandatory', 'default_value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$body['master']]]);
             foreach ($fieldsMaster as $key => $value) {
@@ -140,7 +152,7 @@ class IndexingModelController
             'default'   => $body['default'],
             'owner'     => $GLOBALS['id'],
             'private'   => $body['private'],
-            'master'    => $body['master']
+            'master'    => $master
         ]);
 
         foreach ($body['fields'] as $field) {
@@ -167,6 +179,10 @@ class IndexingModelController
 
     public function update(Request $request, Response $response, array $args)
     {
+        if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $body = $request->getParsedBody();
 
         if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
@@ -203,16 +219,13 @@ class IndexingModelController
         }
 
         $model = IndexingModelModel::getById(['select' => ['owner', 'private'], 'id' => $args['id']]);
-        $hasServiceAdmin = ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']);
         if (empty($model)) {
             return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
-        } elseif ($model['private'] && $model['owner'] != $GLOBALS['id']) {
-            return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
-        } elseif (!$model['private'] && !$hasServiceAdmin) {
+        } elseif ($model['private']) {
             return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
         }
 
-        if ($hasServiceAdmin && !$body['private'] && $body['default']) {
+        if ($body['default']) {
             IndexingModelModel::update(['set' => ['"default"' => 'false'], 'where' => ['"default" = ?'], 'data' => ['true']]);
         }
 
@@ -226,7 +239,7 @@ class IndexingModelController
             'data'  => [$args['id']]
         ]);
 
-        $childrenModels = IndexingModelModel::get(['select' => ['id', 'label'], 'where' => ['"master" = ?'], 'data' => [$args['id']]]);
+        $childrenModels = IndexingModelModel::get(['select' => ['id', 'label'], 'where' => ['master = ?'], 'data' => [$args['id']]]);
 
         // If model has children, update the children
         if (!empty($childrenModels)) {
@@ -243,16 +256,13 @@ class IndexingModelController
                 foreach ($body['fields'] as $field) {
                     $found = false;
                     foreach ($childFields as $value) {
-                        // field in master found in child => not changed, keep this field
                         if ($value['identifier'] == $field['identifier'] && $value['mandatory'] == $field['mandatory'] && $value['unit'] == $field['unit']) {
-                            array_push($fieldsToKeep, $value);
+                            $fieldsToKeep[] = $value;
                             $found = true;
                         }
                     }
-
-                    // field in master not found in child => new field to add
                     if (!$found) {
-                        array_push($fieldsToKeep, $field);
+                        $fieldsToKeep[] = $field;
                     }
                 }
 
@@ -264,7 +274,7 @@ class IndexingModelController
                         'identifier'    => $field['identifier'],
                         'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
                         'default_value' => empty($field['default_value']) ? null : json_encode($field['default_value']),
-                        'unit'          => $field['unit'] ?? null
+                        'unit'          => $field['unit']
                     ]);
                 }
 
@@ -287,7 +297,7 @@ class IndexingModelController
                 'identifier'    => $field['identifier'],
                 'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
                 'default_value' => empty($field['default_value']) ? null : json_encode($field['default_value']),
-                'unit'          => $field['unit'] ?? null
+                'unit'          => $field['unit']
             ]);
         }
 
@@ -319,16 +329,20 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => 'Default model can not be deleted']);
         }
 
+        $resources = ResModel::get([
+            'select'    => ['1'],
+            'where'     => ['model_id = ?'],
+            'data'      => [$args['id']]
+        ]);
+
+        if (!empty($resources)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Model is used by at least one resource']);
+        }
+
         $childrenModels = IndexingModelModel::get(['select' => ['id', 'label'], 'where' => ['"master" = ?'], 'data' => [$args['id']]]);
 
-        // If model has children, delete the children
         if (!empty($childrenModels)) {
             foreach ($childrenModels as $child) {
-                IndexingModelModel::delete([
-                    'where' => ['id = ?'],
-                    'data'  => [$child['id']]
-                ]);
-
                 IndexingModelFieldModel::delete(['where' => ['model_id = ?'], 'data' => [$child['id']]]);
 
                 HistoryController::add([
@@ -343,8 +357,8 @@ class IndexingModelController
         }
 
         IndexingModelModel::delete([
-            'where' => ['id = ?'],
-            'data'  => [$args['id']]
+            'where' => ['(id = ? or master = ?)'],
+            'data'  => [$args['id'], $args['id']]
         ]);
 
         IndexingModelFieldModel::delete(['where' => ['model_id = ?'], 'data' => [$args['id']]]);
@@ -356,6 +370,58 @@ class IndexingModelController
             'info'      => _INDEXINGMODEL_SUPPRESSION . " : {$model['label']}",
             'moduleId'  => 'indexingModel',
             'eventId'   => 'indexingModelSuppression',
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function disable(Request $request, Response $response, array $args)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is empty or not an integer']);
+        }
+
+        $model = IndexingModelModel::getById(['select' => ['enabled'], 'id' => $args['id']]);
+        if (empty($model)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
+        }
+
+        IndexingModelModel::update([
+            'set'   => [
+                'enabled'   => 'false'
+            ],
+            'where' => ['id = ? or master = ?'],
+            'data'  => [$args['id'], $args['id']]
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function enable(Request $request, Response $response, array $args)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is empty or not an integer']);
+        }
+
+        $model = IndexingModelModel::getById(['select' => ['enabled'], 'id' => $args['id']]);
+        if (empty($model)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
+        }
+
+        IndexingModelModel::update([
+            'set'   => [
+                'enabled'   => 'true'
+            ],
+            'where' => ['id = ? or master = ?'],
+            'data'  => [$args['id'], $args['id']]
         ]);
 
         return $response->withStatus(204);

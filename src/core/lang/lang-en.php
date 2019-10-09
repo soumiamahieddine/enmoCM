@@ -265,8 +265,8 @@ define('_GRAPHICS_REPORTS_DESC', 'Display graphical mode in reports');
 define("_USE_MAIL_SERVICES", "Use emails services as sender");
 define("_USE_MAIL_SERVICES_DESC", "Use emails services as sender");
 define("_TAG_DEFAULT", "Tag");
-define("_CREATE_TAG", "Create Tag");
-define("_CREATE_TAG_DESC", "Allows to create Tag not existing in database");
+define("_MANAGE_TAGS_IN_APPLICATION", "Create tags");
+define("_MANAGE_TAGS_IN_APPLICATION_DESC", "Create tags while indexing, processing and in details");
 define("_PRIVATE_TAGS", "Associate Tag to the user's entity (Direction level)");
 define("_PRIVATE_TAGS_DESC", "User will only see Tag restricted to user's direction (adding / updating will automatically associate the word to user's direction).");
 define("_THESAURUS_VIEW", "Display the thesaurus in the process pages");
@@ -285,6 +285,10 @@ define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Useful if signature book is used a
 define('_PRINT_FOLDER_DOC', 'Print the entire folder');
 define('_USE_DATE_IN_SIGNBLOCK', 'Add current date in sign block');
 define('_USE_DATE_IN_SIGNBLOCK_DESC', 'The current date is added in top of sign block (with the town if it wrote in parent entity of application).');
+define('_UPDATE_DIFFUSION_RECIPIENT_WHILE_INDEXING', "Update all parts of diffusion list when indexing.");
+define('_UPDATE_DIFFUSION_ROLES_WHILE_INDEXING', "Update diffusion list except Assignee when indexing.");
+define('_UPDATE_DIFFUSION_RECIPIENT_WHILE_PROCESSING', "Update all parts of diffusion list when processing.");
+define('_UPDATE_DIFFUSION_ROLES_WHILE_PROCESSING', "Update diffusion list except Assignee when processing.");
 
 // ACTIONS
 define('_REDIRECTION', 'Redirection');
@@ -346,9 +350,6 @@ define("_AVIS_ANSWERS", "Give oneself's opinion");
 define("_AVIS_ANSWERS_DESC", "Allows to this group to appear in the counsellor's list (recommendation workflow)");
 define("_VIEW_BASKETS_DESC", "My baskets");
 define('_CHOOSE_ENTITY', 'Choose a department');
-define('_EDIT_RECIPIENT_IN_PROCESS', 'Edit recipient in the handling');
-define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', 'Edit recipient on the diffusion list');
-define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Update diffusion list from the detailed page');
 define('_ENTITIES_PRINT_SEP_MLB', 'Print limiters by department/services');
 define("_EXPORT_SEDA_VIEW", "See message export");
 define("_SEND_DOCS_TO_RECOMMENDATION", "Sent a recommendation request (parallel)");
@@ -499,3 +500,5 @@ define("_CUSTOMFIELDS_SUPPRESSION", "Custom field suppression");
 define("_INDEXINGMODEL_CREATION", "Indexing model creation");
 define("_INDEXINGMODEL_MODIFICATION", "Indexing model modification");
 define("_INDEXINGMODEL_SUPPRESSION", "Indexing model suppression");
+
+define("_PRIORITY_DELAY_ALREADY_SET", "This time limit is already set to another priority");

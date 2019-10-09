@@ -161,13 +161,13 @@
                                     *ngIf="!adminMode && arrFormControl[field.identifier].valid && !isEmptyField(field)"></i>
                             </div>
                         </div>
-                        <div *ngIf="field.identifier === 'destination' && !adminMode">
+                        <div *ngIf="field.identifier === 'destination' && !adminMode && arrFormControl['destination'].value > 0">
                             <mat-divider></mat-divider>
                             <div style="padding: 10px;font-size: 16px;color: #135F7F;letter-spacing: 2px;font-weight: bold;display: flex;
                                 align-items: center;">
                                 <div style="display: flex;flex: 1;align-items: center;">
-                                    Liste de diffusion <button mat-icon-button color="primary"
-                                            (click)="appDiffusionsList.switchMode()">
+                                    {{lang.diffusionList}} <button mat-icon-button color="primary"
+                                            (click)="appDiffusionsList.switchMode()" [title]="lang.modifyDiffusionList">
                                             <mat-icon class="fa fa-edit"></mat-icon>
                                         </button>
                                 </div>
@@ -181,7 +181,7 @@
                                         *ngIf="!adminMode && arrFormControl['diffusionList'].valid && !isEmptyField(field)"></i>
                                 </div>
                             </div>
-                            <app-diffusions-list #appDiffusionsList [entityId]="arrFormControl[field.identifier].value" [diffFormControl]="arrFormControl['diffusionList']" [allowedEntities]="[1,2,3,5]">
+                            <app-diffusions-list #appDiffusionsList [entityId]="arrFormControl[field.identifier].value" [diffFormControl]="arrFormControl['diffusionList']" [allowedEntities]="field.allowedEntities" (triggerEvent)="changeDestination($event,field.allowedEntities)">
                             </app-diffusions-list>
                             <mat-divider></mat-divider>
                         </div>

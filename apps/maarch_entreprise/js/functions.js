@@ -2379,28 +2379,6 @@ function stockCheckbox(url, value) {
 
 }
 
-function cleanSessionBasket(url, value) {
-    //fait appel à l'ajax cleanSessionBasket du module basket pour vider la $_SESSION['basket_used']
-    if (value != '') {
-        new Ajax.Request(url,
-
-            {
-                method: 'post',
-                parameters: {
-                    courrier_purpose: value
-                },
-                onSuccess: function (answer) {
-                    eval("response = " + answer.responseText);
-                    $j('#select_basket').submit();
-                    //monTableauJS =  JSON.parse(answer.responseText);
-
-
-                }
-            })
-    };
-
-}
-
 function loadRepList(id, option) {
     if ($('repList_' + id).style.display != 'none') {
         new Effect.toggle('repList_' + id, 'appear', {

@@ -262,7 +262,6 @@ export const LANG_NL = {
     "default"                               : "standaard",
     "defaultAction"                         : "Standaardactie",
     "defaultOrder"                          : "_TO_TRANSLATE",
-    "defaultPriority"                       : "Standaardprioriteit",
     "defaultSort"                           : "Standaard sortering",
     "defaultTemplate"                       : "Aard van het model",
     "delay1"                                : "Termijn herinnering 1 voor einde (in dagen)",
@@ -745,7 +744,6 @@ export const LANG_NL = {
     "processDate"                           : "_TO_TRANSLATE",
     "processDelay"                          : "Verwerkingstermijn",
     "processDelayDay"                       : "Verwerkingstermijn (in dagen)",
-    "processDelayDoctype"                   : "gebruikt de termijn volgens het documenttype",
     "processLimitDate"                      : "Verwerkingsdeadline",
     "processMode"                           : "Verwerkingswijze",
     "processType"                           : "Verwerkingstype",
@@ -928,7 +926,6 @@ export const LANG_NL = {
     "to"                                    : "naar",
     "toAnUser"                              : "Naar een gebruiker", //_TO_TRANSLATE
     "toAService"                            : "Naar een dienst", //_TO_TRANSLATE
-    "toDefault"                             : "standaard",
     "toEntities"                            : "Naar de diensten",
     "toExport"                              : "_TO_TRANSLATE",
     "toggleQrcode"                          : "_TO_TRANSLATE",
@@ -936,8 +933,6 @@ export const LANG_NL = {
     "toolTipDeleteDoctype"                  : "Indien er aan dit documenttype brieven zijn gekoppeld zal er een scherm van nieuwe toewijzing weergegeven worden",
     "tooltipFolderStatus"                   : "Indien dit aangevinkt is, zal de status gebruikt kunnen worden voor mapbakjes",
     "tooltipIndexStatus"                    : "Indien dit aangevinkt is, zal u de metagegevens van de brieven met deze status kunnen wijzigen",
-    "tooltipPriorityDefault"                : "Deze prioriteit standaard plaatsen bij de bewaring van een brief",
-    "tooltipPriorityDelay"                  : "Deze verwerkingstermijn gebruiken in plaats van deze die in het documenttype bepaald is",
     "tooltipSearchStatus"                   : "Indien  aangevinkt zal de status u voorgesteld worden in het opzoekcriterium STATUSSEN van de geavanceerde opzoeking",
     "tooMuchDatas"                          : "Too much datas to export", //_TO_TRANSLATE
     "toRange"                               : "naar",
@@ -1163,12 +1158,14 @@ export const LANG_NL = {
     "indexing_outgoing" : "outgoing", //_TO_TRANSLATE
     "indexing_internal" : "internal", //_TO_TRANSLATE
     "indexing_ged_doc" : "GED", //_TO_TRANSLATE
-    "createMsg" : "Do want create", //_TO_TRANSLATE
-    "folderDeleteWarnMsg" : "Do want delete", //_TO_TRANSLATE
+    "createMsg" : "Do you want to create", //_TO_TRANSLATE
+    "folderDeleteWarnMsg" : "Do you want to delete", //_TO_TRANSLATE
     "folderDeleteWarnMsg2" : "previously created ?", //_TO_TRANSLATE
     "noSelectedFolder" : "No selected folder", //_TO_TRANSLATE
     "noSelectedTag" : "No selected tag", //_TO_TRANSLATE
     "searchTag" : "Search tag", //_TO_TRANSLATE
     "tagAdded" : "Tag added", //_TO_TRANSLATE
     "tagDeleted" : "Tag deleted", //_TO_TRANSLATE
+    "modifyDiffusionList" : "Modify diffusion list", //_TO_TRANSLATE
+    "notInAuthorizedEntities" : "is not in one of the <b>authorized entities</b>.", //_TO_TRANSLATE
 };

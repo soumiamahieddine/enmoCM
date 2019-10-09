@@ -133,8 +133,8 @@ class NoteControllerTest extends TestCase
 
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('string', $responseBody->note_text);
-        $this->assertSame("Test modification d'une note par php unit", $responseBody->note_text);
+        $this->assertInternalType('string', $responseBody->value);
+        $this->assertSame("Test modification d'une note par php unit", $responseBody->value);
         $this->assertInternalType('array', $responseBody->entities);
 
         $response = $noteController->getById($request, new \Slim\Http\Response(), ['id' => 999999999, 'resId' => self::$resId]);
@@ -165,8 +165,8 @@ class NoteControllerTest extends TestCase
         foreach ($responseBody as $value) {
             $this->assertInternalType('int', $value->id);
             $this->assertInternalType('int', $value->identifier);
-            $this->assertInternalType('string', $value->note_text);
-            $this->assertNotEmpty($value->note_text);
+            $this->assertInternalType('string', $value->value);
+            $this->assertNotEmpty($value->value);
             $this->assertInternalType('int', $value->user_id);
             $this->assertInternalType('string', $value->firstname);
             $this->assertNotEmpty($value->firstname);

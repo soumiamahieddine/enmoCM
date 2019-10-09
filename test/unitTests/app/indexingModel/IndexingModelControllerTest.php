@@ -26,7 +26,7 @@ class IndexingModelControllerTest extends TestCase
         $args = [
             'label'     => 'mon model d indexation',
             'category'  => 'incoming',
-            'private'   => true,
+            'private'   => false,
             'fields'    => [
                 [
                     'identifier'    => 'subject',
@@ -67,7 +67,7 @@ class IndexingModelControllerTest extends TestCase
 
         $this->assertSame('mon model d indexation', $responseBody->indexingModel->label);
         $this->assertSame(false, $responseBody->indexingModel->default);
-        $this->assertSame(true, $responseBody->indexingModel->private);
+        $this->assertSame(false, $responseBody->indexingModel->private);
         $this->assertSame('subject', $responseBody->indexingModel->fields[0]->identifier);
         $this->assertSame(true, $responseBody->indexingModel->fields[0]->mandatory);
         $this->assertSame('tika', $responseBody->indexingModel->fields[0]->default_value);
@@ -270,7 +270,7 @@ class IndexingModelControllerTest extends TestCase
 
         $this->assertSame('mon model d indexation modifié', $responseBody->indexingModel->label);
         $this->assertSame(false, $responseBody->indexingModel->default);
-        $this->assertSame(true, $responseBody->indexingModel->private);
+        $this->assertSame(false, $responseBody->indexingModel->private);
         $this->assertSame('subject', $responseBody->indexingModel->fields[0]->identifier);
         $this->assertSame(true, $responseBody->indexingModel->fields[0]->mandatory);
         $this->assertSame('butter', $responseBody->indexingModel->fields[0]->default_value);
@@ -352,6 +352,97 @@ class IndexingModelControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertNotEmpty($responseBody->indexingModels);
+    }
+
+    public function testEnabled() {
+        $indexingModelController = new \IndexingModel\controllers\IndexingModelController();
+
+        // GET BY ID
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$masterId]);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(true, $responseBody->indexingModel->enabled);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$childId]);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(true, $responseBody->indexingModel->enabled);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$childId2]);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(true, $responseBody->indexingModel->enabled);
+
+        //  Disable
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $indexingModelController->disable($request, new \Slim\Http\Response(), ['id' => self::$masterId]);
+        $this->assertSame(204, $response->getStatusCode());
+
+        // GET BY ID
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$masterId]);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(false, $responseBody->indexingModel->enabled);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$childId]);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(false, $responseBody->indexingModel->enabled);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$childId2]);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(false, $responseBody->indexingModel->enabled);
+
+        //  Enable
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $response     = $indexingModelController->enable($request, new \Slim\Http\Response(), ['id' => self::$masterId]);
+        $this->assertSame(204, $response->getStatusCode());
+
+        // GET BY ID
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$masterId]);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(true, $responseBody->indexingModel->enabled);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$childId]);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(true, $responseBody->indexingModel->enabled);
+
+        $response     = $indexingModelController->getById($request, new \Slim\Http\Response(), ['id' => self::$childId2]);
+        $this->assertSame(200, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(true, $responseBody->indexingModel->enabled);
     }
 
     public function testDelete()

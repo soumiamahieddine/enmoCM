@@ -356,6 +356,10 @@ export class IndexingFormComponent implements OnInit {
                                     }
                                 });
                                 elem.event = 'loadDiffusionList';
+                                if (elem.default_value !== null && !this.adminMode) {
+                                    this.loadDiffusionList(elem, elem.default_value);
+                                }
+                                elem.allowedEntities = elem.values.filter((val: any) => val.disabled === false).map((entities: any) => entities.id);
                             }
                         } else if (elem.identifier === 'arrivalDate') {
                             elem.startDate = 'docDate';
@@ -644,7 +648,17 @@ export class IndexingFormComponent implements OnInit {
     }
 
     isEmptyField(field: any) {
-        if (this.arrFormControl[field.identifier].value !== null || String(this.arrFormControl[field.identifier].value) !== '' || this.arrFormControl[field.identifier].value.length > 0 ) {
+
+        if (this.arrFormControl[field.identifier].value === null) {
+            return true;
+
+        } else if (Array.isArray(this.arrFormControl[field.identifier].value)) {
+            if (this.arrFormControl[field.identifier].value.length > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (String(this.arrFormControl[field.identifier].value) !== '') {
             return false;
         } else {
             return true;
@@ -682,8 +696,23 @@ export class IndexingFormComponent implements OnInit {
         }
     }
 
+    toggleMailTracking() {
+        this.arrFormControl['mail­tracking'].setValue(!this.arrFormControl['mail­tracking'].value);
+    }
+
+    changeCategory(categoryId: string) {
+        this.currentCategory = categoryId;
+    }
+
+    changeDestination(entityIds: number[], allowedEntities: number[]) {
+
+        if (entityIds.indexOf(this.arrFormControl['destination'].value) === -1) {
+            this.arrFormControl['destination'].setValue(entityIds[0]);
+        }
+    }
+
     launchEvent(value: any, field: any) {
-        if (field.event !== undefined && value !== null) {
+        if (field.event !== undefined && value !== null && !this.adminMode) {
             this[field.event](field, value);
         }
     }
@@ -704,19 +733,13 @@ export class IndexingFormComponent implements OnInit {
         }
     }
 
-    toggleMailTracking() {
-        this.arrFormControl['mail­tracking'].setValue(!this.arrFormControl['mail­tracking'].value);
-    }
-
     setPriorityColor(field: any, value: any) {
         this.currentPriorityColor = field.values.filter((fieldVal: any) => fieldVal.id === value).map((fieldVal: any) => fieldVal.color)[0];
     }
 
-    changeCategory(categoryId: string) {
-        this.currentCategory = categoryId;
-    }
-
     loadDiffusionList(field: any, value: any) {
-        this.appDiffusionsList.loadListModel(value);
+        setTimeout(() => {
+            this.appDiffusionsList.loadListModel(value);
+        }, 0);
     }
 }

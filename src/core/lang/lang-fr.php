@@ -266,7 +266,7 @@ define("_USE_MAIL_SERVICES", "Utiliser les courriels de ses services en tant qu'
 define("_USE_MAIL_SERVICES_DESC", "Utiliser les courriels de ses services en tant qu'expéditeur");
 define("_TAG_DEFAULT", "Mot-clé");
 define("_MANAGE_TAGS_IN_APPLICATION", "Créer des mots-clés depuis les pages d'actions");
-define("_MANAGE_TAGS_IN_APPLICATION_DESC", "Créer des mots-clés depuis l'indexation, le traitement et la fiche détaillé");
+define("_MANAGE_TAGS_IN_APPLICATION_DESC", "Créer des mots-clés depuis l'indexation, le traitement et la fiche détaillée");
 define("_PRIVATE_TAGS", "Lier les Mots-clé à l'entité de l'utilisateur (Niveau direction)");
 define("_PRIVATE_TAGS_DESC", "L'utilisateur ne verra que les Mots-clé qui ont été restreints à sa direction (l'ajout / modification associera le mot clé automatiquement à sa direction).");
 define("_THESAURUS_VIEW", "Afficher le thésaurus dans les pages de traitement");
@@ -285,6 +285,10 @@ define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Utile si le parahpeur sert en tant
 define('_PRINT_FOLDER_DOC', 'Imprimer le dossier complet');
 define('_USE_DATE_IN_SIGNBLOCK', 'Inclure la date dans la griffe de signature');
 define('_USE_DATE_IN_SIGNBLOCK_DESC', "La date de signature aparaîtra en haut de la griffe de signature (avec la ville si celle-ci a été inscrite dans le service racine de l'application).");
+define('_UPDATE_DIFFUSION_RECIPIENT_WHILE_INDEXING', "Pouvoir modifier toutes les parties de la liste de diffusion lors de l'enregistrement d'un courrier.");
+define('_UPDATE_DIFFUSION_ROLES_WHILE_INDEXING', "Pouvoir modifier la liste de diffusion hormis l'attributaire lors de l'enregistrement d'un courrier.");
+define('_UPDATE_DIFFUSION_RECIPIENT_WHILE_PROCESSING', "Pouvoir modifier toutes les parties de la liste de diffusion lors du traitement d'un courrier.");
+define('_UPDATE_DIFFUSION_ROLES_WHILE_PROCESSING', "Pouvoir modifier la liste de diffusion hormis l'attributaire lors du traitement d'un courrier.");
 
 // ACTIONS
 define('_REDIRECTION', 'Rediriger');
@@ -346,9 +350,6 @@ define("_AVIS_ANSWERS", "Donner son avis");
 define("_AVIS_ANSWERS_DESC", "Permet à ce groupe d'apparaître dans la liste des personnes Conseillers (circuit d'avis)");
 define("_VIEW_BASKETS_DESC", "Mes bannettes");
 define('_CHOOSE_ENTITY', 'Choisissez une entité');
-define('_EDIT_RECIPIENT_IN_PROCESS', 'Modifier l\'attributaire dans le traitement');
-define('_EDIT_RECIPIENT_OUTSIDE_PROCESS', "Modifier l'attributaire dans la liste de diffusion (hors traitement)");
-define('_UPDATE_LIST_DIFF_IN_DETAILS', 'Mettre à jour la liste de diffusion depuis la fiche détaillée');
 define('_ENTITIES_PRINT_SEP_MLB', 'Impression des séparateurs');
 define('_EXPORT_SEDA_VIEW', 'Voir le bordereau');
 define('_SEND_DOCS_TO_RECOMMENDATION', 'Envoyer une demande d\'avis (parallèle)');
@@ -498,3 +499,5 @@ define("_CUSTOMFIELDS_SUPPRESSION", "Champ personnalisé supprimé");
 define("_INDEXINGMODEL_CREATION", "Modèle d'enregistrement créé");
 define("_INDEXINGMODEL_MODIFICATION", "Modèle d'enregistrement modifié");
 define("_INDEXINGMODEL_SUPPRESSION", "Modèle d'enregistrement supprimé");
+
+define("_PRIORITY_DELAY_ALREADY_SET", "Ce délai de traitement est déjà défini pour une autre priorité");

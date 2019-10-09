@@ -24,10 +24,8 @@ use Resource\models\ChronoModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use Respect\Validation\Validator;
-use Entity\models\EntityModel;
 use Resource\models\ResModel;
 use SrcCore\models\CoreConfigModel;
-use User\models\UserModel;
 
 class StoreController
 {
@@ -42,7 +40,7 @@ class StoreController
                     unset($aArgs[$column]);
                 }
             }
-            $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $aArgs['encodedFile']));
+            $fileContent = base64_decode(str_replace(['-', '_'], ['+', '/'], $aArgs['encodedFile']));
 
             $storeResult = DocserverController::storeResourceOnDocServer([
                 'collId'            => 'letterbox_coll',
@@ -285,10 +283,11 @@ class StoreController
         return $response->withJson(['success']);
     }
 
-    private static function isFileAllowed(array $args)
+    public static function isFileAllowed(array $args)
     {
         ValidatorModel::notEmpty($args, ['extension', 'type']);
         ValidatorModel::stringType($args, ['extension', 'type']);
+
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/extensions.xml']);
         if ($loadedXml) {
             foreach ($loadedXml->FORMAT as $value) {
@@ -299,5 +298,36 @@ class StoreController
         }
 
         return false;
+    }
+
+    public static function getAllowedFiles()
+    {
+        $allowedFiles = [];
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/extensions.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->FORMAT as $value) {
+                $allowedFiles[] = [
+                    'extension'     => (string)$value->name,
+                    'mimeType'      => (string)$value->mime,
+                    'canConvert'    => filter_var((string)$value->canConvert, FILTER_VALIDATE_BOOLEAN)
+                ];
+            }
+        }
+
+        return $allowedFiles;
+    }
+
+    public static function getOctetSizeFromPhpIni(array $args)
+    {
+        if (strpos($args['size'], 'K') !== false) {
+            return (int)$args['size'] * 1024;
+        } elseif (strpos($args['size'], 'M') !== false) {
+            return (int)$args['size'] * 1048576;
+        } elseif (strpos($args['size'], 'G') !== false) {
+            return (int)$args['size'] * 1073741824;
+        }
+
+        return (int)$args['size'];
     }
 }

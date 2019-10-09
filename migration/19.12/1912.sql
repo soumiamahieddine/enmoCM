@@ -140,6 +140,7 @@ CREATE TABLE indexing_models
   owner INTEGER NOT NULL,
   private BOOLEAN NOT NULL,
   master INTEGER DEFAULT NULL,
+  enabled BOOLEAN DEFAULT TRUE NOT NULL,
   CONSTRAINT indexing_models_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
@@ -156,6 +157,9 @@ CREATE TABLE indexing_models_fields
   CONSTRAINT indexing_models_fields_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS model_id;
+ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
 
 
 /* TAGS */
@@ -298,9 +302,32 @@ DELETE FROM usergroups_services WHERE service_id = 'add_tag_to_res';
 DELETE FROM usergroups_services WHERE service_id = 'tag_view';
 UPDATE usergroups_services SET service_id = 'manage_tags_application' WHERE service_id = 'create_tag';
 
+INSERT INTO usergroups_services (group_id, service_id)
+SELECT distinct(group_id), 'update_diffusion_recipient_indexing'
+FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
+INSERT INTO usergroups_services (group_id, service_id)
+SELECT distinct(group_id), 'update_diffusion_recipient_details'
+FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
+INSERT INTO usergroups_services (group_id, service_id)
+SELECT distinct(group_id), 'update_diffusion_roles_details'
+FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
+
+INSERT INTO usergroups_services (group_id, service_id)
+SELECT distinct(group_id), 'update_diffusion_roles_indexing'
+FROM usergroups_services WHERE group_id NOT IN (
+SELECT group_id FROM usergroups_services
+WHERE service_id = 'edit_recipient_outside_process' OR service_id = 'update_diffusion_recipient_indexing' OR service_id = 'update_diffusion_roles_indexing'
+);
+DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
+DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
+DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
+UPDATE priorities SET delays = 30 WHERE delays IS NULL;
+
 
 /* REFACTORING MODIFICATION */
 ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
+ALTER TABLE tags ALTER COLUMN label TYPE character varying(128);
+ALTER TABLE priorities ALTER COLUMN delays SET NOT NULL;
 
 
 /* REFACTORING SUPPRESSION */
@@ -341,6 +368,7 @@ DROP TABLE IF EXISTS foldertypes_doctypes_level1;
 DROP TABLE IF EXISTS foldertypes_indexes;
 ALTER TABLE doctypes DROP COLUMN IF EXISTS coll_id;
 DROP TABLE IF EXISTS mlb_doctype_ext;
+ALTER TABLE priorities DROP COLUMN IF EXISTS working_days;
 
 
 /* RE CREATE VIEWS */

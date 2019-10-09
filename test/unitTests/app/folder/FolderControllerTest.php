@@ -160,7 +160,7 @@ class FolderControllerTest extends TestCase
         $response       = $folderController->delete($request, new \Slim\Http\Response(), ['id' => 999999]);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertSame('Can not delete because almost one folder is out of your perimeter', $responseBody->errors);
+        $this->assertSame('Cannot delete because at least one folder is out of your perimeter', $responseBody->errors);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);

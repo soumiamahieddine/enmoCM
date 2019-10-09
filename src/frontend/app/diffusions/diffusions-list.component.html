@@ -1,5 +1,5 @@
 <ng-container *ngIf="!loading">
-    <plugin-autocomplete *ngIf="adminMode" [labelPlaceholder]="lang.addUserOrEntity"
+    <plugin-autocomplete *ngIf="adminMode" #test [labelPlaceholder]="lang.addUserOrEntity"
         [routeDatas]="['/rest/autocomplete/users','/rest/autocomplete/entities']" [targetSearchKey]="'idToDisplay'"
         [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElem($event)"></plugin-autocomplete>
     <div *ngIf="isEmptyList() && !loading" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
@@ -21,16 +21,30 @@
                         [class.fa-user]="diffusion.item_type === 'user_id'"
                         [class.fa-sitemap]="diffusion.item_type === 'entity_id'"></mat-icon>
                     <div class="item-diffusion">
-                        <p mat-line>{{diffusion.labelToDisplay}}</p>
-                        <p mat-line class="subInfo">{{diffusion.descriptionToDisplay}}</p>
+                        <p mat-line [title]="diffusion.labelToDisplay">{{diffusion.labelToDisplay}}</p>
+                        <p mat-line class="subInfo" [title]="diffusion.descriptionToDisplay">
+                            {{diffusion.descriptionToDisplay}}</p>
+                    </div>
+                    <div *ngIf="role.id === 'dest' && target === 'redirect' && adminMode" >
+                        <button mat-icon-button (click)="loadDestUserList()" [matMenuTriggerFor]="menuDestUserList"
+                            title="{{lang.chooseAnotherEntityUser}}">
+                            <mat-icon class="fa fa-edit" color="primary"></mat-icon>
+                        </button>
+                        <mat-menu #menuDestUserList="matMenu">
+                            <button mat-menu-item *ngFor="let userDest of userDestList" (click)="changeDest(userDest)">
+                                <span>{{userDest.labelToDisplay}}</span>
+                            </button>
+                        </mat-menu>
                     </div>
                     <div *ngIf="role.id !== 'dest' && adminMode && diffusion.item_type === 'user_id'">
                         <button mat-button [matMenuTriggerFor]="menu">{{role.label}} <i
                                 class="fa fa-chevron-down"></i></button>
                         <mat-menu #menu="matMenu" [class]="'roleListMenu'">
-                            <button mat-menu-item *ngFor="let selectRole of availableRoles"
-                                (click)="changeRole(diffusion,role,selectRole)"
-                                style="font-size:13px;">{{selectRole.label}}</button>
+                            <ng-container *ngFor="let selectRole of availableRoles">
+                                <button mat-menu-item *ngIf="selectRole.canUpdate"
+                                    (click)="changeRole(diffusion,role,selectRole)"
+                                    style="font-size:13px;">{{selectRole.label}}</button>
+                            </ng-container>
                         </mat-menu>
                     </div>
                     <div *ngIf="role.id !== 'dest' && adminMode">

@@ -7,14 +7,14 @@
             <div class="listModels">
                 <button mat-button class="button-form-primary" [matMenuTriggerFor]="IndexingModelsMenu"
                     style="flex:1;margin-right:20px;">
-                    <span class="menu-label">
+                    <span class="menu-label" [title]="currentIndexingModel.label">
                         {{currentIndexingModel.label}} {{currentIndexingModel.default ? '(' + lang.default + ')': ''}}
                     </span>
                     <i class="fa fa-chevron-down menu-icon"></i></button>
                 <mat-menu #IndexingModelsMenu="matMenu" [class]="'menuForm'">
                     <ng-container *ngFor="let indexingModel of indexingModels">
                         <button *ngIf="indexingModel.id !== currentIndexingModel.id" mat-menu-item
-                            (click)="loadIndexingModel(indexingModel)">{{indexingModel.label}}
+                            (click)="loadIndexingModel(indexingModel)" [title]="indexingModel.label">{{indexingModel.label}}
                             {{indexingModel.default ? '(' + lang.default + ')': ''}}</button>
                     </ng-container>
                 </mat-menu>
@@ -68,7 +68,7 @@
         </div>
         <div class="document-container" [class.fullContainer]="appService.getViewMode()">
             <div class="content">
-                <i class="fa fa-file-upload upload-icon"></i><br />
+                <!--<i class="fa fa-file-upload upload-icon"></i><br />
                 Glisser-déposer<br />ou
                 <div style="display: flex;">
                     <button mat-button class="button-form-primary" [matMenuTriggerFor]="menu"
@@ -85,7 +85,8 @@
                     <button mat-button class="button-form-primary"
                         style="align-items: center;justify-content: center;text-align: center;display: flex;">Choisissez
                         votre fichier</button>
-                </div>
+                </div>-->
+                <app-document-viewer style="height:100%;width:100%;"></app-document-viewer>
             </div>
         </div>
     </mat-sidenav-content>

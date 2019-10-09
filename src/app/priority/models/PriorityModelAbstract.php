@@ -44,10 +44,10 @@ abstract class PriorityModelAbstract
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $aPriority = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['priorities'],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'  => ['priorities'],
+            'where'  => ['id = ?'],
+            'data'   => [$aArgs['id']]
         ]);
 
         if (empty($aPriority[0])) {
@@ -59,21 +59,18 @@ abstract class PriorityModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['label', 'color', 'working_days', 'default_priority']);
-        ValidatorModel::stringType($aArgs, ['label', 'color', 'working_days', 'default_priority']);
+        ValidatorModel::notEmpty($aArgs, ['label', 'color']);
+        ValidatorModel::stringType($aArgs, ['label', 'color']);
         ValidatorModel::intVal($aArgs, ['delays']);
 
-        //working_days => true (monday to friday) => false (monday to sunday)
         $id = CoreConfigModel::uniqueId();
         DatabaseModel::insert([
             'table'         => 'priorities',
             'columnsValues' => [
-                'id'                => $id,
-                'label'             => $aArgs['label'],
-                'color'             => $aArgs['color'],
-                'working_days'      => $aArgs['working_days'],
-                'delays'            => $aArgs['delays'],
-                'default_priority'  => $aArgs['default_priority'],
+                'id'     => $id,
+                'label'  => $aArgs['label'],
+                'color'  => $aArgs['color'],
+                'delays' => $aArgs['delays'],
             ]
         ]);
 
@@ -82,22 +79,19 @@ abstract class PriorityModelAbstract
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'label', 'color', 'working_days', 'default_priority']);
-        ValidatorModel::stringType($aArgs, ['id', 'label', 'color', 'working_days', 'default_priority']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'label', 'color']);
+        ValidatorModel::stringType($aArgs, ['id', 'label', 'color']);
         ValidatorModel::intVal($aArgs, ['delays']);
 
-        //working_days => true (monday to friday) => false (monday to sunday)
         DatabaseModel::update([
             'table'     => 'priorities',
             'set'       => [
-                'label'             => $aArgs['label'],
-                'color'             => $aArgs['color'],
-                'working_days'      => $aArgs['working_days'],
-                'delays'            => $aArgs['delays'],
-                'default_priority'  => $aArgs['default_priority']
+                'label'  => $aArgs['label'],
+                'color'  => $aArgs['color'],
+                'delays' => $aArgs['delays'],
             ],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'where' => ['id = ?'],
+            'data'  => [$aArgs['id']]
         ]);
 
         return true;
@@ -121,20 +115,6 @@ abstract class PriorityModelAbstract
         return true;
     }
 
-    public static function resetDefaultPriority()
-    {
-        DatabaseModel::update([
-            'table'     => 'priorities',
-            'set'       => [
-                'default_priority'  => 'false'
-            ],
-            'where'     => ['default_priority = ?'],
-            'data'      => ['true']
-        ]);
-
-        return true;
-    }
-
     public static function delete(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
@@ -148,5 +128,19 @@ abstract class PriorityModelAbstract
         
         return true;
     }
-}
 
+    public static function getByDelays(array $aArgs)
+    {
+        ValidatorModel::intVal($aArgs, ['delays']);
+        ValidatorModel::arrayType($aArgs, ['select']);
+
+        $aPriority = PriorityModel::get([
+            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'  => ['priorities'],
+            'where'  => ['delays = ?'],
+            'data'   => [$aArgs['delays']]
+        ]);
+
+        return $aPriority;
+    }
+}

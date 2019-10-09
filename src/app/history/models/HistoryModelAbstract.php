@@ -77,6 +77,23 @@ abstract class HistoryModelAbstract
         return $aHistories;
     }
 
+    public static function getByResourceId(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::stringType($args, ['resId']);
+
+        $history = DatabaseModel::select([
+            'select'   => empty($args['select']) ? ['*'] : $args['select'],
+            'table'    => ['history'],
+            'where'    => ['table_name in (?)', 'record_id = ?', 'event_date > (CURRENT_TIMESTAMP - interval \'30 DAYS\')'],
+            'data'     => [['res_letterbox', 'res_view_letterbox'], $args['resId']],
+            'order_by' => ['event_date DESC'],
+            'limit'    => 200
+        ]);
+
+        return $history;
+    }
+
     public static function getFilter(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['select','event_date']);

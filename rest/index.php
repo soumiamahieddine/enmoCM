@@ -128,6 +128,9 @@ $app->get('/contactsTypes', \Contact\controllers\ContactTypeController::class . 
 $app->get('/contactsFilling', \Contact\controllers\ContactController::class . ':getFilling');
 $app->put('/contactsFilling', \Contact\controllers\ContactController::class . ':updateFilling');
 
+//Convert
+$app->post('/convertedFile', \Convert\controllers\ConvertPdfController::class . ':convertedFile');
+
 //CustomFields
 $app->get('/customFields', \CustomField\controllers\CustomFieldController::class . ':get');
 $app->post('/customFields', \CustomField\controllers\CustomFieldController::class . ':create');
@@ -213,6 +216,7 @@ $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupControll
 //Histories
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
+$app->get('/histories/resources/{resId}', \History\controllers\HistoryController::class . ':getByResourceId');
 
 //Header
 $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');
@@ -227,6 +231,7 @@ $app->get('/home/maarchParapheurDocuments', \Home\controllers\HomeController::cl
 $app->get('/indexing/{groupId}/actions', \Resource\controllers\IndexingController::class . ':getIndexingActions');
 $app->get('/indexing/{groupId}/entities', \Resource\controllers\IndexingController::class . ':getIndexingEntities');
 $app->get('/indexing/processLimitDate', \Resource\controllers\IndexingController::class . ':getProcessLimitDate');
+$app->get('/indexing/fileInformations', \Resource\controllers\IndexingController::class . ':getFileInformations');
 
 //IndexingModels
 $app->get('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':get');
@@ -234,6 +239,8 @@ $app->get('/indexingModels/entities', \IndexingModel\controllers\IndexingModelCo
 $app->get('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':getById');
 $app->post('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':create');
 $app->put('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':update');
+$app->put('/indexingModels/{id}/disable', \IndexingModel\controllers\IndexingModelController::class . ':disable');
+$app->put('/indexingModels/{id}/enable', \IndexingModel\controllers\IndexingModelController::class . ':enable');
 $app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
 
 //Jnlp
@@ -263,6 +270,7 @@ $app->get('/listTemplates/entities/{entityId}/maarchParapheur', \Entity\controll
 $app->put('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':updateByUserWithEntityDest');
 $app->get('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':getTypeRoles');
 $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':updateTypeRoles');
+$app->get('/roles', \Entity\controllers\ListTemplateController::class . ':getRoles');
 
 //Notes
 $app->get('/notes/templates', \Note\controllers\NoteController::class . ':getTemplates');

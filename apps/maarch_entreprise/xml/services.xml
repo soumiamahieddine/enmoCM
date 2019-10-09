@@ -455,4 +455,40 @@
     <system_service>false</system_service>
     <enabled>true</enabled>
   </SERVICE>
+  <SERVICE>
+    <id>update_diffusion_recipient_indexing</id>
+    <name>_UPDATE_DIFFUSION_RECIPIENT_WHILE_INDEXING</name>
+    <comment>_UPDATE_DIFFUSION_RECIPIENT_WHILE_INDEXING</comment>
+    <servicepage></servicepage>
+    <servicetype>use</servicetype>
+    <system_service>false</system_service>
+    <enabled>true</enabled>
+  </SERVICE>
+  <SERVICE>
+    <id>update_diffusion_roles_indexing</id>
+    <name>_UPDATE_DIFFUSION_ROLES_WHILE_INDEXING</name>
+    <comment>_UPDATE_DIFFUSION_ROLES_WHILE_INDEXING</comment>
+    <servicepage></servicepage>
+    <servicetype>use</servicetype>
+    <system_service>false</system_service>
+    <enabled>true</enabled>
+  </SERVICE>
+  <SERVICE>
+    <id>update_diffusion_recipient_details</id>
+    <name>_UPDATE_DIFFUSION_RECIPIENT_WHILE_PROCESSING</name>
+    <comment>_UPDATE_DIFFUSION_RECIPIENT_WHILE_PROCESSING</comment>
+    <servicepage></servicepage>
+    <servicetype>use</servicetype>
+    <system_service>false</system_service>
+    <enabled>true</enabled>
+  </SERVICE>
+  <SERVICE>
+    <id>update_diffusion_roles_details</id>
+    <name>_UPDATE_DIFFUSION_ROLES_WHILE_PROCESSING</name>
+    <comment>_UPDATE_DIFFUSION_ROLES_WHILE_PROCESSING</comment>
+    <servicepage></servicepage>
+    <servicetype>use</servicetype>
+    <system_service>false</system_service>
+    <enabled>true</enabled>
+  </SERVICE>
 </root>

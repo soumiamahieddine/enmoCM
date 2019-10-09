@@ -16,7 +16,7 @@
         </mat-card-header>
         <mat-card-content>
             <p class="noteTextContent">
-                {{note.note_text}}
+                {{note.value}}
             </p>
             <span *ngFor="let entity of note.entities_restriction" class="label label-default noteRestriction"
                 title="{{lang.restrictedEntity}}"><i class="fa fa-sitemap"></i> {{entity.short_label}}</span>

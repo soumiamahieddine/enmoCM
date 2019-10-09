@@ -53,9 +53,9 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'prin
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'print_doc_details_from_list');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'delete_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_document_in_detail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'entities_print_sep_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_recipient_outside_process');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_diffusion_recipient_indexing');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_diffusion_recipient_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'use_mail_services');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'reports');
@@ -86,6 +86,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'use_mail_services');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'edit_attachments_from_detail');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_diffusion_recipient_indexing');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'modify_attachments');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'delete_attachments');
@@ -114,7 +115,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'print_doc_details_from_list');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'delete_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'edit_document_in_detail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'edit_recipient_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'sendmail');
@@ -138,7 +138,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'v
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_links');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'print_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'print_doc_details_from_list');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'edit_recipient_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'sendmail');
@@ -194,7 +193,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'manage_entities');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_difflist_types');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_listmodels');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'edit_recipient_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'entities_print_sep_mlb');
@@ -920,7 +918,8 @@ INSERT INTO parameters (id, description, param_value_string, param_value_int, pa
 INSERT INTO parameters (id, description, param_value_string) VALUES ('homepage_message', 'Texte apparaissant dans la bannière sur la page d''accueil, mettre un espace pour supprimer la bannière.', 'Bienvenue dans votre <b>G</b>estion <b>E</b>lectronique du <b>C</b>ourrier.');
 INSERT INTO parameters (id, description, param_value_string) VALUES ('thumbnailsSize', 'Résolution des imagettes', '750x900');
 INSERT INTO parameters (id, description, param_value_int) VALUES ('keepDestForRedirection', 'If enabled (1), put recipient in copy for diffusion list when redirecting', 0);
-INSERT INTO parameters (id, description, param_value_int) VALUES ('QrCodePrefix', 'Si enabled (1), add "Maarch_" before the content in QrCode. (Can be use with MaarchCapture >= 1.4)', 0);
+INSERT INTO parameters (id, description, param_value_int) VALUES ('QrCodePrefix', 'If enabled (1), add "Maarch_" before the content in QrCode. (Can be use with MaarchCapture >= 1.4)', 0);
+INSERT INTO parameters (id, description, param_value_int) VALUES ('workingDays', 'If enabled (1), processing time are calculated in working days (Monday to Friday). Otherwise, in calendar days', 1);
 
 ------------
 --DIFFLIST_TYPES
@@ -1470,9 +1469,9 @@ Select setval('templates_seq', (select max(template_id)+1 from templates), false
 --PRIORITES
 ------------
 TRUNCATE TABLE priorities;
-INSERT INTO priorities (id, label, color, working_days, delays, default_priority, "order") VALUES ('poiuytre1357nbvc', 'Normal', '#009dc5', TRUE, null, TRUE, 1);
-INSERT INTO priorities (id, label, color, working_days, delays, default_priority, "order") VALUES ('poiuytre1379nbvc', 'Urgent', '#ffa500', TRUE, 8, FALSE, 2);
-INSERT INTO priorities (id, label, color, working_days, delays, default_priority, "order") VALUES ('poiuytre1391nbvc', 'Very urgent', '#ff0000', TRUE, 4, FALSE, 3);
+INSERT INTO priorities (id, label, color, delays, "order") VALUES ('poiuytre1357nbvc', 'Normal', '#009dc5', 0, 1);
+INSERT INTO priorities (id, label, color, delays, "order") VALUES ('poiuytre1379nbvc', 'Urgent', '#ffa500', 8, 2);
+INSERT INTO priorities (id, label, color, delays, "order") VALUES ('poiuytre1391nbvc', 'Very urgent', '#ff0000', 4, 3);
 
 ------------
 --NOTIFICATIONS

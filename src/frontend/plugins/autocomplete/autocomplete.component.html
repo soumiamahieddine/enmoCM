@@ -5,7 +5,7 @@
     floatLabel="never">
     <mat-label *ngIf="singleMode !== undefined">{{placeholder}}</mat-label>
     <mat-icon *ngIf="size !== 'small' && (myControl.enabled && !singleMode)" color="primary" class="fa fa-search" matPrefix></mat-icon>
-    <input type="text" #autoCompleteInput [placeholder]="singleMode !== undefined ? '' : placeholder"
+    <input type="text" id="autoCompleteInput" #autoCompleteInput [placeholder]="singleMode !== undefined ? '' : placeholder"
       aria-label="Number" matInput [formControl]="myControl" [matAutocomplete]="auto" (click)="$event.stopPropagation()"
       (focus)="resetAutocomplete()" [required]="required" (keyup.enter)="addItem()">
     <button type="button" *ngIf="myControl.disabled" matSuffix mat-icon-button color="warn" (click)="unsetValue()">

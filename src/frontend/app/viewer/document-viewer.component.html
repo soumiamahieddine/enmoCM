@@ -1,0 +1,52 @@
+<!--<mat-card>
+    <span class="file-info">{{file.name}}({{file.size | bytes}})</span>
+    <section class="example-section">
+        <mat-progress-bar class="example-margin" [value]="progressPercentage"></mat-progress-bar>
+        <a [ngClass]="{'disabled' : isUploading}"><mat-icon class="action" (click)="upload()">file_upload</mat-icon></a>
+        <mat-icon class="action" (click)="remove()">cancel</mat-icon>
+    </section>
+    <span class="file-info">{{progressPercentage}}%</span><span> {{loaded | bytes}} of {{total | bytes}}</span>
+</mat-card>-->
+
+<div class="example-loading-shade" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="file.content === null && !loading" class="view-doc-container" appUploadFileDragDrop (onFileDropped)="dndUploadFile($event)">
+    <i class="fa fa-file-upload upload-icon"></i><br />
+    Glisser-déposer<br />ou
+    <div style="display: flex;">
+        <button mat-button class="button-form-primary" [matMenuTriggerFor]="menu"
+            style="margin-right:20px;align-items: center;justify-content: center;text-align: center;display: flex;">
+            <span class="menu-label">
+                Choisir un modèle
+            </span>
+            <i class="fa fa-chevron-down menu-icon"></i>
+        </button>
+        <mat-menu #menu="matMenu" [class]="'menuForm'">
+            <button mat-menu-item>Modèle 1</button>
+            <button mat-menu-item>Modèle 2</button>
+        </mat-menu>
+        <button mat-button (click)="docToUpload.click()" class="button-form-primary"
+            style="align-items: center;justify-content: center;text-align: center;display: flex;">Choisissez
+            votre fichier</button>
+    </div>
+</div>
+<input type="file" #docToUpload name="files[]" (change)="uploadTrigger($event)" style="display:none;">
+<div style="display: block;width:100%;" appUploadFileDragDrop (onFileDropped)="dndUploadFile($event)">
+    <div class="viewer-tools">
+        <button mat-icon-button (click)="docToUpload.click()" matTooltip="Téléversez un autre fichier">
+            <mat-icon class="fa fa-file-upload"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="cleanFile()" matTooltip="Enlever le fichier">
+            <mat-icon class="fa fa-trash" color="warn"></mat-icon>
+        </button>
+    </div>
+    <pdf-viewer *ngIf="file.src!==null" [src]="file.src" [render-text]="true" [autoresize]="true"
+        [original-size]="false" [show-all]="true" (error)="onError($event)" style="width:100%;"></pdf-viewer>
+</div>
+<div *ngIf="file.content !== null && noConvertedFound" class="no-doc-container" appUploadFileDragDrop (onFileDropped)="dndUploadFile($event)">
+    <div class="loaded-file"><i class="fa fa-file"></i>&nbsp;<a (click)="docToUpload.click()">{{file.name}}</a>&nbsp;<b>chargé</b></div>
+
+    <div class="no-view"><i class="far fa-eye-slash no-view-icon"></i><br />Pas de visualisation disponible</div>
+    
+ </div>

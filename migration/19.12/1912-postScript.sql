@@ -1,7 +1,7 @@
 -- *************************************************************************--
 --                                                                          --
 --                                                                          --
--- Model migration script - 19.04 to 19.12 (Run this file after migrate.sh) --
+-- Model migration script - 19.04 to 20.01 (Run this file after migrate.sh) --
 --                                                                          --
 --                                                                          --
 -- *************************************************************************--
@@ -20,3 +20,5 @@ DROP TABLE IF EXISTS groupbasket_status;
 DROP TABLE IF EXISTS indexingmodels;
 
 DROP TABLE IF EXISTS mlb_coll_ext;
+
+ALTER TABLE priorities DROP COLUMN IF EXISTS default_priority;
