@@ -158,6 +158,7 @@ CREATE TABLE indexing_models_fields
 )
 WITH (OIDS=FALSE);
 
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS model_id;
 ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
 
 
