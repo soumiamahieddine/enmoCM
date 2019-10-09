@@ -14,6 +14,7 @@
 
 namespace History\controllers;
 
+use Resource\controllers\ResController;
 use Respect\Validation\Validator;
 use SrcCore\controllers\LogsController;
 use Group\models\ServiceModel;
@@ -105,5 +106,16 @@ class HistoryController
         $aHistories = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['info', 'event_date']]);
 
         return $response->withJson(['histories' => $aHistories]);
+    }
+
+    public function getByResourceId(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $history = HistoryModel::getByResourceId(['resId' => $args['resId'], 'select' => ['info', 'event_date']]);
+
+        return $response->withJson(['history' => $history]);
     }
 }

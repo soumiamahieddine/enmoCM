@@ -216,6 +216,7 @@ $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupControll
 //Histories
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
+$app->get('/histories/resources/{resId}', \History\controllers\HistoryController::class . ':getByResourceId');
 
 //Header
 $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');

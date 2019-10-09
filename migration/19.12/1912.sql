@@ -158,6 +158,8 @@ CREATE TABLE indexing_models_fields
 )
 WITH (OIDS=FALSE);
 
+ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
+
 
 /* TAGS */
 DO $$ BEGIN
@@ -318,11 +320,13 @@ WHERE service_id = 'edit_recipient_outside_process' OR service_id = 'update_diff
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
 DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
+UPDATE priorities SET delays = 30 WHERE delays IS NULL;
 
 
 /* REFACTORING MODIFICATION */
 ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
 ALTER TABLE tags ALTER COLUMN label TYPE character varying(128);
+ALTER TABLE priorities ALTER COLUMN delays SET NOT NULL;
 
 
 /* REFACTORING SUPPRESSION */
@@ -363,12 +367,8 @@ DROP TABLE IF EXISTS foldertypes_doctypes_level1;
 DROP TABLE IF EXISTS foldertypes_indexes;
 ALTER TABLE doctypes DROP COLUMN IF EXISTS coll_id;
 DROP TABLE IF EXISTS mlb_doctype_ext;
-ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
-
-/* PRIORITIES */
 ALTER TABLE priorities DROP COLUMN IF EXISTS working_days;
-UPDATE priorities SET delays = 30 WHERE delays IS NULL;
-ALTER TABLE priorities ALTER COLUMN delays SET NOT NULL;
+
 
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS
