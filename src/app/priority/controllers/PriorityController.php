@@ -48,10 +48,15 @@ class PriorityController
         $data = $request->getParams();
         $check = Validator::stringType()->notEmpty()->validate($data['label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['color']);
-        $check = $check && (Validator::intVal()->notEmpty()->validate($data['delays']) || $data['delays'] == null || $data['delays'] == 0);
+        $check = $check && (Validator::intVal()->notEmpty()->validate($data['delays']) || $data['delays'] == 0);
 
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Body (label, color or delays) is empty or type is incorrect']);
+        }
+
+        $delayAlreadySet = PriorityModel::getByDelays(['select' => [1], 'delays' => (int)$data['delays']]);
+        if (!empty($delayAlreadySet)) {
+            return $response->withStatus(400)->withJson(['errors' => _PRIORITY_DELAY_ALREADY_SET]);
         }
 
         $id = PriorityModel::create($data);
@@ -76,10 +81,15 @@ class PriorityController
         $data = $request->getParams();
         $check = Validator::stringType()->notEmpty()->validate($data['label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['color']);
-        $check = $check && (Validator::intVal()->notEmpty()->validate($data['delays']) || $data['delays'] == null);
+        $check = $check && (Validator::intVal()->notEmpty()->validate($data['delays']) || $data['delays'] == 0);
 
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Body (label, color or delays) is empty or type is incorrect']);
+        }
+
+        $delayAlreadySet = PriorityModel::getByDelays(['select' => [1], 'delays' => $data['delays']]);
+        if (!empty($delayAlreadySet)) {
+            return $response->withStatus(400)->withJson(['errors' => _PRIORITY_DELAY_ALREADY_SET]);
         }
 
         $data['id'] = $aArgs['id'];

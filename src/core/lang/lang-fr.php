@@ -499,3 +499,5 @@ define("_CUSTOMFIELDS_SUPPRESSION", "Champ personnalisé supprimé");
 define("_INDEXINGMODEL_CREATION", "Modèle d'enregistrement créé");
 define("_INDEXINGMODEL_MODIFICATION", "Modèle d'enregistrement modifié");
 define("_INDEXINGMODEL_SUPPRESSION", "Modèle d'enregistrement supprimé");
+
+define("_PRIORITY_DELAY_ALREADY_SET", "Ce délai de traitement est déjà défini pour une autre priorité");

@@ -1600,7 +1600,7 @@ Select setval('templates_seq', (select max(template_id)+1 from templates), false
 --PRIORITES
 ------------
 TRUNCATE TABLE priorities;
-INSERT INTO priorities (id, label, color, delays, "order") VALUES ('poiuytre1357nbvc', 'Normal', '#009dc5', 0, 1);
+INSERT INTO priorities (id, label, color, delays, "order") VALUES ('poiuytre1357nbvc', 'Normal', '#009dc5', 30, 1);
 INSERT INTO priorities (id, label, color, delays, "order") VALUES ('poiuytre1379nbvc', 'Urgent', '#ffa500', 8, 2);
 INSERT INTO priorities (id, label, color, delays, "order") VALUES ('poiuytre1391nbvc', 'Très urgent', '#ff0000', 4, 3);
 

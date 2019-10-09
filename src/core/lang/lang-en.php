@@ -500,3 +500,5 @@ define("_CUSTOMFIELDS_SUPPRESSION", "Custom field suppression");
 define("_INDEXINGMODEL_CREATION", "Indexing model creation");
 define("_INDEXINGMODEL_MODIFICATION", "Indexing model modification");
 define("_INDEXINGMODEL_SUPPRESSION", "Indexing model suppression");
+
+define("_PRIORITY_DELAY_ALREADY_SET", "This time limit is already set to another priority");

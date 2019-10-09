@@ -363,7 +363,11 @@ DROP TABLE IF EXISTS foldertypes_doctypes_level1;
 DROP TABLE IF EXISTS foldertypes_indexes;
 ALTER TABLE doctypes DROP COLUMN IF EXISTS coll_id;
 DROP TABLE IF EXISTS mlb_doctype_ext;
+
+/* PRIORITIES */
 ALTER TABLE priorities DROP COLUMN IF EXISTS working_days;
+UPDATE priorities SET delays = 30 WHERE delays IS NULL;
+ALTER TABLE priorities ALTER COLUMN delays SET NOT NULL;
 
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS

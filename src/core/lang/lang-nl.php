@@ -505,3 +505,5 @@ define("_CUSTOMFIELDS_SUPPRESSION", "Custom field suppression_TO_TRANSLATE");
 define("_INDEXINGMODEL_CREATION", "Indexing model creation_TO_TRANSLATE");
 define("_INDEXINGMODEL_MODIFICATION", "Indexing model modification_TO_TRANSLATE");
 define("_INDEXINGMODEL_SUPPRESSION", "Indexing model suppression_TO_TRANSLATE");
+
+define("_PRIORITY_DELAY_ALREADY_SET", "Ce délai de traitement est déjà paramétré pour une autre priorité_TO_TRANSLATE");
