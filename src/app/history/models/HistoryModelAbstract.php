@@ -68,10 +68,10 @@ abstract class HistoryModelAbstract
         $aHistories = DatabaseModel::select([
             'select'   => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'    => ['history'],
-            'where'    => ['user_id = ?', 'event_date > (CURRENT_TIMESTAMP - interval \'7 DAYS\')'],
+            'where'    => ['user_id = ?'],
             'data'     => [$aArgs['userId']],
             'order_by' => ['event_date DESC'],
-            'limit'    => 200
+            'limit'    => 500
         ]);
 
         return $aHistories;
@@ -85,10 +85,10 @@ abstract class HistoryModelAbstract
         $history = DatabaseModel::select([
             'select'   => empty($args['select']) ? ['*'] : $args['select'],
             'table'    => ['history'],
-            'where'    => ['table_name in (?)', 'record_id = ?', 'event_date > (CURRENT_TIMESTAMP - interval \'30 DAYS\')'],
+            'where'    => ['table_name in (?)', 'record_id = ?'],
             'data'     => [['res_letterbox', 'res_view_letterbox'], $args['resId']],
             'order_by' => ['event_date DESC'],
-            'limit'    => 200
+            'limit'    => 500
         ]);
 
         return $history;

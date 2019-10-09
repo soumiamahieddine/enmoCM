@@ -318,7 +318,7 @@ class StoreController
         return $allowedFiles;
     }
 
-    public static function getOctetSizeFromPhpIni(array $args)
+    public static function getBytesSizeFromPhpIni(array $args)
     {
         if (strpos($args['size'], 'K') !== false) {
             return (int)$args['size'] * 1024;

@@ -371,7 +371,7 @@ class ListTemplateController
         $rolesForType = empty($listTemplateTypes[0]['difflist_type_roles']) ? [] : explode(' ', $listTemplateTypes[0]['difflist_type_roles']);
         foreach ($roles as $key => $role) {
             if ($role['id'] == 'dest') {
-                $roles[$key]['label'] = _ASSIGNEE . ' / ' . _REDACTOR ;
+                $roles[$key]['label'] = _ASSIGNEE;
             }
             if (in_array($role['id'], $unneededRoles)) {
                 unset($roles[$key]);
@@ -470,8 +470,14 @@ class ListTemplateController
             }
         }
 
+        $listTemplateTypes = ListTemplateModel::getTypes(['select' => ['difflist_type_roles'], 'where' => ['difflist_type_id = ?'], 'data' => ['entity_id']]);
+        $availableRoles = empty($listTemplateTypes[0]['difflist_type_roles']) ? [] : explode(' ', $listTemplateTypes[0]['difflist_type_roles']);
         $roles = EntityModel::getRoles();
         foreach ($roles as $key => $role) {
+            if (!in_array($role['id'], $availableRoles)) {
+                unset($roles[$key]);
+                break;
+            }
             if ($role['id'] == 'dest') {
                 $roles[$key]['label'] = _ASSIGNEE;
                 if ($triggerContext) {
@@ -487,7 +493,7 @@ class ListTemplateController
             }
         }
 
-        return $response->withJson(['roles' => $roles]);
+        return $response->withJson(['roles' => array_values($roles)]);
     }
 
     private static function checkItems(array $aArgs)

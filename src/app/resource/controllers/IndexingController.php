@@ -153,11 +153,11 @@ class IndexingController
         $allowedFiles = StoreController::getAllowedFiles();
 
         $uploadMaxFilesize = ini_get('upload_max_filesize');
-        $uploadMaxFilesize = StoreController::getOctetSizeFromPhpIni(['size' => $uploadMaxFilesize]);
+        $uploadMaxFilesize = StoreController::getBytesSizeFromPhpIni(['size' => $uploadMaxFilesize]);
         $postMaxSize = ini_get('post_max_size');
-        $postMaxSize = StoreController::getOctetSizeFromPhpIni(['size' => $postMaxSize]);
+        $postMaxSize = StoreController::getBytesSizeFromPhpIni(['size' => $postMaxSize]);
         $memoryLimit = ini_get('memory_limit');
-        $memoryLimit = StoreController::getOctetSizeFromPhpIni(['size' => $memoryLimit]);
+        $memoryLimit = StoreController::getBytesSizeFromPhpIni(['size' => $memoryLimit]);
 
         $maximumSize = min($uploadMaxFilesize, $postMaxSize, $memoryLimit);
 
