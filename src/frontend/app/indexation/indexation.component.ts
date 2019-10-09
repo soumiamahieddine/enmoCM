@@ -14,6 +14,7 @@ import { AppService } from '../../service/app.service';
 import { IndexingFormComponent } from './indexing-form/indexing-form.component';
 import { tap, finalize, catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { DocumentViewerComponent } from '../viewer/document-viewer.component';
 
 @Component({
     templateUrl: "indexation.component.html",
@@ -34,6 +35,7 @@ export class IndexationComponent implements OnInit {
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
+    @ViewChild('appDocumentViewer', { static: false }) appDocumentViewer: DocumentViewerComponent;
 
     indexingModels: any[] = [];
     currentIndexingModel: any = {};
@@ -111,6 +113,8 @@ export class IndexationComponent implements OnInit {
     onSubmit() {
         if (this.indexingForm.isValidForm()) {
             alert(this.selectedAction.component + '() déclenchée');
+            console.log(this.indexingForm.getDatas());
+            console.log(this.appDocumentViewer.getFile());
         } else {
             alert('Veuillez corriger les erreurs.');
         }
