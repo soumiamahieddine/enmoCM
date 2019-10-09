@@ -58,8 +58,8 @@ export class DiffusionsListComponent implements OnInit {
 
     /**
      * To load privilege of current list management
-     * @param indexing
-     * @param process
+     * @param indexation
+     * @param details
      * @param redirect
      */
     @Input('target') target: string;
@@ -82,7 +82,7 @@ export class DiffusionsListComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.target = this.target !== undefined ? this.target : 'indexing';
+        this.target = this.target !== undefined ? this.target : '';
         this.adminMode = this.adminMode !== undefined ? this.adminMode : false;
         this.keepDestForRedirection = this.keepDestForRedirection !== undefined ? this.keepDestForRedirection : false;
 
@@ -125,7 +125,7 @@ export class DiffusionsListComponent implements OnInit {
         let mergedRoutesDatas: any = {};
 
         if (this.availableRoles.length === 0) {
-            arrayRoutes.push(this.http.get('../../rest/listTemplates/types/entity_id/roles'));
+            arrayRoutes.push(this.http.get('../../rest/roles?context=' + this.target));
         }
 
         arrayRoutes.push(this.http.get('../../rest/listTemplates/entities/' + entityId));
@@ -217,7 +217,7 @@ export class DiffusionsListComponent implements OnInit {
         let mergedRoutesDatas: any = {};
 
         if (this.availableRoles.length === 0) {
-            arrayRoutes.push(this.http.get('../../rest/listTemplates/types/entity_id/roles'));
+            arrayRoutes.push(this.http.get('../../rest/roles?context=' + this.target));
         }
 
         arrayRoutes.push(this.http.get('../../rest/resources/' + resId + '/listInstance'));
@@ -277,7 +277,7 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     initRoles() {
-        this.http.get('../../rest/listTemplates/types/entity_id/roles').pipe(
+        this.http.get('../../rest/roles?context=' + this.target).pipe(
             tap(() => {
                 this.availableRoles.forEach(element => {
                     this.diffList[element.id] = {

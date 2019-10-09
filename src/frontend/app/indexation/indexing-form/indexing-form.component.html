@@ -181,7 +181,7 @@
                                         *ngIf="!adminMode && arrFormControl['diffusionList'].valid && !isEmptyField(field)"></i>
                                 </div>
                             </div>
-                            <app-diffusions-list #appDiffusionsList [entityId]="arrFormControl[field.identifier].value" [diffFormControl]="arrFormControl['diffusionList']" [allowedEntities]="field.allowedEntities" (triggerEvent)="changeDestination($event,field.allowedEntities)">
+                            <app-diffusions-list #appDiffusionsList [entityId]="arrFormControl[field.identifier].value" [diffFormControl]="arrFormControl['diffusionList']" [allowedEntities]="field.allowedEntities" [target]="'indexation'" (triggerEvent)="changeDestination($event,field.allowedEntities)">
                             </app-diffusions-list>
                             <mat-divider></mat-divider>
                         </div>
