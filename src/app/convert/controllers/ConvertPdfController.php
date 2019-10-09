@@ -241,18 +241,21 @@ class ConvertPdfController
         } else {
             $fileAccepted  = StoreController::isFileAllowed(['extension' => $ext, 'type' => $mimeType]);
             $maxFilesizeMo = ini_get('upload_max_filesize');
+            $canConvert    = ConvertPdfController::canConvert(['extension' => $ext]);
     
             if (!$fileAccepted) {
                 return $response->withStatus(400)->withJson(['errors' => 'File type not allowed. Extension : ' . $ext . '. Mime Type : ' . $mimeType . '.']);
             } elseif ($size/1024 > $maxFilesizeMo*1024) {
                 return $response->withStatus(400)->withJson(['errors' => 'File maximum size is exceeded ('.$maxFilesizeMo.' Mo)']);
+            } elseif (!$canConvert) {
+                return $response->withStatus(400)->withJson(['errors' => 'File accepted but can not be converted in pdf']);
             }
     
             $convertion = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $body['base64']]);
             if (empty($convertion['errors'])) {
                 return $response->withJson(['encodedResource' => $convertion]);
             } else {
-                return $response->withStatus(403)->withJson($convertion);
+                return $response->withStatus(400)->withJson($convertion);
             }
         }
     }
