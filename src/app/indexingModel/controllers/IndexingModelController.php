@@ -330,7 +330,7 @@ class IndexingModelController
         }
 
         $resources = ResModel::get([
-            'select'    => ['model_id'],
+            'select'    => ['1'],
             'where'     => ['model_id = ?'],
             'data'      => [$args['id']]
         ]);
@@ -375,7 +375,8 @@ class IndexingModelController
         return $response->withStatus(204);
     }
 
-    public function disable(Request $request, Response $response, array $args) {
+    public function disable(Request $request, Response $response, array $args)
+    {
         if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
@@ -400,7 +401,8 @@ class IndexingModelController
         return $response->withStatus(204);
     }
 
-    public function enable(Request $request, Response $response, array $args) {
+    public function enable(Request $request, Response $response, array $args)
+    {
         if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }

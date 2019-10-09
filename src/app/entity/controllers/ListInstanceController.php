@@ -158,7 +158,7 @@ class ListInstanceController
                     $user = UserModel::getByLogin(['login' => $instance['item_id']]);
                     if (empty($user)) {
                         DatabaseModel::rollbackTransaction();
-                        return ['errors' => 'User not found', 'code' => 404];
+                        return ['errors' => 'User not found', 'code' => 400];
                     }
                 } elseif ($instance['item_type'] == 'entity_id') {
                     $entity = EntityModel::getByEntityId(['entityId' => $instance['item_id']]);
