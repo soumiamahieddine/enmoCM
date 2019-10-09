@@ -148,6 +148,23 @@ class IndexingController
         return $response->withJson(['processLimitDate' => $processLimitDate]);
     }
 
+    public function getFileInformations(Request $request, Response $response)
+    {
+        $allowedFiles  = StoreController::getAllowedFiles();
+
+        $uploadMaxFilesize = ini_get('upload_max_filesize');
+        $uploadMaxFilesize = StoreController::getOctetSizeFromPhpIni(['size' => $uploadMaxFilesize]);
+        $postMaxSize = ini_get('post_max_size');
+        $postMaxSize = StoreController::getOctetSizeFromPhpIni(['size' => $postMaxSize]);
+        $memoryLimit = ini_get('memory_limit');
+        $memoryLimit = StoreController::getOctetSizeFromPhpIni(['size' => $memoryLimit]);
+
+        $maximumSize = min($uploadMaxFilesize, $postMaxSize, $memoryLimit);
+
+
+        return $response->withJson(['informations' => ['maximumSize' => $maximumSize, 'allowedFiles' => $allowedFiles]]);
+    }
+
     public static function getEntitiesChildrenLevel($aArgs = [])
     {
         $entities = EntityModel::getEntityChildrenSubLevel([

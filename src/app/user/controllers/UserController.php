@@ -29,6 +29,7 @@ use History\models\HistoryModel;
 use Notification\controllers\NotificationsEventsController;
 use Parameter\models\ParameterModel;
 use Resource\controllers\ResController;
+use Resource\controllers\StoreController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;

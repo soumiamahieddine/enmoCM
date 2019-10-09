@@ -363,6 +363,7 @@ DROP TABLE IF EXISTS foldertypes_doctypes_level1;
 DROP TABLE IF EXISTS foldertypes_indexes;
 ALTER TABLE doctypes DROP COLUMN IF EXISTS coll_id;
 DROP TABLE IF EXISTS mlb_doctype_ext;
+ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
 
 /* PRIORITIES */
 ALTER TABLE priorities DROP COLUMN IF EXISTS working_days;

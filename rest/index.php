@@ -230,6 +230,7 @@ $app->get('/home/maarchParapheurDocuments', \Home\controllers\HomeController::cl
 $app->get('/indexing/{groupId}/actions', \Resource\controllers\IndexingController::class . ':getIndexingActions');
 $app->get('/indexing/{groupId}/entities', \Resource\controllers\IndexingController::class . ':getIndexingEntities');
 $app->get('/indexing/processLimitDate', \Resource\controllers\IndexingController::class . ':getProcessLimitDate');
+$app->get('/indexing/fileInformations', \Resource\controllers\IndexingController::class . ':getFileInformations');
 
 //IndexingModels
 $app->get('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':get');
@@ -237,6 +238,8 @@ $app->get('/indexingModels/entities', \IndexingModel\controllers\IndexingModelCo
 $app->get('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':getById');
 $app->post('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':create');
 $app->put('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':update');
+$app->put('/indexingModels/{id}/disable', \IndexingModel\controllers\IndexingModelController::class . ':disable');
+$app->put('/indexingModels/{id}/enable', \IndexingModel\controllers\IndexingModelController::class . ':enable');
 $app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
 
 //Jnlp

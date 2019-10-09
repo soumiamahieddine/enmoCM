@@ -1195,6 +1195,7 @@ CREATE TABLE res_letterbox
   flag_alarm2 char(1) default 'N'::character varying,
   is_multicontacts char(1),
   address_id bigint,
+  model_id integer,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);

@@ -32,7 +32,13 @@ class IndexingModelController
 {
     public function get(Request $request, Response $response)
     {
-        $models = IndexingModelModel::get(['where' => ['owner = ? OR private = ?'], 'data' => [$GLOBALS['id'], 'false']]);
+        $where = ['(owner = ? OR private = ?)'];
+
+        if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            $where[] = 'enabled = TRUE';
+        }
+
+        $models = IndexingModelModel::get(['where' => $where, 'data' => [$GLOBALS['id'], 'false']]);
         return $response->withJson(['indexingModels' => $models]);
     }
 
@@ -354,6 +360,56 @@ class IndexingModelController
             'info'      => _INDEXINGMODEL_SUPPRESSION . " : {$model['label']}",
             'moduleId'  => 'indexingModel',
             'eventId'   => 'indexingModelSuppression',
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function disable(Request $request, Response $response, array $args) {
+        if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is empty or not an integer']);
+        }
+
+        $model = IndexingModelModel::getById(['select' => ['enabled'], 'id' => $args['id']]);
+        if (empty($model)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
+        }
+
+        IndexingModelModel::update([
+            'set'   => [
+                'enabled'   => 'false'
+            ],
+            'where' => ['id = ? or master = ?'],
+            'data'  => [$args['id'], $args['id']]
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function enable(Request $request, Response $response, array $args) {
+        if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is empty or not an integer']);
+        }
+
+        $model = IndexingModelModel::getById(['select' => ['enabled'], 'id' => $args['id']]);
+        if (empty($model)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
+        }
+
+        IndexingModelModel::update([
+            'set'   => [
+                'enabled'   => 'true'
+            ],
+            'where' => ['id = ? or master = ?'],
+            'data'  => [$args['id'], $args['id']]
         ]);
 
         return $response->withStatus(204);

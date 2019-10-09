@@ -287,6 +287,7 @@ class StoreController
     {
         ValidatorModel::notEmpty($args, ['extension', 'type']);
         ValidatorModel::stringType($args, ['extension', 'type']);
+
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/extensions.xml']);
         if ($loadedXml) {
             foreach ($loadedXml->FORMAT as $value) {
@@ -297,5 +298,35 @@ class StoreController
         }
 
         return false;
+    }
+
+    public static function getAllowedFiles()
+    {
+        $allowedFiles = [];
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/extensions.xml']);
+        if ($loadedXml) {
+            foreach ($loadedXml->FORMAT as $value) {
+                $allowedFiles[] = [
+                    'extension' => (string)$value->name,
+                    'mimeType'  => (string)$value->mime,
+                ];
+            }
+        }
+
+        return $allowedFiles;
+    }
+
+    public static function getOctetSizeFromPhpIni(array $args)
+    {
+        if (strpos($args['size'], 'K') !== false) {
+            return (int)$args['size'] * 1024;
+        } elseif (strpos($args['size'], 'M') !== false) {
+            return (int)$args['size'] * 1048576;
+        } elseif (strpos($args['size'], 'G') !== false) {
+            return (int)$args['size'] * 1073741824;
+        }
+
+        return (int)$args['size'];
     }
 }
