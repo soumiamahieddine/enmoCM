@@ -329,6 +329,16 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => 'Default model can not be deleted']);
         }
 
+        $resources = ResModel::get([
+            'select'    => ['model_id'],
+            'where'     => ['model_id = ?'],
+            'data'      => [$args['id']]
+        ]);
+
+        if (!empty($resources)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Model is used by at least one resource']);
+        }
+
         $childrenModels = IndexingModelModel::get(['select' => ['id', 'label'], 'where' => ['"master" = ?'], 'data' => [$args['id']]]);
 
         if (!empty($childrenModels)) {
