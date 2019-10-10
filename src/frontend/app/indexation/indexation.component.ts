@@ -65,11 +65,14 @@ export class IndexationComponent implements OnInit {
             this.http.get("../../rest/indexingModels").pipe(
                 tap((data: any) => {
                     this.indexingModels = data.indexingModels;
-                    this.currentIndexingModel = this.indexingModels.filter(model => model.default === true)[0];
-                    if (this.currentIndexingModel === undefined) {
-                        this.currentIndexingModel = this.indexingModels[0];
-                        this.notify.error(this.lang.noDefaultIndexingModel);
+                    if(this.indexingModels.length > 0) {
+                        this.currentIndexingModel = this.indexingModels.filter(model => model.default === true)[0];
+                        if (this.currentIndexingModel === undefined) {
+                            this.currentIndexingModel = this.indexingModels[0];
+                            this.notify.error(this.lang.noDefaultIndexingModel);
+                        }
                     }
+                    
                     if (this.appService.getViewMode()) {
                         setTimeout(() => {
                             this.sidenavLeft.open();

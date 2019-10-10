@@ -18,6 +18,7 @@ import { PDFProgressData } from 'ng2-pdf-viewer';
     templateUrl: "document-viewer.component.html",
     styleUrls: [
         'document-viewer.component.scss',
+        '../indexation/indexing-form/indexing-form.component.scss',
     ],
     providers: [NotificationService, AppService, SortPipe]
 })
