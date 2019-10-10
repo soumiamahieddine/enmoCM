@@ -141,12 +141,33 @@ export class DocumentViewerComponent implements OnInit {
         return bytes.buffer;
     }
 
+    b64toBlob(b64Data: any, contentType = '', sliceSize = 512) {
+        const byteCharacters = atob(b64Data);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            const byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+        }
+
+        const blob = new Blob(byteArrays, { type: contentType });
+        return blob;
+    }
+
     convertDocument(file: any) {
         if (this.canBeConverted(file)) {
             const data = { name: file.name, base64: file.content };
             this.upload(data).subscribe(
                 (res: any) => {
                     if (res.encodedResource) {
+                        this.file.base64src = res.encodedResource;
                         this.file.src = this.base64ToArrayBuffer(res.encodedResource);
                         this.loading = false;
                     }
@@ -251,7 +272,7 @@ export class DocumentViewerComponent implements OnInit {
     isExtensionAllowed(file: any) {
         const fileExtension = '.' + file.name.split('.').pop();
         if (this.allowedExtensions.filter(ext => ext.mimeType === file.type && ext.extension === fileExtension).length === 0) {
-            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.notAllowedExtension+' !', msg: '<u>'+this.lang.allowedExtensions+'</u> : <br/>' + this.allowedExtensions.map(ext => ext.extension).filter((elem: any, index: any, self: any) => index === self.indexOf(elem)).join(', ') } });
+            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.notAllowedExtension + ' !', msg: '<u>' + this.lang.allowedExtensions + '</u> : <br/>' + this.allowedExtensions.map(ext => ext.extension).filter((elem: any, index: any, self: any) => index === self.indexOf(elem)).join(', ') } });
             return false;
         } else if (file.size > this.maxFileSize) {
             this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.maxFileSizeReached + ' ! ', msg: this.lang.maxFileSize + ' : ' + this.maxFileSizeLabel } });
@@ -259,6 +280,21 @@ export class DocumentViewerComponent implements OnInit {
         } else {
             return true;
         }
+    }
+
+    downloadOriginalFile() {
+        let downloadLink = document.createElement('a');
+        downloadLink.href = `data:${this.file.type};base64,${this.file.content}`;
+        downloadLink.setAttribute('download', this.file.name);
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+    }
+
+    printPdf() {
+        const blob = this.b64toBlob(this.file.base64src, this.file.type);
+        const blobUrl = URL.createObjectURL(blob);
+        window.focus();
+        window.open(blobUrl);
     }
 
 }
