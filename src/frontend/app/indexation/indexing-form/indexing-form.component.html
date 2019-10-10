@@ -91,7 +91,7 @@
                                             [matDatepicker]="picker"
                                             [placeholder]="!adminMode ? lang.chooseDate : lang.defaultValue"
                                             [min]="getMinDate(field.startDate)" [max]="getMaxDate(field.endDate)"
-                                            readonly style="cursor:pointer;">
+                                            readonly style="cursor:pointer;" (dateChange)="launchEvent($event, field)">
                                         <mat-datepicker-toggle matSuffix [for]="picker"
                                             *ngIf="!arrFormControl[field.identifier].value">
                                         </mat-datepicker-toggle>

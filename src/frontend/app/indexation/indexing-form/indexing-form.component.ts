@@ -5,7 +5,7 @@ import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AppService } from '../../../service/app.service';
-import { tap, catchError, finalize, exhaustMap, map } from 'rxjs/operators';
+import { tap, catchError, finalize, exhaustMap, map, filter } from 'rxjs/operators';
 import { of, forkJoin } from 'rxjs';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
@@ -376,6 +376,7 @@ export class IndexingFormComponent implements OnInit {
                         } else if (elem.identifier === 'processLimitDate') {
                             elem.startDate = '_TODAY';
                             elem.endDate = '';
+                            elem.event = 'setPriorityColorByLimitDate';
 
                         } else if (elem.identifier === 'folder') {
                             elem.values = null;
@@ -385,9 +386,9 @@ export class IndexingFormComponent implements OnInit {
 
                         } else if (elem.identifier === 'priority') {
                             elem.values = data.priorities;
-                            elem.event = 'setPriorityColor';
-                            if (elem.default_value !== '') {
-                                this.setPriorityColor(elem, elem.default_value);
+                            elem.event = 'calcLimitDateByPriority';
+                            if (elem.default_value !== null) {
+                                this.calcLimitDateByPriority(elem, elem.default_value);
                             }
                         } else if (elem.identifier === 'doctype') {
                             let title = '';
@@ -718,12 +719,21 @@ export class IndexingFormComponent implements OnInit {
     }
 
     calcLimitDate(field: any, value: any) {
-
+        let limitDate: Date = null;
         if (this.arrFormControl['processLimitDate'] !== undefined) {
             this.http.get("../../rest/indexing/processLimitDate", { params: { "doctype": value } }).pipe(
                 tap((data: any) => {
-                    const limitDate = new Date(data.processLimitDate);
+                    limitDate = new Date(data.processLimitDate);
                     this.arrFormControl['processLimitDate'].setValue(limitDate);
+                }),
+                filter(() => this.arrFormControl['priority'] !== undefined),
+                //exhaustMap(() => this.http.post('../../rest/getNewPriority', { params: { "limitDate": limitDate } })),
+                tap((data: any) => {
+                    // TO DO WAIT REAL ROUTE
+                    data.priority = 'poiuytre1391nbvc';
+                    this.arrFormControl['priority'].setValue(data.priority);
+                    this.setPriorityColor(null, data.priority);
+
                 }),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
@@ -733,8 +743,54 @@ export class IndexingFormComponent implements OnInit {
         }
     }
 
+    calcLimitDateByPriority(field: any, value: any) {
+        let limitDate: Date = null;
+        if (this.arrFormControl['processLimitDate'] !== undefined) {
+            this.http.get("../../rest/indexing/processLimitDate", { params: { "priority": value } }).pipe(
+                tap((data: any) => {
+                    limitDate = new Date(data.processLimitDate);
+                    this.arrFormControl['processLimitDate'].setValue(limitDate);
+                    this.setPriorityColor(field, value);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.setPriorityColor(field, value);
+        }
+    }
+
     setPriorityColor(field: any, value: any) {
-        this.currentPriorityColor = field.values.filter((fieldVal: any) => fieldVal.id === value).map((fieldVal: any) => fieldVal.color)[0];
+        if (field !== null) {
+            this.currentPriorityColor = field.values.filter((fieldVal: any) => fieldVal.id === value).map((fieldVal: any) => fieldVal.color)[0];
+        } else {
+            this.fieldCategories.forEach(element => {
+                if (this['indexingModels_' + element].filter((field: any) => field.identifier === 'priority').length > 0) {
+                    this.currentPriorityColor = this['indexingModels_' + element].filter((field: any) => field.identifier === 'priority')[0].values.filter((fieldVal: any) => fieldVal.id === value).map((fieldVal: any) => fieldVal.color)[0]
+                }
+            });
+        }
+
+    }
+
+    setPriorityColorByLimitDate(field: any, value: any) {
+        // TO DO : WAIT REAL ROUTE
+        this.arrFormControl['priority'].setValue('poiuytre1391nbvc');
+        this.setPriorityColor(null, 'poiuytre1391nbvc');
+
+        /*this.http.get("../../rest/indexing/getpriorityByLimitDate", { params: { "limitDate": value } }).pipe(
+            tap((data: any) => {
+                this.arrFormControl['priority'].setValue(data.priority);
+                this.setPriorityColor(null, value);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();*/
+
     }
 
     loadDiffusionList(field: any, value: any) {
