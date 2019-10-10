@@ -54,8 +54,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'prin
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'delete_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_document_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'entities_print_sep_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_diffusion_recipient_indexing');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_diffusion_recipient_details');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_diffusion_indexing');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_diffusion_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'use_mail_services');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'reports');
@@ -86,7 +86,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'use_mail_services');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'edit_attachments_from_detail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_diffusion_recipient_indexing');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_diffusion_indexing');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'edit_recipient_outside_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'modify_attachments');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'delete_attachments');

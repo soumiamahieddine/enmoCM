@@ -303,20 +303,20 @@ DELETE FROM usergroups_services WHERE service_id = 'tag_view';
 UPDATE usergroups_services SET service_id = 'manage_tags_application' WHERE service_id = 'create_tag';
 
 INSERT INTO usergroups_services (group_id, service_id)
-SELECT distinct(group_id), 'update_diffusion_recipient_indexing'
+SELECT distinct(group_id), 'update_diffusion_indexing'
 FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
 INSERT INTO usergroups_services (group_id, service_id)
-SELECT distinct(group_id), 'update_diffusion_recipient_details'
+SELECT distinct(group_id), 'update_diffusion_details'
 FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
 INSERT INTO usergroups_services (group_id, service_id)
-SELECT distinct(group_id), 'update_diffusion_roles_details'
+SELECT distinct(group_id), 'update_diffusion_except_recipient_details'
 FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 
 INSERT INTO usergroups_services (group_id, service_id)
-SELECT distinct(group_id), 'update_diffusion_roles_indexing'
+SELECT distinct(group_id), 'update_diffusion_except_recipient_indexing'
 FROM usergroups_services WHERE group_id NOT IN (
 SELECT group_id FROM usergroups_services
-WHERE service_id = 'edit_recipient_outside_process' OR service_id = 'update_diffusion_recipient_indexing' OR service_id = 'update_diffusion_roles_indexing'
+WHERE service_id = 'edit_recipient_outside_process' OR service_id = 'update_diffusion_indexing' OR service_id = 'update_diffusion_except_recipient_indexing'
 );
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
 DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';

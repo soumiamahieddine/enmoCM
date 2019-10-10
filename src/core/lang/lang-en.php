@@ -285,10 +285,10 @@ define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Useful if signature book is used a
 define('_PRINT_FOLDER_DOC', 'Print the entire folder');
 define('_USE_DATE_IN_SIGNBLOCK', 'Add current date in sign block');
 define('_USE_DATE_IN_SIGNBLOCK_DESC', 'The current date is added in top of sign block (with the town if it wrote in parent entity of application).');
-define('_UPDATE_DIFFUSION_RECIPIENT_WHILE_INDEXING', "Update all parts of diffusion list when indexing.");
-define('_UPDATE_DIFFUSION_ROLES_WHILE_INDEXING', "Update diffusion list except Assignee when indexing.");
-define('_UPDATE_DIFFUSION_RECIPIENT_WHILE_PROCESSING', "Update all parts of diffusion list when processing.");
-define('_UPDATE_DIFFUSION_ROLES_WHILE_PROCESSING', "Update diffusion list except Assignee when processing.");
+define('_UPDATE_DIFFUSION_WHILE_INDEXING', "Update all parts of diffusion list when indexing.");
+define('_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_INDEXING', "Update diffusion list except Assignee when indexing.");
+define('_UPDATE_DIFFUSION_WHILE_DETAILS', "Update all parts of diffusion list when processing.");
+define('_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_DETAILS', "Update diffusion list except Assignee when processing.");
 
 // ACTIONS
 define('_REDIRECTION', 'Redirection');

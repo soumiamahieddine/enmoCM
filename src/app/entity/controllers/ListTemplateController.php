@@ -453,12 +453,12 @@ class ListTemplateController
         $triggerContext = false;
 
         if ($data['context'] == 'indexation') {
-            $serviceRecipient = 'update_diffusion_recipient_indexing';
-            $serviceRoles = 'update_diffusion_roles_indexing';
+            $serviceRecipient = 'update_diffusion_indexing';
+            $serviceRoles = 'update_diffusion_except_recipient_indexing';
             $triggerContext = true;
         } elseif ($data['context'] == 'details') {
-            $serviceRecipient = 'update_diffusion_recipient_indexing';
-            $serviceRoles = 'update_diffusion_roles_indexing';
+            $serviceRecipient = 'update_diffusion_indexing';
+            $serviceRoles = 'update_diffusion_except_recipient_indexing';
             $triggerContext = true;
         }
         if ($triggerContext) {
