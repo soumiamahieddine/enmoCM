@@ -421,11 +421,6 @@ if (count($_REQUEST['meta']) > 0) {
                 include_once("modules".DIRECTORY_SEPARATOR."tags".
                    DIRECTORY_SEPARATOR."tags_search.php");
             }
-            // THESAURUS
-            elseif ($tab_id_fields[$j] == 'thesaurus_chosen' && !empty($_REQUEST['thesaurus_chosen'])) {
-                include_once("modules".DIRECTORY_SEPARATOR."thesaurus".
-                   DIRECTORY_SEPARATOR."thesaurus_search.php");
-            }
             //WELCOME PAGE
             elseif ($tab_id_fields[$j] == 'welcome'  && (!empty($_REQUEST['welcome']))) {
                 $welcome = trim($_REQUEST['welcome']);

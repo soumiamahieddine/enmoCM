@@ -890,7 +890,6 @@ export const LANG_EN = {
     "templateUpdated"                       : "Template updated",
     "thanksToCommunity"                     : "And all the Maarch's community !",
     "thanksToExtDev"                        : "Maarch Courrier depend upon some external components. A thank-you to their developers !",
-    "thesaurus"                             : "Thesaurus",
     "thisRes"                               : "Following mail(s)",
     "thuesday"                              : "Thuesday",
     "thursday"                              : "Thursday",

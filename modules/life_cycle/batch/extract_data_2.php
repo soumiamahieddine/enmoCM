@@ -145,22 +145,6 @@ try {
     $countMail = 0;
     while($selectedFile = $stmt->fetchObject()) {
 
-        #### THESAURUS ####
-        $stmt2 = Bt_doQuery(
-            $GLOBALS['db'], 
-            "SELECT thesaurus_name FROM thesaurus_res,thesaurus WHERE res_id = ? AND thesaurus_res.thesaurus_id = thesaurus.thesaurus_id", array($selectedFile->res_id)
-        );
-
-        $labelThesaurus = "";
-        $iThesaurus = 0;
-        while($resThesaurus = $stmt2->fetchObject()){
-            if ($iThesaurus >0) {
-                $labelThesaurus .= ", ";
-            }
-            $labelThesaurus .= $resThesaurus->thesaurus_name;
-            $iThesaurus++;
-        }
-
         #### Contact type ####
         $stmt2 = Bt_doQuery(
             $GLOBALS['db'], 
@@ -499,7 +483,6 @@ try {
                 $selectedFile->type_label,
                 $GLOBALS['mail_natures'][$selectedFile->nature_id],
                 $department_name,  //5
-                $labelThesaurus,
                 $parentFolder,
                 $selectedFile->folder_name,//"Sous Thème", 
                 $selectedFile->doc_custom_t2,

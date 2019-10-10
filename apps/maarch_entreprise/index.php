@@ -311,9 +311,7 @@ if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
         </script>
         <?php
     }
-    //THESAURUS
-    echo '<div id="return_previsualise_thes" style="display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: fixed; top: 0; left: 0; z-index: 99999; color: #4f4b47; text-shadow: -1px -1px 0px rgba(255,255,255,0.2);background:#FFF18F;border-radius:5px;overflow:auto;">\';<input type="hidden" id="identifierDetailFrame" value="" /></div>';
-    
+
     $core->insert_page();
 
     //FOOTER

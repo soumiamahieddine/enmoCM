@@ -918,7 +918,6 @@ export const LANG_NL = {
     "templateUpdated"                       : "Model bijgewerkt",
     "thanksToCommunity"                     : "En de volledige Maarch-community!",
     "thanksToExtDev"                        : "Maarch Courrier steunt op enkele externe onderdelen. Hartelijk dank aan de ontwikkelaars ervan!",
-    "thesaurus"                             : "Thesaurus",
     "thisRes"                               : "Following mail(s)", //_TO_TRANSLATE
     "thuesday"                              : "Dinsdag",
     "thursday"                              : "Donderdag",
