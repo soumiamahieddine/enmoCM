@@ -440,8 +440,8 @@ export class FolderTreeComponent implements OnInit {
                 if (data.folder.user_id !== currentUserId && node.public) {
                     canAdd = false;
                 }
-                node.canAdd = canAdd;
                 node.edition = (canAdmin || data.folder.user_id === currentUserId) ? true : false;
+                node.canAdd = node.edition;
             }),
         ).subscribe();
     }

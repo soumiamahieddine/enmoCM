@@ -114,17 +114,7 @@ class FolderController
         if ($folder['public']) {
             $entitiesFolder = EntityFolderModel::getByFolderId(['folder_id' => $args['id'], 'select' => ['entities_folders.entity_id', 'entities_folders.edition', 'entities.entity_label']]);
             foreach ($entitiesFolder as $value) {
-                $edition = $value['edition'];
-                // Check if parent is in perimeter
-                if ($edition) {
-                    $edition = !empty(FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $folder['parent_id'], 'edition' => true]));
-                }
-                // Check if children are in perimeter
-                if ($edition) {
-                    $edition = FolderController::areChildrenInPerimeter(['folderId' => $args['id']]);
-                }
-
-                $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $edition, 'label' => $value['entity_label']];
+                $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition'], 'label' => $value['entity_label']];
             }
         }
 
@@ -217,10 +207,7 @@ class FolderController
             $data['parent_id'] = null;
             $level = 0;
         } else {
-            $folderParent = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $data['parent_id']]);
-            if (empty($folderParent[0])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Parent Folder not found or out of your perimeter']);
-            }
+            $folderParent = FolderModel::getById(['id' => $data['parent_id'], 'select' => ['folders.id', 'parent_id', 'level']]);
             $level = $folderParent[0]['level'] + 1;
         }
 
@@ -228,13 +215,28 @@ class FolderController
 
         FolderModel::update([
             'set' => [
-                'label'      => $data['label'],
-                'parent_id'  => $data['parent_id'],
-                'level'      => $level
+                'label'      => $data['label']
             ],
             'where' => ['id = ?'],
             'data' => [$aArgs['id']]
         ]);
+
+
+        if ($folder[0]['parent_id'] != $data['parent_id']) {
+            $childrenInPerimeter = FolderController::areChildrenInPerimeter(['folderId' => $aArgs['id']]);
+            if ($childrenInPerimeter) {
+                FolderModel::update([
+                    'set' => [
+                        'parent_id' => $data['parent_id'],
+                        'level' => $level
+                    ],
+                    'where' => ['id = ?'],
+                    'data' => [$aArgs['id']]
+                ]);
+            } else {
+                return $response->withStatus(400)->withJson(['errors' => 'Cannot move folder because at least one folder is out of your perimeter']);
+            }
+        }
 
         HistoryController::add([
             'tableName' => 'folders',
@@ -260,6 +262,11 @@ class FolderController
         }
         if ($data['public'] && !isset($data['sharing']['entities'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body sharing/entities does not exists']);
+        }
+
+        $childrenInPerimeter = FolderController::areChildrenInPerimeter(['folderId' => $aArgs['id']]);
+        if (!$childrenInPerimeter) {
+            return $response->withStatus(400)->withJson(['errors' => 'Cannot share/unshare folder because at least one folder is out of your perimeter']);
         }
 
         DatabaseModel::beginTransaction();
@@ -312,10 +319,7 @@ class FolderController
         $folderChild = FolderModel::getChild(['id' => $aArgs['folderId'], 'select' => ['id']]);
         if (!empty($folderChild)) {
             foreach ($folderChild as $child) {
-                $sharing = FolderController::folderSharing(['folderId' => $child['id'], 'public' => $aArgs['public'], 'sharing' => $aArgs['sharing']]);
-                if (!$sharing) {
-                    return false;
-                }
+                FolderController::folderSharing(['folderId' => $child['id'], 'public' => $aArgs['public'], 'sharing' => $aArgs['sharing']]);
             }
         }
 
