@@ -12,6 +12,7 @@ import { tap, finalize, catchError, filter, exhaustMap, map } from 'rxjs/operato
 import { of } from 'rxjs';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { AlertComponent } from '../../../plugins/modal/alert.component';
 
 declare function $j(selector: any): any;
 
@@ -85,28 +86,31 @@ export class IndexingModelsAdministrationComponent implements OnInit {
 
     delete(indexingModel: any) {
 
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+        if (!indexingModel.used) {
+            this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
 
-        this.dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.delete('../../rest/indexingModels/' + indexingModel.id)),
-            tap(() => {
-                for (let i in this.indexingModels) {
-                    if (this.indexingModels[i].id == indexingModel.id) {
-                        this.indexingModels.splice(Number(i), 1);
+            this.dialogRef.afterClosed().pipe(
+                filter((data: string) => data === 'ok'),
+                exhaustMap(() => this.http.delete('../../rest/indexingModels/' + indexingModel.id)),
+                tap(() => {
+                    for (let i in this.indexingModels) {
+                        if (this.indexingModels[i].id == indexingModel.id) {
+                            this.indexingModels.splice(Number(i), 1);
+                        }
                     }
-                }
-                this.dataSource = new MatTableDataSource(this.indexingModels);
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
-                this.notify.success(this.lang.indexingModelDeleted);
-            }),
-            catchError((err: any) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
-
+                    this.dataSource = new MatTableDataSource(this.indexingModels);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                    this.notify.success(this.lang.indexingModelDeleted);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: indexingModel.label, msg: this.lang.canNotDeleteIndexingModel } });
+        }
     }
 
     disableIndexingModel(indexingModel: any) {

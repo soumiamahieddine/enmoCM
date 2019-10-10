@@ -1178,4 +1178,5 @@ export const LANG_FR = {
     "notInAuthorizedEntities" : "ne fait pas parti des <b>entités traitantes autorisées</b>.",
     "indexingModelDisabled" : "Modèle d'enregistrement désactivé",
     "indexingModelEnabled" : "Modèle d'enregistrement activé",
+    "canNotDeleteIndexingModel" : "Ce modèle ne peut pas être supprimé car il a été utilisé pour enregistrer au moins un courrier",
 };

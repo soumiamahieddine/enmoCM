@@ -1141,4 +1141,5 @@ export const LANG_EN = {
     "notInAuthorizedEntities" : "is not in one of the <b>authorized entities</b>.",
     "indexingModelDisabled" : "Indexing model disabled",
     "indexingModelEnabled" : "Indexing model enabled",
+    "canNotDeleteIndexingModel" : "This indexing model can not be deleted because at least one mail used it",
 };

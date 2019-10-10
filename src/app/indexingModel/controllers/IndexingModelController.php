@@ -42,11 +42,24 @@ class IndexingModelController
 
         if (!$showDisabled) {
             $where[] = 'enabled = TRUE';
-        } else if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        } elseif (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             $where[] = 'enabled = TRUE';
         }
 
         $models = IndexingModelModel::get(['where' => $where, 'data' => [$GLOBALS['id'], 'false']]);
+
+        foreach ($models as $key => $value) {
+            $models[$key]['used'] = false;
+            $resources = ResModel::get([
+                'select'    => [1],
+                'where'     => ['model_id = ?'],
+                'data'      => [$value['model_id']]
+            ]);
+            if (!empty($resources)) {
+                $models[$key]['used'] = true;
+            }
+        }
+
         return $response->withJson(['indexingModels' => $models]);
     }
 
@@ -142,7 +155,6 @@ class IndexingModelController
                 }
             }
             $body['fields'] = $arrayTmp;
-
         }
 
         if (ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
@@ -253,7 +265,6 @@ class IndexingModelController
         if (!empty($childrenModels)) {
             // Update children models of master
             foreach ($childrenModels as $child) {
-
                 $childFields = IndexingModelFieldModel::get(['select' => ['identifier', 'mandatory', 'default_value', 'unit'], 'where' => ['model_id = ?'], 'data' => [$child['id']]]);
                 foreach ($childFields as $key => $value) {
                     $childFields[$key]['default_value'] = json_decode($value['default_value'], true);
