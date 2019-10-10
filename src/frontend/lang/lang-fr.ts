@@ -1176,4 +1176,6 @@ export const LANG_FR = {
     "tagDeleted" : "Mot-clé supprimé",
     "modifyDiffusionList" : "Modifier la liste de diffusion",
     "notInAuthorizedEntities" : "ne fait pas parti des <b>entités traitantes autorisées</b>.",
+    "indexingModelDisabled" : "Modèle d'enregistrement désactivé",
+    "indexingModelEnabled" : "Modèle d'enregistrement activé",
 };

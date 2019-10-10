@@ -1165,4 +1165,6 @@ export const LANG_NL = {
     "tagDeleted" : "Tag deleted", //_TO_TRANSLATE
     "modifyDiffusionList" : "Modify diffusion list", //_TO_TRANSLATE
     "notInAuthorizedEntities" : "is not in one of the <b>authorized entities</b>.", //_TO_TRANSLATE
+    "indexingModelDisabled" : "Indexing model disabled", //_TO_TRANSLATE
+    "indexingModelEnabled" : "Indexing model enabled", //_TO_TRANSLATE
 };

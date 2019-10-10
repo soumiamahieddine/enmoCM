@@ -1139,4 +1139,6 @@ export const LANG_EN = {
     "tagDeleted" : "Tag deleted",
     "modifyDiffusionList" : "Modify diffusion list",
     "notInAuthorizedEntities" : "is not in one of the <b>authorized entities</b>.",
+    "indexingModelDisabled" : "Indexing model disabled",
+    "indexingModelEnabled" : "Indexing model enabled",
 };
