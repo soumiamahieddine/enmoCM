@@ -160,8 +160,9 @@ class IndexingController
         $memoryLimit = StoreController::getBytesSizeFromPhpIni(['size' => $memoryLimit]);
 
         $maximumSize = min($uploadMaxFilesize, $postMaxSize, $memoryLimit);
+        $maximumSizeLabel = round($maximumSize / 1048576, 3) . ' Mo';
 
-        return $response->withJson(['informations' => ['maximumSize' => $maximumSize, 'allowedFiles' => $allowedFiles]]);
+        return $response->withJson(['informations' => ['maximumSize' => $maximumSize, 'maximumSizeLabel' => $maximumSizeLabel, 'allowedFiles' => $allowedFiles]]);
     }
 
     public static function getEntitiesChildrenLevel($aArgs = [])
