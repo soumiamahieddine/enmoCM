@@ -1167,4 +1167,10 @@ export const LANG_NL = {
     "indexingModelDisabled" : "Indexing model disabled", //_TO_TRANSLATE
     "indexingModelEnabled" : "Indexing model enabled", //_TO_TRANSLATE
     "canNotDeleteIndexingModel" : "This indexing model can not be deleted because at least one mail used it", //_TO_TRANSLATE
+    "loadingFile" : "Loading file", //_TO_TRANSLATE
+    "convertingFile" : "Convert file in progress", //_TO_TRANSLATE
+    "notAllowedExtension" : "Extension not allowed", //_TO_TRANSLATE
+    "allowedExtensions" : "Allowed extensions", //_TO_TRANSLATE
+    "maxFileSizeReached" : "Maximum file size reached", //_TO_TRANSLATE
+    "maxFileSize" : "Maximum file size", //_TO_TRANSLATE
 };

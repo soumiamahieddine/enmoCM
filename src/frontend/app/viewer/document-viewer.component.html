@@ -43,7 +43,7 @@
         </button>
     </div>
     <pdf-viewer *ngIf="file.src!==null" [src]="file.src" [render-text]="true" [autoresize]="true"
-        [original-size]="false" [show-all]="true" (error)="onError($event)" style="width:100%;"></pdf-viewer>
+        [original-size]="false" [show-all]="true" (error)="onError($event)" (on-progress)="onProgress($event)" style="width:100%;"></pdf-viewer>
 </div>
 <div *ngIf="file.content !== null && noConvertedFound" class="no-doc-container" appUploadFileDragDrop (onFileDropped)="dndUploadFile($event)">
     <div class="loaded-file"><i class="fa fa-file"></i>&nbsp;<a (click)="docToUpload.click()">{{file.name}}</a>&nbsp;<b>chargé</b></div>

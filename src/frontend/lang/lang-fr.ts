@@ -1178,4 +1178,10 @@ export const LANG_FR = {
     "indexingModelDisabled" : "Modèle d'enregistrement désactivé",
     "indexingModelEnabled" : "Modèle d'enregistrement activé",
     "canNotDeleteIndexingModel" : "Ce modèle ne peut pas être supprimé car il a été utilisé pour enregistrer au moins un courrier",
+    "loadingFile" : "Chargement du fichier",
+    "convertingFile" : "Conversion du fichier",
+    "notAllowedExtension" : "Extension non autorisé",
+    "allowedExtensions" : "Extensions autorisées",
+    "maxFileSizeReached" : "Taille maximale atteinte",
+    "maxFileSize" : "Taille maximale",
 };
