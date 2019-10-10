@@ -268,20 +268,6 @@
                         <?php echo _PEAR;?>
                     </td>
                 </tr>
-                <!--tr>
-                    <td class="voyantPrerequisites">
-                        <?php
-                        // echo $Class_Install->checkPrerequisites(
-                        //     $Class_Install->isPearRequirements(
-                        //         'MIME/Type.php'
-                        //     )
-                        // );
-                        ?>
-                </td>
-                <td>
-                    <?php //echo _MIMETYPE;?>
-                </td>
-                </tr-->
                 <tr>
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
@@ -293,19 +279,6 @@
                     </td>
                     <td>
                         <?php echo _CLITOOLS;?>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="voyantPrerequisites">
-                        <?php echo $Class_Install->checkPrerequisites(
-                            $Class_Install->isPearRequirements(
-                                'SOAP/Disco.php'
-                            ),
-                            true
-                        );?>
-                    </td>
-                    <td>
-                        <?php echo 'SOAP';?>
                     </td>
                 </tr>
                 <tr>

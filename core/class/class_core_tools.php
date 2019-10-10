@@ -1233,7 +1233,6 @@ class core_tools extends functions
                                             $arrOrder = $modules_services[$value][$iService]['whereamiused'][$k]['tab_order'];
 
                                             $frameSrc = $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$value.'&page='.$modules_services[$value][$iService]['servicepage'];
-                                            //$frameSrc = $_SESSION['urltomodules'].$value."/".$modules_services[$value][$iService]['servicepage'];
                                             $tab_view[$arrOrder]['tab_label'] = $arrLabel;
                                             $tab_view[$arrOrder]['frame_src'] = $frameSrc;
                                         } elseif ($modules_services[$value][$iService]['whereamiused'][$k]['nature'] == 'popup'
@@ -1294,12 +1293,10 @@ class core_tools extends functions
                                 }
                             }
                         }
-                    }  //print_r($executedServices);
+                    }
                 }
             }
-            //  $this->show_array($executedServices);
             if ($servicenature == 'tab') {
-                //print_r($tab_view);
                 for ($u = 1; $u <= count($tab_view); ++$u) {
                     if ($u == 1) {
                         ?>
@@ -1323,7 +1320,6 @@ class core_tools extends functions
                 }
             }
         }
-        //  $this->show_array($executedServices);
     }
 
     /**
@@ -1534,10 +1530,7 @@ class core_tools extends functions
         if (isset($_GET['module']) && $_GET['module'] != 'core') {
             // Page is defined in a module
             $found = false;
-            //$this->show_array($_SESSION['maarchFilesWhiteList']['modules'][$_GET['module']]);
             for ($cptM = 0; $cptM < count($_SESSION['maarchFilesWhiteList']['modules'][$_GET['module']]); ++$cptM) {
-                //echo $_SESSION['maarchFilesWhiteList']['modules'][$_GET['module']][$cptM] . '<br />';
-                //echo 'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php" . '<br />';
                 if (
                     $_SESSION['maarchFilesWhiteList']['modules'][$_GET['module']][$cptM]
                         == 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.'.php'
@@ -1557,21 +1550,10 @@ class core_tools extends functions
             if (!$found) {
                 $this->loadDefaultPage();
             }
-
-            // if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-            //     require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php");
-            // } elseif(file_exists($_SESSION['config']['corepath'].'modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-            //     require('modules'.DIRECTORY_SEPARATOR.$_GET['module'].DIRECTORY_SEPARATOR.$this->f_page.".php");
-            // } else {
-            //     $this->loadDefaultPage();
-            // }
         } elseif (isset($_GET['module']) && $_GET['module'] == 'core') {
             // Page is defined the core
             $found = false;
-            //$this->show_array($_SESSION['maarchFilesWhiteList']['core']);
             for ($cptM = 0; $cptM < count($_SESSION['maarchFilesWhiteList']['core']); ++$cptM) {
-                //echo $_SESSION['maarchFilesWhiteList']['core'][$cptM] . '<br />';
-                //echo 'core'.DIRECTORY_SEPARATOR.$this->f_page.".php" . '<br />';
                 if (
                     $_SESSION['maarchFilesWhiteList']['core'][$cptM]
                         == 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$this->f_page.'.php'
@@ -1591,14 +1573,6 @@ class core_tools extends functions
             if (!$found) {
                 $this->loadDefaultPage();
             }
-
-            // if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-            //     require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'core'.DIRECTORY_SEPARATOR.$this->f_page.".php");
-            // } elseif(file_exists($_SESSION['config']['corepath'].'core'.DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-            //     require('core'.DIRECTORY_SEPARATOR.$this->f_page.".php");
-            // } else {
-            //     $this->loadDefaultPage();
-            // }
         } elseif (isset($_GET['admin']) && !empty($_GET['admin'])) {
             if (
                 !isset($_SESSION['user']['services']['admin'])
@@ -1608,10 +1582,7 @@ class core_tools extends functions
                 $this->loadDefaultPage();
             } else {
                 $found = false;
-                //$this->show_array($_SESSION['maarchFilesWhiteList']['apps']);
                 for ($cptM = 0; $cptM < count($_SESSION['maarchFilesWhiteList']['apps']); ++$cptM) {
-                    //echo $_SESSION['maarchFilesWhiteList']['apps'][$cptM] . '<br />';
-                    //echo 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php" . '<br />';
                     if (
                         $_SESSION['maarchFilesWhiteList']['apps'][$cptM]
                             == 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'admin'.DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.'.php'
@@ -1631,23 +1602,11 @@ class core_tools extends functions
                 if (!$found) {
                     $this->loadDefaultPage();
                 }
-
-                // Page is defined the admin directory of the application
-                /*if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-                    require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php");
-                } elseif(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-                    require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."admin".DIRECTORY_SEPARATOR.trim($_GET['admin']).DIRECTORY_SEPARATOR.$this->f_page.".php");
-                } else {
-                    $this->loadDefaultPage();
-                }*/
             }
         } elseif (isset($_GET['dir']) && !empty($_GET['dir'])) {
             // Page is defined in a dir directory of the application
             $found = false;
-            //$this->show_array($_SESSION['maarchFilesWhiteList']['apps']);
             for ($cptM = 0; $cptM < count($_SESSION['maarchFilesWhiteList']['apps']); ++$cptM) {
-                //echo $_SESSION['maarchFilesWhiteList']['apps'][$cptM] . '<br />';
-                //echo 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php" . '<br />';
                 if (
                     $_SESSION['maarchFilesWhiteList']['apps'][$cptM]
                         == 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.'.php'
@@ -1668,21 +1627,10 @@ class core_tools extends functions
                 $this->loadDefaultPage();
             }
 
-            // if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-            //     require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php");
-            // } elseif(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-            //     require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.trim($_GET['dir']).DIRECTORY_SEPARATOR.$this->f_page.".php");
-            // } else {
-            //     $this->loadDefaultPage();
-            // }
         } else {
             // Page is defined in the application
             $found = false;
-            //$this->show_array($_SESSION['maarchFilesWhiteList']['apps']);
             for ($cptM = 0; $cptM < count($_SESSION['maarchFilesWhiteList']['apps']); ++$cptM) {
-                //echo $_SESSION['maarchFilesWhiteList']['apps'][$cptM] . '<br />';
-                //echo 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php" . '<br />';
-                //echo 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php" . '<br />';
                 if (
                     $_SESSION['maarchFilesWhiteList']['apps'][$cptM]
                         == 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.'.php'
@@ -1721,30 +1669,6 @@ class core_tools extends functions
             if (!$found) {
                 $this->loadDefaultPage();
             }
-
-            // if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-            //     require($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php");
-            // } elseif(file_exists($_SESSION['config']['corepath'].'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php")) {
-            //     require('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$this->f_page.".php");
-            // } else {
-            //     require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
-            //     $app = new business_app_tools();
-            //     $path = $app->insert_app_page($this->f_page);
-            //     echo $path;exit;
-            //     if(
-            //         (!$path || empty($path))
-            //         && !file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path)
-            //         && !file_exists($path)) {
-            //         //require($_SESSION["config"]["defaultPage"].".php");
-            //         $this->loadDefaultPage();
-            //     } else {
-            //         if (!file_exists($path)) {
-            //             $this->loadDefaultPage();
-            //         } else {
-            //             require($path);
-            //         }
-            //     }
-            // }
         }
 
         return true;
@@ -1820,7 +1744,7 @@ class core_tools extends functions
      */
     public function load_footer()
     {
-        echo 'Powered by Maarch&trade; 2019';
+        echo 'Powered by Maarch&trade; 2020';
     }
 
     /**
@@ -1911,24 +1835,6 @@ class core_tools extends functions
         }
 
         return _NO_LABEL_FOUND;
-    }
-
-    /**
-     * Test if a service is enabled.
-     *
-     * @param  $id_service string Service identifier
-     *
-     * @return bool true if enabled false if not
-     */
-    public function service_is_enabled($id_service)
-    {
-        for ($i = 0; $i < count($_SESSION['enabled_services']); ++$i) {
-            if ($_SESSION['enabled_services'][$i]['id'] == $id_service) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -2127,29 +2033,6 @@ class core_tools extends functions
         }
     }
 
-    public function is_action_defined($action_id)
-    {
-        require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_db.php';
-        if (empty($action_id)) {
-            return false;
-        }
-        $db = new Database();
-        $stmt = $db->query('select origin from '.$_SESSION['tablename']['actions'].' where id = ?', array($action_id));
-        $res = $stmt->fetchObject();
-        $origin = strtolower($res->origin);
-
-        if ($origin == 'apps' || $origin == 'core') {
-            return true;
-        }
-        for ($i = 0; $i < count($_SESSION['modules']); ++$i) {
-            if (strtolower($_SESSION['modules'][$i]['moduleid']) == $origin) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public function get_custom_id()
     {
         if (!file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml')) {
@@ -2173,7 +2056,6 @@ class core_tools extends functions
         }
 
         $xml = simplexml_load_file($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.'custom.xml');
-        //var_dump($xml);
         foreach ($xml->custom as $custom) {
             if (trim($path) != '' && isset($custom->path) && $custom->path == trim($path)) {
                 return (string) $custom->custom_id;
@@ -2187,84 +2069,5 @@ class core_tools extends functions
         }
 
         return '';
-    }
-
-    /**
-     * Detects if the user agent is a smartphone.
-     */
-    public function detectSmartphone()
-    {
-        $user_agent = $_SERVER['HTTP_USER_AGENT']; // get the user agent value - this should be cleaned to ensure no nefarious input gets executed
-        $accept = $_SERVER['HTTP_ACCEPT']; // get the content accept value - this should be cleaned to ensure no nefarious input gets executed
-        return false
-            || (preg_match('/ipad/i', $user_agent))
-            || (preg_match('/ipod/i', $user_agent) || preg_match('/iphone/i', $user_agent))
-            || (preg_match('/android/i', $user_agent))
-            || (preg_match('/opera mini/i', $user_agent))
-            || (preg_match('/blackberry/i', $user_agent))
-            || (preg_match('/(pre\/|palm os|palm|hiptop|avantgo|plucker|xiino|blazer|elaine)/i', $user_agent))
-            || (preg_match('/(iris|3g_t|windows ce|opera mobi|windows ce; smartphone;|windows ce; iemobile)/i', $user_agent))
-            || (preg_match('/(mini 9.5|vx1000|lge |m800|e860|u940|ux840|compal|wireless| mobi|ahong|lg380|lgku|lgu900|lg210|lg47|lg920|lg840|lg370|sam-r|mg50|s55|g83|t66|vx400|mk99|d615|d763|el370|sl900|mp500|samu3|samu4|vx10|xda_|samu5|samu6|samu7|samu9|a615|b832|m881|s920|n210|s700|c-810|_h797|mob-x|sk16d|848b|mowser|s580|r800|471x|v120|rim8|c500foma:|160x|x160|480x|x640|t503|w839|i250|sprint|w398samr810|m5252|c7100|mt126|x225|s5330|s820|htil-g1|fly v71|s302|-x113|novarra|k610i|-three|8325rc|8352rc|sanyo|vx54|c888|nx250|n120|mtk |c5588|s710|t880|c5005|i;458x|p404i|s210|c5100|teleca|s940|c500|s590|foma|samsu|vx8|vx9|a1000|_mms|myx|a700|gu1100|bc831|e300|ems100|me701|me702m-three|sd588|s800|8325rc|ac831|mw200|brew |d88|htc\/|htc_touch|355x|m50|km100|d736|p-9521|telco|sl74|ktouch|m4u\/|me702|8325rc|kddi|phone|lg |sonyericsson|samsung|240x|x320|vx10|nokia|sony cmd|motorola|up.browser|up.link|mmp|symbian|smartphone|midp|wap|vodafone|o2|pocket|kindle|mobile|psp|treo)/i', $user_agent))
-            || ((strpos($accept, 'text/vnd.wap.wml') > 0) || (strpos($accept, 'application/vnd.wap.xhtml+xml') > 0))
-            || (isset($_SERVER['HTTP_X_WAP_PROFILE']) || isset($_SERVER['HTTP_PROFILE']))
-            || (in_array(strtolower(substr($user_agent, 0, 4)), array('1207' => '1207', '3gso' => '3gso', '4thp' => '4thp', '501i' => '501i', '502i' => '502i', '503i' => '503i', '504i' => '504i', '505i' => '505i', '506i' => '506i', '6310' => '6310', '6590' => '6590', '770s' => '770s', '802s' => '802s', 'a wa' => 'a wa', 'acer' => 'acer', 'acs-' => 'acs-', 'airn' => 'airn', 'alav' => 'alav', 'asus' => 'asus', 'attw' => 'attw', 'au-m' => 'au-m', 'aur ' => 'aur ', 'aus ' => 'aus ', 'abac' => 'abac', 'acoo' => 'acoo', 'aiko' => 'aiko', 'alco' => 'alco', 'alca' => 'alca', 'amoi' => 'amoi', 'anex' => 'anex', 'anny' => 'anny', 'anyw' => 'anyw', 'aptu' => 'aptu', 'arch' => 'arch', 'argo' => 'argo', 'bell' => 'bell', 'bird' => 'bird', 'bw-n' => 'bw-n', 'bw-u' => 'bw-u', 'beck' => 'beck', 'benq' => 'benq', 'bilb' => 'bilb', 'blac' => 'blac', 'c55/' => 'c55/', 'cdm-' => 'cdm-', 'chtm' => 'chtm', 'capi' => 'capi', 'cond' => 'cond', 'craw' => 'craw', 'dall' => 'dall', 'dbte' => 'dbte', 'dc-s' => 'dc-s', 'dica' => 'dica', 'ds-d' => 'ds-d', 'ds12' => 'ds12', 'dait' => 'dait', 'devi' => 'devi', 'dmob' => 'dmob', 'doco' => 'doco', 'dopo' => 'dopo', 'el49' => 'el49', 'erk0' => 'erk0', 'esl8' => 'esl8', 'ez40' => 'ez40', 'ez60' => 'ez60', 'ez70' => 'ez70', 'ezos' => 'ezos', 'ezze' => 'ezze', 'elai' => 'elai', 'emul' => 'emul', 'eric' => 'eric', 'ezwa' => 'ezwa', 'fake' => 'fake', 'fly-' => 'fly-', 'fly_' => 'fly_', 'g-mo' => 'g-mo', 'g1 u' => 'g1 u', 'g560' => 'g560', 'gf-5' => 'gf-5', 'grun' => 'grun', 'gene' => 'gene', 'go.w' => 'go.w', 'good' => 'good', 'grad' => 'grad', 'hcit' => 'hcit', 'hd-m' => 'hd-m', 'hd-p' => 'hd-p', 'hd-t' => 'hd-t', 'hei-' => 'hei-', 'hp i' => 'hp i', 'hpip' => 'hpip', 'hs-c' => 'hs-c', 'htc ' => 'htc ', 'htc-' => 'htc-', 'htca' => 'htca', 'htcg' => 'htcg', 'htcp' => 'htcp', 'htcs' => 'htcs', 'htct' => 'htct', 'htc_' => 'htc_', 'haie' => 'haie', 'hita' => 'hita', 'huaw' => 'huaw', 'hutc' => 'hutc', 'i-20' => 'i-20', 'i-go' => 'i-go', 'i-ma' => 'i-ma', 'i230' => 'i230', 'iac' => 'iac', 'iac-' => 'iac-', 'iac/' => 'iac/', 'ig01' => 'ig01', 'im1k' => 'im1k', 'inno' => 'inno', 'iris' => 'iris', 'jata' => 'jata', 'java' => 'java', 'kddi' => 'kddi', 'kgt' => 'kgt', 'kgt/' => 'kgt/', 'kpt ' => 'kpt ', 'kwc-' => 'kwc-', 'klon' => 'klon', 'lexi' => 'lexi', 'lg g' => 'lg g', 'lg-a' => 'lg-a', 'lg-b' => 'lg-b', 'lg-c' => 'lg-c', 'lg-d' => 'lg-d', 'lg-f' => 'lg-f', 'lg-g' => 'lg-g', 'lg-k' => 'lg-k', 'lg-l' => 'lg-l', 'lg-m' => 'lg-m', 'lg-o' => 'lg-o', 'lg-p' => 'lg-p', 'lg-s' => 'lg-s', 'lg-t' => 'lg-t', 'lg-u' => 'lg-u', 'lg-w' => 'lg-w', 'lg/k' => 'lg/k', 'lg/l' => 'lg/l', 'lg/u' => 'lg/u', 'lg50' => 'lg50', 'lg54' => 'lg54', 'lge-' => 'lge-', 'lge/' => 'lge/', 'lynx' => 'lynx', 'leno' => 'leno', 'm1-w' => 'm1-w', 'm3ga' => 'm3ga', 'm50/' => 'm50/', 'maui' => 'maui', 'mc01' => 'mc01', 'mc21' => 'mc21', 'mcca' => 'mcca', 'medi' => 'medi', 'meri' => 'meri', 'mio8' => 'mio8', 'mioa' => 'mioa', 'mo01' => 'mo01', 'mo02' => 'mo02', 'mode' => 'mode', 'modo' => 'modo', 'mot ' => 'mot ', 'mot-' => 'mot-', 'mt50' => 'mt50', 'mtp1' => 'mtp1', 'mtv ' => 'mtv ', 'mate' => 'mate', 'maxo' => 'maxo', 'merc' => 'merc', 'mits' => 'mits', 'mobi' => 'mobi', 'motv' => 'motv', 'mozz' => 'mozz', 'n100' => 'n100', 'n101' => 'n101', 'n102' => 'n102', 'n202' => 'n202', 'n203' => 'n203', 'n300' => 'n300', 'n302' => 'n302', 'n500' => 'n500', 'n502' => 'n502', 'n505' => 'n505', 'n700' => 'n700', 'n701' => 'n701', 'n710' => 'n710', 'nec-' => 'nec-', 'nem-' => 'nem-', 'newg' => 'newg', 'neon' => 'neon', 'netf' => 'netf', 'noki' => 'noki', 'nzph' => 'nzph', 'o2 x' => 'o2 x', 'o2-x' => 'o2-x', 'opwv' => 'opwv', 'owg1' => 'owg1', 'opti' => 'opti', 'oran' => 'oran', 'p800' => 'p800', 'pand' => 'pand', 'pg-1' => 'pg-1', 'pg-2' => 'pg-2', 'pg-3' => 'pg-3', 'pg-6' => 'pg-6', 'pg-8' => 'pg-8', 'pg-c' => 'pg-c', 'pg13' => 'pg13', 'phil' => 'phil', 'pn-2' => 'pn-2', 'pt-g' => 'pt-g', 'palm' => 'palm', 'pana' => 'pana', 'pire' => 'pire', 'pock' => 'pock', 'pose' => 'pose', 'psio' => 'psio', 'qa-a' => 'qa-a', 'qc-2' => 'qc-2', 'qc-3' => 'qc-3', 'qc-5' => 'qc-5', 'qc-7' => 'qc-7', 'qc07' => 'qc07', 'qc12' => 'qc12', 'qc21' => 'qc21', 'qc32' => 'qc32', 'qc60' => 'qc60', 'qci-' => 'qci-', 'qwap' => 'qwap', 'qtek' => 'qtek', 'r380' => 'r380', 'r600' => 'r600', 'raks' => 'raks', 'rim9' => 'rim9', 'rove' => 'rove', 's55/' => 's55/', 'sage' => 'sage', 'sams' => 'sams', 'sc01' => 'sc01', 'sch-' => 'sch-', 'scp-' => 'scp-', 'sdk/' => 'sdk/', 'se47' => 'se47', 'sec-' => 'sec-', 'sec0' => 'sec0', 'sec1' => 'sec1', 'semc' => 'semc', 'sgh-' => 'sgh-', 'shar' => 'shar', 'sie-' => 'sie-', 'sk-0' => 'sk-0', 'sl45' => 'sl45', 'slid' => 'slid', 'smb3' => 'smb3', 'smt5' => 'smt5', 'sp01' => 'sp01', 'sph-' => 'sph-', 'spv ' => 'spv ', 'spv-' => 'spv-', 'sy01' => 'sy01', 'samm' => 'samm', 'sany' => 'sany', 'sava' => 'sava', 'scoo' => 'scoo', 'send' => 'send', 'siem' => 'siem', 'smar' => 'smar', 'smit' => 'smit', 'soft' => 'soft', 'sony' => 'sony', 't-mo' => 't-mo', 't218' => 't218', 't250' => 't250', 't600' => 't600', 't610' => 't610', 't618' => 't618', 'tcl-' => 'tcl-', 'tdg-' => 'tdg-', 'telm' => 'telm', 'tim-' => 'tim-', 'ts70' => 'ts70', 'tsm-' => 'tsm-', 'tsm3' => 'tsm3', 'tsm5' => 'tsm5', 'tx-9' => 'tx-9', 'tagt' => 'tagt', 'talk' => 'talk', 'teli' => 'teli', 'topl' => 'topl', 'hiba' => 'hiba', 'up.b' => 'up.b', 'upg1' => 'upg1', 'utst' => 'utst', 'v400' => 'v400', 'v750' => 'v750', 'veri' => 'veri', 'vk-v' => 'vk-v', 'vk40' => 'vk40', 'vk50' => 'vk50', 'vk52' => 'vk52', 'vk53' => 'vk53', 'vm40' => 'vm40', 'vx98' => 'vx98', 'virg' => 'virg', 'vite' => 'vite', 'voda' => 'voda', 'vulc' => 'vulc', 'w3c ' => 'w3c ', 'w3c-' => 'w3c-', 'wapj' => 'wapj', 'wapp' => 'wapp', 'wapu' => 'wapu', 'wapm' => 'wapm', 'wig ' => 'wig ', 'wapi' => 'wapi', 'wapr' => 'wapr', 'wapv' => 'wapv', 'wapy' => 'wapy', 'wapa' => 'wapa', 'waps' => 'waps', 'wapt' => 'wapt', 'winc' => 'winc', 'winw' => 'winw', 'wonu' => 'wonu', 'x700' => 'x700', 'xda2' => 'xda2', 'xdag' => 'xdag', 'yas-' => 'yas-', 'your' => 'your', 'zte-' => 'zte-', 'zeto' => 'zeto', 'acs-' => 'acs-', 'alav' => 'alav', 'alca' => 'alca', 'amoi' => 'amoi', 'aste' => 'aste', 'audi' => 'audi', 'avan' => 'avan', 'benq' => 'benq', 'bird' => 'bird', 'blac' => 'blac', 'blaz' => 'blaz', 'brew' => 'brew', 'brvw' => 'brvw', 'bumb' => 'bumb', 'ccwa' => 'ccwa', 'cell' => 'cell', 'cldc' => 'cldc', 'cmd-' => 'cmd-', 'dang' => 'dang', 'doco' => 'doco', 'eml2' => 'eml2', 'eric' => 'eric', 'fetc' => 'fetc', 'hipt' => 'hipt', 'http' => 'http', 'ibro' => 'ibro', 'idea' => 'idea', 'ikom' => 'ikom', 'inno' => 'inno', 'ipaq' => 'ipaq', 'jbro' => 'jbro', 'jemu' => 'jemu', 'java' => 'java', 'jigs' => 'jigs', 'kddi' => 'kddi', 'keji' => 'keji', 'kyoc' => 'kyoc', 'kyok' => 'kyok', 'leno' => 'leno', 'lg-c' => 'lg-c', 'lg-d' => 'lg-d', 'lg-g' => 'lg-g', 'lge-' => 'lge-', 'libw' => 'libw', 'm-cr' => 'm-cr', 'maui' => 'maui', 'maxo' => 'maxo', 'midp' => 'midp', 'mits' => 'mits', 'mmef' => 'mmef', 'mobi' => 'mobi', 'mot-' => 'mot-', 'moto' => 'moto', 'mwbp' => 'mwbp', 'mywa' => 'mywa', 'nec-' => 'nec-', 'newt' => 'newt', 'nok6' => 'nok6', 'noki' => 'noki', 'o2im' => 'o2im', 'opwv' => 'opwv', 'palm' => 'palm', 'pana' => 'pana', 'pant' => 'pant', 'pdxg' => 'pdxg', 'phil' => 'phil', 'play' => 'play', 'pluc' => 'pluc', 'port' => 'port', 'prox' => 'prox', 'qtek' => 'qtek', 'qwap' => 'qwap', 'rozo' => 'rozo', 'sage' => 'sage', 'sama' => 'sama', 'sams' => 'sams', 'sany' => 'sany', 'sch-' => 'sch-', 'sec-' => 'sec-', 'send' => 'send', 'seri' => 'seri', 'sgh-' => 'sgh-', 'shar' => 'shar', 'sie-' => 'sie-', 'siem' => 'siem', 'smal' => 'smal', 'smar' => 'smar', 'sony' => 'sony', 'sph-' => 'sph-', 'symb' => 'symb', 't-mo' => 't-mo', 'teli' => 'teli', 'tim-' => 'tim-', 'tosh' => 'tosh', 'treo' => 'treo', 'tsm-' => 'tsm-', 'upg1' => 'upg1', 'upsi' => 'upsi', 'vk-v' => 'vk-v', 'voda' => 'voda', 'vx52' => 'vx52', 'vx53' => 'vx53', 'vx60' => 'vx60', 'vx61' => 'vx61', 'vx70' => 'vx70', 'vx80' => 'vx80', 'vx81' => 'vx81', 'vx83' => 'vx83', 'vx85' => 'vx85', 'wap-' => 'wap-', 'wapa' => 'wapa', 'wapi' => 'wapi', 'wapp' => 'wapp', 'wapr' => 'wapr', 'webc' => 'webc', 'whit' => 'whit', 'winw' => 'winw', 'wmlb' => 'wmlb', 'xda-' => 'xda-')))
-        ;
-    }
-
-    /**
-     * Loads the html header for smartphone.
-     *
-     * @param  $title string Title tag value (empty by default)
-     */
-    public function loadSmartphoneHeader($title = '', $load_css = true, $load_js = true)
-    {
-        if (empty($title)) {
-            $title = $_SESSION['config']['applicationname'];
-        } ?>
-        <head>
-            <title><?php functions::xecho($title); ?></title>
-            <meta name="apple-mobile-web-app-capable" content="yes">
-            <meta name="apple-touch-fullscreen" content="yes">
-            <link rel="apple-touch-icon" href="img/board.png">
-            <link rel="apple-touch-icon-precomposed" href="img/board.png">
-            <?php
-            if ($load_css) {
-                $this->loadSmartphoneCss();
-            }
-        if ($load_js) {
-            //$this->load_js();?>
-                <script type="application/javascript" src="<?php echo $_SESSION['config']['businessappurl']; ?>smartphone/js/maarch_functions.js"></script>
-                <script type="application/x-javascript" src="<?php echo $_SESSION['config']['businessappurl']; ?>smartphone/js/iui/iui.js"></script>
-                <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl']; ?>smartphone/js/iscroll.js?v3.7.1"></script>
-                <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl']; ?>js/prototype.js"></script>
-                <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl']; ?>js/scriptaculous.js"></script>
-                <script src="<?php  echo $_SESSION['config']['businessappurl']; ?>tools/signature_pad/js/signature_pad.js" type="text/javascript"></script>
-
-                <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-                <script src="<?php  echo $_SESSION['config']['businessappurl']; ?>tools/fingerprintjs2/fingerprint2.js" type="text/javascript"></script>
-                <?php
-        } ?>
-        </head>
-        <?php
-    }
-
-    /**
-     * Loads the smartphone css.
-     */
-    private function loadSmartphoneCss()
-    {
-        ?>
-        <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
-        <!--<link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/style.css'; ?>" media="screen" />-->
-        <link rel="stylesheet" href="<?php echo $_SESSION['config']['coreurl']
-            .'node_modules/@fortawesome/fontawesome-free/css/all.css'; ?>" media="screen" />
-        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl']
-            .'css/font-awesome-maarch/css/font-maarch.css'; ?>" media="screen" />
-        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/iui-panel-list.css'; ?>" media="screen" />
-        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/iui.css'; ?>" media="screen" />
-
-        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/t/maarch/maarch-theme.css'; ?>" media="screen" />
-        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'tools/signature_pad/css/signature-pad.css'; ?>" media="screen" />
-        <?php
     }
 }
