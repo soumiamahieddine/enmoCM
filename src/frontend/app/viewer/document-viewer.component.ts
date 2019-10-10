@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { HeaderService } from '../../service/header.service';
 import { AppService } from '../../service/app.service';
-import { tap, catchError, finalize, filter } from 'rxjs/operators';
+import { tap, catchError, finalize, filter, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material';
@@ -37,6 +37,15 @@ export class DocumentViewerComponent implements OnInit {
 
     allowedExtensions: any[] = [];
     maxFileSize: number = 0;
+    maxFileSizeLabel: string = '';
+
+    percentInProgress: number = 0;
+
+    loadingInfo: any = {
+        mode : 'determinate',
+        percent: 0,
+        message: '',
+    };
 
     dialogRef: MatDialogRef<any>;
 
@@ -64,6 +73,7 @@ export class DocumentViewerComponent implements OnInit {
                 this.allowedExtensions = this.sortPipe.transform(this.allowedExtensions, 'extension');
 
                 this.maxFileSize = data.informations.maximumSize;
+                this.maxFileSizeLabel = data.informations.maximumSizeLabel;
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
@@ -126,23 +136,59 @@ export class DocumentViewerComponent implements OnInit {
 
     convertDocument(file: any) {
         if (this.allowedExtensions.filter(ext => ext.canConvert === true && ext.mimeType === file.type).length > 0) {
-            this.http.post('../../rest/convertedFile', { name: file.name, base64: file.content }).pipe(
-                tap((data: any) => {
-                    this.file.src = this.base64ToArrayBuffer(data.encodedResource);
-                }),
-                finalize(() => this.loading = false),
-                catchError((err: any) => {
+            const data = { name: file.name, base64: file.content };
+            this.upload(data).subscribe(
+                (res: any) => { 
+                    if (res.encodedResource) {
+                        this.file.src = this.base64ToArrayBuffer(res.encodedResource);
+                        this.loading = false;
+                    }
+                },
+                (err: any) => {
                     this.noConvertedFound = true;
-                    //this.notify.handleErrors(err);
+                    console.log(err);
                     return of(false);
-                })
-            ).subscribe();
+                }
+            );
         } else {
             this.noConvertedFound = true;
             this.loading = false
         }
-        
+
     }
+
+    upload(data: any) {
+        let uploadURL = `../../rest/convertedFile`;
+
+        return this.http.post<any>(uploadURL, data, {
+            reportProgress: true,
+            observe: 'events'
+        }).pipe(map((event) => {
+
+            switch (event.type) {
+
+                case HttpEventType.UploadProgress:
+                    const progress = Math.round(100 * event.loaded / event.total);
+                    this.loadingInfo.percent = progress;
+                    
+                    if (progress === 100) {
+                        this.loadingInfo.mode = 'indeterminate';
+                        this.loadingInfo.message = 'Conversion du fichier...';
+                    } else {
+                        this.loadingInfo.mode = 'determinate';
+                        this.loadingInfo.message = 'Chargement du fichier...';
+                    }
+                    return { status: 'progress', message: progress };
+
+                case HttpEventType.Response:
+                    return event.body;
+                default:
+                    return `Unhandled event: ${event.type}`;
+            }
+        })
+        );
+    }
+
 
     onError(error: any) {
         console.log(error);
@@ -190,7 +236,7 @@ export class DocumentViewerComponent implements OnInit {
             this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: 'Extension non autorisé !', msg: '<u>Extension autorisée</u> : <br/>' + this.allowedExtensions.map(ext => ext.extension).filter((elem: any, index: any, self: any) => index === self.indexOf(elem)).join(', ') } });
             return false;
         } else if (file.size > this.maxFileSize) {
-            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: 'Taille maximale dépassée ! ', msg: 'Taille maximale : ' + this.maxFileSize } });
+            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: 'Taille maximale dépassée ! ', msg: 'Taille maximale : ' + this.maxFileSizeLabel } });
             return false;
         } else {
             return true;
