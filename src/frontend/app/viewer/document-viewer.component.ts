@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
@@ -24,6 +24,8 @@ import { PDFProgressData } from 'ng2-pdf-viewer';
 })
 
 export class DocumentViewerComponent implements OnInit {
+
+    @Input('tmpFilename') tmpFilename: string;
 
     lang: any = LANG;
 
@@ -82,6 +84,25 @@ export class DocumentViewerComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+
+        if (this.tmpFilename != '') {
+            this.http.get('../../rest/convertedFile/'+this.tmpFilename).pipe(
+                tap((data: any) => {
+                    this.file = {
+                        name: this.tmpFilename,
+                        type: 'application/pdf',
+                        content: this.getBase64Document(this.base64ToArrayBuffer(data.encodedResource)),
+                        src: this.base64ToArrayBuffer(data.encodedResource)
+                    };
+                    this.noConvertedFound = false;
+                    this.loading = false;
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
     }
 
     uploadTrigger(fileInput: any) {

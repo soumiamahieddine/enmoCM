@@ -43,9 +43,11 @@ export class IndexationComponent implements OnInit {
 
     actionsList: any[] = [];
     selectedAction: any = {};
+    tmpFilename: string = '';
 
     constructor(
         private route: ActivatedRoute,
+        private _activatedRoute: ActivatedRoute,
         public http: HttpClient,
         public dialog: MatDialog,
         private headerService: HeaderService,
@@ -53,7 +55,12 @@ export class IndexationComponent implements OnInit {
         private notify: NotificationService,
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
-        public appService: AppService) { }
+        public appService: AppService) { 
+
+            _activatedRoute.queryParams.subscribe(
+                params => this.tmpFilename = params.tmpfilename
+            );
+        }
 
     ngOnInit(): void {
         this.loading = false;
