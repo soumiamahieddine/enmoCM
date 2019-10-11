@@ -54,7 +54,7 @@ class PriorityController
             return $response->withStatus(400)->withJson(['errors' => 'Body (label, color or delays) is empty or type is incorrect']);
         }
 
-        $delayAlreadySet = PriorityModel::getByDelays(['select' => [1], 'delays' => (int)$data['delays']]);
+        $delayAlreadySet = PriorityModel::get(['select' => [1], 'where' => ['delays = ?'], 'data' => [(int)$data['delays']]]);
         if (!empty($delayAlreadySet)) {
             return $response->withStatus(400)->withJson(['errors' => _PRIORITY_DELAY_ALREADY_SET]);
         }
@@ -72,7 +72,7 @@ class PriorityController
         return $response->withJson(['priority'  => $id]);
     }
 
-    public function update(Request $request, Response $response, array $aArgs)
+    public function update(Request $request, Response $response, array $args)
     {
         if (!ServiceModel::hasService(['id' => 'admin_priorities', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -87,17 +87,21 @@ class PriorityController
             return $response->withStatus(400)->withJson(['errors' => 'Body (label, color or delays) is empty or type is incorrect']);
         }
 
-        $delayAlreadySet = PriorityModel::getByDelays(['select' => [1], 'delays' => $data['delays']]);
+        $delayAlreadySet = PriorityModel::get([
+            'select' => [1],
+            'where'  => ['delays = ?', 'id != ?'],
+            'data'   => [$data['delays'], $args['id']]
+        ]);
         if (!empty($delayAlreadySet)) {
             return $response->withStatus(400)->withJson(['errors' => _PRIORITY_DELAY_ALREADY_SET]);
         }
 
-        $data['id'] = $aArgs['id'];
+        $data['id'] = $args['id'];
 
         PriorityModel::update($data);
         HistoryController::add([
             'tableName' => 'priorities',
-            'recordId'  => $aArgs['id'],
+            'recordId'  => $args['id'],
             'eventType' => 'UP',
             'info'      => _PRIORITY_MODIFICATION . " : {$data['label']}",
             'moduleId'  => 'priority',

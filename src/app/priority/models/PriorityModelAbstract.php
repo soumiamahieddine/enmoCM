@@ -128,19 +128,4 @@ abstract class PriorityModelAbstract
         
         return true;
     }
-
-    public static function getByDelays(array $aArgs)
-    {
-        ValidatorModel::intVal($aArgs, ['delays']);
-        ValidatorModel::arrayType($aArgs, ['select']);
-
-        $aPriority = PriorityModel::get([
-            'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'  => ['priorities'],
-            'where'  => ['delays = ?'],
-            'data'   => [$aArgs['delays']]
-        ]);
-
-        return $aPriority;
-    }
 }

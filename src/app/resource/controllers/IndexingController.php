@@ -179,7 +179,7 @@ class IndexingController
         $diff = $processLimitDate->diff($now);
         $diff = $diff->format("%a");
 
-        $priority = PriorityModel::get(['select' => ['id'], 'where' => ['delays > ?'], 'data' => [$diff], 'orderBy' => ['delays'], 'limit' => 1]);
+        $priority = PriorityModel::get(['select' => ['id'], 'where' => ['delays >= ?'], 'data' => [$diff], 'orderBy' => ['delays'], 'limit' => 1]);
         if (empty($priority)) {
             $priority = PriorityModel::get(['select' => ['id'], 'orderBy' => ['delays DESC'], 'limit' => 1]);
         }
