@@ -29,7 +29,7 @@ export class NotesListComponent implements OnInit {
         this.loading = true;
         this.http.get("../../rest/resources/" + this.resIds[0] + "/notes")
         .subscribe((data: any) => {
-            this.notes = data;
+            this.notes = data['notes'];
             this.reloadBadgeNotes.emit(`${this.notes.length}`);
             this.loading = false;
         });

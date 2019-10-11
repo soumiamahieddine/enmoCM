@@ -415,7 +415,7 @@ export class SignatureBookComponent implements OnInit {
             this.http.get(path, signature)
                 .subscribe((data : any) => {
                     if (data.status == 0) {
-                        this.rightViewerLink = "../../rest/res/" + this.resId + "/attachments/" + data.new_id + "/content";
+                        this.rightViewerLink = "../../rest/attachments/" + data.new_id + "/content";
                         this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                         this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'SIGN';
                         this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = data.new_id;
@@ -462,7 +462,7 @@ export class SignatureBookComponent implements OnInit {
 
         this.http.put(this.coreUrl + 'rest/signatureBook/' + resId + '/unsign', {'table' : collId})
             .subscribe(() => {
-                this.rightViewerLink = "../../rest/res/" + this.resId + "/attachments/" + resId + "/content";
+                this.rightViewerLink = "../../rest/attachments/" + resId + "/content";
                 this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                 this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
                 this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = resId;

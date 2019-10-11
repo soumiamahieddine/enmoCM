@@ -217,25 +217,27 @@ class AttachmentController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function getThumbnailContent(Request $request, Response $response, array $aArgs)
+    public function getThumbnailContent(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => [$aArgs['resIdMaster']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
-        $pathToThumbnail = 'apps/maarch_entreprise/img/noThumbnail.png';
-
         $attachment = AttachmentModel::getOnView([
-            'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename'],
-            'where'     => ['res_id = ? or res_id_version = ?', 'res_id_master = ?', 'status not in (?)'],
-            'data'      => [$aArgs['resId'], $aArgs['resId'], $aArgs['resIdMaster'], ['DEL', 'OBS']],
+            'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename', 'res_id_master'],
+            'where'     => ['res_id = ? or res_id_version = ?', 'status not in (?)'],
+            'data'      => [$args['id'], $args['id'], ['DEL', 'OBS']],
             'limit'     => 1
         ]);
-
         if (empty($attachment[0])) {
             return $response->withStatus(403)->withJson(['errors' => 'Attachment not found']);
         }
 
+        if (!ResController::hasRightByResId(['resId' => [$attachment[0]['res_id_master']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $pathToThumbnail = 'apps/maarch_entreprise/img/noThumbnail.png';
         $attachmentTodisplay = $attachment[0];
         $isVersion = empty($attachmentTodisplay['res_id']);
         if ($isVersion) {
@@ -246,17 +248,17 @@ class AttachmentController
 
         $tnlAdr = AdrModel::getTypedAttachAdrByResId([
             'select'    => ['docserver_id', 'path', 'filename'],
-            'resId'     => $aArgs['resId'],
+            'resId'     => $args['id'],
             'type'      => 'TNL',
             'isVersion' => $isVersion
         ]);
 
         if (empty($tnlAdr)) {
-            ConvertThumbnailController::convert(['collId' => $collId, 'resId' => $aArgs['resId'], 'isVersion' => $isVersion]);
+            ConvertThumbnailController::convert(['collId' => $collId, 'resId' => $args['id'], 'isVersion' => $isVersion]);
             
             $tnlAdr = AdrModel::getTypedAttachAdrByResId([
                 'select'    => ['docserver_id', 'path', 'filename'],
-                'resId'     => $aArgs['resId'],
+                'resId'     => $args['id'],
                 'type'      => 'TNL',
                 'isVersion' => $isVersion
             ]);
@@ -286,23 +288,26 @@ class AttachmentController
         return $response->withHeader('Content-Type', $mimeType);
     }
     
-    public function getFileContent(Request $request, Response $response, array $aArgs)
+    public function getFileContent(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => [$aArgs['resIdMaster']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
         $attachment = AttachmentModel::getOnView([
             'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename'],
-            'where'     => ['res_id = ? or res_id_version = ?', 'res_id_master = ?', 'status not in (?)'],
-            'data'      => [$aArgs['resId'], $aArgs['resId'], $aArgs['resIdMaster'], ['DEL']],
+            'where'     => ['res_id = ? or res_id_version = ?', 'status not in (?)'],
+            'data'      => [$args['id'], $args['id'], ['DEL']],
             'limit'     => 1
         ]);
-
         if (empty($attachment[0])) {
             return $response->withStatus(403)->withJson(['errors' => 'Attachment not found']);
         }
-   
+
+        if (!ResController::hasRightByResId(['resId' => [$attachment[0]['res_id_master']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
         $attachmentTodisplay = $attachment[0];
         $id = (empty($attachmentTodisplay['res_id']) ? $attachmentTodisplay['res_id_version'] : $attachmentTodisplay['res_id']);
         $isVersion = empty($attachmentTodisplay['res_id']);
@@ -349,7 +354,7 @@ class AttachmentController
                         } elseif ($value == 'hour_now') {
                             $tmp = date('H:i');
                         } else {
-                            $backFromView = AttachmentModel::getOnView(['select' => [$value], 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
+                            $backFromView = AttachmentModel::getOnView(['select' => [$value], 'where' => ['res_id = ?'], 'data' => [$args['id']]]);
                             if (!empty($backFromView[0][$value])) {
                                 $tmp = $backFromView[0][$value];
                             }
@@ -414,7 +419,7 @@ class AttachmentController
 
         HistoryController::add([
             'tableName' => 'res_attachments',
-            'recordId'  => $aArgs['resId'],
+            'recordId'  => $args['id'],
             'eventType' => 'VIEW',
             'info'      => _ATTACH_DISPLAYING . " : {$id}",
             'moduleId'  => 'attachments',
@@ -426,18 +431,22 @@ class AttachmentController
 
     public function getOriginalFileContent(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
         $attachment = AttachmentModel::getOnView([
-            'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename'],
-            'where'     => ['res_id = ? or res_id_version = ?', 'res_id_master = ?', 'status not in (?)'],
-            'data'      => [$args['id'], $args['id'], $args['resId'], ['DEL']],
+            'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename', 'res_id_master'],
+            'where'     => ['res_id = ? or res_id_version = ?', 'status not in (?)'],
+            'data'      => [$args['id'], $args['id'], ['DEL']],
             'limit'     => 1
         ]);
         if (empty($attachment[0])) {
             return $response->withStatus(403)->withJson(['errors' => 'Attachment not found']);
+        }
+
+        if (!ResController::hasRightByResId(['resId' => [$attachment[0]['res_id_master']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
         $attachmentTodisplay = $attachment[0];
@@ -469,7 +478,7 @@ class AttachmentController
             $fileContent = file_get_contents($pathToDocument);
         }
         if ($fileContent === false) {
-            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+            return $response->withStatus(400)->withJson(['errors' => 'Document not found on docserver']);
         }
 
         $finfo    = new \finfo(FILEINFO_MIME_TYPE);
@@ -481,7 +490,7 @@ class AttachmentController
 
         HistoryController::add([
             'tableName' => 'res_attachments',
-            'recordId'  => $args['resId'],
+            'recordId'  => $args['id'],
             'eventType' => 'VIEW',
             'info'      => _ATTACH_DISPLAYING . " : {$id}",
             'moduleId'  => 'attachments',

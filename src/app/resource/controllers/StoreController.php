@@ -258,31 +258,6 @@ class StoreController
         return $formatedData;
     }
 
-    public function checkFileUpload(Request $request, Response $response)
-    {
-        $body = $request->getParsedBody();
-
-        if (!Validator::notEmpty()->validate($body['size'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'filesize is empty']);
-        } else if (!Validator::notEmpty()->validate($body['type'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'no mime type detected']);
-        } else if (!Validator::notEmpty()->validate($body['extension'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'this filename has no extension']);
-        }
-
-        if (!StoreController::isFileAllowed($body)) {
-            return $response->withStatus(400)->withJson(['errors' => _FILE_NOT_ALLOWED_INFO_1.' "'.$body['extension'].'" '._FILE_NOT_ALLOWED_INFO_2.' "'. $body['type']. '" '._FILE_NOT_ALLOWED_INFO_3]);
-        }
-
-        $maxFilesizeMo = ini_get('upload_max_filesize');
-        $maxFilesizeKo = ini_get('upload_max_filesize')*1024;
-
-        if ($body['size']/1024 > $maxFilesizeKo) {
-            return $response->withStatus(400)->withJson(['errors' => _MAX_SIZE_UPLOAD_REACHED.' ('.round($maxFilesizeMo).'Mo Max.)']);
-        }
-        return $response->withJson(['success']);
-    }
-
     public static function isFileAllowed(array $args)
     {
         ValidatorModel::notEmpty($args, ['extension', 'type']);

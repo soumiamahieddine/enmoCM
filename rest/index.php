@@ -69,11 +69,11 @@ $app->get('/administration', \SrcCore\controllers\CoreController::class . ':getA
 
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');
+$app->get('/attachments/{id}/content', \Attachment\controllers\AttachmentController::class . ':getFileContent');
+$app->get('/attachments/{id}/originalContent', \Attachment\controllers\AttachmentController::class . ':getOriginalFileContent');
+$app->get('/attachments/{id}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
+$app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\AttachmentController::class . ':setInSendAttachment');
 $app->get('/attachmentsTypes', \Attachment\controllers\AttachmentController::class . ':getAttachmentsTypes');
-$app->get('/resources/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getByResId');
-$app->get('/res/{resIdMaster}/attachments/{resId}/content', \Attachment\controllers\AttachmentController::class . ':getFileContent');
-$app->get('/resources/{resId}/attachments/{id}/originalContent', \Attachment\controllers\AttachmentController::class . ':getOriginalFileContent');
-$app->get('/res/{resIdMaster}/attachments/{resId}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
 
 //AutoComplete
 $app->get('/autocomplete/contacts', \SrcCore\controllers\AutoCompleteController::class . ':getContacts');
@@ -169,6 +169,8 @@ $app->get('/administration/doctypes/new', \Doctype\controllers\FirstLevelControl
 
 //Emails
 $app->post('/emails', \Email\controllers\EmailController::class . ':send');
+$app->get('/emails/{id}', \Email\controllers\EmailController::class . ':getById');
+$app->put('/emails/{id}', \Email\controllers\EmailController::class . ':update');
 $app->delete('/emails/{id}', \Email\controllers\EmailController::class . ':delete');
 
 //Entities
@@ -275,12 +277,11 @@ $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplat
 $app->get('/roles', \Entity\controllers\ListTemplateController::class . ':getRoles');
 
 //Notes
-$app->get('/notes/templates', \Note\controllers\NoteController::class . ':getTemplates');
-$app->get('/resources/{resId}/notes', \Note\controllers\NoteController::class . ':get');
-$app->post('/resources/{resId}/notes', \Note\controllers\NoteController::class . ':create');
-$app->get('/resources/{resId}/notes/{id}', \Note\controllers\NoteController::class . ':getById');
-$app->put('/resources/{resId}/notes/{id}', \Note\controllers\NoteController::class . ':update');
-$app->delete('/resources/{resId}/notes/{id}', \Note\controllers\NoteController::class . ':delete');
+$app->post('/notes', \Note\controllers\NoteController::class . ':create');
+$app->get('/notes/{id}', \Note\controllers\NoteController::class . ':getById');
+$app->put('/notes/{id}', \Note\controllers\NoteController::class . ':update');
+$app->delete('/notes/{id}', \Note\controllers\NoteController::class . ':delete');
+$app->get('/notesTemplates', \Note\controllers\NoteController::class . ':getTemplates');
 
 //Parameters
 $app->get('/parameters', \Parameter\controllers\ParameterController::class . ':get');
@@ -309,18 +310,20 @@ $app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::cla
 
 //Resources
 $app->post('/resources', \Resource\controllers\ResController::class . ':create');
-$app->get('/res/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
+$app->get('/resources/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
 $app->get('/resources/{resId}/originalContent', \Resource\controllers\ResController::class . ':getOriginalFileContent');
-$app->get('/res/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
+$app->get('/resources/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
+$app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
+$app->get('/resources/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getByResId');
+$app->get('/resources/{resId}/emails', \Email\controllers\EmailController::class . ':getByResId');
+$app->get('/resources/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
 $app->get('/res/{resId}/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
 $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
 $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':updateExternalInfos');
 $app->get('/categories', \Resource\controllers\ResController::class . ':getCategories');
-$app->get('/natures', \Resource\controllers\ResController::class . ':getNatures');
-$app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
-$app->post('/resources/checkFileUpload', \Resource\controllers\StoreController::class . ':checkFileUpload');
+$app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
@@ -339,7 +342,6 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/ch
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkExternalNoteBook', \Action\controllers\PreProcessActionController::class . ':checkExternalNoteBook');
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/getRedirect', \Action\controllers\PreProcessActionController::class . ':getRedirectInformations');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkShippings', \Action\controllers\PreProcessActionController::class . ':checkShippings');
-$app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 
 //shipping
 $app->get('/administration/shippings', \Shipping\controllers\ShippingTemplateController::class . ':get');
@@ -348,7 +350,6 @@ $app->get('/administration/shippings/{id}', \Shipping\controllers\ShippingTempla
 $app->post('/administration/shippings', \Shipping\controllers\ShippingTemplateController::class . ':create');
 $app->put('/administration/shippings/{id}', \Shipping\controllers\ShippingTemplateController::class . ':update');
 $app->delete('/administration/shippings/{id}', \Shipping\controllers\ShippingTemplateController::class . ':delete');
-$app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\AttachmentController::class . ':setInSendAttachment');
 
 //SignatureBook
 $app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources', \SignatureBook\controllers\SignatureBookController::class . ':getResources');

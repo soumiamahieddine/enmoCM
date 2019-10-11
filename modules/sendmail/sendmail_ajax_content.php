@@ -459,22 +459,7 @@ switch ($mode) {
                                         $entityInfo = \Entity\models\EntityModel::getByEntityId(['entityId' => $aSenderInfo[0], 'select' => ['id']]);
                                     }
 
-                                    $isSent = \Email\controllers\EmailController::update([
-                                        'userId'    => $userInfo['id'],
-                                        'emailId'   => $id,
-                                        'data'      => [
-                                            'sender'        => empty($entityInfo) ? ['email' => $userInfo['mail']] : ['email' => $aSenderInfo[1], 'entityId' => $entityInfo['id']],
-                                            'recipients'    => explode(",", $to),
-                                            'cc'            => explode(",", $cc),
-                                            'cci'           => explode(",", $cci),
-                                            'object'        => (empty($_REQUEST['object']) ? '' : substr($_REQUEST['object'], 0, 100)),
-                                            'body'          => $body,
-                                            'document'      => $document,
-                                            'isHtml'        => $isHtml,
-                                            'status'        => $email_status
-                                        ]
-                                    ]);
-                        
+
                                     if (!empty($isSent['errors'])) {
                                         $error = $isSent['errors'];
                                     }

@@ -18,7 +18,7 @@
                 <button mat-menu-item *ngFor="let item of items">{{lang.version}} 1</button>
             </mat-menu>-->
             <a mat-button color="primary" class="downloadButton" title="{{lang.downloadOriginalFile}}"
-                href="../../rest/resources/{{resIds[0]}}/attachments/{{attachment.res_id}}/originalContent"
+                href="../../rest/attachments/{{attachment.res_id}}/originalContent"
                 target="_blank">
                 {{attachment.format}}
             </a>

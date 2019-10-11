@@ -82,10 +82,10 @@ export class HomeComponent implements OnInit {
     }
 
     goTo(row:any) {
-        if (this.docUrl == '../../rest/res/'+row.res_id+'/content' && this.sidenavRight.opened) {
+        if (this.docUrl == '../../rest/resources/' + row.res_id + '/content' && this.sidenavRight.opened) {
             this.sidenavRight.close();
         } else {
-            this.docUrl = '../../rest/res/'+row.res_id+'/content';
+            this.docUrl = '../../rest/resources/' + row.res_id + '/content';
 
             this.innerHtml = this.sanitizer.bypassSecurityTrustHtml(
                 "<iframe style='height:100%;width:100%;' src='" + this.docUrl + "' class='embed-responsive-item'>" +
@@ -95,7 +95,7 @@ export class HomeComponent implements OnInit {
     }
 
     viewThumbnail(row:any) {
-        this.thumbnailUrl = '../../rest/res/' + row.res_id + '/thumbnail';
+        this.thumbnailUrl = '../../rest/resources/' + row.res_id + '/thumbnail';
         $j('#viewThumbnail').show();
         $j('#listContent').css({"overflow":"hidden"});
     }

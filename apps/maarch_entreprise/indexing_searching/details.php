@@ -355,7 +355,7 @@ if ($stmt->rowCount() == 0) {
         <p id="viewdoc">
             <?php if ($info_mail->filename) {
                 ?>
-                <a href="../../rest/res/<?php functions::xecho($s_id); ?>/content" target="_blank">
+                <a href="../../rest/resources/<?php functions::xecho($s_id); ?>/content" target="_blank">
                     <?php echo _VIEW_DOC;?>
                     <i class="tooltip visaPjUp tooltipstered fa fa-eye fa-2x" style="height: auto; width: auto;font-size: 14px;margin-right:6px;margin-top: -9px;" title="<?php echo _VIEW_DOC; ?>"></i>
                 </a>

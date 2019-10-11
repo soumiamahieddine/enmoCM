@@ -33,7 +33,7 @@ export class AttachmentsListComponent implements OnInit {
                 this.mailevaEnabled = data.mailevaEnabled;
                 this.attachments = data.attachments;
                 this.attachments.forEach((element: any) => {
-                    element.thumbnailUrl = '../../rest/res/' + this.resIds[0] + '/attachments/' + element.res_id + '/thumbnail';
+                    element.thumbnailUrl = '../../rest/attachments/' + element.res_id + '/thumbnail';
                 });
                 this.reloadBadgeNotes.emit(`${this.attachments.length}`);
                 this.loading = false;

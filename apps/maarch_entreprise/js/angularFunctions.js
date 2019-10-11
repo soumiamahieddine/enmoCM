@@ -172,7 +172,7 @@ function setSessionForSignatureBook(resId) {
 }
 
 function displayThumbnail(resId) {
-    $j('#thumb_' + resId).html('<img src="../../rest/res/' + resId + '/thumbnail">');
+    $j('#thumb_' + resId).html('<img src="../../rest/resources/' + resId + '/thumbnail">');
 }
 
 var koKeys = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];

@@ -1720,12 +1720,12 @@ $content .= '</div>';
 
 // ATTACHMENT IFRAME
 if ($mode == 'edit') {
-    $srcAttachment = '../../rest/res/'.functions::xssafe($_SESSION['doc_id']).'/attachments/'.$_REQUEST['id'] . '/content';
+    $srcAttachment = '../../rest/attachments/'.$_REQUEST['id'] . '/content';
     $content .= '<iframe src="'.$srcAttachment.'" name="iframePjDocument_0" id="iframePjDocument_0" scrolling="auto" frameborder="0" style="width:100% !important;height:85vh;display:none" onmouseover="this.focus()"></iframe>';
 }
 
 // MAIN DOCUMENT IFRAME
-$content .= '<iframe src="../../rest/res/'.functions::xssafe($_SESSION['doc_id']).'/content" name="iframeMainDocument" id="iframeMainDocument" scrolling="auto" frameborder="0" style="width:100% !important;height:85vh;display:none" onmouseover="this.focus()"></iframe>';
+$content .= '<iframe src="../../rest/resources/'.functions::xssafe($_SESSION['doc_id']).'/content" name="iframeMainDocument" id="iframeMainDocument" scrolling="auto" frameborder="0" style="width:100% !important;height:85vh;display:none" onmouseover="this.focus()"></iframe>';
 
 $content .= '</div>';
 
