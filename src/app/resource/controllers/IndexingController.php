@@ -139,7 +139,7 @@ class IndexingController
             $priority = PriorityModel::getById(['id' => $queryParams['priority'], 'select' => ['delays']]);
             $delay = $priority['delays'];
         }
-        if (!Validator::intVal()->validate($delay)) {
+        if (!isset($delay) || !Validator::intVal()->validate($delay)) {
             return $response->withStatus(400)->withJson(['errors' => 'Delay is not a numeric value']);
         }
 
@@ -163,6 +163,28 @@ class IndexingController
         $maximumSizeLabel = round($maximumSize / 1048576, 3) . ' Mo';
 
         return $response->withJson(['informations' => ['maximumSize' => $maximumSize, 'maximumSizeLabel' => $maximumSizeLabel, 'allowedFiles' => $allowedFiles]]);
+    }
+
+    public function getPriorityWithProcessLimitDate(Request $request, Response $response)
+    {
+        $queryParams = $request->getQueryParams();
+
+        if (empty($queryParams['processLimitDate'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params processLimitDate is empty']);
+        }
+
+        $processLimitDate = new \DateTime($queryParams['processLimitDate']);
+        $now = new \DateTime();
+
+        $diff = $processLimitDate->diff($now);
+        $diff = $diff->format("%a");
+
+        $priority = PriorityModel::get(['select' => ['id'], 'where' => ['delays > ?'], 'data' => [$diff], 'orderBy' => ['delays'], 'limit' => 1]);
+        if (empty($priority)) {
+            $priority = PriorityModel::get(['select' => ['id'], 'orderBy' => ['delays DESC'], 'limit' => 1]);
+        }
+
+        return $response->withJson(['priority' => $priority[0]['id']]);
     }
 
     public static function getEntitiesChildrenLevel($aArgs = [])

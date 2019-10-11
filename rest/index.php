@@ -232,6 +232,7 @@ $app->get('/indexing/{groupId}/actions', \Resource\controllers\IndexingControlle
 $app->get('/indexing/{groupId}/entities', \Resource\controllers\IndexingController::class . ':getIndexingEntities');
 $app->get('/indexing/processLimitDate', \Resource\controllers\IndexingController::class . ':getProcessLimitDate');
 $app->get('/indexing/fileInformations', \Resource\controllers\IndexingController::class . ':getFileInformations');
+$app->get('/indexing/priority', \Resource\controllers\IndexingController::class . ':getPriorityWithProcessLimitDate');
 
 //IndexingModels
 $app->get('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':get');
