@@ -264,11 +264,6 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Body sharing/entities does not exists']);
         }
 
-        $childrenInPerimeter = FolderController::areChildrenInPerimeter(['folderId' => $aArgs['id']]);
-        if (!$childrenInPerimeter) {
-            return $response->withStatus(400)->withJson(['errors' => 'Cannot share/unshare folder because at least one folder is out of your perimeter']);
-        }
-
         DatabaseModel::beginTransaction();
         $sharing = FolderController::folderSharing(['folderId' => $aArgs['id'], 'public' => $data['public'], 'sharing' => $data['sharing']]);
         if (!$sharing) {
