@@ -130,6 +130,7 @@ $app->put('/contactsFilling', \Contact\controllers\ContactController::class . ':
 
 //Convert
 $app->post('/convertedFile', \Convert\controllers\ConvertPdfController::class . ':convertedFile');
+$app->get('/convertedFile/{filename}', \Convert\controllers\ConvertPdfController::class . ':getConvertedFileByFilename');
 
 //CustomFields
 $app->get('/customFields', \CustomField\controllers\CustomFieldController::class . ':get');
