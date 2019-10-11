@@ -50,8 +50,7 @@ class EmailController
 
         $body = $request->getParsedBody();
 
-        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-        $isSent = EmailController::createEmail(['userId' => $user['id'], 'data' => $body]);
+        $isSent = EmailController::createEmail(['userId' => $GLOBALS['id'], 'data' => $body]);
 
         if (!empty($isSent['errors'])) {
             $httpCode = empty($isSent['code']) ? 400 : $isSent['code'];
@@ -117,16 +116,13 @@ class EmailController
         return $isSent;
     }
 
-    public static function getById(array $args)
+    public function getById(Request $request, Response $response, array $args)
     {
-        ValidatorModel::notEmpty($args, ['id', 'userId']);
-        ValidatorModel::intVal($args, ['id', 'userId']);
-        
         $emailArray = EmailModel::getById(['id' => $args['id']]);
         $document   = (array)json_decode($emailArray['document']);
 
-        if (!ResController::hasRightByResId(['resId' => [$document['id']], 'userId' => $args['userId']])) {
-            return ['errors' => 'Document out of perimeter', 'code' => 403];
+        if (!ResController::hasRightByResId(['resId' => [$document['id']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
         $sender        = (array)json_decode($emailArray['sender']);
@@ -137,7 +133,7 @@ class EmailController
         $email['resId'] = $document['id'];
 
         $user = UserModel::getById(['id' => $emailArray['user_id'], 'select' => ['user_id']]);
-        $email['userId'] = $user['user_id'];
+        $email['login'] = $user['user_id'];
 
         $email['attachments'] = [];
         $email['attachments_version'] = [];
@@ -171,55 +167,89 @@ class EmailController
             $email['sender_email'] = $sender['email'];
         }
 
-        return $email;
+        return $response->withJson($email);
     }
 
-    public static function update(array $args)
+    public function update(Request $request, Response $response, array $args)
     {
-        ValidatorModel::notEmpty($args, ['userId', 'data', 'emailId']);
-        ValidatorModel::intVal($args, ['userId', 'emailId']);
-        ValidatorModel::arrayType($args, ['data', 'options']);
+        $body = $request->getParsedBody();
 
-        $check = EmailController::controlCreateEmail(['userId' => $args['userId'], 'data' => $args['data']]);
+        $check = EmailController::controlCreateEmail(['userId' => $GLOBALS['id'], 'data' => $body]);
         if (!empty($check['errors'])) {
-            return ['errors' => $check['errors'], 'code' => $check['code']];
+            return $response->withStatus($check['code'])->withJson(['errors' => $check['errors']]);
         }
 
         EmailModel::update([
             'set' => [
-                'sender'      => json_encode($args['data']['sender']),
-                'recipients'  => json_encode($args['data']['recipients']),
-                'cc'          => empty($args['data']['cc']) ? '[]' : json_encode($args['data']['cc']),
-                'cci'         => empty($args['data']['cci']) ? '[]' : json_encode($args['data']['cci']),
-                'object'      => empty($args['data']['object']) ? null : $args['data']['object'],
-                'body'        => empty($args['data']['body']) ? null : $args['data']['body'],
-                'document'    => empty($args['data']['document']) ? null : json_encode($args['data']['document']),
-                'is_html'     => $args['data']['isHtml'] ? 'true' : 'false',
-                'status'      => $args['data']['status'] == 'DRAFT' ? 'DRAFT' : 'WAITING'
+                'sender'      => json_encode($body['sender']),
+                'recipients'  => json_encode($body['recipients']),
+                'cc'          => empty($body['cc']) ? '[]' : json_encode($body['cc']),
+                'cci'         => empty($body['cci']) ? '[]' : json_encode($body['cci']),
+                'object'      => empty($body['object']) ? null : $body['object'],
+                'body'        => empty($body['body']) ? null : $body['body'],
+                'document'    => empty($body['document']) ? null : json_encode($body['document']),
+                'is_html'     => $body['isHtml'] ? 'true' : 'false',
+                'status'      => $body['status'] == 'DRAFT' ? 'DRAFT' : 'WAITING'
             ],
             'where' => ['id = ?'],
-            'data' => [$args['emailId']]
+            'data'  => [$args['id']]
         ]);
 
         HistoryController::add([
             'tableName'    => 'emails',
-            'recordId'     => $args['emailId'],
+            'recordId'     => $args['id'],
             'eventType'    => 'UP',
             'eventId'      => 'emailModification',
             'info'         => _EMAIL_UPDATED
         ]);
 
-        if ($args['data']['status'] != 'DRAFT') {
+        if ($body['status'] != 'DRAFT') {
             $customId = CoreConfigModel::getCustomId();
             if (empty($customId)) {
                 $customId = 'null';
             }
             $encryptKey = CoreConfigModel::getEncryptKey();
-            $options = empty($args['options']) ? '' : serialize($args['options']);
-            exec("php src/app/email/scripts/sendEmail.php {$customId} {$args['emailId']} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
+            exec("php src/app/email/scripts/sendEmail.php {$customId} {$args['id']} {$GLOBALS['id']} '{$encryptKey}' > /dev/null &");
         }
 
-        return true;
+        return $response->withStatus(204);
+    }
+
+    public function delete(Request $request, Response $response, array $args)
+    {
+        $email = EmailModel::getById(['select' => ['user_id'], 'id' => $args['id']]);
+        if (empty($email)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Email does not exist']);
+        }
+        if ($email['user_id'] != $GLOBALS['id']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Email out of perimeter']);
+        }
+
+        EmailModel::delete([
+            'where' => ['id = ?'],
+            'data'  => [$args['id']]
+        ]);
+
+        HistoryController::add([
+            'tableName'    => 'emails',
+            'recordId'     => $args['id'],
+            'eventType'    => 'DEL',
+            'eventId'      => 'emailDeletion',
+            'info'         => _EMAIL_REMOVED
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function getByResId(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $emails = EmailModel::get(['select' => ['*'], 'where' => ['document->>\'id\' = ?'], 'data' => [$args['resId']]]);
+
+        return $response->withJson(['emails' => $emails]);
     }
 
     public static function sendEmail(array $args)
@@ -487,33 +517,5 @@ class EmailController
         }
 
         return ['success' => 'success'];
-    }
-
-    public static function delete(Request $request, Response $response, array $args)
-    {
-        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-
-        $email = EmailModel::getById(['select' => ['user_id'], 'id' => $args['id']]);
-        if (empty($email)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Email does not exist']);
-        }
-        if ($email['user_id'] != $user['id']) {
-            return $response->withStatus(403)->withJson(['errors' => 'Email out of perimeter']);
-        }
-        
-        EmailModel::delete([
-            'where' => ['id = ?'],
-            'data'  => [$args['id']]
-        ]);
-
-        HistoryController::add([
-            'tableName'    => 'emails',
-            'recordId'     => $args['id'],
-            'eventType'    => 'DEL',
-            'eventId'      => 'emailDeletion',
-            'info'         => _EMAIL_REMOVED
-        ]);
-
-        return $response->withStatus(204);
     }
 }
