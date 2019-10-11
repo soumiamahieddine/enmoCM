@@ -220,7 +220,8 @@ class ExportController
 
         $csvHead = [];
         foreach ($aArgs['data'] as $value) {
-            $csvHead[] = $value['label'];
+            $decoded = utf8_decode($value['label']);
+            $csvHead[] = $decoded;
         }
 
         fputcsv($file, $csvHead, $delimiter);
@@ -269,10 +270,33 @@ class ExportController
                         $csvContent[] = empty($tags[$resource['res_id']]) ? '' : $tags[$resource['res_id']];
                     } elseif ($value['value'] == 'getSignatories') {
                         $signatories[] = ExportController::getSignatories(['chunkedResIds' => $aArgs['chunkedResIds']]);
-                        $csvContent[] = empty($signatories[$resource['res_id']]) ? '' : $signatories[$resource['res_id']];
+
+                        $sign = $signatories[$resource['res_id']];
+                        if (empty($sign)) {
+                            $sign = '';
+                        } else if (is_array($sign)) {
+                            $sign = implode(',', $sign);
+
+                            if ($sign == 'empty') {
+                                $sign = '';
+                            }
+                        }
+                        $csvContent[] = $sign;
                     } elseif ($value['value'] == 'getSignatureDates') {
                         $signatureDates[] = ExportController::getSignatureDates(['chunkedResIds' => $aArgs['chunkedResIds']]);
-                        $csvContent[] = empty($signatureDates[$resource['res_id']]) ? '' : $signatureDates[$resource['res_id']];
+
+                        $sign = $signatureDates[$resource['res_id']];
+                        if (empty($sign)) {
+                            $sign = '';
+                        } else if (is_array($sign)) {
+                            $sign = implode(',', $sign);
+
+                            if ($sign == 'empty') {
+                                $sign = '';
+                            }
+                        }
+
+                        $csvContent[] = $sign;
                     } elseif ($value['value'] == 'getDepartment') {
                         if (!empty($resource['department_number_id'])) {
                             $csvContent[] = $resource['department_number_id'] . ' - ' . DepartmentController::getById(['id' => $resource['department_number_id']]);
@@ -287,6 +311,17 @@ class ExportController
                     } else {
                         $csvContent[] = $resource[$value['value']];
                     }
+                }
+            }
+
+            // Decode UTF-8 strings to ISO-8859-1
+            for ($i = 0; $i < count($csvContent); $i++) {
+                if (is_array($csvContent[$i])) {
+                    for ($j = 0; $j < count($csvContent[$i]); $j++) {
+                        $csvContent[$i][$j] = utf8_decode($csvContent[$i][$j]);
+                    }
+                } else {
+                    $csvContent[$i] = utf8_decode($csvContent[$i]);
                 }
             }
             fputcsv($file, $csvContent, $delimiter);
