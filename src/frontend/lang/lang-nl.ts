@@ -1173,4 +1173,8 @@ export const LANG_NL = {
     "allowedExtensions" : "Allowed extensions", //_TO_TRANSLATE
     "maxFileSizeReached" : "Maximum file size reached", //_TO_TRANSLATE
     "maxFileSize" : "Maximum file size", //_TO_TRANSLATE
+    "uploadAnOtherFile" : "Upload an other file", //_TO_TRANSLATE
+    "removeFile" : "Remove file", //_TO_TRANSLATE
+    "loaded" : "loaded", //_TO_TRANSLATE
+    "noAvailablePreview" : "No available preview", //_TO_TRANSLATE
 };

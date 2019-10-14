@@ -1184,4 +1184,8 @@ export const LANG_FR = {
     "allowedExtensions" : "Extensions autorisées",
     "maxFileSizeReached" : "Taille maximale atteinte",
     "maxFileSize" : "Taille maximale",
+    "uploadAnOtherFile" : "Téléverser un autre fichier",
+    "removeFile" : "Enlever le fichier",
+    "loaded" : "chargé",
+    "noAvailablePreview" : "Pas de visualisation disponible",
 };

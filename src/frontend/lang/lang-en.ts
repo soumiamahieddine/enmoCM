@@ -1147,4 +1147,8 @@ export const LANG_EN = {
     "allowedExtensions" : "Allowed extensions",
     "maxFileSizeReached" : "Maximum file size reached",
     "maxFileSize" : "Maximum file size",
+    "uploadAnOtherFile" : "Upload an other file",
+    "removeFile" : "Remove file",
+    "loaded" : "loaded",
+    "noAvailablePreview" : "No available preview",
 };
