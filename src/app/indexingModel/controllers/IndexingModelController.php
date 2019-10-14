@@ -404,9 +404,12 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => 'Route id is empty or not an integer']);
         }
 
-        $model = IndexingModelModel::getById(['select' => ['enabled'], 'id' => $args['id']]);
+        $model = IndexingModelModel::getById(['select' => ['enabled', '"default"'], 'id' => $args['id']]);
         if (empty($model)) {
             return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
+        }
+        if ($model['default']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Can not disable this model because this is the default model']);
         }
 
         IndexingModelModel::update([
