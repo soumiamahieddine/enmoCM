@@ -166,7 +166,7 @@
                             <div style="padding: 10px;font-size: 16px;color: #135F7F;letter-spacing: 2px;font-weight: bold;display: flex;
                                 align-items: center;">
                                 <div style="display: flex;flex: 1;align-items: center;">
-                                    {{lang.diffusionList}} <button mat-icon-button color="primary"
+                                    {{lang.diffusionList}} <button mat-icon-button  *ngIf="appDiffusionsList.canUpdateRoles()" color="primary"
                                             (click)="appDiffusionsList.switchMode()" [title]="lang.modifyDiffusionList">
                                             <mat-icon class="fa fa-edit"></mat-icon>
                                         </button>

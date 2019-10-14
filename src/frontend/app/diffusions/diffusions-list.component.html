@@ -1,5 +1,5 @@
 <ng-container *ngIf="!loading">
-    <plugin-autocomplete *ngIf="adminMode" #test [labelPlaceholder]="lang.addUserOrEntity"
+    <plugin-autocomplete *ngIf="adminMode && canUpdateRoles()" #test [labelPlaceholder]="lang.addUserOrEntity"
         [routeDatas]="['/rest/autocomplete/users','/rest/autocomplete/entities']" [targetSearchKey]="'idToDisplay'"
         [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElem($event)"></plugin-autocomplete>
     <div *ngIf="isEmptyList() && !loading" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
@@ -37,7 +37,7 @@
                         </mat-menu>
                     </div>
                     <div *ngIf="role.id !== 'dest' && adminMode && diffusion.item_type === 'user_id'">
-                        <button mat-button [matMenuTriggerFor]="menu" [disabled]="!isCanUpdateRole()">{{role.label}} <i
+                        <button mat-button [matMenuTriggerFor]="menu" [disabled]="!canUpdateRoles()">{{role.label}} <i
                                 class="fa fa-chevron-down"></i></button>
                         <mat-menu #menu="matMenu" [class]="'roleListMenu'">
                             <ng-container *ngFor="let selectRole of availableRoles">
@@ -48,7 +48,7 @@
                         </mat-menu>
                     </div>
                     <div *ngIf="role.id !== 'dest' && adminMode">
-                        <button mat-icon-button color="warn" (click)="deleteItem(role.id,i)">
+                        <button mat-icon-button color="warn" (click)="deleteItem(role.id,i)" [disabled]="!canUpdateRoles()">
                             <mat-icon class="fa fa-trash" style="height:auto;"></mat-icon>
                         </button>
                     </div>
