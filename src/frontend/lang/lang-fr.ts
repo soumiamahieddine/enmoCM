@@ -1180,7 +1180,7 @@ export const LANG_FR = {
     "canNotDeleteIndexingModel" : "Ce modèle ne peut pas être supprimé car il a été utilisé pour enregistrer au moins un courrier",
     "loadingFile" : "Chargement du fichier",
     "convertingFile" : "Conversion du fichier",
-    "notAllowedExtension" : "Extension non autorisé",
+    "notAllowedExtension" : "Extension non autorisée",
     "allowedExtensions" : "Extensions autorisées",
     "maxFileSizeReached" : "Taille maximale atteinte",
     "maxFileSize" : "Taille maximale",
