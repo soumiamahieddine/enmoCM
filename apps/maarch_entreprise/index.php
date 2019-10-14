@@ -375,8 +375,8 @@ if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
         ?><script>triggerAngular('#/activate-user')</script><?php
     } elseif ($cookie['userId'] == 'superadmin' && !empty($_REQUEST['administration'])) {
         ?><script>triggerAngular('#/administration')</script><?php
-    } elseif (!empty($_REQUEST['scanToMaarch']) && !empty($_REQUEST['tmpfilename'])) {
-        ?><script>triggerAngular('#/indexing/<?php echo $_REQUEST['scanToMaarch']?>?tmpfilename=<?php echo $_REQUEST['tmpfilename']?>')</script><?php
+    } elseif (!empty($_REQUEST['scanGroupId']) && !empty($_REQUEST['tmpfilename'])) {
+        ?><script>triggerAngular('#/indexing/<?php echo $_REQUEST['scanGroupId']?>?tmpfilename=<?php echo $_REQUEST['tmpfilename']?>')</script><?php
     } elseif (empty($_REQUEST['page'])) {
         ?>
             <script>
