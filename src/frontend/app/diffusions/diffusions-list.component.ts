@@ -58,8 +58,8 @@ export class DiffusionsListComponent implements OnInit {
 
     /**
      * To load privilege of current list management
-     * @param indexing
-     * @param process
+     * @param indexation
+     * @param details
      * @param redirect
      */
     @Input('target') target: string;
@@ -75,14 +75,14 @@ export class DiffusionsListComponent implements OnInit {
     @Output('triggerEvent') triggerEvent = new EventEmitter();
 
     constructor(
-        public http: HttpClient, 
-        private notify: NotificationService, 
+        public http: HttpClient,
+        private notify: NotificationService,
         private renderer: Renderer2,
         public dialog: MatDialog
     ) { }
 
     ngOnInit(): void {
-        this.target = this.target !== undefined ? this.target : 'indexing';
+        this.target = this.target !== undefined ? this.target : '';
         this.adminMode = this.adminMode !== undefined ? this.adminMode : false;
         this.keepDestForRedirection = this.keepDestForRedirection !== undefined ? this.keepDestForRedirection : false;
 
@@ -125,7 +125,7 @@ export class DiffusionsListComponent implements OnInit {
         let mergedRoutesDatas: any = {};
 
         if (this.availableRoles.length === 0) {
-            arrayRoutes.push(this.http.get('../../rest/listTemplates/types/entity_id/roles'));
+            arrayRoutes.push(this.http.get('../../rest/roles?context=' + this.target));
         }
 
         arrayRoutes.push(this.http.get('../../rest/listTemplates/entities/' + entityId));
@@ -151,13 +151,12 @@ export class DiffusionsListComponent implements OnInit {
                         if (element.id == 'cc') {
                             element.id = 'copy';
                         }
-                        if (element.available) {
-                            this.availableRoles.push(element);
-                            this.diffList[element.id] = {
-                                'label': element.label,
-                                'items': []
-                            };
-                        }
+                        this.availableRoles.push(element);
+                        this.diffList[element.id] = {
+                            'label': element.label,
+                            'items': []
+                        };
+
                         if (element.keepInListInstance) {
                             this.keepRoles.push(element.id);
                         }
@@ -217,7 +216,7 @@ export class DiffusionsListComponent implements OnInit {
         let mergedRoutesDatas: any = {};
 
         if (this.availableRoles.length === 0) {
-            arrayRoutes.push(this.http.get('../../rest/listTemplates/types/entity_id/roles'));
+            arrayRoutes.push(this.http.get('../../rest/roles?context=' + this.target));
         }
 
         arrayRoutes.push(this.http.get('../../rest/resources/' + resId + '/listInstance'));
@@ -239,13 +238,12 @@ export class DiffusionsListComponent implements OnInit {
                         if (element.id == 'cc') {
                             element.id = 'copy';
                         }
-                        if (element.available) {
-                            this.availableRoles.push(element);
-                            this.diffList[element.id] = {
-                                'label': element.label,
-                                'items': []
-                            };
-                        }
+                        this.availableRoles.push(element);
+                        this.diffList[element.id] = {
+                            'label': element.label,
+                            'items': []
+                        };
+
                         if (element.keepInListInstance) {
                             this.keepRoles.push(element.id);
                         }
@@ -277,7 +275,7 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     initRoles() {
-        this.http.get('../../rest/listTemplates/types/entity_id/roles').pipe(
+        this.http.get('../../rest/roles?context=' + this.target).pipe(
             tap(() => {
                 this.availableRoles.forEach(element => {
                     this.diffList[element.id] = {
@@ -387,12 +385,12 @@ export class DiffusionsListComponent implements OnInit {
 
     changeRole(user: any, oldRole: any, newRole: any) {
         //if (this.diffFormControl !== undefined) {
-            if (newRole.id === 'dest') {
-                this.switchUserWithOldDest(user, oldRole);
+        if (newRole.id === 'dest') {
+            this.switchUserWithOldDest(user, oldRole);
 
-            } else {
-                this.changeUserRole(user, oldRole, newRole);
-            }
+        } else {
+            this.changeUserRole(user, oldRole, newRole);
+        }
         //}
     }
 
@@ -445,7 +443,7 @@ export class DiffusionsListComponent implements OnInit {
                         this.triggerEvent.emit(allowedEntitiesIds);
                     }
                 } else {
-                    this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.userUnauthorized, msg: "<b>" + user.labelToDisplay + "</b> "+ this.lang.notInAuthorizedEntities } });
+                    this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.userUnauthorized, msg: "<b>" + user.labelToDisplay + "</b> " + this.lang.notInAuthorizedEntities } });
                 }
             }),
         ).subscribe();
@@ -477,5 +475,13 @@ export class DiffusionsListComponent implements OnInit {
         });
         this.diffFormControl.setValue(arrValues);
         this.diffFormControl.markAsTouched();
+    }
+
+    isCanUpdateRole() {
+        if (this.availableRoles.filter((role: any) => role.canUpdate === true).length > 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

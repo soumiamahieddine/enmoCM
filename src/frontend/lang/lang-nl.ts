@@ -918,7 +918,6 @@ export const LANG_NL = {
     "templateUpdated"                       : "Model bijgewerkt",
     "thanksToCommunity"                     : "En de volledige Maarch-community!",
     "thanksToExtDev"                        : "Maarch Courrier steunt op enkele externe onderdelen. Hartelijk dank aan de ontwikkelaars ervan!",
-    "thesaurus"                             : "Thesaurus",
     "thisRes"                               : "Following mail(s)", //_TO_TRANSLATE
     "thuesday"                              : "Dinsdag",
     "thursday"                              : "Donderdag",
@@ -1158,9 +1157,6 @@ export const LANG_NL = {
     "indexing_outgoing" : "outgoing", //_TO_TRANSLATE
     "indexing_internal" : "internal", //_TO_TRANSLATE
     "indexing_ged_doc" : "GED", //_TO_TRANSLATE
-    "createMsg" : "Do you want to create", //_TO_TRANSLATE
-    "folderDeleteWarnMsg" : "Do you want to delete", //_TO_TRANSLATE
-    "folderDeleteWarnMsg2" : "previously created ?", //_TO_TRANSLATE
     "noSelectedFolder" : "No selected folder", //_TO_TRANSLATE
     "noSelectedTag" : "No selected tag", //_TO_TRANSLATE
     "searchTag" : "Search tag", //_TO_TRANSLATE
@@ -1168,4 +1164,13 @@ export const LANG_NL = {
     "tagDeleted" : "Tag deleted", //_TO_TRANSLATE
     "modifyDiffusionList" : "Modify diffusion list", //_TO_TRANSLATE
     "notInAuthorizedEntities" : "is not in one of the <b>authorized entities</b>.", //_TO_TRANSLATE
+    "indexingModelDisabled" : "Indexing model disabled", //_TO_TRANSLATE
+    "indexingModelEnabled" : "Indexing model enabled", //_TO_TRANSLATE
+    "canNotDeleteIndexingModel" : "This indexing model can not be deleted because at least one mail used it", //_TO_TRANSLATE
+    "loadingFile" : "Loading file", //_TO_TRANSLATE
+    "convertingFile" : "Convert file in progress", //_TO_TRANSLATE
+    "notAllowedExtension" : "Extension not allowed", //_TO_TRANSLATE
+    "allowedExtensions" : "Allowed extensions", //_TO_TRANSLATE
+    "maxFileSizeReached" : "Maximum file size reached", //_TO_TRANSLATE
+    "maxFileSize" : "Maximum file size", //_TO_TRANSLATE
 };

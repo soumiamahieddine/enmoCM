@@ -4818,9 +4818,6 @@ if (!defined('_DOWNLOAD_MAIN_DOCUMENT')) {
 if (!defined('_SENDMAIL_PARAM')) {
     define('_SENDMAIL_PARAM', 'Serveur mail');
 }
-if (!defined('_ACCESS_SMARTPHONE')) {
-    define('_ACCESS_SMARTPHONE', 'Accéder à la version mobile ?');
-}
 if (!defined('_MAILING_CONFIRMATION')) {
     define('_MAILING_CONFIRMATION', 'Voulez-vous générer toutes les pièces jointes ?');
 }

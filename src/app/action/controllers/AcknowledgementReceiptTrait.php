@@ -114,7 +114,8 @@ trait AcknowledgementReceiptTrait
                     'path'  => $pathToDocument,
                     'data'  => ['resId' => $aArgs['resId'], 'contactAddressId' => $contactToProcess, 'userId' => $currentUser['id']]
                 ]);
-                $mergedDocument['encodedDocument'] = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $mergedDocument['encodedDocument']]);
+                $encodedDocument = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $mergedDocument['encodedDocument']]);
+                $mergedDocument['encodedDocument'] = $encodedDocument["encodedResource"];
                 $format = 'pdf';
 
                 if (!empty($mergedDocument['encodedDocument']['errors'])) {

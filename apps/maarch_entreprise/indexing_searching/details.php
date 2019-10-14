@@ -183,21 +183,6 @@ if (isset($_POST['submit_index_doc'])) {
         $tags_list = $tags;
         include_once 'modules'.DIRECTORY_SEPARATOR.'tags'.DIRECTORY_SEPARATOR.'tags_update.php';
     }
-
-    //thesaurus
-    if ($core->is_module_loaded('thesaurus')) {
-        require_once 'modules'.DIRECTORY_SEPARATOR.'thesaurus'
-                    .DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR
-                    .'class_modules_tools.php';
-        $thesaurus = new thesaurus();
-
-        if (!empty($_POST['thesaurus'])) {
-            $thesaurusList = implode('__', $_POST['thesaurus']);
-        } else {
-            $thesaurusList = '';
-        }
-        $thesaurus->updateResThesaurusList($thesaurusList, $s_id);
-    }
 }
 
 //DELETE DOC (status to DEL)
@@ -370,7 +355,7 @@ if ($stmt->rowCount() == 0) {
         <p id="viewdoc">
             <?php if ($info_mail->filename) {
                 ?>
-                <a href="../../rest/res/<?php functions::xecho($s_id); ?>/content" target="_blank">
+                <a href="../../rest/resources/<?php functions::xecho($s_id); ?>/content" target="_blank">
                     <?php echo _VIEW_DOC;?>
                     <i class="tooltip visaPjUp tooltipstered fa fa-eye fa-2x" style="height: auto; width: auto;font-size: 14px;margin-right:6px;margin-top: -9px;" title="<?php echo _VIEW_DOC; ?>"></i>
                 </a>
@@ -969,7 +954,7 @@ if ($stmt->rowCount() == 0) {
     //END GENERAL DATAS?>
                     
         <div id="opt_indexes">
-            <?php if (count($indexes) > 0 || ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) || ($core->is_module_loaded('thesaurus') && ($core->test_service('thesaurus_view', 'thesaurus', false) == 1))) {
+            <?php if (count($indexes) > 0 || ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1))) {
         ?>
             <br/>
             <h2>
@@ -1050,45 +1035,6 @@ if ($stmt->rowCount() == 0) {
                 if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
                     include_once 'modules/tags/templates/details/index.php';
                 }
-        if ($core->is_module_loaded('thesaurus') && ($core->test_service('thesaurus_view', 'thesaurus', false) == 1)) {
-            require_once 'modules'.DIRECTORY_SEPARATOR.'thesaurus'
-                                    .DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
-            $thesaurus = new thesaurus();
-
-            $thesaurusListRes = array();
-
-            $thesaurusListRes = $thesaurus->getThesaursusListRes($s_id);
-
-            echo '<tr id="thesaurus_tr_label" >';
-            echo '<th align="left" class="picto" ><i class="fa fa-bookmark fa-2x" title="'._THESAURUS.'"></i></th>';
-            echo '<td style="font-weight:bold;width:200px;">'._THESAURUS.'</td>';
-            echo '<td id="thesaurus_field" colspan="6"><select multiple="multiple" id="thesaurus" name="thesaurus[]" data-placeholder=" "';
-
-            if (!$core->test_service('add_thesaurus_to_res', 'thesaurus', false)) {
-                echo 'disabled="disabled"';
-            }
-
-            echo '>';
-            if (!empty($thesaurusListRes)) {
-                foreach ($thesaurusListRes as $key => $value) {
-                    echo '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="'.$value['ID'].'"';
-                    echo ' selected="selected"';
-                    echo '>'
-                                                .functions::show_string($value['LABEL'])
-                                                .'</option>';
-                }
-            }
-
-            echo '</select> <i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
-            echo '</tr>';
-            echo '<div onClick="$(\'return_previsualise_thes\').style.display=\'none\';" id="return_previsualise_thes" style="cursor: pointer; display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; color: #4f4b47; text-shadow: -1px -1px 0px rgba(255,255,255,0.2);background:#FFF18F;border-radius:5px;overflow:auto;">\';
-                                                    <input type="hidden" id="identifierDetailFrame" value="" />
-                                                </div>';
-            echo '<script>$j("#thesaurus").chosen({width: "95%", disable_search_threshold: 10});getInfoIcon();</script>';
-            echo '<style>#thesaurus_chosen .chosen-drop{display:none;}</style>';
-
-            /*****************/
-        }
         ?>
                 </table>
             </div>

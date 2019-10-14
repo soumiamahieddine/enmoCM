@@ -300,33 +300,35 @@ DELETE FROM usergroups_services WHERE service_id = 'add_cases';
 DELETE FROM usergroups_services WHERE service_id IN ('folder_search', 'view_folder_tree', 'select_folder', 'show_history_folder', 'modify_folder', 'associate_folder', 'delete_folder', 'admin_foldertypes', 'create_folder', 'folder_freeze', 'close_folder');
 DELETE FROM usergroups_services WHERE service_id = 'add_tag_to_res';
 DELETE FROM usergroups_services WHERE service_id = 'tag_view';
+DELETE FROM usergroups_services WHERE service_id = 'admin_thesaurus';
+DELETE FROM usergroups_services WHERE service_id = 'thesaurus_view';
+DELETE FROM usergroups_services WHERE service_id = 'add_thesaurus_to_res';
 UPDATE usergroups_services SET service_id = 'manage_tags_application' WHERE service_id = 'create_tag';
 
 INSERT INTO usergroups_services (group_id, service_id)
-SELECT distinct(group_id), 'update_diffusion_recipient_indexing'
+SELECT distinct(group_id), 'update_diffusion_indexing'
 FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
 INSERT INTO usergroups_services (group_id, service_id)
-SELECT distinct(group_id), 'update_diffusion_recipient_details'
+SELECT distinct(group_id), 'update_diffusion_details'
 FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
 INSERT INTO usergroups_services (group_id, service_id)
-SELECT distinct(group_id), 'update_diffusion_roles_details'
+SELECT distinct(group_id), 'update_diffusion_except_recipient_details'
 FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 
 INSERT INTO usergroups_services (group_id, service_id)
-SELECT distinct(group_id), 'update_diffusion_roles_indexing'
+SELECT distinct(group_id), 'update_diffusion_except_recipient_indexing'
 FROM usergroups_services WHERE group_id NOT IN (
 SELECT group_id FROM usergroups_services
-WHERE service_id = 'edit_recipient_outside_process' OR service_id = 'update_diffusion_recipient_indexing' OR service_id = 'update_diffusion_roles_indexing'
+WHERE service_id = 'edit_recipient_outside_process' OR service_id = 'update_diffusion_indexing' OR service_id = 'update_diffusion_except_recipient_indexing'
 );
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
 DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
-UPDATE priorities SET delays = 30 WHERE delays IS NULL;
-
 
 /* REFACTORING MODIFICATION */
 ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
 ALTER TABLE tags ALTER COLUMN label TYPE character varying(128);
+UPDATE priorities SET delays = 30 WHERE delays IS NULL;
 ALTER TABLE priorities ALTER COLUMN delays SET NOT NULL;
 
 
@@ -369,6 +371,9 @@ DROP TABLE IF EXISTS foldertypes_indexes;
 ALTER TABLE doctypes DROP COLUMN IF EXISTS coll_id;
 DROP TABLE IF EXISTS mlb_doctype_ext;
 ALTER TABLE priorities DROP COLUMN IF EXISTS working_days;
+DROP TABLE IF EXISTS thesaurus;
+DROP TABLE IF EXISTS thesaurus_res;
+DROP SEQUENCE IF EXISTS thesaurus_id_seq;
 
 
 /* RE CREATE VIEWS */

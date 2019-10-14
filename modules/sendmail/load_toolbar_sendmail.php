@@ -16,7 +16,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR 
 $sendmail_tools = new sendmail();
 
 //Count mails
-$nbr_emails = \Email\models\EmailModel::getCount(['resId' => $res_id]);
+$nbr_emails = 0;
 if ($nbr_emails == 0) {
     $class       = 'nbResZero';
     $style2      = 'display:none;';

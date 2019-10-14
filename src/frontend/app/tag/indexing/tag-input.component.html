@@ -3,9 +3,9 @@
     <mat-form-field floatLabel="never" class="input-form">
         <mat-icon color="primary" class="fa fa-search" matPrefix style="padding-left: 20px;font-size: 15px;"></mat-icon>
         <input type="text" #autoCompleteInput [placeholder]="lang.searchTag" matInput [formControl]="myControl"
-            [matAutocomplete]="auto" (click)="$event.stopPropagation()" (focus)="resetAutocomplete()">
+            [matAutocomplete]="auto" (click)="$event.stopPropagation()" (focus)="resetAutocomplete()" maxlength="128">
         <button [disabled]="!canAdd" type="button" matSuffix mat-icon-button (click)="addItem()">
-            <mat-icon class="fa fa-plus" [title]="lang.add" [style.visibility]="canAdd && myControl.value.length > 0 ? 'visible' : 'hidden'"></mat-icon>
+            <mat-icon class="fa fa-plus" [title]="lang.add" [style.visibility]="canAdd && myControl.value !== null && myControl.value.length > 0 ? 'visible' : 'hidden'"></mat-icon>
         </button>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOpt($event)">
             <ng-container *ngIf="options.length > 0 && !loading">

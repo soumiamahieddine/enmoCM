@@ -152,4 +152,76 @@ class TagController
 
         return $response->withStatus(204);
     }
+
+    public function merge(Request $request, Response $response, array $args)
+    {
+        if (!ServiceModel::hasService(['id' => 'admin_tag', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $body = $request->getParsedBody();
+
+        if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route idMaster must be an integer val']);
+        }
+
+        $tagMaster = TagModel::getById(['id' => $args['id']]);
+        if (empty($tagMaster)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Master tag not found']);
+        }
+
+        if (!Validator::intVal()->notEmpty()->validate($body['idMerge'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body idMerge must be an integer val']);
+        }
+
+        $tagMerge = TagModel::getById(['id' => $body['idMerge']]);
+        if (empty($tagMerge)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Merge tag not found']);
+        }
+
+        $tagResMaster = TagModel::getTagRes([
+           'where'  => ['tag_id = ?'],
+            'data'  => [$tagMaster['id']]
+        ]);
+        $tagResMaster = array_column($tagResMaster, 'res_id');
+
+        TagModel::updateTagRes([
+           'set'    => [
+               'tag_id' => $tagMaster['id']
+           ],
+           'where'  => ['tag_id = ?', 'res_id not in (?)'],
+           'data'   => [$tagMerge['id'], $tagResMaster]
+        ]);
+
+        TagModel::deleteTagRes([
+           'where'  => ['tag_id = ?'],
+           'data'   => [$tagMerge['id']]
+        ]);
+
+        $tagResEntities = TagModel::getTagEntities([
+            'where'  => ['tag_id = ?'],
+            'data'  => [$tagMaster['id']]
+        ]);
+        $tagResEntities = array_column($tagResEntities, 'entity_id');
+
+        TagModel::updateTagEntities([
+           'set'    => [
+               'tag_id' => $tagMaster['id']
+           ],
+           'where'  => ['tag_id = ?', 'entity_id not in (?)'],
+           'data'   => [$tagMerge['id'], $tagResEntities]
+        ]);
+
+        TagModel::deleteTagEntities([
+           'where'  => ['tag_id = ?'],
+           'data'   => [$tagMerge['id']]
+        ]);
+
+        TagModel::delete([
+            'where' => ['id = ?'],
+            'data'  => [$tagMerge['id']]
+        ]);
+
+        return $response->withStatus(204);
+    }
 }

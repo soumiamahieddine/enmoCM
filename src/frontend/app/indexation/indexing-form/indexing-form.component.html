@@ -78,7 +78,7 @@
                                 <ng-container *ngIf="field.type === 'date'">
                                     <button mat-button color="primary" *ngIf="adminMode" matPrefix mat-icon-button
                                         (click)="$event.stopPropagation();toggleTodayDate(field);"
-                                        matTooltip="Jour d'aujourd'hui" style="position: absolute;left: -40px;">
+                                        [matTooltip]="lang.todayDate" style="position: absolute;left: -40px;">
                                         <mat-icon color="primary"
                                             class="{{field.today ? 'far fa-bell-slash' : 'far fa-bell'}}">
                                         </mat-icon>
@@ -91,7 +91,7 @@
                                             [matDatepicker]="picker"
                                             [placeholder]="!adminMode ? lang.chooseDate : lang.defaultValue"
                                             [min]="getMinDate(field.startDate)" [max]="getMaxDate(field.endDate)"
-                                            readonly style="cursor:pointer;">
+                                            readonly style="cursor:pointer;" (dateChange)="launchEvent($event, field)">
                                         <mat-datepicker-toggle matSuffix [for]="picker"
                                             *ngIf="!arrFormControl[field.identifier].value">
                                         </mat-datepicker-toggle>
@@ -181,7 +181,7 @@
                                         *ngIf="!adminMode && arrFormControl['diffusionList'].valid && !isEmptyField(field)"></i>
                                 </div>
                             </div>
-                            <app-diffusions-list #appDiffusionsList [entityId]="arrFormControl[field.identifier].value" [diffFormControl]="arrFormControl['diffusionList']" [allowedEntities]="field.allowedEntities" (triggerEvent)="changeDestination($event,field.allowedEntities)">
+                            <app-diffusions-list #appDiffusionsList [entityId]="arrFormControl[field.identifier].value" [diffFormControl]="arrFormControl['diffusionList']" [allowedEntities]="field.allowedEntities" [target]="'indexation'" (triggerEvent)="changeDestination($event,field.allowedEntities)">
                             </app-diffusions-list>
                             <mat-divider></mat-divider>
                         </div>

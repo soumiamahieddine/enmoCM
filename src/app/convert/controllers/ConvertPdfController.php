@@ -144,10 +144,10 @@ class ConvertPdfController
     public static function convertFromEncodedResource(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['encodedResource']);
-        ValidatorModel::stringType($aArgs, ['encodedResource']);
+        ValidatorModel::stringType($aArgs, ['encodedResource', 'context']);
 
         $tmpPath = CoreConfigModel::getTmpPath();
-        $tmpFilename = 'converting' . rand();
+        $tmpFilename = 'converting' . rand() . '_' . rand();
 
         file_put_contents($tmpPath . $tmpFilename, base64_decode($aArgs['encodedResource']));
 
@@ -159,11 +159,19 @@ class ConvertPdfController
             return ['errors' => '[ConvertPdf]  Conversion failed ! '. implode(" ", $output)];
         }
 
-        $resource = file_get_contents("{$tmpPath}{$tmpFilename}.pdf");
         unlink("{$tmpPath}{$tmpFilename}");
-        unlink("{$tmpPath}{$tmpFilename}.pdf");
 
-        return base64_encode($resource);
+        $resource = file_get_contents("{$tmpPath}{$tmpFilename}.pdf");
+
+        $aReturn = [];
+        $aReturn["encodedResource"] = base64_encode($resource);
+
+        if ($aArgs['context'] == 'scan') {
+            $aReturn["tmpFilename"] = $tmpFilename.'.pdf';
+        } else {
+            unlink("{$tmpPath}{$tmpFilename}.pdf");
+        }
+        return $aReturn;
     }
 
     public static function getConvertedPdfById(array $aArgs)
@@ -224,10 +232,10 @@ class ConvertPdfController
         $body = $request->getParsedBody();
 
         if (!Validator::notEmpty()->validate($body['name'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body name is not an integer']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body name is empty']);
         }
         if (!Validator::notEmpty()->validate($body['base64'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body base64 is not an integer']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body base64 is empty']);
         }
         
         $file     = base64_decode($body['base64']);
@@ -237,7 +245,15 @@ class ConvertPdfController
         $size     = strlen($file);
 
         if (strtolower($ext) == 'pdf' && strtolower($mimeType) == 'application/pdf') {
-            return $response->withJson(['encodedResource' => $body['base64']]);
+            $return['encodedResource'] = $body['base64'];
+            if ($body['context'] == 'scan') {
+                $tmpPath = CoreConfigModel::getTmpPath();
+                $tmpFilename = 'scan_converting' . rand() . '.pdf';
+        
+                file_put_contents($tmpPath . $tmpFilename, $file);
+                $return['tmpFilename'] = $tmpFilename;
+            }
+            return $response->withJson($return);
         } else {
             $fileAccepted  = StoreController::isFileAllowed(['extension' => $ext, 'type' => $mimeType]);
             $maxFilesizeMo = ini_get('upload_max_filesize');
@@ -251,12 +267,26 @@ class ConvertPdfController
                 return $response->withStatus(400)->withJson(['errors' => 'File accepted but can not be converted in pdf']);
             }
     
-            $convertion = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $body['base64']]);
+            $convertion = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $body['base64'], 'context' => $body['context']]);
             if (empty($convertion['errors'])) {
-                return $response->withJson(['encodedResource' => $convertion]);
+                return $response->withJson($convertion);
             } else {
                 return $response->withStatus(400)->withJson($convertion);
             }
         }
+    }
+
+    public function getConvertedFileByFilename(Request $request, Response $response, array $aArgs)
+    {
+        $tmpPath = CoreConfigModel::getTmpPath();
+
+        if (!file_exists("{$tmpPath}{$aArgs['filename']}")) {
+            return $response->withStatus(400)->withJson(['errors' => 'File does not exists']);
+        }
+
+        $resource = file_get_contents("{$tmpPath}{$aArgs['filename']}");
+        unlink("{$tmpPath}{$aArgs['filename']}");
+        
+        return $response->withJson(['encodedResource' => base64_encode($resource)]);
     }
 }

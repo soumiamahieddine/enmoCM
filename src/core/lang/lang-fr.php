@@ -169,8 +169,6 @@ define('_FOLDERTYPES', 'Types de dossier');
 define('_ADMIN_FOLDERTYPES_DESC', 'Administrer les types de dossier. Définir pour chaque type les qualificateurs liés et les types de documents obligatoires pour la complétude du dossier.');
 define('_TAGS', 'Mots-clés');
 define('_ADMIN_TAGS_DESC', "Permet de modifier, supprimer, ajouter ou fusionner des mots-clés depuis l'interface d'administration");
-define('_THESAURUS', 'Thesaurus (Mots-clés)');
-define('_ADMIN_THESAURUS_DESC', 'Le thésaurus est un outil linguistique qui permet de mettre en relation le langage naturel des utilisateurs et celui contenu dans les ressources.');
 define('_HISTORY', 'Historique');
 define('_ADMIN_HISTORY_DESC', "Consulter l'historique des événements relatifs à l'utilisation de Maarch Courrier.");
 define('_HISTORY_BATCH', 'Historique des batchs');
@@ -242,7 +240,6 @@ define('_SENDMAIL_COMMENT', 'Envoi de courriels et plis numériques');
 define('_THUMBNAILS_COMMENT', 'Module des miniatures');
 define('_VISA_WORKFLOW_COMMENT', 'Gestion du circuit de visa');
 define('_AVIS_WORKFLOW_COMMENT', "Gestion du circuit d'avis");
-define('_THESAURUS_COMMENT', 'Gestion du thesaurus');
 define('_EXPORT_SEDA_COMMENT', 'Export');
 define('_CONVERT_COMMENT', 'Module de conversions');
 define('_VIEW_BASKETS', 'Mes bannettes');
@@ -269,10 +266,6 @@ define("_MANAGE_TAGS_IN_APPLICATION", "Créer des mots-clés depuis les pages d'
 define("_MANAGE_TAGS_IN_APPLICATION_DESC", "Créer des mots-clés depuis l'indexation, le traitement et la fiche détaillée");
 define("_PRIVATE_TAGS", "Lier les Mots-clé à l'entité de l'utilisateur (Niveau direction)");
 define("_PRIVATE_TAGS_DESC", "L'utilisateur ne verra que les Mots-clé qui ont été restreints à sa direction (l'ajout / modification associera le mot clé automatiquement à sa direction).");
-define("_THESAURUS_VIEW", "Afficher le thésaurus dans les pages de traitement");
-define("_THESAURUS_VIEW_DESC", "Permet de voir le(s) terme(s) qui sont associés aux différents documents");
-define("_ADD_THESAURUS_TO_RES", "Pouvoir associer des termes aux différents documents");
-define("_ADD_THESAURUS_TO_RES_DESC", "Permet de pouvoir utiliser les termes disponibles du thésaurus afin de référencer les documents");
 define('_CONFIG_VISA_WORKFLOW', 'Configuration du circuit de visa');
 define('_CONFIG_VISA_WORKFLOW_DESC', 'Permet de configurer le circuit de visa que devra prendre le courrier');
 define('_CONFIG_VISA_WORKFLOW_IN_DETAIL', 'Configuration du circuit de visa depuis la fiche détaillée');
@@ -285,10 +278,10 @@ define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Utile si le parahpeur sert en tant
 define('_PRINT_FOLDER_DOC', 'Imprimer le dossier complet');
 define('_USE_DATE_IN_SIGNBLOCK', 'Inclure la date dans la griffe de signature');
 define('_USE_DATE_IN_SIGNBLOCK_DESC', "La date de signature aparaîtra en haut de la griffe de signature (avec la ville si celle-ci a été inscrite dans le service racine de l'application).");
-define('_UPDATE_DIFFUSION_RECIPIENT_WHILE_INDEXING', "Pouvoir modifier toutes les parties de la liste de diffusion lors de l'enregistrement d'un courrier.");
-define('_UPDATE_DIFFUSION_ROLES_WHILE_INDEXING', "Pouvoir modifier la liste de diffusion hormis l'attributaire lors de l'enregistrement d'un courrier.");
-define('_UPDATE_DIFFUSION_RECIPIENT_WHILE_PROCESSING', "Pouvoir modifier toutes les parties de la liste de diffusion lors du traitement d'un courrier.");
-define('_UPDATE_DIFFUSION_ROLES_WHILE_PROCESSING', "Pouvoir modifier la liste de diffusion hormis l'attributaire lors du traitement d'un courrier.");
+define('_UPDATE_DIFFUSION_WHILE_INDEXING', "Pouvoir modifier toutes les parties de la liste de diffusion lors de l'enregistrement d'un courrier.");
+define('_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_INDEXING', "Pouvoir modifier la liste de diffusion hormis l'attributaire lors de l'enregistrement d'un courrier.");
+define('_UPDATE_DIFFUSION_WHILE_DETAILS', "Pouvoir modifier toutes les parties de la liste de diffusion lors du traitement d'un courrier.");
+define('_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_DETAILS', "Pouvoir modifier la liste de diffusion hormis l'attributaire lors du traitement d'un courrier.");
 
 // ACTIONS
 define('_REDIRECTION', 'Rediriger');

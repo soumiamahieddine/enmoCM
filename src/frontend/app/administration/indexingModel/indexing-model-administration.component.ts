@@ -155,7 +155,16 @@ export class IndexingModelAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
-        this.indexingModel.fields = this.indexingForm.getDatas();
+        let fields = this.indexingForm.getDatas();
+        fields.forEach((element, key) => {
+            delete fields[key].event;
+            delete fields[key].label;
+            delete fields[key].system;
+            delete fields[key].type;
+            delete fields[key].values;
+        });
+
+        this.indexingModel.fields = fields;
 
         if (this.creationMode) {
             this.http.post("../../rest/indexingModels", this.indexingModel).pipe(

@@ -1095,47 +1095,6 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<table width="100%" align="center" border="0" '
         .'id="indexing_fields" style="display:table;">';
 
-    /*** Thesaurus ***/
-    if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
-        //DECLARATIONS
-        require_once 'modules'.DIRECTORY_SEPARATOR.'thesaurus'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
-
-        //INSTANTIATE
-        $thesaurus = new thesaurus();
-
-        //INITIALIZE
-        $thesaurusListRes = array();
-        $thesaurusListRes = $thesaurus->getThesaursusListRes($res_id);
-
-        $frm_str .= '<tr id="thesaurus_tr" style="display:'.$display_value.';">';
-        $frm_str .= '<td colspan="3" style="width:100%;"><label for="thesaurus" class="form_title" >'._THESAURUS.'</label></td>';
-        $frm_str .= '</tr>';
-
-        $frm_str .= '<tr id="thesaurus_tr" style="display:'.$display_value.';">';
-        $frm_str .= '<td colspan="2" class="indexing_field" id="thesaurus_field" style="text-align:left;"><select multiple="multiple" style="width:100%;" id="thesaurus" data-placeholder=" "';
-
-        if (!$core->test_service('add_thesaurus_to_res', 'thesaurus', false)) {
-            $frm_str .= 'disabled="disabled"';
-        }
-        $frm_str .= '>';
-        if (!empty($thesaurusListRes)) {
-            foreach ($thesaurusListRes as $key => $value) {
-                $frm_str .= '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="'.$value['ID'].'"';
-                $frm_str .= ' selected="selected"';
-                $frm_str .= '>'
-                        .functions::show_string($value['LABEL'])
-                        .'</option>';
-            }
-        }
-        $frm_str .= '</optgroup>';
-        $frm_str .= '</select></td><td style="width:5%;"><i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
-        $frm_str .= '</tr>';
-        $frm_str .= '<script>$j("#thesaurus").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});getInfoIcon();</script>';
-        $frm_str .= '<style>#thesaurus_chosen{width:100% !important;}#thesaurus_chosen .chosen-drop{display:none;}</style>';
-
-        /*****************/
-    }
-
 
 	/*** Description ***/
 	$frm_str .= '<tr id="description_tr" style="display:' . $display_value . ';">';
@@ -1681,17 +1640,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         $tags_list = explode('__', $tags_list);
 
         include_once 'modules'.DIRECTORY_SEPARATOR.'tags'.DIRECTORY_SEPARATOR.'tags_update.php';
-    }
-
-    //Thesaurus
-    if ($core->is_module_loaded('thesaurus')) {
-        require_once 'modules'.DIRECTORY_SEPARATOR.'thesaurus'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
-
-        $thesaurus = new thesaurus();
-
-        $thesaurusList = get_value_fields($values_form, 'thesaurus');
-
-        $thesaurus->updateResThesaurusList($thesaurusList, $res_id);
     }
 
     $query_ext = 'update '.$table_ext.' set ';

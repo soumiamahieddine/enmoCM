@@ -880,38 +880,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     }
 
     /**
-    * Check if the user exist in the database given his mail
-    *
-    * @param  $userMail string user mail
-    * @return Array or null
-    */
-    public function checkUserMail($userMail)
-    {
-        self::$db = new Database();
-        $func = new functions();
-        $queryUser = "SELECT user_id FROM users WHERE mail = ? and status = 'OK'";
-        $stmt = self::$db->query($queryUser, array($userMail));
-        $userIdFound = $stmt->fetchObject();
-        $UserEntities = array();
-        if (!empty($userIdFound->user_id)) {
-            $isUser = true;
-            $UserEntities = $this->getEntities($userIdFound->user_id);
-        } else {
-            $isUser = false;
-        }
-        $return = array();
-        array_push(
-            $return, 
-            array(
-                'isUser' => $isUser,
-                'userEntities' => $UserEntities
-            )
-        );
-
-        return $return;
-    }
-
-    /**
     * Returns in an array all the entities associated with a user (user_id,
     * entity_id, primary and role)
     *

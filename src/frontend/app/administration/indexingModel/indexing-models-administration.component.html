@@ -55,9 +55,23 @@
                                 class="label">{{element.default ? lang.yes : lang.no}}</span>
                         </mat-cell>
                     </ng-container>
+                    <ng-container matColumnDef="enabled">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.status}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <span *ngIf="element.enabled" class="label dataLabelPrimary">{{lang.active}}</span>
+                            <span *ngIf="!element.enabled" class="label dataLabelWarn">{{lang.inactive}}</span>
+                        </mat-cell>
+                    </ng-container>
                     <ng-container matColumnDef="actions">
                         <mat-header-cell *matHeaderCellDef></mat-header-cell>
                         <mat-cell *matCellDef="let element" style="justify-content: flex-end;">
+                            <button mat-icon-button color="primary" *ngIf="element.enabled" matTooltip="{{lang.suspend}}"
+                                (click)="$event.stopPropagation();disableIndexingModel(element)">
+                                <mat-icon class="fa fa-pause fa-2x" aria-hidden="true"></mat-icon>
+                            </button>
+                            <button mat-icon-button color="accent" *ngIf="!element.enabled" matTooltip="{{lang.authorize}}" (click)="$event.stopPropagation();enableIndexingModel(element)">
+                                <mat-icon class="fa fa-check fa-2x" aria-hidden="true"></mat-icon>
+                            </button>
                             <button mat-icon-button color="warn" matTooltip="{{lang.delete}}" (click)="$event.stopPropagation();delete(element)" [disabled]="element.default">
                                 <mat-icon class="fa fa-trash-alt fa-2x" aria-hidden="true"></mat-icon>
                             </button>

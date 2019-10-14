@@ -14,6 +14,7 @@ import { AppService } from '../../service/app.service';
 import { IndexingFormComponent } from './indexing-form/indexing-form.component';
 import { tap, finalize, catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { DocumentViewerComponent } from '../viewer/document-viewer.component';
 
 @Component({
     templateUrl: "indexation.component.html",
@@ -34,6 +35,7 @@ export class IndexationComponent implements OnInit {
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
+    @ViewChild('appDocumentViewer', { static: false }) appDocumentViewer: DocumentViewerComponent;
 
     indexingModels: any[] = [];
     currentIndexingModel: any = {};
@@ -41,9 +43,11 @@ export class IndexationComponent implements OnInit {
 
     actionsList: any[] = [];
     selectedAction: any = {};
+    tmpFilename: string = '';
 
     constructor(
         private route: ActivatedRoute,
+        private _activatedRoute: ActivatedRoute,
         public http: HttpClient,
         public dialog: MatDialog,
         private headerService: HeaderService,
@@ -51,7 +55,12 @@ export class IndexationComponent implements OnInit {
         private notify: NotificationService,
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
-        public appService: AppService) { }
+        public appService: AppService) { 
+
+            _activatedRoute.queryParams.subscribe(
+                params => this.tmpFilename = params.tmpfilename
+            );
+        }
 
     ngOnInit(): void {
         this.loading = false;
@@ -63,11 +72,14 @@ export class IndexationComponent implements OnInit {
             this.http.get("../../rest/indexingModels").pipe(
                 tap((data: any) => {
                     this.indexingModels = data.indexingModels;
-                    this.currentIndexingModel = this.indexingModels.filter(model => model.default === true)[0];
-                    if (this.currentIndexingModel === undefined) {
-                        this.currentIndexingModel = this.indexingModels[0];
-                        this.notify.error(this.lang.noDefaultIndexingModel);
+                    if(this.indexingModels.length > 0) {
+                        this.currentIndexingModel = this.indexingModels.filter(model => model.default === true)[0];
+                        if (this.currentIndexingModel === undefined) {
+                            this.currentIndexingModel = this.indexingModels[0];
+                            this.notify.error(this.lang.noDefaultIndexingModel);
+                        }
                     }
+                    
                     if (this.appService.getViewMode()) {
                         setTimeout(() => {
                             this.sidenavLeft.open();
@@ -111,6 +123,8 @@ export class IndexationComponent implements OnInit {
     onSubmit() {
         if (this.indexingForm.isValidForm()) {
             alert(this.selectedAction.component + '() déclenchée');
+            console.log(this.indexingForm.getDatas());
+            console.log(this.appDocumentViewer.getFile());
         } else {
             alert('Veuillez corriger les erreurs.');
         }

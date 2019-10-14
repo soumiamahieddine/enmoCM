@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, Input } from '@angular/core';
+import { HttpClient, HttpEventType } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { HeaderService } from '../../service/header.service';
 import { AppService } from '../../service/app.service';
-import { tap, catchError, finalize, filter } from 'rxjs/operators';
+import { tap, catchError, finalize, filter, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { AlertComponent } from '../../plugins/modal/alert.component';
 import { SortPipe } from '../../plugins/sorting.pipe';
+import { PDFProgressData } from 'ng2-pdf-viewer';
 
 
 @Component({
@@ -17,11 +18,14 @@ import { SortPipe } from '../../plugins/sorting.pipe';
     templateUrl: "document-viewer.component.html",
     styleUrls: [
         'document-viewer.component.scss',
+        '../indexation/indexing-form/indexing-form.component.scss',
     ],
     providers: [NotificationService, AppService, SortPipe]
 })
 
 export class DocumentViewerComponent implements OnInit {
+
+    @Input('tmpFilename') tmpFilename: string;
 
     lang: any = LANG;
 
@@ -37,6 +41,15 @@ export class DocumentViewerComponent implements OnInit {
 
     allowedExtensions: any[] = [];
     maxFileSize: number = 0;
+    maxFileSizeLabel: string = '';
+
+    percentInProgress: number = 0;
+
+    loadingInfo: any = {
+        mode: 'determinate',
+        percent: 0,
+        message: '',
+    };
 
     dialogRef: MatDialogRef<any>;
 
@@ -58,32 +71,45 @@ export class DocumentViewerComponent implements OnInit {
                     return {
                         extension: '.' + ext.extension.toLowerCase(),
                         mimeType: ext.mimeType,
+                        canConvert: ext.canConvert
                     }
                 });
                 this.allowedExtensions = this.sortPipe.transform(this.allowedExtensions, 'extension');
 
                 this.maxFileSize = data.informations.maximumSize;
+                this.maxFileSizeLabel = data.informations.maximumSizeLabel;
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
             })
         ).subscribe();
+
+        if (this.tmpFilename != '' && this.tmpFilename !== undefined) {
+            this.http.get('../../rest/convertedFile/'+this.tmpFilename).pipe(
+                tap((data: any) => {
+                    this.file = {
+                        name: this.tmpFilename,
+                        type: 'application/pdf',
+                        content: this.getBase64Document(this.base64ToArrayBuffer(data.encodedResource)),
+                        src: this.base64ToArrayBuffer(data.encodedResource)
+                    };
+                    this.noConvertedFound = false;
+                    this.loading = false;
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
     }
 
     uploadTrigger(fileInput: any) {
-        this.file = {
-            name: '',
-            type: '',
-            content: null,
-            src: null
-        };
-        this.noConvertedFound = false;
-        this.loading = true;
+        if (fileInput.target.files && fileInput.target.files[0] && this.isExtensionAllowed(fileInput.target.files[0])) {
+            this.initUpload();
 
-        if (fileInput.target.files && fileInput.target.files[0] && this.checkFile(fileInput.target.files[0])) {
             var reader = new FileReader();
-
             this.file.name = fileInput.target.files[0].name;
             this.file.type = fileInput.target.files[0].type;
 
@@ -102,6 +128,19 @@ export class DocumentViewerComponent implements OnInit {
         } else {
             this.loading = false;
         }
+    }
+
+    initUpload() {
+        this.loading = true;
+        this.file = {
+            name: '',
+            type: '',
+            content: null,
+            src: null
+        };
+        this.noConvertedFound = false;
+        this.loadingInfo.message = this.lang.loadingFile + '...';
+        this.loadingInfo.mode = 'indeterminate';
     }
 
     getBase64Document(buffer: ArrayBuffer) {
@@ -123,19 +162,83 @@ export class DocumentViewerComponent implements OnInit {
         return bytes.buffer;
     }
 
-    convertDocument(file: any) {
-        this.http.post('../../rest/convertedFile', { name: file.name, base64: file.content }).pipe(
-            tap((data: any) => {
-                this.file.src = this.base64ToArrayBuffer(data.encodedResource);
-            }),
-            finalize(() => this.loading = false),
-            catchError((err: any) => {
-                this.noConvertedFound = true;
-                //this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+    b64toBlob(b64Data: any, contentType = '', sliceSize = 512) {
+        const byteCharacters = atob(b64Data);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            const byteNumbers = new Array(slice.length);
+            for (let i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            const byteArray = new Uint8Array(byteNumbers);
+            byteArrays.push(byteArray);
+        }
+
+        const blob = new Blob(byteArrays, { type: contentType });
+        return blob;
     }
+
+    convertDocument(file: any) {
+        if (this.canBeConverted(file)) {
+            const data = { name: file.name, base64: file.content };
+            this.upload(data).subscribe(
+                (res: any) => {
+                    if (res.encodedResource) {
+                        this.file.base64src = res.encodedResource;
+                        this.file.src = this.base64ToArrayBuffer(res.encodedResource);
+                        this.loading = false;
+                    }
+                },
+                (err: any) => {
+                    this.noConvertedFound = true;
+                    this.notify.handleErrors(err);
+                    this.loading = false;
+                    return of(false);
+                }
+            );
+        } else {
+            this.noConvertedFound = true;
+            this.loading = false
+        }
+
+    }
+
+    upload(data: any) {
+        let uploadURL = `../../rest/convertedFile`;
+
+        return this.http.post<any>(uploadURL, data, {
+            reportProgress: true,
+            observe: 'events'
+        }).pipe(map((event) => {
+
+            switch (event.type) {
+
+                case HttpEventType.UploadProgress:
+                    const progress = Math.round(100 * event.loaded / event.total);
+                    this.loadingInfo.percent = progress;
+
+                    if (progress === 100) {
+                        this.loadingInfo.mode = 'indeterminate';
+                        this.loadingInfo.message = this.lang.convertingFile + '...';
+                    } else {
+                        this.loadingInfo.mode = 'determinate';
+                        this.loadingInfo.message = this.lang.loadingFile + '...';
+                    }
+                    return { status: 'progress', message: progress };
+
+                case HttpEventType.Response:
+                    return event.body;
+                default:
+                    return `Unhandled event: ${event.type}`;
+            }
+        })
+        );
+    }
+
 
     onError(error: any) {
         console.log(error);
@@ -177,17 +280,42 @@ export class DocumentViewerComponent implements OnInit {
         this.uploadTrigger(fileInput);
     }
 
-    checkFile(file: any) {
+    canBeConverted(file: any): boolean {
+        const fileExtension = '.' + file.name.split('.').pop();
+        if (this.allowedExtensions.filter(ext => ext.canConvert === true && ext.mimeType === file.type && ext.extension === fileExtension).length > 0) {
+            return true;
+        } else {
+            return false;
+        }
 
-        if (this.allowedExtensions.map(ext => ext.mimeType).indexOf(file.type) === -1) {
-            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: 'Extension non autorisé !', msg: '<u>Extension autorisée</u> : <br/>' + this.allowedExtensions.map(ext => ext.extension).filter((elem: any, index: any, self: any) => index === self.indexOf(elem)).join(', ') } });
+    }
+
+    isExtensionAllowed(file: any) {
+        const fileExtension = '.' + file.name.split('.').pop();
+        if (this.allowedExtensions.filter(ext => ext.mimeType === file.type && ext.extension === fileExtension).length === 0) {
+            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.notAllowedExtension + ' !', msg: '<u>' + this.lang.allowedExtensions + '</u> : <br/>' + this.allowedExtensions.map(ext => ext.extension).filter((elem: any, index: any, self: any) => index === self.indexOf(elem)).join(', ') } });
             return false;
         } else if (file.size > this.maxFileSize) {
-            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: 'Taille maximale dépassée ! ', msg: 'Taille maximale : ' + this.maxFileSize } });
+            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.maxFileSizeReached + ' ! ', msg: this.lang.maxFileSize + ' : ' + this.maxFileSizeLabel } });
             return false;
         } else {
             return true;
         }
+    }
+
+    downloadOriginalFile() {
+        let downloadLink = document.createElement('a');
+        downloadLink.href = `data:${this.file.type};base64,${this.file.content}`;
+        downloadLink.setAttribute('download', this.file.name);
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+    }
+
+    printPdf() {
+        const blob = this.b64toBlob(this.file.base64src, this.file.type);
+        const blobUrl = URL.createObjectURL(blob);
+        window.focus();
+        window.open(blobUrl);
     }
 
 }

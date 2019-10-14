@@ -30,7 +30,7 @@ export class NoteEditorComponent implements AfterViewInit {
 
     addNote() {
         this.loading = true;
-        this.http.post("../../rest/resources/" + this.resIds[0] + "/notes", { value: this.content })
+        this.http.post("../../rest/notes", { value: this.content, resId: this.resIds[0] })
             .subscribe((data: any) => {
                 this.refreshNotes.emit(this.resIds[0]);
                 this.loading = false;
@@ -56,7 +56,7 @@ export class NoteEditorComponent implements AfterViewInit {
             if (this.resIds.length == 1) {
                 params['resId'] = this.resIds[0];
             }
-            this.http.get("../../rest/notes/templates", { params: params })
+            this.http.get("../../rest/notesTemplates", { params: params })
                 .subscribe((data: any) => {
                     this.templatesNote = data['templates'];
                 });

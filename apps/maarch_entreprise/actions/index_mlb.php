@@ -896,34 +896,6 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
             .'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
 
-    /*** Thesaurus ***/
-    if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
-        require_once 'modules'.DIRECTORY_SEPARATOR.'thesaurus'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
-
-        $thesaurus = new thesaurus();
-
-        $frmStr .= '<tr id="thesaurus_tr" style="display:'.$displayValue.';">';
-        $frmStr .= '<td colspan="3"><label for="thesaurus" class="form_title" >'._THESAURUS.'</label></td>';
-        $frmStr .= '</tr>';
-
-        $frmStr .= '<tr id="thesaurus_tr" style="display:'.$displayValue.';">';
-        $frmStr .= '<td colspan="2" class="indexing_field" id="thesaurus_field" style="text-align:left;"><select multiple="multiple" id="thesaurus" data-placeholder=" " onselect="alert(\'ok\')"';
-
-        if (!$core->test_service('add_thesaurus_to_res', 'thesaurus', false)) {
-            $frmStr .= 'disabled="disabled"';
-        }
-
-        $frmStr .= '>';
-
-        $frmStr .= '</select>';
-        $frmStr .= '<td style="width:5%;"> <i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
-        $frmStr .= '</tr>';
-        $frmStr .= '<script>$j("#thesaurus").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});getInfoIcon();</script>';
-        $frmStr .= '<style>#thesaurus_chosen{width:100% !important;}#thesaurus_chosen .chosen-drop{display:none;}</style>';
-
-        /*****************/
-    }
-
     /*** Description ***/
     $frmStr .= '<tr id="description_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td colspan="3">' . _OTHERS_INFORMATIONS . '</td>';
@@ -1933,20 +1905,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             $tags = get_value_fields($formValues, 'tag_userform');
             $tags_list = explode('__', $tags);
             include_once 'modules'.DIRECTORY_SEPARATOR.'tags'.DIRECTORY_SEPARATOR.'tags_update.php';
-        }
-
-        //thesaurus
-        if ($core->is_module_loaded('thesaurus')) {
-            require_once 'modules'.DIRECTORY_SEPARATOR.'thesaurus'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
-            $thesaurus = new thesaurus();
-
-            $thesaurusList = '';
-
-            $thesaurusList = get_value_fields($formValues, 'thesaurus');
-
-            if (!empty($thesaurusList)) {
-                $thesaurus->saveResThesaurusList($thesaurusList, $resId);
-            }
         }
     } else {
         $_SESSION['action_error'] = _ERROR_RES_ID;

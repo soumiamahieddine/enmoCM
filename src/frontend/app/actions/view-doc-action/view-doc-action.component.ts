@@ -21,6 +21,6 @@ export class ViewDocActionComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.docUrl = '../../rest/res/' + this.data.selectedRes[0] + '/content';
+        this.docUrl = '../../rest/resources/' + this.data.selectedRes[0] + '/content';
     }
 }

@@ -29,7 +29,7 @@ export class FolderInputComponent implements OnInit {
 
     key: string = 'idToDisplay';
 
-    canAdd: boolean = false;
+    canAdd: boolean = true;
 
     listInfo: string;
     myControl = new FormControl();
@@ -69,7 +69,7 @@ export class FolderInputComponent implements OnInit {
         this.options = [];
         this.myControl.valueChanges
             .pipe(
-                tap((value) => this.canAdd = value.length === 0 ? false : true),
+                //tap((value) => this.canAdd = value.length === 0 ? false : true),
                 debounceTime(300),
                 filter(value => value.length > 2),
                 distinctUntilChanged(),

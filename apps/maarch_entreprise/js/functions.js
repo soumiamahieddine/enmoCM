@@ -3968,34 +3968,3 @@ function setSendAttachment(id, isVersion) {
         }
     });
 }
-
-function uploadFiles () {
-
-    var fileInfo = $j("#file")[0]["files"][0];
-
-    var extension = "";
-
-    // set extension according to filename
-    if (fileInfo.name.split('.').length > 1) {
-        extension = fileInfo.name.split('.').pop();
-    }
-    
-    $j.ajax({
-        url: '../../rest/resources/checkFileUpload',
-        type: 'POST',
-        dataType: "json",
-        data: {
-            extension : extension,
-            size : fileInfo.size,
-            type : fileInfo.type,
-        },
-        success: function (answer) {
-            $j('#with_file')[0].value='false';
-            $j("#select_file_form").attr('method','post');
-            $j("#select_file_form").submit();
-        },
-        error: function (err) {
-            alert(err.responseJSON.errors);
-        }
-    });
-}

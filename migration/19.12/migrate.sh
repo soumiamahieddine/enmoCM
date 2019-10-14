@@ -14,3 +14,4 @@ php ./removeProcessModes.php
 php ./migrateCategories.php
 php ./migrateOldIndexingModels.php
 php ./migrateWorkingDays.php
+php ./migrateExtensions.php

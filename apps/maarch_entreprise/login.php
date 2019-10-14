@@ -34,13 +34,19 @@ if (strtoupper(substr(PHP_OS, 0, 3)) != 'WIN'
 }
 $_SESSION['slash_env'] = DIRECTORY_SEPARATOR;
 $tmpPath = explode(
-    DIRECTORY_SEPARATOR, str_replace(
-        '/', DIRECTORY_SEPARATOR, $_SERVER['SCRIPT_FILENAME']
+    DIRECTORY_SEPARATOR,
+    str_replace(
+        '/',
+        DIRECTORY_SEPARATOR,
+        $_SERVER['SCRIPT_FILENAME']
     )
 );
 $serverPath = implode(
-    DIRECTORY_SEPARATOR, array_slice(
-        $tmpPath, 0, array_search('apps', $tmpPath)
+    DIRECTORY_SEPARATOR,
+    array_slice(
+        $tmpPath,
+        0,
+        array_search('apps', $tmpPath)
     )
 ).DIRECTORY_SEPARATOR;
 
@@ -83,17 +89,6 @@ $businessAppTools->compare_base_version(
     'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
     .DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'applicationVersion.xml'
 );
-
-//LGI TEST FOR SMARTPHONE
-// if ($core->detectSmartphone()) {
-//     $confirmScript = '<script>';
-//     $confirmScript .= 'if(confirm("' . _ACCESS_SMARTPHONE . '")){';
-//     $confirmScript .= 'window.location.href="smartphone/hello.php"';
-//     $confirmScript .= '}';
-//     $confirmScript .= '</script>';
-    
-//     echo $confirmScript;
-// }
 
 $core->load_html();
 $core->load_header('', true, false);

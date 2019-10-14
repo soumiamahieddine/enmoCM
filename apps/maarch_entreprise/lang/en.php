@@ -4694,9 +4694,6 @@ if (!defined('_DOWNLOAD_MAIN_DOCUMENT')) {
 if (!defined('_SENDMAIL_PARAM')) {
     define('_SENDMAIL_PARAM', 'Mail server');
 }
-if (!defined('_ACCESS_SMARTPHONE')) {
-    define('_ACCESS_SMARTPHONE', 'Go to mobile mode ?');
-}
 if (!defined('_MAILING_CONFIRMATION')) {
     define('_MAILING_CONFIRMATION', 'Do you want to generate all attachments ?');
 }

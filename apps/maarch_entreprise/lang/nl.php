@@ -1580,9 +1580,6 @@ if (!defined('_DOWNLOAD_MAIN_DOCUMENT')) {
 if (!defined('_SENDMAIL_PARAM')) {
     define('_SENDMAIL_PARAM', '_TO_TRANSLATE');
 }
-if (!defined('_ACCESS_SMARTPHONE')) {
-    define('_ACCESS_SMARTPHONE', '_TO_TRANSLATE');
-}
 if (!defined('_MAILING_CONFIRMATION')) {
     define('_MAILING_CONFIRMATION', 'Do you want to generate all attachments ? _TO_TRANSLATE');
 }

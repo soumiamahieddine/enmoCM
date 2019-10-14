@@ -183,8 +183,8 @@ class SignatureBookController
                 'alt_id'        => $incomingMail['alt_identifier'],
                 'title'         => $incomingMail['subject'],
                 'category_id'   => $incomingMail['category_id'],
-                'viewerLink'    => "../../rest/res/{$resId}/content",
-                'thumbnailLink' => "rest/res/{$resId}/thumbnail"
+                'viewerLink'    => "../../rest/resources/{$resId}/content",
+                'thumbnailLink' => "rest/resources/{$resId}/thumbnail"
             ]
         ];
 
@@ -215,8 +215,8 @@ class SignatureBookController
                 'title'         => $value['title'],
                 'format'        => $value['format'],
                 'isConverted'   => $isConverted,
-                'viewerLink'    => "../../rest/res/{$resId}/attachments/{$realId}/content",
-                'thumbnailLink' => "rest/res/{$resId}/attachments/{$realId}/thumbnail"
+                'viewerLink'    => "../../rest/attachments/{$realId}/content",
+                'thumbnailLink' => "rest/attachments/{$realId}/thumbnail"
             ];
         }
 

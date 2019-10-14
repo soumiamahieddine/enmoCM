@@ -1622,39 +1622,6 @@ CREATE VIEW res_view_attachments AS
   coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, in_send_attach, signatory_user_serial_id
   FROM res_attachments;
 
--- thesaurus
-
-
-CREATE SEQUENCE thesaurus_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 1
-  CACHE 1;
-
-CREATE TABLE thesaurus
-(
-  thesaurus_id bigint NOT NULL DEFAULT nextval('thesaurus_id_seq'::regclass),
-  thesaurus_name character varying(255) NOT NULL,
-  thesaurus_description text,
-  thesaurus_name_associate character varying(255),
-  thesaurus_parent_id character varying(255),
-  creation_date timestamp without time zone,
-  used_for text,
-  CONSTRAINT thesaurus_pkey PRIMARY KEY (thesaurus_id)
-)
-WITH (
-  OIDS=FALSE
-);
-
-CREATE TABLE thesaurus_res
-(
-  res_id bigint NOT NULL,
-  thesaurus_id bigint NOT NULL
-)
-WITH (
-  OIDS=FALSE
-);
 
 CREATE FUNCTION order_alphanum(text) RETURNS text AS $$
   SELECT regexp_replace(regexp_replace(regexp_replace(regexp_replace($1,

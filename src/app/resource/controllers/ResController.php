@@ -762,11 +762,6 @@ class ResController
         return $response->withJson(['categories' => ResModel::getCategories()]);
     }
 
-    public function getNatures(Request $request, Response $response)
-    {
-        return $response->withJson(['natures' => ResModel::getNatures()]);
-    }
-
     public function isAllowedForCurrentUser(Request $request, Response $response, array $aArgs)
     {
         if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {

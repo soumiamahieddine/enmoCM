@@ -168,8 +168,6 @@ define('_FOLDERTYPES', 'Maptypes');
 define('_ADMIN_FOLDERTYPES_DESC', 'De maptypes beheren. Voor elk type de gekoppelde kwalificatoren en de verplichte documenttypes bepalen voor de volledigheid van de map.');
 define('_TAGS', 'Sleutelwoorden');
 define('_ADMIN_TAGS_DESC', 'Voor het wijzigen, verwijderen, toevoegen of fusioneren van sleutelwoorden vanuit de beheerinterface');
-define('_THESAURUS', 'Thesaurus (Sleutelwoorden)');
-define('_ADMIN_THESAURUS_DESC', 'De thesaurus is een taaltool waarmee een relatie gelegd kan worden tussen de natuurlijke taal van de gebruikers en de taal van de resources.');
 define('_HISTORY', 'Geschiedenis');
 define('_ADMIN_HISTORY_DESC', 'De geschiedenis van de gebeurtenissen met betrekking tot het gebruik van Maarch Courrier raadplegen.');
 define('_HISTORY_BATCH', 'Geschiedenis van de batches');
@@ -241,7 +239,6 @@ define('_SENDMAIL_COMMENT', 'Verzending van e-mails en digitale brieven');
 define('_THUMBNAILS_COMMENT', 'Module van de miniaturen');
 define('_VISA_WORKFLOW_COMMENT', 'Beheer van het goedkeuringscircuit');
 define('_AVIS_WORKFLOW_COMMENT', 'Beheer van het berichtencircuit');
-define('_THESAURUS_COMMENT', 'Thesaurusbeheer');
 define('_EXPORT_SEDA_COMMENT', 'Export');
 define('_CONVERT_COMMENT', 'Conversiemodule');
 define('_VIEW_BASKETS', 'Mijn bakjes');
@@ -268,10 +265,6 @@ define("_MANAGE_TAGS_IN_APPLICATION", "Create tags");
 define("_MANAGE_TAGS_IN_APPLICATION_DESC", "Create tags while indexing, processing and in details");
 define('_PRIVATE_TAGS', 'De sleutelwoorden verbinden met de eenheid van de gebruiker (Directieniveau)');
 define('_PRIVATE_TAGS_DESC', 'De gebruiker zal enkel de sleutelwoorden zien die beperkt werden tot zijn directie (de toevoeging / wijziging zal het sleutelwoord automatisch aan zijn directie koppelen).');
-define('_THESAURUS_VIEW', 'De thesaurus weergeven in de verwerkingspagina’s');
-define('_THESAURUS_VIEW_DESC', 'Om de term(en) te zien die aan de verschillende documenten gekoppeld zijn');
-define('_ADD_THESAURUS_TO_RES', 'Om termen aan de verschillende documenten te koppelen');
-define('_ADD_THESAURUS_TO_RES_DESC', 'Om de beschikbare termen van de thesaurus te kunnen gebruiken om documenten van een referentie te voorzien');
 define('_CONFIG_VISA_WORKFLOW', 'Configuratie van het goedkeuringscircuit');
 define('_CONFIG_VISA_WORKFLOW_DESC', 'Om het goedkeuringscircuit in te stellen dat de brief zal moeten volgen');
 define('_CONFIG_VISA_WORKFLOW_IN_DETAIL', 'Configuratie van het goedkeuringscircuit vanuit de gedetailleerde fiche');
@@ -284,10 +277,10 @@ define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Nuttig indien het vloeiboek als co
 define('_PRINT_FOLDER_DOC', 'De volledige map afdrukken');
 define('_USE_DATE_IN_SIGNBLOCK', 'De datum in de handtekening insluiten');
 define('_USE_DATE_IN_SIGNBLOCK_DESC', 'De datum van ondertekening zal bovenaan de handtekening verschijnen (met de gemeente indien deze in de rootservice van de applicatie werd ingeschreven)');
-define('_UPDATE_DIFFUSION_RECIPIENT_WHILE_INDEXING', "Update all parts of diffusion list when indexing."); //translate
-define('_UPDATE_DIFFUSION_ROLES_WHILE_INDEXING', "Update diffusion list except Assignee when indexing."); //translate
-define('_UPDATE_DIFFUSION_RECIPIENT_WHILE_PROCESSING', "Update all parts of diffusion list when processing."); //translate
-define('_UPDATE_DIFFUSION_ROLES_WHILE_PROCESSING', "Update diffusion list except Assignee when processing."); //translate
+define('_UPDATE_DIFFUSION_WHILE_INDEXING', "Update all parts of diffusion list when indexing."); //translate
+define('_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_INDEXING', "Update diffusion list except Assignee when indexing."); //translate
+define('_UPDATE_DIFFUSION_WHILE_DETAILS', "Update all parts of diffusion list when processing."); //translate
+define('_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_DETAILS', "Update diffusion list except Assignee when processing."); //translate
 
 // ACTIONS
 define('_REDIRECTION', 'Doorsturen');

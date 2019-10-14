@@ -371,7 +371,7 @@ class ListTemplateController
         $rolesForType = empty($listTemplateTypes[0]['difflist_type_roles']) ? [] : explode(' ', $listTemplateTypes[0]['difflist_type_roles']);
         foreach ($roles as $key => $role) {
             if ($role['id'] == 'dest') {
-                $roles[$key]['label'] = _ASSIGNEE . ' / ' . _REDACTOR ;
+                $roles[$key]['label'] = _ASSIGNEE;
             }
             if (in_array($role['id'], $unneededRoles)) {
                 unset($roles[$key]);
@@ -453,12 +453,12 @@ class ListTemplateController
         $triggerContext = false;
 
         if ($data['context'] == 'indexation') {
-            $serviceRecipient = 'update_diffusion_recipient_indexing';
-            $serviceRoles = 'update_diffusion_roles_indexing';
+            $serviceRecipient = 'update_diffusion_indexing';
+            $serviceRoles = 'update_diffusion_except_recipient_indexing';
             $triggerContext = true;
         } elseif ($data['context'] == 'details') {
-            $serviceRecipient = 'update_diffusion_recipient_indexing';
-            $serviceRoles = 'update_diffusion_roles_indexing';
+            $serviceRecipient = 'update_diffusion_indexing';
+            $serviceRoles = 'update_diffusion_except_recipient_indexing';
             $triggerContext = true;
         }
         if ($triggerContext) {
@@ -470,8 +470,14 @@ class ListTemplateController
             }
         }
 
+        $listTemplateTypes = ListTemplateModel::getTypes(['select' => ['difflist_type_roles'], 'where' => ['difflist_type_id = ?'], 'data' => ['entity_id']]);
+        $availableRoles = empty($listTemplateTypes[0]['difflist_type_roles']) ? [] : explode(' ', $listTemplateTypes[0]['difflist_type_roles']);
         $roles = EntityModel::getRoles();
         foreach ($roles as $key => $role) {
+            if (!in_array($role['id'], $availableRoles)) {
+                unset($roles[$key]);
+                continue;
+            }
             if ($role['id'] == 'dest') {
                 $roles[$key]['label'] = _ASSIGNEE;
                 if ($triggerContext) {
@@ -487,7 +493,7 @@ class ListTemplateController
             }
         }
 
-        return $response->withJson(['roles' => $roles]);
+        return $response->withJson(['roles' => array_values($roles)]);
     }
 
     private static function checkItems(array $aArgs)

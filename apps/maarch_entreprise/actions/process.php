@@ -395,49 +395,6 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
     $frm_str .= '<table style="width:100%;" id="complementary_fields">';
 
-    //THESAURUS
-    if ($core->is_module_loaded('thesaurus') && $core->test_service('thesaurus_view', 'thesaurus', false)) {
-        require_once 'modules'.DIRECTORY_SEPARATOR.'thesaurus'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
-
-        $thesaurus = new thesaurus();
-        $thesaurusListRes = array();
-
-        $thesaurusListRes = $thesaurus->getThesaursusListRes($res_id);
-
-        $frm_str .= '<tr id="thesaurus_tr" style="display:block;">';
-        $frm_str .= '<td colspan="2">'._THESAURUS.'</td>';
-        $frm_str .= '</tr>';
-
-        $frm_str .= '<tr id="thesaurus_tr" style="display:'.$displayValue.';">';
-        $frm_str .= '<td class="indexing_field" id="thesaurus_field"><select multiple="multiple" id="thesaurus" data-placeholder=" "';
-
-        if (!$core->test_service('add_thesaurus_to_res', 'thesaurus', false)) {
-            $frm_str .= 'disabled="disabled"';
-        }
-
-        $frm_str .= '>';
-        if (!empty($thesaurusListRes)) {
-            foreach ($thesaurusListRes as $key => $value) {
-                $frm_str .= '<option title="'.functions::show_string($value['LABEL']).'" data-object_type="thesaurus_id" id="thesaurus_'.$value['ID'].'"  value="'.$value['ID'].'"';
-                $frm_str .= ' selected="selected"';
-                $frm_str .= '>'
-                    .functions::show_string($value['LABEL'])
-                    .'</option>';
-            }
-        }
-        $frm_str .= '</select></td>';
-        $frm_str .= ' <td style="width:5px;"><i onclick="lauch_thesaurus_list(this);" class="fa fa-search" title="parcourir le thésaurus" aria-hidden="true" style="cursor:pointer;"></i></td>';
-        $frm_str .= '</tr>';
-        $frm_str .= '<style>#thesaurus_chosen{width:100% !important;}#thesaurus_chosen .chosen-drop{display:none;}</style>';
-
-        //script
-        $frm_str .= '<script>';
-        $frm_str .= '$j("#thesaurus").chosen({width: "95%", disable_search_threshold: 10});getInfoIcon();';
-
-        $frm_str .= '</script>';
-        /*****************/
-    }
-
     //TAGS
     if ($core_tools->is_module_loaded('tags') && ($core_tools->test_service('tag_view', 'tags', false) == 1)) {
         include_once 'modules'.DIRECTORY_SEPARATOR.'tags'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.'process'.DIRECTORY_SEPARATOR.'index.php';
@@ -787,7 +744,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     $ind = $sec->get_ind_collection($coll_id);
     $table = $_SESSION['collections'][$ind]['extensions'][0];
     $folder = '';
-    $thesaurusList = '';
 
     for ($j = 0; $j < count($values_form); ++$j) {
         if ($values_form[$j]['ID'] == "description") {
@@ -799,9 +755,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         if ($values_form[$j]['ID'] == 'tag_userform') {
             $tags = $values_form[$j]['VALUE'];
         }
-        if ($values_form[$j]['ID'] == 'thesaurus') {
-            $thesaurusList = $values_form[$j]['VALUE'];
-        }
     }
 
     //DEPARTEMENT CONCERNE et DESCRIPTION
@@ -811,15 +764,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     if ($core->is_module_loaded('tags')) {
         $tags_list = explode('__', $tags);
         include_once 'modules'.DIRECTORY_SEPARATOR.'tags'.DIRECTORY_SEPARATOR.'tags_update.php';
-    }
-
-    //THESAURUS
-    if ($core->is_module_loaded('thesaurus')) {
-        require_once 'modules'.DIRECTORY_SEPARATOR.'thesaurus'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
-
-        $thesaurus = new thesaurus();
-
-        $thesaurus->updateResThesaurusList($thesaurusList, $arr_id[0]);
     }
 
     //DIFFLIST

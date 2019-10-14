@@ -118,7 +118,7 @@ class LinkController
                     $delChild = $key;
                 }
                 $return .= '<td align="right">';
-                $return .= '<div align="center" class="iconDoc"><a href="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.$key.'" target="_blank" title="'._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="'._VIEW_DOC.'"></i><span><img src="../../rest/res/'.$key.'/thumbnail"></span></a></div>';
+                $return .= '<div align="center" class="iconDoc"><a href="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='.$key.'" target="_blank" title="'._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="'._VIEW_DOC.'"></i><span><img src="../../rest/resources/'.$key.'/thumbnail"></span></a></div>';
                 $return .= '</td>';
                 $return .= '<td align="right">';
                 $return .= '<span onclick="';

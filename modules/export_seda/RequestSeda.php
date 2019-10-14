@@ -40,7 +40,6 @@ class RequestSeda
             require_once('core/class/class_db.php');
             require_once('core/class/class_request.php');
             require_once('core/class/class_core_tools.php');
-            require_once('core/class/web_service/class_web_service.php');
 
             //load Maarch session vars
             $portal = new portal();

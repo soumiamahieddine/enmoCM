@@ -9,7 +9,8 @@
 </mat-card>-->
 
 <div class="example-loading-shade" *ngIf="loading">
-    <mat-spinner></mat-spinner>
+    <mat-progress-spinner [mode]="loadingInfo.mode" [value]="loadingInfo.percent"></mat-progress-spinner>
+    <div style="padding-top: 10px;">{{loadingInfo.message}}</div>
 </div>
 <div *ngIf="file.content === null && !loading" class="view-doc-container" appUploadFileDragDrop (onFileDropped)="dndUploadFile($event)">
     <i class="fa fa-file-upload upload-icon"></i><br />
@@ -33,16 +34,22 @@
 </div>
 <input type="file" #docToUpload name="files[]" (change)="uploadTrigger($event)" style="display:none;">
 <div style="display: block;width:100%;" appUploadFileDragDrop (onFileDropped)="dndUploadFile($event)">
-    <div class="viewer-tools">
+    <div *ngIf="!loading" class="viewer-tools">
         <button mat-icon-button (click)="docToUpload.click()" matTooltip="Téléversez un autre fichier">
             <mat-icon class="fa fa-file-upload"></mat-icon>
         </button>
+        <button mat-icon-button (click)="downloadOriginalFile()" matTooltip="Télécharger le fichier original">
+            <mat-icon class="fa fa-download"></mat-icon>
+        </button>
+        <!--<button mat-icon-button (click)="printPdf()" matTooltip="Imprimer le pdf">
+            <mat-icon class="fa fa-print"></mat-icon>
+        </button>-->
         <button mat-icon-button (click)="cleanFile()" matTooltip="Enlever le fichier">
             <mat-icon class="fa fa-trash" color="warn"></mat-icon>
         </button>
     </div>
     <pdf-viewer *ngIf="file.src!==null" [src]="file.src" [render-text]="true" [autoresize]="true"
-        [original-size]="false" [show-all]="true" (error)="onError($event)" style="width:100%;"></pdf-viewer>
+        [original-size]="false" [show-all]="true" (error)="onError($event)" (on-progress)="onProgress($event)" style="width:100%;"></pdf-viewer>
 </div>
 <div *ngIf="file.content !== null && noConvertedFound" class="no-doc-container" appUploadFileDragDrop (onFileDropped)="dndUploadFile($event)">
     <div class="loaded-file"><i class="fa fa-file"></i>&nbsp;<a (click)="docToUpload.click()">{{file.name}}</a>&nbsp;<b>chargé</b></div>

@@ -12,6 +12,7 @@ import { tap, finalize, catchError, filter, exhaustMap, map } from 'rxjs/operato
 import { of } from 'rxjs';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { AlertComponent } from '../../../plugins/modal/alert.component';
 
 declare function $j(selector: any): any;
 
@@ -33,7 +34,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
 
     loading: boolean = false;
 
-    displayedColumns = ['category', 'label', 'private', 'default', 'actions'];
+    displayedColumns = ['category', 'label', 'private', 'default', 'enabled', 'actions'];
 
     dataSource = new MatTableDataSource(this.indexingModels);
 
@@ -62,7 +63,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get("../../rest/indexingModels").pipe(
+        this.http.get("../../rest/indexingModels?showDisabled=true").pipe(
             map((data: any) => {
                 return data.indexingModels.filter((info: any) => info.private === false);
             }),
@@ -85,27 +86,72 @@ export class IndexingModelsAdministrationComponent implements OnInit {
 
     delete(indexingModel: any) {
 
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+        if (!indexingModel.used) {
+            this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+
+            this.dialogRef.afterClosed().pipe(
+                filter((data: string) => data === 'ok'),
+                exhaustMap(() => this.http.delete('../../rest/indexingModels/' + indexingModel.id)),
+                tap(() => {
+                    for (let i in this.indexingModels) {
+                        if (this.indexingModels[i].id == indexingModel.id) {
+                            this.indexingModels.splice(Number(i), 1);
+                        }
+                    }
+                    this.dataSource = new MatTableDataSource(this.indexingModels);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+                    this.notify.success(this.lang.indexingModelDeleted);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: indexingModel.label, msg: this.lang.canNotDeleteIndexingModel } });
+        }
+    }
+
+    disableIndexingModel(indexingModel: any) {
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.disable, msg: this.lang.confirmAction } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.delete('../../rest/indexingModels/' + indexingModel.id)),
-            tap(() => {
+            exhaustMap(() => this.http.request('PUT', '../../rest/indexingModels/' + indexingModel.id + '/disable')),
+            tap((data: any) => {
                 for (let i in this.indexingModels) {
                     if (this.indexingModels[i].id == indexingModel.id) {
-                        this.indexingModels.splice(Number(i), 1);
+                        this.indexingModels[i].enabled = false;
                     }
                 }
-                this.dataSource = new MatTableDataSource(this.indexingModels);
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
-                this.notify.success(this.lang.indexingModelDeleted);
+                this.notify.success(this.lang.indexingModelDisabled);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
             })
         ).subscribe();
+    }
 
+    enableIndexingModel(indexingModel: any) {
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.enable, msg: this.lang.confirmAction } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.request('PUT', '../../rest/indexingModels/' + indexingModel.id + '/enable')),
+            tap((data: any) => {
+                for (let i in this.indexingModels) {
+                    if (this.indexingModels[i].id == indexingModel.id) {
+                        this.indexingModels[i].enabled = true;
+                    }
+                }
+                this.notify.success(this.lang.indexingModelEnabled);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 }
