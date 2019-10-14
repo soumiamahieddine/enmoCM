@@ -164,11 +164,11 @@ class ConvertPdfController
         $resource = file_get_contents("{$tmpPath}{$tmpFilename}.pdf");
 
         $aReturn = [];
-        $aReturn["encodedResource"] = base64_encode($resource);
 
         if ($aArgs['context'] == 'scan') {
             $aReturn["tmpFilename"] = $tmpFilename.'.pdf';
         } else {
+            $aReturn["encodedResource"] = base64_encode($resource);
             unlink("{$tmpPath}{$tmpFilename}.pdf");
         }
         return $aReturn;
@@ -245,24 +245,22 @@ class ConvertPdfController
         $size     = strlen($file);
 
         if (strtolower($ext) == 'pdf' && strtolower($mimeType) == 'application/pdf') {
-            $return['encodedResource'] = $body['base64'];
             if ($body['context'] == 'scan') {
                 $tmpPath = CoreConfigModel::getTmpPath();
                 $tmpFilename = 'scan_converting' . rand() . '.pdf';
         
                 file_put_contents($tmpPath . $tmpFilename, $file);
                 $return['tmpFilename'] = $tmpFilename;
+            } else {
+                $return['encodedResource'] = $body['base64'];
             }
             return $response->withJson($return);
         } else {
             $fileAccepted  = StoreController::isFileAllowed(['extension' => $ext, 'type' => $mimeType]);
-            $maxFilesizeMo = ini_get('upload_max_filesize');
             $canConvert    = ConvertPdfController::canConvert(['extension' => $ext]);
     
             if (!$fileAccepted) {
                 return $response->withStatus(400)->withJson(['errors' => 'File type not allowed. Extension : ' . $ext . '. Mime Type : ' . $mimeType . '.']);
-            } elseif ($size/1024 > $maxFilesizeMo*1024) {
-                return $response->withStatus(400)->withJson(['errors' => 'File maximum size is exceeded ('.$maxFilesizeMo.' Mo)']);
             } elseif (!$canConvert) {
                 return $response->withStatus(400)->withJson(['errors' => 'File accepted but can not be converted in pdf']);
             }
