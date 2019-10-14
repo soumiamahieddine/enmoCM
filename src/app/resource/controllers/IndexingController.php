@@ -174,6 +174,7 @@ class IndexingController
         }
 
         $processLimitDate = new \DateTime($queryParams['processLimitDate']);
+        $processLimitDate->setTime(23, 59, 59);
         $now = new \DateTime();
 
         $diff = $processLimitDate->diff($now);
