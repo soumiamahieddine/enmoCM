@@ -476,7 +476,7 @@ class ListTemplateController
         foreach ($roles as $key => $role) {
             if (!in_array($role['id'], $availableRoles)) {
                 unset($roles[$key]);
-                break;
+                continue;
             }
             if ($role['id'] == 'dest') {
                 $roles[$key]['label'] = _ASSIGNEE;
