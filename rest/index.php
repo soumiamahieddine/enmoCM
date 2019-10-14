@@ -373,7 +373,7 @@ $app->get('/tags', \Tag\controllers\TagController::class . ':get');
 $app->post('/tags', \Tag\controllers\TagController::class . ':create');
 $app->get('/tags/{id}', \Tag\controllers\TagController::class . ':getById');
 $app->put('/tags/{id}', \Tag\controllers\TagController::class . ':update');
-$app->put('/tags/{id}/merge', \Tag\controllers\TagController::class . ':merge');
+$app->put('/mergeTags', \Tag\controllers\TagController::class . ':merge');
 $app->delete('/tags/{id}', \Tag\controllers\TagController::class . ':delete');
 
 //Templates
