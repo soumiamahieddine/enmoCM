@@ -29,7 +29,7 @@ export class FolderInputComponent implements OnInit {
 
     key: string = 'idToDisplay';
 
-    canAdd: boolean = false;
+    canAdd: boolean = true;
 
     listInfo: string;
     myControl = new FormControl();
