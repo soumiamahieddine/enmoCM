@@ -1188,4 +1188,5 @@ export const LANG_FR = {
     "removeFile" : "Enlever le fichier",
     "loaded" : "chargé",
     "noAvailablePreview" : "Pas de visualisation disponible",
+    "file" : "Fichier",
 };

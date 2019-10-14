@@ -1177,4 +1177,5 @@ export const LANG_NL = {
     "removeFile" : "Remove file", //_TO_TRANSLATE
     "loaded" : "loaded", //_TO_TRANSLATE
     "noAvailablePreview" : "No available preview", //_TO_TRANSLATE
+    "file" : "File", //_TO_TRANSLATE
 };

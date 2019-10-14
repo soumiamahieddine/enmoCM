@@ -1151,4 +1151,5 @@ export const LANG_EN = {
     "removeFile" : "Remove file",
     "loaded" : "loaded",
     "noAvailablePreview" : "No available preview",
+    "file" : "File",
 };
