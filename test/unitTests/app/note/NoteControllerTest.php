@@ -37,13 +37,14 @@ class NoteControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'value'    => "Test d'ajout d'une note par php unit",
-            'entities' => ['COU', 'CAB']
+            'value'     => "Test d'ajout d'une note par php unit",
+            'entities'  => ['COU', 'CAB'],
+            'resId'     => self::$resId
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $noteController->create($fullRequest, new \Slim\Http\Response(), ['resId' => self::$resId]);
+        $response     = $noteController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         self::$noteId = $responseBody->noteId;
@@ -55,12 +56,13 @@ class NoteControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'value' => "Test d'ajout d'une note par php unit"
+            'value'     => "Test d'ajout d'une note par php unit",
+            'resId'     => self::$resId
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $noteController->create($fullRequest, new \Slim\Http\Response(), ['resId' => self::$resId]);
+        $response     = $noteController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         self::$noteId2 = $responseBody->noteId;
@@ -71,16 +73,17 @@ class NoteControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $aArgs = [
-            'entities' => ["COU", "CAB"]
+        $body = [
+            'entities'  => ["COU", "CAB"],
+            'resId'     => self::$resId
         ];
 
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $fullRequest = \httpRequestCustom::addContentInBody($body, $request);
 
-        $response     = $noteController->create($fullRequest, new \Slim\Http\Response(), ['resId' => self::$resId]);
+        $response     = $noteController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('Data value is empty or not a string', $responseBody->errors);
+        $this->assertSame('Body value is empty or not a string', $responseBody->errors);
     }
 
     public function testUpdate()
@@ -93,11 +96,12 @@ class NoteControllerTest extends TestCase
 
         $aArgs = [
             'value'      => "Test modification d'une note par php unit",
-            'entities'   => ['COU', 'DGS']
+            'entities'   => ['COU', 'DGS'],
+            'resId'     => self::$resId
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $noteController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$noteId, 'resId' => self::$resId]);
+        $response     = $noteController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$noteId]);
 
         $this->assertSame(204, $response->getStatusCode());
 
@@ -106,14 +110,14 @@ class NoteControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'value' => ''
+            'value' => '',
+            'resId' => self::$resId
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
-        $response     = $noteController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$noteId, 'resId' => self::$resId]);
+        $response     = $noteController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$noteId]);
 
         $this->assertSame(400, $response->getStatusCode());
-
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('string', $responseBody->errors);
@@ -127,7 +131,7 @@ class NoteControllerTest extends TestCase
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response     = $noteController->getById($request, new \Slim\Http\Response(), ['id' => self::$noteId, 'resId' => self::$resId]);
+        $response     = $noteController->getById($request, new \Slim\Http\Response(), ['id' => self::$noteId]);
 
         $this->assertSame(200, $response->getStatusCode());
 
@@ -137,7 +141,7 @@ class NoteControllerTest extends TestCase
         $this->assertSame("Test modification d'une note par php unit", $responseBody->value);
         $this->assertInternalType('array', $responseBody->entities);
 
-        $response = $noteController->getById($request, new \Slim\Http\Response(), ['id' => 999999999, 'resId' => self::$resId]);
+        $response = $noteController->getById($request, new \Slim\Http\Response(), ['id' => 999999999]);
 
         $this->assertSame(403, $response->getStatusCode());
 
@@ -146,23 +150,23 @@ class NoteControllerTest extends TestCase
         $this->assertSame('Note out of perimeter', $responseBody->errors);
     }
 
-    public function testGet()
+    public function testGetByResId()
     {
         $noteController = new \Note\controllers\NoteController();
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response     = $noteController->get($request, new \Slim\Http\Response(), ['resId' => self::$resId]);
+        $response     = $noteController->getByResId($request, new \Slim\Http\Response(), ['resId' => self::$resId]);
 
         $this->assertSame(200, $response->getStatusCode());
 
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertInternalType('array', $responseBody);
-        $this->assertNotEmpty($responseBody);
+        $this->assertInternalType('array', $responseBody->notes);
+        $this->assertNotEmpty($responseBody->notes);
 
-        foreach ($responseBody as $value) {
+        foreach ($responseBody->notes as $value) {
             $this->assertInternalType('int', $value->id);
             $this->assertInternalType('int', $value->identifier);
             $this->assertInternalType('string', $value->value);
@@ -182,14 +186,14 @@ class NoteControllerTest extends TestCase
         $request      = \Slim\Http\Request::createFromEnvironment($environment);
 
         $noteController = new \Note\controllers\NoteController();
-        $response         = $noteController->delete($request, new \Slim\Http\Response(), ['id' => self::$noteId, 'resId' => self::$resId]);
+        $response         = $noteController->delete($request, new \Slim\Http\Response(), ['id' => self::$noteId]);
 
         $this->assertSame(204, $response->getStatusCode());
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response     = $noteController->getById($request, new \Slim\Http\Response(), ['id' => self::$noteId, 'resId' => self::$resId]);
+        $response     = $noteController->getById($request, new \Slim\Http\Response(), ['id' => self::$noteId]);
 
         $this->assertSame(403, $response->getStatusCode());
 
@@ -200,12 +204,12 @@ class NoteControllerTest extends TestCase
 
         // FAIL DELETE
         $noteController = new \Note\controllers\NoteController();
-        $response         = $noteController->delete($request, new \Slim\Http\Response(), ['id' => self::$noteId, 'resId' => self::$resId]);
+        $response         = $noteController->delete($request, new \Slim\Http\Response(), ['id' => self::$noteId]);
         $responseBody     = json_decode((string)$response->getBody());
 
         $this->assertSame('Note out of perimeter', $responseBody->errors);
         $this->assertSame(403, $response->getStatusCode());
 
-        $noteController->delete($request, new \Slim\Http\Response(), ['id' => self::$noteId2, 'resId' => self::$resId]);
+        $noteController->delete($request, new \Slim\Http\Response(), ['id' => self::$noteId2]);
     }
 }

@@ -75,7 +75,7 @@ class NoteController
         return $response->withJson($note);
     }
 
-    public function create(Request $request, Response $response, array $aArgs)
+    public function create(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
 
