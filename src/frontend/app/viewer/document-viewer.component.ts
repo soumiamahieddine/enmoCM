@@ -85,7 +85,7 @@ export class DocumentViewerComponent implements OnInit {
             })
         ).subscribe();
 
-        if (this.tmpFilename != '') {
+        if (this.tmpFilename != '' && this.tmpFilename !== undefined) {
             this.http.get('../../rest/convertedFile/'+this.tmpFilename).pipe(
                 tap((data: any) => {
                     this.file = {

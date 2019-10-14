@@ -727,10 +727,8 @@ export class IndexingFormComponent implements OnInit {
                     this.arrFormControl['processLimitDate'].setValue(limitDate);
                 }),
                 filter(() => this.arrFormControl['priority'] !== undefined),
-                //exhaustMap(() => this.http.post('../../rest/getNewPriority', { params: { "limitDate": limitDate } })),
+                exhaustMap(() => this.http.get('../../rest/indexing/priority', { params: { "processLimitDate": limitDate.toDateString() } })),
                 tap((data: any) => {
-                    // TO DO WAIT REAL ROUTE
-                    data.priority = 'poiuytre1391nbvc';
                     this.arrFormControl['priority'].setValue(data.priority);
                     this.setPriorityColor(null, data.priority);
 
@@ -745,6 +743,7 @@ export class IndexingFormComponent implements OnInit {
 
     calcLimitDateByPriority(field: any, value: any) {
         let limitDate: Date = null;
+        
         if (this.arrFormControl['processLimitDate'] !== undefined) {
             this.http.get("../../rest/indexing/processLimitDate", { params: { "priority": value } }).pipe(
                 tap((data: any) => {
@@ -776,20 +775,19 @@ export class IndexingFormComponent implements OnInit {
     }
 
     setPriorityColorByLimitDate(field: any, value: any) {
-        // TO DO : WAIT REAL ROUTE
-        this.arrFormControl['priority'].setValue('poiuytre1391nbvc');
-        this.setPriorityColor(null, 'poiuytre1391nbvc');
 
-        /*this.http.get("../../rest/indexing/getpriorityByLimitDate", { params: { "limitDate": value } }).pipe(
+        const limitDate = new Date(value.value);
+
+        this.http.get("../../rest/indexing/priority", { params: { "processLimitDate": limitDate.toDateString() } }).pipe(
             tap((data: any) => {
                 this.arrFormControl['priority'].setValue(data.priority);
-                this.setPriorityColor(null, value);
+                this.setPriorityColor(null, data.priority);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
             })
-        ).subscribe();*/
+        ).subscribe();
 
     }
 
