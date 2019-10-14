@@ -286,6 +286,11 @@
         <canConvert>false</canConvert>
     </FORMAT>
     <FORMAT>
+        <name>CSV</name>
+        <mime>text/csv</mime>
+        <canConvert>false</canConvert>
+    </FORMAT>
+    <FORMAT>
         <name>DWG</name>
         <mime>application/acad</mime>
         <canConvert>false</canConvert>

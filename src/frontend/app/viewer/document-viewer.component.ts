@@ -291,6 +291,7 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     isExtensionAllowed(file: any) {
+        console.log(file);
         const fileExtension = '.' + file.name.split('.').pop();
         if (this.allowedExtensions.filter(ext => ext.mimeType === file.type && ext.extension === fileExtension).length === 0) {
             this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.notAllowedExtension + ' !', msg: '<u>' + this.lang.allowedExtensions + '</u> : <br/>' + this.allowedExtensions.map(ext => ext.extension).filter((elem: any, index: any, self: any) => index === self.indexOf(elem)).join(', ') } });
