@@ -476,4 +476,12 @@ export class DiffusionsListComponent implements OnInit {
         this.diffFormControl.setValue(arrValues);
         this.diffFormControl.markAsTouched();
     }
+
+    isCanUpdateRole() {
+        if (this.availableRoles.filter((role: any) => role.canUpdate === true).length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
