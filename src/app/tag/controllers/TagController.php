@@ -19,6 +19,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Tag\models\TagModel;
+use Tag\models\TagResModel;
 
 class TagController
 {
@@ -179,13 +180,13 @@ class TagController
             return $response->withStatus(404)->withJson(['errors' => 'Merge tag not found']);
         }
 
-        $tagResMaster = TagModel::getTagRes([
+        $tagResMaster = TagResModel::get([
            'where'  => ['tag_id = ?'],
             'data'  => [$tagMaster['id']]
         ]);
         $tagResMaster = array_column($tagResMaster, 'res_id');
 
-        TagModel::updateTagRes([
+        TagResModel::update([
            'set'    => [
                'tag_id' => $tagMaster['id']
            ],
@@ -193,7 +194,7 @@ class TagController
            'data'   => [$tagMerge['id'], $tagResMaster]
         ]);
 
-        TagModel::deleteTagRes([
+        TagResModel::delete([
            'where'  => ['tag_id = ?'],
            'data'   => [$tagMerge['id']]
         ]);

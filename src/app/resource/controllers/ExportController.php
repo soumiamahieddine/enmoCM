@@ -33,6 +33,7 @@ use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use Tag\models\TagModel;
+use Tag\models\TagResModel;
 use User\models\UserModel;
 
 require_once 'core/class/Url.php';
@@ -482,7 +483,7 @@ class ExportController
         }
 
         foreach ($args['chunkedResIds'] as $resIds) {
-            $tagsRes = TagModel::getTagRes([
+            $tagsRes = TagResModel::get([
                 'select'    => ['tag_id', 'res_id'],
                 'where'     => ['res_id in (?)'],
                 'data'      => [$resIds],
