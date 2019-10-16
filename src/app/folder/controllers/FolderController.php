@@ -114,7 +114,8 @@ class FolderController
         if ($folder['public']) {
             $entitiesFolder = EntityFolderModel::getByFolderId(['folder_id' => $args['id'], 'select' => ['entities_folders.entity_id', 'entities_folders.edition', 'entities.entity_label']]);
             foreach ($entitiesFolder as $value) {
-                $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition'], 'label' => $value['entity_label']];
+                $canDelete = FolderController::areChildrenInPerimeter(['folderId' => $args['id']]);
+                $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition'], 'canDelete' => $canDelete, 'label' => $value['entity_label']];
             }
         }
 
@@ -387,6 +388,9 @@ class FolderController
         if (!empty($children)) {
             foreach ($children as $child) {
                 if ($child['edition'] == false or $child['edition'] == null) {
+                    return false;
+                }
+                if (!FolderController::areChildrenInPerimeter(['folderId' => $child['id']])) {
                     return false;
                 }
             }

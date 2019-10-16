@@ -425,9 +425,9 @@ export class FolderTreeComponent implements OnInit {
             exhaustMap(() => this.http.get("../../rest/folders/" + node.id)),
             tap((data: any) => {
                 let canAdmin = false;
-
+                let canDelete = false;
                 let canAdd = true;
-                
+
                 const compare = data.folder.sharing.entities.filter((item: any) => userEntities.indexOf(item) > -1);
 
                 const entitiesCompare = data.folder.sharing.entities.filter((item: any) => compare.indexOf(item.id));
@@ -436,12 +436,17 @@ export class FolderTreeComponent implements OnInit {
                     if (element.edition === true) {
                         canAdmin = true;
                     }
+                    if (element.canDelete === true) {
+                        canDelete = true;
+                    }
                 });
                 if (data.folder.user_id !== currentUserId && node.public) {
                     canAdd = false;
                 }
+
                 node.edition = (canAdmin || data.folder.user_id === currentUserId) ? true : false;
                 node.canAdd = node.edition;
+                node.canDelete = canDelete || data.folder.user_id === currentUserId;
             }),
         ).subscribe();
     }
