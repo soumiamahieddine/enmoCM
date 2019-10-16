@@ -83,22 +83,6 @@ export class IndexationComponent implements OnInit {
                         }
                     }
 
-                    //TO DO : WAIT BACK
-                    this.indexingModels[0].children =
-                        [
-                            {
-                                id: 9,
-                                label: 'toto',
-                                category: 'outgoing',
-                                default: false,
-                                owner: 23,
-                                private: false,
-                                master: 1,
-                                enabled: true,
-                                used: false
-                            }
-                        ]
-
                     if (this.appService.getViewMode()) {
                         setTimeout(() => {
                             this.sidenavLeft.open();
@@ -171,7 +155,7 @@ export class IndexationComponent implements OnInit {
 
         const privateIndexingModel = {
             category: this.indexingForm.getCategory(),
-            label: 'toto',
+            label: this.currentIndexingModel.label + '_' + Math.floor(Math.random() * Math.floor(9999)),
             owner: this.headerService.user.id,
             private: true,
             fields: fields,

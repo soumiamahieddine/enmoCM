@@ -17,11 +17,11 @@
                     <button mat-menu-item disabled style="text-align:center;"
                         (click)="$event.stopPropagation();">Modèles d'enregistrement</button>
                     <ng-container *ngFor="let indexingModel of indexingModels">
-                        <button mat-menu-item (click)="loadIndexingModel(indexingModel)"
+                        <button mat-menu-item *ngIf="indexingModel.master === null" (click)="loadIndexingModel(indexingModel)"
                             [title]="indexingModel.label" [class.listModels-menu-selected]="indexingModel.id === currentIndexingModel.id">{{indexingModel.label}}
                             {{indexingModel.default ? '(' + lang.default + ')': ''}}</button>
-                        <ng-container *ngFor="let privateIndexingModel of indexingModel.children">
-                            <button mat-menu-item (click)="loadIndexingModel(privateIndexingModel)"
+                        <ng-container *ngFor="let privateIndexingModel of indexingModels">
+                            <button mat-menu-item *ngIf="privateIndexingModel.master === indexingModel.id" (click)="loadIndexingModel(privateIndexingModel)"
                                 [title]="privateIndexingModel.label" [class.listModels-menu-selected]="privateIndexingModel.id === currentIndexingModel.id" style="padding-left: 50px;display: flex;align-items: center;">
                                 <div style="flex:1;">
                                     {{privateIndexingModel.label}} <span class="listModels-menu-badge">privée</span>
