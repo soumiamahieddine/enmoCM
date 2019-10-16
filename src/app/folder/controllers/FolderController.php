@@ -209,7 +209,7 @@ class FolderController
             $level = 0;
         } else {
             $folderParent = FolderModel::getById(['id' => $data['parent_id'], 'select' => ['folders.id', 'parent_id', 'level']]);
-            $level = $folderParent[0]['level'] + 1;
+            $level = $folderParent['level'] + 1;
         }
 
         FolderController::updateChildren($aArgs['id'], $level);
