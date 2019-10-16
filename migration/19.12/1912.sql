@@ -114,6 +114,17 @@ CREATE TABLE entities_folders
 )
 WITH (OIDS=FALSE);
 
+DROP TABLE IF EXISTS users_pinned_folders;
+CREATE TABLE users_pinned_folders
+(
+  id serial NOT NULL,
+  folder_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  CONSTRAINT users_pinned_folders_pkey PRIMARY KEY (id),
+  CONSTRAINT users_pinned_folders_unique_key UNIQUE (folder_id, user_id)
+)
+WITH (OIDS=FALSE);
+
 
 /* CUSTOM FIELDS */
 DROP TABLE IF EXISTS custom_fields;
