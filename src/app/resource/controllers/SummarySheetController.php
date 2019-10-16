@@ -231,7 +231,7 @@ class SummarySheetController
                     $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['short_label']]);
                 }
                 $initiatorEntity = empty($initiator) ? '' : "({$initiator['short_label']})";
-                $typist          = UserModel::getLabelledUserById(['login' => $resource['typist']]);
+                $typist          = UserModel::getLabelledUserById(['id' => $resource['typist']]);
                 $doctype         = empty($resource['type_label']) ? '<i>'._UNDEFINED.'</i>' : "<b>{$resource['type_label']}</b>";
 
                 $pdf->SetY($pdf->GetY() + 40);

@@ -83,8 +83,8 @@ abstract class ResModelAbstract
     public static function create(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status', 'category_id']);
-        ValidatorModel::stringType($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'status', 'category_id']);
-        ValidatorModel::intVal($aArgs, ['filesize', 'res_id']);
+        ValidatorModel::stringType($aArgs, ['format', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'status', 'category_id']);
+        ValidatorModel::intVal($aArgs, ['filesize', 'res_id', 'typist']);
 
         if (empty($aArgs['res_id'])) {
             $aArgs['res_id'] = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_id_mlb_seq']);

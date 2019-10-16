@@ -263,7 +263,7 @@ class ExportController
                         $aRecipients = empty($recipients[$resource['res_id']]) ? [] : $recipients[$resource['res_id']];
                         $csvContent[] = implode("\n\n", $aRecipients);
                     } elseif ($value['value'] == 'getTypist') {
-                        $csvContent[] = UserModel::getLabelledUserById(['login' => $resource['typist']]);
+                        $csvContent[] = UserModel::getLabelledUserById(['id' => $resource['typist']]);
                     } elseif ($value['value'] == 'getAssignee') {
                         $csvContent[] = UserModel::getLabelledUserById(['login' => $resource['dest_user']]);
                     } elseif ($value['value'] == 'getTags') {
@@ -381,7 +381,7 @@ class ExportController
                             $content[] = implode("\n\n", $aRecipients);
                         }
                     } elseif ($value['value'] == 'getTypist') {
-                        $content[] = UserModel::getLabelledUserById(['login' => $resource['typist']]);
+                        $content[] = UserModel::getLabelledUserById(['id' => $resource['typist']]);
                     } elseif ($value['value'] == 'getAssignee') {
                         $content[] = UserModel::getLabelledUserById(['login' => $resource['dest_user']]);
                     } elseif ($value['value'] == 'getTags') {
