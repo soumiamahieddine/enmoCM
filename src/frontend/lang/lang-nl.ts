@@ -1178,4 +1178,5 @@ export const LANG_NL = {
     "loaded" : "loaded", //_TO_TRANSLATE
     "noAvailablePreview" : "No available preview", //_TO_TRANSLATE
     "file" : "File", //_TO_TRANSLATE
+    "DownloadConvertedFile" : "Download converted file", //_TO_TRANSLATE
 };

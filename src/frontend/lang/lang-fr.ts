@@ -1189,4 +1189,5 @@ export const LANG_FR = {
     "loaded" : "chargé",
     "noAvailablePreview" : "Pas de visualisation disponible",
     "file" : "Fichier",
+    "downloadConvertedFile" : "Reception de la conversion",
 };
