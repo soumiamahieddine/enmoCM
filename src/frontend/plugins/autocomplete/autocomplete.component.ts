@@ -100,6 +100,7 @@ export class PluginAutocomplete implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.singleMode = this.singleMode === undefined ? false : true;
         this.optGroupLabel = this.optGroupLabel === undefined ? this.lang.availableValues : this.optGroupLabel;
         this.placeholder = this.placeholder === undefined ? this.lang.chooseValue : this.placeholder;
 
