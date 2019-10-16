@@ -11,6 +11,7 @@ import { SortPipe } from '../../../plugins/sorting.pipe';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormControl, Validators, FormGroup, ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
 import { DiffusionsListComponent } from '../../diffusions/diffusions-list.component';
+import { stringify } from '@angular/compiler/src/util';
 
 @Component({
     selector: 'app-indexing-form',
@@ -152,7 +153,7 @@ export class IndexingFormComponent implements OnInit {
     availableFieldsClone: any[] = [];
 
     availableCustomFields: any[] = [];
-    availableCustomFieldsClone: any[] = []
+    availableCustomFieldsClone: any[] = null;
 
     indexingFormGroup: FormGroup;
 
@@ -500,28 +501,49 @@ export class IndexingFormComponent implements OnInit {
             this.arrFormControl['mail­tracking'] = new FormControl({ value: '', disabled: this.adminMode ? true : false });
         }
 
-
         this.fieldCategories.forEach(category => {
             this['indexingModels_' + category] = [];
         });
 
-        this.http.get("../../rest/customFields").pipe(
-            tap((data: any) => {
-                this.availableCustomFields = data.customFields.map((info: any) => {
-                    info.identifier = 'indexingCustomField_' + info.id;
-                    info.system = false;
-                    info.values = info.values.length > 0 ? info.values.map((custVal: any) => {
-                        return {
-                            id: custVal,
-                            label: custVal
-                        }
-                    }) : info.values;
-                    return info;
-                });
-            }),
-            exhaustMap((data) => this.http.get("../../rest/indexingModels/" + indexModelId)),
-            tap((data: any) => {
 
+        let arrayRoutes: any = [];
+        let mergedRoutesDatas: any = {};
+
+        
+        if (this.availableCustomFieldsClone === null) {
+            arrayRoutes.push(this.http.get("../../rest/customFields"));
+        } else {
+            this.availableCustomFields = this.availableCustomFieldsClone;
+        }
+
+        arrayRoutes.push(this.http.get(`../../rest/indexingModels/${indexModelId}`));
+
+        forkJoin(arrayRoutes).pipe(
+            map(data => {
+                let objectId = '';
+                let index = '';
+                for (var key in data) {
+                    index = key;
+                    objectId = Object.keys(data[key])[0];
+                    mergedRoutesDatas[Object.keys(data[key])[0]] = data[index][objectId]
+                }
+                return mergedRoutesDatas;
+            }),
+            tap((data: any) => {
+                if (data.customFields !== undefined) {
+                    this.availableCustomFields = data.customFields.map((info: any) => {
+                        info.identifier = 'indexingCustomField_' + info.id;
+                        info.system = false;
+                        info.values = info.values.length > 0 ? info.values.map((custVal: any) => {
+                            return {
+                                id: custVal,
+                                label: custVal
+                            }
+                        }) : info.values;
+                        return info;
+                    });
+                    this.availableCustomFieldsClone = JSON.parse(JSON.stringify(this.availableCustomFields));
+                }
                 this.currentCategory = data.indexingModel.category;
                 let fieldExist: boolean;
                 if (data.indexingModel.fields.length === 0) {
@@ -585,6 +607,7 @@ export class IndexingFormComponent implements OnInit {
 
                 this.initElemForm();
                 this.createForm();
+                
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
