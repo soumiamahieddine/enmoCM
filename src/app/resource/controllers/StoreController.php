@@ -15,15 +15,11 @@
 
 namespace Resource\controllers;
 
-use Slim\Http\Request;
-use Slim\Http\Response;
 use Attachment\models\AttachmentModel;
-use Contact\models\ContactModel;
 use Docserver\controllers\DocserverController;
 use Resource\models\ChronoModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
-use Respect\Validation\Validator;
 use Resource\models\ResModel;
 use SrcCore\models\CoreConfigModel;
 
@@ -32,7 +28,8 @@ class StoreController
     public static function storeResource(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['encodedFile', 'format', 'status', 'type_id', 'category_id']);
-        ValidatorModel::stringType($aArgs, ['format', 'status']);
+        ValidatorModel::stringType($aArgs, ['format', 'status', 'category_id']);
+        ValidatorModel::intVal($aArgs, ['type_id']);
 
         try {
             foreach ($aArgs as $column => $value) {
@@ -149,58 +146,36 @@ class StoreController
         return hash_file(strtolower($aArgs['mode']), $aArgs['filePath']);
     }
 
-    public static function prepareStorage(array $aArgs)
+    public static function prepareStorage(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['docserver_id', 'filename', 'format', 'filesize', 'path', 'fingerprint', 'status', 'res_id']);
-        ValidatorModel::stringType($aArgs, ['docserver_id', 'filename', 'format', 'path', 'fingerprint', 'status']);
-        ValidatorModel::intVal($aArgs, ['filesize', 'res_id']);
+        ValidatorModel::notEmpty($args, ['docserver_id', 'filename', 'format', 'filesize', 'path', 'fingerprint', 'status', 'res_id']);
+        ValidatorModel::stringType($args, ['docserver_id', 'filename', 'format', 'path', 'fingerprint', 'status']);
+        ValidatorModel::intVal($args, ['filesize', 'res_id']);
 
-        if (empty($aArgs['typist'])) {
-            $aArgs['typist'] = 'auto';
+        $args['typist'] = $GLOBALS['id'];
+
+        unset($args['alt_identifier']);
+        if (!empty($args['chrono'])) {
+            $args['alt_identifier'] = ChronoModel::getChrono(['id' => $args['category_id'], 'entityId' => $args['destination'], 'typeId' => $args['type_id'], 'resId' => $args['res_id']]);
+        }
+        unset($args['chrono']);
+
+        if (empty($args['process_limit_date'])) {
+            $processLimitDate = ResModel::getStoredProcessLimitDate(['typeId' => $args['type_id'], 'admissionDate' => $args['admission_date']]);
+            $args['process_limit_date'] = $processLimitDate;
         }
 
-        unset($aArgs['alt_identifier']);
-        if (!empty($aArgs['chrono'])) {
-            $aArgs['alt_identifier'] = ChronoModel::getChrono(['id' => $aArgs['category_id'], 'entityId' => $aArgs['destination'], 'typeId' => $aArgs['type_id'], 'resId' => $aArgs['res_id']]);
-        }
-        unset($aArgs['chrono']);
-
-        if (empty($aArgs['process_limit_date'])) {
-            $processLimitDate = ResModel::getStoredProcessLimitDate(['typeId' => $aArgs['type_id'], 'admissionDate' => $aArgs['admission_date']]);
-            $aArgs['process_limit_date'] = $processLimitDate;
-        }
-
-        if (!empty($aArgs['exp_contact_id']) && !is_numeric($aArgs['exp_contact_id'])) {
-            $mail = explode('<', str_replace('>', '', $aArgs['exp_contact_id']));
-            $contact = ContactModel::getByEmail(['email' => $mail[count($mail) - 1], 'select' => ['contacts_v2.contact_id']]);
-            if (!empty($contact['contact_id'])) {
-                $aArgs['exp_contact_id'] = $contact['contact_id'];
-            } else {
-                $aArgs['exp_contact_id'] = 0;
+        unset($args['external_id']);
+        if (!empty($args['externalId'])) {
+            if (is_array($args['externalId'])) {
+                $args['external_id'] = json_encode($args['externalId']);
             }
+            unset($args['externalId']);
         }
 
-        if (!empty($aArgs['address_id']) && !is_numeric($aArgs['address_id'])) {
-            $mail = explode('<', str_replace('>', '', $aArgs['address_id']));
-            $contact = ContactModel::getByEmail(['email' => $mail[count($mail) - 1], 'select' => ['contact_addresses.id']]);
-            if (!empty($contact['id'])) {
-                $aArgs['address_id'] = $contact['id'];
-            } else {
-                $aArgs['address_id'] = 0;
-            }
-        }
+        $args['creation_date'] = 'CURRENT_TIMESTAMP';
 
-        unset($aArgs['external_id']);
-        if (!empty($aArgs['externalId'])) {
-            if (is_array($aArgs['externalId'])) {
-                $aArgs['external_id'] = json_encode($aArgs['externalId']);
-            }
-            unset($aArgs['externalId']);
-        }
-
-        $aArgs['creation_date'] = 'CURRENT_TIMESTAMP';
-
-        return $aArgs;
+        return $args;
     }
 
     public static function prepareAttachmentStorage(array $aArgs)

@@ -139,6 +139,18 @@ CREATE TABLE custom_fields
 )
 WITH (OIDS=FALSE);
 
+DROP TABLE IF EXISTS resources_custom_fields;
+CREATE TABLE resources_custom_fields
+(
+    id serial NOT NULL,
+    res_id INTEGER NOT NULL,
+    custom_field_id INTEGER NOT NULL,
+    value jsonb NOT NULL,
+    CONSTRAINT resources_custom_fields_pkey PRIMARY KEY (id),
+    CONSTRAINT resources_custom_fields_unique_key UNIQUE (res_id, custom_field_id)
+)
+WITH (OIDS=FALSE);
+
 
 /* INDEXING MODELS */
 DROP TABLE IF EXISTS indexing_models;
@@ -222,6 +234,19 @@ DO $$ BEGIN
         ALTER TABLE notes DROP COLUMN IF EXISTS user_id;
         ALTER TABLE notes RENAME COLUMN user_tmp_id TO user_id;
         ALTER TABLE notes DROP COLUMN IF EXISTS type;
+    END IF;
+END$$;
+
+
+/* RES_LETTERBOX */
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_letterbox' and column_name = 'typist' and data_type != 'integer') THEN
+        ALTER TABLE res_letterbox ADD COLUMN typist_tmp integer;
+        UPDATE res_letterbox set typist_tmp = (select id FROM users where users.user_id = res_letterbox.typist);
+        UPDATE res_letterbox set typist_tmp = 0 WHERE typist_tmp IS NULL;
+        ALTER TABLE res_letterbox ALTER COLUMN typist_tmp set not null;
+        ALTER TABLE res_letterbox DROP COLUMN IF EXISTS typist;
+        ALTER TABLE res_letterbox RENAME COLUMN typist_tmp TO typist;
     END IF;
 END$$;
 
@@ -388,13 +413,21 @@ ALTER TABLE priorities DROP COLUMN IF EXISTS working_days;
 DROP TABLE IF EXISTS thesaurus;
 DROP TABLE IF EXISTS thesaurus_res;
 DROP SEQUENCE IF EXISTS thesaurus_id_seq;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS title;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS description;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS author;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS identifier;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS source;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS relation;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS offset_doc;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS is_multi_docservers;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tablename;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS validation_date;
 
 
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS
-SELECT r.tablename,
-       r.is_multi_docservers,
-       r.res_id,
+SELECT r.res_id,
        r.type_id,
        r.policy_id,
        r.cycle_id,
@@ -409,12 +442,10 @@ SELECT r.tablename,
        r.typist,
        r.creation_date,
        r.modification_date,
-       r.relation,
        r.docserver_id,
        r.path,
        r.filename,
        r.fingerprint,
-       r.offset_doc,
        r.filesize,
        r.scan_date,
        r.scan_user,
@@ -425,9 +456,6 @@ SELECT r.tablename,
        r.status,
        r.work_batch,
        r.doc_date,
-       r.description,
-       r.source,
-       r.author,
        r.reference_number,
        r.external_reference,
        r.external_id,
@@ -492,8 +520,6 @@ SELECT r.tablename,
        r.flag_alarm2,
        r.is_multicontacts,
        r.subject,
-       r.identifier,
-       r.title,
        r.priority,
        r.locker_user_id,
        r.locker_time,

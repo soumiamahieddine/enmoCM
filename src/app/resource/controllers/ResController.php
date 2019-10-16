@@ -726,8 +726,16 @@ class ResController
         $resources = ResModel::getOnView(['select' => $select, 'where' => $where, 'orderBy' => $data['orderBy'], 'limit' => $data['limit']]);
         if (!empty($resources) && $data['withFile'] === true) {
             foreach ($resources as $key => $res) {
-                $path = ResDocserverModel::getSourceResourcePath(['resId' => $res['res_id'], 'resTable' => 'res_letterbox', 'adrTable' => 'null']);
-                $file = file_get_contents($path);
+                $document = ResModel::getById(['resId' => $res['res_id'], 'select' => ['path', 'filename', 'docserver_id']]);
+                $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+                if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+                    continue;
+                }
+                $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
+                if (!file_exists($pathToDocument)) {
+                    continue;
+                }
+                $file = file_get_contents($pathToDocument);
                 $base64Content = base64_encode($file);
                 $resources[$key]['fileBase64Content'] = $base64Content;
             }
