@@ -25,7 +25,7 @@ export class MaarchParaphComponent implements OnInit {
         editable: true
     };
    
-    @ViewChild('appVisaWorkflow', { static: true }) appVisaWorkflow: VisaWorkflowComponent;
+    @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
     
     @Input('additionalsInfos') additionalsInfos: any;
     @Input('externalSignatoryBookDatas') externalSignatoryBookDatas: any;
@@ -34,7 +34,9 @@ export class MaarchParaphComponent implements OnInit {
 
     ngOnInit(): void {
         if (this.additionalsInfos.destinationId !== '') {
-            this.appVisaWorkflow.loadListModel(this.additionalsInfos.destinationId);
+            setTimeout(() => {
+                this.appVisaWorkflow.loadListModel(this.additionalsInfos.destinationId);  
+            }, 0);
         }
     }
 
