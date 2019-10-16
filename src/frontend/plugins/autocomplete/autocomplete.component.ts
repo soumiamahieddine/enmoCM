@@ -180,9 +180,7 @@ export class PluginAutocomplete implements OnInit {
         }
 
         if (this.selectedOpt !== undefined) {
-            if (this.singleMode) {
-                this.resetAutocomplete();
-            }
+            this.resetAutocomplete();
             this.autoCompleteInput.nativeElement.blur();
             this.selectedOpt.emit(ev.option.value);
         }
