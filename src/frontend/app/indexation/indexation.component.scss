@@ -92,6 +92,58 @@
         padding-left: 0px;
         padding-right: 0px;
     }
+
+    .mat-icon {
+        font-size: 20px;
+        height: auto;
+    }
+
+    &-button {
+        margin-right:20px;
+        width: 450px !important;
+    }
+}
+
+::ng-deep.listModels-menu {
+    min-width: 450px !important;
+
+    .mat-menu-item:hover:hover {
+        .listModels-menu-badge {
+            background: white !important;
+            color: $primary !important;
+        }
+    
+        .listModels-menu-delete {
+            .mat-icon {
+                color: white !important;
+            }
+        }
+    }
+    &-badge {
+        font-size: 70%;
+        background: $primary;
+        padding: 2px;
+        border-radius: 20px;
+        color: white;
+        padding-left: 5px;
+        padding-right: 5px;
+        font-weight: bold;
+    }
+
+    &-delete {
+        .mat-icon {
+            margin-right: 0px;
+        }
+    }
+
+    &-selected {
+        color: white !important;
+        background: $primary;
+        .listModels-menu-badge {
+            background: white !important;
+            color: $primary !important;
+        }
+    }
 }
 
 .emptyAction {

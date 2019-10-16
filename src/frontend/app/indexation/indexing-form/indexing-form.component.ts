@@ -264,6 +264,10 @@ export class IndexingFormComponent implements OnInit {
         return arrIndexingModels;
     }
 
+    getCategory() {
+        return this.currentCategory;
+    }
+
     getAvailableFields() {
         return this.availableFields;
     }
@@ -513,7 +517,7 @@ export class IndexingFormComponent implements OnInit {
         if (this.availableCustomFieldsClone === null) {
             arrayRoutes.push(this.http.get("../../rest/customFields"));
         } else {
-            this.availableCustomFields = this.availableCustomFieldsClone;
+            this.availableCustomFields = JSON.parse(JSON.stringify(this.availableCustomFieldsClone));
         }
 
         arrayRoutes.push(this.http.get(`../../rest/indexingModels/${indexModelId}`));
