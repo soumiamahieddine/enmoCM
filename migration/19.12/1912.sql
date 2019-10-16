@@ -197,6 +197,9 @@ DO $$ BEGIN
   END IF;
 END$$;
 
+/* LIST INSTANCE */
+ALTER TABLE listinstance DROP COLUMN IF EXISTS added_by_entity;
+ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_entity;
 
 /* NOTES */
 DO $$ BEGIN

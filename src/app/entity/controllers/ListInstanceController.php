@@ -175,7 +175,6 @@ class ListInstanceController
                     'item_type'         => $instance['item_type'],
                     'item_mode'         => $instance['item_mode'],
                     'added_by_user'     => $currentUser['user_id'],
-                    'added_by_entity'   => $primaryEntity['entity_id'],
                     'difflist_type'     => $instance['difflist_type'],
                     'process_date'      => $instance['process_date'],
                     'process_comment'   => $instance['process_comment'],
@@ -217,7 +216,6 @@ class ListInstanceController
                     'item_type'                 => $listInstance['item_type'],
                     'item_mode'                 => $listInstance['item_mode'],
                     'added_by_user'             => $listInstance['added_by_user'],
-                    'added_by_entity'           => $listInstance['added_by_entity'],
                     'difflist_type'             => $listInstance['difflist_type'],
                     'process_date'              => $listInstance['process_date'],
                     'process_comment'           => $listInstance['process_comment']

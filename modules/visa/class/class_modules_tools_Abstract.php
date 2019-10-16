@@ -419,7 +419,6 @@ abstract class visa_Abstract extends Database
         $stepDetails['item_type'] = $res->item_type;
         $stepDetails['item_mode'] = $res->item_mode;
         $stepDetails['added_by_user'] = $res->added_by_user;
-        $stepDetails['added_by_entity'] = $res->added_by_entity;
         $stepDetails['visible'] = $res->visible;
         $stepDetails['viewed'] = $res->viewed;
         $stepDetails['difflist_type'] = $res->difflist_type;
