@@ -118,8 +118,6 @@ export class PluginAutocomplete implements OnInit {
         this.optGroupLabel = this.optGroupLabel === undefined ? this.lang.availableValues : this.optGroupLabel;
         this.placeholder = this.placeholder === undefined ? this.lang.chooseValue : this.placeholder;
 
-        console.log(this.singleMode);
-        console.log(this.size);
         if (this.controlAutocomplete !== undefined) {
             this.controlAutocomplete.setValue(this.controlAutocomplete.value === null || this.controlAutocomplete.value === '' ? [] : this.controlAutocomplete.value);
             this.initFormValue();
