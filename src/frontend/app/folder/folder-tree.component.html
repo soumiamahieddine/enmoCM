@@ -2,7 +2,7 @@
     <div class="filter">
         <plugin-autocomplete [size]="'small'" [labelPlaceholder]="lang.searchFolder"
             [routeDatas]="['/rest/autocomplete/folders']" [targetSearchKey]="'idToDisplay'"
-            (triggerEvent)="goTo($event)"></plugin-autocomplete>
+            (triggerEvent)="goTo($event)" appearance="outline"></plugin-autocomplete>
     </div>
     <div>
         <button mat-icon-button color="primary" title="{{lang.addRootFolder}}" (click)="toggleInput()">

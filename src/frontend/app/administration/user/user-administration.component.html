@@ -266,7 +266,7 @@
                                             <mat-icon class="fa fa-check"></mat-icon>
                                         </button>
                                         <mat-menu #menu="matMenu" style="width:200px !important;">
-                                            <plugin-autocomplete [labelPlaceholder]="lang.redirectBaskets" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addBasketRedirection($event)"></plugin-autocomplete>
+                                            <plugin-autocomplete [labelPlaceholder]="lang.redirectBaskets" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addBasketRedirection($event)" appearance="outline"></plugin-autocomplete>
                                         </mat-menu>
                                     </p>
                                 </mat-list-item>
@@ -337,7 +337,7 @@
                                                         style="font-weight:normal">{{basket.group_desc}}</span>
                                                 </h4>
                                                 <p mat-line>
-                                                    <plugin-autocomplete *ngIf="basket.userToDisplay == null" [labelPlaceholder]="lang.redirectBaskets" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="reassignBasketRedirection($event,basket,i)"></plugin-autocomplete>
+                                                    <plugin-autocomplete *ngIf="basket.userToDisplay == null" [labelPlaceholder]="lang.redirectBaskets" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="reassignBasketRedirection($event,basket,i)" appearance="outline"></plugin-autocomplete>
                                                     <mat-form-field>
                                                         <input type="text" color="warn" matInput disabled
                                                             value="{{lang.assignBy}} {{basket.userToDisplay}}">

@@ -1153,4 +1153,5 @@ export const LANG_EN = {
     "noAvailablePreview" : "No available preview",
     "file" : "File",
     "DownloadConvertedFile" : "Download converted file",
+    "linkNewAction" : "Link new action",
 };

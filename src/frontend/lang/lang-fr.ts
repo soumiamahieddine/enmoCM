@@ -1190,4 +1190,5 @@ export const LANG_FR = {
     "noAvailablePreview" : "Pas de visualisation disponible",
     "file" : "Fichier",
     "downloadConvertedFile" : "Reception de la conversion",
+    "linkNewAction" : "Associer une nouvelle action",
 };

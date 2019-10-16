@@ -423,14 +423,14 @@ export class DiffusionsListComponent implements OnInit {
                     }
                 });
                 if (isAllowed) {
-                    //if (this.keepDestForRedirection) {
-                    const destUser = this.diffList['dest'].items[0];
-                    indexFound = this.diffList[oldRole.id].items.map((item: any) => item.id).indexOf(destUser.id);
+                    if (this.diffList['dest'].items.length > 0) {
+                        const destUser = this.diffList['dest'].items[0];
+                        indexFound = this.diffList[oldRole.id].items.map((item: any) => item.id).indexOf(destUser.id);
 
-                    if (indexFound === -1) {
-                        this.diffList[oldRole.id].items.push(destUser);
+                        if (indexFound === -1) {
+                            this.diffList[oldRole.id].items.push(destUser);
+                        }
                     }
-                    //}
                     indexFound = this.diffList[oldRole.id].items.map((item: any) => item.id).indexOf(user.id);
 
                     if (indexFound > -1) {

@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{lang.linkAccount}}</h1>
 <mat-dialog-content class="modal-container">
-  <plugin-autocomplete [labelPlaceholder]="lang.searchUserInMaarchParapheur" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/maarchParapheurUsers?exludeAlreadyConnected=true']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'email'" (triggerEvent)="selectUser($event)"></plugin-autocomplete>
+  <plugin-autocomplete [labelPlaceholder]="lang.searchUserInMaarchParapheur" [routeDatas]="['/rest/autocomplete/maarchParapheurUsers?exludeAlreadyConnected=true']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'email'" (triggerEvent)="selectUser($event)" appearance="outline"></plugin-autocomplete>
   <mat-list *ngIf="externalUser.inMaarchParapheur">
     <mat-list-item >
       <mat-icon class="avatarAccount" color="primary" mat-list-icon

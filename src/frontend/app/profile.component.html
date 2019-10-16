@@ -221,7 +221,7 @@
                                                     style="opacity: 0.5;font-style: italic;font-size: 80%;">
                                                     {{lang.selectAll}}
                                                 </span>
-                                                <plugin-autocomplete *ngIf="selectionBaskets.hasValue()" [labelPlaceholder]="lang.redirectBaskets" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addBasketRedirection($event)"></plugin-autocomplete>
+                                                <plugin-autocomplete *ngIf="selectionBaskets.hasValue()" [labelPlaceholder]="lang.redirectBaskets" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addBasketRedirection($event)" appearance="outline"></plugin-autocomplete>
                                             </p>
                                         </mat-list-item>
                                         <mat-divider></mat-divider>
@@ -294,7 +294,7 @@
                                                                 style="font-weight:normal">{{basket.group_desc}}</span>
                                                         </h4>
                                                         <p mat-line>
-                                                            <plugin-autocomplete *ngIf="basket.userToDisplay == null" [labelPlaceholder]="lang.redirectBaskets" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="reassignBasketRedirection($event,basket,i)"></plugin-autocomplete>
+                                                            <plugin-autocomplete *ngIf="basket.userToDisplay == null" [labelPlaceholder]="lang.redirectBaskets" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="reassignBasketRedirection($event,basket,i)" appearance="outline"></plugin-autocomplete>
                                                             <mat-form-field>
                                                                 <input type="text" color="warn" matInput disabled
                                                                     value="{{lang.assignBy}} {{basket.userToDisplay}}">
@@ -881,11 +881,11 @@
                         class="fa fa-sitemap"></mat-icon>
                     <mat-icon color="primary" *ngIf="userEntity.primary_entity != 'Y'" mat-list-icon
                         class="fa fa-sitemap" style="position:relative;">
-                        <button mat-icon-button
+                        <!--<button mat-icon-button
                             style="cursor:pointer;position: absolute;right: -20px;top: -20px;font-size:10px;"
                             (click)="updatePrimaryEntity(userEntity)" matTooltip="{{lang.entityTooglePrimary}}">
                             <mat-icon class="fa fa-arrow-up"></mat-icon>
-                        </button>
+                        </button>-->
                     </mat-icon>
                     <h4 mat-line [ngStyle]="{'font-weight': userEntity.primary_entity == 'Y' ? 'bold' : 'normal'}"
                         matTooltip="{{userEntity.entity_label}}">
