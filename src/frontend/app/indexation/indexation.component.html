@@ -15,28 +15,34 @@
                 </button>
                 <mat-menu #IndexingModelsMenu="matMenu" [class]="'menuForm listModels-menu'">
                     <button mat-menu-item disabled style="text-align:center;"
-                        (click)="$event.stopPropagation();">Modèles d'enregistrement</button>
-                    <ng-container *ngFor="let indexingModel of indexingModels">
-                        <button mat-menu-item *ngIf="indexingModel.master === null" (click)="loadIndexingModel(indexingModel)"
-                            [title]="indexingModel.label" [class.listModels-menu-selected]="indexingModel.id === currentIndexingModel.id">{{indexingModel.label}}
+                        (click)="$event.stopPropagation();">{{lang.indexingModel}}</button>
+                    <ng-container *ngFor="let indexingModel of indexingModels | sortBy: 'label'">
+                        <button mat-menu-item *ngIf="indexingModel.master === null"
+                            (click)="loadIndexingModel(indexingModel)" [title]="indexingModel.label"
+                            [class.listModels-menu-selected]="indexingModel.id === currentIndexingModel.id">{{indexingModel.label}}
                             {{indexingModel.default ? '(' + lang.default + ')': ''}}</button>
-                        <ng-container *ngFor="let privateIndexingModel of indexingModels">
-                            <button mat-menu-item *ngIf="privateIndexingModel.master === indexingModel.id" (click)="loadIndexingModel(privateIndexingModel)"
-                                [title]="privateIndexingModel.label" [class.listModels-menu-selected]="privateIndexingModel.id === currentIndexingModel.id" style="padding-left: 50px;display: flex;align-items: center;">
+                        <ng-container
+                            *ngFor="let privateIndexingModel of indexingModels | sortBy: 'label' ;let itPrivate=index">
+                            <button mat-menu-item *ngIf="privateIndexingModel.master === indexingModel.id"
+                                (click)="loadIndexingModel(privateIndexingModel)" [title]="privateIndexingModel.label"
+                                [class.listModels-menu-selected]="privateIndexingModel.id === currentIndexingModel.id"
+                                style="padding-left: 50px;display: flex;align-items: center;">
                                 <div style="flex:1;">
-                                    {{privateIndexingModel.label}} <span class="listModels-menu-badge">privée</span>
+                                    {{privateIndexingModel.label}} <span
+                                        class="listModels-menu-badge">{{lang.private}}</span>
                                 </div>
-
-                                <button mat-icon-button class="listModels-menu-delete" *ngIf="privateIndexingModel.id !== currentIndexingModel.id" (click)="$event.stopPropagation();deletePrivateIndexingModel(privateIndexingModel.id)">
+                                <button mat-icon-button class="listModels-menu-delete"
+                                    *ngIf="privateIndexingModel.id !== currentIndexingModel.id" [title]="lang.delete"
+                                    (click)="$event.stopPropagation();deletePrivateIndexingModel(privateIndexingModel.id, itPrivate)">
                                     <mat-icon class="fa fa-trash" color="warn">
-
                                     </mat-icon>
                                 </button>
                             </button>
                         </ng-container>
                     </ng-container>
                 </mat-menu>
-                <button mat-icon-button type="button" color="primary" (click)="savePrivateIndexingModel()" [title]="'Créer un modèle avec les données actuelles'">
+                <button mat-icon-button type="button" color="primary" (click)="savePrivateIndexingModel()"
+                    [title]="lang.createPrivateIndexingModel">
                     <mat-icon class="far fa-copy"></mat-icon>
                 </button>
             </div>
@@ -83,24 +89,6 @@
         </div>
         <div class="document-container" [class.fullContainer]="appService.getViewMode()">
             <div class="content">
-                <!--<i class="fa fa-file-upload upload-icon"></i><br />
-                Glisser-déposer<br />ou
-                <div style="display: flex;">
-                    <button mat-button class="button-form-primary" [matMenuTriggerFor]="menu"
-                        style="margin-right:20px;align-items: center;justify-content: center;text-align: center;display: flex;">
-                        <span class="menu-label">
-                            Choisir un modèle
-                        </span>
-                        <i class="fa fa-chevron-down menu-icon"></i>
-                    </button>
-                    <mat-menu #menu="matMenu" [class]="'menuForm'">
-                        <button mat-menu-item>Modèle 1</button>
-                        <button mat-menu-item>Modèle 2</button>
-                    </mat-menu>
-                    <button mat-button class="button-form-primary"
-                        style="align-items: center;justify-content: center;text-align: center;display: flex;">Choisissez
-                        votre fichier</button>
-                </div>-->
                 <app-document-viewer #appDocumentViewer [tmpFilename]="tmpFilename" style="height:100%;width:100%;">
                 </app-document-viewer>
             </div>

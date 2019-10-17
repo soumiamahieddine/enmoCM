@@ -65,6 +65,7 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
 import { PrintSeparatorComponent }                        from './separator/print-separator/print-separator.component';
 
 import { IndexationComponent }                        from './indexation/indexation.component';
+import { AddPrivateIndexingModelModalComponent }                        from './indexation/private-indexing-model/add-private-indexing-model-modal.component';
 
 
 @NgModule({
@@ -124,7 +125,8 @@ import { IndexationComponent }                        from './indexation/indexat
         FolderMenuComponent,
         FolderUpdateComponent,
         FolderActionListComponent,
-        IndexationComponent
+        IndexationComponent,
+        AddPrivateIndexingModelModalComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,
@@ -148,7 +150,8 @@ import { IndexationComponent }                        from './indexation/indexat
         RedirectActionComponent,
         SendShippingActionComponent,
         ViewDocActionComponent,
-        FolderUpdateComponent
+        FolderUpdateComponent,
+        AddPrivateIndexingModelModalComponent
     ],
     providers: [ HeaderService, FiltersListService ],
     bootstrap: [ AppComponent ]

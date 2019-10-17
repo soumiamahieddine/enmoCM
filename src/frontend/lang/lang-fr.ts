@@ -1191,4 +1191,8 @@ export const LANG_FR = {
     "file" : "Fichier",
     "downloadConvertedFile" : "Reception de la conversion",
     "linkNewAction" : "Associer une nouvelle action",
+    "addPrivateIndexingModelMsg" : "Ce modèle sera <b>privé</b> et prendra comme base le modèle",
+    "addPrivateIndexingModelMsg2" : "avec les valeurs renseignées <b>actuellement</b>.",
+    "privateIndexingModelCreation" : "Création d'un modèle d'enregistrement privé",
+    "createPrivateIndexingModel" : "Créer un modèle avec les données actuelles",
 };

@@ -1154,4 +1154,8 @@ export const LANG_EN = {
     "file" : "File",
     "DownloadConvertedFile" : "Download converted file",
     "linkNewAction" : "Link new action",
+    "addPrivateIndexingModelMsg" : "This model will be <b>private</b> and will keep as model",
+    "addPrivateIndexingModelMsg2" : "with <b>current</b> values.",
+    "privateIndexingModelCreation" : "Private indexing model creation",
+    "createPrivateIndexingModel" : "Create an indexing model with current datas",
 };

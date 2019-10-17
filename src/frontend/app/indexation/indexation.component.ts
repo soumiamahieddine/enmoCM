@@ -16,6 +16,7 @@ import { tap, finalize, catchError, map, filter, exhaustMap } from 'rxjs/operato
 import { of } from 'rxjs';
 import { DocumentViewerComponent } from '../viewer/document-viewer.component';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
+import { AddPrivateIndexingModelModalComponent } from './private-indexing-model/add-private-indexing-model-modal.component';
 
 @Component({
     templateUrl: "indexation.component.html",
@@ -155,19 +156,22 @@ export class IndexationComponent implements OnInit {
 
         const privateIndexingModel = {
             category: this.indexingForm.getCategory(),
-            label: this.currentIndexingModel.label + '_' + Math.floor(Math.random() * Math.floor(9999)),
+            label: '',
             owner: this.headerService.user.id,
             private: true,
             fields: fields,
             master: this.currentIndexingModel.master !== null ? this.currentIndexingModel.master : this.currentIndexingModel.id
         }
 
-        this.http.post("../../rest/indexingModels", privateIndexingModel).pipe(
-            tap((data: any) => {
+        const masterIndexingModel = this.indexingModels.filter((indexingModel) => indexingModel.id === privateIndexingModel.master)[0];
+        this.dialogRef = this.dialog.open(AddPrivateIndexingModelModalComponent, { autoFocus: true, disableClose: true, data: { indexingModel: privateIndexingModel, masterIndexingModel : masterIndexingModel } });
 
-                this.notify.success(this.lang.indexingModelAdded);
+        this.dialogRef.afterClosed().pipe(
+            filter((data: any) => data !== undefined),
+            tap((data) => {
+                this.indexingModels.push(data.indexingModel);
+                this.currentIndexingModel = this.indexingModels.filter(indexingModel => indexingModel.id === data.indexingModel.id)[0];
             }),
-            finalize(() => this.loading = false),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
@@ -175,13 +179,14 @@ export class IndexationComponent implements OnInit {
         ).subscribe();
     }
 
-    deletePrivateIndexingModel(id: number) {
+    deletePrivateIndexingModel(id: number, index: number) {
         this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             exhaustMap(() => this.http.delete(`../../rest/indexingModels/${id}`)),
             tap(() => {
+                this.indexingModels.splice(index, 1);
                 this.notify.success(this.lang.indexingModelDeleted);
             }),
             catchError((err: any) => {

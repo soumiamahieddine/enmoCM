@@ -1180,4 +1180,8 @@ export const LANG_NL = {
     "file" : "File", //_TO_TRANSLATE
     "DownloadConvertedFile" : "Download converted file", //_TO_TRANSLATE
     "linkNewAction" : "Link new action", //_TO_TRANSLATE
+    "addPrivateIndexingModelMsg" : "This model will be <b>private</b> and will keep as model", //_TO_TRANSLATE
+    "addPrivateIndexingModelMsg2" : "with <b>actual</b> values.", //_TO_TRANSLATE
+    "privateIndexingModelCreation" : "Private indexing model creation", //_TO_TRANSLATE
+    "createPrivateIndexingModel" : "Create an indexing model with current datas", //_TO_TRANSLATE
 };
