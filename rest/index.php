@@ -203,6 +203,10 @@ $app->delete('/folders/{id}/resources', \Folder\controllers\FolderController::cl
 $app->get('/folders/{id}/resources/{resId}/baskets', \Folder\controllers\FolderController::class . ':getBasketsFromFolder');
 $app->get('/folders/{id}/filters', \Folder\controllers\FolderController::class . ':getFilters');
 $app->put('/folders/{id}/sharing', \Folder\controllers\FolderController::class . ':sharing');
+$app->get('/pinnedFolders', \Folder\controllers\FolderController::class . ':getPinnedFolders');
+$app->put('/folders/{id}/pin', \Folder\controllers\FolderController::class . ':pinFolder');
+$app->delete('/folders/{id}/unpin', \Folder\controllers\FolderController::class . ':unpinFolder');
+
 
 //Groups
 $app->get('/groups', \Group\controllers\GroupController::class . ':get');
