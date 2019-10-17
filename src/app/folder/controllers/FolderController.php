@@ -687,7 +687,7 @@ class FolderController
     public function pinFolder(Request $request, Response $response, array $args)
     {
         if (!Validator::numeric()->notEmpty()->validate($args['id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+            return $response->withStatus(400)->withJson(['errors' => 'Route id not found or is not an integer']);
         }
 
         $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $args['id']]);
@@ -713,7 +713,7 @@ class FolderController
         return $response->withStatus(204);
     }
 
-    public function getPinnedFolders(Request $request, Response $response, array $args)
+    public function getPinnedFolders(Request $request, Response $response)
     {
         $folders = UserPinnedFolderModel::getById(['user_id' => $GLOBALS['id']]);
 
@@ -750,7 +750,7 @@ class FolderController
     public function unpinFolder(Request $request, Response $response, array $args)
     {
         if (!Validator::numeric()->notEmpty()->validate($args['id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+            return $response->withStatus(400)->withJson(['errors' => 'Route id not found or is not an integer']);
         }
 
         $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $args['id']]);

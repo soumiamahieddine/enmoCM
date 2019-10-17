@@ -143,6 +143,111 @@ class FolderControllerTest extends TestCase
         }
     }
 
+    public function testPinFolder() {
+        $folderController = new \Folder\controllers\FolderController();
+
+        //  UPDATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $args = [
+            'id' => self::$id
+        ];
+
+        $response     = $folderController->pinFolder($request, new \Slim\Http\Response(), $args);
+
+        $this->assertSame(204, $response->getStatusCode());
+
+        // ERROR
+
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+        $response     = $folderController->pinFolder($fullRequest, new \Slim\Http\Response(), $args);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('Folder is already pinned', $responseBody->errors);
+
+
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+        $response     = $folderController->pinFolder($fullRequest, new \Slim\Http\Response(), ['id' => self::$id + 100]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('Folder not found or out of your perimeter', $responseBody->errors);
+
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+        $response     = $folderController->pinFolder($fullRequest, new \Slim\Http\Response(), ['id' => 'test']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('Route id not found or is not an integer', $responseBody->errors);
+    }
+
+    public function testGetPinned()
+    {
+        $folderController = new \Folder\controllers\FolderController();
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response     = $folderController->getPinnedFolders($request, new \Slim\Http\Response());
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertNotEmpty($responseBody->folders);
+
+        foreach ($responseBody->folders as $value) {
+            $this->assertNotEmpty($value->name);
+            $this->assertNotEmpty($value->id);
+            $this->assertInternalType("integer", $value->id);
+            $this->assertNotEmpty($value->label);
+            $this->assertInternalType("boolean", $value->public);
+            $this->assertInternalType("integer", $value->user_id);
+            if (!empty($value->parent_id)) {
+                $this->assertInternalType("integer", $value->parent_id);
+            }
+            $this->assertInternalType("integer", $value->level);
+            $this->assertInternalType("integer", $value->countResources);
+        }
+    }
+
+    public function testUnpinFolder() {
+        $folderController = new \Folder\controllers\FolderController();
+
+        //  UPDATE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $args = [
+            'id' => self::$id
+        ];
+
+        $response     = $folderController->unpinFolder($request, new \Slim\Http\Response(), $args);
+
+        $this->assertSame(204, $response->getStatusCode());
+
+        // ERROR
+
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+        $response     = $folderController->unpinFolder($fullRequest, new \Slim\Http\Response(), $args);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('Folder is not pinned', $responseBody->errors);
+
+
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+        $response     = $folderController->unpinFolder($fullRequest, new \Slim\Http\Response(), ['id' => self::$id + 100]);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('Folder not found or out of your perimeter', $responseBody->errors);
+
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+        $response     = $folderController->unpinFolder($fullRequest, new \Slim\Http\Response(), ['id' => 'test']);
+        $responseBody = json_decode((string)$response->getBody());
+
+        $this->assertSame(400, $response->getStatusCode());
+        $this->assertSame('Route id not found or is not an integer', $responseBody->errors);
+    }
+
     public function testDelete()
     {
         $folderController = new \Folder\controllers\FolderController();
