@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>{{lang.privateIndexingModelCreation}}</h1>
+<form #submitForm="ngForm" (ngSubmit)="onSubmit()">
+    <mat-dialog-content>
+        <div class="alert-message alert-message-info" role="alert" style="margin-top: 30px;"
+            [innerHTML]="lang.addPrivateIndexingModelMsg +' <b>'+data.masterIndexingModel.label+'</b> ' + lang.addPrivateIndexingModelMsg2"></div>
+        <mat-form-field appearance="outline">
+            <mat-label>{{lang.label}}</mat-label>
+            <input matInput name="label" placeholder="{{lang.label}}" [(ngModel)]="data.indexingModel.label" required>
+        </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!submitForm.form.valid">{{lang.validate}}</button>
+        <button mat-raised-button color="default" type="button" (click)="dialogRef.close()">{{lang.cancel}}</button>
+    </mat-dialog-actions>
+</form>
