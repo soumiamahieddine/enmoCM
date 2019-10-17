@@ -341,7 +341,6 @@ abstract class avis_controler_Abstract
         $stepDetails['listinstance_id'] = $res->listinstance_id;
         $stepDetails['coll_id'] = $res->coll_id;
         $stepDetails['res_id'] = $res->res_id;
-        $stepDetails['listinstance_type'] = $res->listinstance_type;
         $stepDetails['sequence'] = $res->sequence;
         $stepDetails['item_id'] = $res->item_id;
         $stepDetails['item_type'] = $res->item_type;

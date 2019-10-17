@@ -159,7 +159,7 @@ export const LANG_EN = {
     "chronoNumber"                          : "Chrono number",
     "chronoNumberShort"                     : "Chrono Num",
     "city"                                  : "City",
-    "classement"                            : "RANKING",
+    "classifying"                           : "Classifying",
     "clause"                                : "Clause",
     "clickOn"                               : "Click on",
     "close"                                 : "Close",

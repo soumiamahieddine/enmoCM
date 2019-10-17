@@ -426,15 +426,12 @@ CREATE SEQUENCE listinstance_id_seq
 CREATE TABLE listinstance
 (
   listinstance_id BIGINT NOT NULL DEFAULT nextval('listinstance_id_seq'::regclass),
-  coll_id character varying(50) NOT NULL,
   res_id bigint NOT NULL,
-  listinstance_type character varying(50) DEFAULT 'DOC'::character varying,
   "sequence" bigint NOT NULL,
   item_id character varying(128) NOT NULL,
   item_type character varying(255) NOT NULL,
   item_mode character varying(50) NOT NULL,
   added_by_user character varying(128) NOT NULL,
-  visible character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
   viewed bigint,
   difflist_type character varying(50),
   process_date timestamp without time zone,

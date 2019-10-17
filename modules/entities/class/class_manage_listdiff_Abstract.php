@@ -489,10 +489,10 @@ abstract class diffusion_list_Abstract extends functions
                 if ($processDate != '') {
                     $stmt = $db->query(
                         'insert into '.ENT_LISTINSTANCE
-                            .' (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_comment, process_date, signatory, requested_signature) '
+                            .' (coll_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_comment, process_date, signatory, requested_signature) '
                         .'values ('
                             .'?, ?, '
-                            ."'DOC', ?, "
+                            ."?, "
                             .'?, '
                             ."'user_id' , "
                             .'?, '

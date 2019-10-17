@@ -58,7 +58,7 @@ class ResControllerTest extends TestCase
         $this->assertSame(102, $res['type_id']);
         $this->assertSame('txt', $res['format']);
         $this->assertSame('NEW', $res['status']);
-        $this->assertSame('LLane', $res['typist']);
+        $this->assertSame(19, $res['typist']);
         $this->assertSame(null, $res['destination']);
 
         $GLOBALS['userId'] = 'superadmin';

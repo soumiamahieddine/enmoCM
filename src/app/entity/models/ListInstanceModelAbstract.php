@@ -67,15 +67,12 @@ abstract class ListInstanceModelAbstract
         DatabaseModel::insert([
             'table'         => 'listinstance',
             'columnsValues' => [
-                'coll_id'                   => 'letterbox_coll',
                 'res_id'                    => $args['res_id'],
-                'listinstance_type'         => 'DOC',
                 'sequence'                  => $args['sequence'],
                 'item_id'                   => $args['item_id'],
                 'item_type'                 => $args['item_type'],
                 'item_mode'                 => $args['item_mode'],
                 'added_by_user'             => $args['added_by_user'],
-                'visible'                   => 'Y',
                 'viewed'                    => $args['viewed'],
                 'difflist_type'             => $args['difflist_type'],
                 'process_date'              => $args['process_date'],

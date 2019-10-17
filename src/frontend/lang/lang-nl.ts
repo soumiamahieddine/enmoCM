@@ -160,7 +160,7 @@ export const LANG_NL = {
     "chronoNumber"                          : "Chrononummer",
     "chronoNumberShort"                     : "Chrono Num", //_TO_TRANSLATE
     "city"                                  : "Gemeente",
-    "classement"                            : "STANDEN",
+    "classifying"                           : "STANDEN",
     "clause"                                : "Clausule",
     "clauseGroup"                           : "Documentaire perimeter",
     "clickOn"                               : "Klik op",

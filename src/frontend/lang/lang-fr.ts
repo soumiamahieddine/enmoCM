@@ -167,7 +167,7 @@ export const LANG_FR = {
     "chronoNumber"                          : "Numéro chrono",
     "chronoNumberShort"                     : "N° Chrono",
     "city"                                  : "Ville",
-    "classement"                            : "CLASSEMENT",
+    "classifying"                           : "CLASSEMENT",
     "clause"                                : "Clause",
     "clauseGroup"                           : "Périmètre documentaire",
     "clickOn"                               : "Cliquez sur",

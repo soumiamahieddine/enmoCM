@@ -44,7 +44,7 @@
                             <br />{{modService.name}}</button>
                     </div>
                     <div class="col-md-6 adminArea_3" *ngIf="classementServices">
-                        <div class="adminArea-label">{{lang.classement}}</div>
+                        <div class="adminArea-label">{{lang.classifying}}</div>
                         <button class="col-md-4 col-xs-6 adminArea-button"
                             mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of classementServices"
                             (click)="goToSpecifiedAdministration(modService)">

@@ -336,10 +336,14 @@ abstract class BasketModelAbstract
 
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
 
-        $count = ResModel::getOnView([
-            'select'    => ['COUNT(1)'],
-            'where'     => [PreparedClauseController::getPreparedClause(['login' => $user['user_id'], 'clause' => $aArgs['clause']])]
-        ]);
+        try {
+            $count = ResModel::getOnView([
+                'select'    => ['COUNT(1)'],
+                'where'     => [PreparedClauseController::getPreparedClause(['login' => $user['user_id'], 'clause' => $aArgs['clause']])]
+            ]);
+        } catch (\Exception $e) {
+            return 0;
+        }
 
         if (empty($count[0]['count'])) {
             return 0;

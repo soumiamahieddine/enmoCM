@@ -558,8 +558,7 @@ class DoctypeControllerTest extends TestCase
             'format'        => 'txt',
             'type_id'       => $doctypeId,
             'category_id'   => 'incoming',
-            'subject'       => 'subject value test U',
-            'typist'        => 'LLane'
+            'subject'       => 'subject value test U'
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);

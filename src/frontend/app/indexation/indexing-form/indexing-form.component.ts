@@ -32,7 +32,7 @@ export class IndexingFormComponent implements OnInit {
 
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
 
-    fieldCategories: any[] = ['mail', 'contact', 'process', 'classement'];
+    fieldCategories: any[] = ['mail', 'contact', 'process', 'classifying'];
 
     indexingModelsCore: any[] = [
         {
@@ -127,14 +127,14 @@ export class IndexingFormComponent implements OnInit {
             values: []
         },
         {
-            identifier: 'folder',
-            label: this.lang.folder,
+            identifier: 'folders',
+            label: this.lang.folders,
             type: 'autocomplete',
             default_value: '',
             values: ['/rest/autocomplete/folders', '/rest/folders']
         },
         {
-            identifier: 'docDate',
+            identifier: 'documentDate',
             label: this.lang.docDate,
             unit: 'mail',
             type: 'date',

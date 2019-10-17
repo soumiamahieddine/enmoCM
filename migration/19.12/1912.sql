@@ -181,9 +181,6 @@ CREATE TABLE indexing_models_fields
 )
 WITH (OIDS=FALSE);
 
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS model_id;
-ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
-
 
 /* TAGS */
 DO $$ BEGIN
@@ -220,9 +217,6 @@ DO $$ BEGIN
   END IF;
 END$$;
 
-/* LIST INSTANCE */
-ALTER TABLE listinstance DROP COLUMN IF EXISTS added_by_entity;
-ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_entity;
 
 /* NOTES */
 DO $$ BEGIN
@@ -239,6 +233,8 @@ END$$;
 
 
 /* RES_LETTERBOX */
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS model_id;
+ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
 DO $$ BEGIN
     IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_letterbox' and column_name = 'typist' and data_type != 'integer') THEN
         ALTER TABLE res_letterbox ADD COLUMN typist_tmp integer;
@@ -253,7 +249,7 @@ END$$;
 
 /* MLB COLL EXT */
 DO $$ BEGIN
-    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'mlb_coll_ext') AND attname = 'category_id') THEN
+    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'category_id') = 0 THEN
         ALTER TABLE res_letterbox ADD COLUMN category_id character varying(32);
         UPDATE res_letterbox SET category_id = mlb_coll_ext.category_id FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
         UPDATE res_letterbox set category_id = 'incoming' WHERE category_id IS NULL;
@@ -364,6 +360,7 @@ DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_outside_proce
 DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
 
+
 /* REFACTORING MODIFICATION */
 ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
 ALTER TABLE tags ALTER COLUMN label TYPE character varying(128);
@@ -423,6 +420,12 @@ ALTER TABLE res_letterbox DROP COLUMN IF EXISTS offset_doc;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS is_multi_docservers;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tablename;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS validation_date;
+ALTER TABLE listinstance DROP COLUMN IF EXISTS added_by_entity;
+ALTER TABLE listinstance DROP COLUMN IF EXISTS coll_id;
+ALTER TABLE listinstance DROP COLUMN IF EXISTS listinstance_type;
+ALTER TABLE listinstance DROP COLUMN IF EXISTS visible;
+ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_entity;
+
 
 
 /* RE CREATE VIEWS */
