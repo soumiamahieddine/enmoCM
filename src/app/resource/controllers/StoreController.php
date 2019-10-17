@@ -152,7 +152,9 @@ class StoreController
         ValidatorModel::stringType($args, ['docserver_id', 'filename', 'format', 'path', 'fingerprint', 'status']);
         ValidatorModel::intVal($args, ['filesize', 'res_id']);
 
-        $args['typist'] = $GLOBALS['id'];
+        if (empty($args['typist'])) {
+            $args['typist'] = $GLOBALS['id'];
+        }
 
         unset($args['alt_identifier']);
         if (!empty($args['chrono'])) {

@@ -23,9 +23,10 @@ use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
-use Docserver\models\ResDocserverModel;
 use Entity\models\ListInstanceModel;
+use Folder\controllers\FolderController;
 use Folder\models\FolderModel;
+use Folder\models\ResourceFolderModel;
 use Group\controllers\GroupController;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
@@ -39,6 +40,8 @@ use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
+use Tag\models\TagModel;
+use Tag\models\TagResModel;
 use User\models\UserModel;
 
 class ResController
@@ -81,9 +84,48 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => "Format with this mimeType is not allowed : {$body['format']} {$mimeType}"]);
         }
 
+        if (!empty($body['diffusion'])) {
+            if (!Validator::arrayType()->notEmpty()->validate($body['diffusion'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body diffusion is not an array']);
+            }
+            //TODO control
+        }
+        if (!empty($body['folders'])) {
+            if (!Validator::arrayType()->notEmpty()->validate($body['folders'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body folders is not an array']);
+            }
+            if (!FolderController::hasFolders(['folders' => $body['folders'], 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(400)->withJson(['errors' => "Body folders : One or more folders do not exist or are out of perimeter"]);
+            }
+        }
+        if (!empty($body['tags'])) {
+            if (!Validator::arrayType()->notEmpty()->validate($body['tags'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body tags is not an array']);
+            }
+            $tags = TagModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['tags']]]);
+            if (count($body['tags']) != $tags[0]['count']) {
+                return $response->withStatus(400)->withJson(['errors' => "Body tags : One or more tags do not exist"]);
+            }
+        }
+
+        $folders = $body['folders'] ?? [];
+        $tags = $body['tags'] ?? [];
+        unset($body['folders'], $body['tags']);
+
         $resId = StoreController::storeResource($body);
         if (empty($resId) || !empty($resId['errors'])) {
             return $response->withStatus(500)->withJson(['errors' => '[ResController create] ' . $resId['errors']]);
+        }
+
+        if (!empty($folders)) {
+            foreach ($folders as $folder) {
+                ResourceFolderModel::create(['res_id' => $resId, 'folder_id' => $folder]);
+            }
+        }
+        if (!empty($tags)) {
+            foreach ($tags as $tag) {
+                TagResModel::create(['res_id' => $resId, 'tag_id' => $tag]);
+            }
         }
 
         ConvertPdfController::convert([

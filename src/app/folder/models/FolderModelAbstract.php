@@ -18,7 +18,6 @@ class FolderModelAbstract
 {
     public static function get(array $aArgs)
     {
-
         $folders = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['folders'],

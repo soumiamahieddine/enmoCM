@@ -404,7 +404,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
-        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+        if (!FolderController::hasFolders(['folders' => [$args['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
         }
 
@@ -500,7 +500,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
         }
 
-        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+        if (!FolderController::hasFolders(['folders' => [$args['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
         }
 
@@ -538,7 +538,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
-        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+        if (!FolderController::hasFolders(['folders' => [$args['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
         }
 
@@ -581,7 +581,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
-        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+        if (!FolderController::hasFolders(['folders' => [$args['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Folder out of perimeter']);
         }
 
@@ -624,7 +624,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
-        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+        if (!FolderController::hasFolders(['folders' => [$args['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
         }
 
@@ -683,11 +683,11 @@ class FolderController
         return $folders;
     }
 
-    private static function hasFolder(array $args)
+    public static function hasFolders(array $args)
     {
-        ValidatorModel::notEmpty($args, ['id', 'userId']);
-        ValidatorModel::intVal($args, ['id', 'userId']);
-
+        ValidatorModel::notEmpty($args, ['folders', 'userId']);
+        ValidatorModel::arrayType($args, ['folders']);
+        ValidatorModel::intVal($args, ['userId']);
 
         $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
 
@@ -699,12 +699,12 @@ class FolderController
         }
 
         $folders = FolderModel::getWithEntities([
-            'select'   => [1],
-            'where'    => ['folders.id = ?', '(user_id = ? OR entity_id in (?))'],
-            'data'     => [$args['id'], $args['userId'], $entities]
+            'select'   => ['count(1)'],
+            'where'    => ['folders.id in (?)', '(user_id = ? OR entity_id in (?))'],
+            'data'     => [$args['folders'], $args['userId'], $entities]
         ]);
 
-        if (empty($folders)) {
+        if ($folders[0]['count'] != count($args['folders'])) {
             return false;
         }
 

@@ -35,7 +35,7 @@ class ResControllerTest extends TestCase
             'type_id'       => 102,
             'category_id'   => 'incoming',
             'subject'       => 'Breaking News : Superman is alive - PHP unit',
-            'typist'        => 'LLane',
+            'typist'        => 19,
             'dest_user'     => 'bbain',
             'priority'      => 'poiuytre1357nbvc',
         ];
@@ -81,7 +81,7 @@ class ResControllerTest extends TestCase
         $response     = $resController->getFileContent($request, new \Slim\Http\Response(), ['resId' => -2]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('Document does not exist', $responseBody->errors);
+        $this->assertSame('Document out of perimeter', $responseBody->errors);
     }
 
     public function testGetThumbnailContent()
@@ -365,7 +365,7 @@ class ResControllerTest extends TestCase
                 'type_id'       => $value[0],
                 'category_id'   => 'incoming',
                 'subject'       => $key . ' Breaking News : 12345 Superman is alive - PHP unit',
-                'typist'        => 'LLane',
+                'typist'        => 19,
                 'dest_user'     => 'bbain',
                 'priority'      => $value[1],
                 'destination'   => 'PJS'

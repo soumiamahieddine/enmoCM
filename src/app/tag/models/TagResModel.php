@@ -1,8 +1,18 @@
 <?php
 
+/**
+ * Copyright Maarch since 2008 under licence GPLv3.
+ * See LICENCE.txt file at the root folder for more details.
+ * This file is part of Maarch software.
+ *
+ */
+
+/**
+ * @brief Tag Res Model
+ * @author dev@maarch.org
+ */
 
 namespace Tag\models;
-
 
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
@@ -25,6 +35,22 @@ class TagResModel
         ]);
 
         return $tags;
+    }
+
+    public static function create(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['res_id', 'tag_id']);
+        ValidatorModel::intVal($args, ['res_id', 'tag_id']);
+
+        DatabaseModel::insert([
+            'table'         => 'tag_res',
+            'columnsValues' => [
+                'res_id'    => $args['res_id'],
+                'tag_id'    => $args['tag_id']
+            ]
+        ]);
+
+        return true;
     }
 
     public static function update(array $args)

@@ -76,7 +76,7 @@ class HistoryControllerTest extends TestCase
             'select'    => ['res_id'],
             'table'     => ['res_letterbox'],
             'where'     => ['subject like ?','typist = ?', 'dest_user = ?'],
-            'data'      => ['%Superman is alive - PHP unit', 'LLane', 'bbain'],
+            'data'      => ['%Superman is alive - PHP unit', 19, 'bbain'],
             'order_by'  => ['res_id DESC']
         ]);
 
