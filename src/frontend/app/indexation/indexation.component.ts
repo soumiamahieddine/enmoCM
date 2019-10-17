@@ -127,12 +127,20 @@ export class IndexationComponent implements OnInit {
     onSubmit() {
         if (this.indexingForm.isValidForm()) {
             alert(this.selectedAction.component + '() déclenchée');
-            console.log(this.indexingForm.getDatas());
+            this.formatDatas(this.indexingForm.getDatas());
             console.log(this.appDocumentViewer.getFile());
         } else {
             alert('Veuillez corriger les erreurs.');
         }
+    }
 
+    formatDatas(datas: any) {
+        let formatData: any = {};
+        datas.forEach((element: any) => {
+            formatData[element.identifier] = element.default_value;
+        });
+
+        console.log(formatData);
     }
 
     loadIndexingModel(indexingModel: any) {

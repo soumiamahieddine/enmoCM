@@ -260,6 +260,12 @@ export class IndexingFormComponent implements OnInit {
             } else {
                 element.default_value = this.arrFormControl[element.identifier].value;
             }
+            if (element.identifier === "destination") {
+                arrIndexingModels.push({
+                    identifier : 'diffusionList',
+                    default_value : this.arrFormControl['diffusionList'].value
+                });
+            }
         });
         return arrIndexingModels;
     }
