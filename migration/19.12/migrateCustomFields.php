@@ -14,8 +14,6 @@ foreach ($customs as $custom) {
     \SrcCore\models\DatabasePDO::reset();
     new \SrcCore\models\DatabasePDO(['customId' => $custom]);
 
-    \CustomField\models\CustomFieldModel::delete(['where' => ['1=1']]);
-
     $migrated = 0;
     $path = "custom/{$custom}/apps/maarch_entreprise/xml/index_letterbox.xml";
     if (file_exists($path)) {
@@ -68,11 +66,32 @@ foreach ($customs as $custom) {
                     }
                 }
 
-                \CustomField\models\CustomFieldModel::create([
+                $fieldId = \CustomField\models\CustomFieldModel::create([
                     'label'     => $label,
                     'type'      => $type,
                     'values'    => empty($values) ? null : json_encode($values)
                 ]);
+
+                $column = (string)$value->column;
+                $resources = \Resource\models\ResModel::get([
+                    'select'    => ['res_id', $column],
+                    'where'     => [$column . ' is not null'],
+                ]);
+
+                foreach ($resources as $resource) {
+                    $valueColumn = $resource[$column];
+                    $resId = $resource['res_id'];
+
+                    \SrcCore\models\DatabaseModel::insert([
+                        'table'         => 'resources_custom_fields',
+                        'columnsValues' => [
+                            'res_id'            => $resId,
+                            'custom_field_id'   => $fieldId,
+                            'value'             => json_encode($valueColumn)
+                        ]
+                    ]);
+                }
+
                 $migrated++;
             }
         }
