@@ -204,7 +204,7 @@ $app->get('/folders/{id}/resources/{resId}/baskets', \Folder\controllers\FolderC
 $app->get('/folders/{id}/filters', \Folder\controllers\FolderController::class . ':getFilters');
 $app->put('/folders/{id}/sharing', \Folder\controllers\FolderController::class . ':sharing');
 $app->get('/pinnedFolders', \Folder\controllers\FolderController::class . ':getPinnedFolders');
-$app->put('/folders/{id}/pin', \Folder\controllers\FolderController::class . ':pinFolder');
+$app->post('/folders/{id}/pin', \Folder\controllers\FolderController::class . ':pinFolder');
 $app->delete('/folders/{id}/unpin', \Folder\controllers\FolderController::class . ':unpinFolder');
 
 
