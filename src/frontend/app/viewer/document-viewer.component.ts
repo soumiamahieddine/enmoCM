@@ -218,12 +218,12 @@ export class DocumentViewerComponent implements OnInit {
             switch (event.type) {
                 case HttpEventType.DownloadProgress:
 
-                    this.loadingInfo.mode = 'indeterminate';
-
-                    const kbLoaded = Math.round(event.loaded / 125);
-                    this.loadingInfo.message = `${this.lang.downloadConvertedFile}... ${kbLoaded} Ko`;
+                    const downloadProgress = Math.round(100 * event.loaded / event.total);
+                    this.loadingInfo.percent = downloadProgress;
+                    this.loadingInfo.mode = 'determinate';
+                    this.loadingInfo.message = `3/3 ${this.lang.downloadConvertedFile}...`;
                     
-                    return { status: 'progress', message: '' };
+                    return { status: 'progress', message: downloadProgress };
 
                 case HttpEventType.UploadProgress:
                     const progress = Math.round(100 * event.loaded / event.total);
@@ -231,10 +231,10 @@ export class DocumentViewerComponent implements OnInit {
 
                     if (progress === 100) {
                         this.loadingInfo.mode = 'indeterminate';
-                        this.loadingInfo.message = `${this.lang.convertingFile}...`;
+                        this.loadingInfo.message = `2/3 ${this.lang.convertingFile}...`;
                     } else {
                         this.loadingInfo.mode = 'determinate';
-                        this.loadingInfo.message = `${this.lang.loadingFile}...`;
+                        this.loadingInfo.message = `1/3 ${this.lang.loadingFile}...`;
                     }
                     return { status: 'progress', message: progress };
 

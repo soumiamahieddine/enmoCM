@@ -26,7 +26,7 @@ if (file_exists("custom/{$customId}/src/core/lang/lang-{$language}.php")) {
 require_once("src/core/lang/lang-{$language}.php");
 
 
-$app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRouteBeforeAppMiddleware' => true, 'addContentLengthHeader' => false ]]);
+$app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRouteBeforeAppMiddleware' => true, 'addContentLengthHeader' => true ]]);
 
 //Authentication
 $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
