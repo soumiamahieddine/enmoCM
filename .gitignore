@@ -9,4 +9,3 @@ modules/visa/xml/remoteSignatoryBooks.xml
 dist/
 node_modules/
 package-lock.json
-custom/**/*.xml
