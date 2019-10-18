@@ -1189,7 +1189,7 @@ export const LANG_FR = {
     "loaded" : "chargé",
     "noAvailablePreview" : "Pas de visualisation disponible",
     "file" : "Fichier",
-    "downloadConvertedFile" : "Reception de la conversion",
+    "downloadConvertedFile" : "Réception de la conversion",
     "linkNewAction" : "Associer une nouvelle action",
     "addPrivateIndexingModelMsg" : "Ce modèle sera <b>privé</b> et prendra comme base le modèle",
     "addPrivateIndexingModelMsg2" : "avec les valeurs renseignées <b>actuellement</b>.",
