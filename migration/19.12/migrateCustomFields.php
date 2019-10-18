@@ -48,7 +48,6 @@ foreach ($customs as $custom) {
                     }
                 }
                 if (!empty($value->table) && !empty($value->table->table_name) && !empty($value->table->foreign_label)) {
-
                     $tableName    = (string)$value->table->table_name;
                     $foreignLabel = (string)$value->table->foreign_label;
                     $whereClause  = (string)$value->table->where_clause;
@@ -69,7 +68,7 @@ foreach ($customs as $custom) {
                 $fieldId = \CustomField\models\CustomFieldModel::create([
                     'label'     => $label,
                     'type'      => $type,
-                    'values'    => empty($values) ? null : json_encode($values)
+                    'values'    => empty($values) ? '[]' : json_encode($values)
                 ]);
 
                 $column = (string)$value->column;
