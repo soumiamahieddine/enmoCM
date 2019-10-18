@@ -1,5 +1,5 @@
 <mat-list *ngIf="!loading">
-    <plugin-autocomplete *ngIf="injectDatas.editable" [labelPlaceholder]="lang.addPerson" [routeDatas]="['/rest/autocomplete/maarchParapheurUsers']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addItem($event)"></plugin-autocomplete>
+    <plugin-autocomplete *ngIf="injectDatas.editable" [labelPlaceholder]="lang.addPerson" [routeDatas]="['/rest/autocomplete/maarchParapheurUsers']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addItem($event)" appearance="outline"></plugin-autocomplete>
     <div cdkDropList #dataAvailableList="cdkDropList" [cdkDropListData]="visaWorkflow.items" class="cdk-list"
         (cdkDropListDropped)="drop($event)" [cdkDropListDisabled]="!injectDatas.editable">
         <div class="emptyContent" *ngIf="visaWorkflow.items.length === 0">

@@ -426,16 +426,12 @@ CREATE SEQUENCE listinstance_id_seq
 CREATE TABLE listinstance
 (
   listinstance_id BIGINT NOT NULL DEFAULT nextval('listinstance_id_seq'::regclass),
-  coll_id character varying(50) NOT NULL,
   res_id bigint NOT NULL,
-  listinstance_type character varying(50) DEFAULT 'DOC'::character varying,
   "sequence" bigint NOT NULL,
   item_id character varying(128) NOT NULL,
   item_type character varying(255) NOT NULL,
   item_mode character varying(50) NOT NULL,
   added_by_user character varying(128) NOT NULL,
-  added_by_entity character varying(50) NOT NULL,
-  visible character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
   viewed bigint,
   difflist_type character varying(50),
   process_date timestamp without time zone,
@@ -555,6 +551,16 @@ CREATE TABLE entities_folders
   edition boolean NOT NULL,
   CONSTRAINT entities_folders_pkey PRIMARY KEY (id),
   CONSTRAINT entities_folders_unique_key UNIQUE (folder_id, entity_id)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE users_pinned_folders
+(
+  id serial NOT NULL,
+  folder_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  CONSTRAINT users_pinned_folders_pkey PRIMARY KEY (id),
+  CONSTRAINT users_pinned_folders_unique_key UNIQUE (folder_id, user_id)
 )
 WITH (OIDS=FALSE);
 
@@ -1095,23 +1101,16 @@ CREATE SEQUENCE res_id_mlb_seq
 CREATE TABLE res_letterbox
 (
   res_id bigint NOT NULL DEFAULT nextval('res_id_mlb_seq'::regclass),
-  title character varying(255) DEFAULT NULL::character varying,
   subject text,
-  description text,
   type_id bigint NOT NULL,
   format character varying(50) NOT NULL,
-  typist character varying(128) NOT NULL,
+  typist INTEGER NOT NULL,
   creation_date timestamp without time zone NOT NULL,
   modification_date timestamp without time zone DEFAULT NOW(),
-  author character varying(255) DEFAULT NULL::character varying,
-  identifier character varying(255) DEFAULT NULL::character varying,
-  source character varying(255) DEFAULT NULL::character varying,
-  relation bigint,
   doc_date timestamp without time zone,
   docserver_id character varying(32) NOT NULL,
   path character varying(255) DEFAULT NULL::character varying,
   filename character varying(255) DEFAULT NULL::character varying,
-  offset_doc character varying(255) DEFAULT NULL::character varying,
   fingerprint character varying(255) DEFAULT NULL::character varying,
   filesize bigint,
   scan_date timestamp without time zone,
@@ -1122,13 +1121,11 @@ CREATE TABLE res_letterbox
   scan_postmark character varying(50) DEFAULT NULL::character varying,
   status character varying(10) NOT NULL,
   destination character varying(50) DEFAULT NULL::character varying,
-  validation_date timestamp without time zone,
   work_batch bigint,
   origin character varying(50) DEFAULT NULL::character varying,
   priority character varying(16),
   policy_id character varying(32) DEFAULT NULL::character varying,
   cycle_id character varying(32) DEFAULT NULL::character varying,
-  is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
   custom_t1 text,
   custom_n1 bigint,
   custom_f1 numeric,
@@ -1165,7 +1162,6 @@ CREATE TABLE res_letterbox
   custom_t14 character varying(255) DEFAULT NULL::character varying,
   custom_t15 character varying(255) DEFAULT NULL::character varying,
   reference_number character varying(255) DEFAULT NULL::character varying,
-  tablename character varying(32) DEFAULT 'res_letterbox'::character varying,
   initiator character varying(50) DEFAULT NULL::character varying,
   dest_user character varying(128) DEFAULT NULL::character varying,
   locker_user_id INTEGER DEFAULT NULL,
@@ -1315,7 +1311,6 @@ item_id character varying(128) NOT NULL,
 item_type character varying(255) NOT NULL,
 item_mode character varying(50) NOT NULL,
 added_by_user character varying(128) NOT NULL,
-added_by_entity character varying(50) NOT NULL,
 visible character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
 viewed bigint,
 difflist_type character varying(50),
@@ -1357,9 +1352,7 @@ WITH (OIDS=FALSE);
 --VIEWS
 -- view for letterbox
 CREATE OR REPLACE VIEW res_view_letterbox AS
-SELECT r.tablename,
-       r.is_multi_docservers,
-       r.res_id,
+SELECT r.res_id,
        r.type_id,
        r.policy_id,
        r.cycle_id,
@@ -1374,12 +1367,10 @@ SELECT r.tablename,
        r.typist,
        r.creation_date,
        r.modification_date,
-       r.relation,
        r.docserver_id,
        r.path,
        r.filename,
        r.fingerprint,
-       r.offset_doc,
        r.filesize,
        r.scan_date,
        r.scan_user,
@@ -1390,9 +1381,6 @@ SELECT r.tablename,
        r.status,
        r.work_batch,
        r.doc_date,
-       r.description,
-       r.source,
-       r.author,
        r.reference_number,
        r.external_reference,
        r.external_id,
@@ -1457,8 +1445,6 @@ SELECT r.tablename,
        r.flag_alarm2,
        r.is_multicontacts,
        r.subject,
-       r.identifier,
-       r.title,
        r.priority,
        r.locker_user_id,
        r.locker_time,
@@ -1831,6 +1817,17 @@ CREATE TABLE custom_fields
     values jsonb,
     CONSTRAINT custom_fields_pkey PRIMARY KEY (id),
     CONSTRAINT custom_fields_unique_key UNIQUE (label)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE resources_custom_fields
+(
+    id serial NOT NULL,
+    res_id INTEGER NOT NULL,
+    custom_field_id INTEGER NOT NULL,
+    value jsonb NOT NULL,
+    CONSTRAINT resources_custom_fields_pkey PRIMARY KEY (id),
+    CONSTRAINT resources_custom_fields_unique_key UNIQUE (res_id, custom_field_id)
 )
 WITH (OIDS=FALSE);
 

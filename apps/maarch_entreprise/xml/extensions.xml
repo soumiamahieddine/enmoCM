@@ -201,6 +201,11 @@
         <canConvert>true</canConvert>
     </FORMAT>
     <FORMAT>
+        <name>EML</name>
+        <mime>text/html</mime>
+        <canConvert>true</canConvert>
+    </FORMAT>
+    <FORMAT>
         <name>MSG</name>
         <mime>application/CDFV2-corrupt</mime>
         <canConvert>false</canConvert>
@@ -283,6 +288,11 @@
     <FORMAT>
         <name>CSV</name>
         <mime>text/comma-separated-values</mime>
+        <canConvert>false</canConvert>
+    </FORMAT>
+    <FORMAT>
+        <name>CSV</name>
+        <mime>text/csv</mime>
         <canConvert>false</canConvert>
     </FORMAT>
     <FORMAT>

@@ -82,18 +82,6 @@ $db = new Database();
     $creationDate = functions::format_date_db($res->creation_date, false);
     $fingerprint = $res->fingerprint;
     $workBatch = $res->work_batch;
-    $isMultiDs = $res->is_multi_docservers;
-    if ($isMultiDs == 'Y') {
-        $adr = array();
-        $resource = new resource();
-        $whereClause = ' and 1=1';
-        $adr = $resource->getResourceAdr(
-            $table,
-            $_SESSION['doc_id'],
-            $whereClause,
-            $adrTable
-        );
-    }
     ?>
         <h2>
             <span class="date">
@@ -157,49 +145,6 @@ $db = new Database();
         <br/>
         <?php
         $docserversControler = new docservers_controler();
-        if ($isMultiDs == 'Y') {
-            for ($cptAdr = 0; $cptAdr < count($adr[0]); ++$cptAdr) {
-                $docserver = $docserversControler->get(
-                    $adr[0][$cptAdr]['docserver_id']
-                );
-                echo '<h4>'.functions::xssafe($adr[0][$cptAdr]['docserver_id'])
-                    .' ('.functions::xssafe($docserver->device_label).')</h4>'; ?>
-                <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
-                    <tr>
-                        <th align="left" class="picto">
-                            &nbsp;
-                        </th>
-                        <td align="left" width="200px"><?php echo _PATH_TEMPLATE; ?> :</td>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo str_replace('#', '/', functions::xssafe($adr[0][$cptAdr]['path'])); ?>"/></td>
-                        <th align="left" class="picto">
-                            &nbsp;
-                        </th>
-                        <td align="left" width="200px"><?php echo _FILE; ?> :</td>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['filename']); ?>" /></td>
-                    </tr>
-                    <tr>
-                        <th align="left" class="picto">
-                            &nbsp;
-                        </th>
-                        <td align="left" width="200px"><?php echo _FORMAT; ?> :</td>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['format']); ?>"/></td>
-                        <th align="left" class="picto">
-                            &nbsp;
-                        </th>
-                        <td align="left" width="200px"><?php echo _FINGERPRINT; ?> :</td>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['fingerprint']); ?>" /></td>
-                    </tr>
-                    <tr>
-                        <th align="left" class="picto">
-                            &nbsp;
-                        </th>
-                        <td align="left" width="200px"><?php echo _ADR_PRIORITY; ?> :</td>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($adr[0][$cptAdr]['adr_priority']); ?>" /></td>
-                    </tr>
-                </table>
-                <?php
-            }
-        } else {
             $docserver = $docserversControler->get($docserverId);
             echo '<h4>'.functions::xssafe($docserverId)
                     .' ('.functions::xssafe($docserver->device_label).')</h4>'; ?>
@@ -218,6 +163,5 @@ $db = new Database();
                 </tr>
             </table>
             <?php
-        }
         ?>
         <br>

@@ -313,40 +313,13 @@
         }
         $docserverAdr = array();
         $db = new Database();
-        $query = "select res_id, docserver_id, path, filename, format, fingerprint, is_multi_docservers from " . $view
+        $query = "select res_id, docserver_id, path, filename, format, fingerprint from " . $view
             . " where res_id = ? ". $whereClause;
         $stmt = $db->query($query, array($resId));
         if ($stmt->rowCount() > 0) {
             $line = $stmt->fetchObject();
             $format = $line->format;
-            if ($line->is_multi_docservers == "Y") {
-                if (
-                    $adrTable == 'adr_letterbox' ||
-                    $adrTable == 'adr_attachments' ||
-                    $adrTable == 'adr_attachments_version'
-
-                ) {
-                    if ($adrTable == 'adr_x') {
-                        $adrTable = 'adr_letterbox';
-                    }
-                    $query = "select res_id, docserver_id, path, filename, fingerprint, adr_priority from "
-                        . $adrTable . " where res_id = ? order by adr_priority";
-                    $stmt = $db->query($query, array($resId));
-                    if ($stmt->rowCount() > 0) {
-                        while ($line = $stmt->fetchObject()) {
-                            array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "adr_priority" => $line->adr_priority));
-                        }
-                    } else {
-                        $control = array("status" => "ko", "error" => _RESOURCE_NOT_FOUND);
-                        return $control;
-                    }
-                } else {
-                    $control = array("status" => "ko", "error" => _PB_WITH_ARGUMENTS . ' adrTable');
-                    return $control;
-                }
-            } else {
-                array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "adr_priority" => ""));
-            }
+            array_push($docserverAdr, array("docserver_id" => $line->docserver_id, "path" => $line->path, "filename" => $line->filename, "format" => $format, "fingerprint" => $line->fingerprint, "adr_priority" => ""));
             $control = array("status" => "ok", $docserverAdr, "error" => "");
             return $control;
         } else {

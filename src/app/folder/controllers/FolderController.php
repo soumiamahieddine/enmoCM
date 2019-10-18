@@ -21,6 +21,7 @@ use Entity\models\EntityModel;
 use Folder\models\EntityFolderModel;
 use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
+use Folder\models\UserPinnedFolderModel;
 use Group\models\GroupModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
@@ -114,7 +115,8 @@ class FolderController
         if ($folder['public']) {
             $entitiesFolder = EntityFolderModel::getByFolderId(['folder_id' => $args['id'], 'select' => ['entities_folders.entity_id', 'entities_folders.edition', 'entities.entity_label']]);
             foreach ($entitiesFolder as $value) {
-                $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition'], 'label' => $value['entity_label']];
+                $canDelete = FolderController::areChildrenInPerimeter(['folderId' => $args['id']]);
+                $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition'], 'canDelete' => $canDelete, 'label' => $value['entity_label']];
             }
         }
 
@@ -208,7 +210,7 @@ class FolderController
             $level = 0;
         } else {
             $folderParent = FolderModel::getById(['id' => $data['parent_id'], 'select' => ['folders.id', 'parent_id', 'level']]);
-            $level = $folderParent[0]['level'] + 1;
+            $level = $folderParent['level'] + 1;
         }
 
         FolderController::updateChildren($aArgs['id'], $level);
@@ -389,6 +391,9 @@ class FolderController
                 if ($child['edition'] == false or $child['edition'] == null) {
                     return false;
                 }
+                if (!FolderController::areChildrenInPerimeter(['folderId' => $child['id']])) {
+                    return false;
+                }
             }
         }
         return true;
@@ -400,7 +405,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
-        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+        if (!FolderController::hasFolders(['folders' => [$args['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
         }
 
@@ -445,7 +450,7 @@ class FolderController
                 $attachments = AttachmentModel::getOnView([
                     'select'    => ['COUNT(res_id)', 'res_id_master'],
                     'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],
-                    'data'      => [$resIds, ['DEL', 'OBS'], $excludeAttachmentTypes, 'TMP', $GLOBALS['userId'], 'TMP'],
+                    'data'      => [$resIds, ['DEL', 'OBS'], $excludeAttachmentTypes, 'TMP', $GLOBALS['id'], 'TMP'],
                     'groupBy'   => ['res_id_master']
                 ]);
 
@@ -496,7 +501,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
         }
 
-        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+        if (!FolderController::hasFolders(['folders' => [$args['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
         }
 
@@ -534,7 +539,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
-        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+        if (!FolderController::hasFolders(['folders' => [$args['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
         }
 
@@ -577,7 +582,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
-        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+        if (!FolderController::hasFolders(['folders' => [$args['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Folder out of perimeter']);
         }
 
@@ -620,7 +625,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
-        if (!FolderController::hasFolder(['id' => $args['id'], 'userId' => $GLOBALS['id']])) {
+        if (!FolderController::hasFolders(['folders' => [$args['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder out of perimeter']);
         }
 
@@ -679,11 +684,103 @@ class FolderController
         return $folders;
     }
 
-    private static function hasFolder(array $args)
+    public function pinFolder(Request $request, Response $response, array $args)
     {
-        ValidatorModel::notEmpty($args, ['id', 'userId']);
-        ValidatorModel::intVal($args, ['id', 'userId']);
+        if (!Validator::numeric()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id not found or is not an integer']);
+        }
 
+        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $args['id']]);
+        if (empty($folder[0])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Folder not found or out of your perimeter']);
+        }
+
+        $alreadyPinned = UserPinnedFolderModel::get([
+            'select'    => ['folder_id', 'user_id'],
+            'where'     => ['folder_id = ?', 'user_id = ?'],
+            'data'      => [$args['id'], $GLOBALS['id']]
+        ]);
+
+        if (!empty($alreadyPinned)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Folder is already pinned']);
+        }
+
+        UserPinnedFolderModel::create([
+            'folder_id' => $args['id'],
+            'user_id'   => $GLOBALS['id']
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function getPinnedFolders(Request $request, Response $response)
+    {
+        $folders = UserPinnedFolderModel::getById(['user_id' => $GLOBALS['id']]);
+
+        $foldersWithResources = FolderModel::getWithEntitiesAndResources([
+            'select'   => ['COUNT(DISTINCT resources_folders.res_id)', 'resources_folders.folder_id'],
+            'where'    => ['(folders.user_id = ?)'],
+            'data'     => [$GLOBALS['id']],
+            'groupBy'  => ['resources_folders.folder_id']
+        ]);
+
+        $pinnedFolders = [];
+
+        foreach ($folders as $folder) {
+            $key = array_keys(array_column($foldersWithResources, 'folder_id'), $folder['id']);
+            $count = 0;
+            if (isset($key[0])) {
+                $count = $foldersWithResources[$key[0]]['count'];
+            }
+            $pinnedFolders[] = [
+                'name'       => $folder['label'],
+                'id'         => $folder['id'],
+                'label'      => $folder['label'],
+                'public'     => $folder['public'],
+                'user_id'    => $folder['user_id'],
+                'parent_id'  => $folder['parent_id'],
+                'level'      => $folder['level'],
+                'countResources' => $count
+            ];
+        }
+
+        return $response->withJson(['folders' => $pinnedFolders]);
+    }
+
+    public function unpinFolder(Request $request, Response $response, array $args)
+    {
+        if (!Validator::numeric()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id not found or is not an integer']);
+        }
+
+        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $args['id']]);
+        if (empty($folder[0])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Folder not found or out of your perimeter']);
+        }
+
+        $alreadyPinned = UserPinnedFolderModel::get([
+            'select'    => ['folder_id', 'user_id'],
+            'where'     => ['folder_id = ?', 'user_id = ?'],
+            'data'      => [$args['id'], $GLOBALS['id']]
+        ]);
+
+        if (empty($alreadyPinned)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Folder is not pinned']);
+        }
+
+        UserPinnedFolderModel::delete([
+            'where' => ['folder_id = ?', 'user_id = ?'],
+            'data'  => [$args['id'], $GLOBALS['id']]
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    private static function hasFolders(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['folders', 'userId']);
+        ValidatorModel::arrayType($args, ['folders']);
+        ValidatorModel::intVal($args, ['userId']);
 
         $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
 
@@ -695,12 +792,12 @@ class FolderController
         }
 
         $folders = FolderModel::getWithEntities([
-            'select'   => [1],
-            'where'    => ['folders.id = ?', '(user_id = ? OR entity_id in (?))'],
-            'data'     => [$args['id'], $args['userId'], $entities]
+            'select'   => ['count(1)'],
+            'where'    => ['folders.id in (?)', '(user_id = ? OR entity_id in (?))'],
+            'data'     => [$args['folders'], $args['userId'], $entities]
         ]);
 
-        if (empty($folders)) {
+        if ($folders[0]['count'] != count($args['folders'])) {
             return false;
         }
 

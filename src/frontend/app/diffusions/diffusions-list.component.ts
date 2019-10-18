@@ -397,7 +397,7 @@ export class DiffusionsListComponent implements OnInit {
     switchMode() {
         this.adminMode = !this.adminMode;
 
-        if (this.adminMode) {
+        if (this.adminMode && this.canUpdateRoles()) {
             setTimeout(() => {
                 this.renderer.selectRootElement('#autoCompleteInput').focus();
             }, 100);
@@ -423,14 +423,14 @@ export class DiffusionsListComponent implements OnInit {
                     }
                 });
                 if (isAllowed) {
-                    //if (this.keepDestForRedirection) {
-                    const destUser = this.diffList['dest'].items[0];
-                    indexFound = this.diffList[oldRole.id].items.map((item: any) => item.id).indexOf(destUser.id);
+                    if (this.diffList['dest'].items.length > 0) {
+                        const destUser = this.diffList['dest'].items[0];
+                        indexFound = this.diffList[oldRole.id].items.map((item: any) => item.id).indexOf(destUser.id);
 
-                    if (indexFound === -1) {
-                        this.diffList[oldRole.id].items.push(destUser);
+                        if (indexFound === -1) {
+                            this.diffList[oldRole.id].items.push(destUser);
+                        }
                     }
-                    //}
                     indexFound = this.diffList[oldRole.id].items.map((item: any) => item.id).indexOf(user.id);
 
                     if (indexFound > -1) {
@@ -477,7 +477,7 @@ export class DiffusionsListComponent implements OnInit {
         this.diffFormControl.markAsTouched();
     }
 
-    isCanUpdateRole() {
+    canUpdateRoles() {
         if (this.availableRoles.filter((role: any) => role.canUpdate === true).length > 0) {
             return true;
         } else {

@@ -2,7 +2,7 @@
     <div class="filter">
         <plugin-autocomplete [size]="'small'" [labelPlaceholder]="lang.searchFolder"
             [routeDatas]="['/rest/autocomplete/folders']" [targetSearchKey]="'idToDisplay'"
-            (triggerEvent)="goTo($event)"></plugin-autocomplete>
+            (triggerEvent)="goTo($event)" appearance="outline"></plugin-autocomplete>
     </div>
     <div>
         <button mat-icon-button color="primary" title="{{lang.addRootFolder}}" (click)="toggleInput()">
@@ -55,7 +55,7 @@
                 <mat-menu #menu="matMenu">
                     <button mat-menu-item [disabled]="createItemNode || !node.canAdd"
                         (click)="addNewItem(node)">{{lang.addSubFolder}}</button>
-                    <button mat-menu-item (click)="deleteNode(node)" [disabled]="!node.edition">{{lang.delete}}</button>
+                    <button mat-menu-item (click)="deleteNode(node)" [disabled]="!node.canDelete">{{lang.delete}}</button>
                     <button mat-menu-item (click)="openFolderAdmin(node)"
                         [disabled]="!node.edition">{{lang.update}}</button>
                 </mat-menu>
@@ -100,7 +100,7 @@
                 <mat-menu #menu="matMenu">
                     <button mat-menu-item [disabled]="createItemNode || !node.canAdd"
                         (click)="addNewItem(node)">{{lang.addSubFolder}}</button>
-                    <button mat-menu-item (click)="deleteNode(node)" [disabled]="!node.edition">{{lang.delete}}</button>
+                    <button mat-menu-item (click)="deleteNode(node)" [disabled]="!node.canDelete">{{lang.delete}}</button>
                     <button mat-menu-item (click)="openFolderAdmin(node)"
                         [disabled]="!node.edition">{{lang.update}}</button>
                 </mat-menu>

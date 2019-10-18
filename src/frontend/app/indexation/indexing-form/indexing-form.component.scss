@@ -175,6 +175,50 @@
 }
 
 .button-form-primary {
+    background: white;
+    border: solid 1px $primary;
+    color: $primary;
+    border-radius: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 240px;
+    height: 45px;
+
+    @media (max-width: 768px) {
+        width: auto;
+    }
+
+    transition: all 0.1s;
+
+    &:hover, &[aria-expanded=true] {
+        background: $primary !important;
+        border: solid 1px white !important;
+        color: white !important;
+        transition: all 0.1s;
+        
+    }
+
+    ::ng-deep.mat-button-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+
+        .menu-label {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 10px;
+        }
+
+        .menu-icon {
+            display: flex;
+        }
+    }
+}
+
+.button-form-primary-filled {
     background: $primary;
     border: solid 1px white;
     color: white;
@@ -246,15 +290,6 @@
 }
 
 
-
-.button-form-primary:hover {
-    color: $primary;
-    background: white;
-    transition: all 0.1s;
-    border: solid 1px $primary;
-}
-
-
 .button-form-primary[aria-expanded=true] {
     color: $primary;
     background: white;
@@ -310,7 +345,7 @@
         .mat-menu-item:hover {
             transition: all 0.1s;
             color: white;
-            background: $primary;
+            background: lighten($primary, 10%);
         }
     }
 }

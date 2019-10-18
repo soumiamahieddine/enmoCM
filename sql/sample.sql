@@ -196,87 +196,87 @@ Select setval('adr_attachments_id_seq', (select max(res_id)+1 from adr_attachmen
 TRUNCATE TABLE listinstance;
 ALTER SEQUENCE listinstance_id_seq restart WITH 1;
 -- to sign documents
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (1, 'letterbox_coll', 1, 'DOC', 0, 'bbain', 'user_id', 'dest', 'bbain', 'PJS', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (2, 'letterbox_coll', 1, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'bbain', 'PJS', 'Y', 0, 'entity_id', NULL, NULL, false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (3, 'letterbox_coll', 2, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (4, 'letterbox_coll', 2, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, NULL, false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (5, 'letterbox_coll', 3, 'DOC', 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 'DGS', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (6, 'letterbox_coll', 4, 'DOC', 0, 'bbain', 'user_id', 'dest', 'bbain', 'PJS', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (7, 'letterbox_coll', 5, 'DOC', 0, 'ssaporta', 'user_id', 'dest', 'ssaporta', 'PE', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (8, 'letterbox_coll', 5, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'bbain', 'PJS', 'Y', 0, 'entity_id', NULL, NULL, false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (9, 'letterbox_coll', 6, 'DOC', 0, 'ssaporta', 'user_id', 'dest', 'ssaporta', 'PE', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (10, 'letterbox_coll', 6, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'bbain', 'PJS', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (1, 'letterbox_coll', 1, 'DOC', 0, 'bbain', 'user_id', 'dest', 'bbain', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (2, 'letterbox_coll', 1, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'bbain', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (3, 'letterbox_coll', 2, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (4, 'letterbox_coll', 2, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user,  visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (5, 'letterbox_coll', 3, 'DOC', 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (6, 'letterbox_coll', 4, 'DOC', 0, 'bbain', 'user_id', 'dest', 'bbain', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (7, 'letterbox_coll', 5, 'DOC', 0, 'ssaporta', 'user_id', 'dest', 'ssaporta', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (8, 'letterbox_coll', 5, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'bbain', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (9, 'letterbox_coll', 6, 'DOC', 0, 'ssaporta', 'user_id', 'dest', 'ssaporta', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (10, 'letterbox_coll', 6, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'bbain', 'Y', 0, 'entity_id', NULL, NULL, false, false);
 -- to annotate documents
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (11, 'letterbox_coll', 7, 'DOC', 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 'DGS', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (12, 'letterbox_coll', 8, 'DOC', 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 'DGS', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (13, 'letterbox_coll', 9, 'DOC', 0, 'ssaporta', 'user_id', 'dest', 'ssaporta', 'PE', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (14, 'letterbox_coll', 9, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'bbain', 'PJS', 'Y', 0, 'entity_id', NULL, NULL, false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (15, 'letterbox_coll', 10, 'DOC', 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 'DGS', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (16, 'letterbox_coll', 11, 'DOC', 0, 'sstar', 'user_id', 'dest', 'sstar', 'FIN', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (17, 'letterbox_coll', 11, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'sstar', 'FIN', 'Y', 0, 'entity_id', NULL, NULL, false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (18, 'letterbox_coll', 11, 'DOC', 0, 'jjane', 'user_id', 'cc', 'sstar', 'FIN', 'Y', 0, 'entity_id', NULL, NULL, false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (19, 'letterbox_coll', 12, 'DOC', 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 'DGS', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (20, 'letterbox_coll', 13, 'DOC', 0, 'ppruvost', 'user_id', 'dest', 'bbain', 'PJS', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (21, 'letterbox_coll', 13, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'bbain', 'PJS', 'Y', 0, 'entity_id', NULL, NULL, false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (22, 'letterbox_coll', 14, 'DOC', 0, 'ssaporta', 'user_id', 'dest', 'ssaporta', 'PE', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (23, 'letterbox_coll', 14, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'bbain', 'PJS', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (11, 'letterbox_coll', 7, 'DOC', 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (12, 'letterbox_coll', 8, 'DOC', 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (13, 'letterbox_coll', 9, 'DOC', 0, 'ssaporta', 'user_id', 'dest', 'ssaporta', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (14, 'letterbox_coll', 9, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'bbain', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (15, 'letterbox_coll', 10, 'DOC', 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (16, 'letterbox_coll', 11, 'DOC', 0, 'sstar', 'user_id', 'dest', 'sstar', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (17, 'letterbox_coll', 11, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'sstar', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (18, 'letterbox_coll', 11, 'DOC', 0, 'jjane', 'user_id', 'cc', 'sstar', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (19, 'letterbox_coll', 12, 'DOC', 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (20, 'letterbox_coll', 13, 'DOC', 0, 'ppruvost', 'user_id', 'dest', 'bbain', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (21, 'letterbox_coll', 13, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'bbain', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (22, 'letterbox_coll', 14, 'DOC', 0, 'ssaporta', 'user_id', 'dest', 'ssaporta', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (23, 'letterbox_coll', 14, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'bbain', 'Y', 0, 'entity_id', NULL, NULL, false, false);
 -- to qualify document
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (24, 'letterbox_coll', 15, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (25, 'letterbox_coll', 15, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (24, 'letterbox_coll', 15, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (25, 'letterbox_coll', 15, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'Y', 0, 'entity_id', NULL, NULL, false, false);
 -- to validate document
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (26, 'letterbox_coll', 16, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (27, 'letterbox_coll', 16, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (26, 'letterbox_coll', 16, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (27, 'letterbox_coll', 16, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'Y', 0, 'entity_id', NULL, NULL, false, false);
 -- to process document ccharles
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (28, 'letterbox_coll', 17, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (29, 'letterbox_coll', 17, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (28, 'letterbox_coll', 17, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (29, 'letterbox_coll', 17, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'Y', 0, 'entity_id', NULL, NULL, false, false);
 -- to process document nnataly
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (30, 'letterbox_coll', 18, 'DOC', 0, 'nnataly', 'user_id', 'dest', 'nnataly', 'PSO', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (31, 'letterbox_coll', 18, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'nnataly', 'PSO', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (30, 'letterbox_coll', 18, 'DOC', 0, 'nnataly', 'user_id', 'dest', 'nnataly', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (31, 'letterbox_coll', 18, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'nnataly', 'Y', 0, 'entity_id', NULL, NULL, false, false);
 -- to paraph document ppetit
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (32, 'letterbox_coll', 19, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (33, 'letterbox_coll', 19, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, NULL, false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature) 
-VALUES (34, 'letterbox_coll', 19, 'DOC', 0, 'mmanfred', 'user_id', 'visa', 'ccharles', 'PTE', 'Y', 1, 'VISA_CIRCUIT', CURRENT_DATE, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature) 
-VALUES (35, 'letterbox_coll', 19, 'DOC', 0, 'ppetit', 'user_id', 'sign', 'ccharles', 'PTE', 'Y', 0, 'VISA_CIRCUIT', NULL, '', false, true);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (32, 'letterbox_coll', 19, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (33, 'letterbox_coll', 19, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (34, 'letterbox_coll', 19, 'DOC', 0, 'mmanfred', 'user_id', 'visa', 'ccharles', 'Y', 1, 'VISA_CIRCUIT', CURRENT_DATE, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (35, 'letterbox_coll', 19, 'DOC', 0, 'ppetit', 'user_id', 'sign', 'ccharles', 'Y', 0, 'VISA_CIRCUIT', NULL, '', false, true);
 -- to archive document ggrand
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (36, 'letterbox_coll', 20, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, '', false, false);
-INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (37, 'letterbox_coll', 20, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'PTE', 'Y', 0, 'entity_id', NULL, NULL, false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (36, 'letterbox_coll', 20, 'DOC', 0, 'ccharles', 'user_id', 'dest', 'ccharles', 'Y', 0, 'entity_id', NULL, '', false, false);
+INSERT INTO listinstance (listinstance_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
+VALUES (37, 'letterbox_coll', 20, 'DOC', 0, 'DSG', 'entity_id', 'cc', 'ccharles', 'Y', 0, 'entity_id', NULL, NULL, false, false);
 
 Select setval('listinstance_id_seq', (select max(listinstance_id)+1 from listinstance), false);
 

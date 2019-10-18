@@ -182,7 +182,7 @@ export class UsersAdministrationComponent implements OnInit {
                                             //update listInstances
                                             this.http.put('../../rest/listinstances', user.redirectListInstances)
                                                 .subscribe((data: any) => {
-                                                    if (data.errors) {
+                                                    if (data != null && data.errors) {
                                                         this.notify.error(data.errors);
                                                     } else {
 

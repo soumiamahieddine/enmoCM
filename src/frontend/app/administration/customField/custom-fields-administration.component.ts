@@ -56,7 +56,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
             label: this.lang.checkboxInput,
             type: 'checkbox'
         }
-    ]
+    ];
     customFields: any[] = [];
     customFieldsClone: any[] = [];
 

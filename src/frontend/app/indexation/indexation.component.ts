@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 
 import { ActivatedRoute } from '@angular/router';
@@ -12,9 +12,11 @@ import { FiltersListService } from '../../service/filtersList.service';
 import { Overlay } from '@angular/cdk/overlay';
 import { AppService } from '../../service/app.service';
 import { IndexingFormComponent } from './indexing-form/indexing-form.component';
-import { tap, finalize, catchError, map } from 'rxjs/operators';
+import { tap, finalize, catchError, map, filter, exhaustMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { DocumentViewerComponent } from '../viewer/document-viewer.component';
+import { ConfirmComponent } from '../../plugins/modal/confirm.component';
+import { AddPrivateIndexingModelModalComponent } from './private-indexing-model/add-private-indexing-model-modal.component';
 
 @Component({
     templateUrl: "indexation.component.html",
@@ -45,6 +47,8 @@ export class IndexationComponent implements OnInit {
     selectedAction: any = {};
     tmpFilename: string = '';
 
+    dialogRef: MatDialogRef<any>;
+
     constructor(
         private route: ActivatedRoute,
         private _activatedRoute: ActivatedRoute,
@@ -55,12 +59,12 @@ export class IndexationComponent implements OnInit {
         private notify: NotificationService,
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
-        public appService: AppService) { 
+        public appService: AppService) {
 
-            _activatedRoute.queryParams.subscribe(
-                params => this.tmpFilename = params.tmpfilename
-            );
-        }
+        _activatedRoute.queryParams.subscribe(
+            params => this.tmpFilename = params.tmpfilename
+        );
+    }
 
     ngOnInit(): void {
         this.loading = false;
@@ -72,14 +76,14 @@ export class IndexationComponent implements OnInit {
             this.http.get("../../rest/indexingModels").pipe(
                 tap((data: any) => {
                     this.indexingModels = data.indexingModels;
-                    if(this.indexingModels.length > 0) {
+                    if (this.indexingModels.length > 0) {
                         this.currentIndexingModel = this.indexingModels.filter(model => model.default === true)[0];
                         if (this.currentIndexingModel === undefined) {
                             this.currentIndexingModel = this.indexingModels[0];
                             this.notify.error(this.lang.noDefaultIndexingModel);
                         }
                     }
-                    
+
                     if (this.appService.getViewMode()) {
                         setTimeout(() => {
                             this.sidenavLeft.open();
@@ -96,10 +100,10 @@ export class IndexationComponent implements OnInit {
                 map((data: any) => {
                     data.actions = data.actions.map((action: any, index: number) => {
                         return {
-                            id : action.id,
-                            label : action.label_action,
-                            component : action.component,
-                            default : index === 0 ? true : false
+                            id: action.id,
+                            label: action.label_action,
+                            component: action.component,
+                            default: index === 0 ? true : false
                         }
                     });
                     return data;
@@ -123,12 +127,20 @@ export class IndexationComponent implements OnInit {
     onSubmit() {
         if (this.indexingForm.isValidForm()) {
             alert(this.selectedAction.component + '() déclenchée');
-            console.log(this.indexingForm.getDatas());
+            this.formatDatas(this.indexingForm.getDatas());
             console.log(this.appDocumentViewer.getFile());
         } else {
             alert('Veuillez corriger les erreurs.');
         }
+    }
 
+    formatDatas(datas: any) {
+        let formatData: any = {};
+        datas.forEach((element: any) => {
+            formatData[element.identifier] = element.default_value;
+        });
+
+        console.log(formatData);
     }
 
     loadIndexingModel(indexingModel: any) {
@@ -139,4 +151,57 @@ export class IndexationComponent implements OnInit {
     selectAction(action: any) {
         this.selectedAction = action;
     }
+
+    savePrivateIndexingModel() {
+        let fields = JSON.parse(JSON.stringify(this.indexingForm.getDatas()));
+        fields.forEach((element: any, key: any) => {
+            delete fields[key].event;
+            delete fields[key].label;
+            delete fields[key].system;
+            delete fields[key].type;
+            delete fields[key].values;
+        });
+
+        const privateIndexingModel = {
+            category: this.indexingForm.getCategory(),
+            label: '',
+            owner: this.headerService.user.id,
+            private: true,
+            fields: fields,
+            master: this.currentIndexingModel.master !== null ? this.currentIndexingModel.master : this.currentIndexingModel.id
+        }
+
+        const masterIndexingModel = this.indexingModels.filter((indexingModel) => indexingModel.id === privateIndexingModel.master)[0];
+        this.dialogRef = this.dialog.open(AddPrivateIndexingModelModalComponent, { autoFocus: true, disableClose: true, data: { indexingModel: privateIndexingModel, masterIndexingModel : masterIndexingModel } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: any) => data !== undefined),
+            tap((data) => {
+                this.indexingModels.push(data.indexingModel);
+                this.currentIndexingModel = this.indexingModels.filter(indexingModel => indexingModel.id === data.indexingModel.id)[0];
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    deletePrivateIndexingModel(id: number, index: number) {
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.delete(`../../rest/indexingModels/${id}`)),
+            tap(() => {
+                this.indexingModels.splice(index, 1);
+                this.notify.success(this.lang.indexingModelDeleted);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
 }

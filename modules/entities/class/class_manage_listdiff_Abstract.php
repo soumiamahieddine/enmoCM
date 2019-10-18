@@ -489,13 +489,12 @@ abstract class diffusion_list_Abstract extends functions
                 if ($processDate != '') {
                     $stmt = $db->query(
                         'insert into '.ENT_LISTINSTANCE
-                            .' (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment, process_date, signatory, requested_signature) '
+                            .' (coll_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_comment, process_date, signatory, requested_signature) '
                         .'values ('
                             .'?, ?, '
-                            ."'DOC', ?, "
+                            ."?, "
                             .'?, '
                             ."'user_id' , "
-                            .'?, '
                             .'?, '
                             .'?, '
                             .'?, ?, '
@@ -505,18 +504,17 @@ abstract class diffusion_list_Abstract extends functions
                             .'?, '
                             .'?'
                         .' )',
-                        array($collId, $resId, $i, $userId, $item_mode, $creatorUser, $creatorEntity, $visible, $viewed, $difflistType, $processComment, $processDate, $signatory, $requested_signature)
+                        array($collId, $resId, $i, $userId, $item_mode, $creatorUser, $visible, $viewed, $difflistType, $processComment, $processDate, $signatory, $requested_signature)
                     );
                 } else {
                     $stmt = $db->query(
                         'insert into '.ENT_LISTINSTANCE
-                            .' (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment, signatory, requested_signature) '
+                            .' (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_comment, signatory, requested_signature) '
                         .'values ('
                             .'?, ?, '
                             ."'DOC', ?, "
                             .'?, '
                             ."'user_id' , "
-                            .'?, '
                             .'?, '
                             .'?, '
                             .'?, ?, '
@@ -525,7 +523,7 @@ abstract class diffusion_list_Abstract extends functions
                             .'?, '
                             .'?'
                         .' )',
-                        array($collId, $resId, $i, $userId, $item_mode, $creatorUser, $creatorEntity, $visible, $viewed, $difflistType, $processComment, $signatory, $requested_signature)
+                        array($collId, $resId, $i, $userId, $item_mode, $creatorUser, $visible, $viewed, $difflistType, $processComment, $signatory, $requested_signature)
                     );
                 }
 
@@ -569,7 +567,7 @@ abstract class diffusion_list_Abstract extends functions
 
                 $stmt = $db->query(
                     'INSERT INTO '.ENT_LISTINSTANCE
-                        .' (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type) '
+                        .' (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type) '
                     .'VALUES ('
                         .'?, ?, '
                         ."'DOC', ?, "
@@ -577,11 +575,10 @@ abstract class diffusion_list_Abstract extends functions
                         ."'entity_id' , "
                         .'?, '
                         .'?, '
-                        .'?, '
                         .'?,?, '
                         .'?'
                     .' )',
-                    array($collId, $resId, $j, $entityId, $item_mode, $creatorUser, $creatorEntity, $visible, $viewed, $difflistType)
+                    array($collId, $resId, $j, $entityId, $item_mode, $creatorUser, $visible, $viewed, $difflistType)
                 );
 
                 if (!$entityFound || $fromQualif) {
@@ -614,19 +611,18 @@ abstract class diffusion_list_Abstract extends functions
         while ($resListinstance = $stmt->fetchObject()) {
             $stmt2 = $db->query(
                 'INSERT INTO listinstance_history_details 
-                    (listinstance_history_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment) '
+                    (listinstance_history_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_comment) '
                 .'VALUES (?,?, ?, '
                     ."'DOC', ?, "
                     .'?, '
                     .'? , '
                     .'?, '
                     .'?, '
-                    .'?, '
                     .'?,?, '
                     .'?, '
                     .'?'
                 .' )',
-                array($listinstance_history_id, $resListinstance->coll_id, $res_id, $resListinstance->sequence, $resListinstance->item_id, $resListinstance->item_type, $resListinstance->item_mode, $resListinstance->added_by_user, $resListinstance->added_by_entity, $resListinstance->visible, $resListinstance->viewed, $resListinstance->difflist_type, $resListinstance->process_comment)
+                array($listinstance_history_id, $resListinstance->coll_id, $res_id, $resListinstance->sequence, $resListinstance->item_id, $resListinstance->item_type, $resListinstance->item_mode, $resListinstance->added_by_user, $resListinstance->visible, $resListinstance->viewed, $resListinstance->difflist_type, $resListinstance->process_comment)
             );
         }
     }
@@ -810,8 +806,8 @@ abstract class diffusion_list_Abstract extends functions
             $stmt = $db->query(
                 'insert into '.ENT_LISTINSTANCE.' (coll_id, res_id, '
                 .'item_id, item_type, item_mode, sequence, '
-                ."added_by_user, added_by_entity, viewed) values (?, ?, ?, ?, 'dest', 0, ?,?, ?)",
-                array($collId, $resId, $dest, $itemType, $_SESSION['user']['UserId'], $_SESSION['primaryentity']['id'], $viewed)
+                ."added_by_user, viewed) values (?, ?, ?, ?, 'dest', 0, ?, ?)",
+                array($collId, $resId, $dest, $itemType, $_SESSION['user']['UserId'], $viewed)
             );
         }
     }

@@ -174,10 +174,40 @@ class IndexingController
         }
 
         $processLimitDate = new \DateTime($queryParams['processLimitDate']);
+        $processLimitDate->setTime(23, 59, 59);
         $now = new \DateTime();
 
         $diff = $processLimitDate->diff($now);
         $diff = $diff->format("%a");
+
+        $workingDays = ParameterModel::getById(['id' => 'workingDays', 'select' => ['param_value_int']]);
+        if (!empty($workingDays['param_value_int'])) {
+            $hollidays = [
+                '01-01',
+                '01-05',
+                '08-05',
+                '14-07',
+                '15-08',
+                '01-11',
+                '11-11',
+                '25-12'
+            ];
+            if (function_exists('easter_date')) {
+                $hollidays[] = date('d-m', easter_date() + 86400);
+            }
+
+            $diffUpdated = 0;
+            for ($i = 1; $i <= $diff; $i++) {
+                $tmpDate = $now;
+                $tmpDate->add(new \DateInterval("P{$i}D"));
+                if (in_array($tmpDate->format('N'), [6, 7]) || in_array($tmpDate->format('d-m'), $hollidays)) {
+                    continue;
+                }
+                ++$diffUpdated;
+            }
+
+            $diff = $diffUpdated;
+        }
 
         $priority = PriorityModel::get(['select' => ['id'], 'where' => ['delays >= ?'], 'data' => [$diff], 'orderBy' => ['delays'], 'limit' => 1]);
         if (empty($priority)) {

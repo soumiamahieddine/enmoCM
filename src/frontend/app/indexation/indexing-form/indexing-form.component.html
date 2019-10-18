@@ -21,7 +21,7 @@
             </div>
             <div class="content">
                 <div cdkDropList id="indexingModelsCustomFieldsList_{{category}}"
-                    [cdkDropListConnectedTo]="['indexingModelsCustomFieldsList_mail','indexingModelsCustomFieldsList_contact','indexingModelsCustomFieldsList_process','indexingModelsCustomFieldsList_classement','customFieldsList','fieldsList']"
+                    [cdkDropListConnectedTo]="['indexingModelsCustomFieldsList_mail','indexingModelsCustomFieldsList_contact','indexingModelsCustomFieldsList_process','indexingModelsCustomFieldsList_classifying','customFieldsList','fieldsList']"
                     [cdkDropListData]="this['indexingModels_'+category]" [cdkDropListDisabled]="!adminMode"
                     (cdkDropListDropped)="drop($event)" class="indexingModelsCustomFieldsList"
                     style="min-height: 50px;">
@@ -142,7 +142,7 @@
                                         [manageDatas]="!adminMode ? field.values[1] : undefined" style="width:100%;">
                                     </plugin-autocomplete>
                                 </ng-container>-->
-                                <ng-container *ngIf="field.identifier === 'folder'">
+                                <ng-container *ngIf="field.identifier === 'folders'">
                                     <app-folder-input [control]="arrFormControl[field.identifier]" style="width:100%;">
                                     </app-folder-input>
                                 </ng-container>
@@ -166,7 +166,7 @@
                             <div style="padding: 10px;font-size: 16px;color: #135F7F;letter-spacing: 2px;font-weight: bold;display: flex;
                                 align-items: center;">
                                 <div style="display: flex;flex: 1;align-items: center;">
-                                    {{lang.diffusionList}} <button mat-icon-button color="primary"
+                                    {{lang.diffusionList}} <button mat-icon-button  *ngIf="appDiffusionsList.canUpdateRoles()" color="primary"
                                             (click)="appDiffusionsList.switchMode()" [title]="lang.modifyDiffusionList">
                                             <mat-icon class="fa fa-edit"></mat-icon>
                                         </button>

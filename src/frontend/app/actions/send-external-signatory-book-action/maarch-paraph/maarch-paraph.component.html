@@ -2,7 +2,7 @@
     <div class="fieldsetdContainer" style="flex:2">
         <h2>{{lang.visaWorkflow}} :</h2>
         <div class="fieldsetdContent">
-            <app-visa-workflow #appVisaWorkflow [injectDatas]="injectDatasParam"></app-visa-workflow>
+            <app-visa-workflow #appVisaWorkflow [injectDatas]="injectDatasParam" [linkedToMaarchParapheur]="true"></app-visa-workflow>
             <div *ngIf="appVisaWorkflow.checkExternalSignatoryBook().length > 0" class="alert-message alert-message-danger" role="alert">
                 <b>{{appVisaWorkflow.checkExternalSignatoryBook().join(', ')}}</b> {{lang.usersMissingInSignatureBook}} !       
             </div>

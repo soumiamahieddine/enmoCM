@@ -28,14 +28,27 @@ export class PluginAutocomplete implements OnInit {
     }
 
     /**
-     * 'small', 'default' : can be used for real input or discret input filter
+     * Can be used for real input or discret input filter
+     * @default default
+     * 
+     * @param default
+     * @param small
      */
     @Input('size') size: string;
 
     /**
-     * If true, input auto empty when trigger a value
+     * If false, input auto empty when trigger a value
      */
     @Input('singleMode') singleMode: boolean;
+
+    /**
+     * Appearance of input
+     * @default legacy
+     * 
+     * @param legacy
+     * @param outline
+     */
+    @Input('appearance') appearance: string;
 
 
     @Input('required') required: boolean;
@@ -100,6 +113,8 @@ export class PluginAutocomplete implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.appearance = this.appearance === undefined ? 'legacy' : 'outline';
+        this.singleMode = this.singleMode === undefined ? false : true;
         this.optGroupLabel = this.optGroupLabel === undefined ? this.lang.availableValues : this.optGroupLabel;
         this.placeholder = this.placeholder === undefined ? this.lang.chooseValue : this.placeholder;
 
@@ -180,9 +195,7 @@ export class PluginAutocomplete implements OnInit {
         }
 
         if (this.selectedOpt !== undefined) {
-            if (this.singleMode) {
-                this.resetAutocomplete();
-            }
+            this.resetAutocomplete();
             this.autoCompleteInput.nativeElement.blur();
             this.selectedOpt.emit(ev.option.value);
         }
@@ -214,7 +227,7 @@ export class PluginAutocomplete implements OnInit {
     }
 
     resetAutocomplete() {
-        if (this.singleMode === undefined) {
+        if (this.singleMode === false) {
             this.myControl.setValue('');
         }
         if (this.routeDatas !== undefined) {

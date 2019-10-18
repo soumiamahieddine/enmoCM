@@ -18,9 +18,8 @@
             <mat-hint class="infoActions">
                 {{lang.actionsInfo}}
             </mat-hint>
-            <plugin-autocomplete [labelPlaceholder]="'Associer une nouvelle action'"
-                [labelList]="'Action(s) disponible(s)'" [datas]="actionList" [targetSearchKey]="'label_action'"
-                (triggerEvent)="addAction($event)"></plugin-autocomplete>
+            <plugin-autocomplete [labelPlaceholder]="lang.linkNewAction"  [datas]="actionList" [targetSearchKey]="'label_action'"
+                (triggerEvent)="addAction($event)" appearance="outline"></plugin-autocomplete>
             <mat-list cdkDropList [cdkDropListData]="indexingInfo.actions" (cdkDropListDropped)="drop($event)"
                 class="selectedActionList" role="list">
                 <mat-list-item class="selectedAction" role="listitem"

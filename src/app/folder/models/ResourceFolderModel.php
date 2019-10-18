@@ -42,7 +42,7 @@ class ResourceFolderModel
             'table'         => 'resources_folders',
             'columnsValues' => [
                 'folder_id' => $args['folder_id'],
-                'res_id'    => $args['res_id'],
+                'res_id'    => $args['res_id']
             ]
         ]);
 

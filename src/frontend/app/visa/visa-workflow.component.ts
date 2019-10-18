@@ -24,9 +24,13 @@ export class VisaWorkflowComponent implements OnInit {
 
     @Input('injectDatas') injectDatas: any;
 
+    @Input('linkedToMaarchParapheur') linkedToMaarchParapheur: boolean;
+
     constructor(public http: HttpClient, private notify: NotificationService) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void { 
+        this.linkedToMaarchParapheur = this.linkedToMaarchParapheur === undefined ? false: this.linkedToMaarchParapheur;
+    }
 
     drop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
@@ -39,7 +43,9 @@ export class VisaWorkflowComponent implements OnInit {
 
         this.visaWorkflow.items = [];
 
-        this.http.get("../../rest/listTemplates/entities/" + entityId)
+        let route = this.linkedToMaarchParapheur === true ? `../../rest/listTemplates/entities/${entityId}/maarchParapheur` : `../../rest/listTemplates/entities/${entityId}`;
+        
+        this.http.get(route)
             .subscribe((data: any) => {
                 data.listTemplate.forEach((element: any) => {
                     if (element.object_type === 'VISA_CIRCUIT') {

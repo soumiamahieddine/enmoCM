@@ -114,6 +114,17 @@ CREATE TABLE entities_folders
 )
 WITH (OIDS=FALSE);
 
+DROP TABLE IF EXISTS users_pinned_folders;
+CREATE TABLE users_pinned_folders
+(
+  id serial NOT NULL,
+  folder_id INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  CONSTRAINT users_pinned_folders_pkey PRIMARY KEY (id),
+  CONSTRAINT users_pinned_folders_unique_key UNIQUE (folder_id, user_id)
+)
+WITH (OIDS=FALSE);
+
 
 /* CUSTOM FIELDS */
 DROP TABLE IF EXISTS custom_fields;
@@ -125,6 +136,18 @@ CREATE TABLE custom_fields
   values jsonb,
   CONSTRAINT custom_fields_pkey PRIMARY KEY (id),
   CONSTRAINT custom_fields_unique_key UNIQUE (label)
+)
+WITH (OIDS=FALSE);
+
+DROP TABLE IF EXISTS resources_custom_fields;
+CREATE TABLE resources_custom_fields
+(
+    id serial NOT NULL,
+    res_id INTEGER NOT NULL,
+    custom_field_id INTEGER NOT NULL,
+    value jsonb NOT NULL,
+    CONSTRAINT resources_custom_fields_pkey PRIMARY KEY (id),
+    CONSTRAINT resources_custom_fields_unique_key UNIQUE (res_id, custom_field_id)
 )
 WITH (OIDS=FALSE);
 
@@ -157,9 +180,6 @@ CREATE TABLE indexing_models_fields
   CONSTRAINT indexing_models_fields_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
-
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS model_id;
-ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
 
 
 /* TAGS */
@@ -212,9 +232,24 @@ DO $$ BEGIN
 END$$;
 
 
+/* RES_LETTERBOX */
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS model_id;
+ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_letterbox' and column_name = 'typist' and data_type != 'integer') THEN
+        ALTER TABLE res_letterbox ADD COLUMN typist_tmp integer;
+        UPDATE res_letterbox set typist_tmp = (select id FROM users where users.user_id = res_letterbox.typist);
+        UPDATE res_letterbox set typist_tmp = 0 WHERE typist_tmp IS NULL;
+        ALTER TABLE res_letterbox ALTER COLUMN typist_tmp set not null;
+        ALTER TABLE res_letterbox DROP COLUMN IF EXISTS typist;
+        ALTER TABLE res_letterbox RENAME COLUMN typist_tmp TO typist;
+    END IF;
+END$$;
+
+
 /* MLB COLL EXT */
 DO $$ BEGIN
-    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'mlb_coll_ext') AND attname = 'category_id') THEN
+    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'category_id') = 0 THEN
         ALTER TABLE res_letterbox ADD COLUMN category_id character varying(32);
         UPDATE res_letterbox SET category_id = mlb_coll_ext.category_id FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
         UPDATE res_letterbox set category_id = 'incoming' WHERE category_id IS NULL;
@@ -325,6 +360,7 @@ DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_outside_proce
 DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
 
+
 /* REFACTORING MODIFICATION */
 ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
 ALTER TABLE tags ALTER COLUMN label TYPE character varying(128);
@@ -374,13 +410,27 @@ ALTER TABLE priorities DROP COLUMN IF EXISTS working_days;
 DROP TABLE IF EXISTS thesaurus;
 DROP TABLE IF EXISTS thesaurus_res;
 DROP SEQUENCE IF EXISTS thesaurus_id_seq;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS title;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS description;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS author;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS identifier;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS source;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS relation;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS offset_doc;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS is_multi_docservers;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tablename;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS validation_date;
+ALTER TABLE listinstance DROP COLUMN IF EXISTS added_by_entity;
+ALTER TABLE listinstance DROP COLUMN IF EXISTS coll_id;
+ALTER TABLE listinstance DROP COLUMN IF EXISTS listinstance_type;
+ALTER TABLE listinstance DROP COLUMN IF EXISTS visible;
+ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_entity;
+
 
 
 /* RE CREATE VIEWS */
 CREATE OR REPLACE VIEW res_view_letterbox AS
-SELECT r.tablename,
-       r.is_multi_docservers,
-       r.res_id,
+SELECT r.res_id,
        r.type_id,
        r.policy_id,
        r.cycle_id,
@@ -395,12 +445,10 @@ SELECT r.tablename,
        r.typist,
        r.creation_date,
        r.modification_date,
-       r.relation,
        r.docserver_id,
        r.path,
        r.filename,
        r.fingerprint,
-       r.offset_doc,
        r.filesize,
        r.scan_date,
        r.scan_user,
@@ -411,9 +459,6 @@ SELECT r.tablename,
        r.status,
        r.work_batch,
        r.doc_date,
-       r.description,
-       r.source,
-       r.author,
        r.reference_number,
        r.external_reference,
        r.external_id,
@@ -478,8 +523,6 @@ SELECT r.tablename,
        r.flag_alarm2,
        r.is_multicontacts,
        r.subject,
-       r.identifier,
-       r.title,
        r.priority,
        r.locker_user_id,
        r.locker_time,
@@ -532,7 +575,7 @@ TRUNCATE TABLE indexing_models_fields;
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'doctype', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'priority', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'confidential', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'docDate', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'documentDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'arrivalDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'subject', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'indexingCustomField_1', FALSE, null, 'mail');
@@ -541,14 +584,14 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'initiator', TRUE, null, 'process');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'destination', TRUE, null, 'process');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'processLimitDate', TRUE, null, 'process');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'folder', FALSE, null, 'classement');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'tags', FALSE, null, 'classement');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'folders', FALSE, null, 'classifying');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'tags', FALSE, null, 'classifying');
 
 /* Départ */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'doctype', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'priority', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'confidential', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'docDate', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'documentDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'subject', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'indexingCustomField_1', FALSE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'senders', FALSE, null, 'contact');
@@ -556,14 +599,14 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'initiator', TRUE, null, 'process');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'destination', TRUE, null, 'process');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'processLimitDate', TRUE, null, 'process');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'folder', FALSE, null, 'classement');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'tags', FALSE, null, 'classement');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'folders', FALSE, null, 'classifying');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'tags', FALSE, null, 'classifying');
 
 /* Interne */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'doctype', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'priority', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'confidential', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'docDate', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'documentDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'subject', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'indexingCustomField_1', FALSE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'senders', FALSE, null, 'contact');
@@ -571,13 +614,13 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'initiator', TRUE, null, 'process');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'destination', TRUE, null, 'process');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'processLimitDate', TRUE, null, 'process');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'folder', FALSE, null, 'classement');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'tags', FALSE, null, 'classement');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'folders', FALSE, null, 'classifying');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'tags', FALSE, null, 'classifying');
 
 /* GED */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'doctype', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'confidential', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'docDate', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'documentDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'subject', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'senders', FALSE, null, 'contact');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'getRecipients', FALSE, null, 'contact');

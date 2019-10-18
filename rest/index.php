@@ -203,6 +203,10 @@ $app->delete('/folders/{id}/resources', \Folder\controllers\FolderController::cl
 $app->get('/folders/{id}/resources/{resId}/baskets', \Folder\controllers\FolderController::class . ':getBasketsFromFolder');
 $app->get('/folders/{id}/filters', \Folder\controllers\FolderController::class . ':getFilters');
 $app->put('/folders/{id}/sharing', \Folder\controllers\FolderController::class . ':sharing');
+$app->get('/pinnedFolders', \Folder\controllers\FolderController::class . ':getPinnedFolders');
+$app->post('/folders/{id}/pin', \Folder\controllers\FolderController::class . ':pinFolder');
+$app->delete('/folders/{id}/unpin', \Folder\controllers\FolderController::class . ':unpinFolder');
+
 
 //Groups
 $app->get('/groups', \Group\controllers\GroupController::class . ':get');
@@ -373,7 +377,7 @@ $app->get('/tags', \Tag\controllers\TagController::class . ':get');
 $app->post('/tags', \Tag\controllers\TagController::class . ':create');
 $app->get('/tags/{id}', \Tag\controllers\TagController::class . ':getById');
 $app->put('/tags/{id}', \Tag\controllers\TagController::class . ':update');
-$app->put('/tags/{id}/merge', \Tag\controllers\TagController::class . ':merge');
+$app->put('/mergeTags', \Tag\controllers\TagController::class . ':merge');
 $app->delete('/tags/{id}', \Tag\controllers\TagController::class . ':delete');
 
 //Templates
