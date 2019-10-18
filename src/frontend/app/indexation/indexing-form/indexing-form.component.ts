@@ -99,6 +99,13 @@ export class IndexingFormComponent implements OnInit {
             values: []
         },
         {
+            identifier: 'departureDate',
+            label: this.lang.departureDate,
+            type: 'date',
+            default_value: '',
+            values: []
+        },
+        {
             identifier: 'processLimitDate',
             label: this.lang.processLimitDate,
             type: 'date',
@@ -388,6 +395,10 @@ export class IndexingFormComponent implements OnInit {
                             elem.startDate = '_TODAY';
                             elem.endDate = '';
                             elem.event = 'setPriorityColorByLimitDate';
+
+                        } else if (elem.identifier === 'departureDate') {
+                            elem.startDate = '_TODAY';
+                            elem.endDate = '';
 
                         } else if (elem.identifier === 'folders') {
                             elem.values = null;
