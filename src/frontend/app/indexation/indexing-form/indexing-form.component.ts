@@ -326,7 +326,7 @@ export class IndexingFormComponent implements OnInit {
 
                 this.fieldCategories.forEach(element => {
                     this['indexingModels_' + element].forEach((elem: any) => {
-                        if (elem.identifier === 'docDate') {
+                        if (elem.identifier === 'documentDate') {
                             elem.startDate = '';
                             elem.endDate = '_TODAY';
 
@@ -373,7 +373,7 @@ export class IndexingFormComponent implements OnInit {
                                 elem.allowedEntities = elem.values.filter((val: any) => val.disabled === false).map((entities: any) => entities.id);
                             }
                         } else if (elem.identifier === 'arrivalDate') {
-                            elem.startDate = 'docDate';
+                            elem.startDate = 'documentDate';
                             elem.endDate = '_TODAY';
 
                         } else if (elem.identifier === 'initiator' && !this.adminMode) {
@@ -389,7 +389,7 @@ export class IndexingFormComponent implements OnInit {
                             elem.endDate = '';
                             elem.event = 'setPriorityColorByLimitDate';
 
-                        } else if (elem.identifier === 'folder') {
+                        } else if (elem.identifier === 'folders') {
                             elem.values = null;
 
                         } else if (elem.identifier === 'category_id') {
