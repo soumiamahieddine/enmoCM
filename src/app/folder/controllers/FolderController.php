@@ -64,6 +64,14 @@ class FolderController
             if (isset($key[0])) {
                 $count = $foldersWithResources[$key[0]]['count'];
             }
+
+            $isPinned = !empty(
+                UserPinnedFolderModel::get([
+                    'where' => ['folder_id = ?', 'user_id = ?'],
+                    'data'  => [$folder['id'], $GLOBALS['id']]
+                ])
+            );
+
             $insert = [
                 'name'       => $folder['label'],
                 'id'         => $folder['id'],
@@ -72,7 +80,8 @@ class FolderController
                 'user_id'    => $folder['user_id'],
                 'parent_id'  => $folder['parent_id'],
                 'level'      => $folder['level'],
-                'countResources' => $count
+                'countResources' => $count,
+                'pinned'    => $isPinned
             ];
             if ($folder['level'] == 0) {
                 array_splice($tree, 0, 0, [$insert]);
@@ -119,6 +128,13 @@ class FolderController
                 $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition'], 'canDelete' => $canDelete, 'label' => $value['entity_label']];
             }
         }
+
+        $folder['pinned'] = !empty(
+            UserPinnedFolderModel::get([
+                'where' => ['folder_id = ?', 'user_id = ?'],
+                'data'  => [$folder['id'], $GLOBALS['id']]
+            ])
+        );
 
         return $response->withJson(['folder' => $folder]);
     }
@@ -690,8 +706,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Route id not found or is not an integer']);
         }
 
-        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $args['id']]);
-        if (empty($folder[0])) {
+        if (!FolderController::hasFolders(['folders' => [$args['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder not found or out of your perimeter']);
         }
 
@@ -753,8 +768,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Route id not found or is not an integer']);
         }
 
-        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $args['id']]);
-        if (empty($folder[0])) {
+        if (!FolderController::hasFolders(['folders' => [$args['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder not found or out of your perimeter']);
         }
 
