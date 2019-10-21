@@ -112,8 +112,8 @@
                                         <input matInput style="display: none;">
                                         <mat-radio-group class="radio-form" color="primary"
                                             [formControl]="arrFormControl[field.identifier]">
-                                            <mat-radio-button *ngFor="let value of field.values" [value]="value">
-                                                {{value}}
+                                            <mat-radio-button *ngFor="let value of field.values" [value]="value.id">
+                                                {{value.label}}
                                             </mat-radio-button>
                                         </mat-radio-group>
                                     </mat-form-field>
@@ -122,9 +122,9 @@
                                     <div class="input-form checkbox-form">
                                         <mat-selection-list #shoes class="div-list"
                                             [formControl]="arrFormControl[field.identifier]">
-                                            <mat-list-option *ngFor="let value of field.values" [value]="value"
+                                            <mat-list-option *ngFor="let value of field.values" [value]="value.id"
                                                 checkboxPosition="before">
-                                                {{value}}
+                                                {{value.label}}
                                             </mat-list-option>
                                         </mat-selection-list>
                                     </div>
