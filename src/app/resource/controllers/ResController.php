@@ -24,6 +24,8 @@ use Convert\models\AdrModel;
 use CustomField\models\CustomFieldModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
+use Doctype\models\DoctypeModel;
+use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Folder\controllers\FolderController;
 use Folder\models\FolderModel;
@@ -34,6 +36,7 @@ use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
 use IndexingModel\models\IndexingModelModel;
 use Note\models\NoteModel;
+use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
@@ -71,22 +74,19 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
 
-        $folders = $body['folders'] ?? [];
-        $tags = $body['tags'] ?? [];
-        unset($body['folders'], $body['tags']);
-
         $resId = StoreController::storeResource($body);
         if (empty($resId) || !empty($resId['errors'])) {
             return $response->withStatus(500)->withJson(['errors' => '[ResController create] ' . $resId['errors']]);
         }
 
-        if (!empty($folders)) {
-            foreach ($folders as $folder) {
+        //TODO découper
+        if (!empty($body['folders'])) {
+            foreach ($body['folders'] as $folder) {
                 ResourceFolderModel::create(['res_id' => $resId, 'folder_id' => $folder]);
             }
         }
-        if (!empty($tags)) {
-            foreach ($tags as $tag) {
+        if (!empty($body['tags'])) {
+            foreach ($body['tags'] as $tag) {
                 TagResModel::create(['res_id' => $resId, 'tag_id' => $tag]);
             }
         }
@@ -99,15 +99,14 @@ class ResController
 
         $customId = CoreConfigModel::getCustomId();
         $customId = empty($customId) ? 'null' : $customId;
-        $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
-        exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId 'letterbox_coll' --userId {$user['id']} > /dev/null &");
+        exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId 'letterbox_coll' --userId {$GLOBALS['id']} > /dev/null &");
 
         HistoryController::add([
             'tableName' => 'res_letterbox',
             'recordId'  => $resId,
             'eventType' => 'ADD',
             'info'      => _DOC_ADDED,
-            'moduleId'  => 'res',
+            'moduleId'  => 'resource',
             'eventId'   => 'resadd',
         ]);
 
@@ -656,7 +655,7 @@ class ResController
             }
         }
 
-        $entities = UserModel::getEntitiesById(['userId' => $user['user_id']]);
+        $entities = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
         $entities = array_column($entities, 'id');
 
         $foldersWithResources = FolderModel::getWithEntitiesAndResources([
@@ -810,6 +809,11 @@ class ResController
             return ['errors' => "Format with this mimeType is not allowed : {$body['format']} {$mimeType}"];
         }
 
+        $doctype = DoctypeModel::getById(['id' => $body['doctype'], 'select' => [1]]);
+        if (empty($doctype)) {
+            return ['errors' => 'Body doctype does not exist'];
+        }
+
         if (!empty($body['customFields'])) {
             if (!Validator::arrayType()->notEmpty()->validate($body['customFields'])) {
                 return ['errors' => 'Body customFields is not an array'];
@@ -857,25 +861,128 @@ class ResController
                     if ($indexingModelField['mandatory'] && empty($body['customFields'][$customFieldId])) {
                         return ['errors' => "Body customFields[{$customFieldId}] is empty"];
                     }
-                    $customField = CustomFieldModel::getById(['id' => $customFieldId, 'select' => ['type', 'values']]);
-                    $possibleValues = empty($customField['values']) ? [] : json_decode($customField['values']);
-                    if (($customField['type'] == 'select' || $customField['type'] == 'checkbox') && !in_array($body['customFields'][$customFieldId], $possibleValues)) {
-                        return ['errors' => "Body customFields[{$customFieldId}] has wrong value"];
-                    } elseif ($customField['type'] == 'checkbox') {
-                        if (!is_array($body['customFields'][$customFieldId])) {
-                            return ['errors' => "Body customFields[{$customFieldId}] is not an array"];
-                        }
-                        foreach ($body['customFields'][$customFieldId] as $value) {
-                            if (!in_array($value, $possibleValues)) {
-                                return ['errors' => "Body customFields[{$customFieldId}] has wrong value"];
+                    if (!empty($body['customFields'][$customFieldId])) {
+                        $customField = CustomFieldModel::getById(['id' => $customFieldId, 'select' => ['type', 'values']]);
+                        $possibleValues = empty($customField['values']) ? [] : json_decode($customField['values']);
+                        if (($customField['type'] == 'select' || $customField['type'] == 'checkbox') && !in_array($body['customFields'][$customFieldId], $possibleValues)) {
+                            return ['errors' => "Body customFields[{$customFieldId}] has wrong value"];
+                        } elseif ($customField['type'] == 'checkbox') {
+                            if (!is_array($body['customFields'][$customFieldId])) {
+                                return ['errors' => "Body customFields[{$customFieldId}] is not an array"];
                             }
+                            foreach ($body['customFields'][$customFieldId] as $value) {
+                                if (!in_array($value, $possibleValues)) {
+                                    return ['errors' => "Body customFields[{$customFieldId}] has wrong value"];
+                                }
+                            }
+                        } elseif ($customField['type'] == 'string' && !Validator::stringType()->notEmpty()->validate($body['customFields'][$customFieldId])) {
+                            return ['errors' => "Body customFields[{$customFieldId}] is not a string"];
+                        } elseif ($customField['type'] == 'integer' && !Validator::intVal()->notEmpty()->validate($body['customFields'][$customFieldId])) {
+                            return ['errors' => "Body customFields[{$customFieldId}] is not an integer"];
+                        } elseif ($customField['type'] == 'date' && !Validator::date()->notEmpty()->validate($body['customFields'][$customFieldId])) {
+                            return ['errors' => "Body customFields[{$customFieldId}] is not a date"];
                         }
                     }
                 } elseif ($indexingModelField['mandatory'] && empty($body[$indexingModelField['identifier']])) {
                     return ['errors' => "Body {$indexingModelField['identifier']} is empty"];
                 }
             }
+
+            if (!empty($body['initiator'])) {
+                $userEntities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
+                $userEntities = array_column($userEntities, 'entity_id');
+                if (!in_array($body['initiator'], $userEntities)) {
+                    return ['errors' => "Body initiator does not belong to your entities"];
+                }
+            }
+
         }
+
+        if (!empty($body['destination'])) {
+            $groups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
+
+            $clauseToProcess = '';
+            $allowedEntities = [];
+            foreach ($groups as $group) {
+                if (!$group['can_index']) {
+                    continue;
+                }
+                $group['indexation_parameters'] = json_decode($group['indexation_parameters'], true);
+                foreach ($group['indexation_parameters']['keywords'] as $keywordValue) {
+                    if (strpos($clauseToProcess, IndexingController::KEYWORDS[$keywordValue]) === false) {
+                        if (!empty($clauseToProcess)) {
+                            $clauseToProcess .= ', ';
+                        }
+                        $clauseToProcess .= IndexingController::KEYWORDS[$keywordValue];
+                    }
+                }
+                $allowedEntities = array_merge($allowedEntities, $group['indexation_parameters']['entities']);
+                $allowedEntities = array_unique($allowedEntities);
+            }
+
+            $preparedClause = '';
+            if (!empty($clauseToProcess)) {
+                $preparedClause = PreparedClauseController::getPreparedClause(['clause' => $clauseToProcess, 'login' => $GLOBALS['userId']]);
+            }
+            if (!empty($allowedEntities)) {
+                $preparedEntities = EntityModel::get(['select' => ['entity_id'], 'where' => ['enabled = ?', 'id in (?)'], 'data' => ['Y', $allowedEntities]]);
+                $allowedEntities = array_column($preparedEntities, 'entity_id');
+            }
+
+            if (!in_array($body['destination'], $allowedEntities) && strpos($preparedClause, $body['destination']) === false) {
+                return ['errors' => "Body destination is out of your indexing parameters"];
+            }
+
+        }
+
+        if (!empty($body['documentDate'])) {
+            if (!Validator::date()->notEmpty()->validate($body['documentDate'])) {
+                return ['errors' => "Body documentDate is not a date"];
+            }
+
+            $documentDate = new \DateTime($body['documentDate']);
+            $tmr = new \DateTime('tomorrow');
+
+            if ($documentDate > $tmr) {
+                return ['errors' => "Body documentDate is not a valid date"];
+            }
+        }
+        if (!empty($body['arrivalDate'])) {
+            if (!Validator::date()->notEmpty()->validate($body['arrivalDate'])) {
+                return ['errors' => "Body arrivalDate is not a date"];
+            }
+
+            $documentDate = new \DateTime($body['arrivalDate']);
+            $tmr = new \DateTime('tomorrow');
+
+            if ($documentDate > $tmr) {
+                return ['errors' => "Body arrivalDate is not a valid date"];
+            }
+        }
+        if (!empty($body['departureDate'])) {
+            if (!Validator::date()->notEmpty()->validate($body['departureDate'])) {
+                return ['errors' => "Body departureDate is not a date"];
+            }
+        }
+        if (!empty($body['processLimitDate'])) {
+            if (!Validator::date()->notEmpty()->validate($body['processLimitDate'])) {
+                return ['errors' => "Body processLimitDate is not a date"];
+            }
+
+            $processLimitDate = new \DateTime($body['processLimitDate']);
+            $today = new \DateTime();
+            $today->setTime(00, 00, 00);
+
+            if ($processLimitDate < $today) {
+                return ['errors' => "Body processLimitDate is not a valid date"];
+            }
+        } elseif (!empty($body['priority'])) {
+            $priority = PriorityModel::getById(['id' => $body['priority'], 'select' => [1]]);
+            if (empty($priority)) {
+                return ['errors' => "Body priority does not exist"];
+            }
+        }
+
 
         $tableMatch = [
             'subject'           => 'subject',
@@ -895,6 +1002,7 @@ class ResController
             'origin'            => 'origin'
         ];
 
+        //TODO check attributaire
         if (!empty($body['diffusion'])) {
             if (!Validator::arrayType()->notEmpty()->validate($body['diffusion'])) {
                 return ['errors' => 'Body diffusion is not an array'];

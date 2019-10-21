@@ -80,22 +80,18 @@ abstract class ResModelAbstract
         return $aResources[0];
     }
 
-    public static function create(array $aArgs)
+    public static function create(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status', 'category_id']);
-        ValidatorModel::stringType($aArgs, ['format', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'status', 'category_id']);
-        ValidatorModel::intVal($aArgs, ['filesize', 'res_id', 'typist']);
-
-        if (empty($aArgs['res_id'])) {
-            $aArgs['res_id'] = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_id_mlb_seq']);
-        }
+        ValidatorModel::notEmpty($args, ['res_id', 'format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status', 'category_id']);
+        ValidatorModel::stringType($args, ['format', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'status', 'category_id']);
+        ValidatorModel::intVal($args, ['filesize', 'res_id', 'typist']);
 
         DatabaseModel::insert([
             'table'         => 'res_letterbox',
-            'columnsValues' => $aArgs
+            'columnsValues' => $args
         ]);
 
-        return $aArgs['res_id'];
+        return true;
     }
 
     public static function update(array $aArgs)
@@ -195,37 +191,6 @@ abstract class ResModelAbstract
         }
 
         return $resource[0];
-    }
-
-    public static function getStoredProcessLimitDate(array $aArgs)
-    {
-        ValidatorModel::intVal($aArgs, ['resId', 'typeId']);
-        ValidatorModel::stringType($aArgs, ['admissionDate']);
-
-        if (!empty($aArgs['typeId'])) {
-            $typeId = $aArgs['type_id'];
-        } else {
-            $document = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['type_id']]);
-            $typeId = $document['type_id'];
-        }
-
-        $processDelay = 30;
-        if (!empty($typeId)) {
-            $doctype = DoctypeModel::getById(['select' => ['process_delay'], 'id' => $typeId]);
-            $processDelay = $doctype['process_delay'];
-        }
-
-        if (!empty($aArgs['admissionDate'])) {
-            if (strtotime($aArgs['admissionDate']) === false) {
-                $defaultDate = date('c');
-            } else {
-                $defaultDate = $aArgs['admissionDate'];
-            }
-        } else {
-            $defaultDate = date('c');
-        }
-
-        return IndexingController::calculateProcessDate(['date' => $defaultDate, 'delay' => $processDelay]);
     }
 
     public static function getCategories()

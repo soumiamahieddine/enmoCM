@@ -6,6 +6,8 @@
 --                                                                          --
 -- *************************************************************************--
 
+DROP VIEW IF EXISTS res_view_letterbox;
+
 DROP TABLE IF EXISTS cases;
 DROP TABLE IF EXISTS cases_res;
 

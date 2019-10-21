@@ -793,7 +793,7 @@ class ResourceListController
 
         $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
 
-        $entities = UserModel::getEntitiesById(['userId' => $user['user_id']]);
+        $entities = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
         $entities = array_column($entities, 'id');
 
         if (empty($entities)) {

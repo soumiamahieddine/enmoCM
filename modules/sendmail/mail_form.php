@@ -109,7 +109,7 @@ $core_tools->load_header('', true, false);
 <body><?php
 $core_tools->load_js();
 
-$aUserEntities = \User\models\UserModel::getEntitiesById(['userId' => $_SESSION['user']['UserId']]);
+$aUserEntities = \User\models\UserModel::getEntitiesByLogin(['login' => $_SESSION['user']['UserId']]);
 $userEntities = [];
 foreach ($aUserEntities as $value) {
     $userEntities[] = $value['entity_id'];

@@ -277,7 +277,7 @@ abstract class EntityModelAbstract
             return $entities;
         }
 
-        $aReturn = UserModel::getEntitiesById(['userId' => $aArgs['userId']]);
+        $aReturn = UserModel::getEntitiesByLogin(['login' => $aArgs['userId']]);
         foreach ($aReturn as $value) {
             $entities = array_merge($entities, EntityModel::getEntityChildren(['entityId' => $value['entity_id']]));
         }

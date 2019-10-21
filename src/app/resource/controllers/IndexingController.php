@@ -28,6 +28,17 @@ use SrcCore\models\ValidatorModel;
 
 class IndexingController
 {
+    const KEYWORDS = [
+        'ALL_ENTITIES'          => '@all_entities',
+        'ENTITIES_JUST_BELOW'   => '@immediate_children[@my_primary_entity]',
+        'ENTITIES_BELOW'        => '@subentities[@my_entities]',
+        'ALL_ENTITIES_BELOW'    => '@subentities[@my_primary_entity]',
+        'ENTITIES_JUST_UP'      => '@parent_entity[@my_primary_entity]',
+        'MY_ENTITIES'           => '@my_entities',
+        'MY_PRIMARY_ENTITY'     => '@my_primary_entity',
+        'SAME_LEVEL_ENTITIES'   => '@sisters_entities[@my_primary_entity]'
+    ];
+
     public function getIndexingActions(Request $request, Response $response, array $aArgs)
     {
         if (!Validator::intVal()->notEmpty()->validate($aArgs['groupId'])) {
@@ -58,17 +69,6 @@ class IndexingController
             return $response->withStatus(403)->withJson($indexingParameters);
         }
 
-        $keywords = [
-            'ALL_ENTITIES'          => '@all_entities',
-            'ENTITIES_JUST_BELOW'   => '@immediate_children[@my_primary_entity]',
-            'ENTITIES_BELOW'        => '@subentities[@my_entities]',
-            'ALL_ENTITIES_BELOW'    => '@subentities[@my_primary_entity]',
-            'ENTITIES_JUST_UP'      => '@parent_entity[@my_primary_entity]',
-            'MY_ENTITIES'           => '@my_entities',
-            'MY_PRIMARY_ENTITY'     => '@my_primary_entity',
-            'SAME_LEVEL_ENTITIES'   => '@sisters_entities[@my_primary_entity]'
-        ];
-
         $allowedEntities = [];
         $clauseToProcess = '';
 
@@ -76,7 +76,7 @@ class IndexingController
             if (!empty($clauseToProcess)) {
                 $clauseToProcess .= ', ';
             }
-            $clauseToProcess .= $keywords[$keywordValue];
+            $clauseToProcess .= IndexingController::KEYWORDS[$keywordValue];
         }
 
         if (!empty($clauseToProcess)) {
