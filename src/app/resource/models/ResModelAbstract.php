@@ -82,8 +82,8 @@ abstract class ResModelAbstract
 
     public static function create(array $args)
     {
-        ValidatorModel::notEmpty($args, ['res_id', 'format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status', 'category_id']);
-        ValidatorModel::stringType($args, ['format', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'status', 'category_id']);
+        ValidatorModel::notEmpty($args, ['res_id', 'format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'category_id']);
+        ValidatorModel::stringType($args, ['format', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'category_id']);
         ValidatorModel::intVal($args, ['filesize', 'res_id', 'typist']);
 
         DatabaseModel::insert([

@@ -109,8 +109,8 @@ class StoreController
 
     public static function prepareStorage(array $args)
     {
-        ValidatorModel::notEmpty($args, ['docserver_id', 'filename', 'format', 'filesize', 'path', 'fingerprint', 'status', 'resId', 'modelId']);
-        ValidatorModel::stringType($args, ['docserver_id', 'filename', 'format', 'path', 'fingerprint', 'status']);
+        ValidatorModel::notEmpty($args, ['docserver_id', 'filename', 'format', 'filesize', 'path', 'fingerprint', 'resId', 'modelId']);
+        ValidatorModel::stringType($args, ['docserver_id', 'filename', 'format', 'path', 'fingerprint']);
         ValidatorModel::intVal($args, ['filesize', 'resId', 'modelId']);
 
         $indexingModel = IndexingModelModel::getById(['id' => $args['modelId'], 'select' => ['category']]);
@@ -142,7 +142,7 @@ class StoreController
             'alt_identifier'        => $chrono,
             'format'                => $args['format'],
             'typist'                => $args['typist'],
-            'status'                => $args['status'],
+            'status'                => $args['status'] ?? null,
             'destination'           => $args['destination'] ?? null,
             'initiator'             => $args['initiator'] ?? null,
             'confidentiality'       => empty('confidentiality') ? 'N' : 'Y',

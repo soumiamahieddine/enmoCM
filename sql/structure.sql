@@ -1119,7 +1119,7 @@ CREATE TABLE res_letterbox
   scan_wkstation character varying(255) DEFAULT NULL::character varying,
   scan_batch character varying(50) DEFAULT NULL::character varying,
   scan_postmark character varying(50) DEFAULT NULL::character varying,
-  status character varying(10) NOT NULL,
+  status character varying(10),
   destination character varying(50) DEFAULT NULL::character varying,
   work_batch bigint,
   origin character varying(50) DEFAULT NULL::character varying,

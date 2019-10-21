@@ -721,8 +721,6 @@ class ResController
 
         if (empty($body)) {
             return ['errors' => 'Body is not set or empty'];
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['status'])) {
-            return ['errors' => 'Body status is empty or not a string'];
         } elseif (!Validator::intVal()->notEmpty()->validate($body['doctype'])) {
             return ['errors' => 'Body doctype is empty or not an integer'];
         } elseif (!Validator::intVal()->notEmpty()->validate($body['modelId'])) {
@@ -779,6 +777,14 @@ class ResController
         if (!empty($control['errors'])) {
             return ['errors' => $control['errors']];
         }
+
+        if (!empty($body['status'])) {
+            $status = StatusModel::getById(['id' => $body['status'], 'select' => [1]]);
+            if (empty($status)) {
+                return ['errors' => 'Body status does not exist'];
+            }
+        }
+
 
         return true;
     }

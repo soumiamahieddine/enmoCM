@@ -360,6 +360,7 @@ WHERE service_id = 'edit_recipient_outside_process' OR service_id = 'update_diff
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
 DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
+UPDATE listmodels SET title = object_id WHERE title IS NULL;
 
 
 /* REFACTORING MODIFICATION */
@@ -367,7 +368,7 @@ ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
 ALTER TABLE tags ALTER COLUMN label TYPE character varying(128);
 UPDATE priorities SET delays = 30 WHERE delays IS NULL;
 ALTER TABLE priorities ALTER COLUMN delays SET NOT NULL;
-UPDATE listmodels SET title = object_id WHERE title IS NULL;
+ALTER TABLE res_letterbox ALTER COLUMN status DROP NOT NULL;
 
 /* REFACTORING SUPPRESSION */
 DO $$ BEGIN
