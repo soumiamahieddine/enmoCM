@@ -88,8 +88,8 @@ class IndexingModelController
         $categories = ResModel::getCategories();
         $categories = array_column($categories, 'id');
 
-        if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
+        if (!Validator::stringType()->notEmpty()->length(1, 256)->validate($body['label'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string or more than 256 characters']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['category']) || !in_array($body['category'], $categories)) {
             return $response->withStatus(400)->withJson(['errors' => "Body category is empty, not a string or not a valid category"]);
         } elseif (!Validator::arrayType()->notEmpty()->validate($body['fields'])) {
@@ -208,8 +208,8 @@ class IndexingModelController
         if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Param id is empty or not an integer']);
         }
-        if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
+        if (!Validator::stringType()->notEmpty()->length(1, 256)->validate($body['label'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string or more than 256 characters']);
         } elseif (!Validator::stringType()->notEmpty()->validate($body['category'])) {
             return $response->withStatus(400)->withJson(['errors' => "Body category is empty or not a string"]);
         } elseif (!Validator::boolType()->validate($body['default'])) {
