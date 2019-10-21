@@ -366,7 +366,7 @@ ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
 ALTER TABLE tags ALTER COLUMN label TYPE character varying(128);
 UPDATE priorities SET delays = 30 WHERE delays IS NULL;
 ALTER TABLE priorities ALTER COLUMN delays SET NOT NULL;
-
+UPDATE listmodels SET title = object_id WHERE title IS NULL;
 
 /* REFACTORING SUPPRESSION */
 DO $$ BEGIN

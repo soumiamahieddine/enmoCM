@@ -118,7 +118,7 @@ export class UsersAdministrationComponent implements OnInit {
 
         this.http.get('../../rest/users/' + user.id + '/isDeletable')
             .subscribe((response: any) => {
-                if (response.errors) {
+                if (response && response.hasOwnProperty('errors')) {
                     this.notify.error(response.errors);
                 } else {
                     user.isDeletable = response.isDeletable
@@ -297,7 +297,7 @@ export class UsersAdministrationComponent implements OnInit {
                                 //update listInstances
                                 this.http.put('../../rest/listinstances', user.redirectListInstances)
                                     .subscribe((data: any) => {
-                                        if (data.errors) {
+                                        if (data && data.hasOwnProperty('errors')) {
                                             this.notify.error(data.errors);
                                         } else {
 
