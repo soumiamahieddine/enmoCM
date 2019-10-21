@@ -124,6 +124,10 @@ class StoreController
             $chrono = ChronoModel::getChrono(['id' => $args['category_id'], 'entityId' => $args['destination'], 'typeId' => $args['doctype'], 'resId' => $args['resId']]);
         }
 
+        if (!empty($args['processLimitDate']) && !empty($args['priority'])) {
+            $args['priority'] = IndexingController::calculatePriorityWithProcessLimitDate(['processLimitDate' => $args['processLimitDate']]);
+        }
+
         $externalId = '{}';
         if (!empty($args['externalId']) && is_array($args['externalId'])) {
             $externalId = json_encode($args['externalId']);

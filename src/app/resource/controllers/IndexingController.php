@@ -39,6 +39,17 @@ class IndexingController
         'SAME_LEVEL_ENTITIES'   => '@sisters_entities[@my_primary_entity]'
     ];
 
+    const HOLLIDAYS = [
+        '01-01',
+        '01-05',
+        '08-05',
+        '14-07',
+        '15-08',
+        '01-11',
+        '11-11',
+        '25-12'
+    ];
+
     public function getIndexingActions(Request $request, Response $response, array $aArgs)
     {
         if (!Validator::intVal()->notEmpty()->validate($aArgs['groupId'])) {
@@ -173,7 +184,14 @@ class IndexingController
             return $response->withStatus(400)->withJson(['errors' => 'Query params processLimitDate is empty']);
         }
 
-        $processLimitDate = new \DateTime($queryParams['processLimitDate']);
+        $priorityId = IndexingController::calculatePriorityWithProcessLimitDate(['processLimitDate' => $queryParams['processLimitDate']]);
+
+        return $response->withJson(['priority' => $priorityId]);
+    }
+
+    public static function calculatePriorityWithProcessLimitDate(array $args)
+    {
+        $processLimitDate = new \DateTime($args['processLimitDate']);
         $processLimitDate->setTime(23, 59, 59);
         $now = new \DateTime();
 
@@ -182,16 +200,7 @@ class IndexingController
 
         $workingDays = ParameterModel::getById(['id' => 'workingDays', 'select' => ['param_value_int']]);
         if (!empty($workingDays['param_value_int'])) {
-            $hollidays = [
-                '01-01',
-                '01-05',
-                '08-05',
-                '14-07',
-                '15-08',
-                '01-11',
-                '11-11',
-                '25-12'
-            ];
+            $hollidays = IndexingController::KEYWORDS;
             if (function_exists('easter_date')) {
                 $hollidays[] = date('d-m', easter_date() + 86400);
             }
@@ -214,7 +223,7 @@ class IndexingController
             $priority = PriorityModel::get(['select' => ['id'], 'orderBy' => ['delays DESC'], 'limit' => 1]);
         }
 
-        return $response->withJson(['priority' => $priority[0]['id']]);
+        return $priority[0]['id'];
     }
 
     public static function getEntitiesChildrenLevel($aArgs = [])
@@ -262,16 +271,7 @@ class IndexingController
 
         // Working Day
         if ($workingDays['param_value_int'] == 1 && !empty($args['delay'])) {
-            $hollidays = [
-                '01-01',
-                '01-05',
-                '08-05',
-                '14-07',
-                '15-08',
-                '01-11',
-                '11-11',
-                '25-12'
-            ];
+            $hollidays = IndexingController::KEYWORDS;
             if (function_exists('easter_date')) {
                 $hollidays[] = date('d-m', easter_date() + 86400);
             }
