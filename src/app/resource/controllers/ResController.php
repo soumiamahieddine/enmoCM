@@ -688,9 +688,9 @@ class ResController
                 ListInstanceModel::create([
                     'res_id'            => $args['resId'],
                     'sequence'          => 0,
-                    'item_id'           => $diffusion['item_id'],
-                    'item_type'         => $diffusion['item_type'],
-                    'item_mode'         => $diffusion['item_mode'],
+                    'item_id'           => $diffusion['id'],
+                    'item_type'         => $diffusion['type'],
+                    'item_mode'         => $diffusion['mode'],
                     'added_by_user'     => $GLOBALS['userId'],
                     'difflist_type'     => 'entity_id'
                 ]);
@@ -845,21 +845,21 @@ class ResController
             }
             $destFound = false;
             foreach ($body['diffusion'] as $key => $diffusion) {
-                if ($diffusion['item_mode'] == 'dest') {
+                if ($diffusion['mode'] == 'dest') {
                     if ($destFound) {
                         return ['errors' => "Body diffusion has multiple dest"];
                     }
                     $destFound = true;
                 }
-                if ($diffusion['item_type'] == 'user_id') {
-                    $user = UserModel::getByLogin(['login' => $diffusion['item_id'], 'select' => [1]]);
+                if ($diffusion['type'] == 'user_id') {
+                    $user = UserModel::getByLogin(['login' => $diffusion['id'], 'select' => [1]]);
                     if (empty($user)) {
-                        return ['errors' => "Body diffusion[{$key}] item_id does not exist"];
+                        return ['errors' => "Body diffusion[{$key}] id does not exist"];
                     }
                 } else {
-                    $entity = EntityModel::getByEntityId(['entityId' => $diffusion['item_id'], 'select' => [1]]);
+                    $entity = EntityModel::getByEntityId(['entityId' => $diffusion['id'], 'select' => [1]]);
                     if (empty($entity)) {
-                        return ['errors' => "Body diffusion[{$key}] item_id does not exist"];
+                        return ['errors' => "Body diffusion[{$key}] id does not exist"];
                     }
                 }
             }

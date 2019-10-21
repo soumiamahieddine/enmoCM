@@ -28,8 +28,8 @@ class StoreController
 {
     public static function storeResource(array $args)
     {
-        ValidatorModel::notEmpty($args, ['encodedFile', 'format', 'status', 'doctype', 'modelId']);
-        ValidatorModel::stringType($args, ['format', 'status']);
+        ValidatorModel::notEmpty($args, ['encodedFile', 'format', 'doctype', 'modelId']);
+        ValidatorModel::stringType($args, ['format']);
         ValidatorModel::intVal($args, ['doctype', 'modelId']);
 
         try {
