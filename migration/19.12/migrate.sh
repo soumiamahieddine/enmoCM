@@ -1,4 +1,5 @@
 #!/bin/sh
+php ./exportCustomFields.php
 php ./migrateCustomFields.php
 php ./migrateFileplans.php
 php ./migrateFolders.php
