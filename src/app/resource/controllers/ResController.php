@@ -79,17 +79,7 @@ class ResController
             return $response->withStatus(500)->withJson(['errors' => '[ResController create] ' . $resId['errors']]);
         }
 
-        //TODO découper
-        if (!empty($body['folders'])) {
-            foreach ($body['folders'] as $folder) {
-                ResourceFolderModel::create(['res_id' => $resId, 'folder_id' => $folder]);
-            }
-        }
-        if (!empty($body['tags'])) {
-            foreach ($body['tags'] as $tag) {
-                TagResModel::create(['res_id' => $resId, 'tag_id' => $tag]);
-            }
-        }
+        ResController::createAdjacentData(['body' => $body, 'resId' => $resId]);
 
         ConvertPdfController::convert([
             'resId'     => $resId,
@@ -509,6 +499,20 @@ class ResController
         return $response->withJson(NoteModel::countByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['id'], 'login' => $GLOBALS['userId']]));
     }
 
+    public function getCategories(Request $request, Response $response)
+    {
+        return $response->withJson(['categories' => ResModel::getCategories()]);
+    }
+
+    public function isAllowedForCurrentUser(Request $request, Response $response, array $aArgs)
+    {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withJson(['isAllowed' => false]);
+        }
+
+        return $response->withJson(['isAllowed' => true]);
+    }
+
     public static function getEncodedDocument(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
@@ -670,118 +674,27 @@ class ResController
         return false;
     }
 
-    public function getList(Request $request, Response $response)
+    private static function createAdjacentData(array $args)
     {
-        $data = $request->getParams();
+        ValidatorModel::notEmpty($args, ['resId', 'body']);
+        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::arrayType($args, ['body']);
 
-        if (!Validator::stringType()->notEmpty()->validate($data['select'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request: select is not valid']);
+        $body = $args['body'];
+        if (!empty($body['folders'])) {
+            foreach ($body['folders'] as $folder) {
+                ResourceFolderModel::create(['res_id' => $args['resId'], 'folder_id' => $folder]);
+            }
         }
-        if (!Validator::stringType()->notEmpty()->validate($data['clause'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request: clause is not valid']);
-        }
-        if (!empty($data['withFile'])) {
-            if (!Validator::boolType()->validate($data['withFile'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: withFile parameter is not a boolean']);
+        if (!empty($body['tags'])) {
+            foreach ($body['tags'] as $tag) {
+                TagResModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
             }
         }
 
-        if (!empty($data['orderBy'])) {
-            if (!Validator::arrayType()->notEmpty()->validate($data['orderBy'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: orderBy parameter not valid']);
-            }
-        }
-
-        if (!empty($data['limit'])) {
-            if (!Validator::intType()->validate($data['limit'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: limit parameter not valid']);
-            }
-        }
-        $select = explode(',', $data['select']);
-
-        $sve_start_date = false;
-        $keySve = array_search('sve_start_date', array_map('trim', $select));
-        if ($keySve !== false) {
-            unset($select[$keySve]);
-            $sve_start_date = true;
-        }
-        
-        if ($sve_start_date && empty($select)) {
-            $select[] = 'res_id';
-        }
-
-        if (!PreparedClauseController::isRequestValid(['select' => $select, 'clause' => $data['clause'], 'orderBy' => $data['orderBy'], 'limit' => $data['limit'], 'userId' => $GLOBALS['userId']])) {
-            return $response->withStatus(400)->withJson(['errors' => _INVALID_REQUEST]);
-        }
-
-        $where = [$data['clause']];
-        if ($GLOBALS['userId'] != 'superadmin') {
-            $groupsClause = GroupController::getGroupsClause(['userId' => $GLOBALS['userId']]);
-            if (empty($groupsClause)) {
-                return $response->withStatus(400)->withJson(['errors' => 'User has no groups']);
-            }
-            $where[] = "({$groupsClause})";
-        }
-
-        if ($data['withFile'] === true) {
-            $select[] = 'res_id';
-        }
-
-        $resources = ResModel::getOnView(['select' => $select, 'where' => $where, 'orderBy' => $data['orderBy'], 'limit' => $data['limit']]);
-        if (!empty($resources) && $data['withFile'] === true) {
-            foreach ($resources as $key => $res) {
-                $document = ResModel::getById(['resId' => $res['res_id'], 'select' => ['path', 'filename', 'docserver_id']]);
-                $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
-                if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
-                    continue;
-                }
-                $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
-                if (!file_exists($pathToDocument)) {
-                    continue;
-                }
-                $file = file_get_contents($pathToDocument);
-                $base64Content = base64_encode($file);
-                $resources[$key]['fileBase64Content'] = $base64Content;
-            }
-        }
-        if (!empty($resources) && $sve_start_date) {
-            $aResId = [];
-            foreach ($resources as $res) {
-                $aResId[] = $res['res_id'];
-            }
-            $aSveStartDate = AcknowledgementReceiptModel::getByResIds([
-                'select'  => ['res_id', 'min(send_date) as send_date'],
-                'resIds'  => $aResId,
-                'where'   => ['send_date IS NOT NULL', 'send_date != \'\''],
-                'groupBy' => ['res_id']
-            ]);
-            foreach ($resources as $key => $res) {
-                $resources[$key]['sve_start_date'] = null;
-                foreach ($aSveStartDate as $valueSveStartDate) {
-                    if ($res['res_id'] == $valueSveStartDate['res_id']) {
-                        $resources[$key]['sve_start_date'] = $valueSveStartDate['send_date'];
-                        break;
-                    }
-                }
-            }
-        }
-
-        return $response->withJson(['resources' => $resources, 'count' => count($resources)]);
+        return true;
     }
 
-    public function getCategories(Request $request, Response $response)
-    {
-        return $response->withJson(['categories' => ResModel::getCategories()]);
-    }
-
-    public function isAllowedForCurrentUser(Request $request, Response $response, array $aArgs)
-    {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
-            return $response->withJson(['isAllowed' => false]);
-        }
-
-        return $response->withJson(['isAllowed' => true]);
-    }
 
     //TODO decouper la fonction
     public static function createControls(array $args)
@@ -1013,5 +926,104 @@ class ResController
         }
 
         return true;
+    }
+
+    public function getList(Request $request, Response $response)
+    {
+        $data = $request->getParams();
+
+        if (!Validator::stringType()->notEmpty()->validate($data['select'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request: select is not valid']);
+        }
+        if (!Validator::stringType()->notEmpty()->validate($data['clause'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request: clause is not valid']);
+        }
+        if (!empty($data['withFile'])) {
+            if (!Validator::boolType()->validate($data['withFile'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: withFile parameter is not a boolean']);
+            }
+        }
+
+        if (!empty($data['orderBy'])) {
+            if (!Validator::arrayType()->notEmpty()->validate($data['orderBy'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: orderBy parameter not valid']);
+            }
+        }
+
+        if (!empty($data['limit'])) {
+            if (!Validator::intType()->validate($data['limit'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Bad Request: limit parameter not valid']);
+            }
+        }
+        $select = explode(',', $data['select']);
+
+        $sve_start_date = false;
+        $keySve = array_search('sve_start_date', array_map('trim', $select));
+        if ($keySve !== false) {
+            unset($select[$keySve]);
+            $sve_start_date = true;
+        }
+
+        if ($sve_start_date && empty($select)) {
+            $select[] = 'res_id';
+        }
+
+        if (!PreparedClauseController::isRequestValid(['select' => $select, 'clause' => $data['clause'], 'orderBy' => $data['orderBy'], 'limit' => $data['limit'], 'userId' => $GLOBALS['userId']])) {
+            return $response->withStatus(400)->withJson(['errors' => _INVALID_REQUEST]);
+        }
+
+        $where = [$data['clause']];
+        if ($GLOBALS['userId'] != 'superadmin') {
+            $groupsClause = GroupController::getGroupsClause(['userId' => $GLOBALS['userId']]);
+            if (empty($groupsClause)) {
+                return $response->withStatus(400)->withJson(['errors' => 'User has no groups']);
+            }
+            $where[] = "({$groupsClause})";
+        }
+
+        if ($data['withFile'] === true) {
+            $select[] = 'res_id';
+        }
+
+        $resources = ResModel::getOnView(['select' => $select, 'where' => $where, 'orderBy' => $data['orderBy'], 'limit' => $data['limit']]);
+        if (!empty($resources) && $data['withFile'] === true) {
+            foreach ($resources as $key => $res) {
+                $document = ResModel::getById(['resId' => $res['res_id'], 'select' => ['path', 'filename', 'docserver_id']]);
+                $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+                if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+                    continue;
+                }
+                $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
+                if (!file_exists($pathToDocument)) {
+                    continue;
+                }
+                $file = file_get_contents($pathToDocument);
+                $base64Content = base64_encode($file);
+                $resources[$key]['fileBase64Content'] = $base64Content;
+            }
+        }
+        if (!empty($resources) && $sve_start_date) {
+            $aResId = [];
+            foreach ($resources as $res) {
+                $aResId[] = $res['res_id'];
+            }
+            $aSveStartDate = AcknowledgementReceiptModel::getByResIds([
+                'select'  => ['res_id', 'min(send_date) as send_date'],
+                'resIds'  => $aResId,
+                'where'   => ['send_date IS NOT NULL', 'send_date != \'\''],
+                'groupBy' => ['res_id']
+            ]);
+            foreach ($resources as $key => $res) {
+                $resources[$key]['sve_start_date'] = null;
+                foreach ($aSveStartDate as $valueSveStartDate) {
+                    if ($res['res_id'] == $valueSveStartDate['res_id']) {
+                        $resources[$key]['sve_start_date'] = $valueSveStartDate['send_date'];
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $response->withJson(['resources' => $resources, 'count' => count($resources)]);
     }
 }

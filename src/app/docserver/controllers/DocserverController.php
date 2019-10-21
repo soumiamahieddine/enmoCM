@@ -230,7 +230,6 @@ class DocserverController
         }
 
         $directory = substr($docinfo['destinationDir'], strlen($docserver['path_template']));
-        $destinationDir = str_replace(DIRECTORY_SEPARATOR, '#', $directory);
 
         DocserverModel::update([
             'set'   => [
@@ -242,7 +241,7 @@ class DocserverController
 
         return [
             'path_template'         => $docserver['path_template'],
-            'destination_dir'       => $destinationDir,
+            'destination_dir'       => $directory,
             'directory'             => $directory,
             'docserver_id'          => $docserver['docserver_id'],
             'file_destination_name' => $docinfo['fileDestinationName'],

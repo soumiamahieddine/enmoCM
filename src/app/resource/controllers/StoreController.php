@@ -48,12 +48,12 @@ class StoreController
             $resId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_id_mlb_seq']);
 
             $data = [
+                'resId'         => $resId,
                 'docserver_id'  => $storeResult['docserver_id'],
                 'filename'      => $storeResult['file_destination_name'],
                 'filesize'      => $storeResult['fileSize'],
-                'path'          => $storeResult['destination_dir'],
-                'fingerprint'   => $storeResult['fingerPrint'],
-                'resId'         => $resId
+                'path'          => $storeResult['directory'],
+                'fingerprint'   => $storeResult['fingerPrint']
             ];
             $data = array_merge($args, $data);
             $data = StoreController::prepareStorage($data);
@@ -152,9 +152,9 @@ class StoreController
             'external_id'           => $externalId,
             'docserver_id'          => $args['docserver_id'],
             'filename'              => $args['filename'],
-            'filesize'              => $args['fileSize'],
+            'filesize'              => $args['filesize'],
             'path'                  => $args['path'],
-            'fingerprint'           => $args['fingerPrint'],
+            'fingerprint'           => $args['fingerprint'],
             'creation_date'         => 'CURRENT_TIMESTAMP'
         ];
 
