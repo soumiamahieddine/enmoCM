@@ -17,6 +17,7 @@ import { of } from 'rxjs';
 import { DocumentViewerComponent } from '../viewer/document-viewer.component';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { AddPrivateIndexingModelModalComponent } from './private-indexing-model/add-private-indexing-model-modal.component';
+import { ActionsService } from '../actions/actions.service';
 
 @Component({
     templateUrl: "indexation.component.html",
@@ -24,7 +25,7 @@ import { AddPrivateIndexingModelModalComponent } from './private-indexing-model/
         'indexation.component.scss',
         'indexing-form/indexing-form.component.scss'
     ],
-    providers: [NotificationService, AppService],
+    providers: [NotificationService, AppService, ActionsService],
 })
 export class IndexationComponent implements OnInit {
 
@@ -59,7 +60,8 @@ export class IndexationComponent implements OnInit {
         private notify: NotificationService,
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
-        public appService: AppService) {
+        public appService: AppService,
+        private actionService: ActionsService) {
 
         _activatedRoute.queryParams.subscribe(
             params => this.tmpFilename = params.tmpfilename
@@ -126,9 +128,14 @@ export class IndexationComponent implements OnInit {
 
     onSubmit() {
         if (this.indexingForm.isValidForm()) {
-            alert(this.selectedAction.component + '() déclenchée');
-            this.formatDatas(this.indexingForm.getDatas());
-            console.log(this.appDocumentViewer.getFile());
+            const formatdatas = this.formatDatas(this.indexingForm.getDatas());
+
+            // TO DO : WAIT DECISION
+            formatdatas['encodedFile'] = this.appDocumentViewer.getFile().content;
+            formatdatas['format'] = 'pdf';
+
+            this.actionService.launchIndexingAction(this.selectedAction, this.headerService.user.id, this.currentGroupId, formatdatas);
+
         } else {
             alert('Veuillez corriger les erreurs.');
         }
@@ -139,8 +146,7 @@ export class IndexationComponent implements OnInit {
         datas.forEach((element: any) => {
             formatData[element.identifier] = element.default_value;
         });
-
-        console.log(formatData);
+        return formatData;
     }
 
     loadIndexingModel(indexingModel: any) {

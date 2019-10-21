@@ -274,6 +274,13 @@ export class IndexingFormComponent implements OnInit {
                 });
             }
         });
+
+        if (!this.adminMode) {
+            arrIndexingModels.push({
+                identifier : 'modelId',
+                default_value : this.indexingFormId
+            });
+        }
         return arrIndexingModels;
     }
 
@@ -509,7 +516,7 @@ export class IndexingFormComponent implements OnInit {
     }
 
     loadForm(indexModelId: number) {
-
+        this.indexingFormId = indexModelId;
         Object.keys(this.arrFormControl).forEach(element => {
             delete this.arrFormControl[element];
         });
