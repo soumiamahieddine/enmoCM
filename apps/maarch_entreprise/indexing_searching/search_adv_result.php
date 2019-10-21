@@ -133,14 +133,12 @@ if (count($_REQUEST['meta']) > 0) {
                 $arrayPDO = array_merge($arrayPDO, array(":initiatorServiceChosen" => $_REQUEST['initiatorServices_chosen']));
                 $json_txt .= '],';
             } elseif ($tab_id_fields[$j] == 'multifield' && !empty($_REQUEST['multifield'])) {
-                // MULTIFIELD : subject, title, doc_custom_t1, process notes
+                // MULTIFIELD : subject, process notes
                 $multifield = trim($_REQUEST['multifield']);
                 $json_txt .= "'multifield' : ['".addslashes(trim($multifield))."'],";
 
                 $where_request .= "(REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:multifield) "
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifield) OR lower(alt_identifier) like lower(:multifield)) "
-                    ."or lower(title) LIKE lower(:multifield) "
-                    ."or lower(doc_custom_t1) LIKE lower(:multifield) "
                     ."or lower(description) LIKE lower(:multifield) "
                     ."or lower(barcode) LIKE lower(:multifield) "
                     ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifield)) "
@@ -188,7 +186,7 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'signatory_group' && !empty($_REQUEST['signatory_group'])) {
                 $json_txt .= " 'signatory_group' : ['".addslashes(trim($_REQUEST['signatory_group']))."'],";
                 $where_request .= " (res_id in (select res_id from listinstance where item_id in (select user_id from usergroup_content where group_id = :signatoryGroup) "
-                        ."and coll_id = '" . $coll_id . "' and item_mode = 'sign' and difflist_type = 'VISA_CIRCUIT')) ";
+                        ."and item_mode = 'sign' and difflist_type = 'VISA_CIRCUIT')) ";
                 $arrayPDO = array_merge($arrayPDO, array(":signatoryGroup" => $_REQUEST['signatory_group']));
                 $where_request .=" and  ";
             }
@@ -432,8 +430,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request_welcome .= "( REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:multifieldWelcome) "
                     ."or lower(external_reference) LIKE lower(:multifieldWelcomeReference) "
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifieldWelcome) OR lower(alt_identifier) like lower(:multifieldWelcome)) "
-                    ."or lower(title) LIKE lower(:multifieldWelcome) "
-                    ."or lower(description) LIKE lower(:multifieldWelcome) "
                     ."or lower(barcode) LIKE lower(:multifieldWelcome) "
                     ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifieldWelcome)) "
                     ."or res_id in (select res_id_master from res_view_attachments where (lower(translate(identifier,'/','')) like lower(:multifieldWelcome) OR lower(identifier) like lower(:multifieldWelcome)) AND status NOT IN ('DEL','OBS','TMP')) "

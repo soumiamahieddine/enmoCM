@@ -126,32 +126,29 @@ $browser_ie = 'false';
 $class_for_form = 'forms';
 $hr = '';
 $size = '';
-// $size = 'style="width:40px;"';
 
 // building of the parameters array used to pre-load the category list and the search elements
 $param = array();
 
-// Indexes specific to doctype
-$indexes = $type->get_all_indexes($coll_id);
+// Custom fields
+$customFields = \CustomField\models\CustomFieldModel::get();
+foreach ($customFields as $customField) {
+    $field = 'indexingCustomField_'.$customField['id'];
 
-for ($i = 0; $i < count($indexes); ++$i) {
-    $field = $indexes[$i]['column'];
-    if (preg_match('/^custom_/', $field)) {
-        $field = 'doc_'.$field;
-    }
-    if ($indexes[$i]['type_field'] == 'select') {
+    if (in_array($customField['type'], ['select', 'radio', 'checkbox'])) {
         $arr_tmp = array();
         array_push($arr_tmp, array('VALUE' => '', 'LABEL' => _CHOOSE.'...'));
-        for ($j = 0; $j < count($indexes[$i]['values']); ++$j) {
-            array_push($arr_tmp, array('VALUE' => $indexes[$i]['values'][$j]['id'], 'LABEL' => $indexes[$i]['values'][$j]['label']));
+        $customValues = json_decode($customField['values'], true);
+        foreach ($customValues as $customValue) {
+            array_push($arr_tmp, array('VALUE' => $customValue, 'LABEL' => $customValue));
         }
-        $arr_tmp2 = array('label' => $indexes[$i]['label'], 'type' => 'select_simple', 'param' => array('field_label' => $indexes[$i]['label'], 'default_label' => '', 'options' => $arr_tmp));
-    } elseif ($indexes[$i]['type'] == 'date') {
-        $arr_tmp2 = array('label' => $indexes[$i]['label'], 'type' => 'date_range', 'param' => array('field_label' => $indexes[$i]['label'], 'id1' => $field.'_from', 'id2' => $field.'_to'));
-    } elseif ($indexes[$i]['type'] == 'string') {
-        $arr_tmp2 = array('label' => $indexes[$i]['label'], 'type' => 'input_text', 'param' => array('field_label' => $indexes[$i]['label'], 'other' => $size));
-    } else {  // integer or float
-        $arr_tmp2 = array('label' => $indexes[$i]['label'], 'type' => 'num_range', 'param' => array('field_label' => $indexes[$i]['label'], 'id1' => $field.'_min', 'id2' => $field.'_max'));
+        $arr_tmp2 = array('label' => $customField['label'], 'type' => 'select_simple', 'param' => array('field_label' => $customField['label'], 'default_label' => '', 'options' => $arr_tmp));
+    } elseif ($customField['type'] == 'date') {
+        $arr_tmp2 = array('label' => $customField['label'], 'type' => 'date_range', 'param' => array('field_label' => $customField['label'], 'id1' => $field.'_from', 'id2' => $field.'_to'));
+    } elseif ($customField['type'] == 'string') {
+        $arr_tmp2 = array('label' => $customField['label'], 'type' => 'input_text', 'param' => array('field_label' => $customField['label'], 'other' => ''));
+    } else {  // integer
+        $arr_tmp2 = array('label' => $customField['label'], 'type' => 'num_range', 'param' => array('field_label' => $customField['label'], 'id1' => $field.'_min', 'id2' => $field.'_max'));
     }
     $param[$field] = $arr_tmp2;
 }

@@ -496,6 +496,7 @@ export const LANG_FR = {
     "keyword"                               : "Mot-clé",
     "keywordHelp"                           : "Aide sur les mots-clés",
     "keywordHelpDesc_1"                     : "Identifiant de l'utilisateur connecté",
+    "keywordHelpDesc_12"                    : "Identifiant technique de l'utilisateur connecté",
     "keywordHelpDesc_10"                    : "Sous-entités immédiates (n-1) des entités données en argument",
     "keywordHelpDesc_11"                    : "Exemple de périmètre documentaire : accès aux ressources concernant le service principal de l'utilisateur connecté, ou les sous-services de ce service",
     "keywordHelpDesc_2"                     : "Courriel de l'utilisateur connecté",

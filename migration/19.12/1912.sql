@@ -243,9 +243,10 @@ DO $$ BEGIN
         ALTER TABLE res_letterbox ALTER COLUMN typist_tmp set not null;
         ALTER TABLE res_letterbox DROP COLUMN IF EXISTS typist;
         ALTER TABLE res_letterbox RENAME COLUMN typist_tmp TO typist;
+        UPDATE baskets SET basket_clause = REPLACE(basket_clause, 'typist = @user', 'typist = @user_id');
+        UPDATE security SET where_clause = REPLACE(where_clause, 'typist = @user', 'typist = @user_id');
     END IF;
 END$$;
-
 
 /* MLB COLL EXT */
 DO $$ BEGIN
@@ -422,10 +423,12 @@ ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tablename;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS validation_date;
 ALTER TABLE listinstance DROP COLUMN IF EXISTS added_by_entity;
 ALTER TABLE listinstance DROP COLUMN IF EXISTS coll_id;
+UPDATE baskets SET basket_clause = REPLACE(basket_clause, 'coll_id = ''letterbox_coll'' AND', '') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
+UPDATE baskets SET basket_clause = REPLACE(basket_clause, 'coll_id = ''letterbox_coll'' and', '') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
+
 ALTER TABLE listinstance DROP COLUMN IF EXISTS listinstance_type;
 ALTER TABLE listinstance DROP COLUMN IF EXISTS visible;
 ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_entity;
-
 
 
 /* RE CREATE VIEWS */

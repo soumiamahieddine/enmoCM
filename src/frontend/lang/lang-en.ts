@@ -473,6 +473,7 @@ export const LANG_EN = {
     "keyword"                               : "Keyword",
     "keywordHelp"                           : "Keyword help",
     "keywordHelpDesc_1"                     : "Identifier of logged user",
+    "keywordHelpDesc_12"                    : "Technical user id of logged user",
     "keywordHelpDesc_10"                    : "Immediate sub-entities (n-1) of entities passed in argument",
     "keywordHelpDesc_11"                    : "Example of security definition for a group (where clause) : access of main entity of logged user or sub-entity of this entity",
     "keywordHelpDesc_2"                     : "Email of logged user",

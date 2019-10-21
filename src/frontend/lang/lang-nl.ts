@@ -488,6 +488,7 @@ export const LANG_NL = {
     "keyword"                               : "Sleutelwoord",
     "keywordHelp"                           : "Hulp voor sleutelwoorden",
     "keywordHelpDesc_1"                     : "Gebruikersnaam van de verbonden gebruiker",
+    "keywordHelpDesc_12"                    : "Technical user id of logged user", //_TO_TRANSLATE
     "keywordHelpDesc_10"                    : "Subeenheden die direct onder (n-1) de in het argument gegeven eenheden liggen",
     "keywordHelpDesc_11"                    : "Voorbeeld van documentaire perimeter toegang tot assets met betrekking tot de hoofddienst van de verbonden gebruiker of tot de subdiensten van deze dienst",
     "keywordHelpDesc_2"                     : "E-mail van de verbonden gebruiker",
