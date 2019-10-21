@@ -226,7 +226,7 @@ class FolderController
 
         if ($folder[0]['parent_id'] != $data['parent_id']) {
             $childrenInPerimeter = FolderController::areChildrenInPerimeter(['folderId' => $aArgs['id']]);
-            if ($childrenInPerimeter) {
+            if ($childrenInPerimeter || $folder[0]['user_id'] == $GLOBALS['id']) {
                 FolderModel::update([
                     'set' => [
                         'parent_id' => $data['parent_id'],
@@ -792,7 +792,7 @@ class FolderController
         }
 
         $folders = FolderModel::getWithEntities([
-            'select'   => ['count(1)'],
+            'select'   => ['count(distinct folders.id)'],
             'where'    => ['folders.id in (?)', '(user_id = ? OR entity_id in (?))'],
             'data'     => [$args['folders'], $args['userId'], $entities]
         ]);
