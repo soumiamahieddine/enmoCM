@@ -123,7 +123,10 @@ class IndexingController
 
         $actions = [];
         foreach ($indexingParameters['indexingParameters']['actions'] as $value) {
-            $actions[] = ActionModel::getById(['id' => $value, 'select' => ['id', 'label_action', 'component']]);
+            $action = ActionModel::getById(['id' => $value, 'select' => ['id', 'label_action', 'component', 'id_status']]);
+
+            $action['enabled'] = !empty($action['id_status']) && $action['id_status'] != '_NOSTATUS_';
+            $actions[] = $action;
         }
 
         return $response->withJson(['actions' => $actions]);
