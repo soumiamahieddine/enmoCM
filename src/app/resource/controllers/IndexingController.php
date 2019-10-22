@@ -96,7 +96,9 @@ class IndexingController
         $body['note'] = empty($body['note']) ? null : $body['note'];
 
         $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
-        $methodResponse = ActionMethodController::$method(['resId' => $body['resource'], 'data' => $body['data'], 'note' => $body['note']]);
+        if (!empty($method)) {
+            $methodResponse = ActionMethodController::$method(['resId' => $body['resource'], 'data' => $body['data'], 'note' => $body['note']]);
+        }
 
         $historic = empty($methodResponse['history']) ? '' : $methodResponse['history'];
         ActionMethodController::terminateAction(['id' => $args['actionId'], 'resources' => [$body['resource']], 'basketName' => 'Indexing', 'note' => $body['note'], 'history' => $historic]);
