@@ -22,7 +22,6 @@ use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Template\models\TemplateModel;
-use Doctype\models\DoctypeIndexesModel;
 
 class FirstLevelController
 {
@@ -116,7 +115,7 @@ class FirstLevelController
             'order_by'  => ['doctypes_second_level_label asc']
         ]);
         $obj['models'] = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);
-        $obj['indexes'] = DoctypeIndexesModel::getAllIndexes();
+        $obj['indexes'] = [];
 
         return $response->withJson($obj);
     }
