@@ -243,8 +243,8 @@ DO $$ BEGIN
         ALTER TABLE res_letterbox ALTER COLUMN typist_tmp set not null;
         ALTER TABLE res_letterbox DROP COLUMN IF EXISTS typist;
         ALTER TABLE res_letterbox RENAME COLUMN typist_tmp TO typist;
-        UPDATE baskets SET basket_clause = REPLACE(basket_clause, 'typist = @user', 'typist = @user_id');
-        UPDATE security SET where_clause = REPLACE(where_clause, 'typist = @user', 'typist = @user_id');
+        UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'typist(\s*)=(\s*)@user', 'typist = @user_id', 'gmi');
+        UPDATE security SET where_clause = REGEXP_REPLACE(where_clause, 'typist(\s*)=(\s*)@user', 'typist = @user_id', 'gmi');
     END IF;
 END$$;
 
