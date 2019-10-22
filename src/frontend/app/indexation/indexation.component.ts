@@ -5,7 +5,7 @@ import { NotificationService } from '../notification.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
 
@@ -13,7 +13,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { AppService } from '../../service/app.service';
 import { IndexingFormComponent } from './indexing-form/indexing-form.component';
 import { tap, finalize, catchError, map, filter, exhaustMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { DocumentViewerComponent } from '../viewer/document-viewer.component';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { AddPrivateIndexingModelModalComponent } from './private-indexing-model/add-private-indexing-model-modal.component';
@@ -33,7 +33,6 @@ export class IndexationComponent implements OnInit {
 
     loading: boolean = false;
 
-
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
@@ -50,6 +49,8 @@ export class IndexationComponent implements OnInit {
 
     dialogRef: MatDialogRef<any>;
 
+    subscription: Subscription;
+
     constructor(
         private route: ActivatedRoute,
         private _activatedRoute: ActivatedRoute,
@@ -61,11 +62,18 @@ export class IndexationComponent implements OnInit {
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
         public appService: AppService,
-        private actionService: ActionsService) {
+        private actionService: ActionsService,
+        private router: Router
+    ) {
 
         _activatedRoute.queryParams.subscribe(
             params => this.tmpFilename = params.tmpfilename
         );
+
+        // Event after process action 
+        this.subscription = this.actionService.catchAction().subscribe(message => {
+            this.router.navigate(['/home']);
+        });
     }
 
     ngOnInit(): void {
@@ -98,7 +106,7 @@ export class IndexationComponent implements OnInit {
                     return of(false);
                 })
             ).subscribe();
-            this.http.get("../../rest/indexing/" + this.currentGroupId + "/actions").pipe(
+            this.http.get("../../rest/indexing/groups/" + this.currentGroupId + "/actions").pipe(
                 map((data: any) => {
                     data.actions = data.actions.map((action: any, index: number) => {
                         return {
@@ -133,6 +141,8 @@ export class IndexationComponent implements OnInit {
             // TO DO : WAIT DECISION
             formatdatas['encodedFile'] = this.appDocumentViewer.getFile().content;
             formatdatas['format'] = 'pdf';
+
+            console.log(formatdatas['encodedFile']);
 
             this.actionService.launchIndexingAction(this.selectedAction, this.headerService.user.id, this.currentGroupId, formatdatas);
 
@@ -208,6 +218,11 @@ export class IndexationComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    ngOnDestroy() {
+        // unsubscribe to ensure no memory leaks
+        this.subscription.unsubscribe();
     }
 
 }

@@ -479,7 +479,7 @@ export class IndexingFormComponent implements OnInit {
                         arrayRoutes.push(this.http.get('../../rest/indexingModels/entities'));
 
                     } else {
-                        arrayRoutes.push(this.http.get('../../rest/indexing/' + this.groupId + '/entities'));
+                        arrayRoutes.push(this.http.get('../../rest/indexing/groups/' + this.groupId + '/entities'));
                     }
                 } else if (elem.identifier === 'category_id') {
                     arrayRoutes.push(this.http.get('../../rest/categories'));

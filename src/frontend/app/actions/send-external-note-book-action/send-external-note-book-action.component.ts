@@ -34,7 +34,7 @@ export class SendExternalNoteBookActionComponent implements OnInit {
     ngOnInit(): void {
         this.loading = true;
 
-        this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/checkExternalNoteBook', { resources: this.data.selectedRes }).pipe(
+        this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/checkExternalNoteBook', { resources: this.data.resIds }).pipe(
             map((data: any) => {
                 data.additionalsInfos.users.forEach((element: any) => {
                     element.displayName = element.firstname + ' ' + element.lastname;
@@ -53,28 +53,56 @@ export class SendExternalNoteBookActionComponent implements OnInit {
         ).subscribe();
     }
 
-    onSubmit(): void {
+    onSubmit() {
         this.loading = true;
 
+        if ( this.data.resIds.length === 0) {
+            // this.indexDocumentAndExecuteAction();
+        } else {
+            this.executeAction();
+        }
+    }
+
+    /* indexDocumentAndExecuteAction() {
+        
+        this.http.post('../../rest/resources', this.data.resource).pipe(
+            tap((data: any) => {
+                this.data.resIds = [data.resId];
+            }),
+            exhaustMap(() => this.http.put(this.data.indexActionRoute, {resource : this.data.resIds[0], note : this.noteEditor.getNoteContent()})),
+            tap(() => {
+                this.dialogRef.close('success');
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe()
+    } */
+
+    executeAction() {
         let realResSelected: string[];
         let datas: any;
 
         realResSelected = this.additionalsInfos.mails.map((e: any) => { return e.res_id; });
         datas = this.externalSignatoryBookDatas;
 
-        this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: realResSelected, note: this.noteEditor.getNoteContent(), data: datas })
-            .subscribe((data: any) => {
+        this.http.put(this.data.processActionRoute, {resources : realResSelected, note : this.noteEditor.getNoteContent(), data: datas}).pipe(
+            tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close('success');
                 }
                 if (data && data.errors != null) {
                     this.notify.error(data.errors);
                 }
-                this.loading = false;
-            }, (err: any) => {
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
                 this.notify.handleErrors(err);
-                this.loading = false;
-            });
+                return of(false);
+            })
+        ).subscribe();
     }
 
     checkValidAction() {

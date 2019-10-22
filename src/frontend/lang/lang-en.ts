@@ -1159,4 +1159,5 @@ export const LANG_EN = {
     "addPrivateIndexingModelMsg2" : "with <b>current</b> values.",
     "privateIndexingModelCreation" : "Private indexing model creation",
     "createPrivateIndexingModel" : "Create an indexing model with current datas",
+    "currentIndexingMail" : "the current indexing mail",
 };

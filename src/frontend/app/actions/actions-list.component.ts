@@ -4,31 +4,15 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
-
-import { ConfirmActionComponent } from './confirm-action/confirm-action.component';
-import { EnabledBasketPersistenceActionComponent } from './enabled-basket-persistence-action/enabled-basket-persistence-action.component';
-import { DisabledBasketPersistenceActionComponent } from './disabled-basket-persistence-action/disabled-basket-persistence-action.component';
-import { ResMarkAsReadActionComponent } from './res-mark-as-read-action/res-mark-as-read-action.component';
-import { CloseMailActionComponent } from './close-mail-action/close-mail-action.component';
-import { UpdateAcknowledgementSendDateActionComponent } from './update-acknowledgement-send-date-action/update-acknowledgement-send-date-action.component';
-import { CreateAcknowledgementReceiptActionComponent } from './create-acknowledgement-receipt-action/create-acknowledgement-receipt-action.component';
-import { CloseAndIndexActionComponent } from './close-and-index-action/close-and-index-action.component';
-import { UpdateDepartureDateActionComponent } from './update-departure-date-action/update-departure-date-action.component';
-import { SendExternalSignatoryBookActionComponent } from './send-external-signatory-book-action/send-external-signatory-book-action.component';
-import { SendExternalNoteBookActionComponent } from './send-external-note-book-action/send-external-note-book-action.component';
-// import { ProcessActionComponent } from './process-action/process-action.component';
 import { Router } from '@angular/router';
-import { ViewDocActionComponent } from './view-doc-action/view-doc-action.component';
-import { RedirectActionComponent } from './redirect-action/redirect-action.component';
-import { SendShippingActionComponent } from './send-shipping-action/send-shipping-action.component';
-import { map, tap } from 'rxjs/operators';
-import { ConfirmComponent } from '../../plugins/modal/confirm.component';
+import { ActionsService } from './actions.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-actions-list',
     templateUrl: "actions-list.component.html",
     styleUrls: ['actions-list.component.scss'],
-    providers: [NotificationService],
+    providers: [NotificationService, ActionsService],
 })
 export class ActionsListComponent implements OnInit {
 
@@ -41,11 +25,12 @@ export class ActionsListComponent implements OnInit {
     contextMenuPosition = { x: '0px', y: '0px' };
     contextMenuTitle = '';
     currentAction: any = {};
+    currentResource: any = null;
     basketInfo: any = {};
     contextResId = 0;
     currentLock: any = null;
     arrRes: any[] = [];
-    folderList: any [] = [];
+    folderList: any[] = [];
 
     actionsList: any[] = [];
 
@@ -57,11 +42,25 @@ export class ActionsListComponent implements OnInit {
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
     @Output('refreshPanelFolders') refreshPanelFolders = new EventEmitter<string>();
 
-    constructor(public http: HttpClient, private notify: NotificationService, public dialog: MatDialog, private router: Router) { }
+    constructor(
+        public http: HttpClient,
+        private notify: NotificationService,
+        public dialog: MatDialog,
+        private router: Router,
+        private actionService: ActionsService
+    ) { }
 
     dialogRef: MatDialogRef<any>;
-    
-    ngOnInit(): void { }
+    subscription: Subscription;
+
+    ngOnInit(): void {
+        // Event after process action 
+        this.subscription = this.actionService.catchAction().subscribe(message => {
+            console.log('TOTO!');
+            this.refreshEvent.emit();
+            this.refreshPanelFolders.emit();
+        });
+    }
 
     open(x: number, y: number, row: any) {
 
@@ -69,6 +68,8 @@ export class ActionsListComponent implements OnInit {
         // Adjust the menu anchor position
         this.contextMenuPosition.x = x + 'px';
         this.contextMenuPosition.y = y + 'px';
+
+        this.currentResource = row;
 
         this.contextMenuTitle = row.alt_identifier;
         this.contextResId = row.res_id;
@@ -93,372 +94,13 @@ export class ActionsListComponent implements OnInit {
             this.contextMenuTitle = '';
             this.contextResId = 0;
         }
-        
-        if (row !== undefined){
+
+        if (row !== undefined) {
             this.contextMenuTitle = row.alt_identifier;
         }
 
-        if (action.component == 'v1Action' && this.arrRes.length > 1) {
-            alert(this.lang.actionMassForbidden);
-        } else if (action.component !== null) {
-            
-            this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: this.arrRes })
-                .subscribe((data: any) => {
-                    try {
-                        let msgWarn = this.lang.warnLockRes + ' : ' + data.lockers.join(', ');
+        this.actionService.launchAction(action, this.currentBasketInfo.ownerId, this.currentBasketInfo.groupId, this.currentBasketInfo.basketId, this.selectedRes, this.currentResource);
 
-                        if (data.lockedResources != this.arrRes.length) {
-                            msgWarn += this.lang.warnLockRes2 + '.';
-                        }
-
-                        if (data.lockedResources > 0) {
-                            alert(data.lockedResources + ' ' + msgWarn);
-                        }
-
-                        if (data.lockedResources != this.arrRes.length) {
-                            this.lock();
-                            this[action.component]();
-                        }
-                    }
-                    catch (error) {
-                        console.log(error);
-                        console.log(action.component);
-                        alert(this.lang.actionNotExist);
-                    }
-                    this.loading = false;
-                }, (err: any) => {
-                    this.notify.handleErrors(err);
-                });
-        }
-
-    }
-
-    /* OPEN SPECIFIC ACTION */
-    confirmAction() {
-        const dialogRef = this.dialog.open(ConfirmActionComponent, {
-            width: '500px',
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
-
-            if (result == 'success') {
-                this.endAction();
-            } else {
-                this.unlockRest();
-            }
-        });
-    }
-
-    closeMailAction() {
-        const dialogRef = this.dialog.open(CloseMailActionComponent, {
-            width: '500px',
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
-
-            if (result == 'success') {
-                this.endAction();
-            } else {
-                this.unlockRest();
-            }
-        });
-    }
-
-    closeAndIndexAction() {
-        const dialogRef = this.dialog.open(CloseAndIndexActionComponent, {
-            width: '500px',
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
-
-            if (result == 'success') {
-                this.endAction();
-            } else {
-                this.unlockRest();
-            }
-        });
-    }
-
-    updateAcknowledgementSendDateAction() {
-        const dialogRef = this.dialog.open(UpdateAcknowledgementSendDateActionComponent, {
-            width: '500px',
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
-
-            if (result == 'success') {
-                this.endAction();
-            } else {
-                this.unlockRest();
-            }
-        });
-    }
-
-    createAcknowledgementReceiptsAction() {
-        const dialogRef = this.dialog.open(CreateAcknowledgementReceiptActionComponent, {
-            width: '600px',
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
-
-            if (result == 'success') {
-                this.endAction();
-            } else {
-                this.unlockRest();
-            }
-        });
-    }
-
-    updateDepartureDateAction() {
-        const dialogRef = this.dialog.open(UpdateDepartureDateActionComponent, {
-            width: '500px',
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
-
-            if (result == 'success') {
-                this.endAction();
-            } else {
-                this.unlockRest();
-            }
-        });
-    }
-
-    disabledBasketPersistenceAction() {
-        const dialogRef = this.dialog.open(DisabledBasketPersistenceActionComponent, {
-            width: '500px',
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
-
-            if (result == 'success') {
-                this.endAction();
-            } else {
-                this.unlockRest();
-            }
-        });
-    }
-
-    enabledBasketPersistenceAction() {
-        const dialogRef = this.dialog.open(EnabledBasketPersistenceActionComponent, {
-            width: '500px',
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
-
-            if (result == 'success') {
-                this.endAction();
-            } else {
-                this.unlockRest();
-            }
-        });
-    }
-
-    resMarkAsReadAction() {
-        const dialogRef = this.dialog.open(ResMarkAsReadActionComponent, {
-            width: '500px',
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
-
-            if (result == 'success') {
-                this.endAction();
-            } else {
-                this.unlockRest();
-            }
-        });
-    }
-
-    viewDoc() {
-        this.dialog.open(ViewDocActionComponent, {
-            panelClass: 'no-padding-full-dialog',
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });
-    }
-
-    sendExternalSignatoryBookAction() {
-        const dialogRef = this.dialog.open(SendExternalSignatoryBookActionComponent, {
-            width: '500px',
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
-
-            if (result == 'success') {
-                this.endAction();
-            } else {
-                this.unlockRest();
-            }
-        });
-    }
-
-    sendExternalNoteBookAction() {
-        const dialogRef = this.dialog.open(SendExternalNoteBookActionComponent, {
-            width: '500px',
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
-
-            if (result == 'success') {
-                this.endAction();
-            } else {
-                this.unlockRest();
-            }
-        });
-    }
-
-    redirectAction() {
-        const dialogRef = this.dialog.open(RedirectActionComponent, {
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
-
-            if (result == 'success') {
-                this.endAction();
-            } else {
-                this.unlockRest();
-            }
-        });
-    }
-
-    sendShippingAction() {
-        const dialogRef = this.dialog.open(SendShippingActionComponent, {
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            this.unlock();
-
-            if (result == 'success') {
-                this.endAction();
-            } else {
-                this.unlockRest();
-            }
-        });
-    }
-
-    // CALL GENERIC ACTION V1
-    v1Action() {
-        location.hash = "";
-        window.location.href = 'index.php?page=view_baskets&module=basket&baskets=' + this.currentBasketInfo.basket_id + '&basketId=' + this.currentBasketInfo.basketId + '&resId=' + this.arrRes[0] + '&userId=' + this.currentBasketInfo.ownerId + '&groupIdSer=' + this.currentBasketInfo.groupId + '&defaultAction=' + this.currentAction.id;
-        // WHEN V2
-        /*this.dialog.open(ProcessActionComponent, {
-            width: '500px',
-            data: {
-                contextMode: this.contextMode,
-                contextChrono: this.contextMenuTitle,
-                selectedRes: this.selectedRes,
-                action: this.currentAction,
-                currentBasketInfo: this.currentBasketInfo
-            }
-        });*/
-    }
-
-    // CALL SIGNATUREBOOK WITH V1 METHOD
-    signatureBookAction() {
-        location.hash = "";
-        window.location.href = 'index.php?page=view_baskets&module=basket&baskets=' + this.currentBasketInfo.basket_id + '&basketId=' + this.currentBasketInfo.basketId + '&resId=' + this.arrRes[0] + '&userId=' + this.currentBasketInfo.ownerId + '&groupIdSer=' + this.currentBasketInfo.groupId + '&defaultAction=' + this.currentAction.id + '&signatureBookMode=true';
-
-    }
-    ////
-
-    endAction() {
-        this.triggerEvent.emit();
-        this.notify.success(this.lang.action + ' : "' + this.currentAction.label_action + '" ' + this.lang.done);
     }
 
     loadActionList() {
@@ -471,6 +113,16 @@ export class ActionsListComponent implements OnInit {
                 .subscribe((data: any) => {
                     if (data.actions.length > 0) {
                         this.actionsList = data.actions;
+
+                        // TO DO TO REMOVE AFTER BACK CHANGE : label_action => label
+                        this.actionsList = data.actions.map((action: any) => {
+                            return {
+                                id: action.id,
+                                label: action.label_action,
+                                component: action.component
+                            }
+                        });
+                        
                     } else {
                         this.actionsList = [{
                             id: 0,
@@ -485,27 +137,16 @@ export class ActionsListComponent implements OnInit {
         }
     }
 
-    lock() {
-        this.currentLock = setInterval(() => {
-            this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/lock', { resources: this.arrRes })
-                .subscribe((data: any) => { }, (err: any) => { });
-        }, 50000);
-    }
-
-    unlock() {
-        clearInterval(this.currentLock);
-    }
-
-    unlockRest() {
-        this.http.put('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/unlock', { resources: this.arrRes })
-            .subscribe((data: any) => { }, (err: any) => { });
-    }
-
     refreshList() {
         this.refreshEvent.emit();
     }
 
     refreshFolders() {
-        this.refreshPanelFolders.emit();  
+        this.refreshPanelFolders.emit();
+    }
+
+    ngOnDestroy() {
+        // unsubscribe to ensure no memory leaks
+        this.subscription.unsubscribe();
     }
 }

@@ -1196,4 +1196,5 @@ export const LANG_FR = {
     "addPrivateIndexingModelMsg2" : "avec les valeurs renseignées <b>actuellement</b>.",
     "privateIndexingModelCreation" : "Création d'un modèle d'enregistrement privé",
     "createPrivateIndexingModel" : "Créer un modèle avec les données actuelles",
+    "currentIndexingMail" : "le courrier en cours d'enregistrement",
 };

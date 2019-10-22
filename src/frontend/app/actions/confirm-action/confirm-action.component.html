@@ -6,10 +6,9 @@
     <div class="row">
         <div class="col-md-12">
             {{lang.makeActionOn}} 
-            <b *ngIf="data.resIds.length === 0" color="primary" class="highlight">Le courrier en cours d'enregistremennt</b> ?
-
-            <!--<b *ngIf="data.resIds.length == 1" color="primary" class="highlight">{{data.resource.chronoNumber}}</b>
-            <b *ngIf="data.contextChrono == ''" color="primary" class="highlight">{{data.resIds.length}} {{lang.elements}}</b> ?-->
+            <b *ngIf="data.resIds.length === 0" color="primary" class="highlight">{{lang.currentIndexingMail}}</b>
+            <b *ngIf="data.resIds.length == 1" color="primary" class="highlight">{{data.resource.alt_identifier}}</b>
+            <b *ngIf="data.resIds.length > 1" color="primary" class="highlight">{{data.resIds.length}} {{lang.elements}}</b> ?
         </div>
         <div class="col-md-12">
             <app-note-editor #noteEditor [resIds]="data.resIds"></app-note-editor>
