@@ -752,7 +752,7 @@ export const LANG_FR = {
     "processDelay"                          : "Délai de traitement",
     "processDelayDay"                       : "Délai de traitement (en jours)",
     "processLimitDate"                      : "Date limite de traitement",
-    "processMode"                           : "Mode de traitement",
+    "processMode"                           : "Mode de traitement en AR",
     "processType"                           : "Type de traitement",
     "production"                            : "PRODUCTION",
     "progression"                           : "Avancement",
