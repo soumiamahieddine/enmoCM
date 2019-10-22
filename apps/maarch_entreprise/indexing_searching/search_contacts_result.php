@@ -28,7 +28,7 @@
 
 require_once('core/class/class_request.php');
 require_once('core/class/class_security.php');
-require_once('apps/' . $_SESSION['config']['app_id'] 
+require_once('apps/' . $_SESSION['config']['app_id']
     . '/class/class_indexing_searching_app.php'
 );
 require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php');
@@ -96,60 +96,46 @@ if (count($_REQUEST['meta']) > 0) {
         for ($j=0; $j<count($tab_id_fields);$j++) {
 
             // CONTACT TYPE
-            if ($tab_id_fields[$j] == 'contact_type' && !empty($_REQUEST['contact_type']))
-            {
+            if ($tab_id_fields[$j] == 'contact_type' && !empty($_REQUEST['contact_type'])) {
                 $json_txt .= " 'contact_type' : ['".addslashes(trim($_REQUEST['contact_type']))."'],";
                 $where_request .= " contact_type = :contactType and ";
                 $arrayPDO = array_merge($arrayPDO, array(":contactType" => $_REQUEST['contact_type']));
             }
             // SOCIETY
-            elseif ($tab_id_fields[$j] == 'society' && (!empty($_REQUEST['society']) || $_REQUEST['society'] <> '') )
-            {
+            elseif ($tab_id_fields[$j] == 'society' && (!empty($_REQUEST['society']) || $_REQUEST['society'] <> '')) {
                 $json_txt .= " 'society' : ['".addslashes(trim($_REQUEST['society']))."'],";
                 $where_request .= " lower(society) like lower(:society) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":society" => '%'.$_REQUEST['society'].'%'));
             }
             // SOCIETY SHORT
-            elseif ($tab_id_fields[$j] == 'society_short' && (!empty($_REQUEST['society_short']) || $_REQUEST['society_short'] <> '') )
-            {
+            elseif ($tab_id_fields[$j] == 'society_short' && (!empty($_REQUEST['society_short']) || $_REQUEST['society_short'] <> '')) {
                 $json_txt .= " 'society_short' : ['".addslashes(trim($_REQUEST['society_short']))."'],";
                 $where_request .= " lower(society_short) like lower(:societyShort) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":societyShort" => '%'.$_REQUEST['society_short'].'%'));
             }
             // LASTNAME
-            elseif ($tab_id_fields[$j] == 'lastname' && (!empty($_REQUEST['lastname']) ||$_REQUEST['lastname'] <> '') )
-            {
+            elseif ($tab_id_fields[$j] == 'lastname' && (!empty($_REQUEST['lastname']) ||$_REQUEST['lastname'] <> '')) {
                 $json_txt .= " 'lastname' : ['".addslashes(trim($_REQUEST['lastname']))."'],";
                 $where_request .= " lower(contact_lastname) like lower(:contactLastname) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":contactLastname" => '%'.$_REQUEST['lastname'].'%'));
             }
             // FIRSTNAME
-            elseif ($tab_id_fields[$j] == 'firstname' && (!empty($_REQUEST['firstname']) ||$_REQUEST['firstname'] <> '') )
-            {
+            elseif ($tab_id_fields[$j] == 'firstname' && (!empty($_REQUEST['firstname']) ||$_REQUEST['firstname'] <> '')) {
                 $json_txt .= " 'firstname' : ['".addslashes(trim($_REQUEST['firstname']))."'],";
                 $where_request .= " lower(contact_firstname) like lower(:contactFirstname) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":contactFirstname" => '%'.$_REQUEST['firstname'].'%'));
             }
             // CREATED BY
-            elseif ($tab_id_fields[$j] == 'created_by' && !empty($_REQUEST['created_by_id']))
-            {
+            elseif ($tab_id_fields[$j] == 'created_by' && !empty($_REQUEST['created_by_id'])) {
                 $json_txt .= " 'created_by' : ['".addslashes(trim($_REQUEST['created_by']))."'], 'created_by_id' : ['".addslashes(trim($_REQUEST['created_by_id']))."'],";
                 $where_request .= " contact_user_id = :createdById and ";
                 $arrayPDO = array_merge($arrayPDO, array(":createdById" => $_REQUEST['created_by_id']));
             }
             // CONTACTS PURPOSE
-            elseif ($tab_id_fields[$j] == 'contact_purpose' && !empty($_REQUEST['contact_purposes_id']))
-            {
+            elseif ($tab_id_fields[$j] == 'contact_purpose' && !empty($_REQUEST['contact_purposes_id'])) {
                 $json_txt .= " 'contact_purpose' : ['".addslashes(trim($_REQUEST['contact_purpose']))."'], 'contact_purposes_id' : ['".addslashes(trim($_REQUEST['contact_purposes_id']))."'],";
                 $where_request .= " contact_purposes_id = :contactPurposeId and ";
                 $arrayPDO = array_merge($arrayPDO, array(":contactPurposeId" => $_REQUEST['contact_purposes_id']));
-            }
-            else  // opt indexes check
-            {
-                $tmp = $type->search_checks($indexes, $tab_id_fields[$j], $_REQUEST[$tab_id_fields[$j]] );
-                //$func->show_array($tmp);
-                $json_txt .= $tmp['json_txt'];
-                $where_request .= $tmp['where'];
             }
         }
         $json_txt = preg_replace('/,$/', '', $json_txt);

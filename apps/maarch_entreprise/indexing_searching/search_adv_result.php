@@ -780,11 +780,35 @@ if (count($_REQUEST['meta']) > 0) {
                         }
                     }
                 }
-            } else {  // opt indexes check
-                $tmp = $type->search_checks($indexes, $tab_id_fields[$j], $_REQUEST[$tab_id_fields[$j]]);
-                //$func->show_array($tmp);
-                $json_txt .= $tmp['json_txt'];
-                $where_request .= $tmp['where'];
+            } elseif (preg_match('/^indexingCustomField_/', $tab_id_fields[$j])) {  // opt indexes check
+                $customFieldId = str_replace("indexingCustomField_", "", $tab_id_fields[$j]);
+                $customFieldId = str_replace("_min", "", $customFieldId);
+                $customFieldId = str_replace("_max", "", $customFieldId);
+                $customFieldId = str_replace("_from", "", $customFieldId);
+                $customFieldId = str_replace("_to", "", $customFieldId);
+                $customField   = \CustomField\models\CustomFieldModel::getById(['id' => $customFieldId]);
+                $json_txt     .= " '".$tab_id_fields[$j]."' : ['".addslashes(trim($_REQUEST[$tab_id_fields[$j]]))."']";
+                if (in_array($customField['type'], ['select', 'radio', 'checkbox'])) {
+                    $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and value @> :valueCustom_".$customFieldId.")) and ";
+                    $arrayPDO       = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
+                } elseif ($customField['type'] == 'date') {
+                    if (strpos($tab_id_fields[$j], '_from') !== false) {
+                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and (value::text::timestamp) > (:valueCustom_".$customFieldId."::timestamp))) and ";
+                    } elseif (strpos($tab_id_fields[$j], '_to') !== false) {
+                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and (value::text::timestamp) < (:valueCustom_".$customFieldId."::timestamp))) and ";
+                    }
+                    $arrayPDO = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
+                } elseif ($customField['type'] == 'string') {
+                    $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and (value::text) ilike (:valueCustom_".$customFieldId."))) and ";
+                    $arrayPDO       = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '%'.$_REQUEST[$tab_id_fields[$j]].'%'));
+                } elseif ($customField['type'] == 'integer') {
+                    if (strpos($tab_id_fields[$j], '_min') !== false) {
+                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and value > :valueCustom_".$customFieldId.")) and ";
+                    } elseif (strpos($tab_id_fields[$j], '_max') !== false) {
+                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and value < :valueCustom_".$customFieldId.")) and ";
+                    }
+                    $arrayPDO = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
+                }
             }
         }
 
