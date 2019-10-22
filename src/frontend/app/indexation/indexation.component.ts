@@ -147,7 +147,7 @@ export class IndexationComponent implements OnInit {
             this.actionService.launchIndexingAction(this.selectedAction, this.headerService.user.id, this.currentGroupId, formatdatas);
 
         } else {
-            alert('Veuillez corriger les erreurs.');
+            this.notify.error(this.lang.mustFixErrors);
         }
     }
 

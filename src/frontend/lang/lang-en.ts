@@ -1160,4 +1160,5 @@ export const LANG_EN = {
     "privateIndexingModelCreation" : "Private indexing model creation",
     "createPrivateIndexingModel" : "Create an indexing model with current datas",
     "currentIndexingMail" : "the current indexing mail",
+    "mustFixErrors" : "You must fix the errors.",
 };

@@ -1197,4 +1197,5 @@ export const LANG_FR = {
     "privateIndexingModelCreation" : "Création d'un modèle d'enregistrement privé",
     "createPrivateIndexingModel" : "Créer un modèle avec les données actuelles",
     "currentIndexingMail" : "le courrier en cours d'enregistrement",
+    "mustFixErrors" : "Veuillez corriger les erreurs.",
 };

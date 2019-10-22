@@ -6,6 +6,7 @@ import { LANG } from './translate.component';
 @Component({
     selector: 'custom-snackbar',
     templateUrl: "notification.service.html",
+    styleUrls: ['notification.service.scss'],
 })
 export class CustomSnackbarComponent {
     constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) { }
@@ -20,6 +21,7 @@ export class NotificationService {
     success(message: string) {
         this.snackBar.openFromComponent(CustomSnackbarComponent, {
             duration: 2000,
+            panelClass: 'success-snackbar',
             data: { message: message, icon: 'info-circle' }
         });
     }
@@ -27,6 +29,7 @@ export class NotificationService {
     error(message: string, url: string = null) {
         this.snackBar.openFromComponent(CustomSnackbarComponent, {
             duration: 4000,
+            panelClass: 'error-snackbar',
             data: { url: url, message: message, icon: 'exclamation-triangle' }
         });
     }

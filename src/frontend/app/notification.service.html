@@ -1,10 +1,11 @@
-<div style="display: flex;align-items: center;padding: 25px;">
-    <div style="display: flex;width:50px;">
+<div class="notif-container">
+    <div class="notif-container-icon">
         <i class="fa fa-{{data.icon}} fa-2x"></i>
     </div>
-    <div style="display: flex;flex-direction: column;">
-        <div [innerHTML]="data.url"></div>
-        <div [innerHTML]="data.message"></div>
+    <div class="notif-container-content">
+        <div class="notif-container-content-msg">
+            <div [innerHTML]="data.url"></div>
+            <div [innerHTML]="data.message"></div>
+        </div>
     </div>
-    <div style="display: flex;flex: 1;" ></div>
 </div>
