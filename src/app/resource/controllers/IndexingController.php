@@ -14,17 +14,20 @@
 
 namespace Resource\controllers;
 
+use Action\controllers\ActionMethodController;
 use Action\models\ActionModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Group\models\GroupModel;
 use Parameter\models\ParameterModel;
 use Priority\models\PriorityModel;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\ValidatorModel;
+use User\models\UserGroupModel;
 
 class IndexingController
 {
@@ -50,13 +53,68 @@ class IndexingController
         '25-12'
     ];
 
-    public function getIndexingActions(Request $request, Response $response, array $aArgs)
+    public function setAction(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->notEmpty()->validate($aArgs['groupId'])) {
+        $body = $request->getParsedBody();
+
+        if (!Validator::intVal()->notEmpty()->validate($body['resource'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resource is empty or not an integer']);
+        }
+
+        $group = GroupModel::getById(['id' => $args['groupId'], 'select' => ['group_id', 'can_index', 'indexation_parameters']]);
+        if (empty($group)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route groupId does not exist']);
+        }
+
+        $isUserLinked = UserGroupModel::get(['select' => [1], 'where' => ['user_id = ?', 'group_id = ?'], 'data' => [$GLOBALS['userId'], $group['group_id']]]);
+        if (empty($isUserLinked)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this user']);
+        }
+
+        $group['indexation_parameters'] = json_decode($group['indexation_parameters'], true);
+
+        if (!in_array($args['actionId'], $group['indexation_parameters']['actions'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action is not linked to this group']);
+        }
+
+        $action = ActionModel::getById(['id' => $args['actionId'], 'select' => ['component']]);
+        if (empty($action['component'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action component does not exist']);
+        }
+        if (!array_key_exists($action['component'], ActionMethodController::COMPONENTS_ACTIONS)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
+        }
+
+        $resource = ResModel::getById(['resId' => $body['resource'], 'select' => ['status']]);
+        if (empty($resource)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Resource does not exist']);
+        } elseif (!empty($resource['status'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Resource out of perimeter']);
+        }
+
+        $body['data'] = empty($body['data']) ? [] : $body['data'];
+        $body['note'] = empty($body['note']) ? null : $body['note'];
+
+        $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
+        $methodResponse = ActionMethodController::$method(['resId' => $body['resource'], 'data' => $body['data'], 'note' => $body['note']]);
+
+        $historic = empty($methodResponse['history']) ? '' : $methodResponse['history'];
+        ActionMethodController::terminateAction(['id' => $args['actionId'], 'resources' => [$body['resource']], 'basketName' => 'Indexing', 'note' => $body['note'], 'history' => $historic]);
+
+        if (!empty($methodResponses['data']) || !empty($methodResponses['errors'])) {
+            return $response->withJson($methodResponses);
+        }
+
+        return $response->withStatus(204);
+    }
+
+    public function getIndexingActions(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->notEmpty()->validate($args['groupId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Param groupId must be an integer val']);
         }
 
-        $indexingParameters = IndexingController::getIndexingParameters(['login' => $GLOBALS['userId'], 'groupId' => $aArgs['groupId']]);
+        $indexingParameters = IndexingController::getIndexingParameters(['login' => $GLOBALS['userId'], 'groupId' => $args['groupId']]);
         if (!empty($indexingParameters['errors'])) {
             return $response->withStatus(403)->withJson($indexingParameters);
         }
@@ -200,7 +258,7 @@ class IndexingController
 
         $workingDays = ParameterModel::getById(['id' => 'workingDays', 'select' => ['param_value_int']]);
         if (!empty($workingDays['param_value_int'])) {
-            $hollidays = IndexingController::KEYWORDS;
+            $hollidays = IndexingController::HOLLIDAYS;
             if (function_exists('easter_date')) {
                 $hollidays[] = date('d-m', easter_date() + 86400);
             }
@@ -271,7 +329,7 @@ class IndexingController
 
         // Working Day
         if ($workingDays['param_value_int'] == 1 && !empty($args['delay'])) {
-            $hollidays = IndexingController::KEYWORDS;
+            $hollidays = IndexingController::HOLLIDAYS;
             if (function_exists('easter_date')) {
                 $hollidays[] = date('d-m', easter_date() + 86400);
             }

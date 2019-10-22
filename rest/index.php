@@ -235,11 +235,12 @@ $app->get('/home/lastRessources', \Home\controllers\HomeController::class . ':ge
 $app->get('/home/maarchParapheurDocuments', \Home\controllers\HomeController::class . ':getMaarchParapheurDocuments');
 
 //Indexing
-$app->get('/indexing/{groupId}/actions', \Resource\controllers\IndexingController::class . ':getIndexingActions');
-$app->get('/indexing/{groupId}/entities', \Resource\controllers\IndexingController::class . ':getIndexingEntities');
+$app->get('/indexing/groups/{groupId}/actions', \Resource\controllers\IndexingController::class . ':getIndexingActions');
+$app->get('/indexing/groups/{groupId}/entities', \Resource\controllers\IndexingController::class . ':getIndexingEntities');
 $app->get('/indexing/processLimitDate', \Resource\controllers\IndexingController::class . ':getProcessLimitDate');
 $app->get('/indexing/fileInformations', \Resource\controllers\IndexingController::class . ':getFileInformations');
 $app->get('/indexing/priority', \Resource\controllers\IndexingController::class . ':getPriorityWithProcessLimitDate');
+$app->put('/indexing/groups/{groupId}/actions/{actionId}', \Resource\controllers\IndexingController::class . ':setAction');
 
 //IndexingModels
 $app->get('/indexingModels', \IndexingModel\controllers\IndexingModelController::class . ':get');

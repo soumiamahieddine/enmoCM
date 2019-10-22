@@ -685,6 +685,9 @@ class ResController
 
         if (!empty($body['diffusion'])) {
             foreach ($body['diffusion'] as $diffusion) {
+                if ($diffusion['mode'] == 'dest') {
+                    ResModel::update(['set' => ['dest_user' => $diffusion['id']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+                }
                 ListInstanceModel::create([
                     'res_id'            => $args['resId'],
                     'sequence'          => 0,
@@ -741,7 +744,7 @@ class ResController
             return ['errors' => 'Body modelId is not public'];
         }
 
-        $control = ResController::controlFiledata(['body' => $body]);
+        $control = ResController::controlFileData(['body' => $body]);
         if (!empty($control['errors'])) {
             return ['errors' => $control['errors']];
         }
@@ -785,11 +788,10 @@ class ResController
             }
         }
 
-
         return true;
     }
 
-    private static function controlFiledata(array $args)
+    private static function controlFileData(array $args)
     {
         $body = $args['body'];
 
@@ -851,7 +853,7 @@ class ResController
                     }
                     $destFound = true;
                 }
-                if ($diffusion['type'] == 'user_id') {
+                if ($diffusion['type'] == 'user_id' || $diffusion['mode'] == 'dest') {
                     $user = UserModel::getByLogin(['login' => $diffusion['id'], 'select' => [1]]);
                     if (empty($user)) {
                         return ['errors' => "Body diffusion[{$key}] id does not exist"];

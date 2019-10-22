@@ -60,24 +60,23 @@ abstract class ResModelAbstract
         return $aResources;
     }
 
-    public static function getById(array $aArgs)
+    public static function getById(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
 
-        $aResources = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => empty($aArgs['table']) ? ['res_letterbox'] : array_merge(['res_letterbox'], $aArgs['table']),
-            'left_join' => empty($aArgs['leftJoin']) ? [] : $aArgs['leftJoin'],
+        $resource = DatabaseModel::select([
+            'select'    => $args['select'],
+            'table'     => ['res_letterbox'],
             'where'     => ['res_id = ?'],
-            'data'      => [$aArgs['resId']]
+            'data'      => [$args['resId']]
         ]);
 
-        if (empty($aResources[0])) {
+        if (empty($resource[0])) {
             return [];
         }
 
-        return $aResources[0];
+        return $resource[0];
     }
 
     public static function create(array $args)
@@ -94,16 +93,16 @@ abstract class ResModelAbstract
         return true;
     }
 
-    public static function update(array $aArgs)
+    public static function update(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
-        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::notEmpty($args, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($args, ['set', 'where', 'data']);
 
         DatabaseModel::update([
             'table' => 'res_letterbox',
-            'set'   => $aArgs['set'],
-            'where' => $aArgs['where'],
-            'data'  => $aArgs['data']
+            'set'   => $args['set'],
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;

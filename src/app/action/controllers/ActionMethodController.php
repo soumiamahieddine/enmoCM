@@ -81,7 +81,7 @@ class ActionMethodController
 
             if ($action['history'] == 'Y') {
                 HistoryController::add([
-                    'tableName' => 'res_view_letterbox',
+                    'tableName' => 'res_letterbox',
                     'recordId'  => $resource,
                     'eventType' => 'ACTION#' . $resource,
                     'eventId'   => $aArgs['id'],

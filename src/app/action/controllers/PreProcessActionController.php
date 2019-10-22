@@ -426,12 +426,12 @@ class PreProcessActionController
             } elseif ($signatureBookEnabled == 'maarchParapheur') {
                 if (is_array($data['resources']) && count($data['resources']) == 1) {
                     $resDestination = ResModel::getById([
-                        'select'   => ['entities.id'],
-                        'table'    => ['entities'],
-                        'leftJoin' => ['res_letterbox.destination = entities.entity_id'],
+                        'select'   => ['destination'],
                         'resId'    => $data['resources'][0]
                     ]);
-                    $additionalsInfos['destinationId'] = $resDestination['id'];
+                    $destination = EntityModel::getByEntityId(['entity_id' => $resDestination['destination'], 'select' => ['id']]);
+
+                    $additionalsInfos['destinationId'] = $destination['id'];
                 } else {
                     $additionalsInfos['destinationId'] = '';
                 }
