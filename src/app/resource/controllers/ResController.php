@@ -82,15 +82,17 @@ class ResController
 
         ResController::createAdjacentData(['body' => $body, 'resId' => $resId]);
 
-        ConvertPdfController::convert([
-            'resId'     => $resId,
-            'collId'    => 'letterbox_coll',
-            'isVersion' => false
-        ]);
+        if (!empty($body['encodedFile'])) {
+            ConvertPdfController::convert([
+                'resId'     => $resId,
+                'collId'    => 'letterbox_coll',
+                'isVersion' => false
+            ]);
 
-        $customId = CoreConfigModel::getCustomId();
-        $customId = empty($customId) ? 'null' : $customId;
-        exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId 'letterbox_coll' --userId {$GLOBALS['id']} > /dev/null &");
+            $customId = CoreConfigModel::getCustomId();
+            $customId = empty($customId) ? 'null' : $customId;
+            exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId 'letterbox_coll' --userId {$GLOBALS['id']} > /dev/null &");
+        }
 
         HistoryController::add([
             'tableName' => 'res_letterbox',
@@ -163,6 +165,10 @@ class ResController
         $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'fingerprint', 'category_id', 'alt_identifier'], 'resId' => $aArgs['resId']]);
         if (empty($document)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
+        }
+
+        if (empty($document['filename'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document has no file']);
         }
 
         if ($document['category_id'] == 'outgoing') {
@@ -328,6 +334,10 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
         }
 
+        if (empty($document['filename'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document has no file']);
+        }
+
         if ($document['category_id'] == 'outgoing') {
             $attachment = AttachmentModel::getOnView([
                 'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename', 'fingerprint'],
@@ -397,7 +407,13 @@ class ResController
         }
 
         $pathToThumbnail = 'apps/maarch_entreprise/img/noThumbnail.png';
-        if (ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
+
+        $document = ResModel::getById(['select' => ['filename'], 'resId' => $aArgs['resId']]);
+        if (empty($document)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
+        }
+
+        if (!empty($document['filename']) && ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
             $tnlAdr = AdrModel::getTypedDocumentAdrByResId([
                 'select'    => ['docserver_id', 'path', 'filename'],
                 'resId'     => $aArgs['resId'],
@@ -795,17 +811,17 @@ class ResController
     {
         $body = $args['body'];
 
-        if (!Validator::notEmpty()->validate($body['encodedFile'])) {
-            return ['errors' => 'Body encodedFile is empty'];
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['format'])) {
-            return ['errors' => 'Body format is empty or not a string'];
-        }
+        if (!empty($body['encodedFile'])) {
+            if (!Validator::stringType()->notEmpty()->validate($body['format'])) {
+                return ['errors' => 'Body format is empty or not a string'];
+            }
 
-        $file     = base64_decode($body['encodedFile']);
-        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->buffer($file);
-        if (!StoreController::isFileAllowed(['extension' => $body['format'], 'type' => $mimeType])) {
-            return ['errors' => "Format with this mimeType is not allowed : {$body['format']} {$mimeType}"];
+            $file     = base64_decode($body['encodedFile']);
+            $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->buffer($file);
+            if (!StoreController::isFileAllowed(['extension' => $body['format'], 'type' => $mimeType])) {
+                return ['errors' => "Format with this mimeType is not allowed : {$body['format']} {$mimeType}"];
+            }
         }
 
         return true;

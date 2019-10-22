@@ -33,28 +33,30 @@ class StoreController
         ValidatorModel::intVal($args, ['doctype', 'modelId']);
 
         try {
-            $fileContent = base64_decode(str_replace(['-', '_'], ['+', '/'], $args['encodedFile']));
-
-            $storeResult = DocserverController::storeResourceOnDocServer([
-                'collId'            => 'letterbox_coll',
-                'docserverTypeId'   => 'DOC',
-                'encodedResource'   => base64_encode($fileContent),
-                'format'            => $args['format']
-            ]);
-            if (!empty($storeResult['errors'])) {
-                return ['errors' => '[storeResource] ' . $storeResult['errors']];
-            }
-
             $resId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_id_mlb_seq']);
 
-            $data = [
-                'resId'         => $resId,
-                'docserver_id'  => $storeResult['docserver_id'],
-                'filename'      => $storeResult['file_destination_name'],
-                'filesize'      => $storeResult['fileSize'],
-                'path'          => $storeResult['directory'],
-                'fingerprint'   => $storeResult['fingerPrint']
-            ];
+            $data = ['resId' => $resId];
+
+            if (!empty($args['encodedFile'])) {
+                $fileContent = base64_decode(str_replace(['-', '_'], ['+', '/'], $args['encodedFile']));
+
+                $storeResult = DocserverController::storeResourceOnDocServer([
+                    'collId'            => 'letterbox_coll',
+                    'docserverTypeId'   => 'DOC',
+                    'encodedResource'   => base64_encode($fileContent),
+                    'format'            => $args['format']
+                ]);
+                if (!empty($storeResult['errors'])) {
+                    return ['errors' => '[storeResource] ' . $storeResult['errors']];
+                }
+
+                $data['docserver_id'] = $storeResult['docserver_id'];
+                $data['filename'] = $storeResult['file_destination_name'];
+                $data['filesize'] = $storeResult['fileSize'];
+                $data['path'] = $storeResult['directory'];
+                $data['fingerprint'] = $storeResult['fingerPrint'];
+            }
+
             $data = array_merge($args, $data);
             $data = StoreController::prepareStorage($data);
 
@@ -109,9 +111,9 @@ class StoreController
 
     public static function prepareStorage(array $args)
     {
-        ValidatorModel::notEmpty($args, ['docserver_id', 'filename', 'format', 'filesize', 'path', 'fingerprint', 'resId', 'modelId']);
+        ValidatorModel::notEmpty($args, ['resId', 'modelId']);
         ValidatorModel::stringType($args, ['docserver_id', 'filename', 'format', 'path', 'fingerprint']);
-        ValidatorModel::intVal($args, ['filesize', 'resId', 'modelId']);
+        ValidatorModel::intVal($args, ['resId', 'modelId', 'filesize']);
 
         $indexingModel = IndexingModelModel::getById(['id' => $args['modelId'], 'select' => ['category']]);
 
@@ -140,7 +142,6 @@ class StoreController
             'type_id'               => $args['doctype'],
             'subject'               => $args['subject'] ?? null,
             'alt_identifier'        => $chrono,
-            'format'                => $args['format'],
             'typist'                => $args['typist'],
             'status'                => $args['status'] ?? null,
             'destination'           => $args['destination'] ?? null,
@@ -154,11 +155,12 @@ class StoreController
             'barcode'               => $args['barcode'] ?? null,
             'origin'                => $args['origin'] ?? null,
             'external_id'           => $externalId,
-            'docserver_id'          => $args['docserver_id'],
-            'filename'              => $args['filename'],
-            'filesize'              => $args['filesize'],
-            'path'                  => $args['path'],
-            'fingerprint'           => $args['fingerprint'],
+            'format'                => empty($args['encodedFile']) ? null : $args['format'],
+            'docserver_id'          => empty($args['encodedFile']) ? null : $args['docserver_id'],
+            'filename'              => empty($args['encodedFile']) ? null : $args['filename'],
+            'filesize'              => empty($args['encodedFile']) ? null : $args['filesize'],
+            'path'                  => empty($args['encodedFile']) ? null : $args['path'],
+            'fingerprint'           => empty($args['encodedFile']) ? null : $args['fingerprint'],
             'creation_date'         => 'CURRENT_TIMESTAMP'
         ];
 

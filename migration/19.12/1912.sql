@@ -232,22 +232,6 @@ DO $$ BEGIN
 END$$;
 
 
-/* RES_LETTERBOX */
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS model_id;
-ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
-DO $$ BEGIN
-    IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_letterbox' and column_name = 'typist' and data_type != 'integer') THEN
-        ALTER TABLE res_letterbox ADD COLUMN typist_tmp integer;
-        UPDATE res_letterbox set typist_tmp = (select id FROM users where users.user_id = res_letterbox.typist);
-        UPDATE res_letterbox set typist_tmp = 0 WHERE typist_tmp IS NULL;
-        ALTER TABLE res_letterbox ALTER COLUMN typist_tmp set not null;
-        ALTER TABLE res_letterbox DROP COLUMN IF EXISTS typist;
-        ALTER TABLE res_letterbox RENAME COLUMN typist_tmp TO typist;
-        UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'typist(\s*)=(\s*)@user', 'typist = @user_id', 'gmi');
-        UPDATE security SET where_clause = REGEXP_REPLACE(where_clause, 'typist(\s*)=(\s*)@user', 'typist = @user_id', 'gmi');
-    END IF;
-END$$;
-
 /* MLB COLL EXT */
 DO $$ BEGIN
     IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'category_id') = 0 THEN
@@ -297,6 +281,28 @@ DO $$ BEGIN
 
         ALTER TABLE res_letterbox ADD COLUMN alarm2_date timestamp without time zone;
         UPDATE res_letterbox SET alarm2_date = mlb_coll_ext.alarm2_date FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+    END IF;
+END$$;
+
+
+/* RES_LETTERBOX */
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS model_id;
+ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
+UPDATE res_letterbox set model_id = 2 WHERE category_id = 'outgoing';
+UPDATE res_letterbox set model_id = 3 WHERE category_id = 'internal';
+UPDATE res_letterbox set model_id = 4 WHERE category_id = 'ged_doc';
+UPDATE res_letterbox set model_id = 1 WHERE model_id IS NULL;
+ALTER TABLE res_letterbox ALTER COLUMN model_id set not null;
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_letterbox' and column_name = 'typist' and data_type != 'integer') THEN
+        ALTER TABLE res_letterbox ADD COLUMN typist_tmp integer;
+        UPDATE res_letterbox set typist_tmp = (select id FROM users where users.user_id = res_letterbox.typist);
+        UPDATE res_letterbox set typist_tmp = 0 WHERE typist_tmp IS NULL;
+        ALTER TABLE res_letterbox ALTER COLUMN typist_tmp set not null;
+        ALTER TABLE res_letterbox DROP COLUMN IF EXISTS typist;
+        ALTER TABLE res_letterbox RENAME COLUMN typist_tmp TO typist;
+        UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'typist(\s*)=(\s*)@user', 'typist = @user_id', 'gmi');
+        UPDATE security SET where_clause = REGEXP_REPLACE(where_clause, 'typist(\s*)=(\s*)@user', 'typist = @user_id', 'gmi');
     END IF;
 END$$;
 
@@ -369,6 +375,7 @@ ALTER TABLE tags ALTER COLUMN label TYPE character varying(128);
 UPDATE priorities SET delays = 30 WHERE delays IS NULL;
 ALTER TABLE priorities ALTER COLUMN delays SET NOT NULL;
 ALTER TABLE res_letterbox ALTER COLUMN status DROP NOT NULL;
+ALTER TABLE res_letterbox ALTER COLUMN docserver_id DROP NOT NULL;
 
 /* REFACTORING SUPPRESSION */
 DO $$ BEGIN
