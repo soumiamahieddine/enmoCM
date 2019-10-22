@@ -257,7 +257,6 @@ if (!defined('_USER_GROUPS_TITLE')) { define('_USER_GROUPS_TITLE', 'De gebruiker
 if (!defined('_USER_ENTITIES_TITLE')) { define('_USER_ENTITIES_TITLE', 'De gebruiker behoort tot de volgende eenheden');}
 if (!defined('_DELETE_GROUPS')) { define('_DELETE_GROUPS', 'Groep(en) verwijderen');}
 if (!defined('_ADD_TO_GROUP')) { define('_ADD_TO_GROUP', 'Aan een groep toevoegen');}
-if (!defined('_CHOOSE_PRIMARY_GROUP')) { define('_CHOOSE_PRIMARY_GROUP', 'Als primaire groep kiezen');}
 if (!defined('_USER_BELONGS_NO_GROUP')) { define('_USER_BELONGS_NO_GROUP', 'De gebruiker behoort tot geen enkele groep');}
 if (!defined('_USER_BELONGS_NO_ENTITY')) { define('_USER_BELONGS_NO_ENTITY', 'De gebruiker behoort tot geen enkele eenheid');}
 if (!defined('_CHOOSE_ONE_GROUP')) { define('_CHOOSE_ONE_GROUP', 'Kies minstens een groep');}
@@ -391,7 +390,6 @@ if (!defined('_USER_SUSPENSION')) { define('_USER_SUSPENSION', 'Opschorting van 
 if (!defined('_USER_UPDATED')) { define('_USER_UPDATED', 'Gewijzigde gebruiker');}
 if (!defined('_USER_UPDATE')) { define('_USER_UPDATE', 'Wijziging van een gebruiker');}
 if (!defined('_USER_ADDED')) { define('_USER_ADDED', 'Nieuwe gebruiker toegevoegd');}
-if (!defined('_NO_PRIMARY_GROUP')) { define('_NO_PRIMARY_GROUP', 'Geen primaire groep geselecteerd!');}
 if (!defined('_THE_USER')) { define('_THE_USER', 'De gebruiker');}
 if (!defined('_USER_ID')) { define('_USER_ID', 'De gebruikersnaam van de gebruiker');}
 if (!defined('_MY_INFO')) { define('_MY_INFO', 'Mijn Profiel');}
@@ -1393,7 +1391,6 @@ if (!defined('_ARCHIVE_TRANSFER_COLL')) { define('_ARCHIVE_TRANSFER_COLL', 'Arch
 if (!defined('_UNREACHABLE_DOCSERVER')) { define('_UNREACHABLE_DOCSERVER', 'Pad docserver onbereikbaar');}
 if (!defined('_MANAGE_MY_SIGNATURES')) { define('_MANAGE_MY_SIGNATURES', 'Mijn handtekeningen beheren');}
 if (!defined('_MY_GROUPS')) { define('_MY_GROUPS', 'Mijn Groepen');}
-if (!defined('_PRIMARY_GROUP')) { define('_PRIMARY_GROUP', 'Primaire groep');}
 if (!defined('_SECONDARY_GROUP')) { define('_SECONDARY_GROUP', 'Secundaire groep');}
 if (!defined('_MY_ENTITIES')) { define('_MY_ENTITIES', 'Mijn Eenheden');}
 if (!defined('_PRIMARY_ENTITY')) { define('_PRIMARY_ENTITY', 'Primaire eenheid');}

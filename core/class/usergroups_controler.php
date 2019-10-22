@@ -149,7 +149,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         $users = array();
         $db = new Database();
         $query = 'select group_id from ' . USERGROUP_CONTENT_TABLE
-               . " where user_id = ? and primary_group = 'Y'";
+               . " where user_id = ?";
         try {
             $stmt = $db->query($query, array($userId));
         } catch (Exception $e){

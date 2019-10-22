@@ -175,7 +175,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     
     /**
     * Returns in an array all the groups associated with a user (user_id,
-    * group_id, primary_group and role)
+    * group_id and role)
     *
     * @param  $userId string  User identifier
     * @return Array or null
@@ -188,7 +188,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         }
         self::$db = new Database();
         $func = new functions();
-        $query = 'select uc.group_id, uc.primary_group, uc.role from '
+        $query = 'select uc.group_id, uc.role from '
                . USERGROUP_CONTENT_TABLE . ' uc, ' . USERGROUPS_TABLE
                . " u where uc.user_id = ? and uc.group_id = u.group_id ";
         try {
@@ -202,7 +202,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                 array(
                     'USER_ID' => $userId,
                     'GROUP_ID' => $res->group_id,
-                    'PRIMARY' => $res->primary_group,
                     'ROLE' => $res->role,
                 )
             );
@@ -274,7 +273,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                 || $params['manageGroups'] == true
             ) {
                 self::cleanUsergroupContent($user->user_id);
-                self::loadDbUsergroupContent($user->user_id, $groups);
             }
             $core = new core_tools();
 
@@ -433,20 +431,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 
         $user->mail = $f->wash($user->mail, 'mail', _MAIL, 'yes', 0, 255);
 
-        if ($user->user_id <> 'superadmin' && (! isset($params['manageGroups']) 
-            || $params['manageGroups'] == true)
-        ) {
-            $primarySet = false;
-            for ($i = 0; $i < count($groups); $i ++) {
-                if ($groups[$i]['PRIMARY'] == 'Y') {
-                    $primarySet = true;
-                    break;
-                }
-            }
-            if ($primarySet == false) {
-                $error .= _PRIMARY_GROUP . ' ' . _MANDATORY . '. ';
-            }
-        }
 
         $_SESSION['service_tag'] = 'user_check';
         $core = new core_tools();
@@ -772,51 +756,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         return $control;
     }
 
-    /**
-    * Loads into the usergroup_content table the given data for a given user
-    *
-    * @param  $userId String User identifier
-    * @param  $array Array
-    * @return bool true if the loadng is complete, false otherwise
-    */
-    public function loadDbUsergroupContent($userId, $array)
-    {
-        if (! isset($userId) || empty($userId)) {
-            return false;
-        }
-        if (! isset($array) || count($array) == 0) {
-            return false;
-        }
-        self::$db = new Database();
-        
-        $func = new functions();
-        $ok = true;
-        for ($i = 0; $i < count($array); $i ++) {
-            if ($ok) {
-                $query = 'insert INTO ' . USERGROUP_CONTENT_TABLE
-                       . " (user_id, group_id, primary_group, role) VALUES (?, ?, ?, ?)";
-                try{
-                    $stmt = self::$db->query(
-                        $query,
-                        array(
-                            $userId,
-                            $array[$i]['GROUP_ID'],
-                            $array[$i]['PRIMARY'],
-                            $array[$i]['ROLE'],
-                        )
-                    );
-                    $ok = true;
-                } catch (Exception $e){
-                    $ok = false;
-                }
-            } else {
-                break;
-            }
-        }
-
-        return $ok;
-    }
-    
     public function changePassword($userId, $newPassword)
     {
         if (! isset($userId) || empty($userId) || ! isset($newPassword) 

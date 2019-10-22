@@ -547,7 +547,7 @@ abstract class basket_Abstract extends Database
             $stmt = $db->query(
                 "select group_id from "
                 . $_SESSION['tablename']['usergroup_content']
-                . " where primary_group = 'Y' and user_id = ?",
+                . " where user_id = ?",
                 array($userId)
             );
             $res = $stmt->fetchObject();

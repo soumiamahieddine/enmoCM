@@ -793,9 +793,6 @@ if (!defined('_DELETE_GROUPS')) {
 if (!defined('_ADD_TO_GROUP')) {
     define('_ADD_TO_GROUP', 'Add to a group');
 }
-if (!defined('_CHOOSE_PRIMARY_GROUP')) {
-    define('_CHOOSE_PRIMARY_GROUP', 'Choose as primary group');
-}
 if (!defined('_USER_BELONGS_NO_GROUP')) {
     define('_USER_BELONGS_NO_GROUP', "The user doesn't belong to any group");
 }
@@ -1221,9 +1218,6 @@ if (!defined('_USER_UPDATE')) {
 }
 if (!defined('_USER_ADDED')) {
     define('_USER_ADDED', 'New added user');
-}
-if (!defined('_NO_PRIMARY_GROUP')) {
-    define('_NO_PRIMARY_GROUP', 'No primary group is selected !');
 }
 if (!defined('_THE_USER')) {
     define('_THE_USER', 'The user ');
@@ -4283,9 +4277,6 @@ if (!defined('_MANAGE_MY_SIGNATURES')) {
 }
 if (!defined('_MY_GROUPS')) {
     define('_MY_GROUPS', 'My Groups');
-}
-if (!defined('_PRIMARY_GROUP')) {
-    define('_PRIMARY_GROUP', 'Primary group');
 }
 if (!defined('_SECONDARY_GROUP')) {
     define('_SECONDARY_GROUP', 'Secondary group');

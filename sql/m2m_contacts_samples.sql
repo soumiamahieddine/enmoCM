@@ -9,7 +9,7 @@ INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('
 DELETE FROM users WHERE user_id = 'cchaplin';
 INSERT INTO users (user_id, password, firstname, lastname, mail, enabled, change_password, status, loginmode) VALUES ('cchaplin', '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', 'Jean', 'WEBSERVICE', 'info@maarch.org', 'Y', 'N', 'OK', 'restMode');
 DELETE FROM usergroup_content WHERE user_id = 'cchaplin';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('cchaplin', 'MAARCHTOGEC', 'Y','');
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('cchaplin', 'MAARCHTOGEC', '');
 
 DELETE FROM contacts_v2 where contact_id >= 1000000;
 DELETE FROM contact_addresses where id >= 1000000;

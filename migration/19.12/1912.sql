@@ -367,6 +367,8 @@ DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_outside_proce
 DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
 UPDATE listmodels SET title = object_id WHERE title IS NULL;
+UPDATE baskets SET basket_clause = REPLACE(basket_clause, 'coll_id = ''letterbox_coll'' AND', '') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
+UPDATE baskets SET basket_clause = REPLACE(basket_clause, 'coll_id = ''letterbox_coll'' and', '') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
 
 
 /* REFACTORING MODIFICATION */
@@ -376,6 +378,7 @@ UPDATE priorities SET delays = 30 WHERE delays IS NULL;
 ALTER TABLE priorities ALTER COLUMN delays SET NOT NULL;
 ALTER TABLE res_letterbox ALTER COLUMN status DROP NOT NULL;
 ALTER TABLE res_letterbox ALTER COLUMN docserver_id DROP NOT NULL;
+
 
 /* REFACTORING SUPPRESSION */
 DO $$ BEGIN
@@ -431,12 +434,10 @@ ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tablename;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS validation_date;
 ALTER TABLE listinstance DROP COLUMN IF EXISTS added_by_entity;
 ALTER TABLE listinstance DROP COLUMN IF EXISTS coll_id;
-UPDATE baskets SET basket_clause = REPLACE(basket_clause, 'coll_id = ''letterbox_coll'' AND', '') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
-UPDATE baskets SET basket_clause = REPLACE(basket_clause, 'coll_id = ''letterbox_coll'' and', '') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
-
 ALTER TABLE listinstance DROP COLUMN IF EXISTS listinstance_type;
 ALTER TABLE listinstance DROP COLUMN IF EXISTS visible;
 ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_entity;
+ALTER TABLE usergroup_content DROP COLUMN IF EXISTS primary_group;
 
 
 /* RE CREATE VIEWS */

@@ -179,7 +179,6 @@ CREATE TABLE usergroup_content
 (
   user_id character varying(128) NOT NULL,
   group_id character varying(32) NOT NULL,
-  primary_group character(1) NOT NULL,
   "role" character varying(255) DEFAULT NULL::character varying,
   CONSTRAINT usergroup_content_pkey PRIMARY KEY (user_id, group_id)
 )
