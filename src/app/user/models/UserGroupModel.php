@@ -24,16 +24,16 @@ class UserGroupModel
         ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy']);
         ValidatorModel::intType($args, ['limit']);
 
-        $fields = DatabaseModel::select([
-            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+        $usersGroups = DatabaseModel::select([
+            'select'    => $args['select'] ?? ['*'],
             'table'     => ['usergroup_content'],
-            'where'     => empty($args['where']) ? [] : $args['where'],
-            'data'      => empty($args['data']) ? [] : $args['data'],
-            'order_by'  => empty($args['orderBy']) ? ['label'] : $args['orderBy'],
-            'limit'     => empty($args['limit']) ? 0 : $args['limit']
+            'where'     => $args['where'] ?? [],
+            'data'      => $args['data'] ?? [],
+            'order_by'  => $args['orderBy'] ?? [],
+            'limit'     => $args['limit'] ?? 0
         ]);
 
-        return $fields;
+        return $usersGroups;
     }
 
     public static function update(array $args)
