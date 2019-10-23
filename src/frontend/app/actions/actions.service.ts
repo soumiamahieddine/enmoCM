@@ -214,6 +214,7 @@ export class ActionsService {
     confirmAction() {
 
         const dialogRef = this.dialog.open(ConfirmActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
@@ -237,6 +238,7 @@ export class ActionsService {
 
     closeMailAction() {
         const dialogRef = this.dialog.open(CloseMailActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
@@ -259,6 +261,7 @@ export class ActionsService {
 
     closeAndIndexAction() {
         const dialogRef = this.dialog.open(CloseAndIndexActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
@@ -281,6 +284,7 @@ export class ActionsService {
 
     updateAcknowledgementSendDateAction() {
         const dialogRef = this.dialog.open(UpdateAcknowledgementSendDateActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
@@ -303,6 +307,7 @@ export class ActionsService {
 
     createAcknowledgementReceiptsAction() {
         const dialogRef = this.dialog.open(CreateAcknowledgementReceiptActionComponent, {
+            disableClose: true,
             width: '600px',
             data: this.setDatasActionToSend()
         });
@@ -325,6 +330,7 @@ export class ActionsService {
 
     updateDepartureDateAction() {
         const dialogRef = this.dialog.open(UpdateDepartureDateActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
@@ -347,6 +353,7 @@ export class ActionsService {
 
     disabledBasketPersistenceAction() {
         const dialogRef = this.dialog.open(DisabledBasketPersistenceActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
@@ -369,6 +376,7 @@ export class ActionsService {
 
     enabledBasketPersistenceAction() {
         const dialogRef = this.dialog.open(EnabledBasketPersistenceActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
@@ -391,6 +399,7 @@ export class ActionsService {
 
     resMarkAsReadAction() {
         const dialogRef = this.dialog.open(ResMarkAsReadActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
@@ -420,6 +429,7 @@ export class ActionsService {
 
     sendExternalSignatoryBookAction() {
         const dialogRef = this.dialog.open(SendExternalSignatoryBookActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
@@ -442,6 +452,7 @@ export class ActionsService {
 
     sendExternalNoteBookAction() {
         const dialogRef = this.dialog.open(SendExternalNoteBookActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
@@ -464,6 +475,7 @@ export class ActionsService {
 
     redirectAction() {
         const dialogRef = this.dialog.open(RedirectActionComponent, {
+            disableClose: true,
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
@@ -485,6 +497,7 @@ export class ActionsService {
 
     sendShippingAction() {
         const dialogRef = this.dialog.open(SendShippingActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
