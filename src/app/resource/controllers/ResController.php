@@ -699,8 +699,8 @@ class ResController
 
         $body = $args['body'];
 
-        if (!empty($body['diffusion'])) {
-            foreach ($body['diffusion'] as $diffusion) {
+        if (!empty($body['diffusionList'])) {
+            foreach ($body['diffusionList'] as $diffusion) {
                 if ($diffusion['mode'] == 'dest') {
                     ResModel::update(['set' => ['dest_user' => $diffusion['id']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
                 }
@@ -857,12 +857,12 @@ class ResController
                 return ['errors' => 'Body tags : One or more tags do not exist'];
             }
         }
-        if (!empty($body['diffusion'])) {
-            if (!Validator::arrayType()->notEmpty()->validate($body['diffusion'])) {
+        if (!empty($body['diffusionList'])) {
+            if (!Validator::arrayType()->notEmpty()->validate($body['diffusionList'])) {
                 return ['errors' => 'Body diffusion is not an array'];
             }
             $destFound = false;
-            foreach ($body['diffusion'] as $key => $diffusion) {
+            foreach ($body['diffusionList'] as $key => $diffusion) {
                 if ($diffusion['mode'] == 'dest') {
                     if ($destFound) {
                         return ['errors' => "Body diffusion has multiple dest"];

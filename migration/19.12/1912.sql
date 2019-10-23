@@ -401,6 +401,7 @@ UPDATE priorities SET delays = 30 WHERE delays IS NULL;
 ALTER TABLE priorities ALTER COLUMN delays SET NOT NULL;
 ALTER TABLE res_letterbox ALTER COLUMN status DROP NOT NULL;
 ALTER TABLE res_letterbox ALTER COLUMN docserver_id DROP NOT NULL;
+ALTER TABLE res_letterbox ALTER COLUMN format DROP NOT NULL;
 
 
 /* REFACTORING SUPPRESSION */
