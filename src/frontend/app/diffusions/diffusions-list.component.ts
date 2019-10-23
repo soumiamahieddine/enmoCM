@@ -368,6 +368,10 @@ export class DiffusionsListComponent implements OnInit {
                 item_mode: "copy"
             };
             this.diffList['copy'].items.unshift(newElemListModel);
+
+            if (this.diffFormControl !== undefined) {
+                this.setFormValues();
+            }
         }
     }
 
@@ -390,6 +394,9 @@ export class DiffusionsListComponent implements OnInit {
 
         } else {
             this.changeUserRole(user, oldRole, newRole);
+        }
+        if (this.diffFormControl !== undefined) {
+            this.setFormValues();
         }
         //}
     }
@@ -457,6 +464,7 @@ export class DiffusionsListComponent implements OnInit {
         if (indexFound > -1) {
             this.diffList[oldRole.id].items.splice(indexFound, 1);
         }
+        user.item_mode = newRole.id;
         this.diffList[newRole.id].items.push(user);
     }
 
