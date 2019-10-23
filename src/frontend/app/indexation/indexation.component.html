@@ -56,17 +56,21 @@
             <div class="actions-indexing-form">
                 <ng-container *ngIf="actionsList.length > 0">
                     <button mat-button class="button-form-primary" [matMenuTriggerFor]="menu"
-                        style="flex:1;margin-right:20px;" [title]="selectedAction.label">
+                        style="width:350px;margin-right:20px;" [title]="selectedAction.label">
                         <span class="menu-label" [innerHTML]="selectedAction.label">
                         </span>
                         <i class="fa fa-chevron-down menu-icon"></i></button>
-                    <mat-menu #menu="matMenu" [class]="'menuForm'">
+                    <mat-menu #menu="matMenu" [class]="'menuForm menuAction'">
+                        <button mat-menu-item disabled style="text-align:center;"
+                            (click)="$event.stopPropagation();">{{lang.actions}}</button>
                         <ng-container *ngFor="let action of actionsList">
-                            <button mat-menu-item *ngIf="action.id !== selectedAction.id" (click)="selectAction(action)"
-                                [title]="action.label" [innerHTML]="action.label"></button>
+                            <button mat-menu-item (click)="selectAction(action)" [title]="action.label" [class.listModels-menu-selected]="action.id === selectedAction.id" [disabled]="!action.enabled">
+                                <span style="flex:1;">{{action.label}}</span><small style="position: absolute;top: 15px;left: 140px;" color="warn" *ngIf="!action.enabled">{{lang.badActionParam}}</small>
+                            </button>
                         </ng-container>
                     </mat-menu>
-                    <button mat-button *ngIf="!appService.getViewMode()" [disabled]="actionService.loading" class="button-form-primary-filled"
+                    <button mat-button *ngIf="!appService.getViewMode()" [disabled]="actionService.loading"
+                        class="button-form-primary-filled"
                         style="width: 150px;align-items: center;justify-content: center;text-align: center;display: flex;"
                         (click)="onSubmit()">{{lang.validate}}</button>
                     <button mat-icon-button *ngIf="appService.getViewMode()" class="button-form-primary"

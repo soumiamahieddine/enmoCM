@@ -161,3 +161,7 @@
     background: #ffffffba;
     z-index: 2;
 }
+
+::ng-deep.menuAction {
+    min-width: 350px !important;
+}

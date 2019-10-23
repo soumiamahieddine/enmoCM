@@ -113,6 +113,7 @@ export class IndexationComponent implements OnInit {
                             id: action.id,
                             label: action.label_action,
                             component: action.component,
+                            enabled: action.enabled,
                             default: index === 0 ? true : false
                         }
                     });

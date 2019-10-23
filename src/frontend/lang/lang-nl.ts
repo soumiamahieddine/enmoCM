@@ -1187,4 +1187,5 @@ export const LANG_NL = {
     "createPrivateIndexingModel" : "Create an indexing model with current datas", //_TO_TRANSLATE
     "currentIndexingMail" : "the current indexing mail", //_TO_TRANSLATE
     "mustFixErrors" : "You must fix the errors.", //_TO_TRANSLATE
+    "badActionParam" : "Bad action parameter", //_TO_TRANSLATE
 };
