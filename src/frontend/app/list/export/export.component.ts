@@ -78,14 +78,9 @@ export class ExportComponent implements OnInit {
             isFunction: false
         },
         {
-            value: 'fold_status',
-            label: this.lang.folderStatus,
-            isFunction: false
-        },
-        {
-            value: 'folder_name',
+            value: 'getFolder',
             label: this.lang.folderName,
-            isFunction: false
+            isFunction: true
         },
         {
             value: 'confidentiality',

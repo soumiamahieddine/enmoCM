@@ -19,6 +19,8 @@ use Basket\models\BasketModel;
 use Contact\models\ContactModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
+use Folder\controllers\FolderController;
+use Folder\models\FolderModel;
 use Resource\models\ExportTemplateModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
@@ -128,7 +130,7 @@ class ExportController
             ]);
         }
 
-        $select           = ['res_id'];
+        $select           = ['res_view_letterbox.res_id'];
         $tableFunction    = [];
         $leftJoinFunction = [];
         $csvHead          = [];
@@ -146,10 +148,12 @@ class ExportController
                     $select[] = 'priorities.label AS "priorities.label"';
                     $tableFunction[] = 'priorities';
                     $leftJoinFunction[] = 'res_view_letterbox.priority = priorities.id';
-                } elseif ($value['value'] == 'getParentFolder') {
-                    $select[] = 'folders.folder_name AS "folders.folder_name"';
-                    $tableFunction[] = 'folders';
-                    $leftJoinFunction[] = 'res_view_letterbox.fold_parent_id = folders.folders_system_id';
+                } elseif ($value['value'] == 'getFolder') {
+                    $select[] = 'res_folder2.label AS "folders.label"';
+                    $tableFunction[] = 'resources_folders as res_folders2';
+                    $leftJoinFunction[] = 'res_view_letterbox.res_id = res_folders2.res_id';
+                    $tableFunction[] = 'folders as res_folder2';
+                    $leftJoinFunction[] = 'res_folder2.id = res_folders2.folder_id';
                 } elseif ($value['value'] == 'getCategory') {
                     $select[] = 'res_view_letterbox.category_id';
                 } elseif ($value['value'] == 'getInitiatorEntity') {
@@ -245,7 +249,9 @@ class ExportController
                     } elseif ($value['value'] == 'getDetailLink') {
                         $csvContent[] = str_replace('rest/', "apps/maarch_entreprise/index.php?page=details&dir=indexing_searching&id={$resource['res_id']}", \Url::coreurl());
                     } elseif ($value['value'] == 'getParentFolder') {
-                        $csvContent[] = $resource['folders.folder_name'];
+                        $csvContent[] = ExportController::getParentFolderLabel(['res_id' => $resource['res_id']]);
+                    } elseif ($value['value'] == 'getFolder') {
+                        $csvContent[] = $resource['folders.label'];
                     } elseif ($value['value'] == 'getCategory') {
                         $csvContent[] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
                     } elseif ($value['value'] == 'getInitiatorEntity') {
@@ -355,7 +361,9 @@ class ExportController
                     } elseif ($value['value'] == 'getDetailLink') {
                         $content[] = str_replace('rest/', "apps/maarch_entreprise/index.php?page=details&dir=indexing_searching&id={$resource['res_id']}", \Url::coreurl());
                     } elseif ($value['value'] == 'getParentFolder') {
-                        $content[] = $resource['folders.folder_name'];
+                        $content[] = ExportController::getParentFolderLabel(['res_id' => $resource['res_id']]);
+                    }  elseif ($value['value'] == 'getFolder') {
+                        $content[] = $resource['folders.label'];
                     } elseif ($value['value'] == 'getCategory') {
                         $content[] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
                     } elseif ($value['value'] == 'getInitiatorEntity') {
@@ -755,5 +763,32 @@ class ExportController
         }
 
         return $maxHeight + 2;
+    }
+
+    private static function getParentFolderLabel(array $args)
+    {
+        $folder = FolderModel::getWithEntitiesAndResources([
+            'select'    => ['folders.parent_id'],
+            'where'     => ['resources_folders.res_id = ?'],
+            'data'      => [$args['res_id']]
+        ]);
+        if (empty($folder)) {
+            return '';
+        }
+        $folder = $folder[0];
+
+        $hasFolder = FolderController::hasFolders([
+            'userId' => $GLOBALS['id'],
+            'folders' => [$folder['parent_id']]
+        ]);
+
+        if (!$hasFolder) {
+            return '';
+        }
+        $parentFolder = FolderModel::getById([
+            'id' => $folder['parent_id']
+        ]);
+
+        return $parentFolder['label'];
     }
 }
