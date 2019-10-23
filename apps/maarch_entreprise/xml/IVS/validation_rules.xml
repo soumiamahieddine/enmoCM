@@ -344,41 +344,7 @@
       <parameter name="destinataire_available" type="identifier" />
       <parameter name="project" type="string" />
       <parameter name="priority" type="string" />
-      <parameter name="doc_custom_t1" type="string" />
-      <parameter name="doc_custom_t2" type="string" />
-      <parameter name="doc_custom_t3" type="string" />
-      <parameter name="doc_custom_t4" type="string" />
-      <parameter name="doc_custom_t5" type="string" />
-      <parameter name="doc_custom_t6" type="string" />
-      <parameter name="doc_custom_t7" type="string" />
-      <parameter name="doc_custom_t8" type="string" />
-      <parameter name="doc_custom_t9" type="string" />
-      <parameter name="doc_custom_t10" type="string" />
-      <parameter name="doc_custom_t11" type="string" />
-      <parameter name="doc_custom_t12" type="string" />
-      <parameter name="doc_custom_t13" type="string" />
-      <parameter name="doc_custom_t14" type="string" />
-      <parameter name="doc_custom_t15" type="string" />
-      <parameter name="doc_custom_f1_min" type="string" />
-      <parameter name="doc_custom_f1_max" type="string" />
-      <parameter name="doc_custom_f2_min" type="string" />
-      <parameter name="doc_custom_f2_max" type="string" />
-      <parameter name="doc_custom_f3_min" type="string" />
-      <parameter name="doc_custom_f3_max" type="string" />
-      <parameter name="doc_custom_f4_min" type="string" />
-      <parameter name="doc_custom_f4_max" type="string" />
-      <parameter name="doc_custom_f5_min" type="string" />
-      <parameter name="doc_custom_f5_max" type="string" />
-      <parameter name="doc_custom_n1_min" type="integer" />
-      <parameter name="doc_custom_n1_max" type="integer" />
-      <parameter name="doc_custom_n2_min" type="integer" />
-      <parameter name="doc_custom_n2_max" type="integer" />
-      <parameter name="doc_custom_n3_min" type="integer" />
-      <parameter name="doc_custom_n3_max" type="integer" />
-      <parameter name="doc_custom_n4_min" type="integer" />
-      <parameter name="doc_custom_n4_max" type="integer" />
-      <parameter name="doc_custom_n5_min" type="integer" />
-      <parameter name="doc_custom_n5_max" type="integer" />
+      <parameter name="indexingCustomField_*" type="string" />
       <parameter name="signatory_group" type="identifier" />
       <parameter name="signatory_name_id" type="identifier" />
       <parameter name="tags_chosen" type="string" />
