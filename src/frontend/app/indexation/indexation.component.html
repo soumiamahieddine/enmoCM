@@ -3,9 +3,6 @@
         [fixedInViewport]="appService.getViewMode()" [opened]="appService.getViewMode() ? false : true"
         autoFocus="false" style="overflow-x:hidden;" [ngStyle]="{'width': appService.getViewMode() ? '95%' : '600px'}">
         <header-panel [snavLeft]="snav"></header-panel>
-        <div *ngIf="actionService.loading" class="loading">
-            <mat-spinner style="margin:auto;"></mat-spinner>
-        </div>
         <ng-container *ngIf="indexingModels.length > 0">
             <div class="listModels">
                 <button mat-button class="button-form-primary listModels-button"
@@ -54,8 +51,8 @@
                     [groupId]="currentGroupId" [indexingFormId]="currentIndexingModel.id"></app-indexing-form>
             </div>
             <div class="actions-indexing-form">
-                <ng-container *ngIf="actionsList.length > 0">
-                    <button mat-button class="button-form-primary" [matMenuTriggerFor]="menu"
+                <ng-container *ngIf="actionsList.length > 0 && indexingForm !== undefined && selectedAction !== undefined">
+                    <button mat-button class="button-form-primary" [disabled]="selectedAction.id === 0" [matMenuTriggerFor]="menu"
                         style="width:350px;margin-right:20px;" [title]="selectedAction.label">
                         <span class="menu-label" [innerHTML]="selectedAction.label">
                         </span>
@@ -64,12 +61,12 @@
                         <button mat-menu-item disabled style="text-align:center;"
                             (click)="$event.stopPropagation();">{{lang.actions}}</button>
                         <ng-container *ngFor="let action of actionsList">
-                            <button mat-menu-item (click)="selectAction(action)" [title]="action.label" [class.listModels-menu-selected]="action.id === selectedAction.id" [disabled]="!action.enabled">
+                            <button *ngIf="showActionInCurrentCategory(action)" mat-menu-item (click)="selectAction(action)" [title]="action.label" [class.listModels-menu-selected]="action.id === selectedAction.id" [disabled]="!action.enabled">
                                 <span style="flex:1;">{{action.label}}</span><small style="position: absolute;top: 15px;left: 140px;" color="warn" *ngIf="!action.enabled">{{lang.badActionParam}}</small>
                             </button>
                         </ng-container>
                     </mat-menu>
-                    <button mat-button *ngIf="!appService.getViewMode()" [disabled]="actionService.loading"
+                    <button mat-button *ngIf="!appService.getViewMode()" [disabled]="actionService.loading || selectedAction.id === 0"
                         class="button-form-primary-filled"
                         style="width: 150px;align-items: center;justify-content: center;text-align: center;display: flex;"
                         (click)="onSubmit()">{{lang.validate}}</button>

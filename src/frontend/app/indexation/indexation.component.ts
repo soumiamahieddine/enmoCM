@@ -44,7 +44,13 @@ export class IndexationComponent implements OnInit {
     currentGroupId: number;
 
     actionsList: any[] = [];
-    selectedAction: any = {};
+    selectedAction: any = {
+        id: 0,
+        label: '',
+        component: '',
+        default: false,
+        categoryUse: []
+    };
     tmpFilename: string = '';
 
     dialogRef: MatDialogRef<any>;
@@ -114,12 +120,17 @@ export class IndexationComponent implements OnInit {
                             label: action.label_action,
                             component: action.component,
                             enabled: action.enabled,
-                            default: index === 0 ? true : false
+                            default: index === 0 ? true : false,
+                            categoryUse: action.categoryUse
                         }
                     });
                     return data;
                 }),
                 tap((data: any) => {
+                    // TO DO : REMOVE AFTER BACK
+                    data.actions[0].categoryUse = ['incoming','outgoing'];
+                    data.actions[1].categoryUse = ['outgoing'];
+                    
                     this.selectedAction = data.actions[0];
                     this.actionsList = data.actions;
                 }),
@@ -224,6 +235,29 @@ export class IndexationComponent implements OnInit {
     ngOnDestroy() {
         // unsubscribe to ensure no memory leaks
         this.subscription.unsubscribe();
+    }
+
+    showActionInCurrentCategory(action: any) {
+
+        if (this.selectedAction.categoryUse.indexOf(this.indexingForm.getCategory()) === -1) {
+            const newAction = this.actionsList.filter(action => action.categoryUse.indexOf(this.indexingForm.getCategory()) > -1)[0];
+            if (newAction !== undefined) {
+                this.selectedAction = this.actionsList.filter(action => action.categoryUse.indexOf(this.indexingForm.getCategory()) > -1)[0];
+            } else {
+                this.selectedAction = {
+                    id: 0,
+                    label: '',
+                    component: '',
+                    default: false,
+                    categoryUse: []
+                };
+            }
+        }
+        if (action.categoryUse.indexOf(this.indexingForm.getCategory()) > -1) {            
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
