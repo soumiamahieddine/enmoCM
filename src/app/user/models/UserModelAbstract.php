@@ -424,7 +424,7 @@ abstract class UserModelAbstract
         $user = UserModel::getByLogin(['login' => $aArgs['login'], 'select' => ['id']]);
 
         $aGroups = DatabaseModel::select([
-            'select'    => ['usergroups.id', 'usergroups.can_index', 'usergroups.group_id', 'usergroups.group_desc', 'usergroup_content.role', 'security.maarch_comment', 'security.where_clause'],
+            'select'    => ['usergroups.id', 'usergroups.can_index', 'usergroups.group_id', 'usergroups.group_desc', 'usergroups.indexation_parameters', 'usergroup_content.role', 'security.maarch_comment', 'security.where_clause'],
             'table'     => ['usergroup_content, usergroups, security'],
             'where'     => ['usergroup_content.group_id = usergroups.id', 'usergroup_content.user_id = ?','usergroups.group_id = security.group_id'],
             'data'      => [$user['id']]
