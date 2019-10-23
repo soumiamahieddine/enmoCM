@@ -152,7 +152,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
         require_once 'modules/entities/class/class_manage_listdiff.php';
         $listdiff = new diffusion_list();
         $roles = $listdiff->list_difflist_roles();
-        $_SESSION['process']['diff_list'] = $listdiff->get_listinstance($res_id, false, $coll_id);
+        $_SESSION['process']['diff_list'] = $listdiff->get_listinstance($res_id, false);
         $_SESSION['process']['difflist_type'] = $listdiff->get_difflist_type($_SESSION['process']['diff_list']['object_type']);
     }
 

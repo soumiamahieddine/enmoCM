@@ -510,7 +510,7 @@ if ($stmt->rowCount() == 0) {
     if ($core->is_module_loaded('entities')) {
         require_once 'modules/entities/class/class_manage_listdiff.php';
         $diff_list = new diffusion_list();
-        $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id, false, $coll_id);
+        $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id, false);
         $_SESSION['details']['difflist_type'] = $diff_list->get_difflist_type($_SESSION['details']['diff_list']['difflist_type']);
         $roles = $diff_list->list_difflist_roles();
 

@@ -57,7 +57,7 @@ if ($typeList=='VISA_CIRCUIT') {
 } else {
     require_once('modules/entities/class/class_manage_listdiff.php');
     $diffListObj = new diffusion_list();
-    $difflist = $diffListObj->get_listinstance($_REQUEST['res_id'], false, $_SESSION['collection_id_choice'], $typeList);
+    $difflist = $diffListObj->get_listinstance($_REQUEST['res_id'], false, $typeList);
         
     # Include display of list
     $roles = $diffListObj->list_difflist_roles();

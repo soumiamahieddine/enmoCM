@@ -103,7 +103,7 @@ abstract class diffusion_list_Abstract extends functions
             }
             // Users
             $stmt = $db->query(
-                'SELECT l.item_id, l.item_mode, u.firstname, u.lastname, e.entity_id, e.entity_label, l.visible, l.process_comment '
+                'SELECT l.item_id, l.item_mode, u.firstname, u.lastname, e.entity_id, e.entity_label, l.process_comment '
                 .' FROM '.ENT_LISTMODELS.' l '
                     .' JOIN '.USERS_TABLE.' u ON l.item_id = u.user_id '
                     .' JOIN '.ENT_USERS_ENTITIES.' ue ON u.user_id = ue.user_id '
@@ -145,7 +145,6 @@ abstract class diffusion_list_Abstract extends functions
                         'firstname' => functions::show_string($user->firstname),
                         'entity_id' => functions::show_string($user->entity_id),
                         'entity_label' => functions::show_string($user->entity_label),
-                        'visible' => $user->visible,
                         'process_comment' => $user->process_comment,
                         'requested_signature' => $user->requested_signature,
                     )
@@ -154,7 +153,7 @@ abstract class diffusion_list_Abstract extends functions
 
             // Entities
             $stmt = $db->query(
-                'SELECT l.item_id, e.entity_label, l.item_mode, l.visible '
+                'SELECT l.item_id, e.entity_label, l.item_mode '
                 .'FROM '.ENT_LISTMODELS.' l '
                     .'JOIN '.ENT_ENTITIES.' e ON l.item_id = e.entity_id '
                 .'WHERE '
@@ -179,7 +178,6 @@ abstract class diffusion_list_Abstract extends functions
                     array(
                         'entity_id' => functions::show_string($entity->item_id),
                         'entity_label' => functions::show_string($entity->entity_label),
-                        'visible' => $entity->visible,
                     )
                 );
             }
@@ -238,7 +236,7 @@ abstract class diffusion_list_Abstract extends functions
                 //print_r($description); exit;
                 $stmt = $db->query(
                     'insert into '.ENT_LISTMODELS
-                        .' (object_id, object_type, sequence, item_id, item_type, item_mode, description, title, visible, process_comment ) '
+                        .' (object_id, object_type, sequence, item_id, item_type, item_mode, description, title, process_comment ) '
                     .' values ('
                         .'? , '
                         .'?, ?, '
@@ -250,7 +248,7 @@ abstract class diffusion_list_Abstract extends functions
                         .'?,'
                         .'?'
                     .')',
-                    array($objectId, $objectType, $i, $user['user_id'], $item_mode, $description, $title, $user['visible'], $user['process_comment'])
+                    array($objectId, $objectType, $i, $user['user_id'], $item_mode, $description, $title, $user['process_comment'])
                 );
             }
             // Entities
@@ -264,7 +262,7 @@ abstract class diffusion_list_Abstract extends functions
                 //print_r($description); exit;
                 $stmt = $db->query(
                     'insert into '.ENT_LISTMODELS
-                        .' (object_id, object_type, sequence, item_id, item_type, item_mode, description, title, visible ) '
+                        .' (object_id, object_type, sequence, item_id, item_type, item_mode, description, title ) '
                     .' values ('
                         .'? , '
                         .'?, ?, '
@@ -275,7 +273,7 @@ abstract class diffusion_list_Abstract extends functions
                         .'?,'
                         .'?'
                     .')',
-                    array($objectId, $objectType, $i, $entity['entity_id'], $item_mode, $description, $title, $entity['visible'])
+                    array($objectId, $objectType, $i, $entity['entity_id'], $item_mode, $description, $title)
                 );
             }
         }
@@ -359,7 +357,7 @@ abstract class diffusion_list_Abstract extends functions
             $creatorEntity = '';
         }
 
-        $oldListInst = $this->get_listinstance($resId, false, $collId, $difflistType);
+        $oldListInst = $this->get_listinstance($resId, false, $difflistType);
         /*echo 'old<br/>';
         var_dump($oldListInst);
         echo 'new<br/>';
@@ -370,7 +368,7 @@ abstract class diffusion_list_Abstract extends functions
 
         $roles = $this->list_difflist_roles();
         $db = new Database();
-        $stmt = $db->query('SELECT listinstance_id FROM listinstance WHERE res_id = ? and coll_id = ? and difflist_type = ?', array($resId, $collId, $difflistType));
+        $stmt = $db->query('SELECT listinstance_id FROM listinstance WHERE res_id = ? and difflist_type = ?', array($resId, $difflistType));
 
         $diffUser = false;
         $diffCopyUsers = false;
@@ -423,9 +421,8 @@ abstract class diffusion_list_Abstract extends functions
         //Delete previous listinstance
         $stmt = $db->query(
             'DELETE FROM '.ENT_LISTINSTANCE
-            .' WHERE coll_id = ?'
-                .' AND res_id = ? AND difflist_type = ?',
-            array($collId, $resId, $difflistType)
+            .' WHERE res_id = ? AND difflist_type = ?',
+            array($resId, $difflistType)
         );
 
         $roles = $this->list_difflist_roles();
@@ -446,7 +443,6 @@ abstract class diffusion_list_Abstract extends functions
                 $userId = trim($diffList[$role_id]['users'][$i]['user_id']);
                 $processComment = trim($diffList[$role_id]['users'][$i]['process_comment']);
                 $processDate = trim($diffList[$role_id]['users'][$i]['process_date']);
-                $visible = $diffList[$role_id]['users'][$i]['visible'];
                 $viewed = (int) $diffList[$role_id]['users'][$i]['viewed'];
 
                 $signatory = ($diffList[$role_id]['users'][$i]['signatory'] ? 'true' : 'false');
@@ -465,7 +461,7 @@ abstract class diffusion_list_Abstract extends functions
                     }
                 }
                 //Modification du dest_user dans la table res_letterbox
-                if ($role_id == 'dest' && $collId == 'letterbox_coll') {
+                if ($role_id == 'dest') {
                     $resEntities = \User\models\UserEntityModel::get(['select' => ['entity_id', 'primary_entity'], 'where' => ['user_id = ?'], 'data' => [$userId]]);
                     $mailDestination = \Resource\models\ResModel::getById(['select' => ['destination'], 'resId' => $resId]);
 
@@ -489,7 +485,7 @@ abstract class diffusion_list_Abstract extends functions
                 if ($processDate != '') {
                     $stmt = $db->query(
                         'insert into '.ENT_LISTINSTANCE
-                            .' (coll_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_comment, process_date, signatory, requested_signature) '
+                            .' (res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_comment, process_date, signatory, requested_signature) '
                         .'values ('
                             .'?, ?, '
                             ."?, "
@@ -504,12 +500,12 @@ abstract class diffusion_list_Abstract extends functions
                             .'?, '
                             .'?'
                         .' )',
-                        array($collId, $resId, $i, $userId, $item_mode, $creatorUser, $visible, $viewed, $difflistType, $processComment, $processDate, $signatory, $requested_signature)
+                        array($resId, $i, $userId, $item_mode, $creatorUser, $viewed, $difflistType, $processComment, $processDate, $signatory, $requested_signature)
                     );
                 } else {
                     $stmt = $db->query(
                         'insert into '.ENT_LISTINSTANCE
-                            .' (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_comment, signatory, requested_signature) '
+                            .' (res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_comment, signatory, requested_signature) '
                         .'values ('
                             .'?, ?, '
                             ."'DOC', ?, "
@@ -523,7 +519,7 @@ abstract class diffusion_list_Abstract extends functions
                             .'?, '
                             .'?'
                         .' )',
-                        array($collId, $resId, $i, $userId, $item_mode, $creatorUser, $visible, $viewed, $difflistType, $processComment, $signatory, $requested_signature)
+                        array($resId, $i, $userId, $item_mode, $creatorUser, $viewed, $difflistType, $processComment, $signatory, $requested_signature)
                     );
                 }
 
@@ -550,7 +546,6 @@ abstract class diffusion_list_Abstract extends functions
             for ($j = 0; $j < $cptEntities; ++$j) {
                 $entityFound = false;
                 $entityId = trim($diffList[$role_id]['entities'][$j]['entity_id']);
-                $visible = $diffList[$role_id]['entities'][$j]['visible'];
                 $viewed = (int) $diffList[$role_id]['entities'][$j]['viewed'];
                 $cptOldEntities = 0;
                 if (is_array($oldListInst[$role_id]['entities'])) {
@@ -567,7 +562,7 @@ abstract class diffusion_list_Abstract extends functions
 
                 $stmt = $db->query(
                     'INSERT INTO '.ENT_LISTINSTANCE
-                        .' (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type) '
+                        .' (res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type) '
                     .'VALUES ('
                         .'?, ?, '
                         ."'DOC', ?, "
@@ -578,7 +573,7 @@ abstract class diffusion_list_Abstract extends functions
                         .'?,?, '
                         .'?'
                     .' )',
-                    array($collId, $resId, $j, $entityId, $item_mode, $creatorUser, $visible, $viewed, $difflistType)
+                    array($resId, $j, $entityId, $item_mode, $creatorUser, $viewed, $difflistType)
                 );
 
                 if (!$entityFound || $fromQualif) {
@@ -603,15 +598,15 @@ abstract class diffusion_list_Abstract extends functions
         $user = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => $_SESSION['user']['UserId']]);
 
         $db = new Database();
-        $db->query('INSERT INTO listinstance_history (coll_id, res_id, user_id, updated_date) VALUES (?, ?, ?, current_timestamp)', array($coll_id, $res_id, $user['id']));
+        $db->query('INSERT INTO listinstance_history (coll_id, res_id, user_id, updated_date) VALUES (?, ?, ?, current_timestamp)', array('letterbox_coll', $res_id, $user['id']));
         $listinstance_history_id = $db->lastInsertId('listinstance_history_id_seq');
 
-        $stmt = $db->query('SELECT * FROM listinstance WHERE res_id = ? and coll_id = ? and difflist_type = ?', array($res_id, $coll_id, $difflistType));
+        $stmt = $db->query('SELECT * FROM listinstance WHERE res_id = ? and difflist_type = ?', array($res_id, $difflistType));
 
         while ($resListinstance = $stmt->fetchObject()) {
             $stmt2 = $db->query(
                 'INSERT INTO listinstance_history_details 
-                    (listinstance_history_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, visible, viewed, difflist_type, process_comment) '
+                    (listinstance_history_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_comment) '
                 .'VALUES (?,?, ?, '
                     ."'DOC', ?, "
                     .'?, '
@@ -622,7 +617,7 @@ abstract class diffusion_list_Abstract extends functions
                     .'?, '
                     .'?'
                 .' )',
-                array($listinstance_history_id, $resListinstance->coll_id, $res_id, $resListinstance->sequence, $resListinstance->item_id, $resListinstance->item_type, $resListinstance->item_mode, $resListinstance->added_by_user, $resListinstance->visible, $resListinstance->viewed, $resListinstance->difflist_type, $resListinstance->process_comment)
+                array($listinstance_history_id, 'letterbox_coll', $res_id, $resListinstance->sequence, $resListinstance->item_id, $resListinstance->item_type, $resListinstance->item_mode, $resListinstance->added_by_user, $resListinstance->viewed, $resListinstance->difflist_type, $resListinstance->process_comment)
             );
         }
     }
@@ -653,7 +648,6 @@ abstract class diffusion_list_Abstract extends functions
     public function get_listinstance(
         $resId,
         $modeCc = false,
-        $collId = 'letterbox_coll',
         $typeList = 'entity_id'
     ) {
         $db = new Database();
@@ -661,17 +655,16 @@ abstract class diffusion_list_Abstract extends functions
 
         $listinstance = array();
 
-        if (empty($resId) || empty($collId)) {
+        if (empty($resId)) {
             return $listinstance;
         }
 
         // Load header
         $query =
-            'SELECT distinct coll_id, res_id, difflist_type'
+            'SELECT distinct res_id, difflist_type'
             .' FROM '.ENT_LISTINSTANCE
-            .' WHERE coll_id = ? '
-                .'and res_id = ? GROUP BY coll_id, res_id, difflist_type';
-        $stmt = $db->query($query, array($collId, $resId));
+            .' WHERE res_id = ? GROUP BY res_id, difflist_type';
+        $stmt = $db->query($query, array($resId));
 
         $listinstance = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($listinstance['difflist_type'] == '') {
@@ -682,11 +675,10 @@ abstract class diffusion_list_Abstract extends functions
         /*if (! $modeCc) {
             $stmt = $db->query(
                 "select l.item_id, u.firstname, u.lastname, e.entity_id, "
-                . "e.entity_label, l.visible, l.viewed from " . ENT_LISTINSTANCE . " l, "
+                . "e.entity_label, l.viewed from " . ENT_LISTINSTANCE . " l, "
                 . USERS_TABLE . " u, " . ENT_ENTITIES . " e, "
                 . ENT_USERS_ENTITIES . " ue "
-                . " where l.coll_id = '" . $collId . "' "
-                ." and l.item_mode = 'dest' "
+                . " where l.item_mode = 'dest' "
                 . "and l.item_type = 'user_id' and l.sequence = 0 "
                 . "and l.item_id = u.user_id and u.user_id = ue.user_id "
                 . "and e.entity_id = ue.entity_id and ue.primary_entity = 'Y' "
@@ -701,7 +693,6 @@ abstract class diffusion_list_Abstract extends functions
                 'firstname' => $this->show_string($res->firstname),
                 'entity_id' => $this->show_string($res->entity_id),
                 'entity_label' => $this->show_string($res->entity_label),
-                'visible' => $this->show_string($res->visible),
                 'viewed' => $this->show_string($res->viewed)
             );
         }*/
@@ -710,11 +701,10 @@ abstract class diffusion_list_Abstract extends functions
         //**********************************************************************
         $stmt = $db->query(
             'select l.listinstance_id ,l.item_id, u.firstname, u.lastname, e.entity_id, e.entity_label,'
-            .' l.visible, l.viewed, l.item_mode, l.difflist_type, l.process_date, l.process_comment, l.signatory, l.requested_signature from '
+            .' l.viewed, l.item_mode, l.difflist_type, l.process_date, l.process_comment, l.signatory, l.requested_signature from '
             .ENT_LISTINSTANCE.' l, '.USERS_TABLE
             .' u, '.ENT_ENTITIES.' e, '.ENT_USERS_ENTITIES
-            ." ue where l.coll_id = '".$collId."' "
-            ." and l.item_type = 'user_id' and l.item_id = u.user_id "
+            ." ue where l.item_type = 'user_id' and l.item_id = u.user_id "
             .' and l.item_id = ue.user_id and ue.user_id=u.user_id '
             ." and e.entity_id = ue.entity_id and l.difflist_type = ? and l.res_id = ? and ue.primary_entity = 'Y' order by l.sequence ",
             array($typeList, $resId)
@@ -737,7 +727,6 @@ abstract class diffusion_list_Abstract extends functions
                 'firstname' => functions::show_string($res->firstname),
                 'entity_id' => functions::show_string($res->entity_id),
                 'entity_label' => functions::show_string($res->entity_label),
-                'visible' => functions::show_string($res->visible),
                 'viewed' => functions::show_string($res->viewed),
                 'difflist_type' => functions::show_string($res->difflist_type),
                 'process_date' => functions::show_string($res->process_date),
@@ -750,11 +739,11 @@ abstract class diffusion_list_Abstract extends functions
         // OTHER ROLES ENTITIES
         //**********************************************************************
         $stmt = $db->query(
-            'select l.item_id,  e.entity_label, l.visible, l.viewed, l.item_mode, l.difflist_type, l.process_date, l.process_comment  from '.ENT_LISTINSTANCE
-            .' l, '.ENT_ENTITIES.' e where l.difflist_type = ? and l.coll_id =  ? '
+            'select l.item_id,  e.entity_label, l.viewed, l.item_mode, l.difflist_type, l.process_date, l.process_comment  from '.ENT_LISTINSTANCE
+            .' l, '.ENT_ENTITIES.' e where l.difflist_type = ? '
             ."and l.item_type = 'entity_id' and l.item_id = e.entity_id "
             .'and l.res_id = ? order by l.sequence ',
-            array($typeList, $collId, $resId)
+            array($typeList, $resId)
         );
 
         while ($res = $stmt->fetchObject()) {
@@ -772,7 +761,6 @@ abstract class diffusion_list_Abstract extends functions
                 array(
                      'entity_id' => functions::show_string($res->item_id),
                      'entity_label' => functions::show_string($res->entity_label),
-                     'visible' => functions::show_string($res->visible),
                      'viewed' => functions::show_string($res->viewed),
                      'difflist_type' => functions::show_string($res->difflist_type),
                      'process_date' => functions::show_string($res->process_date),
@@ -794,20 +782,20 @@ abstract class diffusion_list_Abstract extends functions
     ) {
         $db = new Database();
         $stmt = $db->query(
-            'select item_id from '.ENT_LISTINSTANCE." where res_id = ? and coll_id = ? and sequence = 0 and item_type = ? and item_mode = 'dest'",
-            array($resId, $collId, $itemType)
+            'select item_id from '.ENT_LISTINSTANCE." where res_id = ? and sequence = 0 and item_type = ? and item_mode = 'dest'",
+            array($resId, $itemType)
         );
         if ($stmt->rowCount() == 1) {
             $stmt = $db->query(
-                'update '.ENT_LISTINSTANCE." set item_id = ?, viewed = ? where res_id = ? and coll_id = ? and sequence = 0 and item_type = ? and item_mode = 'dest'",
-                array($dest, $viewed, $resId, $collId, $itemType)
+                'update '.ENT_LISTINSTANCE." set item_id = ?, viewed = ? where res_id = ? and sequence = 0 and item_type = ? and item_mode = 'dest'",
+                array($dest, $viewed, $resId, $itemType)
             );
         } else {
             $stmt = $db->query(
-                'insert into '.ENT_LISTINSTANCE.' (coll_id, res_id, '
+                'insert into '.ENT_LISTINSTANCE.' (res_id, '
                 .'item_id, item_type, item_mode, sequence, '
                 ."added_by_user, viewed) values (?, ?, ?, ?, 'dest', 0, ?, ?)",
-                array($collId, $resId, $dest, $itemType, $_SESSION['user']['UserId'], $viewed)
+                array($resId, $dest, $itemType, $_SESSION['user']['UserId'], $viewed)
             );
         }
     }
@@ -888,7 +876,7 @@ abstract class diffusion_list_Abstract extends functions
             }
         }
 
-        $aCurrentDiffList = diffusion_list::get_listinstance($resId, false, $collId, $objectType);
+        $aCurrentDiffList = diffusion_list::get_listinstance($resId, false, $objectType);
         if (!empty($aCurrentDiffList)) {
             // On regarde les roles a conserver
             foreach ($aCurrentDiffList as $roleId => $listDiffItemId) {
