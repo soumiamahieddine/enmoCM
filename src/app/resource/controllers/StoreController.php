@@ -155,7 +155,7 @@ class StoreController
             'status'                => $args['status'] ?? null,
             'destination'           => $args['destination'] ?? null,
             'initiator'             => $args['initiator'] ?? null,
-            'confidentiality'       => empty('confidentiality') ? 'N' : 'Y',
+            'confidentiality'       => empty($args['confidentiality']) ? 'N' : 'Y',
             'doc_date'              => $args['documentDate'] ?? null,
             'admission_date'        => $args['arrivalDate'] ?? null,
             'departure_date'        => $args['departureDate'] ?? null,
