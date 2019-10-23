@@ -367,8 +367,8 @@ DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_outside_proce
 DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
 UPDATE listmodels SET title = object_id WHERE title IS NULL;
-UPDATE baskets SET basket_clause = REPLACE(basket_clause, 'coll_id = ''letterbox_coll'' AND', '') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
-UPDATE baskets SET basket_clause = REPLACE(basket_clause, 'coll_id = ''letterbox_coll'' and', '') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
+UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)AND', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
+UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)and', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
 
 
 /* REFACTORING MODIFICATION */
