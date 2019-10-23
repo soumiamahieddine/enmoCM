@@ -781,7 +781,7 @@ class ResController
 
             if (!empty($body['initiator'])) {
                 $userEntities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
-                $userEntities = array_column($userEntities, 'entity_id');
+                $userEntities = array_column($userEntities, 'id');
                 if (!in_array($body['initiator'], $userEntities)) {
                     return ['errors' => "Body initiator does not belong to your entities"];
                 }
@@ -1011,16 +1011,15 @@ class ResController
                 $allowedEntities = array_unique($allowedEntities);
             }
 
-            $preparedClause = '';
             if (!empty($clauseToProcess)) {
                 $preparedClause = PreparedClauseController::getPreparedClause(['clause' => $clauseToProcess, 'login' => $GLOBALS['userId']]);
-            }
-            if (!empty($allowedEntities)) {
-                $preparedEntities = EntityModel::get(['select' => ['entity_id'], 'where' => ['enabled = ?', 'id in (?)'], 'data' => ['Y', $allowedEntities]]);
-                $allowedEntities = array_column($preparedEntities, 'entity_id');
+                $preparedEntities = EntityModel::get(['select' => ['id'], 'where' => ['enabled = ?', "entity_id in {$preparedClause}"], 'data' => ['Y']]);
+                $preparedEntities = array_column($preparedEntities, 'id');
+                $allowedEntities = array_merge($allowedEntities, $preparedEntities);
+                $allowedEntities = array_unique($allowedEntities);
             }
 
-            if (!in_array($body['destination'], $allowedEntities) && strpos($preparedClause, $body['destination']) === false) {
+            if (!in_array($body['destination'], $allowedEntities)) {
                 return ['errors' => "Body destination is out of your indexing parameters"];
             }
         }

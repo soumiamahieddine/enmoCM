@@ -17,6 +17,7 @@ namespace Resource\controllers;
 
 use Attachment\models\AttachmentModel;
 use Docserver\controllers\DocserverController;
+use Entity\models\EntityModel;
 use IndexingModel\models\IndexingModelModel;
 use Resource\models\ChronoModel;
 use SrcCore\models\DatabaseModel;
@@ -123,6 +124,15 @@ class StoreController
         $chrono = null;
         if (!empty($args['chrono'])) {
             $chrono = ChronoModel::getChrono(['id' => $indexingModel['category'], 'entityId' => $args['destination'], 'typeId' => $args['doctype'], 'resId' => $args['resId']]);
+        }
+
+        if (!empty($args['initiator'])) {
+            $entity = EntityModel::getById(['id' => $args['initiator'], 'select' => ['entity_id']]);
+            $args['initiator'] = $entity['entity_id'];
+        }
+        if (!empty($args['destination'])) {
+            $entity = EntityModel::getById(['id' => $args['destination'], 'select' => ['entity_id']]);
+            $args['destination'] = $entity['entity_id'];
         }
 
         if (!empty($args['processLimitDate']) && !empty($args['priority'])) {
