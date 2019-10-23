@@ -789,7 +789,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $customFieldId = str_replace("_from", "", $customFieldId);
                 $customFieldId = str_replace("_to", "", $customFieldId);
                 $customField   = \CustomField\models\CustomFieldModel::getById(['id' => $customFieldId]);
-                $json_txt     .= " '".$tab_id_fields[$j]."' : ['".addslashes(trim($_REQUEST[$tab_id_fields[$j]]))."']";
+                $json_txt     .= " '".$tab_id_fields[$j]."' : ['".addslashes(trim($_REQUEST[$tab_id_fields[$j]]))."'],";
                 if (in_array($customField['type'], ['select', 'radio', 'checkbox'])) {
                     $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and value @> :valueCustom_".$customFieldId.")) and ";
                     $arrayPDO       = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
