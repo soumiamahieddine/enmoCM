@@ -458,55 +458,55 @@ select setval('users_id_seq', (select max(id)+1 from users), false);
 
 -- Create USERGROUP_CONTENT
 TRUNCATE TABLE usergroup_content;
-DELETE FROM usergroup_content WHERE user_id = 'rrenaud';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('rrenaud', 'RESPONSABLE', '');
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('rrenaud', 'DIRECTEUR', '');
-DELETE FROM usergroup_content WHERE user_id = 'ccordy';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('ccordy', 'AGENT', '');
-DELETE FROM usergroup_content WHERE user_id = 'ssissoko';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('ssissoko', 'RESPONSABLE', '');
-DELETE FROM usergroup_content WHERE user_id = 'nnataly';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('nnataly', 'AGENT', '');
-DELETE FROM usergroup_content WHERE user_id = 'ddur';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('ddur', 'ELU', '');
-DELETE FROM usergroup_content WHERE user_id = 'jjane';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('jjane', 'RESPONSABLE', '');
-DELETE FROM usergroup_content WHERE user_id = 'eerina';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('eerina', 'RESPONSABLE', '');
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('eerina', 'DIRECTEUR', '');
-DELETE FROM usergroup_content WHERE user_id = 'kkaar';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('kkaar', 'AGENT', '');
-DELETE FROM usergroup_content WHERE user_id = 'bboule';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('bboule', 'AGENT', '');
-DELETE FROM usergroup_content WHERE user_id = 'ppetit';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('ppetit', 'RESPONSABLE', '');
-DELETE FROM usergroup_content WHERE user_id = 'aackermann';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('aackermann', 'AGENT', '');
-DELETE FROM usergroup_content WHERE user_id = 'ppruvost';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('ppruvost', 'AGENT', '');
-DELETE FROM usergroup_content WHERE user_id = 'ttong';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('ttong', 'AGENT', '');
-DELETE FROM usergroup_content WHERE user_id = 'sstar';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('sstar', 'RESPONSABLE', '');
-DELETE FROM usergroup_content WHERE user_id = 'ssaporta';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('ssaporta', 'AGENT', '');
-DELETE FROM usergroup_content WHERE user_id = 'ccharles';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('ccharles', 'AGENT', '');
-DELETE FROM usergroup_content WHERE user_id = 'mmanfred';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('mmanfred', 'RESPONSABLE', '');
-DELETE FROM usergroup_content WHERE user_id = 'ddaull';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('ddaull', 'COURRIER', '');
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('ddaull', 'RESP_COURRIER', '');
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('ddaull', 'RESPONSABLE', '');
-DELETE FROM usergroup_content WHERE user_id = 'bbain';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('bbain', 'AGENT', '');
-DELETE FROM usergroup_content WHERE user_id = 'jjonasz';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('jjonasz', 'AGENT', '');
-DELETE FROM usergroup_content WHERE user_id = 'bblier';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('bblier', 'COURRIER', '');
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('bblier', 'ADMINISTRATEUR_N1', '');
-DELETE FROM usergroup_content WHERE user_id = 'ggrand';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('ggrand', 'ARCHIVISTE', '');
+DELETE FROM usergroup_content WHERE user_id = 1;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (1, 4, '');
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (1, 7, '');
+DELETE FROM usergroup_content WHERE user_id = 2;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (2, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 3;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (3, 4, '');
+DELETE FROM usergroup_content WHERE user_id = 4;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (4, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 5;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (5, 8, '');
+DELETE FROM usergroup_content WHERE user_id = 6;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (6, 4, '');
+DELETE FROM usergroup_content WHERE user_id = 7;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (7, 4, '');
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (7, 7, '');
+DELETE FROM usergroup_content WHERE user_id = 8;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (8, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 9;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (9, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 10;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (10, 4, '');
+DELETE FROM usergroup_content WHERE user_id = 11;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (11, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 12;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (12, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 13;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (13, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 14;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (14, 4, '');
+DELETE FROM usergroup_content WHERE user_id = 15;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (15, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 16;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (16, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 17;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (17, 4, '');
+DELETE FROM usergroup_content WHERE user_id = 18;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (18, 1, '');
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (18, 3, '');
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (18, 4, '');
+DELETE FROM usergroup_content WHERE user_id = 19;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (19, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 20;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (20, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 21;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (21, 1, '');
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (21, 5, '');
+DELETE FROM usergroup_content WHERE user_id = 22;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (22, 10, '');
 
 -- Create ENTITIES and LISTMODELS
 TRUNCATE TABLE entities;
@@ -856,8 +856,8 @@ INSERT INTO users (user_id, password, firstname, lastname, phone, mail, custom_t
 --MAARCH2GEC USER
 DELETE FROM users WHERE user_id = 'cchaplin';
 INSERT INTO users (user_id, password, firstname, lastname, mail, change_password, status, loginmode) VALUES ('cchaplin', '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', 'Charlie', 'CHAPLIN', 'support@maarch.fr', 'N', 'OK', 'restMode');
-DELETE FROM usergroup_content WHERE user_id = 'cchaplin';
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('cchaplin', 'MAARCHTOGEC', '');
+DELETE FROM usergroup_content WHERE user_id = 24;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (24, 11, '');
 
 ------------
 -- CONTACTS
@@ -1076,8 +1076,8 @@ Select setval('actions_id_seq', (select max(id)+1 from actions), false);
 -- BANNETTES SECONDAIRES
 TRUNCATE TABLE users_baskets_preferences;
 INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
-SELECT users.id, usergroups.id, groupbasket.basket_id, TRUE FROM users, usergroups, groupbasket, usergroup_content
-WHERE groupbasket.group_id = usergroup_content.group_id AND users.user_id = usergroup_content.user_id AND usergroups.group_id = usergroup_content.group_id
+SELECT usergroup_content.user_id, usergroups.id, groupbasket.basket_id, TRUE FROM usergroups, groupbasket, usergroup_content
+WHERE groupbasket.group_id = usergroups.group_id AND usergroups.id = usergroup_content.group_id
 ORDER BY users.id;
 
 ------------

@@ -41,6 +41,7 @@ use SrcCore\models\DatabaseModel;
 use SrcCore\models\PasswordModel;
 use User\models\UserBasketPreferenceModel;
 use User\models\UserEntityModel;
+use User\models\UserGroupModel;
 use User\models\UserModel;
 use User\models\UserSignatureModel;
 
@@ -915,10 +916,10 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => _USER_ALREADY_LINK_GROUP]);
         }
         if (empty($data['role'])) {
-            $data['role'] = '';
+            $data['role'] = null;
         }
 
-        UserModel::addGroup(['id' => $aArgs['id'], 'groupId' => $data['groupId'], 'role' => $data['role']]);
+        UserGroupModel::create(['user_id' => $aArgs['id'], 'group_id' => $group['id'], 'role' => $data['role']]);
 
         $baskets = GroupBasketModel::get(['select' => ['basket_id'], 'where' => ['group_id = ?'], 'data' => [$data['groupId']]]);
         foreach ($baskets as $basket) {
@@ -952,7 +953,9 @@ class UserController
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
-        if (empty(GroupModel::getByGroupId(['groupId' => $aArgs['groupId']]))) {
+
+        $group = GroupModel::getByGroupId(['select' => ['id'], 'groupId' => $aArgs['groupId']]);
+        if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
@@ -961,7 +964,7 @@ class UserController
             $data['role'] = '';
         }
 
-        UserModel::updateGroup(['id' => $aArgs['id'], 'groupId' => $aArgs['groupId'], 'role' => $data['role']]);
+        UserGroupModel::update(['set' => ['role' => $data['role']], 'where' => ['user_id = ?', 'group_id = ?'], 'data' => [$aArgs['id'], $group['id']]]);
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
         HistoryController::add([
@@ -987,7 +990,7 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
-        UserModel::deleteGroup(['id' => $aArgs['id'], 'groupId' => $aArgs['groupId']]);
+        UserGroupModel::delete(['where' => ['user_id = ?', 'group_id = ?'], 'data' => [$aArgs['id'], $group['id']]]);
 
         UserBasketPreferenceModel::delete([
             'where' => ['user_serial_id = ?', 'group_serial_id = ?'],

@@ -155,7 +155,7 @@ class BasketControllerTest extends TestCase
         $this->assertInternalType('array', $responseBody->allGroups);
         $this->assertNotNull($responseBody->allGroups);
 
-        $users = \Group\models\GroupModel::getUsersByGroupId(['select' => ['id'], 'groupId' => 'AGENT']);
+        $users = \Group\models\GroupModel::getUsersById(['select' => ['id'], 'id' => 2]);
         $group = \Group\models\GroupModel::getByGroupId(['select' => ['id'], 'groupId' => 'AGENT']);
         foreach ($users as $user) {
             $preference = \User\models\UserBasketPreferenceModel::get([

@@ -307,6 +307,29 @@ DO $$ BEGIN
 END$$;
 
 
+/* USERGROUP_CONTENT */
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'usergroup_content' and column_name = 'user_id' and data_type != 'integer') THEN
+        ALTER TABLE usergroup_content ADD COLUMN user_id_tmp integer;
+        UPDATE usergroup_content set user_id_tmp = (select id FROM users where users.user_id = usergroup_content.user_id);
+        DELETE FROM usergroup_content WHERE user_id_tmp IS NULL;
+        ALTER TABLE usergroup_content ALTER COLUMN user_id_tmp set not null;
+        ALTER TABLE usergroup_content DROP COLUMN IF EXISTS user_id;
+        ALTER TABLE usergroup_content RENAME COLUMN user_id_tmp TO user_id;
+    END IF;
+END$$;
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'usergroup_content' and column_name = 'group_id' and data_type != 'integer') THEN
+        ALTER TABLE usergroup_content ADD COLUMN group_id_tmp integer;
+        UPDATE usergroup_content set group_id_tmp = (select id FROM usergroups where usergroups.group_id = usergroup_content.group_id);
+        DELETE FROM usergroup_content WHERE group_id_tmp IS NULL;
+        ALTER TABLE usergroup_content ALTER COLUMN group_id_tmp set not null;
+        ALTER TABLE usergroup_content DROP COLUMN IF EXISTS group_id;
+        ALTER TABLE usergroup_content RENAME COLUMN group_id_tmp TO group_id;
+    END IF;
+END$$;
+
+
 /* REFACTORING DATA */
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'usergroups') AND attname = 'enabled') THEN

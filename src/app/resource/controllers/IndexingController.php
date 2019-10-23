@@ -61,12 +61,12 @@ class IndexingController
             return $response->withStatus(400)->withJson(['errors' => 'Body resource is empty or not an integer']);
         }
 
-        $group = GroupModel::getById(['id' => $args['groupId'], 'select' => ['group_id', 'can_index', 'indexation_parameters']]);
+        $group = GroupModel::getById(['id' => $args['groupId'], 'select' => ['can_index', 'indexation_parameters']]);
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Route groupId does not exist']);
         }
 
-        $isUserLinked = UserGroupModel::get(['select' => [1], 'where' => ['user_id = ?', 'group_id = ?'], 'data' => [$GLOBALS['userId'], $group['group_id']]]);
+        $isUserLinked = UserGroupModel::get(['select' => [1], 'where' => ['user_id = ?', 'group_id = ?'], 'data' => [$GLOBALS['id'], $args['groupId']]]);
         if (empty($isUserLinked)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this user']);
         }
@@ -138,7 +138,7 @@ class IndexingController
             return $response->withStatus(400)->withJson(['errors' => 'Param groupId must be an integer val']);
         }
 
-        $indexingParameters = IndexingController::getIndexingParameters(['login' => $GLOBALS['userId'], 'groupId' => $aArgs['groupId']]);
+        $indexingParameters = IndexingController::getIndexingParameters(['userId' => $GLOBALS['id'], 'groupId' => $aArgs['groupId']]);
         if (!empty($indexingParameters['errors'])) {
             return $response->withStatus(403)->withJson($indexingParameters);
         }
@@ -310,7 +310,7 @@ class IndexingController
 
     public static function getIndexingParameters($aArgs = [])
     {
-        $group = GroupModel::getGroupByLogin(['login' => $aArgs['login'], 'groupId' => $aArgs['groupId'], 'select' => ['can_index', 'indexation_parameters']]);
+        $group = GroupModel::getGroupWithUsersGroups(['userId' => $aArgs['userId'], 'groupId' => $aArgs['groupId'], 'select' => ['can_index', 'indexation_parameters']]);
         if (empty($group)) {
             return ['errors' => 'This user is not in this group'];
         }

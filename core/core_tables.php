@@ -77,9 +77,6 @@ if (! defined('STATUS_TABLE')) {
 if (! defined('USERGROUPS_TABLE')) {
     define('USERGROUPS_TABLE', 'usergroups');
 }
-if (! defined('USERGROUP_CONTENT_TABLE')) {
-    define('USERGROUP_CONTENT_TABLE', 'usergroup_content');
-}
 if (! defined('USERGROUPS_SERVICES_TABLE')) {
     define('USERGROUPS_SERVICES_TABLE', 'usergroups_services');
 }

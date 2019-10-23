@@ -185,9 +185,11 @@ if (count($_REQUEST['meta']) > 0) {
             // SIGNATORY GROUP
             elseif ($tab_id_fields[$j] == 'signatory_group' && !empty($_REQUEST['signatory_group'])) {
                 $json_txt .= " 'signatory_group' : ['".addslashes(trim($_REQUEST['signatory_group']))."'],";
-                $where_request .= " (res_id in (select res_id from listinstance where item_id in (select user_id from usergroup_content where group_id = :signatoryGroup) "
+
+                $where_request .= " (res_id in (select res_id from listinstance where item_id in (select user_id from users where id in (select user_id from usergroup_content where group_id = :signatoryGroup)) "
                         ."and item_mode = 'sign' and difflist_type = 'VISA_CIRCUIT')) ";
-                $arrayPDO = array_merge($arrayPDO, array(":signatoryGroup" => $_REQUEST['signatory_group']));
+                $group = \Group\models\GroupModel::getByGroupId(['groupId' => $_REQUEST['signatory_group'], 'select' => ['id']]);
+                $arrayPDO = array_merge($arrayPDO, array(":signatoryGroup" => $group['id']));
                 $where_request .=" and  ";
             }
 

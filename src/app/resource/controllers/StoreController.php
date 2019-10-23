@@ -28,8 +28,7 @@ class StoreController
 {
     public static function storeResource(array $args)
     {
-        ValidatorModel::notEmpty($args, ['encodedFile', 'format', 'doctype', 'modelId']);
-        ValidatorModel::stringType($args, ['format']);
+        ValidatorModel::notEmpty($args, ['doctype', 'modelId']);
         ValidatorModel::intVal($args, ['doctype', 'modelId']);
 
         try {
@@ -123,7 +122,7 @@ class StoreController
 
         $chrono = null;
         if (!empty($args['chrono'])) {
-            $chrono = ChronoModel::getChrono(['id' => $args['category_id'], 'entityId' => $args['destination'], 'typeId' => $args['doctype'], 'resId' => $args['resId']]);
+            $chrono = ChronoModel::getChrono(['id' => $indexingModel['category'], 'entityId' => $args['destination'], 'typeId' => $args['doctype'], 'resId' => $args['resId']]);
         }
 
         if (!empty($args['processLimitDate']) && !empty($args['priority'])) {

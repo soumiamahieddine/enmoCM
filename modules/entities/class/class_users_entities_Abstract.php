@@ -35,26 +35,6 @@ require("modules/entities/entities_tables.php");
 abstract class users_entities_Abstract extends functions
 {
 
-    public function service_load_entities($mode)
-    {
-        $db = new Database();
-        $stmt = $db->query("select count(*) as total from ".ENT_ENTITIES." where enabled ='Y'");
-        $nb_total_1 = $stmt->fetchObject();
-        $_SESSION['m_admin']['nbentities']  = $nb_total_1->total;
-
-        if($mode == 'up')
-        {
-            if (($_SESSION['m_admin']['load_entities'] == true || ! isset($_SESSION['m_admin']['load_entities'] )) && $_SESSION['m_admin']['users']['user_id'] <> "superadmin")
-            {
-                $this->load_entities_session($_SESSION['m_admin']['users']['user_id']);
-            }
-        }
-        else
-        {
-            $_SESSION['m_admin']['entity'] = array();
-        }
-    }
-
     /**
     * Loads in the session variables the entities of the user passed in parameter
     *
@@ -79,72 +59,6 @@ abstract class users_entities_Abstract extends functions
 
         }
         $_SESSION['m_admin']['load_entities']  = false;
-    }
-
-    /**
-    * Removes the entity on the tables passed in parameters for the user.
-    *
-    * @param array $tab
-    */
-    public function remove_session($tab)
-    {
-        $tabtmp = array();
-        for($i=0; $i < count($_SESSION['m_admin']['entity']['entities']); $i++)
-        {
-            if( !in_array($_SESSION['m_admin']['entity']['entities'][$i]['ENTITY_ID'], $tab))
-            {
-                array_push($tabtmp, $_SESSION['m_admin']['entity']['entities'][$i]);
-            }
-        }
-
-        $_SESSION['m_admin']['entity']['entities'] = array();
-        $_SESSION['m_admin']['entity']['entities'] = $tabtmp;
-
-    }
-
-    /**
-    * No entity is the primary entity for the user.
-    *
-    */
-    public function erase_primary_entity_session()
-    {
-        for($i=0; $i < count($_SESSION['m_admin']['entity']['entities']); $i++)
-        {
-            $_SESSION['m_admin']['entity']['entities'][$i]["PRIMARY"] = 'N';
-        }
-
-    }
-
-    /**
-    * Set the primary entity for a user in the session variables.
-    *
-    * @param    string  $entity_id entity identifier
-    */
-    public function set_primary_entity_session($entity_id)
-    {
-        for($i=0; $i < count($_SESSION['m_admin']['entity']['entities']); $i++)
-        {
-            if ( $_SESSION['m_admin']['entity']['entities'][$i]["ENTITY_ID"] == $entity_id)
-            {
-                $_SESSION['m_admin']['entity']['entities'][$i]["PRIMARY"] = 'Y';
-                break;
-            }
-        }
-    }
-
-
-    /**
-    * Adds an entity in the session variables related to the user_entities administration
-    *
-    * @param    string  $entity_id entity identifier
-    * @param    string  $role role in the entity (empty by default)
-    * @param    string  $label label of the entity
-    */
-    public function add_usertmp_to_entity_session($entity_id, $role = "", $label)
-    {
-        $tab = array();
-        $tab = array("USER_ID" => "", "ENTITY_ID" => $entity_id , "LABEL" => functions::show_string($label), "PRIMARY" => 'N', "ROLE" => functions::show_string($role) );
-        array_push($_SESSION['m_admin']['entity']['entities'], $tab);
     }
 
 
@@ -322,26 +236,6 @@ abstract class users_entities_Abstract extends functions
     }
 
 
-    public function checks_info($mode)
-    {
-        $primary_set = false;
-        if(!empty($_SESSION['m_admin']['entity']['entities'])   )
-        {
-            for($i=0; $i < count($_SESSION['m_admin']['entity']['entities']); $i++)
-            {
-                if($_SESSION['m_admin']['entity']['entities'][$i]['PRIMARY'] == 'Y')
-                {
-                    $primary_set = true;
-                    break;
-                }
-            }
-
-            if ($primary_set == false)
-            {
-                $_SESSION['error'] = _NO_PRIMARY_ENTITY;
-            }
-        }
-    }
     /**
     * Add ou modify users_entities in the database
     *
@@ -410,46 +304,6 @@ abstract class users_entities_Abstract extends functions
             }
 
         }
-    }
-
-    /**
-    * Cleans the listmodels_content table in the database from a given user
-    *   (user_id)
-    *
-    * @param  $userId string  User identifier
-    * @return bool true if the cleaning is complete, false otherwise
-    */
-
-    public function cleanListModelsContent($userId){
-
-        $control = array();
-        if (! isset($userId) || empty($userId)) {
-            $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _USER_ID_EMPTY,
-            );
-            return $control;
-        }
-
-        $db = new Database();
-        $func = new functions();
-        $query = 'delete from ' . LISTMODELS_CONTENT_TABLE . " where item_id = ?";
-        
-        try{
-            $db->query($query,array($userId));
-            $control = array(
-                'status' => 'ok',
-                'value'  => $userId,
-            );
-        } catch (Exception $e){
-            $control = array(
-                'status' => 'ko',
-                'value'  => '',
-                'error'  => _CANNOT_CLEAN_USERGROUP_CONTENT . ' ' . $userId,
-            );
-        }
-        return $control;
     }
 
     /**

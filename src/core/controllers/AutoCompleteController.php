@@ -377,7 +377,8 @@ class AutoCompleteController
             'search'        => $data['search'],
             'fields'        => $fields,
             'where'         => [
-                'usergroup_content.group_id = usergroups_services.group_id',
+                'usergroups.group_id = usergroups_services.group_id',
+                'usergroups.id = usergroup_content.group_id',
                 'usergroup_content.user_id = users.user_id',
                 'usergroups_services.service_id in (?)',
                 'users.user_id not in (?)',
@@ -389,7 +390,7 @@ class AutoCompleteController
 
         $users = DatabaseModel::select([
             'select'    => ['DISTINCT users.user_id', 'users.firstname', 'users.lastname'],
-            'table'     => ['users, usergroup_content, usergroups_services'],
+            'table'     => ['users, usergroup_content, usergroups, usergroups_services'],
             'where'     => $requestData['where'],
             'data'      => $requestData['data'],
             'order_by'  => ['users.lastname'],

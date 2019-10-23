@@ -346,8 +346,8 @@ class BasketController
             }
         }
 
-        $users = GroupModel::getUsersByGroupId(['select' => ['id'], 'groupId' => $data['group_id']]);
         $group = GroupModel::getByGroupId(['select' => ['id'], 'groupId' => $data['group_id']]);
+        $users = GroupModel::getUsersById(['select' => ['id'], 'id' => $group['id']]);
         foreach ($users as $user) {
             UserBasketPreferenceModel::create([
                 'userSerialId'  => $user['id'],

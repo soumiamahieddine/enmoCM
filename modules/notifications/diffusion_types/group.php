@@ -28,8 +28,9 @@ switch ($request) {
         $groups = "'".str_replace(',', "','", $notification->diffusion_properties)."'";
         $query = 'SELECT distinct us.*'
             .' FROM usergroup_content ug '
-            .'	LEFT JOIN users us ON us.user_id = ug.user_id'
-            .' WHERE ug.group_id in ('.$groups.')';
+            .'	LEFT JOIN users us ON us.id = ug.user_id'
+            .'	LEFT JOIN usergroups ON ug.group_id = usergroups.group_id'
+            .' WHERE usergroups.group_id in ('.$groups.')';
         $dbRecipients = new Database();
         $stmt = $dbRecipients->query($query);
         $recipients = array();
@@ -40,10 +41,7 @@ switch ($request) {
 
     case 'attach':
         $groups = "'".str_replace(',', "','", $notification->attachfor_properties)."'";
-        $query = 'SELECT user_id'
-            .' FROM usergroup_content'
-            .' WHERE group_id in ('.$groups.')'
-            .' AND user_id = ?';
+        $query = 'SELECT users.user_id FROM usergroup_content, users, usergroups WHERE usergroup_content.group_id = usergroups.group_id AND users.id = usergroup_content.user_id AND usergroups.group_id in ('.$groups.') AND users.user_id = ?';
         $attach = false;
         $dbAttach = new Database();
         $stmt = $dbAttach->query($query, array($user_id));

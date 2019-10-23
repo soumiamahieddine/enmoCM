@@ -19,7 +19,6 @@
         <security>security</security>
         <status>status</status>
         <usergroups>usergroups</usergroups>
-        <usergroupcontent>usergroup_content</usergroupcontent>
         <usergroups_services>usergroups_services</usergroups_services>
         <users>users</users>
     </TABLENAME>

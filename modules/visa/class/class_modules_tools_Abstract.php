@@ -91,176 +91,6 @@ abstract class visa_Abstract extends Database
         $_SESSION['modules_loaded']['visa']['routing_template'] = $routing_template;
     }
 
-    public function getDocsBasket()
-    {
-        require_once 'core/class/class_request.php';
-        $request = new request();
-        $table = $_SESSION['current_basket']['view'];
-        $select[$table] = array();
-        array_push(
-            $select[$table],
-            'res_id',
-            'status',
-            'category_id as category_img',
-                        'contact_firstname',
-            'contact_lastname',
-            'contact_society',
-            'user_lastname',
-                        'user_firstname',
-            'priority',
-            'creation_date',
-            'admission_date',
-            'subject',
-                        'process_limit_date',
-            'entity_label',
-            'dest_user',
-            'category_id',
-            'type_label',
-                        'exp_user_id',
-            'doc_custom_n1 as count_attachment',
-            'alt_identifier',
-            'is_multicontacts',
-            'locker_user_id',
-            'locker_time'
-        );
-
-        $where_tab = array();
-
-        // $_SESSION['current_basket']['last_query']['select'] = $select;
-        // $_SESSION['current_basket']['last_query']['where'] = $where;
-        // $_SESSION['current_basket']['last_query']['arrayPDO'] = $arrayPDO;
-        // $_SESSION['current_basket']['last_query']['orderstr'] = $orderstr;
-        // $_SESSION['current_basket']['last_query']['limit'] = $_SESSION['config']['databasesearchlimit'];
-
-        //From basket
-        if (!empty($_SESSION['current_basket']['last_query']['where'])) {
-            $where_tab[] = stripslashes($_SESSION['current_basket']['last_query']['where']); //Basket clause
-        } elseif (!empty($_SESSION['current_basket']['clause'])) {
-            $where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause
-        }
-
-        //Order
-        $orderstr = 'order by creation_date desc';
-        if (!empty($_SESSION['current_basket']['last_query']['orderstr'])) {
-            $orderstr = $_SESSION['current_basket']['last_query']['orderstr'];
-        } elseif (isset($_SESSION['last_order_basket'])) {
-            $orderstr = $_SESSION['last_order_basket'];
-        }
-
-        //Request
-        $where = implode(' and ', $where_tab);
-        $tab = $request->PDOselect(
-            $select,
-            $where,
-            array(),
-            $orderstr,
-            $_SESSION['config']['databasetype'],
-            $_SESSION['config']['databasesearchlimit'],
-            false,
-            '',
-            '',
-            '',
-            false,
-            false,
-            'distinct'
-        );
-
-        $tab_docs = array();
-        foreach ($tab as $doc) {
-            array_push($tab_docs, $doc[0]['value']);
-        }
-
-        return $tab_docs;
-    }
-
-    public function get_rep_path($res_id, $coll_id)
-    {
-        require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php';
-        require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'docservers_controler.php';
-        $docserverControler = new docservers_controler();
-        $sec = new security();
-        $view = $sec->retrieve_view_from_coll_id($coll_id);
-        if (empty($view)) {
-            $view = $sec->retrieve_table_from_coll($coll_id);
-        }
-
-        $db = new Database();
-        $stmt = $db->query(
-            'select docserver_id from res_view_attachments where res_id_master = ?'
-            ."AND status <> 'DEL' order by res_id desc",
-            array($res_id)
-        );
-        while ($res = $stmt->fetchObject()) {
-            $docserver_id = $res->docserver_id;
-            break;
-        }
-
-        $stmt = $db->query(
-            'select path_template from '.$_SESSION['tablename']['docservers'].' where docserver_id = ?',
-            array($docserver_id)
-        );
-
-        $res = $stmt->fetchObject();
-        $docserver_path = $res->path_template;
-
-        $stmt = $db->query(
-            'select filename, format, path, title, res_id, res_id_version, attachment_type '
-            ."from res_view_attachments where res_id_master = ? AND status <> 'OBS' AND status <> 'SIGN' "
-            ."AND status <> 'DEL' and attachment_type NOT IN "
-            ."('converted_pdf','print_folder') order by creation_date desc",
-            array($res_id)
-        );
-
-        $array_reponses = array();
-        $cpt_rep = 0;
-        while ($res2 = $stmt->fetchObject()) {
-            $filename = $res2->filename;
-            $format = 'pdf';
-            $filename_pdf = str_ireplace($res2->format, $format, $filename);
-            $path = preg_replace('/#/', DIRECTORY_SEPARATOR, $res2->path);
-            //$filename_pdf = str_replace(pathinfo($filename, PATHINFO_EXTENSION), "pdf",$filename);
-            if (file_exists($docserver_path.$path.$filename_pdf)) {
-                $array_reponses[$cpt_rep]['path'] = $docserver_path.$path.$filename_pdf;
-                $array_reponses[$cpt_rep]['title'] = $res2->title;
-                $array_reponses[$cpt_rep]['attachment_type'] = $res2->attachment_type;
-                if ($res2->res_id_version == 0) {
-                    $array_reponses[$cpt_rep]['res_id'] = $res2->res_id;
-                    $array_reponses[$cpt_rep]['is_version'] = 0;
-                } else {
-                    $array_reponses[$cpt_rep]['res_id'] = $res2->res_id_version;
-                    $array_reponses[$cpt_rep]['is_version'] = 1;
-                }
-                if ($res2->res_id_version == 0 && $array_reponses[$cpt_rep]['attachment_type'] == 'outgoing_mail') {
-                    $array_reponses[$cpt_rep]['is_version'] = 2;
-                }
-                ++$cpt_rep;
-            }
-        }
-        /*echo "<pre>";
-        print_r($array_reponses);
-        echo "</pre>";*/
-        return $array_reponses;
-    }
-
-    protected function isSameFile($firstFile, $secondFile)
-    {
-        $nb1 = strrpos($firstFile, '.');
-        $nb2 = strrpos($secondFile, '.');
-
-        return substr($firstFile, 0, $nb1) === substr($secondFile, 0, $nb2);
-    }
-
-    protected function hasSameFileInArray($fileName, $filesArray)
-    {
-        foreach ($filesArray as $tmpFileName) {
-            if ($this->isSameFile($fileName, $tmpFileName)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public function checkResponseProject($res_id, $coll_id)
     {
         $this->errorMessageVisa = null;
@@ -346,12 +176,6 @@ abstract class visa_Abstract extends Database
         } else {
             return false;
         }
-    }
-
-    public function deleteWorkflow($res_id, $coll_id)
-    {
-        $db = new Database();
-        $db->query('DELETE FROM visa_circuit WHERE res_id= ? AND coll_id= ?', array($res_id, $coll_id));
     }
 
     public function nbVisa($res_id, $coll_id)
@@ -461,23 +285,6 @@ abstract class visa_Abstract extends Database
         return $message;
     }
 
-    public function myPosVisa($res_id, $coll_id, $listDiffType)
-    {
-        $db = new Database();
-        $order = 'ORDER by listinstance_id ASC';
-        $where = 'res_id= ? and coll_id = ? and difflist_type = ? and item_id = ? and  process_date IS NULL';
-        $query = $db->limit_select(0, 1, 'sequence, item_mode', 'listinstance', $where, '', '', $order);
-
-        $stmt = $db->query($select, array($res_id, $coll_id, $listDiffType, $_SESSION['user']['UserId']));
-
-        $res = $stmt->fetchObject();
-        if ($res->item_mode == 'sign') {
-            return $this->nbVisa($res_id, $coll_id);
-        }
-
-        return $res->sequence;
-    }
-
     public function getUsersVis($group_id = null)
     {
         $db = new Database();
@@ -502,21 +309,6 @@ abstract class visa_Abstract extends Database
         return $tab_users;
     }
 
-    public function getGroupVis()
-    {
-        $db = new Database();
-
-        $stmt = $db->query('SELECT DISTINCT(usergroup_content.group_id),group_desc FROM usergroups, usergroup_content WHERE usergroups.group_id = usergroup_content.group_id AND usergroup_content.group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ?)', array('visa_documents'));
-
-        $tab_usergroup = array();
-
-        while ($res = $stmt->fetchObject()) {
-            array_push($tab_usergroup, array('group_id' => $res->group_id, 'group_desc' => $res->group_desc));
-        }
-
-        return $tab_usergroup;
-    }
-
     public function getEntityVis()
     {
         $db = new Database();
@@ -533,41 +325,6 @@ abstract class visa_Abstract extends Database
         }
 
         return $tab_userentities;
-    }
-
-    public function allUserVised($res_id, $coll_id, $typeList)
-    {
-        $circuit = $this->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
-        if (isset($circuit['visa'])) {
-            foreach ($circuit['visa']['users'] as $seq => $step) {
-                if ($step['process_date'] == '') {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public function getConsigne($res_id, $coll_id, $userId)
-    {
-        $circuit = $this->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
-        if (isset($circuit['visa'])) {
-            foreach ($circuit['visa']['users'] as $seq => $step) {
-                if ($step['user_id'] == $userId) {
-                    return $step['process_comment'];
-                }
-            }
-        }
-        if (isset($circuit['sign'])) {
-            foreach ($circuit['sign']['users'] as $seq => $step) {
-                if ($step['user_id'] == $userId) {
-                    return $step['process_comment'];
-                }
-            }
-        }
-
-        return '';
     }
 
     public function setStatusVisa($res_id, $coll_id, $inDetails = false)

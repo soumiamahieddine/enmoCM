@@ -413,10 +413,6 @@ class history
             $_SESSION['user']['department'] = '';
         }
 
-        if (!isset($_SESSION['user']['primarygroup'])) {
-            $_SESSION['user']['primarygroup'] = '';
-        }
-
         if (file_exists(
             'custom'
             . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']

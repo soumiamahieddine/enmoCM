@@ -134,7 +134,7 @@ abstract class GroupModelAbstract
         DatabaseModel::delete([
             'table'     => 'usergroup_content',
             'where'     => ['group_id = ?'],
-            'data'      => [$group['group_id']]
+            'data'      => [$aArgs['id']]
         ]);
         DatabaseModel::delete([
             'table'     => 'usergroups_reports',
@@ -170,20 +170,20 @@ abstract class GroupModelAbstract
         return true;
     }
 
-    public static function getUsersByGroupId(array $aArgs)
+    public static function getUsersById(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['groupId']);
-        ValidatorModel::stringType($aArgs, ['groupId']);
+        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::intVal($aArgs, ['id']);
         ValidatorModel::arrayType($aArgs, ['select']);
 
-        $aUsers = DatabaseModel::select([
+        $users = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['usergroup_content, users'],
-            'where'     => ['group_id = ?', 'usergroup_content.user_id = users.user_id', 'users.status != ?'],
-            'data'      => [$aArgs['groupId'], 'DEL']
+            'where'     => ['group_id = ?', 'usergroup_content.user_id = users.id', 'users.status != ?'],
+            'data'      => [$aArgs['id'], 'DEL']
         ]);
 
-        return $aUsers;
+        return $users;
     }
 
     public static function getAvailableGroupsByUserId(array $aArgs = [])
@@ -211,17 +211,16 @@ abstract class GroupModelAbstract
         return $allGroups;
     }
 
-    public static function getGroupByLogin(array $aArgs = [])
+    public static function getGroupWithUsersGroups(array $aArgs = [])
     {
-        ValidatorModel::notEmpty($aArgs, ['login', 'groupId']);
-        ValidatorModel::stringType($aArgs, ['login']);
-        ValidatorModel::intVal($aArgs, ['groupId']);
+        ValidatorModel::notEmpty($aArgs, ['userId', 'groupId']);
+        ValidatorModel::intVal($aArgs, ['userId', 'groupId']);
 
         $aGroups = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => ['usergroup_content, usergroups'],
-            'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?', 'usergroups.id = ?'],
-            'data'      => [$aArgs['login'], $aArgs['groupId']]
+            'where'     => ['usergroup_content.group_id = usergroups.id', 'usergroup_content.user_id = ?', 'usergroup_content.group_id = ?'],
+            'data'      => [$aArgs['userId'], $aArgs['groupId']]
         ]);
 
         return $aGroups;
@@ -346,31 +345,6 @@ abstract class GroupModelAbstract
                 'data'      => [$aArgs['groupId'], $aArgs['serviceId']]
             ]);
         }
-
-        return true;
-    }
-
-    public static function reassignUsers(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['groupId', 'newGroupId']);
-        ValidatorModel::stringType($aArgs, ['groupId', 'newGroupId']);
-        ValidatorModel::arrayType($aArgs, ['ignoredUsers']);
-
-        $where = ['group_id = ?'];
-        $data = [$aArgs['groupId']];
-        if (!empty($aArgs['ignoredUsers'])) {
-            $where[] = 'user_id NOT IN (?)';
-            $data[] = $aArgs['ignoredUsers'];
-        }
-
-        DatabaseModel::update([
-            'table'     => 'usergroup_content',
-            'set'       => [
-                'group_id'  => $aArgs['newGroupId']
-            ],
-            'where'     => $where,
-            'data'      => $data
-        ]);
 
         return true;
     }

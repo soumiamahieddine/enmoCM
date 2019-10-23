@@ -227,21 +227,6 @@ abstract class avis_controler_Abstract
         return $tab_userentities;
     }
 
-    public function getGroupAvis()
-    {
-        $db = new Database();
-
-        $stmt = $db->query('SELECT DISTINCT(usergroup_content.group_id),group_desc from usergroups, usergroup_content WHERE usergroups.group_id = usergroup_content.group_id AND usergroup_content.group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = ?)', array('avis_documents'));
-
-        $tab_usergroup = array();
-
-        while ($res = $stmt->fetchObject()) {
-            array_push($tab_usergroup, array('group_id' => $res->group_id, 'group_desc' => $res->group_desc));
-        }
-        //print_r($tab_usergroup);
-        return $tab_usergroup;
-    }
-
     public function getUsersAvis($group_id = null)
     {
         $db = new Database();
@@ -264,21 +249,6 @@ abstract class avis_controler_Abstract
         }
 
         return $tab_users;
-    }
-
-    public function myPosAvis($res_id, $coll_id, $listDiffType)
-    {
-        $db = new Database();
-        $where = 'res_id= ? and coll_id = ? and difflist_type = ? and item_id = ? and  process_date IS NULL';
-        $order = ' ORDER by listinstance_id ASC';
-        $query = $db->limit_select(0, 1, 'sequence, item_mode', 'listinstance', $where, '', '', $order);
-
-        $stmt = $db->query($query, array($res_id, $coll_id, $listDiffType, $_SESSION['user']['UserId']));
-        $res = $stmt->fetchObject();
-        /* if ($res->item_mode == 'sign'){
-            return $this->nbAvis($res_id, $coll_id);
-        } */
-        return $res->sequence;
     }
 
     public function saveModelWorkflow($id_list, $workflow, $typeList, $title)

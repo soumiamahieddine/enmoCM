@@ -177,9 +177,9 @@ WITH (OIDS=FALSE);
 
 CREATE TABLE usergroup_content
 (
-  user_id character varying(128) NOT NULL,
-  group_id character varying(32) NOT NULL,
-  "role" character varying(255) DEFAULT NULL::character varying,
+  user_id INTEGER NOT NULL,
+  group_id INTEGER NOT NULL,
+  "role" character varying(255),
   CONSTRAINT usergroup_content_pkey PRIMARY KEY (user_id, group_id)
 )
 WITH (OIDS=FALSE);

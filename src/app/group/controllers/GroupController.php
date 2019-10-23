@@ -12,6 +12,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\ValidatorModel;
+use User\models\UserGroupModel;
 use User\models\UserModel;
 
 class GroupController
@@ -24,7 +25,7 @@ class GroupController
 
         $groups = GroupModel::get();
         foreach ($groups as $key => $value) {
-            $groups[$key]['users'] = GroupModel::getUsersByGroupId(['groupId' => $value['group_id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
+            $groups[$key]['users'] = GroupModel::getUsersById(['id' => $value['id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
         }
 
         return $response->withJson(['groups' => $groups]);
@@ -129,7 +130,7 @@ class GroupController
 
         $groups = GroupModel::get();
         foreach ($groups as $key => $value) {
-            $groups[$key]['users'] = GroupModel::getUsersByGroupId(['groupId' => $value['group_id'], 'select' => ['users.user_id']]);
+            $groups[$key]['users'] = GroupModel::getUsersById(['id' => $value['id'], 'select' => ['users.user_id']]);
         }
 
         return $response->withJson(['groups' => $groups]);
@@ -148,7 +149,7 @@ class GroupController
 
         $group['security']          = GroupModel::getSecurityByGroupId(['groupId' => $group['group_id']]);
         $group['services']          = GroupModel::getAllServicesByGroupId(['groupId' => $group['group_id']]);
-        $group['users']             = GroupModel::getUsersByGroupId(['groupId' => $group['group_id'], 'select' => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname', 'users.status']]);
+        $group['users']             = GroupModel::getUsersById(['id' => $aArgs['id'], 'select' => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname', 'users.status']]);
         $group['baskets']           = GroupBasketModel::getBasketsByGroupId(['select' => ['baskets.basket_id', 'baskets.basket_name', 'baskets.basket_desc'], 'groupId' => $group['group_id']]);
         $group['canAdminUsers']     = ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']);
         $group['canAdminBaskets']   = ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin']);
@@ -192,16 +193,16 @@ class GroupController
         if (empty($newGroup)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
-        $oldGroupUsers = GroupModel::getUsersByGroupId(['groupId' => $group['group_id'], 'select' => ['users.user_id']]);
-        $newGroupUsers = GroupModel::getUsersByGroupId(['groupId' => $newGroup['group_id'], 'select' => ['users.user_id']]);
+        $oldGroupUsers = GroupModel::getUsersById(['id' => $aArgs['id'], 'select' => ['users.id']]);
+        $newGroupUsers = GroupModel::getUsersById(['id' => $aArgs['id'], 'select' => ['users.id']]);
         
         //Mapped array to have only user_id
         $oldGroupUsers = array_map(function ($entry) {
-            return $entry['user_id'];
+            return $entry['id'];
         }, $oldGroupUsers);
 
         $newGroupUsers = array_map(function ($entry) {
-            return $entry['user_id'];
+            return $entry['id'];
         }, $newGroupUsers);
 
         $ignoredUsers = [];
@@ -211,7 +212,14 @@ class GroupController
             }
         }
 
-        GroupModel::reassignUsers(['groupId' => $group['group_id'], 'newGroupId' => $newGroup['group_id'], 'ignoredUsers' => $ignoredUsers]);
+        $where = ['group_id = ?'];
+        $data = [$aArgs['groupId']];
+        if (!empty($ignoredUsers)) {
+            $where[] = 'user_id NOT IN (?)';
+            $data[] = $ignoredUsers;
+        }
+
+        UserGroupModel::update(['set' => ['group_id' => $aArgs['newGroupId']], 'where' => $where, 'data' => $data]);
 
         return $response->withJson(['success' => 'success']);
     }
