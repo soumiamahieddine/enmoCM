@@ -121,10 +121,6 @@ class StoreController
             $args['typist'] = $GLOBALS['id'];
         }
 
-        $chrono = null;
-        if (!empty($args['chrono'])) {
-            $chrono = ChronoModel::getChrono(['id' => $indexingModel['category'], 'entityId' => $args['destination'], 'typeId' => $args['doctype'], 'resId' => $args['resId']]);
-        }
 
         if (!empty($args['initiator'])) {
             $entity = EntityModel::getById(['id' => $args['initiator'], 'select' => ['entity_id']]);
@@ -133,6 +129,10 @@ class StoreController
         if (!empty($args['destination'])) {
             $entity = EntityModel::getById(['id' => $args['destination'], 'select' => ['entity_id']]);
             $args['destination'] = $entity['entity_id'];
+        }
+        $chrono = null;
+        if (!empty($args['chrono'])) {
+            $chrono = ChronoModel::getChrono(['id' => $indexingModel['category'], 'entityId' => $args['destination'], 'typeId' => $args['doctype'], 'resId' => $args['resId']]);
         }
 
         if (!empty($args['processLimitDate']) && !empty($args['priority'])) {
