@@ -720,7 +720,7 @@ export const LANG_EN = {
     "processDelay"                          : "Process delay",
     "processDelayDay"                       : "Process delay (in days)",
     "processLimitDate"                      : "Processing deadline",
-    "processMode"                           : "Process modes in AR",
+    "processMode"                           : "Process modes for Acknowledgement Receipt",
     "processType"                           : "Process type",
     "production"                            : "PRODUCTION",
     "progression"                           : "Progression",

@@ -746,7 +746,7 @@ export const LANG_NL = {
     "processDelay"                          : "Verwerkingstermijn",
     "processDelayDay"                       : "Verwerkingstermijn (in dagen)",
     "processLimitDate"                      : "Verwerkingsdeadline",
-    "processMode"                           : "Verwerkingswijze",
+    "processMode"                           : "Verwerkingswijze for Acknowledgement Receipt", //_TO_TRANSLATE
     "processType"                           : "Verwerkingstype",
     "production"                            : "PRODUCTIE",
     "progression"                           : "Vooruitgang",
