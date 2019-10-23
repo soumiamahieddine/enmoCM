@@ -421,26 +421,28 @@ abstract class UserModelAbstract
         ValidatorModel::notEmpty($aArgs, ['login']);
         ValidatorModel::stringType($aArgs, ['login']);
 
+        $user = UserModel::getByLogin(['login' => $aArgs['login'], 'select' => ['id']]);
+
         $aGroups = DatabaseModel::select([
-            'select'    => ['usergroups.id', 'usergroups.can_index', 'usergroup_content.group_id', 'usergroups.group_desc', 'usergroup_content.primary_group', 'usergroup_content.role', 'security.maarch_comment', 'security.where_clause'],
+            'select'    => ['usergroups.id', 'usergroups.can_index', 'usergroups.group_id', 'usergroups.group_desc', 'usergroups.indexation_parameters', 'usergroup_content.role', 'security.maarch_comment', 'security.where_clause'],
             'table'     => ['usergroup_content, usergroups, security'],
-            'where'     => ['usergroup_content.group_id = usergroups.group_id', 'usergroup_content.user_id = ?','usergroups.group_id = security.group_id'],
-            'data'      => [$aArgs['login']]
+            'where'     => ['usergroup_content.group_id = usergroups.id', 'usergroup_content.user_id = ?','usergroups.group_id = security.group_id'],
+            'data'      => [$user['id']]
         ]);
 
         return $aGroups;
     }
 
-    public static function getEntitiesById(array $aArgs)
+    public static function getEntitiesByLogin(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::notEmpty($aArgs, ['login']);
+        ValidatorModel::stringType($aArgs, ['login']);
 
         $aEntities = DatabaseModel::select([
             'select'    => ['entities.id', 'users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
             'table'     => ['users_entities, entities'],
             'where'     => ['users_entities.entity_id = entities.entity_id', 'users_entities.user_id = ?'],
-            'data'      => [$aArgs['userId']],
+            'data'      => [$aArgs['login']],
             'order_by'  => ['users_entities.primary_entity DESC']
         ]);
 
@@ -482,61 +484,6 @@ abstract class UserModelAbstract
         return false;
     }
 
-    public static function addGroup(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['groupId', 'role']);
-
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        DatabaseModel::insert([
-            'table'         => 'usergroup_content',
-            'columnsValues' => [
-                'user_id'       => $user['user_id'],
-                'group_id'      => $aArgs['groupId'],
-                'role'          => $aArgs['role'],
-                'primary_group' => 'Y'
-            ]
-        ]);
-
-        return true;
-    }
-
-    public static function updateGroup(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['groupId', 'role']);
-
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        DatabaseModel::update([
-            'table'     => 'usergroup_content',
-            'set'       => [
-                'role'      => $aArgs['role']
-            ],
-            'where'     => ['user_id = ?', 'group_id = ?'],
-            'data'      => [$user['user_id'], $aArgs['groupId']]
-        ]);
-
-        return true;
-    }
-
-    public static function deleteGroup(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'groupId']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::stringType($aArgs, ['groupId']);
-
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        DatabaseModel::delete([
-            'table'     => 'usergroup_content',
-            'where'     => ['group_id = ?', 'user_id = ?'],
-            'data'      => [$aArgs['groupId'], $user['user_id']]
-        ]);
-
-        return true;
-    }
-
     public static function hasEntity(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'entityId']);
@@ -544,7 +491,7 @@ abstract class UserModelAbstract
         ValidatorModel::stringType($aArgs, ['entityId']);
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-        $entities = UserModel::getEntitiesById(['userId' => $user['user_id']]);
+        $entities = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
         foreach ($entities as $value) {
             if ($value['entity_id'] == $aArgs['entityId']) {
                 return true;

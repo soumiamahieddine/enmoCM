@@ -15,7 +15,6 @@ use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Doctype\models\SecondLevelModel;
 use Doctype\models\DoctypeModel;
-use Doctype\models\DoctypeIndexesModel;
 use Doctype\models\TemplateDoctypeModel;
 use Group\models\ServiceModel;
 use Template\models\TemplateModel;
@@ -59,24 +58,7 @@ class DoctypeController
             $template["is_generated"] = 'N';
         }
 
-        $indexes  = DoctypeIndexesModel::getAllIndexes();
-        $indexesSelected = DoctypeIndexesModel::getById(['id' => $obj['doctype']['type_id']]);
-        foreach ($indexes as $key => $value) {
-            foreach ($indexesSelected as $valueSelected) {
-                if ($value['column'] == $valueSelected['field_name']) {
-                    $indexes[$key]['use'] = true;
-                    if ($valueSelected['mandatory'] == 'Y') {
-                        $valueSelected['mandatory'] = true;
-                    } else {
-                        $valueSelected['mandatory'] = false;
-                    }
-                    $indexes[$key]['mandatory'] = $valueSelected['mandatory'];
-                    break;
-                }
-            }
-        }
-
-        $obj['doctype']      = array_merge($obj['doctype'], $template, ['indexes' => $indexes]);
+        $obj['doctype']      = array_merge($obj['doctype'], $template);
         $obj['secondLevel']  = SecondLevelModel::get([
             'select'    => ['doctypes_second_level_id', 'doctypes_second_level_label'],
             'where'     => ['enabled = ?'],
@@ -104,7 +86,6 @@ class DoctypeController
             $data['duration_current_use'] = null;
         }
 
-        $data = DoctypeController::manageValue($data);
         $secondLevelInfo = SecondLevelModel::getById(['select' => ['doctypes_first_level_id'], 'id' => $data['doctypes_second_level_id']]);
         
         if (empty($secondLevelInfo)) {
@@ -131,19 +112,6 @@ class DoctypeController
             "type_id"      => $doctypeId,
             "is_generated" => $data["is_generated"]
         ]);
-
-        if (!empty($data['indexes'])) {
-            foreach ($data['indexes'] as $value) {
-                if (!empty($value['use'])) {
-                    DoctypeIndexesModel::create([
-                        "type_id"    => $doctypeId,
-                        "coll_id"    => 'letterbox_coll',
-                        "field_name" => $value['column'],
-                        "mandatory"  => $value['mandatory']
-                    ]);
-                }
-            }
-        }
 
         HistoryController::add([
             'tableName' => 'doctypes',
@@ -177,7 +145,7 @@ class DoctypeController
         if (empty($data['duration_current_use'])) {
             $data['duration_current_use'] = null;
         }
-        $data = DoctypeController::manageValue($data);
+
         $secondLevelInfo                 = SecondLevelModel::getById(['select' => ['doctypes_first_level_id'], 'id' => $data['doctypes_second_level_id']]);
         if (empty($secondLevelInfo)) {
             return $response->withStatus(500)->withJson(['errors' => 'doctypes_second_level_id does not exists']);
@@ -203,21 +171,6 @@ class DoctypeController
             "type_id"      => $data['type_id'],
             "is_generated" => $data["is_generated"]
         ]);
-
-        DoctypeIndexesModel::delete(["type_id" => $data['type_id']]);
-
-        if (!empty($data['indexes'])) {
-            foreach ($data['indexes'] as $value) {
-                if (!empty($value['use'])) {
-                    DoctypeIndexesModel::create([
-                        "type_id"    => $data['type_id'],
-                        "coll_id"    => 'letterbox_coll',
-                        "field_name" => $value['column'],
-                        "mandatory"  => $value['mandatory']
-                    ]);
-                }
-            }
-        }
 
         HistoryController::add([
             'tableName' => 'doctypes',
@@ -328,7 +281,6 @@ class DoctypeController
         $doctypeInfo = DoctypeModel::getById(['id' => $aArgs['type_id']]);
         DoctypeModel::delete(['type_id' => $aArgs['type_id']]);
         TemplateDoctypeModel::delete(["type_id" => $aArgs['type_id']]);
-        DoctypeIndexesModel::delete(["type_id" => $aArgs['type_id']]);
 
         HistoryController::add([
             'tableName' => 'doctypes',
@@ -383,17 +335,5 @@ class DoctypeController
         }
 
         return $errors;
-    }
-
-    protected static function manageValue($request)
-    {
-        foreach ($request['indexes'] as $key => $value) {
-            if (!empty($value['mandatory'])) {
-                $request['indexes'][$key]['mandatory'] = 'Y';
-            } else {
-                $request['indexes'][$key]['mandatory'] = 'N';
-            }
-        }
-        return $request;
     }
 }

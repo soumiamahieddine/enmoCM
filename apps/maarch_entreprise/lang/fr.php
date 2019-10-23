@@ -789,9 +789,6 @@ if (!defined('_DELETE_GROUPS')) {
 if (!defined('_ADD_TO_GROUP')) {
     define('_ADD_TO_GROUP', 'Ajouter à un groupe');
 }
-if (!defined('_CHOOSE_PRIMARY_GROUP')) {
-    define('_CHOOSE_PRIMARY_GROUP', 'Choisir comme groupe primaire');
-}
 if (!defined('_USER_BELONGS_NO_GROUP')) {
     define('_USER_BELONGS_NO_GROUP', "L'utilisateur n'appartient à aucun groupe");
 }
@@ -1226,9 +1223,6 @@ if (!defined('_USER_UPDATE')) {
 }
 if (!defined('_USER_ADDED')) {
     define('_USER_ADDED', 'Nouvel utilisateur ajouté');
-}
-if (!defined('_NO_PRIMARY_GROUP')) {
-    define('_NO_PRIMARY_GROUP', 'Aucun groupe primaire sélectionné !');
 }
 if (!defined('_THE_USER')) {
     define('_THE_USER', "L'utilisateur ");
@@ -4365,12 +4359,6 @@ if (!defined('_MANAGE_MY_SIGNATURES')) {
 }
 if (!defined('_MY_GROUPS')) {
     define('_MY_GROUPS', 'Mes Groupes');
-}
-if (!defined('_PRIMARY_GROUP')) {
-    define('_PRIMARY_GROUP', 'Groupe primaire');
-}
-if (!defined('_SECONDARY_GROUP')) {
-    define('_SECONDARY_GROUP', 'Groupe secondaire');
 }
 if (!defined('_MY_ENTITIES')) {
     define('_MY_ENTITIES', 'Mes Entités');

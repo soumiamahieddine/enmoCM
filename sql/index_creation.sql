@@ -5,7 +5,6 @@ CREATE INDEX doc_date_idx ON res_letterbox (doc_date);
 CREATE INDEX status_idx ON res_letterbox (status);
 CREATE INDEX destination_idx ON res_letterbox (destination);
 CREATE INDEX dest_user_idx ON res_letterbox (dest_user);
-CREATE INDEX custom_t15_idx ON res_letterbox (custom_t15);
 CREATE INDEX res_letterbox_docserver_id_idx ON res_letterbox (docserver_id);
 CREATE INDEX res_letterbox_filename_idx ON res_letterbox (filename);
 CREATE INDEX res_departure_date_idx ON res_letterbox (departure_date);

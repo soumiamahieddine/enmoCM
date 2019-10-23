@@ -171,9 +171,6 @@ class security extends Database
                     'cookie_date' => $user->__get('cookie_date')
                 );
 
-                $array['primarygroup'] = $ugc->getPrimaryGroup(
-                    $array['UserId']
-                );
                 $tmp = $sec_controler->load_security(
                     $array['UserId']
                 );
@@ -219,7 +216,6 @@ class security extends Database
                     }
                     $_SESSION['user']['UserId'] = $s_login;
                     $_SESSION['user']['department'] = $array['department'];
-                    $_SESSION['user']['primarygroup'] = $array['primarygroup'];
                     $hist->add(
                         $_SESSION['tablename']['users'],
                         $s_login,

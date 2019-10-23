@@ -120,48 +120,20 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         if (empty($groupId)) {
             return null;
         }
-        $users = array();
-        $db = new Database();
-        $query = 'select user_id from ' . USERGROUP_CONTENT_TABLE
-               . " where group_id = ?";
-        try {
-            $stmt = $db->query($query, array($groupId));
-        } catch (Exception $e) {
-            echo _NO_GROUP_WITH_ID . ' ' . functions::xssafe($groupId) . ' // ';
-        }
-        while ($res = $stmt->fetchObject()) {
-            array_push($users, $res->user_id);
-        }
-        return $users;
-    }
 
-    /**
-    * Returns the id of the primary group for a given user_id
-    *
-    * @param  $userId string  User identifier
-    * @return String  group_id or null
-    */
-    public function getPrimaryGroup($userId)
-    {
-        if (empty($userId)) {
-            return null;
-        }
-        $users = array();
-        $db = new Database();
-        $query = 'select group_id from ' . USERGROUP_CONTENT_TABLE
-               . " where user_id = ? and primary_group = 'Y'";
-        try {
-            $stmt = $db->query($query, array($userId));
-        } catch (Exception $e){
-            echo _NO_USER_WITH_ID.' '.functions::xssafe($userId).' // ';
-        }
-        $res = $stmt->fetchObject();
-        if (isset($res->group_id)) {
-            $groupId = $res->group_id;
+        $groupUse = \Group\models\GroupModel::getByGroupId(['groupId' => $groupId, 'select' => ['id']]);
+        $userGroup = \User\models\UserGroupModel::get(['select' => ['user_id'], 'where' => ['group_id = ?'], 'data' => [$groupUse['id']]]);
+        $userGroup = array_column($userGroup, 'user_id');
+
+        $userUse = [];
+        if (empty($userGroup)) {
+            echo _NO_GROUP_WITH_ID . ' ' . functions::xssafe($groupId) . ' // ';
         } else {
-            return null;
+            $userUse = \User\models\UserModel::get(['select' => ['user_id'], 'where' => ['id in (?)'], 'data' => [$userGroup]]);
+            $userUse = array_column($userUse, 'user_id');
         }
-        return $groupId;
+
+        return $userUse;
     }
 
     /**
@@ -474,118 +446,15 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         return $this->advanced_update($group);
     }
 
+
     /**
-    * Deletes in the database (usergroups related tables) a given usergroup
-    *
-    * @param  $group usergroup object
-    * @return bool true if the deletion is complete, false otherwise
-    */
+     * Deletes in the database (usergroups related tables) a given usergroup
+     *
+     * @param  $group usergroup object
+     * @return bool true if the deletion is complete, false otherwise
+     */
     public function delete($group, $params = array())
     {
-        $control = array();
-        if (!isset($group) || empty($group)) {
-            $control = array(
-                'status' => 'ko',
-                'value'  => '',
-                'error'  => _GROUP_EMPTY,
-            );
-            return $control;
-        }
-        $group = $this->_isAGroup($group);
-        if (!$this->groupExists($group->group_id)) {
-            $control = array(
-                'status' => 'ko',
-                'value'  => '',
-                'error'  => _GROUP_NOT_EXISTS,
-            );
-            return $control;
-        }
-
-        $this->set_foolish_ids(array('group_id'));
-        $this->set_specific_id('group_id');
-
-        $groupId = $group->__get('group_id');
-        $ok = $this->advanced_delete($group);
-        if ($ok) {
-            $ok = $this->_cleanUsergroupContent($groupId);
-        } else {
-            $control = array(
-                'status' => 'ko',
-                'value'  => '',
-                'error'  => _IMPOSSIBLE_TO_DELETE_USER,
-            );
-        }
-
-        if ($ok) {
-            $ok = $this->deleteServicesForGroup($groupId);
-        } elseif (!isset($control['status']) || $control['status'] <> 'ko' ) {
-            $control = array(
-                'status' => 'ko',
-                'value'  => '',
-                'error'  => _PB_WITH_USERGROUP_CONTENT_CLEANING,
-            );
-        }
-
-        if ($ok) {
-            $secCtrl = new SecurityControler();
-            $ok = $secCtrl->deleteForGroup($groupId);
-        } elseif (!isset($control['status']) || $control['status'] <> 'ko' ) {
-            $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _PB_WITH_USERGROUP_CONTENT_CLEANING,
-            );
-        }
-
-        if (!$ok
-            && (!isset($control['status']) || $control['status'] <> 'ko' )
-        ) {
-            $control = array(
-                'status' => 'ko',
-                'value'  => '',
-                'error'  => _PB_WITH_SECURITY_CLEANING,
-            );
-        }
-
-        if (isset($control['status']) && $control['status'] == 'ok') {
-            if (isset($params['log_group_del'])
-                && ($params['log_group_del'] == 'true'
-                    || $params['log_group_del'] == true)
-            ) {
-                $history = new history();
-                $history->add(
-                    USERGROUPS_TABLE, $group->group_id, 'DEL','usergroupdel',
-                    _DELETED_GROUP . ' : ' . $group->group_id,
-                    $params['databasetype']
-                );
-            }
-        }
-        return $control;
-    }
-
-    /**
-    * Cleans the usergroup_content table in the database from a given usergroup
-    *  (group_id)
-    *
-    * @param  $groupId string  Usergroup identifier
-    * @return bool true if the cleaning is complete, false otherwise
-    */
-    private function _cleanUsergroupContent($groupId)
-    {
-        if (!isset($groupId)|| empty($groupId)) {
-            return false;
-        }
-        $db = new Database();
-        $query = 'delete from ' . USERGROUP_CONTENT_TABLE . " where group_id=?";
-        try {
-            $stmt = $db->query($query, array($groupId));
-            $ok = true;
-        } catch (Exception $e){
-            echo _CANNOT_DELETE_GROUP_ID . ' ' . functions::xssafe($groupId) . ' // ';
-            $ok = false;
-        }
-
-        return $ok;
     }
 
 
@@ -778,46 +647,11 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         ) {
             return false;
         }
-        $db = new Database();
-        $query = 'select user_id from ' . USERGROUP_CONTENT_TABLE
-               . " where user_id = ? and group_id = ?";
+        $userUse = \User\models\UserModel::getByLogin(['login' => $userId, 'select' => ['id']]);
+        $groupUse = \Group\models\GroupModel::getByGroupId(['groupId' => $groupId, 'select' => ['id']]);
+        $userGroup = \User\models\UserGroupModel::get(['select' => [1], 'where' => ['user_id = ?', 'group_id = ?'], 'data' => [$userUse['id'], $groupUse['id']]]);
 
-        try {
-            $stmt = $db->query($query, array($userId, $groupId));
-        } catch (Exception $e) {
-            echo _CANNOT_FIND . ' ' . functions::xssafe($groupId) 
-                . ' ' . functions::xssafe($userId) . ' // ';
-        }
-        if ($stmt->rowCount() > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-    * Returns the number of usergroup of the usergroups table
-    *   (only the enabled by default)
-    *
-    * @param  $enabledOnly Bool if true counts only the enabled ones,
-    *   otherwise counts all usergroups even the disabled ones (true by default)
-    * @return Integer the number of usergroups in the usergroups table
-    */
-    public function getUsergroupsCount($enabledOnly=true)
-    {
-        $nb = 0;
-        $db = new Database();
-        $query = 'select group_id from ' . USERGROUPS_TABLE . ' ' ;
-        if ($enabledOnly) {
-            $query .= "where enabled ='Y'";
-        }
-        try {
-            $stmt = $db->query($query);
-        } catch (Exception $e) {
-
-        }
-        $nb = $stmt->rowCount();
-        return $nb;
+        return !empty($userGroup);
     }
 
      /**

@@ -544,14 +544,10 @@ abstract class basket_Abstract extends Database
         $absBasket = false;
 
         if (!$isSecondary) {
-            $stmt = $db->query(
-                "select group_id from "
-                . $_SESSION['tablename']['usergroup_content']
-                . " where primary_group = 'Y' and user_id = ?",
-                array($userId)
-            );
-            $res = $stmt->fetchObject();
-            $groupId = $res->group_id;
+            $userUse = \User\models\UserModel::getByLogin(['login' => $userId, 'select' => ['id']]);
+            $userGroup = \User\models\UserGroupModel::get(['select' => ['group_id'], 'where' => ['user_id = ?'], 'data' => [$userUse['id']], 'limit' => 1]);
+            $groupUse = \Group\models\GroupModel::getById(['id' => $userGroup['group_id'], 'select' => ['group_id']]);
+            $groupId = $groupUse['group_id'];
         }
 
         // Gets actions of the basket

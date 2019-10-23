@@ -5,7 +5,7 @@
             [innerHTML]="lang.addPrivateIndexingModelMsg +' <b>'+data.masterIndexingModel.label+'</b> ' + lang.addPrivateIndexingModelMsg2"></div>
         <mat-form-field appearance="outline">
             <mat-label>{{lang.label}}</mat-label>
-            <input matInput name="label" placeholder="{{lang.label}}" [(ngModel)]="data.indexingModel.label" required>
+            <input matInput name="label" placeholder="{{lang.label}}" [(ngModel)]="data.indexingModel.label" required maxlength="256">
         </mat-form-field>
     </mat-dialog-content>
 

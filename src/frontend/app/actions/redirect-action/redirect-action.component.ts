@@ -5,9 +5,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { DiffusionsListComponent } from '../../diffusions/diffusions-list.component';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { startWith } from 'rxjs/internal/operators/startWith';
-import { map } from 'rxjs/operators';
+import { map, tap, finalize, catchError } from 'rxjs/operators';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
 
 declare function $j(selector: any): any;
@@ -51,7 +51,7 @@ export class RedirectActionComponent implements OnInit {
     ngOnInit(): void {
         let noEntity = true;
         this.loading = true;
-        this.http.get("../../rest/resourcesList/users/" + this.data.currentBasketInfo.ownerId + "/groups/" + this.data.currentBasketInfo.groupId + "/baskets/" + this.data.currentBasketInfo.basketId + "/actions/" + this.data.action.id + "/getRedirect")
+        this.http.get("../../rest/resourcesList/users/" + this.data.userId + "/groups/" + this.data.groupId + "/baskets/" + this.data.basketId + "/actions/" + this.data.action.id + "/getRedirect")
             .subscribe((data: any) => {
                 this.entities = data['entities'];
                 this.userListRedirect = data.users;
@@ -85,8 +85,8 @@ export class RedirectActionComponent implements OnInit {
 
     loadEntities() {
         this.redirectMode = 'entity';
-        if (this.data.selectedRes.length == 1) {
-            this.injectDatasParam.resId = this.data.selectedRes[0];
+        if (this.data.resIds.length == 1) {
+            this.injectDatasParam.resId = this.data.resIds[0];
         }
         this.loading = false;
         setTimeout(() => {
@@ -96,7 +96,7 @@ export class RedirectActionComponent implements OnInit {
                     "three_state": false //no cascade selection
                 },
                 'core': {
-                    force_text : true,
+                    force_text: true,
                     'themes': {
                         'name': 'proton',
                         'responsive': true
@@ -140,8 +140,8 @@ export class RedirectActionComponent implements OnInit {
                 map(user => user ? this._filterUserRedirect(user) : this.userListRedirect.slice())
             );
 
-        if (this.data.selectedRes.length == 1) {
-            this.http.get("../../rest/resources/" + this.data.selectedRes[0] + "/listInstance").subscribe((data: any) => {
+        if (this.data.resIds.length == 1) {
+            this.http.get("../../rest/resources/" + this.data.resIds[0] + "/listInstance").subscribe((data: any) => {
                 this.diffusionListDestRedirect = data.listInstance;
                 Object.keys(data).forEach(diffusionRole => {
                     data[diffusionRole].forEach((line: any) => {
@@ -176,9 +176,9 @@ export class RedirectActionComponent implements OnInit {
             descriptionToDisplay: user.descriptionToDisplay
         };
 
-        if (this.data.selectedRes.length == 1) {
+        if (this.data.resIds.length == 1) {
             this.isDestinationChanging = false;
-            this.http.get('../../rest/resources/' + this.data.selectedRes[0] + '/users/' + user.id + '/isDestinationChanging')
+            this.http.get('../../rest/resources/' + this.data.resIds[0] + '/users/' + user.id + '/isDestinationChanging')
                 .subscribe((data: any) => {
                     this.isDestinationChanging = data.isDestinationChanging;
                 }, (err: any) => {
@@ -222,34 +222,63 @@ export class RedirectActionComponent implements OnInit {
         this.appDiffusionsList.loadListModel(entity.serialId);
     }
 
-    onSubmit(): void {
+    onSubmit() {
         this.loading = true;
-        if (this.redirectMode == 'user') {
-            this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: this.data.selectedRes, data: { onlyRedirectDest: true, listInstances: this.currentDiffusionListDestRedirect }, note: this.noteEditor.getNoteContent() })
-                .subscribe((data: any) => {
-                    if (data && data.errors != null) {
-                        this.notify.error(data.errors);
-                    }
-                    this.loading = false;
-                    this.dialogRef.close('success');
-
-                }, (err: any) => {
-                    this.notify.handleErrors(err);
-                    this.loading = false;
-                });
+        if (this.data.resIds.length === 0) {
+            //this.indexDocumentAndExecuteAction();
         } else {
-            this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: this.data.selectedRes, data: { listInstances: this.appDiffusionsList.getCurrentListinstance() }, note: this.noteEditor.getNoteContent() })
-                .subscribe((data: any) => {
+            this.executeAction();
+        }
+    }
+
+    /* indexDocumentAndExecuteAction() {
+        
+        this.http.post('../../rest/resources', this.data.resource).pipe(
+            tap((data: any) => {
+                this.data.resIds = [data.resId];
+            }),
+            exhaustMap(() => this.http.put(this.data.indexActionRoute, {resource : this.data.resIds[0], note : this.noteEditor.getNoteContent()})),
+            tap(() => {
+                this.dialogRef.close('success');
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe()
+    } */
+
+    executeAction() {
+        if (this.redirectMode == 'user') {
+            this.http.put(this.data.processActionRoute, { resources: this.data.resIds, data: { onlyRedirectDest: true, listInstances: this.currentDiffusionListDestRedirect }, note: this.noteEditor.getNoteContent() }).pipe(
+                tap((data: any) => {
                     if (data && data.errors != null) {
                         this.notify.error(data.errors);
                     }
-                    this.loading = false;
                     this.dialogRef.close('success');
-
-                }, (err: any) => {
+                }),
+                finalize(() => this.loading = false),
+                catchError((err: any) => {
                     this.notify.handleErrors(err);
-                    this.loading = false;
-                });
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+
+            this.http.put(this.data.processActionRoute, { resources: this.data.resIds, data: { listInstances: this.appDiffusionsList.getCurrentListinstance() }, note: this.noteEditor.getNoteContent() }).pipe(
+                tap((data: any) => {
+                    if (data && data.errors != null) {
+                        this.notify.error(data.errors);
+                    }
+                    this.dialogRef.close('success');
+                }),
+                finalize(() => this.loading = false),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
         }
     }
 

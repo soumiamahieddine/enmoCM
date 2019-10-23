@@ -473,6 +473,7 @@ export const LANG_EN = {
     "keyword"                               : "Keyword",
     "keywordHelp"                           : "Keyword help",
     "keywordHelpDesc_1"                     : "Identifier of logged user",
+    "keywordHelpDesc_12"                    : "Technical user id of logged user",
     "keywordHelpDesc_10"                    : "Immediate sub-entities (n-1) of entities passed in argument",
     "keywordHelpDesc_11"                    : "Example of security definition for a group (where clause) : access of main entity of logged user or sub-entity of this entity",
     "keywordHelpDesc_2"                     : "Email of logged user",
@@ -719,7 +720,7 @@ export const LANG_EN = {
     "processDelay"                          : "Process delay",
     "processDelayDay"                       : "Process delay (in days)",
     "processLimitDate"                      : "Processing deadline",
-    "processMode"                           : "Process modes",
+    "processMode"                           : "Process modes for Acknowledgement Receipt",
     "processType"                           : "Process type",
     "production"                            : "PRODUCTION",
     "progression"                           : "Progression",
@@ -1158,4 +1159,6 @@ export const LANG_EN = {
     "addPrivateIndexingModelMsg2" : "with <b>current</b> values.",
     "privateIndexingModelCreation" : "Private indexing model creation",
     "createPrivateIndexingModel" : "Create an indexing model with current datas",
+    "currentIndexingMail" : "the current indexing mail",
+    "mustFixErrors" : "You must fix the errors.",
 };

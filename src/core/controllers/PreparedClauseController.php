@@ -28,6 +28,10 @@ class PreparedClauseController
 
         $clause = $aArgs['clause'];
 
+        if (preg_match('/@user_id/', $clause)) {
+            $user = UserModel::getByLogin(['login' => $aArgs['login'], 'select' => ['id']]);
+            $clause = str_replace('@user_id', "{$user['id']}", $clause);
+        }
         if (preg_match('/@user/', $clause)) {
             $clause = str_replace('@user', "'{$aArgs['login']}'", $clause);
         }

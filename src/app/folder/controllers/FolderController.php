@@ -64,6 +64,14 @@ class FolderController
             if (isset($key[0])) {
                 $count = $foldersWithResources[$key[0]]['count'];
             }
+
+            $isPinned = !empty(
+                UserPinnedFolderModel::get([
+                    'where' => ['folder_id = ?', 'user_id = ?'],
+                    'data'  => [$folder['id'], $GLOBALS['id']]
+                ])
+            );
+
             $insert = [
                 'name'       => $folder['label'],
                 'id'         => $folder['id'],
@@ -72,7 +80,8 @@ class FolderController
                 'user_id'    => $folder['user_id'],
                 'parent_id'  => $folder['parent_id'],
                 'level'      => $folder['level'],
-                'countResources' => $count
+                'countResources' => $count,
+                'pinned'    => $isPinned
             ];
             if ($folder['level'] == 0) {
                 array_splice($tree, 0, 0, [$insert]);
@@ -119,6 +128,13 @@ class FolderController
                 $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition'], 'canDelete' => $canDelete, 'label' => $value['entity_label']];
             }
         }
+
+        $folder['pinned'] = !empty(
+            UserPinnedFolderModel::get([
+                'where' => ['folder_id = ?', 'user_id = ?'],
+                'data'  => [$folder['id'], $GLOBALS['id']]
+            ])
+        );
 
         return $response->withJson(['folder' => $folder]);
     }
@@ -226,7 +242,7 @@ class FolderController
 
         if ($folder[0]['parent_id'] != $data['parent_id']) {
             $childrenInPerimeter = FolderController::areChildrenInPerimeter(['folderId' => $aArgs['id']]);
-            if ($childrenInPerimeter) {
+            if ($childrenInPerimeter || $folder[0]['user_id'] == $GLOBALS['id']) {
                 FolderModel::update([
                     'set' => [
                         'parent_id' => $data['parent_id'],
@@ -690,8 +706,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Route id not found or is not an integer']);
         }
 
-        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $args['id']]);
-        if (empty($folder[0])) {
+        if (!FolderController::hasFolders(['folders' => [$args['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder not found or out of your perimeter']);
         }
 
@@ -753,8 +768,7 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Route id not found or is not an integer']);
         }
 
-        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $args['id']]);
-        if (empty($folder[0])) {
+        if (!FolderController::hasFolders(['folders' => [$args['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder not found or out of your perimeter']);
         }
 
@@ -776,7 +790,7 @@ class FolderController
         return $response->withStatus(204);
     }
 
-    private static function hasFolders(array $args)
+    public static function hasFolders(array $args)
     {
         ValidatorModel::notEmpty($args, ['folders', 'userId']);
         ValidatorModel::arrayType($args, ['folders']);
@@ -784,7 +798,7 @@ class FolderController
 
         $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
 
-        $entities = UserModel::getEntitiesById(['userId' => $user['user_id']]);
+        $entities = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
         $entities = array_column($entities, 'id');
 
         if (empty($entities)) {
@@ -792,7 +806,7 @@ class FolderController
         }
 
         $folders = FolderModel::getWithEntities([
-            'select'   => ['count(1)'],
+            'select'   => ['count(distinct folders.id)'],
             'where'    => ['folders.id in (?)', '(user_id = ? OR entity_id in (?))'],
             'data'     => [$args['folders'], $args['userId'], $entities]
         ]);

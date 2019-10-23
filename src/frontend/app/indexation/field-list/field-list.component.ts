@@ -26,9 +26,9 @@ export class FieldListComponent implements OnInit {
 
     loading: boolean = false;
 
-    @Input('dataFields') availableCustomFields: any[];
+    @Input('dataCustomFields') availableCustomFields: any[];
 
-    @Input('dataCustomFields') availableFields: any[];
+    @Input('dataFields') availableFields: any[];
 
     constructor(
         public http: HttpClient,

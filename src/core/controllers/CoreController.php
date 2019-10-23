@@ -83,7 +83,7 @@ class CoreController
     {
         $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
         $user['groups'] = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
-        $user['entities'] = UserModel::getEntitiesById(['userId' => $GLOBALS['userId']]);
+        $user['entities'] = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
 
         if ($GLOBALS['userId'] == 'superadmin') {
             $menu = ServiceModel::getApplicationServicesByXML(['type' => 'menu']);

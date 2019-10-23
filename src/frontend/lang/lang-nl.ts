@@ -488,6 +488,7 @@ export const LANG_NL = {
     "keyword"                               : "Sleutelwoord",
     "keywordHelp"                           : "Hulp voor sleutelwoorden",
     "keywordHelpDesc_1"                     : "Gebruikersnaam van de verbonden gebruiker",
+    "keywordHelpDesc_12"                    : "Technical user id of logged user", //_TO_TRANSLATE
     "keywordHelpDesc_10"                    : "Subeenheden die direct onder (n-1) de in het argument gegeven eenheden liggen",
     "keywordHelpDesc_11"                    : "Voorbeeld van documentaire perimeter toegang tot assets met betrekking tot de hoofddienst van de verbonden gebruiker of tot de subdiensten van deze dienst",
     "keywordHelpDesc_2"                     : "E-mail van de verbonden gebruiker",
@@ -745,7 +746,7 @@ export const LANG_NL = {
     "processDelay"                          : "Verwerkingstermijn",
     "processDelayDay"                       : "Verwerkingstermijn (in dagen)",
     "processLimitDate"                      : "Verwerkingsdeadline",
-    "processMode"                           : "Verwerkingswijze",
+    "processMode"                           : "Verwerkingswijze for Acknowledgement Receipt", //_TO_TRANSLATE
     "processType"                           : "Verwerkingstype",
     "production"                            : "PRODUCTIE",
     "progression"                           : "Vooruitgang",
@@ -1184,4 +1185,6 @@ export const LANG_NL = {
     "addPrivateIndexingModelMsg2" : "with <b>actual</b> values.", //_TO_TRANSLATE
     "privateIndexingModelCreation" : "Private indexing model creation", //_TO_TRANSLATE
     "createPrivateIndexingModel" : "Create an indexing model with current datas", //_TO_TRANSLATE
+    "currentIndexingMail" : "the current indexing mail", //_TO_TRANSLATE
+    "mustFixErrors" : "You must fix the errors.", //_TO_TRANSLATE
 };

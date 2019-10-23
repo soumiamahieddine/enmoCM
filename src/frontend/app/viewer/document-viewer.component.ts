@@ -90,6 +90,7 @@ export class DocumentViewerComponent implements OnInit {
                 tap((data: any) => {
                     this.file = {
                         name: this.tmpFilename,
+                        format: 'pdf',
                         type: 'application/pdf',
                         content: this.getBase64Document(this.base64ToArrayBuffer(data.encodedResource)),
                         src: this.base64ToArrayBuffer(data.encodedResource)
@@ -112,6 +113,7 @@ export class DocumentViewerComponent implements OnInit {
             var reader = new FileReader();
             this.file.name = fileInput.target.files[0].name;
             this.file.type = fileInput.target.files[0].type;
+            this.file.format = this.file.name.split('.').pop();
 
             reader.readAsArrayBuffer(fileInput.target.files[0]);
 
@@ -218,12 +220,12 @@ export class DocumentViewerComponent implements OnInit {
             switch (event.type) {
                 case HttpEventType.DownloadProgress:
 
-                    this.loadingInfo.mode = 'indeterminate';
-
-                    const kbLoaded = Math.round(event.loaded / 125);
-                    this.loadingInfo.message = `${this.lang.downloadConvertedFile}... ${kbLoaded} Ko`;
+                    const downloadProgress = Math.round(100 * event.loaded / event.total);
+                    this.loadingInfo.percent = downloadProgress;
+                    this.loadingInfo.mode = 'determinate';
+                    this.loadingInfo.message = `3/3 ${this.lang.downloadConvertedFile}...`;
                     
-                    return { status: 'progress', message: '' };
+                    return { status: 'progress', message: downloadProgress };
 
                 case HttpEventType.UploadProgress:
                     const progress = Math.round(100 * event.loaded / event.total);
@@ -231,10 +233,10 @@ export class DocumentViewerComponent implements OnInit {
 
                     if (progress === 100) {
                         this.loadingInfo.mode = 'indeterminate';
-                        this.loadingInfo.message = `${this.lang.convertingFile}...`;
+                        this.loadingInfo.message = `2/3 ${this.lang.convertingFile}...`;
                     } else {
                         this.loadingInfo.mode = 'determinate';
-                        this.loadingInfo.message = `${this.lang.loadingFile}...`;
+                        this.loadingInfo.message = `1/3 ${this.lang.loadingFile}...`;
                     }
                     return { status: 'progress', message: progress };
 
@@ -295,11 +297,9 @@ export class DocumentViewerComponent implements OnInit {
         } else {
             return false;
         }
-
     }
 
     isExtensionAllowed(file: any) {
-        console.log(file);
         const fileExtension = '.' + file.name.split('.').pop();
         if (this.allowedExtensions.filter(ext => ext.mimeType === file.type && ext.extension === fileExtension).length === 0) {
             this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.notAllowedExtension + ' !', msg: this.lang.file + ' : <b>' + file.name + '</b>, ' + this.lang.type + ' : <b>'+ file.type+'</b><br/><br/><u>' + this.lang.allowedExtensions + '</u> : <br/>' + this.allowedExtensions.map(ext => ext.extension).filter((elem: any, index: any, self: any) => index === self.indexOf(elem)).join(', ') } });

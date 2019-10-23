@@ -43,7 +43,6 @@ export class DoctypesAdministrationComponent implements OnInit {
     newFirstLevel: any = false;
 
     displayedColumns = ['label','use', 'mandatory', 'column'];
-    dataSource = new MatTableDataSource(this.currentType.indexes);
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
 
@@ -162,7 +161,6 @@ export class DoctypesAdministrationComponent implements OnInit {
                     this.secondLevels = dataValue['secondLevel'];
                     this.processModes = ['NORMAL', 'SVA', 'SVR'];
                     this.models       = dataValue['models'];
-                    this.loadIndexesTable();
 
                     if(move){
                         if(this.currentType){
@@ -227,12 +225,6 @@ export class DoctypesAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         }
-    }
-
-    loadIndexesTable() {
-        this.dataSource = new MatTableDataSource(this.currentType.indexes);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
     }
     
     resetDatas() {
@@ -429,23 +421,13 @@ export class DoctypesAdministrationComponent implements OnInit {
                 this.processModes = ['NORMAL', 'SVA', 'SVR'];
                 this.models       = data['models'];
                 if(mode == 'doctype'){
-                    this.currentType.indexes = data['indexes'];
                     this.currentType.is_generated = 'N';
-                    this.loadIndexesTable();
                 }
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
         this.creationMode = mode;
     }
-
-    selectIndexesUse(e: any, index: any) {
-        this.currentType.indexes[index].use = e.checked;
-    }
-    selectIndexesMandatory(e: any, index: any) {
-        this.currentType.indexes[index].mandatory = e.checked;
-    }
-
 }
 @Component({
     templateUrl: "doctypes-administration-redirect-modal.component.html"

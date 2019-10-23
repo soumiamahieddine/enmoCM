@@ -89,12 +89,19 @@ export class IndexingFormComponent implements OnInit {
             label: this.lang.confidential,
             type: 'radio',
             default_value: '',
-            values: ['Oui', 'Non']
+            values: [{'id': 'true', 'label': 'Oui'}, {'id': 'false', 'label': 'Non'}]
         },
         {
             identifier: 'initiator',
             label: this.lang.initiatorEntityAlt,
             type: 'select',
+            default_value: '',
+            values: []
+        },
+        {
+            identifier: 'departureDate',
+            label: this.lang.departureDate,
+            type: 'date',
             default_value: '',
             values: []
         },
@@ -267,6 +274,13 @@ export class IndexingFormComponent implements OnInit {
                 });
             }
         });
+
+        if (!this.adminMode) {
+            arrIndexingModels.push({
+                identifier : 'modelId',
+                default_value : this.indexingFormId
+            });
+        }
         return arrIndexingModels;
     }
 
@@ -389,6 +403,10 @@ export class IndexingFormComponent implements OnInit {
                             elem.endDate = '';
                             elem.event = 'setPriorityColorByLimitDate';
 
+                        } else if (elem.identifier === 'departureDate') {
+                            elem.startDate = '_TODAY';
+                            elem.endDate = '';
+
                         } else if (elem.identifier === 'folders') {
                             elem.values = null;
 
@@ -461,7 +479,7 @@ export class IndexingFormComponent implements OnInit {
                         arrayRoutes.push(this.http.get('../../rest/indexingModels/entities'));
 
                     } else {
-                        arrayRoutes.push(this.http.get('../../rest/indexing/' + this.groupId + '/entities'));
+                        arrayRoutes.push(this.http.get('../../rest/indexing/groups/' + this.groupId + '/entities'));
                     }
                 } else if (elem.identifier === 'category_id') {
                     arrayRoutes.push(this.http.get('../../rest/categories'));
@@ -498,7 +516,7 @@ export class IndexingFormComponent implements OnInit {
     }
 
     loadForm(indexModelId: number) {
-
+        this.indexingFormId = indexModelId;
         Object.keys(this.arrFormControl).forEach(element => {
             delete this.arrFormControl[element];
         });

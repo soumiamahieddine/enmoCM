@@ -81,14 +81,15 @@ class ActionMethodController
 
             if ($action['history'] == 'Y') {
                 HistoryController::add([
-                    'tableName' => 'res_view_letterbox',
+                    'tableName' => 'res_letterbox',
                     'recordId'  => $resource,
                     'eventType' => 'ACTION#' . $resource,
                     'eventId'   => $aArgs['id'],
                     'info'      => "{$aArgs['basketName']} : {$action['label_action']}{$aArgs['history']}"
                 ]);
 
-                MessageExchangeReviewController::sendMessageExchangeReview(['res_id' => $resource, 'action_id' => $aArgs['id'], 'userId' => $GLOBALS['userId']]);
+                //TODO M2M
+//                MessageExchangeReviewController::sendMessageExchangeReview(['res_id' => $resource, 'action_id' => $aArgs['id'], 'userId' => $GLOBALS['userId']]);
             }
         }
 

@@ -496,6 +496,7 @@ export const LANG_FR = {
     "keyword"                               : "Mot-clé",
     "keywordHelp"                           : "Aide sur les mots-clés",
     "keywordHelpDesc_1"                     : "Identifiant de l'utilisateur connecté",
+    "keywordHelpDesc_12"                    : "Identifiant technique de l'utilisateur connecté",
     "keywordHelpDesc_10"                    : "Sous-entités immédiates (n-1) des entités données en argument",
     "keywordHelpDesc_11"                    : "Exemple de périmètre documentaire : accès aux ressources concernant le service principal de l'utilisateur connecté, ou les sous-services de ce service",
     "keywordHelpDesc_2"                     : "Courriel de l'utilisateur connecté",
@@ -751,7 +752,7 @@ export const LANG_FR = {
     "processDelay"                          : "Délai de traitement",
     "processDelayDay"                       : "Délai de traitement (en jours)",
     "processLimitDate"                      : "Date limite de traitement",
-    "processMode"                           : "Mode de traitement",
+    "processMode"                           : "Mode de traitement pour Accusés de Réception",
     "processType"                           : "Type de traitement",
     "production"                            : "PRODUCTION",
     "progression"                           : "Avancement",
@@ -1195,4 +1196,6 @@ export const LANG_FR = {
     "addPrivateIndexingModelMsg2" : "avec les valeurs renseignées <b>actuellement</b>.",
     "privateIndexingModelCreation" : "Création d'un modèle d'enregistrement privé",
     "createPrivateIndexingModel" : "Créer un modèle avec les données actuelles",
+    "currentIndexingMail" : "le courrier en cours d'enregistrement",
+    "mustFixErrors" : "Veuillez corriger les erreurs.",
 };

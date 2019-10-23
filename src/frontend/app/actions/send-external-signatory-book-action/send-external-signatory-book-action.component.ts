@@ -6,6 +6,8 @@ import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
 import { XParaphComponent } from './x-paraph/x-paraph.component';
 import { MaarchParaphComponent } from './maarch-paraph/maarch-paraph.component';
+import { tap, finalize, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
     templateUrl: "send-external-signatory-book-action.component.html",
@@ -40,7 +42,7 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     ngOnInit(): void {
         this.loading = true;
 
-        this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/checkExternalSignatoryBook', { resources: this.data.selectedRes })
+        this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/checkExternalSignatoryBook', { resources: this.data.resIds })
             .subscribe((data: any) => {
                 this.additionalsInfos = data.additionalsInfos;
                 if (this.additionalsInfos.attachments.length > 0) {
@@ -54,28 +56,55 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
             });
     }
 
-    onSubmit(): void {
+    onSubmit() {
         this.loading = true;
+        if ( this.data.resIds.length === 0) {
+            // this.indexDocumentAndExecuteAction();
+        } else {
+            this.executeAction();
+        }
+    }
 
+    /* indexDocumentAndExecuteAction() {
+        
+        this.http.post('../../rest/resources', this.data.resource).pipe(
+            tap((data: any) => {
+                this.data.resIds = [data.resId];
+            }),
+            exhaustMap(() => this.http.put(this.data.indexActionRoute, {resource : this.data.resIds[0], note : this.noteEditor.getNoteContent()})),
+            tap(() => {
+                this.dialogRef.close('success');
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe()
+    } */
+
+    executeAction() {
         let realResSelected: string[];
         let datas: any;
 
         realResSelected = this[this.signatoryBookEnabled].getRessources();
         datas = this[this.signatoryBookEnabled].getDatas();
-
-        this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: realResSelected, note: this.noteEditor.getNoteContent(), data: datas })
-            .subscribe((data: any) => {
+        
+        this.http.put(this.data.processActionRoute, {resources : realResSelected, note : this.noteEditor.getNoteContent(), data: datas}).pipe(
+            tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close('success');
                 }
                 if (data && data.errors != null) {
                     this.notify.error(data.errors);
                 }
-                this.loading = false;
-            }, (err: any) => {
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
                 this.notify.handleErrors(err);
-                this.loading = false;
-            });
+                return of(false);
+            })
+        ).subscribe();
     }
 
     checkValidAction() {

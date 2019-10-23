@@ -62,6 +62,7 @@ while ($state != 'END') {
 
                 $u = 1;
                 while ($line2 = $stmt2->fetchObject()) {
+                    $group = \Group\models\GroupModel::getByGroupId(['groupId' => $line2->group_id, 'select' => ['id']]);
                     if ($notification->diffusion_type == 'groups') {
                         $recipients = array();
                         $recipients = $diffusion_type_controler->getRecipients($notification, '');
@@ -72,9 +73,9 @@ while ($state != 'END') {
                         if (empty($aRecipients)) {
                             $aRecipients = '0=1';
                         }
-                        $stmt3 = $db->query("SELECT usergroup_content.user_id, users.id, users.status FROM usergroup_content, users WHERE group_id = ? and users.status in ('OK','ABS') and usergroup_content.user_id=users.user_id and users.user_id in (?)", array($line2->group_id, $aRecipients));
+                        $stmt3 = $db->query("SELECT users.user_id, users.id, users.status FROM usergroup_content, users WHERE group_id = ? and users.status in ('OK','ABS') and usergroup_content.user_id=users.id and users.user_id in (?)", array($group['id'], $aRecipients));
                     } else {
-                        $stmt3 = $db->query("SELECT usergroup_content.user_id, users.id, users.status FROM usergroup_content, users WHERE group_id = ? and users.status in ('OK','ABS') and usergroup_content.user_id=users.user_id", array($line2->group_id));
+                        $stmt3 = $db->query("SELECT users.user_id, users.id, users.status FROM usergroup_content, users WHERE group_id = ? and users.status in ('OK','ABS') and usergroup_content.user_id=users.id", array($group['id']));
                     }
 
                     $baskets_notif = array();

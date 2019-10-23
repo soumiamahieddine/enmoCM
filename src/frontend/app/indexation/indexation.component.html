@@ -3,6 +3,9 @@
         [fixedInViewport]="appService.getViewMode()" [opened]="appService.getViewMode() ? false : true"
         autoFocus="false" style="overflow-x:hidden;" [ngStyle]="{'width': appService.getViewMode() ? '95%' : '600px'}">
         <header-panel [snavLeft]="snav"></header-panel>
+        <div *ngIf="actionService.loading" class="loading">
+            <mat-spinner style="margin:auto;"></mat-spinner>
+        </div>
         <ng-container *ngIf="indexingModels.length > 0">
             <div class="listModels">
                 <button mat-button class="button-form-primary listModels-button"
@@ -63,7 +66,7 @@
                                 [title]="action.label" [innerHTML]="action.label"></button>
                         </ng-container>
                     </mat-menu>
-                    <button mat-button *ngIf="!appService.getViewMode()" class="button-form-primary-filled"
+                    <button mat-button *ngIf="!appService.getViewMode()" [disabled]="actionService.loading" class="button-form-primary-filled"
                         style="width: 150px;align-items: center;justify-content: center;text-align: center;display: flex;"
                         (click)="onSubmit()">{{lang.validate}}</button>
                     <button mat-icon-button *ngIf="appService.getViewMode()" class="button-form-primary"

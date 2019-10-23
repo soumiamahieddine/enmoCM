@@ -4,6 +4,8 @@ import { NotificationService } from '../../notification.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
+import { catchError, finalize, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
     templateUrl: "send-shipping-action.component.html",
@@ -43,7 +45,7 @@ export class SendShippingActionComponent implements OnInit {
     ngOnInit(): void {
         this.loading = true;
 
-        this.http.post('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id + '/checkShippings', { resources: this.data.selectedRes })
+        this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkShippings', { resources: this.data.resIds })
             .subscribe((data: any) => {
                 this.shippings = data.shippingTemplates;
                 this.mailsNotSend = data.canNotSend;
@@ -56,23 +58,50 @@ export class SendShippingActionComponent implements OnInit {
             });
     }
 
-    onSubmit(): void {
+    onSubmit() {
         this.loading = true;
+        if ( this.data.resIds.length === 0) {
+            // this.indexDocumentAndExecuteAction();
+        } else {
+            this.executeAction();
+        }
+    }
 
+    /* indexDocumentAndExecuteAction() {
+        
+        this.http.post('../../rest/resources', this.data.resource).pipe(
+            tap((data: any) => {
+                this.data.resIds = [data.resId];
+            }),
+            exhaustMap(() => this.http.put(this.data.indexActionRoute, {resource : this.data.resIds[0], note : this.noteEditor.getNoteContent()})),
+            tap(() => {
+                this.dialogRef.close('success');
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe()
+    } */
+
+    executeAction() {
         let realResSelected: string[] = this.attachList.map((e: any) => { return e.res_id_master; });
 
-        this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, { resources: realResSelected, data: { shippingTemplateId: this.currentShipping.id }, note: this.noteEditor.getNoteContent() })
-            .subscribe((data: any) => {
+        this.http.put(this.data.processActionRoute, {resources : realResSelected, data: { shippingTemplateId: this.currentShipping.id }, note : this.noteEditor.getNoteContent()}).pipe(
+            tap((data: any) => {
                 if (data && data.errors != null) {
                     this.notify.error(data.errors);
                 } else {
                     this.dialogRef.close('success');
                 }
-                this.loading = false;
-            }, (err: any) => {
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
                 this.notify.handleErrors(err);
-                this.loading = false;
-            });
+                return of(false);
+            })
+        ).subscribe();
     }
 
 }

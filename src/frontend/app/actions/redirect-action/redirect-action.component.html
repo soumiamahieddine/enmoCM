@@ -1,12 +1,13 @@
-<h1 mat-dialog-title>"{{data.action.label_action}}"</h1>
+<h1 mat-dialog-title>"{{data.action.label}}"</h1>
 <div mat-dialog-content [class.fullWidth]="redirectMode == 'entity'">
     <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
         <mat-spinner style="margin:auto;"></mat-spinner>
     </div>
     <ng-container *ngIf="!loading">
         {{lang.makeActionOn}}
-         <b *ngIf="data.selectedRes.length == 1 && data.contextChrono != ''" color="primary" class="highlight">{{data.contextChrono}}</b>
-        <b *ngIf="data.contextChrono == ''" color="primary" class="highlight">{{data.selectedRes.length}} {{lang.elements}}</b>
+        <b *ngIf="data.resIds.length === 0" color="primary" class="highlight">{{lang.currentIndexingMail}}</b>
+        <b *ngIf="data.resIds.length == 1" color="primary" class="highlight">{{data.resource.alt_identifier}}</b>
+        <b *ngIf="data.resIds.length > 1" color="primary" class="highlight">{{data.resIds.length}} {{lang.elements}}</b>
         ?<br />
     </ng-container>
     <div class="chooseMode" *ngIf="redirectMode == '' && !loading">
@@ -37,14 +38,16 @@
         <div class="redirectContent" style="flex:1;overflow: auto;">
             <h2 title="{{currentEntity.entity_label}}">{{lang.diffusionList}} "{{currentEntity.entity_label}}" :</h2>
             <div class="contentEntities">
-                <app-diffusions-list #appDiffusionsList [adminMode]="true" [resId]="injectDatasParam.resId" [keepDestForRedirection]="injectDatasParam.keepDestForRedirection" [target]="'redirect'"></app-diffusions-list>
+                <app-diffusions-list #appDiffusionsList [adminMode]="true" [resId]="injectDatasParam.resId"
+                    [keepDestForRedirection]="injectDatasParam.keepDestForRedirection" [target]="'redirect'">
+                </app-diffusions-list>
             </div>
         </div>
     </div>
     <div *ngIf="redirectMode == 'user'" class="row">
         <mat-form-field appearance="outline" floatLabel="never" [style.fontSize.px]="10">
-            <input class="searchUserRedirect" matInput placeholder="{{lang.searchNewAssignee}}"
-                [matAutocomplete]="auto" [formControl]="userRedirectCtrl" (click)="userRedirectCtrl.setValue('')">
+            <input class="searchUserRedirect" matInput placeholder="{{lang.searchNewAssignee}}" [matAutocomplete]="auto"
+                [formControl]="userRedirectCtrl" (click)="userRedirectCtrl.setValue('')">
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="changeDest($event)" isOpen="true">
                 <mat-option *ngFor="let user of filteredUserRedirect | async" [value]="user">
                     <mat-list>
@@ -75,10 +78,10 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="isDestinationChanging && data.selectedRes.length == 1" class="alert-message alert-message-info"
+        <div *ngIf="isDestinationChanging && data.resIds.length == 1" class="alert-message alert-message-info"
             role="alert" style="margin-top: 30px;">{{lang.destinationChangingInfo}}
             <b>{{destUser.descriptionToDisplay}}</b></div>
-        <div *ngIf="isDestinationChanging && data.selectedRes.length > 1" class="alert-message alert-message-info"
+        <div *ngIf="isDestinationChanging && data.resIds.length > 1" class="alert-message alert-message-info"
             role="alert" style="margin-top: 30px;">{{lang.destinationChangingInfoMass}}
             <b>{{destUser.labelToDisplay}}</b> {{lang.destinationChangingInfoMass2}}
             <b>{{destUser.descriptionToDisplay}}</b></div>
@@ -88,12 +91,11 @@
     </div>
 
     <div class="row" *ngIf="redirectMode != '' && redirectMode != 'none'">
-        <app-note-editor #noteEditor [resIds]="data.selectedRes"></app-note-editor>
+        <app-note-editor #noteEditor [resIds]="data.resIds"></app-note-editor>
     </div>
 </div>
 <div *ngIf="!loading" mat-dialog-actions class="actions">
     <button *ngIf="redirectMode != ''" mat-raised-button mat-button color="primary" [disabled]="checkValidity()"
         (click)="onSubmit()">{{lang.validate}}</button>
-    <button mat-raised-button mat-button [disabled]="loading"
-        [mat-dialog-close]="">{{lang.cancel}}</button>
+    <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
 </div>

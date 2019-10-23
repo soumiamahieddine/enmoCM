@@ -104,13 +104,10 @@ export class TagInputComponent implements OnInit {
     }
 
     initFormValue() {
-
         this.controlAutocomplete.value.forEach((ids: any) => {
             this.http.get('../../rest/tags/' + ids).pipe(
-                tap((data) => {
-                    for (var key in data) {
-                        this.valuesToDisplay[data[key].id] = data[key].label;
-                    }
+                tap((data: any) => {
+                    this.valuesToDisplay[data.id] = data.label;
                 })
             ).subscribe();
         });

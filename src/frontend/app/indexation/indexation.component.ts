@@ -5,7 +5,7 @@ import { NotificationService } from '../notification.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
 
@@ -13,10 +13,11 @@ import { Overlay } from '@angular/cdk/overlay';
 import { AppService } from '../../service/app.service';
 import { IndexingFormComponent } from './indexing-form/indexing-form.component';
 import { tap, finalize, catchError, map, filter, exhaustMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { DocumentViewerComponent } from '../viewer/document-viewer.component';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { AddPrivateIndexingModelModalComponent } from './private-indexing-model/add-private-indexing-model-modal.component';
+import { ActionsService } from '../actions/actions.service';
 
 @Component({
     templateUrl: "indexation.component.html",
@@ -24,14 +25,13 @@ import { AddPrivateIndexingModelModalComponent } from './private-indexing-model/
         'indexation.component.scss',
         'indexing-form/indexing-form.component.scss'
     ],
-    providers: [NotificationService, AppService],
+    providers: [NotificationService, AppService, ActionsService],
 })
 export class IndexationComponent implements OnInit {
 
     lang: any = LANG;
 
     loading: boolean = false;
-
 
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
@@ -49,6 +49,8 @@ export class IndexationComponent implements OnInit {
 
     dialogRef: MatDialogRef<any>;
 
+    subscription: Subscription;
+
     constructor(
         private route: ActivatedRoute,
         private _activatedRoute: ActivatedRoute,
@@ -59,11 +61,19 @@ export class IndexationComponent implements OnInit {
         private notify: NotificationService,
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
-        public appService: AppService) {
+        public appService: AppService,
+        public actionService: ActionsService,
+        private router: Router
+    ) {
 
         _activatedRoute.queryParams.subscribe(
             params => this.tmpFilename = params.tmpfilename
         );
+
+        // Event after process action 
+        this.subscription = this.actionService.catchAction().subscribe(message => {
+            this.router.navigate(['/home']);
+        });
     }
 
     ngOnInit(): void {
@@ -96,7 +106,7 @@ export class IndexationComponent implements OnInit {
                     return of(false);
                 })
             ).subscribe();
-            this.http.get("../../rest/indexing/" + this.currentGroupId + "/actions").pipe(
+            this.http.get("../../rest/indexing/groups/" + this.currentGroupId + "/actions").pipe(
                 map((data: any) => {
                     data.actions = data.actions.map((action: any, index: number) => {
                         return {
@@ -126,11 +136,18 @@ export class IndexationComponent implements OnInit {
 
     onSubmit() {
         if (this.indexingForm.isValidForm()) {
-            alert(this.selectedAction.component + '() déclenchée');
-            this.formatDatas(this.indexingForm.getDatas());
-            console.log(this.appDocumentViewer.getFile());
+            const formatdatas = this.formatDatas(this.indexingForm.getDatas());
+
+            formatdatas['chrono'] = true;
+            formatdatas['encodedFile'] = this.appDocumentViewer.getFile().content;
+            formatdatas['format'] = this.appDocumentViewer.getFile().format;
+
+            console.log(formatdatas['encodedFile']);
+
+            this.actionService.launchIndexingAction(this.selectedAction, this.headerService.user.id, this.currentGroupId, formatdatas);
+
         } else {
-            alert('Veuillez corriger les erreurs.');
+            this.notify.error(this.lang.mustFixErrors);
         }
     }
 
@@ -139,8 +156,7 @@ export class IndexationComponent implements OnInit {
         datas.forEach((element: any) => {
             formatData[element.identifier] = element.default_value;
         });
-
-        console.log(formatData);
+        return formatData;
     }
 
     loadIndexingModel(indexingModel: any) {
@@ -202,6 +218,11 @@ export class IndexationComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    ngOnDestroy() {
+        // unsubscribe to ensure no memory leaks
+        this.subscription.unsubscribe();
     }
 
 }

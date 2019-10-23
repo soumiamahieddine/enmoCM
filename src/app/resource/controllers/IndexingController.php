@@ -14,34 +14,119 @@
 
 namespace Resource\controllers;
 
+use Action\controllers\ActionMethodController;
 use Action\models\ActionModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Group\models\GroupModel;
 use Parameter\models\ParameterModel;
 use Priority\models\PriorityModel;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\ValidatorModel;
+use User\models\UserGroupModel;
 
 class IndexingController
 {
-    public function getIndexingActions(Request $request, Response $response, array $aArgs)
+    const KEYWORDS = [
+        'ALL_ENTITIES'          => '@all_entities',
+        'ENTITIES_JUST_BELOW'   => '@immediate_children[@my_primary_entity]',
+        'ENTITIES_BELOW'        => '@subentities[@my_entities]',
+        'ALL_ENTITIES_BELOW'    => '@subentities[@my_primary_entity]',
+        'ENTITIES_JUST_UP'      => '@parent_entity[@my_primary_entity]',
+        'MY_ENTITIES'           => '@my_entities',
+        'MY_PRIMARY_ENTITY'     => '@my_primary_entity',
+        'SAME_LEVEL_ENTITIES'   => '@sisters_entities[@my_primary_entity]'
+    ];
+
+    const HOLLIDAYS = [
+        '01-01',
+        '01-05',
+        '08-05',
+        '14-07',
+        '15-08',
+        '01-11',
+        '11-11',
+        '25-12'
+    ];
+
+    public function setAction(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->notEmpty()->validate($aArgs['groupId'])) {
+        $body = $request->getParsedBody();
+
+        if (!Validator::intVal()->notEmpty()->validate($body['resource'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resource is empty or not an integer']);
+        }
+
+        $group = GroupModel::getById(['id' => $args['groupId'], 'select' => ['can_index', 'indexation_parameters']]);
+        if (empty($group)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route groupId does not exist']);
+        }
+
+        $isUserLinked = UserGroupModel::get(['select' => [1], 'where' => ['user_id = ?', 'group_id = ?'], 'data' => [$GLOBALS['id'], $args['groupId']]]);
+        if (empty($isUserLinked)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group is not linked to this user']);
+        }
+
+        $group['indexation_parameters'] = json_decode($group['indexation_parameters'], true);
+
+        if (!in_array($args['actionId'], $group['indexation_parameters']['actions'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action is not linked to this group']);
+        }
+
+        $action = ActionModel::getById(['id' => $args['actionId'], 'select' => ['component']]);
+        if (empty($action['component'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action component does not exist']);
+        }
+        if (!array_key_exists($action['component'], ActionMethodController::COMPONENTS_ACTIONS)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
+        }
+
+        $resource = ResModel::getById(['resId' => $body['resource'], 'select' => ['status']]);
+        if (empty($resource)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Resource does not exist']);
+        } elseif (!empty($resource['status'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Resource out of perimeter']);
+        }
+
+        $body['data'] = empty($body['data']) ? [] : $body['data'];
+        $body['note'] = empty($body['note']) ? null : $body['note'];
+
+        $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
+        if (!empty($method)) {
+            $methodResponse = ActionMethodController::$method(['resId' => $body['resource'], 'data' => $body['data'], 'note' => $body['note']]);
+        }
+
+        $historic = empty($methodResponse['history']) ? '' : $methodResponse['history'];
+        ActionMethodController::terminateAction(['id' => $args['actionId'], 'resources' => [$body['resource']], 'basketName' => 'Indexing', 'note' => $body['note'], 'history' => $historic]);
+
+        if (!empty($methodResponses['data']) || !empty($methodResponses['errors'])) {
+            return $response->withJson($methodResponses);
+        }
+
+        return $response->withStatus(204);
+    }
+
+    public function getIndexingActions(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->notEmpty()->validate($args['groupId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Param groupId must be an integer val']);
         }
 
-        $indexingParameters = IndexingController::getIndexingParameters(['login' => $GLOBALS['userId'], 'groupId' => $aArgs['groupId']]);
+        $indexingParameters = IndexingController::getIndexingParameters(['userId' => $GLOBALS['id'], 'groupId' => $args['groupId']]);
         if (!empty($indexingParameters['errors'])) {
             return $response->withStatus(403)->withJson($indexingParameters);
         }
 
         $actions = [];
         foreach ($indexingParameters['indexingParameters']['actions'] as $value) {
-            $actions[] = ActionModel::getById(['id' => $value, 'select' => ['id', 'label_action', 'component']]);
+            $action = ActionModel::getById(['id' => $value, 'select' => ['id', 'label_action', 'component', 'id_status']]);
+
+            $action['enabled'] = !empty($action['id_status']) && $action['id_status'] != '_NOSTATUS_';
+            $actions[] = $action;
         }
 
         return $response->withJson(['actions' => $actions]);
@@ -53,21 +138,10 @@ class IndexingController
             return $response->withStatus(400)->withJson(['errors' => 'Param groupId must be an integer val']);
         }
 
-        $indexingParameters = IndexingController::getIndexingParameters(['login' => $GLOBALS['userId'], 'groupId' => $aArgs['groupId']]);
+        $indexingParameters = IndexingController::getIndexingParameters(['userId' => $GLOBALS['id'], 'groupId' => $aArgs['groupId']]);
         if (!empty($indexingParameters['errors'])) {
             return $response->withStatus(403)->withJson($indexingParameters);
         }
-
-        $keywords = [
-            'ALL_ENTITIES'          => '@all_entities',
-            'ENTITIES_JUST_BELOW'   => '@immediate_children[@my_primary_entity]',
-            'ENTITIES_BELOW'        => '@subentities[@my_entities]',
-            'ALL_ENTITIES_BELOW'    => '@subentities[@my_primary_entity]',
-            'ENTITIES_JUST_UP'      => '@parent_entity[@my_primary_entity]',
-            'MY_ENTITIES'           => '@my_entities',
-            'MY_PRIMARY_ENTITY'     => '@my_primary_entity',
-            'SAME_LEVEL_ENTITIES'   => '@sisters_entities[@my_primary_entity]'
-        ];
 
         $allowedEntities = [];
         $clauseToProcess = '';
@@ -76,7 +150,7 @@ class IndexingController
             if (!empty($clauseToProcess)) {
                 $clauseToProcess .= ', ';
             }
-            $clauseToProcess .= $keywords[$keywordValue];
+            $clauseToProcess .= IndexingController::KEYWORDS[$keywordValue];
         }
 
         if (!empty($clauseToProcess)) {
@@ -173,7 +247,14 @@ class IndexingController
             return $response->withStatus(400)->withJson(['errors' => 'Query params processLimitDate is empty']);
         }
 
-        $processLimitDate = new \DateTime($queryParams['processLimitDate']);
+        $priorityId = IndexingController::calculatePriorityWithProcessLimitDate(['processLimitDate' => $queryParams['processLimitDate']]);
+
+        return $response->withJson(['priority' => $priorityId]);
+    }
+
+    public static function calculatePriorityWithProcessLimitDate(array $args)
+    {
+        $processLimitDate = new \DateTime($args['processLimitDate']);
         $processLimitDate->setTime(23, 59, 59);
         $now = new \DateTime();
 
@@ -182,16 +263,7 @@ class IndexingController
 
         $workingDays = ParameterModel::getById(['id' => 'workingDays', 'select' => ['param_value_int']]);
         if (!empty($workingDays['param_value_int'])) {
-            $hollidays = [
-                '01-01',
-                '01-05',
-                '08-05',
-                '14-07',
-                '15-08',
-                '01-11',
-                '11-11',
-                '25-12'
-            ];
+            $hollidays = IndexingController::HOLLIDAYS;
             if (function_exists('easter_date')) {
                 $hollidays[] = date('d-m', easter_date() + 86400);
             }
@@ -214,7 +286,7 @@ class IndexingController
             $priority = PriorityModel::get(['select' => ['id'], 'orderBy' => ['delays DESC'], 'limit' => 1]);
         }
 
-        return $response->withJson(['priority' => $priority[0]['id']]);
+        return $priority[0]['id'];
     }
 
     public static function getEntitiesChildrenLevel($aArgs = [])
@@ -238,7 +310,7 @@ class IndexingController
 
     public static function getIndexingParameters($aArgs = [])
     {
-        $group = GroupModel::getGroupByLogin(['login' => $aArgs['login'], 'groupId' => $aArgs['groupId'], 'select' => ['can_index', 'indexation_parameters']]);
+        $group = GroupModel::getGroupWithUsersGroups(['userId' => $aArgs['userId'], 'groupId' => $aArgs['groupId'], 'select' => ['can_index', 'indexation_parameters']]);
         if (empty($group)) {
             return ['errors' => 'This user is not in this group'];
         }
@@ -262,16 +334,7 @@ class IndexingController
 
         // Working Day
         if ($workingDays['param_value_int'] == 1 && !empty($args['delay'])) {
-            $hollidays = [
-                '01-01',
-                '01-05',
-                '08-05',
-                '14-07',
-                '15-08',
-                '01-11',
-                '11-11',
-                '25-12'
-            ];
+            $hollidays = IndexingController::HOLLIDAYS;
             if (function_exists('easter_date')) {
                 $hollidays[] = date('d-m', easter_date() + 86400);
             }

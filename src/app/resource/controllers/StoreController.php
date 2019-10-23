@@ -17,6 +17,8 @@ namespace Resource\controllers;
 
 use Attachment\models\AttachmentModel;
 use Docserver\controllers\DocserverController;
+use Entity\models\EntityModel;
+use IndexingModel\models\IndexingModelModel;
 use Resource\models\ChronoModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
@@ -25,42 +27,37 @@ use SrcCore\models\CoreConfigModel;
 
 class StoreController
 {
-    public static function storeResource(array $aArgs)
+    public static function storeResource(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['encodedFile', 'format', 'status', 'type_id', 'category_id']);
-        ValidatorModel::stringType($aArgs, ['format', 'status', 'category_id']);
-        ValidatorModel::intVal($aArgs, ['type_id']);
+        ValidatorModel::notEmpty($args, ['doctype', 'modelId']);
+        ValidatorModel::intVal($args, ['doctype', 'modelId']);
 
         try {
-            foreach ($aArgs as $column => $value) {
-                if (empty($value)) {
-                    unset($aArgs[$column]);
-                }
-            }
-            $fileContent = base64_decode(str_replace(['-', '_'], ['+', '/'], $aArgs['encodedFile']));
-
-            $storeResult = DocserverController::storeResourceOnDocServer([
-                'collId'            => 'letterbox_coll',
-                'docserverTypeId'   => 'DOC',
-                'encodedResource'   => base64_encode($fileContent),
-                'format'            => $aArgs['format']
-            ]);
-            if (!empty($storeResult['errors'])) {
-                return ['errors' => '[storeResource] ' . $storeResult['errors']];
-            }
-            unset($aArgs['encodedFile']);
-
             $resId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_id_mlb_seq']);
 
-            $data = [
-                'docserver_id'  => $storeResult['docserver_id'],
-                'filename'      => $storeResult['file_destination_name'],
-                'filesize'      => $storeResult['fileSize'],
-                'path'          => $storeResult['destination_dir'],
-                'fingerprint'   => $storeResult['fingerPrint'],
-                'res_id'        => $resId
-            ];
-            $data = array_merge($aArgs, $data);
+            $data = ['resId' => $resId];
+
+            if (!empty($args['encodedFile'])) {
+                $fileContent = base64_decode(str_replace(['-', '_'], ['+', '/'], $args['encodedFile']));
+
+                $storeResult = DocserverController::storeResourceOnDocServer([
+                    'collId'            => 'letterbox_coll',
+                    'docserverTypeId'   => 'DOC',
+                    'encodedResource'   => base64_encode($fileContent),
+                    'format'            => $args['format']
+                ]);
+                if (!empty($storeResult['errors'])) {
+                    return ['errors' => '[storeResource] ' . $storeResult['errors']];
+                }
+
+                $data['docserver_id'] = $storeResult['docserver_id'];
+                $data['filename'] = $storeResult['file_destination_name'];
+                $data['filesize'] = $storeResult['fileSize'];
+                $data['path'] = $storeResult['directory'];
+                $data['fingerprint'] = $storeResult['fingerPrint'];
+            }
+
+            $data = array_merge($args, $data);
             $data = StoreController::prepareStorage($data);
 
             ResModel::create($data);
@@ -112,72 +109,70 @@ class StoreController
         }
     }
 
-    public static function controlFingerPrint(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['pathInit', 'pathTarget']);
-        ValidatorModel::stringType($aArgs, ['pathInit', 'pathTarget', 'fingerprintMode']);
-
-        if (!file_exists($aArgs['pathInit'])) {
-            return ['errors' => '[controlFingerprint] PathInit does not exist'];
-        }
-        if (!file_exists($aArgs['pathTarget'])) {
-            return ['errors' => '[controlFingerprint] PathTarget does not exist'];
-        }
-
-        $fingerprint1 = StoreController::getFingerPrint(['filePath' => $aArgs['pathInit'], 'mode' => $aArgs['fingerprintMode']]);
-        $fingerprint2 = StoreController::getFingerPrint(['filePath' => $aArgs['pathTarget'], 'mode' => $aArgs['fingerprintMode']]);
-
-        if ($fingerprint1 != $fingerprint2) {
-            return ['errors' => '[controlFingerprint] Fingerprints do not match: ' . $aArgs['pathInit'] . ' and ' . $aArgs['pathTarget']];
-        }
-
-        return true;
-    }
-
-    public static function getFingerPrint(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['filePath']);
-        ValidatorModel::stringType($aArgs, ['filePath', 'mode']);
-
-        if (empty($aArgs['mode']) || $aArgs['mode'] == 'NONE') {
-            $aArgs['mode'] = 'sha512';
-        }
-
-        return hash_file(strtolower($aArgs['mode']), $aArgs['filePath']);
-    }
-
     public static function prepareStorage(array $args)
     {
-        ValidatorModel::notEmpty($args, ['docserver_id', 'filename', 'format', 'filesize', 'path', 'fingerprint', 'status', 'res_id']);
-        ValidatorModel::stringType($args, ['docserver_id', 'filename', 'format', 'path', 'fingerprint', 'status']);
-        ValidatorModel::intVal($args, ['filesize', 'res_id']);
+        ValidatorModel::notEmpty($args, ['resId', 'modelId']);
+        ValidatorModel::stringType($args, ['docserver_id', 'filename', 'format', 'path', 'fingerprint']);
+        ValidatorModel::intVal($args, ['resId', 'modelId', 'filesize']);
+
+        $indexingModel = IndexingModelModel::getById(['id' => $args['modelId'], 'select' => ['category']]);
 
         if (empty($args['typist'])) {
             $args['typist'] = $GLOBALS['id'];
         }
 
-        unset($args['alt_identifier']);
+        if (!empty($args['initiator'])) {
+            $entity = EntityModel::getById(['id' => $args['initiator'], 'select' => ['entity_id']]);
+            $args['initiator'] = $entity['entity_id'];
+        }
+        if (!empty($args['destination'])) {
+            $entity = EntityModel::getById(['id' => $args['destination'], 'select' => ['entity_id']]);
+            $args['destination'] = $entity['entity_id'];
+        }
+        $chrono = null;
         if (!empty($args['chrono'])) {
-            $args['alt_identifier'] = ChronoModel::getChrono(['id' => $args['category_id'], 'entityId' => $args['destination'], 'typeId' => $args['type_id'], 'resId' => $args['res_id']]);
-        }
-        unset($args['chrono']);
-
-        if (empty($args['process_limit_date'])) {
-            $processLimitDate = ResModel::getStoredProcessLimitDate(['typeId' => $args['type_id'], 'admissionDate' => $args['admission_date']]);
-            $args['process_limit_date'] = $processLimitDate;
+            $chrono = ChronoModel::getChrono(['id' => $indexingModel['category'], 'entityId' => $args['destination'], 'typeId' => $args['doctype'], 'resId' => $args['resId']]);
         }
 
-        unset($args['external_id']);
-        if (!empty($args['externalId'])) {
-            if (is_array($args['externalId'])) {
-                $args['external_id'] = json_encode($args['externalId']);
-            }
-            unset($args['externalId']);
+        if (!empty($args['processLimitDate']) && !empty($args['priority'])) {
+            $args['priority'] = IndexingController::calculatePriorityWithProcessLimitDate(['processLimitDate' => $args['processLimitDate']]);
         }
 
-        $args['creation_date'] = 'CURRENT_TIMESTAMP';
+        $externalId = '{}';
+        if (!empty($args['externalId']) && is_array($args['externalId'])) {
+            $externalId = json_encode($args['externalId']);
+        }
 
-        return $args;
+        $preparedData = [
+            'res_id'                => $args['resId'],
+            'model_id'              => $args['modelId'],
+            'category_id'           => $indexingModel['category'],
+            'type_id'               => $args['doctype'],
+            'subject'               => $args['subject'] ?? null,
+            'alt_identifier'        => $chrono,
+            'typist'                => $args['typist'],
+            'status'                => $args['status'] ?? null,
+            'destination'           => $args['destination'] ?? null,
+            'initiator'             => $args['initiator'] ?? null,
+            'confidentiality'       => empty($args['confidentiality']) ? 'N' : 'Y',
+            'doc_date'              => $args['documentDate'] ?? null,
+            'admission_date'        => $args['arrivalDate'] ?? null,
+            'departure_date'        => $args['departureDate'] ?? null,
+            'process_limit_date'    => $args['processLimitDate'] ?? null,
+            'priority'              => $args['priority'] ?? null,
+            'barcode'               => $args['barcode'] ?? null,
+            'origin'                => $args['origin'] ?? null,
+            'external_id'           => $externalId,
+            'format'                => empty($args['encodedFile']) ? null : $args['format'],
+            'docserver_id'          => empty($args['encodedFile']) ? null : $args['docserver_id'],
+            'filename'              => empty($args['encodedFile']) ? null : $args['filename'],
+            'filesize'              => empty($args['encodedFile']) ? null : $args['filesize'],
+            'path'                  => empty($args['encodedFile']) ? null : $args['path'],
+            'fingerprint'           => empty($args['encodedFile']) ? null : $args['fingerprint'],
+            'creation_date'         => 'CURRENT_TIMESTAMP'
+        ];
+
+        return $preparedData;
     }
 
     public static function prepareAttachmentStorage(array $aArgs)
@@ -233,6 +228,18 @@ class StoreController
         }
 
         return $formatedData;
+    }
+
+    public static function getFingerPrint(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['filePath']);
+        ValidatorModel::stringType($aArgs, ['filePath', 'mode']);
+
+        if (empty($aArgs['mode']) || $aArgs['mode'] == 'NONE') {
+            $aArgs['mode'] = 'sha512';
+        }
+
+        return hash_file(strtolower($aArgs['mode']), $aArgs['filePath']);
     }
 
     public static function isFileAllowed(array $args)

@@ -77,7 +77,6 @@ class core_tools extends functions
         $_SESSION['tablename']['security'] = (string) $TABLENAME->security;
         $_SESSION['tablename']['status'] = (string) $TABLENAME->status;
         $_SESSION['tablename']['usergroups'] = (string) $TABLENAME->usergroups;
-        $_SESSION['tablename']['usergroup_content'] = (string) $TABLENAME->usergroupcontent;
         $_SESSION['tablename']['usergroup_services'] = (string) $TABLENAME->usergroups_services;
         $_SESSION['tablename']['users'] = (string) $TABLENAME->users;
     }

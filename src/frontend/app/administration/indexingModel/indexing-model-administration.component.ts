@@ -60,7 +60,7 @@ export class IndexingModelAdministrationComponent implements OnInit {
             identifier: 'confidential',
             label: this.lang.confidential,
             type: 'radio',
-            values: ['yes', 'no']
+            values: [{'id': 'true', 'label': 'Oui'}, {'id': 'false', 'label': 'Non'}]
         },
         {
             identifier: 'initiator',

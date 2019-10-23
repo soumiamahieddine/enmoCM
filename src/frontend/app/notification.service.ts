@@ -5,7 +5,8 @@ import { Router } from '@angular/router';
 import { LANG } from './translate.component';
 @Component({
     selector: 'custom-snackbar',
-    template: '<mat-grid-list cols="4" rowHeight="1:1"><mat-grid-tile colspan="1"><mat-icon class="fa fa-{{data.icon}} fa-2x"></mat-icon></mat-grid-tile><mat-grid-tile colspan="3">{{data.message}}</mat-grid-tile></mat-grid-list>' // You may also use a HTML file
+    templateUrl: "notification.service.html",
+    styleUrls: ['notification.service.scss'],
 })
 export class CustomSnackbarComponent {
     constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) { }
@@ -20,14 +21,16 @@ export class NotificationService {
     success(message: string) {
         this.snackBar.openFromComponent(CustomSnackbarComponent, {
             duration: 2000,
+            panelClass: 'success-snackbar',
             data: { message: message, icon: 'info-circle' }
         });
     }
 
-    error(message: string) {
+    error(message: string, url: string = null) {
         this.snackBar.openFromComponent(CustomSnackbarComponent, {
-            duration: 2000,
-            data: { message: message, icon: 'exclamation-triangle' }
+            duration: 4000,
+            panelClass: 'error-snackbar',
+            data: { url: url, message: message, icon: 'exclamation-triangle' }
         });
     }
 
@@ -42,16 +45,16 @@ export class NotificationService {
         } else {
             if (err.error !== undefined) {
                 if (err.error.errors !== undefined) {
-                    this.error(err.error.errors);
+                    this.error(err.error.errors, err.url);
                     if (err.status === 403 || err.status === 404) {
                         this.router.navigate(['/home']);
                     }
                 } else if (err.error.exception !== undefined) {
-                    this.error(err.error.exception[0].message);
+                    this.error(err.error.exception[0].message, err.url);
                 } else if(err.error.error !== undefined){
-                    this.error(err.error.error.message);
+                    this.error(err.error.error.message, err.url);
                 } else {
-                    this.error(err.status + ' : ' + err.statusText);
+                    this.error(`${err.status} : ${err.statusText}`, err.url);
                 }
             } else {
                 this.error(err);

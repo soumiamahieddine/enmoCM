@@ -133,14 +133,12 @@ if (count($_REQUEST['meta']) > 0) {
                 $arrayPDO = array_merge($arrayPDO, array(":initiatorServiceChosen" => $_REQUEST['initiatorServices_chosen']));
                 $json_txt .= '],';
             } elseif ($tab_id_fields[$j] == 'multifield' && !empty($_REQUEST['multifield'])) {
-                // MULTIFIELD : subject, title, doc_custom_t1, process notes
+                // MULTIFIELD : subject, process notes
                 $multifield = trim($_REQUEST['multifield']);
                 $json_txt .= "'multifield' : ['".addslashes(trim($multifield))."'],";
 
                 $where_request .= "(REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:multifield) "
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifield) OR lower(alt_identifier) like lower(:multifield)) "
-                    ."or lower(title) LIKE lower(:multifield) "
-                    ."or lower(doc_custom_t1) LIKE lower(:multifield) "
                     ."or lower(description) LIKE lower(:multifield) "
                     ."or lower(barcode) LIKE lower(:multifield) "
                     ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifield)) "
@@ -187,9 +185,11 @@ if (count($_REQUEST['meta']) > 0) {
             // SIGNATORY GROUP
             elseif ($tab_id_fields[$j] == 'signatory_group' && !empty($_REQUEST['signatory_group'])) {
                 $json_txt .= " 'signatory_group' : ['".addslashes(trim($_REQUEST['signatory_group']))."'],";
-                $where_request .= " (res_id in (select res_id from listinstance where item_id in (select user_id from usergroup_content where group_id = :signatoryGroup) "
-                        ."and coll_id = '" . $coll_id . "' and item_mode = 'sign' and difflist_type = 'VISA_CIRCUIT')) ";
-                $arrayPDO = array_merge($arrayPDO, array(":signatoryGroup" => $_REQUEST['signatory_group']));
+
+                $where_request .= " (res_id in (select res_id from listinstance where item_id in (select user_id from users where id in (select user_id from usergroup_content where group_id = :signatoryGroup)) "
+                        ."and item_mode = 'sign' and difflist_type = 'VISA_CIRCUIT')) ";
+                $group = \Group\models\GroupModel::getByGroupId(['groupId' => $_REQUEST['signatory_group'], 'select' => ['id']]);
+                $arrayPDO = array_merge($arrayPDO, array(":signatoryGroup" => $group['id']));
                 $where_request .=" and  ";
             }
 
@@ -432,8 +432,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request_welcome .= "( REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:multifieldWelcome) "
                     ."or lower(external_reference) LIKE lower(:multifieldWelcomeReference) "
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifieldWelcome) OR lower(alt_identifier) like lower(:multifieldWelcome)) "
-                    ."or lower(title) LIKE lower(:multifieldWelcome) "
-                    ."or lower(description) LIKE lower(:multifieldWelcome) "
                     ."or lower(barcode) LIKE lower(:multifieldWelcome) "
                     ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifieldWelcome)) "
                     ."or res_id in (select res_id_master from res_view_attachments where (lower(translate(identifier,'/','')) like lower(:multifieldWelcome) OR lower(identifier) like lower(:multifieldWelcome)) AND status NOT IN ('DEL','OBS','TMP')) "
@@ -784,11 +782,35 @@ if (count($_REQUEST['meta']) > 0) {
                         }
                     }
                 }
-            } else {  // opt indexes check
-                $tmp = $type->search_checks($indexes, $tab_id_fields[$j], $_REQUEST[$tab_id_fields[$j]]);
-                //$func->show_array($tmp);
-                $json_txt .= $tmp['json_txt'];
-                $where_request .= $tmp['where'];
+            } elseif (preg_match('/^indexingCustomField_/', $tab_id_fields[$j])) {  // opt indexes check
+                $customFieldId = str_replace("indexingCustomField_", "", $tab_id_fields[$j]);
+                $customFieldId = str_replace("_min", "", $customFieldId);
+                $customFieldId = str_replace("_max", "", $customFieldId);
+                $customFieldId = str_replace("_from", "", $customFieldId);
+                $customFieldId = str_replace("_to", "", $customFieldId);
+                $customField   = \CustomField\models\CustomFieldModel::getById(['id' => $customFieldId]);
+                $json_txt     .= " '".$tab_id_fields[$j]."' : ['".addslashes(trim($_REQUEST[$tab_id_fields[$j]]))."'],";
+                if (in_array($customField['type'], ['select', 'radio', 'checkbox'])) {
+                    $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and value @> :valueCustom_".$customFieldId.")) and ";
+                    $arrayPDO       = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
+                } elseif ($customField['type'] == 'date') {
+                    if (strpos($tab_id_fields[$j], '_from') !== false) {
+                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and (value::text::timestamp) > (:valueCustom_".$customFieldId."::timestamp))) and ";
+                    } elseif (strpos($tab_id_fields[$j], '_to') !== false) {
+                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and (value::text::timestamp) < (:valueCustom_".$customFieldId."::timestamp))) and ";
+                    }
+                    $arrayPDO = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
+                } elseif ($customField['type'] == 'string') {
+                    $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and (value::text) ilike (:valueCustom_".$customFieldId."))) and ";
+                    $arrayPDO       = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '%'.$_REQUEST[$tab_id_fields[$j]].'%'));
+                } elseif ($customField['type'] == 'integer') {
+                    if (strpos($tab_id_fields[$j], '_min') !== false) {
+                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and value > :valueCustom_".$customFieldId.")) and ";
+                    } elseif (strpos($tab_id_fields[$j], '_max') !== false) {
+                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and value < :valueCustom_".$customFieldId.")) and ";
+                    }
+                    $arrayPDO = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
+                }
             }
         }
 

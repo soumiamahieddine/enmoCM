@@ -112,26 +112,6 @@ function listmodel_setObjectId(objectId)
     );
 
 }
- 
-function listmodel_open()
-{
-    var main_error = $('main_error'); 
-    
-    // Validate form
-    var valid = listmodel_validate();
-    
-    if(valid == false)
-        return;
-    
-    // Open pop up 
-    window.open(
-        'index.php?display=true&module=entities&page=manage_listmodel',
-        '',
-        'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no'
-    );
-                    
-    
-}
 
 function listmodel_validate() {
     // Control input values
@@ -260,7 +240,7 @@ if ($mode != 'del') {
     echo $frm;
     include_once 'modules/entities/difflist_display.php';
     $frm = '<p class="buttons" style="text-align:center;margin-top:5px;">';
-    $frm .= '<input type="button" onclick="listmodel_open()" class="button" value="'._MODIFY_LIST.'"';
+    $frm .= '<input type="button" class="button" value="'._MODIFY_LIST.'"';
     $frm .= '</p>';
     $frm .= '</div>';
 

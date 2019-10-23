@@ -458,55 +458,55 @@ select setval('users_id_seq', (select max(id)+1 from users), false);
 
 -- Create USERGROUP_CONTENT
 TRUNCATE TABLE usergroup_content;
-DELETE FROM usergroup_content WHERE user_id = 'rrenaud';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('rrenaud', 'RESPONSABLE', 'Y','');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('rrenaud', 'DIRECTEUR', 'N','');
-DELETE FROM usergroup_content WHERE user_id = 'ccordy';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ccordy', 'AGENT', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'ssissoko';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ssissoko', 'RESPONSABLE', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'nnataly';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('nnataly', 'AGENT', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'ddur';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ddur', 'ELU', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'jjane';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('jjane', 'RESPONSABLE', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'eerina';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('eerina', 'RESPONSABLE', 'Y','');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('eerina', 'DIRECTEUR', 'N','');
-DELETE FROM usergroup_content WHERE user_id = 'kkaar';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('kkaar', 'AGENT', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'bboule';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bboule', 'AGENT', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'ppetit';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ppetit', 'RESPONSABLE', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'aackermann';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('aackermann', 'AGENT', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'ppruvost';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ppruvost', 'AGENT', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'ttong';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ttong', 'AGENT', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'sstar';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('sstar', 'RESPONSABLE', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'ssaporta';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ssaporta', 'AGENT', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'ccharles';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ccharles', 'AGENT', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'mmanfred';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('mmanfred', 'RESPONSABLE', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'ddaull';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ddaull', 'COURRIER', 'N','');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ddaull', 'RESP_COURRIER', 'N','');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ddaull', 'RESPONSABLE', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'bbain';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bbain', 'AGENT', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'jjonasz';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('jjonasz', 'AGENT', 'Y','');
-DELETE FROM usergroup_content WHERE user_id = 'bblier';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bblier', 'COURRIER', 'Y','');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bblier', 'ADMINISTRATEUR_N1', 'N','');
-DELETE FROM usergroup_content WHERE user_id = 'ggrand';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ggrand', 'ARCHIVISTE', 'Y','');
+DELETE FROM usergroup_content WHERE user_id = 1;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (1, 4, '');
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (1, 7, '');
+DELETE FROM usergroup_content WHERE user_id = 2;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (2, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 3;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (3, 4, '');
+DELETE FROM usergroup_content WHERE user_id = 4;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (4, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 5;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (5, 8, '');
+DELETE FROM usergroup_content WHERE user_id = 6;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (6, 4, '');
+DELETE FROM usergroup_content WHERE user_id = 7;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (7, 4, '');
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (7, 7, '');
+DELETE FROM usergroup_content WHERE user_id = 8;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (8, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 9;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (9, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 10;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (10, 4, '');
+DELETE FROM usergroup_content WHERE user_id = 11;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (11, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 12;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (12, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 13;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (13, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 14;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (14, 4, '');
+DELETE FROM usergroup_content WHERE user_id = 15;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (15, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 16;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (16, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 17;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (17, 4, '');
+DELETE FROM usergroup_content WHERE user_id = 18;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (18, 1, '');
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (18, 3, '');
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (18, 4, '');
+DELETE FROM usergroup_content WHERE user_id = 19;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (19, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 20;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (20, 2, '');
+DELETE FROM usergroup_content WHERE user_id = 21;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (21, 1, '');
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (21, 5, '');
+DELETE FROM usergroup_content WHERE user_id = 22;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (22, 10, '');
 
 -- Create ENTITIES and LISTMODELS
 TRUNCATE TABLE entities;
@@ -515,7 +515,7 @@ TRUNCATE TABLE listmodels;
 DELETE FROM entities WHERE entity_id = 'VILLE';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('VILLE', 'Ville de Maarch-les-bains', 'Ville de Maarch-les-bains', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', '', 'Direction');
 DELETE FROM listmodels WHERE object_id = 'VILLE' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('VILLE', 'entity_id', 0, '', 'user_id', 'dest', 'Ville de Maarch-les-bains','Ville de Maarch-les-bains', '', 'Y');
+INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('VILLE', 'entity_id', 0, 'ppetit', 'user_id', 'dest', 'Ville de Maarch-les-bains','Ville de Maarch-les-bains', '', 'Y');
 DELETE FROM entities WHERE entity_id = 'CAB';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('CAB', 'Cabinet du Maire', 'Cabinet du Maire', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'VILLE', 'Direction');
 DELETE FROM listmodels WHERE object_id = 'CAB' AND object_type = 'entity_id';
@@ -609,11 +609,11 @@ INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, 
 DELETE FROM entities WHERE entity_id = 'ELUS';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('ELUS', 'Ensemble des élus', 'ELUS:Ensemble des élus', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'VILLE', 'Direction');
 DELETE FROM listmodels WHERE object_id = 'ELUS' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('ELUS', 'entity_id', 0, '', 'user_id', 'dest', 'ELUS:Ensemble des élus','ELUS:Ensemble des élus', '', 'Y');
+INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('ELUS', 'entity_id', 0, 'ddur', 'user_id', 'dest', 'ELUS:Ensemble des élus','ELUS:Ensemble des élus', '', 'Y');
 DELETE FROM entities WHERE entity_id = 'CCAS';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('CCAS', 'Centre Communal d''Action Sociale', 'Centre Communal d''Action Sociale', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', '', 'Direction');
 DELETE FROM listmodels WHERE object_id = 'CCAS' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('CCAS', 'entity_id', 0, '', 'user_id', 'dest', 'Centre Communal d''Action Sociale','Centre Communal d''Action Sociale', '', 'Y');
+INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('CCAS', 'entity_id', 0, 'jjane', 'user_id', 'dest', 'Centre Communal d''Action Sociale','Centre Communal d''Action Sociale', '', 'Y');
 
 -- Create BASKETS
 TRUNCATE TABLE baskets;
@@ -637,7 +637,7 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'CopyMailBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'CopyMailBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'CopyMailBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('CopyMailBasket', 'Courriers en copie', 'Courriers en copie non clos ou sans suite', '(res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''user_id'' and item_id = @user and item_mode = ''cc'') or res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''entity_id'' and item_mode = ''cc'' and item_id in (@my_entities))) and status not in ( ''DEL'', ''END'', ''SSUITE'') and res_id not in (select res_id from res_mark_as_read WHERE user_id = @user)', 'letterbox_coll', 'Y', 'N', 'Y',60);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('CopyMailBasket', 'Courriers en copie', 'Courriers en copie non clos ou sans suite', '(res_id in (select res_id from listinstance WHERE item_type = ''user_id'' and item_id = @user and item_mode = ''cc'') or res_id in (select res_id from listinstance WHERE item_type = ''entity_id'' and item_mode = ''cc'' and item_id in (@my_entities))) and status not in ( ''DEL'', ''END'', ''SSUITE'') and res_id not in (select res_id from res_mark_as_read WHERE user_id = @user)', 'letterbox_coll', 'Y', 'N', 'Y',60);
 DELETE FROM baskets WHERE basket_id = 'RetourCourrier';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'RetourCourrier';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'RetourCourrier';
@@ -645,7 +645,7 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'DdeAvisBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'DdeAvisBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'DdeAvisBasket';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('DdeAvisBasket', 'Avis : Avis à émettre', 'Courriers nécessitant un avis', 'status = ''EAVIS'' AND res_id IN (SELECT res_id FROM listinstance WHERE coll_id = ''letterbox_coll'' AND item_type = ''user_id'' AND item_id = @user AND item_mode = ''avis'' and process_date is NULL)', 'letterbox_coll', 'Y', 'N', 'Y',80);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('DdeAvisBasket', 'Avis : Avis à émettre', 'Courriers nécessitant un avis', 'status = ''EAVIS'' AND res_id IN (SELECT res_id FROM listinstance WHERE item_type = ''user_id'' AND item_id = @user AND item_mode = ''avis'' and process_date is NULL)', 'letterbox_coll', 'Y', 'N', 'Y',80);
 DELETE FROM baskets WHERE basket_id = 'SupAvisBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'SupAvisBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'SupAvisBasket';
@@ -856,8 +856,8 @@ INSERT INTO users (user_id, password, firstname, lastname, phone, mail, custom_t
 --MAARCH2GEC USER
 DELETE FROM users WHERE user_id = 'cchaplin';
 INSERT INTO users (user_id, password, firstname, lastname, mail, change_password, status, loginmode) VALUES ('cchaplin', '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', 'Charlie', 'CHAPLIN', 'support@maarch.fr', 'N', 'OK', 'restMode');
-DELETE FROM usergroup_content WHERE user_id = 'cchaplin';
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('cchaplin', 'MAARCHTOGEC', 'Y','');
+DELETE FROM usergroup_content WHERE user_id = 24;
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (24, 11, '');
 
 ------------
 -- CONTACTS
@@ -1076,8 +1076,8 @@ Select setval('actions_id_seq', (select max(id)+1 from actions), false);
 -- BANNETTES SECONDAIRES
 TRUNCATE TABLE users_baskets_preferences;
 INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
-SELECT users.id, usergroups.id, groupbasket.basket_id, TRUE FROM users, usergroups, groupbasket, usergroup_content
-WHERE groupbasket.group_id = usergroup_content.group_id AND users.user_id = usergroup_content.user_id AND usergroups.group_id = usergroup_content.group_id
+SELECT usergroup_content.user_id, usergroups.id, groupbasket.basket_id, TRUE FROM usergroups, groupbasket, usergroup_content
+WHERE groupbasket.group_id = usergroups.group_id AND usergroups.id = usergroup_content.group_id
 ORDER BY users.id;
 
 ------------

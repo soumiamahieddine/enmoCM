@@ -258,12 +258,14 @@ class ConvertPdfController
         } else {
             $fileAccepted  = StoreController::isFileAllowed(['extension' => $ext, 'type' => $mimeType]);
             $maxFilesizeMo = ini_get('upload_max_filesize');
+            $uploadMaxFilesize = StoreController::getBytesSizeFromPhpIni(['size' => $maxFilesizeMo]);
             $canConvert    = ConvertPdfController::canConvert(['extension' => $ext]);
     
             if (!$fileAccepted) {
                 return $response->withStatus(400)->withJson(['errors' => 'File type not allowed. Extension : ' . $ext . '. Mime Type : ' . $mimeType . '.']);
-            } elseif ($size/1024 > $maxFilesizeMo*1024) {
-                return $response->withStatus(400)->withJson(['errors' => 'File maximum size is exceeded ('.$maxFilesizeMo.' Mo)']);
+            } elseif ($size > $uploadMaxFilesize) {
+                $maximumSizeLabel = round($maxFilesizeMo / 1048576, 3) . ' Mo';
+                return $response->withStatus(400)->withJson(['errors' => 'File maximum size is exceeded ('.$maximumSizeLabel.')']);
             } elseif (!$canConvert) {
                 return $response->withStatus(400)->withJson(['errors' => 'File accepted but can not be converted in pdf']);
             }

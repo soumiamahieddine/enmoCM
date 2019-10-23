@@ -107,7 +107,6 @@ class ListInstanceController
         ValidatorModel::intVal($args, ['userId']);
 
         $currentUser = UserModel::getById(['select' => ['user_id'], 'id' => $args['userId']]);
-        $primaryEntity = UserModel::getPrimaryEntityById(['id' => $args['userId']]);
 
         DatabaseModel::beginTransaction();
 

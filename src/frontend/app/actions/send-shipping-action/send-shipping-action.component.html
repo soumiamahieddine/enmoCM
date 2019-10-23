@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{data.action.label_action}}</h1>
+<h1 mat-dialog-title>{{data.action.label}}</h1>
 <div mat-dialog-content [class.fullWidth]="shippings.length > 0" [class.fullHeight]="shippings.length > 0">
     <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
         <mat-spinner style="margin:auto;"></mat-spinner>
@@ -19,8 +19,12 @@
             <div class="row" style="margin: 0;">
                 <div class="col-md-12">
                     {{lang.makeActionOn}}
-                     <b *ngIf="data.selectedRes.length == 1 && data.contextChrono != ''" color="primary" class="highlight">{{data.contextChrono}}</b>
-                    <b *ngIf="data.contextChrono == ''" color="primary" class="highlight">{{data.selectedRes.length}} {{lang.elements}}</b> ?
+                    <b *ngIf="data.resIds.length === 0" color="primary"
+                        class="highlight">{{lang.currentIndexingMail}}</b>
+                    <b *ngIf="data.resIds.length == 1" color="primary"
+                        class="highlight">{{data.resource.alt_identifier}}</b>
+                    <b *ngIf="data.resIds.length > 1" color="primary" class="highlight">{{data.resIds.length}}
+                        {{lang.elements}}</b> ?
                 </div>
                 <div class="col-md-12" style="padding-top: 10px;">
                     <mat-form-field>
@@ -91,13 +95,14 @@
                 </div>
 
                 <div class="col-md-12">
-                    <app-note-editor #noteEditor [resIds]="data.selectedRes"></app-note-editor>
+                    <app-note-editor #noteEditor [resIds]="data.resIds"></app-note-editor>
                 </div>
             </div>
         </mat-sidenav-content>
         <mat-sidenav mode="side" fixedTopGap="56" position='end' [opened]="attachList.length > 0" style="width: 50%;">
             <div class="pjList">
-                <img *ngFor="let attach of attachList" title="{{attach.identifier}} : {{attach.title}}" src="../../rest/attachments/{{attach.res_id!=0 ? attach.res_id : attach.res_id_version}}/thumbnail" />
+                <img *ngFor="let attach of attachList" title="{{attach.identifier}} : {{attach.title}}"
+                    src="../../rest/attachments/{{attach.res_id!=0 ? attach.res_id : attach.res_id_version}}/thumbnail" />
             </div>
         </mat-sidenav>
     </mat-sidenav-container>

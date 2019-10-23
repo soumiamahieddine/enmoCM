@@ -4,6 +4,8 @@ import { NotificationService } from '../../notification.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
+import { tap, finalize, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
     templateUrl: "update-acknowledgement-send-date-action.component.html",
@@ -24,15 +26,43 @@ export class UpdateAcknowledgementSendDateActionComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    onSubmit(): void {
+    onSubmit() {
         this.loading = true;
-        this.http.put('../../rest/resourcesList/users/' + this.data.currentBasketInfo.ownerId + '/groups/' + this.data.currentBasketInfo.groupId + '/baskets/' + this.data.currentBasketInfo.basketId + '/actions/' + this.data.action.id, {resources : this.data.selectedRes, note : this.noteEditor.getNoteContent(), data : {send_date : (this.acknowledgementSendDate.getTime() / 1000).toString()}})
-            .subscribe((data: any) => {
-                this.loading = false;
+        if ( this.data.resIds.length === 0) {
+            // this.indexDocumentAndExecuteAction();
+        } else {
+            this.executeAction();
+        }
+    }
+
+    /* indexDocumentAndExecuteAction() {
+        
+        this.http.post('../../rest/resources', this.data.resource).pipe(
+            tap((data: any) => {
+                this.data.resIds = [data.resId];
+            }),
+            exhaustMap(() => this.http.put(this.data.indexActionRoute, {resource : this.data.resIds[0], note : this.noteEditor.getNoteContent()})),
+            tap(() => {
                 this.dialogRef.close('success');
-            }, (err: any) => {
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
                 this.notify.handleErrors(err);
-                this.loading = false;
-            });
+                return of(false);
+            })
+        ).subscribe()
+    } */
+
+    executeAction() {
+        this.http.put(this.data.processActionRoute, {resources : this.data.resIds, note : this.noteEditor.getNoteContent(), data : {send_date : (this.acknowledgementSendDate.getTime() / 1000).toString()}}).pipe(
+            tap(() => {
+                this.dialogRef.close('success');
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 }

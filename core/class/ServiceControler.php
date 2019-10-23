@@ -108,8 +108,8 @@ class ServiceControler
 	{
 		$services = array();
 		
-		// #TODO : Au lieu de partir des services, partir plutot des groupes de l'utilisateur et récuperer tous les services 
-		// associés aux groupes
+		// #TODO : Au lieu de partir des services, partir plutot des groupes de l'utilisateur et rï¿½cuperer tous les services 
+		// associÃ©s aux groupes
 		if($user_id == "superadmin")
 		{
 			$services = self::getAllServices();
@@ -126,11 +126,11 @@ class ServiceControler
 			}
 			$ugc = new usergroups_controler();
 			self::connect();
+			$userUse = \User\models\UserModel::getByLogin(['login' => $user_id, 'select' => ['id']]);
 			$stmt = self::$db->query(
 				'select distinct us.service_id from ' . USERGROUPS_SERVICES_TABLE
-				. ' us, ' . USERGROUP_CONTENT_TABLE 
-				. " uc where us.group_id = uc.group_id and uc.user_id = ?", 
-				array($user_id)
+				. ' us, usergroup_content uc, usergroups where us.group_id = usergroups.group_id and usergroups.id = uc.group_id and uc.user_id = ?',
+				array($userUse['id'])
 			);
 			
 			while($res = $stmt->fetchObject()) {

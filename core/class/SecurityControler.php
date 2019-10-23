@@ -403,19 +403,19 @@ class SecurityControler
     */
     public function process_where_clause($whereClause, $userId)
     {
+        if (preg_match('/@user_id/', $whereClause)) {
+            $user = \User\models\UserModel::getByLogin(['login' => $userId, 'select' => ['id']]);
+            $whereClause = str_replace('@user_id', "{$user['id']}", $whereClause);
+        }
         if (preg_match('/@user/', $whereClause)) {
             $whereClause = str_replace(
                 "@user", "'" . trim($userId) . "'", $whereClause
             );
         }
-        $db = new Database();
-        
-        $query = "select mail from " . USERS_TABLE . " where user_id = ?";
-        $stmt = $db->query($query, array($userId));
-        $userObj = $stmt->fetchObject();
         if (preg_match('/@email/', $whereClause)) {
+            $user = \User\models\UserModel::getByLogin(['login' => $userId, 'select' => ['mail']]);
             $whereClause = str_replace(
-                "@email", "'" . trim($userObj->mail) . "'", $whereClause
+                "@email", "'" . trim($user['mail']) . "'", $whereClause
             );
         }
         return $whereClause;

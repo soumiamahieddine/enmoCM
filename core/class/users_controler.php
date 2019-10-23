@@ -175,7 +175,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     
     /**
     * Returns in an array all the groups associated with a user (user_id,
-    * group_id, primary_group and role)
+    * group_id and role)
     *
     * @param  $userId string  User identifier
     * @return Array or null
@@ -187,12 +187,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             return null;
         }
         self::$db = new Database();
-        $func = new functions();
-        $query = 'select uc.group_id, uc.primary_group, uc.role from '
-               . USERGROUP_CONTENT_TABLE . ' uc, ' . USERGROUPS_TABLE
-               . " u where uc.user_id = ? and uc.group_id = u.group_id ";
+        $userUse = \User\models\UserModel::getByLogin(['login' => $userId, 'select' => ['id']]);
+
+        $query = 'select u.group_id, uc.role from usergroup_content uc, usergroups u where uc.user_id = ? and uc.group_id = u.id ';
         try {
-            $stmt = self::$db->query($query, array($userId));
+            $stmt = self::$db->query($query, array($userUse['id']));
         } catch (Exception $e){
             echo _NO_USER_WITH_ID.' '.functions::xssafe($userId).' // ';
         }
@@ -202,7 +201,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                 array(
                     'USER_ID' => $userId,
                     'GROUP_ID' => $res->group_id,
-                    'PRIMARY' => $res->primary_group,
                     'ROLE' => $res->role,
                 )
             );
@@ -270,12 +268,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $control = self::_control($user, $groups, $mode, $params);
 
         if ($control['status'] == 'ok') {
-            if (! isset($params['manageGroups']) 
-                || $params['manageGroups'] == true
-            ) {
-                self::cleanUsergroupContent($user->user_id);
-                self::loadDbUsergroupContent($user->user_id, $groups);
-            }
             $core = new core_tools();
 
             $_SESSION['service_tag'] = 'user_' . $mode;
@@ -433,20 +425,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 
         $user->mail = $f->wash($user->mail, 'mail', _MAIL, 'yes', 0, 255);
 
-        if ($user->user_id <> 'superadmin' && (! isset($params['manageGroups']) 
-            || $params['manageGroups'] == true)
-        ) {
-            $primarySet = false;
-            for ($i = 0; $i < count($groups); $i ++) {
-                if ($groups[$i]['PRIMARY'] == 'Y') {
-                    $primarySet = true;
-                    break;
-                }
-            }
-            if ($primarySet == false) {
-                $error .= _PRIMARY_GROUP . ' ' . _MANDATORY . '. ';
-            }
-        }
 
         $_SESSION['service_tag'] = 'user_check';
         $core = new core_tools();
@@ -497,158 +475,10 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         return self::advanced_update($user);
     }
 
-    /**
-    * Deletes in the database (users related tables) a given user (user_id)
-    *
-    * @param  $user User Object
-    * @return bool true if the deletion is complete, false otherwise
-    */
-    public function delete($user, $params=array())
+    public function delete($user, $params = array())
     {
-        $core_tools = new core_tools();
-        
-        $control = array();
-        if (! isset($user) || empty($user)) {
-            $control = array(
-                'status' => 'ko',
-                'value'  => '',
-                'error'  => _USER_EMPTY,
-            );
-            return $control;
-        }
-        $user = self::_isAUser($user);
-        if (! self::userExists($user->user_id)) {
-            $control = array(
-                'status' => 'ko',
-                'value'  => '',
-                'error'  => _USER_NOT_EXISTS,
-            );
-            return $control;
-        }
-
-        self::$db = new Database();
-        
-        $func = new functions();
-        $query = 'update ' . USERS_TABLE . " set status = 'DEL' where user_id=?";
-
-        try{
-            $stmt = self::$db->query($query, array($user->user_id));
-            $ok = true;
-        } catch (Exception $e){
-            $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _CANNOT_DELETE_USER_ID . ' ' . $user->user_id,
-            );
-            $ok = false;
-        }
-        
-        if ($ok) {
-            $control = self::cleanUsergroupContent($user->user_id);
-            $control = self::cleanUserentityContent($user->user_id);
-
-            if ($core_tools->is_module_loaded('entities')){
-                $listModels = new users_entities();
-                $listModels->cleanListModelsContent($user->user_id);
-            }
-        }
-
-        if ($control['status'] == 'ok') {
-            if (isset($params['log_user_del'])
-                && ($params['log_user_del'] == "true"
-                    || $params['log_user_del'] == true)
-            ) {
-                $history = new history();
-                $history->add(
-                    USERS_TABLE, $user->user_id, 'DEL', 'usersdel',
-                    _DELETED_USER . ' : ' . $user->lastname . ' '
-                    . $user->firstname . ' (' . $user->user_id . ')',
-                    $params['databasetype']
-                );
-            }
-        }
-        return $control;
     }
 
-    /**
-    * Cleans the usergroup_content table in the database from a given user
-    *   (user_id)
-    *
-    * @param  $userId string  User identifier
-    * @return bool true if the cleaning is complete, false otherwise
-    */
-    public function cleanUsergroupContent($userId)
-    {
-        $control = array();
-        if (! isset($userId) || empty($userId)) {
-            $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _USER_ID_EMPTY,
-            );
-            return $control;
-        }
-
-        self::$db = new Database();
-        
-        $func = new functions();
-        $query = 'delete from ' . USERGROUP_CONTENT_TABLE . " where user_id=?";
-        try{
-            $stmt = self::$db->query($query, array($userId));
-            $control = array(
-                'status' => 'ok',
-                'value'  => $userId,
-            );
-        } catch (Exception $e){
-            $control = array(
-                'status' => 'ko',
-                'value'  => '',
-                'error'  => _CANNOT_CLEAN_USERGROUP_CONTENT . ' ' . $userId,
-            );
-        }
-        
-        return $control;
-    }
-
-    /**
-    * Cleans the users_entities table in the database from a given user
-    *   (user_id)
-    *
-    * @param  $userId string  User identifier
-    * @return bool true if the cleaning is complete, false otherwise
-    */
-    public function cleanUserentityContent($userId)
-    {
-        $control = array();
-        if (! isset($userId) || empty($userId)) {
-            $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _USER_ID_EMPTY,
-            );
-            return $control;
-        }
-
-        self::$db = new Database();
-        
-        $func = new functions();
-        $query = "delete from users_entities where user_id=?";
-        try{
-            $stmt = self::$db->query($query, array($userId));
-            $control = array(
-                'status' => 'ok',
-                'value'  => $userId,
-            );
-        } catch (Exception $e){
-            $control = array(
-                'status' => 'ko',
-                'value'  => '',
-                'error'  => _CANNOT_CLEAN_USERENTITY_CONTENT . ' ' . $userId,
-            );
-        }
-        
-        return $control;
-    }
     /**
     * Asserts if a given user (user_id) exists in the database
     *
@@ -772,51 +602,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         return $control;
     }
 
-    /**
-    * Loads into the usergroup_content table the given data for a given user
-    *
-    * @param  $userId String User identifier
-    * @param  $array Array
-    * @return bool true if the loadng is complete, false otherwise
-    */
-    public function loadDbUsergroupContent($userId, $array)
-    {
-        if (! isset($userId) || empty($userId)) {
-            return false;
-        }
-        if (! isset($array) || count($array) == 0) {
-            return false;
-        }
-        self::$db = new Database();
-        
-        $func = new functions();
-        $ok = true;
-        for ($i = 0; $i < count($array); $i ++) {
-            if ($ok) {
-                $query = 'insert INTO ' . USERGROUP_CONTENT_TABLE
-                       . " (user_id, group_id, primary_group, role) VALUES (?, ?, ?, ?)";
-                try{
-                    $stmt = self::$db->query(
-                        $query,
-                        array(
-                            $userId,
-                            $array[$i]['GROUP_ID'],
-                            $array[$i]['PRIMARY'],
-                            $array[$i]['ROLE'],
-                        )
-                    );
-                    $ok = true;
-                } catch (Exception $e){
-                    $ok = false;
-                }
-            } else {
-                break;
-            }
-        }
-
-        return $ok;
-    }
-    
     public function changePassword($userId, $newPassword)
     {
         if (! isset($userId) || empty($userId) || ! isset($newPassword) 

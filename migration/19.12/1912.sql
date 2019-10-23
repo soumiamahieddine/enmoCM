@@ -232,21 +232,6 @@ DO $$ BEGIN
 END$$;
 
 
-/* RES_LETTERBOX */
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS model_id;
-ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
-DO $$ BEGIN
-    IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_letterbox' and column_name = 'typist' and data_type != 'integer') THEN
-        ALTER TABLE res_letterbox ADD COLUMN typist_tmp integer;
-        UPDATE res_letterbox set typist_tmp = (select id FROM users where users.user_id = res_letterbox.typist);
-        UPDATE res_letterbox set typist_tmp = 0 WHERE typist_tmp IS NULL;
-        ALTER TABLE res_letterbox ALTER COLUMN typist_tmp set not null;
-        ALTER TABLE res_letterbox DROP COLUMN IF EXISTS typist;
-        ALTER TABLE res_letterbox RENAME COLUMN typist_tmp TO typist;
-    END IF;
-END$$;
-
-
 /* MLB COLL EXT */
 DO $$ BEGIN
     IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'category_id') = 0 THEN
@@ -296,6 +281,51 @@ DO $$ BEGIN
 
         ALTER TABLE res_letterbox ADD COLUMN alarm2_date timestamp without time zone;
         UPDATE res_letterbox SET alarm2_date = mlb_coll_ext.alarm2_date FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id;
+    END IF;
+END$$;
+
+
+/* RES_LETTERBOX */
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS model_id;
+ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
+UPDATE res_letterbox set model_id = 2 WHERE category_id = 'outgoing';
+UPDATE res_letterbox set model_id = 3 WHERE category_id = 'internal';
+UPDATE res_letterbox set model_id = 4 WHERE category_id = 'ged_doc';
+UPDATE res_letterbox set model_id = 1 WHERE model_id IS NULL;
+ALTER TABLE res_letterbox ALTER COLUMN model_id set not null;
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'res_letterbox' and column_name = 'typist' and data_type != 'integer') THEN
+        ALTER TABLE res_letterbox ADD COLUMN typist_tmp integer;
+        UPDATE res_letterbox set typist_tmp = (select id FROM users where users.user_id = res_letterbox.typist);
+        UPDATE res_letterbox set typist_tmp = 0 WHERE typist_tmp IS NULL;
+        ALTER TABLE res_letterbox ALTER COLUMN typist_tmp set not null;
+        ALTER TABLE res_letterbox DROP COLUMN IF EXISTS typist;
+        ALTER TABLE res_letterbox RENAME COLUMN typist_tmp TO typist;
+        UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'typist(\s*)=(\s*)@user', 'typist = @user_id', 'gmi');
+        UPDATE security SET where_clause = REGEXP_REPLACE(where_clause, 'typist(\s*)=(\s*)@user', 'typist = @user_id', 'gmi');
+    END IF;
+END$$;
+
+
+/* USERGROUP_CONTENT */
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'usergroup_content' and column_name = 'user_id' and data_type != 'integer') THEN
+        ALTER TABLE usergroup_content ADD COLUMN user_id_tmp integer;
+        UPDATE usergroup_content set user_id_tmp = (select id FROM users where users.user_id = usergroup_content.user_id);
+        DELETE FROM usergroup_content WHERE user_id_tmp IS NULL;
+        ALTER TABLE usergroup_content ALTER COLUMN user_id_tmp set not null;
+        ALTER TABLE usergroup_content DROP COLUMN IF EXISTS user_id;
+        ALTER TABLE usergroup_content RENAME COLUMN user_id_tmp TO user_id;
+    END IF;
+END$$;
+DO $$ BEGIN
+    IF (SELECT count(column_name) from information_schema.columns where table_name = 'usergroup_content' and column_name = 'group_id' and data_type != 'integer') THEN
+        ALTER TABLE usergroup_content ADD COLUMN group_id_tmp integer;
+        UPDATE usergroup_content set group_id_tmp = (select id FROM usergroups where usergroups.group_id = usergroup_content.group_id);
+        DELETE FROM usergroup_content WHERE group_id_tmp IS NULL;
+        ALTER TABLE usergroup_content ALTER COLUMN group_id_tmp set not null;
+        ALTER TABLE usergroup_content DROP COLUMN IF EXISTS group_id;
+        ALTER TABLE usergroup_content RENAME COLUMN group_id_tmp TO group_id;
     END IF;
 END$$;
 
@@ -359,6 +389,9 @@ WHERE service_id = 'edit_recipient_outside_process' OR service_id = 'update_diff
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
 DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
+UPDATE listmodels SET title = object_id WHERE title IS NULL;
+UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)AND', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
+UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)and', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
 
 
 /* REFACTORING MODIFICATION */
@@ -366,6 +399,9 @@ ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;
 ALTER TABLE tags ALTER COLUMN label TYPE character varying(128);
 UPDATE priorities SET delays = 30 WHERE delays IS NULL;
 ALTER TABLE priorities ALTER COLUMN delays SET NOT NULL;
+ALTER TABLE res_letterbox ALTER COLUMN status DROP NOT NULL;
+ALTER TABLE res_letterbox ALTER COLUMN docserver_id DROP NOT NULL;
+ALTER TABLE res_letterbox ALTER COLUMN format DROP NOT NULL;
 
 
 /* REFACTORING SUPPRESSION */
@@ -425,124 +461,10 @@ ALTER TABLE listinstance DROP COLUMN IF EXISTS coll_id;
 ALTER TABLE listinstance DROP COLUMN IF EXISTS listinstance_type;
 ALTER TABLE listinstance DROP COLUMN IF EXISTS visible;
 ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_entity;
-
+ALTER TABLE usergroup_content DROP COLUMN IF EXISTS primary_group;
 
 
 /* RE CREATE VIEWS */
-CREATE OR REPLACE VIEW res_view_letterbox AS
-SELECT r.res_id,
-       r.type_id,
-       r.policy_id,
-       r.cycle_id,
-       d.description AS type_label,
-       d.doctypes_first_level_id,
-       dfl.doctypes_first_level_label,
-       dfl.css_style AS doctype_first_level_style,
-       d.doctypes_second_level_id,
-       dsl.doctypes_second_level_label,
-       dsl.css_style AS doctype_second_level_style,
-       r.format,
-       r.typist,
-       r.creation_date,
-       r.modification_date,
-       r.docserver_id,
-       r.path,
-       r.filename,
-       r.fingerprint,
-       r.filesize,
-       r.scan_date,
-       r.scan_user,
-       r.scan_location,
-       r.scan_wkstation,
-       r.scan_batch,
-       r.scan_postmark,
-       r.status,
-       r.work_batch,
-       r.doc_date,
-       r.reference_number,
-       r.external_reference,
-       r.external_id,
-       r.external_link,
-       r.departure_date,
-       r.opinion_limit_date,
-       r.department_number_id,
-       r.barcode,
-       r.external_signatory_book_id,
-       r.custom_t1 AS doc_custom_t1,
-       r.custom_t2 AS doc_custom_t2,
-       r.custom_t3 AS doc_custom_t3,
-       r.custom_t4 AS doc_custom_t4,
-       r.custom_t5 AS doc_custom_t5,
-       r.custom_t6 AS doc_custom_t6,
-       r.custom_t7 AS doc_custom_t7,
-       r.custom_t8 AS doc_custom_t8,
-       r.custom_t9 AS doc_custom_t9,
-       r.custom_t10 AS doc_custom_t10,
-       r.custom_t11 AS doc_custom_t11,
-       r.custom_t12 AS doc_custom_t12,
-       r.custom_t13 AS doc_custom_t13,
-       r.custom_t14 AS doc_custom_t14,
-       r.custom_t15 AS doc_custom_t15,
-       r.custom_d1 AS doc_custom_d1,
-       r.custom_d2 AS doc_custom_d2,
-       r.custom_d3 AS doc_custom_d3,
-       r.custom_d4 AS doc_custom_d4,
-       r.custom_d5 AS doc_custom_d5,
-       r.custom_d6 AS doc_custom_d6,
-       r.custom_d7 AS doc_custom_d7,
-       r.custom_d8 AS doc_custom_d8,
-       r.custom_d9 AS doc_custom_d9,
-       r.custom_d10 AS doc_custom_d10,
-       r.custom_n1 AS doc_custom_n1,
-       r.custom_n2 AS doc_custom_n2,
-       r.custom_n3 AS doc_custom_n3,
-       r.custom_n4 AS doc_custom_n4,
-       r.custom_n5 AS doc_custom_n5,
-       r.custom_f1 AS doc_custom_f1,
-       r.custom_f2 AS doc_custom_f2,
-       r.custom_f3 AS doc_custom_f3,
-       r.custom_f4 AS doc_custom_f4,
-       r.custom_f5 AS doc_custom_f5,
-       r.initiator,
-       r.destination,
-       r.dest_user,
-       r.confidentiality,
-       r.category_id,
-       r.exp_contact_id,
-       r.exp_user_id,
-       r.dest_user_id,
-       r.dest_contact_id,
-       r.address_id,
-       r.alt_identifier,
-       r.admission_date,
-       r.process_limit_date,
-       r.closing_date,
-       r.alarm1_date,
-       r.alarm2_date,
-       r.flag_alarm1,
-       r.flag_alarm2,
-       r.is_multicontacts,
-       r.subject,
-       r.priority,
-       r.locker_user_id,
-       r.locker_time,
-       en.entity_label,
-       en.entity_type AS entitytype,
-       cont.contact_id,
-       cont.firstname AS contact_firstname,
-       cont.lastname AS contact_lastname,
-       cont.society AS contact_society,
-       u.lastname AS user_lastname,
-       u.firstname AS user_firstname
-FROM doctypes d,
-     doctypes_first_level dfl,
-     doctypes_second_level dsl,
-     res_letterbox r
-         LEFT JOIN entities en ON r.destination::text = en.entity_id::text
-         LEFT JOIN contacts_v2 cont ON r.exp_contact_id = cont.contact_id OR r.dest_contact_id = cont.contact_id
-         LEFT JOIN users u ON r.exp_user_id::text = u.user_id::text OR r.dest_user_id::text = u.user_id::text
-WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
-
 CREATE VIEW res_view_attachments AS
   SELECT '0' as res_id, res_id as res_id_version, title, subject, description, type_id, format, typist,
   creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, path,
