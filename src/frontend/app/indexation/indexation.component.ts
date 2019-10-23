@@ -62,7 +62,7 @@ export class IndexationComponent implements OnInit {
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
         public appService: AppService,
-        private actionService: ActionsService,
+        public actionService: ActionsService,
         private router: Router
     ) {
 
@@ -138,9 +138,9 @@ export class IndexationComponent implements OnInit {
         if (this.indexingForm.isValidForm()) {
             const formatdatas = this.formatDatas(this.indexingForm.getDatas());
 
-            // TO DO : WAIT DECISION
+            formatdatas['chrono'] = true;
             formatdatas['encodedFile'] = this.appDocumentViewer.getFile().content;
-            formatdatas['format'] = 'pdf';
+            formatdatas['format'] = this.appDocumentViewer.getFile().format;
 
             console.log(formatdatas['encodedFile']);
 
