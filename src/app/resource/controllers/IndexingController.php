@@ -116,7 +116,7 @@ class IndexingController
             return $response->withStatus(400)->withJson(['errors' => 'Param groupId must be an integer val']);
         }
 
-        $indexingParameters = IndexingController::getIndexingParameters(['login' => $GLOBALS['userId'], 'groupId' => $args['groupId']]);
+        $indexingParameters = IndexingController::getIndexingParameters(['userId' => $GLOBALS['id'], 'groupId' => $args['groupId']]);
         if (!empty($indexingParameters['errors'])) {
             return $response->withStatus(403)->withJson($indexingParameters);
         }
