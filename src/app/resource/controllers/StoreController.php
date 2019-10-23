@@ -121,7 +121,6 @@ class StoreController
             $args['typist'] = $GLOBALS['id'];
         }
 
-
         if (!empty($args['initiator'])) {
             $entity = EntityModel::getById(['id' => $args['initiator'], 'select' => ['entity_id']]);
             $args['initiator'] = $entity['entity_id'];

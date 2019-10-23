@@ -708,7 +708,7 @@ class ResController
                     'res_id'            => $args['resId'],
                     'sequence'          => 0,
                     'item_id'           => $diffusion['id'],
-                    'item_type'         => $diffusion['type'],
+                    'item_type'         => $diffusion['type'] == 'user' ? 'user_id' : 'entity_id',
                     'item_mode'         => $diffusion['mode'],
                     'added_by_user'     => $GLOBALS['userId'],
                     'difflist_type'     => 'entity_id'
@@ -859,25 +859,25 @@ class ResController
         }
         if (!empty($body['diffusionList'])) {
             if (!Validator::arrayType()->notEmpty()->validate($body['diffusionList'])) {
-                return ['errors' => 'Body diffusion is not an array'];
+                return ['errors' => 'Body diffusionList is not an array'];
             }
             $destFound = false;
             foreach ($body['diffusionList'] as $key => $diffusion) {
                 if ($diffusion['mode'] == 'dest') {
                     if ($destFound) {
-                        return ['errors' => "Body diffusion has multiple dest"];
+                        return ['errors' => "Body diffusionList has multiple dest"];
                     }
                     $destFound = true;
                 }
-                if ($diffusion['type'] == 'user_id' || $diffusion['mode'] == 'dest') {
+                if ($diffusion['type'] == 'user' || $diffusion['mode'] == 'dest') {
                     $user = UserModel::getByLogin(['login' => $diffusion['id'], 'select' => [1]]);
                     if (empty($user)) {
-                        return ['errors' => "Body diffusion[{$key}] id does not exist"];
+                        return ['errors' => "Body diffusionList[{$key}] id does not exist"];
                     }
                 } else {
                     $entity = EntityModel::getByEntityId(['entityId' => $diffusion['id'], 'select' => [1]]);
                     if (empty($entity)) {
-                        return ['errors' => "Body diffusion[{$key}] id does not exist"];
+                        return ['errors' => "Body diffusionList[{$key}] id does not exist"];
                     }
                 }
             }
