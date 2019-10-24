@@ -16,3 +16,4 @@ php ./migrateCategories.php
 php ./migrateOldIndexingModels.php
 php ./migrateWorkingDays.php
 php ./migrateExtensions.php
+php ./migrateM2MConfiguration.php

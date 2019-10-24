@@ -206,7 +206,7 @@ abstract class BasketModelAbstract
                 $data[]  = $aArgs['unneededBasketId'];
             }
             $aBaskets = DatabaseModel::select([
-                    'select'    => ['usergroups.id as groupSerialId', 'groupbasket.basket_id', 'groupbasket.group_id', 'basket_name', 'basket_desc', 'basket_clause', 'usergroups.group_desc'],
+                    'select'    => ['usergroups.id as groupSerialId', 'groupbasket.basket_id', 'baskets.id', 'groupbasket.group_id', 'basket_name', 'basket_desc', 'basket_clause', 'usergroups.group_desc'],
                     'table'     => ['groupbasket, baskets, usergroups'],
                     'where'     => $where,
                     'data'      => $data,
