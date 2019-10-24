@@ -404,7 +404,7 @@ export class IndexingFormComponent implements OnInit {
                             elem.event = 'setPriorityColorByLimitDate';
 
                         } else if (elem.identifier === 'departureDate') {
-                            elem.startDate = '_TODAY';
+                            elem.startDate = 'documentDate';
                             elem.endDate = '';
 
                         } else if (elem.identifier === 'folders') {
