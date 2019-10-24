@@ -15,7 +15,7 @@ class ResControllerTest extends TestCase
 
     public function testCreate()
     {
-        $GLOBALS['userId'] = 'bbain';
+        $GLOBALS['userId'] = 'cchaplin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
 
@@ -29,14 +29,19 @@ class ResControllerTest extends TestCase
         $encodedFile = base64_encode($fileContent);
 
         $aArgs = [
+            'modelId'       => 1,
             'status'        => 'NEW',
             'encodedFile'   => $encodedFile,
             'format'        => 'txt',
-            'type_id'       => 102,
-            'category_id'   => 'incoming',
+            'confidential'  => false,
+            'documentDate'  => '2019-01-01 17:18:47',
+            'arrivalDate'   => '2019-01-01 17:18:47',
+            'processLimitDate'  => '2029-01-01',
+            'doctype'       => 102,
+            'destination'   => 15,
+            'initiator'     => 15,
             'subject'       => 'Breaking News : Superman is alive - PHP unit',
             'typist'        => 19,
-            'dest_user'     => 'bbain',
             'priority'      => 'poiuytre1357nbvc',
         ];
 
@@ -48,18 +53,17 @@ class ResControllerTest extends TestCase
         $this->assertInternalType('int', self::$id);
 
         //  READ
-        $res = \Resource\models\ResModel::getById(['resId' => self::$id]);
+        $res = \Resource\models\ResModel::getById(['resId' => self::$id, 'select' => ['*']]);
 
         $this->assertInternalType('array', $res);
 
         $this->assertSame('Breaking News : Superman is alive - PHP unit', $res['subject']);
-        $this->assertSame(null, $res['title']);
-        $this->assertSame(null, $res['description']);
         $this->assertSame(102, $res['type_id']);
         $this->assertSame('txt', $res['format']);
         $this->assertSame('NEW', $res['status']);
         $this->assertSame(19, $res['typist']);
-        $this->assertSame(null, $res['destination']);
+        $this->assertNotNull($res['destination']);
+        $this->assertNotNull($res['initiator']);
 
         $GLOBALS['userId'] = 'superadmin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
@@ -81,7 +85,7 @@ class ResControllerTest extends TestCase
         $response     = $resController->getFileContent($request, new \Slim\Http\Response(), ['resId' => -2]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('Document out of perimeter', $responseBody->errors);
+        $this->assertSame('Document does not exist', $responseBody->errors);
     }
 
     public function testGetThumbnailContent()
@@ -99,7 +103,7 @@ class ResControllerTest extends TestCase
         $response     = $resController->getThumbnailContent($request, new \Slim\Http\Response(), ['resId' => -2]);
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame(null, $responseBody);
+        $this->assertSame('Document does not exist', $responseBody->errors);
     }
 
     public function testUpdateStatus()
@@ -121,7 +125,7 @@ class ResControllerTest extends TestCase
         $this->assertSame('success', $responseBody->success);
 
         //  READ
-        $res = \Resource\models\ResModel::getById(['resId' => self::$id]);
+        $res = \Resource\models\ResModel::getById(['resId' => self::$id, 'select' => ['*']]);
         $this->assertInternalType('array', $res);
         $this->assertSame('EVIS', $res['status']);
 
@@ -141,7 +145,7 @@ class ResControllerTest extends TestCase
         $this->assertSame('success', $responseBody->success);
 
         //  READ
-        $res = \Resource\models\ResModel::getById(['resId' => self::$id]);
+        $res = \Resource\models\ResModel::getById(['resId' => self::$id, 'select' => ['*']]);
         $this->assertInternalType('array', $res);
         $this->assertSame('COU', $res['status']);
     }
@@ -320,14 +324,14 @@ class ResControllerTest extends TestCase
         \Resource\models\ResModel::delete(['resId' => self::$id]);
 
         //  READ
-        $res = \Resource\models\ResModel::getById(['resId' => self::$id]);
+        $res = \Resource\models\ResModel::getById(['resId' => self::$id, 'select' => ['*']]);
         $this->assertInternalType('array', $res);
         $this->assertSame('DEL', $res['status']);
     }
 
     public function testCreateMultipleDocument()
     {
-        $GLOBALS['userId'] = 'bbain';
+        $GLOBALS['userId'] = 'cchaplin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
 
@@ -354,23 +358,25 @@ class ResControllerTest extends TestCase
         foreach ($aNewDocument as $key => $value) {
             $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
             $request        = \Slim\Http\Request::createFromEnvironment($environment);
-    
+
             $fileContent = file_get_contents('test/unitTests/samples/test.txt');
             $encodedFile = base64_encode($fileContent);
-    
             $aArgs = [
+                'modelId'       => 1,
                 'status'        => $value[2],
                 'encodedFile'   => $encodedFile,
                 'format'        => 'txt',
-                'type_id'       => $value[0],
-                'category_id'   => 'incoming',
-                'subject'       => $key . ' Breaking News : 12345 Superman is alive - PHP unit',
-                'typist'        => 19,
-                'dest_user'     => 'bbain',
-                'priority'      => $value[1],
-                'destination'   => 'PJS'
+                'confidential'  => false,
+                'documentDate'  => '2019-01-01 17:18:47',
+                'arrivalDate'   => '2019-01-01 17:18:47',
+                'processLimitDate'  => '2029-01-01',
+                'doctype'       => $value[0],
+                'destination'   => 15,
+                'initiator'     => 15,
+                'subject'       => $key .' Breaking News : Superman is alive - PHP unit',
+                'typist'        => 19
             ];
-    
+
             $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
             $response     = $resController->create($fullRequest, new \Slim\Http\Response());
             $responseBody = json_decode((string)$response->getBody());

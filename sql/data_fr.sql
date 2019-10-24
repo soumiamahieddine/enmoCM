@@ -38,6 +38,9 @@ INSERT INTO usergroups (group_id,group_desc) VALUES ('MAARCHTOGEC', 'Envoi déma
 DELETE FROM usergroups WHERE group_id = 'SERVICE';
 DELETE FROM usergroups_services WHERE group_id = 'SERVICE';
 INSERT INTO usergroups (group_id,group_desc) VALUES ('SERVICE', 'Service');
+DELETE FROM usergroups WHERE group_id = 'WEBSERVICE';
+DELETE FROM usergroups_services WHERE group_id = 'WEBSERVICE';
+INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('WEBSERVICE', 'Utilisateurs de WebService', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'search_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'my_contacts');
@@ -858,6 +861,7 @@ DELETE FROM users WHERE user_id = 'cchaplin';
 INSERT INTO users (user_id, password, firstname, lastname, mail, change_password, status, loginmode) VALUES ('cchaplin', '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', 'Charlie', 'CHAPLIN', 'support@maarch.fr', 'N', 'OK', 'restMode');
 DELETE FROM usergroup_content WHERE user_id = 24;
 INSERT INTO usergroup_content (user_id, group_id, role) VALUES (24, 11, '');
+INSERT INTO usergroup_content (user_id, group_id, role) VALUES (24, 13, '');
 
 ------------
 -- CONTACTS

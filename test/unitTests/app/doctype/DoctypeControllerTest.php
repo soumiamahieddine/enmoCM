@@ -542,7 +542,7 @@ class DoctypeControllerTest extends TestCase
         $resController = new \Resource\controllers\ResController();
 
         //  CREATE RESOURCE
-        $GLOBALS['userId'] = 'bbain';
+        $GLOBALS['userId'] = 'cchaplin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
 
@@ -553,12 +553,20 @@ class DoctypeControllerTest extends TestCase
         $encodedFile = base64_encode($fileContent);
 
         $aArgs = [
+            'modelId'       => 1,
             'status'        => 'NEW',
             'encodedFile'   => $encodedFile,
             'format'        => 'txt',
-            'type_id'       => $doctypeId,
-            'category_id'   => 'incoming',
-            'subject'       => 'subject value test U'
+            'confidential'  => false,
+            'documentDate'  => '2019-01-01 17:18:47',
+            'arrivalDate'   => '2019-01-01 17:18:47',
+            'processLimitDate'  => '2029-01-01',
+            'doctype'       => $doctypeId,
+            'destination'   => 15,
+            'initiator'     => 15,
+            'subject'       => 'Breaking News : Aquaman is a fish - PHP unit',
+            'typist'        => 19,
+            'priority'      => 'poiuytre1357nbvc',
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
