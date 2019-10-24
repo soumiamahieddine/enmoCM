@@ -116,7 +116,7 @@ export class ActionsListComponent implements OnInit {
                     } else {
                         this.actionsList = [{
                             id: 0,
-                            label_action: this.lang.noAction,
+                            label: this.lang.noAction,
                             component: ''
                         }];
                     }

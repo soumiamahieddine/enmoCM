@@ -104,7 +104,7 @@ export class FolderMenuComponent implements OnInit {
             exhaustMap(() => this.http.request('DELETE', '../../rest/folders/' + folder.id + '/resources', { body: { resources: this.resIds } })),
             tap((data: any) => {
                 this.notify.success(this.lang.removedFromFolder);
-                this.refreshFolders.emit();
+                this.foldersService.getPinnedFolders();
                 this.refreshList.emit();
             })
         ).subscribe();
