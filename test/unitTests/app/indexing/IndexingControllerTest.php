@@ -14,6 +14,8 @@ class IndexingControllerTest extends TestCase
     public function testGetIndexingActions()
     {
         $GLOBALS['userId'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
 
         $indexingController = new \Resource\controllers\IndexingController();
 
@@ -30,7 +32,7 @@ class IndexingControllerTest extends TestCase
         foreach ($responseBody->actions as $action) {
             $this->assertNotEmpty($action->id);
             $this->assertInternalType('int', $action->id);
-            $this->assertNotEmpty($action->label_action);
+            $this->assertNotEmpty($action->label);
             $this->assertNotEmpty($action->component);
         }
 
@@ -40,11 +42,15 @@ class IndexingControllerTest extends TestCase
         $this->assertSame('This user is not in this group', $responseBody->errors);
 
         $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
     }
 
     public function testGetIndexingEntities()
     {
         $GLOBALS['userId'] = 'bbain';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
 
         $indexingController = new \Resource\controllers\IndexingController();
 
@@ -71,5 +77,7 @@ class IndexingControllerTest extends TestCase
         $this->assertSame('This user is not in this group', $responseBody->errors);
 
         $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
     }
 }

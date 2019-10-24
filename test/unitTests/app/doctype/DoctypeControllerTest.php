@@ -460,10 +460,6 @@ class DoctypeControllerTest extends TestCase
         $this->assertSame(null, $responseBody->doctype->template_id);
         $this->assertSame('N', $responseBody->doctype->is_generated);
         $this->assertNotNull($responseBody->models);
-        $this->assertNotNull($responseBody->doctype->indexes);
-        $this->assertSame('custom_t1', $responseBody->doctype->indexes[0]->column);
-        $this->assertSame(true, $responseBody->doctype->indexes[0]->mandatory);
-        $this->assertSame(true, $responseBody->doctype->indexes[0]->use);
 
         // READ DOCTYPE FAIL
         $response          = $doctypeController->getById($request, new \Slim\Http\Response(), ["id" => 'GAZ']);
@@ -608,7 +604,7 @@ class DoctypeControllerTest extends TestCase
 
         $this->assertNotNull($responseBody->doctypeTree);
 
-        $res = \Resource\models\ResModel::getById(['resId' => $resId]);
+        $res = \Resource\models\ResModel::getById(['resId' => $resId, 'select' => ['*']]);
         $this->assertSame(self::$doctypeId, $res['type_id']);
 
         DatabaseModel::delete([

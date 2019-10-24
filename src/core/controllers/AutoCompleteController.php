@@ -379,7 +379,7 @@ class AutoCompleteController
             'where'         => [
                 'usergroups.group_id = usergroups_services.group_id',
                 'usergroups.id = usergroup_content.group_id',
-                'usergroup_content.user_id = users.user_id',
+                'usergroup_content.user_id = users.id',
                 'usergroups_services.service_id in (?)',
                 'users.user_id not in (?)',
                 'users.status not in (?)'

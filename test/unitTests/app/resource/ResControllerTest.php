@@ -374,7 +374,8 @@ class ResControllerTest extends TestCase
                 'destination'   => 15,
                 'initiator'     => 15,
                 'subject'       => $key .' Breaking News : Superman is alive - PHP unit',
-                'typist'        => 19
+                'typist'        => 19,
+                'diffusionList' => [['id' => 'bbain', 'type' => 'user', 'mode' => 'dest']]
             ];
 
             $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
