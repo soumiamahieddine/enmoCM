@@ -505,16 +505,14 @@ abstract class diffusion_list_Abstract extends functions
                 } else {
                     $stmt = $db->query(
                         'insert into '.ENT_LISTINSTANCE
-                            .' (res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_comment, signatory, requested_signature) '
+                            .' (res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_comment, signatory, requested_signature) '
                         .'values ('
                             .'?, ?, '
-                            ."'DOC', ?, "
                             .'?, '
                             ."'user_id' , "
                             .'?, '
                             .'?, '
                             .'?, ?, '
-                            .'?, '
                             .'?, '
                             .'?, '
                             .'?'
@@ -562,16 +560,14 @@ abstract class diffusion_list_Abstract extends functions
 
                 $stmt = $db->query(
                     'INSERT INTO '.ENT_LISTINSTANCE
-                        .' (res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type) '
+                        .' (res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type) '
                     .'VALUES ('
                         .'?, ?, '
-                        ."'DOC', ?, "
                         .'?, '
                         ."'entity_id' , "
                         .'?, '
                         .'?, '
-                        .'?,?, '
-                        .'?'
+                        .'?, ?'
                     .' )',
                     array($resId, $j, $entityId, $item_mode, $creatorUser, $viewed, $difflistType)
                 );
