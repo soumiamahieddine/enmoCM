@@ -59,8 +59,9 @@ export class ActionsService {
     }
 
     setActionInformations(action: any, userId: number, groupId: number, basketId: number, resIds: number[]) {
-
-        if (action !== null && userId > 0 && groupId > 0) {
+        if (action !== null && action.component === null) {
+            return false;
+        } else if (action !== null && userId > 0 && groupId > 0) {
             this.mode = basketId === null ? 'indexing' : 'process';
             this.currentAction = action;
             this.currentUserId = userId;
@@ -73,8 +74,6 @@ export class ActionsService {
 
             return true;
         } else {
-            let arrErr = [];
-
             console.log('Bad informations: ');
             console.log({ 'action': action }, { 'userId': userId }, { 'groupId': groupId }, { 'basketId': basketId }, { 'resIds': resIds });
 
@@ -128,7 +127,7 @@ export class ActionsService {
                         }
                         catch (error) {
                             console.log(error);
-                            console.log(action.component);
+                            console.log(action);
                             alert(this.lang.actionNotExist);
                         }
                     }

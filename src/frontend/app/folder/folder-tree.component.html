@@ -12,7 +12,7 @@
         </div>
     </div>
     <div *ngIf="dataSource.data.length === 0" class="noFolder">
-        {{lang.noAvailableFolder}}<br /><a (click)="createRoot()">{{lang.addFolder}}</a>
+        {{lang.noAvailableFolder}}
     </div>
     <mat-nav-list *ngIf="dataSource.data.length > 0">
         <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">

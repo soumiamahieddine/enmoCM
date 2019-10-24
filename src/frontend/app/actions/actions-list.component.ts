@@ -97,6 +97,7 @@ export class ActionsListComponent implements OnInit {
 
         if (row !== undefined) {
             this.contextMenuTitle = row.alt_identifier;
+            this.currentResource = row;
         }
 
         this.actionService.launchAction(action, this.currentBasketInfo.ownerId, this.currentBasketInfo.groupId, this.currentBasketInfo.basketId, this.selectedRes, this.currentResource);
