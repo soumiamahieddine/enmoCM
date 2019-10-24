@@ -369,12 +369,12 @@ class ResControllerTest extends TestCase
                 'confidential'  => false,
                 'documentDate'  => '2019-01-01 17:18:47',
                 'arrivalDate'   => '2019-01-01 17:18:47',
-                'processLimitDate'  => '2029-01-01',
                 'doctype'       => $value[0],
                 'destination'   => 15,
                 'initiator'     => 15,
-                'subject'       => $key .' Breaking News : Superman is alive - PHP unit',
+                'subject'       => $key .' Breaking News : 12345 Superman is alive - PHP unit',
                 'typist'        => 19,
+                'priority'      => $value[1],
                 'diffusionList' => [['id' => 'bbain', 'type' => 'user', 'mode' => 'dest']]
             ];
 

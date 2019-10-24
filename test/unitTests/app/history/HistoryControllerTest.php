@@ -84,7 +84,7 @@ class HistoryControllerTest extends TestCase
         foreach ($aResId as $value) {
             $aNewResId[] = $value['res_id'];
         }
-        
+
         //  REAL DELETE
         \SrcCore\models\DatabaseModel::delete([
             'table' => 'res_letterbox',
@@ -94,7 +94,7 @@ class HistoryControllerTest extends TestCase
 
         //  READ
         foreach ($aNewResId as $resId) {
-            $res = \Resource\models\ResModel::getById(['resId' => $resId]);
+            $res = \Resource\models\ResModel::getById(['resId' => $resId, 'select' => ['*']]);
             $this->assertInternalType('array', $res);
             $this->assertEmpty($res);
         }
