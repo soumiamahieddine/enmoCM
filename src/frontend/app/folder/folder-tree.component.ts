@@ -13,6 +13,8 @@ import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { Router } from '@angular/router';
 import { FolderUpdateComponent } from './folder-update/folder-update.component';
 import { FoldersService } from './folders.service';
+import { FormControl } from '@angular/forms';
+import { PluginAutocomplete } from '../../plugins/autocomplete/autocomplete.component';
 
 declare function $j(selector: any): any;
 /**
@@ -64,6 +66,10 @@ export class ItemFlatNode {
 export class FolderTreeComponent implements OnInit {
 
     lang: any = LANG;
+    loading: boolean = true;
+
+    searchTerm: FormControl = new FormControl();
+    
     TREE_DATA: any[] = [];
     dialogRef: MatDialogRef<any>;
     createRootNode: boolean = false;
@@ -72,6 +78,7 @@ export class FolderTreeComponent implements OnInit {
 
     @Input('selectedId') seletedId: number;
     @ViewChild('itemValue', { static: true }) itemValue: MatInput;
+    @ViewChild('autocomplete', { static: false }) autocomplete: PluginAutocomplete;
 
 
     get data(): ItemNode[] { return this.dataChange.value; }
@@ -136,6 +143,7 @@ export class FolderTreeComponent implements OnInit {
     getFolders() {
         this.http.get("../../rest/folders").pipe(
             map((data: any) => this.flatToNestedObject(data.folders)),
+            tap(() => this.loading = false),
             filter((data: any) => data.length > 0),
             tap((data) => this.initTree(data)),
             tap(() => {
@@ -273,9 +281,10 @@ export class FolderTreeComponent implements OnInit {
         ).subscribe();
     }
 
-    createRoot(value: any) {
-        this.http.post("../../rest/folders", { label: value }).pipe(
+    createRoot() {
+        this.http.post("../../rest/folders", { label: this.autocomplete.getValue() }).pipe(
             tap(() => {
+                this.autocomplete.resetValue();
                 this.getFolders();
             }),
             tap(() => this.notify.success(this.lang.folderAdded)),
@@ -393,15 +402,6 @@ export class FolderTreeComponent implements OnInit {
             return this.treeControl.dataNodes.map(node => 'folder-list-' + node.id);
         } else {
             return [];
-        }
-    }
-
-    toggleInput() {
-        this.createRootNode = !this.createRootNode;
-        if (this.createRootNode) {
-            setTimeout(() => {
-                this.renderer.selectRootElement('#itemValue').focus();
-            }, 0);
         }
     }
 

@@ -1190,4 +1190,12 @@ export const LANG_NL = {
     "badActionParam" : "Bad action parameter", //_TO_TRANSLATE
     "technicalId"    : "Technical identifier", //_TO_TRANSLATE
     "foldersTree" : "Folders tree", //_TO_TRANSLATE
+    "myPinnedFolder" : "My pinned folders", //_TO_TRANSLATE
+    "noPinnedFolder" : "No pinned folder", //_TO_TRANSLATE
+    "pinFolder" : "Pin folder", //_TO_TRANSLATE
+    "unpinFolder" : "Unpin folder", //_TO_TRANSLATE
+    "showFoldersTree" : "Show tree", //_TO_TRANSLATE
+    "hideFoldersTree" : "Hide tree", //_TO_TRANSLATE
+    "folderPinned" : "Folder pinned", //_TO_TRANSLATE  
+    "folderUnpinned" : "Folder unpinned", //_TO_TRANSLATE
 };

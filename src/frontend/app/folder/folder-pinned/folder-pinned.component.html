@@ -5,7 +5,7 @@
             [id]="'folder-list-'+folder.id" cdkDropListConnectedTo="['document-list','folder-list']"
             (cdkDropListDropped)="drop($event, folder)" (cdkDropListEntered)="dragEnter(folder)"
             (cdkDropListExited)="folder.drag=false">
-            <mat-icon mat-list-icon class="pinnedIcon" [title]="'Désépingler le dossier'"
+            <mat-icon mat-list-icon class="pinnedIcon" [title]="lang.unpinFolder"
                 (click)="$event.stopPropagation();foldersService.unpinFolder(folder)">
                 <i class="fa fa-thumbtack"></i>
             </mat-icon>
@@ -23,6 +23,6 @@
 </ng-container>
 <ng-template #elseTemplate>
     <div class="noPinnedFolder">
-        Aucun dossier épinglé
+        {{lang.noPinnedFolder}}
     </div>
 </ng-template>

@@ -18,9 +18,8 @@
         <mat-form-field floatLabel="never" appearance="outline" class="smallInput"  (click)="$event.stopPropagation();">
             <input matInput id="searchTerm" placeholder="{{lang.searchFolder}}" [formControl]="searchTerm" autocomplete="off" (click)="$event.stopPropagation();" (keydown)="$event.stopPropagation()">
         </mat-form-field>
-        <!--<plugin-autocomplete [labelPlaceholder]="lang.searchFolder" [size]="'small'"
-        [routeDatas]="['/rest/autocomplete/folders']" [targetSearchKey]="'idToDisplay'"
-        (triggerEvent)="classifyDocuments($event)"></plugin-autocomplete>-->
+        <button *ngIf="pinnedFolder" mat-menu-item class="noFolder"
+            disabled>{{lang.myPinnedFolder}}</button>
         <button *ngIf="foldersList.length === 0" mat-menu-item class="noFolder"
             disabled>{{lang.noAvailableFolder}}</button>
         <button mat-menu-item *ngFor="let folder of foldersList | sortBy : 'label'" class="labelFolder"

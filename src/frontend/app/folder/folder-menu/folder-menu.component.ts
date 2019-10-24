@@ -20,6 +20,7 @@ export class FolderMenuComponent implements OnInit {
     lang: any = LANG;
 
     foldersList: any[] = [];
+    pinnedFolder: boolean = true;
     @Input('resIds') resIds: number[];
     @Input('currentFolders') currentFoldersList: any[];
 
@@ -43,6 +44,7 @@ export class FolderMenuComponent implements OnInit {
             debounceTime(300),
             tap((value: any) => {
                 if (value.length === 0) {
+                    this.pinnedFolder = true;
                     this.getFolders();
                 }
             }),
@@ -50,6 +52,7 @@ export class FolderMenuComponent implements OnInit {
             distinctUntilChanged(),
             switchMap(data => this.http.get('../../rest/autocomplete/folders', { params: { "search": data } })),
             tap((data: any) => {
+                this.pinnedFolder = false;
                 this.foldersList = data.map(
                     (info: any) => {
                         return {

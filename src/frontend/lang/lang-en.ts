@@ -1164,4 +1164,12 @@ export const LANG_EN = {
     "badActionParam" : "Bad action parameter",
     "technicalId"    : "Technical identifier",
     "foldersTree" : "Folders tree",
+    "myPinnedFolder" : "My pinned folders",
+    "noPinnedFolder" : "No pinned folder", 
+    "pinFolder" : "Pin folder",    
+    "unpinFolder" : "Unpin folder", 
+    "showFoldersTree" : "Show tree",
+    "hideFoldersTree" : "Hide tree",
+    "folderPinned" : "Folder pinned",    
+    "folderUnpinned" : "Folder unpinned",
 };

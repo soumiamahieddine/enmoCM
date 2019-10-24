@@ -1201,4 +1201,12 @@ export const LANG_FR = {
     "badActionParam" : "Mauvais paramétrage de l'action",
     "technicalId"    : "Identifiant technique",
     "foldersTree" : "Arborescence des dossiers",    
+    "myPinnedFolder" : "Mes dossiers épinglés",    
+    "noPinnedFolder" : "Aucun dossier épinglé",    
+    "pinFolder" : "Épingler le dossier",    
+    "unpinFolder" : "Désépingler le dossier",    
+    "showFoldersTree" : "Voir l'arborescence",
+    "hideFoldersTree" : "Cacher l'arborescence",    
+    "folderPinned" : "Dossier épinglé",    
+    "folderUnpinned" : "Dossier retiré",    
 };

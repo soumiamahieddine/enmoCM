@@ -83,7 +83,7 @@ export class FoldersService {
             exhaustMap(() => this.http.post(`../../rest/folders/${folder.id}/pin`, {})),
             tap(() => {
                 this.getPinnedFolders();
-                this.notify.success('Dossier Épinglé');
+                this.notify.success(this.lang.folderPinned);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
@@ -100,7 +100,7 @@ export class FoldersService {
             exhaustMap(() => this.http.delete(`../../rest/folders/${folder.id}/unpin`)),
             tap(() => {
                 this.getPinnedFolders();
-                this.notify.success('Dossier desépinglé');
+                this.notify.success(this.lang.folderUnpinned);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
