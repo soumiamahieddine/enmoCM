@@ -148,12 +148,6 @@ class ExportController
                     $select[] = 'priorities.label AS "priorities.label"';
                     $tableFunction[] = 'priorities';
                     $leftJoinFunction[] = 'res_view_letterbox.priority = priorities.id';
-                } elseif ($value['value'] == 'getFolder') {
-                    $select[] = 'res_folder2.label AS "folders.label"';
-                    $tableFunction[] = 'resources_folders as res_folders2';
-                    $leftJoinFunction[] = 'res_view_letterbox.res_id = res_folders2.res_id';
-                    $tableFunction[] = 'folders as res_folder2';
-                    $leftJoinFunction[] = 'res_folder2.id = res_folders2.folder_id';
                 } elseif ($value['value'] == 'getCategory') {
                     $select[] = 'res_view_letterbox.category_id';
                 } elseif ($value['value'] == 'getInitiatorEntity') {
@@ -251,7 +245,7 @@ class ExportController
                     } elseif ($value['value'] == 'getParentFolder') {
                         $csvContent[] = ExportController::getParentFolderLabel(['res_id' => $resource['res_id']]);
                     } elseif ($value['value'] == 'getFolder') {
-                        $csvContent[] = $resource['folders.label'];
+                        $csvContent[] = ExportController::getFolderLabel(['res_id' => $resource['res_id']]);
                     } elseif ($value['value'] == 'getCategory') {
                         $csvContent[] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
                     } elseif ($value['value'] == 'getInitiatorEntity') {
@@ -363,7 +357,7 @@ class ExportController
                     } elseif ($value['value'] == 'getParentFolder') {
                         $content[] = ExportController::getParentFolderLabel(['res_id' => $resource['res_id']]);
                     }  elseif ($value['value'] == 'getFolder') {
-                        $content[] = $resource['folders.label'];
+                        $content[] = ExportController::getFolderLabel(['res_id' => $resource['res_id']]);
                     } elseif ($value['value'] == 'getCategory') {
                         $content[] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
                     } elseif ($value['value'] == 'getInitiatorEntity') {
@@ -765,30 +759,52 @@ class ExportController
         return $maxHeight + 2;
     }
 
+    private static function getFolderLabel(array $args)
+    {
+        $folders = FolderModel::getWithEntitiesAndResources([
+            'select'    => ['folders.label'],
+            'where'     => ['resources_folders.res_id = ?'],
+            'data'      => [$args['res_id']]
+        ]);
+        if (empty($folders)) {
+            return '';
+        }
+
+        $labels = [];
+        foreach ($folders as $folder) {
+            $labels[] = $folder['label'];
+        }
+
+        return implode(',', $labels);
+    }
+
     private static function getParentFolderLabel(array $args)
     {
-        $folder = FolderModel::getWithEntitiesAndResources([
+        $folders = FolderModel::getWithEntitiesAndResources([
             'select'    => ['folders.parent_id'],
             'where'     => ['resources_folders.res_id = ?'],
             'data'      => [$args['res_id']]
         ]);
-        if (empty($folder)) {
+        if (empty($folders)) {
             return '';
         }
-        $folder = $folder[0];
 
-        $hasFolder = FolderController::hasFolders([
-            'userId' => $GLOBALS['id'],
-            'folders' => [$folder['parent_id']]
-        ]);
+        $parentLabels = [];
+        foreach ($folders as $folder) {
+            $hasFolder = FolderController::hasFolders([
+                'userId' => $GLOBALS['id'],
+                'folders' => [$folder['parent_id']]
+            ]);
 
-        if (!$hasFolder) {
-            return '';
+            if (!$hasFolder) {
+                continue;
+            }
+            $parentFolder = FolderModel::getById([
+                'id' => $folder['parent_id']
+            ]);
+            $parentLabels[] = $parentFolder['label'];
         }
-        $parentFolder = FolderModel::getById([
-            'id' => $folder['parent_id']
-        ]);
 
-        return $parentFolder['label'];
+        return implode(',', $parentLabels);
     }
 }
