@@ -159,8 +159,19 @@ export class IndexationComponent implements OnInit {
 
     formatDatas(datas: any) {
         let formatData: any = {};
+        const regex = /indexingCustomField_[.]*/g;
+
+        formatData['customFields'] = {};
+
         datas.forEach((element: any) => {
-            formatData[element.identifier] = element.default_value;
+
+            if (element.identifier.match(regex) !== null) {
+
+                formatData['customFields'][element.identifier.split('_')[1]] = element.default_value;
+
+            } else {
+                formatData[element.identifier] = element.default_value;
+            }            
         });
         return formatData;
     }
