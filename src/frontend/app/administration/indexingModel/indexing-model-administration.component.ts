@@ -49,41 +49,6 @@ export class IndexingModelAdministrationComponent implements OnInit {
 
     creationMode: boolean = true;
 
-    availableFields: any[] = [
-        {
-            identifier: 'priority',
-            label: this.lang.priority,
-            type: 'select',
-            values: []
-        },
-        {
-            identifier: 'confidential',
-            label: this.lang.confidential,
-            type: 'radio',
-            values: [{'id': 'true', 'label': 'Oui'}, {'id': 'false', 'label': 'Non'}]
-        },
-        {
-            identifier: 'initiator',
-            label: this.lang.initiator,
-            type: 'select',
-            values: []
-        },
-        {
-            identifier: 'processLimitDate',
-            label: this.lang.processLimitDate,
-            type: 'date',
-            values: []
-        },
-        {
-            identifier: 'arrivalDate',
-            label: this.lang.arrivalDate,
-            type: 'date',
-            values: []
-        }
-    ];
-
-    availableCustomFields: any[] = [];
-
     categoriesList: any [];
 
     constructor(
