@@ -906,7 +906,7 @@ class ResController
                 if (!empty($body['customFields'][$customFieldId])) {
                     $customField = CustomFieldModel::getById(['id' => $customFieldId, 'select' => ['type', 'values']]);
                     $possibleValues = empty($customField['values']) ? [] : json_decode($customField['values']);
-                    if (($customField['type'] == 'select' || $customField['type'] == 'checkbox') && !in_array($body['customFields'][$customFieldId], $possibleValues)) {
+                    if (($customField['type'] == 'select' || $customField['type'] == 'radio') && !in_array($body['customFields'][$customFieldId], $possibleValues)) {
                         return ['errors' => "Body customFields[{$customFieldId}] has wrong value"];
                     } elseif ($customField['type'] == 'checkbox') {
                         if (!is_array($body['customFields'][$customFieldId])) {

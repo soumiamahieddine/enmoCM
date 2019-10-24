@@ -1102,12 +1102,12 @@ CREATE TABLE res_letterbox
   res_id bigint NOT NULL DEFAULT nextval('res_id_mlb_seq'::regclass),
   subject text,
   type_id bigint NOT NULL,
-  format character varying(50) NOT NULL,
+  format character varying(50),
   typist INTEGER NOT NULL,
   creation_date timestamp without time zone NOT NULL,
   modification_date timestamp without time zone DEFAULT NOW(),
   doc_date timestamp without time zone,
-  docserver_id character varying(32) NOT NULL,
+  docserver_id character varying(32),
   path character varying(255) DEFAULT NULL::character varying,
   filename character varying(255) DEFAULT NULL::character varying,
   fingerprint character varying(255) DEFAULT NULL::character varying,
@@ -1155,7 +1155,7 @@ CREATE TABLE res_letterbox
   flag_alarm2 char(1) default 'N'::character varying,
   is_multicontacts char(1),
   address_id bigint,
-  model_id integer,
+  model_id integer NOT NULL,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);

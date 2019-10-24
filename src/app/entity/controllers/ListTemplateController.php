@@ -465,7 +465,11 @@ class ListTemplateController
             $serviceRoles = 'update_diffusion_except_recipient_indexing';
             $triggerContext = true;
         }
-        if ($triggerContext) {
+
+        if ($data['context'] == 'redirect') {
+            $triggerContext = true;
+            $canUpdateDiffusionRecipient = true;
+        } elseif ($triggerContext) {
             if (ServiceModel::hasService(['id' => $serviceRecipient, 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use'])) {
                 $canUpdateDiffusionRecipient = true;
             }
