@@ -52,7 +52,7 @@ class ActionMethodController
 
     public static function terminateAction(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'resources', 'basketName']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'resources']);
         ValidatorModel::intVal($aArgs, ['id']);
         ValidatorModel::arrayType($aArgs, ['resources']);
         ValidatorModel::stringType($aArgs, ['basketName', 'note', 'history']);
@@ -80,12 +80,15 @@ class ActionMethodController
             }
 
             if ($action['history'] == 'Y') {
+                $info = "{$action['label_action']}{$aArgs['history']}";
+                $info = empty($aArgs['basketName']) ? $info : "{$aArgs['basketName']} : {$info}";
                 HistoryController::add([
                     'tableName' => 'res_letterbox',
                     'recordId'  => $resource,
                     'eventType' => 'ACTION#' . $resource,
+                    'moduleId'  => 'resource',
                     'eventId'   => $aArgs['id'],
-                    'info'      => "{$aArgs['basketName']} : {$action['label_action']}{$aArgs['history']}"
+                    'info'      => $info
                 ]);
 
                 //TODO M2M

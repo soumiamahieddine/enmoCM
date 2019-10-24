@@ -131,7 +131,7 @@ $size = '';
 $param = array();
 
 // Custom fields
-$customFields = \CustomField\models\CustomFieldModel::get();
+$customFields = \CustomField\models\CustomFieldModel::get(['orderBy' => ['label']]);
 foreach ($customFields as $customField) {
     $field = 'indexingCustomField_'.$customField['id'];
 

@@ -101,7 +101,7 @@ class IndexingController
         }
 
         $historic = empty($methodResponse['history']) ? '' : $methodResponse['history'];
-        ActionMethodController::terminateAction(['id' => $args['actionId'], 'resources' => [$body['resource']], 'basketName' => 'Indexing', 'note' => $body['note'], 'history' => $historic]);
+        ActionMethodController::terminateAction(['id' => $args['actionId'], 'resources' => [$body['resource']], 'note' => $body['note'], 'history' => $historic]);
 
         if (!empty($methodResponses['data']) || !empty($methodResponses['errors'])) {
             return $response->withJson($methodResponses);

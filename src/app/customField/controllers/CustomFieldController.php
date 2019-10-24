@@ -29,7 +29,7 @@ class CustomFieldController
 {
     public function get(Request $request, Response $response)
     {
-        $customFields = CustomFieldModel::get();
+        $customFields = CustomFieldModel::get(['orderBy' => ['label']]);
 
         foreach ($customFields as $key => $customField) {
             $customFields[$key]['values'] = json_decode($customField['values'], true);

@@ -736,6 +736,9 @@ class ResController
 
     private static function controlResource(array $args)
     {
+        $currentUser = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['loginmode']]);
+        $isWebServiceUser = $currentUser['loginmode'] == 'restMode';
+
         $body = $args['body'];
 
         if (empty($body)) {
@@ -743,6 +746,8 @@ class ResController
         } elseif (!Validator::intVal()->notEmpty()->validate($body['doctype'])) {
             return ['errors' => 'Body doctype is empty or not an integer'];
         } elseif (!Validator::intVal()->notEmpty()->validate($body['modelId'])) {
+            return ['errors' => 'Body modelId is empty or not an integer'];
+        } elseif ($isWebServiceUser && !Validator::stringType()->notEmpty()->validate($body['status'])) {
             return ['errors' => 'Body modelId is empty or not an integer'];
         }
 
@@ -764,9 +769,6 @@ class ResController
         if (!empty($control['errors'])) {
             return ['errors' => $control['errors']];
         }
-
-        $currentUser = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['loginmode']]);
-        $isWebServiceUser = $currentUser['loginmode'] == 'restMode';
 
         $control = ResController::controlAdjacentData(['body' => $body, 'isWebServiceUser' => $isWebServiceUser]);
         if (!empty($control['errors'])) {
