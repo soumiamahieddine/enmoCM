@@ -953,15 +953,19 @@ class ResController
                 return ['errors' => "Body arrivalDate is not a date"];
             }
 
-            $documentDate = new \DateTime($body['arrivalDate']);
+            $arrivalDate = new \DateTime($body['arrivalDate']);
             $tmr = new \DateTime('tomorrow');
-            if ($documentDate > $tmr) {
+            if ($arrivalDate > $tmr) {
                 return ['errors' => "Body arrivalDate is not a valid date"];
             }
         }
         if (!empty($body['departureDate'])) {
             if (!Validator::date()->notEmpty()->validate($body['departureDate'])) {
                 return ['errors' => "Body departureDate is not a date"];
+            }
+            $departureDate = new \DateTime($body['departureDate']);
+            if (!empty($documentDate) && $departureDate < $documentDate) {
+                return ['errors' => "Body departureDate is not a valid date"];
             }
         }
         if (!empty($body['processLimitDate'])) {

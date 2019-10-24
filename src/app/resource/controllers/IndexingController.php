@@ -126,8 +126,10 @@ class IndexingController
             $action         = ActionModel::getById(['id' => $value, 'select' => ['id', 'label_action', 'component', 'id_status']]);
             $categoriesList = ActionModel::getCategoriesById(['id' => $value]);
 
+            $action['label'] = $action['label_action'];
             $action['enabled']    = !empty($action['id_status']) && $action['id_status'] != '_NOSTATUS_';
             $action['categories'] = array_column($categoriesList, 'category_id');
+            unset($action['label_action'], $action['id_status']);
             $actions[] = $action;
         }
 

@@ -308,6 +308,10 @@ class ResourceListController
 
         if (!empty($actions)) {
             $actions = ActionModel::get(['select' => ['id', 'label_action', 'component'], 'where' => ['id in (?)'], 'data' => [$actions], 'orderBy' => ['label_action']]);
+            foreach ($actions as $key => $action) {
+                $actions[$key]['label'] = $action['label_action'];
+                unset($actions[$key]['label_action']);
+            }
         }
 
         return $response->withJson(['actions' => $actions]);
