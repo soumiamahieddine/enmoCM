@@ -342,11 +342,7 @@ export class FolderDocumentListComponent implements OnInit {
     }
 
     listTodrag() {
-        if (this.panelFolder !== undefined) {
-            return this.panelFolder.getDragIds();
-        } else {
-            return [];
-        }
+        return this.foldersService.getDragIds();
     }
 }
 export interface BasketList {
