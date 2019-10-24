@@ -1188,4 +1188,5 @@ export const LANG_NL = {
     "currentIndexingMail" : "the current indexing mail", //_TO_TRANSLATE
     "mustFixErrors" : "You must fix the errors.", //_TO_TRANSLATE
     "badActionParam" : "Bad action parameter", //_TO_TRANSLATE
+    "technicalId"    : "Technical identifier", //_TO_TRANSLATE
 };

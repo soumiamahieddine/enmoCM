@@ -38,6 +38,14 @@
                     </div>
                 </div>
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="label" matSortDirection="asc">
+                    <ng-container matColumnDef="id">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.technicalId}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" style="flex:2;">
+                            <span (click)="$event.stopPropagation()">
+                                {{element.id}}
+                            </span>
+                        </mat-cell>
+                    </ng-container>
                     <ng-container matColumnDef="label">
                         <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.label}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" style="flex:2;">

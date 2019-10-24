@@ -1162,4 +1162,5 @@ export const LANG_EN = {
     "currentIndexingMail" : "the current indexing mail",
     "mustFixErrors" : "You must fix the errors.",
     "badActionParam" : "Bad action parameter",
+    "technicalId"    : "Technical identifier",
 };
