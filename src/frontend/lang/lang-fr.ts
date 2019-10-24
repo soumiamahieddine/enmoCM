@@ -1200,4 +1200,5 @@ export const LANG_FR = {
     "mustFixErrors" : "Veuillez corriger les erreurs.",
     "badActionParam" : "Mauvais paramétrage de l'action",
     "technicalId"    : "Identifiant technique",
+    "foldersTree" : "Arborescence des dossiers",    
 };

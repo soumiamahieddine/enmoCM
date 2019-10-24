@@ -1189,4 +1189,5 @@ export const LANG_NL = {
     "mustFixErrors" : "You must fix the errors.", //_TO_TRANSLATE
     "badActionParam" : "Bad action parameter", //_TO_TRANSLATE
     "technicalId"    : "Technical identifier", //_TO_TRANSLATE
+    "foldersTree" : "Folders tree", //_TO_TRANSLATE
 };

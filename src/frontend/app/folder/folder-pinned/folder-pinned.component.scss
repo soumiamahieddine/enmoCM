@@ -1,0 +1,81 @@
+@import '../../../css/vars.scss';
+
+.pinnedFolderList {
+    .mat-list-item {
+        cursor: pointer;
+        height: 45px;
+
+        &:hover {
+            background: rgba(0, 0, 0, 0.04);
+        }
+    }
+
+    ::ng-deep.mat-list-text {
+        padding-left: 0px !important;
+    }
+
+    .pinnedFolderItem {
+        color: rgb(102, 102, 102);
+        font-weight: bold;
+        font-size: 12px;
+        width: 90%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .folderAction {
+        color: rgb(102, 102, 102);
+    }
+
+}
+
+.pinnedIcon {
+    cursor: pointer;
+    color: $primary;
+    text-align: center;
+
+    i {
+
+        font-size: 13px;
+        transition: all 0.3s;
+    }
+
+    &:hover {
+        color: $warn;
+
+        i {
+            transition: all 0.3s;
+            transform: rotate(45deg) translate(0px, -50%);
+        }
+    }
+}
+
+.countResources {
+    color: $primary;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+button:disabled {
+    opacity: 1;
+}
+
+.selectedFolder {
+    border-left: solid 5px $primary;
+    background: rgba($primary, 0.14);
+}
+
+.public {
+    color: $secondary;
+}
+
+.drag {
+    color: $primary !important;
+}
+
+.noPinnedFolder {
+    text-align: center;
+    font-size: 13px;
+    opacity: 0.5;
+    font-style: italic;
+}

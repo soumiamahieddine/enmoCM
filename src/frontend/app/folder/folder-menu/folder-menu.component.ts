@@ -7,6 +7,7 @@ import { NotificationService } from '../../notification.service';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
+import { FoldersService } from '../folders.service';
 
 @Component({
     selector: 'folder-menu',
@@ -33,7 +34,8 @@ export class FolderMenuComponent implements OnInit {
         public http: HttpClient,
         private notify: NotificationService,
         public dialog: MatDialog,
-        private renderer: Renderer2
+        private renderer: Renderer2,
+        private foldersService: FoldersService
     ) { }
 
     ngOnInit(): void {
@@ -68,7 +70,7 @@ export class FolderMenuComponent implements OnInit {
     }
 
     getFolders() {
-        this.http.get("../../rest/folders").pipe(
+        this.http.get("../../rest/pinnedFolders").pipe(
             map((data: any) => data.folders),
             tap((data: any) => {
                 this.foldersList = data;
@@ -80,7 +82,7 @@ export class FolderMenuComponent implements OnInit {
 
         this.http.post('../../rest/folders/' + folder.id + '/resources', { resources: this.resIds }).pipe(
             tap(() => {
-                this.refreshFolders.emit();
+                this.foldersService.getPinnedFolders();
                 this.refreshList.emit();
                 this.notify.success(this.lang.mailClassified);
             }),

@@ -11,7 +11,7 @@
     </div>
 </div>
 <div *ngIf="dataSource.data.length === 0" class="noFolder">
-    {{lang.noAvailableFolder}}<br/><a (click)="toggleInput()">{{lang.addFolder}}</a>
+    {{lang.noAvailableFolder}}<br /><a (click)="toggleInput()">{{lang.addFolder}}</a>
 </div>
 <mat-list *ngIf="createRootNode">
     <mat-list-item role="listitem" class="rootFolder">
@@ -36,8 +36,9 @@
             *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="20px">
             <!-- use a disabled button to provide padding for tree leaf -->
             <button class="expandButton" mat-icon-button disabled></button>
-            <a mat-list-item disableRipple class="folderTreeItem" [class.selectedFolder]="node.selected"
-                (mouseenter)="showAction(node)" (mouseleave)="hideAction(node)" (click)="selectFolder(node)">
+            <a mat-list-item disableRipple class="folderTreeItem"
+                [class.selectedFolder]="foldersService.getCurrentFolder().id == node.id" (mouseenter)="showAction(node)"
+                (mouseleave)="hideAction(node)" (click)="selectFolder(node)">
                 <span style="width: 90%;overflow: hidden;text-overflow: ellipsis;">
                     <span class="treeLabel" [title]="node.label" [class.drag]="node.drag">
                         <i class="fa fa-users private" *ngIf="node.public" title="{{lang.sharedFolder}}"></i>
@@ -52,10 +53,17 @@
                         {{node.countResources}}
                     </span>
                 </button>
-                <mat-menu #menu="matMenu">
+                <mat-menu #menu="matMenu" [class]="'folderListMenu'">
+                    <button mat-menu-item (click)="togglePinFolder(node)">
+                        <mat-icon [class.pinnedActionIcon]="!node.pinned" [class.revertPinnedActionIcon]="node.pinned">
+                            <i class="fas fa-thumbtack"></i>
+                        </mat-icon>
+                        <span>{{node.pinned ? 'Désépingler' : 'Épingler'}}</span>
+                    </button>
                     <button mat-menu-item [disabled]="createItemNode || !node.canAdd"
                         (click)="addNewItem(node)">{{lang.addSubFolder}}</button>
-                    <button mat-menu-item (click)="deleteNode(node)" [disabled]="!node.canDelete">{{lang.delete}}</button>
+                    <button mat-menu-item (click)="deleteNode(node)"
+                        [disabled]="!node.canDelete">{{lang.delete}}</button>
                     <button mat-menu-item (click)="openFolderAdmin(node)"
                         [disabled]="!node.edition">{{lang.update}}</button>
                 </mat-menu>
@@ -82,8 +90,9 @@
                     class="mat-icon-rtl-mirror fa {{treeControl.isExpanded(node) ? 'fa-chevron-down' : 'fa-chevron-right'}}">
                 </mat-icon>
             </button>
-            <a mat-list-item disableRipple class="folderTreeItem" [class.selectedFolder]="node.selected"
-                (mouseleave)="hideAction(node)" (mouseenter)="showAction(node)" (click)="selectFolder(node)">
+            <a mat-list-item disableRipple class="folderTreeItem"
+                [class.selectedFolder]="foldersService.getCurrentFolder().id == node.id" (mouseleave)="hideAction(node)"
+                (mouseenter)="showAction(node)" (click)="selectFolder(node)">
                 <span style="width: 90%;overflow: hidden;text-overflow: ellipsis;">
                     <span class="treeLabel" [title]="node.label" [class.drag]="node.drag">
                         <i class="fa fa-users private" *ngIf="node.public" title="{{lang.sharedFolder}}"></i>
@@ -97,10 +106,18 @@
                         {{node.countResources}}
                     </span>
                 </button>
-                <mat-menu #menu="matMenu">
+                <mat-menu #menu="matMenu" [class]="'folderListMenu'">
+                    <button mat-menu-item (click)="togglePinFolder(node)">
+                        <mat-icon [class.pinnedActionIcon]="!node.pinned" [class.revertPinnedActionIcon]="node.pinned">
+                            <i class="fas fa-thumbtack"></i>
+                        </mat-icon>
+                        <span>{{node.pinned ? 'Désépingler' : 'Épingler'}}</span>
+                    </button>
+
                     <button mat-menu-item [disabled]="createItemNode || !node.canAdd"
                         (click)="addNewItem(node)">{{lang.addSubFolder}}</button>
-                    <button mat-menu-item (click)="deleteNode(node)" [disabled]="!node.canDelete">{{lang.delete}}</button>
+                    <button mat-menu-item (click)="deleteNode(node)"
+                        [disabled]="!node.canDelete">{{lang.delete}}</button>
                     <button mat-menu-item (click)="openFolderAdmin(node)"
                         [disabled]="!node.edition">{{lang.update}}</button>
                 </mat-menu>

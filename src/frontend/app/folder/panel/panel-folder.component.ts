@@ -13,6 +13,7 @@ export class PanelFolderComponent implements OnInit {
 
     lang: any = LANG;
 
+    showTree: boolean = false;
     @Input('selectedId') id: number;
     @ViewChild('folderTree', { static: true }) folderTree: FolderTreeComponent;
     

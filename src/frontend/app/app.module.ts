@@ -2,7 +2,7 @@ import { NgModule }                             from '@angular/core';
 
 import { SharedModule }                         from './app-common.module';
 
-import { CustomSnackbarComponent }              from './notification.service';
+import { CustomSnackbarComponent, NotificationService }              from './notification.service';
 import { ConfirmModalComponent }                from './confirmModal.component';
 import { HeaderService }                        from '../service/header.service';
 import { FiltersListService }                   from '../service/filtersList.service';
@@ -23,6 +23,7 @@ import { ActivateUserComponent }                from './activate-user.component'
 
 import { ActionsListComponent }                 from './actions/actions-list.component';
 
+import { FolderPinnedComponent }                 from './folder/folder-pinned/folder-pinned.component';
 import { FolderTreeComponent }                 from './folder/folder-tree.component';
 import { FolderDocumentListComponent }                 from './folder/document-list/folder-document-list.component';
 import { PanelFolderComponent }                 from './folder/panel/panel-folder.component';
@@ -66,6 +67,7 @@ import { PrintSeparatorComponent }                        from './separator/prin
 
 import { IndexationComponent }                        from './indexation/indexation.component';
 import { AddPrivateIndexingModelModalComponent }                        from './indexation/private-indexing-model/add-private-indexing-model-modal.component';
+import { FoldersService } from './folder/folders.service';
 
 
 @NgModule({
@@ -119,6 +121,7 @@ import { AddPrivateIndexingModelModalComponent }                        from './
         SendShippingActionComponent,
         ActionsListComponent,
         PrintSeparatorComponent,
+        FolderPinnedComponent,
         FolderTreeComponent,
         PanelFolderComponent,
         FolderDocumentListComponent,
@@ -153,7 +156,7 @@ import { AddPrivateIndexingModelModalComponent }                        from './
         FolderUpdateComponent,
         AddPrivateIndexingModelModalComponent
     ],
-    providers: [ HeaderService, FiltersListService ],
+    providers: [ HeaderService, FiltersListService, FoldersService, NotificationService ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule { }

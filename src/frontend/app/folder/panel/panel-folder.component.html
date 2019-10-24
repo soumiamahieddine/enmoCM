@@ -4,5 +4,9 @@
             <i class="fa fa-folder panelIconMenu"></i>&nbsp;{{lang.folders}}
         </mat-panel-title>
     </mat-expansion-panel-header>
-    <folder-tree #folderTree [selectedId]="id" (refreshDocList)="refreshDocList()"></folder-tree>
+    <folder-pinned></folder-pinned>
+    <button mat-button class="showFolderTree" (click)="showTree = !showTree">
+        {{showTree ? lang.less : lang.more}}
+    </button>
+    <folder-tree #folderTree *ngIf="showTree" [selectedId]="id" (refreshDocList)="refreshDocList()"></folder-tree>
 </mat-expansion-panel>

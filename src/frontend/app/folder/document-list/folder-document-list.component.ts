@@ -22,6 +22,7 @@ import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { FolderActionListComponent } from '../folder-action-list/folder-action-list.component';
 import { FiltersListService } from '../../../service/filtersList.service';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { FoldersService } from '../folders.service';
 
 
 declare function $j(selector: any): any;
@@ -115,11 +116,13 @@ export class FolderDocumentListComponent implements OnInit {
         private notify: NotificationService,
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
-        public appService: AppService) {
+        public appService: AppService,
+        private foldersService: FoldersService) {
         $j("link[href='merged_css.php']").remove();
     }
 
     ngOnInit(): void {
+
         this.appService.openBasketMenu(false);
         this.loading = false;
 
@@ -144,7 +147,7 @@ export class FolderDocumentListComponent implements OnInit {
                             'ownerDisplayName': data.folder.ownerDisplayName,
                             'entitiesSharing': data.folder.sharing.entities.map((entity: any) => entity.label),
                         };
-
+                    this.foldersService.setFolder(this.folderInfo);
                     this.headerService.setHeader(this.folderInfo.label, '', 'fa fa-folder-open');
                 });
             this.basketUrl = '../../rest/folders/' + params['folderId'] + '/resources';

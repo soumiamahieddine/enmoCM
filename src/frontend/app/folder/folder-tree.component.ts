@@ -7,11 +7,12 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatInput } from '@angular/material/input';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, of, Subscription } from 'rxjs';
 import { NotificationService } from '../notification.service';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { Router } from '@angular/router';
 import { FolderUpdateComponent } from './folder-update/folder-update.component';
+import { FoldersService } from './folders.service';
 
 declare function $j(selector: any): any;
 /**
@@ -23,6 +24,7 @@ export class ItemNode {
     label: string;
     parent_id: number;
     public: boolean;
+    pinned: boolean;
     countResources: number;
 }
 
@@ -34,6 +36,7 @@ export class ItemFlatNode {
     countResources: number;
     level: number;
     public: boolean;
+    pinned: boolean;
     expandable: boolean;
 }
 @Component({
@@ -87,6 +90,7 @@ export class FolderTreeComponent implements OnInit {
         flatNode.label = node.label;
         flatNode.countResources = node.countResources;
         flatNode.public = node.public;
+        flatNode.pinned = node.pinned;
         flatNode.parent_id = node.parent_id;
         flatNode.id = node.id;
         flatNode.level = level;
@@ -104,6 +108,8 @@ export class FolderTreeComponent implements OnInit {
 
     dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
+    subscription: Subscription;
+    
     @ViewChild('tree', { static: true }) tree: any;
     
     @Output('refreshDocList') refreshDocList = new EventEmitter<string>();
@@ -114,8 +120,14 @@ export class FolderTreeComponent implements OnInit {
         private notify: NotificationService,
         private dialog: MatDialog,
         private router: Router,
-        private renderer: Renderer2
-    ) { }
+        private renderer: Renderer2,
+        public foldersService: FoldersService
+    ) {
+        // Event after process action 
+        this.subscription = this.foldersService.catchEvent().subscribe((result: any) => {
+            this.openTree(this.foldersService.getCurrentFolder().id);
+        }); 
+    }
 
     ngOnInit(): void {
         this.getFolders();
@@ -126,10 +138,8 @@ export class FolderTreeComponent implements OnInit {
             map((data: any) => this.flatToNestedObject(data.folders)),
             filter((data: any) => data.length > 0),
             tap((data) => this.initTree(data)),
-            //filter(() => this.seletedId !== undefined),
             tap(() => {
-                this.openTree(this.seletedId);
-                this.selectTree(this.seletedId);
+                this.openTree(this.foldersService.getCurrentFolder().id);
             })
         ).subscribe();
     }
@@ -149,13 +159,6 @@ export class FolderTreeComponent implements OnInit {
             if (indexSelectedFolder != -1) {
                 this.treeControl.expand(this.treeControl.dataNodes[indexSelectedFolder]);
             }
-        }
-    }
-
-    selectTree(id: any) {
-        let indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(parseInt(id));
-        if (indexSelectedFolder != -1) {
-            this.treeControl.dataNodes[indexSelectedFolder].selected = true;
         }
     }
 
@@ -409,6 +412,7 @@ export class FolderTreeComponent implements OnInit {
             tap((data) => {
                 if (data !== undefined) {
                     this.getFolders();
+                    this.foldersService.getPinnedFolders();
                 }                
             })
         ).subscribe();
@@ -455,5 +459,18 @@ export class FolderTreeComponent implements OnInit {
         this.seletedId = folder.id;
         this.getFolders();
         this.router.navigate(["/folders/" + folder.id]);
+    }
+
+    togglePinFolder(folder: any) {
+        if (folder.pinned) {
+            this.foldersService.unpinFolder(folder);
+        } else {
+            this.foldersService.pinFolder(folder);
+        }
+    }
+
+    ngOnDestroy() {
+        // unsubscribe to ensure no memory leaks
+        this.subscription.unsubscribe();
     }
 }

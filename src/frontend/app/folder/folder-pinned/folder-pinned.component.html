@@ -1,0 +1,28 @@
+<ng-container *ngIf="foldersService.getPinnedList().length > 0; else elseTemplate">
+    <mat-list class="pinnedFolderList">
+        <mat-list-item cdkDropList *ngFor="let folder of foldersService.getPinnedList();let i=index"
+            (click)="gotToFolder(folder)" [class.selectedFolder]="foldersService.getCurrentFolder().id == folder.id"
+            [id]="'folder-list-'+folder.id" cdkDropListConnectedTo="['document-list','folder-list']"
+            (cdkDropListDropped)="drop($event, folder)" (cdkDropListEntered)="dragEnter(folder)"
+            (cdkDropListExited)="folder.drag=false">
+            <mat-icon mat-list-icon class="pinnedIcon" [title]="'Désépingler le dossier'"
+                (click)="$event.stopPropagation();foldersService.unpinFolder(folder)">
+                <i class="fa fa-thumbtack"></i>
+            </mat-icon>
+            <span class="pinnedFolderItem">
+                <span class="treeLabel" [title]="folder.label" [class.drag]="folder.drag"
+                    [class.public]="folder.public">
+                    {{folder.label}}
+                </span>
+            </span>
+            <span class="countResources" [class.empty]="folder.countResources === 0">
+                {{folder.countResources}}
+            </span>
+        </mat-list-item>
+    </mat-list>
+</ng-container>
+<ng-template #elseTemplate>
+    <div class="noPinnedFolder">
+        Aucun dossier épinglé
+    </div>
+</ng-template>

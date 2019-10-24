@@ -1163,4 +1163,5 @@ export const LANG_EN = {
     "mustFixErrors" : "You must fix the errors.",
     "badActionParam" : "Bad action parameter",
     "technicalId"    : "Technical identifier",
+    "foldersTree" : "Folders tree",
 };
