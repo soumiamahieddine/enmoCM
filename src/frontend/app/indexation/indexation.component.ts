@@ -121,16 +121,12 @@ export class IndexationComponent implements OnInit {
                             component: action.component,
                             enabled: action.enabled,
                             default: index === 0 ? true : false,
-                            categoryUse: action.categoryUse
+                            categoryUse: action.categories
                         }
                     });
                     return data;
                 }),
-                tap((data: any) => {
-                    // TO DO : REMOVE AFTER BACK
-                    data.actions[0].categoryUse = ['incoming','outgoing'];
-                    data.actions[1].categoryUse = ['outgoing'];
-                    
+                tap((data: any) => {                    
                     this.selectedAction = data.actions[0];
                     this.actionsList = data.actions;
                 }),
