@@ -117,7 +117,7 @@ export class IndexationComponent implements OnInit {
                     data.actions = data.actions.map((action: any, index: number) => {
                         return {
                             id: action.id,
-                            label: action.label_action,
+                            label: action.label,
                             component: action.component,
                             enabled: action.enabled,
                             default: index === 0 ? true : false,
@@ -149,8 +149,6 @@ export class IndexationComponent implements OnInit {
             formatdatas['chrono'] = true;
             formatdatas['encodedFile'] = this.appDocumentViewer.getFile().content;
             formatdatas['format'] = this.appDocumentViewer.getFile().format;
-
-            console.log(formatdatas['encodedFile']);
 
             this.actionService.launchIndexingAction(this.selectedAction, this.headerService.user.id, this.currentGroupId, formatdatas);
 

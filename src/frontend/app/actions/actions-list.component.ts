@@ -112,17 +112,7 @@ export class ActionsListComponent implements OnInit {
             this.http.get('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/actions')
                 .subscribe((data: any) => {
                     if (data.actions.length > 0) {
-                        this.actionsList = data.actions;
-
-                        // TO DO TO REMOVE AFTER BACK CHANGE : label_action => label
-                        this.actionsList = data.actions.map((action: any) => {
-                            return {
-                                id: action.id,
-                                label: action.label_action,
-                                component: action.component
-                            }
-                        });
-                        
+                        this.actionsList = data.actions;    
                     } else {
                         this.actionsList = [{
                             id: 0,

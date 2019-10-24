@@ -89,7 +89,7 @@ export class IndexingFormComponent implements OnInit {
             label: this.lang.confidential,
             type: 'radio',
             default_value: '',
-            values: [{'id': 'true', 'label': 'Oui'}, {'id': 'false', 'label': 'Non'}]
+            values: [{ 'id': 'true', 'label': 'Oui' }, { 'id': 'false', 'label': 'Non' }]
         },
         {
             identifier: 'initiator',
@@ -277,8 +277,8 @@ export class IndexingFormComponent implements OnInit {
 
         if (!this.adminMode) {
             arrIndexingModels.push({
-                identifier : 'modelId',
-                default_value : this.indexingFormId
+                identifier: 'modelId',
+                default_value: this.indexingFormId
             });
         }
         return arrIndexingModels;
@@ -537,7 +537,7 @@ export class IndexingFormComponent implements OnInit {
         let arrayRoutes: any = [];
         let mergedRoutesDatas: any = {};
 
-        
+
         if (this.availableCustomFieldsClone === null) {
             arrayRoutes.push(this.http.get("../../rest/customFields"));
         } else {
@@ -635,7 +635,7 @@ export class IndexingFormComponent implements OnInit {
 
                 this.initElemForm();
                 this.createForm();
-                
+
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
@@ -661,9 +661,10 @@ export class IndexingFormComponent implements OnInit {
 
         if (field.identifier === 'destination') {
             let valArr: ValidatorFn[] = [];
-
-            valArr.push(Validators.required);
-
+            if (field.mandatory) {
+                valArr.push(Validators.required);
+            }
+            
             this.arrFormControl['diffusionList'] = new FormControl({ value: null, disabled: false });
 
             this.arrFormControl['diffusionList'].setValidators(valArr);
@@ -794,7 +795,7 @@ export class IndexingFormComponent implements OnInit {
 
     calcLimitDateByPriority(field: any, value: any) {
         let limitDate: Date = null;
-        
+
         if (this.arrFormControl['processLimitDate'] !== undefined) {
             this.http.get("../../rest/indexing/processLimitDate", { params: { "priority": value } }).pipe(
                 tap((data: any) => {
