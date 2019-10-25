@@ -15,15 +15,22 @@
 </button>
 <mat-menu #folders="matMenu" [class]="'folderListMenu'" restoreFocus="false">
     <ng-template matMenuContent>
-        <mat-form-field floatLabel="never" appearance="outline" class="smallInput"  (click)="$event.stopPropagation();">
-            <input matInput id="searchTerm" placeholder="{{lang.searchFolder}}" [formControl]="searchTerm" autocomplete="off" (click)="$event.stopPropagation();" (keydown)="$event.stopPropagation()">
+        <mat-form-field floatLabel="never" appearance="outline" class="smallInput" (click)="$event.stopPropagation();">
+            <input matInput id="searchTerm" placeholder="{{lang.searchFolder}}" [formControl]="searchTerm"
+                autocomplete="off" (click)="$event.stopPropagation();" (keydown)="$event.stopPropagation()">
         </mat-form-field>
-        <button *ngIf="pinnedFolder" mat-menu-item class="noFolder"
-            disabled>{{lang.myPinnedFolder}}</button>
-        <button *ngIf="foldersList.length === 0" mat-menu-item class="noFolder"
-            disabled>{{lang.noAvailableFolder}}</button>
-        <button mat-menu-item *ngFor="let folder of foldersList | sortBy : 'label'" class="labelFolder"
-            (click)="classifyDocuments(folder)" [title]="folder.label"><i class="fa fa-users private"
-                *ngIf="folder.public" title="{{lang.sharedFolder}}"></i> {{folder.label}}</button>
+        <ng-container *ngIf="!loading; else elseTemplate">
+            <button *ngIf="pinnedFolder" mat-menu-item class="noFolder" disabled>{{lang.myPinnedFolder}}</button>
+            <button *ngIf="foldersList.length === 0 && !loading" mat-menu-item class="noFolder"
+                disabled>{{lang.noAvailableFolder}}</button>
+            <button mat-menu-item *ngFor="let folder of foldersList | sortBy : 'label'" class="labelFolder"
+                (click)="classifyDocuments(folder)" [title]="folder.label"><i class="fa fa-users private"
+                    *ngIf="folder.public" title="{{lang.sharedFolder}}"></i> {{folder.label}}</button>
+        </ng-container>
+        <ng-template #elseTemplate>
+            <div class="loading">
+                <mat-spinner diameter="35"></mat-spinner>
+            </div>
+        </ng-template>
     </ng-template>
 </mat-menu>

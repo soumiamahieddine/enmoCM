@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, Renderer2 } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { HttpClient } from '@angular/common/http';
-import { map, tap, catchError, filter, exhaustMap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { map, tap, catchError, filter, exhaustMap, debounceTime, distinctUntilChanged, switchMap, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
@@ -21,6 +21,9 @@ export class FolderMenuComponent implements OnInit {
 
     foldersList: any[] = [];
     pinnedFolder: boolean = true;
+
+    loading: boolean = true;
+
     @Input('resIds') resIds: number[];
     @Input('currentFolders') currentFoldersList: any[];
 
@@ -49,6 +52,7 @@ export class FolderMenuComponent implements OnInit {
                 }
             }),
             filter(value => value.length > 2),
+            tap(() => this.loading = true),
             distinctUntilChanged(),
             switchMap(data => this.http.get('../../rest/autocomplete/folders', { params: { "search": data } })),
             tap((data: any) => {
@@ -61,6 +65,11 @@ export class FolderMenuComponent implements OnInit {
                         }
                     }
                 );
+                this.loading = false;
+            }),
+            catchError((err) => {
+                this.notify.handleErrors(err);
+                return of(false);
             })
         ).subscribe();
     }
@@ -73,11 +82,17 @@ export class FolderMenuComponent implements OnInit {
     }
 
     getFolders() {
+        this.loading = true;
         this.http.get("../../rest/pinnedFolders").pipe(
             map((data: any) => data.folders),
             tap((data: any) => {
                 this.foldersList = data;
             }),
+            finalize(() => this.loading = false),
+            catchError((err) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
         ).subscribe();
     }
 
