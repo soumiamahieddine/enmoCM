@@ -199,6 +199,6 @@
             <mat-divider></mat-divider>
         </mat-sidenav>
     </mat-sidenav-container>
-    <app-actions-list (refreshEvent)="refreshDao()" #actionsListContext [contextMode]="true"
+    <app-actions-list (refreshEvent)="refreshDao()" (refreshEventAfterAction)="refreshDaoAfterAction()" #actionsListContext [contextMode]="true"
         [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo" (refreshPanelFolders)="panelFolder.refreshFoldersTree()">
     </app-actions-list>

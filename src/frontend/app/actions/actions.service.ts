@@ -200,10 +200,14 @@ export class ActionsService {
         }
     }
 
+    unlockResourceAfterActionModal(state: string) {
+        this.stopRefreshResourceLock();
+        if (state !== 'success') {
+            this.unlockResource();
+        }
+    }
 
     endAction(status: any) {
-        this.unlockResource();
-
         this.notify.success(this.lang.action + ' : "' + this.currentAction.label + '" ' + this.lang.done);
 
         this.eventAction.next();
@@ -219,9 +223,8 @@ export class ActionsService {
         });
 
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -242,9 +245,8 @@ export class ActionsService {
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -265,9 +267,8 @@ export class ActionsService {
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -288,9 +289,8 @@ export class ActionsService {
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -311,9 +311,8 @@ export class ActionsService {
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -334,9 +333,8 @@ export class ActionsService {
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -357,9 +355,8 @@ export class ActionsService {
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -380,9 +377,8 @@ export class ActionsService {
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -403,9 +399,8 @@ export class ActionsService {
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -433,9 +428,8 @@ export class ActionsService {
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -456,9 +450,8 @@ export class ActionsService {
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -478,9 +471,8 @@ export class ActionsService {
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -501,9 +493,8 @@ export class ActionsService {
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {

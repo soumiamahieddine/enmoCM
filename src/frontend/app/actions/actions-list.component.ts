@@ -40,6 +40,7 @@ export class ActionsListComponent implements OnInit {
     @Input('currentBasketInfo') currentBasketInfo: any;
 
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
+    @Output('refreshEventAfterAction') refreshEventAfterAction = new EventEmitter<string>();
     @Output('refreshPanelFolders') refreshPanelFolders = new EventEmitter<string>();
 
     constructor(
@@ -56,7 +57,7 @@ export class ActionsListComponent implements OnInit {
     ngOnInit(): void {
         // Event after process action 
         this.subscription = this.actionService.catchAction().subscribe(message => {
-            this.refreshEvent.emit();
+            this.refreshEventAfterAction.emit();
             this.refreshPanelFolders.emit();
         });
     }
