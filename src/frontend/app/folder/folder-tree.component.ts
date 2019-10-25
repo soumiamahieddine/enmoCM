@@ -131,8 +131,19 @@ export class FolderTreeComponent implements OnInit {
         public foldersService: FoldersService
     ) {
         // Event after process action 
-        this.subscription = this.foldersService.catchEvent().subscribe((result: any) => {
-            this.openTree(this.foldersService.getCurrentFolder().id);
+        this.subscription = this.foldersService.catchEvent().subscribe((result: any) => {   
+            if (result.type === 'initTree') {
+                const folders = this.flatToNestedObject(this.foldersService.getList());
+                if (folders.length > 0) {
+                    this.initTree(folders);
+                    this.openTree(this.foldersService.getCurrentFolder().id);
+                }
+                this.loading = false;
+            } else if (result.type === 'refreshFolder') {
+                this.treeControl.dataNodes.filter(folder => folder.id === result.content.id)[0].countResources = result.content.countResources;
+            } else {
+                this.openTree(this.foldersService.getCurrentFolder().id);
+            }
         }); 
     }
 
@@ -141,15 +152,8 @@ export class FolderTreeComponent implements OnInit {
     }
 
     getFolders() {
-        this.http.get("../../rest/folders").pipe(
-            map((data: any) => this.flatToNestedObject(data.folders)),
-            tap(() => this.loading = false),
-            filter((data: any) => data.length > 0),
-            tap((data) => this.initTree(data)),
-            tap(() => {
-                this.openTree(this.foldersService.getCurrentFolder().id);
-            })
-        ).subscribe();
+        this.loading = true;
+        this.foldersService.getFolders();
     }
 
     initTree(data: any) {
@@ -173,14 +177,6 @@ export class FolderTreeComponent implements OnInit {
     hasChild = (_: number, node: any) => node.expandable;
 
     hasNoContent = (_: number, _nodeData: any) => _nodeData.label === '';
-
-    selectFolder(node: any) {
-        this.treeControl.dataNodes.forEach(element => {
-            element.selected = false;
-        });
-        node.selected = true;
-        this.router.navigate(['/folders/' + node.id]);
-    }
 
     showAction(node: any) {
         this.treeControl.dataNodes.forEach(element => {
@@ -281,7 +277,7 @@ export class FolderTreeComponent implements OnInit {
         ).subscribe();
     }
 
-    createRoot() {
+    createFolderRoot() {
         this.http.post("../../rest/folders", { label: this.autocomplete.getValue() }).pipe(
             tap(() => {
                 this.autocomplete.resetValue();
@@ -348,64 +344,11 @@ export class FolderTreeComponent implements OnInit {
     }
 
     drop(ev: any, node: any) {
-        this.classifyDocument(ev, node);
-        /*if (ev.previousContainer.id === 'folder-list') {
-            this.moveFolder(ev, node);
-        } else {
-            this.classifyDocument(ev, node);
-        }*/
-    }
-
-    moveFolder(ev: any, node: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.move + ' ' + ev.item.data.alt_identifier, msg: this.lang.moveQuestion + ' <b>' + ev.item.data.alt_identifier + '</b> ' + this.lang.in + ' <b>' + node.label + '</b>&nbsp;?' } });
-
-        this.dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            //exhaustMap(() => this.http.post("../../rest/folders/" + node.id)),
-            tap(() => {
-                node.countResources = node.countResources + 1;
-            }),
-            tap(() => this.notify.success('Courrier déplacé')),
-            tap(() => this.getFolders()),
-            finalize(() => node.drag = false),
-            catchError((err) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
-    }
-
-    classifyDocument(ev: any, node: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.classify + ' ' + ev.item.data.alt_identifier, msg: this.lang.classifyQuestion + ' <b>' + ev.item.data.alt_identifier + '</b> ' + this.lang.in + ' <b>' + node.label + '</b>&nbsp;?' } });
-
-        this.dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.post('../../rest/folders/' + node.id + '/resources', { resources: [ev.item.data.res_id] })),
-            tap((data: any) => {
-                node.countResources = data.countResources;
-            }),
-            tap(() => {
-                this.notify.success(this.lang.mailClassified);
-                this.refreshDocList.emit();
-            }),
-            finalize(() => node.drag = false),
-            catchError((err) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+        this.foldersService.classifyDocument(ev, node);
     }
 
     dragEnter(node: any) {
         node.drag = true;
-    }
-
-    getDragIds() {
-        if (this.treeControl.dataNodes !== undefined) {
-            return this.treeControl.dataNodes.map(node => 'folder-list-' + node.id);
-        } else {
-            return [];
-        }
     }
 
     openFolderAdmin(node: any) {

@@ -48,11 +48,6 @@ export class FolderPinnedComponent implements OnInit {
 
     drop(ev: any, node: any) {
         this.foldersService.classifyDocument(ev, node);
-        /*if (ev.previousContainer.id === 'folder-list') {
-            this.moveFolder(ev, node);
-        } else {
-            this.classifyDocument(ev, node);
-        }*/
     }
 
     ngOnDestroy() {

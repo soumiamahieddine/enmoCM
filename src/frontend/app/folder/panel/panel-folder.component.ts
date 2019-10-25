@@ -24,14 +24,6 @@ export class PanelFolderComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    getDragIds() {
-        if (this.folderTree !== undefined) {
-            return this.folderTree.getDragIds();
-        } else {
-            return [];
-        }
-    }
-
     initTree() {
         this.folderTree.openTree(this.id);
     }

@@ -6,7 +6,7 @@
                 (triggerEvent)="goTo($event)" appearance="outline"></plugin-autocomplete>
         </div>
         <div>
-            <button mat-icon-button color="primary" title="{{lang.addRootFolder}}" (click)="createRoot()" [disabled]="autocomplete.getValue() === '' || autocomplete.getValue() === null">
+            <button mat-icon-button color="primary" title="{{lang.addRootFolder}}" (click)="createFolderRoot()" [disabled]="autocomplete.getValue() === '' || autocomplete.getValue() === null">
                 <mat-icon class="fa fa-plus"></mat-icon>
             </button>
         </div>
@@ -17,7 +17,7 @@
     <mat-nav-list *ngIf="dataSource.data.length > 0">
         <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
             <!-- This is the tree node template for leaf nodes -->
-            <mat-tree-node cdkDropList [id]="'folder-list-'+node.id"
+            <mat-tree-node cdkDropList [id]="'treefolder-list-'+node.id"
                 cdkDropListConnectedTo="['document-list','folder-list']" (cdkDropListDropped)="drop($event, node)"
                 (cdkDropListEntered)="dragEnter(node)" (cdkDropListExited)="node.drag=false" [@hideShow]
                 *matTreeNodeDef="let node" matTreeNodePadding matTreeNodePaddingIndent="20px">
@@ -25,7 +25,7 @@
                 <button class="expandButton" mat-icon-button disabled></button>
                 <a mat-list-item disableRipple class="folderTreeItem"
                     [class.selectedFolder]="foldersService.getCurrentFolder().id == node.id"
-                    (mouseenter)="showAction(node)" (mouseleave)="hideAction(node)" (click)="selectFolder(node)">
+                    (mouseenter)="showAction(node)" (mouseleave)="hideAction(node)" (click)="foldersService.goToFolder(node)">
                     <span style="width: 90%;overflow: hidden;text-overflow: ellipsis;">
                         <span class="treeLabel" [title]="node.label" [class.drag]="node.drag">
                             <i class="fa fa-users private" *ngIf="node.public" title="{{lang.sharedFolder}}"></i>
@@ -70,7 +70,7 @@
                 </form>
             </mat-tree-node>
             <!-- This is the tree node template for expandable nodes -->
-            <mat-tree-node cdkDropList [id]="'folder-list-'+node.id" cdkDropListConnectedTo="list-1"
+            <mat-tree-node cdkDropList [id]="'treefolder-list-'+node.id" cdkDropListConnectedTo="list-1"
                 (cdkDropListDropped)="drop($event, node)" (cdkDropListEntered)="dragEnter(node)"
                 (cdkDropListExited)="node.drag=false" [@hideShow] *matTreeNodeDef="let node;when: hasChild"
                 matTreeNodePadding matTreeNodePaddingIndent="20px">
@@ -82,7 +82,7 @@
                 </button>
                 <a mat-list-item disableRipple class="folderTreeItem"
                     [class.selectedFolder]="foldersService.getCurrentFolder().id == node.id"
-                    (mouseleave)="hideAction(node)" (mouseenter)="showAction(node)" (click)="selectFolder(node)">
+                    (mouseleave)="hideAction(node)" (mouseenter)="showAction(node)" (click)="foldersService.goToFolder(node)">
                     <span style="width: 90%;overflow: hidden;text-overflow: ellipsis;">
                         <span class="treeLabel" [title]="node.label" [class.drag]="node.drag">
                             <i class="fa fa-users private" *ngIf="node.public" title="{{lang.sharedFolder}}"></i>

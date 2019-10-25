@@ -18,6 +18,8 @@ export class FoldersService {
 
     pinnedFolders: any = [];
 
+    folders: any = [];
+
     currentFolder: any = { id: 0 };
 
     private eventAction = new Subject<any>();
@@ -54,24 +56,41 @@ export class FoldersService {
         return this.currentFolder;
     }
 
+    getFolders() {
+        this.http.get("../../rest/folders").pipe(
+            tap((data: any) => {
+                this.folders = data.folders;
+                this.eventAction.next({type:'initTree', content: ''});
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    getList() {
+        return this.folders;
+    }
+
     getPinnedFolders() {
         this.loading = true;
 
         this.http.get("../../rest/pinnedFolders").pipe(
-            map((data: any) => {
-                data.folders = data.folders.map((folder: any) => {
-                    return {
-                        ...folder,
-                        showAction: false
-                    }
-                });
-                return data;
-            }),
-            finalize(() => this.loading = false),
             tap((data: any) => {
                 this.pinnedFolders = data.folders;
             }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
         ).subscribe();
+    }
+
+    setFolders(folders: any) {
+        this.folders = folders;
     }
 
     getPinnedList() {
@@ -113,7 +132,10 @@ export class FoldersService {
     }
 
     getDragIds() {
-        return this.pinnedFolders.map((folder: any) => 'folder-list-' + folder.id);
+        const treeList = this.folders.map((folder: any) => 'treefolder-list-' + folder.id);
+        const list = this.pinnedFolders.map((folder: any) => 'folder-list-' + folder.id);
+
+        return list.concat(treeList);
     }
 
     classifyDocument(ev: any, folder: any) {
@@ -123,7 +145,12 @@ export class FoldersService {
             filter((data: string) => data === 'ok'),
             exhaustMap(() => this.http.post(`../../rest/folders/${folder.id}/resources`, { resources: [ev.item.data.res_id] })),
             tap((data: any) => {
-                folder.countResources = data.countResources;
+
+
+                if (this.pinnedFolders.filter((pinFolder: any) => pinFolder.id === folder.id)[0] !== undefined) {
+                    this.pinnedFolders.filter((pinFolder: any) => pinFolder.id === folder.id)[0].countResources = data.countResources;
+                }
+                this.eventAction.next({type:'refreshFolder', content: {id: folder.id, countResources : data.countResources}});
             }),
             tap(() => {
                 this.notify.success(this.lang.mailClassified);
