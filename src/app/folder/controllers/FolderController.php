@@ -290,11 +290,13 @@ class FolderController
         }
         DatabaseModel::commitTransaction();
 
+        $folder = FolderModel::getById(['select' => ['label'], 'id' => $aArgs['id']]);
+
         HistoryController::add([
             'tableName' => 'folders',
             'recordId'  => $aArgs['id'],
             'eventType' => 'UP',
-            'info'      => _FOLDER_SHARING_MODIFICATION . " : {$data['label']}",
+            'info'      => _FOLDER_SHARING_MODIFICATION . " : {$folder['label']}",
             'moduleId'  => 'folder',
             'eventId'   => 'folderModification',
         ]);
