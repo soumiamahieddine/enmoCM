@@ -321,7 +321,10 @@ export class FolderTreeComponent implements OnInit {
                 this.dataChange.next(this.data);
 
             }),
-            tap(() => this.notify.success(this.lang.folderDeleted)),
+            tap(() => {
+                this.foldersService.getPinnedFolders();
+                this.notify.success(this.lang.folderDeleted);
+            }),
             catchError((err) => {
                 this.notify.handleErrors(err);
                 return of(false);

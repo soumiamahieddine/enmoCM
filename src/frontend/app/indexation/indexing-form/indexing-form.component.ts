@@ -263,7 +263,7 @@ export class IndexingFormComponent implements OnInit {
         });
         arrIndexingModels.forEach(element => {
             if (element.today === true) {
-                element.default_value = '_TODAY';
+                element.default_value = new Date();
             } else {
                 element.default_value = this.arrFormControl[element.identifier].value;
             }
