@@ -76,7 +76,7 @@ export class FoldersService {
     }
 
     pinFolder(folder: any) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.pinFolder, msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
@@ -93,7 +93,7 @@ export class FoldersService {
     }
 
     unpinFolder(folder: any) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.unpinFolder, msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
