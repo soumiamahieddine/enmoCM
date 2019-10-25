@@ -16,7 +16,7 @@ export class PanelFolderComponent implements OnInit {
 
     showTree: boolean = false;
     @Input('selectedId') id: number;
-    @ViewChild('folderTree', { static: true }) folderTree: FolderTreeComponent;
+    @ViewChild('folderTree', { static: false }) folderTree: FolderTreeComponent;
     
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
     
@@ -41,6 +41,8 @@ export class PanelFolderComponent implements OnInit {
     }
 
     refreshFoldersTree() {
-        this.folderTree.getFolders();
+        if (this.folderTree !== undefined) {
+            this.folderTree.getFolders();
+        }
     }
 }

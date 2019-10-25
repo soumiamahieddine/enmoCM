@@ -56,7 +56,6 @@ export class ActionsListComponent implements OnInit {
     ngOnInit(): void {
         // Event after process action 
         this.subscription = this.actionService.catchAction().subscribe(message => {
-            console.log('TOTO!');
             this.refreshEvent.emit();
             this.refreshPanelFolders.emit();
         });

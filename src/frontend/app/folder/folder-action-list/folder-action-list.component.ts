@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { filter, exhaustMap, tap, map } from 'rxjs/operators';
 import { HeaderService } from '../../../service/header.service';
+import { FoldersService } from '../folders.service';
 
 @Component({
     selector: 'app-folder-action-list',
@@ -51,7 +52,8 @@ export class FolderActionListComponent implements OnInit {
         private notify: NotificationService, 
         public dialog: MatDialog, 
         private router: Router,
-        private headerService: HeaderService
+        private headerService: HeaderService,
+        private foldersService: FoldersService
         ) { }
 
     dialogRef: MatDialogRef<any>;
@@ -91,6 +93,7 @@ export class FolderActionListComponent implements OnInit {
             tap((data: any) => {
                 this.notify.success(this.lang.removedFromFolder);
                 this.refreshFolders();
+                this.foldersService.getPinnedFolders();
                 this.refreshDaoAfterAction();
             })
         ).subscribe();
