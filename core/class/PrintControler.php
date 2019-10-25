@@ -335,18 +335,10 @@ class PrintControler extends PrintFunctions
 				}
 				
 				//LINE 3, 4
-				if ($this->array_print[$cpt]['nature_id'] <> '' || $this->array_print[$cpt]['doc_date'] <> '') {
+				if ($this->array_print[$cpt]['doc_date'] <> '') {
 					//CREATION DATE
 					$pdf->Cell(91,5,utf8_decode(_CREATED_ON . ' : ') 
 						. $functions->format_date_db($this->array_print[$cpt]['creation_date'], false),1,0, 'L', false);
-					
-					//NATURE
-					foreach (array_keys($_SESSION['mail_natures']) as $nature) {
-						if ($this->array_print[$cpt]['nature_id'] == $nature) {
-							$this->array_print[$cpt]['nature_id'] = $_SESSION['mail_natures'][$nature];
-						}
-					}
-					$pdf->Cell(91,5,utf8_decode(_NATURE . ' : ' . $this->array_print[$cpt]['nature_id']),1,1, 'L', false);
 					
 					//DOC DATE
 					$pdf->Cell(91,5,utf8_decode(_PRINT_DOC_DATE . ' : ') 

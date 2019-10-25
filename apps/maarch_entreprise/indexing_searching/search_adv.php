@@ -190,14 +190,6 @@ $arr_tmp2 = array('label' => _ASSIGNEE . ' / ' . _REDACTOR, 'type' => 'select_mu
 'id' => 'destinataire', 'options' => $arr_tmp, ));
 $param['destinataire'] = $arr_tmp2;
 
-//mail_natures
-$arr_tmp = array();
-foreach (array_keys($_SESSION['mail_natures']) as $nature) {
-    array_push($arr_tmp, array('VALUE' => $nature, 'LABEL' => $_SESSION['mail_natures'][$nature]));
-}
-$arr_tmp2 = array('label' => _MAIL_NATURE, 'type' => 'select_simple', 'param' => array('field_label' => _MAIL_NATURE, 'default_label' => addslashes(_CHOOSE_MAIL_NATURE), 'options' => $arr_tmp));
-$param['mail_nature'] = $arr_tmp2;
-
 //priority
 $arr_tmp = array();
 foreach (array_keys($_SESSION['mail_priorities']) as $priority) {

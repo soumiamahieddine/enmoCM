@@ -1875,12 +1875,6 @@ if (!defined('_DOCTYPES')) {
 if (!defined('_DOCTYPE_INDEXES')) {
     define('_DOCTYPE_INDEXES', 'Document type index');
 }
-if (!defined('_MAIL_NATURE')) {
-    define('_MAIL_NATURE', ' Nature of the sending');
-}
-if (!defined('_CHOOSE_MAIL_NATURE')) {
-    define('_CHOOSE_MAIL_NATURE', 'Choose the nature of the sending');
-}
 if (!defined('_ERROR_DOCTYPE')) {
     define('_ERROR_DOCTYPE', 'Invalid document type');
 }

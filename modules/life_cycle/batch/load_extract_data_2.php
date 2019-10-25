@@ -324,21 +324,6 @@ if (count($mailPriorities) > 0) {
     }
 }
 
-$GLOBALS['mail_natures'] = array();
-$mailNatures = $xml_entreprise->mail_natures;
-if (count($mailNatures) > 0) {
-    foreach ($mailNatures->nature as $nature ) {
-        $label = (string) $nature->label;
-        $attribute = (string) $nature->attributes();
-        if (!empty($label) && defined($label)
-            && constant($label) <> NULL
-         ) {
-            $label = constant($label);
-        }
-        $GLOBALS['mail_natures'][(string) $nature->id] = $label;
-    }
-}
-
 $GLOBALS['mail_titles'] = array();
 $mailTitles = $xml_entreprise->titles;
 if (count($mailTitles) > 0) {

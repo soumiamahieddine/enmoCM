@@ -604,8 +604,6 @@ if (!defined('_ERROR_IE_SEARCH')) { define('_ERROR_IE_SEARCH', 'Dit element werd
 if (!defined('_DEST_USER')) { define('_DEST_USER', 'Ontvanger');}
 if (!defined('_DOCTYPES')) { define('_DOCTYPES', 'Documenttype(s)');}
 if (!defined('_DOCTYPE_INDEXES')) { define('_DOCTYPE_INDEXES', 'Index van het documenttype');}
-if (!defined('_MAIL_NATURE')) { define('_MAIL_NATURE', 'Aard van de verzending');}
-if (!defined('_CHOOSE_MAIL_NATURE')) { define('_CHOOSE_MAIL_NATURE', 'Kies de aard van de verzending');}
 if (!defined('_ERROR_DOCTYPE')) { define('_ERROR_DOCTYPE', 'Ongeldig documenttype');}
 if (!defined('_ADMISSION_DATE')) { define('_ADMISSION_DATE', 'Aankomstdatum');}
 if (!defined('_FOUND_DOC')) { define('_FOUND_DOC', 'brieven gevonden');}

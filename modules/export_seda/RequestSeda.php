@@ -93,7 +93,7 @@ class RequestSeda
         $query = "SELECT destination FROM res_letterbox WHERE res_id = ?";
         $this->statement['getDestinationLetter'] = $this->db->prepare($query);
 
-        $query = "SELECT res_id, contact_id, filename, docserver_id, path, creation_date, modification_date, type_id, doc_date, admission_date, creation_date, exp_contact_id, dest_contact_id, destination, nature_id, type_label, alt_identifier, subject, title
+        $query = "SELECT res_id, contact_id, filename, docserver_id, path, creation_date, modification_date, type_id, doc_date, admission_date, creation_date, exp_contact_id, dest_contact_id, destination, type_label, alt_identifier, subject
                   FROM res_view_letterbox
                   WHERE res_id = ?";
         $this->statement['getLetter'] = $this->db->prepare($query);

@@ -504,12 +504,6 @@ where lower(translate(folders.label , 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓ�
                 $json_txt .= '],';
             }
 
-            // MAIL NATURE
-            elseif ($tab_id_fields[$j] == 'mail_nature' && !empty($_REQUEST['mail_nature'])) {
-                $json_txt .= "'mail_nature' : ['".addslashes(trim($_REQUEST['mail_nature']))."'],";
-                $where_request .= " nature_id = :mailNature and ";
-                $arrayPDO = array_merge($arrayPDO, array(":mailNature" => $_REQUEST['mail_nature']));
-            }
             // CREATION DATE PJ : FROM
             elseif ($tab_id_fields[$j] == 'creation_date_pj_from' && !empty($_REQUEST['creation_date_pj_from'])) {
                 if (preg_match($_ENV['date_pattern'], $_REQUEST['creation_date_pj_from'])==false) {

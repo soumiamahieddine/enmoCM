@@ -695,28 +695,6 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
     $frmStr .= '<input type="hidden" id="sender_recipient_type" />';
     $frmStr .= '</tr>';
 
-    /*** Nature ***/
-    $frmStr .= '<tr id="nature_id_tr" style="display:'.$displayValue.';">';
-    $frmStr .= '<td><label for="nature_id" class="form_title" >'._NATURE
-            .'</label></td>';
-    $frmStr .= '<td>&nbsp;</td>';
-    $frmStr .= '<td class="indexing_field"><select name="nature_id" '
-            .'id="nature_id" onchange="clear_error(\'frm_error_'.$actionId
-            .'\');affiche_reference();">';
-    $frmStr .= '<option value="">'._CHOOSE_NATURE.'</option>';
-    foreach (array_keys($_SESSION['mail_natures']) as $nature) {
-        $frmStr .= '<option value="'.functions::xssafe($nature).'" with_reference = "'.$_SESSION['mail_natures_attribute'][$nature].'"';
-        if ($_SESSION['default_mail_nature'] == $nature) {
-            $frmStr .= 'selected="selected"';
-        }
-        $frmStr .= '>'.functions::xssafe($_SESSION['mail_natures'][$nature]).'</option>';
-    }
-    $frmStr .= '</select></td>';
-    $frmStr .= '<td><span class="red_asterisk" id="nature_id_mandatory" '
-            .'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<script>$j("#nature_id").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
-
     /****** RECOMMANDE ******/
     $frmStr .= '<tr id="reference_number_tr" style="display:none;">';
     $frmStr .= '<td><label for="reference_number" class="form_title" >'._MONITORING_NUMBER.'</label></td>';

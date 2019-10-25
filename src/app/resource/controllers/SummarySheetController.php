@@ -219,8 +219,7 @@ class SummarySheetController
         }
         foreach ($units as $key => $unit) {
             if ($unit['unit'] == 'primaryInformations') {
-                $nature        = ResModel::getNatureLabel(['natureId' => '']);
-                $nature        = empty($nature) ? '<i>'._UNDEFINED.'</i>' : "<b>{$nature}</b>";
+                $nature        = '<i>'._UNDEFINED.'</i>';
                 $admissionDate = TextFormatModel::formatDate($resource['admission_date'], 'd-m-Y');
                 $admissionDate = empty($admissionDate) ? '<i>'._UNDEFINED.'</i>' : "<b>{$admissionDate}</b>";
                 $creationdate  = TextFormatModel::formatDate($resource['creation_date'], 'd-m-Y');

@@ -84,7 +84,6 @@ try {
             "Objet du courrier", 
             "Catégorie",
             "Type du courrier", 
-            "Nature", 
             "Département",  //5
             "Thésaurus", 
             "Thème", 
@@ -481,7 +480,6 @@ try {
                 $selectedFile->subject,             
                 $selectedFile->category_id,
                 $selectedFile->type_label,
-                $GLOBALS['mail_natures'][$selectedFile->nature_id],
                 $department_name,  //5
                 $parentFolder,
                 $selectedFile->folder_name,//"Sous Thème", 

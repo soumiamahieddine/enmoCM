@@ -349,7 +349,6 @@
       <parameter name="signatory_name_id" type="identifier" />
       <parameter name="tags_chosen" type="string" />
       <parameter name="tags_available" type="string" />
-      <parameter name="mail_nature" type="identifier" />
       <parameter name="signatory_name" type="string" />
       <parameter name="doc_notes" type="string" />
       <parameter name="chrono" type="string" />
