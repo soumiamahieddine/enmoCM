@@ -355,6 +355,9 @@ class ResControllerTest extends TestCase
             ]
         ];
 
+        $entity = \Entity\models\EntityModel::getByEntityId(['entityId' => 'PJS', 'select' => ['id']]);
+        $this->assertInternalType('int', $entity['id']);
+
         foreach ($aNewDocument as $key => $value) {
             $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
             $request        = \Slim\Http\Request::createFromEnvironment($environment);
@@ -370,8 +373,8 @@ class ResControllerTest extends TestCase
                 'documentDate'  => '2019-01-01 17:18:47',
                 'arrivalDate'   => '2019-01-01 17:18:47',
                 'doctype'       => $value[0],
-                'destination'   => 15,
-                'initiator'     => 15,
+                'destination'   => $entity['id'],
+                'initiator'     => $entity['id'],
                 'subject'       => $key .' Breaking News : 12345 Superman is alive - PHP unit',
                 'typist'        => 19,
                 'priority'      => $value[1],

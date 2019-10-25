@@ -49,6 +49,7 @@ use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
 use Tag\models\TagModel;
 use Tag\models\TagResModel;
+use User\models\UserGroupModel;
 use User\models\UserModel;
 
 class ResController
@@ -996,14 +997,15 @@ class ResController
         $body = $args['body'];
 
         if (!empty($body['destination'])) {
-            $groups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
+            $groups = UserGroupModel::getWithGroups([
+                'select'    => ['usergroups.indexation_parameters'],
+                'where'     => ['usergroup_content.user_id = ?', 'usergroups.can_index = ?'],
+                'data'      => [$GLOBALS['id'], true]
+            ]);
 
             $clauseToProcess = '';
             $allowedEntities = [];
             foreach ($groups as $group) {
-                if (!$group['can_index']) {
-                    continue;
-                }
                 $group['indexation_parameters'] = json_decode($group['indexation_parameters'], true);
                 foreach ($group['indexation_parameters']['keywords'] as $keywordValue) {
                     if (strpos($clauseToProcess, IndexingController::KEYWORDS[$keywordValue]) === false) {

@@ -796,6 +796,8 @@ DELETE FROM security WHERE group_id = 'MAARCHTOGEC';
 INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('MAARCHTOGEC', 'letterbox_coll', '1=0', 'Aucun courrier');
 DELETE FROM security WHERE group_id = 'SERVICE';
 INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('SERVICE', 'letterbox_coll', '1=0', 'Aucun courrier');
+DELETE FROM security WHERE group_id = 'WEBSERVICE';
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('WEBSERVICE', 'letterbox_coll', '1=0', 'Aucun courrier');
 
 -- Donnees manuelles
 ------------
@@ -1082,7 +1084,7 @@ TRUNCATE TABLE users_baskets_preferences;
 INSERT INTO users_baskets_preferences (user_serial_id, group_serial_id, basket_id, display)
 SELECT usergroup_content.user_id, usergroups.id, groupbasket.basket_id, TRUE FROM usergroups, groupbasket, usergroup_content
 WHERE groupbasket.group_id = usergroups.group_id AND usergroups.id = usergroup_content.group_id
-ORDER BY users.id;
+ORDER BY usergroup_content.user_id;
 
 ------------
 --ACTIONS_GROUPBASKETS
