@@ -104,7 +104,6 @@ if (empty($_SESSION['config']['databasename'])) {
 
     $businessAppTools->build_business_app_config();
     $core->load_modules_config($_SESSION['modules']);
-    $core->load_menu($_SESSION['modules']);
     $core->load_lang();
     $core->load_app_services();
     $core->load_modules_services($_SESSION['modules']);
@@ -195,7 +194,6 @@ if (!empty($_SESSION['error'])) {
                         \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
                         \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
                         $user = \User\models\UserModel::getByLogin(['login' => $login, 'select' => ['id']]);
-                        $core->load_menu($_SESSION['modules']);
                         header(
                             'location: ' . $_SESSION['config']['businessappurl']
                             . $res['url']
@@ -261,7 +259,6 @@ if (!empty($_SESSION['error'])) {
                     } else {
                         $_SESSION['error'] = $res['error'];
                     }
-                    $core->load_menu($_SESSION['modules']);
                     header(
                         'location: ' . $_SESSION['config']['businessappurl']
                         . $res['url']
@@ -299,7 +296,6 @@ if (!empty($_SESSION['error'])) {
         if (empty($res['error'])) {
             \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
             \SrcCore\models\AuthenticationModel::resetFailedAuthentication(['userId' => $login]);
-            $core->load_menu($_SESSION['modules']);
         } else {
             $_SESSION['error'] = $res['error'];
         }

@@ -28,7 +28,7 @@ export class FolderPinnedComponent implements OnInit {
         private notify: NotificationService,
         private dialog: MatDialog,
         private router: Router,
-        private foldersService: FoldersService
+        public foldersService: FoldersService
     ) {
         // Event after process action 
         this.subscription = this.foldersService.catchEvent().subscribe((result: any) => {

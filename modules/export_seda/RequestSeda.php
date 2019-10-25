@@ -74,7 +74,6 @@ class RequestSeda
 
             $businessAppTools->build_business_app_config();
             $coreTools->load_modules_config($_SESSION['modules']);
-            $coreTools->load_menu($_SESSION['modules']);
         }
 
         $this->statement = [];
