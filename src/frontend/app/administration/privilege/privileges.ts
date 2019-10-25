@@ -1,9 +1,11 @@
+const lang : any = [];
 export const PRIVILEGES = [
     //MENU
     {
         "id"        : "admin",
-        "label"     : "_ADMIN",
-        "comment"   : "_ADMIN",
+        "label2"     : "_ADMIN",
+        "label"     : lang.administration,
+        "comment"   : lang.administration,
         "route"     : "/administration",
         "type"      : "menu",
         "style"     : "fa fa-cogs",
@@ -11,8 +13,9 @@ export const PRIVILEGES = [
     },
     {
         "id"        : "adv_search_mlb",
-        "label"     : "_ADV_SEARCH_MLB",
-        "comment"   : "_ADV_SEARCH_MLB",
+        "label2"     : "_ADV_SEARCH_MLB",
+        "label"     : lang.search,
+        "comment"   : lang.search,
         "route"     : "index.php?page=search_adv&amp;dir=indexing_searching",
         "type"      : "menu",
         "style"     : "fa fa-search",
@@ -20,8 +23,9 @@ export const PRIVILEGES = [
     },
     {
         "id"        : "entities_print_sep_mlb",
-        "label"     : "_ENTITIES_PRINT_SEP_MLB",
-        "comment"   : "_ENTITIES_PRINT_SEP_MLB",
+        "label2"     : "_ENTITIES_PRINT_SEP_MLB",
+        "label"     : lang.entitiesSeparator,
+        "comment"   : lang.entitiesSeparator,
         "route"     : "/separators/print",
         "type"      : "menu",
         "style"     : "fa fa-print",
@@ -29,8 +33,10 @@ export const PRIVILEGES = [
     },
     {
         "id"        : "reports",
-        "label"     : "_REPORTS",
-        "comment"   : "_REPORTS_DESC",
+        "label2"     : "_REPORTS",
+        "comment2"   : "_REPORTS_DESC",
+        "label"     : lang.reports,
+        "comment"   : lang.reports,
         "route"     : "index.php?page=reports&amp;module=reports",
         "type"      : "menu",
         "style"     : "fa fa-chart-area",
@@ -38,8 +44,9 @@ export const PRIVILEGES = [
     },
     {
         "id"        : "save_numeric_package",
-        "label"     : "_SAVE_NUMERIC_PACKAGE",
-        "comment"   : "_SAVE_NUMERIC_PACKAGE",
+        "label2"     : "_SAVE_NUMERIC_PACKAGE",
+        "label"     : lang.saveNumericPackage,
+        "comment"   : lang.saveNumericPackage,
         "route"     : "/saveNumericPackage",
         "type"      : "menu",
         "style"     : "fa fa-file-archive",
