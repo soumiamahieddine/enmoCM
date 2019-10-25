@@ -268,11 +268,11 @@ class FolderController
         return $response->withStatus(200);
     }
 
-    public function sharing(Request $request, Response $response, array $aArgs)
+    public function sharing(Request $request, Response $response, array $args)
     {
         $data = $request->getParams();
 
-        if (!Validator::numeric()->notEmpty()->validate($aArgs['id'])) {
+        if (!Validator::numeric()->notEmpty()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Query id is empty or not an integer']);
         }
         if (!Validator::boolType()->validate($data['public'])) {
@@ -282,19 +282,42 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Body sharing/entities does not exists']);
         }
 
+        $entitiesBefore = EntityFolderModel::getByFolderId(['select' => ['entities_folders.entity_id'], 'folder_id' => $args['id']]);
+        $entitiesAfter = $data['sharing']['entities'];
+
+        $entitiesToRemove = array_udiff($entitiesBefore, $entitiesAfter, function ($a, $b) {
+            if ($a["entity_id"] < $b["entity_id"]) {
+                return -1;
+            }
+            if ($a["entity_id"] > $b["entity_id"]) {
+                return 1;
+            }
+            return 0;
+        });
+
+        $entitiesToAdd = array_udiff($entitiesAfter, $entitiesBefore, function ($a, $b) {
+            if ($a["entity_id"] < $b["entity_id"]) {
+                return -1;
+            }
+            if ($a["entity_id"] > $b["entity_id"]) {
+                return 1;
+            }
+            return 0;
+        });
+
         DatabaseModel::beginTransaction();
-        $sharing = FolderController::folderSharing(['folderId' => $aArgs['id'], 'public' => $data['public'], 'sharing' => $data['sharing']]);
+        $sharing = FolderController::folderSharing(['folderId' => $args['id'], 'public' => $data['public'], 'remove' => $entitiesToRemove, 'add' => $entitiesToAdd]);
         if (!$sharing) {
             DatabaseModel::rollbackTransaction();
             return $response->withStatus(400)->withJson(['errors' => 'Cannot share/unshare folder because at least one folder is out of your perimeter']);
         }
         DatabaseModel::commitTransaction();
 
-        $folder = FolderModel::getById(['select' => ['label'], 'id' => $aArgs['id']]);
+        $folder = FolderModel::getById(['select' => ['label'], 'id' => $args['id']]);
 
         HistoryController::add([
             'tableName' => 'folders',
-            'recordId'  => $aArgs['id'],
+            'recordId'  => $args['id'],
             'eventType' => 'UP',
             'info'      => _FOLDER_SHARING_MODIFICATION . " : {$folder['label']}",
             'moduleId'  => 'folder',
@@ -304,37 +327,38 @@ class FolderController
         return $response->withStatus(204);
     }
 
-    public function folderSharing($aArgs = [])
-    {
-        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['folderId'], 'edition' => true]);
+    public function folderSharing($args = []) {
+        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $args['folderId'], 'edition' => true]);
         if (empty($folder[0])) {
             return false;
         }
+        $entitiesToRemove = array_column($args['remove'], 'entity_id');
 
         FolderModel::update([
             'set' => [
-                'public' => empty($aArgs['public']) ? 'false' : 'true',
+                'public' => empty($args['public']) ? 'false' : 'true',
             ],
             'where' => ['id = ?'],
-            'data' => [$aArgs['folderId']]
+            'data' => [$args['folderId']]
         ]);
 
-        EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['folderId']]);
-
-        if ($aArgs['public'] && !empty($aArgs['sharing']['entities'])) {
-            foreach ($aArgs['sharing']['entities'] as $entity) {
+        if (!empty($args['remove'])) {
+            EntityFolderModel::delete(['entity_id' => $entitiesToRemove, 'folder_id' => $args['folderId']]);
+        }
+        if (!empty($args['add'])) {
+            foreach ($args['add'] as $entity) {
                 EntityFolderModel::create([
-                    'folder_id' => $aArgs['folderId'],
+                    'folder_id' => $args['folderId'],
                     'entity_id' => $entity['entity_id'],
-                    'edition'   => $entity['edition'],
+                    'edition'   => $entity['edition']
                 ]);
             }
         }
 
-        $folderChild = FolderModel::getChild(['id' => $aArgs['folderId'], 'select' => ['id']]);
+        $folderChild = FolderModel::getChild(['id' => $args['folderId'], 'select' => ['id']]);
         if (!empty($folderChild)) {
             foreach ($folderChild as $child) {
-                FolderController::folderSharing(['folderId' => $child['id'], 'public' => $aArgs['public'], 'sharing' => $aArgs['sharing']]);
+                FolderController::folderSharing(['folderId' => $child['id'], 'public' => $args['public'], 'remove' => $args['remove'], 'add' => $args['add']]);
             }
         }
 
