@@ -119,7 +119,36 @@ class request extends dbquery
                             $where_string = "( ".$_SESSION['user']['security'][$coll]['DOC']['where']." ) ";
                             //$where_string = " where ( ".$_SESSION['user']['security'][$coll]['DOC']['where']." ) ";
                         } else {
-                            $where_string = ''.$where_string." and ( ".$_SESSION['user']['security'][$coll]['DOC']['where']." ) ";
+
+                            if (array_key_exists(':label', $parameters)) {
+                                $whereFolders = "select res_id
+from resources_folders
+         left join folders on resources_folders.folder_id = folders.id
+where lower(translate(folders.label , 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ',
+                                       'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) ilike
+                       lower(translate(:label, 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ',
+                                      'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))
+    and (
+        folders.id in (
+            select folders.id
+            from folders
+            left join users on folders.user_id = users.id
+            where users.user_id = :user_id
+        ) or folders.id in (
+            select entities_folders.folder_id
+            from entities_folders
+                left join entities on entities_folders.entity_id = entities.id
+                left join users_entities on entities.entity_id = users_entities.entity_id
+            where users_entities.user_id = :user_id
+        )
+    )";
+
+                                $where_string = ''.$where_string." and ( ".$_SESSION['user']['security'][$coll]['DOC']['where']." or res_id in (".$whereFolders.")) ";
+                                $parameters = array_merge($parameters, array(":label" => $parameters[':label'], ":user_id" => $parameters[':user_id']));
+                            } else {
+                                $where_string = '' . $where_string . " and ( " . $_SESSION['user']['security'][$coll]['DOC']['where'] . " ) ";
+                            }
+
                         }
                         break;
                     }

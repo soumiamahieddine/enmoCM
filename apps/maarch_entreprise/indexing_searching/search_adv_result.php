@@ -246,6 +246,38 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " (contact_id in(select contact_id from view_contacts where contact_type = :contactType))) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":contactType" => $_REQUEST['contact_type']));
             }
+            elseif ($tab_id_fields[$j] == 'project' && !empty($_REQUEST['project'])) {
+                $json_txt .= " 'project' : ['".addslashes(trim($_REQUEST['project']))."'],";
+                $project = $func->wash($_REQUEST['project'], "no", _MARKET, "no");
+
+                $where_request .= " res_id in ( ";
+
+                $where_request .= "select res_id
+from resources_folders
+         left join folders on resources_folders.folder_id = folders.id
+where lower(translate(folders.label , 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ',
+                                       'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) ilike
+                       lower(translate(:label, 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ',
+                                      'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))
+    and (
+        folders.id in (
+            select folders.id
+            from folders
+            left join users on folders.user_id = users.id
+            where users.user_id = :user_id
+        ) or folders.id in (
+            select entities_folders.folder_id
+            from entities_folders
+                left join entities on entities_folders.entity_id = entities.id
+                left join users_entities on entities.entity_id = users_entities.entity_id
+            where users_entities.user_id = :user_id
+        )
+    )";
+
+                $where_request .=" ) and ";
+
+                $arrayPDO = array_merge($arrayPDO, array(":label" => "%".$project."%", ":user_id" => $GLOBALS['userId']));
+            }
             // GED NUM
             elseif ($tab_id_fields[$j] == 'numged' && !empty($_REQUEST['numged'])) {
                 $json_txt .= " 'numged' : ['".addslashes(trim($_REQUEST['numged']))."'],";
