@@ -393,18 +393,19 @@ class FolderController
         return $response->withStatus(204);
     }
 
-    public static function folderDeletion(array $aArgs = [])
+    public static function folderDeletion(array $args = [])
     {
-        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['folderId'], 'edition' => true]);
+        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $args['folderId'], 'edition' => true]);
         if (empty($folder[0])) {
             return false;
         }
 
-        FolderModel::delete(['where' => ['id = ?'], 'data' => [$aArgs['folderId']]]);
-        EntityFolderModel::deleteByFolderId(['folder_id' => $aArgs['folderId']]);
-        ResourceFolderModel::delete(['where' => ['folder_id = ?'], 'data' => [$aArgs['folderId']]]);
+        FolderModel::delete(['where' => ['id = ?'], 'data' => [$args['folderId']]]);
+        EntityFolderModel::deleteByFolderId(['folder_id' => $args['folderId']]);
+        ResourceFolderModel::delete(['where' => ['folder_id = ?'], 'data' => [$args['folderId']]]);
+        UserPinnedFolderModel::delete([ 'where' => ['folder_id = ?'], 'data'  => [$args['folderId']] ]);
 
-        $folderChild = FolderModel::getChild(['id' => $aArgs['folderId'], 'select' => ['id']]);
+        $folderChild = FolderModel::getChild(['id' => $args['folderId'], 'select' => ['id']]);
         if (!empty($folderChild)) {
             foreach ($folderChild as $child) {
                 $deletion = FolderController::folderDeletion(['folderId' => $child['id']]);
