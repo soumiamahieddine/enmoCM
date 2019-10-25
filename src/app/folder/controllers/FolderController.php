@@ -35,6 +35,7 @@ use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
+use User\models\UserEntityModel;
 use User\models\UserModel;
 
 class FolderController
@@ -342,7 +343,7 @@ class FolderController
             'data' => [$args['folderId']]
         ]);
 
-        if (!empty($args['remove'])) {
+        if (!empty($entitiesToRemove)) {
             EntityFolderModel::delete(['entity_id' => $entitiesToRemove, 'folder_id' => $args['folderId']]);
         }
         if (!empty($args['add'])) {
@@ -352,6 +353,41 @@ class FolderController
                     'entity_id' => $entity['entity_id'],
                     'edition'   => $entity['edition']
                 ]);
+            }
+        }
+
+        $entitiesOfFolder = EntityFolderModel::getByFolderId([
+            'select' => ['entities.entity_id'],
+            'folder_id' => $args['folderId']
+        ]);
+        $entitiesOfFolder = array_column($entitiesOfFolder, 'entity_id');
+
+        $users = UserPinnedFolderModel::get([
+            'select' => ['user_id'],
+            'where' => ['folder_id = ?'],
+            'data' => [$args['folderId']]
+        ]);
+
+        if (!empty($users) && empty($entitiesOfFolder)) {
+            UserPinnedFolderModel::delete([
+                'where' => ['folder_id = ?', 'user_id != ?'],
+                'data' => [$args['folderId'], $folder[0]['user_id']]
+            ]);
+        } else {
+            foreach ($users as $user) {
+                if ($user['user_id'] != $folder[0]['user_id']) {
+                    $inEntities = UserEntityModel::getWithUsers([
+                        'select' => ['users.id'],
+                        'where' => ['users.id = ?', 'entity_id in (?)'],
+                        'data' => [$user['user_id'], $entitiesOfFolder]
+                    ]);
+                    if (empty($inEntities)) {
+                        UserPinnedFolderModel::delete([
+                            'where' => ['folder_id = ?', 'user_id = ?'],
+                            'data' => [$args['folderId'], $user['user_id']]
+                        ]);
+                    }
+                }
             }
         }
 
