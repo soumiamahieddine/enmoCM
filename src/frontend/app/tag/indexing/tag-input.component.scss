@@ -23,3 +23,18 @@
 .listAutocomplete {
     height: auto;
 }
+
+.itemChip {
+    display: block;
+    width: 95%;
+
+    ::ng-deep.mat-chip-list-wrapper {
+        margin: 0px;
+    }
+}
+
+.itemList {
+    padding-top: 10px;
+    overflow-x: hidden;
+    max-height: 165px;
+}
