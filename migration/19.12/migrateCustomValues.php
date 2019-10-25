@@ -49,12 +49,20 @@ foreach ($customs as $custom) {
             ]);
     
             foreach ($migration['modelId'] as $modelId) {
-                \IndexingModel\models\IndexingModelFieldModel::create([
-                    'model_id'   => $modelId,
-                    'identifier' => 'indexingCustomField_'.$fieldId,
-                    'mandatory'  => 'false',
-                    'unit'       => 'mail'
+                $indexingModels = \IndexingModel\models\IndexingModelModel::get([
+                    'select'=> [1],
+                    'where' => ['id = ?'],
+                    'data'  => [$modelId]
                 ]);
+
+                if (!empty($indexingModels)) {
+                    \IndexingModel\models\IndexingModelFieldModel::create([
+                        'model_id'   => $modelId,
+                        'identifier' => 'indexingCustomField_'.$fieldId,
+                        'mandatory'  => 'false',
+                        'unit'       => 'mail'
+                    ]);
+                }
             }
     
             $aValues = [];
