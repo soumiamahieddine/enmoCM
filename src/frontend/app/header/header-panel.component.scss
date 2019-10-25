@@ -1,6 +1,6 @@
 .panelHeader {
     display: flex;
-
+    align-items: center;
     &-logo {
         flex: 1;
     }
@@ -11,6 +11,24 @@
 
         .mat-icon-button {
             font-size: 25px;
+            color: #666;
+        }
+    }
+
+    &-backHome {
+        i {
+            height: auto;
+            color:
+            #666;
+            background:
+            #D8D8D8;
+            padding: 10px;
+            border-radius: 20px;
+            font-size: 18px;
+        }
+
+        span {
+            font-size: 13px;
             color: #666;
         }
     }

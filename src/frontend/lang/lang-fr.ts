@@ -1209,4 +1209,5 @@ export const LANG_FR = {
     "hideFoldersTree" : "Cacher l'arborescence",    
     "folderPinned" : "Dossier épinglé",    
     "folderUnpinned" : "Dossier retiré",    
+    "backHome" : "Retour accueil",    
 };

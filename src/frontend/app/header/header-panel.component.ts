@@ -4,6 +4,7 @@ import { HeaderService }        from '../../service/header.service';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../service/app.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'header-panel',
@@ -17,12 +18,19 @@ export class HeaderPanelComponent implements OnInit {
     dialogRef   : MatDialogRef<any>;
     config      : any       = {};
 
+
+    @Input('showBackHome') showBackHome: boolean = false;
     @Input('snavLeft') snavLeft: MatSidenav;
     
     constructor(
         public headerService: HeaderService,
-        public appService: AppService
+        public appService: AppService,
+        private router: Router
     ) { }
 
     ngOnInit(): void { }
+
+    gotToHome() {
+        this.router.navigate(['/home']);
+    }
 }

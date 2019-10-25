@@ -1198,4 +1198,5 @@ export const LANG_NL = {
     "hideFoldersTree" : "Hide tree", //_TO_TRANSLATE
     "folderPinned" : "Folder pinned", //_TO_TRANSLATE  
     "folderUnpinned" : "Folder unpinned", //_TO_TRANSLATE
+    "backHome" : "Back to home",  //_TO_TRANSLATE
 };

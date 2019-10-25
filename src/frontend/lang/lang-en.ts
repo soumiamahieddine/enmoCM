@@ -1172,4 +1172,5 @@ export const LANG_EN = {
     "hideFoldersTree" : "Hide tree",
     "folderPinned" : "Folder pinned",    
     "folderUnpinned" : "Folder unpinned",
+    "backHome" : "Back to home", 
 };
