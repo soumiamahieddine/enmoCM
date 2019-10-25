@@ -28,7 +28,7 @@
                                 [class.listModels-menu-selected]="privateIndexingModel.id === currentIndexingModel.id"
                                 style="padding-left: 50px;display: flex;align-items: center;">
                                 <div style="flex:1;">
-                                    {{privateIndexingModel.label}} <span
+                                    {{privateIndexingModel.label  | shorten: 45: '...'}} <span
                                         class="listModels-menu-badge">{{lang.private}}</span>
                                 </div>
                                 <button mat-icon-button class="listModels-menu-delete"
