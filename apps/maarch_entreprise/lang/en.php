@@ -290,9 +290,6 @@ if (!defined('_TRACE_ACT')) {
 if (!defined('_INCLUDE_SUB_ENTITIES')) {
     define('_INCLUDE_SUB_ENTITIES', 'Include sub-entities');
 }
-if (!defined('_GRAPHICS_REPORTS')) {
-    define('_GRAPHICS_REPORTS', 'Graphics mode enabled');
-}
 
 /************** Forms And lists **************/
 if (!defined('_ID')) {
@@ -3559,10 +3556,6 @@ if (!defined('_SQL_QUERY_NOT_SECURE')) {
     define('_SQL_QUERY_NOT_SECURE', 'SQL request is not secured');
 }
 
-//service to put doc on validation from details page
-if (!defined('_PUT_DOC_ON_VALIDATION_FROM_DETAILS')) {
-    define('_PUT_DOC_ON_VALIDATION_FROM_DETAILS', 'Send the document for validation from the detailed page');
-}
 if (!defined('_PUT_DOC_ON_VALIDATION')) {
     define('_PUT_DOC_ON_VALIDATION', 'Send the document for validation');
 }
@@ -3919,15 +3912,6 @@ if (!defined('_CHOOSE_CURRENT_STATUS')) {
 }
 
 //PRINT
-if (!defined('_PRINT_DETAILS_SERVICE')) {
-    define('_PRINT_DETAILS_SERVICE', 'Print the liaison sheet from the detail sheet');
-}
-if (!defined('_PRINT_DETAILS')) {
-    define('_PRINT_DETAILS', 'Print liaison sheet');
-}
-if (!defined('_PRINT_DOC_DETAILS_FROM_SEARCH')) {
-    define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'Print the liaison sheets from the search');
-}
 if (!defined('_PRINT_DOC_FROM_LIST')) {
     define('_PRINT_DOC_FROM_LIST', 'Print the mail liaison sheets');
 }

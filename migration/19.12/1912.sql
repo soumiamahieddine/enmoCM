@@ -369,6 +369,23 @@ DELETE FROM usergroups_services WHERE service_id = 'admin_thesaurus';
 DELETE FROM usergroups_services WHERE service_id = 'thesaurus_view';
 DELETE FROM usergroups_services WHERE service_id = 'add_thesaurus_to_res';
 UPDATE usergroups_services SET service_id = 'manage_tags_application' WHERE service_id = 'create_tag';
+UPDATE usergroups_services SET service_id = 'update_status_mail' WHERE service_id = 'reopen_mail';
+DELETE FROM usergroups_services WHERE service_id = 'quicklaunch';
+DELETE FROM usergroups_services WHERE service_id = 'put_in_validation';
+DELETE FROM usergroups_services WHERE service_id = 'print_details';
+DELETE FROM usergroups_services WHERE service_id = 'print_doc_details_from_list';
+DELETE FROM usergroups_services WHERE service_id = 'view_attachments';
+DELETE FROM usergroups_services WHERE service_id = 'manage_attachments';
+DELETE FROM usergroups_services WHERE service_id = 'index_attachment';
+DELETE FROM usergroups_services WHERE service_id = 'display_basket_list';
+DELETE FROM usergroups_services WHERE service_id = 'choose_entity';
+DELETE FROM usergroups_services WHERE service_id = 'export_seda_view';
+DELETE FROM usergroups_services WHERE service_id = 'manage_notes_doc';
+DELETE FROM usergroups_services WHERE service_id = 'notes_restriction';
+DELETE FROM usergroups_services WHERE service_id = 'graphics_reports';
+DELETE FROM usergroups_services WHERE service_id = 'show_reports';
+DELETE FROM usergroups_services WHERE service_id = 'param_templates_doctypes';
+DELETE FROM usergroups_services WHERE service_id = 'doctype_template_use';
 
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'update_diffusion_indexing'

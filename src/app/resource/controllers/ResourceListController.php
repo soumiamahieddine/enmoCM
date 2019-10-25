@@ -1093,12 +1093,14 @@ class ResourceListController
             'groupBy'   => ['status']
         ]);
         foreach ($rawStatuses as $key => $value) {
-            $status = StatusModel::getById(['select' => ['label_status'], 'id' => $value['status']]);
-            $statuses[] = [
-                'id'        => $value['status'],
-                'label'     => empty($status['label_status']) ? '_UNDEFINED' : $status['label_status'],
-                'count'     => $value['count']
-            ];
+            if (!empty($value['status'])) {
+                $status = StatusModel::getById(['select' => ['label_status'], 'id' => $value['status']]);
+                $statuses[] = [
+                    'id'        => $value['status'],
+                    'label'     => empty($status['label_status']) ? '_UNDEFINED' : $status['label_status'],
+                    'count'     => $value['count']
+                ];
+            }
         }
 
         $entities = [];

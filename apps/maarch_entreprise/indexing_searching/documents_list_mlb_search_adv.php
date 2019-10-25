@@ -915,7 +915,7 @@ if ($nbTab > 0) {
         array_push($paramsTab['tools'], $export2);
     }
 
-    if ($printTool && $core_tools->test_service('print_doc_details_from_list', 'apps', false)) {
+    if ($printTool) {
         $print = array(
                     'script' => "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=print', '_blank');",
                     'icon' => 'link',

@@ -2928,9 +2928,6 @@ if (!defined('_N_DAYS')) {
 if (!defined('_INCLUDE_SUB_ENTITIES')) {
     define('_INCLUDE_SUB_ENTITIES', 'Inclure les sous-entités');
 }
-if (!defined('_GRAPHICS_REPORTS')) {
-    define('_GRAPHICS_REPORTS', "Activer l'affichage graphique");
-}
 
 /******************** Specific ************/
 if (!defined('_PROJECT')) {
@@ -3586,9 +3583,6 @@ if (!defined('_SQL_QUERY_NOT_SECURE')) {
 }
 
 //service to put doc on validation from details page
-if (!defined('_PUT_DOC_ON_VALIDATION_FROM_DETAILS')) {
-    define('_PUT_DOC_ON_VALIDATION_FROM_DETAILS', 'Envoyer le document en validation depuis la page détails');
-}
 if (!defined('_PUT_DOC_ON_VALIDATION')) {
     define('_PUT_DOC_ON_VALIDATION', 'Envoyer le document en validation');
 }
@@ -3957,14 +3951,8 @@ if (!defined('_CHOOSE_CURRENT_STATUS')) {
 }
 
 //PRINT
-if (!defined('_PRINT_DETAILS_SERVICE')) {
-    define('_PRINT_DETAILS_SERVICE', 'Imprimer la fiche de liaison depuis la fiche détail');
-}
 if (!defined('_PRINT_DETAILS')) {
     define('_PRINT_DETAILS', 'Imprimer fiche de liaison');
-}
-if (!defined('_PRINT_DOC_DETAILS_FROM_SEARCH')) {
-    define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'Imprimer les fiches de liaison depuis la recherche');
 }
 if (!defined('_PRINT_DOC_FROM_LIST')) {
     define('_PRINT_DOC_FROM_LIST', 'Imprimer les fiches de liaison des courriers');

@@ -933,7 +933,6 @@ if (!defined('_FOR_YEAR')) { define('_FOR_YEAR', 'voor het jaar');}
 if (!defined('_FOR_MONTH')) { define('_FOR_MONTH', 'voor de maand');}
 if (!defined('_N_DAYS')) { define('_N_DAYS', 'AANT DAGEN');}
 if (!defined('_INCLUDE_SUB_ENTITIES')) { define('_INCLUDE_SUB_ENTITIES', 'De subeenheden insluiten');}
-if (!defined('_GRAPHICS_REPORTS')) { define('_GRAPHICS_REPORTS', 'De grafische weergave activeren');}
 if (!defined('_PROJECT')) { define('_PROJECT', 'Map');}
 if (!defined('_MARKET')) { define('_MARKET', 'Submap');}
 if (!defined('_SEARCH_CUSTOMER')) { define('_SEARCH_CUSTOMER', 'Raadpleging Mappen, Submappen');}
@@ -1147,7 +1146,6 @@ if (!defined('_NOTES_2')) { define('_NOTES_2', 'Voorbeeld Dienstnota’s 2');}
 if (!defined('_NOTES_3')) { define('_NOTES_3', 'Voorbeeld Dienstnota’s 3');}
 if (!defined('_WHERE_CLAUSE_NOT_SECURE')) { define('_WHERE_CLAUSE_NOT_SECURE', 'Niet beveiligde Where clause');}
 if (!defined('_SQL_QUERY_NOT_SECURE')) { define('_SQL_QUERY_NOT_SECURE', 'Niet beveiligd SQL-verzoek');}
-if (!defined('_PUT_DOC_ON_VALIDATION_FROM_DETAILS')) { define('_PUT_DOC_ON_VALIDATION_FROM_DETAILS', 'Het te bevestigen document vanuit de detailpagina verzenden');}
 if (!defined('_PUT_DOC_ON_VALIDATION')) { define('_PUT_DOC_ON_VALIDATION', 'Het te bevestigen document verzenden');}
 if (!defined('_REALLY_PUT_DOC_ON_VALIDATION')) { define('_REALLY_PUT_DOC_ON_VALIDATION', 'De verzending in goedkeuring bevestigen');}
 if (!defined('_ASK_RA_CODE_1')) { define('_ASK_RA_CODE_1', 'Er zal een e-mail verzonden worden naar het adres:');}
@@ -1276,9 +1274,6 @@ if (!defined('_CHOOSE_TYPE')) { define('_CHOOSE_TYPE', 'Kies een typologie');}
 if (!defined('_DEPARTMENT_OWNER')) { define('_DEPARTMENT_OWNER', 'Eenheid waartoe het behoort');}
 if (!defined('_FOLDER')) { define('_FOLDER', 'Seriële map');}
 if (!defined('_CHOOSE_CURRENT_STATUS')) { define('_CHOOSE_CURRENT_STATUS', 'Huidige status bewaren');}
-if (!defined('_PRINT_DETAILS_SERVICE')) { define('_PRINT_DETAILS_SERVICE', 'De verbindingsfiche vanuit de detailfiche afdrukken');}
-if (!defined('_PRINT_DETAILS')) { define('_PRINT_DETAILS', 'De verbindingsfiche afdrukken');}
-if (!defined('_PRINT_DOC_DETAILS_FROM_SEARCH')) { define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'De verbindingsfiche vanuit de zoekopdracht afdrukken');}
 if (!defined('_PRINT_DOC_FROM_LIST')) { define('_PRINT_DOC_FROM_LIST', 'De verbindingsfiches van de brieven afdrukken');}
 if (!defined('_PRINT_LIST')) { define('_PRINT_LIST', 'De lijst afdrukken');}
 if (!defined('_PRINT_CATEGORY')) { define('_PRINT_CATEGORY', 'Categorie');}

@@ -16,22 +16,5 @@
      <nature>listelement</nature>
    </WHEREAMIUSED>
  </SERVICE>
- <SERVICE>
-   <id>display_basket_list</id>
-   <name>_DISPLAY_BASKET_LIST</name>
-   <comment>_DISPLAY_BASKET_LIST</comment>
-   <servicepage>display_basket_list.php</servicepage>
-   <servicetype>use</servicetype>
-   <system_service>true</system_service>
-   <enabled>true</enabled>
-   <WHEREAMIUSED>
-		<page>welcome</page>
-		<nature>include</nature>
-	</WHEREAMIUSED>
-   <WHEREAMIUSED>
-		<page>view_basket</page>
-		<nature>include</nature>
-	</WHEREAMIUSED>
- </SERVICE>
 </root>
 

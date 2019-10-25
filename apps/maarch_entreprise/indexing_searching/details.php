@@ -74,16 +74,8 @@ $_SESSION['collection_id_choice'] = $coll_id;
 $_SESSION['current_basket']['coll_id'] = $coll_id;
 $idCourrier = $_GET['id'];
 
-//test service print_details
 $printDetails = false;
-if ($core->test_service('print_details', 'apps', false)) {
-    $printDetails = true;
-}
-//test service put_in_validation
 $putInValid = false;
-if ($core->test_service('put_in_validation', 'apps', false)) {
-    $putInValid = true;
-}
 //test service view technical infos
 $viewTechnicalInfos = false;
 if ($core->test_service('view_technical_infos', 'apps', false)) {
@@ -546,9 +538,6 @@ if ($stmt->rowCount() == 0) {
         <?php
         //TOOLBAR
         $toolBar = '';
-    if ($printDetails) {
-        $toolBar .= '<input type="button" class="button" name="print_details" id="print_details" value="'._PRINT_DETAILS.'" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=print&id='.$s_id.'\', \'_blank\');" /> ';
-    }
 
     if ($putInValid) {
         $toolBar .= '<input type="submit" class="button"  value="'._PUT_DOC_ON_VALIDATION.'" name="put_doc_on_validation" onclick="return(confirm(\''._REALLY_PUT_DOC_ON_VALIDATION.'\n\r\n\r\'));" /> ';

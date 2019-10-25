@@ -128,10 +128,6 @@
 		<parameter name="module" type="identifier" />
 		<parameter name="form_values" type="string" />
     </validationRule>
-    <validationRule name="choose_entity" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="entityid" type="identifier" />
-    </validationRule>
     <validationRule name="entity_late_mail" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="arguments" type="ajax_ids_2" />
