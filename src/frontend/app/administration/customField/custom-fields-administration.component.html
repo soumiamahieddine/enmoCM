@@ -28,6 +28,10 @@
                                 </mat-expansion-panel-header>
                                 <div class="col-md-12">
                                     <mat-form-field>
+                                        <input matInput name="id" [(ngModel)]="custom.id" disabled
+                                            [placeholder]="lang.technicalId" [value]="custom.id">
+                                    </mat-form-field>
+                                    <mat-form-field>
                                         <input matInput name="label" [(ngModel)]="custom.label"
                                             [placeholder]="lang.label" [value]="custom.label">
                                     </mat-form-field>
