@@ -62,6 +62,16 @@ ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_f2;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_f3;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_f4;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_f5;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS scan_date;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS scan_user;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS scan_location;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS scan_wkstation;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS scan_batch;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS scan_postmark;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS description;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS author;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS reference_number;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_reference;
 
 
 /* RE CREATE VIEWS */
@@ -86,17 +96,9 @@ SELECT r.res_id,
        r.filename,
        r.fingerprint,
        r.filesize,
-       r.scan_date,
-       r.scan_user,
-       r.scan_location,
-       r.scan_wkstation,
-       r.scan_batch,
-       r.scan_postmark,
        r.status,
        r.work_batch,
        r.doc_date,
-       r.reference_number,
-       r.external_reference,
        r.external_id,
        r.external_link,
        r.departure_date,

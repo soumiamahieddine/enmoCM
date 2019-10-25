@@ -116,7 +116,7 @@ if ($s_id == '') {
             . $table . " WHERE res_id = ? ", array($s_id));
         $res_outgoing = $stmt->fetchObject(); 
 
-        if ($res_outgoing->category_id == 'outgoing' && $res_outgoing->source == 'with_empty_file') {
+        if ($res_outgoing->category_id == 'outgoing') {
             if(!empty($_REQUEST['editingMode'])){
                 $stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' "
                     . "and res_id_master = ? and coll_id = ? "

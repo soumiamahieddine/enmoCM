@@ -63,11 +63,6 @@ export class ExportComponent implements OnInit {
             isFunction: false
         },
         {
-            value: 'reference_number',
-            label: this.lang.reference,
-            isFunction: false
-        },
-        {
             value: 'departure_date',
             label: this.lang.departureDate,
             isFunction: false

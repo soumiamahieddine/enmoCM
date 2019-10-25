@@ -352,7 +352,6 @@
       <parameter name="signatory_name" type="string" />
       <parameter name="doc_notes" type="string" />
       <parameter name="chrono" type="string" />
-      <parameter name="reference_number" type="identifier" />
       <parameter name="identifier" type="string" />
       <parameter name="services_chosen" type="identifier" />
       <parameter name="services_available" type="identifier" />
@@ -385,7 +384,6 @@
       <parameter name="department_number_available" type="string" />
       <parameter name="welcome" type="string" />
       <parameter name="Submit" type="identifier" />
-      <parameter name="external_reference" type="string" />
     </validationRule>
 
     <validationRule name="view_resource" extends="index">  

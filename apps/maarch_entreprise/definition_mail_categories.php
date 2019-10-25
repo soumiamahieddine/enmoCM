@@ -107,16 +107,6 @@ $_ENV['categories']['incoming']['doc_date'] = array(
     'modify' => true,
     'form_show' => 'date',
 );
-$_ENV['categories']['incoming']['external_reference'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => false,
-    'label' => _REFERENCE_MAIL,
-    'table' => 'res',
-    'img' => 'file',
-    'modify' => false,
-    'form_show' => 'textfield'
-);
 $_ENV['categories']['incoming']['admission_date'] = array(
     'type_form' => 'date',
     'type_field' => 'date',
@@ -136,16 +126,6 @@ $_ENV['categories']['incoming']['departure_date'] = array (
     'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date'
-);
-$_ENV['categories']['incoming']['reference_number'] = array(
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => false,
-    'label' => _MONITORING_NUMBER,
-    'table' => 'res',
-    'img' => 'barcode',
-    'modify' => false,
-    'form_show' => 'textfield',
 );
 $_ENV['categories']['incoming']['description'] = array (
     'type_form' => 'string',
@@ -299,16 +279,6 @@ $_ENV['categories']['outgoing']['departure_date'] = array (
     'modify' => true,
     'form_show' => 'date'
 );
-$_ENV['categories']['outgoing']['reference_number'] = array(
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => false,
-    'label' => _MONITORING_NUMBER,
-    'table' => 'res',
-    'img' => 'barcode',
-    'modify' => false,
-    'form_show' => 'textfield',
-);
 $_ENV['categories']['outgoing']['description'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
@@ -451,16 +421,6 @@ $_ENV['categories']['internal']['doc_date'] = array(
     'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date',
-);
-$_ENV['categories']['internal']['reference_number'] = array(
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => false,
-    'label' => _MONITORING_NUMBER,
-    'table' => 'res',
-    'img' => 'barcode',
-    'modify' => false,
-    'form_show' => 'textfield',
 );
 $_ENV['categories']['internal']['subject'] = array(
     'type_form' => 'string',
@@ -1101,10 +1061,6 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                 if ($stmt2->rowCount() == 1) {
                     $res2 = $stmt2->fetchObject();
                     $data[$arr[$i]]['show_value'] = functions::show_string($res2->entity_label, true);
-                }
-            } elseif ($arr[$i] == 'reference_number') {
-                if (empty($line->{$arr[$i]})) {
-                    unset($data[$arr[$i]]);
                 }
             } elseif ($arr[$i] == 'type_id') {
                 $data[$arr[$i]]['show_value'] = functions::show_string($line->type_label);

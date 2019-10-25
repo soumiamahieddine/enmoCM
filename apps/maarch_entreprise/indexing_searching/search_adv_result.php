@@ -139,7 +139,6 @@ if (count($_REQUEST['meta']) > 0) {
 
                 $where_request .= "(REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:multifield) "
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifield) OR lower(alt_identifier) like lower(:multifield)) "
-                    ."or lower(description) LIKE lower(:multifield) "
                     ."or lower(barcode) LIKE lower(:multifield) "
                     ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifield)) "
                     ."or res_id in (select res_id_master from res_view_attachments where (lower(translate(identifier,'/','')) like lower(:multifield) OR lower(identifier) like lower(:multifield) AND status NOT IN ('DEL','OBS','TMP')))) ";
@@ -199,24 +198,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " (res_id in (SELECT res_id_master FROM res_view_attachments WHERE attachment_type = :attachmentTypes AND status NOT IN ('DEL','OBS','TMP')) )";
                 $arrayPDO = array_merge($arrayPDO, array(":attachmentTypes" => $_REQUEST['attachment_types']));
                 $where_request .=" and  ";
-            }
-            // REFERENCE COURRIER EXTERNE
-            elseif ($tab_id_fields[$j] == 'external_reference' && !empty($_REQUEST['external_reference'])) {
-                $json_txt .= "'external_reference' : ['".addslashes(trim($_REQUEST['external_reference']))."'],";
-                $where_request .=" (lower(external_reference) LIKE lower(:external_reference) ) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":external_reference" => "%".$_REQUEST['external_reference']."%"));
-            }
-            // DESCRIPTION
-            elseif ($tab_id_fields[$j] == 'description' && !empty($_REQUEST['description'])) {
-                $json_txt .= "'description' : ['".addslashes(trim($_REQUEST['description']))."'],";
-                $where_request .=" (lower(description) LIKE lower(:description) ) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":description" => "%".$_REQUEST['description']."%"));
-            }
-            // REFERENCE NUMBER
-            elseif ($tab_id_fields[$j] == 'reference_number' && !empty($_REQUEST['reference_number'])) {
-                $json_txt .= "'reference_number' : ['".addslashes(trim($_REQUEST['reference_number']))."'],";
-                $where_request .=" (lower(reference_number) LIKE lower(:referenceNumber) ) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":referenceNumber" => "%".$_REQUEST['reference_number']."%"));
             }
             // DEPARTMENT NUMBER
             elseif ($tab_id_fields[$j] == 'department_number_chosen' && !empty($_REQUEST['department_number_chosen'])) {
@@ -462,7 +443,6 @@ where lower(translate(folders.label , 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓ�
                     $arrayPDO = array_merge($arrayPDO, array(":resIdWelcome" => $welcome));
                 }
                 $where_request_welcome .= "( REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:multifieldWelcome) "
-                    ."or lower(external_reference) LIKE lower(:multifieldWelcomeReference) "
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifieldWelcome) OR lower(alt_identifier) like lower(:multifieldWelcome)) "
                     ."or lower(barcode) LIKE lower(:multifieldWelcome) "
                     ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifieldWelcome)) "

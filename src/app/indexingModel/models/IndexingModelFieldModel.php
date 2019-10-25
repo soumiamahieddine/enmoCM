@@ -38,7 +38,7 @@ class IndexingModelFieldModel
 
     public static function create(array $args)
     {
-        ValidatorModel::notEmpty($args, ['model_id', 'identifier', 'mandatory']);
+        ValidatorModel::notEmpty($args, ['model_id', 'identifier', 'mandatory', 'unit']);
         ValidatorModel::stringType($args, ['mandatory', 'identifier', 'unit']);
         ValidatorModel::intVal($args, ['model_id']);
 

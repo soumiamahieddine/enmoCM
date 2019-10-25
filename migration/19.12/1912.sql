@@ -447,8 +447,6 @@ DROP TABLE IF EXISTS thesaurus;
 DROP TABLE IF EXISTS thesaurus_res;
 DROP SEQUENCE IF EXISTS thesaurus_id_seq;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS title;
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS description;
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS author;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS identifier;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS source;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS relation;
@@ -485,7 +483,6 @@ CREATE VIEW res_view_attachments AS
 /* DATA */
 TRUNCATE TABLE custom_fields;
 INSERT INTO custom_fields (id, label, type, values) VALUES (1, 'Nature', 'select', '["Courrier simple", "Courriel", "Courrier suivi", "Courrier avec AR", "Autre"]');
-INSERT INTO custom_fields (id, label, type, values) VALUES (2, 'N° recommandé', 'string', '[]');
 SELECT setval('custom_fields_id_seq', (select max(id)+1 from custom_fields), false);
 
 TRUNCATE TABLE resources_custom_fields;
