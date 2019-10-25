@@ -14,7 +14,7 @@ export class FoldersService {
 
     lang: any = LANG;
 
-    loading: boolean = false;
+    loading: boolean = true;
 
     pinnedFolders: any = [];
 
@@ -55,6 +55,8 @@ export class FoldersService {
     }
 
     getPinnedFolders() {
+        this.loading = true;
+
         this.http.get("../../rest/pinnedFolders").pipe(
             map((data: any) => {
                 data.folders = data.folders.map((folder: any) => {
@@ -65,6 +67,7 @@ export class FoldersService {
                 });
                 return data;
             }),
+            finalize(() => this.loading = false),
             tap((data: any) => {
                 this.pinnedFolders = data.folders;
             }),
@@ -132,5 +135,9 @@ export class FoldersService {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    getLoader() {
+        return this.loading;
     }
 }

@@ -1,4 +1,4 @@
-<mat-expansion-panel class="folderList" expanded>
+<mat-expansion-panel class="folderList" [expanded]="!foldersService.getLoader()">
     <mat-expansion-panel-header>
         <mat-panel-title>
             <i class="fa fa-folder panelIconMenu"></i>&nbsp;{{lang.folders}}

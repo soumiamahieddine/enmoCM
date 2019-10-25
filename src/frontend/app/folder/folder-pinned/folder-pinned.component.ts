@@ -1,14 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 
 import { NotificationService } from '../../notification.service';
-import { tap, filter, catchError, exhaustMap, map } from 'rxjs/operators';
-import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { MatDialog } from '@angular/material';
-import { of, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
-import { FolderUpdateComponent } from '../folder-update/folder-update.component';
 import { FoldersService } from '../folders.service';
 
 @Component({

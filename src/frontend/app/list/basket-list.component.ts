@@ -39,8 +39,7 @@ export class BasketListComponent implements OnInit {
     docUrl: string = '';
     public innerHtml: SafeHtml;
     basketUrl: string;
-    homeData: any;
-    
+
     injectDatasParam = {
         resId: 0,
         editable: false
@@ -134,11 +133,6 @@ export class BasketListComponent implements OnInit {
 
     ngOnInit(): void {
         this.loading = false;
-
-        this.http.get("../../rest/home")
-            .subscribe((data: any) => {
-                this.homeData = data;
-            });
 
         this.isLoadingResults = false;
 

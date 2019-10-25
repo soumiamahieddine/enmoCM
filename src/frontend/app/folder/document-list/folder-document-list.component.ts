@@ -123,13 +123,7 @@ export class FolderDocumentListComponent implements OnInit {
 
     ngOnInit(): void {
 
-        this.appService.openBasketMenu(false);
         this.loading = false;
-
-        this.http.get("../../rest/home")
-            .subscribe((data: any) => {
-                this.homeData = data;
-            });
 
         this.isLoadingResults = false;
 
@@ -149,6 +143,10 @@ export class FolderDocumentListComponent implements OnInit {
                         };
                     this.foldersService.setFolder(this.folderInfo);
                     this.headerService.setHeader(this.folderInfo.label, '', 'fa fa-folder-open');
+                    setTimeout(() => {
+                        this.basketHome.togglePanel(false); 
+                    }, 200);
+                    
                 });
             this.basketUrl = '../../rest/folders/' + params['folderId'] + '/resources';
             this.filtersListService.filterMode = false;

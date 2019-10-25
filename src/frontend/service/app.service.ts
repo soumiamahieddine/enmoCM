@@ -9,9 +9,6 @@ export class AppService {
 
     currentUser: any;
 
-    isBasketMenuOpen: boolean = true;
-    isFolderMenuOpen: boolean = true;
-
     constructor(changeDetectorRef: ChangeDetectorRef, media: MediaMatcher) {
         this.mobileQuery = media.matchMedia('(max-width: 768px)');
         this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -32,21 +29,5 @@ export class AppService {
 
     ngOnDestroy(): void {
         this.mobileQuery.removeListener(this._mobileQueryListener);
-    }
-
-    openBasketMenu(state: boolean) {
-        return this.isBasketMenuOpen = state;
-    }
-
-    openFolderMenu(state: boolean) {
-        return this.isFolderMenuOpen = state;
-    }
-
-    getStateBasketMenu() {
-        return this.isBasketMenuOpen;
-    }
-
-    getStateFolderMenu() {
-        return this.isFolderMenuOpen;
     }
 }

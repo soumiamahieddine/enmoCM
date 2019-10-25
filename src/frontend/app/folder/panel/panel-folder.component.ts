@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { FolderTreeComponent } from '../folder-tree.component';
+import { FoldersService } from '../folders.service';
 
 declare function $j(selector: any): any;
 
@@ -19,7 +20,7 @@ export class PanelFolderComponent implements OnInit {
     
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
     
-    constructor() { }
+    constructor(public foldersService: FoldersService) { }
 
     ngOnInit(): void { }
 

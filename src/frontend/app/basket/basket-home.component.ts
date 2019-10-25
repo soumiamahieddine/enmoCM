@@ -1,8 +1,10 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../service/app.service';
+import { tap, finalize } from 'rxjs/operators';
+import { MatExpansionPanel } from '@angular/material';
 
 declare function $j(selector: any) : any;
 
@@ -14,16 +16,17 @@ declare function $j(selector: any) : any;
 export class BasketHomeComponent implements OnInit {
 
     lang: any = LANG;
-    
-    @Input() homeData: any;
+    loading: boolean = true;
+
+    homeData: any = null;
     @Input('currentBasketInfo') currentBasketInfo: any = {
         ownerId: 0,
         groupId: 0,
         basketId: ''
     };
     @Input() snavL: MatSidenav;
-    @Input('opened') opened: boolean;
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
+    @ViewChild('basketPanel', { static: true }) basketPanel: MatExpansionPanel;
 
     constructor(
         public http: HttpClient,
@@ -31,14 +34,21 @@ export class BasketHomeComponent implements OnInit {
     ) {
     }
 
-    ngOnInit(): void { }
-
-    goTo(basketId:any, groupId:any) {
-        window.location.href="index.php?page=view_baskets&fromV2=true&module=basket&baskets="+basketId+"&groupId="+groupId;
+    ngOnInit(): void {
+        this.getMyBaskets();
     }
 
-    goToRedirect(basketId:any, owner:any, groupId:any) {
-        window.location.href="index.php?page=view_baskets&fromV2=true&module=basket&baskets="+basketId+"_"+owner+"&groupId=" + groupId;
+    getMyBaskets() {
+        this.loading = true;
+
+        this.http.get("../../rest/home").pipe(
+            tap((data: any) => {
+                this.homeData = data;
+            }),
+            finalize(() => {
+                this.loading = false;
+            })
+        ).subscribe();
     }
 
     closePanelLeft() {
@@ -61,5 +71,13 @@ export class BasketHomeComponent implements OnInit {
             .subscribe((data: any) => {
                 this.homeData = data;
             });
+    }
+
+    togglePanel(state: boolean) {
+        if (state) {
+            this.basketPanel.open();
+        } else {
+            this.basketPanel.close();
+        }
     }
 }
