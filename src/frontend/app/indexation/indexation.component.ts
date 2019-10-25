@@ -146,6 +146,7 @@ export class IndexationComponent implements OnInit {
         if (this.indexingForm.isValidForm()) {
             const formatdatas = this.formatDatas(this.indexingForm.getDatas());
 
+            formatdatas['modelId'] = this.currentIndexingModel.master !== null ? this.currentIndexingModel.master : this.currentIndexingModel.id;
             formatdatas['chrono'] = true;
             formatdatas['encodedFile'] = this.appDocumentViewer.getFile().content;
             formatdatas['format'] = this.appDocumentViewer.getFile().format;
