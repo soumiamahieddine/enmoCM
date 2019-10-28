@@ -28,6 +28,11 @@ export class AppDateAdapter extends NativeDateAdapter {
     private _to2digit(n: number) {
         return ('00' + n).slice(-2);
     }
+
+    getFirstDayOfWeek(): number {
+        return 1;
+    }
+
 }
 
 export const APP_DATE_FORMATS =
