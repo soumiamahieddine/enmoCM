@@ -429,7 +429,7 @@ class PreProcessActionController
                         'select'   => ['destination'],
                         'resId'    => $data['resources'][0]
                     ]);
-                    $destination = EntityModel::getByEntityId(['entity_id' => $resDestination['destination'], 'select' => ['id']]);
+                    $destination = EntityModel::getByEntityId(['entityId' => $resDestination['destination'], 'select' => ['id']]);
 
                     $additionalsInfos['destinationId'] = $destination['id'];
                 } else {
