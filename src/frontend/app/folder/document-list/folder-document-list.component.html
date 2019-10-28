@@ -8,7 +8,7 @@
         <basket-home #basketHome [snavL]="snav"></basket-home>
         <mat-divider></mat-divider>
         <panel-folder #panelFolder *ngIf="folderInfo.id !== '' && folderInfo.id !== undefined"
-            [selectedId]="folderInfo.id"></panel-folder>
+            [selectedId]="folderInfo.id" [showTree]="true"></panel-folder>
     </mat-sidenav>
     <mat-sidenav-content>
         <mat-card id="viewThumbnail" style="display:none;position: fixed;z-index: 2;margin-left: 1px;">

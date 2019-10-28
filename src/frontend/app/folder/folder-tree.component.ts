@@ -144,7 +144,9 @@ export class FolderTreeComponent implements OnInit {
             } else if (result.type === 'refreshFolderPinned') {
                 this.treeControl.dataNodes.filter(folder => folder.id === result.content.id)[0].pinned = result.content.pinned;
             } else {
-                this.openTree(this.foldersService.getCurrentFolder().id);
+                if (this.treeControl.dataNodes !== undefined) {
+                    this.openTree(this.foldersService.getCurrentFolder().id);
+                }
             }
         }); 
     }
@@ -361,7 +363,8 @@ export class FolderTreeComponent implements OnInit {
                 if (data !== undefined) {
                     this.getFolders();
                     this.foldersService.getPinnedFolders();
-                }                
+                    this.foldersService.setEvent({type:'refreshFolderInformations', content: node});
+                }
             })
         ).subscribe();
     }

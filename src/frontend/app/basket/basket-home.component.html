@@ -1,11 +1,11 @@
-<mat-expansion-panel #basketPanel *ngIf="loading || homeData.regroupedBaskets.length > 0 || homeData.assignedBaskets.length > 0" class="basketList" [expanded]="!loading">
+<mat-expansion-panel #basketPanel class="basketList" [expanded]="!loading">
     <mat-expansion-panel-header>
         <mat-panel-title>
             <i class="fa fa-inbox panelIconMenu"></i>&nbsp;{{lang.myBaskets}}
         </mat-panel-title>
     </mat-expansion-panel-header>
     <ng-container *ngIf="!loading">
-        <mat-form-field floatLabel="never" appearance="outline" class="basketsFilter"
+        <mat-form-field [style.display]="homeData.assignedBaskets.length > 0 || homeData.regroupedBaskets.length > 0 ? 'inline-block' : 'none'" floatLabel="never" appearance="outline" class="basketsFilter"
             style="padding-left:20px;padding-right:20px;font-size: 11px;">
             <input matInput placeholder="{{lang.filterBy}}" #listFilter>
         </mat-form-field>
@@ -61,5 +61,8 @@
                 </a>
             </mat-nav-list>
         </ng-container>
+        <div class="noBasket" *ngIf="homeData.assignedBaskets.length === 0 && homeData.regroupedBaskets.length === 0">
+            {{lang.noAvailableBasket}}
+        </div>
     </ng-container>
 </mat-expansion-panel>

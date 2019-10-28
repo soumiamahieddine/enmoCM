@@ -1250,6 +1250,4 @@ export const LANG_FR = {
     "configVisaWorkflowInDetailDesc" : "Permet de configurer le circuit de visa depuis la fiche détaillée",
     "noFile" : "Aucun fichier",
     "noFileMsg" : "<b>Attention</b>, aucun fichier téléversé.<br/><br/>Voulez-vous continuer ?",
-
-
 };

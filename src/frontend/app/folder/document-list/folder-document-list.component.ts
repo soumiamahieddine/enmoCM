@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { merge, Observable, of as observableOf, Subject, of } from 'rxjs';
+import { merge, Observable, of as observableOf, Subject, of, Subscription } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -94,6 +94,7 @@ export class FolderDocumentListComponent implements OnInit {
     folderInfoOpened: boolean = false;
 
     private destroy$ = new Subject<boolean>();
+    subscription: Subscription;
 
     @ViewChild('actionsListContext', { static: true }) actionsList: FolderActionListComponent;
     @ViewChild('appPanelList', { static: true }) appPanelList: PanelListComponent;
@@ -112,13 +113,24 @@ export class FolderDocumentListComponent implements OnInit {
         public dialog: MatDialog,
         private sanitizer: DomSanitizer,
         private headerService: HeaderService,
-        public filtersListService: FiltersListService, 
+        public filtersListService: FiltersListService,
         private notify: NotificationService,
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
         public appService: AppService,
         private foldersService: FoldersService) {
+
         $j("link[href='merged_css.php']").remove();
+
+        // Event after process action 
+        this.subscription = this.foldersService.catchEvent().subscribe((result: any) => {
+            
+            if (result.type === 'refreshFolderInformations') {
+                if(result.content.id == this.folderInfo.id) {
+                    this.refreshFolderInformations();
+                }
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -144,9 +156,9 @@ export class FolderDocumentListComponent implements OnInit {
                     this.foldersService.setFolder(this.folderInfo);
                     this.headerService.setHeader(this.folderInfo.label, '', 'fa fa-folder-open');
                     setTimeout(() => {
-                        this.basketHome.togglePanel(false); 
+                        this.basketHome.togglePanel(false);
                     }, 200);
-                    
+
                 });
             this.basketUrl = '../../rest/folders/' + params['folderId'] + '/resources';
             this.filtersListService.filterMode = false;
@@ -170,6 +182,7 @@ export class FolderDocumentListComponent implements OnInit {
 
     ngOnDestroy() {
         this.destroy$.next(true);
+        this.subscription.unsubscribe();
     }
 
     initResultList() {
@@ -245,6 +258,20 @@ export class FolderDocumentListComponent implements OnInit {
         this.currentResource.countNotes = nb;
     }
 
+    refreshFolderInformations() {
+        this.http.get('../../rest/folders/' + this.folderInfo.id)
+            .subscribe((data: any) => {
+                this.folderInfo =
+                    {
+                        'id': data.folder.id,
+                        'label': data.folder.label,
+                        'ownerDisplayName': data.folder.ownerDisplayName,
+                        'entitiesSharing': data.folder.sharing.entities.map((entity: any) => entity.label),
+                    };
+                this.headerService.setHeader(this.folderInfo.label, '', 'fa fa-folder-open');
+            });
+    }
+
     refreshBadgeAttachments(nb: number) {
         this.currentResource.countAttachments = nb;
     }
@@ -317,18 +344,18 @@ export class FolderDocumentListComponent implements OnInit {
     }
 
     selectSpecificRes(row: any) {
-        let thisSelect = { checked : true };
-        let thisDeselect = { checked : false };
-        
+        let thisSelect = { checked: true };
+        let thisDeselect = { checked: false };
+
         this.toggleAllRes(thisDeselect);
         this.toggleRes(thisSelect, row);
     }
 
     open({ x, y }: MouseEvent, row: any) {
-        
-        let thisSelect = { checked : true };
-        let thisDeselect = { checked : false };
-        if ( row.checked === false) {
+
+        let thisSelect = { checked: true };
+        let thisDeselect = { checked: false };
+        if (row.checked === false) {
             row.checked = true;
             this.toggleAllRes(thisDeselect);
             this.toggleRes(thisSelect, row);
