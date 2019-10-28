@@ -1237,4 +1237,6 @@ export const LANG_NL = {
     "configVisaWorkflowDesc" : "Om het goedkeuringscircuit in te stellen dat de brief zal moeten volgen",
     "configVisaWorkflowInDetail" : "Configuratie van het goedkeuringscircuit vanuit de gedetailleerde fiche",
     "configVisaWorkflowInDetailDesc" : "Om het goedkeuringscircuit vanuit de gedetailleerde fiche te configureren",
+    "noFile" : "No file", //_TO_TRANSLATE
+    "noFileMsg" : "<b>Be careful</b>, no file uploaded.<br/><br/>Continue ?", //_TO_TRANSLATE
 };

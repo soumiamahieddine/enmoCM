@@ -1211,4 +1211,6 @@ export const LANG_EN = {
     "configVisaWorkflowDesc" : "Allows to set up visa flow which the mail will have to follow",
     "configVisaWorkflowInDetail" : "Visa workflow setting from detailed card",
     "configVisaWorkflowInDetailDesc" : "Allows to set up visa flow in detail",
+    "noFile" : "No file",
+    "noFileMsg" : "<b>Be careful</b>, no file uploaded.<br/><br/>Continue ?",
 };

@@ -1248,4 +1248,8 @@ export const LANG_FR = {
     "configVisaWorkflowDesc" : "Permet de configurer le circuit de visa que devra prendre le courrier",
     "configVisaWorkflowInDetail" : "Configuration du circuit de visa depuis la fiche détaillée",
     "configVisaWorkflowInDetailDesc" : "Permet de configurer le circuit de visa depuis la fiche détaillée",
+    "noFile" : "Aucun fichier",
+    "noFileMsg" : "<b>Attention</b>, aucun fichier téléversé.<br/><br/>Voulez-vous continuer ?",
+
+
 };

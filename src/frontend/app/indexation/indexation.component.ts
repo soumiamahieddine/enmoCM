@@ -18,6 +18,7 @@ import { DocumentViewerComponent } from '../viewer/document-viewer.component';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { AddPrivateIndexingModelModalComponent } from './private-indexing-model/add-private-indexing-model-modal.component';
 import { ActionsService } from '../actions/actions.service';
+import { AlertComponent } from '../../plugins/modal/alert.component';
 
 @Component({
     templateUrl: "indexation.component.html",
@@ -126,7 +127,7 @@ export class IndexationComponent implements OnInit {
                     });
                     return data;
                 }),
-                tap((data: any) => {                    
+                tap((data: any) => {
                     this.selectedAction = data.actions[0];
                     this.actionsList = data.actions;
                 }),
@@ -151,8 +152,22 @@ export class IndexationComponent implements OnInit {
             formatdatas['encodedFile'] = this.appDocumentViewer.getFile().content;
             formatdatas['format'] = this.appDocumentViewer.getFile().format;
 
-            this.actionService.launchIndexingAction(this.selectedAction, this.headerService.user.id, this.currentGroupId, formatdatas);
+            if (formatdatas['encodedFile'] === null) {
+                this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.noFile, msg: this.lang.noFileMsg } });
 
+                this.dialogRef.afterClosed().pipe(
+                    filter((data: string) => data === 'ok'),
+                    tap(() => {
+                        this.actionService.launchIndexingAction(this.selectedAction, this.headerService.user.id, this.currentGroupId, formatdatas);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else {
+                this.actionService.launchIndexingAction(this.selectedAction, this.headerService.user.id, this.currentGroupId, formatdatas);
+            }
         } else {
             this.notify.error(this.lang.mustFixErrors);
         }
@@ -172,7 +187,7 @@ export class IndexationComponent implements OnInit {
 
             } else {
                 formatData[element.identifier] = element.default_value;
-            }            
+            }
         });
         return formatData;
     }
@@ -206,7 +221,7 @@ export class IndexationComponent implements OnInit {
         }
 
         const masterIndexingModel = this.indexingModels.filter((indexingModel) => indexingModel.id === privateIndexingModel.master)[0];
-        this.dialogRef = this.dialog.open(AddPrivateIndexingModelModalComponent, { autoFocus: true, disableClose: true, data: { indexingModel: privateIndexingModel, masterIndexingModel : masterIndexingModel } });
+        this.dialogRef = this.dialog.open(AddPrivateIndexingModelModalComponent, { autoFocus: true, disableClose: true, data: { indexingModel: privateIndexingModel, masterIndexingModel: masterIndexingModel } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: any) => data !== undefined),
@@ -259,7 +274,7 @@ export class IndexationComponent implements OnInit {
                 };
             }
         }
-        if (action.categoryUse.indexOf(this.indexingForm.getCategory()) > -1) {            
+        if (action.categoryUse.indexOf(this.indexingForm.getCategory()) > -1) {
             return true;
         } else {
             return false;
