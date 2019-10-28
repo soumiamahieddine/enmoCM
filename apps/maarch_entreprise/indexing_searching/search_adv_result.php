@@ -226,9 +226,9 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " (res_id in (select res_id from contacts_res where contact_id in(select cast (contact_id as varchar) from view_contacts where contact_type = :contactType)) or ";
                 $where_request .= " (contact_id in(select contact_id from view_contacts where contact_type = :contactType))) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":contactType" => $_REQUEST['contact_type']));
-            } elseif ($tab_id_fields[$j] == 'project' && !empty($_REQUEST['project'])) {
-                $json_txt .= " 'project' : ['".addslashes(trim($_REQUEST['project']))."'],";
-                $folder = $func->wash($_REQUEST['project'], "no", _MARKET, "no");
+            } elseif ($tab_id_fields[$j] == 'folder' && !empty($_REQUEST['folder'])) {
+                $json_txt .= " 'folder' : ['".addslashes(trim($_REQUEST['folder']))."'],";
+                $folder = $func->wash($_REQUEST['folder'], "no", _MARKET, "no");
 
                 $where_request .= " res_id in ( ";
 

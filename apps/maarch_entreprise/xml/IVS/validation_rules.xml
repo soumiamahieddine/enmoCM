@@ -342,7 +342,7 @@
       <parameter name="process_limit_date_to" type="string" />
       <parameter name="destinataire_chosen" type="identifier" />
       <parameter name="destinataire_available" type="identifier" />
-      <parameter name="project" type="string" />
+      <parameter name="folder" type="string" />
       <parameter name="priority" type="string" />
       <parameter name="indexingCustomField_*" type="string" />
       <parameter name="signatory_group" type="identifier" />
