@@ -479,8 +479,8 @@ ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_entity;
 ALTER TABLE usergroup_content DROP COLUMN IF EXISTS primary_group;
 
 /* M2M */
-UPDATE res_letterbox SET external_id = json_build_object('m2m', reference_number) FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id = 'message_exchange';
-UPDATE mlb SET nature_id = null, reference_number = null WHERE nature_id = 'message_exchange';
+UPDATE res_letterbox SET external_id = json_build_object('m2m', reference_number), reference_number = null FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id = 'message_exchange';
+UPDATE mlb_coll_ext SET nature_id = null WHERE nature_id = 'message_exchange';
 
 /* RE CREATE VIEWS */
 CREATE VIEW res_view_attachments AS

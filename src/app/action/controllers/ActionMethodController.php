@@ -91,8 +91,7 @@ class ActionMethodController
                     'info'      => $info
                 ]);
 
-                //TODO M2M
-//                MessageExchangeReviewController::sendMessageExchangeReview(['res_id' => $resource, 'action_id' => $aArgs['id'], 'userId' => $GLOBALS['userId']]);
+                MessageExchangeReviewController::sendMessageExchangeReview(['res_id' => $resource, 'action_id' => $aArgs['id'], 'userId' => $GLOBALS['userId']]);
             }
         }
 

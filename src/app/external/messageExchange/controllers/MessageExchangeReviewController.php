@@ -37,7 +37,11 @@ class MessageExchangeReviewController
 
         if (!empty($resLetterboxData[0]['external_id'])) {
             $resLetterboxData[0]['external_id'] = json_decode($resLetterboxData[0]['external_id'], true);
-            return $resLetterboxData[0];
+            if (!empty($resLetterboxData[0]['external_id']['m2m'])) {
+                return $resLetterboxData[0];
+            } else {
+                return false;
+            }
         } else {
             return false;
         }
