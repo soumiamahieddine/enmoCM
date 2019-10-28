@@ -32,33 +32,31 @@ class EntitySeparatorController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $bodyData = $request->getParsedBody();
+        $body = $request->getParsedBody();
 
-        if (!Validator::stringType()->notEmpty()->validate($bodyData['type'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'type is not set or empty']);
-        }
-
-        if (!in_array($bodyData['type'], ['barcode', 'qrcode'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'type value must be qrcode or barcode']);
+        if (!Validator::stringType()->notEmpty()->validate($body['type'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Body type is not set or empty']);
+        } elseif (!in_array($body['type'], ['barcode', 'qrcode'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Body type value must be qrcode or barcode']);
         }
 
         $entitiesList = [];
-        if ($bodyData['target'] == 'generic') {
+        if ($body['target'] == 'generic') {
             $entitiesList['GÉNÉRIQUE'] = 'Maarch Courrier';
         } else {
-            if (!Validator::arrayType()->notEmpty()->validate($bodyData['entities'])) {
+            if (!Validator::arrayType()->notEmpty()->validate($body['entities'])) {
                 return $response->withStatus(403)->withJson(['errors' => 'entities is not set or empty']);
             }
 
             $entitiesInfo = EntityModel::get([
-                'select'   => ['entity_label', 'entity_id'],
+                'select'   => ['entity_label', 'id'],
                 'where'    => ['entity_id in (?)'],
-                'data'     => [$bodyData['entities']],
+                'data'     => [$body['entities']],
                 'order_by' => ['entity_label asc']
             ]);
 
             foreach ($entitiesInfo as $value) {
-                $entitiesList[$value['entity_id']] = $value['entity_label'];
+                $entitiesList[$value['id']] = $value['entity_label'];
             }
         }
 
@@ -66,7 +64,7 @@ class EntitySeparatorController
         $pdf->setPrintHeader(false);
 
         $prefix = '';
-        if ($bodyData['type'] == 'qrcode') {
+        if ($body['type'] == 'qrcode') {
             $parameter = ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'QrCodePrefix']);
             if ($parameter['param_value_int'] == 1) {
                 $prefix = 'MAARCH_';
@@ -76,7 +74,7 @@ class EntitySeparatorController
             $pdf->AddPage();
             $pdf->SetFont('', 'B', 25);
 
-            if ($bodyData['type'] == 'qrcode') {
+            if ($body['type'] == 'qrcode') {
                 $qrCode = new QrCode($prefix . $entityId);
                 $qrCode->setSize(600);
                 $pdf->Image('@'.$qrCode->writeString(), 0, 40, 200, '', '', '', '', false, 300, 'C');

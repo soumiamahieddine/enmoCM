@@ -63,4 +63,19 @@ class EntityFolderModelAbstract
 
         return true;
     }
+
+    public static function delete(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['entity_id', 'folder_id']);
+        ValidatorModel::arrayType($args, ['entity_id']);
+        ValidatorModel::intVal($args, ['folder_id']);
+
+        DatabaseModel::delete([
+            'table' => 'entities_folders',
+            'where' => ['entity_id in (?)', 'folder_id = ?'],
+            'data'  => [$args['entity_id'], $args['folder_id']]
+        ]);
+
+        return true;
+    }
 }

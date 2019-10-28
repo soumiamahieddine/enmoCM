@@ -90,7 +90,7 @@ class IndexingModelControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('Body label is empty or not a string', $responseBody->errors);
+        $this->assertSame('Body label is empty or not a string or more than 256 characters', $responseBody->errors);
 
         //  Errors category
         $args['label'] = 'mon model d indexation';
@@ -335,7 +335,7 @@ class IndexingModelControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody());
 
-        $this->assertSame('Body label is empty or not a string', $responseBody->errors);
+        $this->assertSame('Body label is empty or not a string or more than 256 characters', $responseBody->errors);
     }
 
     public function testGet()

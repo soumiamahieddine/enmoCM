@@ -50,7 +50,7 @@ if (isset($_REQUEST['identifier'])) {
     $query .= "( ";
     $query .= "item_id IN (";
           
-   if(!empty($_SESSION['user']['entities'])){
+    if (!empty($_SESSION['user']['entities'])) {
         foreach ($_SESSION['user']['entities'] as $entitiestmpnote) {
             $query .= "?, ";
             $arrayPDO = array_merge($arrayPDO, array($entitiestmpnote['ENTITY_ID']));
@@ -77,34 +77,32 @@ if (isset($_REQUEST['identifier'])) {
     $fetch = '';
     while ($return_db = $stmt->fetchObject()) {
         // get lastname and firstname for user_id
-        //var_dump($return_db);
-        $stmt2 = $db->query("SELECT lastname, firstname FROM users WHERE user_id =?", array($return_db->user_id));
+        $stmt2 = $db->query("SELECT lastname, firstname FROM users WHERE id =?", array($return_db->user_id));
         while ($user_db = $stmt2->fetchObject()) {
-            $lastname = $user_db->lastname;
+            $lastname  = $user_db->lastname;
             $firstname = $user_db->firstname;
         }
-        $stmt3 = $db->query("SELECT notes.id as id, identifier, user_id, note_text, item_id, entity_label FROM notes, note_entities, entities WHERE identifier = ? AND note_id = notes.id AND entities.entity_id = note_entities.item_id and notes.id = ?", array($_REQUEST['identifier'], $return_db->id));
+        $stmt3        = $db->query("SELECT notes.id as id, identifier, note_text, item_id, entity_label FROM notes, note_entities, entities WHERE identifier = ? AND note_id = notes.id AND entities.entity_id = note_entities.item_id and notes.id = ?", array($_REQUEST['identifier'], $return_db->id));
         $entity_label = '';
-        $Tabentity = [];
+        $Tabentity    = [];
         while ($entity = $stmt3->fetchObject()) {
-            $Tabentity[] = $entity->entity_label;
-            $item_id = $entity->id;
+            $Tabentity[]  = $entity->entity_label;
+            $item_id      = $entity->id;
             $entity_label = $entity->entity_label;
         }
         $return .= '<tr>';
         $return .= '<td style="background: transparent; padding-left:30px; padding-right:30px; border: 1px dashed rgb(200, 200, 200);">';
-        // $return .= '<blockquote style="padding: 1px;">';
         $return .= '<div style="text-align: right; background-color: rgb(230, 230, 230); padding: 2px;">';
         $allEntity = '';
         foreach ($Tabentity as $value) {
             $allEntity .= $value." / ";
         }
-        $notes_tools = new notes();
-        $noteEntities = $notes_tools->getNotesEntities($return_db->id);
+        $notes_tools    = new notes();
+        $noteEntities   = $notes_tools->getNotesEntities($return_db->id);
         $tabEntityLabel = [];
-        $tabEntityId = [];
-        $allEntities = '';
-        $allEntitiesId = '';
+        $tabEntityId    = [];
+        $allEntities    = '';
+        $allEntitiesId  = '';
 
         foreach ($noteEntities as $value) {
             $tabEntityLabel[] = $value->short_label;
@@ -112,7 +110,7 @@ if (isset($_REQUEST['identifier'])) {
         }
 
         if (!empty($tabEntityLabel)) {
-            $allEntities = implode(' - ', $tabEntityLabel);
+            $allEntities   = implode(' - ', $tabEntityLabel);
             $allEntitiesId = implode(', ', $tabEntityId);
         }
 
@@ -122,7 +120,6 @@ if (isset($_REQUEST['identifier'])) {
                                     
         $return .= '</div>';
 
-        // $return .= '<br />';
         if ($entity_label != '') {
             $return .= '<div style="padding-top:2px;padding-bottom:2px;">';
             $note_text = str_replace(array("\r", "\n"), array("<br />", "<br />"), functions::xssafe($return_db->note_text));
@@ -138,8 +135,6 @@ if (isset($_REQUEST['identifier'])) {
             $return .= '</div>';
         }
 
-
-        // $return .= '</blockquote>';
         $return .= '</td>';
         $return .= '</tr>';
     }

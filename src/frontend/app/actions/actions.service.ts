@@ -59,8 +59,9 @@ export class ActionsService {
     }
 
     setActionInformations(action: any, userId: number, groupId: number, basketId: number, resIds: number[]) {
-
-        if (action !== null && userId > 0 && groupId > 0) {
+        if (action !== null && action.component === null) {
+            return false;
+        } else if (action !== null && userId > 0 && groupId > 0) {
             this.mode = basketId === null ? 'indexing' : 'process';
             this.currentAction = action;
             this.currentUserId = userId;
@@ -73,8 +74,6 @@ export class ActionsService {
 
             return true;
         } else {
-            let arrErr = [];
-
             console.log('Bad informations: ');
             console.log({ 'action': action }, { 'userId': userId }, { 'groupId': groupId }, { 'basketId': basketId }, { 'resIds': resIds });
 
@@ -128,7 +127,7 @@ export class ActionsService {
                         }
                         catch (error) {
                             console.log(error);
-                            console.log(action.component);
+                            console.log(action);
                             alert(this.lang.actionNotExist);
                         }
                     }
@@ -201,10 +200,14 @@ export class ActionsService {
         }
     }
 
+    unlockResourceAfterActionModal(state: string) {
+        this.stopRefreshResourceLock();
+        if (state !== 'success') {
+            this.unlockResource();
+        }
+    }
 
     endAction(status: any) {
-        this.unlockResource();
-
         this.notify.success(this.lang.action + ' : "' + this.currentAction.label + '" ' + this.lang.done);
 
         this.eventAction.next();
@@ -214,14 +217,14 @@ export class ActionsService {
     confirmAction() {
 
         const dialogRef = this.dialog.open(ConfirmActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
 
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -237,13 +240,13 @@ export class ActionsService {
 
     closeMailAction() {
         const dialogRef = this.dialog.open(CloseMailActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -259,13 +262,13 @@ export class ActionsService {
 
     closeAndIndexAction() {
         const dialogRef = this.dialog.open(CloseAndIndexActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -281,13 +284,13 @@ export class ActionsService {
 
     updateAcknowledgementSendDateAction() {
         const dialogRef = this.dialog.open(UpdateAcknowledgementSendDateActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -303,13 +306,13 @@ export class ActionsService {
 
     createAcknowledgementReceiptsAction() {
         const dialogRef = this.dialog.open(CreateAcknowledgementReceiptActionComponent, {
+            disableClose: true,
             width: '600px',
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -325,13 +328,13 @@ export class ActionsService {
 
     updateDepartureDateAction() {
         const dialogRef = this.dialog.open(UpdateDepartureDateActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -347,13 +350,13 @@ export class ActionsService {
 
     disabledBasketPersistenceAction() {
         const dialogRef = this.dialog.open(DisabledBasketPersistenceActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -369,13 +372,13 @@ export class ActionsService {
 
     enabledBasketPersistenceAction() {
         const dialogRef = this.dialog.open(EnabledBasketPersistenceActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -391,13 +394,13 @@ export class ActionsService {
 
     resMarkAsReadAction() {
         const dialogRef = this.dialog.open(ResMarkAsReadActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -420,13 +423,13 @@ export class ActionsService {
 
     sendExternalSignatoryBookAction() {
         const dialogRef = this.dialog.open(SendExternalSignatoryBookActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -442,13 +445,13 @@ export class ActionsService {
 
     sendExternalNoteBookAction() {
         const dialogRef = this.dialog.open(SendExternalNoteBookActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -464,12 +467,12 @@ export class ActionsService {
 
     redirectAction() {
         const dialogRef = this.dialog.open(RedirectActionComponent, {
+            disableClose: true,
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {
@@ -485,13 +488,13 @@ export class ActionsService {
 
     sendShippingAction() {
         const dialogRef = this.dialog.open(SendShippingActionComponent, {
+            disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
-            tap(() => {
-                this.stopRefreshResourceLock();
-                this.unlockResource();
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
             }),
             filter((data: string) => data === 'success'),
             tap((result: any) => {

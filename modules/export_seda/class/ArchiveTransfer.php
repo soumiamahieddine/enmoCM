@@ -551,7 +551,7 @@ class ArchiveTransfer
                     $content->Addressee[] = $addressee;
                 }
 
-                $content->Source = $_SESSION['mail_nature'][$object->nature_id];
+                $content->Source = '';
 
                 $content->DocumentType = $object->type_label;
                 $content->OriginatingAgencyArchiveUnitIdentifier = $object->alt_identifier;

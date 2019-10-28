@@ -39,6 +39,10 @@
                     </div>
                 </div>
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="user_id" matSortDirection="asc">
+                    <ng-container matColumnDef="id">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()">{{lang.technicalId}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()"> {{element.id}} </mat-cell>
+                    </ng-container>
                     <ng-container matColumnDef="user_id">
                         <mat-header-cell *matHeaderCellDef mat-sort-header [class.hide-for-mobile]="appService.getViewMode()">{{lang.id}}</mat-header-cell>
                         <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()"> {{element.user_id}} </mat-cell>
@@ -82,7 +86,7 @@
                     <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/administration/users/{{row.id}}" style="cursor:pointer;"
                         matTooltip="{{lang.view}}"></mat-row>
                 </mat-table>
-                <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{data.length}} {{lang.users}}</div>
+                <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{data.length}} {{lang.usersAlt}}</div>
             </mat-card>
         </mat-sidenav-content>
         <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"

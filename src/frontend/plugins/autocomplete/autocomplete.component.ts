@@ -282,4 +282,12 @@ export class PluginAutocomplete implements OnInit {
             ).subscribe();
         }
     }
+    
+    getValue() {
+        return this.myControl.value;
+    }
+
+    resetValue() {
+        return this.myControl.setValue('');
+    }
 }

@@ -44,7 +44,13 @@ export class IndexationComponent implements OnInit {
     currentGroupId: number;
 
     actionsList: any[] = [];
-    selectedAction: any = {};
+    selectedAction: any = {
+        id: 0,
+        label: '',
+        component: '',
+        default: false,
+        categoryUse: []
+    };
     tmpFilename: string = '';
 
     dialogRef: MatDialogRef<any>;
@@ -111,14 +117,16 @@ export class IndexationComponent implements OnInit {
                     data.actions = data.actions.map((action: any, index: number) => {
                         return {
                             id: action.id,
-                            label: action.label_action,
+                            label: action.label,
                             component: action.component,
-                            default: index === 0 ? true : false
+                            enabled: action.enabled,
+                            default: index === 0 ? true : false,
+                            categoryUse: action.categories
                         }
                     });
                     return data;
                 }),
-                tap((data: any) => {
+                tap((data: any) => {                    
                     this.selectedAction = data.actions[0];
                     this.actionsList = data.actions;
                 }),
@@ -138,11 +146,10 @@ export class IndexationComponent implements OnInit {
         if (this.indexingForm.isValidForm()) {
             const formatdatas = this.formatDatas(this.indexingForm.getDatas());
 
+            formatdatas['modelId'] = this.currentIndexingModel.master !== null ? this.currentIndexingModel.master : this.currentIndexingModel.id;
             formatdatas['chrono'] = true;
             formatdatas['encodedFile'] = this.appDocumentViewer.getFile().content;
             formatdatas['format'] = this.appDocumentViewer.getFile().format;
-
-            console.log(formatdatas['encodedFile']);
 
             this.actionService.launchIndexingAction(this.selectedAction, this.headerService.user.id, this.currentGroupId, formatdatas);
 
@@ -153,8 +160,19 @@ export class IndexationComponent implements OnInit {
 
     formatDatas(datas: any) {
         let formatData: any = {};
+        const regex = /indexingCustomField_[.]*/g;
+
+        formatData['customFields'] = {};
+
         datas.forEach((element: any) => {
-            formatData[element.identifier] = element.default_value;
+
+            if (element.identifier.match(regex) !== null) {
+
+                formatData['customFields'][element.identifier.split('_')[1]] = element.default_value;
+
+            } else {
+                formatData[element.identifier] = element.default_value;
+            }            
         });
         return formatData;
     }
@@ -223,6 +241,29 @@ export class IndexationComponent implements OnInit {
     ngOnDestroy() {
         // unsubscribe to ensure no memory leaks
         this.subscription.unsubscribe();
+    }
+
+    showActionInCurrentCategory(action: any) {
+
+        if (this.selectedAction.categoryUse.indexOf(this.indexingForm.getCategory()) === -1) {
+            const newAction = this.actionsList.filter(action => action.categoryUse.indexOf(this.indexingForm.getCategory()) > -1)[0];
+            if (newAction !== undefined) {
+                this.selectedAction = this.actionsList.filter(action => action.categoryUse.indexOf(this.indexingForm.getCategory()) > -1)[0];
+            } else {
+                this.selectedAction = {
+                    id: 0,
+                    label: '',
+                    component: '',
+                    default: false,
+                    categoryUse: []
+                };
+            }
+        }
+        if (action.categoryUse.indexOf(this.indexingForm.getCategory()) > -1) {            
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

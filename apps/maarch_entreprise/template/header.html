@@ -6,36 +6,6 @@
                 </div>
             </a>
             <div style="justify-content: flex-end;display: flex;width: 100%;color: white;align-items: center;">
-                <span class="maarchToolButton" style="cursor:pointer;padding:15px;padding-left: 20px;padding-right: 20px;position: relative;margin-right: 15px;" onclick="$j('#menunav').slideToggle('fast');event.stopPropagation();" title="Menu">
-                    <i class="fa fa-th fa-2x" style="font-size: 20px;"></i>
-                    <div id="menunav" class="menunav" style="left: -225px;display:none;">
-                        <div class="header_menu_blank">&nbsp;</div>
-                        <ul>
-                            <?php
-                                //here we building the maarch menu
-                                $core->build_menu($_SESSION['menu']);
-                            ?>
-                        </ul>
-                        <div class="header_menu_blank">&nbsp;</div>
-                        <div class="footer_menu">
-                            <i style="font-style:normal;color:white;float:left;">
-                                <?php echo $_SESSION['config']['applicationname']; ?>
-                            </i>
-                            <a onclick="triggerAngular('#/about-us')" style="cursor: pointer;color:white;float:right;"><?php echo _MAARCH_CREDITS ;?></a>
-                            <div style="clear:both;"></div>
-                        </div>
-                    </div>
-                    <script>
-                        $j(window).click(function(event) {
-                            if ($j('#menunav').css('display') != 'none') {
-                                $j('#menunav').slideToggle('fast');
-                            }
-                            if ($j('#profilenav').css('display') != 'none') {
-                                $j('#profilenav').slideToggle('fast');
-                            }
-                        });
-                    </script>
-                </span>
                 <span class="maarchToolButton" style="padding-left:10px;padding-right:10px;font-size: 14px;text-align: center;display: flex;align-items: center;position: relative;cursor:pointer;" onclick="$j('#profilenav').slideToggle('fast');event.stopPropagation();" title="Mes groupes">
                     <?php                         
                     $strUserInfos = '<i class="fa fa-user fa-2x" style="padding-right:5px;"></i> ' . $_SESSION['user']['FirstName']."&nbsp;<b>".$_SESSION['user']['LastName']."</b>";

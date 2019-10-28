@@ -5,7 +5,7 @@
         <header-panel [snavLeft]="snav"></header-panel>
         <menu-shortcut></menu-shortcut>
         <menu-nav></menu-nav>
-        <basket-home *ngIf="homeData" #basketHome [homeData]="homeData" [snavL]="snav"></basket-home>
+        <basket-home #basketHome [snavL]="snav"></basket-home>
         <mat-divider></mat-divider>
         <panel-folder></panel-folder>
     </mat-sidenav>

@@ -5,7 +5,7 @@
             <header-panel [snavLeft]="snav"></header-panel>
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
-            <basket-home *ngIf="homeData" #basketHome (refreshEvent)="refreshDao()" [homeData]="homeData" [snavL]="snav"
+            <basket-home #basketHome (refreshEvent)="refreshDao()" [snavL]="snav"
                 [currentBasketInfo]="currentBasketInfo"></basket-home>
             <mat-divider></mat-divider>
             <panel-folder #panelFolder (refreshEvent)="refreshDao()"></panel-folder>
@@ -199,6 +199,6 @@
             <mat-divider></mat-divider>
         </mat-sidenav>
     </mat-sidenav-container>
-    <app-actions-list (refreshEvent)="refreshDao()" #actionsListContext [contextMode]="true"
+    <app-actions-list (refreshEvent)="refreshDao()" (refreshEventAfterAction)="refreshDaoAfterAction()" #actionsListContext [contextMode]="true"
         [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo" (refreshPanelFolders)="panelFolder.refreshFoldersTree()">
     </app-actions-list>

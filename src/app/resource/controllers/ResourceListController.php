@@ -285,9 +285,7 @@ class ResourceListController
 
     public function getActions(Request $request, Response $response, array $aArgs)
     {
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-
-        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $GLOBALS['id']]);
         if (!empty($errors['errors'])) {
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
         }
@@ -296,18 +294,26 @@ class ResourceListController
         $group = GroupModel::getById(['id' => $aArgs['groupId'], 'select' => ['group_id']]);
 
         $rawActions = ActionGroupBasketModel::get([
-            'select'    => ['id_action'],
-            'where'     => ['basket_id = ?', 'group_id = ?', 'used_in_basketlist = ?', 'default_action_list = ?'],
-            'data'      => [$basket['basket_id'], $group['group_id'], 'Y', 'N']
+            'select'    => ['id_action', 'default_action_list'],
+            'where'     => ['basket_id = ?', 'group_id = ?', 'used_in_basketlist = ?'],
+            'data'      => [$basket['basket_id'], $group['group_id'], 'Y']
         ]);
 
         $actions = [];
+        $defaultAction = 0;
         foreach ($rawActions as $rawAction) {
+            if ($rawAction['default_action_list'] == 'Y') {
+                $defaultAction = $rawAction['id_action'];
+            }
             $actions[] = $rawAction['id_action'];
         }
 
         if (!empty($actions)) {
-            $actions = ActionModel::get(['select' => ['id', 'label_action', 'component'], 'where' => ['id in (?)'], 'data' => [$actions], 'orderBy' => ['label_action']]);
+            $actions = ActionModel::get(['select' => ['id', 'label_action', 'component'], 'where' => ['id in (?)'], 'data' => [$actions], 'orderBy' => ["id = {$defaultAction} DESC",'label_action']]);
+            foreach ($actions as $key => $action) {
+                $actions[$key]['label'] = $action['label_action'];
+                unset($actions[$key]['label_action']);
+            }
         }
 
         return $response->withJson(['actions' => $actions]);
@@ -1089,12 +1095,14 @@ class ResourceListController
             'groupBy'   => ['status']
         ]);
         foreach ($rawStatuses as $key => $value) {
-            $status = StatusModel::getById(['select' => ['label_status'], 'id' => $value['status']]);
-            $statuses[] = [
-                'id'        => $value['status'],
-                'label'     => empty($status['label_status']) ? '_UNDEFINED' : $status['label_status'],
-                'count'     => $value['count']
-            ];
+            if (!empty($value['status'])) {
+                $status = StatusModel::getById(['select' => ['label_status'], 'id' => $value['status']]);
+                $statuses[] = [
+                    'id'        => $value['status'],
+                    'label'     => empty($status['label_status']) ? '_UNDEFINED' : $status['label_status'],
+                    'count'     => $value['count']
+                ];
+            }
         }
 
         $entities = [];

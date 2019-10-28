@@ -23,6 +23,11 @@ foreach ($customs as $custom) {
         $loadedXml = simplexml_load_file($path);
         
         if ($loadedXml) {
+		    $indexingModels = \IndexingModel\models\IndexingModelModel::get(['select'=> ['id']]);
+            if (!empty($indexingModels)) {
+                $indexingModelsId = array_column($indexingModels, 'id');
+            }
+
             $i = 0;
             foreach ($loadedXml->INDEX as $value) {
                 $customExists = \SrcCore\models\DatabaseModel::select([
@@ -70,6 +75,17 @@ foreach ($customs as $custom) {
                     'type'      => $type,
                     'values'    => empty($values) ? '[]' : json_encode($values)
                 ]);
+
+                if (!empty($indexingModelsId)) {
+                    foreach ($indexingModelsId as $indexingModelId) {
+                        \IndexingModel\models\IndexingModelFieldModel::create([
+                            'model_id'   => $indexingModelId,
+                            'identifier' => 'indexingCustomField_'.$fieldId,
+                            'mandatory'  => 'false',
+                            'unit'       => 'mail'
+                        ]);
+                    }
+                }
 
                 $column = (string)$value->column;
                 $resources = \Resource\models\ResModel::get([

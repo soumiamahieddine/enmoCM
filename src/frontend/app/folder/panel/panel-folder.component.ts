@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { FolderTreeComponent } from '../folder-tree.component';
+import { FoldersService } from '../folders.service';
 
 declare function $j(selector: any): any;
 
@@ -13,22 +14,15 @@ export class PanelFolderComponent implements OnInit {
 
     lang: any = LANG;
 
+    showTree: boolean = false;
     @Input('selectedId') id: number;
-    @ViewChild('folderTree', { static: true }) folderTree: FolderTreeComponent;
+    @ViewChild('folderTree', { static: false }) folderTree: FolderTreeComponent;
     
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
     
-    constructor() { }
+    constructor(public foldersService: FoldersService) { }
 
     ngOnInit(): void { }
-
-    getDragIds() {
-        if (this.folderTree !== undefined) {
-            return this.folderTree.getDragIds();
-        } else {
-            return [];
-        }
-    }
 
     initTree() {
         this.folderTree.openTree(this.id);
@@ -39,6 +33,8 @@ export class PanelFolderComponent implements OnInit {
     }
 
     refreshFoldersTree() {
-        this.folderTree.getFolders();
+        if (this.folderTree !== undefined) {
+            this.folderTree.getFolders();
+        }
     }
 }

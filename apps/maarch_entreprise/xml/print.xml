@@ -31,10 +31,6 @@
             <LIBELLE>Date de création</LIBELLE>
             <DATABASE_FIELD>creation_date</DATABASE_FIELD>
         </FIELD>
-        <FIELD>
-            <LIBELLE>Nature du courrier</LIBELLE>
-            <DATABASE_FIELD>nature_id</DATABASE_FIELD>
-        </FIELD>
         <!-- line 4 -->
         <FIELD>
             <LIBELLE>Date du document</LIBELLE>

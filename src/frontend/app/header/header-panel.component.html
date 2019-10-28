@@ -1,5 +1,11 @@
 <div class="panelHeader">
-    <div class="panelHeader-logo">
+    <div *ngIf="showBackHome" class="panelHeader-backHome">
+        <button mat-button style="padding-top: 5px;padding-bottom: 5px;" (click)="gotToHome()">
+            <i class="fa fa-home" style="height: auto"></i>&nbsp;
+            <span>{{lang.backHome}}</span>
+        </button>   
+    </div>
+    <div class="panelHeader-logo" [class.text-center]="showBackHome">
         <a href="#" title="{{lang.home}}" style="margin-right: 30px;">
             <mat-icon class="maarchLogo" svgIcon="maarchLogoFull"></mat-icon>
         </a>

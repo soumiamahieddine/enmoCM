@@ -101,7 +101,7 @@ class IndexingController
         }
 
         $historic = empty($methodResponse['history']) ? '' : $methodResponse['history'];
-        ActionMethodController::terminateAction(['id' => $args['actionId'], 'resources' => [$body['resource']], 'basketName' => 'Indexing', 'note' => $body['note'], 'history' => $historic]);
+        ActionMethodController::terminateAction(['id' => $args['actionId'], 'resources' => [$body['resource']], 'note' => $body['note'], 'history' => $historic]);
 
         if (!empty($methodResponses['data']) || !empty($methodResponses['errors'])) {
             return $response->withJson($methodResponses);
@@ -123,9 +123,13 @@ class IndexingController
 
         $actions = [];
         foreach ($indexingParameters['indexingParameters']['actions'] as $value) {
-            $action = ActionModel::getById(['id' => $value, 'select' => ['id', 'label_action', 'component', 'id_status']]);
+            $action         = ActionModel::getById(['id' => $value, 'select' => ['id', 'label_action', 'component', 'id_status']]);
+            $categoriesList = ActionModel::getCategoriesById(['id' => $value]);
 
-            $action['enabled'] = !empty($action['id_status']) && $action['id_status'] != '_NOSTATUS_';
+            $action['label'] = $action['label_action'];
+            $action['enabled']    = !empty($action['id_status']) && $action['id_status'] != '_NOSTATUS_';
+            $action['categories'] = array_column($categoriesList, 'category_id');
+            unset($action['label_action'], $action['id_status']);
             $actions[] = $action;
         }
 
@@ -163,8 +167,8 @@ class IndexingController
         $allowedEntities = array_unique($allowedEntities);
 
         $entitiesTmp = EntityModel::get([
-            'select'   => ['id', 'entity_label', 'entity_id'], 
-            'where'    => ['enabled = ?', '(parent_entity_id is null OR parent_entity_id = \'\')'], 
+            'select'   => ['id', 'entity_label', 'entity_id'],
+            'where'    => ['enabled = ?', '(parent_entity_id is null OR parent_entity_id = \'\')'],
             'data'     => ['Y'],
             'orderBy'  => ['entity_label']
         ]);

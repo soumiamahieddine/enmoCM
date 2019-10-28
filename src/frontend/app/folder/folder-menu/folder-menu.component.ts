@@ -1,12 +1,13 @@
 import { Component, OnInit, Input, Output, EventEmitter, Renderer2 } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { HttpClient } from '@angular/common/http';
-import { map, tap, catchError, filter, exhaustMap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { map, tap, catchError, filter, exhaustMap, debounceTime, distinctUntilChanged, switchMap, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
+import { FoldersService } from '../folders.service';
 
 @Component({
     selector: 'folder-menu',
@@ -19,6 +20,10 @@ export class FolderMenuComponent implements OnInit {
     lang: any = LANG;
 
     foldersList: any[] = [];
+    pinnedFolder: boolean = true;
+
+    loading: boolean = true;
+
     @Input('resIds') resIds: number[];
     @Input('currentFolders') currentFoldersList: any[];
 
@@ -33,7 +38,8 @@ export class FolderMenuComponent implements OnInit {
         public http: HttpClient,
         private notify: NotificationService,
         public dialog: MatDialog,
-        private renderer: Renderer2
+        private renderer: Renderer2,
+        private foldersService: FoldersService
     ) { }
 
     ngOnInit(): void {
@@ -41,13 +47,16 @@ export class FolderMenuComponent implements OnInit {
             debounceTime(300),
             tap((value: any) => {
                 if (value.length === 0) {
+                    this.pinnedFolder = true;
                     this.getFolders();
                 }
             }),
             filter(value => value.length > 2),
+            tap(() => this.loading = true),
             distinctUntilChanged(),
             switchMap(data => this.http.get('../../rest/autocomplete/folders', { params: { "search": data } })),
             tap((data: any) => {
+                this.pinnedFolder = false;
                 this.foldersList = data.map(
                     (info: any) => {
                         return {
@@ -56,6 +65,11 @@ export class FolderMenuComponent implements OnInit {
                         }
                     }
                 );
+                this.loading = false;
+            }),
+            catchError((err) => {
+                this.notify.handleErrors(err);
+                return of(false);
             })
         ).subscribe();
     }
@@ -68,11 +82,17 @@ export class FolderMenuComponent implements OnInit {
     }
 
     getFolders() {
-        this.http.get("../../rest/folders").pipe(
+        this.loading = true;
+        this.http.get("../../rest/pinnedFolders").pipe(
             map((data: any) => data.folders),
             tap((data: any) => {
                 this.foldersList = data;
             }),
+            finalize(() => this.loading = false),
+            catchError((err) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
         ).subscribe();
     }
 
@@ -80,7 +100,7 @@ export class FolderMenuComponent implements OnInit {
 
         this.http.post('../../rest/folders/' + folder.id + '/resources', { resources: this.resIds }).pipe(
             tap(() => {
-                this.refreshFolders.emit();
+                this.foldersService.getPinnedFolders();
                 this.refreshList.emit();
                 this.notify.success(this.lang.mailClassified);
             }),
@@ -99,7 +119,7 @@ export class FolderMenuComponent implements OnInit {
             exhaustMap(() => this.http.request('DELETE', '../../rest/folders/' + folder.id + '/resources', { body: { resources: this.resIds } })),
             tap((data: any) => {
                 this.notify.success(this.lang.removedFromFolder);
-                this.refreshFolders.emit();
+                this.foldersService.getPinnedFolders();
                 this.refreshList.emit();
             })
         ).subscribe();

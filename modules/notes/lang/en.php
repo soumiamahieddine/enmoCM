@@ -72,10 +72,6 @@ if (!defined("_SELECT_NOTE_TEMPLATE")) {
     define("_SELECT_NOTE_TEMPLATE", "Select a note template");
 }
 
-//SERVICES FOR NOTES
-if (!defined("_NOTES_RESTRICTION")) {
-    define("_NOTES_RESTRICTION", "By default, limit the notes to your department");
-}
 
 if (!defined("_NOTE")) {
     define("_NOTE", "Note");

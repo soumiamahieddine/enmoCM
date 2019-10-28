@@ -7,11 +7,14 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatInput } from '@angular/material/input';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, of, Subscription } from 'rxjs';
 import { NotificationService } from '../notification.service';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { Router } from '@angular/router';
 import { FolderUpdateComponent } from './folder-update/folder-update.component';
+import { FoldersService } from './folders.service';
+import { FormControl } from '@angular/forms';
+import { PluginAutocomplete } from '../../plugins/autocomplete/autocomplete.component';
 
 declare function $j(selector: any): any;
 /**
@@ -23,6 +26,7 @@ export class ItemNode {
     label: string;
     parent_id: number;
     public: boolean;
+    pinned: boolean;
     countResources: number;
 }
 
@@ -34,6 +38,7 @@ export class ItemFlatNode {
     countResources: number;
     level: number;
     public: boolean;
+    pinned: boolean;
     expandable: boolean;
 }
 @Component({
@@ -61,6 +66,10 @@ export class ItemFlatNode {
 export class FolderTreeComponent implements OnInit {
 
     lang: any = LANG;
+    loading: boolean = true;
+
+    searchTerm: FormControl = new FormControl();
+    
     TREE_DATA: any[] = [];
     dialogRef: MatDialogRef<any>;
     createRootNode: boolean = false;
@@ -69,6 +78,7 @@ export class FolderTreeComponent implements OnInit {
 
     @Input('selectedId') seletedId: number;
     @ViewChild('itemValue', { static: true }) itemValue: MatInput;
+    @ViewChild('autocomplete', { static: false }) autocomplete: PluginAutocomplete;
 
 
     get data(): ItemNode[] { return this.dataChange.value; }
@@ -87,6 +97,7 @@ export class FolderTreeComponent implements OnInit {
         flatNode.label = node.label;
         flatNode.countResources = node.countResources;
         flatNode.public = node.public;
+        flatNode.pinned = node.pinned;
         flatNode.parent_id = node.parent_id;
         flatNode.id = node.id;
         flatNode.level = level;
@@ -104,6 +115,8 @@ export class FolderTreeComponent implements OnInit {
 
     dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
+    subscription: Subscription;
+    
     @ViewChild('tree', { static: true }) tree: any;
     
     @Output('refreshDocList') refreshDocList = new EventEmitter<string>();
@@ -114,24 +127,35 @@ export class FolderTreeComponent implements OnInit {
         private notify: NotificationService,
         private dialog: MatDialog,
         private router: Router,
-        private renderer: Renderer2
-    ) { }
+        private renderer: Renderer2,
+        public foldersService: FoldersService
+    ) {
+        // Event after process action 
+        this.subscription = this.foldersService.catchEvent().subscribe((result: any) => {   
+            if (result.type === 'initTree') {
+                const folders = this.flatToNestedObject(this.foldersService.getList());
+                if (folders.length > 0) {
+                    this.initTree(folders);
+                    this.openTree(this.foldersService.getCurrentFolder().id);
+                }
+                this.loading = false;
+            } else if (result.type === 'refreshFolderCount') {
+                this.treeControl.dataNodes.filter(folder => folder.id === result.content.id)[0].countResources = result.content.countResources;
+            } else if (result.type === 'refreshFolderPinned') {
+                this.treeControl.dataNodes.filter(folder => folder.id === result.content.id)[0].pinned = result.content.pinned;
+            } else {
+                this.openTree(this.foldersService.getCurrentFolder().id);
+            }
+        }); 
+    }
 
     ngOnInit(): void {
         this.getFolders();
     }
 
     getFolders() {
-        this.http.get("../../rest/folders").pipe(
-            map((data: any) => this.flatToNestedObject(data.folders)),
-            filter((data: any) => data.length > 0),
-            tap((data) => this.initTree(data)),
-            //filter(() => this.seletedId !== undefined),
-            tap(() => {
-                this.openTree(this.seletedId);
-                this.selectTree(this.seletedId);
-            })
-        ).subscribe();
+        this.loading = true;
+        this.foldersService.getFolders();
     }
 
     initTree(data: any) {
@@ -152,24 +176,9 @@ export class FolderTreeComponent implements OnInit {
         }
     }
 
-    selectTree(id: any) {
-        let indexSelectedFolder = this.treeControl.dataNodes.map((folder: any) => folder.id).indexOf(parseInt(id));
-        if (indexSelectedFolder != -1) {
-            this.treeControl.dataNodes[indexSelectedFolder].selected = true;
-        }
-    }
-
     hasChild = (_: number, node: any) => node.expandable;
 
     hasNoContent = (_: number, _nodeData: any) => _nodeData.label === '';
-
-    selectFolder(node: any) {
-        this.treeControl.dataNodes.forEach(element => {
-            element.selected = false;
-        });
-        node.selected = true;
-        this.router.navigate(['/folders/' + node.id]);
-    }
 
     showAction(node: any) {
         this.treeControl.dataNodes.forEach(element => {
@@ -270,9 +279,10 @@ export class FolderTreeComponent implements OnInit {
         ).subscribe();
     }
 
-    createRoot(value: any) {
-        this.http.post("../../rest/folders", { label: value }).pipe(
+    createFolderRoot() {
+        this.http.post("../../rest/folders", { label: this.autocomplete.getValue() }).pipe(
             tap(() => {
+                this.autocomplete.resetValue();
                 this.getFolders();
             }),
             tap(() => this.notify.success(this.lang.folderAdded)),
@@ -309,7 +319,10 @@ export class FolderTreeComponent implements OnInit {
                 this.dataChange.next(this.data);
 
             }),
-            tap(() => this.notify.success(this.lang.folderDeleted)),
+            tap(() => {
+                this.foldersService.getPinnedFolders();
+                this.notify.success(this.lang.folderDeleted);
+            }),
             catchError((err) => {
                 this.notify.handleErrors(err);
                 return of(false);
@@ -333,73 +346,11 @@ export class FolderTreeComponent implements OnInit {
     }
 
     drop(ev: any, node: any) {
-        this.classifyDocument(ev, node);
-        /*if (ev.previousContainer.id === 'folder-list') {
-            this.moveFolder(ev, node);
-        } else {
-            this.classifyDocument(ev, node);
-        }*/
-    }
-
-    moveFolder(ev: any, node: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.move + ' ' + ev.item.data.alt_identifier, msg: this.lang.moveQuestion + ' <b>' + ev.item.data.alt_identifier + '</b> ' + this.lang.in + ' <b>' + node.label + '</b>&nbsp;?' } });
-
-        this.dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            //exhaustMap(() => this.http.post("../../rest/folders/" + node.id)),
-            tap(() => {
-                node.countResources = node.countResources + 1;
-            }),
-            tap(() => this.notify.success('Courrier déplacé')),
-            tap(() => this.getFolders()),
-            finalize(() => node.drag = false),
-            catchError((err) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
-    }
-
-    classifyDocument(ev: any, node: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.classify + ' ' + ev.item.data.alt_identifier, msg: this.lang.classifyQuestion + ' <b>' + ev.item.data.alt_identifier + '</b> ' + this.lang.in + ' <b>' + node.label + '</b>&nbsp;?' } });
-
-        this.dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.post('../../rest/folders/' + node.id + '/resources', { resources: [ev.item.data.res_id] })),
-            tap((data: any) => {
-                node.countResources = data.countResources;
-            }),
-            tap(() => {
-                this.notify.success(this.lang.mailClassified);
-                this.refreshDocList.emit();
-            }),
-            finalize(() => node.drag = false),
-            catchError((err) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+        this.foldersService.classifyDocument(ev, node);
     }
 
     dragEnter(node: any) {
         node.drag = true;
-    }
-
-    getDragIds() {
-        if (this.treeControl.dataNodes !== undefined) {
-            return this.treeControl.dataNodes.map(node => 'folder-list-' + node.id);
-        } else {
-            return [];
-        }
-    }
-
-    toggleInput() {
-        this.createRootNode = !this.createRootNode;
-        if (this.createRootNode) {
-            setTimeout(() => {
-                this.renderer.selectRootElement('#itemValue').focus();
-            }, 0);
-        }
     }
 
     openFolderAdmin(node: any) {
@@ -409,6 +360,7 @@ export class FolderTreeComponent implements OnInit {
             tap((data) => {
                 if (data !== undefined) {
                     this.getFolders();
+                    this.foldersService.getPinnedFolders();
                 }                
             })
         ).subscribe();
@@ -455,5 +407,18 @@ export class FolderTreeComponent implements OnInit {
         this.seletedId = folder.id;
         this.getFolders();
         this.router.navigate(["/folders/" + folder.id]);
+    }
+
+    togglePinFolder(folder: any) {
+        if (folder.pinned) {
+            this.foldersService.unpinFolder(folder);
+        } else {
+            this.foldersService.pinFolder(folder);
+        }
+    }
+
+    ngOnDestroy() {
+        // unsubscribe to ensure no memory leaks
+        this.subscription.unsubscribe();
     }
 }

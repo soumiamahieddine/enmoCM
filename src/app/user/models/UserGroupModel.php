@@ -82,4 +82,25 @@ class UserGroupModel
 
         return true;
     }
+
+    public static function getWithGroups(array $args = [])
+    {
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($args, ['limit']);
+
+        $where = ['usergroup_content.group_id = usergroups.id'];
+        if (!empty($args['where'])) {
+            $where = array_merge($where, $args['where']);
+        }
+        $usersGroups = DatabaseModel::select([
+            'select'    => $args['select'] ?? ['*'],
+            'table'     => ['usergroup_content, usergroups'],
+            'where'     => $where,
+            'data'      => $args['data'] ?? [],
+            'order_by'  => $args['orderBy'] ?? [],
+            'limit'     => $args['limit'] ?? 0
+        ]);
+
+        return $usersGroups;
+    }
 }

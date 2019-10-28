@@ -137,3 +137,59 @@ button:disabled {
         cursor: pointer;
     }
 }
+
+::ng-deep.folderListMenu {
+    .mat-menu-content {
+        padding-top: 0;
+        padding-bottom: 0;
+
+        .mat-menu-item {
+            .pinnedActionIcon {
+                color: $warn;
+                height: auto;
+
+                i {
+                    font-size: 13px;
+                    transition: all 0.3s;
+                    transform: rotate(15deg) translate(0px, -50%);
+                }
+
+            }
+            .revertPinnedActionIcon {
+                color: $primary;
+                height: auto;
+
+                i {
+                    font-size: 13px;
+                    transition: all 0.3s;
+                    transform: rotate(0deg) translate(0px, 0px);
+                }
+
+            }
+        }
+
+        .mat-menu-item:hover {
+            .pinnedActionIcon {
+                color: $primary;
+                i {
+                    transition: all 0.3s;
+                    transform: rotate(0deg) translate(0px, 0px);
+                }
+            }
+
+            .revertPinnedActionIcon {
+                color: $warn;
+                i {
+                    transition: all 0.3s;
+                    transform: rotate(15deg) translate(0px, -50%);
+                }
+            }
+        }
+
+    }
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+}

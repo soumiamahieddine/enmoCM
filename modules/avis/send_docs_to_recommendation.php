@@ -120,7 +120,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     $_SESSION['redirect']['diff_list']['difflist_type'] = 'entity_id';
 
-    $_SESSION['redirect']['diff_list'] = $difflist->get_listinstance($values_str, false, $coll_id);
+    $_SESSION['redirect']['diff_list'] = $difflist->get_listinstance($values_str, false);
 
     if ($_SESSION['save_list']['fromProcess'] == 'true') {
         if (!empty($_SESSION['process']['diff_list']['avis'])) {

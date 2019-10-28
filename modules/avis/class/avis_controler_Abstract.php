@@ -201,7 +201,7 @@ abstract class avis_controler_Abstract
         require_once 'modules/entities/class/class_manage_listdiff.php';
         $listdiff = new diffusion_list();
         $roles = $listdiff->list_difflist_roles();
-        $circuitAvis = $listdiff->get_listinstance($res_id, false, $coll_id, $typeList);
+        $circuitAvis = $listdiff->get_listinstance($res_id, false, $typeList);
         if (isset($circuitAvis['copy'])) {
             unset($circuitAvis['copy']);
         }

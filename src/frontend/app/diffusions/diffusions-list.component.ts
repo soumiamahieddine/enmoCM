@@ -368,6 +368,10 @@ export class DiffusionsListComponent implements OnInit {
                 item_mode: "copy"
             };
             this.diffList['copy'].items.unshift(newElemListModel);
+
+            if (this.diffFormControl !== undefined) {
+                this.setFormValues();
+            }
         }
     }
 
@@ -384,14 +388,12 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     changeRole(user: any, oldRole: any, newRole: any) {
-        //if (this.diffFormControl !== undefined) {
         if (newRole.id === 'dest') {
             this.switchUserWithOldDest(user, oldRole);
 
         } else {
             this.changeUserRole(user, oldRole, newRole);
         }
-        //}
     }
 
     switchMode() {
@@ -428,6 +430,7 @@ export class DiffusionsListComponent implements OnInit {
                         indexFound = this.diffList[oldRole.id].items.map((item: any) => item.id).indexOf(destUser.id);
 
                         if (indexFound === -1) {
+                            destUser.item_mode = oldRole.id;
                             this.diffList[oldRole.id].items.push(destUser);
                         }
                     }
@@ -436,8 +439,12 @@ export class DiffusionsListComponent implements OnInit {
                     if (indexFound > -1) {
                         this.diffList[oldRole.id].items.splice(indexFound, 1);
                     }
+                    user.item_mode = 'dest';
                     this.diffList['dest'].items[0] = user;
 
+                    if (this.diffFormControl !== undefined) {
+                        this.setFormValues();
+                    }
                     // TO CHANGE DESTINATION IN INDEXING FORM
                     if (this.triggerEvent !== undefined) {
                         this.triggerEvent.emit(allowedEntitiesIds);
@@ -457,7 +464,11 @@ export class DiffusionsListComponent implements OnInit {
         if (indexFound > -1) {
             this.diffList[oldRole.id].items.splice(indexFound, 1);
         }
+        user.item_mode = newRole.id;
         this.diffList[newRole.id].items.push(user);
+        if (this.diffFormControl !== undefined) {
+            this.setFormValues();
+        }
     }
 
     setFormValues() {
@@ -467,7 +478,7 @@ export class DiffusionsListComponent implements OnInit {
                 this.diffList[role].items.map((item: any) => {
                     return {
                         id: item.item_id,
-                        mode: item.item_mode,
+                        mode: role,
                         type: item.item_type === 'user_id' ? 'user' : 'entity'
                     }
                 })

@@ -35,7 +35,6 @@ if ($_SERVER['REMOTE_USER'] <> '' && $_SERVER['AUTH_TYPE'] = 'shibboleth') {
 
     if ($res['error'] == '') {
             \SrcCore\models\AuthenticationModel::setCookieAuth(['userId' => $login]);
-            $core->load_menu($_SESSION['modules']);
             //login OK
             $trace = new history();
             header('location: ' . $_SESSION['config']['businessappurl']. $res['url']);

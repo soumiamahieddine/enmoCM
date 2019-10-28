@@ -22,6 +22,7 @@ import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { FolderActionListComponent } from '../folder-action-list/folder-action-list.component';
 import { FiltersListService } from '../../../service/filtersList.service';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { FoldersService } from '../folders.service';
 
 
 declare function $j(selector: any): any;
@@ -115,18 +116,14 @@ export class FolderDocumentListComponent implements OnInit {
         private notify: NotificationService,
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
-        public appService: AppService) {
+        public appService: AppService,
+        private foldersService: FoldersService) {
         $j("link[href='merged_css.php']").remove();
     }
 
     ngOnInit(): void {
-        this.appService.openBasketMenu(false);
-        this.loading = false;
 
-        this.http.get("../../rest/home")
-            .subscribe((data: any) => {
-                this.homeData = data;
-            });
+        this.loading = false;
 
         this.isLoadingResults = false;
 
@@ -144,8 +141,12 @@ export class FolderDocumentListComponent implements OnInit {
                             'ownerDisplayName': data.folder.ownerDisplayName,
                             'entitiesSharing': data.folder.sharing.entities.map((entity: any) => entity.label),
                         };
-
+                    this.foldersService.setFolder(this.folderInfo);
                     this.headerService.setHeader(this.folderInfo.label, '', 'fa fa-folder-open');
+                    setTimeout(() => {
+                        this.basketHome.togglePanel(false); 
+                    }, 200);
+                    
                 });
             this.basketUrl = '../../rest/folders/' + params['folderId'] + '/resources';
             this.filtersListService.filterMode = false;
@@ -339,11 +340,7 @@ export class FolderDocumentListComponent implements OnInit {
     }
 
     listTodrag() {
-        if (this.panelFolder !== undefined) {
-            return this.panelFolder.getDragIds();
-        } else {
-            return [];
-        }
+        return this.foldersService.getDragIds();
     }
 }
 export interface BasketList {

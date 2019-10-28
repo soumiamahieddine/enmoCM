@@ -131,7 +131,7 @@ $size = '';
 $param = array();
 
 // Custom fields
-$customFields = \CustomField\models\CustomFieldModel::get();
+$customFields = \CustomField\models\CustomFieldModel::get(['orderBy' => ['label']]);
 foreach ($customFields as $customField) {
     $field = 'indexingCustomField_'.$customField['id'];
 
@@ -189,14 +189,6 @@ for ($i = 0; $i < count($users_list); ++$i) {
 $arr_tmp2 = array('label' => _ASSIGNEE . ' / ' . _REDACTOR, 'type' => 'select_multiple', 'param' => array('field_label' => _ASSIGNEE . ' / ' . _REDACTOR, 'label_title' => _CHOOSE_RECIPIENT_SEARCH_TITLE,
 'id' => 'destinataire', 'options' => $arr_tmp, ));
 $param['destinataire'] = $arr_tmp2;
-
-//mail_natures
-$arr_tmp = array();
-foreach (array_keys($_SESSION['mail_natures']) as $nature) {
-    array_push($arr_tmp, array('VALUE' => $nature, 'LABEL' => $_SESSION['mail_natures'][$nature]));
-}
-$arr_tmp2 = array('label' => _MAIL_NATURE, 'type' => 'select_simple', 'param' => array('field_label' => _MAIL_NATURE, 'default_label' => addslashes(_CHOOSE_MAIL_NATURE), 'options' => $arr_tmp));
-$param['mail_nature'] = $arr_tmp2;
 
 //priority
 $arr_tmp = array();
@@ -281,17 +273,9 @@ if ($core_tools->is_module_loaded('entities')) {
     'id' => 'initiatorServices', 'options' => $arr_tmp, ));
 }
 
-// Reference courrier externe
-$arr_tmp2 = array('label' => _REFERENCE_MAIL, 'type' => 'input_text', 'param' => array('field_label' => _REFERENCE_MAIL, 'other' => $size));
-$param['external_reference'] = $arr_tmp2;
-
-// description
-$arr_tmp2 = array('label' => _OTHERS_INFORMATIONS, 'type' => 'input_text', 'param' => array('field_label' => _OTHERS_INFORMATIONS, 'other' => $size));
-$param['description'] = $arr_tmp2;
-
-// Monitoring number
-$arr_tmp2 = array('label' => _MONITORING_NUMBER, 'type' => 'input_text', 'param' => array('field_label' => _MONITORING_NUMBER, 'other' => $size));
-$param['reference_number'] = $arr_tmp2;
+// Folder
+$arr_tmp2 = array('label' => _PROJECT, 'type' => 'input_text', 'param' => array('field_label' => _PROJECT, 'other' => $size));
+$param['project'] = $arr_tmp2;
 
 // Department number
 include("apps/maarch_entreprise/department_list.php");

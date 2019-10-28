@@ -49,6 +49,7 @@ use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
 use Tag\models\TagModel;
 use Tag\models\TagResModel;
+use User\models\UserGroupModel;
 use User\models\UserModel;
 
 class ResController
@@ -736,6 +737,9 @@ class ResController
 
     private static function controlResource(array $args)
     {
+        $currentUser = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['loginmode']]);
+        $isWebServiceUser = $currentUser['loginmode'] == 'restMode';
+
         $body = $args['body'];
 
         if (empty($body)) {
@@ -743,6 +747,8 @@ class ResController
         } elseif (!Validator::intVal()->notEmpty()->validate($body['doctype'])) {
             return ['errors' => 'Body doctype is empty or not an integer'];
         } elseif (!Validator::intVal()->notEmpty()->validate($body['modelId'])) {
+            return ['errors' => 'Body modelId is empty or not an integer'];
+        } elseif ($isWebServiceUser && !Validator::stringType()->notEmpty()->validate($body['status'])) {
             return ['errors' => 'Body modelId is empty or not an integer'];
         }
 
@@ -764,9 +770,6 @@ class ResController
         if (!empty($control['errors'])) {
             return ['errors' => $control['errors']];
         }
-
-        $currentUser = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['loginmode']]);
-        $isWebServiceUser = $currentUser['loginmode'] == 'restMode';
 
         $control = ResController::controlAdjacentData(['body' => $body, 'isWebServiceUser' => $isWebServiceUser]);
         if (!empty($control['errors'])) {
@@ -906,7 +909,7 @@ class ResController
                 if (!empty($body['customFields'][$customFieldId])) {
                     $customField = CustomFieldModel::getById(['id' => $customFieldId, 'select' => ['type', 'values']]);
                     $possibleValues = empty($customField['values']) ? [] : json_decode($customField['values']);
-                    if (($customField['type'] == 'select' || $customField['type'] == 'checkbox') && !in_array($body['customFields'][$customFieldId], $possibleValues)) {
+                    if (($customField['type'] == 'select' || $customField['type'] == 'radio') && !in_array($body['customFields'][$customFieldId], $possibleValues)) {
                         return ['errors' => "Body customFields[{$customFieldId}] has wrong value"];
                     } elseif ($customField['type'] == 'checkbox') {
                         if (!is_array($body['customFields'][$customFieldId])) {
@@ -953,15 +956,19 @@ class ResController
                 return ['errors' => "Body arrivalDate is not a date"];
             }
 
-            $documentDate = new \DateTime($body['arrivalDate']);
+            $arrivalDate = new \DateTime($body['arrivalDate']);
             $tmr = new \DateTime('tomorrow');
-            if ($documentDate > $tmr) {
+            if ($arrivalDate > $tmr) {
                 return ['errors' => "Body arrivalDate is not a valid date"];
             }
         }
         if (!empty($body['departureDate'])) {
             if (!Validator::date()->notEmpty()->validate($body['departureDate'])) {
                 return ['errors' => "Body departureDate is not a date"];
+            }
+            $departureDate = new \DateTime($body['departureDate']);
+            if (!empty($documentDate) && $departureDate < $documentDate) {
+                return ['errors' => "Body departureDate is not a valid date"];
             }
         }
         if (!empty($body['processLimitDate'])) {
@@ -990,14 +997,15 @@ class ResController
         $body = $args['body'];
 
         if (!empty($body['destination'])) {
-            $groups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
+            $groups = UserGroupModel::getWithGroups([
+                'select'    => ['usergroups.indexation_parameters'],
+                'where'     => ['usergroup_content.user_id = ?', 'usergroups.can_index = ?'],
+                'data'      => [$GLOBALS['id'], true]
+            ]);
 
             $clauseToProcess = '';
             $allowedEntities = [];
             foreach ($groups as $group) {
-                if (!$group['can_index']) {
-                    continue;
-                }
                 $group['indexation_parameters'] = json_decode($group['indexation_parameters'], true);
                 foreach ($group['indexation_parameters']['keywords'] as $keywordValue) {
                     if (strpos($clauseToProcess, IndexingController::KEYWORDS[$keywordValue]) === false) {

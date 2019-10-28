@@ -20,13 +20,19 @@ export class AppDateAdapter extends NativeDateAdapter {
             let year = date.getFullYear();
             return this._to2digit(day) + '/' + this._to2digit(month) + '/' + year;
         } else {
-            return date.toDateString();
+            const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+            return date.toLocaleDateString('fr-FR', options);
         }
     }
 
     private _to2digit(n: number) {
         return ('00' + n).slice(-2);
     }
+
+    getFirstDayOfWeek(): number {
+        return 1;
+    }
+
 }
 
 export const APP_DATE_FORMATS =
@@ -157,9 +163,9 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
     ],
     providers: [
         { provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() },
+        { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
         { provide: DateAdapter, useClass: AppDateAdapter },
         { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS },
-        { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
     ]
 })
 export class AppMaterialModule { }

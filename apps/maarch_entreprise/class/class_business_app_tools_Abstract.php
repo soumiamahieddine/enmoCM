@@ -447,27 +447,6 @@ abstract class business_app_tools_Abstract extends Database
             . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
             . $_SESSION['config']['lang'] . '.php';
 
-        $_SESSION['mail_natures'] = array();
-        $_SESSION['mail_natures_attribute'] = array();
-        $_SESSION['mail_natures_third'] = [];
-        $mailNatures = $xmlfile->mail_natures;
-        if (count($mailNatures) > 0) {
-            foreach ($mailNatures->nature as $nature ) {
-                $label = (string) $nature->label;
-                $attribute = (string) $nature['with_reference'];
-                $attributeThird = (string) $nature['with_third'];
-                if (!empty($label) && defined($label)
-                    && constant($label) <> NULL
-                ) {
-                    $label = constant($label);
-                }
-                $_SESSION['mail_natures'][(string) $nature->id] = $label;
-                $_SESSION['mail_natures_attribute'][(string) $nature->id] = $attribute;
-                $_SESSION['mail_natures_third'][(string) $nature->id] = $attributeThird;
-            }
-            $_SESSION['default_mail_nature'] = (string) $mailNatures->default_nature;
-        }
-
         $_SESSION['processing_modes'] = array();
         $processingModes = $xmlfile->process_modes; 
         if(count($processingModes) > 0) {

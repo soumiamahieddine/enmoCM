@@ -290,9 +290,6 @@ if (!defined('_TRACE_ACT')) {
 if (!defined('_INCLUDE_SUB_ENTITIES')) {
     define('_INCLUDE_SUB_ENTITIES', 'Include sub-entities');
 }
-if (!defined('_GRAPHICS_REPORTS')) {
-    define('_GRAPHICS_REPORTS', 'Graphics mode enabled');
-}
 
 /************** Forms And lists **************/
 if (!defined('_ID')) {
@@ -1875,12 +1872,6 @@ if (!defined('_DOCTYPES')) {
 if (!defined('_DOCTYPE_INDEXES')) {
     define('_DOCTYPE_INDEXES', 'Document type index');
 }
-if (!defined('_MAIL_NATURE')) {
-    define('_MAIL_NATURE', ' Nature of the sending');
-}
-if (!defined('_CHOOSE_MAIL_NATURE')) {
-    define('_CHOOSE_MAIL_NATURE', 'Choose the nature of the sending');
-}
 if (!defined('_ERROR_DOCTYPE')) {
     define('_ERROR_DOCTYPE', 'Invalid document type');
 }
@@ -2845,9 +2836,6 @@ if (!defined('_INDEXING_STATUSES')) {
 if (!defined('_UNCHANGED')) {
     define('_UNCHANGED', 'Unchanged');
 }
-if (!defined('_LOAD_STATUSES_SESSION')) {
-    define('_LOAD_STATUSES_SESSION', 'Load Status session');
-}
 if (!defined('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS')) {
     define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Indexation status configuration');
 }
@@ -3565,10 +3553,6 @@ if (!defined('_SQL_QUERY_NOT_SECURE')) {
     define('_SQL_QUERY_NOT_SECURE', 'SQL request is not secured');
 }
 
-//service to put doc on validation from details page
-if (!defined('_PUT_DOC_ON_VALIDATION_FROM_DETAILS')) {
-    define('_PUT_DOC_ON_VALIDATION_FROM_DETAILS', 'Send the document for validation from the detailed page');
-}
 if (!defined('_PUT_DOC_ON_VALIDATION')) {
     define('_PUT_DOC_ON_VALIDATION', 'Send the document for validation');
 }
@@ -3925,15 +3909,6 @@ if (!defined('_CHOOSE_CURRENT_STATUS')) {
 }
 
 //PRINT
-if (!defined('_PRINT_DETAILS_SERVICE')) {
-    define('_PRINT_DETAILS_SERVICE', 'Print the liaison sheet from the detail sheet');
-}
-if (!defined('_PRINT_DETAILS')) {
-    define('_PRINT_DETAILS', 'Print liaison sheet');
-}
-if (!defined('_PRINT_DOC_DETAILS_FROM_SEARCH')) {
-    define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'Print the liaison sheets from the search');
-}
 if (!defined('_PRINT_DOC_FROM_LIST')) {
     define('_PRINT_DOC_FROM_LIST', 'Print the mail liaison sheets');
 }
@@ -4455,97 +4430,6 @@ if (!defined('_DELETED_PRIORITY')) {
 }
 /***** Administration *****/
 
-/**** admin update control ****/
-if (!defined('_ADMIN_UPDATE_CONTROL')) {
-    define('_ADMIN_UPDATE_CONTROL', 'Verify update');
-}
-if (!defined('_ADMIN_UPDATE_CONTROL_DESC')) {
-    define('_ADMIN_UPDATE_CONTROL_DESC', 'Check new tags of Maarch Courrier and update application in latest tag.');
-}
-if (!defined('_YOUR_VERSION')) {
-    define('_YOUR_VERSION', 'Your version');
-}
-if (!defined('_AVAILABLE_VERSION_TO_UPDATE')) {
-    define('_AVAILABLE_VERSION_TO_UPDATE', 'Available versions');
-}
-if (!defined('_CLICK_HERE_TO_GO_TO_UPDATE_MANAGEMENT')) {
-    define('_CLICK_HERE_TO_GO_TO_UPDATE_MANAGEMENT', 'To begin the update process');
-}
-if (!defined('_NEW_MAJOR_VERSION_AVAILABLE')) {
-    define('_NEW_MAJOR_VERSION_AVAILABLE', 'New major version available');
-}
-if (!defined('_BRANCH_VERSION')) {
-    define('_BRANCH_VERSION', 'Branch');
-}
-if (!defined('_TAG_VERSION')) {
-    define('_TAG_VERSION', 'Tag');
-}
-if (!defined('_CONNECT_YOU_IN_SUPERADMIN')) {
-    define('_CONNECT_YOU_IN_SUPERADMIN', 'You have to be connected with superadmin profile to process update');
-}
-if (!defined('_UPDATE_WELCOME')) {
-    define('_UPDATE_WELCOME', 'Update');
-}
-if (!defined('_UPDATE_WELCOME_INSTALL')) {
-    define('_UPDATE_WELCOME_INSTALL', 'Update process');
-}
-if (!defined('_UPDATE_DESC_INSTALL')) {
-    define('_UPDATE_DESC_INSTALL', 'Update MaarchCourrier (only minor version)');
-}
-if (!defined('_UPDATE_BACKUP')) {
-    define('_UPDATE_BACKUP', 'Backup');
-}
-if (!defined('_UPDATE_BACKUP_INFOS')) {
-    define('_UPDATE_BACKUP_INFOS', 'Backup your version');
-}
-if (!defined('_UPDATE_BACKUP_DETAILS')) {
-    define('_UPDATE_BACKUP_DETAILS', 'Backup your version, you can restore it if necessary');
-}
-if (!defined('_ACTUAL_VERSION_PATH')) {
-    define('_ACTUAL_VERSION_PATH', 'Path of your installation');
-}
-if (!defined('_UPDATE_BACKUP_PATH')) {
-    define('_UPDATE_BACKUP_PATH', 'Path of your backup');
-}
-if (!defined('_BACKUP_ACTUAL_VERSION')) {
-    define('_BACKUP_ACTUAL_VERSION', 'Backup your version');
-}
-if (!defined('_UPDATE_DOWNLOAD')) {
-    define('_UPDATE_DOWNLOAD', 'Download');
-}
-if (!defined('_LAST_RELEASE_INFOS')) {
-    define('_LAST_RELEASE_INFOS', 'Download last minor version');
-}
-if (!defined('_LAST_RELEASE_DETAILS')) {
-    define('_LAST_RELEASE_DETAILS', 'Available minor versions');
-}
-if (!defined('_CHOOSE_VERSION_TO_UPDATE')) {
-    define('_CHOOSE_VERSION_TO_UPDATE', 'Choose the version');
-}
-if (!defined('_DOWNLOAD_VERSION')) {
-    define('_DOWNLOAD_VERSION', 'Download the version');
-}
-if (!defined('_UPDATE_DEPLOY')) {
-    define('_UPDATE_DEPLOY', 'Deploiement');
-}
-if (!defined('_UPDATE_DEPLOY_INFOS')) {
-    define('_UPDATE_DEPLOY_INFOS', 'Deploiement of the downloaded version');
-}
-if (!defined('_UPDATE_DEPLOY_DETAILS')) {
-    define('_UPDATE_DEPLOY_DETAILS', 'Deploiement of the downloaded version');
-}
-if (!defined('_DEPLOY_VERSION')) {
-    define('_DEPLOY_VERSION', 'Deploy the version');
-}
-if (!defined('_UPDATE_END')) {
-    define('_UPDATE_END', 'Update sucessful');
-}
-if (!defined('_UPDATE_DESC_END')) {
-    define('_UPDATE_DESC_END', 'Update sucessful');
-}
-if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE')) {
-    define('_NO_AVAILABLE_TAG_TO_UPDATE', 'No available tag to update');
-}
 if (!defined('_ADDRESS_NB')) {
     define('_ADDRESS_NB', 'Address number');
 }

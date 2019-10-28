@@ -2069,9 +2069,13 @@ abstract class lists_Abstract extends Database
             //Eval disabled rule
             if (!empty($disabledRules)) {
                 $rules = "return($disabledRules);";
-                //echo $rules."<br>\n";
-                if (@eval($rules)) {
-                    $disabled = true;
+//                echo $rules."<br>\n";
+                try {
+                    if (@eval($rules)) {
+                        $disabled = true;
+                    }
+                } catch (Throwable $t) {
+
                 }
             }
         }

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef, ApplicationRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
-import { merge, Observable, of as observableOf, Subject  } from 'rxjs';
+import { merge, Observable, of as observableOf, Subject, Subscription  } from 'rxjs';
 import { NotificationService } from '../notification.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -21,6 +21,7 @@ import { BasketHomeComponent } from '../basket/basket-home.component';
 import { PanelListComponent } from './panel/panel-list.component';
 import { AppService } from '../../service/app.service';
 import { PanelFolderComponent } from '../folder/panel/panel-folder.component';
+import { FoldersService } from '../folder/folders.service';
 
 
 declare function $j(selector: any): any;
@@ -38,8 +39,7 @@ export class BasketListComponent implements OnInit {
     docUrl: string = '';
     public innerHtml: SafeHtml;
     basketUrl: string;
-    homeData: any;
-    
+
     injectDatasParam = {
         resId: 0,
         editable: false
@@ -90,6 +90,7 @@ export class BasketListComponent implements OnInit {
     displayFolderTags: boolean = false;
 
     private destroy$ = new Subject<boolean>();
+    subscription: Subscription;
 
     @ViewChild('actionsListContext', { static: true }) actionsList: ActionsListComponent;
     @ViewChild('filtersTool', { static: true }) filtersTool: FiltersToolComponent;
@@ -114,21 +115,24 @@ export class BasketListComponent implements OnInit {
         private notify: NotificationService, 
         public overlay: Overlay, 
         public viewContainerRef: ViewContainerRef,
-        public appService: AppService) {
+        public appService: AppService,
+        private foldersService: FoldersService) {
             _activatedRoute.queryParams.subscribe(
                 params => this.specificChrono = params.chrono
             );
+
+            // Event after process action 
+            this.subscription = this.foldersService.catchEvent().subscribe((result: any) => {
+                if (result.type === 'function') {
+                    this[result.content]();
+                } 
+            }); 
 
             $j("link[href='merged_css.php']").remove();
     }
 
     ngOnInit(): void {
         this.loading = false;
-
-        this.http.get("../../rest/home")
-            .subscribe((data: any) => {
-                this.homeData = data;
-            });
 
         this.isLoadingResults = false;
 
@@ -166,6 +170,7 @@ export class BasketListComponent implements OnInit {
 
     ngOnDestroy() {
         this.destroy$.next(true);
+        this.subscription.unsubscribe();
     }
 
     initResultList() {
@@ -448,11 +453,7 @@ export class BasketListComponent implements OnInit {
     }
 
     listTodrag() {
-        if (this.panelFolder !== undefined) {
-            return this.panelFolder.getDragIds();
-        } else {
-            return [0];
-        }
+        return this.foldersService.getDragIds();
     }
 }
 export interface BasketList {

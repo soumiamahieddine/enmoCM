@@ -55,9 +55,6 @@ if (!defined('_NOTE_TEMPLATE')) {
 if (!defined('_SELECT_NOTE_TEMPLATE')) {
     define('_SELECT_NOTE_TEMPLATE', 'Een aantekeningmodel selecteren');
 }
-if (!defined('_NOTES_RESTRICTION')) {
-    define('_NOTES_RESTRICTION', 'De aantekeningen standaard tot uw eenheid beperken');
-}
 if (!defined('_RESTRICTED_SERVICES')) {
     define('_RESTRICTED_SERVICES', 'Beperkt tot de eenheid (eenheden)');
 }
@@ -99,9 +96,6 @@ if (!defined('_NOTE_TEMPLATE')) {
 }
 if (!defined('_SELECT_NOTE_TEMPLATE')) {
     define('_SELECT_NOTE_TEMPLATE', 'Een opmerkingsmodel selecteren');
-}
-if (!defined('_NOTES_RESTRICTION')) {
-    define('_NOTES_RESTRICTION', 'De standaardopmerkingen tot uw eenheid beperken');
 }
 if (!defined('_NOTE')) {
     define('_NOTE', 'Opmerking');

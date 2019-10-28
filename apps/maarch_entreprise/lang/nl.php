@@ -604,8 +604,6 @@ if (!defined('_ERROR_IE_SEARCH')) { define('_ERROR_IE_SEARCH', 'Dit element werd
 if (!defined('_DEST_USER')) { define('_DEST_USER', 'Ontvanger');}
 if (!defined('_DOCTYPES')) { define('_DOCTYPES', 'Documenttype(s)');}
 if (!defined('_DOCTYPE_INDEXES')) { define('_DOCTYPE_INDEXES', 'Index van het documenttype');}
-if (!defined('_MAIL_NATURE')) { define('_MAIL_NATURE', 'Aard van de verzending');}
-if (!defined('_CHOOSE_MAIL_NATURE')) { define('_CHOOSE_MAIL_NATURE', 'Kies de aard van de verzending');}
 if (!defined('_ERROR_DOCTYPE')) { define('_ERROR_DOCTYPE', 'Ongeldig documenttype');}
 if (!defined('_ADMISSION_DATE')) { define('_ADMISSION_DATE', 'Aankomstdatum');}
 if (!defined('_FOUND_DOC')) { define('_FOUND_DOC', 'brieven gevonden');}
@@ -914,7 +912,6 @@ if (!defined('_NOT_ALLOWED')) { define('_NOT_ALLOWED', 'verboden');}
 if (!defined('_CHOOSE_TITLE')) { define('_CHOOSE_TITLE', 'Kies een aanspreking');}
 if (!defined('_INDEXING_STATUSES')) { define('_INDEXING_STATUSES', 'Indexeren naar de statussen');}
 if (!defined('_UNCHANGED')) { define('_UNCHANGED', 'Ongewijzigd');}
-if (!defined('_LOAD_STATUSES_SESSION')) { define('_LOAD_STATUSES_SESSION', 'Laden van statussen in sessie');}
 if (!defined('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS')) { define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Instelling van de indexeringsstatussen');}
 if (!defined('_USERS_LOGS')) { define('_USERS_LOGS', 'Lijst van toegangen tot de applicatie per agent');}
 if (!defined('_USERS_LOGS_DESC')) { define('_USERS_LOGS_DESC', 'Lijst van toegangen tot de applicatie per agent');}
@@ -935,7 +932,6 @@ if (!defined('_FOR_YEAR')) { define('_FOR_YEAR', 'voor het jaar');}
 if (!defined('_FOR_MONTH')) { define('_FOR_MONTH', 'voor de maand');}
 if (!defined('_N_DAYS')) { define('_N_DAYS', 'AANT DAGEN');}
 if (!defined('_INCLUDE_SUB_ENTITIES')) { define('_INCLUDE_SUB_ENTITIES', 'De subeenheden insluiten');}
-if (!defined('_GRAPHICS_REPORTS')) { define('_GRAPHICS_REPORTS', 'De grafische weergave activeren');}
 if (!defined('_PROJECT')) { define('_PROJECT', 'Map');}
 if (!defined('_MARKET')) { define('_MARKET', 'Submap');}
 if (!defined('_SEARCH_CUSTOMER')) { define('_SEARCH_CUSTOMER', 'Raadpleging Mappen, Submappen');}
@@ -1149,7 +1145,6 @@ if (!defined('_NOTES_2')) { define('_NOTES_2', 'Voorbeeld Dienstnota’s 2');}
 if (!defined('_NOTES_3')) { define('_NOTES_3', 'Voorbeeld Dienstnota’s 3');}
 if (!defined('_WHERE_CLAUSE_NOT_SECURE')) { define('_WHERE_CLAUSE_NOT_SECURE', 'Niet beveiligde Where clause');}
 if (!defined('_SQL_QUERY_NOT_SECURE')) { define('_SQL_QUERY_NOT_SECURE', 'Niet beveiligd SQL-verzoek');}
-if (!defined('_PUT_DOC_ON_VALIDATION_FROM_DETAILS')) { define('_PUT_DOC_ON_VALIDATION_FROM_DETAILS', 'Het te bevestigen document vanuit de detailpagina verzenden');}
 if (!defined('_PUT_DOC_ON_VALIDATION')) { define('_PUT_DOC_ON_VALIDATION', 'Het te bevestigen document verzenden');}
 if (!defined('_REALLY_PUT_DOC_ON_VALIDATION')) { define('_REALLY_PUT_DOC_ON_VALIDATION', 'De verzending in goedkeuring bevestigen');}
 if (!defined('_ASK_RA_CODE_1')) { define('_ASK_RA_CODE_1', 'Er zal een e-mail verzonden worden naar het adres:');}
@@ -1278,9 +1273,6 @@ if (!defined('_CHOOSE_TYPE')) { define('_CHOOSE_TYPE', 'Kies een typologie');}
 if (!defined('_DEPARTMENT_OWNER')) { define('_DEPARTMENT_OWNER', 'Eenheid waartoe het behoort');}
 if (!defined('_FOLDER')) { define('_FOLDER', 'Seriële map');}
 if (!defined('_CHOOSE_CURRENT_STATUS')) { define('_CHOOSE_CURRENT_STATUS', 'Huidige status bewaren');}
-if (!defined('_PRINT_DETAILS_SERVICE')) { define('_PRINT_DETAILS_SERVICE', 'De verbindingsfiche vanuit de detailfiche afdrukken');}
-if (!defined('_PRINT_DETAILS')) { define('_PRINT_DETAILS', 'De verbindingsfiche afdrukken');}
-if (!defined('_PRINT_DOC_DETAILS_FROM_SEARCH')) { define('_PRINT_DOC_DETAILS_FROM_SEARCH', 'De verbindingsfiche vanuit de zoekopdracht afdrukken');}
 if (!defined('_PRINT_DOC_FROM_LIST')) { define('_PRINT_DOC_FROM_LIST', 'De verbindingsfiches van de brieven afdrukken');}
 if (!defined('_PRINT_LIST')) { define('_PRINT_LIST', 'De lijst afdrukken');}
 if (!defined('_PRINT_CATEGORY')) { define('_PRINT_CATEGORY', 'Categorie');}

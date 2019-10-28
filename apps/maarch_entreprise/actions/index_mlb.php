@@ -34,8 +34,7 @@ $contacts_v2 = new contacts_v2();
 if ($core->is_module_loaded('entities')) {
     require_once 'modules/entities/entities_tables.php';
 }
-require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
-    .DIRECTORY_SEPARATOR.'apps_tables.php';
+
 /**
  * $confirm  bool false.
  */
@@ -694,28 +693,6 @@ function get_form_txt($values, $pathManageAction, $actionId, $table, $module, $c
     $frmStr .= '<input type="hidden" id="sender_recipient_id" />';
     $frmStr .= '<input type="hidden" id="sender_recipient_type" />';
     $frmStr .= '</tr>';
-
-    /*** Nature ***/
-    $frmStr .= '<tr id="nature_id_tr" style="display:'.$displayValue.';">';
-    $frmStr .= '<td><label for="nature_id" class="form_title" >'._NATURE
-            .'</label></td>';
-    $frmStr .= '<td>&nbsp;</td>';
-    $frmStr .= '<td class="indexing_field"><select name="nature_id" '
-            .'id="nature_id" onchange="clear_error(\'frm_error_'.$actionId
-            .'\');affiche_reference();">';
-    $frmStr .= '<option value="">'._CHOOSE_NATURE.'</option>';
-    foreach (array_keys($_SESSION['mail_natures']) as $nature) {
-        $frmStr .= '<option value="'.functions::xssafe($nature).'" with_reference = "'.$_SESSION['mail_natures_attribute'][$nature].'"';
-        if ($_SESSION['default_mail_nature'] == $nature) {
-            $frmStr .= 'selected="selected"';
-        }
-        $frmStr .= '>'.functions::xssafe($_SESSION['mail_natures'][$nature]).'</option>';
-    }
-    $frmStr .= '</select></td>';
-    $frmStr .= '<td><span class="red_asterisk" id="nature_id_mandatory" '
-            .'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<script>$j("#nature_id").chosen({width: "226px", disable_search_threshold: 10, search_contains: true});</script>';
 
     /****** RECOMMANDE ******/
     $frmStr .= '<tr id="reference_number_tr" style="display:none;">';
@@ -1534,20 +1511,20 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         )
     );
 
-    //without file case
-    if (
-        isset($_SESSION['with_file'])
-        && $_SESSION['with_file']
-    ) {
-        array_push(
-            $_SESSION['data'],
-            array(
-                'column' => 'source',
-                'value' => 'with_empty_file',
-                'type' => 'string',
-            )
-        );
-    }
+    // //without file case
+    // if (
+    //     isset($_SESSION['with_file'])
+    //     && $_SESSION['with_file']
+    // ) {
+    //     array_push(
+    //         $_SESSION['data'],
+    //         array(
+    //             'column' => 'source',
+    //             'value' => 'with_empty_file',
+    //             'type' => 'string',
+    //         )
+    //     );
+    // }
 
     $attach = get_value_fields($formValues, 'attach');
 

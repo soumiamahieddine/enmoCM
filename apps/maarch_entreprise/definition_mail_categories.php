@@ -107,16 +107,6 @@ $_ENV['categories']['incoming']['doc_date'] = array(
     'modify' => true,
     'form_show' => 'date',
 );
-$_ENV['categories']['incoming']['external_reference'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => false,
-    'label' => _REFERENCE_MAIL,
-    'table' => 'res',
-    'img' => 'file',
-    'modify' => false,
-    'form_show' => 'textfield'
-);
 $_ENV['categories']['incoming']['admission_date'] = array(
     'type_form' => 'date',
     'type_field' => 'date',
@@ -136,26 +126,6 @@ $_ENV['categories']['incoming']['departure_date'] = array (
     'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date'
-);
-// $_ENV['categories']['incoming']['nature_id'] = array(
-//     'type_form' => 'string',
-//     'type_field' => 'string',
-//     'mandatory' => true,
-//     'label' => _NATURE,
-//     'table' => 'coll_ext',
-//     'img' => 'envelope',
-//     'modify' => false, //DO NOT MODIFY !
-//     'form_show' => 'select',
-// );
-$_ENV['categories']['incoming']['reference_number'] = array(
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => false,
-    'label' => _MONITORING_NUMBER,
-    'table' => 'res',
-    'img' => 'barcode',
-    'modify' => false,
-    'form_show' => 'textfield',
 );
 $_ENV['categories']['incoming']['description'] = array (
     'type_form' => 'string',
@@ -309,26 +279,6 @@ $_ENV['categories']['outgoing']['departure_date'] = array (
     'modify' => true,
     'form_show' => 'date'
 );
-// $_ENV['categories']['outgoing']['nature_id'] = array(
-//     'type_form' => 'string',
-//     'type_field' => 'string',
-//     'mandatory' => true,
-//     'label' => _NATURE,
-//     'table' => 'coll_ext',
-//     'img' => 'envelope',
-//     'modify' => false, //DO NOT MODIFY !
-//     'form_show' => 'select',
-// );
-$_ENV['categories']['outgoing']['reference_number'] = array(
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => false,
-    'label' => _MONITORING_NUMBER,
-    'table' => 'res',
-    'img' => 'barcode',
-    'modify' => false,
-    'form_show' => 'textfield',
-);
 $_ENV['categories']['outgoing']['description'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
@@ -471,26 +421,6 @@ $_ENV['categories']['internal']['doc_date'] = array(
     'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date',
-);
-// $_ENV['categories']['internal']['nature_id'] = array(
-//     'type_form' => 'string',
-//     'type_field' => 'string',
-//     'mandatory' => true,
-//     'label' => _NATURE,
-//     'table' => 'coll_ext',
-//     'img' => 'envelope',
-//     'modify' => false, //DO NOT MODIFY !
-//     'form_show' => 'select',
-// );
-$_ENV['categories']['internal']['reference_number'] = array(
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => false,
-    'label' => _MONITORING_NUMBER,
-    'table' => 'res',
-    'img' => 'barcode',
-    'modify' => false,
-    'form_show' => 'textfield',
 );
 $_ENV['categories']['internal']['subject'] = array(
     'type_form' => 'string',
@@ -952,13 +882,6 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                         } elseif ($field == 'destination') {
                             //require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_entities.php");
                                 // TO DO : get the entities list
-                        } elseif ($field == 'nature_id') {
-                            foreach (array_keys($_SESSION['mail_natures']) as $nature) {
-                                array_push($data[$field]['select'], array(
-                                            'ID' => $nature,
-                                            'LABEL' => $_SESSION['mail_natures'][$nature],
-                                        ));
-                            }
                         } elseif ($field == 'priority') {
                             foreach (array_keys($_SESSION['mail_priorities']) as $prio) {
                                 $data[$field]['select'][] = [
@@ -1138,12 +1061,6 @@ function get_general_data($coll_id, $res_id, $mode, $params = array())
                 if ($stmt2->rowCount() == 1) {
                     $res2 = $stmt2->fetchObject();
                     $data[$arr[$i]]['show_value'] = functions::show_string($res2->entity_label, true);
-                }
-            } elseif ($arr[$i] == 'nature_id') {
-                $data[$arr[$i]]['show_value'] = $_SESSION['mail_natures'][$line->{$arr[$i]}];
-            } elseif ($arr[$i] == 'reference_number') {
-                if (empty($line->{$arr[$i]})) {
-                    unset($data[$arr[$i]]);
                 }
             } elseif ($arr[$i] == 'type_id') {
                 $data[$arr[$i]]['show_value'] = functions::show_string($line->type_label);

@@ -33,8 +33,6 @@ if (!empty($res_id)) {
 
     $doc['category_id'] = html_entity_decode($_SESSION['coll_categories']['letterbox_coll'][$doc['category_id']]);
 
-    $doc['nature_id'] = $_SESSION['mail_natures'][$doc['nature_id']];
-
     //INITIATOR INFO OF DOCUMENT
     $stmt2 = $dbDatasource->query('SELECT a.*, b.entity_label as parent_entity_label
     FROM entities as a, entities as b
@@ -140,7 +138,7 @@ if (!empty($res_id)) {
 
     // Notes
     $datasources['notes'] = array();
-    $stmt = $dbDatasource->query('SELECT notes.*, users.firstname, users.lastname FROM notes left join users on notes.user_id = users.user_id WHERE identifier = ?', array($res_id));
+    $stmt = $dbDatasource->query('SELECT notes.*, users.firstname, users.lastname FROM notes left join users on notes.user_id = users.id WHERE identifier = ?', array($res_id));
 
     $countNote = 1;
     while ($notes = $stmt->fetchObject()) {

@@ -111,6 +111,7 @@ export const LANG_NL = {
     "basketNotFound"                        : "Bakjes niet gevonden",
     "basketNotification"                    : "De melding van dit bakje inschakelen / uitschakelen",
     "baskets"                               : "Bakjes",
+    "adminBasketsDesc"                      : "De inhoud van de bakjes bepalen en deze aan gebruikersgroepen toewijzen. De mogelijke omleidingen opnoemen bij het gebruik van het bakje door een gegeven groep. Een weergaveformaat van het bakje toekennen door deze groep.",
     "basketsAssigned"                       : "Bakjes door een andere gebruiker toegewezen",
     "basketsAssignedShort"                  : "_TO_TRANSLATE",
     "basketsColor"                          : "Kleur van de bakjes",
@@ -314,7 +315,9 @@ export const LANG_NL = {
     "docserverUpdated"                      : "Opslagruimte gewijzigd",
     "doctype"                               : "Documenttype",
     "doctypes"                              : "Documenttypes",
-    "doctypesAdmin"                         : "Documenttypologie(ën)",
+    "documentTypes"                         : "Documenttypes",
+    "documentTypesAlt"                      : "Documenttypologie(ën)",
+    "adminDocumentTypesDesc"                : "De interne structuur van een map bepalen (map / submap / documenttype).",
     "documentation"                         : "Documentatie",
     "documentOutOfPerimeter"                : "Dit document ligt buiten uw perimeter",
     "documents"                             : "document(en)",
@@ -359,6 +362,9 @@ export const LANG_NL = {
     "enabledContactsFilling"                : "Volledigheid uitgeschakeld",
     "enterValue"                            : "U moet een waarde invoeren",
     "entities"                              : "Eenheden",
+    "adminEntitiesDesc"                     : "De structuur van uw organisatie beheren (polen, diensten en kantoren). Evenals de verdelingsmodellen en de goedkeuringscircuits die aan de eenheden gekoppeld zijn.",
+    "workflowModels"                        : "Circuitmodellen",
+    "adminWorkflowModelsDesc"               : "De modellen van de berichten- en goedkeuringscircuits beheren die in een brief gebruikt kunnen worden.",
     "entity_label"                          : "_TO_TRANSLATE",
     "entityAdded"                           : "Toegevoegde eenheid",
     "entityDeleted"                         : "Verwijderde eenheid",
@@ -438,6 +444,7 @@ export const LANG_NL = {
     "groupModification"                     : "Wijziging van een groep",
     "groupRedirect"                         : "Groepswijziging",
     "groups"                                : "Groepen",
+    "adminGroupsDesc"                       : "Gebruikersgroepen toevoegen, opschorten of wijzigen. Privileges of toegangstoelatingen aan assets toekennen.",
     "groupServicesUpdated"                  : "Gewijzigde voorrechten",
     "groupUpdated"                          : "Gewijzigde groep",
     "hello"                                 : "Hallo",
@@ -746,7 +753,7 @@ export const LANG_NL = {
     "processDelay"                          : "Verwerkingstermijn",
     "processDelayDay"                       : "Verwerkingstermijn (in dagen)",
     "processLimitDate"                      : "Verwerkingsdeadline",
-    "processMode"                           : "Verwerkingswijze for Acknowledgement Receipt", //_TO_TRANSLATE
+    "processMode"                           : "Verwerkingswijze for acknowledgement receipt", //_TO_TRANSLATE
     "processType"                           : "Verwerkingstype",
     "production"                            : "PRODUCTIE",
     "progression"                           : "Vooruitgang",
@@ -902,6 +909,7 @@ export const LANG_NL = {
     "system"                                : "Systeem",
     "systemParameters"                      : "systeeminstellingen",
     "tags"                                  : "Sleutelwoorden",
+    "adminTagsDesc"                         : "Voor het wijzigen, verwijderen, toevoegen of fusioneren van sleutelwoorden vanuit de beheerinterface.",
     "templateAdded"                         : "Model toegevoegd",
     "templateAssociateEntities"             : "List of entities already associated with a template", //_TO_TRANSLATE
     "templateCheckEntities"                 : "The following entities already have a registered template for the type : ", //_TO_TRANSLATE
@@ -985,7 +993,9 @@ export const LANG_NL = {
     "userMaarchParapheur"                   : "Maarch Parapheur user", //_TO_TRANSLATE
     "userModification"                      : "Wijziging van de gebruiker",
     "userReplacement"                       : "Vervangingsgebruiker",
-    "users"                                 : "Gebruiker(s)",
+    "users"                                 : "Gebruikers",
+    "adminUsersDesc"                        : "Gebruikersprofielen toevoegen, opschorten of wijzigen.",
+    "usersAlt"                              : "Gebruiker(s)",
     "userSuspended"                         : "Geschorste gebruiker",
     "userToRedirect"                        : "Hier klikken om door te sturen",
     "userUpdated"                           : "Gewijzigde gebruiker",
@@ -1187,4 +1197,44 @@ export const LANG_NL = {
     "createPrivateIndexingModel" : "Create an indexing model with current datas", //_TO_TRANSLATE
     "currentIndexingMail" : "the current indexing mail", //_TO_TRANSLATE
     "mustFixErrors" : "You must fix the errors.", //_TO_TRANSLATE
+    "badActionParam" : "Bad action parameter", //_TO_TRANSLATE
+    "technicalId"    : "Technical identifier", //_TO_TRANSLATE
+    "foldersTree" : "Folders tree", //_TO_TRANSLATE
+    "myPinnedFolder" : "My pinned folders", //_TO_TRANSLATE
+    "noPinnedFolder" : "No pinned folder", //_TO_TRANSLATE
+    "pinFolder" : "Pin folder", //_TO_TRANSLATE
+    "unpinFolder" : "Unpin folder", //_TO_TRANSLATE
+    "showFoldersTree" : "Show tree", //_TO_TRANSLATE
+    "hideFoldersTree" : "Hide tree", //_TO_TRANSLATE
+    "folderPinned" : "Folder pinned", //_TO_TRANSLATE  
+    "folderUnpinned" : "Folder unpinned", //_TO_TRANSLATE
+    "entitiesSeparator" : "Print limiters by department/services",//_TO_TRANSLATE
+    "backHome" : "Back to home",  //_TO_TRANSLATE
+    "viewDocHistory" : "De geschiedenis van de acties op het brief bekijken",
+    "viewHistoryDesc" : "De geschiedenis van de gebeurtenissen met betrekking tot het gebruik van Maarch Courrier raadplegen.",
+    "viewFullHistory" : "De volledige geschiedenis van het document bekijken",
+    "viewFullHistoryDesc" : "De volledige geschiedenis van de evenementen over het gebruik van GED Maarch raadplegen.",
+    "editDocumentInDetail" : "Een document in de gedetailleerde fiche wijzigen",
+    "editDocumentInDetailDesc" : "Een document in de gedetailleerde fiche wijzigen Dat zal ook van de instelling van de status afhangen (Wijziging van de indexen)",
+    "deleteDocumentInDetail" : "Een document in de gedetailleerde fiche verwijderen",
+    "manageTagsInApplication" : "Create tags", //_TO_TRANSLATE
+    "manageTagsInApplicationDesc" : "Create tags while indexing, processing and in details", //_TO_TRANSLATE
+    "updateDiffusionWhileIndexing" : "Update all parts of diffusion list when indexing.", //_TO_TRANSLATE
+    "updateDiffusionExceptRecipientWhileIndexing" : "Update diffusion list except Assignee when indexing.", //_TO_TRANSLATE
+    "updateDiffusionWhileDetails" : "Update all parts of diffusion list when processing.", //_TO_TRANSLATE
+    "updateDiffusionExceptRecipientWhileDetails" : "Update diffusion list except Assignee when processing.", //_TO_TRANSLATE
+    "useMailServices" : "De e-mails van zijn diensten gebruiken als verzender",
+    "viewDocumentsWithNotes": "View mail with notes", //_TO_TRANSLATE
+    "viewDocumentsWithNotesDesc": "View attachment of 'document_with_notes' type", //_TO_TRANSLATE
+    "viewTechnicalInformation" : "De technische informatie bekijken",
+    "configAvisWorkflow" : "Configuratie van het berichtencircuit",
+    "configAvisWorkflowDesc" : "Om het berichtencircuit van de brief in te stellen",
+    "configAvisWorkflowInDetail" : "Configuratie van het berichtencircuit vanuit de gedetailleerde fiche",
+    "configAvisWorkflowInDetailDesc" : "Om het circuit rechtstreeks vanuit de gedetailleerde fiche van de brief te bepalen",
+    "avisAnswer" : "Zijn mening geven",
+    "avisAnswerDesc" : "Laat deze groep verschijnen in de lijst van de Consultants (berichtencircuit)",
+    "configVisaWorkflow" : "Configuratie van het goedkeuringscircuit",
+    "configVisaWorkflowDesc" : "Om het goedkeuringscircuit in te stellen dat de brief zal moeten volgen",
+    "configVisaWorkflowInDetail" : "Configuratie van het goedkeuringscircuit vanuit de gedetailleerde fiche",
+    "configVisaWorkflowInDetailDesc" : "Om het goedkeuringscircuit vanuit de gedetailleerde fiche te configureren",
 };

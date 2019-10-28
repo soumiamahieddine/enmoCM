@@ -26,7 +26,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
     priorities      : any[]     = [];
     prioritiesOrder : any[]     = [];
     dataSource      : any;
-    displayedColumns            = ['label', 'delays', 'actions'];
+    displayedColumns            = ['id', 'label', 'delays', 'actions'];
 
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;

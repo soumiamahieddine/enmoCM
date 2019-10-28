@@ -49,12 +49,7 @@
     	<parameter name="template_id" type="document_id" />
     	<parameter name="module" type="identifier" />
     </validationRule>
-	<validationRule name="param_templates_doctypes" extends="standardForm" mode="error">
-    	<parameter name="templates" type="identifier" />
-    	<parameter name="e_file" type="YN" />
-    	<parameter name="module" type="identifier" />
-    </validationRule>
-    
+
     <validationRule name="file_iframe" extends="standardForm" mode="error">
     	<parameter name="model_id" type="integer" />
     	<parameter name="module" type="identifier" />

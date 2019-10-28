@@ -136,15 +136,6 @@
 		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="choose_entity">
-		<parameter name="page" value="choose_entity"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="choose_entity">
-		<parameter name="page" value="choose_entity"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="entity_late_mail">
 		<parameter name="page" value="entity_late_mail"/>
 		<parameter name="display" value="true"/>

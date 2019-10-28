@@ -120,9 +120,11 @@ class ReceiveMessageExchangeController
             foreach ($userBaskets as $value) {
                 if ($value['basket_id'] == $aDefaultConfig['basketRedirection_afterUpload'][0]) {
                     $userGroups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
-                    $userPrimaryGroup = $userGroups[0]['group_id'];
-                    $defaultAction = BasketModel::getDefaultActionIdByBasketId(['basketId' => $value['basket_id'], 'groupId' => $userPrimaryGroup]);
-                    $basketRedirection = 'index.php?page=view_baskets&module=basket&baskets=' . $value['basket_id'] . '&resId=' . $resLetterboxReturn . '&defaultAction=' . $defaultAction;
+                    $basketRedirection = 'index.php#/basketList/users/'.$GLOBALS['id'].'/groups/'.$userGroups[0]['id'].'/baskets/'.$value['id'];
+                    $resource = ResModel::getById(['id' => $resLetterboxReturn]);
+                    if (!empty($resource['alt_identifier'])) {
+                        $basketRedirection .= '?chrono='.$resource['alt_identifier'];
+                    }
                     break;
                 }
             }
@@ -241,25 +243,28 @@ class ReceiveMessageExchangeController
         $contact = $aArgs['contact'];
 
         $dataValue = [];
-        array_push($dataValue, ['typist'           => 'superadmin']);
-        array_push($dataValue, ['type_id'          => $defaultConfig['type_id']]);
+        $user      = UserModel::getByLogin(['login' => 'superadmin', 'select' => ['id']]);
+        $entityId  = EntityModel::getByEntityId(['entityId' => $destination[0]['entity_id'], 'select' => ['id']]);
+        array_push($dataValue, ['typist'           => $user['id']]);
+        array_push($dataValue, ['doctype'          => $defaultConfig['type_id']]);
         array_push($dataValue, ['subject'          => str_replace("[CAPTUREM2M]", "", $mainDocumentMetaData->Title[0])]);
-        array_push($dataValue, ['doc_date'         => $mainDocumentMetaData->CreatedDate]);
-        array_push($dataValue, ['destination'      => $destination[0]['entity_id']]);
-        array_push($dataValue, ['initiator'        => $destination[0]['entity_id']]);
-        array_push($dataValue, ['dest_user'        => $destUser[0]['user_id']]);
-        array_push($dataValue, ['reference_number' => $dataObject->MessageIdentifier->value]);
+        array_push($dataValue, ['documentDate'     => $mainDocumentMetaData->CreatedDate]);
+        array_push($dataValue, ['destination'      => $entityId['id']]);
+        array_push($dataValue, ['initiator'        => $entityId['id']]);
+        array_push($dataValue, ['diffusionList'    => ['id' => $destUser[0]['user_id'], 'type' => 'user', 'mode' => 'dest']]);
+        array_push($dataValue, ['externalId'       => ['m2m' => $dataObject->MessageIdentifier->value]]);
         array_push($dataValue, ['priority'         => $defaultConfig['priority']]);
-        array_push($dataValue, ['confidentiality'  => 'N']);
-        // array_push($dataValue, ['nature_id' => 'message_exchange');
-        array_push($dataValue, ['category_id'     => 'incoming']);
-        array_push($dataValue, ['alt_identifier'  => '']);
-        array_push($dataValue, ['exp_contact_id'  => $contact['contactId']]);
-        array_push($dataValue, ['address_id'      => $contact['addressId']]);
-        array_push($dataValue, ['admission_date'  => 'CURRENT_TIMESTAMP']);
+        array_push($dataValue, ['confidentiality'  => false]);
+        array_push($dataValue, ['chrono'           => true]);
+        // TODO CONTACT
+        // array_push($dataValue, ['exp_contact_id'   => $contact['contactId']]);
+        // array_push($dataValue, ['address_id'       => $contact['addressId']]);
+        $date = new \DateTime();
+        array_push($dataValue, ['arrivalDate'  => $date->format('d-m-Y H:i')]);
         array_push($dataValue, ['encodedFile'  => $documentMetaData->Attachment->value]);
-        array_push($dataValue, ['fileFormat'  => $fileFormat]);
-        array_push($dataValue, ['status'  => $defaultConfig['status']]);
+        array_push($dataValue, ['format'       => $fileFormat]);
+        array_push($dataValue, ['status'       => $defaultConfig['status']]);
+        array_push($dataValue, ['modelId'      => $defaultConfig['indexingModelId']]);
 
         return StoreController::storeResource($dataValue);
     }

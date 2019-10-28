@@ -33,6 +33,10 @@
                     </div>
                 </div>
                 <mat-table #table [dataSource]="dataSource" matSort matSortActive="label" matSortDirection="asc">
+                    <ng-container matColumnDef="id">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.technicalId}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element"> {{element.id}} </mat-cell>
+                    </ng-container>
                     <ng-container matColumnDef="category">
                         <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.category_id}}</mat-header-cell>
                         <mat-cell *matCellDef="let element"> {{lang[element.category]}} </mat-cell>

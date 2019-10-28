@@ -124,7 +124,7 @@ abstract class visa_Abstract extends Database
         require_once 'modules/entities/class/class_manage_listdiff.php';
         $listdiff = new diffusion_list();
         $roles = $listdiff->list_difflist_roles();
-        $circuit = $listdiff->get_listinstance($res_id, false, $coll_id, $typeList);
+        $circuit = $listdiff->get_listinstance($res_id, false, $typeList);
         if (isset($circuit['copy'])) {
             unset($circuit['copy']);
         }

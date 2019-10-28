@@ -230,48 +230,6 @@ abstract class ResModelAbstract
         return '';
     }
 
-    public static function getNatures()
-    {
-        static $natures;
-
-        if (!empty($natures)) {
-            return $natures;
-        }
-
-        $natures = [];
-
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/entreprise.xml']);
-        if ($loadedXml) {
-            foreach ($loadedXml->mail_natures->nature as $nature) {
-                $withReference = (string)$nature['with_reference'] == 'true' ? true : false;
-                $nature = (array)$nature;
-
-                $natures[] = [
-                    'id'            => $nature['id'],
-                    'label'         => defined($nature['label']) ? constant($nature['label']) : $nature['label'],
-                    'withReference' => $withReference,
-                    'defaultNature' => $nature['id'] == $loadedXml->mail_natures->default_nature
-                ];
-            }
-        }
-
-        return $natures;
-    }
-
-    public static function getNatureLabel(array $args)
-    {
-        ValidatorModel::stringType($args, ['natureId']);
-
-        $natures = ResModel::getNatures();
-        foreach ($natures as $nature) {
-            if ($nature['id'] == $args['natureId']) {
-                return $nature['label'];
-            }
-        }
-
-        return '';
-    }
-
     public static function getNbContactsByResId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);

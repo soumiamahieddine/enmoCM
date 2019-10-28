@@ -16,6 +16,7 @@ namespace Group\models;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
+use User\models\UserGroupModel;
 use User\models\UserModel;
 
 abstract class ServiceModelAbstract
@@ -328,16 +329,13 @@ abstract class ServiceModelAbstract
         ValidatorModel::notEmpty($args, ['userId']);
         ValidatorModel::intVal($args, ['userId']);
 
-        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
-        $groups = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
+        $canIndex = UserGroupModel::getWithGroups([
+            'select'    => [1],
+            'where'     => ['usergroup_content.user_id = ?', 'usergroups.can_index = ?'],
+            'data'      => [$args['userId'], true]
+        ]);
 
-        foreach ($groups as $group) {
-            if ($group['can_index']) {
-                return true;
-            }
-        }
-
-        return false;
+        return !empty($canIndex);
     }
 
     protected static function getLoadedXml(array $aArgs = [])

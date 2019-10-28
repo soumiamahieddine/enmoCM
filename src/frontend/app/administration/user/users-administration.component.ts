@@ -40,7 +40,7 @@ export class UsersAdministrationComponent implements OnInit {
     user                                    : any                   = {};
 
     dataSource          = new MatTableDataSource(this.data);
-    displayedColumns    = ['user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
+    displayedColumns    = ['id', 'user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
 
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;

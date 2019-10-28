@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, Inject } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { HttpClient } from '@angular/common/http';
-import { map, tap, catchError, exhaustMap } from 'rxjs/operators';
+import { map, tap, catchError, exhaustMap, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -28,6 +28,8 @@ export class FolderUpdateComponent implements OnInit {
             entities: []
         }
     }
+
+    sharingFolderCLone: any[] = [];
 
     entities: any[] = [];
 
@@ -86,12 +88,14 @@ export class FolderUpdateComponent implements OnInit {
                 return data;
             }),
             tap((data: any) => {
+                
                 this.initFoldersTree(data.folders);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
-            })
+            }),
+            finalize(() => this.sharingFolderCLone = JSON.parse(JSON.stringify(this.folder.sharing.entities)))
         ).subscribe();
     }
 
@@ -184,8 +188,14 @@ export class FolderUpdateComponent implements OnInit {
 
     onSubmit(): void {
         this.http.put('../../rest/folders/' + this.folder.id, this.folder).pipe(
-            exhaustMap(() => this.http.put('../../rest/folders/' + this.folder.id + '/sharing', { public: this.folder.sharing.entities.length > 0, sharing: this.folder.sharing })),
-            tap((data: any) => {
+            exhaustMap(() => {
+                if (JSON.stringify(this.sharingFolderCLone) !== JSON.stringify(this.folder.sharing.entities)) {
+                    return this.http.put('../../rest/folders/' + this.folder.id + '/sharing', { public: this.folder.sharing.entities.length > 0, sharing: this.folder.sharing })
+                } else {
+                    return of(false);
+                }
+            }),
+            tap(() => {
                 this.notify.success(this.lang.folderUpdated);
                 this.dialogRef.close('success');
             }),

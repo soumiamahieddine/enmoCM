@@ -253,7 +253,7 @@ if ($mode == 'normal') {
         'entity_label',
         'address_id',
         'exp_user_id',
-        'doc_custom_n1 as count_attachment',
+        'res_id as count_attachment',
         'is_multicontacts',
         'filename',
         'res_id as real_dest'
@@ -915,7 +915,7 @@ if ($nbTab > 0) {
         array_push($paramsTab['tools'], $export2);
     }
 
-    if ($printTool && $core_tools->test_service('print_doc_details_from_list', 'apps', false)) {
+    if ($printTool) {
         $print = array(
                     'script' => "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=print', '_blank');",
                     'icon' => 'link',

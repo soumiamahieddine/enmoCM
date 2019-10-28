@@ -369,6 +369,23 @@ DELETE FROM usergroups_services WHERE service_id = 'admin_thesaurus';
 DELETE FROM usergroups_services WHERE service_id = 'thesaurus_view';
 DELETE FROM usergroups_services WHERE service_id = 'add_thesaurus_to_res';
 UPDATE usergroups_services SET service_id = 'manage_tags_application' WHERE service_id = 'create_tag';
+UPDATE usergroups_services SET service_id = 'update_status_mail' WHERE service_id = 'reopen_mail';
+DELETE FROM usergroups_services WHERE service_id = 'quicklaunch';
+DELETE FROM usergroups_services WHERE service_id = 'put_in_validation';
+DELETE FROM usergroups_services WHERE service_id = 'print_details';
+DELETE FROM usergroups_services WHERE service_id = 'print_doc_details_from_list';
+DELETE FROM usergroups_services WHERE service_id = 'view_attachments';
+DELETE FROM usergroups_services WHERE service_id = 'manage_attachments';
+DELETE FROM usergroups_services WHERE service_id = 'index_attachment';
+DELETE FROM usergroups_services WHERE service_id = 'display_basket_list';
+DELETE FROM usergroups_services WHERE service_id = 'choose_entity';
+DELETE FROM usergroups_services WHERE service_id = 'export_seda_view';
+DELETE FROM usergroups_services WHERE service_id = 'manage_notes_doc';
+DELETE FROM usergroups_services WHERE service_id = 'notes_restriction';
+DELETE FROM usergroups_services WHERE service_id = 'graphics_reports';
+DELETE FROM usergroups_services WHERE service_id = 'show_reports';
+DELETE FROM usergroups_services WHERE service_id = 'param_templates_doctypes';
+DELETE FROM usergroups_services WHERE service_id = 'doctype_template_use';
 
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'update_diffusion_indexing'
@@ -447,8 +464,6 @@ DROP TABLE IF EXISTS thesaurus;
 DROP TABLE IF EXISTS thesaurus_res;
 DROP SEQUENCE IF EXISTS thesaurus_id_seq;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS title;
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS description;
-ALTER TABLE res_letterbox DROP COLUMN IF EXISTS author;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS identifier;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS source;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS relation;
@@ -463,6 +478,9 @@ ALTER TABLE listinstance DROP COLUMN IF EXISTS visible;
 ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_entity;
 ALTER TABLE usergroup_content DROP COLUMN IF EXISTS primary_group;
 
+/* M2M */
+UPDATE res_letterbox SET external_id = json_build_object('m2m', reference_number) FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id = 'message_exchange';
+UPDATE mlb SET nature_id = null, reference_number = null WHERE nature_id = 'message_exchange';
 
 /* RE CREATE VIEWS */
 CREATE VIEW res_view_attachments AS
@@ -481,9 +499,20 @@ CREATE VIEW res_view_attachments AS
 
 /* DATA */
 TRUNCATE TABLE custom_fields;
-INSERT INTO custom_fields (id, label, type, values) VALUES (1, 'Nature', 'select', '["Courrier simple", "Courriel", "Chronopost", "Pli numérique"]');
-INSERT INTO custom_fields (id, label, type, values) VALUES (2, 'N° recommandé', 'string', '[]');
+INSERT INTO custom_fields (id, label, type, values) VALUES (1, 'Nature', 'select', '["Courrier simple", "Courriel", "Courrier suivi", "Courrier avec AR", "Autre"]');
 SELECT setval('custom_fields_id_seq', (select max(id)+1 from custom_fields), false);
+
+TRUNCATE TABLE resources_custom_fields;
+INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+SELECT res_id, 1, '"Courrier simple"' FROM mlb_coll_ext WHERE nature_id = 'simple_mail';
+INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+SELECT res_id, 1, '"Courriel"' FROM mlb_coll_ext WHERE nature_id = 'email';
+INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+SELECT res_id, 1, '"Autre"' FROM mlb_coll_ext WHERE nature_id IN ('fax', 'other', 'courier');
+INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+SELECT res_id, 1, '"Courrier suivi"' FROM mlb_coll_ext WHERE nature_id IN ('chronopost', 'fedex');
+INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+SELECT res_id, 1, '"Courrier avec AR"' FROM mlb_coll_ext WHERE nature_id = 'registered_mail';
 
 TRUNCATE TABLE indexing_models;
 INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (1, 'incoming', 'Courrier arrivée', TRUE, 23, FALSE);
@@ -500,7 +529,7 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'documentDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'arrivalDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'subject', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'indexingCustomField_1', FALSE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'indexingCustomField_1', FALSE, '"Courrier simple"', 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'senders', TRUE, null, 'contact');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'getRecipients', FALSE, null, 'contact');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'initiator', TRUE, null, 'process');
@@ -514,8 +543,9 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'priority', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'confidential', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'documentDate', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'departureDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'subject', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'indexingCustomField_1', FALSE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'indexingCustomField_1', FALSE, '"Courrier simple"', 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'senders', FALSE, null, 'contact');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'getRecipients', TRUE, null, 'contact');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'initiator', TRUE, null, 'process');
@@ -530,7 +560,7 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'confidential', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'documentDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'subject', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'indexingCustomField_1', FALSE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'indexingCustomField_1', FALSE, '"Courrier simple"', 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'senders', FALSE, null, 'contact');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'getRecipients', FALSE, null, 'contact');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'initiator', TRUE, null, 'process');

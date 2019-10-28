@@ -27,25 +27,4 @@
 		<style>fa fa-chart-area</style>
 		<angular>false</angular>
 	</SERVICE>
-	<SERVICE>
-		<id>graphics_reports</id>
-		<name>_GRAPHICS_REPORTS</name>
-		<comment>_GRAPHICS_REPORTS_DESC</comment>
-		<servicetype>use</servicetype>
-		<system_service>false</system_service>
-		<enabled>true</enabled>
-	</SERVICE>
-	<SERVICE>
-		<id>show_reports</id>
-		<name>_REPORTS</name>
-		<comment>_REPORTS_DESC</comment>
-		<servicepage>reports_frame.php</servicepage>
-		<servicetype>use</servicetype>
-		<system_service>true</system_service>
-		<enabled>true</enabled>
-		<WHEREAMIUSED>
-			<page>details_invoices.php</page>
-			<nature>include</nature>
-		</WHEREAMIUSED>
-	</SERVICE>
 </root>

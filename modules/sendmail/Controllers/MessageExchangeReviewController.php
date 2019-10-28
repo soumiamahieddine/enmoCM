@@ -35,12 +35,13 @@ class MessageExchangeReviewController
         }
 
         $resLetterboxData = ResModel::getOnView([
-            'select' => ['nature_id, reference_number', 'entity_label', 'res_id', 'identifier'],
-            'where' => ['res_id = ?'],
-            'data' => [$aArgs['res_id']],
+            'select'  => ['entity_label', 'res_id', 'identifier', 'external_id'],
+            'where'   => ['res_id = ?'],
+            'data'    => [$aArgs['res_id']],
             'orderBy' => ['res_id'], ]);
 
-        if ($resLetterboxData[0]['nature_id'] == 'message_exchange' && substr($resLetterboxData[0]['reference_number'], 0, 16) == 'ArchiveTransfer_') {
+        if (!empty($resLetterboxData[0]['external_id'])) {
+            $resLetterboxData[0]['external_id'] = json_decode($resLetterboxData[0]['external_id'], true);
             return $resLetterboxData[0];
         } else {
             return false;
@@ -64,16 +65,16 @@ class MessageExchangeReviewController
             $reviewObject->Date = $date->format(\DateTime::ATOM);
 
             $reviewObject->MessageIdentifier = new \stdClass();
-            $reviewObject->MessageIdentifier->value = $messageExchangeData['reference_number'].'_NotificationSent';
+            $reviewObject->MessageIdentifier->value = $messageExchangeData['external_id']['m2m'].'_NotificationSent';
 
             $reviewObject->CodeListVersions = new \stdClass();
             $reviewObject->CodeListVersions->value = '';
 
             $reviewObject->UnitIdentifier = new \stdClass();
-            $reviewObject->UnitIdentifier->value = $messageExchangeData['reference_number'];
+            $reviewObject->UnitIdentifier->value = $messageExchangeData['external_id']['m2m'];
 
             $RequestSeda = new \RequestSeda();
-            $messageExchangeReply = $RequestSeda->getMessageByReference($messageExchangeData['reference_number'].'_ReplySent');
+            $messageExchangeReply = $RequestSeda->getMessageByReference($messageExchangeData['external_id']['m2m'].'_ReplySent');
             $dataObject = json_decode($messageExchangeReply->data);
             $reviewObject->OriginatingAgency = $dataObject->TransferringAgency;
             $reviewObject->ArchivalAgency = $dataObject->ArchivalAgency;
@@ -85,16 +86,16 @@ class MessageExchangeReviewController
 
             $sendMessage = new \SendMessage();
 
-            $reviewObject->MessageIdentifier->value = $messageExchangeData['reference_number'].'_Notification';
+            $reviewObject->MessageIdentifier->value = $messageExchangeData['external_id']['m2m'].'_Notification';
 
             $tmpPath = CoreConfigModel::getTmpPath();
             $filePath = $sendMessage->generateMessageFile($reviewObject, 'ArchiveModificationNotification', $tmpPath);
 
-            $reviewObject->MessageIdentifier->value = $messageExchangeData['reference_number'].'_NotificationSent';
+            $reviewObject->MessageIdentifier->value = $messageExchangeData['external_id']['m2m'].'_NotificationSent';
             $reviewObject->TransferringAgency = $reviewObject->OriginatingAgency;
             $messageExchangeSaved = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $reviewObject, 'res_id_master' => $aArgs['res_id_master'], 'type' => 'ArchiveModificationNotification', 'file_path' => $filePath]);
 
-            $reviewObject->MessageIdentifier->value = $messageExchangeData['reference_number'].'_Notification';
+            $reviewObject->MessageIdentifier->value = $messageExchangeData['external_id']['m2m'].'_Notification';
 
             $reviewObject->DataObjectPackage = new \stdClass();
             $reviewObject->DataObjectPackage->DescriptiveMetadata = new \stdClass();

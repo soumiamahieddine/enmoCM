@@ -139,7 +139,6 @@ if (count($_REQUEST['meta']) > 0) {
 
                 $where_request .= "(REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:multifield) "
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifield) OR lower(alt_identifier) like lower(:multifield)) "
-                    ."or lower(description) LIKE lower(:multifield) "
                     ."or lower(barcode) LIKE lower(:multifield) "
                     ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifield)) "
                     ."or res_id in (select res_id_master from res_view_attachments where (lower(translate(identifier,'/','')) like lower(:multifield) OR lower(identifier) like lower(:multifield) AND status NOT IN ('DEL','OBS','TMP')))) ";
@@ -200,24 +199,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $arrayPDO = array_merge($arrayPDO, array(":attachmentTypes" => $_REQUEST['attachment_types']));
                 $where_request .=" and  ";
             }
-            // REFERENCE COURRIER EXTERNE
-            elseif ($tab_id_fields[$j] == 'external_reference' && !empty($_REQUEST['external_reference'])) {
-                $json_txt .= "'external_reference' : ['".addslashes(trim($_REQUEST['external_reference']))."'],";
-                $where_request .=" (lower(external_reference) LIKE lower(:external_reference) ) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":external_reference" => "%".$_REQUEST['external_reference']."%"));
-            }
-            // DESCRIPTION
-            elseif ($tab_id_fields[$j] == 'description' && !empty($_REQUEST['description'])) {
-                $json_txt .= "'description' : ['".addslashes(trim($_REQUEST['description']))."'],";
-                $where_request .=" (lower(description) LIKE lower(:description) ) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":description" => "%".$_REQUEST['description']."%"));
-            }
-            // REFERENCE NUMBER
-            elseif ($tab_id_fields[$j] == 'reference_number' && !empty($_REQUEST['reference_number'])) {
-                $json_txt .= "'reference_number' : ['".addslashes(trim($_REQUEST['reference_number']))."'],";
-                $where_request .=" (lower(reference_number) LIKE lower(:referenceNumber) ) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":referenceNumber" => "%".$_REQUEST['reference_number']."%"));
-            }
             // DEPARTMENT NUMBER
             elseif ($tab_id_fields[$j] == 'department_number_chosen' && !empty($_REQUEST['department_number_chosen'])) {
                 $json_txt .= " 'department_number_chosen' : [";
@@ -236,8 +217,8 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'doc_notes' && !empty($_REQUEST['doc_notes'])) {
                 $json_txt .= " 'doc_notes' : ['".addslashes(trim($_REQUEST['doc_notes']))."'],";
                 $s_doc_notes = $func->wash($_REQUEST['doc_notes'], "no", _NOTES, "no");
-                $where_request .= " res_id in(select identifier from ".$_SESSION['tablename']['not_notes']." where lower(note_text) LIKE lower(:referenceNumber)) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":referenceNumber" => "%".$s_doc_notes."%"));
+                $where_request .= " res_id in(select identifier from ".$_SESSION['tablename']['not_notes']." where lower(note_text) LIKE lower(:noteText)) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":noteText" => "%".$s_doc_notes."%"));
             }
             // CONTACT TYPE
             elseif ($tab_id_fields[$j] == 'contact_type' && !empty($_REQUEST['contact_type'])) {
@@ -245,6 +226,37 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " (res_id in (select res_id from contacts_res where contact_id in(select cast (contact_id as varchar) from view_contacts where contact_type = :contactType)) or ";
                 $where_request .= " (contact_id in(select contact_id from view_contacts where contact_type = :contactType))) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":contactType" => $_REQUEST['contact_type']));
+            } elseif ($tab_id_fields[$j] == 'project' && !empty($_REQUEST['project'])) {
+                $json_txt .= " 'project' : ['".addslashes(trim($_REQUEST['project']))."'],";
+                $project = $func->wash($_REQUEST['project'], "no", _MARKET, "no");
+
+                $where_request .= " res_id in ( ";
+
+                $where_request .= "select res_id
+from resources_folders
+         left join folders on resources_folders.folder_id = folders.id
+where lower(translate(folders.label , 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ',
+                                       'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) ilike
+                       lower(translate(:label, 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ',
+                                      'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr'))
+    and (
+        folders.id in (
+            select folders.id
+            from folders
+            left join users on folders.user_id = users.id
+            where users.user_id = :user_id
+        ) or folders.id in (
+            select entities_folders.folder_id
+            from entities_folders
+                left join entities on entities_folders.entity_id = entities.id
+                left join users_entities on entities.entity_id = users_entities.entity_id
+            where users_entities.user_id = :user_id
+        )
+    )";
+
+                $where_request .=" ) and ";
+
+                $arrayPDO = array_merge($arrayPDO, array(":label" => "%".$project."%", ":user_id" => $GLOBALS['userId']));
             }
             // GED NUM
             elseif ($tab_id_fields[$j] == 'numged' && !empty($_REQUEST['numged'])) {
@@ -430,7 +442,6 @@ if (count($_REQUEST['meta']) > 0) {
                     $arrayPDO = array_merge($arrayPDO, array(":resIdWelcome" => $welcome));
                 }
                 $where_request_welcome .= "( REGEXP_REPLACE(lower(translate(subject,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')),'( ){2,}', ' ') like lower(:multifieldWelcome) "
-                    ."or lower(external_reference) LIKE lower(:multifieldWelcomeReference) "
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifieldWelcome) OR lower(alt_identifier) like lower(:multifieldWelcome)) "
                     ."or lower(barcode) LIKE lower(:multifieldWelcome) "
                     ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifieldWelcome)) "
@@ -472,12 +483,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= '],';
             }
 
-            // MAIL NATURE
-            elseif ($tab_id_fields[$j] == 'mail_nature' && !empty($_REQUEST['mail_nature'])) {
-                $json_txt .= "'mail_nature' : ['".addslashes(trim($_REQUEST['mail_nature']))."'],";
-                $where_request .= " nature_id = :mailNature and ";
-                $arrayPDO = array_merge($arrayPDO, array(":mailNature" => $_REQUEST['mail_nature']));
-            }
             // CREATION DATE PJ : FROM
             elseif ($tab_id_fields[$j] == 'creation_date_pj_from' && !empty($_REQUEST['creation_date_pj_from'])) {
                 if (preg_match($_ENV['date_pattern'], $_REQUEST['creation_date_pj_from'])==false) {

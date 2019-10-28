@@ -40,6 +40,7 @@ export class ActionsListComponent implements OnInit {
     @Input('currentBasketInfo') currentBasketInfo: any;
 
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
+    @Output('refreshEventAfterAction') refreshEventAfterAction = new EventEmitter<string>();
     @Output('refreshPanelFolders') refreshPanelFolders = new EventEmitter<string>();
 
     constructor(
@@ -56,8 +57,7 @@ export class ActionsListComponent implements OnInit {
     ngOnInit(): void {
         // Event after process action 
         this.subscription = this.actionService.catchAction().subscribe(message => {
-            console.log('TOTO!');
-            this.refreshEvent.emit();
+            this.refreshEventAfterAction.emit();
             this.refreshPanelFolders.emit();
         });
     }
@@ -97,6 +97,7 @@ export class ActionsListComponent implements OnInit {
 
         if (row !== undefined) {
             this.contextMenuTitle = row.alt_identifier;
+            this.currentResource = row;
         }
 
         this.actionService.launchAction(action, this.currentBasketInfo.ownerId, this.currentBasketInfo.groupId, this.currentBasketInfo.basketId, this.selectedRes, this.currentResource);
@@ -112,21 +113,11 @@ export class ActionsListComponent implements OnInit {
             this.http.get('../../rest/resourcesList/users/' + this.currentBasketInfo.ownerId + '/groups/' + this.currentBasketInfo.groupId + '/baskets/' + this.currentBasketInfo.basketId + '/actions')
                 .subscribe((data: any) => {
                     if (data.actions.length > 0) {
-                        this.actionsList = data.actions;
-
-                        // TO DO TO REMOVE AFTER BACK CHANGE : label_action => label
-                        this.actionsList = data.actions.map((action: any) => {
-                            return {
-                                id: action.id,
-                                label: action.label_action,
-                                component: action.component
-                            }
-                        });
-                        
+                        this.actionsList = data.actions;    
                     } else {
                         this.actionsList = [{
                             id: 0,
-                            label_action: this.lang.noAction,
+                            label: this.lang.noAction,
                             component: ''
                         }];
                     }

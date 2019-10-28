@@ -30,14 +30,6 @@ abstract class EmailSignaturesAbstract extends Database
         return $text;
     }
 
-    public function createForCurrentUser($title, $body) {
-        $db = new Database();
-
-        $db->query('INSERT INTO ' . EMAIL_SIGNATURES_TABLE . ' (user_id, html_body, title) VALUES (?, ?, ?)',
-            [$_SESSION['user']['UserId'], $body, $title]
-        );
-    }
-
     public function getForCurrentUser() {
         $db = new Database();
 
@@ -49,21 +41,5 @@ abstract class EmailSignaturesAbstract extends Database
             $mailSignatures[] = ['id' => $res->id, 'title' => $res->title, 'signature' => $this->rawToHtml($res->html_body)];
 
         return $mailSignatures;
-    }
-
-    public function updateForCurrentUser($id, $body) {
-        $db = new Database();
-
-        $db->query('UPDATE ' . EMAIL_SIGNATURES_TABLE . ' SET user_id = ?, html_body = ? WHERE id = ?',
-            [$_SESSION['user']['UserId'], $body, $id]
-        );
-    }
-
-    public function deleteForCurrentUser($id) {
-        $db = new Database();
-
-        $db->query('DELETE FROM ' . EMAIL_SIGNATURES_TABLE . ' WHERE user_id = ? AND id = ?',
-            [$_SESSION['user']['UserId'], $id]
-        );
     }
 }

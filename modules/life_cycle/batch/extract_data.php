@@ -83,7 +83,6 @@ try {
             "Date d'arrivée", 
             "Objet du courrier", 
             "Type du courrier", 
-            "Nature", 
             "Département",  //5
             "Mots clés", 
             "Thème", 
@@ -366,7 +365,6 @@ try {
                 format_date_db(str_replace("/", "-",$selectedFile->admission_date), "", $GLOBALS['databasetype']),
                 $selectedFile->subject,             
                 $selectedFile->type_label,
-                $GLOBALS['mail_natures'][$selectedFile->nature_id],
                 $department_name,  //5
                 $labelTags,
                 $selectedFile->folder_name, 
