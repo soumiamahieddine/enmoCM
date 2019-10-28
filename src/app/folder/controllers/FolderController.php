@@ -794,6 +794,9 @@ class FolderController
     public function getPinnedFolders(Request $request, Response $response)
     {
         $folders = UserPinnedFolderModel::getById(['user_id' => $GLOBALS['id']]);
+        if (empty($folders)) {
+            return $response->withJson(['folders' => []]);
+        }
 
         $foldersIds = array_column($folders, 'id');
         $foldersWithResources = FolderModel::getWithEntitiesAndResources([
