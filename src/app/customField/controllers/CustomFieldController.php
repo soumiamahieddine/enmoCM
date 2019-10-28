@@ -18,6 +18,7 @@
 namespace CustomField\controllers;
 
 use CustomField\models\CustomFieldModel;
+use CustomField\models\ResourceCustomFieldModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
@@ -142,9 +143,8 @@ class CustomFieldController
 
         $field = CustomFieldModel::getById(['select' => ['label'], 'id' => $args['id']]);
 
-        IndexingModelFieldModel::delete(['where' => ['identifier = ?'], 'data' => [$args['id']]]);
-
-        //TODO Suppression des valeurs liés aux courriers ?
+        IndexingModelFieldModel::delete(['where' => ['identifier = ?'], 'data' => ['indexingCustomField_' . $args['id']]]);
+        ResourceCustomFieldModel::delete(['where' => ['custom_field_id = ?'], 'data' => [$args['id']]]);
 
         CustomFieldModel::delete([
             'where' => ['id = ?'],

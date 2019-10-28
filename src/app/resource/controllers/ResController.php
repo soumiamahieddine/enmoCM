@@ -749,7 +749,7 @@ class ResController
         } elseif (!Validator::intVal()->notEmpty()->validate($body['modelId'])) {
             return ['errors' => 'Body modelId is empty or not an integer'];
         } elseif ($isWebServiceUser && !Validator::stringType()->notEmpty()->validate($body['status'])) {
-            return ['errors' => 'Body modelId is empty or not an integer'];
+            return ['errors' => 'Body status is empty or not a string'];
         }
 
         $doctype = DoctypeModel::getById(['id' => $body['doctype'], 'select' => [1]]);
