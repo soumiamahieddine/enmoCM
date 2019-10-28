@@ -218,7 +218,6 @@ define('_VIEW_FULL_HISTORY_DESC', 'De volledige geschiedenis van de evenementen 
 define('_DELETE_DOCUMENT_IN_DETAIL', 'Een document in de gedetailleerde fiche verwijderen');
 define('_EDIT_DOCUMENT_IN_DETAIL', 'Een document in de gedetailleerde fiche wijzigen');
 define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Een document in de gedetailleerde fiche wijzigen Dat zal ook van de instelling van de status afhangen (Wijziging van de indexen)');
-define('_LOAD_STATUSES_SESSION', 'Laden van statussen in sessie');
 define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Instelling van de indexeringsstatussen');
 define('_ADD_LINKS', 'Verbindingen toevoegen');
 define('_ATTACHMENTS_COMMENT', 'Beheer van de bijlagen');

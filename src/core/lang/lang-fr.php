@@ -219,7 +219,6 @@ define('_VIEW_FULL_HISTORY_DESC', "Consulter l'historique complet des événemen
 define('_DELETE_DOCUMENT_IN_DETAIL', 'Supprimer un document dans la fiche détaillée');
 define('_EDIT_DOCUMENT_IN_DETAIL', 'Modifier un document dans la fiche détaillée');
 define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Modifier un document dans la fiche détaillée. Cela dépendra aussi du paramétrage du statut (Modification des index)');
-define('_LOAD_STATUSES_SESSION', 'Chargement des status en session');
 define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', "Paramétrage des status d'indexation");
 define('_ADD_LINKS', 'Ajouter des liaisons');
 define('_ATTACHMENTS_COMMENT', 'Gestion des pièces jointes');

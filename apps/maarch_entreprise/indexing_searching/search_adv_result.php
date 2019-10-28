@@ -217,8 +217,8 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'doc_notes' && !empty($_REQUEST['doc_notes'])) {
                 $json_txt .= " 'doc_notes' : ['".addslashes(trim($_REQUEST['doc_notes']))."'],";
                 $s_doc_notes = $func->wash($_REQUEST['doc_notes'], "no", _NOTES, "no");
-                $where_request .= " res_id in(select identifier from ".$_SESSION['tablename']['not_notes']." where lower(note_text) LIKE lower(:referenceNumber)) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":referenceNumber" => "%".$s_doc_notes."%"));
+                $where_request .= " res_id in(select identifier from ".$_SESSION['tablename']['not_notes']." where lower(note_text) LIKE lower(:noteText)) and ";
+                $arrayPDO = array_merge($arrayPDO, array(":noteText" => "%".$s_doc_notes."%"));
             }
             // CONTACT TYPE
             elseif ($tab_id_fields[$j] == 'contact_type' && !empty($_REQUEST['contact_type'])) {
@@ -226,8 +226,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " (res_id in (select res_id from contacts_res where contact_id in(select cast (contact_id as varchar) from view_contacts where contact_type = :contactType)) or ";
                 $where_request .= " (contact_id in(select contact_id from view_contacts where contact_type = :contactType))) and ";
                 $arrayPDO = array_merge($arrayPDO, array(":contactType" => $_REQUEST['contact_type']));
-            }
-            elseif ($tab_id_fields[$j] == 'project' && !empty($_REQUEST['project'])) {
+            } elseif ($tab_id_fields[$j] == 'project' && !empty($_REQUEST['project'])) {
                 $json_txt .= " 'project' : ['".addslashes(trim($_REQUEST['project']))."'],";
                 $project = $func->wash($_REQUEST['project'], "no", _MARKET, "no");
 

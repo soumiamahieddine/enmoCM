@@ -561,65 +561,6 @@ class functions
     }
 
     /**
-    *  Extracts the user informations from database and puts the result in an array
-    *
-    * @param  $id integer User identifier
-    */
-    public function infouser($id)
-    {
-        require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR. "class" . DIRECTORY_SEPARATOR. "class_user_signatures.php";
-        $us = new UserSignatures();
-
-        $conn = new Database();
-
-        $stmt = $conn->query("SELECT * FROM ".$_SESSION['tablename']['users']." WHERE user_id = ?", array($id));
-        if($stmt->rowCount() == 0)
-        {
-            return array("UserId" => "",
-                "FirstName" => "",
-                "LastName" => "",
-                "Initials" => "",
-                "Phone" => "",
-                "Mail" => "",
-                "department" => "",
-                "pathToSignature" => []
-            );
-        }
-        else
-        {
-            $line = $stmt->fetchObject();
-
-            $query = "SELECT path_template FROM docservers WHERE docserver_id = 'TEMPLATES'";
-            $stmt2 = $conn->query($query);
-            $resDs = $stmt2->fetchObject();
-            $pathToDs = $resDs->path_template;
-            
-            $tab_sign = $us->getForUser($line->user_id);
-            $_SESSION['user']['pathToSignature'] = array();
-            foreach ($tab_sign as $sign) {
-                $path = $pathToDs . str_replace(
-                    "#",
-                    DIRECTORY_SEPARATOR,
-                    $sign['signature_path']
-                )
-                . $sign['signature_file_name'];
-                array_push($_SESSION['user']['pathToSignature'], $path);
-            }
-
-            return array("UserId" => $line->user_id,
-                "FirstName" => $line->firstname,
-                "LastName" => $line->lastname,
-                "Initials" => $line->initials,
-                "Phone" => $line->phone,
-                "Mail" => $line->mail ,
-                "department" => $line->department,
-                "pathToSignature" => $_SESSION['user']['pathToSignature']
-            );
-        }
-    }
-
-
-    /**
     * Returns a formated date for SQL queries
     *
     * @param  $date date Date to format

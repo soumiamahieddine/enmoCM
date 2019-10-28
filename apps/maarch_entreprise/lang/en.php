@@ -2836,9 +2836,6 @@ if (!defined('_INDEXING_STATUSES')) {
 if (!defined('_UNCHANGED')) {
     define('_UNCHANGED', 'Unchanged');
 }
-if (!defined('_LOAD_STATUSES_SESSION')) {
-    define('_LOAD_STATUSES_SESSION', 'Load Status session');
-}
 if (!defined('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS')) {
     define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Indexation status configuration');
 }

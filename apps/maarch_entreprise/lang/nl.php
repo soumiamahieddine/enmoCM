@@ -912,7 +912,6 @@ if (!defined('_NOT_ALLOWED')) { define('_NOT_ALLOWED', 'verboden');}
 if (!defined('_CHOOSE_TITLE')) { define('_CHOOSE_TITLE', 'Kies een aanspreking');}
 if (!defined('_INDEXING_STATUSES')) { define('_INDEXING_STATUSES', 'Indexeren naar de statussen');}
 if (!defined('_UNCHANGED')) { define('_UNCHANGED', 'Ongewijzigd');}
-if (!defined('_LOAD_STATUSES_SESSION')) { define('_LOAD_STATUSES_SESSION', 'Laden van statussen in sessie');}
 if (!defined('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS')) { define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Instelling van de indexeringsstatussen');}
 if (!defined('_USERS_LOGS')) { define('_USERS_LOGS', 'Lijst van toegangen tot de applicatie per agent');}
 if (!defined('_USERS_LOGS_DESC')) { define('_USERS_LOGS_DESC', 'Lijst van toegangen tot de applicatie per agent');}

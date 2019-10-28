@@ -219,7 +219,6 @@ define('_VIEW_FULL_HISTORY_DESC', 'Read the full events history linked to the ut
 define('_DELETE_DOCUMENT_IN_DETAIL', 'Delete a document in detail page');
 define('_EDIT_DOCUMENT_IN_DETAIL', 'Edit a document in detail page');
 define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Edit a document in detail page. Il will also depend on status setting (Index modification)');
-define('_LOAD_STATUSES_SESSION', 'Load Status session');
 define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Indexation status configuration');
 define('_ADD_LINKS', 'Add connection');
 define('_ATTACHMENTS_COMMENT', 'Attachments management');

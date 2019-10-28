@@ -2863,9 +2863,6 @@ if (!defined('_INDEXING_STATUSES')) {
 if (!defined('_UNCHANGED')) {
     define('_UNCHANGED', 'Inchangé');
 }
-if (!defined('_LOAD_STATUSES_SESSION')) {
-    define('_LOAD_STATUSES_SESSION', 'Chargement des status en session');
-}
 if (!defined('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS')) {
     define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', "Paramétrage des status d'indexation");
 }

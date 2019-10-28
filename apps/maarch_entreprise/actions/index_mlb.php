@@ -34,8 +34,7 @@ $contacts_v2 = new contacts_v2();
 if ($core->is_module_loaded('entities')) {
     require_once 'modules/entities/entities_tables.php';
 }
-require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
-    .DIRECTORY_SEPARATOR.'apps_tables.php';
+
 /**
  * $confirm  bool false.
  */

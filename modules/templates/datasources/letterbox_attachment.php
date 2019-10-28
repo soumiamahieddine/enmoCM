@@ -138,7 +138,7 @@ if (!empty($res_id)) {
 
     // Notes
     $datasources['notes'] = array();
-    $stmt = $dbDatasource->query('SELECT notes.*, users.firstname, users.lastname FROM notes left join users on notes.user_id = users.user_id WHERE identifier = ?', array($res_id));
+    $stmt = $dbDatasource->query('SELECT notes.*, users.firstname, users.lastname FROM notes left join users on notes.user_id = users.id WHERE identifier = ?', array($res_id));
 
     $countNote = 1;
     while ($notes = $stmt->fetchObject()) {
