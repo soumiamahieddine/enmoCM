@@ -105,6 +105,7 @@ export class FoldersService {
             exhaustMap(() => this.http.post(`../../rest/folders/${folder.id}/pin`, {})),
             tap(() => {
                 this.getPinnedFolders();
+                this.eventAction.next({type:'refreshFolderPinned', content: {id: folder.id, pinned : true}});
                 this.notify.success(this.lang.folderPinned);
             }),
             catchError((err: any) => {
@@ -122,6 +123,7 @@ export class FoldersService {
             exhaustMap(() => this.http.delete(`../../rest/folders/${folder.id}/unpin`)),
             tap(() => {
                 this.getPinnedFolders();
+                this.eventAction.next({type:'refreshFolderPinned', content: {id: folder.id, pinned : false}});
                 this.notify.success(this.lang.folderUnpinned);
             }),
             catchError((err: any) => {
@@ -150,7 +152,7 @@ export class FoldersService {
                 if (this.pinnedFolders.filter((pinFolder: any) => pinFolder.id === folder.id)[0] !== undefined) {
                     this.pinnedFolders.filter((pinFolder: any) => pinFolder.id === folder.id)[0].countResources = data.countResources;
                 }
-                this.eventAction.next({type:'refreshFolder', content: {id: folder.id, countResources : data.countResources}});
+                this.eventAction.next({type:'refreshFolderCount', content: {id: folder.id, countResources : data.countResources}});
             }),
             tap(() => {
                 this.notify.success(this.lang.mailClassified);

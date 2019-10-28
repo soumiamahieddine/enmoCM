@@ -139,8 +139,10 @@ export class FolderTreeComponent implements OnInit {
                     this.openTree(this.foldersService.getCurrentFolder().id);
                 }
                 this.loading = false;
-            } else if (result.type === 'refreshFolder') {
+            } else if (result.type === 'refreshFolderCount') {
                 this.treeControl.dataNodes.filter(folder => folder.id === result.content.id)[0].countResources = result.content.countResources;
+            } else if (result.type === 'refreshFolderPinned') {
+                this.treeControl.dataNodes.filter(folder => folder.id === result.content.id)[0].pinned = result.content.pinned;
             } else {
                 this.openTree(this.foldersService.getCurrentFolder().id);
             }
