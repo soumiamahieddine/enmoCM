@@ -1218,7 +1218,7 @@ export const LANG_FR = {
     "showFoldersTree" : "Voir l'arborescence",
     "hideFoldersTree" : "Cacher l'arborescence",    
     "folderPinned" : "Dossier épinglé",    
-    "folderUnpinned" : "Dossier retiré",
+    "folderUnpinned" : "Dossier désépinglé",
     "entitiesSeparator" : "Impression des séparateurs",
     "backHome" : "Retour accueil",
     "viewDocHistory" : "Voir l'historique des actions sur le courrier",
