@@ -795,10 +795,11 @@ class FolderController
     {
         $folders = UserPinnedFolderModel::getById(['user_id' => $GLOBALS['id']]);
 
+        $foldersIds = array_column($folders, 'id');
         $foldersWithResources = FolderModel::getWithEntitiesAndResources([
             'select'   => ['COUNT(DISTINCT resources_folders.res_id)', 'resources_folders.folder_id'],
-            'where'    => ['(folders.user_id = ?)'],
-            'data'     => [$GLOBALS['id']],
+            'where'    => ['folders.id in (?)'],
+            'data'     => [$foldersIds],
             'groupBy'  => ['resources_folders.folder_id']
         ]);
 
