@@ -57,7 +57,7 @@ export class DoctypesAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.doctypesAdmin);
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.documentTypes);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 

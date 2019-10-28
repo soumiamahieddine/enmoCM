@@ -3,7 +3,7 @@
     <form #changeGroupUsersForm="ngForm">
         <div class="alert alert-warning" role="alert">
             Le groupe
-            <b>{{this.data.group_desc}}</b> {{lang.isAssociatedTo}} <b>{{this.data.users.length}}</b> {{lang.users}}:
+            <b>{{this.data.group_desc}}</b> {{lang.isAssociatedTo}} <b>{{this.data.users.length}}</b> {{lang.usersAlt}}:
             <mat-list>
                 <mat-list-item *ngFor="let user of this.data.users" style="height:25px;">
                     <mat-icon mat-list-icon class="fa fa-user" color="primary"></mat-icon>
