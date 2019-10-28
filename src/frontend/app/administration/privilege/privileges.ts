@@ -306,110 +306,146 @@ export const PRIVILEGES = [
     //USE
     {
         "id"        : "view_doc_history",
-        "label"     : "_VIEW_DOC_HISTORY",
-        "comment"   : "_VIEW_HISTORY_DESC",
+        "label2"    : "_VIEW_DOC_HISTORY",
+        "label"     : lang.viewDocHistory,
+        "comment2"  : "_VIEW_HISTORY_DESC",
+        "comment"   : lang.viewHistoryDesc,
         "type"      : "use"
     },
     {
         "id"        : "view_full_history",
-        "label"     : "_VIEW_FULL_HISTORY",
-        "comment"   : "_VIEW_FULL_HISTORY_DESC",
+        "label2"    : "_VIEW_FULL_HISTORY",
+        "label"     : lang.viewFullHistory,
+        "comment2"  : "_VIEW_FULL_HISTORY_DESC",
+        "comment"   : lang.viewFullHistoryDesc,
         "type"      : "use"
     },
     {
         "id"        : "edit_document_in_detail",
-        "label"     : "_EDIT_DOCUMENT_IN_DETAIL",
-        "comment"   : "_EDIT_DOCUMENT_IN_DETAIL_DESC",
+        "label2"    : "_EDIT_DOCUMENT_IN_DETAIL",
+        "label"     : lang.editDocumentInDetail,
+        "comment2"  : "_EDIT_DOCUMENT_IN_DETAIL_DESC",
+        "comment"   : lang.editDocumentInDetailDesc,
         "type"      : "use"
     },
     {
         "id"        : "delete_document_in_detail",
-        "label"     : "_DELETE_DOCUMENT_IN_DETAIL",
-        "comment"   : "_DELETE_DOCUMENT_IN_DETAIL",
+        "label2"    : "_DELETE_DOCUMENT_IN_DETAIL",
+        "comment2"  : "_DELETE_DOCUMENT_IN_DETAIL",
+        "label"     : lang.deleteDocumentInDetail,
+        "comment"   : lang.deleteDocumentInDetail,
         "type"      : "use"
     },
     {
         "id"        : "manage_tags_application",
-        "label"     : "_MANAGE_TAGS_IN_APPLICATION",
-        "comment"   : "_MANAGE_TAGS_IN_APPLICATION_DESC",
+        "label2"    : "_MANAGE_TAGS_IN_APPLICATION",
+        "label"     : lang.manageTagsInApplication,
+        "comment2"  : "_MANAGE_TAGS_IN_APPLICATION_DESC",
+        "comment"   : lang.manageTagsInApplicationDesc,
         "type"      : "use"
     },
     {
         "id"        : "update_diffusion_indexing",
-        "label"     : "_UPDATE_DIFFUSION_WHILE_INDEXING",
-        "comment"   : "_UPDATE_DIFFUSION_WHILE_INDEXING",
+        "label2"    : "_UPDATE_DIFFUSION_WHILE_INDEXING",
+        "label"     : lang.updateDiffusionWhileIndexing,
+        "comment"     : lang.updateDiffusionWhileIndexing,
+        "comment2"   : "_UPDATE_DIFFUSION_WHILE_INDEXING",
         "type"      : "use"
     },
     {
         "id"        : "update_diffusion_except_recipient_indexing",
-        "label"     : "_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_INDEXING",
-        "comment"   : "_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_INDEXING",
+        "label2"    : "_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_INDEXING",
+        "label"     : lang.updateDiffusionExceptRecipientWhileIndexing,
+        "comment2"  : "_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_INDEXING",
+        "comment"   : lang.updateDiffusionExceptRecipientWhileIndexing,
         "type"      : "use"
     },
     {
         "id"        : "update_diffusion_details",
-        "label"     : "_UPDATE_DIFFUSION_WHILE_DETAILS",
-        "comment"   : "_UPDATE_DIFFUSION_WHILE_DETAILS",
+        "label2"    : "_UPDATE_DIFFUSION_WHILE_DETAILS",
+        "label"     : lang.updateDiffusionWhileDetails,
+        "comment"   : lang.updateDiffusionWhileDetails,
+        "comment2"  : "_UPDATE_DIFFUSION_WHILE_DETAILS",
         "type"      : "use"
     },
     {
         "id"        : "update_diffusion_except_recipient_details",
-        "label"     : "_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_DETAILS",
-        "comment"   : "_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_DETAILS",
+        "label2"    : "_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_DETAILS",
+        "comment2"  : "_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_DETAILS",
+        "label"     : lang.updateDiffusionExceptRecipientWhileDetails,
+        "comment"   : lang.updateDiffusionExceptRecipientWhileDetails,
         "type"      : "use"
     },
     {
         "id"        : "sendmail",
-        "label"     : "_SENDMAIL_COMMENT",
-        "comment"   : "_SENDMAIL_COMMENT",
+        "label2"    : "_SENDMAIL_COMMENT",
+        "label"     : lang.sendmail,
+        "comment2"  : "_SENDMAIL_COMMENT",
+        "comment"   : lang.sendmail,
         "type"      : "use"
     },
     {
         "id"        : "use_mail_services",
-        "label"     : "_USE_MAIL_SERVICES",
-        "comment"   : "_USE_MAIL_SERVICES_DESC",
+        "label2"    : "_USE_MAIL_SERVICES",
+        "label"     : lang.useMailServices,
+        "comment2"  : "_USE_MAIL_SERVICES_DESC",
+        "comment"   : lang.useMailServices,
         "type"      : "use"
     },
     {
         "id"        : "view_documents_with_notes",
-        "label"     : "_VIEW_DOCUMENTS_WITH_NOTES",
-        "comment"   : "_VIEW_DOCUMENTS_WITH_NOTES_DESC",
+        "label2"    : "_VIEW_DOCUMENTS_WITH_NOTES",
+        "label"     : lang.viewDocumentsWithNotes,
+        "comment2"  : "_VIEW_DOCUMENTS_WITH_NOTES_DESC",
+        "comment"   : lang.viewDocumentsWithNotesDesc,
         "type"      : "use"
     },
     {
         "id"        : "view_technical_infos",
-        "label"     : "_VIEW_TECHNICAL_INFORMATIONS",
-        "comment"   : "_VIEW_TECHNICAL_INFORMATIONS",
+        "label2"    : "_VIEW_TECHNICAL_INFORMATIONS",
+        "label"     : lang.viewTechnicalInformation,
+        "comment2"  : "_VIEW_TECHNICAL_INFORMATIONS",
+        "comment"   : lang.viewTechnicalInformation,
         "type"      : "use"
     },
     {
         "id"        : "config_avis_workflow",
-        "label"     : "_CONFIG_AVIS_WORKFLOW",
-        "comment"   : "_CONFIG_AVIS_WORKFLOW_DESC",
+        "label2"    : "_CONFIG_AVIS_WORKFLOW",
+        "label"     : lang.configAvisWorkflow,
+        "comment"   : lang.configAvisWorkflowDesc,
+        "comment2"  : "_CONFIG_AVIS_WORKFLOW_DESC",
         "type"      : "use"
     },
     {
         "id"        : "config_avis_workflow_in_detail",
-        "label"     : "_CONFIG_AVIS_WORKFLOW_IN_DETAIL",
-        "comment"   : "_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC",
+        "label2"    : "_CONFIG_AVIS_WORKFLOW_IN_DETAIL",
+        "label"     : lang.configAvisWorkflowInDetail,
+        "comment2"  : "_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC",
+        "comment"   : lang.configAvisWorkflowInDetailDesc,
         "type"      : "use"
     },
     {
         "id"        : "avis_documents",
-        "label"     : "_AVIS_ANSWERS",
-        "comment"   : "_AVIS_ANSWERS_DESC",
+        "label2"    : "_AVIS_ANSWERS",
+        "label"     : lang.avisAnswer,
+        "comment2"  : "_AVIS_ANSWERS_DESC",
+        "comment"   : lang.avisAnswerDesc,
         "type"      : "use"
     },
     {
         "id"        : "config_visa_workflow",
-        "label"     : "_CONFIG_VISA_WORKFLOW",
-        "comment"   : "_CONFIG_VISA_WORKFLOW_DESC",
+        "label2"     : "_CONFIG_VISA_WORKFLOW",
+        "label"     : lang.configVisaWorkflow,
+        "comment"   : lang.configVisaWorkflowDesc,
+        "comment2"  : "_CONFIG_VISA_WORKFLOW_DESC",
         "type"      : "use"
     },
     {
         "id"        : "config_visa_workflow_in_detail",
-        "label"     : "_CONFIG_VISA_WORKFLOW_IN_DETAIL",
-        "comment"   : "_CONFIG_VISA_WORKFLOW_IN_DETAIL_DESC",
+        "label2"    : "_CONFIG_VISA_WORKFLOW_IN_DETAIL",
+        "label"     : lang.configVisaWorkflowInDetail,
+        "comment"   : lang.configVisaWorkflowInDetailDesc,
+        "comment2"  : "_CONFIG_VISA_WORKFLOW_IN_DETAIL_DESC",
         "type"      : "use"
     },
     {

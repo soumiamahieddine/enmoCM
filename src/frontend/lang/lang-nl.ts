@@ -1200,4 +1200,31 @@ export const LANG_NL = {
     "folderUnpinned" : "Folder unpinned", //_TO_TRANSLATE
     "entitiesSeparator" : "Print limiters by department/services",//_TO_TRANSLATE
     "backHome" : "Back to home",  //_TO_TRANSLATE
+    "viewDocHistory" : "De geschiedenis van de acties op het brief bekijken",
+    "viewHistoryDesc" : "De geschiedenis van de gebeurtenissen met betrekking tot het gebruik van Maarch Courrier raadplegen.",
+    "viewFullHistory" : "De volledige geschiedenis van het document bekijken",
+    "viewFullHistoryDesc" : "De volledige geschiedenis van de evenementen over het gebruik van GED Maarch raadplegen.",
+    "editDocumentInDetail" : "Een document in de gedetailleerde fiche wijzigen",
+    "editDocumentInDetailDesc" : "Een document in de gedetailleerde fiche wijzigen Dat zal ook van de instelling van de status afhangen (Wijziging van de indexen)",
+    "deleteDocumentInDetail" : "Een document in de gedetailleerde fiche verwijderen",
+    "manageTagsInApplication" : "Create tags", //_TO_TRANSLATE
+    "manageTagsInApplicationDesc" : "Create tags while indexing, processing and in details", //_TO_TRANSLATE
+    "updateDiffusionWhileIndexing" : "Update all parts of diffusion list when indexing.", //_TO_TRANSLATE
+    "updateDiffusionExceptRecipientWhileIndexing" : "Update diffusion list except Assignee when indexing.", //_TO_TRANSLATE
+    "updateDiffusionWhileDetails" : "Update all parts of diffusion list when processing.", //_TO_TRANSLATE
+    "updateDiffusionExceptRecipientWhileDetails" : "Update diffusion list except Assignee when processing.", //_TO_TRANSLATE
+    "useMailServices" : "De e-mails van zijn diensten gebruiken als verzender",
+    "viewDocumentsWithNotes": "View mail with notes", //_TO_TRANSLATE
+    "viewDocumentsWithNotesDesc": "View attachment of 'document_with_notes' type", //_TO_TRANSLATE
+    "viewTechnicalInformation" : "De technische informatie bekijken",
+    "configAvisWorkflow" : "Configuratie van het berichtencircuit",
+    "configAvisWorkflowDesc" : "Om het berichtencircuit van de brief in te stellen",
+    "configAvisWorkflowInDetail" : "Configuratie van het berichtencircuit vanuit de gedetailleerde fiche",
+    "configAvisWorkflowInDetailDesc" : "Om het circuit rechtstreeks vanuit de gedetailleerde fiche van de brief te bepalen",
+    "avisAnswer" : "Zijn mening geven",
+    "avisAnswerDesc" : "Laat deze groep verschijnen in de lijst van de Consultants (berichtencircuit)",
+    "configVisaWorkflow" : "Configuratie van het goedkeuringscircuit",
+    "configVisaWorkflowDesc" : "Om het goedkeuringscircuit in te stellen dat de brief zal moeten volgen",
+    "configVisaWorkflowInDetail" : "Configuratie van het goedkeuringscircuit vanuit de gedetailleerde fiche",
+    "configVisaWorkflowInDetailDesc" : "Om het goedkeuringscircuit vanuit de gedetailleerde fiche te configureren",
 };
