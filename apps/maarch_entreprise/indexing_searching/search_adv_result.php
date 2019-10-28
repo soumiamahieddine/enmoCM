@@ -787,7 +787,7 @@ where lower(translate(folders.label , 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓ�
                         }
                     }
                 }
-            } elseif (preg_match('/^indexingCustomField_/', $tab_id_fields[$j])) {  // opt indexes check
+            } elseif (preg_match('/^indexingCustomField_/', $tab_id_fields[$j]) && !empty($_REQUEST[$tab_id_fields[$j]])) {  // opt indexes check
                 $customFieldId = str_replace("indexingCustomField_", "", $tab_id_fields[$j]);
                 $customFieldId = str_replace("_min", "", $customFieldId);
                 $customFieldId = str_replace("_max", "", $customFieldId);
@@ -800,21 +800,22 @@ where lower(translate(folders.label , 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓ�
                     $arrayPDO       = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
                 } elseif ($customField['type'] == 'date') {
                     if (strpos($tab_id_fields[$j], '_from') !== false) {
-                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and (value::text::timestamp) > (:valueCustom_".$customFieldId."::timestamp))) and ";
+                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId."_".$j." and (value::text::timestamp) >= (:valueCustom_".$customFieldId."_".$j."::timestamp))) and ";
+                        $arrayPDO = array_merge($arrayPDO, array(":customFieldId_".$customFieldId."_".$j => $customFieldId, ":valueCustom_".$customFieldId."_".$j => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
                     } elseif (strpos($tab_id_fields[$j], '_to') !== false) {
-                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and (value::text::timestamp) < (:valueCustom_".$customFieldId."::timestamp))) and ";
+                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId."_".$j." and (value::text::timestamp) <= (:valueCustom_".$customFieldId."_".$j."::timestamp))) and ";
+                        $arrayPDO = array_merge($arrayPDO, array(":customFieldId_".$customFieldId."_".$j => $customFieldId, ":valueCustom_".$customFieldId."_".$j => '"'.$_REQUEST[$tab_id_fields[$j]].' 23:59:59"'));
                     }
-                    $arrayPDO = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
                 } elseif ($customField['type'] == 'string') {
                     $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and (value::text) ilike (:valueCustom_".$customFieldId."))) and ";
                     $arrayPDO       = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '%'.$_REQUEST[$tab_id_fields[$j]].'%'));
                 } elseif ($customField['type'] == 'integer') {
                     if (strpos($tab_id_fields[$j], '_min') !== false) {
-                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and value > :valueCustom_".$customFieldId.")) and ";
+                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId."_".$j." and value >= :valueCustom_".$customFieldId."_".$j.")) and ";
                     } elseif (strpos($tab_id_fields[$j], '_max') !== false) {
-                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and value < :valueCustom_".$customFieldId.")) and ";
+                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId."_".$j." and value <= :valueCustom_".$customFieldId."_".$j.")) and ";
                     }
-                    $arrayPDO = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
+                    $arrayPDO = array_merge($arrayPDO, array(":customFieldId_".$customFieldId."_".$j => $customFieldId, ":valueCustom_".$customFieldId."_".$j => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
                 }
             }
         }

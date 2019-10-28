@@ -30,7 +30,7 @@ class MessageExchangeReviewController
         }
 
         $resLetterboxData = ResModel::getOnView([
-            'select'  => ['entity_label', 'res_id', 'identifier', 'external_id'],
+            'select'  => ['entity_label', 'res_id', 'external_id'],
             'where'   => ['res_id = ?'],
             'data'    => [$aArgs['res_id']],
             'orderBy' => ['res_id'], ]);
