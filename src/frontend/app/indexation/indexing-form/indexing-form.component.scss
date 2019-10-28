@@ -159,6 +159,17 @@
     }
 }
 
+.input-form.mat-form-field-disabled {
+    ::ng-deep.mat-input-element {
+        cursor: not-allowed;
+        padding-left: 20px;
+    }
+    ::ng-deep.mat-form-field-flex {
+        cursor: not-allowed;
+        border: dashed 1px rgb(53, 50, 50);
+    }
+}
+
 .opt-group {
     font-weight: bold;
 }
@@ -190,12 +201,13 @@
 
     transition: all 0.1s;
 
-    &:hover, &[aria-expanded=true] {
+    &:hover,
+    &[aria-expanded=true] {
         background: $primary !important;
         border: solid 1px white !important;
         color: white !important;
         transition: all 0.1s;
-        
+
     }
 
     ::ng-deep.mat-button-wrapper {
@@ -271,12 +283,13 @@
     width: 240px;
     transition: all 0.1s;
 
-    &:hover, &[aria-expanded=true] {
+    &:hover,
+    &[aria-expanded=true] {
         background: white !important;
         border: solid 1px white !important;
         color: $primary !important;
         transition: all 0.1s;
-        
+
     }
 
     ::ng-deep.mat-button-wrapper {
@@ -358,18 +371,6 @@
     }
 }
 
-.mat-form-field-disabled {
-    ::ng-deep.mat-input-element {
-        cursor: not-allowed;
-        padding-left: 20px;
-    }
-
-    ::ng-deep.mat-form-field-flex {
-        cursor: not-allowed;
-        border: dashed 1px rgb(53, 50, 50);
-    }
-}
-
 .div-list {
 
     padding: 0px;
@@ -435,7 +436,7 @@
     ::ng-deep.mat-form-field-label {
         top: 0px;
         font-size: 12px;
-    } 
+    }
 }
 
 .disabled {
@@ -488,9 +489,11 @@
 .categoryLabel {
     letter-spacing: 1px;
     font-size: 13px;
+
     @media (max-width: 768px) {
         font-size: 1em;
     }
+
     color: $primary;
     font-weight: bold;
 }
