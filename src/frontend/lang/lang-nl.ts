@@ -735,7 +735,7 @@ export const LANG_NL = {
     "printDate"                             : "_TO_TRANSLATE",
     "printResultList"                       : "_TO_TRANSLATE",
     "priorities"                            : "Prioriteit(en)",
-    "prioritiesAlt"                         : "_TO_TRANSLATE",
+    "prioritiesAlt"                         : "Prioriteiten",
     "prioritiesHelpDesc"                    : "De prioriteiten slepen-neerzetten om de volgorde te wijzigen",
     "prioritiesOrder"                       : "De volgorde van de prioriteiten beheren",
     "priority"                              : "Prioriteit",
@@ -1247,4 +1247,19 @@ export const LANG_NL = {
     "useDateInSignBlock" : "De datum in de handtekening insluiten",
     "useDateInSignBlockDesc" : "De datum van ondertekening zal bovenaan de handtekening verschijnen (met de gemeente indien deze in de rootservice van de applicatie werd ingeschreven)",
     "printFolderDoc" : "De volledige map afdrukken",
+    "statusesAdmin" : "Statussen aanmaken of wijzigen",
+    "actionsAdmin" : "Acties aanmaken of wijzigen",
+    "contactsAdmin" : "Contactenbeheer",
+    "templatesAdmin" : "De modellen die voor de bijlagen gebruikt worden, de meldingen, de aanmaak van brieven, het verzenden van e-mails en de opmerkingen beheren",
+    "customFieldsAdmin" : "Custom fields", //_TO_TRANSLATE
+    "notificationsAdmin" : "Meldingen voor de gebruikers aanmaken en beheren die gebaseerd zijn op gebeurtenissen van de applicatie",
+    "docserversAdmin" : "Opslagruimtes toevoegen opschorten of wijzigen. De opslagruimtes per type plaatsen waartoe ze behoren en hun primaire groep bepalen",
+    "securities" : "Veiligheden",
+    "emailServerParam" : "Mail server", //_TO_TRANSLATE
+    "emailServerParamDesc" : "Link your mail server with application in order to send emails", //_TO_TRANSLATE
+    "mailevaAdmin" : "Maileva shipping admin", //_TO_TRANSLATE
+    "mailevaAdminDesc" : "Configure mailing templates for Maileva", //_TO_TRANSLATE
+    "reportsAdmin" : "Administratie van de statistieken",
+    "historyBatchAdmin" : "De geschiedenis van de batches raadplegen",
+    "updateControl" : "Controle van de bijwerking",
 };
