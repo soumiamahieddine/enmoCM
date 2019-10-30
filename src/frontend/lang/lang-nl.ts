@@ -1239,4 +1239,12 @@ export const LANG_NL = {
     "configVisaWorkflowInDetailDesc" : "Om het goedkeuringscircuit vanuit de gedetailleerde fiche te configureren",
     "noFile" : "No file", //_TO_TRANSLATE
     "noFileMsg" : "<b>Be careful</b>, no file uploaded.<br/><br/>Continue ?", //_TO_TRANSLATE
+    "visaAnswers" : "De antwoordontwerpen goedkeuren",
+    "visaAnswersDesc" : "Om de antwoordontwerpen te kunnen goedkeuren",
+    "signDocs": "De documenten ondertekenen",
+    "modifyVisaInSignatureBook" : "De huidige goedkeurder wijzigen vanuit het vloeiboek",
+    "modifyVisaInSignatureBookDesc" : "Nuttig indien het vloeiboek als controlevloeiboek dient",
+    "useDateInSignBlock" : "De datum in de handtekening insluiten",
+    "useDateInSignBlockDesc" : "De datum van ondertekening zal bovenaan de handtekening verschijnen (met de gemeente indien deze in de rootservice van de applicatie werd ingeschreven)",
+    "printFolderDoc" : "De volledige map afdrukken",
 };

@@ -464,32 +464,42 @@ export const PRIVILEGES = [
     },
     {
         "id"        : "visa_documents",
-        "label"     : "_VISA_ANSWERS",
-        "comment"   : "_VISA_ANSWERS_DESC",
+        "label2"    : "_VISA_ANSWERS",
+        "label"     : lang.visaAnswers,
+        "comment2"   : "_VISA_ANSWERS_DESC",
+        "comment"   : lang.visaAnswersDesc,
         "type"      : "use"
     },
     {
         "id"        : "sign_document",
-        "label"     : "_SIGN_DOCS",
-        "comment"   : "_SIGN_DOCS",
+        "label2"    : "_SIGN_DOCS",
+        "label"     : lang.signDocs,
+        "comment"   : lang.signDocs,
+        "comment2"  : "_SIGN_DOCS",
         "type"      : "use"
     },
     {
         "id"        : "modify_visa_in_signatureBook",
-        "label"     : "_MODIFY_VISA_IN_SIGNATUREBOOK",
-        "comment"   : "_MODIFY_VISA_IN_SIGNATUREBOOK_DESC",
+        "label2"    : "_MODIFY_VISA_IN_SIGNATUREBOOK",
+        "label"     : lang.modifyVisaInSignatureBook,
+        "comment"   : lang.modifyVisaInSignatureBookDesc,
+        "comment2"  : "_MODIFY_VISA_IN_SIGNATUREBOOK_DESC",
         "type"      : "use"
     },
     {
         "id"        : "use_date_in_signBlock",
-        "label"     : "_USE_DATE_IN_SIGNBLOCK",
-        "comment"   : "_USE_DATE_IN_SIGNBLOCK_DESC",
+        "label2"    : "_USE_DATE_IN_SIGNBLOCK",
+        "label"     : lang.useDateInSignBlock,
+        "comment"   : lang.useDateInSignBlockDesc,
+        "comment2"  : "_USE_DATE_IN_SIGNBLOCK_DESC",
         "type"      : "use"
     },
     {
         "id"        : "print_folder_doc",
-        "label"     : "_PRINT_FOLDER_DOC",
-        "comment"   : "_PRINT_FOLDER_DOC",
+        "label2"    : "_PRINT_FOLDER_DOC",
+        "label"     : lang.printFolderDoc,
+        "comment"   : lang.printFolderDoc,
+        "comment2"  : "_PRINT_FOLDER_DOC",
         "type"      : "use"
     }
 ];

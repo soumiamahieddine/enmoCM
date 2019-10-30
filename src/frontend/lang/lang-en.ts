@@ -1213,4 +1213,12 @@ export const LANG_EN = {
     "configVisaWorkflowInDetailDesc" : "Allows to set up visa flow in detail",
     "noFile" : "No file",
     "noFileMsg" : "<b>Be careful</b>, no file uploaded.<br/><br/>Continue ?",
+    "visaAnswers" : "Stamp the responses projects",
+    "visaAnswersDesc" : "Allows to stamp response projects",
+    "signDocs": "Sign the documents",
+    "modifyVisaInSignatureBook" : "Modify current visa user from signature book",
+    "modifyVisaInSignatureBookDesc" : "Useful if signature book is used as a supervision signature book",
+    "useDateInSignBlock" : "Add current date in sign block",
+    "useDateInSignBlockDesc" : "The current date is added in top of sign block (with the town if it wrote in parent entity of application).",
+    "printFolderDoc" : "Print the entire folder",
 };

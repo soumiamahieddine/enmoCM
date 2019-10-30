@@ -1250,4 +1250,12 @@ export const LANG_FR = {
     "configVisaWorkflowInDetailDesc" : "Permet de configurer le circuit de visa depuis la fiche détaillée",
     "noFile" : "Aucun fichier",
     "noFileMsg" : "<b>Attention</b>, aucun fichier téléversé.<br/><br/>Voulez-vous continuer ?",
+    "visaAnswers" : "Viser les projets de réponse",
+    "visaAnswersDesc" : "Permet de viser les projets de réponse",
+    "signDocs": "Signer les documents",
+    "modifyVisaInSignatureBook" : "Modifier le viseur en cours depuis le parapheur",
+    "modifyVisaInSignatureBookDesc" : "Utile si le parahpeur sert en tant que parapheur de supervision",
+    "useDateInSignBlock" : "Inclure la date dans la griffe de signature",
+    "useDateInSignBlockDesc" : "La date de signature aparaîtra en haut de la griffe de signature (avec la ville si celle-ci a été inscrite dans le service racine de l'application).",
+    "printFolderDoc" : "Imprimer le dossier complet",
 };
