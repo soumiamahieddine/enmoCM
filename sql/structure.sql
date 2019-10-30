@@ -627,7 +627,6 @@ CREATE TABLE notes
   user_id bigint NOT NULL,
   creation_date timestamp without time zone NOT NULL,
   note_text text NOT NULL,
-  type CHARACTER VARYING (32) DEFAULT 'resource' NOT NULL,
   CONSTRAINT notes_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);

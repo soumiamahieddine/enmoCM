@@ -479,8 +479,13 @@ ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_entity;
 ALTER TABLE usergroup_content DROP COLUMN IF EXISTS primary_group;
 
 /* M2M */
-UPDATE res_letterbox SET external_id = json_build_object('m2m', reference_number), reference_number = null FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id = 'message_exchange';
-UPDATE mlb_coll_ext SET nature_id = null WHERE nature_id = 'message_exchange';
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'mlb_coll_ext')) THEN
+    UPDATE res_letterbox SET external_id = json_build_object('m2m', reference_number), reference_number = null FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id = 'message_exchange';
+    UPDATE mlb_coll_ext SET nature_id = null WHERE nature_id = 'message_exchange';
+  END IF;
+END$$;
+
 
 /* RE CREATE VIEWS */
 CREATE VIEW res_view_attachments AS
@@ -502,17 +507,21 @@ TRUNCATE TABLE custom_fields;
 INSERT INTO custom_fields (id, label, type, values) VALUES (1, 'Nature', 'select', '["Courrier simple", "Courriel", "Courrier suivi", "Courrier avec AR", "Autre"]');
 SELECT setval('custom_fields_id_seq', (select max(id)+1 from custom_fields), false);
 
-TRUNCATE TABLE resources_custom_fields;
-INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-SELECT res_id, 1, '"Courrier simple"' FROM mlb_coll_ext WHERE nature_id = 'simple_mail';
-INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-SELECT res_id, 1, '"Courriel"' FROM mlb_coll_ext WHERE nature_id = 'email';
-INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-SELECT res_id, 1, '"Autre"' FROM mlb_coll_ext WHERE nature_id IN ('fax', 'other', 'courier');
-INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-SELECT res_id, 1, '"Courrier suivi"' FROM mlb_coll_ext WHERE nature_id IN ('chronopost', 'fedex');
-INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-SELECT res_id, 1, '"Courrier avec AR"' FROM mlb_coll_ext WHERE nature_id = 'registered_mail';
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'mlb_coll_ext')) THEN
+    TRUNCATE TABLE resources_custom_fields;
+    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+    SELECT res_id, 1, '"Courrier simple"' FROM mlb_coll_ext WHERE nature_id = 'simple_mail';
+    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+    SELECT res_id, 1, '"Courriel"' FROM mlb_coll_ext WHERE nature_id = 'email';
+    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+    SELECT res_id, 1, '"Autre"' FROM mlb_coll_ext WHERE nature_id IN ('fax', 'other', 'courier');
+    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+    SELECT res_id, 1, '"Courrier suivi"' FROM mlb_coll_ext WHERE nature_id IN ('chronopost', 'fedex');
+    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+    SELECT res_id, 1, '"Courrier avec AR"' FROM mlb_coll_ext WHERE nature_id = 'registered_mail';
+  END IF;
+END$$;
 
 TRUNCATE TABLE indexing_models;
 INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (1, 'incoming', 'Courrier arrivée', TRUE, 23, FALSE);

@@ -14,9 +14,6 @@
 
 namespace Resource\models;
 
-use Doctype\models\DoctypeModel;
-use Resource\controllers\IndexingController;
-use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
