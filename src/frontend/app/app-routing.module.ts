@@ -13,6 +13,7 @@ import { PrintSeparatorComponent }          from './separator/print-separator/pr
 import { AppGuard }                         from '../service/app.guard';
 import { FolderDocumentListComponent }      from './folder/document-list/folder-document-list.component';
 import { IndexationComponent }              from './indexation/indexation.component';
+import { ProcessComponent } from './process/process.component';
 
 @NgModule({
     imports: [
@@ -23,6 +24,7 @@ import { IndexationComponent }              from './indexation/indexation.compon
             { path: 'about-us', canActivate: [AppGuard], component: AboutUsComponent },
             { path: 'home', canActivate: [AppGuard],  component: HomeComponent },
             { path: 'basketList/users/:userSerialId/groups/:groupSerialId/baskets/:basketId', canActivate: [AppGuard], component: BasketListComponent },
+            { path: 'process/users/:userSerialId/groups/:groupSerialId/baskets/:basketId/resId/:resId', canActivate: [AppGuard], component: ProcessComponent },
             { path: 'folders/:folderId', canActivate: [AppGuard], component: FolderDocumentListComponent },
             { path: 'saveNumericPackage', canActivate: [AppGuard], component: SaveNumericPackageComponent },
             { path: 'separators/print', canActivate: [AppGuard], component: PrintSeparatorComponent },

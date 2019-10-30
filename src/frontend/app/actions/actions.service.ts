@@ -19,6 +19,7 @@ import { SendExternalSignatoryBookActionComponent } from './send-external-signat
 import { SendExternalNoteBookActionComponent } from './send-external-note-book-action/send-external-note-book-action.component';
 import { RedirectActionComponent } from './redirect-action/redirect-action.component';
 import { SendShippingActionComponent } from './send-shipping-action/send-shipping-action.component';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ActionsService {
@@ -46,7 +47,8 @@ export class ActionsService {
     constructor(
         public http: HttpClient,
         public dialog: MatDialog,
-        private notify: NotificationService
+        private notify: NotificationService,
+        private router: Router,
     ) {
     }
 
@@ -506,5 +508,9 @@ export class ActionsService {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    processDocument() {
+        this.router.navigate([`/process/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/resId/${this.currentResIds}`]);
     }
 }

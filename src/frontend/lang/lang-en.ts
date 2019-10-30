@@ -1237,4 +1237,6 @@ export const LANG_EN = {
     "historyBatchAdmin" : "Read batch history",
     "updateControl" : "Check for update(s)",
     "updateControlDesc" : "Check for new tags of Maarch Courrier and update the application to the latest tag",
+    "mailsSent" : "Resource sent",
+    "dashboard" : "Dashboard",
 };

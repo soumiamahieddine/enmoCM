@@ -45,6 +45,8 @@ export class DocumentViewerComponent implements OnInit {
 
     percentInProgress: number = 0;
 
+    @Input('editMode') editMode: boolean = false;
+
     loadingInfo: any = {
         mode: 'determinate',
         percent: 0,
@@ -86,7 +88,7 @@ export class DocumentViewerComponent implements OnInit {
         ).subscribe();
 
         if (this.tmpFilename != '' && this.tmpFilename !== undefined) {
-            this.http.get('../../rest/convertedFile/'+this.tmpFilename).pipe(
+            this.http.get('../../rest/convertedFile/' + this.tmpFilename).pipe(
                 tap((data: any) => {
                     this.file = {
                         name: this.tmpFilename,
@@ -224,7 +226,7 @@ export class DocumentViewerComponent implements OnInit {
                     this.loadingInfo.percent = downloadProgress;
                     this.loadingInfo.mode = 'determinate';
                     this.loadingInfo.message = `3/3 ${this.lang.downloadConvertedFile}...`;
-                    
+
                     return { status: 'progress', message: downloadProgress };
 
                 case HttpEventType.UploadProgress:
@@ -302,7 +304,7 @@ export class DocumentViewerComponent implements OnInit {
     isExtensionAllowed(file: any) {
         const fileExtension = '.' + file.name.split('.').pop();
         if (this.allowedExtensions.filter(ext => ext.mimeType === file.type && ext.extension === fileExtension).length === 0) {
-            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.notAllowedExtension + ' !', msg: this.lang.file + ' : <b>' + file.name + '</b>, ' + this.lang.type + ' : <b>'+ file.type+'</b><br/><br/><u>' + this.lang.allowedExtensions + '</u> : <br/>' + this.allowedExtensions.map(ext => ext.extension).filter((elem: any, index: any, self: any) => index === self.indexOf(elem)).join(', ') } });
+            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.notAllowedExtension + ' !', msg: this.lang.file + ' : <b>' + file.name + '</b>, ' + this.lang.type + ' : <b>' + file.type + '</b><br/><br/><u>' + this.lang.allowedExtensions + '</u> : <br/>' + this.allowedExtensions.map(ext => ext.extension).filter((elem: any, index: any, self: any) => index === self.indexOf(elem)).join(', ') } });
             return false;
         } else if (file.size > this.maxFileSize) {
             this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.maxFileSizeReached + ' ! ', msg: this.lang.maxFileSize + ' : ' + this.maxFileSizeLabel } });
@@ -325,6 +327,24 @@ export class DocumentViewerComponent implements OnInit {
         const blobUrl = URL.createObjectURL(blob);
         window.focus();
         window.open(blobUrl);
+    }
+
+    loadRessource(resId: any, target: string = 'mainDocument') {
+        this.http.get(`../../rest/resources/${resId}/content`, { responseType: 'blob' }).pipe(
+            tap((data: any) => {
+                var reader = new FileReader();
+                reader.readAsDataURL(data);
+                reader.onloadend = () => {
+                    var base64data = reader.result;
+                    this.file.content = base64data;
+                    this.file.src = base64data;
+                }
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
 }

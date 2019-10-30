@@ -16,6 +16,8 @@ import { AboutUsComponent }                     from './about-us.component';
 import { HomeComponent }                        from './home/home.component';
 import { MaarchParapheurListComponent }         from './home/maarch-parapheur/maarch-parapheur-list.component';
 import { BasketListComponent }                  from './list/basket-list.component';
+import { ProcessComponent }                  from './process/process.component';
+
 import { PasswordModificationComponent, InfoChangePasswordModalComponent, }        from './password-modification.component';
 import { SignatureBookComponent, SafeUrlPipe }  from './signature-book.component';
 import { SaveNumericPackageComponent }          from './save-numeric-package.component';
@@ -83,6 +85,7 @@ import { FoldersService } from './folder/folders.service';
         HomeComponent,
         MaarchParapheurListComponent,
         BasketListComponent,
+        ProcessComponent,
         PasswordModificationComponent,
         SignatureBookComponent,
         SafeUrlPipe,

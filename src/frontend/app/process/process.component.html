@@ -1,0 +1,149 @@
+<mat-sidenav-container class="maarch-container">
+    <mat-sidenav #snavLeft class="panel-left" #snav [mode]="appService.getViewMode() ? 'over' : 'side'"
+        [fixedInViewport]="appService.getViewMode()" [opened]="appService.getViewMode() ? false : true"
+        autoFocus="false" style="overflow-x:hidden;" [ngStyle]="{'width': appService.getViewMode() ? '95%' : '600px'}">
+        <header-panel [snavLeft]="snav" [showBackHome]="true"></header-panel>
+        <div class="listModels">
+            <div class="processTool">
+                <div class="processTool-module" *ngFor="let module of processTool"
+                    [class.processTool-module-active]="module.selected" matRipple>
+                    <i [class]="module.icon"></i>
+                    <span>{{module.label}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="indexing-form-container">
+            <div
+                style="display: flex;align-items: center;justify-content: flex-end;margin-top: 10px;margin-bottom: -20px;">
+                <button mat-button class="categoryLabel" (click)="toggleMailTracking()"
+                    [title]="currentResourceInformations.mailtracking ? lang.untrackThisMail : lang.trackThisMail">
+                    {{currentResourceInformations.mailtracking ? lang.untrackThisMail : lang.trackThisMail}}
+                    <mat-icon color="primary"
+                        class="{{currentResourceInformations.mailtracking ? 'fas':'far'}} fa-star"
+                        style="font-size: 20px;"></mat-icon>
+                </button>
+            </div>
+            <div class="banner" [style.borderColor]="currentPriorityColor">
+                <div class="title">
+                    Historique
+                    <div class="title-divider"></div>
+                </div>
+                <div class="content">
+                    content
+                </div>
+            </div>
+            <div class="banner" [style.borderColor]="currentPriorityColor">
+                <div class="title">
+                    {{lang.notes}}
+                    <div class="title-divider"></div>
+                </div>
+                <div class="content">
+                    content
+                </div>
+            </div>
+            <div class="banner" [style.borderColor]="currentPriorityColor">
+                <div class="title">
+                    {{lang.attachments}}
+                    <div class="title-divider"></div>
+                </div>
+                <div class="content">
+                    content
+                </div>
+            </div>
+            <div class="banner" [style.borderColor]="currentPriorityColor">
+                <div class="title">
+                    {{lang.mailsSent}}
+                    <div class="title-divider"></div>
+                </div>
+                <div class="content">
+                    content
+                </div>
+            </div>
+        </div>
+        <div class="actions-indexing-form">
+            <ng-container *ngIf="actionsList.length > 0 && selectedAction !== undefined">
+                <button mat-button class="button-form-primary" [disabled]="selectedAction.id === 0"
+                    [matMenuTriggerFor]="menu" style="width:350px;margin-right:20px;" [title]="selectedAction.label">
+                    <span class="menu-label" [innerHTML]="selectedAction.label">
+                    </span>
+                    <i class="fa fa-chevron-down menu-icon"></i></button>
+                <mat-menu #menu="matMenu" [class]="'menuForm menuAction'">
+                    <button mat-menu-item disabled style="text-align:center;"
+                        (click)="$event.stopPropagation();">{{lang.actions}}</button>
+                    <ng-container *ngFor="let action of actionsList">
+                        <button *ngIf="showActionInCurrentCategory(action)" mat-menu-item (click)="selectAction(action)"
+                            [title]="action.label" [class.listModels-menu-selected]="action.id === selectedAction.id"
+                            [disabled]="!action.enabled">
+                            <span style="flex:1;">{{action.label}}</span><small
+                                style="position: absolute;top: 15px;left: 140px;" color="warn"
+                                *ngIf="!action.enabled">{{lang.badActionParam}}</small>
+                        </button>
+                    </ng-container>
+                </mat-menu>
+                <button mat-button *ngIf="!appService.getViewMode()"
+                    [disabled]="actionService.loading || selectedAction.id === 0" class="button-form-primary-filled"
+                    style="width: 150px;align-items: center;justify-content: center;text-align: center;display: flex;"
+                    (click)="onSubmit()">{{lang.validate}}</button>
+                <button mat-icon-button *ngIf="appService.getViewMode()" class="button-form-primary"
+                    (click)="onSubmit()">
+                    <mat-icon class="fa fa-check"></mat-icon>
+                </button>
+            </ng-container>
+            <div class="emptyAction" *ngIf="actionsList.length === 0" [innerHTML]="lang.noAvaiblableAction"></div>
+        </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="bg-head">
+            <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
+                <div class="bg-head-title-label">
+                    <header-left [snavLeft]="snav"></header-left>
+                </div>
+                <div class="bg-head-title-tool">
+                    <header-right></header-right>
+                </div>
+            </div>
+            <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()" style="padding-bottom: 20px;">
+                <div class="resourceInfo">
+                    <div class="title">
+                        Objet du courrier
+                        <div class="title-divider"></div>
+                    </div>
+                    <div class="content">
+                        <div class="content-item">
+                            <b><i class="fas fa-flag" style="font-size: 25px;padding-right: 20px;"></i> Urgent</b>
+                        </div>
+                        <div class="content-item">
+                            <div>N° chrono :</div>
+                            <div class="content-item-value">MAARCH/2019A/757</div>
+                        </div>
+                        <div class="content-item">
+                            <div>Expéditeur :</div>
+                            <div class="content-item-value">John Doe <i class="fas fa-circle"
+                                    style="color:green;font-size: 8px;"></i></div>
+                        </div>
+                        <div class="content-item">
+                            <div>Date limite de traitement :</div>
+                            <div class="content-item-value">Dans 2 jour <i class="fas fa-circle"
+                                    style="color:red;font-size: 8px;"></i></div>
+                        </div>
+                        <div class="content-item">
+                            <div>Autre info :</div>
+                            <div class="content-item-value">Bla bla</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="document-container" [class.fullContainer]="appService.getViewMode()">
+            <div class="content">
+                <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false">
+                </app-document-viewer>
+            </div>
+        </div>
+    </mat-sidenav-content>
+    <mat-sidenav #snav2 [fixedInViewport]="appService.getViewMode()" position='end'
+        [opened]="appService.getViewMode() ? false : false" [mode]="appService.getViewMode() ? 'over' : 'side'"
+        class="panel-right" style="overflow-x:hidden;" [class.docView]="!filtersListService.filterMode"
+        [ngStyle]="{'width': appService.getViewMode() ? '80%' : '30%'}" autoFocus="false">
+    </mat-sidenav>
+</mat-sidenav-container>

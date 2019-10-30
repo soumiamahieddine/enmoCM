@@ -1274,4 +1274,6 @@ export const LANG_FR = {
     "historyBatchAdmin" : "Consulter l'historique des batchs",
     "updateControl" : "Vérification de mise à jour",
     "updateControlDesc" : "Voir les nouveaux tags de Maarch Courrier et mettre à jour l'application au dernier tag si besoin",
+    "mailsSent" : "Élément(s) envoyé(s)",
+    "dashboard" : "Vue d'ensemble",
 };

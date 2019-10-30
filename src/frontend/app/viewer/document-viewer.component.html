@@ -25,7 +25,7 @@
 <input type="file" #docToUpload name="files[]" (change)="uploadTrigger($event)" style="display:none;">
 <div style="display: block;width:100%;" appUploadFileDragDrop (onFileDropped)="dndUploadFile($event)">
     <div *ngIf="!loading" class="viewer-tools">
-        <button mat-icon-button (click)="docToUpload.click()" [matTooltip]="lang.uploadAnOtherFile">
+        <button *ngIf="editMode" mat-icon-button (click)="docToUpload.click()" [matTooltip]="lang.uploadAnOtherFile">
             <mat-icon class="fa fa-file-upload"></mat-icon>
         </button>
         <button mat-icon-button (click)="downloadOriginalFile()" [matTooltip]="lang.downloadOriginalFile">
@@ -34,7 +34,7 @@
         <!--<button mat-icon-button (click)="printPdf()" matTooltip="Imprimer le pdf">
             <mat-icon class="fa fa-print"></mat-icon>
         </button>-->
-        <button mat-icon-button (click)="cleanFile()" [matTooltip]="lang.removeFile">
+        <button *ngIf="editMode" mat-icon-button (click)="cleanFile()" [matTooltip]="lang.removeFile">
             <mat-icon class="fa fa-trash" color="warn"></mat-icon>
         </button>
     </div>
