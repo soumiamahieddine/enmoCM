@@ -344,6 +344,12 @@ export class IndexingFormComponent implements OnInit {
                             elem.startDate = '';
                             elem.endDate = '_TODAY';
 
+                            this.fieldCategories.forEach(element => {
+                                if (this['indexingModels_' + element].filter((field: any) => field.identifier === 'departureDate').length > 0) {
+                                    elem.endDate = 'departureDate';
+                                }
+                            });                            
+
                         } else if (elem.identifier === 'destination') {
                             if (this.adminMode) {
                                 let title = '';
