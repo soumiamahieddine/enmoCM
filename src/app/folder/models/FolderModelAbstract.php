@@ -148,4 +148,20 @@ class FolderModelAbstract
 
         return $folders;
     }
+
+    public static function getWithResources(array $args = [])
+    {
+        ValidatorModel::arrayType($args, ['select', 'where', 'data']);
+
+        $folders = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['folders', 'resources_folders'],
+            'left_join' => ['folders.id = resources_folders.folder_id'],
+            'where'     => empty($args['where']) ? [] : $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data'],
+            'groupBy'   => empty($args['groupBy']) ? [] : $args['groupBy']
+        ]);
+
+        return $folders;
+    }
 }

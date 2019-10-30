@@ -761,7 +761,7 @@ class ExportController
 
     private static function getFolderLabel(array $args)
     {
-        $folders = FolderModel::getWithEntitiesAndResources([
+        $folders = FolderModel::getWithResources([
             'select'    => ['folders.label'],
             'where'     => ['resources_folders.res_id = ?'],
             'data'      => [$args['res_id']]
@@ -775,12 +775,12 @@ class ExportController
             $labels[] = $folder['label'];
         }
 
-        return implode(',', $labels);
+        return implode("\n", $labels);
     }
 
     private static function getParentFolderLabel(array $args)
     {
-        $folders = FolderModel::getWithEntitiesAndResources([
+        $folders = FolderModel::getWithResources([
             'select'    => ['folders.parent_id'],
             'where'     => ['resources_folders.res_id = ?'],
             'data'      => [$args['res_id']]
@@ -805,6 +805,6 @@ class ExportController
             $parentLabels[] = $parentFolder['label'];
         }
 
-        return implode(',', $parentLabels);
+        return implode("\n", $parentLabels);
     }
 }
