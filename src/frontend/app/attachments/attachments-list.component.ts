@@ -2,6 +2,8 @@ import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { tap, finalize, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
     selector: 'app-attachments-list',
@@ -19,11 +21,29 @@ export class AttachmentsListComponent implements OnInit {
     mailevaEnabled  : boolean   = false;
 
     @Input('injectDatas') injectDatas: any;
+    @Input('resId') resId: number = null;
     @Output('reloadBadgeAttachments') reloadBadgeNotes = new EventEmitter<string>();
 
     constructor(public http: HttpClient, private notify: NotificationService) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void { 
+        if (this.resId !== null) {
+            this.http.get(`../../rest/resources/${this.resId}/attachments`).pipe(
+                tap((data: any) => {
+                    this.mailevaEnabled = data.mailevaEnabled;
+                    this.attachments = data.attachments;
+                    this.attachments.forEach((element: any) => {
+                        element.thumbnailUrl = '../../rest/attachments/' + element.res_id + '/thumbnail';
+                    });
+                }),
+                finalize(() => this.loading = false),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
+    }
 
     loadAttachments(resId: number) {
         this.resIds[0] = resId;

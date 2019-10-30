@@ -98,7 +98,9 @@ export class ProcessComponent implements OnInit {
             icon : 'fas fa-info-circle',
             label: this.lang.informations,   
         }
-    ] 
+    ];
+
+    currentTool: string = 'dashboard';
 
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
@@ -122,7 +124,7 @@ export class ProcessComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.loading = false;
+        this.loading = true;
 
         this.headerService.setHeader("Traitement d'un courrier");
 
@@ -130,14 +132,14 @@ export class ProcessComponent implements OnInit {
             this.currentUserId = params['userSerialId'];
             this.currentGroupId = params['groupSerialId'];
             this.currentBasketId = params['basketId'];
-
-            this.processTool[0]['selected'] = true;
             
             this.currentResourceInformations = {
                 resId: params['resId'],
                 category: 'outgoing',
                 mailtracking: false
             }
+
+            this.loading = false;
 
             // TO : WAIT RIGHT ROUTE FOR PROCESS
             this.http.get(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/actions`).pipe(

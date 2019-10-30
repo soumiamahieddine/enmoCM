@@ -6,59 +6,76 @@
         <div class="listModels">
             <div class="processTool">
                 <div class="processTool-module" *ngFor="let module of processTool"
-                    [class.processTool-module-active]="module.selected" matRipple>
+                    [class.processTool-module-active]="module.id === currentTool" matRipple
+                    (click)="currentTool = module.id">
                     <i [class]="module.icon"></i>
                     <span>{{module.label}}</span>
                 </div>
             </div>
         </div>
         <div class="indexing-form-container">
-            <div
-                style="display: flex;align-items: center;justify-content: flex-end;margin-top: 10px;margin-bottom: -20px;">
-                <button mat-button class="categoryLabel" (click)="toggleMailTracking()"
-                    [title]="currentResourceInformations.mailtracking ? lang.untrackThisMail : lang.trackThisMail">
-                    {{currentResourceInformations.mailtracking ? lang.untrackThisMail : lang.trackThisMail}}
-                    <mat-icon color="primary"
-                        class="{{currentResourceInformations.mailtracking ? 'fas':'far'}} fa-star"
-                        style="font-size: 20px;"></mat-icon>
-                </button>
-            </div>
-            <div class="banner" [style.borderColor]="currentPriorityColor">
-                <div class="title">
-                    Historique
-                    <div class="title-divider"></div>
+            <ng-container *ngIf="currentTool === 'dashboard'">
+                <div
+                    style="display: flex;align-items: center;justify-content: flex-end;margin-top: 10px;margin-bottom: -20px;">
+                    <button mat-button class="categoryLabel" (click)="toggleMailTracking()"
+                        [title]="currentResourceInformations.mailtracking ? lang.untrackThisMail : lang.trackThisMail">
+                        {{currentResourceInformations.mailtracking ? lang.untrackThisMail : lang.trackThisMail}}
+                        <mat-icon color="primary"
+                            class="{{currentResourceInformations.mailtracking ? 'fas':'far'}} fa-star"
+                            style="font-size: 20px;"></mat-icon>
+                    </button>
                 </div>
-                <div class="content">
-                    content
+                <div class="banner" [style.borderColor]="currentPriorityColor">
+                    <div class="title" (click)="currentTool = 'history'">
+                        Historique
+                        <div class="title-divider"></div>
+                    </div>
+                    <div class="content">
+                        content
+                    </div>
                 </div>
-            </div>
-            <div class="banner" [style.borderColor]="currentPriorityColor">
-                <div class="title">
-                    {{lang.notes}}
-                    <div class="title-divider"></div>
+                <div class="banner" [style.borderColor]="currentPriorityColor">
+                    <div class="title" (click)="currentTool = 'notes'">
+                        {{lang.notes}}
+                        <div class="title-divider"></div>
+                    </div>
+                    <div class="content">
+                        <app-notes-list #appNotesList *ngIf="!loading" [resId]="currentResourceInformations.resId">
+                        </app-notes-list>
+                    </div>
                 </div>
-                <div class="content">
-                    content
+                <div class="banner" [style.borderColor]="currentPriorityColor">
+                    <div class="title" (click)="currentTool = 'attachments'">
+                        {{lang.attachments}}
+                        <div class="title-divider"></div>
+                    </div>
+                    <div class="content">
+                        content
+                    </div>
                 </div>
-            </div>
-            <div class="banner" [style.borderColor]="currentPriorityColor">
-                <div class="title">
-                    {{lang.attachments}}
-                    <div class="title-divider"></div>
+                <div class="banner" [style.borderColor]="currentPriorityColor">
+                    <div class="title" (click)="currentTool = 'mails'">
+                        {{lang.mailsSent}}
+                        <div class="title-divider"></div>
+                    </div>
+                    <div class="content">
+                        content
+                    </div>
                 </div>
-                <div class="content">
-                    content
-                </div>
-            </div>
-            <div class="banner" [style.borderColor]="currentPriorityColor">
-                <div class="title">
-                    {{lang.mailsSent}}
-                    <div class="title-divider"></div>
-                </div>
-                <div class="content">
-                    content
-                </div>
-            </div>
+            </ng-container>
+            <app-notes-list *ngIf="currentTool === 'notes'" #appNotesList [editMode]="true"
+                [resId]="currentResourceInformations.resId">
+            </app-notes-list>
+            <app-diffusions-list *ngIf="currentTool === 'diffusionList'" #appDiffusionsList [adminMode]="false"
+                [resId]="currentResourceInformations.resId">
+            </app-diffusions-list>
+            <app-visa-workflow *ngIf="currentTool === 'visa'" #appVisaWorkflow [resId]="currentResourceInformations.resId"></app-visa-workflow>
+            <app-avis-workflow *ngIf="currentTool === 'avis'" #appAvisWorkflow [resId]="currentResourceInformations.resId"></app-avis-workflow>
+            <app-attachments-list *ngIf="currentTool === 'attachments'" #appAttachmentsList
+                [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="reloadBadgeAttachments($event)">
+            </app-attachments-list>
+            <app-indexing-form *ngIf="currentTool === 'info'" #indexingForm [groupId]="currentGroupId"
+                [indexingFormId]="1"></app-indexing-form>
         </div>
         <div class="actions-indexing-form">
             <ng-container *ngIf="actionsList.length > 0 && selectedAction !== undefined">

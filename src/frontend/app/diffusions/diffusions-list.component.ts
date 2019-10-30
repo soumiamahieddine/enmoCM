@@ -87,7 +87,7 @@ export class DiffusionsListComponent implements OnInit {
         this.keepDestForRedirection = this.keepDestForRedirection !== undefined ? this.keepDestForRedirection : false;
 
         if (this.resId !== undefined) {
-            //this.loadListinstance(this.resId);
+            this.loadListinstance(this.resId);
 
         } else if (this.entityId !== undefined && this.entityId !== '') {
             // this.loadListModel(this.entityId);

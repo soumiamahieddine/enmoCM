@@ -23,6 +23,8 @@ export class VisaWorkflowComponent implements OnInit {
     data: any;
 
     @Input('injectDatas') injectDatas: any;
+    @Input('adminMode') adminMode: boolean;
+    @Input('resId') resId: number = null;
 
     @Input('linkedToMaarchParapheur') linkedToMaarchParapheur: boolean;
 
@@ -30,6 +32,9 @@ export class VisaWorkflowComponent implements OnInit {
 
     ngOnInit(): void { 
         this.linkedToMaarchParapheur = this.linkedToMaarchParapheur === undefined ? false: this.linkedToMaarchParapheur;
+        if (this.resId !== null) {
+            this.loadWorkflow(this.resId);
+        }
     }
 
     drop(event: CdkDragDrop<string[]>) {

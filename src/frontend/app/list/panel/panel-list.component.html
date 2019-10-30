@@ -13,14 +13,14 @@
 </div>
 <mat-tab-group *ngIf="this.mode == 'diffusion'" [(selectedIndex)]="selectedDiffusionTab" class="diffusionTab">
     <mat-tab label="{{lang.diffusionList}}">
-        <app-diffusions-list #appDiffusionsList [adminMode]="false" [resId]="injectDatasParam.resId"></app-diffusions-list>
+        <app-diffusions-list #appDiffusionsList [adminMode]="false"></app-diffusions-list>
     </mat-tab>
     <mat-tab label="{{lang.visaWorkflow}}" [disabled]="appVisaWorkflow.getVisaCount() == 0">
-        <app-visa-workflow #appVisaWorkflow [injectDatas]="injectDatasParam"></app-visa-workflow>
+        <app-visa-workflow #appVisaWorkflow [adminMode]="false" [injectDatas]="injectDatasParam"></app-visa-workflow>
     </mat-tab>
     <mat-tab label="{{lang.avis}}" [disabled]="appAvisWorkflow.getAvisCount() == 0">
-        <app-avis-workflow #appAvisWorkflow [injectDatas]="injectDatasParam"></app-avis-workflow>
+        <app-avis-workflow #appAvisWorkflow [adminMode]="false" [injectDatas]="injectDatasParam"></app-avis-workflow>
     </mat-tab>
 </mat-tab-group>
-<app-notes-list #appNotesList *ngIf="this.mode == 'note'" [injectDatas]="injectDatasParam" (reloadBadgeNotes)="reloadBadgeNotes($event)"></app-notes-list>
+<app-notes-list #appNotesList *ngIf="this.mode == 'note'" [editMode]="true" [injectDatas]="injectDatasParam" (reloadBadgeNotes)="reloadBadgeNotes($event)"></app-notes-list>
 <app-attachments-list #appAttachmentsList *ngIf="this.mode == 'attachment'" [injectDatas]="injectDatasParam" (reloadBadgeAttachments)="reloadBadgeAttachments($event)"></app-attachments-list>

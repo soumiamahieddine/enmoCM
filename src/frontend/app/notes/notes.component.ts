@@ -2,6 +2,8 @@ import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
+import { tap, finalize, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
     selector: 'app-notes-list',
@@ -18,11 +20,30 @@ export class NotesListComponent implements OnInit {
 
     @Input('injectDatas') injectDatas: any;
 
+    @Input('resId') resId: number = null;
+    @Input('editMode') editMode: boolean = false;
+
     @Output('reloadBadgeNotes') reloadBadgeNotes = new EventEmitter<string>();
 
-    constructor(public http: HttpClient) { }
+    constructor(
+        public http: HttpClient,
+        private notify: NotificationService
+    ) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        if (this.resId !== null) {
+            this.http.get(`../../rest/resources/${this.resId}/notes`).pipe(
+                tap((data: any) => {
+                    this.notes = data['notes'];
+                }),
+                finalize(() => this.loading = false),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
+    }
 
     loadNotes(resId: number) {
         this.resIds[0] = resId;
