@@ -762,7 +762,7 @@ class ExportController
     private static function getFolderLabel(array $args)
     {
         $folders = FolderModel::getWithResources([
-            'select'    => ['folders.label'],
+            'select'    => ['folders.id, folders.label'],
             'where'     => ['resources_folders.res_id = ?'],
             'data'      => [$args['res_id']]
         ]);
@@ -772,7 +772,13 @@ class ExportController
 
         $labels = [];
         foreach ($folders as $folder) {
-            $labels[] = $folder['label'];
+            $hasFolder = FolderController::hasFolders([
+                'userId' => $GLOBALS['id'],
+                'folders' => [$folder['id']]
+            ]);
+            if ($hasFolder) {
+                $labels[] = $folder['label'];
+            }
         }
 
         return implode("\n", $labels);
