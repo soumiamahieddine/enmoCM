@@ -5,7 +5,7 @@
         <header-panel [snavLeft]="snav" [showBackHome]="true"></header-panel>
         <div class="listModels">
             <div class="processTool">
-                <div class="processTool-module" *ngFor="let module of processTool"
+                <div class="processTool-module jiggle" *ngFor="let module of processTool"
                     [class.processTool-module-active]="module.id === currentTool" matRipple
                     (click)="currentTool = module.id">
                     <i [class]="module.icon"></i>
@@ -69,13 +69,15 @@
             <app-diffusions-list *ngIf="currentTool === 'diffusionList'" #appDiffusionsList [adminMode]="false"
                 [resId]="currentResourceInformations.resId">
             </app-diffusions-list>
-            <app-visa-workflow *ngIf="currentTool === 'visa'" #appVisaWorkflow [resId]="currentResourceInformations.resId"></app-visa-workflow>
-            <app-avis-workflow *ngIf="currentTool === 'avis'" #appAvisWorkflow [resId]="currentResourceInformations.resId"></app-avis-workflow>
+            <app-visa-workflow *ngIf="currentTool === 'visa'" #appVisaWorkflow
+                [resId]="currentResourceInformations.resId"></app-visa-workflow>
+            <app-avis-workflow *ngIf="currentTool === 'avis'" #appAvisWorkflow
+                [resId]="currentResourceInformations.resId"></app-avis-workflow>
             <app-attachments-list *ngIf="currentTool === 'attachments'" #appAttachmentsList
                 [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="reloadBadgeAttachments($event)">
             </app-attachments-list>
             <app-indexing-form *ngIf="currentTool === 'info'" #indexingForm [groupId]="currentGroupId"
-                [indexingFormId]="1"></app-indexing-form>
+                [indexingFormId]="1"></app-indexing-form>              
         </div>
         <div class="actions-indexing-form">
             <ng-container *ngIf="actionsList.length > 0 && selectedAction !== undefined">

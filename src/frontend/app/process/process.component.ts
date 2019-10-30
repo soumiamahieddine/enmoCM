@@ -85,12 +85,12 @@ export class ProcessComponent implements OnInit {
         },
         {
             id: 'visa',
-            icon : 'fas fa-envelope',
+            icon : 'fas fa-list-ol',
             label: this.lang.visaWorkflow,   
         },
         {
             id: 'avis',
-            icon : 'fas fa-envelope',
+            icon : 'fas fa-comment-alt',
             label: this.lang.avis,   
         },
         {
