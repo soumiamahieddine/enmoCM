@@ -198,7 +198,7 @@ class JnlpController
 
     public function processJnlp(Request $request, Response $response, array $args)
     {
-        $body = $request->getParsedBody();
+        $body = $request->getParams();
 
         $tmpPath = CoreConfigModel::getTmpPath();
 
