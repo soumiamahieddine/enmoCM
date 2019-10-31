@@ -31,6 +31,8 @@ export class DocumentViewerComponent implements OnInit {
     loading: boolean = false;
     noConvertedFound: boolean = false;
 
+    noFile: boolean = false;
+
     file: any = {
         name: '',
         type: '',
@@ -354,18 +356,18 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     loadRessource(resId: any, target: string = 'mainDocument') {
-        this.http.get(`../../rest/resources/${resId}/content`, { responseType: 'blob' }).pipe(
+        this.http.get(`../../rest/resources/${resId}/content`, { params: { mode: 'base64'}}).pipe(
             tap((data: any) => {
-                var reader = new FileReader();
-                reader.readAsDataURL(data);
-                reader.onloadend = () => {
-                    var base64data = reader.result;
-                    this.file.content = base64data;
-                    this.file.src = base64data;
-                }
+                this.file.content = data.encodedDocument;
+                this.file.src = this.base64ToArrayBuffer(this.file.content);
+
             }),
             catchError((err: any) => {
-                this.notify.handleErrors(err);
+                if (err.error.errors === 'Document has no file') {
+                    this.noFile = true;
+                } else {
+                    this.notify.handleErrors(err);
+                }
                 return of(false);
             })
         ).subscribe();
