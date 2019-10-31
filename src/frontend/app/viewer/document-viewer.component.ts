@@ -390,6 +390,7 @@ export class DocumentViewerComponent implements OnInit {
             this.http.get('../../rest/jnlp/lock/' + id)
                 .subscribe((data: any) => {
                     if (!data.lockFileFound) {
+                        this.editInProgress = false;
                         clearInterval(this.intervalLockFile);
                         // this.loadTmpFile(data.filename);
                     }

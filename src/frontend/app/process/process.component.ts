@@ -100,6 +100,8 @@ export class ProcessComponent implements OnInit {
         }
     ];
 
+    modalModule: any[] = [];
+
     currentTool: string = 'dashboard';
 
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
@@ -210,5 +212,13 @@ export class ProcessComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    createModal() {
+        this.modalModule.push(this.processTool.filter(module => module.id === this.currentTool)[0]);
+    }
+
+    removeModal(index: number) {
+        this.modalModule.splice(index, 1);
     }
 }

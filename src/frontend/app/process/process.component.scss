@@ -224,6 +224,7 @@
       padding-left: 20px;
       padding-right: 20px;
       white-space: pre;
+
       &-value {
         font-weight: bold;
         display: flex;
@@ -290,6 +291,7 @@
   .title {
     cursor: pointer;
   }
+
   .content {
     overflow: auto;
     max-height: 300px;
@@ -306,10 +308,12 @@
     -moz-transform: rotate(0deg);
   }
 }
+
 @-moz-keyframes jiggle {
   0% {
     -moz-transform: rotate(-9deg);
   }
+
   50% {
     -moz-transform: rotate(9deg);
   }
@@ -319,7 +323,43 @@
   0% {
     -webkit-transform: rotate(-9deg);
   }
+
   50% {
     -webkit-transform: rotate(9deg);
+  }
+}
+
+
+.modal-module {
+  background: white;
+  position: absolute;
+  right: 50px;
+  z-index: 1;
+  box-shadow: rgba(0, 0, 0, 0.75) 10px 10px 21px -15px;
+  border-radius: 5px;
+  padding: 10px;
+
+  &-title {
+    cursor: move;
+    color: white;
+    padding: 10px;
+    background: $primary;
+    margin-top: -10px;
+    margin-left: -10px;
+    margin-right: -10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    display: flex;
+    align-items: center;
+
+    span {
+      display: flex;
+      flex: 1;
+    }
+  }
+
+  &-content {
+    overflow: auto;
+    max-height: 500px;
   }
 }

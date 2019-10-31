@@ -63,6 +63,9 @@
                     </div>
                 </div>
             </ng-container>
+            <button mat-icon-button (click)="createModal()">
+                <mat-icon class="fas fa-external-link-alt"></mat-icon>
+            </button>
             <app-notes-list *ngIf="currentTool === 'notes'" #appNotesList [editMode]="true"
                 [resId]="currentResourceInformations.resId">
             </app-notes-list>
@@ -77,7 +80,7 @@
                 [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="reloadBadgeAttachments($event)">
             </app-attachments-list>
             <app-indexing-form *ngIf="currentTool === 'info'" #indexingForm [groupId]="currentGroupId"
-                [indexingFormId]="1"></app-indexing-form>              
+                [indexingFormId]="1"></app-indexing-form>
         </div>
         <div class="actions-indexing-form">
             <ng-container *ngIf="actionsList.length > 0 && selectedAction !== undefined">
@@ -166,3 +169,30 @@
         [ngStyle]="{'width': appService.getViewMode() ? '80%' : '30%'}" autoFocus="false">
     </mat-sidenav>
 </mat-sidenav-container>
+<div class="modal-module" cdkDrag *ngFor="let modal of modalModule; let i=index">
+    <div class="modal-module-title">
+        <span>
+            {{modal.label}}
+        </span> 
+        <button mat-icon-button (click)="removeModal(i)">
+            <mat-icon class="fas fa-times"></mat-icon>
+        </button>
+    </div>
+    <div class="modal-module-content">
+        <app-notes-list *ngIf="modal.id === 'notes'" #appNotesList [editMode]="true"
+            [resId]="currentResourceInformations.resId">
+        </app-notes-list>
+        <app-diffusions-list *ngIf="modal.id === 'diffusionList'" #appDiffusionsList [adminMode]="false"
+            [resId]="currentResourceInformations.resId">
+        </app-diffusions-list>
+        <app-visa-workflow *ngIf="modal.id === 'visa'" #appVisaWorkflow [resId]="currentResourceInformations.resId">
+        </app-visa-workflow>
+        <app-avis-workflow *ngIf="modal.id === 'avis'" #appAvisWorkflow [resId]="currentResourceInformations.resId">
+        </app-avis-workflow>
+        <app-attachments-list *ngIf="modal.id === 'attachments'" #appAttachmentsList
+            [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="reloadBadgeAttachments($event)">
+        </app-attachments-list>
+        <app-indexing-form *ngIf="modal.id === 'info'" #indexingForm [groupId]="currentGroupId" [indexingFormId]="1">
+        </app-indexing-form>
+    </div>
+</div>
