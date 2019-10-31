@@ -221,4 +221,12 @@ export class ProcessComponent implements OnInit {
     removeModal(index: number) {
         this.modalModule.splice(index, 1);
     }
+
+    isModalOpen() {
+        if (this.modalModule.map(module => module.id).indexOf(this.currentTool) > -1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

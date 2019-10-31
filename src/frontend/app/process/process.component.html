@@ -63,24 +63,34 @@
                     </div>
                 </div>
             </ng-container>
-            <button mat-icon-button (click)="createModal()">
-                <mat-icon class="fas fa-external-link-alt"></mat-icon>
-            </button>
-            <app-notes-list *ngIf="currentTool === 'notes'" #appNotesList [editMode]="true"
-                [resId]="currentResourceInformations.resId">
-            </app-notes-list>
-            <app-diffusions-list *ngIf="currentTool === 'diffusionList'" #appDiffusionsList [adminMode]="false"
-                [resId]="currentResourceInformations.resId">
-            </app-diffusions-list>
-            <app-visa-workflow *ngIf="currentTool === 'visa'" #appVisaWorkflow
-                [resId]="currentResourceInformations.resId"></app-visa-workflow>
-            <app-avis-workflow *ngIf="currentTool === 'avis'" #appAvisWorkflow
-                [resId]="currentResourceInformations.resId"></app-avis-workflow>
-            <app-attachments-list *ngIf="currentTool === 'attachments'" #appAttachmentsList
-                [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="reloadBadgeAttachments($event)">
-            </app-attachments-list>
-            <app-indexing-form *ngIf="currentTool === 'info'" #indexingForm [groupId]="currentGroupId"
-                [indexingFormId]="1"></app-indexing-form>
+            <div *ngIf="!isModalOpen()" style="display: flex;justify-content: flex-end;">
+                <button mat-icon-button (click)="createModal()" color="primary">
+                    <mat-icon class="fas fa-external-link-alt"></mat-icon>
+                </button>
+            </div>
+            <ng-container *ngIf="!isModalOpen(); else elseTemplate">
+                <app-notes-list *ngIf="currentTool === 'notes'" #appNotesList [editMode]="true"
+                    [resId]="currentResourceInformations.resId">
+                </app-notes-list>
+                <app-diffusions-list *ngIf="currentTool === 'diffusionList'" #appDiffusionsList [adminMode]="false"
+                    [resId]="currentResourceInformations.resId">
+                </app-diffusions-list>
+                <app-visa-workflow *ngIf="currentTool === 'visa'" #appVisaWorkflow
+                    [resId]="currentResourceInformations.resId"></app-visa-workflow>
+                <app-avis-workflow *ngIf="currentTool === 'avis'" #appAvisWorkflow
+                    [resId]="currentResourceInformations.resId"></app-avis-workflow>
+                <app-attachments-list *ngIf="currentTool === 'attachments'" #appAttachmentsList
+                    [resId]="currentResourceInformations.resId">
+                </app-attachments-list>
+                <app-indexing-form *ngIf="currentTool === 'info'" #indexingForm [groupId]="currentGroupId"
+                    [indexingFormId]="1"></app-indexing-form>
+            </ng-container>
+            <ng-template #elseTemplate>
+                <div class="openedModal">
+                    <i class="fas fa-external-link-alt"></i>
+                    Ouvert dans une modal
+                </div>
+            </ng-template>
         </div>
         <div class="actions-indexing-form">
             <ng-container *ngIf="actionsList.length > 0 && selectedAction !== undefined">
@@ -169,11 +179,11 @@
         [ngStyle]="{'width': appService.getViewMode() ? '80%' : '30%'}" autoFocus="false">
     </mat-sidenav>
 </mat-sidenav-container>
-<div class="modal-module" cdkDrag *ngFor="let modal of modalModule; let i=index">
-    <div class="modal-module-title">
+<div class="modal-module" cdkDrag *ngFor="let modal of modalModule; let i=index" cdkDragBoundary=".maarch-container">
+    <div class="modal-module-title" cdkDragHandle>
         <span>
             {{modal.label}}
-        </span> 
+        </span>
         <button mat-icon-button (click)="removeModal(i)">
             <mat-icon class="fas fa-times"></mat-icon>
         </button>
