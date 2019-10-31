@@ -288,7 +288,7 @@ class JnlpController
             fwrite($file, $fileContent);
             fclose($file);
 
-            if (!empty($data['step']) && $data['step'] == 'end') {
+            if (!empty($body['step']) && $body['step'] == 'end') {
                 if (file_exists("{$tmpPath}{$GLOBALS['id']}_maarchCM_{$args['jnlpUniqueId']}.lck")) {
                     unlink("{$tmpPath}{$GLOBALS['id']}_maarchCM_{$args['jnlpUniqueId']}.lck");
                 }
