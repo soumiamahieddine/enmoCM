@@ -1,5 +1,13 @@
 <ng-container *ngIf="editInProgress; else elseTemplate">
-    toto
+    <div class="editInProgress">
+        <i class="fas fa-file-word bounce"></i>
+        <div>
+            Edition en cours ...
+        </div>
+        <div>
+            <button mat-button (click)="cancelTemplateEdition()">{{lang.cancel}}</button>
+        </div>
+    </div>
 </ng-container>
 <ng-template #elseTemplate>
     <div class="example-loading-shade" *ngIf="loading">
@@ -19,14 +27,12 @@
                 <i class="fa fa-chevron-down menu-icon"></i>
             </button>
             <mat-menu #menu="matMenu" [class]="'menuForm'">
-                <button mat-menu-item>Modèle 1</button>
+                <button mat-menu-item (click)="editTemplate()">Modèle 1</button>
                 <button mat-menu-item>Modèle 2</button>
             </mat-menu>
             <button mat-button (click)="docToUpload.click()" class="button-form-primary-alt"
                 style="align-items: center;justify-content: center;text-align: center;display: flex;">Choisissez
                 votre fichier</button>
-            <button mat-button (click)="editTemplate()" class="button-form-primary-alt"
-                style="align-items: center;justify-content: center;text-align: center;display: flex;">Test</button>
         </div>
     </div>
     <input type="file" #docToUpload name="files[]" (change)="uploadTrigger($event)" style="display:none;">

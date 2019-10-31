@@ -396,4 +396,13 @@ export class DocumentViewerComponent implements OnInit {
                 });
         }, 1000);
     }
+
+    cancelTemplateEdition() {
+        clearInterval(this.intervalLockFile);
+        this.editInProgress = false;
+    }
+
+    isEditingTemplate() {
+        return this.editInProgress;
+    }
 }
