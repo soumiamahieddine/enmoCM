@@ -3,6 +3,7 @@
 namespace Group\controllers;
 
 use Group\models\ServiceModel;
+use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
@@ -121,7 +122,8 @@ class ServiceController
         return $menu;
     }
 
-    public static function getAdministrationPrivilegesByUserId(array $args) {
+    public static function getAdministrationPrivilegesByUserId(array $args)
+    {
         ValidatorModel::notEmpty($args, ['userId']);
         ValidatorModel::intVal($args, ['userId']);
 
@@ -159,18 +161,32 @@ class ServiceController
         return $administration;
     }
 
-    public static function getPrivilegesMenu() {
-        return ServiceController::PRIVILEGE_MENU;
-    }
+    public static function hasService2(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['privilegeId', 'userId']);
+        ValidatorModel::stringType($args, ['privilegeId']);
+        ValidatorModel::intVal($args, ['userId']);
 
-    public static function getAllAdminPrivilege() {
-        return [
-            "administration" => [
-                "organisation" => ServiceController::PRIVILEGE_ADMIN_ORGANIZATION,
-                "classement" => ServiceController::PRIVILEGE_ADMIN_CLASSIFYING,
-                "production" => ServiceController::PRIVILEGE_ADMIN_PRODUCTION,
-                "supervision" => ServiceController::PRIVILEGE_ADMIN_SUPERVISION
-            ]
-        ];
+        $user = UserModel::getById([
+            'select' => ['user_id'],
+            'id' => $args['userId']
+        ]);
+        if ($user['user_id'] == 'superadmin') {
+            return true;
+        }
+
+        $aServices = DatabaseModel::select([
+            'select'    => ['usergroups_services.service_id'],
+            'table'     => ['usergroup_content, usergroups_services, usergroups'],
+            'where'     => [
+                'usergroup_content.group_id = usergroups.id',
+                'usergroups.group_id = usergroups_services.group_id',
+                'usergroup_content.user_id = ?',
+                'usergroups_services.service_id = ?'
+            ],
+            'data'      => [$args['userId'], $args['privilegeId']]
+        ]);
+
+        return !empty($aServices);
     }
 }

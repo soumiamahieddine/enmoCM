@@ -84,7 +84,14 @@ class CoreController
         $user['entities'] = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
 
 //        if ($GLOBALS['userId'] == 'superadmin') {
-//            $menu = ServiceController::getPrivilegesMenu();
+//            $menu = [
+//            "administration" => [
+//                "organisation" => ServiceController::PRIVILEGE_ADMIN_ORGANIZATION,
+//                "classement" => ServiceController::PRIVILEGE_ADMIN_CLASSIFYING,
+//                "production" => ServiceController::PRIVILEGE_ADMIN_PRODUCTION,
+//                "supervision" => ServiceController::PRIVILEGE_ADMIN_SUPERVISION
+//            ]
+//        ];
 //        } else {
 //            $menu = ServiceController::getMenuPrivilegesByUserId(['id' => $GLOBALS['id']]);
 //        }
@@ -109,10 +116,10 @@ class CoreController
             ['id' => 'home']
         ];
 
-        if (ServiceModel::hasService2(['serviceId' => 'admin', 'userId' => $GLOBALS['id']])) {
+        if (ServiceController::hasService2(['privilegeId' => 'admin', 'userId' => $GLOBALS['id']])) {
             $shortcuts[] = ['id' => 'administration'];
         }
-        if (ServiceModel::hasService2(['serviceId' => 'adv_search_mlb', 'userId' => $GLOBALS['id']])) {
+        if (ServiceController::hasService2(['privilegeId' => 'adv_search_mlb', 'userId' => $GLOBALS['id']])) {
             $shortcuts[] = ['id' => 'search'];
         }
 
@@ -135,7 +142,7 @@ class CoreController
 
     public function getAdministration(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService2(['serviceId' => 'admin', 'userId' => $GLOBALS['id']])) {
+        if (!ServiceController::hasService2(['privilegeId' => 'admin', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -144,7 +151,7 @@ class CoreController
             $administrationApplication         = ServiceModel::getApplicationServicesByXML(['type' => 'admin']);
             $administrationModule              = ServiceModel::getModulesServicesByXML(['type' => 'admin']);
             $administration['administrations'] = array_merge_recursive($administrationApplication, $administrationModule);
-//            $administration = ServiceController::getAllAdminPrivilege();
+//            $administration = ServiceController::PRIVILEGE_MENU;
         } else {
             $administration = ServiceModel::getAdministrationServicesByUserId(['userId' => $GLOBALS['userId']]);
 //            $administration = ServiceController::getAdministrationPrivilegesByUserId(['userId' => $GLOBALS['id']]);

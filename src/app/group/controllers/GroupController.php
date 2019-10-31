@@ -136,24 +136,25 @@ class GroupController
         return $response->withJson(['groups' => $groups]);
     }
 
-    public function getDetailledById(Request $request, Response $response, array $aArgs)
+    public function getDetailledById(Request $request, Response $response, array $args)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasService2(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $group = GroupModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'group_id', 'group_desc']]);
+        $group = GroupModel::getById(['id' => $args['id'], 'select' => ['id', 'group_id', 'group_desc']]);
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
         $group['security']          = GroupModel::getSecurityByGroupId(['groupId' => $group['group_id']]);
         $group['services']          = GroupModel::getAllServicesByGroupId(['groupId' => $group['group_id']]);
-        $group['users']             = GroupModel::getUsersById(['id' => $aArgs['id'], 'select' => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname', 'users.status']]);
+        $group['users']             = GroupModel::getUsersById(['id' => $args['id'], 'select' => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname', 'users.status']]);
         $group['baskets']           = GroupBasketModel::getBasketsByGroupId(['select' => ['baskets.basket_id', 'baskets.basket_name', 'baskets.basket_desc'], 'groupId' => $group['group_id']]);
-        $group['canAdminUsers']     = ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']);
-        $group['canAdminBaskets']   = ServiceModel::hasService(['id' => 'admin_baskets', 'userId' => $GLOBALS['userId'], 'location' => 'basket', 'type' => 'admin']);
+        $group['canAdminUsers']     = ServiceController::hasService2(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']]);
+        $group['canAdminBaskets']   = ServiceController::hasService2(['privilegeId' => 'admin_baskets', 'userId' => $GLOBALS['id']]);
 
+        $group['privileges']         = ServiceModel::getPrivilegesByGroupId(['groupId' => $args['id']]);
         return $response->withJson(['group' => $group]);
     }
 
