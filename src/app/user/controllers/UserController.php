@@ -39,6 +39,7 @@ use SrcCore\models\AuthenticationModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\PasswordModel;
+use Template\models\TemplateModel;
 use User\models\UserBasketPreferenceModel;
 use User\models\UserEntityModel;
 use User\models\UserGroupModel;
@@ -1326,6 +1327,28 @@ class UserController
         }
 
         return $response->withJson(['privileges' => $privileges]);
+    }
+
+    public function getTemplates(Request $request, Response $response)
+    {
+        $entities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
+        $entities = array_column($entities, 'entity_id');
+        if (empty($entities)) {
+            $entities = [0];
+        }
+
+        $templates = TemplateModel::getWithAssociation([
+            'select'    => ['DISTINCT(templates.template_id)','templates.template_label', 'templates.template_style'],
+            'where'     => ['templates.template_type = ?', '(templates_association.value_field in (?) OR templates_association.template_id IS NULL)'],
+            'data'      => ['OFFICE', $entities],
+            'orderBy'   => ['templates.template_label']
+        ]);
+
+        foreach ($templates as $key => $template) {
+            $templates[$key] = ['id' => $template['template_id'], 'label' => $template['template_label'], 'style' => $template['template_style']];
+        }
+
+        return $response->withJson(['templates' => $templates]);
     }
 
     public function updateCurrentUserBasketPreferences(Request $request, Response $response, array $aArgs)

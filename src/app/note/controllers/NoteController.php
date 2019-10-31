@@ -227,7 +227,7 @@ class NoteController
             if (!empty($resource['destination'])) {
                 $templates = TemplateModel::getWithAssociation([
                     'select'    => ['DISTINCT(templates.template_id), template_label', 'template_content'],
-                    'where'     => ['template_target = ?', 'value_field = ?', 'templates.template_id = templates_association.template_id'],
+                    'where'     => ['template_target = ?', 'value_field = ?'],
                     'data'      => ['notes', $resource['destination']],
                     'orderBy'   => ['template_label']
                 ]);

@@ -246,7 +246,7 @@ class PreProcessActionController
 
             $template = TemplateModel::getWithAssociation([
                 'select'    => ['template_content', 'template_path', 'template_file_name'],
-                'where'     => ['templates.template_id = templates_association.template_id', 'template_target = ?', 'template_attachment_type = ?', 'value_field = ?'],
+                'where'     => ['template_target = ?', 'template_attachment_type = ?', 'value_field = ?'],
                 'data'      => ['acknowledgementReceipt', $templateAttachmentType, $resource['destination']]
             ]);
 

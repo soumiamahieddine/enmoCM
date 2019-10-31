@@ -220,7 +220,8 @@ abstract class TemplateModelAbstract
 
         $aTemplates = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['templates, templates_association'],
+            'table'     => ['templates', 'templates_association'],
+            'left_join' => ['templates.template_id = templates_association.template_id'],
             'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
             'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
