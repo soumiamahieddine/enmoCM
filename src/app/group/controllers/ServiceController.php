@@ -8,12 +8,49 @@ use User\models\UserModel;
 
 class ServiceController
 {
-    const SERVICE_MENU = [
+    const PRIVILEGE_MENU = [
         "admin",
         "adv_search_mlb",
         "entities_print_sep_mlb",
         "reports",
         "save_numeric_package"
+    ];
+
+    const PRIVILEGE_ADMIN_ORGANIZATION = [
+        "admin_users",
+        "admin_groups",
+        "manage_entities",
+        "admin_listmodels"
+    ];
+
+    const PRIVILEGE_ADMIN_CLASSIFYING = [
+        "admin_architecture",
+        "admin_tag"
+    ];
+
+    const PRIVILEGE_ADMIN_PRODUCTION = [
+        "admin_baskets",
+        "admin_status",
+        "admin_actions",
+        "admin_contacts",
+        "admin_priorities",
+        "admin_templates",
+        "admin_indexing_models",
+        "admin_custom_fields",
+        "admin_notif"
+    ];
+
+    const PRIVILEGE_ADMIN_SUPERVISION = [
+        "update_status_mail",
+        "admin_docservers",
+        "admin_parameters",
+        "admin_password_rules",
+        "admin_email_server",
+        "admin_shippings",
+        "admin_reports",
+        "view_history",
+        "view_history_batch",
+        "admin_update_control",
     ];
 
     public static function getMenuServicesByUserIdByXml(array $aArgs)
@@ -53,24 +90,24 @@ class ServiceController
         return $menu;
     }
 
-    public static function getMenuServicesByUserId(array $aArgs)
+    public static function getMenuPrivilegesByUserId(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
 
-        $rawServicesStoredInDB = ServiceModel::getByUserId(['userId' => $aArgs['userId']]);
-        $servicesStoredInDB = array_column($rawServicesStoredInDB, 'service_id');
+        $rawPrivilegesStoredInDB = ServiceModel::getByUser(['id' => $args['id']]);
+        $privilegesStoredInDB = array_column($rawPrivilegesStoredInDB, 'service_id');
 
         $menu = [];
-        if (!empty($servicesStoredInDB)) {
-            foreach ($servicesStoredInDB as $service) {
-                if (in_array($service, self::SERVICE_MENU)) {
-                    $menu[] = $service;
+        if (!empty($privilegesStoredInDB)) {
+            foreach ($privilegesStoredInDB as $privilege) {
+                if (in_array($privilege, ServiceController::PRIVILEGE_MENU)) {
+                    $menu[] = $privilege;
                 }
             }
         }
 
-        $userGroups = UserModel::getGroupsByLogin(['login' => $aArgs['userId']]);
+        $userGroups = UserModel::getGroupsByUser(['id' => $args['id']]);
         $indexingGroups = [];
         foreach ($userGroups as $group) {
             if ($group['can_index']) {
@@ -84,7 +121,56 @@ class ServiceController
         return $menu;
     }
 
-    public static function getServicesMenu() {
-        return self::SERVICE_MENU;
+    public static function getAdministrationPrivilegesByUserId(array $args) {
+        ValidatorModel::notEmpty($args, ['userId']);
+        ValidatorModel::intVal($args, ['userId']);
+
+        $rawPrivilegesStoredInDB = ServiceModel::getByUser(['id' => $args['userId']]);
+        $privilegesStoredInDB = array_column($rawPrivilegesStoredInDB, 'service_id');
+
+        $organization = [];
+        $classifying = [];
+        $production = [];
+        $supervision = [];
+
+        if (!empty($privilegesStoredInDB)) {
+            foreach ($privilegesStoredInDB as $privilege) {
+                if (in_array($privilege, ServiceController::PRIVILEGE_ADMIN_ORGANIZATION)) {
+                    $organization[] = $privilege;
+                } else if (in_array($privilege, ServiceController::PRIVILEGE_ADMIN_CLASSIFYING)) {
+                    $classifying[] = $privilege;
+                } else if (in_array($privilege, ServiceController::PRIVILEGE_ADMIN_PRODUCTION)) {
+                    $production[] = $privilege;
+                } else if (in_array($privilege, ServiceController::PRIVILEGE_ADMIN_SUPERVISION)) {
+                    $supervision[] = $privilege;
+                }
+            }
+        }
+
+        $administration = [
+            "administration" => [
+                "organisation" => $organization,
+                "classement" => $classifying,
+                "production" => $production,
+                "supervision" => $supervision
+           ]
+        ];
+
+        return $administration;
+    }
+
+    public static function getPrivilegesMenu() {
+        return ServiceController::PRIVILEGE_MENU;
+    }
+
+    public static function getAllAdminPrivilege() {
+        return [
+            "administration" => [
+                "organisation" => ServiceController::PRIVILEGE_ADMIN_ORGANIZATION,
+                "classement" => ServiceController::PRIVILEGE_ADMIN_CLASSIFYING,
+                "production" => ServiceController::PRIVILEGE_ADMIN_PRODUCTION,
+                "supervision" => ServiceController::PRIVILEGE_ADMIN_SUPERVISION
+            ]
+        ];
     }
 }

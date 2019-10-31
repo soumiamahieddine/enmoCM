@@ -84,9 +84,9 @@ class CoreController
         $user['entities'] = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
 
 //        if ($GLOBALS['userId'] == 'superadmin') {
-//            $menu = ServiceController::getServicesMenu();
+//            $menu = ServiceController::getPrivilegesMenu();
 //        } else {
-//            $menu = ServiceController::getMenuServicesByUserId(['userId' => $GLOBALS['userId']]);
+//            $menu = ServiceController::getMenuPrivilegesByUserId(['id' => $GLOBALS['id']]);
 //        }
 
         if ($GLOBALS['userId'] == 'superadmin') {
@@ -117,7 +117,7 @@ class CoreController
         }
 
         $indexingGroups = [];
-        $userGroups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
+        $userGroups = UserModel::getGroupsByUser(['id' => $GLOBALS['id']]);
         foreach ($userGroups as $group) {
             if ($group['can_index']) {
                 $indexingGroups[] = ['id' => $group['id'], 'label' => $group['group_desc']];
@@ -135,7 +135,7 @@ class CoreController
 
     public function getAdministration(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+        if (!ServiceModel::hasService2(['serviceId' => 'admin', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -144,8 +144,10 @@ class CoreController
             $administrationApplication         = ServiceModel::getApplicationServicesByXML(['type' => 'admin']);
             $administrationModule              = ServiceModel::getModulesServicesByXML(['type' => 'admin']);
             $administration['administrations'] = array_merge_recursive($administrationApplication, $administrationModule);
+//            $administration = ServiceController::getAllAdminPrivilege();
         } else {
             $administration = ServiceModel::getAdministrationServicesByUserId(['userId' => $GLOBALS['userId']]);
+//            $administration = ServiceController::getAdministrationPrivilegesByUserId(['userId' => $GLOBALS['id']]);
         }
 
         return $response->withJson($administration);

@@ -296,6 +296,21 @@ abstract class ServiceModelAbstract
         return $aServices;
     }
 
+    public static function getByUser(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
+
+        $aServices = DatabaseModel::select([
+            'select'    => ['usergroups_services.service_id'],
+            'table'     => ['usergroup_content, usergroups_services, usergroups'],
+            'where'     => ['usergroup_content.group_id = usergroups.id', 'usergroups.group_id = usergroups_services.group_id', 'usergroup_content.user_id = ?'],
+            'data'      => [$args['id']]
+        ]);
+
+        return $aServices;
+    }
+
     public static function hasService(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id', 'userId', 'location', 'type']);
