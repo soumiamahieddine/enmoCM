@@ -85,12 +85,18 @@ class CoreController
         $user['groups'] = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
         $user['entities'] = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
 
+//        if ($GLOBALS['userId'] == 'superadmin') {
+//            $menu = ServiceController::getServicesMenu();
+//        } else {
+//            $menu = ServiceController::getMenuServicesByUserId(['userId' => $GLOBALS['userId']]);
+//        }
+
         if ($GLOBALS['userId'] == 'superadmin') {
             $menu = ServiceModel::getApplicationServicesByXML(['type' => 'menu']);
             $menuModules = ServiceModel::getModulesServicesByXML(['type' => 'menu']);
             $menu = array_merge($menu, $menuModules);
         } else {
-            $menu = ServiceController::getMenuServicesByUserId(['userId' => $GLOBALS['userId']]);
+            $menu = ServiceController::getMenuServicesByUserIdByXml(['userId' => $GLOBALS['userId']]);
         }
 
         return $response->withJson([
@@ -105,10 +111,10 @@ class CoreController
             ['id' => 'home']
         ];
 
-        if (ServiceModel::hasService(['id' => 'admin', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+        if (ServiceModel::hasService2(['serviceId' => 'admin', 'userId' => $GLOBALS['id']])) {
             $shortcuts[] = ['id' => 'administration'];
         }
-        if (ServiceModel::hasService(['id' => 'adv_search_mlb', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+        if (ServiceModel::hasService2(['serviceId' => 'adv_search_mlb', 'userId' => $GLOBALS['id']])) {
             $shortcuts[] = ['id' => 'search'];
         }
 

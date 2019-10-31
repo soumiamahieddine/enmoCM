@@ -324,6 +324,35 @@ abstract class ServiceModelAbstract
         return false;
     }
 
+    public static function hasService2(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['serviceId', 'userId']);
+        ValidatorModel::stringType($args, ['serviceId']);
+        ValidatorModel::intVal($args, ['userId']);
+
+        $user = UserModel::getById([
+            'select' => ['user_id'],
+            'id' => $args['userId']
+        ]);
+        if ($user['user_id'] == 'superadmin') {
+            return true;
+        }
+
+        $aServices = DatabaseModel::select([
+            'select'    => ['usergroups_services.service_id'],
+            'table'     => ['usergroup_content, usergroups_services, usergroups'],
+            'where'     => [
+                'usergroup_content.group_id = usergroups.id',
+                'usergroups.group_id = usergroups_services.group_id',
+                'usergroup_content.user_id = ?',
+                'usergroups_services.service_id = ?'
+            ],
+            'data'      => [$args['userId'], $args['serviceId']]
+        ]);
+
+        return !empty($aServices);
+    }
+
     public static function canIndex(array $args)
     {
         ValidatorModel::notEmpty($args, ['userId']);
