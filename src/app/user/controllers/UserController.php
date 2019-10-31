@@ -1338,14 +1338,17 @@ class UserController
         }
 
         $templates = TemplateModel::getWithAssociation([
-            'select'    => ['DISTINCT(templates.template_id)','templates.template_label', 'templates.template_style'],
+            'select'    => ['DISTINCT(templates.template_id)', 'templates.template_label', 'templates.template_file_name'],
             'where'     => ['templates.template_type = ?', '(templates_association.value_field in (?) OR templates_association.template_id IS NULL)'],
             'data'      => ['OFFICE', $entities],
             'orderBy'   => ['templates.template_label']
         ]);
 
         foreach ($templates as $key => $template) {
-            $templates[$key] = ['id' => $template['template_id'], 'label' => $template['template_label'], 'style' => $template['template_style']];
+            $explodeFile = explode('.', $template['template_file_name']);
+            $ext = $explodeFile[count($explodeFile) - 1];
+
+            $templates[$key] = ['id' => $template['template_id'], 'label' => $template['template_label'], 'extension' => $ext];
         }
 
         return $response->withJson(['templates' => $templates]);

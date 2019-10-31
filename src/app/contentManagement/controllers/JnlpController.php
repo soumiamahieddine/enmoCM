@@ -325,14 +325,15 @@ class JnlpController
     public function isLockFileExisting(Request $request, Response $response, array $aArgs)
     {
         $tmpPath = CoreConfigModel::getTmpPath();
-        $lockFileName = "{$GLOBALS['id']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck";
+        $fileTrunk = "{$GLOBALS['id']}_maarchCM_{$aArgs['jnlpUniqueId']}";
+        $lockFileName = "{$fileTrunk}.lck";
 
         $fileFound = false;
         if (file_exists($tmpPath . $lockFileName)) {
             $fileFound = true;
         }
 
-        return $response->withJson(['lockFileFound' => $fileFound]);
+        return $response->withJson(['lockFileFound' => $fileFound, 'fileTrunk' => $fileTrunk]);
     }
 
     private static function generateResponse(array $aArgs)
