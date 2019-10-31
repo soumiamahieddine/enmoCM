@@ -129,7 +129,7 @@ class TemplateController
                     return $response->withStatus(400)->withJson(['errors' => 'Template style is missing']);
                 }
                 $explodeStyle = explode(':', $data['template_style']);
-                $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[0]);
+                $fileOnTmp = "tmp_file_{$GLOBALS['id']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[0]);
             } else {
                 if (empty($data['uploadedFile']['base64']) || empty($data['uploadedFile']['name'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Uploaded file is missing']);
@@ -407,6 +407,7 @@ class TemplateController
 
         return $check;
     }
+
     public static function mergeDatasource(array $aArgs)
     {
         include_once 'apps/maarch_entreprise/tools/tbs/tbs_class_php5.php';

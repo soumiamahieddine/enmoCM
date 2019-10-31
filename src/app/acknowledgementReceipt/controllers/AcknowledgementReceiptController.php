@@ -23,14 +23,11 @@ use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use User\models\UserModel;
 
 class AcknowledgementReceiptController
 {
     public function createPaperAcknowledgement(Request $request, Response $response)
     {
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-
         $bodyData = $request->getParsedBody();
 
         if (!Validator::arrayType()->notEmpty()->validate($bodyData['resources'])) {

@@ -22,14 +22,12 @@ use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
-require_once 'core/class/Url.php';
-
 class CoreController
 {
     public function initialize(Request $request, Response $response)
     {
         $aInit = [];
-        $aInit['coreUrl']            = str_replace('rest/', '', \Url::coreurl());
+        $aInit['coreUrl']            = str_replace('rest/', '', UrlController::getCoreUrl());
         $aInit['applicationName']    = CoreConfigModel::getApplicationName();
         $aInit['applicationVersion'] = CoreConfigModel::getApplicationVersion();
         $aInit['lang']               = CoreConfigModel::getLanguage();
