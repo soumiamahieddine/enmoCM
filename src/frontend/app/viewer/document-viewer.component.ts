@@ -45,6 +45,9 @@ export class DocumentViewerComponent implements OnInit {
 
     percentInProgress: number = 0;
 
+    intervalLockFile: any;
+    editInProgress: boolean = false;
+
     @Input('editMode') editMode: boolean = false;
 
     loadingInfo: any = {
@@ -106,6 +109,26 @@ export class DocumentViewerComponent implements OnInit {
                 })
             ).subscribe();
         }
+    }
+
+    loadTmpFile(filenameOnTmp: string) {
+        this.http.get('../../rest/convertedFile/' + filenameOnTmp).pipe(
+            tap((data: any) => {
+                this.file = {
+                    name: this.tmpFilename,
+                    format: 'pdf',
+                    type: 'application/pdf',
+                    content: this.getBase64Document(this.base64ToArrayBuffer(data.encodedResource)),
+                    src: this.base64ToArrayBuffer(data.encodedResource)
+                };
+                this.noConvertedFound = false;
+                this.loading = false;
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     uploadTrigger(fileInput: any) {
@@ -347,4 +370,30 @@ export class DocumentViewerComponent implements OnInit {
         ).subscribe();
     }
 
+    editTemplate() {
+        this.editInProgress = true;
+        const jnlp = {
+            objectType : 'resourceCreation',
+            objectId : 25,
+            cookie : document.cookie
+        }
+        this.http.post('../../rest/jnlp', jnlp).pipe(
+            tap((data: any) => {
+                window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
+                this.checkLockFile(data.jnlpUniqueId);
+            })
+        ).subscribe();
+    }
+
+    checkLockFile(id: string) {
+        this.intervalLockFile = setInterval(() => {
+            this.http.get('../../rest/jnlp/lock/' + id)
+                .subscribe((data: any) => {
+                    if (!data.lockFileFound) {
+                        clearInterval(this.intervalLockFile);
+                        // this.loadTmpFile(data.filename);
+                    }
+                });
+        }, 1000);
+    }
 }
