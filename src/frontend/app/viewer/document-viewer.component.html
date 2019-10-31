@@ -19,7 +19,7 @@
         <i class="fa fa-file-upload upload-icon"></i><br />
         Glisser-déposer<br />ou
         <div style="display: flex;">
-            <button mat-button class="button-form-primary-alt" [matMenuTriggerFor]="menu"
+            <button mat-button class="button-form-primary-alt" (click)="loadTemplates()" [matMenuTriggerFor]="menu"
                 style="margin-right:20px;align-items: center;justify-content: center;text-align: center;display: flex;">
                 <span class="menu-label">
                     Choisir un modèle
@@ -27,8 +27,7 @@
                 <i class="fa fa-chevron-down menu-icon"></i>
             </button>
             <mat-menu #menu="matMenu" [class]="'menuForm'">
-                <button mat-menu-item (click)="editTemplate()">Modèle 1</button>
-                <button mat-menu-item>Modèle 2</button>
+                <button mat-menu-item (click)="editTemplate(template)" *ngFor="let template of listTemplates">{{template.label}}</button>
             </mat-menu>
             <button mat-button (click)="docToUpload.click()" class="button-form-primary-alt"
                 style="align-items: center;justify-content: center;text-align: center;display: flex;">Choisissez

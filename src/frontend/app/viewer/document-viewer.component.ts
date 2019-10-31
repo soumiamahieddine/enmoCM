@@ -10,7 +10,6 @@ import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { AlertComponent } from '../../plugins/modal/alert.component';
 import { SortPipe } from '../../plugins/sorting.pipe';
-import { PDFProgressData } from 'ng2-pdf-viewer';
 
 
 @Component({
@@ -47,6 +46,8 @@ export class DocumentViewerComponent implements OnInit {
 
     intervalLockFile: any;
     editInProgress: boolean = false;
+
+    listTemplates: any[] = [];
 
     @Input('editMode') editMode: boolean = false;
 
@@ -370,12 +371,12 @@ export class DocumentViewerComponent implements OnInit {
         ).subscribe();
     }
 
-    editTemplate() {
+    editTemplate(template: any) {
         this.editInProgress = true;
         const jnlp = {
-            objectType : 'resourceCreation',
-            objectId : 25,
-            cookie : document.cookie
+            objectType: 'resourceCreation',
+            objectId: template.id,
+            cookie: document.cookie
         }
         this.http.post('../../rest/jnlp', jnlp).pipe(
             tap((data: any) => {
@@ -405,5 +406,15 @@ export class DocumentViewerComponent implements OnInit {
 
     isEditingTemplate() {
         return this.editInProgress;
+    }
+
+    loadTemplates() {
+        if (this.listTemplates.length === 0) {
+            this.http.get('../../rest/currentUser/templates').pipe(
+                tap((data: any) => {
+                    this.listTemplates = data.templates;
+                })
+            ).subscribe();
+        }
     }
 }
