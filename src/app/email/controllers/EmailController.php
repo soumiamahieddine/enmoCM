@@ -247,7 +247,12 @@ class EmailController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $emails = EmailModel::get(['select' => ['*'], 'where' => ['document->>\'id\' = ?'], 'data' => [$args['resId']]]);
+        $queryParams = $request->getQueryParams();
+        if (!empty($queryParams['limit']) && !Validator::intVal()->validate($queryParams['limit'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an int val']);
+        }
+
+        $emails = EmailModel::get(['select' => ['*'], 'where' => ['document->>\'id\' = ?'], 'data' => [$args['resId']], 'limit' => (int)$queryParams['limit']]);
 
         return $response->withJson(['emails' => $emails]);
     }

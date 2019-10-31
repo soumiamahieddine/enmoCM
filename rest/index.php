@@ -223,6 +223,7 @@ $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupControll
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 $app->get('/histories/resources/{resId}', \History\controllers\HistoryController::class . ':getByResourceId');
+$app->get('/histories/resources/workflow/{resId}', \History\controllers\HistoryController::class . ':getWorkflowByResourceId');
 
 //Header
 $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');

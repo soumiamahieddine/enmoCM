@@ -132,6 +132,11 @@ class AttachmentController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
+        $queryParams = $request->getQueryParams();
+        if (!empty($queryParams['limit']) && !Validator::intVal()->validate($queryParams['limit'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an int val']);
+        }
+
         $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
         if (!ServiceModel::hasService(['id' => 'view_documents_with_notes', 'userId' => $GLOBALS['userId'], 'location' => 'attachments', 'type' => 'use'])) {
             $excludeAttachmentTypes[] = 'document_with_notes';
@@ -141,7 +146,8 @@ class AttachmentController
             'resId'                     => $aArgs['resId'],
             'login'                     => $GLOBALS['userId'],
             'excludeAttachmentTypes'    => $excludeAttachmentTypes,
-            'orderBy'                   => ['res_id DESC']
+            'orderBy'                   => ['res_id DESC'],
+            'limit'                     => (int)$queryParams['limit']
         ]);
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
         foreach ($attachments as $key => $attachment) {

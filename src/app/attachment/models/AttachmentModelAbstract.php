@@ -111,7 +111,7 @@ abstract class AttachmentModelAbstract
     public static function getListByResIdMaster(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'login']);
-        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId', 'limit']);
         ValidatorModel::stringType($aArgs, ['login']);
         ValidatorModel::arrayType($aArgs, ['excludeAttachmentTypes']);
 
@@ -128,6 +128,7 @@ abstract class AttachmentModelAbstract
             'where'     => ['res_id_master = ?', 'res_view_attachments.status not in (?)', 'attachment_type not in (?)', '((res_view_attachments.status = ? AND typist = ?) OR res_view_attachments.status != ?)'],
             'data'      => [$aArgs['resId'], ['OBS', 'DEL'], $aArgs['excludeAttachmentTypes'], 'TMP', $aArgs['login'], 'TMP'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'limit'     => empty($aArgs['limit']) ? null : $aArgs['limit']
         ]);
 
         return $aAttachments;

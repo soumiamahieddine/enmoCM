@@ -85,7 +85,7 @@ class ActionMethodController
                 HistoryController::add([
                     'tableName' => 'res_letterbox',
                     'recordId'  => $resource,
-                    'eventType' => 'ACTION#' . $resource,
+                    'eventType' => 'ACTION#' . $aArgs['id'],
                     'moduleId'  => 'resource',
                     'eventId'   => $aArgs['id'],
                     'info'      => $info
