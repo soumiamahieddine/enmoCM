@@ -127,16 +127,16 @@ $_ENV['categories']['incoming']['departure_date'] = array (
     'modify' => true,
     'form_show' => 'date'
 );
-$_ENV['categories']['incoming']['description'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => false,
-    'label' => _OTHERS_INFORMATIONS,
-    'table' => 'res',
-    'img' => 'info-circle',
-    'modify' => true,
-    'form_show' => 'textarea'
-);
+// $_ENV['categories']['incoming']['description'] = array (
+//     'type_form' => 'string',
+//     'type_field' => 'string',
+//     'mandatory' => false,
+//     'label' => _OTHERS_INFORMATIONS,
+//     'table' => 'res',
+//     'img' => 'info-circle',
+//     'modify' => true,
+//     'form_show' => 'textarea'
+// );
 $_ENV['categories']['incoming']['subject'] = array(
     'type_form' => 'string',
     'type_field' => 'string',
@@ -279,16 +279,16 @@ $_ENV['categories']['outgoing']['departure_date'] = array (
     'modify' => true,
     'form_show' => 'date'
 );
-$_ENV['categories']['outgoing']['description'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => false,
-    'label' => _OTHERS_INFORMATIONS,
-    'table' => 'res',
-    'img' => 'info-circle',
-    'modify' => true,
-    'form_show' => 'textarea'
-);
+// $_ENV['categories']['outgoing']['description'] = array (
+//     'type_form' => 'string',
+//     'type_field' => 'string',
+//     'mandatory' => false,
+//     'label' => _OTHERS_INFORMATIONS,
+//     'table' => 'res',
+//     'img' => 'info-circle',
+//     'modify' => true,
+//     'form_show' => 'textarea'
+// );
 $_ENV['categories']['outgoing']['department_number_id'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
