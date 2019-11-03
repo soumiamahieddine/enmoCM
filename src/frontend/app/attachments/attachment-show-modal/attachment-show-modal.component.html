@@ -1,0 +1,5 @@
+<h1 mat-dialog-title>{{data.attachment.identifier}} - {{data.attachment.title}}</h1>
+<mat-dialog-content class="modal-container">
+  <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false">
+  </app-document-viewer>
+</mat-dialog-content>

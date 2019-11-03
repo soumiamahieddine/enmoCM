@@ -31,7 +31,7 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        content
+                        <app-history-workflow-resume *ngIf="!loading" [resId]="currentResourceInformations.resId"></app-history-workflow-resume>
                     </div>
                 </div>
                 <div class="banner" [style.borderColor]="currentPriorityColor">
@@ -40,8 +40,7 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        <app-notes-list #appNotesList *ngIf="!loading" [resId]="currentResourceInformations.resId">
-                        </app-notes-list>
+                        <app-note-resume *ngIf="!loading" [resId]="currentResourceInformations.resId"></app-note-resume>
                     </div>
                 </div>
                 <div class="banner" [style.borderColor]="currentPriorityColor">
@@ -50,7 +49,7 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        content
+                        <app-attachments-resume *ngIf="!loading" [resId]="currentResourceInformations.resId"></app-attachments-resume>
                     </div>
                 </div>
                 <div class="banner" [style.borderColor]="currentPriorityColor">
@@ -59,7 +58,7 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        content
+                        <app-mail-resume *ngIf="!loading" [resId]="currentResourceInformations.resId"></app-mail-resume>
                     </div>
                 </div>
             </ng-container>

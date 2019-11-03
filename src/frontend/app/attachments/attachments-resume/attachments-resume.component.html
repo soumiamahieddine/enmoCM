@@ -1,0 +1,21 @@
+<ng-container *ngFor="let attachment of attachments">
+    <div class="attachmentsList" (click)="showAttachment(attachment)">
+        <ng-container *ngIf="attachment.update_date !== null; else elseTemplate">
+            <div class="date" [title]="attachment.update_date | fullDate">
+                {{attachment.update_date | timeAgo}}
+            </div>
+        </ng-container>
+        <ng-template #elseTemplate>
+            <div class="date" [title]="attachment.creation_date | fullDate">
+                {{attachment.creation_date | timeAgo}}
+            </div>
+        </ng-template>
+        <div class="info">
+            {{attachment.title}}
+        </div>
+        <div class="attachmentType">
+            {{attachment.typeLabel}}
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+</ng-container>

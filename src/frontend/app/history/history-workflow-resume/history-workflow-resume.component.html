@@ -1,0 +1,11 @@
+<ng-container *ngFor="let history of histories">
+    <div class="historyList">
+        <div class="date" [title]="history.event_date | fullDate">
+            {{history.event_date | timeAgo}}
+        </div>
+        <div class="info">
+            {{history.info}}
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+</ng-container>

@@ -1,0 +1,18 @@
+@import "../../../css/vars.scss";
+
+.noteList {
+  font-size: 13px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 15% 70% 15%;
+  align-items: center;
+}
+
+.date {
+  padding: 5px;
+  color: $primary;
+}
+
+.info {
+  padding: 5px;
+}

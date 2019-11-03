@@ -1,0 +1,57 @@
+import { Component, OnInit, Input } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { LANG } from '../../translate.component';
+import { catchError, tap, finalize } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { NotificationService } from '../../notification.service';
+import { MatDialog } from '@angular/material';
+import { AttachmentShowModalComponent } from '../attachment-show-modal/attachment-show-modal.component';
+
+
+@Component({
+    selector: 'app-attachments-resume',
+    templateUrl: "attachments-resume.component.html",
+    styleUrls: [
+        'attachments-resume.component.scss',
+    ]
+})
+
+export class AttachmentsResumeComponent implements OnInit {
+
+    lang: any = LANG;
+
+    loading: boolean = true;
+
+    attachments: any[] = [];
+
+    @Input('resId') resId: number = null;
+
+    constructor(
+        public http: HttpClient,
+        private notify: NotificationService,
+        public dialog: MatDialog,
+    ) {
+    }
+
+    ngOnInit(): void {
+        this.loading = true;
+        this.loadAttachments(this.resId);
+    }
+
+    loadAttachments(resId: number) {
+        this.http.get(`../../rest/resources/${resId}/attachments?limit=2`).pipe(
+            tap((data: any) => {
+                this.attachments = data.attachments;
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    showAttachment(attachment: any) {
+        this.dialog.open(AttachmentShowModalComponent, { data: { attachment: attachment } });
+    }
+}

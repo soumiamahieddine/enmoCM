@@ -1,0 +1,18 @@
+@import "../../../css/vars.scss";
+
+.historyList {
+  font-size: 13px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 15% 85%;
+  align-items: center;
+}
+
+.date {
+  padding: 5px;
+  color: $primary;
+}
+
+.info {
+  padding: 5px;
+}

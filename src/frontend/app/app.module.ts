@@ -68,6 +68,11 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
 import { PrintSeparatorComponent }                        from './separator/print-separator/print-separator.component';
 
 import { IndexationComponent }                        from './indexation/indexation.component';
+import { HistoryWorkflowResumeComponent }                        from './history/history-workflow-resume/history-workflow-resume.component';
+import { NoteResumeComponent }                        from './notes/note-resume/note-resume.component';
+import { AttachmentShowModalComponent }                        from './attachments/attachment-show-modal/attachment-show-modal.component';
+import { AttachmentsResumeComponent }                        from './attachments/attachments-resume/attachments-resume.component';
+import { MailResumeComponent }                        from './mail/mail-resume/mail-resume.component';
 import { AddPrivateIndexingModelModalComponent }                        from './indexation/private-indexing-model/add-private-indexing-model-modal.component';
 import { FoldersService } from './folder/folders.service';
 
@@ -132,7 +137,12 @@ import { FoldersService } from './folder/folders.service';
         FolderUpdateComponent,
         FolderActionListComponent,
         IndexationComponent,
-        AddPrivateIndexingModelModalComponent
+        HistoryWorkflowResumeComponent,
+        NoteResumeComponent,
+        AttachmentsResumeComponent,
+        AddPrivateIndexingModelModalComponent,
+        AttachmentShowModalComponent,
+        MailResumeComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,
@@ -157,7 +167,8 @@ import { FoldersService } from './folder/folders.service';
         SendShippingActionComponent,
         ViewDocActionComponent,
         FolderUpdateComponent,
-        AddPrivateIndexingModelModalComponent
+        AddPrivateIndexingModelModalComponent,
+        AttachmentShowModalComponent
     ],
     providers: [ HeaderService, FiltersListService, FoldersService, NotificationService ],
     bootstrap: [ AppComponent ]

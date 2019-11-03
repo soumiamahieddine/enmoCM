@@ -1,0 +1,11 @@
+<ng-container *ngFor="let mail of mails">
+    <div class="mailList">
+        <div class="date" [title]="mail.creation_date | fullDate">
+            {{mail.creation_date | timeAgo}}
+        </div>
+        <div class="info">
+            {{mail.object}}
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+</ng-container>

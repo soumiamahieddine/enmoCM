@@ -1,0 +1,14 @@
+<ng-container *ngFor="let note of notes">
+    <div class="noteList">
+        <div class="date" [title]="note.creation_date | fullDate">
+            {{note.creation_date | timeAgo}}
+        </div>
+        <div class="info">
+            {{note.value}}
+        </div>
+        <div class="date">
+            {{note.firstname}} {{note.lastname}}
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+</ng-container>
