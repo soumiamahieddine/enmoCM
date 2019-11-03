@@ -20,7 +20,7 @@ import { DocumentViewerComponent } from '../viewer/document-viewer.component';
     templateUrl: "process.component.html",
     styleUrls: [
         'process.component.scss',
-        '/../indexation/indexing-form/indexing-form.component.scss'
+        '../indexation/indexing-form/indexing-form.component.scss'
     ],
     providers: [NotificationService, AppService, ActionsService],
 })
