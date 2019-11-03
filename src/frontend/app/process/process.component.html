@@ -9,7 +9,7 @@
                     [class.processTool-module-active]="module.id === currentTool" matRipple
                     (click)="currentTool = module.id">
                     <i [class]="module.icon"></i>
-                    <span>{{module.label}}</span>
+                    <span *ngIf="!appService.getViewMode()">{{module.label}}</span>
                 </div>
             </div>
         </div>
