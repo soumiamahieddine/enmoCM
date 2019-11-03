@@ -508,7 +508,7 @@ INSERT INTO custom_fields (id, label, type, values) VALUES (1, 'Nature', 'select
 SELECT setval('custom_fields_id_seq', (select max(id)+1 from custom_fields), false);
 
 DO $$ BEGIN
-  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'mlb_coll_ext')) THEN
+  IF (SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'mlb_coll_ext')) THEN
     TRUNCATE TABLE resources_custom_fields;
     INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
     SELECT res_id, 1, '"Courrier simple"' FROM mlb_coll_ext WHERE nature_id = 'simple_mail';
