@@ -126,6 +126,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         ),
         'E' => 
         array (
+            'ExternalSummary\\' => 16,
             'ExternalSignatoryBook\\' => 22,
             'ExportSeda\\' => 11,
             'Entity\\' => 7,
@@ -373,6 +374,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'FastRoute\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
+        ),
+        'ExternalSummary\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/external/summary',
         ),
         'ExternalSignatoryBook\\' => 
         array (

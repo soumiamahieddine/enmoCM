@@ -59,6 +59,7 @@ return array(
     'Gitlab\\' => array($vendorDir . '/m4tthumphrey/php-gitlab-api/lib/Gitlab'),
     'Folder\\' => array($baseDir . '/src/app/folder'),
     'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
+    'ExternalSummary\\' => array($baseDir . '/src/app/external/summary'),
     'ExternalSignatoryBook\\' => array($baseDir . '/src/app/external/externalSignatoryBook'),
     'ExportSeda\\' => array($baseDir . '/src/app/external/exportSeda'),
     'Entity\\' => array($baseDir . '/src/app/entity'),

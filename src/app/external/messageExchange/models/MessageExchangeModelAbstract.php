@@ -23,6 +23,24 @@ use Docserver\controllers\DocserverController;
 
 abstract class MessageExchangeModelAbstract
 {
+    public static function get(array $args = [])
+    {
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($args, ['limit', 'offset']);
+
+        $emails = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['message_exchange'],
+            'where'     => empty($args['where']) ? [] : $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data'],
+            'order_by'  => empty($args['orderBy']) ? [] : $args['orderBy'],
+            'offset'    => empty($args['offset']) ? 0 : $args['offset'],
+            'limit'     => empty($args['limit']) ? 0 : $args['limit']
+        ]);
+
+        return $emails;
+    }
+
     public static function getMessageByReference($aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['reference']);

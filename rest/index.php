@@ -456,4 +456,6 @@ $app->post('/saveMessageExchangeReview', \Sendmail\Controllers\MessageExchangeRe
 
 $app->get('/maarchParapheur/user/{id}/picture', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':getUserPicture');
 
+$app->get('/externalSummary/{resId}', \ExternalSummary\controllers\SummaryController::class . ':getByResId');
+
 $app->run();
