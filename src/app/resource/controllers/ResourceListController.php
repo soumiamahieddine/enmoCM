@@ -284,34 +284,52 @@ class ResourceListController
         return ['table' => $table, 'leftJoin' => $leftJoin, 'where' => $where, 'queryData' => $queryData, 'order' => $order];
     }
 
-    public function getActions(Request $request, Response $response, array $aArgs)
+    public function getActions(Request $request, Response $response, array $args)
     {
-        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
         if (!empty($errors['errors'])) {
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
         }
 
-        $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name', 'basket_id']]);
-        $group = GroupModel::getById(['id' => $aArgs['groupId'], 'select' => ['group_id']]);
+        $basket = BasketModel::getById(['id' => $args['basketId'], 'select' => ['basket_clause', 'basket_res_order', 'basket_name', 'basket_id']]);
+        $group = GroupModel::getById(['id' => $args['groupId'], 'select' => ['group_id']]);
+
+        $queryParams = $request->getQueryParams();
+
+        if (!empty($queryParams['resId'])) {
+            $usedIn = 'used_in_action_page';
+        } else {
+            $usedIn = 'used_in_basketlist';
+        }
 
         $rawActions = ActionGroupBasketModel::get([
-            'select'    => ['id_action', 'default_action_list'],
-            'where'     => ['basket_id = ?', 'group_id = ?', 'used_in_basketlist = ?'],
+            'select'    => ['id_action', 'default_action_list', 'where_clause'],
+            'where'     => ['basket_id = ?', 'group_id = ?', "{$usedIn} = ?"],
             'data'      => [$basket['basket_id'], $group['group_id'], 'Y']
         ]);
 
         $actions = [];
+        $actionsClauses = [];
         $defaultAction = 0;
         foreach ($rawActions as $rawAction) {
             if ($rawAction['default_action_list'] == 'Y') {
                 $defaultAction = $rawAction['id_action'];
             }
             $actions[] = $rawAction['id_action'];
+            $actionsClauses[$rawAction['id_action']] = $rawAction['where_clause'];
         }
 
         if (!empty($actions)) {
             $actions = ActionModel::get(['select' => ['id', 'label_action', 'component'], 'where' => ['id in (?)'], 'data' => [$actions], 'orderBy' => ["id = {$defaultAction} DESC",'label_action']]);
             foreach ($actions as $key => $action) {
+                if (!empty($queryParams['resId']) && !empty($actionsClauses[$action['id']])) {
+                    $whereClause = PreparedClauseController::getPreparedClause(['clause' => $actionsClauses[$action['id']], 'login' => $GLOBALS['userId']]);
+                    $ressource = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', $whereClause], 'data' => [$queryParams['resId']]]);
+                    if (empty($ressource)) {
+                        unset($actions[$key]);
+                        continue;
+                    }
+                }
                 $actions[$key]['label'] = $action['label_action'];
                 unset($actions[$key]['label_action']);
             }
