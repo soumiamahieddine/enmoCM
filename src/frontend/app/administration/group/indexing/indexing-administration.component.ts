@@ -321,7 +321,7 @@ export class IndexingAdministrationComponent implements OnInit {
         this.http.put('../../rest/groups/' + this.groupId + '/indexing', { canIndex: canIndex }).pipe(
             tap(() => {
                 this.indexingInfo.canIndex = canIndex;
-                this.headerService.refreshShortcuts();
+                //this.headerService.refreshShortcuts();
             }),
             tap(() => {
                 if (this.indexingInfo.canIndex) {

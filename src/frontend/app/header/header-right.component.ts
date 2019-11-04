@@ -7,8 +7,7 @@ import { MatInput } from '@angular/material/input';
 import { IndexingGroupModalComponent } from '../menu/menu-shortcut.component';
 import { Router } from '@angular/router';
 import { AppService } from '../../service/app.service';
-
-declare function $j(selector: any): any;
+import { PrivilegeService } from '../../service/privileges.service';
 
 @Component({
     selector: 'header-right',
@@ -21,6 +20,7 @@ export class HeaderRightComponent implements OnInit {
 
     dialogRef   : MatDialogRef<any>;
     config      : any       = {};
+    menus: any = [];
 
     hideSearch : boolean = true;
 
@@ -29,11 +29,14 @@ export class HeaderRightComponent implements OnInit {
     constructor(
         public http: HttpClient, 
         private router: Router,
-        public headerService: HeaderService, 
         public dialog: MatDialog,
-        public appService: AppService) {}
+        public appService: AppService,
+        public headerService: HeaderService,
+        private privilegeService: PrivilegeService) {}
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+        this.menus = this.privilegeService.getCurrentUserMenus();
+    }
 
     gotToMenu(shortcut:any) {
         if (shortcut.id == 'indexing' && shortcut.groups.length > 1) {

@@ -75,6 +75,7 @@ import { AttachmentsResumeComponent }                        from './attachments
 import { MailResumeComponent }                        from './mail/mail-resume/mail-resume.component';
 import { AddPrivateIndexingModelModalComponent }                        from './indexation/private-indexing-model/add-private-indexing-model-modal.component';
 import { FoldersService } from './folder/folders.service';
+import { PrivilegeService } from '../service/privileges.service';
 
 
 @NgModule({
@@ -170,7 +171,7 @@ import { FoldersService } from './folder/folders.service';
         AddPrivateIndexingModelModalComponent,
         AttachmentShowModalComponent
     ],
-    providers: [ HeaderService, FiltersListService, FoldersService, NotificationService ],
+    providers: [ HeaderService, FiltersListService, FoldersService, NotificationService, PrivilegeService ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule { }

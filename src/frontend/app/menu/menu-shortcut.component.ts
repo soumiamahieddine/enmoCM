@@ -5,6 +5,7 @@ import { LANG }                 from '../translate.component';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { HeaderService } from '../../service/header.service';
 import { AppService } from '../../service/app.service';
+import { PrivilegeService } from '../../service/privileges.service';
 
 declare function $j(selector: any) : any;
 
@@ -21,35 +22,35 @@ export class MenuShortcutComponent implements OnInit {
     config      : any       = {};
     speedDialFabButtons : any = [];
     speedDialFabColumnDirection = 'column';
+    shortcuts: any;
 
 
     constructor(
         public http: HttpClient, 
         private _router: Router, 
-        public headerService: HeaderService, 
         public dialog: MatDialog,
-        public appService: AppService
+        public appService: AppService,
+        public privilegeService: PrivilegeService
     ) {
         this.router = _router;
         /**/
     }
 
     ngOnInit(): void {
-        this.headerService.getShortcut();
+        this.shortcuts = this.privilegeService.getShortcuts();
     }
 
     onSpeedDialFabClicked(group: any, shortcut:any) {
         this.router.navigate(['/indexing/' + group.id]);
-        // location.href = shortcut.servicepage+'&groupId='+group.id;
     }
 
     gotToMenu(shortcut:any) {
         if (shortcut.id === 'indexing') {
-            this.router.navigate([shortcut.servicepage + '/' + shortcut.groups[0].id]);
-        } else if (shortcut.angular == 'true') {
-            this.router.navigate([shortcut.servicepage]);
+            this.router.navigate([shortcut.route + '/' + shortcut.groups[0].id]);
+        } else if (shortcut.angular === true) {
+            this.router.navigate([shortcut.route]);
         } else {
-            location.href = shortcut.servicepage;
+            location.href = shortcut.route;
         }
     }
 }

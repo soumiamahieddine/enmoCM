@@ -29,7 +29,8 @@ export class AppGuard implements CanActivate {
                             firstname : data.firstname,
                             lastname: data.lastname,
                             entities: data.entities,
-                            groups: data.groups
+                            groups: data.groups,
+                            privileges: data.privileges
                         }
                         return true;
                     })

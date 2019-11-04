@@ -9,13 +9,16 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AppService } from '../../../service/app.service';
+import { PrivilegeService } from '../../../service/privileges.service';
+import { tap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 declare function $j(selector: any) : any;
 
 @Component({
     templateUrl: "group-administration.component.html",
     styleUrls: ['group-administration.component.scss'],
-    providers   : [NotificationService, AppService]
+    providers   : [NotificationService, AppService, PrivilegeService]
 })
 export class GroupAdministrationComponent implements OnInit {
     /*HEADER*/
@@ -29,6 +32,7 @@ export class GroupAdministrationComponent implements OnInit {
         security                    : {}
     };
     creationMode                    : boolean;
+    menus: any = {};
 
     usersDisplayedColumns           = ['firstname', 'lastname'];
     basketsDisplayedColumns         = ['basket_name', 'basket_desc'];
@@ -58,7 +62,8 @@ export class GroupAdministrationComponent implements OnInit {
         private router: Router, 
         private notify: NotificationService, 
         private headerService: HeaderService,
-        public appService: AppService
+        public appService: AppService,
+        private privilegeService: PrivilegeService
     ) {
         $j("link[href='merged_css.php']").remove();
     }
@@ -84,6 +89,11 @@ export class GroupAdministrationComponent implements OnInit {
                     .subscribe((data : any) => {
                         this.group = data['group'];
                         this.headerService.setHeader(this.lang.groupModification, this.group['group_desc']);
+
+                        const toto = this.privilegeService.getMenus().map(elem => elem.unit).filter((elem, pos, arr) => arr.indexOf(elem) === pos);
+
+                        console.log(toto);
+
                         this.loading = false;
                         setTimeout(() => {
                             this.usersDataSource = new MatTableDataSource(this.group.users);
@@ -120,14 +130,42 @@ export class GroupAdministrationComponent implements OnInit {
         }
     }
 
-    updateService(service: any) {
-        this.http.put("../../rest/groups/" + this.group['id'] + "/services/" + service['id'], service)
-            .subscribe(() => {
+    toggleService(ev: any, service: any) {
+        console.log(ev);
+
+        // TO DO : WAIT BACK
+        /*if (ev.checked) {
+            this.addService(service);
+        } else {
+            this.removeService(service);
+        }*/
+        
+    }
+
+    addService(service: any) {
+        this.http.post(`../../rest/groups/${this.group.id}/services/${service.id}`, {}).pipe(
+            tap(() => {
+                this.group.privileges.push(service.id);
                 this.notify.success(this.lang.groupServicesUpdated);
-            }, (err) => {
-                service.checked = !service.checked;
-                this.notify.error(err.error.errors);
-            });
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    removeService(service: any) {
+        this.http.delete(`../../rest/groups/${this.group.id}/services/${service.id}`).pipe(
+            tap(() => {
+                this.group.privileges.splice(this.group.privileges.indexOf(service.id), 1);
+                this.notify.success(this.lang.groupServicesUpdated);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     linkUser(newUser:any) {

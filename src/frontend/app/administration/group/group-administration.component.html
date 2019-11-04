@@ -40,37 +40,37 @@
                     <mat-tab label="{{lang.privileges}}" *ngIf="!creationMode">
                         <mat-tab-group [(selectedIndex)]="selectedTabIndex_2" *ngIf="!creationMode">
                             <mat-tab label="{{lang.menus}}">
-                                <mat-expansion-panel *ngFor="let upperService of group.services.menu; let i = index">
+                                <mat-expansion-panel *ngFor="let unit of privilegeService.getUnitsMenus()">
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>
-                                            {{lang[upperService[0]['location']]}}
+                                            {{lang[unit]}}
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
                                     <mat-list>
-                                        <mat-list-item *ngFor="let service of upperService">
-                                            <mat-slide-toggle color="primary" name="{{service.name}}" [checked]="service.checked" [(ngModel)]="service.checked" (change)="updateService(service)"
-                                                matTooltip="{{service.comment}}">{{service.name}}</mat-slide-toggle>
+                                        <mat-list-item *ngFor="let menu of privilegeService.getMenusByUnit(unit) | sortBy: 'label'">
+                                            <mat-slide-toggle color="primary" name="{{menu.label}}" [checked]="group.privileges.indexOf(menu.id) > -1" (change)="toggleService($event,menu)"
+                                                matTooltip="{{menu.comment}}">{{menu.label}}</mat-slide-toggle>
                                         </mat-list-item>
                                     </mat-list>
                                 </mat-expansion-panel>
                             </mat-tab>
                             <mat-tab label="{{lang.administrationServices}}">
-                                <div class="col-md-3" *ngFor="let service of group['services'].administration" style="padding:10px;">
-                                    <mat-slide-toggle color="primary" name="{{service.name}}" [checked]="service.checked" [(ngModel)]="service.checked" (change)="updateService(service)"
-                                        matTooltip="{{service.comment}}">{{service.name}}</mat-slide-toggle>
+                                <div class="col-md-3" *ngFor="let administration of privilegeService.getAdministrations() | sortBy: 'label'" style="padding:10px;">
+                                    <mat-slide-toggle color="primary" name="{{administration.label}}" [checked]="group.privileges.indexOf(administration.id) > -1" (change)="toggleService($event,administration)"
+                                        matTooltip="{{administration.comment}}">{{administration.label}}</mat-slide-toggle>
                                 </div>
                             </mat-tab>
                             <mat-tab label="{{lang.functionnalities}}">
-                                <mat-expansion-panel *ngFor="let upperService of group.services.use; let i = index">
+                                <mat-expansion-panel *ngFor="let unit of privilegeService.getUnitsPrivileges()">
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>
-                                            {{lang[upperService[0]['location']]}}
+                                            {{lang[unit]}}
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
                                     <mat-list>
-                                        <mat-list-item *ngFor="let service of upperService">
-                                            <mat-slide-toggle color="primary" name="{{service.name}}" [checked]="service.checked" [(ngModel)]="service.checked" (change)="updateService(service)"
-                                                matTooltip="{{service.comment}}">{{service.name}}</mat-slide-toggle>
+                                        <mat-list-item *ngFor="let privilege of privilegeService.getPrivilegesByUnit(unit) | sortBy: 'label'">
+                                            <mat-slide-toggle color="primary" name="{{privilege.label}}" [checked]="group.privileges.indexOf(privilege.id) > -1" (change)="toggleService($event,privilege)"
+                                                matTooltip="{{privilege.comment}}">{{privilege.label}}</mat-slide-toggle>
                                         </mat-list-item>
                                     </mat-list>
                                 </mat-expansion-panel>
