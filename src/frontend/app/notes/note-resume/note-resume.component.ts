@@ -36,6 +36,7 @@ export class NoteResumeComponent implements OnInit {
     }
 
     loadNotes(resId: number) {
+        this.loading = true;
         this.http.get(`../../rest/resources/${resId}/notes?limit=2`).pipe(
             tap((data: any) => {
                 this.notes = data.notes;

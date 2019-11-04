@@ -36,6 +36,7 @@ export class MailResumeComponent implements OnInit {
     }
 
     loadMails(resId: number) {
+        this.loading = true;
         this.http.get(`../../rest/externalSummary/${resId}?limit=2`).pipe(
             tap((data: any) => {
                 this.mails = data.elementsSend;

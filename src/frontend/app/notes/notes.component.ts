@@ -34,6 +34,7 @@ export class NotesListComponent implements OnInit {
         if (this.resId !== null) {
             this.http.get(`../../rest/resources/${this.resId}/notes`).pipe(
                 tap((data: any) => {
+                    this.resIds[0] = this.resId;
                     this.notes = data['notes'];
                 }),
                 finalize(() => this.loading = false),

@@ -1,24 +1,31 @@
 @import "../../../css/vars.scss";
 
 .mailList {
-  font-size: 13px;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 15% 70% 15%;
-  align-items: center;
+    font-size: 13px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 15% 70% 15%;
+    align-items: center;
 }
 
 .date {
-  padding: 5px;
-  color: $primary;
+    padding: 5px;
+    color: $primary;
 }
 
 .info {
-  padding: 5px;
+    padding: 5px;
 }
+
 .noData {
-  text-align: center;
-  font-size: 24px;
-  font-weight: bold;
-  opacity: 0.3;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    opacity: 0.3;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    height: 100%;
 }

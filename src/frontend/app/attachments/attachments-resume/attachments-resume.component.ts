@@ -39,6 +39,7 @@ export class AttachmentsResumeComponent implements OnInit {
     }
 
     loadAttachments(resId: number) {
+        this.loading = true;
         this.http.get(`../../rest/resources/${resId}/attachments?limit=2`).pipe(
             tap((data: any) => {
                 this.attachments = data.attachments;

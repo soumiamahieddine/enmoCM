@@ -14,6 +14,11 @@
             </div>
         </div>
         <div class="indexing-form-container">
+            <div *ngIf="!isModalOpen()" style="display: flex;justify-content: flex-end;">
+                <button mat-icon-button (click)="createModal()" color="primary">
+                    <mat-icon class="fas fa-external-link-alt"></mat-icon>
+                </button>
+            </div>
             <ng-container *ngIf="currentTool === 'dashboard'">
                 <div
                     style="display: flex;align-items: center;justify-content: flex-end;margin-top: 10px;margin-bottom: -20px;">
@@ -31,7 +36,8 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        <app-history-workflow-resume *ngIf="!loading" [resId]="currentResourceInformations.resId"></app-history-workflow-resume>
+                        <app-history-workflow-resume *ngIf="!loading" [resId]="currentResourceInformations.resId">
+                        </app-history-workflow-resume>
                     </div>
                 </div>
                 <div class="banner" [style.borderColor]="currentPriorityColor">
@@ -49,7 +55,8 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        <app-attachments-resume *ngIf="!loading" [resId]="currentResourceInformations.resId"></app-attachments-resume>
+                        <app-attachments-resume *ngIf="!loading" [resId]="currentResourceInformations.resId">
+                        </app-attachments-resume>
                     </div>
                 </div>
                 <div class="banner" [style.borderColor]="currentPriorityColor">
@@ -62,11 +69,6 @@
                     </div>
                 </div>
             </ng-container>
-            <div *ngIf="!isModalOpen()" style="display: flex;justify-content: flex-end;">
-                <button mat-icon-button (click)="createModal()" color="primary">
-                    <mat-icon class="fas fa-external-link-alt"></mat-icon>
-                </button>
-            </div>
             <ng-container *ngIf="!isModalOpen(); else elseTemplate">
                 <app-notes-list *ngIf="currentTool === 'notes'" #appNotesList [editMode]="true"
                     [resId]="currentResourceInformations.resId">
