@@ -107,6 +107,66 @@ class ResController
         return $response->withJson(['resId' => $resId]);
     }
 
+    public function getById(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $document = ResModel::getById([
+            'select' => [
+                'model_id', 'category_id', 'type_id', 'subject', 'alt_identifier', 'typist',
+                'status', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date',
+                'departure_date', 'process_limit_date', 'priority', 'barcode', 'creation_date', 'modification_date'
+            ],
+            'resId' => $args['resId']
+        ]);
+        if (empty($document)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
+        }
+
+        $formattedData = [
+            'modelId'               => $document['model_id'],
+            'categoryId'            => $document['category_id'],
+            'doctype'               => $document['type_id'],
+            'subject'               => $document['subject'],
+            'chrono'                => $document['alt_identifier'],
+            'typist'                => $document['typist'],
+            'labelledTypist'        => UserModel::getLabelledUserById(['id' => $document['typist']]),
+            'status'                => $document['status'],
+            'destination'           => $document['destination'],
+            'initiator'             => $document['initiator'],
+            'confidentiality'       => $document['confidentiality'] == 'Y',
+            'documentDate'          => $document['doc_date'],
+            'arrivalDate'           => $document['admission_date'],
+            'departureDate'         => $document['departure_date'],
+            'processLimitDate'      => $document['process_limit_date'],
+            'priority'              => $document['priority'],
+            'barcode'               => $document['barcode'],
+            'creationDate'          => $document['creation_date'],
+            'modificationDate'      => $document['modification_date']
+        ];
+
+        if (!empty($formattedData['destination'])) {
+            $entity = EntityModel::getByEntityId(['entityId' => $formattedData['destination'], 'select' => ['entity_label']]);
+            $formattedData['labelledDestination'] = $entity['entity_label'];
+        }
+        if (!empty($formattedData['initiator'])) {
+            $entity = EntityModel::getByEntityId(['entityId' => $formattedData['initiator'], 'select' => ['entity_label']]);
+            $formattedData['labelledInitiator'] = $entity['entity_label'];
+        }
+        if (!empty($formattedData['status'])) {
+            $status = StatusModel::getById(['id' => $formattedData['status'], 'select' => ['label_status']]);
+            $formattedData['labelledStatus'] = $status['label_status'];
+        }
+        if (!empty($formattedData['priority'])) {
+            $priority = PriorityModel::getById(['id' => $formattedData['priority'], 'select' => ['label']]);
+            $formattedData['labelledPriority'] = $priority['label'];
+        }
+
+        return $response->withJson($formattedData);
+    }
+
     public function updateStatus(Request $request, Response $response)
     {
         $data = $request->getParams();
