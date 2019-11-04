@@ -165,7 +165,7 @@ class ConvertPdfController
 
         $aReturn = [];
 
-        if ($aArgs['context'] == 'scan') {
+        if (!empty($aArgs['context']) && $aArgs['context'] == 'scan') {
             $aReturn["tmpFilename"] = $tmpFilename.'.pdf';
         } else {
             $aReturn["encodedResource"] = base64_encode($resource);
@@ -279,17 +279,33 @@ class ConvertPdfController
         }
     }
 
-    public function getConvertedFileByFilename(Request $request, Response $response, array $aArgs)
+    public function getConvertedFileByFilename(Request $request, Response $response, array $args)
     {
         $tmpPath = CoreConfigModel::getTmpPath();
 
-        if (!file_exists("{$tmpPath}{$aArgs['filename']}")) {
-            return $response->withStatus(400)->withJson(['errors' => 'File does not exists']);
+        if (!file_exists("{$tmpPath}{$args['filename']}")) {
+            return $response->withStatus(400)->withJson(['errors' => 'File does not exist']);
         }
 
-        $resource = file_get_contents("{$tmpPath}{$aArgs['filename']}");
-        unlink("{$tmpPath}{$aArgs['filename']}");
-        
-        return $response->withJson(['encodedResource' => base64_encode($resource)]);
+        $resource = file_get_contents("{$tmpPath}{$args['filename']}");
+        $extension = pathinfo("{$tmpPath}{$args['filename']}", PATHINFO_EXTENSION);
+        unlink("{$tmpPath}{$args['filename']}");
+        $encodedResource = base64_encode($resource);
+
+        $encodedFiles = ['encodedResource' => $encodedResource];
+
+        $queryParams = $request->getQueryParams();
+        if (!empty($queryParams['convert'])) {
+            if (ConvertPdfController::canConvert(['extension' => $extension])) {
+                $convertion = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $encodedResource]);
+                if (!empty($convertion['errors'])) {
+                    $encodedFiles['convertedResourceErrors'] = $convertion['errors'];
+                } else {
+                    $encodedFiles['encodedConvertedResource'] = $convertion['encodedResource'];
+                }
+            }
+        }
+
+        return $response->withJson($encodedFiles);
     }
 }
