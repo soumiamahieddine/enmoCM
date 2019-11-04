@@ -13,6 +13,7 @@
 
 namespace Doctype\controllers;
 
+use Group\controllers\ServiceController;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Doctype\models\FirstLevelModel;

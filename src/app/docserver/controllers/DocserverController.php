@@ -15,6 +15,7 @@
 namespace Docserver\controllers;
 
 use Docserver\models\DocserverTypeModel;
+use Group\controllers\ServiceController;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Resource\controllers\StoreController;
