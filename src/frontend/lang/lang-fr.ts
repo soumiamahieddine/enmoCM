@@ -1276,4 +1276,6 @@ export const LANG_FR = {
     "updateControlDesc" : "Voir les nouveaux tags de Maarch Courrier et mettre à jour l'application au dernier tag si besoin",
     "mailsSent" : "Élément(s) envoyé(s)",
     "dashboard" : "Vue d'ensemble",
+    "noSendmail" : "Aucun envoi",
+    "noEvent" : "Aucun évênement",
 };

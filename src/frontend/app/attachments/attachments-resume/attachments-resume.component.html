@@ -19,3 +19,6 @@
     </div>
     <mat-divider></mat-divider>
 </ng-container>
+<div class="noData" *ngIf="attachments.length === 0">
+    {{lang.noAttachment}}
+ </div>

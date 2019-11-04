@@ -1239,4 +1239,6 @@ export const LANG_EN = {
     "updateControlDesc" : "Check for new tags of Maarch Courrier and update the application to the latest tag",
     "mailsSent" : "Resource sent",
     "dashboard" : "Dashboard",
+    "noSendmail" : "No mail sent",
+    "noEvent" : "Aucun event",
 };

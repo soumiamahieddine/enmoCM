@@ -12,3 +12,6 @@
     </div>
     <mat-divider></mat-divider>
 </ng-container>
+<div class="noData" *ngIf="notes.length === 0">
+   {{lang.noNote}}
+</div>
