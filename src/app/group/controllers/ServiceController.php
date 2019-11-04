@@ -189,4 +189,29 @@ class ServiceController
 
         return !empty($aServices);
     }
+
+    public static function getPrivilegesByUser(array $args) {
+        ValidatorModel::notEmpty($args, ['userId']);
+        ValidatorModel::intVal($args, ['userId']);
+
+        $user = UserModel::getById([
+            'select' => ['user_id'],
+            'id' => $args['userId']
+        ]);
+        if ($user['user_id'] == 'superadmin') {
+            $allPrivileges = array_merge(
+                ServiceController::PRIVILEGE_ADMIN_SUPERVISION,
+                ServiceController::PRIVILEGE_ADMIN_PRODUCTION,
+                ServiceController::PRIVILEGE_ADMIN_CLASSIFYING,
+                ServiceController::PRIVILEGE_ADMIN_ORGANIZATION,
+                ServiceController::PRIVILEGE_MENU);
+
+            return $allPrivileges;
+        }
+
+        $rawPrivilegesStoredInDB = ServiceModel::getByUser(['id' => $args['userId']]);
+        $privilegesStoredInDB = array_column($rawPrivilegesStoredInDB, 'service_id');
+
+        return $privilegesStoredInDB;
+    }
 }
