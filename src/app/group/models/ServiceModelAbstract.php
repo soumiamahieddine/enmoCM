@@ -311,34 +311,6 @@ abstract class ServiceModelAbstract
         return $aServices;
     }
 
-    public static function hasService(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id', 'userId', 'location', 'type']);
-        ValidatorModel::stringType($aArgs, ['id', 'userId', 'location', 'type']);
-
-        if ($aArgs['userId'] == 'superadmin') {
-            return true;
-        }
-        $rawServicesStoredInDB = ServiceModel::getByUserId(['userId' => $aArgs['userId']]);
-        $servicesStoredInDB = [];
-        foreach ($rawServicesStoredInDB as $value) {
-            $servicesStoredInDB[] = $value['service_id'];
-        }
-
-        $xmlfile = ServiceModel::getLoadedXml(['location' => $aArgs['location']]);
-
-        if ($xmlfile) {
-            foreach ($xmlfile->SERVICE as $value) {
-                if ((string) $value->servicetype == $aArgs['type'] && (string) $value->id == $aArgs['id'] && (string) $value->enabled === 'true'
-                    && ((string) $value->system_service == 'true' || in_array((string) $value->id, $servicesStoredInDB))) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     public static function canIndex(array $args)
     {
         ValidatorModel::notEmpty($args, ['userId']);
