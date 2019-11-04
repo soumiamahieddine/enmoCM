@@ -51,8 +51,13 @@ export class TimeLimitPipe implements PipeTransform, OnDestroy {
 		} else if(now > d) {
 			return '<span class="timeDanger" color="warn"><b>' + this.lang.outdated + ' !</b></span>';
 		} else {
+			console.log(days);
 			if (Number.isNaN(seconds)){
 				return '';
+			} else if (minutes <= 59){
+				return '<span color="warn"><b>'+ minutes + ' ' + this.lang.minutes +'</b></span>';
+			} else if (hours <= 23){
+				return '<span color="warn"><b>'+ hours + ' ' + this.lang.hours +'</b></span>';
 			} else if (days <= 3) {
 				return '<span color="warn"><b>'+ days + ' ' + this.lang.dayS +'</b></span>';
 			} else if (days <= 7) {
@@ -65,40 +70,6 @@ export class TimeLimitPipe implements PipeTransform, OnDestroy {
 				return dayNumber + '/' + monthNumber + '/' + d.getFullYear();
 			}
 		}
-		
-		
-		/*if (Number.isNaN(seconds)){
-			return '';
-		} else if (seconds <= 45) {
-			return seconds + ' secondes';
-		} else if (seconds <= 90) {
-			//return 'une minute';
-		} else if (minutes <= 45) {
-			return minutes + ' minutes';
-		} else if (minutes <= 90) {
-			//return 'une heure';
-		} else if (hours <= 22) {
-			return hourNumber+':'+minuteNumber;
-			//return hours + ' heures';
-		} else if (hours <= 36) {
-			return dayNumber+' '+ month[d.getMonth()];
-			//return 'un jour';
-		} else if (days <= 25) {
-			return d.getDate()+' '+ month[d.getMonth()];
-			//return days + ' jours';
-		} else if (days <= 45) {
-			return d.getDate()+' '+ month[d.getMonth()];
-			//return 'un mois';
-		} else if (days <= 345) {
-			return d.getDate()+' '+ month[d.getMonth()];
-			//return months + ' mois';
-		} else if (days <= 545) {
-			return dayNumber + '/' + monthNumber + '/' + d.getFullYear();
-			//return 'un an';
-		} else { // (days > 545)
-			return dayNumber + '/' + monthNumber + '/' + d.getFullYear();
-			//return years + ' ans';
-		}*/
 	}
 	ngOnDestroy(): void {
 		this.removeTimer();

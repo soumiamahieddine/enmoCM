@@ -1278,4 +1278,5 @@ export const LANG_FR = {
     "dashboard" : "Vue d'ensemble",
     "noSendmail" : "Aucun envoi",
     "noEvent" : "Aucun évênement",
+    "hours" : "heures",
 };

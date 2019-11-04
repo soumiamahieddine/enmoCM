@@ -1266,4 +1266,5 @@ export const LANG_NL = {
     "dashboard" : "Dashboard", //_TO_TRANSLATE
     "noSendmail" : "No mail sent", //_TO_TRANSLATE
     "noEvent" : "Aucun event", //_TO_TRANSLATE
+    "hours" : "hours", //_TO_TRANSLATE
 };

@@ -1241,4 +1241,5 @@ export const LANG_EN = {
     "dashboard" : "Dashboard",
     "noSendmail" : "No mail sent",
     "noEvent" : "Aucun event",
+    "hours" : "hours",
 };
