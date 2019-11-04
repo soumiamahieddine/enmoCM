@@ -51,7 +51,6 @@ export class TimeLimitPipe implements PipeTransform, OnDestroy {
 		} else if(now > d) {
 			return '<span class="timeDanger" color="warn"><b>' + this.lang.outdated + ' !</b></span>';
 		} else {
-			console.log(days);
 			if (Number.isNaN(seconds)){
 				return '';
 			} else if (minutes <= 59){

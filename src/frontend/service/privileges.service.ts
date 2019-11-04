@@ -517,7 +517,7 @@ export class PrivilegeService {
                 "id": "indexing",
                 "label": this.lang.indexing,
                 "comment": this.lang.indexing,
-                "route": "",
+                "route": "/indexing",
                 "style": "fa fa-file-medical",
                 "unit": "application",
                 "angular": true,
