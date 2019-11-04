@@ -232,6 +232,11 @@ DO $$ BEGIN
 END$$;
 
 
+/* ATTACHMENTS */
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS origin_id;
+ALTER TABLE res_attachments ADD COLUMN origin_id INTEGER;
+
+
 /* MLB COLL EXT */
 DO $$ BEGIN
     IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'category_id') = 0 THEN

@@ -274,6 +274,7 @@ CREATE TABLE res_attachments
   dest_user character varying(128) DEFAULT NULL::character varying,
   coll_id character varying(32) NOT NULL,
   res_id_master bigint,
+  origin_id INTEGER,
   attachment_type character varying(255) DEFAULT NULL::character varying,
   dest_contact_id bigint,
   dest_address_id bigint,
