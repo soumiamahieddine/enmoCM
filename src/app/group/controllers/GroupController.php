@@ -19,7 +19,7 @@ class GroupController
 {
     public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -33,7 +33,7 @@ class GroupController
 
     public function getById(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -47,7 +47,7 @@ class GroupController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -81,7 +81,7 @@ class GroupController
 
     public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -117,7 +117,7 @@ class GroupController
 
     public function delete(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -138,7 +138,7 @@ class GroupController
 
     public function getDetailledById(Request $request, Response $response, array $args)
     {
-        if (!ServiceController::hasService2(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -151,8 +151,8 @@ class GroupController
         $group['services']          = GroupModel::getAllServicesByGroupId(['groupId' => $group['group_id']]);
         $group['users']             = GroupModel::getUsersById(['id' => $args['id'], 'select' => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname', 'users.status']]);
         $group['baskets']           = GroupBasketModel::getBasketsByGroupId(['select' => ['baskets.basket_id', 'baskets.basket_name', 'baskets.basket_desc'], 'groupId' => $group['group_id']]);
-        $group['canAdminUsers']     = ServiceController::hasService2(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']]);
-        $group['canAdminBaskets']   = ServiceController::hasService2(['privilegeId' => 'admin_baskets', 'userId' => $GLOBALS['id']]);
+        $group['canAdminUsers']     = ServiceController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']]);
+        $group['canAdminBaskets']   = ServiceController::hasPrivilege(['privilegeId' => 'admin_baskets', 'userId' => $GLOBALS['id']]);
 
         $group['privileges']         = ServiceModel::getPrivilegesByGroupId(['groupId' => $args['id']]);
         return $response->withJson(['group' => $group]);
@@ -160,7 +160,7 @@ class GroupController
 
     public function updateService(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -182,7 +182,7 @@ class GroupController
 
     public function reassignUsers(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -227,7 +227,7 @@ class GroupController
 
     public function getIndexingInformationsById(Request $request, Response $response, array $args)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -272,7 +272,7 @@ class GroupController
 
     public function updateIndexingInformations(Request $request, Response $response, array $args)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_groups', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

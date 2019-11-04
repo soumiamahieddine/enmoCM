@@ -19,6 +19,7 @@ namespace CustomField\controllers;
 
 use CustomField\models\CustomFieldModel;
 use CustomField\models\ResourceCustomFieldModel;
+use Group\controllers\ServiceController;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
@@ -41,7 +42,7 @@ class CustomFieldController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_custom_fields', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_custom_fields', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -80,7 +81,7 @@ class CustomFieldController
 
     public function update(Request $request, Response $response, array $args)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_custom_fields', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_custom_fields', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -133,7 +134,7 @@ class CustomFieldController
 
     public function delete(Request $request, Response $response, array $args)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_custom_fields', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_custom_fields', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

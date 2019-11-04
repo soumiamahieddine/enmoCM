@@ -14,6 +14,7 @@
 
 namespace History\controllers;
 
+use Group\controllers\ServiceController;
 use Resource\controllers\ResController;
 use Respect\Validation\Validator;
 use SrcCore\controllers\LogsController;
@@ -29,7 +30,7 @@ class HistoryController
 {
     public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'view_history', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'view_history', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -99,7 +100,7 @@ class HistoryController
     public function getByUserId(Request $request, Response $response, array $aArgs)
     {
         $user = UserModel::getById(['id' => $aArgs['userSerialId'], 'select' => ['user_id']]);
-        if ($user['user_id'] != $GLOBALS['userId'] && !ServiceModel::hasService(['id' => 'view_history', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if ($user['user_id'] != $GLOBALS['userId'] && !ServiceController::hasPrivilege(['privilegeId' => 'view_history', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

@@ -116,10 +116,10 @@ class CoreController
             ['id' => 'home']
         ];
 
-        if (ServiceController::hasService2(['privilegeId' => 'admin', 'userId' => $GLOBALS['id']])) {
+        if (ServiceController::hasPrivilege(['privilegeId' => 'admin', 'userId' => $GLOBALS['id']])) {
             $shortcuts[] = ['id' => 'administration'];
         }
-        if (ServiceController::hasService2(['privilegeId' => 'adv_search_mlb', 'userId' => $GLOBALS['id']])) {
+        if (ServiceController::hasPrivilege(['privilegeId' => 'adv_search_mlb', 'userId' => $GLOBALS['id']])) {
             $shortcuts[] = ['id' => 'search'];
         }
 
@@ -142,7 +142,7 @@ class CoreController
 
     public function getAdministration(Request $request, Response $response)
     {
-        if (!ServiceController::hasService2(['privilegeId' => 'admin', 'userId' => $GLOBALS['id']])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

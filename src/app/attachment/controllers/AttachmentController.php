@@ -21,6 +21,7 @@ use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
+use Group\controllers\ServiceController;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
@@ -138,7 +139,7 @@ class AttachmentController
         }
 
         $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
-        if (!ServiceModel::hasService(['id' => 'view_documents_with_notes', 'userId' => $GLOBALS['userId'], 'location' => 'attachments', 'type' => 'use'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
             $excludeAttachmentTypes[] = 'document_with_notes';
         }
 

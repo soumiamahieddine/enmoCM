@@ -161,7 +161,7 @@ class ServiceController
         return $administration;
     }
 
-    public static function hasService2(array $args)
+    public static function hasPrivilege(array $args)
     {
         ValidatorModel::notEmpty($args, ['privilegeId', 'userId']);
         ValidatorModel::stringType($args, ['privilegeId']);

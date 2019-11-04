@@ -16,6 +16,7 @@ namespace Entity\controllers;
 
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
+use Group\controllers\ServiceController;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
@@ -89,11 +90,11 @@ class ListTemplateController
     {
         $data = $request->getParams();
 
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin']) && !strstr($data['object_id'], 'VISA_CIRCUIT_') && !strstr($data['object_id'], 'AVIS_CIRCUIT_')) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']]) && !strstr($data['object_id'], 'VISA_CIRCUIT_') && !strstr($data['object_id'], 'AVIS_CIRCUIT_')) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        if (!ServiceModel::hasService(['id' => 'admin_listmodels', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin']) && (strstr($data['object_id'], 'VISA_CIRCUIT_') || strstr($data['object_id'], 'AVIS_CIRCUIT_'))) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId' => $GLOBALS['id']]) && (strstr($data['object_id'], 'VISA_CIRCUIT_') || strstr($data['object_id'], 'AVIS_CIRCUIT_'))) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -162,11 +163,11 @@ class ListTemplateController
         }
 
         $listTemplates = ListTemplateModel::getById(['id' => $aArgs['id'], 'select' => ['object_id', 'object_type']]);
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin']) && !strstr($listTemplates[0]['object_id'], 'VISA_CIRCUIT_') && !strstr($listTemplates[0]['object_id'], 'AVIS_CIRCUIT_')) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']]) && !strstr($listTemplates[0]['object_id'], 'VISA_CIRCUIT_') && !strstr($listTemplates[0]['object_id'], 'AVIS_CIRCUIT_')) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        if (!ServiceModel::hasService(['id' => 'admin_listmodels', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin']) && (strstr($listTemplates[0]['object_id'], 'VISA_CIRCUIT_') || strstr($listTemplates[0]['object_id'], 'AVIS_CIRCUIT_'))) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId' => $GLOBALS['id']]) && (strstr($listTemplates[0]['object_id'], 'VISA_CIRCUIT_') || strstr($listTemplates[0]['object_id'], 'AVIS_CIRCUIT_'))) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
         if (empty($listTemplates)) {
@@ -222,11 +223,11 @@ class ListTemplateController
     {
         $listTemplates = ListTemplateModel::getById(['id' => $aArgs['id'], 'select' => ['object_id', 'object_type']]);
         
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin']) && !strstr($listTemplates[0]['object_id'], 'VISA_CIRCUIT_') && !strstr($listTemplates[0]['object_id'], 'AVIS_CIRCUIT_')) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']]) && !strstr($listTemplates[0]['object_id'], 'VISA_CIRCUIT_') && !strstr($listTemplates[0]['object_id'], 'AVIS_CIRCUIT_')) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        if (!ServiceModel::hasService(['id' => 'admin_listmodels', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin']) && (strstr($listTemplates[0]['object_id'], 'VISA_CIRCUIT_') || strstr($listTemplates[0]['object_id'], 'AVIS_CIRCUIT_'))) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId' => $GLOBALS['id']]) && (strstr($listTemplates[0]['object_id'], 'VISA_CIRCUIT_') || strstr($listTemplates[0]['object_id'], 'AVIS_CIRCUIT_'))) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -337,7 +338,7 @@ class ListTemplateController
 
     public function updateByUserWithEntityDest(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
         
@@ -403,7 +404,7 @@ class ListTemplateController
 
     public function updateTypeRoles(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -470,10 +471,10 @@ class ListTemplateController
             $triggerContext = true;
             $canUpdateDiffusionRecipient = true;
         } elseif ($triggerContext) {
-            if (ServiceModel::hasService(['id' => $serviceRecipient, 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use'])) {
+            if (ServiceController::hasPrivilege(['privilegeId' => $serviceRecipient, 'userId' => $GLOBALS['id']])) {
                 $canUpdateDiffusionRecipient = true;
             }
-            if (!$canUpdateDiffusionRecipient && ServiceModel::hasService(['id' => $serviceRoles, 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use'])) {
+            if (!$canUpdateDiffusionRecipient && ServiceController::hasPrivilege(['privilegeId' => $serviceRoles, 'userId' => $GLOBALS['id']])) {
                 $canUpdateDiffusionRoles = true;
             }
         }

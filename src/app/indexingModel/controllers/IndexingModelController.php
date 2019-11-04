@@ -18,6 +18,7 @@
 namespace IndexingModel\controllers;
 
 use Entity\models\EntityModel;
+use Group\controllers\ServiceController;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
@@ -42,7 +43,7 @@ class IndexingModelController
 
         if (!$showDisabled) {
             $where[] = 'enabled = TRUE';
-        } elseif (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        } elseif (!ServiceController::hasPrivilege(['privilegeId' => 'admin_indexing_models', 'userId' => $GLOBALS['id']])) {
             $where[] = 'enabled = TRUE';
         }
 
@@ -157,7 +158,7 @@ class IndexingModelController
             $body['fields'] = $arrayTmp;
         }
 
-        if (ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (ServiceController::hasPrivilege(['privilegeId' => 'admin_indexing_models', 'userId' => $GLOBALS['id']])) {
             $body['private'] = empty($body['private']) ? 'false' : 'true';
             $defaultModel = IndexingModelModel::get(['select' => [1], 'where' => ['"default" = ?'], 'data' => ['true']]);
             $body['default'] = empty($defaultModel) ? 'true' : 'false';
@@ -199,7 +200,7 @@ class IndexingModelController
 
     public function update(Request $request, Response $response, array $args)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_indexing_models', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -342,7 +343,7 @@ class IndexingModelController
             return $response->withStatus(400)->withJson(['errors' => 'Model not found']);
         } elseif ($model['private'] && $model['owner'] != $GLOBALS['id']) {
             return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
-        } elseif (!$model['private'] && !ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        } elseif (!$model['private'] && !ServiceController::hasPrivilege(['privilegeId' => 'admin_indexing_models', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Model out of perimeter']);
         } elseif ($model['default']) {
             return $response->withStatus(400)->withJson(['errors' => 'Default model can not be deleted']);
@@ -396,7 +397,7 @@ class IndexingModelController
 
     public function disable(Request $request, Response $response, array $args)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_indexing_models', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -425,7 +426,7 @@ class IndexingModelController
 
     public function enable(Request $request, Response $response, array $args)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_indexing_models', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_indexing_models', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

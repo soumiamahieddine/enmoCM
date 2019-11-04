@@ -16,6 +16,7 @@ namespace Contact\controllers;
 
 use Contact\models\ContactFillingModel;
 use Contact\models\ContactModel;
+use Group\controllers\ServiceController;
 use Group\models\ServiceModel;
 use SrcCore\models\CoreConfigModel;
 use Respect\Validation\Validator;
@@ -28,10 +29,10 @@ class ContactController
 {
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']) &&
-            !ServiceModel::hasService(['id' => 'my_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
-            !ServiceModel::hasService(['id' => 'my_contacts_menu', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu']) &&
-            !ServiceModel::hasService(['id' => 'create_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]) &&
+            !ServiceController::hasPrivilege(['privilegeId' => 'my_contacts', 'userId' => $GLOBALS['id']]) &&
+            !ServiceController::hasPrivilege(['privilegeId' => 'my_contacts_menu', 'userId' => $GLOBALS['id']]) &&
+            !ServiceController::hasPrivilege(['privilegeId' => 'create_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -93,11 +94,11 @@ class ContactController
 
     public function createAddress(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']) &&
-            !ServiceModel::hasService(['id' => 'my_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
-            !ServiceModel::hasService(['id' => 'update_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
-            !ServiceModel::hasService(['id' => 'my_contacts_menu', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu']) &&
-            !ServiceModel::hasService(['id' => 'create_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]) &&
+            !ServiceController::hasPrivilege(['privilegeId' => 'my_contacts', 'userId' => $GLOBALS['id']]) &&
+            !ServiceController::hasPrivilege(['privilegeId' => 'update_contacts', 'userId' => $GLOBALS['id']]) &&
+            !ServiceController::hasPrivilege(['privilegeId' => 'my_contacts_menu', 'userId' => $GLOBALS['id']]) &&
+            !ServiceController::hasPrivilege(['privilegeId' => 'create_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -141,10 +142,10 @@ class ContactController
 
     public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']) &&
-            !ServiceModel::hasService(['id' => 'update_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
-            !ServiceModel::hasService(['id' => 'my_contacts_menu', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu']) &&
-            !ServiceModel::hasService(['id' => 'create_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]) &&
+            !ServiceController::hasPrivilege(['privilegeId' => 'update_contacts', 'userId' => $GLOBALS['id']]) &&
+            !ServiceController::hasPrivilege(['privilegeId' => 'my_contacts_menu', 'userId' => $GLOBALS['id']]) &&
+            !ServiceController::hasPrivilege(['privilegeId' => 'create_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -163,10 +164,10 @@ class ContactController
 
     public function updateAddress(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']) &&
-            !ServiceModel::hasService(['id' => 'update_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
-            !ServiceModel::hasService(['id' => 'my_contacts_menu', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu']) &&
-            !ServiceModel::hasService(['id' => 'create_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]) &&
+            !ServiceController::hasPrivilege(['privilegeId' => 'update_contacts', 'userId' => $GLOBALS['id']]) &&
+            !ServiceController::hasPrivilege(['privilegeId' => 'my_contacts_menu', 'userId' => $GLOBALS['id']]) &&
+            !ServiceController::hasPrivilege(['privilegeId' => 'create_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -208,7 +209,7 @@ class ContactController
 
     public function updateFilling(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

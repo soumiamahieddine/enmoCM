@@ -21,6 +21,7 @@ use Basket\models\BasketModel;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Entity\models\ListInstanceModel;
+use Group\controllers\ServiceController;
 use Group\models\GroupModel;
 use Group\models\ServiceModel;
 use Link\models\LinkModel;
@@ -101,7 +102,7 @@ class SignatureBookController
 
         $datas = [];
         $datas['actions']               = $actions;
-        $datas['attachments']           = SignatureBookController::getAttachmentsForSignatureBook(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
+        $datas['attachments']           = SignatureBookController::getAttachmentsForSignatureBook(['resId' => $resId, 'userId' => $GLOBALS['id']]);
         $datas['documents']             = $documents;
         $datas['currentAction']         = $currentAction;
         $datas['resList']               = $resources;
@@ -111,7 +112,7 @@ class SignatureBookController
         $datas['consigne']              = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']           = ((int)$listInstances[0]['count'] > 0);
         $datas['listinstance']          = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);
-        $datas['canSign']               = ServiceModel::hasService(['id' => 'sign_document', 'userId' => $GLOBALS['userId'], 'location' => 'visa', 'type' => 'use']);
+        $datas['canSign']               = ServiceController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $GLOBALS['id']]);
         $datas['isCurrentWorkflowUser'] = $datas['listinstance']['item_id'] == $GLOBALS['userId'];
 
         return $response->withJson($datas);
@@ -155,7 +156,7 @@ class SignatureBookController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        return $response->withJson(SignatureBookController::getAttachmentsForSignatureBook(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']]));
+        return $response->withJson(SignatureBookController::getAttachmentsForSignatureBook(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['id']]));
     }
 
     private static function getIncomingMailAndAttachmentsForSignatureBook(array $aArgs)
@@ -252,8 +253,8 @@ class SignatureBookController
             'orderBy'   => [$orderBy]
         ]);
 
-        $canModify = ServiceModel::hasService(['id' => 'modify_attachments', 'userId' => $aArgs['userId'], 'location' => 'attachments', 'type' => 'use']);
-        $canDelete = ServiceModel::hasService(['id' => 'delete_attachments', 'userId' => $aArgs['userId'], 'location' => 'attachments', 'type' => 'use']);
+        $canModify = ServiceController::hasPrivilege(['privilegeId' => 'modify_attachments', 'userId' => $aArgs['userId']]);
+        $canDelete = ServiceController::hasPrivilege(['privilegeId' => 'delete_attachments', 'userId' => $aArgs['userId']]);
 
         foreach ($attachments as $key => $value) {
             if ($value['attachment_type'] == 'converted_pdf' || ($value['attachment_type'] == 'signed_response' && !empty($value['origin']))) {

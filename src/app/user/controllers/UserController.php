@@ -20,6 +20,7 @@ use Basket\models\RedirectBasketModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Entity\models\ListInstanceModel;
+use Group\controllers\ServiceController;
 use Group\models\ServiceModel;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
@@ -52,7 +53,7 @@ class UserController
 
     public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -132,7 +133,7 @@ class UserController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -677,7 +678,7 @@ class UserController
 
     public function getStatusByUserId(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
         
@@ -1322,7 +1323,7 @@ class UserController
             'canManageTags' => false
         ];
 
-        if (ServiceModel::hasService(['id' => 'manage_tags_application', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use'])) {
+        if (ServiceController::hasPrivilege(['privilegeId' => 'manage_tags_application', 'userId' => $GLOBALS['id']])) {
             $privileges['canManageTags'] = true;
         }
 
@@ -1396,7 +1397,7 @@ class UserController
                 $error['error'] = 'User not found';
             } else {
                 if (empty($aArgs['himself']) || $GLOBALS['userId'] != $user['user_id']) {
-                    if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+                    if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
                         $error['status'] = 403;
                         $error['error'] = 'Service forbidden';
                     }

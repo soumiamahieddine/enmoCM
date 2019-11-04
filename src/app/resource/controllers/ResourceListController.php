@@ -25,6 +25,7 @@ use Contact\models\ContactModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Folder\models\FolderModel;
+use Group\controllers\ServiceController;
 use Group\models\GroupModel;
 use Group\models\ServiceModel;
 use Note\models\NoteModel;
@@ -87,7 +88,7 @@ class ResourceListController
         $displayFolderTags = false;
         if (!empty($resIds)) {
             $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
-            if (!ServiceModel::hasService(['id' => 'view_documents_with_notes', 'userId' => $GLOBALS['userId'], 'location' => 'attachments', 'type' => 'use'])) {
+            if (!ServiceController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
                 $excludeAttachmentTypes[] = 'document_with_notes';
             }
 

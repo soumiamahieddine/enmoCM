@@ -21,6 +21,7 @@ use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Email\models\EmailModel;
 use Entity\models\EntityModel;
+use Group\controllers\ServiceController;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use History\models\HistoryModel;
@@ -44,7 +45,7 @@ class EmailController
 {
     public function send(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'sendmail', 'userId' => $GLOBALS['userId'], 'location' => 'sendmail', 'type' => 'use'])) {
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'sendmail', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
