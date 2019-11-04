@@ -115,15 +115,16 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     loadTmpFile(filenameOnTmp: string) {
-        this.http.get('../../rest/convertedFile/' + filenameOnTmp).pipe(
+        this.http.get(`../../rest/convertedFile/${filenameOnTmp}`, { params: { convert: 'true'}}).pipe(
             tap((data: any) => {
                 this.file = {
-                    name: this.tmpFilename,
-                    format: 'pdf',
-                    type: 'application/pdf',
-                    content: this.getBase64Document(this.base64ToArrayBuffer(data.encodedResource)),
-                    src: this.base64ToArrayBuffer(data.encodedResource)
+                    name: filenameOnTmp,
+                    format: data.extension,
+                    type: data.type,
+                    content: data.encodedResource,
+                    src: this.base64ToArrayBuffer(data.encodedConvertedResource)
                 };
+                this.editMode = true;
                 this.noConvertedFound = false;
                 this.loading = false;
             }),
@@ -383,19 +384,19 @@ export class DocumentViewerComponent implements OnInit {
         this.http.post('../../rest/jnlp', jnlp).pipe(
             tap((data: any) => {
                 window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
-                this.checkLockFile(data.jnlpUniqueId);
+                this.checkLockFile(data.jnlpUniqueId, template);
             })
         ).subscribe();
     }
 
-    checkLockFile(id: string) {
+    checkLockFile(id: string, template: any) {
         this.intervalLockFile = setInterval(() => {
             this.http.get('../../rest/jnlp/lock/' + id)
                 .subscribe((data: any) => {
                     if (!data.lockFileFound) {
                         this.editInProgress = false;
                         clearInterval(this.intervalLockFile);
-                        // this.loadTmpFile(data.filename);
+                        this.loadTmpFile(`${data.fileTrunk}.${template.extension}`);
                     }
                 });
         }, 1000);

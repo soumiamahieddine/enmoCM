@@ -289,10 +289,16 @@ class ConvertPdfController
 
         $resource = file_get_contents("{$tmpPath}{$args['filename']}");
         $extension = pathinfo("{$tmpPath}{$args['filename']}", PATHINFO_EXTENSION);
+        $mimeType = mime_content_type("{$tmpPath}{$args['filename']}");
+        
         unlink("{$tmpPath}{$args['filename']}");
         $encodedResource = base64_encode($resource);
 
         $encodedFiles = ['encodedResource' => $encodedResource];
+
+        $encodedFiles['type'] = $mimeType;
+        $encodedFiles['extension'] = $extension;
+        
 
         $queryParams = $request->getQueryParams();
         if (!empty($queryParams['convert'])) {

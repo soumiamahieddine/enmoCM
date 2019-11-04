@@ -325,8 +325,8 @@ class JnlpController
     public function isLockFileExisting(Request $request, Response $response, array $aArgs)
     {
         $tmpPath = CoreConfigModel::getTmpPath();
-        $fileTrunk = "{$GLOBALS['id']}_maarchCM_{$aArgs['jnlpUniqueId']}";
-        $lockFileName = "{$fileTrunk}.lck";
+        $fileTrunk = "tmp_file_{$GLOBALS['id']}_{$aArgs['jnlpUniqueId']}";
+        $lockFileName = "{$GLOBALS['id']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck";
 
         $fileFound = false;
         if (file_exists($tmpPath . $lockFileName)) {
