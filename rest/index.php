@@ -64,9 +64,6 @@ $app->post('/actions', \Action\controllers\ActionController::class . ':create');
 $app->put('/actions/{id}', \Action\controllers\ActionController::class . ':update');
 $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':delete');
 
-//Administration
-$app->get('/administration', \SrcCore\controllers\CoreController::class . ':getAdministration');
-
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');
 $app->get('/attachments/{id}/content', \Attachment\controllers\AttachmentController::class . ':getFileContent');
@@ -229,7 +226,6 @@ $app->get('/histories/resources/workflow/{resId}', \History\controllers\HistoryC
 
 //Header
 $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');
-$app->get('/shortcuts', \SrcCore\controllers\CoreController::class . ':getShortcuts');
 
 //Home
 $app->get('/home', \Home\controllers\HomeController::class . ':get');

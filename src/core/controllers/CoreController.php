@@ -88,56 +88,6 @@ class CoreController
         ]);
     }
 
-    public function getShortcuts(Request $request, Response $response)
-    {
-        $shortcuts = [
-            ['id' => 'home']
-        ];
-
-        if (ServiceController::hasPrivilege(['privilegeId' => 'admin', 'userId' => $GLOBALS['id']])) {
-            $shortcuts[] = ['id' => 'administration'];
-        }
-        if (ServiceController::hasPrivilege(['privilegeId' => 'adv_search_mlb', 'userId' => $GLOBALS['id']])) {
-            $shortcuts[] = ['id' => 'search'];
-        }
-
-        $indexingGroups = [];
-        $userGroups = UserModel::getGroupsByUser(['id' => $GLOBALS['id']]);
-        foreach ($userGroups as $group) {
-            if ($group['can_index']) {
-                $indexingGroups[] = ['id' => $group['id'], 'label' => $group['group_desc']];
-            }
-        }
-        if (!empty($indexingGroups)) {
-            $shortcuts[] = [
-                'id'        => 'indexing',
-                'groups'    => $indexingGroups
-            ];
-        }
-
-        return $response->withJson(['shortcuts' => $shortcuts]);
-    }
-
-    public function getAdministration(Request $request, Response $response)
-    {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        if ($GLOBALS['userId'] == 'superadmin') {
-            $administration                    = [];
-            $administrationApplication         = ServiceModel::getApplicationServicesByXML(['type' => 'admin']);
-            $administrationModule              = ServiceModel::getModulesServicesByXML(['type' => 'admin']);
-            $administration['administrations'] = array_merge_recursive($administrationApplication, $administrationModule);
-//            $administration = ServiceController::PRIVILEGE_MENU;
-        } else {
-            $administration = ServiceModel::getAdministrationServicesByUserId(['userId' => $GLOBALS['userId']]);
-//            $administration = ServiceController::getAdministrationPrivilegesByUserId(['userId' => $GLOBALS['id']]);
-        }
-
-        return $response->withJson($administration);
-    }
-
     public static function setGlobals(array $args)
     {
         ValidatorModel::notEmpty($args, ['login']);
