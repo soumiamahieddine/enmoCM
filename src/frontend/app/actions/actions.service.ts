@@ -511,6 +511,8 @@ export class ActionsService {
     }
 
     processDocument() {
+        this.stopRefreshResourceLock();
+        this.unlockResource();
         this.router.navigate([`/process/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/resId/${this.currentResIds}`]);
     }
 }

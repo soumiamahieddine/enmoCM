@@ -18,7 +18,6 @@ import { DocumentViewerComponent } from '../viewer/document-viewer.component';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { AddPrivateIndexingModelModalComponent } from './private-indexing-model/add-private-indexing-model-modal.component';
 import { ActionsService } from '../actions/actions.service';
-import { AlertComponent } from '../../plugins/modal/alert.component';
 
 @Component({
     templateUrl: "indexation.component.html",

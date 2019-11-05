@@ -30,6 +30,8 @@ export class ProcessComponent implements OnInit {
 
     loading: boolean = false;
 
+    currentResourceLock: any = null;
+
     actionsList: any[] = [];
     currentUserId: number = null;
     currentBasketId: number = null;
@@ -50,53 +52,53 @@ export class ProcessComponent implements OnInit {
     processTool: any[] = [
         {
             id: 'dashboard',
-            icon : 'fas fa-columns',
-            label: this.lang.dashboard,   
+            icon: 'fas fa-columns',
+            label: this.lang.dashboard,
         },
         {
             id: 'history',
-            icon : 'fas fa-history',
+            icon: 'fas fa-history',
             label: this.lang.history,
         },
         {
             id: 'notes',
-            icon : 'fas fa-pen-square',
-            label: this.lang.notes,   
+            icon: 'fas fa-pen-square',
+            label: this.lang.notes,
         },
         {
             id: 'attachments',
-            icon : 'fas fa-paperclip',
-            label: this.lang.attachments,   
+            icon: 'fas fa-paperclip',
+            label: this.lang.attachments,
         },
         {
             id: 'link',
-            icon : 'fas fa-link',
-            label: this.lang.links,   
+            icon: 'fas fa-link',
+            label: this.lang.links,
         },
         {
             id: 'diffusionList',
-            icon : 'fas fa-share-alt',
-            label: this.lang.diffusionList,   
+            icon: 'fas fa-share-alt',
+            label: this.lang.diffusionList,
         },
         {
             id: 'mails',
-            icon : 'fas fa-envelope',
-            label: this.lang.mailsSent,   
+            icon: 'fas fa-envelope',
+            label: this.lang.mailsSent,
         },
         {
             id: 'visa',
-            icon : 'fas fa-list-ol',
-            label: this.lang.visaWorkflow,   
+            icon: 'fas fa-list-ol',
+            label: this.lang.visaWorkflow,
         },
         {
             id: 'avis',
-            icon : 'fas fa-comment-alt',
-            label: this.lang.avis,   
+            icon: 'fas fa-comment-alt',
+            label: this.lang.avis,
         },
         {
             id: 'info',
-            icon : 'fas fa-info-circle',
-            label: this.lang.informations,   
+            icon: 'fas fa-info-circle',
+            label: this.lang.informations,
         }
     ];
 
@@ -108,7 +110,7 @@ export class ProcessComponent implements OnInit {
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     @ViewChild('appDocumentViewer', { static: true }) appDocumentViewer: DocumentViewerComponent;
-
+    
     constructor(
         private route: ActivatedRoute,
         private _activatedRoute: ActivatedRoute,
@@ -134,12 +136,14 @@ export class ProcessComponent implements OnInit {
             this.currentUserId = params['userSerialId'];
             this.currentGroupId = params['groupSerialId'];
             this.currentBasketId = params['basketId'];
-            
+
             this.currentResourceInformations = {
                 resId: params['resId'],
                 category: 'outgoing',
                 mailtracking: false
             }
+
+            this.lockResource();
 
             this.loading = false;
 
@@ -187,8 +191,30 @@ export class ProcessComponent implements OnInit {
             });
     }
 
+    lockResource() {
+        this.currentResourceLock = setInterval(() => {
+            this.http.put(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/lock`, { resources: [this.currentResourceInformations.resId] }).pipe(
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }, 50000);
+    }
+
+    unlockResource() {
+        clearInterval(this.currentResourceLock);
+
+        this.http.put(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/unlock`, { resources: [this.currentResourceInformations.resId] }).pipe(
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
     onSubmit() {
-        this.actionService.launchAction(this.selectedAction,  this.currentUserId, this.currentGroupId, this.currentBasketId, this.currentResourceInformations.resId, this.currentResourceInformations);
+        this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, this.currentResourceInformations.resId, this.currentResourceInformations);
     }
 
     showActionInCurrentCategory(action: any) {
