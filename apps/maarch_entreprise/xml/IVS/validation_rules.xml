@@ -277,28 +277,6 @@
       <parameter name="dir" type="identifier" />
     </validationRule>
 
-    <validationRule name="ix_change_category" extends="standardForm" mode="error">
-      <parameter name="category_id" type="identifier" />
-      <parameter name="dir" type="identifier" />
-    </validationRule>
-
-    <validationRule name="ix_change_category_actions" extends="standardForm" mode="error">
-      <parameter name="category_id" type="identifier" />
-      <parameter name="dir" type="identifier" />
-      <parameter name="resId" type="identifier" />
-      <parameter name="collId" type="collection_list" />
-    </validationRule>
-
-    <validationRule name="ix_change_doctype" extends="standardForm" mode="error">
-      <parameter name="type_id" type="integer" />
-      <parameter name="admission_date" type="datefr" />
-      <parameter name="id_action" type="identifier" />
-      <parameter name="priority_id" type="string" />
-      <parameter name="dir" type="identifier" />
-      <parameter name="res_id" type="identifier" />
-      <parameter name="coll_id" type="collection_list" />
-    </validationRule>
-
     <validationRule name="search_adv_result" extends="standardForm" mode="error">
       <parameter name="baskets_clause" type="identifier" />
       <parameter name="sender" type="string" />

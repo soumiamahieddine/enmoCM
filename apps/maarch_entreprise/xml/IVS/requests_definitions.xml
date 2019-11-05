@@ -218,23 +218,6 @@
       <parameter name="page" value="autocomplete_contacts_prepare_multi"/>
       <parameter name="display" value="true"/>
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ix_change_category" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="change_category"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ix_change_category_actions" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="change_category_actions"/>
-      <parameter name="display" value="true"/>
-      <parameter name="resId"/>
-      <parameter name="collId"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ix_change_doctype" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="change_doctype"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="type_id_integer" >
       <parameter name="dir" value="indexing_searching"/>
       <parameter name="page" value="change_doctype_details"/>
