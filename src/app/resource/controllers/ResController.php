@@ -125,7 +125,7 @@ class ResController
         }
 
         $formattedData = [
-            'resId'                 => $args['resId'],
+            'resId'                 => (int)$args['resId'],
             'modelId'               => $document['model_id'],
             'categoryId'            => $document['category_id'],
             'doctype'               => $document['type_id'],
