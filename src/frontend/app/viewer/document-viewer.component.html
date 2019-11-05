@@ -19,6 +19,7 @@
     <ng-template #elseHaveFile>
         <div class="example-loading-shade" *ngIf="loading">
             <mat-progress-spinner [mode]="loadingInfo.mode" [value]="loadingInfo.percent"></mat-progress-spinner>
+            <div class="percent">{{loadingInfo.percent}} %</div>
             <div style="padding-top: 10px;">{{loadingInfo.message}}</div>
         </div>
         <div *ngIf="file.content === null && !loading" class="view-doc-container" appUploadFileDragDrop

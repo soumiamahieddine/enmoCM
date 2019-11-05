@@ -28,7 +28,7 @@ export class DocumentViewerComponent implements OnInit {
 
     lang: any = LANG;
 
-    loading: boolean = false;
+    loading: boolean = true;
     noConvertedFound: boolean = false;
 
     noFile: boolean = false;
@@ -51,10 +51,11 @@ export class DocumentViewerComponent implements OnInit {
 
     listTemplates: any[] = [];
 
+    @Input('resId') resId: number = null;
     @Input('editMode') editMode: boolean = false;
 
     loadingInfo: any = {
-        mode: 'determinate',
+        mode: 'indeterminate',
         percent: 0,
         message: '',
     };
@@ -86,6 +87,12 @@ export class DocumentViewerComponent implements OnInit {
 
                 this.maxFileSize = data.informations.maximumSize;
                 this.maxFileSizeLabel = data.informations.maximumSizeLabel;
+
+                if (this.resId !== null) {
+                    this.loadRessource(this.resId);
+                } else {
+                    this.loading = false;
+                }
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
@@ -390,21 +397,25 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     loadRessource(resId: any, target: string = 'mainDocument') {
-        this.http.get(`../../rest/resources/${resId}/content`, { params: { mode: 'base64'}}).pipe(
-            tap((data: any) => {
-                this.file.content = data.encodedDocument;
-                this.file.src = this.base64ToArrayBuffer(this.file.content);
-
-            }),
-            catchError((err: any) => {
+        this.loading = true;
+        this.requestWithLoader(`../../rest/resources/${resId}/content?mode=base64`).subscribe(
+            (data: any) => {
+                if (data.encodedDocument) {
+                    this.file.content = data.encodedDocument;
+                    this.file.src = this.base64ToArrayBuffer(this.file.content);
+                    this.loading = false;
+                }
+            },
+            (err: any) => {
                 if (err.error.errors === 'Document has no file') {
                     this.noFile = true;
                 } else {
                     this.notify.handleErrors(err);
                 }
+                this.loading = false;
                 return of(false);
-            })
-        ).subscribe();
+            }
+        );
     }
 
     editTemplate(template: any) {

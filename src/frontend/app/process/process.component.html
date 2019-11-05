@@ -169,7 +169,7 @@
         </div>
         <div class="document-container" [class.fullContainer]="appService.getViewMode()">
             <div class="content">
-                <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false">
+                <app-document-viewer #appDocumentViewer *ngIf="!loading" style="height:100%;width:100%;" [editMode]="false" [resId]="currentResourceInformations.resId">
                 </app-document-viewer>
             </div>
         </div>
