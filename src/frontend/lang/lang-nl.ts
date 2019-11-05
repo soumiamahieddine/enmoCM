@@ -1265,7 +1265,7 @@ export const LANG_NL = {
     "mailsSent" : "Resource(s) sent", //_TO_TRANSLATE
     "dashboard" : "Dashboard", //_TO_TRANSLATE
     "noSendmail" : "No mail sent", //_TO_TRANSLATE
-    "noEvent" : "Aucun event", //_TO_TRANSLATE
+    "noEvent" : "No event", //_TO_TRANSLATE
     "hours" : "hours", //_TO_TRANSLATE
     "editInProgress" : "Edit in progress", //_TO_TRANSLATE
     "chooseFile" : "Choose a file", //_TO_TRANSLATE

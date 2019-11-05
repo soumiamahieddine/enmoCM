@@ -1240,7 +1240,7 @@ export const LANG_EN = {
     "mailsSent" : "Resource(s) sent",
     "dashboard" : "Dashboard",
     "noSendmail" : "No mail sent",
-    "noEvent" : "Aucun event",
+    "noEvent" : "No event",
     "hours" : "hours",
     "editInProgress" : "Edit in progress",
     "chooseFile" : "Choose a file",

@@ -1277,7 +1277,7 @@ export const LANG_FR = {
     "mailsSent" : "Élément(s) envoyé(s)",
     "dashboard" : "Vue d'ensemble",
     "noSendmail" : "Aucun envoi",
-    "noEvent" : "Aucun évênement",
+    "noEvent" : "Aucun événement",
     "hours" : "heures",
     "editInProgress" : "Edition en cours",
     "chooseFile" : "Choisissez un fichier",
