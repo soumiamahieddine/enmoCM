@@ -7,6 +7,7 @@ import { Router }               from '@angular/router';
 import { IndexingGroupModalComponent }  from './menu-shortcut.component';
 import { HeaderService }        from '../../service/header.service';
 import { AppService } from '../../service/app.service';
+import { PrivilegeService } from '../../service/privileges.service';
 
 declare function $j(selector: any) : any;
 
@@ -23,6 +24,7 @@ export class MainHeaderComponent implements OnInit {
     config      : any       = {};
     titleHeader     : string;
     router          : any;
+    menus: any = [];
 
     snav            : MatSidenav;
     snav2           : MatSidenav;
@@ -34,7 +36,8 @@ export class MainHeaderComponent implements OnInit {
         private _router: Router, 
         public headerService: HeaderService, 
         public dialog: MatDialog,
-        public appService: AppService
+        public appService: AppService,
+        private privilegeService: PrivilegeService
     ) {
         this.router = _router;
         window['MainHeaderComponent'] = {
@@ -44,7 +47,9 @@ export class MainHeaderComponent implements OnInit {
         };
     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        this.menus = this.privilegeService.getCurrentUserMenus();
+    }
 
     setTitle(title: string) {
         this.zone.run(() => this.titleHeader = title);
@@ -64,13 +69,13 @@ export class MainHeaderComponent implements OnInit {
     }
 
     gotToMenu(shortcut:any) {
-        if (shortcut.id == 'index_mlb' && this.headerService.user.indexingGroups.length > 1) {
-            this.config = { data: { indexingGroups:this.headerService.user.indexingGroups, link:shortcut.servicepage } };
+        if (shortcut.id == 'indexing' && shortcut.groups.length > 1) {
+            this.config = { data: { indexingGroups: shortcut.groups, link:shortcut.route } };
             this.dialogRef = this.dialog.open(IndexingGroupModalComponent, this.config);
-        } else if (shortcut.angular == 'true') {
-            this.router.navigate([shortcut.servicepage]);
+        } else if (shortcut.angular === true) {
+            this.router.navigate([shortcut.route]);
         } else {
-            location.href = shortcut.servicepage;
+            location.href = shortcut.route;
         }
     }
 }
