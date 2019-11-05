@@ -148,7 +148,6 @@ class GroupController
         }
 
         $group['security']          = GroupModel::getSecurityByGroupId(['groupId' => $group['group_id']]);
-        $group['services']          = GroupModel::getAllServicesByGroupId(['groupId' => $group['group_id']]);
         $group['users']             = GroupModel::getUsersById(['id' => $args['id'], 'select' => ['users.id', 'users.user_id', 'users.firstname', 'users.lastname', 'users.status']]);
         $group['baskets']           = GroupBasketModel::getBasketsByGroupId(['select' => ['baskets.basket_id', 'baskets.basket_name', 'baskets.basket_desc'], 'groupId' => $group['group_id']]);
         $group['canAdminUsers']     = ServiceController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']]);
@@ -156,28 +155,6 @@ class GroupController
 
         $group['privileges']         = ServiceModel::getPrivilegesByGroupId(['groupId' => $args['id']]);
         return $response->withJson(['group' => $group]);
-    }
-
-    public function updateService(Request $request, Response $response, array $aArgs)
-    {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $data = $request->getParams();
-
-        $group = GroupModel::getById(['id' => $aArgs['id']]);
-        if (empty($group)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
-        }
-
-        if ($data['checked'] === true && !empty(GroupModel::getServiceById(['groupId' => $group['group_id'], 'serviceId' => $aArgs['serviceId']]))) {
-            return $response->withStatus(400)->withJson(['errors' => 'Service is already linked to this group']);
-        }
-
-        GroupModel::updateServiceById(['groupId' => $group['group_id'], 'serviceId' => $aArgs['serviceId'], 'checked' => $data['checked']]);
-
-        return $response->withJson(['success' => 'success']);
     }
 
     public function reassignUsers(Request $request, Response $response, array $aArgs)

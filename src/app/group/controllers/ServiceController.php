@@ -12,27 +12,18 @@ use User\models\UserModel;
 
 class ServiceController
 {
-    const PRIVILEGE_MENU = [
+    const PRIVILEGES = [
         "admin",
         "adv_search_mlb",
         "entities_print_sep_mlb",
         "reports",
-        "save_numeric_package"
-    ];
-
-    const PRIVILEGE_ADMIN_ORGANIZATION = [
+        "save_numeric_package",
         "admin_users",
         "admin_groups",
         "manage_entities",
-        "admin_listmodels"
-    ];
-
-    const PRIVILEGE_ADMIN_CLASSIFYING = [
+        "admin_listmodels",
         "admin_architecture",
-        "admin_tag"
-    ];
-
-    const PRIVILEGE_ADMIN_PRODUCTION = [
+        "admin_tag",
         "admin_baskets",
         "admin_status",
         "admin_actions",
@@ -41,10 +32,7 @@ class ServiceController
         "admin_templates",
         "admin_indexing_models",
         "admin_custom_fields",
-        "admin_notif"
-    ];
-
-    const PRIVILEGE_ADMIN_SUPERVISION = [
+        "admin_notif",
         "update_status_mail",
         "admin_docservers",
         "admin_parameters",
@@ -143,14 +131,7 @@ class ServiceController
             'id' => $args['userId']
         ]);
         if ($user['user_id'] == 'superadmin') {
-            $allPrivileges = array_merge(
-                ServiceController::PRIVILEGE_ADMIN_SUPERVISION,
-                ServiceController::PRIVILEGE_ADMIN_PRODUCTION,
-                ServiceController::PRIVILEGE_ADMIN_CLASSIFYING,
-                ServiceController::PRIVILEGE_ADMIN_ORGANIZATION,
-                ServiceController::PRIVILEGE_MENU);
-
-            return $allPrivileges;
+            return ServiceController::PRIVILEGES;
         }
 
         $rawPrivilegesStoredInDB = ServiceModel::getByUser(['id' => $args['userId']]);
