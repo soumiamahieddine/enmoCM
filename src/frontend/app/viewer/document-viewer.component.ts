@@ -36,6 +36,7 @@ export class DocumentViewerComponent implements OnInit {
     file: any = {
         name: '',
         type: '',
+        contentMode: 'base64',
         content: null,
         src: null
     };
@@ -107,6 +108,7 @@ export class DocumentViewerComponent implements OnInit {
                         name: this.tmpFilename,
                         format: 'pdf',
                         type: 'application/pdf',
+                        contentMode: 'base64',
                         content: this.getBase64Document(this.base64ToArrayBuffer(data.encodedResource)),
                         src: this.base64ToArrayBuffer(data.encodedResource)
                     };
@@ -132,6 +134,7 @@ export class DocumentViewerComponent implements OnInit {
                         name: filenameOnTmp,
                         format: data.extension,
                         type: data.type,
+                        contentMode: 'base64',
                         content: data.encodedResource,
                         src: this.base64ToArrayBuffer(data.encodedConvertedResource)
                     };
@@ -180,6 +183,7 @@ export class DocumentViewerComponent implements OnInit {
         this.file = {
             name: '',
             type: '',
+            contentMode: 'base64',
             content: null,
             src: null
         };
@@ -383,7 +387,12 @@ export class DocumentViewerComponent implements OnInit {
 
     downloadOriginalFile() {
         let downloadLink = document.createElement('a');
-        downloadLink.href = `data:${this.file.type};base64,${this.file.content}`;
+        if (this.file.contentMode === 'base64') {
+            downloadLink.href = `data:${this.file.type};base64,${this.file.content}`;
+        } else {
+            downloadLink.href = this.file.content;
+        }
+        
         downloadLink.setAttribute('download', this.file.name);
         document.body.appendChild(downloadLink);
         downloadLink.click();
@@ -401,14 +410,19 @@ export class DocumentViewerComponent implements OnInit {
         this.requestWithLoader(`../../rest/resources/${resId}/content?mode=base64`).subscribe(
             (data: any) => {
                 if (data.encodedDocument) {
-                    this.file.content = data.encodedDocument;
-                    this.file.src = this.base64ToArrayBuffer(this.file.content);
+                    this.file.contentMode = 'route';
+                    this.file.content = `../../rest/resources/${resId}/originalContent`;
+                    this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
                     this.loading = false;
                 }
             },
             (err: any) => {
                 if (err.error.errors === 'Document has no file') {
                     this.noFile = true;
+                } else if (err.error.errors === 'Converted Document not found') {
+                    this.file.contentMode = 'route';
+                    this.file.content = `../../rest/resources/${resId}/originalContent`;
+                    this.noConvertedFound = true;
                 } else {
                     this.notify.handleErrors(err);
                 }
