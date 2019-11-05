@@ -134,9 +134,7 @@ class IndexingController
             if (!empty($categoriesList)) {
                 $action['categories'] = array_column($categoriesList, 'category_id');
             } else {
-                foreach ($categories as $category) {
-                    $action['categories'][] = $category['id'];
-                }
+                $action['categories'] = array_column($categories, 'id');
             }
             unset($action['label_action'], $action['id_status']);
             $actions[] = $action;

@@ -322,12 +322,21 @@ class ResourceListController
         if (!empty($actions)) {
             $actions = ActionModel::get(['select' => ['id', 'label_action', 'component'], 'where' => ['id in (?)'], 'data' => [$actions], 'orderBy' => ["id = {$defaultAction} DESC",'label_action']]);
             foreach ($actions as $key => $action) {
-                if (!empty($queryParams['resId']) && !empty($actionsClauses[$action['id']])) {
-                    $whereClause = PreparedClauseController::getPreparedClause(['clause' => $actionsClauses[$action['id']], 'login' => $GLOBALS['userId']]);
-                    $ressource = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', $whereClause], 'data' => [$queryParams['resId']]]);
-                    if (empty($ressource)) {
-                        unset($actions[$key]);
-                        continue;
+                if (!empty($queryParams['resId'])) {
+                    if (!empty($actionsClauses[$action['id']])) {
+                        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $actionsClauses[$action['id']], 'login' => $GLOBALS['userId']]);
+                        $ressource = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', $whereClause], 'data' => [$queryParams['resId']]]);
+                        if (empty($ressource)) {
+                            unset($actions[$key]);
+                            continue;
+                        }
+                    }
+                    $categoriesList = ActionModel::getCategoriesById(['id' => $action['id']]);
+                    if (!empty($categoriesList)) {
+                        $action['categories'] = array_column($categoriesList, 'category_id');
+                    } else {
+                        $categories = ResModel::getCategories();
+                        $action['categories'] = array_column($categories, 'id');
                     }
                 }
                 $actions[$key]['label'] = $action['label_action'];
