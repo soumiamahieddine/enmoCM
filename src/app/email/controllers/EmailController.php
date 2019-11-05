@@ -482,7 +482,7 @@ class EmailController
                     if (!$check) {
                         return ['errors' => 'Data document[attachments] errors', 'code' => 400];
                     }
-                    $checkAttachment = AttachmentModel::getById(['id' => $attachment['id'], 'isVersion' => $attachment['isVersion'], 'select' => ['res_id_master']]);
+                    $checkAttachment = AttachmentModel::getById(['id' => $attachment['id'], 'select' => ['res_id_master']]);
                     if (empty($checkAttachment) || $checkAttachment['res_id_master'] != $args['data']['document']['id']) {
                         return ['errors' => 'Attachment out of perimeter', 'code' => 403];
                     }

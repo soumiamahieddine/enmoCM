@@ -25,17 +25,10 @@ abstract class AttachmentModelAbstract
         ValidatorModel::notEmpty($aArgs, ['select']);
         ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
         ValidatorModel::intType($aArgs, ['limit']);
-        ValidatorModel::boolType($aArgs, ['isVersion']);
-
-        if (!empty($aArgs['isVersion'])) {
-            $table = 'res_version_attachments';
-        } else {
-            $table = 'res_attachments';
-        }
 
         $attachments = DatabaseModel::select([
             'select'    => $aArgs['select'],
-            'table'     => [$table],
+            'table'     => ['res_attachments'],
             'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
             'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
@@ -68,27 +61,20 @@ abstract class AttachmentModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::boolType($aArgs, ['isVersion']);
         ValidatorModel::arrayType($aArgs, ['select']);
 
-        if (!empty($aArgs['isVersion'])) {
-            $table = 'res_version_attachments';
-        } else {
-            $table = 'res_attachments';
-        }
-
-        $aAttachment = DatabaseModel::select([
+        $attachment = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => [$table],
+            'table'     => ['res_attachments'],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['id']],
         ]);
 
-        if (empty($aAttachment[0])) {
+        if (empty($attachment[0])) {
             return [];
         }
 
-        return $aAttachment[0];
+        return $attachment[0];
     }
 
     public static function getAttachmentToSend(array $aArgs)
@@ -97,11 +83,11 @@ abstract class AttachmentModelAbstract
         ValidatorModel::arrayType($aArgs, ['select', 'orderBy', 'ids']);
 
         $aAttachments = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['max(relation) as relation', 'res_id_master', 'title', 'res_id', 'res_id_version', 'identifier', 'dest_address_id'] : $aArgs['select'],
-            'table'     => ['res_view_attachments'],
+            'select'    => empty($aArgs['select']) ? ['max(relation) as relation', 'res_id_master', 'title', 'res_id', 'identifier', 'dest_address_id'] : $aArgs['select'],
+            'table'     => ['res_attachments'],
             'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', 'in_send_attach = TRUE'],
             'data'      => [$aArgs['ids'], ['OBS', 'DEL', 'TMP', 'FRZ'], 'print_folder'],
-            'groupBy'   => ['res_id_master', 'title', 'res_id', 'res_id_version', 'identifier', 'dest_address_id'],
+            'groupBy'   => ['res_id_master', 'title', 'res_id', 'identifier', 'dest_address_id'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy']
         ]);
 
@@ -117,15 +103,15 @@ abstract class AttachmentModelAbstract
 
         $aAttachments = DatabaseModel::select([
             'select'    => [
-                'res_id', 'res_id_version', 'res_view_attachments.identifier', 'title', 'format', 'creation_date',
+                'res_id', 'res_attachments.identifier', 'title', 'format', 'creation_date',
                 'doc_date as update_date', 'validation_date as return_date', 'effective_date as real_return_date',
                 'u.firstname as firstname_updated', 'u.lastname as lastname_updated', 'relation', 'docserver_id', 'path',
                 'filename', 'fingerprint', 'filesize', 'label_status as status', 'attachment_type', 'dest_contact_id',
                 'dest_address_id', 'ut.firstname as firstname_typist', 'ut.lastname as lastname_typist', 'in_signature_book', 'in_send_attach'
             ],
-            'table'     => ['res_view_attachments', 'users ut', 'status', 'users u'],
-            'left_join' => ['res_view_attachments.typist = ut.user_id', 'res_view_attachments.status = status.id', 'res_view_attachments.updated_by = u.user_id'],
-            'where'     => ['res_id_master = ?', 'res_view_attachments.status not in (?)', 'attachment_type not in (?)', '((res_view_attachments.status = ? AND typist = ?) OR res_view_attachments.status != ?)'],
+            'table'     => ['res_attachments', 'users ut', 'status', 'users u'],
+            'left_join' => ['res_attachments.typist = ut.user_id', 'res_attachments.status = status.id', 'res_attachments.updated_by = u.user_id'],
+            'where'     => ['res_id_master = ?', 'res_attachments.status not in (?)', 'attachment_type not in (?)', '((res_attachments.status = ? AND typist = ?) OR res_attachments.status != ?)'],
             'data'      => [$aArgs['resId'], ['OBS', 'DEL'], $aArgs['excludeAttachmentTypes'], 'TMP', $aArgs['login'], 'TMP'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
             'limit'     => empty($aArgs['limit']) ? null : $aArgs['limit']
@@ -151,37 +137,13 @@ abstract class AttachmentModelAbstract
         return $nextSequenceId;
     }
 
-    public static function createVersion(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status']);
-        ValidatorModel::stringType($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'status']);
-        ValidatorModel::intVal($aArgs, ['filesize']);
-
-        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_id_version_attachments_seq']);
-        $aArgs['res_id'] = $nextSequenceId;
-
-        DatabaseModel::insert([
-            'table'         => 'res_version_attachments',
-            'columnsValues' => $aArgs
-        ]);
-
-        return $nextSequenceId;
-    }
-
     public static function update(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
         ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
-        ValidatorModel::boolType($aArgs, ['isVersion']);
-
-        if (!empty($aArgs['isVersion'])) {
-            $table = 'res_version_attachments';
-        } else {
-            $table = 'res_attachments';
-        }
 
         DatabaseModel::update([
-            'table' => $table,
+            'table' => 'res_attachments',
             'set'   => $aArgs['set'],
             'where' => $aArgs['where'],
             'data'  => $aArgs['data']
@@ -216,12 +178,11 @@ abstract class AttachmentModelAbstract
 
     public static function unsignAttachment(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['table', 'resId']);
-        ValidatorModel::stringType($aArgs, ['table']);
+        ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
 
         DatabaseModel::update([
-            'table'     => $aArgs['table'],
+            'table'     => 'res_attachments',
             'set'       => ['status' => 'A_TRA', 'signatory_user_serial_id' => null],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]
@@ -231,7 +192,7 @@ abstract class AttachmentModelAbstract
             'table'     => 'res_attachments',
             'set'       => ['status' => 'DEL'],
             'where'     => ['origin = ?', 'status != ?'],
-            'data'      => ["{$aArgs['resId']},{$aArgs['table']}", 'DEL']
+            'data'      => ["{$aArgs['resId']},res_attachments", 'DEL']
         ]);
 
         return true;
@@ -239,12 +200,12 @@ abstract class AttachmentModelAbstract
 
     public static function freezeAttachment(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['table', 'resId', 'externalId']);
+        ValidatorModel::notEmpty($aArgs, ['resId', 'externalId']);
         ValidatorModel::intType($aArgs, ['resId']);
 
         $aAttachment = DatabaseModel::select([
             'select'    => ['external_id'],
-            'table'     => [$aArgs['table']],
+            'table'     => ['res_attachments'],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']],
         ]);
@@ -253,7 +214,7 @@ abstract class AttachmentModelAbstract
         $externalId['signatureBookId'] = empty($aArgs['externalId']) ? null : $aArgs['externalId'];
 
         DatabaseModel::update([
-            'table'     => $aArgs['table'],
+            'table'     => 'res_attachments',
             'set'       => ['status' => 'FRZ', 'external_id' => json_encode($externalId)],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]
@@ -266,13 +227,8 @@ abstract class AttachmentModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::boolType($aArgs, ['inSignatureBook', 'isVersion']);
+        ValidatorModel::boolType($aArgs, ['inSignatureBook']);
 
-        if ($aArgs['isVersion'] == true) {
-            $table = 'res_version_attachments';
-        } else {
-            $table = 'res_attachments';
-        }
         if ($aArgs['inSignatureBook']) {
             $aArgs['inSignatureBook'] =  'true';
         } else {
@@ -280,7 +236,7 @@ abstract class AttachmentModelAbstract
         }
 
         DatabaseModel::update([
-            'table'     => $table,
+            'table'     => 'res_attachments',
             'set'       => [
                 'in_signature_book'   => $aArgs['inSignatureBook']
             ],
@@ -295,13 +251,8 @@ abstract class AttachmentModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::boolType($aArgs, ['inSendAttachment', 'isVersion']);
+        ValidatorModel::boolType($aArgs, ['inSendAttachment']);
 
-        if ($aArgs['isVersion'] == true) {
-            $table = 'res_version_attachments';
-        } else {
-            $table = 'res_attachments';
-        }
         if ($aArgs['inSendAttachment']) {
             $aArgs['inSendAttachment'] =  'true';
         } else {
@@ -309,7 +260,7 @@ abstract class AttachmentModelAbstract
         }
 
         DatabaseModel::update([
-            'table'     => $table,
+            'table'     => 'res_attachments',
             'set'       => [
                 'in_send_attach'   => $aArgs['inSendAttachment']
             ],
@@ -322,26 +273,19 @@ abstract class AttachmentModelAbstract
 
     public static function hasAttachmentsSignedForUserById(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'user_serial_id', 'isVersion']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'user_serial_id']);
         ValidatorModel::intVal($aArgs, ['id', 'user_serial_id']);
-        ValidatorModel::stringType($aArgs, ['isVersion']);
-
-        if ($aArgs['isVersion'] == 'true') {
-            $table = 'res_version_attachments';
-        } else {
-            $table = 'res_attachments';
-        }
 
         $attachment = DatabaseModel::select([
             'select'    => ['res_id_master'],
-            'table'     => [$table],
+            'table'     => ['res_attachments'],
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['id']],
         ]);
 
         $attachments = DatabaseModel::select([
             'select'    => ['res_id_master'],
-            'table'     => ['res_view_attachments'],
+            'table'     => ['res_attachments'],
             'where'     => ['res_id_master = ?', 'signatory_user_serial_id = ?'],
             'data'      => [$attachment[0]['res_id_master'], $aArgs['user_serial_id']],
         ]);

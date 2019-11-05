@@ -97,8 +97,7 @@ class FullTextScript
                 AttachmentModel::update([
                     'set'       => ['fulltext_result' => 'SUCCESS'],
                     'where'     => ['res_id = ?'],
-                    'data'      => [$args['resId']],
-                    'isVersion' => $args['collId'] == 'attachments_version_coll'
+                    'data'      => [$args['resId']]
                 ]);
             }
         } else {
@@ -108,8 +107,7 @@ class FullTextScript
                 AttachmentModel::update([
                     'set'       => ['fulltext_result' => 'ERROR'],
                     'where'     => ['res_id = ?'],
-                    'data'      => [$args['resId']],
-                    'isVersion' => $args['collId'] == 'attachments_version_coll'
+                    'data'      => [$args['resId']]
                 ]);
             }
             LogsController::add([

@@ -70,14 +70,14 @@ class StoreController
 
     public static function storeAttachment(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['encodedFile', 'data', 'table', 'fileFormat', 'status']);
-        ValidatorModel::stringType($aArgs, ['collId', 'table', 'fileFormat', 'status']);
+        ValidatorModel::notEmpty($aArgs, ['encodedFile', 'data', 'fileFormat', 'status']);
+        ValidatorModel::stringType($aArgs, ['collId', 'fileFormat', 'status']);
 
         try {
             $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $aArgs['encodedFile']));
 
             $storeResult = DocserverController::storeResourceOnDocServer([
-                'collId'            => empty($aArgs['version']) ? 'attachments_coll' : 'attachments_version_coll',
+                'collId'            => 'attachments_coll',
                 'docserverTypeId'   => 'DOC',
                 'encodedResource'   => base64_encode($fileContent),
                 'format'            => $aArgs['fileFormat']
@@ -97,11 +97,7 @@ class StoreController
                 'fingerPrint'   => $storeResult['fingerPrint']
             ]);
 
-            if (empty($aArgs['version'])) {
-                $id = AttachmentModel::create($data);
-            } else {
-                $id = AttachmentModel::createVersion($data);
-            }
+            $id = AttachmentModel::create($data);
 
             return $id;
         } catch (\Exception $e) {

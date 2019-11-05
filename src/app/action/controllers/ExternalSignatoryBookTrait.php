@@ -110,7 +110,6 @@ trait ExternalSignatoryBookTrait
                     foreach ($attachmentToFreeze['attachments_coll'] as $resId => $externalId) {
                         AttachmentModel::freezeAttachment([
                             'resId' => $resId,
-                            'table' => 'res_attachments',
                             'externalId' => $externalId
                         ]);
                     }

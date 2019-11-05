@@ -223,7 +223,7 @@ trait ShippingTrait
 
             $externalId = json_decode($attachment['external_id'], true);
             $externalId['mailevaSendingId'] = $sendingId;
-            AttachmentModel::update(['isVersion' => $isVersion, 'set' => ['external_id' => json_encode($externalId)], 'where' => ['res_id = ?'], 'data' => [$attachmentId]]);
+            AttachmentModel::update(['set' => ['external_id' => json_encode($externalId)], 'where' => ['res_id = ?'], 'data' => [$attachmentId]]);
 
             $fee = ShippingTemplateController::calculShippingFee([
                 'fee'       => $shippingTemplate['fee'],

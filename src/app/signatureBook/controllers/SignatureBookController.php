@@ -120,17 +120,12 @@ class SignatureBookController
 
     public function unsignFile(Request $request, Response $response, array $aArgs)
     {
-        $data = $request->getParams();
-        if (!Validator::stringType()->notEmpty()->validate($data['table'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
         //TODO Check les droits de modif
-        AttachmentModel::unsignAttachment(['table' => $data['table'], 'resId' => $aArgs['resId']]);
+        AttachmentModel::unsignAttachment(['resId' => $aArgs['resId']]);
 
-        $isVersion = ($data['table'] == 'res_attachments' ? 'false' : 'true');
         $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-        if (!AttachmentModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'user_serial_id' => $user['id']])) {
-            $attachment = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => ($data['table'] == 'res_attachments'), 'select' => ['res_id_master']]);
+        if (!AttachmentModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'user_serial_id' => $user['id']])) {
+            $attachment = AttachmentModel::getById(['id' => $aArgs['resId'], 'select' => ['res_id_master']]);
             ListInstanceModel::update([
                 'set'   => ['signatory' => 'false'],
                 'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],

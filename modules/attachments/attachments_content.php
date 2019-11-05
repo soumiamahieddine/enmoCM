@@ -1044,26 +1044,22 @@ if (isset($_POST['add']) && $_POST['add']) {
             }
             $attachmentToProcess = \Attachment\models\AttachmentModel::getById([
                 'select'    => $select,
-                'id'        => $id,
-                'isVersion' => true
+                'id'        => $id
             ]);
             \Attachment\models\AttachmentModel::update([
                 'set'       => ['status' => 'DEL'],
                 'where'     => ['res_id = ?'],
-                'data'      => [$id],
-                'isVersion' => true
+                'data'      => [$id]
             ]);
         } else {
             $attachmentToProcess = \Attachment\models\AttachmentModel::getById([
                 'select'    => $select,
-                'id'        => $_REQUEST['res_id'],
-                'isVersion' => false
+                'id'        => $_REQUEST['res_id']
             ]);
             \Attachment\models\AttachmentModel::update([
                 'set'       => ['status' => 'DEL'],
                 'where'     => ['res_id = ?'],
-                'data'      => [$_REQUEST['res_id']],
-                'isVersion' => false
+                'data'      => [$_REQUEST['res_id']]
             ]);
         }
 

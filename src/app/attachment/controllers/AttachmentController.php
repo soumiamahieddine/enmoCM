@@ -22,7 +22,6 @@ use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Group\controllers\ServiceController;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
 use Resource\controllers\StoreController;
@@ -90,7 +89,6 @@ class AttachmentController
             $body['data'][] = ['column' => 'identifier', 'value' => $chrono];
         }
 
-        $body['table'] = empty($body['version']) ? 'res_attachments' : 'res_version_attachments';
         $body['status'] = 'A_TRA';
         $body['collId'] = 'letterbox_coll';
         $body['data'][] = ['column' => 'coll_id', 'value' => 'letterbox_coll'];
@@ -116,7 +114,7 @@ class AttachmentController
         exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId {$collId} --userId {$user['id']} > /dev/null &");
 
         HistoryController::add([
-            'tableName' => $body['table'],
+            'tableName' => 'res_attachments',
             'recordId'  => $resId,
             'eventType' => 'ADD',
             'info'      => _DOC_ADDED,
@@ -152,9 +150,6 @@ class AttachmentController
         ]);
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
         foreach ($attachments as $key => $attachment) {
-            if (!empty($attachment['res_id_version'])) {
-                $attachments[$key]['res_id'] = $attachment['res_id_version'];
-            }
             $attachments[$key]['contact'] = '';
             if (!empty($attachment['dest_address_id'])) {
                 $contact = ContactModel::getOnView([
@@ -186,11 +181,7 @@ class AttachmentController
 
     public function setInSignatureBook(Request $request, Response $response, array $aArgs)
     {
-        $body = $request->getParsedBody();
-
-        $body['isVersion'] = filter_var($body['isVersion'], FILTER_VALIDATE_BOOLEAN);
-
-        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'isVersion' => $body['isVersion'], 'select' => ['in_signature_book', 'res_id_master']]);
+        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'select' => ['in_signature_book', 'res_id_master']]);
         if (empty($attachment)) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
         }
@@ -199,18 +190,14 @@ class AttachmentController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        AttachmentModel::setInSignatureBook(['id' => $aArgs['id'], 'isVersion' => $body['isVersion'], 'inSignatureBook' => !$attachment['in_signature_book']]);
+        AttachmentModel::setInSignatureBook(['id' => $aArgs['id'], 'inSignatureBook' => !$attachment['in_signature_book']]);
 
         return $response->withJson(['success' => 'success']);
     }
 
     public function setInSendAttachment(Request $request, Response $response, array $aArgs)
     {
-        $body = $request->getParsedBody();
-
-        $body['isVersion'] = filter_var($body['isVersion'], FILTER_VALIDATE_BOOLEAN);
-
-        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'isVersion' => $body['isVersion'], 'select' => ['in_send_attach', 'res_id_master']]);
+        $attachment = AttachmentModel::getById(['id' => $aArgs['id'], 'select' => ['in_send_attach', 'res_id_master']]);
         if (empty($attachment)) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
         }
@@ -219,7 +206,7 @@ class AttachmentController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        AttachmentModel::setInSendAttachment(['id' => $aArgs['id'], 'isVersion' => $body['isVersion'], 'inSendAttachment' => !$attachment['in_send_attach']]);
+        AttachmentModel::setInSendAttachment(['id' => $aArgs['id'], 'inSendAttachment' => !$attachment['in_send_attach']]);
 
         return $response->withJson(['success' => 'success']);
     }
@@ -521,7 +508,7 @@ class AttachmentController
         ValidatorModel::boolType($aArgs, ['original']);
         ValidatorModel::boolType($aArgs, ['isVersion']);
 
-        $document = AttachmentModel::getById(['select' => ['docserver_id', 'path', 'filename', 'title'], 'id' => $aArgs['id'], 'isVersion' => $aArgs['isVersion']]);
+        $document = AttachmentModel::getById(['select' => ['docserver_id', 'path', 'filename', 'title'], 'id' => $aArgs['id']]);
 
         if (empty($aArgs['original'])) {
             $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['id'], 'collId' => 'attachments_coll', 'isVersion' => $aArgs['isVersion']]);
@@ -585,14 +572,6 @@ class AttachmentController
 
         if (!empty($attachments[0])) {
             foreach ($attachments as $attachment) {
-                if ($attachment['res_id_version'] <> 0) {
-                    $resId = $attachment['res_id_version'];
-                    $table = 'res_version_attachments';
-                } else {
-                    $resId = $attachment['res_id'];
-                    $table = 'res_attachments';
-                }
-
                 $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'DOC', 'collId' => 'letterbox_coll', 'select' => ['path_template']]);
                 $pathToAttachmentToCopy = $docserver['path_template'] . str_replace('#', '/', $attachment['path']) . $attachment['filename'];
 
@@ -689,12 +668,11 @@ class AttachmentController
                 }
                 
                 AttachmentModel::update([
-                    'table'     => $table,
                     'set'       => [
                         'status'  => 'DEL',
                     ],
                     'where'     => ['res_id = ?'],
-                    'data'      => [$resId]
+                    'data'      => [$attachment['res_id']]
                 ]);
             }
         }
