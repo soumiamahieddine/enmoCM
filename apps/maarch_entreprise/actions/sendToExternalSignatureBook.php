@@ -162,28 +162,18 @@ function check_form($form_id, $values)
                 return false;
             } else {
                 foreach ($aResources as $resId) {
-                    $attachments = \Attachment\models\AttachmentModel::getOnView([
+                    $attachments = \Attachment\models\AttachmentModel::get([
                         'select'    => [
-                            'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
+                            'res_id', 'title', 'identifier', 'attachment_type',
                             'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
-                            'validation_date', 'relation', 'attachment_id_master'
+                            'validation_date', 'relation'
                         ],
                         'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
                         'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
                     ]);
 
                     foreach ($attachments as $value) {
-                        if (!empty($value['res_id'])) {
-                            $resIdAttachment  = $value['res_id'];
-                            $collId = 'attachments_coll';
-                            $is_version = false;
-                        } else {
-                            $resIdAttachment  = $value['res_id_version'];
-                            $collId = 'attachments_version_coll';
-                            $is_version = true;
-                        }
-                    
-                        $adrInfo       = \Convert\controllers\ConvertPdfController::getConvertedPdfById(['resId' => $resIdAttachment, 'collId' => $collId, 'isVersion' => $is_version]);
+                        $adrInfo       = \Convert\controllers\ConvertPdfController::getConvertedPdfById(['resId' => $value['res_id'], 'collId' => 'attachments_coll']);
                         $docserverInfo = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
                         $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
                         if (!is_file($filePath)) {
@@ -337,7 +327,7 @@ function hasAttachmentError()
 
     $noAttachment = [];
     foreach ($resIds as $resId) {
-        $attachments = \Attachment\models\AttachmentModel::getOnView([
+        $attachments = \Attachment\models\AttachmentModel::get([
             'select'    => [
                 'count(1) as nb'
             ],

@@ -92,7 +92,7 @@ class ResourceListController
                 $excludeAttachmentTypes[] = 'document_with_notes';
             }
 
-            $attachments = AttachmentModel::getOnView([
+            $attachments = AttachmentModel::get([
                 'select'    => ['COUNT(res_id)', 'res_id_master'],
                 'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],
                 'data'      => [$resIds, ['DEL', 'OBS'], $excludeAttachmentTypes, 'TMP', $GLOBALS['id'], 'TMP'],

@@ -92,7 +92,7 @@ class FastParapheurController
             $annexes['letterbox'][0]['filePath'] = $letterboxPath['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $annexes['letterbox'][0]['path']) . $annexes['letterbox'][0]['filename'];
         }
 
-        $annexes['attachments']     = \Attachment\models\AttachmentModel::getOnView([
+        $annexes['attachments']     = \Attachment\models\AttachmentModel::get([
             'select'                => ['res_id', 'path', 'filename', 'format'],
             'where'                 => ['res_id_master = ?', 'attachment_type not in (?)', "status NOT IN ('DEL','OBS')", 'in_signature_book = FALSE'],
             'data'                  => [$aArgs['resIdMaster'], 'print_folder']
@@ -107,7 +107,7 @@ class FastParapheurController
         }
         // END annexes
 
-        $attachments         = \Attachment\models\AttachmentModel::getOnView([
+        $attachments         = \Attachment\models\AttachmentModel::get([
             'select'         => ['res_id', 'title', 'attachment_type','path', 'res_id_master', 'format'],
             'where'          => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')", 'in_signature_book = TRUE'],
             'data'           => [$aArgs['resIdMaster'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]

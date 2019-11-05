@@ -210,7 +210,6 @@ abstract class attachments_controler_Abstract
             $infos['res_id_master'] = $line->res_id_master;
             $infos['identifier'] = $line->identifier;
             
-            $infos['is_version'] =  false;
             if (empty($infos['target_table_origin'])) {
                 $infos['target_table_origin'] = 'res_attachments';
             }

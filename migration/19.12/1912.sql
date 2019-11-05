@@ -27,8 +27,6 @@ UPDATE res_letterbox SET fulltext_result = 'SUCCESS' WHERE fulltext_result = '1'
 UPDATE res_letterbox SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' OR fulltext_result = '-2';
 UPDATE res_attachments SET fulltext_result = 'SUCCESS' WHERE fulltext_result = '1' OR fulltext_result = '2';
 UPDATE res_attachments SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' OR fulltext_result = '-2';
-UPDATE res_version_attachments SET fulltext_result = 'SUCCESS' WHERE fulltext_result = '1' OR fulltext_result = '2';
-UPDATE res_version_attachments SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' OR fulltext_result = '-2';
 
 
 /* GROUPS INDEXING */
@@ -434,22 +432,16 @@ DO $$ BEGIN
   END IF;
 END$$;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS converter_result;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS converter_result;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS convert_result;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS convert_result;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS convert_result;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS convert_attempts;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS convert_attempts;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS convert_attempts;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS fulltext_attempts;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS fulltext_attempts;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS fulltext_attempts;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_attempts;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_attempts;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS tnl_attempts;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_result;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE usergroups DROP COLUMN IF EXISTS enabled;
 ALTER TABLE actions DROP COLUMN IF EXISTS enabled;
 ALTER TABLE actions DROP COLUMN IF EXISTS origin;
@@ -457,7 +449,6 @@ ALTER TABLE actions DROP COLUMN IF EXISTS create_id;
 ALTER TABLE actions DROP COLUMN IF EXISTS category_id;
 DROP VIEW IF EXISTS fp_view_fileplan;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS folders_system_id;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS folders_system_id;
 DROP TABLE IF EXISTS foldertypes;
 DROP TABLE IF EXISTS foldertypes_doctypes;
 DROP TABLE IF EXISTS foldertypes_doctypes_level1;
@@ -490,22 +481,6 @@ DO $$ BEGIN
     UPDATE mlb_coll_ext SET nature_id = null WHERE nature_id = 'message_exchange';
   END IF;
 END$$;
-
-
-/* RE CREATE VIEWS */
-CREATE VIEW res_view_attachments AS
-  SELECT '0' as res_id, res_id as res_id_version, title, subject, description, type_id, format, typist,
-  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, path,
-  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
-  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book, in_send_attach, signatory_user_serial_id
-  FROM res_version_attachments
-  UNION ALL
-  SELECT res_id, '0' as res_id_version, title, subject, description, type_id, format, typist,
-  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, path,
-  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
-  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, in_send_attach, signatory_user_serial_id
-  FROM res_attachments;
-
 
 /* DATA */
 TRUNCATE TABLE custom_fields;

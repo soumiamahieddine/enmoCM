@@ -214,8 +214,8 @@ function Bt_createAttachment($aArgs = [])
     array_push($dataValue, ['column' => 'relation',         'value' => $relation,                 'type' => 'integer']);
     array_push($dataValue, ['column' => 'in_signature_book','value' => $inSignatureBook,          'type' => 'bool']);
 
-    if (!empty($aArgs['attachment_id_master'])) {
-        array_push($dataValue, ['column' => 'attachment_id_master','value' => $aArgs['attachment_id_master'], 'type' => 'integer']);
+    if (!empty($aArgs['origin_id'])) {
+        array_push($dataValue, ['column' => 'origin_id','value' => $aArgs['origin_id'], 'type' => 'integer']);
     }
 
     $allDatas = [

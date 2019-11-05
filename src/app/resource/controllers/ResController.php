@@ -233,22 +233,18 @@ class ResController
         }
 
         if ($document['category_id'] == 'outgoing') {
-            $attachment = AttachmentModel::getOnView([
-                'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename'],
+            $attachment = AttachmentModel::get([
+                'select'    => ['res_id', 'docserver_id', 'path', 'filename'],
                 'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
                 'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
                 'limit'     => 1
             ]);
             if (!empty($attachment[0])) {
                 $attachmentTodisplay = $attachment[0];
-                $id = (empty($attachmentTodisplay['res_id']) ? $attachmentTodisplay['res_id_version'] : $attachmentTodisplay['res_id']);
-                $isVersion = empty($attachmentTodisplay['res_id']);
-                if ($isVersion) {
-                    $collId = "attachments_version_coll";
-                } else {
-                    $collId = "attachments_coll";
-                }
-                $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => $collId, 'isVersion' => $isVersion]);
+                $id = $attachmentTodisplay['res_id'];
+                $collId = "attachments_coll";
+                
+                $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => $collId]);
                 if (empty($convertedDocument['errors'])) {
                     $attachmentTodisplay = $convertedDocument;
                 }
@@ -258,7 +254,7 @@ class ResController
                 $document['fingerprint'] = $attachmentTodisplay['fingerprint'];
             }
         } else {
-            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll', 'isVersion' => false]);
+            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll']);
 
             if (empty($convertedDocument['errors'])) {
                 $documentTodisplay = $convertedDocument;
@@ -404,8 +400,8 @@ class ResController
         }
 
         if ($document['category_id'] == 'outgoing') {
-            $attachment = AttachmentModel::getOnView([
-                'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename', 'fingerprint'],
+            $attachment = AttachmentModel::get([
+                'select'    => ['res_id', 'docserver_id', 'path', 'filename', 'fingerprint'],
                 'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
                 'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
                 'limit'     => 1
@@ -487,8 +483,8 @@ class ResController
             if (empty($tnlAdr)) {
                 $document = ResModel::getById(['select' => ['category_id'], 'resId' => $aArgs['resId']]);
                 if ($document['category_id'] == 'outgoing') {
-                    $attachment = AttachmentModel::getOnView([
-                        'select'    => ['res_id', 'res_id_version'],
+                    $attachment = AttachmentModel::get([
+                        'select'    => ['res_id'],
                         'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
                         'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
                         'limit'     => 1
@@ -605,22 +601,17 @@ class ResController
 
         if (empty($aArgs['original'])) {
             if ($document['category_id'] == 'outgoing') {
-                $attachment = AttachmentModel::getOnView([
-                    'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename'],
+                $attachment = AttachmentModel::get([
+                    'select'    => ['res_id', 'docserver_id', 'path', 'filename'],
                     'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
                     'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
                     'limit'     => 1
                 ]);
                 if (!empty($attachment[0])) {
                     $attachmentTodisplay = $attachment[0];
-                    $id = (empty($attachmentTodisplay['res_id']) ? $attachmentTodisplay['res_id_version'] : $attachmentTodisplay['res_id']);
-                    $isVersion = empty($attachmentTodisplay['res_id']);
-                    if ($isVersion) {
-                        $collId = "attachments_version_coll";
-                    } else {
-                        $collId = "attachments_coll";
-                    }
-                    $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => $collId, 'isVersion' => $isVersion]);
+                    $id = $attachmentTodisplay['res_id'];
+                    $collId = "attachments_version_coll";
+                    $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => $collId]);
                     if (empty($convertedDocument['errors'])) {
                         $attachmentTodisplay = $convertedDocument;
                     }
@@ -630,7 +621,7 @@ class ResController
                     $document['fingerprint'] = $attachmentTodisplay['fingerprint'];
                 }
             } else {
-                $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll', 'isVersion' => false]);
+                $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll']);
 
                 if (empty($convertedDocument['errors'])) {
                     $document['docserver_id'] = $convertedDocument['docserver_id'];

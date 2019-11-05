@@ -167,8 +167,8 @@ class SignatureBookController
             return ['error' => 'No Document Found'];
         }
 
-        $incomingMailAttachments = AttachmentModel::getOnView([
-            'select'      => ['res_id', 'res_id_version', 'title', 'format', 'attachment_type', 'path', 'filename'],
+        $incomingMailAttachments = AttachmentModel::get([
+            'select'      => ['res_id', 'title', 'format', 'attachment_type', 'path', 'filename'],
             'where'     => ['res_id_master = ?', 'attachment_type in (?)', "status not in ('DEL', 'TMP', 'OBS')"],
             'data'      => [$resId, ['incoming_mail_attachment', 'converted_pdf']]
         ]);
@@ -190,15 +190,9 @@ class SignatureBookController
             }
 
             $realId = 0;
-            if ($value['res_id'] == 0) {
-                $realId = $value['res_id_version'];
-                $isVersion = true;
-            } elseif ($value['res_id_version'] == 0) {
-                $realId = $value['res_id'];
-                $isVersion = false;
-            }
+            $realId = $value['res_id_version'];
 
-            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $realId, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $realId, 'collId' => 'attachments_coll']);
 
             if (empty($convertedAttachment['errors'])) {
                 $isConverted = true;
@@ -236,12 +230,12 @@ class SignatureBookController
         }
         $orderBy .= " ELSE {$c} END, doc_date DESC NULLS LAST, creation_date DESC";
 
-        $attachments = AttachmentModel::getOnView([
+        $attachments = AttachmentModel::get([
             'select'    => [
-                'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
+                'res_id', 'title', 'identifier', 'attachment_type',
                 'status', 'typist', 'path', 'filename', 'updated_by', 'creation_date',
                 'validation_date', 'format', 'relation', 'dest_user', 'dest_contact_id',
-                'dest_address_id', 'origin', 'doc_date', 'attachment_id_master'
+                'dest_address_id', 'origin', 'doc_date', 'origin_id'
             ],
             'where'     => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')", 'in_signature_book = TRUE'],
             'data'      => [$aArgs['resId'], ['incoming_mail_attachment', 'print_folder']],
@@ -256,21 +250,14 @@ class SignatureBookController
                 continue;
             }
 
-            $realId = 0;
-            if ($value['res_id'] == 0) {
-                $realId = $value['res_id_version'];
-                $isVersion = true;
-            } elseif ($value['res_id_version'] == 0) {
-                $realId = $value['res_id'];
-                $isVersion = false;
-            }
+            $realId = $value['res_id'];
 
             $viewerId       = $realId;
             $viewerNoSignId = $realId;
             $pathToFind     = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
             $isConverted    = false;
 
-            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => [1], 'resId' => $realId, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => [1], 'resId' => $realId, 'collId' => 'attachments_coll']);
 
             if (empty($convertedAttachment['errors'])) {
                 $isConverted = true;
@@ -337,8 +324,8 @@ class SignatureBookController
             }
         }
 
-        $obsAttachments = AttachmentModel::getOnView([
-            'select'    => ['res_id', 'res_id_version', 'attachment_id_master', 'relation', 'creation_date', 'title'],
+        $obsAttachments = AttachmentModel::get([
+            'select'    => ['res_id', 'origin_id', 'relation', 'creation_date', 'title'],
             'where'     => ['res_id_master = ?', 'attachment_type not in (?)', 'status = ?'],
             'data'      => [$aArgs['resId'], ['incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response'], 'OBS'],
             'orderBy'  => ['relation ASC']
@@ -349,7 +336,7 @@ class SignatureBookController
             if ($value['relation'] == 1) {
                 $obsData[$value['res_id']][] = ['resId' => $value['res_id'], 'title' => $value['title'], 'relation' => $value['relation'], 'creation_date' => $value['creation_date']];
             } else {
-                $obsData[$value['attachment_id_master']][] = ['resId' => $value['res_id_version'], 'title' => $value['title'], 'relation' => $value['relation'], 'creation_date' => $value['creation_date']];
+                $obsData[$value['origin_id']][] = ['resId' => $value['res_id_version'], 'title' => $value['title'], 'relation' => $value['relation'], 'creation_date' => $value['creation_date']];
             }
         }
 
@@ -360,12 +347,12 @@ class SignatureBookController
             }
 
             $attachments[$key]['obsAttachments'] = [];
-            if ($value['relation'] > 1 && !empty($obsData[$value['attachment_id_master']])) {
-                $attachments[$key]['obsAttachments'] = $obsData[$value['attachment_id_master']];
+            if ($value['relation'] > 1 && !empty($obsData[$value['origin_id']])) {
+                $attachments[$key]['obsAttachments'] = $obsData[$value['origin_id']];
             }
 
             unset($attachments[$key]['path'], $attachments[$key]['filename'], $attachments[$key]['dest_user'],
-                $attachments[$key]['dest_contact_id'], $attachments[$key]['dest_address_id'], $attachments[$key]['attachment_id_master']
+                $attachments[$key]['dest_contact_id'], $attachments[$key]['dest_address_id'], $attachments[$key]['origin_id']
             );
         }
 
@@ -397,7 +384,7 @@ class SignatureBookController
             $resIds[] = $value['res_id'];
         }
 
-        $attachmentsInResList = AttachmentModel::getOnView([
+        $attachmentsInResList = AttachmentModel::get([
             'select'    => ['res_id_master', 'status', 'attachment_type'],
             'where'     => ['res_id_master in (?)', "attachment_type not in ('incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response')", "status not in ('DEL', 'TMP', 'OBS')"],
             'data'      => [$resIds]

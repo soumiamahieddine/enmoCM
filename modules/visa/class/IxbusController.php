@@ -272,11 +272,11 @@ class IxbusController
         }
         $userInfo  = IxbusController::getInfoUtilisateur(['config' => $aArgs['config'], 'login' => $aArgs['loginIxbus'], 'password' => $aArgs['passwordIxbus']]);
 
-        $attachments = \Attachment\models\AttachmentModel::getOnView([
+        $attachments = \Attachment\models\AttachmentModel::get([
             'select'    => [
                 'res_id', 'title', 'identifier', 'attachment_type',
                 'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
-                'validation_date', 'relation', 'attachment_id_master'
+                'validation_date', 'relation', 'origin_id'
             ],
             'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
             'data'      => [$aArgs['resIdMaster'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
@@ -287,7 +287,6 @@ class IxbusController
         foreach ($attachments as $value) {
             $resId  = $value['res_id'];
             $collId = 'attachments_coll';
-            $is_version = false;
 
             $adrInfo       = \Convert\controllers\ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId]);
             $docserverInfo = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);

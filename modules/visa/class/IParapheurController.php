@@ -72,7 +72,7 @@ class IParapheurController
         $letterboxPath                      = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $annexes['letterbox']['docserver_id'], 'select' => ['path_template']]);
         $annexes['letterbox']['filePath']   = $letterboxPath['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $annexes['letterbox']['path']) . $annexes['letterbox']['filename'];
 
-        $annexes['attachments']     = \Attachment\models\AttachmentModel::getOnView([
+        $annexes['attachments']     = \Attachment\models\AttachmentModel::get([
             'select'        => ['res_id', 'path', 'filename' ],
             'where'         => ['res_id_master = ?', 'attachment_type not in (?)', "status NOT IN ('DEL','OBS')", 'in_signature_book = FALSE', "format = 'pdf'"],
             'data'          => [$aArgs['resIdMaster'], 'print_folder']
@@ -87,7 +87,7 @@ class IParapheurController
         }
         // END annexes
 
-        $attachments         = \Attachment\models\AttachmentModel::getOnView([
+        $attachments         = \Attachment\models\AttachmentModel::get([
             'select'         => ['res_id', 'title', 'attachment_type','path'],
             'where'          => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", 'in_signature_book = TRUE'],
             'data'           => [$aArgs['resIdMaster'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]

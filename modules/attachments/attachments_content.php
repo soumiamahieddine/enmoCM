@@ -465,7 +465,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                                                     }
 
                                                     if (!empty($select)) {
-                                                        $document = \Attachment\models\AttachmentModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$id]]);
+                                                        $document = \Attachment\models\AttachmentModel::get(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$id]]);
                                                     }
                                                     if ($object['name'] == 'citoyen') {
                                                         $contact = \Contact\models\ContactModel::getOnView(['select' => ['external_id', 'ca_id'], 'where' => ['ca_id = ?'], 'data' => [$resource[0]['address_id']]]);

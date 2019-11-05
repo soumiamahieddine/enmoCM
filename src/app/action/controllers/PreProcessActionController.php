@@ -443,11 +443,11 @@ class PreProcessActionController
                     }
 
                     // Check attachments
-                    $attachments = AttachmentModel::getOnView([
+                    $attachments = AttachmentModel::get([
                         'select'    => [
-                            'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
+                            'res_id', 'title', 'identifier', 'attachment_type',
                             'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
-                            'validation_date', 'relation', 'attachment_id_master'
+                            'validation_date', 'relation', 'origin_id'
                         ],
                         'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
                         'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
@@ -457,17 +457,10 @@ class PreProcessActionController
                         $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
                     } else {
                         foreach ($attachments as $value) {
-                            if (!empty($value['res_id'])) {
-                                $resIdAttachment  = $value['res_id'];
-                                $collId = 'attachments_coll';
-                                $is_version = false;
-                            } else {
-                                $resIdAttachment  = $value['res_id_version'];
-                                $collId = 'attachments_version_coll';
-                                $is_version = true;
-                            }
+                            $resIdAttachment  = $value['res_id'];
+                            $collId = 'attachments_coll';
                             
-                            $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resIdAttachment, 'collId' => $collId, 'isVersion' => $is_version]);
+                            $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resIdAttachment, 'collId' => $collId]);
                             if (empty($adrInfo['docserver_id'])) {
                                 $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resIdAttachment, 'reason' => 'noAttachmentConversion'];
                                 break;
@@ -501,11 +494,11 @@ class PreProcessActionController
                     }
 
                     // Check attachments
-                    $attachments = AttachmentModel::getOnView([
+                    $attachments = AttachmentModel::get([
                         'select'    => [
-                            'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
+                            'res_id', 'title', 'identifier', 'attachment_type',
                             'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
-                            'validation_date', 'relation', 'attachment_id_master'
+                            'validation_date', 'relation', 'origin_id'
                         ],
                         'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
                         'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
@@ -515,17 +508,10 @@ class PreProcessActionController
                         $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
                     } else {
                         foreach ($attachments as $value) {
-                            if (!empty($value['res_id'])) {
-                                $resIdAttachment = $value['res_id'];
-                                $collId          = 'attachments_coll';
-                                $is_version      = false;
-                            } else {
-                                $resIdAttachment = $value['res_id_version'];
-                                $collId          = 'attachments_version_coll';
-                                $is_version      = true;
-                            }
+                            $resIdAttachment = $value['res_id'];
+                            $collId          = 'attachments_coll';
                             
-                            $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resIdAttachment, 'collId' => $collId, 'isVersion' => $is_version]);
+                            $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resIdAttachment, 'collId' => $collId]);
                             if (empty($adrInfo['docserver_id'])) {
                                 $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resIdAttachment, 'reason' => 'noAttachmentConversion'];
                                 break;
@@ -729,21 +715,13 @@ class PreProcessActionController
                 foreach ($aAttachments as $key => $attachment) {
                     if ($attachment['res_id_master'] == $valueResId) {
                         $resIdFound = true;
-                        if (!empty($attachment['res_id'])) {
-                            $isVersion    = false;
-                            $attachmentId = $attachment['res_id'];
-                            $collId       = 'attachments_coll';
-                        } else {
-                            $isVersion    = true;
-                            $attachmentId = $attachment['res_id_version'];
-                            $collId       = 'attachments_version_coll';
-                        }
+                        $attachmentId = $attachment['res_id'];
+                        $collId       = 'attachments_coll';
                         $convertedDocument = ConvertPdfController::getConvertedPdfById([
                             'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
                             'resId'     => $attachmentId,
                             'collId'    => $collId,
-                            'type'      => 'PDF',
-                            'isVersion' => $isVersion
+                            'type'      => 'PDF'
                         ]);
                         if (empty($convertedDocument['docserver_id'])) {
                             $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);

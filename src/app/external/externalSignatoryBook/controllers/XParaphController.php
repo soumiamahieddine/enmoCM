@@ -32,7 +32,7 @@ class XParaphController
 {
     public static function sendDatas($aArgs)
     {
-        $attachments = AttachmentModel::getOnView([
+        $attachments = AttachmentModel::get([
             'select'    => [
                 'res_id', 'title', 'docserver_id', 'path', 'filename'],
             'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
@@ -62,7 +62,6 @@ class XParaphController
         foreach ($attachments as $value) {
             $resId      = $value['res_id'];
             $collId     = 'attachments_coll';
-            $is_version = false;
             
             $adrInfo       = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId]);
             $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);

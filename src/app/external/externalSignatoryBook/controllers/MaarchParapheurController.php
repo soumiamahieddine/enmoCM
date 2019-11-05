@@ -195,11 +195,11 @@ class MaarchParapheurController
 
             $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'signed_response'];
 
-            $attachments = AttachmentModel::getOnView([
+            $attachments = AttachmentModel::get([
                 'select'    => [
                     'res_id', 'title', 'identifier', 'attachment_type',
                     'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
-                    'validation_date', 'relation', 'attachment_id_master'
+                    'validation_date', 'relation', 'origin_id'
                 ],
                 'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
                 'data'      => [$aArgs['resIdMaster'], $excludeAttachmentTypes]
@@ -211,7 +211,6 @@ class MaarchParapheurController
                 foreach ($attachments as $value) {
                     $resId  = $value['res_id'];
                     $collId = 'attachments_coll';
-                    $is_version = false;
                     
                     $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId]);
                     if (empty($adrInfo['docserver_id'])) {

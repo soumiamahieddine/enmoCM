@@ -54,8 +54,8 @@ trait ShippingTrait
         $shippingTemplate['account'] = json_decode($shippingTemplate['account'], true);
         $shippingTemplate['fee'] = json_decode($shippingTemplate['fee'], true);
 
-        $attachments = AttachmentModel::getOnView([
-            'select'    => ['res_id', 'res_id_version', 'title', 'dest_address_id', 'external_id'],
+        $attachments = AttachmentModel::get([
+            'select'    => ['res_id', 'title', 'dest_address_id', 'external_id'],
             'where'     => ['res_id_master = ?', 'in_send_attach = ?', 'status not in (?)', 'attachment_type not in (?)'],
             'data'      => [$args['resId'], true, ['OBS', 'DEL', 'TMP', 'FRZ'], ['print_folder']]
         ]);
@@ -65,13 +65,7 @@ trait ShippingTrait
 
         $contacts = [];
         foreach ($attachments as $attachment) {
-            if (!empty($attachment['res_id'])) {
-                $isVersion = false;
-                $attachmentId = $attachment['res_id'];
-            } else {
-                $isVersion = true;
-                $attachmentId = $attachment['res_id_version'];
-            }
+            $attachmentId = $attachment['res_id'];
 
             $convertedDocument = AdrModel::getConvertedDocumentById([
                 'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
@@ -150,7 +144,7 @@ trait ShippingTrait
                 continue;
             }
 
-            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $attachmentId, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $attachmentId, 'collId' => 'attachments_coll']);
             $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
             if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
                 $errors[] = "Docserver does not exist for attachment {$attachmentId}";

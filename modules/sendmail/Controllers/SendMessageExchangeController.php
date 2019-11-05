@@ -69,7 +69,7 @@ class SendMessageExchangeController
         /**************** GET ATTACHMENTS INFOS ***************/
         $AttachmentsInfo = [];
         if (!empty($aArgs['join_attachment'])) {
-            $AttachmentsInfo = \Attachment\models\AttachmentModel::getOnView(['select' => ['*'], 'where' => ['res_id in (?)'], 'data' => [$aArgs['join_attachment']]]);
+            $AttachmentsInfo = \Attachment\models\AttachmentModel::get(['select' => ['*'], 'where' => ['res_id in (?)'], 'data' => [$aArgs['join_attachment']]]);
             foreach ($AttachmentsInfo as $key => $value) {
                 $AttachmentsInfo[$key]['Title']                                  = $value['title'];
                 $AttachmentsInfo[$key]['OriginatingAgencyArchiveUnitIdentifier'] = $value['identifier'];

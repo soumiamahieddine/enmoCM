@@ -290,14 +290,8 @@ class ShippingTemplateController
     {
         $fee = 0;
         foreach ($aArgs['resources'] as $value) {
-            if (!empty($value['res_id'])) {
-                $isVersion = false;
-                $attachmentId = $value['res_id'];
-            } else {
-                $isVersion = true;
-                $attachmentId = $value['res_id_version'];
-            }
-            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $attachmentId, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+            $attachmentId = $value['res_id'];
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $attachmentId, 'collId' => 'attachments_coll']);
             $docserver           = DocserverModel::getByDocserverId(['docserverId' => $convertedAttachment['docserver_id'], 'select' => ['path_template']]);
             $pathToDocument      = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedAttachment['path']) . $convertedAttachment['filename'];
 

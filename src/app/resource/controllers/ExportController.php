@@ -549,7 +549,7 @@ class ExportController
         }
 
         foreach ($args['chunkedResIds'] as $resIds) {
-            $attachments = AttachmentModel::getOnView([
+            $attachments = AttachmentModel::get([
                 'select'    => ['creation_date', 'res_id'],
                 'where'     => ['res_id in (?)', 'attachment_type = ?', 'status = ?'],
                 'data'      => [$resIds, 'signed_response', 'TRA'],
