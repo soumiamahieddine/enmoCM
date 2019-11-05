@@ -37,7 +37,7 @@ export class MenuShortcutComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.shortcuts = this.privilegeService.getShortcuts();
+        this.shortcuts = this.privilegeService.getCurrentUserShortcuts();
     }
 
     onSpeedDialFabClicked(group: any, shortcut:any) {

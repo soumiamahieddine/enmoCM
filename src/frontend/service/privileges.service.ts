@@ -487,7 +487,7 @@ export class PrivilegeService {
         return this.menus.map(elem => elem.unit).filter((elem, pos, arr) => arr.indexOf(elem) === pos);
     }
 
-    getShortcuts(): Array<menu> {
+    getCurrentUserShortcuts(): Array<menu> {
         let shortcuts: any[] = [
             {
                 "id": "home",
@@ -501,7 +501,7 @@ export class PrivilegeService {
             }
         ];
         
-        shortcuts = shortcuts.concat(this.menus.filter(elem => elem.shortcut === true));
+        shortcuts = shortcuts.concat(this.menus.filter(elem => elem.shortcut === true).filter(elem => this.headerService.user.privileges.indexOf(elem.id) > -1));
 
         if (this.headerService.user.groups.filter((group: any) => group.can_index === true).length > 0) {
             const indexingGroups: any[] = [];
