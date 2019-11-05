@@ -1525,12 +1525,6 @@ abstract class lists_Abstract extends Database
                 $inSendAttach = $value['value'];
             }
         }
-        
-
-        $isVersion = 'false';
-        if ($resultTheLine[1]['value'] > 1) {
-            $isVersion = 'true';
-        }
 
         $return = '<div>';
 
@@ -1549,7 +1543,7 @@ abstract class lists_Abstract extends Database
             $return .= 'disabled ';
         }
 
-        $return .= 'onclick="setSendAttachment('.$resultTheLine[0]['value'].', '.$isVersion.');"/><label';
+        $return .= 'onclick="setSendAttachment('.$resultTheLine[0]['value'].');"/><label';
         if (!$mailevaEnabled) {
             $return .= ' style="opacity: 0.5; cursor: default" ';
         }
@@ -1565,7 +1559,7 @@ abstract class lists_Abstract extends Database
             $return .= 'checked ';
         }
 
-        $return .= 'onclick="setAttachmentInSignatureBook('.$resultTheLine[0]['value'].', '.$isVersion.');"/><label for="final'. $count .'">'._PUT_IN_SIGNATORY_BOOK.'</label>';
+        $return .= 'onclick="setAttachmentInSignatureBook('.$resultTheLine[0]['value'].');"/><label for="final'. $count .'">'._PUT_IN_SIGNATORY_BOOK.'</label>';
 
         $return .= '</div>';
 

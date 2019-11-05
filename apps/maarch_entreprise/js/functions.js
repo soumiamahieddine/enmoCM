@@ -3872,13 +3872,12 @@ function displayAddMailing() {
 }
 
 
-function setSendAttachment(id, isVersion) {
+function setSendAttachment(id) {
     $j.ajax({
         url: '../../rest/attachments/' + id + '/inSendAttachment',
         type: 'PUT',
         dataType: 'json',
         data: {
-            isVersion: isVersion
         },
         success: function (answer) {
             if (typeof window.parent['angularSignatureBookComponent'] !== "undefined") {
