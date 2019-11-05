@@ -156,8 +156,6 @@ export class ProcessComponent implements OnInit {
                             id: action.id,
                             label: action.label,
                             component: action.component,
-                            enabled: action.enabled,
-                            default: index === 0 ? true : false,
                             categoryUse: action.categories
                         }
                     });
@@ -167,15 +165,11 @@ export class ProcessComponent implements OnInit {
                     this.selectedAction = data.actions[0];
                     this.actionsList = data.actions;
                 }),
-                finalize(() => this.loading = false),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
                 })
             ).subscribe();
-
-            this.appDocumentViewer.loadRessource(this.currentResourceInformations.resId);
-
 
         },
             (err: any) => {
@@ -218,15 +212,15 @@ export class ProcessComponent implements OnInit {
     }
 
     onSubmit() {
-        this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, this.currentResourceInformations.resId, this.currentResourceInformations);
+        this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations);
     }
 
     showActionInCurrentCategory(action: any) {
 
-        if (this.selectedAction.categoryUse.indexOf(this.currentResourceInformations.category) === -1) {
-            const newAction = this.actionsList.filter(action => action.categoryUse.indexOf(this.currentResourceInformations.category) > -1)[0];
+        if (this.selectedAction.categoryUse.indexOf(this.currentResourceInformations.categoryId) === -1) {
+            const newAction = this.actionsList.filter(action => action.categoryUse.indexOf(this.currentResourceInformations.categoryId) > -1)[0];
             if (newAction !== undefined) {
-                this.selectedAction = this.actionsList.filter(action => action.categoryUse.indexOf(this.currentResourceInformations.category) > -1)[0];
+                this.selectedAction = this.actionsList.filter(action => action.categoryUse.indexOf(this.currentResourceInformations.categoryId) > -1)[0];
             } else {
                 this.selectedAction = {
                     id: 0,
@@ -237,11 +231,15 @@ export class ProcessComponent implements OnInit {
                 };
             }
         }
-        if (action.categoryUse.indexOf(this.currentResourceInformations.category) > -1) {
+        if (action.categoryUse.indexOf(this.currentResourceInformations.categoryId) > -1) {
             return true;
         } else {
             return false;
         }
+    }
+
+    selectAction(action: any) {
+        this.selectedAction = action;
     }
 
     createModal() {

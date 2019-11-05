@@ -213,6 +213,10 @@ export class ActionsService {
         this.notify.success(this.lang.action + ' : "' + this.currentAction.label + '" ' + this.lang.done);
 
         this.eventAction.next();
+
+        if (this.mode === 'process') {
+            this.router.navigate([`/basketList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}`]);
+        }
     }
 
     /* OPEN SPECIFIC ACTION */

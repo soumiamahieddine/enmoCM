@@ -105,11 +105,8 @@
                         (click)="$event.stopPropagation();">{{lang.actions}}</button>
                     <ng-container *ngFor="let action of actionsList">
                         <button *ngIf="showActionInCurrentCategory(action)" mat-menu-item (click)="selectAction(action)"
-                            [title]="action.label" [class.listModels-menu-selected]="action.id === selectedAction.id"
-                            [disabled]="!action.enabled">
-                            <span style="flex:1;">{{action.label}}</span><small
-                                style="position: absolute;top: 15px;left: 140px;" color="warn"
-                                *ngIf="!action.enabled">{{lang.badActionParam}}</small>
+                            [title]="action.label" [class.listModels-menu-selected]="action.id === selectedAction.id">
+                            <span style="flex:1;">{{action.label}}</span>
                         </button>
                     </ng-container>
                 </mat-menu>
