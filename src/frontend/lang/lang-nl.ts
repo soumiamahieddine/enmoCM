@@ -1262,7 +1262,7 @@ export const LANG_NL = {
     "reportsAdmin" : "Administratie van de statistieken",
     "historyBatchAdmin" : "De geschiedenis van de batches raadplegen",
     "updateControl" : "Controle van de bijwerking",
-    "mailsSent" : "Resource sent", //_TO_TRANSLATE
+    "mailsSent" : "Resource(s) sent", //_TO_TRANSLATE
     "dashboard" : "Dashboard", //_TO_TRANSLATE
     "noSendmail" : "No mail sent", //_TO_TRANSLATE
     "noEvent" : "Aucun event", //_TO_TRANSLATE
