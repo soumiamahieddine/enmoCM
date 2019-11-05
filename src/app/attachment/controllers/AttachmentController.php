@@ -219,7 +219,7 @@ class AttachmentController
         $attachment = AttachmentModel::get([
             'select'    => ['res_id', 'docserver_id', 'path', 'filename', 'res_id_master'],
             'where'     => ['res_id = ?', 'status not in (?)'],
-            'data'      => [$args['id'], $args['id'], ['DEL', 'OBS']],
+            'data'      => [$args['id'], ['DEL', 'OBS']],
             'limit'     => 1
         ]);
         if (empty($attachment[0])) {
@@ -283,7 +283,7 @@ class AttachmentController
         $attachment = AttachmentModel::get([
             'select'    => ['res_id', 'docserver_id', 'path', 'filename'],
             'where'     => ['res_id = ?', 'status not in (?)'],
-            'data'      => [$args['id'], $args['id'], ['DEL']],
+            'data'      => [$args['id'], ['DEL']],
             'limit'     => 1
         ]);
         if (empty($attachment[0])) {
@@ -423,7 +423,7 @@ class AttachmentController
         $attachment = AttachmentModel::get([
             'select'    => ['res_id', 'docserver_id', 'path', 'filename', 'res_id_master'],
             'where'     => ['res_id = ?', 'status not in (?)'],
-            'data'      => [$args['id'], $args['id'], ['DEL']],
+            'data'      => [$args['id'], ['DEL']],
             'limit'     => 1
         ]);
         if (empty($attachment[0])) {
