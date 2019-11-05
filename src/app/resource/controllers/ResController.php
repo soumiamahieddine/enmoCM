@@ -132,7 +132,7 @@ class ResController
             'subject'               => $document['subject'],
             'chrono'                => $document['alt_identifier'],
             'typist'                => $document['typist'],
-            'labelledTypist'        => UserModel::getLabelledUserById(['id' => $document['typist']]),
+            'typistLabel'           => UserModel::getLabelledUserById(['id' => $document['typist']]),
             'status'                => $document['status'],
             'destination'           => $document['destination'],
             'initiator'             => $document['initiator'],
@@ -149,19 +149,19 @@ class ResController
 
         if (!empty($formattedData['destination'])) {
             $entity = EntityModel::getByEntityId(['entityId' => $formattedData['destination'], 'select' => ['entity_label']]);
-            $formattedData['labelledDestination'] = $entity['entity_label'];
+            $formattedData['destinationLabel'] = $entity['entity_label'];
         }
         if (!empty($formattedData['initiator'])) {
             $entity = EntityModel::getByEntityId(['entityId' => $formattedData['initiator'], 'select' => ['entity_label']]);
-            $formattedData['labelledInitiator'] = $entity['entity_label'];
+            $formattedData['initiatorLabel'] = $entity['entity_label'];
         }
         if (!empty($formattedData['status'])) {
             $status = StatusModel::getById(['id' => $formattedData['status'], 'select' => ['label_status']]);
-            $formattedData['labelledStatus'] = $status['label_status'];
+            $formattedData['statusLabel'] = $status['label_status'];
         }
         if (!empty($formattedData['priority'])) {
             $priority = PriorityModel::getById(['id' => $formattedData['priority'], 'select' => ['label']]);
-            $formattedData['labelledPriority'] = $priority['label'];
+            $formattedData['priorityLabel'] = $priority['label'];
         }
 
         return $response->withJson($formattedData);
