@@ -128,7 +128,6 @@ class ConvertPdfController
         } else {
             AdrModel::createAttachAdr([
                 'resId'         => $aArgs['resId'],
-                'isVersion'     => $aArgs['isVersion'],
                 'type'          => 'PDF',
                 'docserverId'   => $storeResult['docserver_id'],
                 'path'          => $storeResult['destination_dir'],

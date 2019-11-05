@@ -143,11 +143,7 @@ class EmailController
             $document['attachments'] = (array)$document['attachments'];
             foreach ($document['attachments'] as $attachment) {
                 $attachment = (array)$attachment;
-                if ($attachment['isVersion']) {
-                    $email['attachments_version'][] = $attachment['id'];
-                } else {
-                    $email['attachments'][] = $attachment['id'];
-                }
+                $email['attachments'][] = $attachment['id'];
             }
         }
 
@@ -477,7 +473,6 @@ class EmailController
                 }
                 foreach ($args['data']['document']['attachments'] as $attachment) {
                     $check = Validator::intVal()->notEmpty()->validate($attachment['id']);
-                    $check = $check && Validator::boolType()->validate($attachment['isVersion']);
                     $check = $check && Validator::boolType()->validate($attachment['original']);
                     if (!$check) {
                         return ['errors' => 'Data document[attachments] errors', 'code' => 400];

@@ -24,14 +24,12 @@ class ShippingModel
         ValidatorModel::notEmpty($args, ['userId', 'attachmentId', 'accountId']);
         ValidatorModel::intVal($args, ['userId', 'attachmentId', 'recipientEntityId']);
         ValidatorModel::stringType($args, ['accountId']);
-        ValidatorModel::boolType($args, ['isVersion']);
 
         DatabaseModel::insert([
             'table'         => 'shippings',
             'columnsValues' => [
                 'user_id'               => $args['userId'],
                 'attachment_id'         => $args['attachmentId'],
-                'is_version'            => empty($args['isVersion']) ? 'false' : 'true',
                 'options'               => $args['options'],
                 'fee'                   => $args['fee'],
                 'recipient_entity_id'   => $args['recipientEntityId'],
