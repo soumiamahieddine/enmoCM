@@ -63,7 +63,11 @@ class JnlpController
         $tagJnlp->appendChild($newAttribute);
 
         $newAttribute = $jnlpDocument->createAttribute('codebase');
-        $newAttribute->value = $tmpPath;
+        $newAttribute->value = $coreUrl . 'rest/jnlp/';
+        $tagJnlp->appendChild($newAttribute);
+
+        $newAttribute = $jnlpDocument->createAttribute('href');
+        $newAttribute->value = htmlentities($jnlpFileNameExt);
         $tagJnlp->appendChild($newAttribute);
 
         $tagInformation = $jnlpDocument->createElement('information');
