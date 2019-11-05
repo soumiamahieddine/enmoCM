@@ -83,30 +83,8 @@ class CoreController
         $user['groups'] = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
         $user['entities'] = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
 
-//        if ($GLOBALS['userId'] == 'superadmin') {
-//            $menu = [
-//            "administration" => [
-//                "organisation" => ServiceController::PRIVILEGE_ADMIN_ORGANIZATION,
-//                "classement" => ServiceController::PRIVILEGE_ADMIN_CLASSIFYING,
-//                "production" => ServiceController::PRIVILEGE_ADMIN_PRODUCTION,
-//                "supervision" => ServiceController::PRIVILEGE_ADMIN_SUPERVISION
-//            ]
-//        ];
-//        } else {
-//            $menu = ServiceController::getMenuPrivilegesByUserId(['id' => $GLOBALS['id']]);
-//        }
-
-        if ($GLOBALS['userId'] == 'superadmin') {
-            $menu = ServiceModel::getApplicationServicesByXML(['type' => 'menu']);
-            $menuModules = ServiceModel::getModulesServicesByXML(['type' => 'menu']);
-            $menu = array_merge($menu, $menuModules);
-        } else {
-            $menu = ServiceController::getMenuServicesByUserIdByXml(['userId' => $GLOBALS['userId']]);
-        }
-
         return $response->withJson([
-            'user'      => $user,
-            'menu'      => $menu
+            'user'      => $user
         ]);
     }
 
