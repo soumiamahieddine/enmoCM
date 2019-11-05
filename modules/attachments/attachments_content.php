@@ -1020,7 +1020,6 @@ if (isset($_POST['add']) && $_POST['add']) {
             if ($_SESSION['upfile'][0]['fileNamePdfOnTmp'] != '' && $_SESSION['upfile'][0]['upAttachment'] != false) {
                 \Convert\models\AdrModel::deleteAttachAdr([
                     'resId'         => $_REQUEST['res_id'],
-                    'isVersion'     => false
                 ]);
             }
         } else {
@@ -1028,7 +1027,6 @@ if (isset($_POST['add']) && $_POST['add']) {
             if ($_SESSION['upfile'][0]['fileNamePdfOnTmp'] != '' && $_SESSION['upfile'][0]['upAttachment'] != false) {
                 \Convert\models\AdrModel::deleteAttachAdr([
                     'resId'         => $_REQUEST['res_id'],
-                    'isVersion'     => true
                 ]);
             }
         }

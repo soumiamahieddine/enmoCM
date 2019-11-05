@@ -135,8 +135,7 @@ class ConvertThumbnailController
                 'type'          => 'TNL',
                 'docserverId'   => $storeResult['docserver_id'],
                 'path'          => $storeResult['destination_dir'],
-                'filename'      => $storeResult['file_destination_name'],
-                'isVersion'     => $aArgs['isVersion'],
+                'filename'      => $storeResult['file_destination_name']
             ]);
         }
 
