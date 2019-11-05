@@ -2,7 +2,7 @@
     <div class="editInProgress">
         <i class="fas fa-file-word bounce"></i>
         <div>
-            Edition en cours ...
+            {{lang.editInProgress}}
         </div>
         <div>
             <button mat-button (click)="cancelTemplateEdition()">{{lang.cancel}}</button>
@@ -13,7 +13,7 @@
     <ng-container *ngIf="noFile; else elseHaveFile">
         <div class="noFile">
             <i class="far fa-times-circle"></i>
-            Aucun fichier
+            {{lang.noFile}}
         </div>
     </ng-container>
     <ng-template #elseHaveFile>
@@ -25,12 +25,12 @@
         <div *ngIf="file.content === null && !loading" class="view-doc-container" appUploadFileDragDrop
             (onFileDropped)="dndUploadFile($event)">
             <i class="fa fa-file-upload upload-icon"></i><br />
-            Glisser-déposer<br />ou
+            {{lang.dragAndDrop}}<br />{{lang.or}}
             <div style="display: flex;">
                 <button mat-button class="button-form-primary-alt" (click)="loadTemplates()" [matMenuTriggerFor]="menu"
                     style="margin-right:20px;align-items: center;justify-content: center;text-align: center;display: flex;">
                     <span class="menu-label">
-                        Choisir un modèle
+                        {{lang.chooseModel}}
                     </span>
                     <i class="fa fa-chevron-down menu-icon"></i>
                 </button>
@@ -39,8 +39,7 @@
                         *ngFor="let template of listTemplates">{{template.label}}</button>
                 </mat-menu>
                 <button mat-button (click)="docToUpload.click()" class="button-form-primary-alt"
-                    style="align-items: center;justify-content: center;text-align: center;display: flex;">Choisissez
-                    votre fichier</button>
+                    style="align-items: center;justify-content: center;text-align: center;display: flex;">{{lang.chooseFile}}</button>
             </div>
         </div>
         <input type="file" #docToUpload name="files[]" (change)="uploadTrigger($event)" style="display:none;">

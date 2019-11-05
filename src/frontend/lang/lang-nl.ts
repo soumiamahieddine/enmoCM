@@ -1267,4 +1267,8 @@ export const LANG_NL = {
     "noSendmail" : "No mail sent", //_TO_TRANSLATE
     "noEvent" : "Aucun event", //_TO_TRANSLATE
     "hours" : "hours", //_TO_TRANSLATE
+    "editInProgress" : "Edit in progress", //_TO_TRANSLATE
+    "chooseFile" : "Choose a file", //_TO_TRANSLATE
+    "or" : "or", //_TO_TRANSLATE
+    "dragAndDrop" : "Drag and drop", //_TO_TRANSLATE
 };

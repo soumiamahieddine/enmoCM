@@ -1279,4 +1279,8 @@ export const LANG_FR = {
     "noSendmail" : "Aucun envoi",
     "noEvent" : "Aucun évênement",
     "hours" : "heures",
+    "editInProgress" : "Edition en cours",
+    "chooseFile" : "Choisissez un fichier",
+    "or" : "ou",
+    "dragAndDrop" : "Glisser-déposer",
 };

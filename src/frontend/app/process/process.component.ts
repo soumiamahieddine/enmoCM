@@ -147,8 +147,7 @@ export class ProcessComponent implements OnInit {
 
             this.loading = false;
 
-            // TO : WAIT RIGHT ROUTE FOR PROCESS
-            this.http.get(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/actions`).pipe(
+            this.http.get(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/actions?resId=${this.currentResourceInformations.resId}`).pipe(
                 map((data: any) => {
                     data.actions = data.actions.map((action: any, index: number) => {
                         return {
@@ -157,7 +156,7 @@ export class ProcessComponent implements OnInit {
                             component: action.component,
                             enabled: action.enabled,
                             default: index === 0 ? true : false,
-                            categoryUse: ['incoming', 'outgoing']
+                            categoryUse: action.categories
                         }
                     });
                     return data;
@@ -174,16 +173,7 @@ export class ProcessComponent implements OnInit {
             ).subscribe();
 
             this.appDocumentViewer.loadRessource(this.currentResourceInformations.resId);
-            /*this.http.get('../../rest/resources/' +  params['resId']).pipe(
-                tap((data: any) => {
-                    this.currentResourceInformations = data.resource;
-                }),
-                finalize(() => this.loading = false),
-                catchError((err: any) => {
-                    this.notify.handleErrors(err);
-                    return of(false);
-                })
-            ).subscribe();*/
+
 
         },
             (err: any) => {
