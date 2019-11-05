@@ -115,24 +115,31 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     loadTmpFile(filenameOnTmp: string) {
-        this.http.get(`../../rest/convertedFile/${filenameOnTmp}`, { params: { convert: 'true'}}).pipe(
-            tap((data: any) => {
-                this.file = {
-                    name: filenameOnTmp,
-                    format: data.extension,
-                    type: data.type,
-                    content: data.encodedResource,
-                    src: this.base64ToArrayBuffer(data.encodedConvertedResource)
-                };
-                this.editMode = true;
-                this.noConvertedFound = false;
-                this.loading = false;
-            }),
-            catchError((err: any) => {
+        this.loading = true;
+        this.loadingInfo.mode = 'determinate';
+
+        this.requestWithLoader(`../../rest/convertedFile/${filenameOnTmp}?convert=true`).subscribe(
+            (data: any) => {
+                if (data.encodedResource) {
+                    this.file = {
+                        name: filenameOnTmp,
+                        format: data.extension,
+                        type: data.type,
+                        content: data.encodedResource,
+                        src: this.base64ToArrayBuffer(data.encodedConvertedResource)
+                    };
+                    this.editMode = true;
+                    this.noConvertedFound = false;
+                    this.loading = false;
+                }
+            },
+            (err: any) => {
+                this.noConvertedFound = true;
                 this.notify.handleErrors(err);
+                this.loading = false;
                 return of(false);
-            })
-        ).subscribe();
+            }
+        );
     }
 
     uploadTrigger(fileInput: any) {
@@ -268,6 +275,32 @@ export class DocumentViewerComponent implements OnInit {
                         this.loadingInfo.message = `1/3 ${this.lang.loadingFile}...`;
                     }
                     return { status: 'progress', message: progress };
+
+                case HttpEventType.Response:
+                    return event.body;
+                default:
+                    return `Unhandled event: ${event.type}`;
+            }
+        })
+        );
+    }
+
+    requestWithLoader(url: string) {
+        this.loadingInfo.percent = 0;
+
+        return this.http.get<any>(url, {
+            reportProgress: true,
+            observe: 'events'
+        }).pipe(map((event) => {
+            switch (event.type) {
+                case HttpEventType.DownloadProgress:
+
+                    const downloadProgress = Math.round(100 * event.loaded / event.total);
+                    this.loadingInfo.percent = downloadProgress;
+                    this.loadingInfo.mode = 'determinate';
+                    this.loadingInfo.message = ``;
+
+                    return { status: 'progressDownload', message: downloadProgress };
 
                 case HttpEventType.Response:
                     return event.body;
