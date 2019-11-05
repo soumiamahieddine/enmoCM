@@ -333,10 +333,10 @@ class ResourceListController
                     }
                     $categoriesList = ActionModel::getCategoriesById(['id' => $action['id']]);
                     if (!empty($categoriesList)) {
-                        $action['categories'] = array_column($categoriesList, 'category_id');
+                        $actions[$key]['categories'] = array_column($categoriesList, 'category_id');
                     } else {
                         $categories = ResModel::getCategories();
-                        $action['categories'] = array_column($categories, 'id');
+                        $actions[$key]['categories'] = array_column($categories, 'id');
                     }
                 }
                 $actions[$key]['label'] = $action['label_action'];
@@ -344,7 +344,7 @@ class ResourceListController
             }
         }
 
-        return $response->withJson(['actions' => $actions]);
+        return $response->withJson(['actions' => array_values($actions)]);
     }
 
     public function setAction(Request $request, Response $response, array $aArgs)
