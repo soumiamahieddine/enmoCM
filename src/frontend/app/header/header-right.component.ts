@@ -40,12 +40,12 @@ export class HeaderRightComponent implements OnInit {
 
     gotToMenu(shortcut:any) {
         if (shortcut.id == 'indexing' && shortcut.groups.length > 1) {
-            this.config = { data: { indexingGroups: shortcut.groups, link:shortcut.servicepage } };
+            this.config = { data: { indexingGroups: shortcut.groups, link:shortcut.route } };
             this.dialogRef = this.dialog.open(IndexingGroupModalComponent, this.config);
-        } else if (shortcut.angular == 'true') {
-            this.router.navigate([shortcut.servicepage]);
+        } else if (shortcut.angular === true) {
+            this.router.navigate([shortcut.route]);
         } else {
-            location.href = shortcut.servicepage;
+            location.href = shortcut.route;
         }
     }
 
