@@ -846,7 +846,7 @@ abstract class visa_Abstract extends Database
             if ($pdf_exist == false) {
                 $collIdConv = ($from_res_attachment) ? 'attachments_coll' : 'letterbox_coll';
                 
-                $viewLinkHtml = '<a id="gen_'.$idFile.'" style="cursor:pointer;" title="'._GENERATE_PDF .'" target="_blank" onclick="generatePdf(\''.$idFile.'\',\''.$collIdConv.'\',\'false\')">'
+                $viewLinkHtml = '<a id="gen_'.$idFile.'" style="cursor:pointer;" title="'._GENERATE_PDF .'" target="_blank" onclick="generatePdf(\''.$idFile.'\',\''.$collIdConv.'\')">'
                     .'<i id="spinner_'.$idFile.'" class="fa fa-sync-alt fa-2x" title="'._GENERATE_PDF.'"></i>'
                     .'</a>';
             } else {

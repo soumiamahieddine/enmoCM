@@ -82,12 +82,11 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
             $db->query("update res_letterbox SET departure_date = ? where res_id = ?", array($date,$line->res_id_master));
         }
 
-        $isVersion = false;
         $attachResId = $line->res_id;
         
         $convertedAttachment =  \Convert\controllers\ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $attachResId, 'collId' => 'attachments_coll']);
         if (!empty($convertedAttachment['errors'])) {
-            echo "{\"status\":1, \"error\" : \""._ATTACH_PDF_NOT_FOUND . ": {$attachResId}, version : {$isVersion}\"}";
+            echo "{\"status\":1, \"error\" : \""._ATTACH_PDF_NOT_FOUND . ": {$attachResId}, version : false\"}";
             exit;
         }
 

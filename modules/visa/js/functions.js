@@ -391,7 +391,7 @@ function selectAllPrintFolder() {
     }
 }
 
-function generatePdf(resId, collId, isVersion) {
+function generatePdf(resId, collId) {
     $j("#spinner_"+resId).addClass( "fa-spin" );
     $j.ajax({
         url: '?display=true&module=visa&page=generatePdf',
@@ -399,9 +399,7 @@ function generatePdf(resId, collId, isVersion) {
         dataType : 'json',
         data: {
             res_id : resId,
-            coll_id : collId,
-            is_version : isVersion,
-
+            coll_id : collId
         },
         success: function(result) {
             if (result.status == "0") {
