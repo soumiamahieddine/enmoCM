@@ -9,7 +9,7 @@ export class HeaderService {
     headerMessageIcon: string = "";
     headerMessage: string = "";
     subHeaderMessage: string = "";
-    user: any = { firstname: "", lastname: "" };
+    user: any = { firstname: "", lastname: "", privileges : [] };
     lang: any = LANG;
 
     constructor(public http: HttpClient) { }

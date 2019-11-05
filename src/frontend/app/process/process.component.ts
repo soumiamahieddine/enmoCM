@@ -147,6 +147,8 @@ export class ProcessComponent implements OnInit {
 
             this.loading = false;
 
+            this.loadResource();
+
             this.http.get(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/actions?resId=${this.currentResourceInformations.resId}`).pipe(
                 map((data: any) => {
                     data.actions = data.actions.map((action: any, index: number) => {
@@ -179,6 +181,18 @@ export class ProcessComponent implements OnInit {
             (err: any) => {
                 this.notify.handleErrors(err);
             });
+    }
+
+    loadResource() {
+        this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}`).pipe(
+            tap((data: any) => {
+                this.currentResourceInformations = data;
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     lockResource() {

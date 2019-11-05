@@ -138,25 +138,25 @@
             <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()" style="padding-bottom: 20px;">
                 <div class="resourceInfo">
                     <div class="title">
-                        Objet du courrier
+                        {{this.currentResourceInformations.subject}}
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
                         <div class="content-item">
-                            <b><i class="fas fa-flag" style="font-size: 25px;padding-right: 20px;"></i> Urgent</b>
+                            <b><i class="fas fa-flag" style="font-size: 25px;padding-right: 20px;"></i> {{this.currentResourceInformations.priorityLabel}}</b>
                         </div>
                         <div class="content-item">
-                            <div>N° chrono :</div>
-                            <div class="content-item-value">MAARCH/2019A/757</div>
+                            <div>{{lang.chronoNumberShort}} :</div>
+                            <div class="content-item-value">{{this.currentResourceInformations.chrono}}</div>
                         </div>
                         <div class="content-item">
-                            <div>Expéditeur :</div>
-                            <div class="content-item-value">John Doe <i class="fas fa-circle"
+                            <div>{{lang.senders}} :</div>
+                            <div class="content-item-value">??? <i class="fas fa-circle"
                                     style="color:green;font-size: 8px;"></i></div>
                         </div>
                         <div class="content-item">
-                            <div>Date limite de traitement :</div>
-                            <div class="content-item-value">Dans 2 jour <i class="fas fa-circle"
+                            <div>{{lang.processLimitDate}} :</div>
+                            <div class="content-item-value" [innerHTML]="this.currentResourceInformations.processLimitDate | timeLimit"> <i class="fas fa-circle"
                                     style="color:red;font-size: 8px;"></i></div>
                         </div>
                         <div class="content-item">
@@ -169,7 +169,7 @@
         </div>
         <div class="document-container" [class.fullContainer]="appService.getViewMode()">
             <div class="content">
-                <app-document-viewer #appDocumentViewer *ngIf="!loading" style="height:100%;width:100%;" [editMode]="false" [resId]="currentResourceInformations.resId">
+                <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false" [resId]="currentResourceInformations.resId">
                 </app-document-viewer>
             </div>
         </div>
