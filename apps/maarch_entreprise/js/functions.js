@@ -2798,7 +2798,7 @@ function showPreviousAttachments(path_manage_script, id) {
     new Ajax.Request(path_manage_script, {
         method: 'post',
         parameters: {
-            res_id_version: id
+            res_id: id
         },
         onSuccess: function (answer) {
             eval("response = " + answer.responseText);

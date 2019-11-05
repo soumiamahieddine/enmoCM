@@ -190,7 +190,7 @@ class SignatureBookController
             }
 
             $realId = 0;
-            $realId = $value['res_id_version'];
+            $realId = $value['res_id'];
 
             $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $realId, 'collId' => 'attachments_coll']);
 
@@ -275,7 +275,6 @@ class SignatureBookController
                 if ($value['status'] == 'SIGN' && $tmpValue['attachment_type'] == 'signed_response' && !empty($tmpValue['origin'])) {
                     $signDaddy = explode(',', $tmpValue['origin']);
                     if (($signDaddy[0] == $value['res_id'] && $signDaddy[1] == "res_attachments")
-                        || ($signDaddy[0] == $value['res_id_version'] && $signDaddy[1] == "res_version_attachments")
                     ) {
                         $viewerId = $tmpValue['res_id'];
                         unset($attachments[$tmpKey]);
@@ -336,7 +335,7 @@ class SignatureBookController
             if ($value['relation'] == 1) {
                 $obsData[$value['res_id']][] = ['resId' => $value['res_id'], 'title' => $value['title'], 'relation' => $value['relation'], 'creation_date' => $value['creation_date']];
             } else {
-                $obsData[$value['origin_id']][] = ['resId' => $value['res_id_version'], 'title' => $value['title'], 'relation' => $value['relation'], 'creation_date' => $value['creation_date']];
+                $obsData[$value['origin_id']][] = ['resId' => $value['res_id'], 'title' => $value['title'], 'relation' => $value['relation'], 'creation_date' => $value['creation_date']];
             }
         }
 

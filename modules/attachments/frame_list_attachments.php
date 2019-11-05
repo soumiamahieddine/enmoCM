@@ -79,7 +79,7 @@ array_push($template_list, $template_select);
 
 $select['res_attachments'] = array();
 
-// Important de laisser cet ordre : 'res_id', 'res_id_version', 'relation', 'status'
+// Important de laisser cet ordre : 'res_id', 'relation', 'status'
 array_push(
     $select['res_attachments'],
     'res_id',

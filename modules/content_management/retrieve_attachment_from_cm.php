@@ -4,7 +4,7 @@ require_once 'modules/attachments/attachments_tables.php';
 $dbAttachment = new Database();
 $query = "SELECT relation, docserver_id, path, filename, format 
         FROM res_attachments 
-        WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc";
+        WHERE res_id = ? AND res_id_master = ? ORDER BY relation desc";
 
 $stmt = $dbAttachment->query($query, array($objectId, $objectId, $_SESSION['doc_id']));
 

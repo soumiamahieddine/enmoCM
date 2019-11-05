@@ -71,8 +71,7 @@ trait ShippingTrait
                 'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
                 'resId'     => $attachmentId,
                 'collId'    => 'attachments_coll',
-                'type'      => 'PDF',
-                'isVersion' => $isVersion
+                'type'      => 'PDF'
             ]);
             if (empty($convertedDocument)) {
                 return ['errors' => ['No conversion for attachment']];
@@ -113,13 +112,7 @@ trait ShippingTrait
         $errors = [];
         foreach ($attachments as $key => $attachment) {
             $sendingName = CoreConfigModel::uniqueId();
-            if (!empty($attachment['res_id'])) {
-                $isVersion = false;
-                $attachmentId = $attachment['res_id'];
-            } else {
-                $isVersion = true;
-                $attachmentId = $attachment['res_id_version'];
-            }
+            $attachmentId = $attachment['res_id'];
 
             $createSending = CurlModel::execSimple([
                 'url'           => $mailevaConfig['uri'] . '/mail/v1/sendings',
@@ -227,7 +220,6 @@ trait ShippingTrait
             ShippingModel::create([
                 'userId'            => $currentUser['id'],
                 'attachmentId'      => $attachmentId,
-                'isVersion'         => $isVersion,
                 'options'           => json_encode($shippingTemplate['options']),
                 'fee'               => $fee,
                 'recipientEntityId' => $recipientEntity['id'],

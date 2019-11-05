@@ -29,7 +29,7 @@ $users = new class_users();
 
 $return = '';
 
-if (isset($_REQUEST['res_id_version'])) {
+if (isset($_REQUEST['res_id'])) {
 
     $status = 0;
     $return .= '<td colspan="6" style="background-color: #FFF;">';
@@ -59,7 +59,7 @@ if (isset($_REQUEST['res_id_version'])) {
                 $db = new Database();
 
                 $query = "SELECT origin_id FROM res_attachments WHERE res_id = ? ";
-                $stmt = $db->query($query, array($_REQUEST['res_id_version']));
+                $stmt = $db->query($query, array($_REQUEST['res_id']));
 				$attach = $stmt->fetchObject();
 
                 $query = "SELECT status, relation, creation_date, title, typist, res_id FROM res_attachments WHERE (res_id = ? or origin_id = ?) AND status = 'OBS' ORDER BY relation desc";

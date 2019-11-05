@@ -63,8 +63,7 @@ export class AttachmentsListComponent implements OnInit {
     }
 
     setInSignatureBook(attachment: any) {
-        const is_version = attachment.res_id_version > 0;
-        this.http.put("../../rest/attachments/" + attachment.res_id + "/inSignatureBook", { isVersion: is_version })
+        this.http.put("../../rest/attachments/" + attachment.res_id + "/inSignatureBook", { })
             .subscribe(() => {
                 attachment.in_signature_book = !attachment.in_signature_book;
                 this.notify.success(this.lang.actionDone);
@@ -74,8 +73,7 @@ export class AttachmentsListComponent implements OnInit {
     }
 
     setInSendAttachment(attachment: any) {
-        const is_version = attachment.res_id_version > 0;
-        this.http.put("../../rest/attachments/" + attachment.res_id + "/inSendAttachment", { isVersion: is_version })
+        this.http.put("../../rest/attachments/" + attachment.res_id + "/inSendAttachment", { })
             .subscribe(() => {
                 attachment.in_send_attach = !attachment.in_send_attach;
                 this.notify.success(this.lang.actionDone);

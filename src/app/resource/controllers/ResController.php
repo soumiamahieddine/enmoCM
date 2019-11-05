@@ -493,7 +493,7 @@ class ResController
                         ConvertThumbnailController::convert([
                             'collId'            => 'letterbox_coll',
                             'resId'             => $aArgs['resId'],
-                            'outgoingId'        => empty($attachment[0]['res_id']) ? $attachment[0]['res_id_version'] : $attachment[0]['res_id'],
+                            'outgoingId'        => $attachment[0]['res_id'],
                             'isOutgoingVersion' => empty($attachment[0]['res_id'])
                         ]);
                     }

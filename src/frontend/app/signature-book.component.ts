@@ -346,11 +346,7 @@ export class SignatureBookComponent implements OnInit {
     editAttachmentIframe(attachment: any) {
         if (attachment.canModify && attachment.status != "SIGN") {
             var resId: number;
-            if (attachment.res_id == 0) {
-                resId = attachment.res_id_version;
-            } else if (attachment.res_id_version == 0) {
-                resId = attachment.res_id;
-            }
+            resId = attachment.res_id;
 
             modifyAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId, '98%', 'auto');
         }
@@ -365,11 +361,7 @@ export class SignatureBookComponent implements OnInit {
             }
             if (r) {
                 var resId: number;
-                if (attachment.res_id == 0) {
-                    resId = attachment.res_id_version;
-                } else if (attachment.res_id_version == 0) {
-                    resId = attachment.res_id;
-                }
+                resId = attachment.res_id;
 
                 this.http.get('index.php?display=true&module=attachments&page=del_attachment&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId + '&rest=true')
                     .subscribe(() => {
@@ -398,18 +390,10 @@ export class SignatureBookComponent implements OnInit {
             this.loadingSign = true;
             var path = "index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&resIdMaster=" + this.resId + "&signatureId=" + signature.id;
 
-            if (attachment.res_id == 0) {
-                if (attachment.attachment_type == "outgoing_mail" && this.signatureBook.documents[0].category_id == "outgoing") {
-                    path += "&isVersion&isOutgoing&id=" + attachment.res_id_version;
-                } else {
-                    path += "&isVersion&id=" + attachment.res_id_version;
-                }
-            } else if (attachment.res_id_version == 0) {
-                if (attachment.attachment_type == "outgoing_mail" && this.signatureBook.documents[0].category_id == "outgoing") {
-                    path += "&isOutgoing&id=" + attachment.res_id;
-                } else {
-                    path += "&id=" + attachment.res_id;
-                }
+            if (attachment.attachment_type == "outgoing_mail" && this.signatureBook.documents[0].category_id == "outgoing") {
+                path += "&isOutgoing&id=" + attachment.res_id;
+            } else {
+                path += "&id=" + attachment.res_id;
             }
 
             this.http.get(path, signature)
@@ -448,17 +432,9 @@ export class SignatureBookComponent implements OnInit {
     unsignFile(attachment: any) {
         var collId: string;
         var resId: number;
-        var isVersion: string;
 
-        if (attachment.res_id == 0) {
-            resId = attachment.res_id_version;
-            collId = "res_version_attachments";
-            isVersion = "true";
-        } else if (attachment.res_id_version == 0) {
-            resId = attachment.res_id;
-            collId = "res_attachments";
-            isVersion = "false";
-        }
+        resId = attachment.res_id;
+        collId = "res_attachments";
 
         this.http.put(this.coreUrl + 'rest/signatureBook/' + resId + '/unsign', {'table' : collId})
             .subscribe(() => {

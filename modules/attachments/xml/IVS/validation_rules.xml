@@ -54,7 +54,7 @@
 
 	<validationRule name="previous_attachments" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
-		<parameter name="res_id_version" type="integer" />
+		<parameter name="res_id" type="integer" />
 	</validationRule>
 
 	<validationRule name="del_attachment" extends="standardForm" mode="error">
