@@ -104,8 +104,7 @@ class AttachmentController
         $collId = empty($body['version']) ? 'attachments_coll' : 'attachments_version_coll';
         ConvertPdfController::convert([
             'resId'     => $resId,
-            'collId'    => $collId,
-            'isVersion' => !empty($body['version'])
+            'collId'    => $collId
         ]);
 
         $customId = CoreConfigModel::getCustomId();
@@ -238,18 +237,16 @@ class AttachmentController
         $tnlAdr = AdrModel::getTypedAttachAdrByResId([
             'select'    => ['docserver_id', 'path', 'filename'],
             'resId'     => $args['id'],
-            'type'      => 'TNL',
-            'isVersion' => $isVersion
+            'type'      => 'TNL'
         ]);
 
         if (empty($tnlAdr)) {
-            ConvertThumbnailController::convert(['collId' => $collId, 'resId' => $args['id'], 'isVersion' => $isVersion]);
+            ConvertThumbnailController::convert(['collId' => $collId, 'resId' => $args['id']]);
             
             $tnlAdr = AdrModel::getTypedAttachAdrByResId([
                 'select'    => ['docserver_id', 'path', 'filename'],
                 'resId'     => $args['id'],
-                'type'      => 'TNL',
-                'isVersion' => $isVersion
+                'type'      => 'TNL'
             ]);
         }
 
@@ -500,7 +497,6 @@ class AttachmentController
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
         ValidatorModel::boolType($aArgs, ['original']);
-        ValidatorModel::boolType($aArgs, ['isVersion']);
 
         $document = AttachmentModel::getById(['select' => ['docserver_id', 'path', 'filename', 'title'], 'id' => $aArgs['id']]);
 

@@ -237,8 +237,7 @@ if (empty($docserver)) {
                 //PDF convert display
                 \Convert\controllers\ConvertPdfController::convert([
                     'resId'     => $id,
-                    'collId'    => 'attachments_coll',
-                    'isVersion' => false,
+                    'collId'    => 'attachments_coll'
                 ]);
                 if ($_SESSION['history']['attachadd'] == "true") {
                     $hist = new history();

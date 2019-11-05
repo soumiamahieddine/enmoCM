@@ -39,8 +39,7 @@ class ConvertThumbnailController
                     'select' => ['docserver_id','path', 'filename'],
                     'resId' => $aArgs['resId'],
                     'collId' => $aArgs['collId'],
-                    'type' => 'PDF',
-                    'isVersion' => false
+                    'type' => 'PDF'
                 ]);
             } else {
                 $resource = AttachmentModel::getById(['id' => $aArgs['outgoingId'], 'select' => ['docserver_id', 'path', 'filename']]);
@@ -48,8 +47,7 @@ class ConvertThumbnailController
                     'select' => ['docserver_id','path', 'filename'],
                     'resId' => $aArgs['outgoingId'],
                     'collId' => 'attachments_coll',
-                    'type' => 'PDF',
-                    'isVersion' => $aArgs['isOutgoingVersion']
+                    'type' => 'PDF'
                 ]);
             }
         } else {
@@ -58,8 +56,7 @@ class ConvertThumbnailController
                 'select' => ['docserver_id','path', 'filename'],
                 'resId' => $aArgs['resId'],
                 'collId' => $aArgs['collId'],
-                'type' => 'PDF',
-                'isVersion' => $aArgs['isVersion']
+                'type' => 'PDF'
             ]);
         }
 

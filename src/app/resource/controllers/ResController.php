@@ -86,8 +86,7 @@ class ResController
         if (!empty($body['encodedFile'])) {
             ConvertPdfController::convert([
                 'resId'     => $resId,
-                'collId'    => 'letterbox_coll',
-                'isVersion' => false
+                'collId'    => 'letterbox_coll'
             ]);
 
             $customId = CoreConfigModel::getCustomId();

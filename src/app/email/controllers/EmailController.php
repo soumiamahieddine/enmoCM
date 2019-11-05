@@ -394,7 +394,7 @@ class EmailController
                     $email['document']['attachments'] = (array)$email['document']['attachments'];
                     foreach ($email['document']['attachments'] as $attachment) {
                         $attachment = (array)$attachment;
-                        $encodedDocument = AttachmentController::getEncodedDocument(['id' => $attachment['id'], 'isVersion' => $attachment['isVersion'], 'original' => $attachment['original']]);
+                        $encodedDocument = AttachmentController::getEncodedDocument(['id' => $attachment['id'], 'original' => $attachment['original']]);
                         if (empty($encodedDocument['errors'])) {
                             $phpmailer->addStringAttachment(base64_decode($encodedDocument['encodedDocument']), $encodedDocument['fileName']);
                         }
