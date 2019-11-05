@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../app/translate.component';
-import { tap, catchError, filter } from 'rxjs/operators';
+import { tap, catchError, filter, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Injectable()
@@ -22,6 +22,23 @@ export class HeaderService {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    resfreshCurrentUser() {
+        this.http.get('../../rest/currentUser/profile')
+            .pipe(
+                map((data: any) => {
+                    this.user = {
+                        id: data.id,
+                        userId: data.user_id,
+                        firstname: data.firstname,
+                        lastname: data.lastname,
+                        entities: data.entities,
+                        groups: data.groups,
+                        privileges: data.privileges
+                    }
+                })
+            ).subscribe();
     }
 
     setUser(user: any) {

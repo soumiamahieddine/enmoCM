@@ -131,21 +131,18 @@ export class GroupAdministrationComponent implements OnInit {
     }
 
     toggleService(ev: any, service: any) {
-        console.log(ev);
-
-        // TO DO : WAIT BACK
-        /*if (ev.checked) {
+        if (ev.checked) {
             this.addService(service);
         } else {
             this.removeService(service);
-        }*/
-        
+        }  
     }
 
     addService(service: any) {
-        this.http.post(`../../rest/groups/${this.group.id}/services/${service.id}`, {}).pipe(
+        this.http.post(`../../rest/groups/${this.group.id}/privileges/${service.id}`, {}).pipe(
             tap(() => {
                 this.group.privileges.push(service.id);
+                this.headerService.resfreshCurrentUser();
                 this.notify.success(this.lang.groupServicesUpdated);
             }),
             catchError((err: any) => {
@@ -156,9 +153,10 @@ export class GroupAdministrationComponent implements OnInit {
     }
 
     removeService(service: any) {
-        this.http.delete(`../../rest/groups/${this.group.id}/services/${service.id}`).pipe(
+        this.http.delete(`../../rest/groups/${this.group.id}/privileges/${service.id}`).pipe(
             tap(() => {
                 this.group.privileges.splice(this.group.privileges.indexOf(service.id), 1);
+                this.headerService.resfreshCurrentUser();
                 this.notify.success(this.lang.groupServicesUpdated);
             }),
             catchError((err: any) => {

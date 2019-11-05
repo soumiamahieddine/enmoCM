@@ -2,7 +2,7 @@
     <mat-sidenav-container autosize class="admin-sidenav-container">
         <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
             fixedTopGap="56" [opened]="appService.getViewMode() ? false : true">
-            <menu-shortcut></menu-shortcut>
+            <menu-shortcut #appShortcut></menu-shortcut>
             <menu-nav></menu-nav>
             <mat-nav-list *ngIf="!creationMode && !loading">
                 <h3 mat-subheader>{{lang.actions}}</h3>

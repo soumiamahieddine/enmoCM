@@ -14,6 +14,7 @@ import { HeaderService } from '../../../service/header.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AccountLinkComponent } from './account-link/account-link.component';
 import { AppService } from '../../../service/app.service';
+import { MenuShortcutComponent } from '../../menu/menu-shortcut.component';
 
 declare function $j(selector: any): any;
 
@@ -82,6 +83,8 @@ export class UserAdministrationComponent implements OnInit {
     dataSource = new MatTableDataSource(this.data);
     selectedTabIndex: number = 0;
     maarchParapheurConnectionStatus = true;
+
+    @ViewChild('appShortcut', { static: false }) appShortcut: MenuShortcutComponent;
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -370,6 +373,12 @@ export class UserAdministrationComponent implements OnInit {
                 .subscribe((data: any) => {
                     this.user.groups = data.groups;
                     this.user.baskets = data.baskets;
+                    if (this.headerService.user.id == this.serialId) {
+                        this.headerService.resfreshCurrentUser();
+                        setTimeout(() => {
+                            this.appShortcut.loadShortcuts();   
+                        }, 200); 
+                    }
                     this.notify.success(this.lang.groupAdded);
                 }, (err) => {
                     this.notify.error(err.error.errors);
@@ -380,6 +389,12 @@ export class UserAdministrationComponent implements OnInit {
                     this.user.groups = data.groups;
                     this.user.baskets = data.baskets;
                     this.user.redirectedBaskets = data.redirectedBaskets;
+                    if (this.headerService.user.id == this.serialId) {
+                        this.headerService.resfreshCurrentUser();
+                        setTimeout(() => {
+                            this.appShortcut.loadShortcuts();   
+                        }, 200); 
+                    }
                     this.notify.success(this.lang.groupDeleted);
                 }, (err) => {
                     this.notify.error(err.error.errors);
@@ -406,6 +421,9 @@ export class UserAdministrationComponent implements OnInit {
             .subscribe((data: any) => {
                 this.user.entities = data.entities;
                 this.user.allEntities = data.allEntities;
+                if (this.headerService.user.id == this.serialId) {
+                    this.headerService.resfreshCurrentUser();
+                }
                 this.notify.success(this.lang.entityAdded);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -441,6 +459,9 @@ export class UserAdministrationComponent implements OnInit {
                         .subscribe((data: any) => {
                             this.user.entities = data.entities;
                             this.user.allEntities = data.allEntities;
+                            if (this.headerService.user.id == this.serialId) {
+                                this.headerService.resfreshCurrentUser();
+                            }
                             this.notify.success(this.lang.entityDeleted);
                         }, (err) => {
                             this.notify.error(err.error.errors);
@@ -456,6 +477,9 @@ export class UserAdministrationComponent implements OnInit {
                                 .subscribe((data: any) => {
                                     this.user.entities = data.entities;
                                     this.user.allEntities = data.allEntities;
+                                    if (this.headerService.user.id == this.serialId) {
+                                        this.headerService.resfreshCurrentUser();
+                                    }
                                     this.notify.success(this.lang.entityDeleted);
                                 }, (err) => {
                                     this.notify.error(err.error.errors);
@@ -845,6 +869,9 @@ export class UserAdministrationComponent implements OnInit {
         } else {
             this.http.put("../../rest/users/" + this.serialId, this.user)
                 .subscribe((data: any) => {
+                    if (this.headerService.user.id == this.serialId) {
+                        this.headerService.resfreshCurrentUser();
+                    }
                     this.notify.success(this.lang.userUpdated);
                 }, (err: any) => {
                     this.notify.error(err.error.errors);

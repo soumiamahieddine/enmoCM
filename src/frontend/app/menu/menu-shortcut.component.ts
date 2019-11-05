@@ -3,7 +3,6 @@ import { Router }               from '@angular/router';
 import { HttpClient }           from '@angular/common/http';
 import { LANG }                 from '../translate.component';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { HeaderService } from '../../service/header.service';
 import { AppService } from '../../service/app.service';
 import { PrivilegeService } from '../../service/privileges.service';
 
@@ -37,6 +36,10 @@ export class MenuShortcutComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.loadShortcuts();
+    }
+
+    loadShortcuts() {
         this.shortcuts = this.privilegeService.getCurrentUserShortcuts();
     }
 

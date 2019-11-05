@@ -20,7 +20,7 @@
                     </smd-fab-trigger>
 
                     <smd-fab-actions>
-                        <button color="primary" mat-mini-fab (click)="onSpeedDialFabClicked(group,shortcut)" *ngFor="let group of shortcut.groups">
+                        <button color="primary" mat-mini-fab (click)="onSpeedDialFabClicked(group,shortcut)" *ngFor="let group of shortcut.groups | sortBy : 'label' ">
                             <span class="speedDialLabel" color="primary" style="display:none;position: absolute;margin-left: 20px;margin-top: -5px;">{{group.label | shorten: 20: '...'}}</span>
                             <mat-icon class="fa fa-plus"></mat-icon>
                         </button>
