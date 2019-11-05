@@ -150,7 +150,7 @@ export class PrivilegeService {
             "comment": this.lang.indexingModels,
             "route": "/administration/indexingModels",
             "unit": "production",
-            "style": "fa fa-wpforms",
+            "style": "fab fa-wpforms",
             "angular" : true
         },
         {
@@ -532,5 +532,9 @@ export class PrivilegeService {
 
     getAdministrations(): Array<administration> {
         return this.administrations;
+    }
+
+    getCurrentUserAdministrationsByUnit(unit: string): Array<administration> {
+        return this.administrations.filter(elem => elem.unit === unit).filter(elem => this.headerService.user.privileges.indexOf(elem.id) > -1);
     }
 }
