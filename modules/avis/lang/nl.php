@@ -46,18 +46,6 @@ if (!defined('_OPINION_LIMIT_DATE')) {
 if (!defined('_TO_AVIS')) {
     define('_TO_AVIS', 'VOOR BERICHT');
 }
-if (!defined('_AVIS_ANSWERS')) {
-    define('_AVIS_ANSWERS', 'Zijn mening geven');
-}
-if (!defined('_AVIS_ANSWERS_DESC')) {
-    define('_AVIS_ANSWERS_DESC', 'Laat deze groep verschijnen in de lijst van de Consultants (berichtencircuit)');
-}
-if (!defined('_CONFIG_AVIS_WORKFLOW_IN_DETAIL')) {
-    define('_CONFIG_AVIS_WORKFLOW_IN_DETAIL', 'Configuratie van het berichtencircuit vanuit de gedetailleerde fiche');
-}
-if (!defined('_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC')) {
-    define('_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC', 'Om het circuit rechtstreeks vanuit de gedetailleerde fiche van de brief te bepalen');
-}
 if (!defined('_LAST_AVIS')) {
     define('_LAST_AVIS', 'Beslissende consultant');
 }

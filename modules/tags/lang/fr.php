@@ -45,8 +45,6 @@ if (!defined("_MANAGE_TAGS"))
     define("_MANAGE_TAGS", "Gérer les ".strtolower(_TAGS_DEFAULT));
 if (!defined("_ADMIN_TAGS"))
     define("_ADMIN_TAGS", "Mots-clés");
-if (!defined("_ADMIN_TAGS_DESC"))
-    define("_ADMIN_TAGS_DESC", "Permet de modifier, supprimer, ajouter ou fusionner des ".strtolower(_TAGS_DEFAULT)." depuis l'interface d'administration");
 if (!defined("_ALL_TAGS"))
     define("_ALL_TAGS", "Tous les ".strtolower(_TAGS_DEFAULT));
 if (!defined("_TAG_DELETED"))

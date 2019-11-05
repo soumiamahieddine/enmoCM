@@ -155,53 +155,22 @@ define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Lijst van de documenten met onderteken
 
 // ADMINISTRATION
 define('_USERS', 'Gebruikers');
-define('_ADMIN_USERS_DESC', 'Gebruikersprofielen toevoegen, opschorten of wijzigen. De gebruikers in de groepen plaatsen waartoe ze behoren en hun primaire groep bepalen.');
 define('_GROUPS', 'Gebruikersgroepen');
-define('_ADMIN_GROUPS_DESC', 'Gebruikersgroepen toevoegen, opschorten of wijzigen. Privileges of toegangstoelatingen aan assets toekennen.');
 define('_ENTITIES', 'Eenheden');
-define('_MANAGE_ENTITIES_DESC', 'De structuur van uw organisatie beheren (polen, diensten en kantoren). Evenals de verdelingsmodellen en de goedkeuringscircuits die aan de eenheden gekoppeld zijn.');
-define('_LISTMODELS_WORKFLOW', 'Circuitmodellen');
-define('_MANAGE_LISTMODELS_WORKFLOW_DESC', 'De modellen van de berichten- en goedkeuringscircuits beheren die in een brief gebruikt kunnen worden.');
 define('_DOCTYPES', 'Soorten brieven');
-define('_ADMIN_DOCTYPES_DESC', 'De interne structuur van een map bepalen (map / submap / documenttype). Voor elk document de in te voeren indexlijst en hun verplicht teken voor de volledigheid van de map bepalen.');
 define('_FOLDERTYPES', 'Maptypes');
 define('_ADMIN_FOLDERTYPES_DESC', 'De maptypes beheren. Voor elk type de gekoppelde kwalificatoren en de verplichte documenttypes bepalen voor de volledigheid van de map.');
 define('_TAGS', 'Sleutelwoorden');
-define('_ADMIN_TAGS_DESC', 'Voor het wijzigen, verwijderen, toevoegen of fusioneren van sleutelwoorden vanuit de beheerinterface');
-define('_HISTORY', 'Geschiedenis');
-define('_ADMIN_HISTORY_DESC', 'De geschiedenis van de gebeurtenissen met betrekking tot het gebruik van Maarch Courrier raadplegen.');
-define('_HISTORY_BATCH', 'Geschiedenis van de batches');
-define('_ADMIN_HISTORY_BATCH_DESC', 'De geschiedenis van de batches raadplegen');
-define('_UPDATE_STATUS_MAIL', 'Statuswijziging van de brief');
 define('_DOCSERVERS', 'Opslagruimtes');
-define('_ADMIN_DOCSERVERS_DESC', 'Opslagruimtes toevoegen opschorten of wijzigen. De opslagruimtes per type plaatsen waartoe ze behoren en hun primaire groep bepalen.');
-define('_PARAMETERS', 'Instellingen');
-define('_UPDATE_CONTROL', 'Controle van de bijwerking');
-define('_ADMIN_UPDATE_CONTROL_DESC', 'De nieuwe tags van Maarch Courrier bekijken en indien nodig de applicatie tot de laatste tag bijwerken.');
 define('_REPORTS', 'Statistieken');
-define('_ADMIN_REPORTS_DESC', 'Administratie van de statistieken');
-define('_STATUSES', 'Statussen');
-define('_ADMIN_STATUSES_DESC', 'Statussen aanmaken of wijzigen.');
 define('_ACTIONS', 'Acties');
-define('_ADMIN_ACTIONS_DESC', 'Acties aanmaken of wijzigen.');
 define('_CONTACTS', 'Contacten');
 define('_ADMIN_CONTACTS_DESC', 'Contactenbeheer');
-define('_PRIORITIES', 'Prioriteiten');
-define('_BASKETS', 'Bakjes');
-define('_ADMIN_BASKETS_DESC', 'De inhoud van de bakjes bepalen en deze aan gebruikersgroepen toewijzen. De mogelijke omleidingen opnoemen bij het gebruik van het bakje door een gegeven groep. Een weergaveformaat van het bakje toekennen door deze groep.');
 define('_NOTIFICATIONS', 'Meldingen');
-define('_ADMIN_NOTIFICATIONS_DESC', 'Meldingen voor de gebruikers aanmaken en beheren die gebaseerd zijn op gebeurtenissen van de applicatie');
 define('_TEMPLATES', 'Documentmodellen');
-define('_ADMIN_TEMPLATES_DESC', 'De modellen die voor de bijlagen gebruikt worden, de meldingen, de aanmaak van brieven, het verzenden van e-mails en de opmerkingen beheren');
-define('_SECURITIES', 'Veiligheden');
-define('_EMAILSERVER_PARAM', '_TO_TRANSLATE');
-define('_EMAILSERVER_PARAM_DESC', '_TO_TRANSLATE');
-define('_ADMIN_INDEXING_MODELS', 'Indexing models'); // translate
-define('_ADMIN_CUSTOM_FIELDS', 'Custom fields'); // translate
 
 //SERVICES
 define('_REDIRECT_TO_ACTION', 'Doorsturen naar een andere actie');
-define('_ADMIN', 'Beheer');
 define('_ADV_SEARCH_MLB', 'Opzoeken');
 define('_INDEXING_MLB', 'Een brief/doc bewaren');
 define('_SEARCH_CONTACTS', 'Een contact zoeken');
@@ -210,14 +179,6 @@ define('_MY_CONTACTS', 'Contacten aanmaken vanuit indexering/kwalificering');
 define('_MY_CONTACTS_MENU', 'Mijn contacten');
 define('_CREATE_CONTACTS', 'Alle contacten');
 define('_UPDATE_CONTACTS', 'Contacten bijwerken');
-define('_VIEW_TECHNICAL_INFORMATIONS', 'De technische informatie bekijken');
-define('_VIEW_DOC_HISTORY', 'De geschiedenis van de acties op het brief bekijken');
-define('_VIEW_HISTORY_DESC', 'De geschiedenis van de gebeurtenissen met betrekking tot het gebruik van Maarch Courrier raadplegen.');
-define('_VIEW_FULL_HISTORY', 'De volledige geschiedenis van het document bekijken');
-define('_VIEW_FULL_HISTORY_DESC', 'De volledige geschiedenis van de evenementen over het gebruik van GED Maarch raadplegen.');
-define('_DELETE_DOCUMENT_IN_DETAIL', 'Een document in de gedetailleerde fiche verwijderen');
-define('_EDIT_DOCUMENT_IN_DETAIL', 'Een document in de gedetailleerde fiche wijzigen');
-define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Een document in de gedetailleerde fiche wijzigen Dat zal ook van de instelling van de status afhangen (Wijziging van de indexen)');
 define('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Instelling van de indexeringsstatussen');
 define('_ADD_LINKS', 'Verbindingen toevoegen');
 define('_ATTACHMENTS_COMMENT', 'Beheer van de bijlagen');
@@ -240,7 +201,6 @@ define('_VIEW_BASKETS', 'Mijn bakjes');
 define('_PRINT_SEPS', 'Afdrukken van de separatoren');
 define('_CREATE_FOLDER', 'Een map aanmaken');
 define('_FOLDER_SEARCH', 'Een map zoeken');
-define('_SAVE_NUMERIC_PACKAGE', 'Een digitale brief bewaren');
 define('_SELECT_FOLDER', 'Selectie van de Map');
 define('_FOLDER_HISTORY', 'Historiek map');
 define('_MODIFY_FOLDER', 'De indexen van een map wijzigen');
@@ -248,30 +208,9 @@ define('_ATTACH_DOC_TO_FOLDER', 'Een mail aan een map koppelen');
 define('_DELETE_FOLDER', 'Een map verwijderen');
 define('_FREEZE_FOLDER', 'De map blokkeren');
 define('_CLOSE_FOLDER', 'De map afsluiten');
-define('_REPORTS_DESC', 'Bewerkingen van de statussen');
-define('_USE_MAIL_SERVICES', 'De e-mails van zijn diensten gebruiken als verzender');
-define('_USE_MAIL_SERVICES_DESC', 'De e-mails van zijn diensten gebruiken als verzender');
 define('_TAG_DEFAULT', 'Sleutelwoord');
-define("_MANAGE_TAGS_IN_APPLICATION", "Create tags");
-define("_MANAGE_TAGS_IN_APPLICATION_DESC", "Create tags while indexing, processing and in details");
 define('_PRIVATE_TAGS', 'De sleutelwoorden verbinden met de eenheid van de gebruiker (Directieniveau)');
 define('_PRIVATE_TAGS_DESC', 'De gebruiker zal enkel de sleutelwoorden zien die beperkt werden tot zijn directie (de toevoeging / wijziging zal het sleutelwoord automatisch aan zijn directie koppelen).');
-define('_CONFIG_VISA_WORKFLOW', 'Configuratie van het goedkeuringscircuit');
-define('_CONFIG_VISA_WORKFLOW_DESC', 'Om het goedkeuringscircuit in te stellen dat de brief zal moeten volgen');
-define('_CONFIG_VISA_WORKFLOW_IN_DETAIL', 'Configuratie van het goedkeuringscircuit vanuit de gedetailleerde fiche');
-define('_CONFIG_VISA_WORKFLOW_IN_DETAIL_DESC', 'Om het goedkeuringscircuit vanuit de gedetailleerde fiche te configureren');
-define('_VISA_ANSWERS', 'De antwoordontwerpen goedkeuren');
-define('_VISA_ANSWERS_DESC', 'Om de antwoordontwerpen te kunnen goedkeuren');
-define('_SIGN_DOCS', 'De documenten ondertekenen');
-define('_MODIFY_VISA_IN_SIGNATUREBOOK', 'De huidige goedkeurder wijzigen vanuit het vloeiboek');
-define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Nuttig indien het vloeiboek als controlevloeiboek dient');
-define('_PRINT_FOLDER_DOC', 'De volledige map afdrukken');
-define('_USE_DATE_IN_SIGNBLOCK', 'De datum in de handtekening insluiten');
-define('_USE_DATE_IN_SIGNBLOCK_DESC', 'De datum van ondertekening zal bovenaan de handtekening verschijnen (met de gemeente indien deze in de rootservice van de applicatie werd ingeschreven)');
-define('_UPDATE_DIFFUSION_WHILE_INDEXING', "Update all parts of diffusion list when indexing."); //translate
-define('_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_INDEXING', "Update diffusion list except Assignee when indexing."); //translate
-define('_UPDATE_DIFFUSION_WHILE_DETAILS', "Update all parts of diffusion list when processing."); //translate
-define('_UPDATE_DIFFUSION_EXCEPT_RECIPIENT_WHILE_DETAILS', "Update diffusion list except Assignee when processing."); //translate
 
 // ACTIONS
 define('_REDIRECTION', 'Doorsturen');
@@ -319,14 +258,7 @@ define('_SEND_ATTACHMENTS_TO_CONTACT_DESC', 'Opent een mailverzendingsmodaliteit
 define('_CREATE_ATTACHMENTS_FROM_DETAILS', 'Bijlagen vanuit de detailfiche aanmaken');
 define('_MODIFY_ATTACHMENTS', 'De bijlagen wijzigen');
 define('_DELETE_ATTACHMENTS', 'De bijlagen verwijderen');
-define('_CONFIG_AVIS_WORKFLOW', 'Configuratie van het berichtencircuit');
-define('_CONFIG_AVIS_WORKFLOW_DESC', 'Om het berichtencircuit van de brief in te stellen');
-define('_CONFIG_AVIS_WORKFLOW_IN_DETAIL', 'Configuratie van het berichtencircuit vanuit de gedetailleerde fiche');
-define('_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC', 'Om het circuit rechtstreeks vanuit de gedetailleerde fiche van de brief te bepalen');
-define('_AVIS_ANSWERS', 'Zijn mening geven');
-define('_AVIS_ANSWERS_DESC', 'Laat deze groep verschijnen in de lijst van de Consultants (berichtencircuit)');
 define('_VIEW_BASKETS_DESC', 'Mijn bakjes');
-define('_ENTITIES_PRINT_SEP_MLB', 'De separatoren per dienst afdrukken');
 define('_SEND_DOCS_TO_RECOMMENDATION', 'Een (parallelle) berichtenvraag verzenden');
 define('_SEND_DOCS_TO_RECOMMENDATION_DESC', 'Opent een modaliteit die toelaat personen in het bericht, in de verdelingslijst toe te voegen of te verwijderen.');
 define('_VALIDATE_RECOMMENDATION', 'Een (parallelle) berichtenvraag bevestigen');
@@ -432,13 +364,8 @@ define("_MAILEVA_ADDED", "Shipping Maileva added_TO_TRANSLATE");
 define("_MAILEVA_UPDATED", "Shipping Maileva updated_TO_TRANSLATE");
 define("_MAILEVA_DELETED", "Shipping Maileva deleted_TO_TRANSLATE");
 
-define("_MAILEVA_ADMIN", "Shippings Maileva admin_TO_TRANSLATE");
-define("_MAILEVA_ADMIN_DESC", "Configure mailing templatesfor Maileva_TO_TRANSLATE");
-
 define("_SEND_MAILEVA", "Send to Maileva_TO_TRANSLATE");
 
-define("_VIEW_DOCUMENTS_WITH_NOTES", "View mail with notes_TO_TRANSLATE");
-define("_VIEW_DOCUMENTS_WITH_NOTES_DESC", "View attachment of 'document_with_notes' type_TO_TRANSLATE");
 define('_VISA_BY', 'Goedkeuring door');
 define('_INSTEAD_OF', 'in plaats van');
 

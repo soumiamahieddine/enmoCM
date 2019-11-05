@@ -55,22 +55,6 @@ if (!defined("_TO_AVIS")) {
     define("_TO_AVIS", "For recommendation");
 }
 
-if (!defined("_AVIS_ANSWERS")) {
-    define("_AVIS_ANSWERS", "Give oneself's opinion");
-}
-
-if (!defined("_AVIS_ANSWERS_DESC")) {
-    define("_AVIS_ANSWERS_DESC", "Allows to this group to appear in the counsellor's list (recommendation workflow)");
-}
-
-if (!defined("_CONFIG_AVIS_WORKFLOW_IN_DETAIL")) {
-    define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL", "Recommendation workflow setting from the detailed form");
-}
-
-if (!defined("_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC")) {
-    define("_CONFIG_AVIS_WORKFLOW_IN_DETAIL_DESC", "Allows to define the workflow directly from the mail detailed form");
-}
-
 if (!defined("_LAST_AVIS")) {
     define("_LAST_AVIS", "decision-maker counsellor");
 }

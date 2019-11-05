@@ -60,29 +60,14 @@ if (!defined('_ADMIN_USERS')) {
 if (!defined('_ADMIN_DOCSERVERS')) {
     define('_ADMIN_DOCSERVERS', 'Zones de stockage');
 }
-if (!defined('_ADMIN_USERS_DESC')) {
-    define('_ADMIN_USERS_DESC', "Ajouter, suspendre, ou modifier des profils utilisateurs. Placer les utilisateurs dans leurs groupes d'appartenance et définir leur groupe primaire.");
-}
-if (!defined('_ADMIN_DOCSERVERS_DESC')) {
-    define('_ADMIN_DOCSERVERS_DESC', "Ajouter, suspendre, ou modifier des zones de stockage. Placer les zones de stockages par type d'appartenance et définir leur groupe primaire.");
-}
 if (!defined('_ADMIN_GROUPS')) {
     define('_ADMIN_GROUPS', "Groupes d'utilisateurs");
-}
-if (!defined('_ADMIN_GROUPS_DESC')) {
-    define('_ADMIN_GROUPS_DESC', "Ajouter, suspendre, ou modifier des groupes d'utilisateurs. Attribuer des privilèges ou des autorisations d'accès aux ressources.");
 }
 if (!defined('_VIEW_HISTORY')) {
     define('_VIEW_HISTORY', 'Historique');
 }
 if (!defined('_VIEW_HISTORY_BATCH')) {
     define('_VIEW_HISTORY_BATCH', 'Historique des batchs');
-}
-if (!defined('_VIEW_HISTORY_DESC')) {
-    define('_VIEW_HISTORY_DESC', "Consulter l'historique des événements relatifs à l'utilisation de Maarch Courrier.");
-}
-if (!defined('_VIEW_FULL_HISTORY_DESC')) {
-    define('_VIEW_FULL_HISTORY_DESC', "Consulter l'historique complet des événements relatifs à l'utilisation de la GED Maarch.");
 }
 if (!defined('_VIEW_HISTORY_BATCH_DESC')) {
     define('_VIEW_HISTORY_BATCH_DESC', "Consulter l'historique des batchs");
@@ -104,9 +89,6 @@ if (!defined('_APPS_SERVICES')) {
 }
 if (!defined('_ADMIN_STATUS_DESC')) {
     define('_ADMIN_STATUS_DESC', 'Créer ou modifier des statuts.');
-}
-if (!defined('_ADMIN_ACTIONS_DESC')) {
-    define('_ADMIN_ACTIONS_DESC', 'Créer ou modifier des actions.');
 }
 if (!defined('_NO_RIGHTS_ON')) {
     define('_NO_RIGHTS_ON', 'Aucun droit sur');
@@ -623,9 +605,6 @@ if (!defined('_LOGOUT')) {
 if (!defined('_MENU')) {
     define('_MENU', 'Menu');
 }
-if (!defined('_ADMIN')) {
-    define('_ADMIN', 'Administration');
-}
 if (!defined('_SUMMARY')) {
     define('_SUMMARY', 'Sommaire');
 }
@@ -1084,12 +1063,6 @@ if (!defined('_HISTORY_TITLE')) {
 }
 if (!defined('_HISTORY_BATCH_TITLE')) {
     define('_HISTORY_BATCH_TITLE', 'Historique des événements des batchs');
-}
-if (!defined('_HISTORY')) {
-    define('_HISTORY', 'Historique');
-}
-if (!defined('_HISTORY_BATCH')) {
-    define('_HISTORY_BATCH', 'Historique du batch');
 }
 if (!defined('_BATCH_NAME')) {
     define('_BATCH_NAME', 'Nom batch');
@@ -3255,9 +3228,6 @@ if (!defined('_MANAGE_DOCSERVER_TYPES_DESC')) {
 if (!defined('_ADMIN_DOCSERVERS')) {
     define('_ADMIN_DOCSERVERS', ' Administration des zones de stockage');
 }
-if (!defined('_ADMIN_DOCSERVERS_DESC')) {
-    define('_ADMIN_DOCSERVERS_DESC', ' Ajouter, modifier, supprimer des zones de stockage');
-}
 if (!defined('_DOCSERVER_ID')) {
     define('_DOCSERVER_ID', 'Identifiant docserver');
 }
@@ -3523,9 +3493,6 @@ if (!defined('_SYNTAX_OK')) {
 /************TECHNICAL INFOS******************************/
 if (!defined('_TECHNICAL_INFORMATIONS')) {
     define('_TECHNICAL_INFORMATIONS', 'Infos techniques');
-}
-if (!defined('_VIEW_TECHNICAL_INFORMATIONS')) {
-    define('_VIEW_TECHNICAL_INFORMATIONS', 'Voir les informations techniques');
 }
 if (!defined('_SOURCE_FILE_PROPERTIES')) {
     define('_SOURCE_FILE_PROPERTIES', 'Propriétés du fichier source');
@@ -3858,9 +3825,6 @@ if (!defined('_DEPARTMENT_OWNER')) {
 }
 
 /********************Parameters **************/
-if (!defined('_PARAMETERS')) {
-    define('_PARAMETERS', 'Paramètres');
-}
 if (!defined('_PARAMETER')) {
     define('_PARAMETER', 'Paramètre');
 }
@@ -4062,14 +4026,6 @@ if (!defined('_EXPORT_CONTACT')) {
 //INDEXATION WITHOUT FILE
 if (!defined('_WITHOUT_FILE')) {
     define('_WITHOUT_FILE', 'Sans fichier');
-}
-
-//SERVICE VIEW DOC HISTORY
-if (!defined('_VIEW_DOC_HISTORY')) {
-    define('_VIEW_DOC_HISTORY', "Voir l'historique des actions sur le courrier");
-}
-if (!defined('_VIEW_FULL_HISTORY')) {
-    define('_VIEW_FULL_HISTORY', "Voir l'historique complet du courrier");
 }
 
 //ONLY ALPHANUM
@@ -4542,9 +4498,6 @@ if (!defined('_IN_ENTITY')) {
 if (!defined('_ADMIN_UPDATE_CONTROL')) {
     define('_ADMIN_UPDATE_CONTROL', 'Vérification mise à jour');
 }
-if (!defined('_ADMIN_UPDATE_CONTROL_DESC')) {
-    define('_ADMIN_UPDATE_CONTROL_DESC', 'Voir les nouveaux tags de Maarch Courrier et mettre à jour l\'application au dernier tag si besoin.');
-}
 if (!defined('_YOUR_VERSION')) {
     define('_YOUR_VERSION', 'Votre version actuelle');
 }
@@ -4629,9 +4582,6 @@ if (!defined('_UPDATE_DESC_END')) {
 if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE')) {
     define('_NO_AVAILABLE_TAG_TO_UPDATE', 'Aucune version disponible pour une mise à jour');
 }
-if (!defined('_SAVE_NUMERIC_PACKAGE')) {
-    define('_SAVE_NUMERIC_PACKAGE', 'Enregistrer un pli numérique');
-}
 //PARAMETERS
 if (!defined('_ID_IS_EMPTY_CONTROLLER')) {
     define('_ID_IS_EMPTY_CONTROLLER', ' L\'identifiant est vide');
@@ -4676,16 +4626,6 @@ if (!defined('_SAVE_POSITION')) {
 }
 
 /***** History *****/
-
-if (!defined('_DELETE_DOCUMENT_IN_DETAIL')) {
-    define('_DELETE_DOCUMENT_IN_DETAIL', 'Supprimer un document dans la fiche détaillée');
-}
-if (!defined('_EDIT_DOCUMENT_IN_DETAIL')) {
-    define('_EDIT_DOCUMENT_IN_DETAIL', 'Modifier un document dans la fiche détaillée');
-}
-if (!defined('_EDIT_DOCUMENT_IN_DETAIL_DESC')) {
-    define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Modifier un document dans la fiche détaillée. Cela dépendra aussi du paramétrage du statut (Modification des index)');
-}
 
 if (!defined('_REF_SEARCH')) {
     define('_REF_SEARCH', 'Rechercher dans le référentiel');

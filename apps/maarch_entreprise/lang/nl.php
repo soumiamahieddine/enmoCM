@@ -26,14 +26,9 @@ if (!defined('_SEND_ATTACHMENTS_TO_CONTACT_DESC')) { define('_SEND_ATTACHMENTS_T
 if (!defined('_PROCESSING_MODE')) { define('_PROCESSING_MODE', 'Verwerkingswijze');}
 if (!defined('_ADMIN_USERS')) { define('_ADMIN_USERS', 'Gebruikers');}
 if (!defined('_ADMIN_DOCSERVERS')) { define('_ADMIN_DOCSERVERS', 'Opslagruimtes');}
-if (!defined('_ADMIN_USERS_DESC')) { define('_ADMIN_USERS_DESC', 'Gebruikersprofielen toevoegen opschorten of wijzigen. De gebruikers in de groepen plaatsen waartoe ze behoren en hun primaire groep bepalen.');}
-if (!defined('_ADMIN_DOCSERVERS_DESC')) { define('_ADMIN_DOCSERVERS_DESC', 'Opslagruimtes toevoegen opschorten of wijzigen. De opslagruimtes per type plaatsen waartoe ze behoren en hun primaire groep bepalen.');}
 if (!defined('_ADMIN_GROUPS')) { define('_ADMIN_GROUPS', 'Gebruikersgroepen');}
-if (!defined('_ADMIN_GROUPS_DESC')) { define('_ADMIN_GROUPS_DESC', 'Gebruikersgroepen toevoegen opschorten of wijzigen. Privileges of toegangstoelatingen aan assets toekennen.');}
 if (!defined('_VIEW_HISTORY')) { define('_VIEW_HISTORY', 'Geschiedenis');}
 if (!defined('_VIEW_HISTORY_BATCH')) { define('_VIEW_HISTORY_BATCH', 'Geschiedenis van de batches');}
-if (!defined('_VIEW_HISTORY_DESC')) { define('_VIEW_HISTORY_DESC', 'De geschiedenis van de gebeurtenissen met betrekking tot het gebruik van Maarch Courrier raadplegen.');}
-if (!defined('_VIEW_FULL_HISTORY_DESC')) { define('_VIEW_FULL_HISTORY_DESC', 'De volledige geschiedenis van de evenementen over het gebruik van GED Maarch raadplegen.');}
 if (!defined('_VIEW_HISTORY_BATCH_DESC')) { define('_VIEW_HISTORY_BATCH_DESC', 'De geschiedenis van de batches raadplegen');}
 if (!defined('_ADMIN_SERVICE')) { define('_ADMIN_SERVICE', 'Administratiedienst');}
 if (!defined('_XML_PARAM_SERVICE_DESC')) { define('_XML_PARAM_SERVICE_DESC', 'Weergave XML-configuratie van de diensten');}
@@ -41,7 +36,6 @@ if (!defined('_XML_PARAM_SERVICE')) { define('_XML_PARAM_SERVICE', 'Weergave XML
 if (!defined('_MODULES_SERVICES')) { define('_MODULES_SERVICES', 'Diensten bepaald door de modules');}
 if (!defined('_APPS_SERVICES')) { define('_APPS_SERVICES', 'Diensten bepaald door de applicatie');}
 if (!defined('_ADMIN_STATUS_DESC')) { define('_ADMIN_STATUS_DESC', 'Statussen aanmaken of wijzigen.');}
-if (!defined('_ADMIN_ACTIONS_DESC')) { define('_ADMIN_ACTIONS_DESC', 'Acties aanmaken of wijzigen.');}
 if (!defined('_NO_RIGHTS_ON')) { define('_NO_RIGHTS_ON', 'Geen recht op');}
 if (!defined('_NO_LABEL_FOUND')) { define('_NO_LABEL_FOUND', 'Geen label gevonden voor deze dienst');}
 if (!defined('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH')) { define('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH', 'Let op: Het gegevensmodel van Maarch Courrier moet bijgewerkt worden...');}
@@ -206,7 +200,6 @@ if (!defined('_RA_CODE')) { define('_RA_CODE', 'Bijkomende toegangscode');}
 if (!defined('_LOGO_ALT')) { define('_LOGO_ALT', 'Terug naar homepage');}
 if (!defined('_LOGOUT')) { define('_LOGOUT', 'Afmelden');}
 if (!defined('_MENU')) { define('_MENU', 'Menu');}
-if (!defined('_ADMIN')) { define('_ADMIN', 'Beheer');}
 if (!defined('_SUMMARY')) { define('_SUMMARY', 'Inhoudsopgave');}
 if (!defined('_MANAGE_REL_MODEL')) { define('_MANAGE_REL_MODEL', 'Het herinneringsmodel beheren');}
 if (!defined('_MANAGE_DOCTYPES')) { define('_MANAGE_DOCTYPES', 'De documenttypes beheren');}
@@ -347,8 +340,6 @@ if (!defined('_ADMIN_ACTIONS')) { define('_ADMIN_ACTIONS', 'Acties');}
 // if (!defined('_KEYWORD_INDEXING_DESC')) { define('_KEYWORD_INDEXING_DESC', 'Om de beschikbare opties op de actie vanuit het bakje te bepalen met name de beschikbare verwerkende diensten en/of mogelijke status(sen) voor een documentregistratie / -wijziging');}
 if (!defined('_HISTORY_TITLE')) { define('_HISTORY_TITLE', 'Geschiedenis van de evenementen');}
 if (!defined('_HISTORY_BATCH_TITLE')) { define('_HISTORY_BATCH_TITLE', 'Geschiedenis van de batchevenementen');}
-if (!defined('_HISTORY')) { define('_HISTORY', 'Geschiedenis');}
-if (!defined('_HISTORY_BATCH')) { define('_HISTORY_BATCH', 'Geschiedenis van de batch');}
 if (!defined('_BATCH_NAME')) { define('_BATCH_NAME', 'Naam van de batch');}
 if (!defined('_CHOOSE_BATCH')) { define('_CHOOSE_BATCH', 'Batch kiezen');}
 if (!defined('_BATCH_ID')) { define('_BATCH_ID', 'Batch Id');}
@@ -1031,7 +1022,6 @@ if (!defined('_MANAGE_DOCSERVERS_LOCATIONS_DESC')) { define('_MANAGE_DOCSERVERS_
 if (!defined('_MANAGE_DOCSERVER_TYPES')) { define('_MANAGE_DOCSERVER_TYPES', 'De opslagruimtetypes beheren');}
 if (!defined('_MANAGE_DOCSERVER_TYPES_DESC')) { define('_MANAGE_DOCSERVER_TYPES_DESC', 'Opslagruimtes toevoegen, wijzigen, verwijderen');}
 if (!defined('_ADMIN_DOCSERVERS')) { define('_ADMIN_DOCSERVERS', 'Beheer van opslagruimtes');}
-if (!defined('_ADMIN_DOCSERVERS_DESC')) { define('_ADMIN_DOCSERVERS_DESC', 'Opslagruimtes toevoegen, wijzigen, verwijderen');}
 if (!defined('_DOCSERVER_ID')) { define('_DOCSERVER_ID', 'Gebruikersnaam docserver');}
 if (!defined('_YOU_CANNOT_DELETE')) { define('_YOU_CANNOT_DELETE', 'Verwijderen onmogelijk');}
 if (!defined('_UNKNOWN')) { define('_UNKNOWN', 'Onbekend');}
@@ -1128,7 +1118,6 @@ if (!defined('_ALERT_DELAY_2')) { define('_ALERT_DELAY_2', 'Termijn van het 2e a
 if (!defined('_ERROR_PARAMETERS_FUNCTION')) { define('_ERROR_PARAMETERS_FUNCTION', 'Instellingsfout...');}
 if (!defined('_SYNTAX_OK')) { define('_SYNTAX_OK', 'Syntax OK');}
 if (!defined('_TECHNICAL_INFORMATIONS')) { define('_TECHNICAL_INFORMATIONS', 'Technische informatie');}
-if (!defined('_VIEW_TECHNICAL_INFORMATIONS')) { define('_VIEW_TECHNICAL_INFORMATIONS', 'De technische informatie bekijken');}
 if (!defined('_SOURCE_FILE_PROPERTIES')) { define('_SOURCE_FILE_PROPERTIES', 'Eigenschappen van het bronbestand');}
 if (!defined('_FINGERPRINT')) { define('_FINGERPRINT', 'Digitale afdruk');}
 if (!defined('_OFFSET')) { define('_OFFSET', 'Offset');}
@@ -1247,7 +1236,6 @@ if (!defined('_BUSINESS_LIST')) { define('_BUSINESS_LIST', 'Lijst van de busines
 if (!defined('_INDEXING_BUSINESS')) { define('_INDEXING_BUSINESS', '[business] Een document bewaren');}
 if (!defined('_ADV_SEARCH_BUSINESS')) { define('_ADV_SEARCH_BUSINESS', '[business] Een document opzoeken');}
 if (!defined('_DEPARTMENT_OWNER')) { define('_DEPARTMENT_OWNER', 'Eigenaarsdienst');}
-if (!defined('_PARAMETERS')) { define('_PARAMETERS', 'Instellingen');}
 if (!defined('_PARAMETER')) { define('_PARAMETER', 'Instelling');}
 if (!defined('_PARAMETER_S')) { define('_PARAMETER_S', 'Instelling(en)');}
 if (!defined('_ALL_PARAMETERS')) { define('_ALL_PARAMETERS', 'Alle');}
@@ -1306,8 +1294,6 @@ if (!defined('_DOC_LOCKER_USER')) { define('_DOC_LOCKER_USER', 'het wordt reeds 
 if (!defined('_MONITORING_NUMBER')) { define('_MONITORING_NUMBER', 'Aanbevolen nr.');}
 if (!defined('_EXPORT_CONTACT')) { define('_EXPORT_CONTACT', 'Contacten exporteren');}
 if (!defined('_WITHOUT_FILE')) { define('_WITHOUT_FILE', 'Zonder bestand');}
-if (!defined('_VIEW_DOC_HISTORY')) { define('_VIEW_DOC_HISTORY', 'De geschiedenis van de acties op het brief bekijken');}
-if (!defined('_VIEW_FULL_HISTORY')) { define('_VIEW_FULL_HISTORY', 'De volledige geschiedenis van het brief bekijken');}
 if (!defined('_ONLY_ALPHANUM')) { define('_ONLY_ALPHANUM', 'Enkel alfanumerieke tekens worden aanvaard');}
 if (!defined('_ONLY_ALPHABETIC')) { define('_ONLY_ALPHABETIC', 'Enkel alfabetische tekens worden aanvaard');}
 if (!defined('_CLOSE_MAIL_AND_INDEX')) { define('_CLOSE_MAIL_AND_INDEX', 'Een brief afsluiten en de indexering starten');}
@@ -1448,7 +1434,6 @@ if (!defined('_FROM_ENTITY')) { define('_FROM_ENTITY', 'van de eenheid');}
 if (!defined('_IN_GROUP')) { define('_IN_GROUP', 'aan de groep');}
 if (!defined('_IN_ENTITY')) { define('_IN_ENTITY', 'aan de eenheid');}
 if (!defined('_ADMIN_UPDATE_CONTROL')) { define('_ADMIN_UPDATE_CONTROL', 'Controle van de bijwerking');}
-if (!defined('_ADMIN_UPDATE_CONTROL_DESC')) { define('_ADMIN_UPDATE_CONTROL_DESC', 'De nieuwe tags van Maarch Courrier bekijken en indien nodig de applicatie tot de laatste tag bijwerken.');}
 if (!defined('_YOUR_VERSION')) { define('_YOUR_VERSION', 'Uw huidige versie');}
 if (!defined('_AVAILABLE_VERSION_TO_UPDATE')) { define('_AVAILABLE_VERSION_TO_UPDATE', 'Beschikbare versies');}
 if (!defined('_CLICK_HERE_TO_GO_TO_UPDATE_MANAGEMENT')) { define('_CLICK_HERE_TO_GO_TO_UPDATE_MANAGEMENT', 'De updateprocedure starten');}
@@ -1477,7 +1462,6 @@ if (!defined('_DEPLOY_VERSION')) { define('_DEPLOY_VERSION', 'De versie unzippen
 if (!defined('_UPDATE_END')) { define('_UPDATE_END', 'Update geslaagd');}
 if (!defined('_UPDATE_DESC_END')) { define('_UPDATE_DESC_END', 'Update geslaagd');}
 if (!defined('_NO_AVAILABLE_TAG_TO_UPDATE')) { define('_NO_AVAILABLE_TAG_TO_UPDATE', 'Geen versie beschikbaar voor update');}
-if (!defined('_SAVE_NUMERIC_PACKAGE')) { define('_SAVE_NUMERIC_PACKAGE', 'Een digitale brief bewaren');}
 if (!defined('_ID_IS_EMPTY_CONTROLLER')) { define('_ID_IS_EMPTY_CONTROLLER', 'De gebruikersnaam is leeg');}
 if (!defined('_PARAM_VALUE_IS_EMPTY')) { define('_PARAM_VALUE_IS_EMPTY', 'De waarde van de instelling is leeg');}
 if (!defined('_INVALID_PARAM_DATE')) { define('_INVALID_PARAM_DATE', 'Instelling ongeldige datum');}
@@ -1490,9 +1474,6 @@ if (!defined('_STATUS_UPDATED')) { define('_STATUS_UPDATED', 'Bijgewerkt statuut
 if (!defined('_SAVED_CHANGE')) { define('_SAVED_CHANGE', 'Wijziging bewaard');}
 if (!defined('_DOC_CREATED')) { define('_DOC_CREATED', 'Document aangemaakt');}
 if (!defined('_SAVE_POSITION')) { define('_SAVE_POSITION', 'Bewaren');}
-if (!defined('_DELETE_DOCUMENT_IN_DETAIL')) { define('_DELETE_DOCUMENT_IN_DETAIL', 'Een document in de gedetailleerde fiche verwijderen');}
-if (!defined('_EDIT_DOCUMENT_IN_DETAIL')) { define('_EDIT_DOCUMENT_IN_DETAIL', 'Een document in de gedetailleerde fiche wijzigen');}
-if (!defined('_EDIT_DOCUMENT_IN_DETAIL_DESC')) { define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Een document in de gedetailleerde fiche wijzigen Dat zal ook van de instelling van de status afhangen (Wijziging van de indexen)');}
 if (!defined('_REF_SEARCH')) { define('_REF_SEARCH', 'Referentiedocument doorzoeken');}
 if (!defined('_USE_REF')) { define('_USE_REF', 'Het nationale referentiedocument gebruiken');}
 if (!defined('_WARNING_REF')) { define('_WARNING_REF', '<b>Bestanden van het referentiedocument ontbreken!</b><br/>Om het nationale referentiedocument te gebruiken, contacteer uw <a href=mailto:.$_SESSION[config][adminmail].>administrator</a>');}

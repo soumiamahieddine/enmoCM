@@ -38,9 +38,6 @@ if (!defined('_MANAGE_TAGS')) {
 if (!defined('_ADMIN_TAGS')) {
     define('_ADMIN_TAGS', 'Sleutelwoorden');
 }
-if (!defined('_ADMIN_TAGS_DESC')) {
-    define('_ADMIN_TAGS_DESC', 'Voor het wijzigen / verwijderen / toevoegen of fusioneren van '.strtolower(_TAGS_DEFAULT).' vanuit de beheerinterface');
-}
 if (!defined('_ALL_TAGS')) {
     define('_ALL_TAGS', 'Alle '.strtolower(_TAGS_DEFAULT));
 }

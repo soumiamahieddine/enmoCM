@@ -169,8 +169,6 @@ if (!defined("_LINK_TO_MAARCH"))
 //v2.0
 if (!defined("_ADMIN_NOTIFICATIONS"))
     define("_ADMIN_NOTIFICATIONS", "Notifications");
-if (!defined("_ADMIN_NOTIFICATIONS_DESC"))
-    define("_ADMIN_NOTIFICATIONS_DESC", "Créer et gérer des notifications aux utilisateurs basées sur des événements de l'application");
 if (!defined("_MANAGE_NOTIFS"))
     define("_MANAGE_NOTIFS", "Gérer les notifications");
 if (!defined("_MANAGE_NOTIFS_DESC"))

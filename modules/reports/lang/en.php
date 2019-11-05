@@ -22,16 +22,12 @@
 /*************************** Report management *****************/
 if (!defined("_ADMIN_REPORTS"))
     define("_ADMIN_REPORTS","States and editions");
-if (!defined("_ADMIN_REPORTS_DESC"))
-    define("_ADMIN_REPORTS_DESC","States and editions administration");
 if (!defined("_REPORTS"))
     define("_REPORTS","States and editions");
 if (!defined("_REPORTS_COMMENT"))
     define("_REPORTS_COMMENT","States and editions");
 if (!defined("_OTHER_REPORTS"))
     define("_OTHER_REPORTS","Others editions");
-if (!defined("_REPORTS_DESC"))
-    define("_REPORTS_DESC","States editions");
 if (!defined("_HAVE_TO_SELECT_GROUP"))
     define("_HAVE_TO_SELECT_GROUP", "You have to select a group");
 if (!defined("_AVAILABLE_REPORTS"))
