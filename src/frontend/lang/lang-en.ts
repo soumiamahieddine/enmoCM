@@ -1246,4 +1246,5 @@ export const LANG_EN = {
     "chooseFile" : "Choose a file",
     "or" : "or",
     "dragAndDrop" : "Drag and drop",
+    "backBasket" : "Back to basket",
 };

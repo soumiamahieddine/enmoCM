@@ -1271,4 +1271,5 @@ export const LANG_NL = {
     "chooseFile" : "Choose a file", //_TO_TRANSLATE
     "or" : "or", //_TO_TRANSLATE
     "dragAndDrop" : "Drag and drop", //_TO_TRANSLATE
+    "backBasket" : "Back to basket", //_TO_TRANSLATE
 };

@@ -19,7 +19,7 @@ export class HeaderPanelComponent implements OnInit {
     config      : any       = {};
 
 
-    @Input('showBackHome') showBackHome: boolean = false;
+    @Input('navButton') navButton: any = null;
     @Input('snavLeft') snavLeft: MatSidenav;
     
     constructor(
@@ -30,7 +30,7 @@ export class HeaderPanelComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    gotToHome() {
-        this.router.navigate(['/home']);
+    gotTo() {
+        this.router.navigate([this.navButton.route]);
     }
 }

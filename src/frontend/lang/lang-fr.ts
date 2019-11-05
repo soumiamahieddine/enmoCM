@@ -1283,4 +1283,5 @@ export const LANG_FR = {
     "chooseFile" : "Choisissez un fichier",
     "or" : "ou",
     "dragAndDrop" : "Glisser-déposer",
+    "backBasket" : "Retour bannette",
 };
