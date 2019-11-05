@@ -2,7 +2,10 @@
 
 namespace Group\controllers;
 
+use Group\models\GroupModel;
 use Group\models\ServiceModel;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
@@ -54,111 +57,52 @@ class ServiceController
         "admin_update_control",
     ];
 
-    public static function getMenuServicesByUserIdByXml(array $aArgs)
+    public static function addPrivilege(Request $request, Response $response, array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
-
-        $rawServicesStoredInDB = ServiceModel::getByUserId(['userId' => $aArgs['userId']]);
-        $servicesStoredInDB = [];
-        foreach ($rawServicesStoredInDB as $value) {
-            $servicesStoredInDB[] = $value['service_id'];
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $menu = [];
-        if (!empty($servicesStoredInDB)) {
-            $menu = ServiceModel::getApplicationServicesByUserServices(['userServices' => $servicesStoredInDB, 'type' => 'menu']);
-            $menuModules = ServiceModel::getModulesServicesByUserServices(['userServices' => $servicesStoredInDB, 'type' => 'menu']);
-            $menu = array_merge($menu, $menuModules);
-        }
-
-        $userGroups = UserModel::getGroupsByLogin(['login' => $aArgs['userId']]);
-        $indexingGroups = [];
-        foreach ($userGroups as $group) {
-            if ($group['can_index']) {
-                $indexingGroups[] = ['id' => $group['id'], 'label' => $group['group_desc']];
-            }
-        }
-        if (!empty($indexingGroups)) {
-            $menu[] = [
-                'id'        => 'indexing',
-                'style'     => 'fa fa-file-medical',
-                'name'      => _INDEXING_MLB,
-                'groups'    => $indexingGroups
-            ];
-        }
-
-        return $menu;
-    }
-
-    public static function getMenuPrivilegesByUserId(array $args)
-    {
-        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::notEmpty($args, ['privilegeId', 'id']);
+        ValidatorModel::stringType($args, ['privilegeId']);
         ValidatorModel::intVal($args, ['id']);
 
-        $rawPrivilegesStoredInDB = ServiceModel::getByUser(['id' => $args['id']]);
-        $privilegesStoredInDB = array_column($rawPrivilegesStoredInDB, 'service_id');
-
-        $menu = [];
-        if (!empty($privilegesStoredInDB)) {
-            foreach ($privilegesStoredInDB as $privilege) {
-                if (in_array($privilege, ServiceController::PRIVILEGE_MENU)) {
-                    $menu[] = $privilege;
-                }
-            }
+        $group = GroupModel::getById(['id' => $args['id']]);
+        if (empty($group)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
-        $userGroups = UserModel::getGroupsByUser(['id' => $args['id']]);
-        $indexingGroups = [];
-        foreach ($userGroups as $group) {
-            if ($group['can_index']) {
-                $indexingGroups[] = ['id' => $group['id'], 'label' => $group['group_desc']];
-            }
-        }
-        if (!empty($indexingGroups)) {
-            $menu[] = 'indexing';
+        if (ServiceModel::groupHasPrivilege(['privilegeId' => $args['privilegeId'], 'groupId' => $group['group_id']])) {
+            return $response->withStatus(204);
         }
 
-        return $menu;
+        ServiceModel::addPrivilegeToGroup(['privilegeId' => $args['privilegeId'], 'groupId' => $group['group_id']]);
+
+        return $response->withStatus(204);
     }
 
-    public static function getAdministrationPrivilegesByUserId(array $args)
+    public static function removePrivilege(Request $request, Response $response, array $args)
     {
-        ValidatorModel::notEmpty($args, ['userId']);
-        ValidatorModel::intVal($args, ['userId']);
-
-        $rawPrivilegesStoredInDB = ServiceModel::getByUser(['id' => $args['userId']]);
-        $privilegesStoredInDB = array_column($rawPrivilegesStoredInDB, 'service_id');
-
-        $organization = [];
-        $classifying = [];
-        $production = [];
-        $supervision = [];
-
-        if (!empty($privilegesStoredInDB)) {
-            foreach ($privilegesStoredInDB as $privilege) {
-                if (in_array($privilege, ServiceController::PRIVILEGE_ADMIN_ORGANIZATION)) {
-                    $organization[] = $privilege;
-                } else if (in_array($privilege, ServiceController::PRIVILEGE_ADMIN_CLASSIFYING)) {
-                    $classifying[] = $privilege;
-                } else if (in_array($privilege, ServiceController::PRIVILEGE_ADMIN_PRODUCTION)) {
-                    $production[] = $privilege;
-                } else if (in_array($privilege, ServiceController::PRIVILEGE_ADMIN_SUPERVISION)) {
-                    $supervision[] = $privilege;
-                }
-            }
+        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $administration = [
-            "administration" => [
-                "organisation" => $organization,
-                "classement" => $classifying,
-                "production" => $production,
-                "supervision" => $supervision
-           ]
-        ];
+        ValidatorModel::notEmpty($args, ['privilegeId', 'id']);
+        ValidatorModel::stringType($args, ['privilegeId']);
+        ValidatorModel::intVal($args, ['id']);
 
-        return $administration;
+        $group = GroupModel::getById(['id' => $args['id']]);
+        if (empty($group)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
+        }
+
+        if (!ServiceModel::groupHasPrivilege(['privilegeId' => $args['privilegeId'], 'groupId' => $group['group_id']])) {
+            return $response->withStatus(204);
+        }
+
+        ServiceModel::removePrivilegeToGroup(['privilegeId' => $args['privilegeId'], 'groupId' => $group['group_id']]);
+
+        return $response->withStatus(204);
     }
 
     public static function hasPrivilege(array $args)

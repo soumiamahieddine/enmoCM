@@ -342,6 +342,49 @@ abstract class ServiceModelAbstract
         return $privileges;
     }
 
+    public static function addPrivilegeToGroup(array $args) {
+        ValidatorModel::notEmpty($args, ['privilegeId', 'groupId']);
+        ValidatorModel::stringType($args, ['privilegeId', 'groupId']);
+
+        DatabaseModel::insert([
+            'table'     => 'usergroups_services',
+            'columnsValues' => [
+                'group_id'  => $args['groupId'],
+                'service_id'  => $args['privilegeId'],
+            ]
+        ]);
+
+        return true;
+    }
+
+    public static function removePrivilegeToGroup(array $args) {
+        ValidatorModel::notEmpty($args, ['privilegeId', 'groupId']);
+        ValidatorModel::stringType($args, ['privilegeId', 'groupId']);
+
+        DatabaseModel::delete([
+            'table' => 'usergroups_services',
+            'where' => ['group_id = ?', 'service_id = ?'],
+            'data'  => [$args['groupId'], $args['privilegeId']]
+        ]);
+
+        return true;
+    }
+
+    public static function groupHasPrivilege(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['groupId', 'privilegeId']);
+        ValidatorModel::stringType($args, ['groupId', 'privilegeId']);
+
+        $service = DatabaseModel::select([
+            'select'    => ['group_id', 'service_id'],
+            'table'     => ['usergroups_services'],
+            'where'     => ['group_id = ?', 'service_id = ?'],
+            'data'      => [$args['groupId'], $args['privilegeId']]
+        ]);
+
+        return !empty($service);
+    }
+
     protected static function getLoadedXml(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['location']);

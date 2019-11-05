@@ -218,6 +218,8 @@ $app->get('/groups/{id}/indexing', \Group\controllers\GroupController::class . '
 $app->put('/groups/{id}/indexing', \Group\controllers\GroupController::class . ':updateIndexingInformations');
 $app->put('/groups/{id}/services/{serviceId}', \Group\controllers\GroupController::class . ':updateService');
 $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupController::class . ':reassignUsers');
+$app->post('/groups/{id}/add/{privilegeId}', \Group\controllers\ServiceController::class . ':addPrivilege');
+$app->delete('/groups/{id}/remove/{privilegeId}', \Group\controllers\ServiceController::class . ':removePrivilege');
 
 //Histories
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
