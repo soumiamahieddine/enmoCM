@@ -47,8 +47,9 @@ abstract class content_management_tools_Abstract
 
     public function __construct()
     {
-        if (!isset($_SESSION) OR count($_SESSION) == 0)
+        if (!isset($_SESSION) or count($_SESSION) == 0) {
             return null;
+        }
 
         $this->db = new Database();
         //TODO: PUT IT AN CONFIG FILE WITH 30
@@ -62,15 +63,15 @@ abstract class content_management_tools_Abstract
     {
         if (file_exists(
             $_SESSION['config']['corepath'] . 'custom/'
-            . $_SESSION['custom_override_id'] 
+            . $_SESSION['custom_override_id']
             . '/modules/content_management/xml/content_management_features.xml'
         )
         ) {
             $path = $_SESSION['config']['corepath'] . 'custom/'
-                . $_SESSION['custom_override_id'] 
+                . $_SESSION['custom_override_id']
                 . '/modules/content_management/xml/content_management_features.xml';
         } else {
-            $path = $_SESSION['config']['corepath'] 
+            $path = $_SESSION['config']['corepath']
                 . 'modules/content_management/xml/content_management_features.xml';
         }
         $cMFeatures = array();
@@ -104,7 +105,6 @@ abstract class content_management_tools_Abstract
         $stmt = $this->db->query($query, array($charTofind, $timeLimit));
         
         if ($res = $stmt->fetchObject()) {
-
             $arrayUser = array();
             $arrayUser = explode("#", $res->id);
             if ($arrayUser[1] <> '') {
@@ -163,7 +163,7 @@ abstract class content_management_tools_Abstract
                . " where id like ?"
                . " and param_value_string = ?";
         $stmt = $this->db->query(
-            $query, 
+            $query,
             array($timeLimit, $charTofind, $CMId)
         );
     }
@@ -219,7 +219,9 @@ abstract class content_management_tools_Abstract
     {
         $query = "delete from " . PARAM_TABLE
             . " where id like ?";
-        $stmt = $this->db->query($query, array('content_management_reservation#' 
+        $stmt = $this->db->query(
+            $query,
+            array('content_management_reservation#'
             . $_SESSION['user']['UserId'] . '%')
         );
     }
@@ -232,16 +234,24 @@ abstract class content_management_tools_Abstract
     */
     protected function deleteDirectory($dir)
     {
-        if (!file_exists($dir)) return true;
-        if (!is_dir($dir) || is_link($dir)) return unlink($dir);
-            foreach (scandir($dir) as $item) {
-                if ($item == '.' || $item == '..') continue;
-                if (!$this->deleteDirectory($dir . "/" . $item)) {
-                    chmod($dir . "/" . $item, 0777);
-                    if (!$this->deleteDirectory($dir . "/" . $item)) return false;
-                };
+        if (!file_exists($dir)) {
+            return true;
+        }
+        if (!is_dir($dir) || is_link($dir)) {
+            return unlink($dir);
+        }
+        foreach (scandir($dir) as $item) {
+            if ($item == '.' || $item == '..') {
+                continue;
             }
-            return rmdir($dir);
+            if (!$this->deleteDirectory($dir . "/" . $item)) {
+                chmod($dir . "/" . $item, 0777);
+                if (!$this->deleteDirectory($dir . "/" . $item)) {
+                    return false;
+                }
+            };
+        }
+        return rmdir($dir);
     }
 
     /**
@@ -261,7 +271,7 @@ abstract class content_management_tools_Abstract
         $stmt = $this->db->query($query, array($charTofind, $CMId));
         if ($res = $stmt->fetchObject()) {
             $secBeforeExpiration = $res->time - $now;
-            if ($secBeforeExpiration < 0)  {
+            if ($secBeforeExpiration < 0) {
                 return 0;
             } else {
                 return $secBeforeExpiration;
@@ -277,7 +287,8 @@ abstract class content_management_tools_Abstract
     * @param  string $mimeType mime type of the resource
     * @return array the program and status ok if mime type allowed for content_management
     */
-    public function isMimeTypeAllowedForCM($mimeType, $ext) {
+    public function isMimeTypeAllowedForCM($mimeType, $ext)
+    {
         $typeState = 'ko';
         $programPath = '';
         if ($mimeType <> '' && $ext <> '') {
@@ -340,7 +351,7 @@ abstract class content_management_tools_Abstract
     /**
     * Generate JLNP file to launch the JNLP
     *
-    * 
+    *
     */
     public function generateJNLP(
         $jar_url,
@@ -355,7 +366,6 @@ abstract class content_management_tools_Abstract
         $convertPdf = "false",
         $onlyConvert = "false"
     ) {
-        
         $docXML = new DomDocument('1.0', "UTF-8");
 
         //create unique id for APPLET
@@ -374,8 +384,8 @@ abstract class content_management_tools_Abstract
         if ($objectType == 'attachmentUpVersion') {
             $dbAttachment = new Database();
             $query = "SELECT relation, docserver_id, path, filename, format 
-            FROM res_view_attachments 
-            WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc";
+            FROM res_attachments 
+            WHERE res_id = ? AND res_id_master = ? ORDER BY relation desc";
 
             $stmt = $dbAttachment->query($query, array($objectId, $objectId, $_SESSION['doc_id']));
 
@@ -400,13 +410,13 @@ abstract class content_management_tools_Abstract
                 'a'
             );
             fwrite(
-                $inF, 
+                $inF,
                 '------------------' . PHP_EOL
                 . 'CREATE JNLP------------------'
                 . $_SERVER['SERVER_NAME'] . ' ' . $_SESSION['user']['UserId'] . ' ' . date('D, j M Y H:i:s O') .PHP_EOL
             );
             fwrite($inF, '|||||||||||||||||SERVER DETAILS BEGIN FOR CREATE JNLP|||||||||||||||||' . PHP_EOL);
-            foreach($_SERVER as $key => $value) {
+            foreach ($_SERVER as $key => $value) {
                 fwrite($inF, $key . " : " . $value . PHP_EOL);
             }
             fwrite($inF, '|||||||||||||||||SERVER DETAILS END FOR CREATE JNLP|||||||||||||||||' . PHP_EOL);
@@ -440,13 +450,13 @@ abstract class content_management_tools_Abstract
         }
         
         $jnlp_balise=$docXML->createElement("jnlp");
-        $jnlp_attribute1 = $docXML->createAttribute('spec'); 
+        $jnlp_attribute1 = $docXML->createAttribute('spec');
         $jnlp_attribute1->value = '6.0+';
-        $jnlp_balise->appendChild($jnlp_attribute1); 
+        $jnlp_balise->appendChild($jnlp_attribute1);
 
         $pathUrl = trim($_SESSION['config']['coreurl'], '/');
 
-        $jnlp_attribute2 = $docXML->createAttribute('codebase'); 
+        $jnlp_attribute2 = $docXML->createAttribute('codebase');
         $jnlp_attribute2->value = $pathUrl . '/rest/jnlp/';
         $jnlp_balise->appendChild($jnlp_attribute2);
 
@@ -458,18 +468,18 @@ abstract class content_management_tools_Abstract
 
         $info_balise=$docXML->createElement("information");
 
-        $title_balise=$docXML->createElement("title","Editeur de modèle de document");
+        $title_balise=$docXML->createElement("title", "Editeur de modèle de document");
 
-        $vendor_balise=$docXML->createElement("vendor","MAARCH");
+        $vendor_balise=$docXML->createElement("vendor", "MAARCH");
 
         $homepage_balise=$docXML->createElement("homepage");
         $homepage_attribute = $docXML->createAttribute('href');
         $homepage_attribute->value = 'http://maarch.com';
         $homepage_balise->appendChild($homepage_attribute);
 
-        $desc_balise=$docXML->createElement("description","Génère votre document avec méta-données associées au courrier grâce à des champs de fusion.");
+        $desc_balise=$docXML->createElement("description", "Génère votre document avec méta-données associées au courrier grâce à des champs de fusion.");
         
-        $descshort_balise=$docXML->createElement("description","Génère votre document avec méta-données.");
+        $descshort_balise=$docXML->createElement("description", "Génère votre document avec méta-données.");
         $descshort_attribute = $docXML->createAttribute('kind');
         $descshort_attribute->value = 'short';
         $descshort_balise->appendChild($descshort_attribute);
@@ -588,20 +598,20 @@ abstract class content_management_tools_Abstract
 
         $param12_balise=$docXML->createElement("argument", $hashFile);
 
-        $jnlp_balise->appendChild($info_balise); 
-        $info_balise->appendChild($title_balise); 
-        $info_balise->appendChild($vendor_balise); 
-        $info_balise->appendChild($homepage_balise); 
-        $info_balise->appendChild($desc_balise); 
-        $info_balise->appendChild($descshort_balise); 
-        $info_balise->appendChild($offline_balise); 
+        $jnlp_balise->appendChild($info_balise);
+        $info_balise->appendChild($title_balise);
+        $info_balise->appendChild($vendor_balise);
+        $info_balise->appendChild($homepage_balise);
+        $info_balise->appendChild($desc_balise);
+        $info_balise->appendChild($descshort_balise);
+        $info_balise->appendChild($offline_balise);
 
-        $jnlp_balise->appendChild($security_balise); 
-        $security_balise->appendChild($permission_balise); 
+        $jnlp_balise->appendChild($security_balise);
+        $security_balise->appendChild($permission_balise);
 
-        $jnlp_balise->appendChild($resources_balise); 
-        $resources_balise->appendChild($j2se_balise); 
-        $resources_balise->appendChild($jar_balise); 
+        $jnlp_balise->appendChild($resources_balise);
+        $resources_balise->appendChild($j2se_balise);
+        $resources_balise->appendChild($jar_balise);
         $resources_balise->appendChild($jar_balise_1);
         $resources_balise->appendChild($jar_balise_2);
         $resources_balise->appendChild($jar_balise_3);
@@ -623,11 +633,11 @@ abstract class content_management_tools_Abstract
         $applet_balise->appendChild($param11_balise);
         $applet_balise->appendChild($param12_balise);
 
-        $docXML->appendChild($jnlp_balise);  
+        $docXML->appendChild($jnlp_balise);
 
         $filename = $_SESSION['config']['tmppath'].$jnlp_name;
 
-        $docXML->save($filename); 
+        $docXML->save($filename);
 
         $fp = fopen($_SESSION['config']['tmppath'].$uid_applet_name.".lck", 'w+');
 

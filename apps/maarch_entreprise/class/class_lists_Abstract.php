@@ -1250,43 +1250,6 @@ abstract class lists_Abstract extends Database
         }
     }
 
-    protected function _tmplt_showActionBasketsFA($parameter, $resultTheLine)
-    {
-        $my_explode = explode('|', $parameter);
-
-        if (!$my_explode[1]) {
-            return _WRONG_PARAM_FOR_LOAD_VALUE;
-        } else {
-            if (count($my_explode) >= 4) {
-                //Init
-                $actionIsDisabled = false;
-
-                //Check if action is disabled
-                if (isset($my_explode[4]) && !empty($my_explode[4])) {
-                    $actionIsDisabled = $this->_checkDisabledRules($my_explode[4], $resultTheLine);
-                }
-                //If disabled, return blank
-                if ($actionIsDisabled) {
-                    return '&nbsp;';
-                } else {
-                    $db = new Database();
-                    $stmt = $db->query("SELECT res_id_master FROM res_view_attachments WHERE status = 'EXP_RTURN' AND validation_date < CURRENT_TIMESTAMP AND res_id_master = ?",
-                                        [$resultTheLine[0]['res_id']]);
-                    $color = '';
-                    if ($stmt->rowCount() >= 1) {
-                        $color = 'style="color: red"';
-                    }
-                    //return action icon
-                    return '<a href="javascript://" onClick="'.$my_explode[3]
-                    .'" title="'.$my_explode[1].'"><i class="fa fa-'
-                    .$my_explode[2].' fa-2x" '.$color.' title="'.$my_explode[1].'"></i></a>';
-                }
-            } else {
-                return _WRONG_PARAM_FOR_LOAD_VALUE;
-            }
-        }
-    }
-
     protected function _tmplt_func_isConfidential($resultTheLine)
     {
         $db = new Database();
@@ -1326,7 +1289,7 @@ abstract class lists_Abstract extends Database
                     }
                     $db = new Database();
                     $stmt = $db->query(
-                        "SELECT count(*) as total FROM res_view_attachments WHERE res_id_master = ? and status not in ('DEL','OBS','TMP') and lower(translate(title,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(?)", array($resultTheLine[0]['res_id'], $_SESSION['searching']['where_request_parameters'][':subject'])
+                        "SELECT count(1) as total FROM res_attachments WHERE res_id_master = ? and status not in ('DEL','OBS','TMP') and lower(translate(title,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(?)", array($resultTheLine[0]['res_id'], $_SESSION['searching']['where_request_parameters'][':subject'])
                     );
                     $res_attach = $stmt->fetchObject();
                     if ($res_attach->total > 0) {
@@ -1736,9 +1699,6 @@ abstract class lists_Abstract extends Database
             //#showActionFA## : show action Font Awesome
         } elseif (preg_match("/^showActionFA\|/", $parameter)) {
             $var = $this->_tmplt_showActionFA($parameter, $resultTheLine);
-            //#showActionBasketsFA## : show action Font Awesome
-        } elseif (preg_match("/^showActionBasketsFA\|/", $parameter)) {
-            $var = $this->_tmplt_showActionBasketsFA($parameter, $resultTheLine);
             //#showActionAdvResultFA## : show action Font Awesome
         } elseif (preg_match("/^showActionAdvResultFA\|/", $parameter)) {
             $var = $this->_tmplt_showActionAdvResultFA($parameter, $resultTheLine);

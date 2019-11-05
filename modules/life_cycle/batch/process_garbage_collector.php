@@ -76,7 +76,7 @@ while ($GLOBALS['state'] <> "END") {
                     echo 'attach turn' . PHP_EOL;
                     //SECOND SELECT THE ATTACH IN DEL STATUS
                     $GLOBALS['table'] = 'res_attachments';
-                    $GLOBALS['versionTable'] = 'res_version_attachments';
+                    $GLOBALS['versionTable'] = '';
                     $GLOBALS['adrTable'] = 'adr_attachments';
                     $GLOBALS['attachAlreadyDone'] = true;
                     $GLOBALS['dateToPurgeDEL'] = '';
@@ -98,7 +98,7 @@ while ($GLOBALS['state'] <> "END") {
                 //THIRD SELECT THE ATTACH IN OBS STATUS
                 $where_clause = "STATUS = 'OBS' and creation_date <= '" . $GLOBALS['dateToPurgeOBS'] . "'";
                 $GLOBALS['table'] = 'res_attachments';
-                $GLOBALS['versionTable'] = 'res_version_attachments';
+                $GLOBALS['versionTable'] = '';
                 $GLOBALS['adrTable'] = 'adr_attachments';
                 $GLOBALS['obsAlreadyDone'] = true;
                 $GLOBALS['dateToPurgeOBS'] = '';

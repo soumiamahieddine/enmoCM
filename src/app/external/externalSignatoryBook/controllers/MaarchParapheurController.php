@@ -197,7 +197,7 @@ class MaarchParapheurController
 
             $attachments = AttachmentModel::getOnView([
                 'select'    => [
-                    'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
+                    'res_id', 'title', 'identifier', 'attachment_type',
                     'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
                     'validation_date', 'relation', 'attachment_id_master'
                 ],
@@ -209,17 +209,11 @@ class MaarchParapheurController
                 return ['error' => 'No attachment to send'];
             } else {
                 foreach ($attachments as $value) {
-                    if (!empty($value['res_id'])) {
-                        $resId  = $value['res_id'];
-                        $collId = 'attachments_coll';
-                        $is_version = false;
-                    } else {
-                        $resId  = $value['res_id_version'];
-                        $collId = 'attachments_version_coll';
-                        $is_version = true;
-                    }
+                    $resId  = $value['res_id'];
+                    $collId = 'attachments_coll';
+                    $is_version = false;
                     
-                    $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId, 'isVersion' => $is_version]);
+                    $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId]);
                     if (empty($adrInfo['docserver_id'])) {
                         return ['error' => 'Attachment ' . $resId . ' is not converted in pdf'];
                     }
@@ -384,7 +378,7 @@ class MaarchParapheurController
 
     public static function retrieveSignedMails(array $aArgs)
     {
-        foreach (['noVersion', 'isVersion', 'resLetterbox'] as $version) {
+        foreach (['noVersion', 'resLetterbox'] as $version) {
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
                 $documentWorkflow = MaarchParapheurController::getDocumentWorkflow(['config' => $aArgs['config'], 'documentId' => $value->external_id]);
                 $state = MaarchParapheurController::getState(['workflow' => $documentWorkflow]);

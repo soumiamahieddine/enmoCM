@@ -58,12 +58,12 @@ if (isset($_REQUEST['res_id_version'])) {
 
                 $db = new Database();
 
-                $query = "SELECT attachment_id_master, res_id_master FROM res_view_attachments WHERE res_id_version = ? ";
-                $stmt = $db->query($query,array($_REQUEST['res_id_version']));
+                $query = "SELECT origin_id FROM res_attachments WHERE res_id = ? ";
+                $stmt = $db->query($query, array($_REQUEST['res_id_version']));
 				$attach = $stmt->fetchObject();
 
-                $query = "SELECT status, '1' as relation, creation_date, title, typist, res_id FROM res_attachments WHERE res_id = ? UNION ALL SELECT status, relation, creation_date, title, typist, res_id_version FROM res_view_attachments WHERE attachment_id_master = ? AND status = 'OBS' ORDER BY relation desc";
-                $stmt = $db->query($query,array($attach->attachment_id_master,$attach->attachment_id_master));
+                $query = "SELECT status, relation, creation_date, title, typist, res_id FROM res_attachments WHERE (res_id = ? or origin_id = ?) AND status = 'OBS' ORDER BY relation desc";
+                $stmt = $db->query($query, array($attach->origin_id));
 
                 while ($return_db = $stmt->fetchObject()) {
                     $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';

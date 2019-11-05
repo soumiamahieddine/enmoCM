@@ -280,15 +280,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     ]);
                 }
             }
-            if (!empty($attachmentToFreeze['attachments_version_coll'])) {
-                foreach ($attachmentToFreeze['attachments_version_coll'] as $resId => $externalId) {
-                    \Attachment\models\AttachmentModel::freezeAttachment([
-                        'resId' => $resId,
-                        'table' => 'res_version_attachments',
-                        'externalId' => $externalId
-                    ]);
-                }
-            }
         }
     }
 

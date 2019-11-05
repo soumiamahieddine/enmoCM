@@ -57,13 +57,10 @@ if (empty($docserver)) {
             require_once "core/class/class_request.php";
             $db = new Database();
             $signatoryUser = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
-            if ($_SESSION['visa']['repSignRel'] > 1) {
-                $target_table = 'res_version_attachments';
-                $db->query("UPDATE res_version_attachments set status = 'SIGN', signatory_user_serial_id = ? WHERE res_id = ?", [$signatoryUser['id'], $_SESSION['visa']['repSignId']]);
-            } else {
-                $target_table = 'res_attachments';
-                $db->query("UPDATE res_attachments set status = 'SIGN', signatory_user_serial_id = ? WHERE res_id = ?", [$signatoryUser['id'], $_SESSION['visa']['repSignId']]);
-            }
+            
+            $target_table = 'res_attachments';
+            $db->query("UPDATE res_attachments set status = 'SIGN', signatory_user_serial_id = ? WHERE res_id = ?", [$signatoryUser['id'], $_SESSION['visa']['repSignId']]);
+            
             unset($_SESSION['visa']['repSignRel']);
             if (isset($_SESSION['visa']['repSignId'])) {
                 unset($_SESSION['visa']['repSignId']);

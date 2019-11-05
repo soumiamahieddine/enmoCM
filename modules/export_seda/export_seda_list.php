@@ -465,10 +465,10 @@ for ($i = 0; $i < $tabI; ++$i) {
                 $tab[$i][$j]['order'] = 'category_id';
             }
             if ($tab[$i][$j][$value] == 'count_attachment') {
-                $query = "SELECT count(*) as total FROM res_view_attachments
+                $query = "SELECT count(1) as total FROM res_attachments
                             WHERE res_id_master = ?
-                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN ('converted_pdf', 'print_folder') AND coll_id = ? AND (status <> 'TMP' or (typist = ? and status = 'TMP'))";
-                $arrayPDO = array($tab[$i][0]['res_id'], $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']);
+                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN ('converted_pdf', 'print_folder') AND (status <> 'TMP' or (typist = ? and status = 'TMP'))";
+                $arrayPDO = array($tab[$i][0]['res_id'], $_SESSION['user']['UserId']);
                 $stmt2 = $db->query($query, $arrayPDO);
                 $return_count = $stmt2->fetchObject();
 

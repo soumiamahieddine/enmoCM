@@ -88,22 +88,17 @@ class IParapheurController
         // END annexes
 
         $attachments         = \Attachment\models\AttachmentModel::getOnView([
-            'select'         => ['res_id', 'res_id_version', 'title', 'attachment_type','path'],
+            'select'         => ['res_id', 'title', 'attachment_type','path'],
             'where'          => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", 'in_signature_book = TRUE'],
             'data'           => [$aArgs['resIdMaster'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
         ]);
 
         for ($i = 0; $i < count($attachments); $i++) {
-            if (!empty($attachments[$i]['res_id'])) {
-                $resId  = $attachments[$i]['res_id'];
-                $collId = 'attachments_coll';
-                $is_version = false;
-            } else {
-                $resId  = $attachments[$i]['res_id_master'];
-                $collId = 'attachments_version_coll';
-                $is_version = true;
-            }
-            $attachmentInfo         = \Convert\controllers\ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId, 'isVersion' => $is_version]);
+            $resId  = $attachments[$i]['res_id'];
+            $collId = 'attachments_coll';
+            $is_version = false;
+            
+            $attachmentInfo         = \Convert\controllers\ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId]);
 
             $attachmentPath         = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $attachmentInfo['docserver_id'], 'select' => ['path_template']]);
             $attachmentFilePath     = $attachmentPath['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachmentInfo['path']) . $attachmentInfo['filename'];
@@ -264,62 +259,6 @@ class IParapheurController
                             break;
                         } else {
                             $aArgs['idsToRetrieve']['noVersion'][$noVersion->res_id]->status = 'waiting';
-                        }
-                    }
-                }
-            } else {
-                echo _EXTERNAL_ID_EMPTY;
-            }
-        }
-        foreach ($aArgs['idsToRetrieve']['isVersion'] as $isVersion) {
-            if (!empty($noVersion->external_id)) {
-                $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
-                   <?xml version="1.0" encoding="utf-8"?>
-                    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns="http://www.adullact.org/spring-ws/iparapheur/1.0">
-                        <soapenv:Header/> 
-                        <soapenv:Body> 
-                            <ns:GetHistoDossierRequest>' . $isVersion->external_id . '</ns:GetHistoDossierRequest> 
-                        </soapenv:Body> 
-                    </soapenv:Envelope>';
-
-                $curlReturn = self::returnCurl($xmlPostString, $aArgs['config']);
-
-                if (!empty($curlReturn['response'])) {
-                    // TODO gestin d'une erreur
-                    echo $curlReturn['error'];
-                    return false;
-                }
-
-                $response = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children('http://www.adullact.org/spring-ws/iparapheur/1.0')->GetHistoDossierResponse[0];
-
-                if ($response->MessageRetour->codeRetour == $aArgs['config']['data']['errorCode']) {
-                    // TODO gestion d'une potentielle erreur
-                    echo 'retrieveSignedMails isVersion : [' . $response->MessageRetour->severite . ']' . $response->MessageRetour->message;
-                    return false;
-                } else {
-                    $noteContent = '';
-                    foreach ($response->LogDossier as $res) {    // Loop on all steps of the documents (prepared, send to signature, signed etc...)
-                        $status = $res->status;
-                        if ($status == $aArgs['config']['data']['visaState'] || $status == $aArgs['config']['data']['signState']) {
-                            $noteContent .= $res->nom . ' : ' . $res->annotation . PHP_EOL;
-                            $response = self::download([
-                                'config' => $aArgs['config'],
-                                'documentId' => $isVersion->external_id
-                            ]);
-                            $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->status = 'validated';
-                            $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->format = 'pdf';
-                            $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->encodedFile = $response['b64FileContent'];
-                            $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->noteContent = $noteContent;
-                            if ($status == $aArgs['config']['data']['signState']) {
-                                break;
-                            }
-                        } elseif ($status == $aArgs['config']['data']['refusedVisa'] || $status == $aArgs['config']['data']['refusedSign']) {
-                            $noteContent .= $res->nom . ' : ' . $res->annotation . PHP_EOL;
-                            $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->status = 'refused';
-                            $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->noteContent = $noteContent;
-                            break;
-                        } else {
-                            $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->status = 'waiting';
                         }
                     }
                 }

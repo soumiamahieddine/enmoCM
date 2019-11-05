@@ -59,18 +59,18 @@ if (isset($_REQUEST['res_id_master'])) {
         $excludeAttachmentTypes[] = 'document_with_notes';
     }
 
-    $query = "SELECT * FROM res_view_attachments 
+    $query = "SELECT * FROM res_attachments 
                             WHERE res_id_master = ? 
-                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN (?) AND coll_id = ?  AND (status <> 'TMP' or (typist = ? and status = 'TMP')) 
+                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN (?)  AND (status <> 'TMP' or (typist = ? and status = 'TMP')) 
                             ORDER BY creation_date desc";
-    $arrayPDO = array($_REQUEST['res_id_master'], $excludeAttachmentTypes, $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']);
+    $arrayPDO = array($_REQUEST['res_id_master'], $excludeAttachmentTypes, $_SESSION['user']['UserId']);
     $stmt = $db->query($query, $arrayPDO);
 
     while ($return_db = $stmt->fetchObject()) {
         if (!empty($_REQUEST['option']) && $_REQUEST['option'] == 'FT') {
             if ($return_db->format != 'pdf') {
                 $stmtFullText = $db->query(
-                    'SELECT res_id FROM res_view_attachments WHERE filename = ? and attachment_type = ? and path = ? ORDER BY relation desc',
+                    'SELECT res_id FROM res_attachments WHERE filename = ? and attachment_type = ? and path = ? ORDER BY relation desc',
                                 [str_replace('.'.$return_db->format, '.pdf', $return_db->filename), 'converted_pdf', $return_db->path]
                 );
                 $lineFullText = $stmtFullText->fetchObject();
@@ -79,14 +79,12 @@ if (isset($_REQUEST['res_id_master'])) {
                 }
             }
             $stmt2 = $db->query(
-                        "SELECT count(*) as total FROM res_view_attachments WHERE res_id = ? and status not in ('DEL','OBS','TMP') and lower(translate(title,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(?)",
+                        "SELECT count(*) as total FROM res_attachments WHERE res_id = ? and status not in ('DEL','OBS','TMP') and lower(translate(title,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(?)",
                 array($return_db->res_id, $_SESSION['searching']['where_request_parameters'][':subject'])
                         );
             $res_attach = $stmt2->fetchObject();
 
-            if ((!empty($_SESSION['fullTextAttachments']['attachments']) && in_array($return_db->res_id, $_SESSION['fullTextAttachments']['attachments'])) ||
-                            (!empty($_SESSION['fullTextAttachments']['versionAttachments']) && in_array($return_db->res_id_version, $_SESSION['fullTextAttachments']['versionAttachments']))
-                        ) {
+            if (!empty($_SESSION['fullTextAttachments']['attachments']) && in_array($return_db->res_id, $_SESSION['fullTextAttachments']['attachments'])) {
                 $return .= '<tr style="border: 1px solid;color: #135F7F;font-weight: bold" style="background-color: #FFF;">';
             } elseif (!empty($resIdConverted) && !empty($_SESSION['fullTextAttachments']['attachments']) && in_array($resIdConverted, $_SESSION['fullTextAttachments']['attachments'])) {
                 $return .= '<tr style="border: 1px solid;color: #135F7F;font-weight: bold" style="background-color: #FFF;">';
@@ -177,12 +175,7 @@ if (isset($_REQUEST['res_id_master'])) {
         $return .= '&nbsp;&nbsp;';
         $return .= '<a ';
         $return .= 'href="';
-        if ($return_db->res_id != 0) {
-            $id = $return_db->res_id;
-        } else {
-            $id = $return_db->res_id_version;
-        }
-        $return .= 'index.php?display=true&module=attachments&page=view_attachment&id='.$id.'&res_id_master='
+        $return .= 'index.php?display=true&module=attachments&page=view_attachment&id='.$return_db->res_id.'&res_id_master='
                                 .functions::xssafe($_REQUEST['res_id_master']);
         $return .= '" ';
         $return .= 'target="_blank" ';

@@ -46,9 +46,9 @@ if ($pdf_id != 0) {
 // IS VERSION ATTACHMENT ?
 if ($info_doc['is_version'] == true && $info_doc['status'] != 'TMP') {
     //DEL PREVIOUS ATTACHMENT VERSION
-    $stmt = $db->query('SELECT attachment_id_master FROM res_version_attachments WHERE res_id = ?', array($_REQUEST['id']));
+    $stmt = $db->query('SELECT attachment_id_master FROM res_attachments WHERE res_id = ?', array($_REQUEST['id']));
     $res = $stmt->fetchObject();
-    $stmt = $db->query("UPDATE res_version_attachments SET status = 'DEL' WHERE attachment_id_master = ?", array($res->attachment_id_master));
+    $stmt = $db->query("UPDATE res_attachments SET status = 'DEL' WHERE attachment_id_master = ?", array($res->attachment_id_master));
     $stmt = $db->query("UPDATE res_attachments SET status = 'DEL' WHERE res_id = ?", array($res->attachment_id_master));
 }
 
@@ -88,7 +88,7 @@ if (!empty($_REQUEST['rest'])) {
 
 //REFRESH TABS
 if (empty($_REQUEST['rest'])) {
-    $query = "SELECT count(1) as total FROM res_view_attachments WHERE status NOT IN ('DEL','OBS','TMP') and res_id_master = ?";
+    $query = "SELECT count(1) as total FROM res_attachments WHERE status NOT IN ('DEL','OBS','TMP') and res_id_master = ?";
     if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') {
         $query .= " and (attachment_type <> 'response_project' and attachment_type <> 'outgoing_mail_signed' and attachment_type <> 'signed_response' and attachment_type <> 'converted_pdf' and attachment_type <> 'outgoing_mail' and attachment_type <> 'print_folder' and attachment_type <> 'aihp')";
     } elseif (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'response') {

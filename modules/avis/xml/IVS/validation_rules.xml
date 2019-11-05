@@ -42,10 +42,5 @@
     	<parameter name="coll_id" type="collection_list" />
     	<parameter name="action" type="string" />
     </validationRule>
-    <validationRule name="view_pdf_attachement" extends="standardForm" mode="error">
-    	<parameter name="res_id_master" type="integer" />
-    	<parameter name="id" type="integer" />
-    </validationRule>
-
 </validationRules>
 

@@ -7,7 +7,7 @@ if (!empty($objectResIdMaster)) {
 } else {
     $data = [$objectId, $objectId, $_SESSION['doc_id']];
 }
-$stmt = $db->query("SELECT relation, docserver_id, path, filename, format FROM res_view_attachments
+$stmt = $db->query("SELECT relation, docserver_id, path, filename, format FROM res_attachments
                         WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc", $data);
 
 if ($stmt->rowCount() == 0) {

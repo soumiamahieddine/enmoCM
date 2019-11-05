@@ -434,7 +434,7 @@ class ExportFunctions
     {
         $db = new Database();
 
-        $query = 'SELECT DISTINCT u.lastname, u.firstname FROM res_view_attachments r LEFT JOIN users u ON u.user_id = r.typist WHERE r.attachment_type = ? AND r.status = ? AND r.res_id_master = ?';
+        $query = 'SELECT DISTINCT u.lastname, u.firstname FROM res_attachments r LEFT JOIN users u ON u.user_id = r.typist WHERE r.attachment_type = ? AND r.status = ? AND r.res_id_master = ?';
         $stmt = $db->query($query, array('signed_response', 'TRA', $res_id));
 
         $arr_signatory = [];
@@ -449,7 +449,7 @@ class ExportFunctions
     {
         $db = new Database();
 
-        $query = 'SELECT creation_date FROM res_view_attachments r WHERE r.attachment_type = ? and r.status = ? and r.res_id_master = ?';
+        $query = 'SELECT creation_date FROM res_attachments r WHERE r.attachment_type = ? and r.status = ? and r.res_id_master = ?';
         $stmt = $db->query($query, array('signed_response', 'TRA', $res_id));
 
         $arr_signatoryDate = [];

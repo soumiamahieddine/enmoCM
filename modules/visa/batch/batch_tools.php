@@ -292,7 +292,7 @@ function Bt_refusedSignedMail($aArgs = [])
 
 function Bt_validatedMail($aArgs = [])
 {
-    $req       = "SELECT count(1) as nbresult FROM res_view_attachments WHERE res_id_master = ? AND status = ?";
+    $req       = "SELECT count(1) as nbresult FROM res_attachments WHERE res_id_master = ? AND status = ?";
     $stmt      = $GLOBALS['db']->query($req, array($aArgs['resId'], 'FRZ'));
     $reqResult = $stmt->fetchObject();
     if ($reqResult->nbresult == 0) {

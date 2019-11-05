@@ -274,7 +274,7 @@ class IxbusController
 
         $attachments = \Attachment\models\AttachmentModel::getOnView([
             'select'    => [
-                'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
+                'res_id', 'title', 'identifier', 'attachment_type',
                 'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
                 'validation_date', 'relation', 'attachment_id_master'
             ],
@@ -285,16 +285,11 @@ class IxbusController
         $attachmentToFreeze = [];
 
         foreach ($attachments as $value) {
-            if (!empty($value['res_id'])) {
-                $resId  = $value['res_id'];
-                $collId = 'attachments_coll';
-                $is_version = false;
-            } else {
-                $resId  = $value['res_id_version'];
-                $collId = 'attachments_version_coll';
-                $is_version = true;
-            }
-            $adrInfo       = \Convert\controllers\ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId, 'isVersion' => $is_version]);
+            $resId  = $value['res_id'];
+            $collId = 'attachments_coll';
+            $is_version = false;
+
+            $adrInfo       = \Convert\controllers\ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId]);
             $docserverInfo = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
             $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
 
@@ -388,7 +383,7 @@ class IxbusController
         if (!empty($sessionId['error'])) {
             return ['error' => $sessionId['error']];
         }
-        foreach (['noVersion', 'isVersion'] as $version) {
+        foreach (['noVersion'] as $version) {
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
                 $etatDossier = IxbusController::getEtatDossier(['config' => $aArgs['config'], 'sessionId' => $sessionId['cookie'], 'dossier_id' => $value->external_id]);
     

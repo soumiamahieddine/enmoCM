@@ -115,15 +115,6 @@ trait ExternalSignatoryBookTrait
                         ]);
                     }
                 }
-                if (!empty($attachmentToFreeze['attachments_version_coll'])) {
-                    foreach ($attachmentToFreeze['attachments_version_coll'] as $resId => $externalId) {
-                        AttachmentModel::freezeAttachment([
-                            'resId' => $resId,
-                            'table' => 'res_version_attachments',
-                            'externalId' => $externalId
-                        ]);
-                    }
-                }
             }
         }
 

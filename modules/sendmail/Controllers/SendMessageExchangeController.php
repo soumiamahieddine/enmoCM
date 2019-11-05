@@ -65,9 +65,6 @@ class SendMessageExchangeController
         if ($MainExchangeDoc['tablename'] == 'res_attachments') {
             $aArgs['join_attachment'][] = $MainExchangeDoc['res_id'];
         }
-        if ($MainExchangeDoc['tablename'] == 'res_version_attachments') {
-            $aArgs['join_version_attachment'][] = $MainExchangeDoc['res_id'];
-        }
 
         /**************** GET ATTACHMENTS INFOS ***************/
         $AttachmentsInfo = [];
@@ -80,18 +77,7 @@ class SendMessageExchangeController
                 $AttachmentsInfo[$key]['tablenameExchangeMessage']               = 'res_attachments';
             }
         }
-        $AttVersionInfo = [];
-        if (!empty($aArgs['join_version_attachment'])) {
-            $AttVersionInfo = \Attachment\models\AttachmentModel::getOnView(['select' => ['*'], 'where' => ['res_id_version in (?)'], 'data' => [$aArgs['join_version_attachment']]]);
-            foreach ($AttVersionInfo as $key => $value) {
-                $AttVersionInfo[$key]['res_id']                                 = $value['res_id_version'];
-                $AttVersionInfo[$key]['Title']                                  = $value['title'];
-                $AttVersionInfo[$key]['OriginatingAgencyArchiveUnitIdentifier'] = $value['identifier'];
-                $AttVersionInfo[$key]['DocumentType']                           = $_SESSION['attachment_types'][$value['attachment_type']];
-                $AttVersionInfo[$key]['tablenameExchangeMessage']               = 'res_version_attachments';
-            }
-        }
-        $aAllAttachment = array_merge($AttachmentsInfo, $AttVersionInfo);
+        $aAllAttachment = $AttachmentsInfo;
 
         /******************* GET NOTE INFOS **********************/
         $aComments = self::generateComments([

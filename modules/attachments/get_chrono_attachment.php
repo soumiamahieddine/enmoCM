@@ -28,11 +28,7 @@ $category_id = $resMaster->category_id;
 $nb_attachment = 0;
 
 // Check if reponse project was already attached to this outgoing document.
-if ($category_id == "outgoing") {
-    $stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE res_id_master = ? and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail') and status <> 'DEL' and status <> 'OBS'", array($_SESSION['doc_id']));
-    $nb_attachment = $stmt->rowCount();
-}
-if ($category_id == "incoming" || $category_id == 'attachment' || ($category_id == "outgoing" && $nb_attachment > 0) || (isset($_POST['type_id']) && $_POST['type_id'] == 'attachment')) {
+if ($category_id == "incoming" || $category_id == 'attachment' || (isset($_POST['type_id']) && $_POST['type_id'] == 'attachment')) {
     if (isset($_SESSION['save_chrono_number']) && $_SESSION['save_chrono_number'][$index] <> "") {
         echo "{status: 1, chronoNB: '".$_SESSION['save_chrono_number'][$index]."'}";
     } else {
@@ -47,8 +43,4 @@ if ($category_id == "incoming" || $category_id == 'attachment' || ($category_id 
         $_SESSION['save_chrono_number'][$index] = $myChrono;
         echo "{status: 1, chronoNB: '".functions::xssafe($myChrono)."'}";
     }
-} elseif ($category_id == "outgoing" && $nb_attachment == 0) {
-    $stmt = $db->query("SELECT alt_identifier FROM res_letterbox WHERE res_id = ?", array($_SESSION['doc_id']));
-    $chronoMaster = $stmt->fetchObject();
-    echo "{status: 1, chronoNB: '".functions::xssafe($chronoMaster->alt_identifier)."'}";
 }

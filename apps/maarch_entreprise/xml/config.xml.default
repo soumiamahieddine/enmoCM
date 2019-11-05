@@ -57,20 +57,7 @@
         <label>_ATTACHMENTS_COLL</label>
         <table>res_attachments</table>
         <version_table>res_version_attachments</version_table>
-        <view>res_view_attachments</view>
-        <adr>adr_attachments</adr>
-        <index_file>index_attachments.xml</index_file>
-        <script_add>index_attachments.php</script_add>
-        <script_search>search_attachments.php</script_search>
-        <script_search_result>list_results_attachments.php</script_search_result>
-        <script_details>details_attachments.php</script_details>
-    </COLLECTION>
-    <COLLECTION>
-        <id>attachments_version_coll</id>
-        <label>_ATTACHMENTS_VERS_COLL</label>
-        <table>res_version_attachments</table>
-        <version_table>res_version_attachments</version_table>
-        <view>res_view_attachments</view>
+        <view>res_attachments</view>
         <adr>adr_attachments</adr>
         <index_file>index_attachments.xml</index_file>
         <script_add>index_attachments.php</script_add>

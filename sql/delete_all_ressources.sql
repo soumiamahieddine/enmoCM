@@ -40,9 +40,6 @@ ALTER SEQUENCE res_id_mlb_seq restart WITH 1;
 TRUNCATE TABLE res_attachments;
 ALTER SEQUENCE res_attachment_res_id_seq restart WITH 1;
 
-TRUNCATE TABLE res_version_attachments;
-ALTER SEQUENCE res_id_version_attachments_seq restart WITH 1;
-
 TRUNCATE TABLE adr_letterbox;
 ALTER SEQUENCE adr_letterbox_id_seq restart WITH 1;
 

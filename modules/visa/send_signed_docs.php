@@ -14,7 +14,7 @@ require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'cla
 function checkAllSigned($id)
 {
     $db = new Database();
-    $stmt = $db->query("SELECT status from res_view_attachments where attachment_type= ? and res_id_master = ?", array('response_project', $id));
+    $stmt = $db->query("SELECT status from res_attachments where attachment_type= ? and res_id_master = ?", array('response_project', $id));
     while ($line = $stmt->fetchObject()) {
         if ($line->status == 'TRA' || $line->status == 'A_TRA' ) {
             return false;
