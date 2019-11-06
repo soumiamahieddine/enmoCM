@@ -18,7 +18,6 @@ use Com\Tecnick\Barcode\Barcode;
 use Endroid\QrCode\QrCode;
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use Parameter\models\ParameterModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;

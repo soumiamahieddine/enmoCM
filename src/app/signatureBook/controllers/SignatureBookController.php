@@ -23,7 +23,6 @@ use Convert\controllers\ConvertPdfController;
 use Entity\models\ListInstanceModel;
 use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
-use Group\models\ServiceModel;
 use Link\models\LinkModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;

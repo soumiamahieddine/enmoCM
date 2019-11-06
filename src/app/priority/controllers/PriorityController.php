@@ -15,7 +15,6 @@
 namespace Priority\controllers;
 
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Priority\models\PriorityModel;
 use Respect\Validation\Validator;

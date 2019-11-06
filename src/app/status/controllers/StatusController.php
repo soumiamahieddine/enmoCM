@@ -15,7 +15,6 @@
 namespace Status\controllers;
 
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Status\models\StatusModel;

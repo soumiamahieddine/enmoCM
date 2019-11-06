@@ -20,7 +20,6 @@ use Action\models\ActionModel;
 use Basket\models\GroupBasketModel;
 use Basket\models\GroupBasketRedirectModel;
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use SrcCore\models\ValidatorModel;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;

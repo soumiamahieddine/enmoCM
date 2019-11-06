@@ -19,7 +19,6 @@ namespace IndexingModel\controllers;
 
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
 use IndexingModel\models\IndexingModelModel;

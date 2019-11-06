@@ -20,7 +20,6 @@ use Entity\models\ListInstanceModel;
 use Entity\models\ListTemplateModel;
 use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;

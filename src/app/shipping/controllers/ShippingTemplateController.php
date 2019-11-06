@@ -16,7 +16,6 @@ use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;

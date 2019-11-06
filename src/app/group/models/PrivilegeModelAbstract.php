@@ -7,7 +7,7 @@
  */
 
 /**
- * @brief Service Model Abstract
+ * @brief Privilege Model Abstract
  * @author dev@maarch.org
  */
 
@@ -17,7 +17,7 @@ use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserGroupModel;
 
-abstract class ServiceModelAbstract
+abstract class PrivilegeModelAbstract
 {
     public static function getByUser(array $args)
     {

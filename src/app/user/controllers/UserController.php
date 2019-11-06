@@ -21,7 +21,6 @@ use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Entity\models\ListInstanceModel;
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
 use Group\models\GroupModel;

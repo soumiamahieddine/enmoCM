@@ -20,7 +20,6 @@ use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Action\models\ActionModel;
 use Status\models\StatusModel;
-use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 

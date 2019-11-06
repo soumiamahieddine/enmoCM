@@ -24,7 +24,6 @@ use Folder\models\ResourceFolderModel;
 use Folder\models\UserPinnedFolderModel;
 use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;

@@ -15,7 +15,6 @@
 namespace SrcCore\controllers;
 
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;

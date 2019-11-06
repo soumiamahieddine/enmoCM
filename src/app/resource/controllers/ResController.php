@@ -32,7 +32,7 @@ use Folder\controllers\FolderController;
 use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
 use Group\controllers\GroupController;
-use Group\models\ServiceModel;
+use Group\models\PrivilegeModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
 use IndexingModel\models\IndexingModelModel;
@@ -65,7 +65,7 @@ class ResController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::canIndex(['userId' => $GLOBALS['id']])) {
+        if (!PrivilegeModel::canIndex(['userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

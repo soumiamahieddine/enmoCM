@@ -5,7 +5,7 @@ namespace Group\controllers;
 use Action\models\ActionModel;
 use Basket\models\GroupBasketModel;
 use Entity\models\EntityModel;
-use Group\models\ServiceModel;
+use Group\models\PrivilegeModel;
 use Group\models\GroupModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -153,7 +153,7 @@ class GroupController
         $group['canAdminUsers']     = PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']]);
         $group['canAdminBaskets']   = PrivilegeController::hasPrivilege(['privilegeId' => 'admin_baskets', 'userId' => $GLOBALS['id']]);
 
-        $group['privileges']         = ServiceModel::getPrivilegesByGroupId(['groupId' => $args['id']]);
+        $group['privileges']         = PrivilegeModel::getPrivilegesByGroupId(['groupId' => $args['id']]);
         return $response->withJson(['group' => $group]);
     }
 

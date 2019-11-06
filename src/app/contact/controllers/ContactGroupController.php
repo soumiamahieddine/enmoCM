@@ -17,7 +17,6 @@ namespace Contact\controllers;
 use Contact\models\ContactGroupModel;
 use Contact\models\ContactModel;
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;

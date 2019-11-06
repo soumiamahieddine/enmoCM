@@ -15,7 +15,6 @@
 namespace Docserver\controllers;
 
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use Docserver\models\DocserverTypeModel;
 use Slim\Http\Request;
 use Slim\Http\Response;

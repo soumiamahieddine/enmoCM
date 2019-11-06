@@ -18,7 +18,6 @@
 namespace Parameter\controllers;
 
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Parameter\models\ParameterModel;
 use Respect\Validation\Validator;

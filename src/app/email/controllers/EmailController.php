@@ -22,7 +22,6 @@ use Docserver\models\DocserverTypeModel;
 use Email\models\EmailModel;
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use History\models\HistoryModel;
 use MessageExchange\models\MessageExchangeModel;

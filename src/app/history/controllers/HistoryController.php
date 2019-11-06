@@ -18,7 +18,6 @@ use Group\controllers\PrivilegeController;
 use Resource\controllers\ResController;
 use Respect\Validation\Validator;
 use SrcCore\controllers\LogsController;
-use Group\models\ServiceModel;
 use SrcCore\models\ValidatorModel;
 use History\models\HistoryModel;
 use Notification\controllers\NotificationsEventsController;

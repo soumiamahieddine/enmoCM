@@ -20,7 +20,6 @@ namespace CustomField\controllers;
 use CustomField\models\CustomFieldModel;
 use CustomField\models\ResourceCustomFieldModel;
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
 use Respect\Validation\Validator;

@@ -21,7 +21,6 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use User\models\UserModel;
 use SrcCore\models\CoreConfigModel;
-use Group\models\ServiceModel;
 use Entity\models\EntityModel;
 use Basket\models\BasketModel;
 use Resource\models\ResModel;

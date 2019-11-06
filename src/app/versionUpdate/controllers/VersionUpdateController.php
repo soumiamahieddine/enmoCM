@@ -16,7 +16,6 @@ namespace VersionUpdate\controllers;
 
 use Gitlab\Client;
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;

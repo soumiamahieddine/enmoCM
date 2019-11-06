@@ -16,7 +16,6 @@ namespace Configuration\controllers;
 
 use Configuration\models\ConfigurationModel;
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;

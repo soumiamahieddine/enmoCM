@@ -17,7 +17,6 @@ namespace Contact\controllers;
 use Contact\models\ContactFillingModel;
 use Contact\models\ContactModel;
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use SrcCore\models\CoreConfigModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;

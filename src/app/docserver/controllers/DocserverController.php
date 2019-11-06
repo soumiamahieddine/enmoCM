@@ -16,7 +16,6 @@ namespace Docserver\controllers;
 
 use Docserver\models\DocserverTypeModel;
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Resource\controllers\StoreController;
 use Respect\Validation\Validator;

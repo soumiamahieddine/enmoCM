@@ -8,12 +8,12 @@
 */
 
 /**
-* @brief Service Model
+* @brief Privilege Model
 * @author dev@maarch.org
 */
 
 namespace Group\models;
 
-class ServiceModel extends ServiceModelAbstract
+class PrivilegeModel extends PrivilegeModelAbstract
 {
 }

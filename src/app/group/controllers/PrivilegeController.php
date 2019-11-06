@@ -3,7 +3,7 @@
 namespace Group\controllers;
 
 use Group\models\GroupModel;
-use Group\models\ServiceModel;
+use Group\models\PrivilegeModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\DatabaseModel;
@@ -56,11 +56,11 @@ class PrivilegeController
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
-        if (ServiceModel::groupHasPrivilege(['privilegeId' => $args['privilegeId'], 'groupId' => $group['group_id']])) {
+        if (PrivilegeModel::groupHasPrivilege(['privilegeId' => $args['privilegeId'], 'groupId' => $group['group_id']])) {
             return $response->withStatus(204);
         }
 
-        ServiceModel::addPrivilegeToGroup(['privilegeId' => $args['privilegeId'], 'groupId' => $group['group_id']]);
+        PrivilegeModel::addPrivilegeToGroup(['privilegeId' => $args['privilegeId'], 'groupId' => $group['group_id']]);
 
         return $response->withStatus(204);
     }
@@ -76,11 +76,11 @@ class PrivilegeController
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
-        if (!ServiceModel::groupHasPrivilege(['privilegeId' => $args['privilegeId'], 'groupId' => $group['group_id']])) {
+        if (!PrivilegeModel::groupHasPrivilege(['privilegeId' => $args['privilegeId'], 'groupId' => $group['group_id']])) {
             return $response->withStatus(204);
         }
 
-        ServiceModel::removePrivilegeToGroup(['privilegeId' => $args['privilegeId'], 'groupId' => $group['group_id']]);
+        PrivilegeModel::removePrivilegeToGroup(['privilegeId' => $args['privilegeId'], 'groupId' => $group['group_id']]);
 
         return $response->withStatus(204);
     }
@@ -127,7 +127,7 @@ class PrivilegeController
             return PrivilegeController::PRIVILEGES;
         }
 
-        $rawPrivilegesStoredInDB = ServiceModel::getByUser(['id' => $args['userId']]);
+        $rawPrivilegesStoredInDB = PrivilegeModel::getByUser(['id' => $args['userId']]);
         $privilegesStoredInDB = array_column($rawPrivilegesStoredInDB, 'service_id');
 
         return $privilegesStoredInDB;

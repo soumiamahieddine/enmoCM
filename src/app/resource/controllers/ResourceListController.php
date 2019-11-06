@@ -27,7 +27,6 @@ use Entity\models\ListInstanceModel;
 use Folder\models\FolderModel;
 use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
-use Group\models\ServiceModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;

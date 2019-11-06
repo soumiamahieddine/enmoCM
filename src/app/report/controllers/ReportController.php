@@ -15,7 +15,6 @@
 namespace Report\controllers;
 
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use Report\models\ReportModel;

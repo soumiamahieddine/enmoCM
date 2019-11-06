@@ -17,7 +17,6 @@ namespace Entity\controllers;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
 use Group\controllers\PrivilegeController;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
