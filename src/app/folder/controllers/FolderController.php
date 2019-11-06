@@ -16,14 +16,12 @@ namespace Folder\controllers;
 
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
-use Basket\models\GroupBasketModel;
 use Entity\models\EntityModel;
 use Folder\models\EntityFolderModel;
 use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
 use Folder\models\UserPinnedFolderModel;
 use Group\controllers\PrivilegeController;
-use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
@@ -174,6 +172,11 @@ class FolderController
             'level'     => $level
         ]);
 
+        UserPinnedFolderModel::create([
+            'folder_id' => $id,
+            'user_id'   => $GLOBALS['id']
+        ]);
+
         if ($public && !empty($data['parent_id'])) {
             $entitiesSharing = EntityFolderModel::getByFolderId(['folder_id' => $data['parent_id'], 'select' => ['entities.id', 'entities_folders.edition']]);
             foreach ($entitiesSharing as $entity) {
@@ -283,10 +286,13 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Body sharing/entities does not exists']);
         }
 
-        $entitiesBefore = EntityFolderModel::getByFolderId(['select' => ['entities_folders.entity_id'], 'folder_id' => $args['id']]);
+        $entitiesBefore = EntityFolderModel::getByFolderId(['select' => ['entities_folders.entity_id, edition'], 'folder_id' => $args['id']]);
         $entitiesAfter = $data['sharing']['entities'];
 
         $entitiesToRemove = array_udiff($entitiesBefore, $entitiesAfter, function ($a, $b) {
+            if ($a['entity_id'] == $b['entity_id'] && $a['edition'] != $b['edition']) {
+                return 1;
+            }
             if ($a["entity_id"] < $b["entity_id"]) {
                 return -1;
             }
@@ -297,6 +303,9 @@ class FolderController
         });
 
         $entitiesToAdd = array_udiff($entitiesAfter, $entitiesBefore, function ($a, $b) {
+            if ($a['entity_id'] == $b['entity_id'] && $a['edition'] != $b['edition']) {
+                return 1;
+            }
             if ($a["entity_id"] < $b["entity_id"]) {
                 return -1;
             }
