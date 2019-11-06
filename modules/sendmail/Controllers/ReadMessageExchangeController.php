@@ -74,7 +74,6 @@ class ReadMessageExchangeController
         $aDataForm['object']      = $messageExchangeData->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->Content->Title[0];
 
         $aDataForm['attachments']         = [];
-        $aDataForm['attachments_version'] = [];
         $aDataForm['notes']               = [];
         foreach ($unitIdentifierData as $value) {
             if ($value->tablename == 'notes') {

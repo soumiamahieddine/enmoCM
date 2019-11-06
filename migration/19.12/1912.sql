@@ -479,6 +479,7 @@ ALTER TABLE listinstance DROP COLUMN IF EXISTS listinstance_type;
 ALTER TABLE listinstance DROP COLUMN IF EXISTS visible;
 ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_entity;
 ALTER TABLE usergroup_content DROP COLUMN IF EXISTS primary_group;
+ALTER TABLE emails ALTER COLUMN document type jsonb;
 
 /* M2M */
 DO $$ BEGIN
