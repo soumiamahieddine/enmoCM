@@ -1247,4 +1247,6 @@ export const LANG_EN = {
     "or" : "or",
     "dragAndDrop" : "Drag and drop",
     "backBasket" : "Back to basket",
+    "openInExternalModal" : "Open in external modal",
+    "openedInExternalModal" : "Opened in external modal",
 };

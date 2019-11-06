@@ -1284,4 +1284,6 @@ export const LANG_FR = {
     "or" : "ou",
     "dragAndDrop" : "Glisser-déposer",
     "backBasket" : "Retour bannette",
+    "openInExternalModal" : "Ouvrir dans une nouvelle modale",
+    "openedInExternalModal" : "Ouvert dans une modale",
 };

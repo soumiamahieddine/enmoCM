@@ -14,8 +14,8 @@
             </div>
         </div>
         <div class="indexing-form-container">
-            <div *ngIf="!isModalOpen()" style="display: flex;justify-content: flex-end;">
-                <button mat-icon-button (click)="createModal()" color="primary">
+            <div *ngIf="!isModalOpen() && currentTool !== 'dashboard'" style="display: flex;justify-content: flex-end;">
+                <button mat-icon-button (click)="createModal()" color="primary" [title]="lang.openInExternalModal">
                     <mat-icon class="fas fa-external-link-alt"></mat-icon>
                 </button>
             </div>
@@ -89,7 +89,7 @@
             <ng-template #elseTemplate>
                 <div class="openedModal">
                     <i class="fas fa-external-link-alt"></i>
-                    Ouvert dans une modal
+                    {{lang.openedInExternalModal}}
                 </div>
             </ng-template>
         </div>
@@ -177,7 +177,7 @@
         [ngStyle]="{'width': appService.getViewMode() ? '80%' : '30%'}" autoFocus="false">
     </mat-sidenav>
 </mat-sidenav-container>
-<div class="modal-module" cdkDrag *ngFor="let modal of modalModule; let i=index" cdkDragBoundary=".maarch-container">
+<div class="modal-module" cdkDrag *ngFor="let modal of modalModule; let i=index" [class.largeModal]="modal.id === 'info'">
     <div class="modal-module-title" cdkDragHandle>
         <span>
             {{modal.label}}

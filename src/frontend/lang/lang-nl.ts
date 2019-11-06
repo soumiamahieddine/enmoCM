@@ -1272,4 +1272,6 @@ export const LANG_NL = {
     "or" : "or", //_TO_TRANSLATE
     "dragAndDrop" : "Drag and drop", //_TO_TRANSLATE
     "backBasket" : "Back to basket", //_TO_TRANSLATE
+    "openInExternalModal" : "Open in external modal", //_TO_TRANSLATE
+    "openedInExternalModal" : "Opened in external modal", //_TO_TRANSLATE
 };
