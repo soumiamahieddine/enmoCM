@@ -33,7 +33,7 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadingInit = true;
-        this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/checkAcknowledgementReceipt', { resources: this.data.selectedRes })
+        this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/checkAcknowledgementReceipt', { resources: this.data.resIds })
             .subscribe((data: any) => {
                 this.acknowledgement = data;
                 this.loadingInit = false;

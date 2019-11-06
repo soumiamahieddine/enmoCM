@@ -71,8 +71,8 @@ export class ActionsListComponent implements OnInit {
 
         this.currentResource = row;
 
-        this.contextMenuTitle = row.alt_identifier;
-        this.contextResId = row.res_id;
+        this.contextMenuTitle = row.chrono;
+        this.contextResId = row.resId;
 
         this.folderList = row.folders !== undefined ? row.folders : [];
 
@@ -96,7 +96,7 @@ export class ActionsListComponent implements OnInit {
         }
 
         if (row !== undefined) {
-            this.contextMenuTitle = row.alt_identifier;
+            this.contextMenuTitle = row.chrono;
             this.currentResource = row;
         }
 
