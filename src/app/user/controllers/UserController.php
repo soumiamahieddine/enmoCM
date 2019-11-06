@@ -1332,24 +1332,56 @@ class UserController
 
     public function getTemplates(Request $request, Response $response)
     {
+        $queryParams = $request->getQueryParams();
+
         $entities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
         $entities = array_column($entities, 'entity_id');
         if (empty($entities)) {
             $entities = [0];
         }
 
+        $where = ['(templates_association.value_field in (?) OR templates_association.template_id IS NULL)'];
+        $data = [$entities];
+        if (!empty($queryParams['type'])) {
+            $where[] = 'templates.template_type = ?';
+            $data[] = strtoupper($queryParams['type']);
+        }
+        if (!empty($queryParams['target'])) {
+            $where[] = 'templates.template_target = ?';
+            $data[] = $queryParams['target'];
+        }
         $templates = TemplateModel::getWithAssociation([
-            'select'    => ['DISTINCT(templates.template_id)', 'templates.template_label', 'templates.template_file_name'],
-            'where'     => ['templates.template_type = ?', '(templates_association.value_field in (?) OR templates_association.template_id IS NULL)'],
-            'data'      => ['OFFICE', $entities],
+            'select'    => ['DISTINCT(templates.template_id)', 'templates.template_label', 'templates.template_file_name', 'templates.template_path', 'templates.template_target', 'templates.template_attachment_type'],
+            'where'     => $where,
+            'data'      => $data,
             'orderBy'   => ['templates.template_label']
         ]);
 
+        $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
         foreach ($templates as $key => $template) {
             $explodeFile = explode('.', $template['template_file_name']);
             $ext = $explodeFile[count($explodeFile) - 1];
+            $exists = is_file($docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name']);
 
-            $templates[$key] = ['id' => $template['template_id'], 'label' => $template['template_label'], 'extension' => $ext];
+            $templates[$key] = [
+                'id'                => $template['template_id'],
+                'label'             => $template['template_label'],
+                'extension'         => $ext,
+                'exists'            => $exists,
+                'target'            => $template['template_target'],
+                'attachmentType'    => $template['template_attachment_type']
+            ];
+        }
+
+        if (!empty($queryParams['target']) && $queryParams['target'] == 'attachments') {
+            $templatesTmp = [];
+            foreach ($templates as $key => $template) {
+                if (empty($templatesTmp[$template['attachmentType']])) {
+                    $templatesTmp[$template['attachmentType']] = [];
+                }
+                $templatesTmp[$template['attachmentType']][] = $template;
+            }
+            $templates = $templatesTmp;
         }
 
         return $response->withJson(['templates' => $templates]);
