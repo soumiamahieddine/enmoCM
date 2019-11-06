@@ -1291,4 +1291,5 @@ export const LANG_FR = {
     "mailsSentAlt" : "Éléments envoyés",
     "newsFeed" : "Fil d'actualité",
     "sendError" : "Erreur d'envoi",
+    "historyDisabled" : "Historique désactivé",    
 };

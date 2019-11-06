@@ -1279,4 +1279,5 @@ export const LANG_NL = {
     "mailsSentAlt" : "Resources sent", //_TO_TRANSLATE
     "newsFeed" : "News feed", //_TO_TRANSLATE
     "sendError" : "Send error", //_TO_TRANSLATE
+    "historyDisabled" : "History disabled", //_TO_TRANSLATE
 };

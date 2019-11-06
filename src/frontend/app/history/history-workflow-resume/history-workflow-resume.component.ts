@@ -4,6 +4,7 @@ import { LANG } from '../../translate.component';
 import { catchError, tap, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
+import { PrivilegeService } from '../../../service/privileges.service';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class HistoryWorkflowResumeComponent implements OnInit {
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
+        public privilegeService: PrivilegeService
     ) {
     }
 

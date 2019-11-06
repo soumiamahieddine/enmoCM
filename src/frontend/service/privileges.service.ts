@@ -537,4 +537,9 @@ export class PrivilegeService {
     getCurrentUserAdministrationsByUnit(unit: string): Array<administration> {
         return this.administrations.filter(elem => elem.unit === unit).filter(elem => this.headerService.user.privileges.indexOf(elem.id) > -1);
     }
+
+    hasCurrentUserPrivilege(privilegeId: string) {
+
+        return this.headerService.user.privileges.indexOf(privilegeId) > -1;
+    }
 }

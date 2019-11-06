@@ -1254,4 +1254,5 @@ export const LANG_EN = {
     "mailsSentAlt" : "Resources sent",
     "newsFeed" : "News feed",
     "sendError" : "Send error",
+    "historyDisabled" : "History disabled",
 };
