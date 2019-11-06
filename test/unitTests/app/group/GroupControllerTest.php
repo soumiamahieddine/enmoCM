@@ -140,6 +140,74 @@ class GroupControllerTest extends TestCase
         }
     }
 
+    public function testAddPrivilege() {
+        $privilegeController = new \Group\controllers\PrivilegeController();
+
+        //  Add privilege
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $args = [
+            'privilegeId'      => 'reports',
+            'id'    => self::$id
+        ];
+
+        $response     = $privilegeController->addPrivilege($request, new \Slim\Http\Response(), $args);
+        $this->assertSame(204, $response->getStatusCode());
+
+        // Add privilege again
+
+        $response     = $privilegeController->addPrivilege($request, new \Slim\Http\Response(), $args);
+        $this->assertSame(204, $response->getStatusCode());
+
+        // Error : group does not exist
+        $args = [
+            'privilegeId'      => 'reports',
+            'id'    => self::$id * 100
+        ];
+
+        $response     = $privilegeController->addPrivilege($request, new \Slim\Http\Response(), $args);
+        $this->assertSame(400, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertSame('Group not found', $responseBody->errors);
+    }
+
+    public function testRemovePrivilege() {
+        $privilegeController = new \Group\controllers\PrivilegeController();
+
+        //  Remove privilege
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $args = [
+            'privilegeId'      => 'reports',
+            'id'    => self::$id
+        ];
+
+        $response     = $privilegeController->removePrivilege($request, new \Slim\Http\Response(), $args);
+        $this->assertSame(204, $response->getStatusCode());
+
+        // Remove privilege again
+
+        $response     = $privilegeController->removePrivilege($request, new \Slim\Http\Response(), $args);
+        $this->assertSame(204, $response->getStatusCode());
+
+        // Error : group does not exist
+        $args = [
+            'privilegeId'      => 'reports',
+            'id'    => self::$id * 100
+        ];
+
+        $response     = $privilegeController->addPrivilege($request, new \Slim\Http\Response(), $args);
+        $this->assertSame(400, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody());
+        $this->assertInternalType('string', $responseBody->errors);
+        $this->assertSame('Group not found', $responseBody->errors);
+    }
+
     public function testDelete()
     {
         $groupController = new \Group\controllers\GroupController();

@@ -55,12 +55,6 @@ class CoreControllerTest extends TestCase
         $this->assertSame("ADMIN", $responseBody->user->lastname);
         $this->assertInternalType('array', $responseBody->user->groups);
         $this->assertInternalType('array', $responseBody->user->entities);
-
-        foreach ($responseBody->menu as $value) {
-            $this->assertNotEmpty($value->id);
-            $this->assertNotEmpty($value->name);
-            $this->assertNotEmpty($value->comment);
-        }
     }
 
     public function testrenderJnlp()
