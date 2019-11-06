@@ -36,7 +36,7 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        <app-history-workflow-resume *ngIf="!loading" [resId]="currentResourceInformations.resId">
+                        <app-history-workflow-resume *ngIf="!loading" [resId]="currentResourceInformations.resId" (goTo)="currentTool = 'history'">
                         </app-history-workflow-resume>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        <app-note-resume *ngIf="!loading" [resId]="currentResourceInformations.resId"></app-note-resume>
+                        <app-note-resume *ngIf="!loading" [resId]="currentResourceInformations.resId" (goTo)="currentTool = 'notes'"></app-note-resume>
                     </div>
                 </div>
                 <div class="banner" [style.borderColor]="currentPriorityColor">
@@ -55,7 +55,7 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        <app-attachments-resume *ngIf="!loading" [resId]="currentResourceInformations.resId">
+                        <app-attachments-resume *ngIf="!loading" [resId]="currentResourceInformations.resId" (goTo)="currentTool = 'attachments'">
                         </app-attachments-resume>
                     </div>
                 </div>
@@ -65,7 +65,7 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        <app-mail-resume *ngIf="!loading" [resId]="currentResourceInformations.resId"></app-mail-resume>
+                        <app-mail-resume *ngIf="!loading" [resId]="currentResourceInformations.resId" (goTo)="currentTool = 'mails'"></app-mail-resume>
                     </div>
                 </div>
             </ng-container>

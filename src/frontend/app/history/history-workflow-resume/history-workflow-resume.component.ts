@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { catchError, tap, finalize } from 'rxjs/operators';
@@ -23,6 +23,7 @@ export class HistoryWorkflowResumeComponent implements OnInit {
     histories: any[] = [];
 
     @Input('resId') resId: number = null;
+    @Output('goTo') goTo = new EventEmitter<string>();
 
     constructor(
         public http: HttpClient,
@@ -37,7 +38,7 @@ export class HistoryWorkflowResumeComponent implements OnInit {
 
     loadHistory(resId: number) {
         this.loading = true;
-        this.http.get(`../../rest/histories/resources/${resId}/workflow?limit=2`).pipe(
+        this.http.get(`../../rest/histories/resources/${resId}/workflow?limit=3`).pipe(
             tap((data: any) => {
                 this.histories = data.history;
             }),
@@ -47,5 +48,9 @@ export class HistoryWorkflowResumeComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    showMore() {
+        this.goTo.emit();
     }
 }

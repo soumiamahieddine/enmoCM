@@ -4,20 +4,18 @@
     </div>
 </ng-container>
 <ng-template #elseTemplate>
-    <ng-container *ngFor="let mail of mails">
-        <div class="mailList">
-            <div class="date" [title]="mail.creation_date | fullDate">
-                {{mail.send_date | timeAgo}}
-            </div>
-            <div class="info">
-                {{mail.object}}
-            </div>
-            <div class="date">
-                {{mail.userInfo}}
-            </div>
+    <div class="mailList" *ngFor="let mail of mails">
+        <div class="date" [title]="mail.creation_date | fullDate">
+            {{mail.send_date | timeAgo}}
         </div>
-        <mat-divider></mat-divider>
-    </ng-container>
+        <div class="info">
+            {{mail.object}}
+        </div>
+        <div class="date">
+            {{mail.userInfo}}
+        </div>
+    </div>
+    <button mat-button *ngIf="mails.length === 3" class="showMore" (click)="showMore()">{{lang.showMore}}</button>
     <div class="noData" *ngIf="mails.length === 0">
         {{lang.noSendmail}}
     </div>

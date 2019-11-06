@@ -1274,4 +1274,5 @@ export const LANG_NL = {
     "backBasket" : "Back to basket", //_TO_TRANSLATE
     "openInExternalModal" : "Open in external modal", //_TO_TRANSLATE
     "openedInExternalModal" : "Opened in external modal", //_TO_TRANSLATE
+    "showMore" : "Show more", //_TO_TRANSLATE
 };

@@ -1286,4 +1286,5 @@ export const LANG_FR = {
     "backBasket" : "Retour bannette",
     "openInExternalModal" : "Ouvrir dans une nouvelle modale",
     "openedInExternalModal" : "Ouvert dans une modale",
+    "showMore" : "Voir plus",
 };

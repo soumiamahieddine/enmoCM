@@ -1249,4 +1249,5 @@ export const LANG_EN = {
     "backBasket" : "Back to basket",
     "openInExternalModal" : "Open in external modal",
     "openedInExternalModal" : "Opened in external modal",
+    "showMore" : "Show more",
 };
