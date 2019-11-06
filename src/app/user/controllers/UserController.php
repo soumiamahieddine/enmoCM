@@ -427,6 +427,23 @@ class UserController
             'data'  => [$aArgs['id'], $aArgs['id']]
         ]);
 
+        // Delete from groups
+        UserGroupModel::delete(['where' => ['user_id = ?'], 'data' => [$aArgs['id']]]);
+        UserBasketPreferenceModel::delete([
+            'where' => ['user_serial_id = ?'],
+            'data'  => [$aArgs['id']]
+        ]);
+        RedirectBasketModel::delete([
+            'where' => ['owner_user_id = ?'],
+            'data'  => [$aArgs['id']]
+        ]);
+
+        // Delete from entities
+        UserEntityModel::delete([
+            'where' => ['user_id = ?'],
+            'data'  => [$user['user_id']]
+        ]);
+
         UserModel::delete(['id' => $aArgs['id']]);
 
         HistoryController::add([
