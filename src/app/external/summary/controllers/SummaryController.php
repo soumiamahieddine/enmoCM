@@ -38,7 +38,7 @@ class SummaryController
             return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an int val']);
         }
 
-        $emails = EmailModel::get(['select' => ['object', 'send_date', 'user_id'], 'where' => ['document->>\'id\' = ?', 'status in (?)'], 'data' => [$args['resId'], ['SENT', 'ERROR']], 'limit' => (int)$queryParams['limit']]);
+        $emails = EmailModel::get(['select' => ['object', 'send_date', 'user_id', 'status'], 'where' => ['document->>\'id\' = ?', 'status in (?)'], 'data' => [$args['resId'], ['SENT', 'ERROR']], 'limit' => (int)$queryParams['limit']]);
         foreach ($emails as $key => $value) {
             $userInfo = UserModel::getById(['select' => ['firstname', 'lastname'], 'id' => $value['user_id']]);
             $emails[$key]['userInfo'] = $userInfo['firstname'] . ' ' . $userInfo['lastname'];
@@ -51,6 +51,7 @@ class SummaryController
             $acknowledgementReceipts[$key]['userInfo'] = $userInfo['firstname'] . ' ' . $userInfo['lastname'];
             $acknowledgementReceipts[$key]['object']   = '';
             $acknowledgementReceipts[$key]['type']     = 'aknowledgement_receipt';
+            $acknowledgementReceipts[$key]['status']   = 'SENT';
             unset($acknowledgementReceipts[$key]['user_id']);
         }
         $maarch2ged = MessageExchangeModel::get(['select' => ['type', 'date as send_date', 'account_id'], 'where' => ['res_id_master = ?', 'status = ?'], 'data' => [$args['resId'], 'S'], 'limit' => (int)$queryParams['limit']]);
@@ -58,6 +59,7 @@ class SummaryController
             $userInfo = UserModel::getByLogin(['select' => ['firstname', 'lastname'], 'login' => $value['account_id']]);
             $maarch2ged[$key]['userInfo'] = $userInfo['firstname'] . ' ' . $userInfo['lastname'];
             $maarch2ged[$key]['object']   = '';
+            $maarch2ged[$key]['status']   = 'SENT';
             unset($maarch2ged[$key]['account_id']);
         }
 
