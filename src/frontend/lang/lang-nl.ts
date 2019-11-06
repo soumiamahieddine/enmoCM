@@ -1280,4 +1280,6 @@ export const LANG_NL = {
     "newsFeed" : "News feed", //_TO_TRANSLATE
     "sendError" : "Send error", //_TO_TRANSLATE
     "historyDisabled" : "History disabled", //_TO_TRANSLATE
+    "ARPaper" : "Paper acknowledgement of receipt", //_TO_TRANSLATE
+    "ARelectronic" : "Electronic acknowledgement of receipt", //_TO_TRANSLATE
 };

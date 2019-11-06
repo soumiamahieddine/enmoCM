@@ -1255,4 +1255,6 @@ export const LANG_EN = {
     "newsFeed" : "News feed",
     "sendError" : "Send error",
     "historyDisabled" : "History disabled",
+    "ARPaper" : "Paper acknowledgement of receipt",
+    "ARelectronic" : "Electronic acknowledgement of receipt",
 };

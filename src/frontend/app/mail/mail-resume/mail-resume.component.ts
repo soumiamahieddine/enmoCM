@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { catchError, tap, finalize } from 'rxjs/operators';
+import { catchError, tap, finalize, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 
@@ -39,6 +39,28 @@ export class MailResumeComponent implements OnInit {
     loadMails(resId: number) {
         this.loading = true;
         this.http.get(`../../rest/externalSummary/${resId}?limit=3`).pipe(
+            map((data: any) => {
+                data.elementsSend = data.elementsSend.map((elem: any) => {
+                    let object = elem.object;
+                    let type = elem.type;
+                    if (elem.object === '') {
+                        object = this.lang.ARPaper;
+                        type = 'aknowledgement_receipt';
+                    } else if (elem.object.startsWith("[AR]")) {
+                        object = this.lang.ARelectronic;
+                        type = 'aknowledgement_receipt';
+                    }
+
+                    return {
+                        object: object,
+                        send_date: elem.send_date,
+                        status: elem.status,
+                        userInfo: elem.userInfo,
+                        type: type
+                    }
+                });
+                return data;
+            }),
             tap((data: any) => {
                 this.mails = data.elementsSend;
             }),

@@ -15,9 +15,11 @@
                 {{lang.sendError}}
             </div>
         </ng-template>
-        <div class="info">
+
+        <div class="info" [class.arType]="mail.type === 'aknowledgement_receipt'">
             {{mail.object}}
         </div>
+
         <div class="date">
             {{mail.userInfo}}
         </div>
