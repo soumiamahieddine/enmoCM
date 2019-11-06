@@ -875,8 +875,8 @@ class ResourceListController
         $currentUser = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
 
         foreach ($resources as $key => $resource) {
-            $formattedResources[$key]['res_id']             = $resource['res_id'];
-            $formattedResources[$key]['alt_identifier']     = $resource['alt_identifier'];
+            $formattedResources[$key]['resId']              = $resource['res_id'];
+            $formattedResources[$key]['chrono']             = $resource['alt_identifier'];
             $formattedResources[$key]['barcode']            = $resource['barcode'];
             $formattedResources[$key]['subject']            = $resource['subject'];
             $formattedResources[$key]['confidentiality']    = $resource['confidentiality'];
