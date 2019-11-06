@@ -138,10 +138,15 @@ export class DocumentViewerComponent implements OnInit {
                         type: data.type,
                         contentMode: 'base64',
                         content: data.encodedResource,
-                        src: this.base64ToArrayBuffer(data.encodedConvertedResource)
+                        src: data.encodedConvertedResource !== undefined ? this.base64ToArrayBuffer(data.encodedConvertedResource) : null
                     };
                     this.editMode = true;
-                    this.noConvertedFound = false;
+                    if (data.encodedConvertedResource !== undefined) {
+                        this.noConvertedFound = false;
+                    } else {
+                        this.noConvertedFound = true;
+                        this.notify.error(data.convertedResourceErrors);
+                    }
                     this.loading = false;
                 }
             },
