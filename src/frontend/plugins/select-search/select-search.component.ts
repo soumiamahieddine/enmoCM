@@ -23,13 +23,15 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
     /** Label of the search placeholder */
     @Input() placeholderLabel = this.lang.chooseValue;
 
-    @Input('formControlSelect') formControlSelect: FormControl;
+    @Input('formControlSelect') formControlSelect: FormControl = new FormControl();
 
     @Input('datas') datas: any;
 
     @Input('label') label: string;
 
     @Input('showResetOption') showResetOption: boolean;
+
+    @Input('class') class: string = "input-form";
 
     /**
      * Catch external event after select an element in autocomplete

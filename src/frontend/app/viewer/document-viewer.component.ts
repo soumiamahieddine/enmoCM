@@ -1,15 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { HeaderService } from '../../service/header.service';
 import { AppService } from '../../service/app.service';
-import { tap, catchError, finalize, filter, map } from 'rxjs/operators';
+import { tap, catchError, finalize, filter, map, exhaustMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { AlertComponent } from '../../plugins/modal/alert.component';
 import { SortPipe } from '../../plugins/sorting.pipe';
+import { templateVisitAll } from '@angular/compiler';
 
 
 @Component({
@@ -92,6 +93,7 @@ export class DocumentViewerComponent implements OnInit {
                 if (this.resId !== null) {
                     this.loadRessource(this.resId);
                 } else {
+                    this.loadTemplates();
                     this.loading = false;
                 }
             }),
@@ -392,7 +394,7 @@ export class DocumentViewerComponent implements OnInit {
         } else {
             downloadLink.href = this.file.content;
         }
-        
+
         downloadLink.setAttribute('download', this.file.name);
         document.body.appendChild(downloadLink);
         downloadLink.click();
@@ -432,7 +434,8 @@ export class DocumentViewerComponent implements OnInit {
         );
     }
 
-    editTemplate(template: any) {
+    editTemplate(templateId: number) {
+        const template = this.listTemplates.filter(template => template.id === templateId)[0];
         this.editInProgress = true;
         const jnlp = {
             objectType: 'resourceCreation',
@@ -471,10 +474,47 @@ export class DocumentViewerComponent implements OnInit {
 
     loadTemplates() {
         if (this.listTemplates.length === 0) {
-            this.http.get('../../rest/currentUser/templates').pipe(
+            let arrValues: any[] = [];
+            let arrTypes: any = [];
+            this.http.get('../../rest/attachmentsTypes').pipe(
+                tap((data: any) => {
+                    Object.keys(data.attachmentsTypes).forEach(templateType => {
+                        arrTypes.push({
+                            id: templateType,
+                            label: data.attachmentsTypes[templateType].label
+                        });
+                        arrTypes = this.sortPipe.transform(arrTypes, 'label');
+                    });
+                }),
+                exhaustMap(() => this.http.get('../../rest/currentUser/templates')),
                 tap((data: any) => {
                     this.listTemplates = data.templates;
+
+                    arrTypes = arrTypes.filter((type: any) => data.templates.map((template: any) => template.attachmentType).indexOf(type.id) > -1);
+
+                    arrTypes.forEach((arrType: any) => {
+                        arrValues.push({
+                            id: arrType.id,
+                            label: arrType.label,
+                            title: arrType.label,
+                            disabled: true,
+                            isTitle: true,
+                            color: '#135f7f'
+                        });
+                        data.templates.filter((template: any) => template.attachmentType === arrType.id).forEach((template: any) => {
+                            arrValues.push({
+                                id: template.id,
+                                label: '&nbsp;&nbsp;&nbsp;&nbsp;' + template.label,
+                                title: template.exists ? template.label : this.lang.fileDoesNotExists,
+                                extension: template.extension,
+                                disabled: !template.exists,
+                            });
+                        });
+                    });
+
+                    this.listTemplates = arrValues;
                 })
+
             ).subscribe();
         }
     }
