@@ -1317,19 +1317,6 @@ class UserController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function getPrivileges(Request $request, Response $response)
-    {
-        $privileges = [
-            'canManageTags' => false
-        ];
-
-        if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_tags_application', 'userId' => $GLOBALS['id']])) {
-            $privileges['canManageTags'] = true;
-        }
-
-        return $response->withJson(['privileges' => $privileges]);
-    }
-
     public function getTemplates(Request $request, Response $response)
     {
         $queryParams = $request->getQueryParams();

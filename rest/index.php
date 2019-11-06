@@ -433,7 +433,6 @@ $app->post('/currentUser/emailSignature', \User\controllers\UserController::clas
 $app->put('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \User\controllers\UserController::class . ':updateCurrentUserBasketPreferences');
-$app->get('/currentUser/privileges', \User\controllers\UserController::class . ':getPrivileges');
 $app->get('/currentUser/templates', \User\controllers\UserController::class . ':getTemplates');
 
 //Notifications
