@@ -1290,4 +1290,5 @@ export const LANG_FR = {
     "notesAlt" : "Annotations",
     "mailsSentAlt" : "Éléments envoyés",
     "newsFeed" : "Fil d'actualité",
+    "sendError" : "Erreur d'envoi",
 };

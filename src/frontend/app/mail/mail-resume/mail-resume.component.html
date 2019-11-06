@@ -5,9 +5,16 @@
 </ng-container>
 <ng-template #elseTemplate>
     <div class="mailList" *ngFor="let mail of mails">
-        <div class="date" [title]="mail.creation_date | fullDate">
-            {{mail.send_date | timeAgo}}
-        </div>
+        <ng-container *ngIf="mail.status === 'SENT'; else elseTemplate">
+            <div class="date" [title]="mail.send_date | fullDate">
+                {{mail.send_date | timeAgo}}
+            </div>
+        </ng-container>
+        <ng-template #elseTemplate>
+            <div *ngIf="mail.status === 'ERROR'" class="error" [title]="mail.send_date | fullDate">
+                {{lang.sendError}}
+            </div>
+        </ng-template>
         <div class="info">
             {{mail.object}}
         </div>

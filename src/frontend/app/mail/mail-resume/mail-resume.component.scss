@@ -46,3 +46,9 @@
     color: $secondary;
     font-weight: bold;
 }
+
+.error {
+    padding: 5px;
+    font-style: italic;
+    color: $warn
+}

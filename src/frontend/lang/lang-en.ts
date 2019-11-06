@@ -1253,4 +1253,5 @@ export const LANG_EN = {
     "notesAlt" : "Notes",
     "mailsSentAlt" : "Resources sent",
     "newsFeed" : "News feed",
+    "sendError" : "Send error",
 };
