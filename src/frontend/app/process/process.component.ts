@@ -53,7 +53,7 @@ export class ProcessComponent implements OnInit {
         {
             id: 'dashboard',
             icon: 'fas fa-columns',
-            label: this.lang.dashboard,
+            label: this.lang.newsFeed,
         },
         {
             id: 'history',
@@ -63,7 +63,7 @@ export class ProcessComponent implements OnInit {
         {
             id: 'notes',
             icon: 'fas fa-pen-square',
-            label: this.lang.notes,
+            label: this.lang.notesAlt,
         },
         {
             id: 'attachments',
@@ -83,7 +83,7 @@ export class ProcessComponent implements OnInit {
         {
             id: 'mails',
             icon: 'fas fa-envelope',
-            label: this.lang.mailsSent,
+            label: this.lang.mailsSentAlt,
         },
         {
             id: 'visa',

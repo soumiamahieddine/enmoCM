@@ -1250,4 +1250,7 @@ export const LANG_EN = {
     "openInExternalModal" : "Open in external modal",
     "openedInExternalModal" : "Opened in external modal",
     "showMore" : "Show more",
+    "notesAlt" : "Notes",
+    "mailsSentAlt" : "Resources sent",
+    "newsFeed" : "News feed",
 };

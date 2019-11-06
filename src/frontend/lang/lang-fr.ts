@@ -1287,4 +1287,7 @@ export const LANG_FR = {
     "openInExternalModal" : "Ouvrir dans une nouvelle modale",
     "openedInExternalModal" : "Ouvert dans une modale",
     "showMore" : "Voir plus",
+    "notesAlt" : "Annotations",
+    "mailsSentAlt" : "Éléments envoyés",
+    "newsFeed" : "Fil d'actualité",
 };

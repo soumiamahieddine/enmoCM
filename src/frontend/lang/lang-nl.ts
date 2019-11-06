@@ -1275,4 +1275,7 @@ export const LANG_NL = {
     "openInExternalModal" : "Open in external modal", //_TO_TRANSLATE
     "openedInExternalModal" : "Opened in external modal", //_TO_TRANSLATE
     "showMore" : "Show more", //_TO_TRANSLATE
+    "notesAlt" : "Notes", //_TO_TRANSLATE
+    "mailsSentAlt" : "Resources sent", //_TO_TRANSLATE
+    "newsFeed" : "News feed", //_TO_TRANSLATE
 };
