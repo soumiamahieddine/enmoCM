@@ -12,7 +12,7 @@ import { FiltersListService } from '../../service/filtersList.service';
 import { Overlay } from '@angular/cdk/overlay';
 import { AppService } from '../../service/app.service';
 import { ActionsService } from '../actions/actions.service';
-import { tap, finalize, catchError, map } from 'rxjs/operators';
+import { tap, catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { DocumentViewerComponent } from '../viewer/document-viewer.component';
 
@@ -47,7 +47,7 @@ export class ProcessComponent implements OnInit {
 
     currentResourceInformations: any = {
 
-    }
+    };
 
     processTool: any[] = [
         {
@@ -141,7 +141,7 @@ export class ProcessComponent implements OnInit {
                 resId: params['resId'],
                 category: 'outgoing',
                 mailtracking: false
-            }
+            };
 
             this.lockResource();
 
@@ -171,14 +171,13 @@ export class ProcessComponent implements OnInit {
                 })
             ).subscribe();
 
-        },
-            (err: any) => {
-                this.notify.handleErrors(err);
-            });
+        }, (err: any) => {
+            this.notify.handleErrors(err);
+        });
     }
 
     loadResource() {
-        this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}`).pipe(
+        this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}?light=true`).pipe(
             tap((data: any) => {
                 this.currentResourceInformations = data;
             }),
@@ -238,11 +237,7 @@ export class ProcessComponent implements OnInit {
                 };
             }
         }
-        if (action.categoryUse.indexOf(this.currentResourceInformations.categoryId) > -1) {
-            return true;
-        } else {
-            return false;
-        }
+        return action.categoryUse.indexOf(this.currentResourceInformations.categoryId) > -1;
     }
 
     selectAction(action: any) {
@@ -258,10 +253,6 @@ export class ProcessComponent implements OnInit {
     }
 
     isModalOpen() {
-        if (this.modalModule.map(module => module.id).indexOf(this.currentTool) > -1) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.modalModule.map(module => module.id).indexOf(this.currentTool) > -1;
     }
 }
