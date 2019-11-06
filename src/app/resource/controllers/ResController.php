@@ -112,13 +112,16 @@ class ResController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
+        $queryParams = $request->getQueryParams();
+
+        $select = ['model_id', 'category_id', 'priority', 'subject', 'alt_identifier', 'process_limit_date', 'creation_date', 'modification_date'];
+        if (empty($queryParams['light'])) {
+            $select = array_merge($select, ['type_id', 'typist', 'status', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date', 'departure_date', 'barcode']);
+        }
+
         $document = ResModel::getById([
-            'select' => [
-                'model_id', 'category_id', 'type_id', 'subject', 'alt_identifier', 'typist',
-                'status', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date',
-                'departure_date', 'process_limit_date', 'priority', 'barcode', 'creation_date', 'modification_date'
-            ],
-            'resId' => $args['resId']
+            'select'    => $select,
+            'resId'     => $args['resId']
         ]);
         if (empty($document)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
@@ -128,24 +131,28 @@ class ResController
             'resId'                 => (int)$args['resId'],
             'modelId'               => $document['model_id'],
             'categoryId'            => $document['category_id'],
-            'doctype'               => $document['type_id'],
             'subject'               => $document['subject'],
             'chrono'                => $document['alt_identifier'],
-            'typist'                => $document['typist'],
-            'typistLabel'           => UserModel::getLabelledUserById(['id' => $document['typist']]),
-            'status'                => $document['status'],
-            'destination'           => $document['destination'],
-            'initiator'             => $document['initiator'],
-            'confidentiality'       => $document['confidentiality'] == 'Y',
-            'documentDate'          => $document['doc_date'],
-            'arrivalDate'           => $document['admission_date'],
-            'departureDate'         => $document['departure_date'],
             'processLimitDate'      => $document['process_limit_date'],
             'priority'              => $document['priority'],
-            'barcode'               => $document['barcode'],
             'creationDate'          => $document['creation_date'],
             'modificationDate'      => $document['modification_date']
         ];
+        if (empty($queryParams['light'])) {
+            $formattedData = array_merge($formattedData, [
+                'doctype'               => $document['type_id'],
+                'typist'                => $document['typist'],
+                'typistLabel'           => UserModel::getLabelledUserById(['id' => $document['typist']]),
+                'status'                => $document['status'],
+                'destination'           => $document['destination'],
+                'initiator'             => $document['initiator'],
+                'confidentiality'       => $document['confidentiality'] == 'Y',
+                'documentDate'          => $document['doc_date'],
+                'arrivalDate'           => $document['admission_date'],
+                'departureDate'         => $document['departure_date'],
+                'barcode'               => $document['barcode']
+            ]);
+        }
 
         if (!empty($formattedData['destination'])) {
             $entity = EntityModel::getByEntityId(['entityId' => $formattedData['destination'], 'select' => ['entity_label']]);
