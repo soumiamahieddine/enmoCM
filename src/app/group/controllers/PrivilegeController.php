@@ -92,15 +92,15 @@ class PrivilegeController
         ValidatorModel::intVal($args, ['userId']);
 
         $user = UserModel::getById([
-            'select' => ['user_id'],
-            'id' => $args['userId']
+            'select'    => ['user_id'],
+            'id'        => $args['userId']
         ]);
         if ($user['user_id'] == 'superadmin') {
             return true;
         }
 
-        $aServices = DatabaseModel::select([
-            'select'    => ['usergroups_services.service_id'],
+        $hasPrivilege = DatabaseModel::select([
+            'select'    => [1],
             'table'     => ['usergroup_content, usergroups_services, usergroups'],
             'where'     => [
                 'usergroup_content.group_id = usergroups.id',
@@ -111,7 +111,7 @@ class PrivilegeController
             'data'      => [$args['userId'], $args['privilegeId']]
         ]);
 
-        return !empty($aServices);
+        return !empty($hasPrivilege);
     }
 
     public static function getPrivilegesByUser(array $args)
@@ -120,8 +120,8 @@ class PrivilegeController
         ValidatorModel::intVal($args, ['userId']);
 
         $user = UserModel::getById([
-            'select' => ['user_id'],
-            'id' => $args['userId']
+            'select'    => ['user_id'],
+            'id'        => $args['userId']
         ]);
         if ($user['user_id'] == 'superadmin') {
             return PrivilegeController::PRIVILEGES;

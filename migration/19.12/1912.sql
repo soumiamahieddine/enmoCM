@@ -20,8 +20,6 @@ INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readon
 VALUES ('FULLTEXT_DOCUMENT', 'FULLTEXT', 'Full text indexes for documents', 'N', 50000000000, 0, '/opt/maarch/docservers/indexes/documents/', '2019-11-01 12:00:00.123456', 'letterbox_coll');
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, size_limit_number, actual_size_number, path_template, creation_date, coll_id)
 VALUES ('FULLTEXT_ATTACHMENT', 'FULLTEXT', 'Full text indexes for attachments', 'N', 50000000000, 0, '/opt/maarch/docservers/indexes/attachments/', '2019-11-01 12:00:00.123456', 'attachments_coll');
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, size_limit_number, actual_size_number, path_template, creation_date, coll_id)
-VALUES ('FULLTEXT_ATTACHMENT_VERSION', 'FULLTEXT', 'Full text indexes for documents', 'N', 50000000000, 0, '/opt/maarch/docservers/indexes/attachments_version/', '2019-11-01 12:00:00.123456', 'attachments_version_coll');
 UPDATE docserver_types SET fingerprint_mode = NULL WHERE docserver_type_id = 'FULLTEXT';
 UPDATE res_letterbox SET fulltext_result = 'SUCCESS' WHERE fulltext_result = '1' OR fulltext_result = '2';
 UPDATE res_letterbox SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' OR fulltext_result = '-2';
@@ -233,6 +231,13 @@ END$$;
 /* ATTACHMENTS */
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS origin_id;
 ALTER TABLE res_attachments ADD COLUMN origin_id INTEGER;
+
+
+/* DOCSERVERS */
+UPDATE docservers SET coll_id = 'attachments_coll', is_readonly = 'Y' WHERE coll_id = 'attachments_version_coll' AND docserver_type_id = 'CONVERT';
+UPDATE docservers SET coll_id = 'attachments_coll', is_readonly = 'Y' WHERE coll_id = 'attachments_version_coll' AND docserver_type_id = 'FASTHD';
+UPDATE docservers SET coll_id = 'attachments_coll', is_readonly = 'Y' WHERE coll_id = 'attachments_version_coll' AND docserver_type_id = 'FULLTEXT';
+UPDATE docservers SET coll_id = 'attachments_coll', is_readonly = 'Y' WHERE coll_id = 'attachments_version_coll' AND docserver_type_id = 'TNL';
 
 
 /* MLB COLL EXT */
