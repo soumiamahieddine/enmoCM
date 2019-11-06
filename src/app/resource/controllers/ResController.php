@@ -153,6 +153,19 @@ class ResController
                 'barcode'               => $document['barcode']
             ]);
         }
+        
+        $modelFields = IndexingModelFieldModel::get([
+            'select'    => ['identifier'],
+            'where'     => ['model_id = ?'],
+            'data'      => [$document['model_id']]
+        ]);
+        $modelFields = array_column($modelFields, 'identifier');
+
+        foreach ($formattedData as $key => $data) {
+            if (!in_array($key, $modelFields)) {
+                unset($formattedData[$key]);
+            }
+        }
 
         if (!empty($formattedData['destination'])) {
             $entity = EntityModel::getByEntityId(['entityId' => $formattedData['destination'], 'select' => ['entity_label']]);
