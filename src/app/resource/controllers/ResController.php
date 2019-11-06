@@ -91,7 +91,7 @@ class ResController
 
             $customId = CoreConfigModel::getCustomId();
             $customId = empty($customId) ? 'null' : $customId;
-            exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId 'letterbox_coll' --userId {$GLOBALS['id']} > /dev/null &");
+            exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId letterbox_coll --userId {$GLOBALS['id']} > /dev/null &");
         }
 
         HistoryController::add([

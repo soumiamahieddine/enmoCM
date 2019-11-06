@@ -104,19 +104,16 @@ abstract class AttachmentModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status']);
+        ValidatorModel::notEmpty($aArgs, ['res_id', 'format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status', 'relation']);
         ValidatorModel::stringType($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'status']);
-        ValidatorModel::intVal($aArgs, ['filesize']);
-
-        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_attachment_res_id_seq']);
-        $aArgs['res_id'] = $nextSequenceId;
+        ValidatorModel::intVal($aArgs, ['res_id', 'filesize', 'relation']);
 
         DatabaseModel::insert([
             'table'         => 'res_attachments',
             'columnsValues' => $aArgs
         ]);
 
-        return $nextSequenceId;
+        return true;
     }
 
     public static function update(array $aArgs)
@@ -136,7 +133,13 @@ abstract class AttachmentModelAbstract
 
     public static function getAttachmentsTypesByXML()
     {
-        $attachmentTypes = [];
+        static $types;
+
+        if (!empty($types)) {
+            return $types;
+        }
+
+        $types = [];
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/entreprise.xml']);
         if ($loadedXml) {
@@ -144,7 +147,7 @@ abstract class AttachmentModelAbstract
             if (count($attachmentTypesXML) > 0) {
                 foreach ($attachmentTypesXML->type as $value) {
                     $label = defined((string) $value->label) ? constant((string) $value->label) : (string) $value->label;
-                    $attachmentTypes[(string) $value->id] = [
+                    $types[(string) $value->id] = [
                         'label'     => $label,
                         'icon'      => (string)$value['icon'],
                         'sign'      => (empty($value['sign']) || (string)$value['sign'] == 'true') ? true : false,
@@ -155,7 +158,7 @@ abstract class AttachmentModelAbstract
             }
         }
 
-        return $attachmentTypes;
+        return $types;
     }
 
     public static function unsignAttachment(array $aArgs)

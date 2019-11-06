@@ -24,6 +24,7 @@ use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use Resource\models\ResModel;
 use SrcCore\models\CoreConfigModel;
+use User\models\UserModel;
 
 class StoreController
 {
@@ -68,40 +69,43 @@ class StoreController
         }
     }
 
-    public static function storeAttachment(array $aArgs)
+    public static function storeAttachment(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['encodedFile', 'data', 'fileFormat', 'status']);
-        ValidatorModel::stringType($aArgs, ['collId', 'fileFormat', 'status']);
+        ValidatorModel::notEmpty($args, ['encodedFile', 'format']);
+        ValidatorModel::stringType($args, ['format']);
 
         try {
-            $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $aArgs['encodedFile']));
+            $id = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_attachment_res_id_seq']);
+
+            $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $args['encodedFile']));
 
             $storeResult = DocserverController::storeResourceOnDocServer([
                 'collId'            => 'attachments_coll',
                 'docserverTypeId'   => 'DOC',
                 'encodedResource'   => base64_encode($fileContent),
-                'format'            => $aArgs['fileFormat']
+                'format'            => $args['format']
             ]);
             if (!empty($storeResult['errors'])) {
-                return ['errors' => '[storeResource] ' . $storeResult['errors']];
+                return ['errors' => '[storeAttachment] ' . $storeResult['errors']];
             }
 
-            $data = StoreController::prepareAttachmentStorage([
-                'data'          => $aArgs['data'],
-                'docserverId'   => $storeResult['docserver_id'],
-                'status'        => $aArgs['status'],
-                'fileName'      => $storeResult['file_destination_name'],
-                'fileFormat'    => $aArgs['fileFormat'],
-                'fileSize'      => $storeResult['fileSize'],
-                'path'          => $storeResult['destination_dir'],
-                'fingerPrint'   => $storeResult['fingerPrint']
-            ]);
+            $data = [
+                'res_id'        => $id,
+                'docserver_id'  => $storeResult['docserver_id'],
+                'filename'      => $storeResult['file_destination_name'],
+                'filesize'      => $storeResult['fileSize'],
+                'path'          => $storeResult['directory'],
+                'fingerprint'   => $storeResult['fingerPrint']
+            ];
 
-            $id = AttachmentModel::create($data);
+            $data = array_merge($args, $data);
+            $data = StoreController::prepareAttachmentStorage($data);
+
+            AttachmentModel::create($data);
 
             return $id;
         } catch (\Exception $e) {
-            return ['errors' => '[storeResource] ' . $e->getMessage()];
+            return ['errors' => '[storeAttachment] ' . $e->getMessage()];
         }
     }
 
@@ -171,59 +175,52 @@ class StoreController
         return $preparedData;
     }
 
-    public static function prepareAttachmentStorage(array $aArgs)
+    public static function prepareAttachmentStorage(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['data', 'docserverId', 'fileName', 'fileFormat', 'fileSize', 'path', 'fingerPrint']);
-        ValidatorModel::stringType($aArgs, ['docserverId', 'status', 'fileName', 'fileFormat', 'path', 'fingerPrint']);
-        ValidatorModel::arrayType($aArgs, ['data']);
-        ValidatorModel::intVal($aArgs, ['fileSize']);
+        ValidatorModel::notEmpty($args, ['res_id', 'docserver_id', 'filename', 'format', 'path', 'fingerprint']);
+        ValidatorModel::stringType($args, ['docserver_id', 'filename', 'format', 'path', 'fingerprint']);
+        ValidatorModel::intVal($args, ['res_id', 'filesize']);
 
-        foreach ($aArgs['data'] as $key => $value) {
-            $aArgs['data'][$key]['column'] = strtolower($value['column']);
+        $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
+        if ($attachmentsTypes[$args['type']]['chrono'] && empty($args['chrono'])) {
+            $resource = ResModel::getById(['select' => ['destination', 'type_id'], 'resId' => $args['resIdMaster']]);
+            $args['chrono'] = ChronoModel::getChrono(['id' => 'outgoing', 'entityId' => $resource['destination'], 'typeId' => $resource['type_id'], 'resId' => $args['resIdMaster']]);
         }
 
-        $aArgs['data'][] = [
-            'column'    => 'docserver_id',
-            'value'     => $aArgs['docserverId'],
-            'type'      => 'string'
-        ];
-        $aArgs['data'][] = [
-            'column'    => 'creation_date',
-            'value'     => 'CURRENT_TIMESTAMP',
-            'type'      => 'function'
-        ];
-        $aArgs['data'][] = [
-            'column'    => 'path',
-            'value'     => $aArgs['path'],
-            'type'      => 'string'
-        ];
-        $aArgs['data'][] = [
-            'column'    => 'fingerprint',
-            'value'     => $aArgs['fingerPrint'],
-            'type'      => 'string'
-        ];
-        $aArgs['data'][] = [
-            'column'    => 'filename',
-            'value'     => $aArgs['fileName'],
-            'type'      => 'string'
-        ];
-        $aArgs['data'][] = [
-            'column'    => 'format',
-            'value'     => $aArgs['fileFormat'],
-            'type'      => 'string'
-        ];
-        $aArgs['data'][] = [
-            'column'    => 'filesize',
-            'value'     => $aArgs['fileSize'],
-            'type'      => 'int'
-        ];
-
-        $formatedData = [];
-        foreach ($aArgs['data'] as $value) {
-            $formatedData[$value['column']] = $value['value'];
+        $relation = 1;
+        if (!empty($args['originId'])) {
+            $relations = AttachmentModel::get(['select' => ['relation'], 'where' => ['origin_id = ?'], 'data' => [$args['originId']], 'orderBy' => ['relation DESC'], 'limit' => 1]);
+            $relation = $relations[0]['relation'] ?? 2;
+            AttachmentModel::update(['set' => ['status' => 'OBS'], 'where' => ['(origin_id = ? OR res_id = ?)'], 'data' => [$args['originId'], $args['originId']]]);
         }
 
-        return $formatedData;
+        $externalId = '{}';
+        if (!empty($args['externalId']) && is_array($args['externalId'])) {
+            $externalId = json_encode($args['externalId']);
+        }
+
+        $preparedData = [
+            'res_id'                => $args['res_id'],
+            'title'                 => $args['title'] ?? null,
+            'identifier'            => $args['chrono'] ?? null,
+            'typist'                => $GLOBALS['userId'],
+            'status'                => 'A_TRA',
+            'relation'              => $relation,
+            'origin_id'             => $args['originId'] ?? null,
+            'res_id_master'         => $args['resIdMaster'],
+            'attachment_type'       => $args['type'],
+            'in_signature_book'     => empty($args['inSignatureBook']) ? 'false' : 'true',
+            'external_id'           => $externalId,
+            'format'                => $args['format'],
+            'docserver_id'          => $args['docserver_id'],
+            'filename'              => $args['filename'],
+            'filesize'              => $args['filesize'],
+            'path'                  => $args['path'],
+            'fingerprint'           => $args['fingerprint'],
+            'creation_date'         => 'CURRENT_TIMESTAMP'
+        ];
+
+        return $preparedData;
     }
 
     public static function getFingerPrint(array $aArgs)
