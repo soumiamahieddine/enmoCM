@@ -20,7 +20,7 @@ use Basket\models\RedirectBasketModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Entity\models\ListInstanceModel;
-use Group\controllers\ServiceController;
+use Group\controllers\PrivilegeController;
 use Group\models\ServiceModel;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
@@ -53,7 +53,7 @@ class UserController
 
     public function get(Request $request, Response $response)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -133,7 +133,7 @@ class UserController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -455,7 +455,7 @@ class UserController
         $user['regroupedBaskets']   = BasketModel::getRegroupedBasketsByUserId(['userId' => $user['user_id']]);
         $user['passwordRules']      = PasswordModel::getEnabledRules();
         $user['canModifyPassword']  = true;
-        $user['privileges']         = ServiceController::getPrivilegesByUser(['userId' => $user['id']]);
+        $user['privileges']         = PrivilegeController::getPrivilegesByUser(['userId' => $user['id']]);
 
         $loggingMethod = CoreConfigModel::getLoggingMethod();
         if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS)) {
@@ -679,7 +679,7 @@ class UserController
 
     public function getStatusByUserId(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
         
@@ -1324,7 +1324,7 @@ class UserController
             'canManageTags' => false
         ];
 
-        if (ServiceController::hasPrivilege(['privilegeId' => 'manage_tags_application', 'userId' => $GLOBALS['id']])) {
+        if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_tags_application', 'userId' => $GLOBALS['id']])) {
             $privileges['canManageTags'] = true;
         }
 
@@ -1398,7 +1398,7 @@ class UserController
                 $error['error'] = 'User not found';
             } else {
                 if (empty($aArgs['himself']) || $GLOBALS['userId'] != $user['user_id']) {
-                    if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
+                    if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
                         $error['status'] = 403;
                         $error['error'] = 'Service forbidden';
                     }

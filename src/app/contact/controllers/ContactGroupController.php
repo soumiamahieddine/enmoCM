@@ -16,7 +16,7 @@ namespace Contact\controllers;
 
 use Contact\models\ContactGroupModel;
 use Contact\models\ContactModel;
-use Group\controllers\ServiceController;
+use Group\controllers\PrivilegeController;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
@@ -29,7 +29,7 @@ class ContactGroupController
 {
     public function get(Request $request, Response $response)
     {
-        $hasService = ServiceController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]);
+        $hasService = PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]);
 
         $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
 
@@ -55,7 +55,7 @@ class ContactGroupController
         }
 
         $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
-        if ($contactsGroup['owner'] != $user['id'] && !ServiceController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+        if ($contactsGroup['owner'] != $user['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -118,7 +118,7 @@ class ContactGroupController
         }
 
         $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
-        if ($contactsGroup['owner'] != $user['id'] && !ServiceController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+        if ($contactsGroup['owner'] != $user['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -160,7 +160,7 @@ class ContactGroupController
         }
 
         $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
-        if ($contactsGroup['owner'] != $user['id'] && !ServiceController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+        if ($contactsGroup['owner'] != $user['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -191,7 +191,7 @@ class ContactGroupController
         }
 
         $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
-        if ($contactsGroup['owner'] != $user['id'] && !ServiceController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+        if ($contactsGroup['owner'] != $user['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -237,7 +237,7 @@ class ContactGroupController
         }
 
         $user = UserModel::getByLogin(['select' => ['id'], 'login' => $GLOBALS['userId']]);
-        if ($contactsGroup['owner'] != $user['id'] && !ServiceController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+        if ($contactsGroup['owner'] != $user['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

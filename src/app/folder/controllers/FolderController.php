@@ -22,7 +22,7 @@ use Folder\models\EntityFolderModel;
 use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
 use Folder\models\UserPinnedFolderModel;
-use Group\controllers\ServiceController;
+use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
@@ -523,7 +523,7 @@ class FolderController
             $formattedResources = [];
             if (!empty($resIds)) {
                 $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
-                if (!ServiceController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
+                if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
                     $excludeAttachmentTypes[] = 'document_with_notes';
                 }
 

@@ -15,7 +15,7 @@
 
 namespace Sendmail\Controllers;
 
-use Group\controllers\ServiceController;
+use Group\controllers\PrivilegeController;
 use Resource\controllers\StoreController;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -40,7 +40,7 @@ class ReceiveMessageExchangeController
 
     public function saveMessageExchange(Request $request, Response $response)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'save_numeric_package', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'save_numeric_package', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

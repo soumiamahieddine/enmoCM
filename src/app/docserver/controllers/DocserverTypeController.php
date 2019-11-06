@@ -14,7 +14,7 @@
 
 namespace Docserver\controllers;
 
-use Group\controllers\ServiceController;
+use Group\controllers\PrivilegeController;
 use Group\models\ServiceModel;
 use Docserver\models\DocserverTypeModel;
 use Slim\Http\Request;
@@ -24,7 +24,7 @@ class DocserverTypeController
 {
     public function get(Request $request, Response $response)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_docservers', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_docservers', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -33,7 +33,7 @@ class DocserverTypeController
 
     public function getById(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_docservers', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_docservers', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

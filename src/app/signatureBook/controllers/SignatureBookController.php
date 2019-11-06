@@ -21,7 +21,7 @@ use Basket\models\BasketModel;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Entity\models\ListInstanceModel;
-use Group\controllers\ServiceController;
+use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
 use Group\models\ServiceModel;
 use Link\models\LinkModel;
@@ -112,7 +112,7 @@ class SignatureBookController
         $datas['consigne']              = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']           = ((int)$listInstances[0]['count'] > 0);
         $datas['listinstance']          = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);
-        $datas['canSign']               = ServiceController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $GLOBALS['id']]);
+        $datas['canSign']               = PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $GLOBALS['id']]);
         $datas['isCurrentWorkflowUser'] = $datas['listinstance']['item_id'] == $GLOBALS['userId'];
 
         return $response->withJson($datas);
@@ -242,8 +242,8 @@ class SignatureBookController
             'orderBy'   => [$orderBy]
         ]);
 
-        $canModify = ServiceController::hasPrivilege(['privilegeId' => 'modify_attachments', 'userId' => $aArgs['userId']]);
-        $canDelete = ServiceController::hasPrivilege(['privilegeId' => 'delete_attachments', 'userId' => $aArgs['userId']]);
+        $canModify = PrivilegeController::hasPrivilege(['privilegeId' => 'modify_attachments', 'userId' => $aArgs['userId']]);
+        $canDelete = PrivilegeController::hasPrivilege(['privilegeId' => 'delete_attachments', 'userId' => $aArgs['userId']]);
 
         foreach ($attachments as $key => $value) {
             if ($value['attachment_type'] == 'converted_pdf' || ($value['attachment_type'] == 'signed_response' && !empty($value['origin']))) {

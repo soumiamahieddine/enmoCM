@@ -17,7 +17,7 @@
 
 namespace Parameter\controllers;
 
-use Group\controllers\ServiceController;
+use Group\controllers\PrivilegeController;
 use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Parameter\models\ParameterModel;
@@ -57,7 +57,7 @@ class ParameterController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -90,7 +90,7 @@ class ParameterController
 
     public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -123,7 +123,7 @@ class ParameterController
 
     public function delete(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_parameters', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

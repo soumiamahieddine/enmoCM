@@ -214,8 +214,8 @@ $app->get('/groups/{id}/details', \Group\controllers\GroupController::class . ':
 $app->get('/groups/{id}/indexing', \Group\controllers\GroupController::class . ':getIndexingInformationsById');
 $app->put('/groups/{id}/indexing', \Group\controllers\GroupController::class . ':updateIndexingInformations');
 $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupController::class . ':reassignUsers');
-$app->post('/groups/{id}/privileges/{privilegeId}', \Group\controllers\ServiceController::class . ':addPrivilege');
-$app->delete('/groups/{id}/privileges/{privilegeId}', \Group\controllers\ServiceController::class . ':removePrivilege');
+$app->post('/groups/{id}/privileges/{privilegeId}', \Group\controllers\PrivilegeController::class . ':addPrivilege');
+$app->delete('/groups/{id}/privileges/{privilegeId}', \Group\controllers\PrivilegeController::class . ':removePrivilege');
 
 //Histories
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');

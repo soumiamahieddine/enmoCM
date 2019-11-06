@@ -14,7 +14,7 @@
 
 namespace SrcCore\controllers;
 
-use Group\controllers\ServiceController;
+use Group\controllers\PrivilegeController;
 use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;

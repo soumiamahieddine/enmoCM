@@ -14,7 +14,7 @@
 
 namespace Notification\controllers;
 
-use Group\controllers\ServiceController;
+use Group\controllers\PrivilegeController;
 use Respect\Validation\Validator;
 use Notification\models\NotificationModel;
 use Notification\models\NotificationScheduleModel;
@@ -27,7 +27,7 @@ class NotificationScheduleController
 {
     public function get(Request $request, Response $response)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_notif', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_notif', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -40,7 +40,7 @@ class NotificationScheduleController
     // Save Crontab
     public function create(Request $request, Response $response)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_notif', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_notif', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -136,7 +136,7 @@ class NotificationScheduleController
 
     public function createScriptNotification(Request $request, Response $response)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_notif', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_notif', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

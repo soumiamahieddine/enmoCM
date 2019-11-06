@@ -17,7 +17,7 @@ namespace Entity\controllers;
 use Com\Tecnick\Barcode\Barcode;
 use Endroid\QrCode\QrCode;
 use Entity\models\EntityModel;
-use Group\controllers\ServiceController;
+use Group\controllers\PrivilegeController;
 use Group\models\ServiceModel;
 use Parameter\models\ParameterModel;
 use Respect\Validation\Validator;
@@ -29,7 +29,7 @@ class EntitySeparatorController
 {
     public function create(Request $request, Response $response)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'entities_print_sep_mlb', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'entities_print_sep_mlb', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

@@ -14,7 +14,7 @@
 
 namespace History\controllers;
 
-use Group\controllers\ServiceController;
+use Group\controllers\PrivilegeController;
 use Group\models\ServiceModel;
 use History\models\BatchHistoryModel;
 use Respect\Validation\Validator;
@@ -25,7 +25,7 @@ class BatchHistoryController
 {
     public function get(Request $request, Response $response)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'view_history_batch', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_history_batch', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

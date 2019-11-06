@@ -31,7 +31,7 @@
 
 
 // To activate de debug mode of the class
-use Group\controllers\ServiceController;
+use Group\controllers\PrivilegeController;
 
 $_ENV['DEBUG'] = false;
 /*
@@ -148,10 +148,10 @@ class ServiceControler
 		$services = ['adv_search_mlb' => false, 'reports' => false];
 		$userUse = \User\models\UserModel::getByLogin(['login' => $user_id, 'select' => ['id']]);
 
-		if (ServiceController::hasPrivilege(['privilegeId' => 'adv_search_mlb', 'userId' => $userUse['id']])) {
+		if (PrivilegeController::hasPrivilege(['privilegeId' => 'adv_search_mlb', 'userId' => $userUse['id']])) {
 			$services['adv_search_mlb'] = true;
 		}
-		if (ServiceController::hasPrivilege(['privilegeId' => 'reports', 'userId' => $userUse['id']])) {
+		if (PrivilegeController::hasPrivilege(['privilegeId' => 'reports', 'userId' => $userUse['id']])) {
 			$services['reports'] = true;
 		}
 

@@ -11,7 +11,7 @@
 
 namespace Doctype\controllers;
 
-use Group\controllers\ServiceController;
+use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Doctype\models\FirstLevelModel;
@@ -59,7 +59,7 @@ class SecondLevelController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_architecture', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_architecture', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -91,7 +91,7 @@ class SecondLevelController
 
     public function update(Request $request, Response $response, $aArgs)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_architecture', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_architecture', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -124,7 +124,7 @@ class SecondLevelController
 
     public function delete(Request $request, Response $response, $aArgs)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_architecture', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_architecture', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

@@ -10,7 +10,7 @@ use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
-class ServiceController
+class PrivilegeController
 {
     const PRIVILEGES = [
         "admin",
@@ -47,13 +47,9 @@ class ServiceController
 
     public static function addPrivilege(Request $request, Response $response, array $args)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
-
-        ValidatorModel::notEmpty($args, ['privilegeId', 'id']);
-        ValidatorModel::stringType($args, ['privilegeId']);
-        ValidatorModel::intVal($args, ['id']);
 
         $group = GroupModel::getById(['id' => $args['id']]);
         if (empty($group)) {
@@ -71,13 +67,9 @@ class ServiceController
 
     public static function removePrivilege(Request $request, Response $response, array $args)
     {
-        if (!ServiceController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
-
-        ValidatorModel::notEmpty($args, ['privilegeId', 'id']);
-        ValidatorModel::stringType($args, ['privilegeId']);
-        ValidatorModel::intVal($args, ['id']);
 
         $group = GroupModel::getById(['id' => $args['id']]);
         if (empty($group)) {
@@ -122,7 +114,8 @@ class ServiceController
         return !empty($aServices);
     }
 
-    public static function getPrivilegesByUser(array $args) {
+    public static function getPrivilegesByUser(array $args)
+    {
         ValidatorModel::notEmpty($args, ['userId']);
         ValidatorModel::intVal($args, ['userId']);
 
@@ -131,7 +124,7 @@ class ServiceController
             'id' => $args['userId']
         ]);
         if ($user['user_id'] == 'superadmin') {
-            return ServiceController::PRIVILEGES;
+            return PrivilegeController::PRIVILEGES;
         }
 
         $rawPrivilegesStoredInDB = ServiceModel::getByUser(['id' => $args['userId']]);
