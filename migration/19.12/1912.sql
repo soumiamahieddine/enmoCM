@@ -442,6 +442,7 @@ ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_attempts;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_attempts;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_result;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS coll_id;
 ALTER TABLE usergroups DROP COLUMN IF EXISTS enabled;
 ALTER TABLE actions DROP COLUMN IF EXISTS enabled;
 ALTER TABLE actions DROP COLUMN IF EXISTS origin;

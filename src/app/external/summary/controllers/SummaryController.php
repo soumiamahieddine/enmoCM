@@ -38,7 +38,7 @@ class SummaryController
             return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an int val']);
         }
 
-        $emails = EmailModel::get(['select' => ['object', 'send_date', 'user_id'], 'where' => ['document->>\'id\' = ?', 'status = ?'], 'data' => [$args['resId'], 'SENT'], 'limit' => (int)$queryParams['limit']]);
+        $emails = EmailModel::get(['select' => ['object', 'send_date', 'user_id'], 'where' => ['document->>\'id\' = ?', 'status in (?)'], 'data' => [$args['resId'], ['SENT', 'ERROR']], 'limit' => (int)$queryParams['limit']]);
         foreach ($emails as $key => $value) {
             $userInfo = UserModel::getById(['select' => ['firstname', 'lastname'], 'id' => $value['user_id']]);
             $emails[$key]['userInfo'] = $userInfo['firstname'] . ' ' . $userInfo['lastname'];
