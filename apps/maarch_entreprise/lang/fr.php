@@ -57,9 +57,6 @@ if (!defined('_PROCESSING_MODE')) {
 if (!defined('_ADMIN_USERS')) {
     define('_ADMIN_USERS', 'Utilisateurs');
 }
-if (!defined('_ADMIN_DOCSERVERS')) {
-    define('_ADMIN_DOCSERVERS', 'Zones de stockage');
-}
 if (!defined('_ADMIN_GROUPS')) {
     define('_ADMIN_GROUPS', "Groupes d'utilisateurs");
 }
@@ -567,24 +564,6 @@ if (!defined('_CARD')) {
 }
 
 /************************* First login ***********************************/
-if (!defined('_MODIFICATION_PSW')) {
-    define('_MODIFICATION_PSW', 'Modification du mot de passe');
-}
-if (!defined('_YOUR_FIRST_CONNEXION')) {
-    define('_YOUR_FIRST_CONNEXION', 'Bienvenue sur Maarch ! <br/>Ceci est votre première connexion');
-}
-if (!defined('_PLEASE_CHANGE_PSW')) {
-    define('_PLEASE_CHANGE_PSW', ' veuillez définir votre mot de passe');
-}
-if (!defined('_ASKED_ONLY_ONCE')) {
-    define('_ASKED_ONLY_ONCE', "Cela ne vous sera demandé qu'une seule fois");
-}
-if (!defined('_PSW_REINI')) {
-    define('_PSW_REINI', 'Votre mot de passe a été réinitialisé. Veuillez en définir un nouveau.');
-}
-if (!defined('_FIRST_CONN')) {
-    define('_FIRST_CONN', 'Première connexion');
-}
 if (!defined('_LOGIN')) {
     define('_LOGIN', 'Connexion');
 }
@@ -784,15 +763,6 @@ if (!defined('_ROLE')) {
     define('_ROLE', 'Rôle');
 }
 
-if (!defined('_THE_PSW')) {
-    define('_THE_PSW', 'Le mot de passe');
-}
-if (!defined('_THE_PSW_VALIDATION')) {
-    define('_THE_PSW_VALIDATION', 'La validation du mot de passe');
-}
-if (!defined('_MODIFICATION_PSW_SNTE')) {
-    define('_MODIFICATION_PSW_SNTE', 'Pour modifier votre mot de passe, vous devez confirmer celui-ci.');
-}
 if (!defined('_USER_ACCESS_DEPARTMENT')) {
     define('_USER_ACCESS_DEPARTMENT', "L'utilisateur a accès aux entités suivantes");
 }
@@ -2135,15 +2105,6 @@ if (!defined('_DUPLICATES_BY_NAME')) {
 if (!defined('_IS_ATTACHED_TO_DOC')) {
     define('_IS_ATTACHED_TO_DOC', 'Attaché à des documents ?');
 }
-if (!defined('_RES_ATTACHED')) {
-    define('_RES_ATTACHED', 'Documents attachés');
-}
-if (!defined('_SELECT_CONTACT_TO_REPLACE')) {
-    define('_SELECT_CONTACT_TO_REPLACE', "Sélectionner le contact et l'adresse remplaçant");
-}
-if (!defined('_ARE_YOU_SURE_TO_DELETE_CONTACT')) {
-    define('_ARE_YOU_SURE_TO_DELETE_CONTACT', 'êtes vous sûr de supprimer le contact ?');
-}
 if (!defined('_CONTACT_CHECK')) {
     define('_CONTACT_CHECK', 'Au moins un courrier enregistré récemment est affecté au même contact.');
 }
@@ -3224,9 +3185,6 @@ if (!defined('_MANAGE_DOCSERVER_TYPES')) {
 }
 if (!defined('_MANAGE_DOCSERVER_TYPES_DESC')) {
     define('_MANAGE_DOCSERVER_TYPES_DESC', 'Ajouter, modifier, supprimer les types de zones de stockage ');
-}
-if (!defined('_ADMIN_DOCSERVERS')) {
-    define('_ADMIN_DOCSERVERS', ' Administration des zones de stockage');
 }
 if (!defined('_DOCSERVER_ID')) {
     define('_DOCSERVER_ID', 'Identifiant docserver');
@@ -4319,18 +4277,12 @@ if (!defined('_CURRENT_PSW')) {
 if (!defined('_NEW_PSW')) {
     define('_NEW_PSW', 'Nouveau mot de passe');
 }
-if (!defined('_REENTER_PSW')) {
-    define('_REENTER_PSW', 'Retaper le mot de passe');
-}
 if (!defined('_UPDATED_PROFILE')) {
     define('_UPDATED_PROFILE', 'Votre profil a bien été modifié');
 }
 
 if (!defined('_WRONG_PSW')) {
     define('_WRONG_PSW', 'Le mot de passe actuel n\'est pas correct');
-}
-if (!defined('_WRONG_SECOND_PSW')) {
-    define('_WRONG_SECOND_PSW', 'Le deuxième mot de passe ne correspond pas au premier mot de passe !');
 }
 if (!defined('_EMPTY_PSW_FORM')) {
     define('_EMPTY_PSW_FORM', 'Le formulaire de mot de passe n\'est pas complet');

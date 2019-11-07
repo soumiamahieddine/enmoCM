@@ -25,7 +25,6 @@ if (!defined('_SEND_ATTACHMENTS_TO_CONTACT')) { define('_SEND_ATTACHMENTS_TO_CON
 if (!defined('_SEND_ATTACHMENTS_TO_CONTACT_DESC')) { define('_SEND_ATTACHMENTS_TO_CONTACT_DESC', 'Opent een mailverzendingsmodaliteit met de e-mail van het aan het document gekoppelde contact als bestemmeling.');}
 if (!defined('_PROCESSING_MODE')) { define('_PROCESSING_MODE', 'Verwerkingswijze');}
 if (!defined('_ADMIN_USERS')) { define('_ADMIN_USERS', 'Gebruikers');}
-if (!defined('_ADMIN_DOCSERVERS')) { define('_ADMIN_DOCSERVERS', 'Opslagruimtes');}
 if (!defined('_ADMIN_GROUPS')) { define('_ADMIN_GROUPS', 'Gebruikersgroepen');}
 if (!defined('_VIEW_HISTORY')) { define('_VIEW_HISTORY', 'Geschiedenis');}
 if (!defined('_VIEW_HISTORY_BATCH')) { define('_VIEW_HISTORY_BATCH', 'Geschiedenis van de batches');}
@@ -188,12 +187,6 @@ if (!defined('_BAD_FEBRUARY')) { define('_BAD_FEBRUARY', 'De maand februari mag 
 if (!defined('_CHAPTER_SHORT')) { define('_CHAPTER_SHORT', 'Hfst');}
 if (!defined('_PROCESS_SHORT')) { define('_PROCESS_SHORT', 'Verwerking');}
 if (!defined('_CARD')) { define('_CARD', 'Fiche');}
-if (!defined('_MODIFICATION_PSW')) { define('_MODIFICATION_PSW', 'Wachtwoord wijzigen');}
-if (!defined('_YOUR_FIRST_CONNEXION')) { define('_YOUR_FIRST_CONNEXION', 'Welkom bij Maarch ! <br/>Dit is uw eerste verbinding');}
-if (!defined('_PLEASE_CHANGE_PSW')) { define('_PLEASE_CHANGE_PSW', 'Definieer uw wachtwoord');}
-if (!defined('_ASKED_ONLY_ONCE')) { define('_ASKED_ONLY_ONCE', 'Dit wordt u maar éénmaal gevraagd');}
-if (!defined('_PSW_REINI')) { define('_PSW_REINI', 'Uw wachtwoord werd gereset. Definieer een nieuw wachtwoord.');}
-if (!defined('_FIRST_CONN')) { define('_FIRST_CONN', 'Eerste verbinding');}
 if (!defined('_LOGIN')) { define('_LOGIN', 'Aanmelden');}
 if (!defined('_RELOGIN')) { define('_RELOGIN', 'Nieuwe verbinding');}
 if (!defined('_RA_CODE')) { define('_RA_CODE', 'Bijkomende toegangscode');}
@@ -255,9 +248,6 @@ if (!defined('_USER_BELONGS_NO_ENTITY')) { define('_USER_BELONGS_NO_ENTITY', 'De
 if (!defined('_CHOOSE_ONE_GROUP')) { define('_CHOOSE_ONE_GROUP', 'Kies minstens een groep');}
 if (!defined('_CHOOSE_GROUP')) { define('_CHOOSE_GROUP', 'Kies een groep');}
 if (!defined('_ROLE')) { define('_ROLE', 'Functie');}
-if (!defined('_THE_PSW')) { define('_THE_PSW', 'Het wachtwoord');}
-if (!defined('_THE_PSW_VALIDATION')) { define('_THE_PSW_VALIDATION', 'De bevestiging van het wachtwoord');}
-if (!defined('_MODIFICATION_PSW_SNTE')) { define('_MODIFICATION_PSW_SNTE', 'Om uw wachtwoord te wijzigen moet u dit bevestigen.');}
 if (!defined('_USER_ACCESS_DEPARTMENT')) { define('_USER_ACCESS_DEPARTMENT', 'De gebruiker heeft toegang tot de volgende diensten');}
 if (!defined('_FIRST_PSW')) { define('_FIRST_PSW', 'Het eerste wachtwoord');}
 if (!defined('_SECOND_PSW')) { define('_SECOND_PSW', 'Het tweede wachtwoord');}
@@ -683,9 +673,6 @@ if (!defined('_MANAGE_DUPLICATES')) { define('_MANAGE_DUPLICATES', 'Beheer van d
 if (!defined('_DUPLICATES_BY_SOCIETY')) { define('_DUPLICATES_BY_SOCIETY', 'Dubbele elementen per organisatie/vennootschap');}
 if (!defined('_DUPLICATES_BY_NAME')) { define('_DUPLICATES_BY_NAME', 'Dubbele elementen per familienaam/voornaam');}
 if (!defined('_IS_ATTACHED_TO_DOC')) { define('_IS_ATTACHED_TO_DOC', 'Bij documenten gevoegd?');}
-if (!defined('_RES_ATTACHED')) { define('_RES_ATTACHED', 'Bijgevoegde documenten');}
-if (!defined('_SELECT_CONTACT_TO_REPLACE')) { define('_SELECT_CONTACT_TO_REPLACE', 'Het contact en het adres van de vervanger selecteren');}
-if (!defined('_ARE_YOU_SURE_TO_DELETE_CONTACT')) { define('_ARE_YOU_SURE_TO_DELETE_CONTACT', 'Weet u zeker dat u het contact wil verwijderen?');}
 if (!defined('_CONTACT_CHECK')) { define('_CONTACT_CHECK', 'Minstens één recent bewaarde brief is aan hetzelfde contact toegewezen.');}
 if (!defined('_NO_SOCIETY_DUPLICATES')) { define('_NO_SOCIETY_DUPLICATES', 'Geen dubbel element voor rechtscontacten');}
 if (!defined('_NO_NAME_DUPLICATES')) { define('_NO_NAME_DUPLICATES', 'Geen dubbel element voor contacten met natuurlijke personen (voornaam familienaam)');}
@@ -1021,7 +1008,6 @@ if (!defined('_MANAGE_DOCSERVERS_LOCATIONS')) { define('_MANAGE_DOCSERVERS_LOCAT
 if (!defined('_MANAGE_DOCSERVERS_LOCATIONS_DESC')) { define('_MANAGE_DOCSERVERS_LOCATIONS_DESC', 'De opslagruimtes van documenten toevoegen, verwijderen, wijzigen');}
 if (!defined('_MANAGE_DOCSERVER_TYPES')) { define('_MANAGE_DOCSERVER_TYPES', 'De opslagruimtetypes beheren');}
 if (!defined('_MANAGE_DOCSERVER_TYPES_DESC')) { define('_MANAGE_DOCSERVER_TYPES_DESC', 'Opslagruimtes toevoegen, wijzigen, verwijderen');}
-if (!defined('_ADMIN_DOCSERVERS')) { define('_ADMIN_DOCSERVERS', 'Beheer van opslagruimtes');}
 if (!defined('_DOCSERVER_ID')) { define('_DOCSERVER_ID', 'Gebruikersnaam docserver');}
 if (!defined('_YOU_CANNOT_DELETE')) { define('_YOU_CANNOT_DELETE', 'Verwijderen onmogelijk');}
 if (!defined('_UNKNOWN')) { define('_UNKNOWN', 'Onbekend');}
@@ -1378,10 +1364,8 @@ if (!defined('_DIGITAL_FINGERPRINT')) { define('_DIGITAL_FINGERPRINT', 'Digitale
 if (!defined('_UPDATE_PSW')) { define('_UPDATE_PSW', 'Uw wachtwoord wijzigen');}
 if (!defined('_CURRENT_PSW')) { define('_CURRENT_PSW', 'Huidig wachtwoord');}
 if (!defined('_NEW_PSW')) { define('_NEW_PSW', 'Nieuw wachtwoord');}
-if (!defined('_REENTER_PSW')) { define('_REENTER_PSW', 'Wachtwoord opnieuw intypen');}
 if (!defined('_UPDATED_PROFILE')) { define('_UPDATED_PROFILE', 'Uw profiel werd wel degelijk gewijzigd');}
 if (!defined('_WRONG_PSW')) { define('_WRONG_PSW', 'Het huidige wachtwoord is niet correct');}
-if (!defined('_WRONG_SECOND_PSW')) { define('_WRONG_SECOND_PSW', 'Het tweede wachtwoord komt niet met het eerste wachtwoord overeen!');}
 if (!defined('_EMPTY_PSW_FORM')) { define('_EMPTY_PSW_FORM', 'Het formulier van het wachtwoord is onvolledig');}
 if (!defined('_UPDATED_PASSWORD')) { define('_UPDATED_PASSWORD', 'Uw wachtwoord werd wel degelijk gewijzigd');}
 if (!defined('_SB_SIGNATURES')) { define('_SB_SIGNATURES', 'Handtekeningen van de parafeerder');}

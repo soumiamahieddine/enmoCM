@@ -33,12 +33,6 @@
       <parameter name="contact_id" type="integer" />
     </validationRule>
 
-    <validationRule name="ajaxLoadDeleteContact" extends="standardForm" mode="error">
-      <parameter name="contact_id" type="integer" />
-      <parameter name="name" type="string" />
-      <parameter name="society_label" type="string" />
-    </validationRule>
-
     <validationRule name="ajaxDeleteContact" extends="standardForm" mode="error">
       <parameter name="contactId" type="integer" />
       <parameter name="replacedAddressId" type="string" />
@@ -586,16 +580,6 @@
       <parameter name="res_id" type="NumComma" />
       <parameter name="res_id_child" type="integer" />
       <parameter name="tableHist" type="res_view_table_list" />
-    </validationRule>
-
-    <validationRule name="verif_pass" extends="standardForm" mode="error">  
-      <parameter name="FirstName" type="string" />
-      <parameter name="LastName" type="personname" />
-      <parameter name="Mail" type="email" />
-      <parameter name="Phone" type="phone" />
-      <parameter name="Submit" type="identifier" />
-      <parameter name="pass1" type="string" />
-      <parameter name="pass2" type="string" />
     </validationRule>
 
     <validationRule name="id_identifier" extends="standardForm" mode="error">  

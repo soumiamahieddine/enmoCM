@@ -62,9 +62,6 @@ if (!defined('_PROCESSING_MODE')) {
 if (!defined('_ADMIN_USERS')) {
     define('_ADMIN_USERS', 'Users');
 }
-if (!defined('_ADMIN_DOCSERVERS')) {
-    define('_ADMIN_DOCSERVERS', 'Storage zones');
-}
 if (!defined('_ADMIN_GROUPS')) {
     define('_ADMIN_GROUPS', 'users groups');
 }
@@ -571,24 +568,6 @@ if (!defined('_CARD')) {
 }
 
 /************************* First login ***********************************/
-if (!defined('_MODIFICATION_PSW')) {
-    define('_MODIFICATION_PSW', 'Password modification');
-}
-if (!defined('_YOUR_FIRST_CONNEXION')) {
-    define('_YOUR_FIRST_CONNEXION', ' Welcome on Maarch !<br/> This is your first connection');
-}
-if (!defined('_PLEASE_CHANGE_PSW')) {
-    define('_PLEASE_CHANGE_PSW', ' Please define your password');
-}
-if (!defined('_ASKED_ONLY_ONCE')) {
-    define('_ASKED_ONLY_ONCE', 'This will be asked once');
-}
-if (!defined('_PSW_REINI')) {
-    define('_PSW_REINI', 'Your password has been rebooted. Please define a new one.');
-}
-if (!defined('_FIRST_CONN')) {
-    define('_FIRST_CONN', 'First connection');
-}
 if (!defined('_LOGIN')) {
     define('_LOGIN', 'Connection');
 }
@@ -785,15 +764,6 @@ if (!defined('_ROLE')) {
     define('_ROLE', 'Role');
 }
 
-if (!defined('_THE_PSW')) {
-    define('_THE_PSW', 'The password');
-}
-if (!defined('_THE_PSW_VALIDATION')) {
-    define('_THE_PSW_VALIDATION', 'The password validation');
-}
-if (!defined('_MODIFICATION_PSW_SNTE')) {
-    define('_MODIFICATION_PSW_SNTE', 'To modify your password, please confirm it.');
-}
 if (!defined('_USER_ACCESS_DEPARTMENT')) {
     define('_USER_ACCESS_DEPARTMENT', 'The user has access to the following departments');
 }
@@ -2114,15 +2084,6 @@ if (!defined('_DUPLICATES_BY_NAME')) {
 if (!defined('_IS_ATTACHED_TO_DOC')) {
     define('_IS_ATTACHED_TO_DOC', 'Attached to documents ?');
 }
-if (!defined('_RES_ATTACHED')) {
-    define('_RES_ATTACHED', 'Attached documents');
-}
-if (!defined('_SELECT_CONTACT_TO_REPLACE')) {
-    define('_SELECT_CONTACT_TO_REPLACE', 'Select the contact and the address to replace');
-}
-if (!defined('_ARE_YOU_SURE_TO_DELETE_CONTACT')) {
-    define('_ARE_YOU_SURE_TO_DELETE_CONTACT', 'Are you sure to delete this contact ?');
-}
 if (!defined('_CONTACT_CHECK')) {
     define('_CONTACT_CHECK', 'A recently recorded mail at least is affected to the same contact.');
 }
@@ -3198,9 +3159,6 @@ if (!defined('_MANAGE_DOCSERVER_TYPES')) {
 if (!defined('_MANAGE_DOCSERVER_TYPES_DESC')) {
     define('_MANAGE_DOCSERVER_TYPES_DESC', 'Add, modify, delete the types of storage zones ');
 }
-if (!defined('_ADMIN_DOCSERVERS')) {
-    define('_ADMIN_DOCSERVERS', ' Administration of storage zones');
-}
 if (!defined('_DOCSERVER_ID')) {
     define('_DOCSERVER_ID', 'Document server ID');
 }
@@ -4236,18 +4194,12 @@ if (!defined('_CURRENT_PSW')) {
 if (!defined('_NEW_PSW')) {
     define('_NEW_PSW', 'New password');
 }
-if (!defined('_REENTER_PSW')) {
-    define('_REENTER_PSW', 'Enter the password again');
-}
 if (!defined('_UPDATED_PROFILE')) {
     define('_UPDATED_PROFILE', 'Your profile has been updated');
 }
 
 if (!defined('_WRONG_PSW')) {
     define('_WRONG_PSW', 'Wrong password');
-}
-if (!defined('_WRONG_SECOND_PSW')) {
-    define('_WRONG_SECOND_PSW', 'The second password isn\'t equivalent to the first password !');
 }
 if (!defined('_EMPTY_PSW_FORM')) {
     define('_EMPTY_PSW_FORM', 'Password form is not complete');
