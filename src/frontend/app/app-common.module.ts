@@ -63,6 +63,7 @@ import { DragDropDirective }                        from '../app/viewer/upload-f
 import { DiffusionsListComponent }             from './diffusions/diffusions-list.component';
 
 import { DocumentViewerComponent }             from './viewer/document-viewer.component';
+import { HeaderService } from '../service/header.service';
 
 
 
@@ -157,6 +158,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         DragDropDirective
     ],
     providers: [
+        HeaderService,
         LatinisePipe,
         CookieService,
         {

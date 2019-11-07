@@ -4,7 +4,6 @@ import { SharedModule }                         from './app-common.module';
 
 import { CustomSnackbarComponent, NotificationService }              from './notification.service';
 import { ConfirmModalComponent }                from './confirmModal.component';
-import { HeaderService }                        from '../service/header.service';
 import { FiltersListService }                   from '../service/filtersList.service';
 
 import { AppComponent }                         from './app.component';
@@ -171,7 +170,7 @@ import { PrivilegeService } from '../service/privileges.service';
         AddPrivateIndexingModelModalComponent,
         AttachmentShowModalComponent
     ],
-    providers: [ HeaderService, FiltersListService, FoldersService, NotificationService, PrivilegeService ],
+    providers: [ FiltersListService, FoldersService, NotificationService, PrivilegeService ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule { }

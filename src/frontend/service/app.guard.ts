@@ -21,6 +21,7 @@ export class AppGuard implements CanActivate {
         localStorage.setItem('PreviousV2Route', state.url);
 
         if (this.headerService.user.id === undefined) {
+            console.log('toto');
             return this.http.get('../../rest/currentUser/profile')
                 .pipe(
                     map((data: any) => {

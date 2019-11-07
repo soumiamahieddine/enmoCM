@@ -48,7 +48,9 @@ export class MainHeaderComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.menus = this.privilegeService.getCurrentUserMenus();
+        setTimeout(() => {
+            this.menus = this.privilegeService.getCurrentUserMenus();
+        }, 200);
     }
 
     setTitle(title: string) {
