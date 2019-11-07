@@ -114,7 +114,7 @@ class ResController
 
         $queryParams = $request->getQueryParams();
 
-        $select = ['model_id', 'category_id', 'priority', 'subject', 'alt_identifier', 'process_limit_date', 'creation_date', 'modification_date'];
+        $select = ['model_id', 'category_id', 'priority', 'subject', 'alt_identifier', 'process_limit_date', 'closing_date', 'creation_date', 'modification_date'];
         if (empty($queryParams['light'])) {
             $select = array_merge($select, ['type_id', 'typist', 'status', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date', 'departure_date', 'barcode']);
         }
@@ -132,6 +132,7 @@ class ResController
             'modelId'               => $document['model_id'],
             'categoryId'            => $document['category_id'],
             'chrono'                => $document['alt_identifier'],
+            'closingDate'           => $document['closing_date'],
             'creationDate'          => $document['creation_date'],
             'modificationDate'      => $document['modification_date']
         ];
