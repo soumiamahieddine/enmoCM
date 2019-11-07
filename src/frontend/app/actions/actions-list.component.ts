@@ -11,8 +11,7 @@ import { Subscription } from 'rxjs';
 @Component({
     selector: 'app-actions-list',
     templateUrl: "actions-list.component.html",
-    styleUrls: ['actions-list.component.scss'],
-    providers: [NotificationService, ActionsService],
+    styleUrls: ['actions-list.component.scss']
 })
 export class ActionsListComponent implements OnInit {
 
@@ -25,7 +24,6 @@ export class ActionsListComponent implements OnInit {
     contextMenuPosition = { x: '0px', y: '0px' };
     contextMenuTitle = '';
     currentAction: any = {};
-    currentResource: any = null;
     basketInfo: any = {};
     contextResId = 0;
     currentLock: any = null;
@@ -38,6 +36,7 @@ export class ActionsListComponent implements OnInit {
     @Input('totalRes') totalRes: number;
     @Input('contextMode') contextMode: boolean;
     @Input('currentBasketInfo') currentBasketInfo: any;
+    @Input('currentResource') currentResource: any = {};
 
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
     @Output('refreshEventAfterAction') refreshEventAfterAction = new EventEmitter<string>();
@@ -52,15 +51,8 @@ export class ActionsListComponent implements OnInit {
     ) { }
 
     dialogRef: MatDialogRef<any>;
-    subscription: Subscription;
 
-    ngOnInit(): void {
-        // Event after process action 
-        this.subscription = this.actionService.catchAction().subscribe(message => {
-            this.refreshEventAfterAction.emit();
-            this.refreshPanelFolders.emit();
-        });
-    }
+    ngOnInit(): void { }
 
     open(x: number, y: number, row: any) {
 
@@ -134,10 +126,5 @@ export class ActionsListComponent implements OnInit {
 
     refreshFolders() {
         this.refreshPanelFolders.emit();
-    }
-
-    ngOnDestroy() {
-        // unsubscribe to ensure no memory leaks
-        this.subscription.unsubscribe();
     }
 }
