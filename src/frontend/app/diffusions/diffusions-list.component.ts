@@ -91,7 +91,7 @@ export class DiffusionsListComponent implements OnInit {
         this.adminMode = this.adminMode !== undefined ? this.adminMode : false;
         this.keepDestForRedirection = this.keepDestForRedirection !== undefined ? this.keepDestForRedirection : false;
 
-        if (this.resId !== undefined) {
+        if (this.resId !== undefined && this.target !== 'redirect') {
             this.loadListinstance(this.resId);
 
         } else if (this.entityId !== undefined && this.entityId !== '') {
