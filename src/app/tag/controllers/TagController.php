@@ -25,10 +25,6 @@ class TagController
 {
     public function get(Request $request, Response $response)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_tag', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
         $tags = TagModel::get();
 
         return $response->withJson(['tags' => $tags]);
@@ -36,10 +32,6 @@ class TagController
 
     public function getById(Request $request, Response $response, array $args)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_tag', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
         if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Route id must be an integer val']);
         }
@@ -54,7 +46,8 @@ class TagController
 
     public function create(Request $request, Response $response)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_tag', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_tag', 'userId' => $GLOBALS['id']])
+            && !PrivilegeController::hasPrivilege(['privilegeId' => 'manage_tags_application', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -124,7 +117,8 @@ class TagController
 
     public function delete(Request $request, Response $response, array $args)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_tag', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_tag', 'userId' => $GLOBALS['id']])
+            && !PrivilegeController::hasPrivilege(['privilegeId' => 'manage_tags_application', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
