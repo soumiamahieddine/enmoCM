@@ -1300,4 +1300,5 @@ export const LANG_FR = {
     "diffListPrivilegeMsg" : "Pouvoir modifier les personnes des rôles suivants: ",
     "diffListPrivilegeMsgIndexing" : "lors de l'enregistrement du courrier.",
     "diffListPrivilegeMsgProcess" : "lors du traitement du courrier.",
+    "recordMail" : "Enregistrer un courrier",
 };

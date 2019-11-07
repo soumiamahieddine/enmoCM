@@ -21,7 +21,7 @@
         <mat-icon class="fa fa-th" style="font-size:22px;"></mat-icon>
     </button>
     <mat-menu #applications="matMenu" class="headerMaarchShortcut">
-        <ng-container *ngFor="let shortcut of menus">
+        <ng-container *ngFor="let shortcut of menus | sortBy: 'label'">
             <button (click)="gotToMenu(shortcut);" style="white-space:inherit;height: 100px;line-height:20px;"
                 class="col-md-4 col-xs-6" mat-button color="primary" matTooltip="{{shortcut.comment}}">
                 <i class="{{shortcut.style}} fa-2x"></i>

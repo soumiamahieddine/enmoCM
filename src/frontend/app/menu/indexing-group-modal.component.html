@@ -2,7 +2,7 @@
 <mat-dialog-content>
     <mat-nav-list>
         <ng-container *ngFor="let group of data.indexingGroups">
-            <a mat-list-item href="{{data.link}}&groupId={{group.groupId}}">
+            <a mat-list-item (click)="goTo(group)">
                 <mat-icon color="primary" mat-list-icon class="fa fa-users"></mat-icon>
                 <p mat-line>
                     {{group.label}}

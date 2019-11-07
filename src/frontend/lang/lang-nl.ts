@@ -1288,4 +1288,5 @@ export const LANG_NL = {
     "diffListPrivilegeMsg" : "Can modify user in roles: ", //_TO_TRANSLATE
     "diffListPrivilegeMsgIndexing" : "in indexing page.", //_TO_TRANSLATE
     "diffListPrivilegeMsgProcess" : "in process page.", //_TO_TRANSLATE
+    "recordMail" : "Record a mail", //_TO_TRANSLATE
 };

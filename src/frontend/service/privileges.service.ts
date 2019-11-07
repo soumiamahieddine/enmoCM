@@ -482,7 +482,33 @@ export class PrivilegeService {
     }
 
     getCurrentUserMenus() {
-        return this.menus.filter(elem => this.headerService.user.privileges.indexOf(elem.id) > -1);
+        let menus = this.menus.filter(elem => this.headerService.user.privileges.indexOf(elem.id) > -1);
+
+        if (this.headerService.user.groups.filter((group: any) => group.can_index === true).length > 0) {
+            const indexingGroups: any[] = [];
+
+            this.headerService.user.groups.filter((group: any) => group.can_index === true).forEach((group: any) => {
+                indexingGroups.push({
+                    id: group.id,
+                    label: group.group_desc
+                });
+            });
+
+            const indexingmenu: any = {
+                "id": "indexing",
+                "label": this.lang.recordMail,
+                "comment": this.lang.recordMail,
+                "route": "/indexing",
+                "style": "fa fa-file-medical",
+                "unit": "application",
+                "angular": true,
+                'shortcut' : true,
+                "groups": indexingGroups
+            };
+            menus.push(indexingmenu);
+        }
+
+        return menus;        
     }
 
     getMenusByUnit(unit: string): Array<menu> {
@@ -521,8 +547,8 @@ export class PrivilegeService {
 
             const indexingShortcut: any = {
                 "id": "indexing",
-                "label": this.lang.indexing,
-                "comment": this.lang.indexing,
+                "label": this.lang.recordMail,
+                "comment": this.lang.recordMail,
                 "route": "/indexing",
                 "style": "fa fa-file-medical",
                 "unit": "application",

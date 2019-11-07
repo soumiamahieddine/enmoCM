@@ -1263,4 +1263,5 @@ export const LANG_EN = {
     "diffListPrivilegeMsg" : "Can modify user in roles: ",
     "diffListPrivilegeMsgIndexing" : "in indexing page.",
     "diffListPrivilegeMsgProcess" : "in process page.",
+    "recordMail" : "Record a mail",
 };
