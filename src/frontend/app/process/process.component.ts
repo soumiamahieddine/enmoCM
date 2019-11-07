@@ -130,7 +130,7 @@ export class ProcessComponent implements OnInit {
     ngOnInit(): void {
         this.loading = true;
 
-        this.headerService.setHeader("Traitement d'un courrier");
+        this.headerService.setHeader(this.lang.eventProcessDoc);
 
         this.route.params.subscribe(params => {
             this.currentUserId = params['userSerialId'];
@@ -139,7 +139,6 @@ export class ProcessComponent implements OnInit {
 
             this.currentResourceInformations = {
                 resId: params['resId'],
-                category: 'outgoing',
                 mailtracking: false
             };
 
@@ -180,6 +179,7 @@ export class ProcessComponent implements OnInit {
         this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}?light=true`).pipe(
             tap((data: any) => {
                 this.currentResourceInformations = data;
+                this.headerService.setHeader(this.lang.eventProcessDoc, this.lang[this.currentResourceInformations.categoryId]);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);

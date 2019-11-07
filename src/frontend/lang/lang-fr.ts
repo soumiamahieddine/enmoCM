@@ -1301,4 +1301,5 @@ export const LANG_FR = {
     "diffListPrivilegeMsgIndexing" : "lors de l'enregistrement du courrier.",
     "diffListPrivilegeMsgProcess" : "lors du traitement du courrier.",
     "recordMail" : "Enregistrer un courrier",
+    "closed" : "Clôturé",
 };

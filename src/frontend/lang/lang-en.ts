@@ -1264,4 +1264,5 @@ export const LANG_EN = {
     "diffListPrivilegeMsgIndexing" : "in indexing page.",
     "diffListPrivilegeMsgProcess" : "in process page.",
     "recordMail" : "Record a mail",
+    "closed" : "Closed",
 };

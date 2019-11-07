@@ -1289,4 +1289,5 @@ export const LANG_NL = {
     "diffListPrivilegeMsgIndexing" : "in indexing page.", //_TO_TRANSLATE
     "diffListPrivilegeMsgProcess" : "in process page.", //_TO_TRANSLATE
     "recordMail" : "Record a mail", //_TO_TRANSLATE
+    "closed" : "Closed", //_TO_TRANSLATE
 };
