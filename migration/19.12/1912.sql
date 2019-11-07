@@ -231,6 +231,8 @@ END$$;
 /* ATTACHMENTS */
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS origin_id;
 ALTER TABLE res_attachments ADD COLUMN origin_id INTEGER;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS modification_date;
+ALTER TABLE res_attachments ADD modification_date timestamp without time zone DEFAULT NOW();
 
 
 /* DOCSERVERS */
@@ -238,6 +240,7 @@ UPDATE docservers SET coll_id = 'attachments_coll', is_readonly = 'Y' WHERE coll
 UPDATE docservers SET coll_id = 'attachments_coll', is_readonly = 'Y' WHERE coll_id = 'attachments_version_coll' AND docserver_type_id = 'FASTHD';
 UPDATE docservers SET coll_id = 'attachments_coll', is_readonly = 'Y' WHERE coll_id = 'attachments_version_coll' AND docserver_type_id = 'FULLTEXT';
 UPDATE docservers SET coll_id = 'attachments_coll', is_readonly = 'Y' WHERE coll_id = 'attachments_version_coll' AND docserver_type_id = 'TNL';
+UPDATE docservers SET docserver_type_id = 'DOC' WHERE coll_id = 'attachments_coll' AND docserver_type_id = 'FASTHD';
 
 
 /* MLB COLL EXT */
