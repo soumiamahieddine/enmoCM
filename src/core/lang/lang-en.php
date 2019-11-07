@@ -141,6 +141,7 @@ define('_DOC_DISPLAYING', 'Displaying document');
 define('_AR_DISPLAYING', 'Displaying acknowledgement receipt');
 define('_DOC_ADDED', 'Document added');
 define('_ATTACH_DISPLAYING', 'Displaying attachment');
+define('_DOC_DELETED', 'Document deleted');
 define('_NOTE_ADDED', 'Note added');
 define('_NOTE_UPDATED', 'Note updated');
 define('_NOTE_DELETED', 'Note deleted');

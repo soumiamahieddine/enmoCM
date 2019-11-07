@@ -447,6 +447,43 @@ class AttachmentController
         return $response->withJson(['attachmentsTypes' => $attachmentsTypes]);
     }
 
+    public function delete(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id must be an integer val']);
+        }
+
+        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['origin_id', 'res_id_master', 'attachment_type', 'res_id', 'title']]);
+        if (empty($attachment)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
+        }
+
+        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        if ($attachment['attachment_type'] == 'signed_response') {
+            AttachmentModel::delete(['id' => $attachment['res_id']]);
+        } else {
+            if (empty($attachment['origin_id'])) {
+                $idToDelete = $attachment['res_id'];
+            } else {
+                $idToDelete = $attachment['origin_id'];
+            }
+
+            AttachmentModel::delete(['id' => $idToDelete]);
+        }
+        HistoryController::add([
+            'tableName' => 'res_attachments',
+            'recordId'  => $args['id'],
+            'eventType' => 'DEL',
+            'info'      =>  _DOC_DELETED . " : {$attachment['title']}",
+            'eventId'   => 'attachmentSuppression',
+        ]);
+
+        return $response->withStatus(204);
+    }
+
     public static function getEncodedDocument(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);

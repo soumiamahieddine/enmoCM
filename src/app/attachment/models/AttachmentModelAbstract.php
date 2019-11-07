@@ -284,4 +284,21 @@ abstract class AttachmentModelAbstract
 
         return true;
     }
+
+    public static function delete(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
+
+        DatabaseModel::update([
+            'table' => 'res_attachments',
+            'set'   => [
+                'status'    => 'DEL'
+            ],
+            'where' => ['res_id = ? or origin_id = ?'],
+            'data'  => [$args['id'], $args['id']]
+        ]);
+
+        return true;
+    }
 }

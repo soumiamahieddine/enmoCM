@@ -71,6 +71,7 @@ $app->get('/attachments/{id}/originalContent', \Attachment\controllers\Attachmen
 $app->get('/attachments/{id}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
 $app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\AttachmentController::class . ':setInSendAttachment');
 $app->get('/attachmentsTypes', \Attachment\controllers\AttachmentController::class . ':getAttachmentsTypes');
+$app->delete('/attachments/{id}', \Attachment\controllers\AttachmentController::class . ':delete');
 
 //AutoComplete
 $app->get('/autocomplete/contacts', \SrcCore\controllers\AutoCompleteController::class . ':getContacts');

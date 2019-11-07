@@ -140,6 +140,7 @@ define('_BACK_FROM_VACATION', 'bij terugkeer na afwezigheid');
 define('_DOC_DISPLAYING', 'Weergave van het document');
 define('_DOC_ADDED', 'Document toegevoegd');
 define('_ATTACH_DISPLAYING', 'Weergave van de bijlage');
+define('_DOC_DELETED', 'Document deleted');//TRANSLATE
 define('_NOTE_ADDED', 'note added _TO_TRANSLATE');
 define('_NOTE_UPDATED', 'Note updated');//TRANSLATE
 define('_NOTE_DELETED', 'Note deleted');//TRANSLATE

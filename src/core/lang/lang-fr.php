@@ -141,6 +141,7 @@ define('_DOC_DISPLAYING', 'Visualisation du document');
 define('_AR_DISPLAYING', 'Visualisation de l\'accusé de réception');
 define('_DOC_ADDED', 'Document ajouté');
 define('_ATTACH_DISPLAYING', 'Visualisation de la pièce jointe');
+define('_DOC_DELETED', 'Document supprimé');
 define('_NOTE_ADDED', 'Annotation ajoutée');
 define('_NOTE_UPDATED', 'Annotation modifiée');
 define('_NOTE_DELETED', 'Annotation supprimée');
