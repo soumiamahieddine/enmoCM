@@ -53,7 +53,7 @@ export class TimeLimitPipe implements PipeTransform, OnDestroy {
 			return '<span>' + this.lang.undefined + '</span>';
 		} else if(now > d) {
 			if (args === 'badge') {
-				return this.getFormatedDate('', '<b>' + this.lang.outdated + ' ' + this.lang.fromRange + ' ' + (days-1) + ' '+ this.lang.dayS +' !</b>', 'warn', args);
+				return this.getFormatedDate('', '<b>' + this.lang.outdated + ' ' + this.lang.fromRange.toLowerCase() + ' ' + (days-1) + ' '+ this.lang.dayS +' !</b>', 'warn', args);
 			} else {
 				return this.getFormatedDate('', '<b>' + this.lang.outdated + ' !</b>', 'warn', args);
 			}	
