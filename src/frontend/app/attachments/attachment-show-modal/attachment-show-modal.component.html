@@ -1,4 +1,6 @@
-<h1 mat-dialog-title>{{data.attachment.identifier}} - {{data.attachment.title}}</h1>
+<h1 mat-dialog-title>{{data.attachment.identifier}} - {{data.attachment.title}} <button [title]="lang.close" mat-icon-button (click)="dialogRef.close();">
+    <mat-icon class="fa fa-times"></mat-icon>
+  </button></h1>
 <mat-dialog-content class="modal-container">
   <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false">
   </app-document-viewer>

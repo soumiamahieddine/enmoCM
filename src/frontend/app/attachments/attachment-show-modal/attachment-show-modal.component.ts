@@ -2,8 +2,6 @@ import { Component, Inject, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { LANG } from '../../translate.component';
 import { HttpClient } from '@angular/common/http';
-import { tap, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { DocumentViewerComponent } from '../../viewer/document-viewer.component';
 
@@ -26,6 +24,6 @@ export class AttachmentShowModalComponent {
     }
 
     ngOnInit(): void {
-        this.appDocumentViewer.loadRessource(100);
+        this.appDocumentViewer.loadRessource(this.data.attachment.res_id, 'attachment');
     }
 }

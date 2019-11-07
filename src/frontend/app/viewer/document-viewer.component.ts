@@ -414,29 +414,58 @@ export class DocumentViewerComponent implements OnInit {
 
     loadRessource(resId: any, target: string = 'mainDocument') {
         this.loading = true;
-        this.requestWithLoader(`../../rest/resources/${resId}/content?mode=base64`).subscribe(
-            (data: any) => {
-                if (data.encodedDocument) {
-                    this.file.contentMode = 'route';
-                    this.file.content = `../../rest/resources/${resId}/originalContent`;
-                    this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
+        if (target === 'attachment') {
+            this.requestWithLoader(`../../rest/attachments/${resId}/content?mode=base64`).subscribe(
+                (data: any) => {
+                    if (data.encodedDocument) {
+                        this.file.contentMode = 'route';
+                        this.file.content = `../../rest/attachments/${resId}/originalContent`;
+                        this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
+                        this.loading = false;
+                    }
+                },
+                (err: any) => {
+                    if (err.error.errors === 'Document has no file') {
+                        this.noFile = true;
+                    } else if (err.error.errors === 'Converted Document not found') {
+                        this.file.contentMode = 'route';
+                        this.file.content = `../../rest/attachments/${resId}/originalContent`;
+                        this.noConvertedFound = true;
+                    } else {
+                        this.notify.error(err.error.errors);
+                        this.noFile = true;
+                    }
                     this.loading = false;
+                    return of(false);
                 }
-            },
-            (err: any) => {
-                if (err.error.errors === 'Document has no file') {
-                    this.noFile = true;
-                } else if (err.error.errors === 'Converted Document not found') {
-                    this.file.contentMode = 'route';
-                    this.file.content = `../../rest/resources/${resId}/originalContent`;
-                    this.noConvertedFound = true;
-                } else {
-                    this.notify.handleErrors(err);
+            );
+        } else {
+            this.requestWithLoader(`../../rest/resources/${resId}/content?mode=base64`).subscribe(
+                (data: any) => {
+                    if (data.encodedDocument) {
+                        this.file.contentMode = 'route';
+                        this.file.content = `../../rest/resources/${resId}/originalContent`;
+                        this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
+                        this.loading = false;
+                    }
+                },
+                (err: any) => {
+                    if (err.error.errors === 'Document has no file') {
+                        this.noFile = true;
+                    } else if (err.error.errors === 'Converted Document not found') {
+                        this.file.contentMode = 'route';
+                        this.file.content = `../../rest/resources/${resId}/originalContent`;
+                        this.noConvertedFound = true;
+                    } else {
+                        this.notify.error(err.error.errors);
+                        this.noFile = true;
+                    }
+                    this.loading = false;
+                    return of(false);
                 }
-                this.loading = false;
-                return of(false);
-            }
-        );
+            );
+        }
+        
     }
 
     editTemplate(templateId: number) {

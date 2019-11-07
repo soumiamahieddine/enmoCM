@@ -482,7 +482,6 @@ export class PrivilegeService {
     }
 
     getCurrentUserMenus() {
-        console.log(this.headerService.user);
         let menus = this.menus.filter(elem => this.headerService.user.privileges.indexOf(elem.id) > -1);
 
         if (this.headerService.user.groups.filter((group: any) => group.can_index === true).length > 0) {
