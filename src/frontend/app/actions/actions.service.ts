@@ -120,25 +120,37 @@ export class ActionsService {
         if (this.setActionInformations(action, userId, groupId, basketId, resIds)) {
             this.loading = true;
             this.setResourceInformations(datas);
-            this.http.put(`../../rest/resourcesList/users/${userId}/groups/${groupId}/baskets/${basketId}/lock`, { resources: resIds }).pipe(
-                tap((data: any) => {
-                    if (this.canExecuteAction(data.lockedResources, data.lockers, resIds)) {
-                        try {
-                            this.lockResource();
-                            this[action.component]();
+            if (this.mode !== 'process') {
+                this.http.put(`../../rest/resourcesList/users/${userId}/groups/${groupId}/baskets/${basketId}/lock`, { resources: resIds }).pipe(
+                    tap((data: any) => {
+                        if (this.canExecuteAction(data.lockedResources, data.lockers, resIds)) {
+                            try {
+                                this.lockResource();
+                                this[action.component]();
+                            }
+                            catch (error) {
+                                console.log(error);
+                                console.log(action);
+                                alert(this.lang.actionNotExist);
+                            }
                         }
-                        catch (error) {
-                            console.log(error);
-                            console.log(action);
-                            alert(this.lang.actionNotExist);
-                        }
-                    }
-                }),
-                catchError((err: any) => {
-                    this.notify.handleErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else {
+                try {
+                    this[action.component]();
+                }
+                catch (error) {
+                    console.log(error);
+                    console.log(action);
+                    alert(this.lang.actionNotExist);
+                }
+            } 
+            
         }
     }
 
@@ -204,7 +216,7 @@ export class ActionsService {
 
     unlockResourceAfterActionModal(state: string) {
         this.stopRefreshResourceLock();
-        if (state !== 'success') {
+        if (state !== 'success' && this.mode !== 'process') {
             this.unlockResource();
         }
     }
@@ -213,10 +225,6 @@ export class ActionsService {
         this.notify.success(this.lang.action + ' : "' + this.currentAction.label + '" ' + this.lang.done);
 
         this.eventAction.next();
-
-        if (this.mode === 'process') {
-            this.router.navigate([`/basketList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}`]);
-        }
     }
 
     /* OPEN SPECIFIC ACTION */

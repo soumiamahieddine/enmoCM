@@ -13,7 +13,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { AppService } from '../../service/app.service';
 import { ActionsService } from '../actions/actions.service';
 import { tap, catchError, map, finalize } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { DocumentViewerComponent } from '../viewer/document-viewer.component';
 
 @Component({
@@ -106,6 +106,10 @@ export class ProcessComponent implements OnInit {
 
     currentTool: string = 'dashboard';
 
+    subscription: Subscription;
+
+    actionEnded: boolean = false;
+    
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
@@ -125,6 +129,12 @@ export class ProcessComponent implements OnInit {
         public actionService: ActionsService,
         private router: Router
     ) {
+        // Event after process action 
+        this.subscription = this.actionService.catchAction().subscribe(message => {
+            this.actionEnded = true;
+            clearInterval(this.currentResourceLock);
+            this.router.navigate([`/basketList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}`]);
+        });
     }
 
     ngOnInit(): void {
@@ -171,6 +181,10 @@ export class ProcessComponent implements OnInit {
         }, (err: any) => {
             this.notify.handleErrors(err);
         });
+    }
+
+    isActionEnded() {
+        return this.actionEnded;
     }
 
     loadResource() {
@@ -254,4 +268,10 @@ export class ProcessComponent implements OnInit {
     isModalOpen() {
         return this.modalModule.map(module => module.id).indexOf(this.currentTool) > -1;
     }
+
+    ngOnDestroy() {
+        // unsubscribe to ensure no memory leaks
+        this.subscription.unsubscribe();
+    }
+
 }
