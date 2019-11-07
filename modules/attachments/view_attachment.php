@@ -52,9 +52,9 @@ if (! empty($_SESSION['error'])) {
     header("location: " . $_SESSION['config']['businessappurl'] . "index.php");
     exit();
 } else {
-    $stmt = $db->query("SELECT coll_id, res_id_master FROM res_attachments WHERE res_id = ? AND res_id_master = ?", [$sId, $_REQUEST['res_id_master']]);
+    $stmt = $db->query("SELECT res_id_master FROM res_attachments WHERE res_id = ? AND res_id_master = ?", [$sId, $_REQUEST['res_id_master']]);
     $res = $stmt->fetchObject();
-    $collId = $res->coll_id;
+    $collId = "res_attachments";
     $resIdMaster = $res->res_id_master;
 
     if ($stmt->rowCount() == 0) {
@@ -79,7 +79,7 @@ if (! empty($_SESSION['error'])) {
         $_SESSION['collection_id_choice'],
         $resIdMaster
     );
-    $table = $sec->retrieve_view_from_coll_id($collId);
+    $table = 'res_attachments';
     $stmt = $db->query(
         "SELECT res_id FROM " . $table . " WHERE res_id = ? ".$where2,
         array($resIdMaster)

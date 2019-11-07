@@ -346,13 +346,6 @@ class AttachmentController
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }
 
-        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->buffer($fileContent);
-        $pathInfo = pathinfo($pathToDocument);
-
-        $response->write($fileContent);
-        $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
-
         HistoryController::add([
             'tableName' => 'res_attachments',
             'recordId'  => $args['id'],
@@ -362,7 +355,18 @@ class AttachmentController
             'eventId'   => 'resview',
         ]);
 
-        return $response->withHeader('Content-Type', $mimeType);
+        $data = $request->getQueryParams();
+        if ($data['mode'] == 'base64') {
+            return $response->withJson(['encodedDocument' => base64_encode($fileContent)]);
+        } else {
+            $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->buffer($fileContent);
+            $pathInfo = pathinfo($pathToDocument);
+
+            $response->write($fileContent);
+            $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
+            return $response->withHeader('Content-Type', $mimeType);
+        }
     }
 
     public function getOriginalFileContent(Request $request, Response $response, array $args)
