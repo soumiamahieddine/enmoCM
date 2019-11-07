@@ -23,39 +23,22 @@
             <div style="padding-top: 10px;">{{loadingInfo.message}}</div>
         </div>
         <div *ngIf="file.content === null && !loading" class="view-doc-container" appUploadFileDragDrop
-            (onFileDropped)="dndUploadFile($event)">
+            (onFileDropped)="dndUploadFile($event)" [disabled]="!editMode">
             <i class="fa fa-file-upload upload-icon"></i><br />
             {{lang.dragAndDrop}}<br />{{lang.or}}
             <div style="display: flex;">
-                <!--<button mat-button class="button-form-primary-alt" (click)="loadTemplates()" [matMenuTriggerFor]="menu"
-                    style="margin-right:20px;align-items: center;justify-content: center;text-align: center;display: flex;">
-                    <span class="menu-label">
-                        {{lang.chooseModel}}
-                    </span>
-                    <i class="fa fa-chevron-down menu-icon"></i>
-                </button>
-                <mat-menu #menu="matMenu" [class]="'menuForm'">
-                    <ng-container *ngFor="let templateType of listTemplates | keyvalue">
-                            <button mat-menu-item disabled>{{templateType.key}}</button>
-                            <ng-container *ngFor="let template of templateType.value">
-                                <button mat-menu-item (click)="editTemplate(template)">&nbsp;&nbsp;{{template.label}}</button>
-                            </ng-container>
-                    </ng-container>
-                </mat-menu>-->
                 <div style="margin-right:20px;align-items: center;justify-content: center;text-align: center;display: flex;">
                     <plugin-select-search *ngIf="listTemplates.length > 0" [label]="lang.chooseModel"
                         [placeholderLabel]="lang.chooseModel" [datas]="listTemplates" [class]="'input-form-filled'"
                         (afterSelected)="editTemplate($event)" style="width: 240px;text-align: left;font-weight:normal;font-size: 13px;">
                     </plugin-select-search>
                 </div>
-
-
                 <button mat-button (click)="docToUpload.click()" class="button-form-primary-alt"
                     style="align-items: center;justify-content: center;text-align: center;display: flex;">{{lang.chooseFile}}</button>
             </div>
         </div>
         <input type="file" #docToUpload name="files[]" (change)="uploadTrigger($event)" style="display:none;">
-        <div style="display: block;width:100%;" appUploadFileDragDrop (onFileDropped)="dndUploadFile($event)">
+        <div style="display: block;width:100%;" appUploadFileDragDrop (onFileDropped)="dndUploadFile($event)" [disabled]="!editMode">
             <div *ngIf="!loading" class="viewer-tools">
                 <button *ngIf="editMode" mat-icon-button (click)="docToUpload.click()"
                     [matTooltip]="lang.uploadAnOtherFile">
@@ -75,7 +58,7 @@
                 [original-size]="false" [show-all]="true" (error)="onError($event)" style="width:100%;"></pdf-viewer>
         </div>
         <div *ngIf="file.content !== null && noConvertedFound" class="no-doc-container" appUploadFileDragDrop
-            (onFileDropped)="dndUploadFile($event)">
+            (onFileDropped)="dndUploadFile($event)" [disabled]="!editMode">
             <div class="loaded-file"><i class="fa fa-file"></i>&nbsp;<a
                     (click)="docToUpload.click()">{{file.name}}</a>&nbsp;<b>{{lang.loaded}}</b></div>
 
