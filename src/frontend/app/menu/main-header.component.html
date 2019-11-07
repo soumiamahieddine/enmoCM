@@ -6,7 +6,7 @@
     <h1 class="admin-toolbar-title">{{headerService.headerMessage}}</h1><span class="admin-toolbar-title-small">{{headerService.subHeaderMessage}}</span>
     <span style="flex: 1 1 auto;"></span>
     <search-home></search-home>
-    <button mat-button [matMenuTriggerFor]="applications" *ngIf="!appService.getViewMode()" style="min-width:0px;width:65px;height: 40px;margin-left: 10px" matTooltip="{{lang.menu}}">
+    <button mat-button [matMenuTriggerFor]="applications" (click)="getMenus()" *ngIf="!appService.getViewMode()" style="min-width:0px;width:65px;height: 40px;margin-left: 10px" matTooltip="{{lang.menu}}">
         <mat-icon mat-list-icon class="fa fa-th" style="font-size:20px;color:white;height:auto;"></mat-icon>
     </button>
     <mat-menu #applications="matMenu" class="headerMaarchShortcut">

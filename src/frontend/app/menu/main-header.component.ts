@@ -47,10 +47,10 @@ export class MainHeaderComponent implements OnInit {
         };
     }
 
-    ngOnInit(): void {
-        setTimeout(() => {
-            this.menus = this.privilegeService.getCurrentUserMenus();
-        }, 200);
+    ngOnInit(): void { }
+
+    getMenus() {
+        this.menus = this.privilegeService.getCurrentUserMenus();
     }
 
     setTitle(title: string) {

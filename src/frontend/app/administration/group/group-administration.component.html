@@ -3,7 +3,7 @@
         <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'"
             [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
             [opened]="appService.getViewMode() ? false : true">
-            <menu-shortcut></menu-shortcut>
+            <menu-shortcut #appShortcut></menu-shortcut>
             <menu-nav></menu-nav>
         </mat-sidenav>
         <mat-sidenav-content>
@@ -114,7 +114,7 @@
                     </mat-tab>
                     <mat-tab label="{{lang.indexation}}" *ngIf="!creationMode">
                         <ng-template matTabContent>
-                            <app-indexing-administration [groupId]="group.id"></app-indexing-administration>
+                            <app-indexing-administration [groupId]="group.id" (resfreshShortcut)="resfreshShortcut()"></app-indexing-administration>
                         </ng-template>
                     </mat-tab>
                     <mat-tab label="{{lang.relatedUsers}}" *ngIf="!creationMode">

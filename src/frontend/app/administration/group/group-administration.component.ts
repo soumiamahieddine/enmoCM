@@ -12,6 +12,7 @@ import { AppService } from '../../../service/app.service';
 import { PrivilegeService } from '../../../service/privileges.service';
 import { tap, catchError, exhaustMap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { MenuShortcutComponent } from '../../menu/menu-shortcut.component';
 
 declare function $j(selector: any): any;
 
@@ -45,6 +46,7 @@ export class GroupAdministrationComponent implements OnInit {
     @ViewChild('sortBaskets', { static: true }) sortBaskets: MatSort;
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild('sortUsers', { static: true }) sortUsers: MatSort;
+    @ViewChild('appShortcut', { static: false }) appShortcut: MenuShortcutComponent;
 
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();
@@ -203,6 +205,13 @@ export class GroupAdministrationComponent implements OnInit {
             ).subscribe();
         }
 
+    }
+
+    resfreshShortcut() {
+        this.headerService.resfreshCurrentUser();
+        setTimeout(() => {
+            this.appShortcut.loadShortcuts();   
+        }, 200); 
     }
 
     getCurrentPrivListDiff(serviceId: string) {

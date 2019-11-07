@@ -498,7 +498,7 @@ export class PrivilegeService {
                 "id": "indexing",
                 "label": this.lang.recordMail,
                 "comment": this.lang.recordMail,
-                "route": "/indexing",
+                "route": "/indexing/"+indexingGroups[0].id,
                 "style": "fa fa-file-medical",
                 "unit": "application",
                 "angular": true,
