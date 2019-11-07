@@ -1160,7 +1160,8 @@ export const LANG_NL = {
     "fieldNotExist" : "Field not exist", //_TO_TRANSLATE
     "saveAsModel" : "Save as Model", //_TO_TRANSLATE
     "noAvailableIndexingModel" : "No indexing model found<br /><br /><small>Please create a model in Administation > Indexing model</small>", //_TO_TRANSLATE
-    "noAvaiblableAction" : "<b>No available action</b>, please set an action in <b>Administration > User groups > Mail indexing</b>.", //_TO_TRANSLATE
+    "noAvailableAction" : "<b>No available action</b>, please set an action in <b>Administration > User groups > Mail indexing</b>.", //_TO_TRANSLATE
+    "noAvailableActionProcess" : "<b>No available action</b>, please set an action in <b>Administration > Baskets > Current basket</b>.", //_TO_TRANSLATE
     "eraseValue" : "Erase value", //_TO_TRANSLATE
     "todayDate" : "Today date", //_TO_TRANSLATE
     "noDefaultIndexingModel" : "No default indexing model found, the first model of the list have been loaded.", //_TO_TRANSLATE
