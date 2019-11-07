@@ -1294,4 +1294,10 @@ export const LANG_FR = {
     "historyDisabled" : "Historique désactivé",
     "ARPaper" : "Accusé de réception papier",
     "ARelectronic" : "Accusé de réception électronique",
+    "allRoles" : "Tous les rôles",
+    "rolesExceptAssignee" : "Rôle hors attributaire",
+    "noRole" : "Aucun Rôle",
+    "diffListPrivilegeMsg" : "Pouvoir modifier les personnes des rôles suivants: ",
+    "diffListPrivilegeMsgIndexing" : "lors de l'enregistrement du courrier.",
+    "diffListPrivilegeMsgProcess" : "lors du traitement du courrier.",
 };

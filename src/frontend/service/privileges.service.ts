@@ -268,13 +268,13 @@ export class PrivilegeService {
             "id": "view_doc_history",
             "label": this.lang.viewDocHistory,
             "comment": this.lang.viewHistoryDesc,
-            "unit": 'application'
+            "unit": 'history'
         },
         {
             "id": "view_full_history",
             "label": this.lang.viewFullHistory,
             "comment": this.lang.viewFullHistoryDesc,
-            "unit": 'application'
+            "unit": 'history'
         },
         {
             "id": "edit_document_in_detail",
@@ -296,39 +296,39 @@ export class PrivilegeService {
         },
         {
             "id": "update_diffusion_indexing",
-            "label": this.lang.updateDiffusionWhileIndexing,
+            "label": this.lang.allRoles,
             "comment": this.lang.updateDiffusionWhileIndexing,
-            "unit": 'application'
+            "unit": 'diffusionList'
         },
         {
             "id": "update_diffusion_except_recipient_indexing",
-            "label": this.lang.updateDiffusionExceptRecipientWhileIndexing,
+            "label": this.lang.rolesExceptAssignee,
             "comment": this.lang.updateDiffusionExceptRecipientWhileIndexing,
-            "unit": 'application'
+            "unit": 'diffusionList'
         },
         {
             "id": "update_diffusion_details",
-            "label": this.lang.updateDiffusionWhileDetails,
+            "label": this.lang.allRoles,
             "comment": this.lang.updateDiffusionWhileDetails,
-            "unit": 'application'
+            "unit": 'diffusionList'
         },
         {
             "id": "update_diffusion_except_recipient_details",
-            "label": this.lang.updateDiffusionExceptRecipientWhileDetails,
+            "label": this.lang.rolesExceptAssignee,
             "comment": this.lang.updateDiffusionExceptRecipientWhileDetails,
-            "unit": 'application'
+            "unit": 'diffusionList'
         },
         {
             "id": "sendmail",
             "label": this.lang.sendmail,
             "comment": this.lang.sendmail,
-            "unit": 'application'
+            "unit": 'sendmail'
         },
         {
             "id": "use_mail_services",
             "label": this.lang.useMailServices,
             "comment": this.lang.useMailServices,
-            "unit": 'application'
+            "unit": 'sendmail'
         },
         {
             "id": "view_documents_with_notes",
@@ -346,55 +346,55 @@ export class PrivilegeService {
             "id": "config_avis_workflow",
             "label": this.lang.configAvisWorkflow,
             "comment": this.lang.configAvisWorkflowDesc,
-            "unit": 'application'
+            "unit": 'avis'
         },
         {
             "id": "config_avis_workflow_in_detail",
             "label": this.lang.configAvisWorkflowInDetail,
             "comment": this.lang.configAvisWorkflowInDetailDesc,
-            "unit": 'application'
+            "unit": 'avis'
         },
         {
             "id": "avis_documents",
             "label": this.lang.avisAnswer,
             "comment": this.lang.avisAnswerDesc,
-            "unit": 'application'
+            "unit": 'avis'
         },
         {
             "id": "config_visa_workflow",
             "label": this.lang.configVisaWorkflow,
             "comment": this.lang.configVisaWorkflowDesc,
-            "unit": 'application'
+            "unit": 'visaWorkflow'
         },
         {
             "id": "config_visa_workflow_in_detail",
             "label": this.lang.configVisaWorkflowInDetail,
             "comment": this.lang.configVisaWorkflowInDetailDesc,
-            "unit": 'application'
+            "unit": 'visaWorkflow'
         },
         {
             "id": "visa_documents",
             "label": this.lang.visaAnswers,
             "comment": this.lang.visaAnswersDesc,
-            "unit": 'application'
+            "unit": 'visaWorkflow'
         },
         {
             "id": "sign_document",
             "label": this.lang.signDocs,
             "comment": this.lang.signDocs,
-            "unit": 'application'
+            "unit": 'visaWorkflow'
         },
         {
             "id": "modify_visa_in_signatureBook",
             "label": this.lang.modifyVisaInSignatureBook,
             "comment": this.lang.modifyVisaInSignatureBookDesc,
-            "unit": 'application'
+            "unit": 'visaWorkflow'
         },
         {
             "id": "use_date_in_signBlock",
             "label": this.lang.useDateInSignBlock,
             "comment": this.lang.useDateInSignBlockDesc,
-            "unit": 'application'
+            "unit": 'visaWorkflow'
         },
         {
             "id": "print_folder_doc",
@@ -459,13 +459,19 @@ export class PrivilegeService {
 
     constructor(public headerService: HeaderService) { }
 
-    getPrivileges() {
-        return this.privileges;
+    getPrivileges(ids: string[]=null) {
+        if (ids !== null) {
+            return this.privileges.filter(elem => ids.indexOf(elem.id) > -1);
+        } else {
+            return this.privileges;
+        }
+        
     }
 
     getUnitsPrivileges(): Array<string> {
         return this.privileges.map(elem => elem.unit).filter((elem, pos, arr) => arr.indexOf(elem) === pos);
     }
+    
 
     getPrivilegesByUnit(unit: string): Array<privilege> {
         return this.privileges.filter(elem => elem.unit === unit);

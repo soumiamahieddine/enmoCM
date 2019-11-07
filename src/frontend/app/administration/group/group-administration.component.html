@@ -1,6 +1,7 @@
 <div class="admin-container" [class.admin-is-mobile]="appService.getViewMode()">
-    <mat-sidenav-container autosize class="admin-sidenav-container" >
-        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
+    <mat-sidenav-container autosize class="admin-sidenav-container">
+        <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'"
+            [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
             [opened]="appService.getViewMode() ? false : true">
             <menu-shortcut></menu-shortcut>
             <menu-nav></menu-nav>
@@ -14,65 +15,99 @@
                     <mat-tab label="{{lang.informations}}">
                         <form class="form-horizontal" (ngSubmit)="onSubmit()" #groupForm="ngForm">
                             <mat-form-field>
-                                <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}" [(ngModel)]="group.group_id" pattern="^[\w.-]*$"
-                                    maxlength="32" required>
-                                <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="group.group_id"
-                                    disabled>
+                                <input matInput *ngIf="creationMode" name="identifier" placeholder="{{lang.id}}"
+                                    [(ngModel)]="group.group_id" pattern="^[\w.-]*$" maxlength="32" required>
+                                <input matInput *ngIf="!creationMode" name="identifier" placeholder="{{lang.id}}"
+                                    title="{{lang.id}}" [(ngModel)]="group.group_id" disabled>
                             </mat-form-field>
                             <mat-form-field>
-                                <input matInput name="description" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="group.group_desc" maxlength="255"
-                                    required>
+                                <input matInput name="description" title="{{lang.label}}" placeholder="{{lang.label}}"
+                                    [(ngModel)]="group.group_desc" maxlength="255" required>
                             </mat-form-field>
                             <mat-form-field>
-                                <input matInput name="comment" title="{{lang.description}}" placeholder="{{lang.description}}" [(ngModel)]="group.security.maarch_comment">
+                                <input matInput name="comment" title="{{lang.description}}"
+                                    placeholder="{{lang.description}}" [(ngModel)]="group.security.maarch_comment">
                             </mat-form-field>
                             <mat-form-field>
-                                <textarea matInput name="clause" title="{{lang.clauseGroup}}" placeholder="{{lang.clauseGroup}}" [(ngModel)]="group.security.where_clause"
-                                    required matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="5"></textarea>
-                                <mat-icon style="cursor:pointer;" color="primary" matSuffix class="fa fa-info-circle" matTooltip="{{lang.keywordHelper}}"
-                                    (click)="snav2.toggle()"></mat-icon>
+                                <textarea matInput name="clause" title="{{lang.clauseGroup}}"
+                                    placeholder="{{lang.clauseGroup}}" [(ngModel)]="group.security.where_clause"
+                                    required matTextareaAutosize matAutosizeMinRows="1"
+                                    matAutosizeMaxRows="5"></textarea>
+                                <mat-icon style="cursor:pointer;" color="primary" matSuffix class="fa fa-info-circle"
+                                    matTooltip="{{lang.keywordHelper}}" (click)="snav2.toggle()"></mat-icon>
                             </mat-form-field>
                             <div class="col-md-12 text-center" style="padding:10px;">
-                                <button mat-raised-button [disabled]="!groupForm.form.valid" color="primary">{{lang.save}}</button>
+                                <button mat-raised-button [disabled]="!groupForm.form.valid"
+                                    color="primary">{{lang.save}}</button>
                             </div>
                         </form>
                     </mat-tab>
                     <mat-tab label="{{lang.privileges}}" *ngIf="!creationMode">
                         <mat-tab-group [(selectedIndex)]="selectedTabIndex_2" *ngIf="!creationMode">
                             <mat-tab label="{{lang.menus}}">
-                                <mat-expansion-panel *ngFor="let unit of privilegeService.getUnitsMenus()">
-                                    <mat-expansion-panel-header>
-                                        <mat-panel-title>
-                                            {{lang[unit]}}
-                                        </mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                    <mat-list>
-                                        <mat-list-item *ngFor="let menu of privilegeService.getMenusByUnit(unit) | sortBy: 'label'">
-                                            <mat-slide-toggle color="primary" name="{{menu.label}}" [checked]="group.privileges.indexOf(menu.id) > -1" (change)="toggleService($event,menu)"
-                                                matTooltip="{{menu.comment}}">{{menu.label}}</mat-slide-toggle>
-                                        </mat-list-item>
-                                    </mat-list>
-                                </mat-expansion-panel>
+                                <mat-list>
+                                    <mat-list-item *ngFor="let menu of privilegeService.getMenus() | sortBy: 'label'">
+                                        <mat-slide-toggle color="primary" name="{{menu.label}}"
+                                            [checked]="group.privileges.indexOf(menu.id) > -1"
+                                            (change)="toggleService($event,menu)" matTooltip="{{menu.comment}}">
+                                            {{menu.label}}</mat-slide-toggle>
+                                    </mat-list-item>
+                                </mat-list>
                             </mat-tab>
                             <mat-tab label="{{lang.administrationServices}}">
-                                <div class="col-md-3" *ngFor="let administration of privilegeService.getAdministrations() | sortBy: 'label'" style="padding:10px;">
-                                    <mat-slide-toggle color="primary" name="{{administration.label}}" [checked]="group.privileges.indexOf(administration.id) > -1" (change)="toggleService($event,administration)"
-                                        matTooltip="{{administration.comment}}">{{administration.label}}</mat-slide-toggle>
+                                <mat-form-field floatLabel="never" appearance="outline" class="basketsFilter"
+                                    style="padding-left:20px;padding-right:20px;font-size: 11px;">
+                                    <input matInput placeholder="{{lang.filterBy}}" #listFilterAdmin>
+                                </mat-form-field>
+                                <div class="col-md-3"
+                                    *ngFor="let administration of privilegeService.getAdministrations() | sortBy: 'label' | filterList:listFilterAdmin.value:'label'"
+                                    style="padding:10px;">
+                                    <mat-slide-toggle color="primary" name="{{administration.label}}"
+                                        [checked]="group.privileges.indexOf(administration.id) > -1"
+                                        (change)="toggleService($event,administration)"
+                                        matTooltip="{{administration.comment}}">{{administration.label}}
+                                    </mat-slide-toggle>
                                 </div>
                             </mat-tab>
                             <mat-tab label="{{lang.functionnalities}}">
-                                <mat-expansion-panel *ngFor="let unit of privilegeService.getUnitsPrivileges()">
+                                <mat-form-field floatLabel="never" appearance="outline" class="basketsFilter"
+                                    style="padding-left:20px;padding-right:20px;font-size: 11px;">
+                                    <input matInput placeholder="{{lang.filterBy}}" #listFilter>
+                                </mat-form-field>
+                                <mat-expansion-panel *ngFor="let unit of unitPrivileges | sortBy: 'label'">
                                     <mat-expansion-panel-header>
                                         <mat-panel-title>
-                                            {{lang[unit]}}
+                                            {{unit.label}}
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
-                                    <mat-list>
-                                        <mat-list-item *ngFor="let privilege of privilegeService.getPrivilegesByUnit(unit) | sortBy: 'label'">
-                                            <mat-slide-toggle color="primary" name="{{privilege.label}}" [checked]="group.privileges.indexOf(privilege.id) > -1" (change)="toggleService($event,privilege)"
-                                                matTooltip="{{privilege.comment}}">{{privilege.label}}</mat-slide-toggle>
+                                    <ng-container *ngIf="unit.id !== 'diffusionList'; else elseTemplate">
+                                        <mat-list>
+                                            <mat-list-item
+                                                *ngFor="let privilege of unit.services | sortBy: 'label' | filterList:listFilter.value:'label'">
+                                                <mat-slide-toggle color="primary" name="{{privilege.label}}"
+                                                    [checked]="group.privileges.indexOf(privilege.id) > -1"
+                                                    (change)="toggleService($event,privilege)"
+                                                    matTooltip="{{privilege.comment}}">{{privilege.label}}
+                                                </mat-slide-toggle>
+                                            </mat-list-item>
+                                        </mat-list>
+                                    </ng-container>
+                                    <ng-template #elseTemplate>
+                                        <mat-list-item *ngFor="let fakePrivilege of unit.services" color="primary"
+                                            style="font-size: 16px;">
+                                            {{fakePrivilege.label}}
+                                            <mat-form-field
+                                                style="width: 250px !important;padding-left: 10px;padding-right: 10px;">
+                                                <mat-select [(ngModel)]="fakePrivilege.current" (selectionChange)="changeDifflistPrivilege($event, fakePrivilege.id)">
+                                                    <mat-option value="">{{lang.noRole}}</mat-option>
+                                                    <mat-option *ngFor="let subservice of fakePrivilege.services"
+                                                        [value]="subservice.id">{{subservice.label}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field> {{fakePrivilege.label2}}
                                         </mat-list-item>
-                                    </mat-list>
+                                    </ng-template>
+
+
                                 </mat-expansion-panel>
                             </mat-tab>
                         </mat-tab-group>
@@ -85,12 +120,16 @@
                     <mat-tab label="{{lang.relatedUsers}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;">
                             <div class="col-md-12" *ngIf="group.canAdminUsers" style="padding:5px;">
-                                <plugin-autocomplete [labelPlaceholder]="lang.linkUser" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'id'" (triggerEvent)="linkUser($event)"></plugin-autocomplete>
-                                <hr/>
+                                <plugin-autocomplete [labelPlaceholder]="lang.linkUser"
+                                    [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']"
+                                    [targetSearchKey]="'idToDisplay'" [subInfoKey]="'id'"
+                                    (triggerEvent)="linkUser($event)"></plugin-autocomplete>
+                                <hr />
                             </div>
                             <div class="col-md-6 col-xs-6">
                                 <mat-form-field>
-                                    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                                    <input matInput (keyup)="applyFilter($event.target.value)"
+                                        placeholder="{{lang.filterBy}}">
                                 </mat-form-field>
                             </div>
                             <div class="col-md-6 col-xs-6">
@@ -98,7 +137,8 @@
                                 </mat-paginator>
                             </div>
                         </div>
-                        <mat-table #sortUsers="matSort" [dataSource]="usersDataSource" matSort matSortActive="lastname" matSortDirection="asc">
+                        <mat-table #sortUsers="matSort" [dataSource]="usersDataSource" matSort matSortActive="lastname"
+                            matSortDirection="asc">
                             <ng-container matColumnDef="firstname">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.firstname}}</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
@@ -108,7 +148,8 @@
                                 <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
                             </ng-container>
                             <mat-header-row *matHeaderRowDef="usersDisplayedColumns"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: usersDisplayedColumns;" routerLink="/administration/users/{{row.id}}" matTooltip="{{lang.view}}"
+                            <mat-row *matRowDef="let row; columns: usersDisplayedColumns;"
+                                routerLink="/administration/users/{{row.id}}" matTooltip="{{lang.view}}"
                                 style="cursor:pointer;"></mat-row>
                         </mat-table>
                     </mat-tab>
@@ -116,7 +157,8 @@
                         <div class="row" style="margin:0px;">
                             <div class="col-md-6 col-xs-6">
                                 <mat-form-field>
-                                    <input matInput (keyup)="applyBasketsFilter($event.target.value)" placeholder="{{lang.filterBy}}">
+                                    <input matInput (keyup)="applyBasketsFilter($event.target.value)"
+                                        placeholder="{{lang.filterBy}}">
                                 </mat-form-field>
                             </div>
                             <div class="col-md-6 col-xs-6">
@@ -124,24 +166,29 @@
                                 </mat-paginator>
                             </div>
                         </div>
-                        <mat-table #sortBaskets="matSort" [dataSource]="basketsDataSource" matSort matSortActive="basket_name" matSortDirection="asc">
+                        <mat-table #sortBaskets="matSort" [dataSource]="basketsDataSource" matSort
+                            matSortActive="basket_name" matSortDirection="asc">
                             <ng-container matColumnDef="basket_name">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.label}}</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{element.basket_name}} </mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="basket_desc">
-                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.description}}</mat-header-cell>
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.description}}
+                                </mat-header-cell>
                                 <mat-cell *matCellDef="let element"> {{element.basket_desc}} </mat-cell>
                             </ng-container>
                             <mat-header-row *matHeaderRowDef="basketsDisplayedColumns"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: basketsDisplayedColumns;" routerLink="/administration/baskets/{{row.basket_id}}" matTooltip="{{lang.view}}" style="cursor:pointer;"></mat-row>
+                            <mat-row *matRowDef="let row; columns: basketsDisplayedColumns;"
+                                routerLink="/administration/baskets/{{row.basket_id}}" matTooltip="{{lang.view}}"
+                                style="cursor:pointer;"></mat-row>
                         </mat-table>
                     </mat-tab>
                 </mat-tab-group>
             </mat-card>
         </mat-sidenav-content>
-        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
-            position='end' [opened]="appService.getViewMode() ? false : false">
+        <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'"
+            [fixedInViewport]="appService.getViewMode()" fixedTopGap="56" position='end'
+            [opened]="appService.getViewMode() ? false : false">
 
             <mat-nav-list>
                 <h3 mat-subheader>{{lang.keywordHelp}}</h3>
@@ -171,7 +218,8 @@
                 <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_8}}</p>
                 <h4 mat-line style="font-weight:bold;font-size:10px;">@all_entities :</h4>
                 <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_9}}</p>
-                <h4 mat-line style="font-weight:bold;font-size:10px;">@immediate_children['entity_1',..., 'entity_id'] :</h4>
+                <h4 mat-line style="font-weight:bold;font-size:10px;">@immediate_children['entity_1',..., 'entity_id'] :
+                </h4>
                 <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_10}}</p>
             </mat-list>
         </mat-sidenav>

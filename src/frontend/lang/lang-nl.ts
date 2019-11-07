@@ -1282,4 +1282,10 @@ export const LANG_NL = {
     "historyDisabled" : "History disabled", //_TO_TRANSLATE
     "ARPaper" : "Paper acknowledgement of receipt", //_TO_TRANSLATE
     "ARelectronic" : "Electronic acknowledgement of receipt", //_TO_TRANSLATE
+    "allRoles" : "All roles", //_TO_TRANSLATE
+    "rolesExceptAssignee" : "Role without assignee", //_TO_TRANSLATE
+    "noRole" : "No role", //_TO_TRANSLATE
+    "diffListPrivilegeMsg" : "Can modify user in roles: ", //_TO_TRANSLATE
+    "diffListPrivilegeMsgIndexing" : "in indexing page.", //_TO_TRANSLATE
+    "diffListPrivilegeMsgProcess" : "in process page.", //_TO_TRANSLATE
 };

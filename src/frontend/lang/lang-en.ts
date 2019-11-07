@@ -1257,4 +1257,10 @@ export const LANG_EN = {
     "historyDisabled" : "History disabled",
     "ARPaper" : "Paper acknowledgement of receipt",
     "ARelectronic" : "Electronic acknowledgement of receipt",
+    "allRoles" : "All roles",
+    "rolesExceptAssignee" : "Role without assignee",
+    "noRole" : "No role",
+    "diffListPrivilegeMsg" : "Can modify user in roles: ",
+    "diffListPrivilegeMsgIndexing" : "in indexing page.",
+    "diffListPrivilegeMsgProcess" : "in process page.",
 };
