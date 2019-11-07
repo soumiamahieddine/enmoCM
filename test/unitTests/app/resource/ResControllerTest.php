@@ -70,14 +70,14 @@ class ResControllerTest extends TestCase
         $GLOBALS['id'] = $userInfo['id'];
     }
 
-    public function testGetFileContent()
+    public function testGetOriginalContent()
     {
         $resController = new \Resource\controllers\ResController();
 
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $resController->getFileContent($request, new \Slim\Http\Response(), ['resId' => self::$id]);
+        $response     = $resController->getOriginalFileContent($request, new \Slim\Http\Response(), ['resId' => self::$id]);
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(null, $responseBody);
