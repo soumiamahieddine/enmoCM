@@ -38,7 +38,7 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        <app-history-workflow-resume *ngIf="!loading" [resId]="currentResourceInformations.resId"
+                        <app-history-workflow-resume [resId]="currentResourceInformations.resId"
                             (goTo)="currentTool = 'history'">
                         </app-history-workflow-resume>
                     </div>
@@ -49,7 +49,7 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        <app-note-resume *ngIf="!loading" [resId]="currentResourceInformations.resId"
+                        <app-note-resume [resId]="currentResourceInformations.resId"
                             (goTo)="currentTool = 'notes'"></app-note-resume>
                     </div>
                 </div>
@@ -59,7 +59,7 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        <app-attachments-resume *ngIf="!loading" [resId]="currentResourceInformations.resId"
+                        <app-attachments-resume [resId]="currentResourceInformations.resId"
                             (goTo)="currentTool = 'attachments'">
                         </app-attachments-resume>
                     </div>
@@ -70,7 +70,7 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        <app-mail-resume *ngIf="!loading" [resId]="currentResourceInformations.resId"
+                        <app-mail-resume [resId]="currentResourceInformations.resId"
                             (goTo)="currentTool = 'mails'"></app-mail-resume>
                     </div>
                 </div>
@@ -177,8 +177,8 @@
                         </div>
                     </ng-container>
                     <ng-template #elseInfoRes>
-                        <div>
-
+                        <div class="loadingBanner">
+                            <mat-spinner diameter="35"></mat-spinner>
                         </div>
                     </ng-template>
                 </div>

@@ -12,7 +12,7 @@ import { FiltersListService } from '../../service/filtersList.service';
 import { Overlay } from '@angular/cdk/overlay';
 import { AppService } from '../../service/app.service';
 import { ActionsService } from '../actions/actions.service';
-import { tap, catchError, map } from 'rxjs/operators';
+import { tap, catchError, map, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { DocumentViewerComponent } from '../viewer/document-viewer.component';
 
@@ -144,8 +144,6 @@ export class ProcessComponent implements OnInit {
 
             this.lockResource();
 
-            this.loading = false;
-
             this.loadResource();
 
             this.http.get(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/actions?resId=${this.currentResourceInformations.resId}`).pipe(
@@ -181,6 +179,7 @@ export class ProcessComponent implements OnInit {
                 this.currentResourceInformations = data;
                 this.headerService.setHeader(this.lang.eventProcessDoc, this.lang[this.currentResourceInformations.categoryId]);
             }),
+            finalize(() => this.loading = false),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
