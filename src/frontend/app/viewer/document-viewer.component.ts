@@ -366,7 +366,7 @@ export class DocumentViewerComponent implements OnInit {
                     event[0]
                 ]
             }
-        }
+        };
         this.uploadTrigger(fileInput);
     }
 
@@ -475,7 +475,7 @@ export class DocumentViewerComponent implements OnInit {
             objectType: 'resourceCreation',
             objectId: template.id,
             cookie: document.cookie
-        }
+        };
         this.http.post('../../rest/jnlp', jnlp).pipe(
             tap((data: any) => {
                 window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
@@ -520,7 +520,7 @@ export class DocumentViewerComponent implements OnInit {
                         arrTypes = this.sortPipe.transform(arrTypes, 'label');
                     });
                 }),
-                exhaustMap(() => this.http.get('../../rest/currentUser/templates')),
+                exhaustMap(() => this.http.get('../../rest/currentUser/templates?target=attachments&type=office')),
                 tap((data: any) => {
                     this.listTemplates = data.templates;
 

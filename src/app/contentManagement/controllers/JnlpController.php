@@ -245,7 +245,7 @@ class JnlpController
 
                 $dataToMerge = ['userId' => $GLOBALS['id']];
                 if (!empty($queryParams['objectTable'])) {
-                    $decodedData = urldecode(json_decode($queryParams['objectTable'], true));
+                    $decodedData = json_decode(urldecode($queryParams['objectTable']), true);
                     $dataToMerge = array_merge($dataToMerge, $decodedData);
                 }
                 $mergedDocument = MergeController::mergeDocument([
