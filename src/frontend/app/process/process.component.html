@@ -213,7 +213,7 @@
             [resId]="currentResourceInformations.resId">
         </app-notes-list>
         <app-diffusions-list *ngIf="modal.id === 'diffusionList'" #appDiffusionsList [adminMode]="false"
-            [resId]="currentResourceInformations.resId">
+            [resId]="currentResourceInformations.resId" [expanded]="true">
         </app-diffusions-list>
         <app-visa-workflow *ngIf="modal.id === 'visa'" #appVisaWorkflow [resId]="currentResourceInformations.resId">
         </app-visa-workflow>
