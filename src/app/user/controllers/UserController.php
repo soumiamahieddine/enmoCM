@@ -1376,18 +1376,7 @@ class UserController
                 'attachmentType'    => $template['template_attachment_type']
             ];
         }
-
-        if (!empty($queryParams['target']) && $queryParams['target'] == 'attachments') {
-            $templatesTmp = [];
-            foreach ($templates as $key => $template) {
-                if (empty($templatesTmp[$template['attachmentType']])) {
-                    $templatesTmp[$template['attachmentType']] = [];
-                }
-                $templatesTmp[$template['attachmentType']][] = $template;
-            }
-            $templates = $templatesTmp;
-        }
-
+        
         return $response->withJson(['templates' => $templates]);
     }
 

@@ -162,7 +162,7 @@ class ResController
         $modelFields = array_column($modelFields, 'identifier');
 
         foreach ($formattedData as $key => $data) {
-            if (!in_array($key, $modelFields)) {
+            if (!in_array($key, $modelFields) && !in_array($key, ['resId', 'chrono'])) {
                 unset($formattedData[$key]);
             }
         }
