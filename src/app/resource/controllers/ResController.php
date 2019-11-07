@@ -127,16 +127,18 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
         }
 
-        $formattedData = [
+        $unchangeableData = [
             'resId'                 => (int)$args['resId'],
             'modelId'               => $document['model_id'],
             'categoryId'            => $document['category_id'],
-            'subject'               => $document['subject'],
             'chrono'                => $document['alt_identifier'],
-            'processLimitDate'      => $document['process_limit_date'],
-            'priority'              => $document['priority'],
             'creationDate'          => $document['creation_date'],
             'modificationDate'      => $document['modification_date']
+        ];
+        $formattedData = [
+            'subject'               => $document['subject'],
+            'processLimitDate'      => $document['process_limit_date'],
+            'priority'              => $document['priority']
         ];
         if (empty($queryParams['light'])) {
             $formattedData = array_merge($formattedData, [
@@ -162,10 +164,11 @@ class ResController
         $modelFields = array_column($modelFields, 'identifier');
 
         foreach ($formattedData as $key => $data) {
-            if (!in_array($key, $modelFields) && !in_array($key, ['resId', 'chrono'])) {
+            if (!in_array($key, $modelFields)) {
                 unset($formattedData[$key]);
             }
         }
+        $formattedData = array_merge($unchangeableData, $formattedData);
 
         if (!empty($formattedData['destination'])) {
             $entity = EntityModel::getByEntityId(['entityId' => $formattedData['destination'], 'select' => ['entity_label']]);
@@ -180,8 +183,9 @@ class ResController
             $formattedData['statusLabel'] = $status['label_status'];
         }
         if (!empty($formattedData['priority'])) {
-            $priority = PriorityModel::getById(['id' => $formattedData['priority'], 'select' => ['label']]);
+            $priority = PriorityModel::getById(['id' => $formattedData['priority'], 'select' => ['label', 'color']]);
             $formattedData['priorityLabel'] = $priority['label'];
+            $formattedData['priorityColor'] = $priority['color'];
         }
 
         return $response->withJson($formattedData);
