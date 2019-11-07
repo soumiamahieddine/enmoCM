@@ -288,6 +288,7 @@ export class FolderTreeComponent implements OnInit {
             tap(() => {
                 this.autocomplete.resetValue();
                 this.getFolders();
+                this.foldersService.getPinnedFolders();
             }),
             tap(() => this.notify.success(this.lang.folderAdded)),
             catchError((err) => {
