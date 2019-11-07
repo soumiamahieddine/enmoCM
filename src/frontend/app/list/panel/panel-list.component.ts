@@ -47,22 +47,22 @@ export class PanelListComponent implements OnInit {
         this.mode = mode;
         this.currentResource = data;
 
-        this.injectDatasParam.resId = this.currentResource.res_id;
+        this.injectDatasParam.resId = this.currentResource.resId;
 
         if (mode == 'diffusion') {
             setTimeout(() => {
                 this.icon = 'fa-sitemap';
                 this.selectedDiffusionTab = 0;
-                this.injectDatasParam.resId = this.currentResource.res_id;
-                this.appDiffusionsList.loadListinstance(this.currentResource.res_id);
-                this.appVisaWorkflow.loadWorkflow(this.currentResource.res_id);
-                this.appAvisWorkflow.loadWorkflow(this.currentResource.res_id);
+                this.injectDatasParam.resId = this.currentResource.resId;
+                this.appDiffusionsList.loadListinstance(this.currentResource.resId);
+                this.appVisaWorkflow.loadWorkflow(this.currentResource.resId);
+                this.appAvisWorkflow.loadWorkflow(this.currentResource.resId);
             }, 0);
 
         } else if (mode == 'note') {
             setTimeout(() => {
                 this.icon = 'fa-comments';
-                this.appNotesList.loadNotes(this.currentResource.res_id);
+                this.appNotesList.loadNotes(this.currentResource.resId);
             }, 0);
 
             setTimeout(() => {
@@ -71,7 +71,7 @@ export class PanelListComponent implements OnInit {
         } else if (mode == 'attachment') {
             setTimeout(() => {
                 this.icon = 'fa-paperclip';
-                this.appAttachmentsList.loadAttachments(this.currentResource.res_id);
+                this.appAttachmentsList.loadAttachments(this.currentResource.resId);
             }, 0);
         }
     }

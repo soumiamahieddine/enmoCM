@@ -27,7 +27,7 @@
             <i class="fa fa-file-upload upload-icon"></i><br />
             {{lang.dragAndDrop}}<br />{{lang.or}}
             <div style="display: flex;">
-                <button mat-button class="button-form-primary-alt" (click)="loadTemplates()" [matMenuTriggerFor]="menu"
+                <!--<button mat-button class="button-form-primary-alt" (click)="loadTemplates()" [matMenuTriggerFor]="menu"
                     style="margin-right:20px;align-items: center;justify-content: center;text-align: center;display: flex;">
                     <span class="menu-label">
                         {{lang.chooseModel}}
@@ -35,9 +35,21 @@
                     <i class="fa fa-chevron-down menu-icon"></i>
                 </button>
                 <mat-menu #menu="matMenu" [class]="'menuForm'">
-                    <button mat-menu-item (click)="editTemplate(template)"
-                        *ngFor="let template of listTemplates">{{template.label}}</button>
-                </mat-menu>
+                    <ng-container *ngFor="let templateType of listTemplates | keyvalue">
+                            <button mat-menu-item disabled>{{templateType.key}}</button>
+                            <ng-container *ngFor="let template of templateType.value">
+                                <button mat-menu-item (click)="editTemplate(template)">&nbsp;&nbsp;{{template.label}}</button>
+                            </ng-container>
+                    </ng-container>
+                </mat-menu>-->
+                <div style="margin-right:20px;align-items: center;justify-content: center;text-align: center;display: flex;">
+                    <plugin-select-search *ngIf="listTemplates.length > 0" [label]="lang.chooseModel"
+                        [placeholderLabel]="lang.chooseModel" [datas]="listTemplates" [class]="'input-form-filled'"
+                        (afterSelected)="editTemplate($event)" style="width: 240px;text-align: left;font-weight:normal;font-size: 13px;">
+                    </plugin-select-search>
+                </div>
+
+
                 <button mat-button (click)="docToUpload.click()" class="button-form-primary-alt"
                     style="align-items: center;justify-content: center;text-align: center;display: flex;">{{lang.chooseFile}}</button>
             </div>

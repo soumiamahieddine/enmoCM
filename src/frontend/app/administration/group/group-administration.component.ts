@@ -90,10 +90,6 @@ export class GroupAdministrationComponent implements OnInit {
                         this.group = data['group'];
                         this.headerService.setHeader(this.lang.groupModification, this.group['group_desc']);
 
-                        const toto = this.privilegeService.getMenus().map(elem => elem.unit).filter((elem, pos, arr) => arr.indexOf(elem) === pos);
-
-                        console.log(toto);
-
                         this.loading = false;
                         setTimeout(() => {
                             this.usersDataSource = new MatTableDataSource(this.group.users);
