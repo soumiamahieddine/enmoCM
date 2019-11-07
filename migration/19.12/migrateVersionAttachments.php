@@ -82,21 +82,27 @@ function migrateEmailsVersion($args = [])
     ]);
 
     foreach ($emails as $email) {
-        $email = json_decode($email['document'], true);
-        foreach ($email['document']['attachment'] as $key => $attachment) {
+        $document = json_decode($email['document'], true);
+        foreach ($document['attachments'] as $key => $attachment) {
             if ($attachment['id'] == $args['oldResId'] && $attachment['isVersion']) {
-                $email['document']['attachment'][$key]['id'] = $args['newResId'];
-                $email['document']['attachment'][$key]['isVersion'] = false;
+                $document['attachments'][$key]['id'] = $args['newResId'];
+                unset($document['attachments'][$key]['isVersion']);
                 break;
             }
         }
         \SrcCore\models\DatabaseModel::update([
-            'set'   => ['document' => json_encode($email['document'])],
+            'set'   => ['document' => json_encode($document)],
             'table' => 'emails',
             'where' => ['id = ?'],
             'data'  => [$email['id']]
         ]);
     }
+    \SrcCore\models\DatabaseModel::update([
+        'set'   => ['document' => json_encode($document)],
+        'table' => 'emails',
+        'where' => ['id = ?'],
+        'data'  => [$email['id']]
+    ]);
 }
 
 function migrateMessageExchangeVersion($args = [])

@@ -104,16 +104,18 @@ abstract class AttachmentModelAbstract
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['res_id', 'format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status', 'relation']);
+        ValidatorModel::notEmpty($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status', 'relation']);
         ValidatorModel::stringType($aArgs, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'status']);
-        ValidatorModel::intVal($aArgs, ['res_id', 'filesize', 'relation']);
+        ValidatorModel::intVal($aArgs, ['filesize', 'relation']);
 
+        $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_attachment_res_id_seq']);
+        $aArgs['res_id'] = $nextSequenceId;
         DatabaseModel::insert([
             'table'         => 'res_attachments',
             'columnsValues' => $aArgs
         ]);
 
-        return true;
+        return $nextSequenceId;
     }
 
     public static function update(array $aArgs)

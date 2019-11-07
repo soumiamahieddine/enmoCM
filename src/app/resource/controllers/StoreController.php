@@ -75,8 +75,6 @@ class StoreController
         ValidatorModel::stringType($args, ['format']);
 
         try {
-            $id = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_attachment_res_id_seq']);
-
             $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $args['encodedFile']));
 
             $storeResult = DocserverController::storeResourceOnDocServer([
@@ -90,7 +88,6 @@ class StoreController
             }
 
             $data = [
-                'res_id'        => $id,
                 'docserver_id'  => $storeResult['docserver_id'],
                 'filename'      => $storeResult['file_destination_name'],
                 'filesize'      => $storeResult['fileSize'],
@@ -101,7 +98,7 @@ class StoreController
             $data = array_merge($args, $data);
             $data = StoreController::prepareAttachmentStorage($data);
 
-            AttachmentModel::create($data);
+            $id = AttachmentModel::create($data);
 
             return $id;
         } catch (\Exception $e) {
@@ -177,9 +174,9 @@ class StoreController
 
     public static function prepareAttachmentStorage(array $args)
     {
-        ValidatorModel::notEmpty($args, ['res_id', 'docserver_id', 'filename', 'format', 'path', 'fingerprint']);
+        ValidatorModel::notEmpty($args, ['docserver_id', 'filename', 'format', 'path', 'fingerprint']);
         ValidatorModel::stringType($args, ['docserver_id', 'filename', 'format', 'path', 'fingerprint']);
-        ValidatorModel::intVal($args, ['res_id', 'filesize']);
+        ValidatorModel::intVal($args, ['filesize']);
 
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
         if ($attachmentsTypes[$args['type']]['chrono'] && empty($args['chrono'])) {
@@ -200,7 +197,6 @@ class StoreController
         }
 
         $preparedData = [
-            'res_id'                => $args['res_id'],
             'title'                 => $args['title'] ?? null,
             'identifier'            => $args['chrono'] ?? null,
             'typist'                => $GLOBALS['userId'],
