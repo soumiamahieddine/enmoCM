@@ -7,7 +7,7 @@
     </div>
     <ng-container *ngFor="let role of availableRoles">
         <mat-expansion-panel *ngIf="diffList[role.id].items.length > 0" class="diffusionList"
-            [expanded]="role.id === 'dest' || this.adminMode">
+            [expanded]="role.id === 'dest' || this.adminMode || expanded">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     {{role.label}} <ng-container *ngIf="role.id !== 'dest'">({{diffList[role.id].items.length}})

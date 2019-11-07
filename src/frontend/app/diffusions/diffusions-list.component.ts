@@ -57,6 +57,11 @@ export class DiffusionsListComponent implements OnInit {
     @Input('allowedEntities') allowedEntities: number[];
 
     /**
+     * Expand all roles
+     */
+    @Input('expanded') expanded: boolean = false;
+
+    /**
      * To load privilege of current list management
      * @param indexation
      * @param details

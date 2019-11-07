@@ -80,7 +80,7 @@
                     [resId]="currentResourceInformations.resId">
                 </app-notes-list>
                 <app-diffusions-list *ngIf="currentTool === 'diffusionList'" #appDiffusionsList [adminMode]="false"
-                    [resId]="currentResourceInformations.resId">
+                    [resId]="currentResourceInformations.resId" [expanded]="true">
                 </app-diffusions-list>
                 <app-visa-workflow *ngIf="currentTool === 'visa'" #appVisaWorkflow
                     [resId]="currentResourceInformations.resId"></app-visa-workflow>
