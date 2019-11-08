@@ -24,7 +24,6 @@ use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use Resource\models\ResModel;
 use SrcCore\models\CoreConfigModel;
-use User\models\UserModel;
 
 class StoreController
 {

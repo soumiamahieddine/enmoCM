@@ -33,6 +33,27 @@ foreach ($customs as $custom) {
         $attachmentInfo['in_signature_book'] = empty($attachmentInfo['in_signature_book']) ?  'false' : 'true';
         $attachmentInfo['in_send_attach']    = empty($attachmentInfo['in_send_attach']) ?  'false' : 'true';
         $attachmentInfo['format']            = empty($attachmentInfo['format']) ?  pathinfo($attachmentInfo['filename'], PATHINFO_EXTENSION) : $attachmentInfo['format'];
+        if (empty($attachmentInfo['fingerprint'])) {
+            $docserver = \SrcCore\models\DatabaseModel::select([
+                'select' => ['path_template', 'docserver_type_id'],
+                'table'  => ['docservers'],
+                'where'  => ['docserver_id = ?'],
+                'data'   => [$attachmentInfo['docserver_id']]
+            ]);
+            $docserverType = \SrcCore\models\DatabaseModel::select([
+                'select' => ['fingerprint_mode'],
+                'table'  => ['docserver_types'],
+                'where'  => ['docserver_type_id = ?'],
+                'data'   => [$docserver[0]['docserver_type_id']]
+            ]);
+            $pathToDocument = $docserver[0]['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachmentInfo['path']) . $attachmentInfo['filename'];
+            if (file_exists($pathToDocument)) {
+                $fingerprint = \Resource\controllers\StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType[0]['fingerprint_mode']]);
+                $attachmentInfo['fingerprint'] = $fingerprint;
+            } else {
+                $attachmentInfo['fingerprint'] = 1;
+            }
+        }
 
         $newResId = \Attachment\models\AttachmentModel::create($attachmentInfo);
 
