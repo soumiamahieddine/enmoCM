@@ -8,8 +8,8 @@
         <div class="date" [title]="note.creation_date | fullDate">
             {{note.creation_date | timeAgo}}
         </div>
-        <div class="info">
-            {{note.value}}
+        <div class="info" [title]="note.value">
+            {{note.value | shorten: 110: '...'}}
         </div>
         <div class="date">
             {{note.firstname}} {{note.lastname}}
