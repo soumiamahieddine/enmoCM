@@ -22,6 +22,7 @@ use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
 use Contact\models\ContactModel;
+use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Folder\models\FolderModel;
@@ -980,12 +981,12 @@ class ResourceListController
         $whereCategories = $where;
         $whereStatuses   = $where;
         $whereEntities   = $where;
-        $whereDocType    = $where;
+        $whereDocTypes    = $where;
         $dataPriorities  = $queryData;
         $dataCategories  = $queryData;
         $dataStatuses    = $queryData;
         $dataEntities    = $queryData;
-        $dataDocType     = $queryData;
+        $dataDocTypes     = $queryData;
 
         if (isset($data['priorities'])) {
             if (empty($data['priorities'])) {
@@ -1001,13 +1002,13 @@ class ResourceListController
                 $dataCategories[] = explode(',', $replace);
                 $dataStatuses[]   = explode(',', $replace);
                 $dataEntities[]   = explode(',', $replace);
-                $dataDocType[]   = explode(',', $replace);
+                $dataDocTypes[]   = explode(',', $replace);
             }
 
             $whereCategories[] = $tmpWhere;
             $whereStatuses[]   = $tmpWhere;
             $whereEntities[]   = $tmpWhere;
-            $whereDocType[]   = $tmpWhere;
+            $whereDocTypes[]   = $tmpWhere;
         }
         if (isset($data['categories'])) {
             if (empty($data['categories'])) {
@@ -1023,13 +1024,13 @@ class ResourceListController
                 $dataPriorities[] = explode(',', $replace);
                 $dataStatuses[]   = explode(',', $replace);
                 $dataEntities[]   = explode(',', $replace);
-                $dataDocType[]   = explode(',', $replace);
+                $dataDocTypes[]   = explode(',', $replace);
             }
 
             $wherePriorities[] = $tmpWhere;
             $whereStatuses[]   = $tmpWhere;
             $whereEntities[]   = $tmpWhere;
-            $whereDocType[]   = $tmpWhere;
+            $whereDocTypes[]   = $tmpWhere;
         }
         if (!empty($data['statuses'])) {
             $wherePriorities[] = 'status in (?)';
@@ -1038,8 +1039,18 @@ class ResourceListController
             $dataCategories[]  = explode(',', $data['statuses']);
             $whereEntities[]   = 'status in (?)';
             $dataEntities[]    = explode(',', $data['statuses']);
-            $whereDocType[]   = 'status in (?)';
-            $dataDocType[]    = explode(',', $data['statuses']);
+            $whereDocTypes[]   = 'status in (?)';
+            $dataDocTypes[]    = explode(',', $data['statuses']);
+        }
+        if (!empty($data['doctypes'])) {
+            $wherePriorities[] = 'type_label in (?)';
+            $dataPriorities[]  = explode(',', $data['doctypes']);
+            $whereCategories[] = 'type_label in (?)';
+            $dataCategories[]  = explode(',', $data['doctypes']);
+            $whereEntities[]   = 'type_label in (?)';
+            $dataEntities[]    = explode(',', $data['doctypes']);
+            $whereDocTypes[]   = 'type_label in (?)';
+            $dataDocTypes[]    = explode(',', $data['doctypes']);
         }
         if (isset($data['entities'])) {
             if (empty($data['entities'])) {
@@ -1055,13 +1066,13 @@ class ResourceListController
                 $dataPriorities[] = explode(',', $replace);
                 $dataCategories[] = explode(',', $replace);
                 $dataStatuses[] = explode(',', $replace);
-                $dataDocType[] = explode(',', $replace);
+                $dataDocTypes[] = explode(',', $replace);
             }
 
             $wherePriorities[] = $tmpWhere;
             $whereCategories[] = $tmpWhere;
             $whereStatuses[]   = $tmpWhere;
-            $whereDocType[]   = $tmpWhere;
+            $whereDocTypes[]   = $tmpWhere;
         }
         if (!empty($data['entitiesChildren'])) {
             $entities = explode(',', $data['entitiesChildren']);
@@ -1077,6 +1088,8 @@ class ResourceListController
                 $dataCategories[]  = $entitiesChildren;
                 $whereStatuses[]   = 'destination in (?)';
                 $dataStatuses[]    = $entitiesChildren;
+                $whereDocTypes[]   = 'destination in (?)';
+                $dataDocTypes[]    = $entitiesChildren;
             }
         }
 
@@ -1161,15 +1174,21 @@ class ResourceListController
             ];
         }
 
-        $docType = [];
+        $docTypes = [];
         $rawDocType = ResModel::getOnView([
             'select'    => ['count(res_id)', 'type_label'],
-            'where'     => $whereEntities,
-            'data'      => $dataEntities,
+            'where'     => $whereDocTypes,
+            'data'      => $dataDocTypes,
             'groupBy'   => ['type_label']
         ]);
         foreach ($rawDocType as $key => $value) {
-            $docType[] = [
+            $doc = DoctypeModel::get([
+                'select' => ['type_id'],
+                'where'  => ['description = ?'],
+                'data'   => [$value['type_label']]
+            ]);
+            $docTypes[] = [
+                'id'        => empty($doc[0]['type_id']) ? null : $doc[0]['type_id'],
                 'label'     => empty($value['type_label']) ? '_UNDEFINED' : $value['type_label'],
                 'count'     => $value['count']
             ];
@@ -1179,7 +1198,7 @@ class ResourceListController
         $categories = (count($categories) >= 2) ? $categories : [];
         $statuses   = (count($statuses) >= 2) ? $statuses : [];
         $entities   = (count($entities) >= 2) ? $entities : [];
-        $docType   = (count($docType) >= 2) ? $docType : [];
+        $docTypes   = (count($docTypes) >= 2) ? $docTypes : [];
 
         $entitiesChildren = [];
         foreach ($entities as $entity) {
@@ -1207,7 +1226,7 @@ class ResourceListController
             'categories' => $categories,
             'statuses' => $statuses,
             'entitiesChildren' => $entitiesChildren,
-            'doctype' => $docType
+            'doctypes' => $docTypes
         ];
     }
 }
