@@ -512,6 +512,10 @@ export class DocumentViewerComponent implements OnInit {
             let arrTypes: any = [];
             this.http.get('../../rest/attachmentsTypes').pipe(
                 tap((data: any) => {
+                    arrTypes.push({
+                        id: 'all',
+                        label: this.lang.others
+                    });
                     Object.keys(data.attachmentsTypes).forEach(templateType => {
                         arrTypes.push({
                             id: templateType,
