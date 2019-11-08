@@ -1,18 +1,18 @@
 <div class="filtersContent">
     <form [formGroup]="stateForm" class="filterTool">
         <mat-form-field floatLabel="never" class="basket-search">
-            <input class="metaSearch" type="text" matInput placeholder="{{title}}"
-                formControlName="stateGroup" [matAutocomplete]="autoGroup" (focus)="initFilters()"
-                (keyup.enter)="metaSearch($event);">
+            <input class="metaSearch" type="text" matInput placeholder="{{title}}" formControlName="stateGroup"
+                [matAutocomplete]="autoGroup" (focus)="initFilters()" (keyup.enter)="metaSearch($event);">
             <button mat-icon-button matPrefix>
                 <mat-icon class="fa fa-search"></mat-icon>
             </button>
-            <mat-button-toggle matSuffix class="processLimitButton" (click)="$event.stopPropagation();" [checked]="this.listProperties.delayed" value="delayed"
-                title="{{lang.displayProcessLimitRes}}" (change)="setFilters($event, 'delayed')">
+            <mat-button-toggle matSuffix class="processLimitButton" (click)="$event.stopPropagation();"
+                [checked]="this.listProperties.delayed" value="delayed" title="{{lang.displayProcessLimitRes}}"
+                (change)="setFilters($event, 'delayed')">
                 <mat-icon fontSet="fas" fontIcon="fa-stopwatch fa-2x"></mat-icon>
             </mat-button-toggle>
             <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="selectFilter($event)"
-            [class]="'autoCompletePanelFilter'">
+                [class]="'autoCompletePanelFilter'">
                 <mat-option *ngIf="isLoading" class="is-loading">
                     <mat-spinner diameter="50"></mat-spinner>
                 </mat-option>
@@ -93,5 +93,9 @@
     <span class="label badge-subEntities" title="{{lang.subEntities}}"
         *ngFor="let subEntity of this.listProperties.subEntities; let i=index"
         (click)="removeFilter('subEntities', i)">{{subEntity.label}}
+        <i class="fa fa-times-circle"></i></span>
+    <span class="label badge-doctypes" title="{{lang.doctypes}}"
+        *ngFor="let doctype of this.listProperties.doctypes; let i=index"
+        (click)="removeFilter('doctypes', i)">{{doctype.label}}
         <i class="fa fa-times-circle"></i></span>
 </div>

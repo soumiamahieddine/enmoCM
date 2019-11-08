@@ -161,8 +161,14 @@
 }
 
 .filterBadges>.badge-subEntities {
-    margin: 5px;
+    margin: 5px; 
     background: #9440D5;
+    cursor: pointer;
+}
+
+.filterBadges>.badge-doctypes {
+    margin: 5px;
+    background: #d6716f;
     cursor: pointer;
 }
 

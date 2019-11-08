@@ -13,7 +13,8 @@ interface listProperties {
     'priorities': string[],
     'entities': string[],
     'subEntities': string[],
-    'statuses': string[]
+    'statuses': string[],
+    'doctypes': string[],
 }
 
 @Injectable()
@@ -60,6 +61,7 @@ export class FiltersListService {
                 'entities': [],
                 'subEntities': [],
                 'statuses': [],
+                'doctypes': [],
             };
             this.listsProperties.push(listProperties);
             this.listsPropertiesIndex = this.listsProperties.length -1;
@@ -138,6 +140,14 @@ export class FiltersListService {
                 });
 
                 filters += '&entitiesChildren=' + ent.join(',');
+            }
+            if (this.listsProperties[this.listsPropertiesIndex].doctypes.length > 0) {
+                let doct: any[] = [];
+                this.listsProperties[this.listsPropertiesIndex].doctypes.forEach((element: any) => {
+                    doct.push(element.id);
+                });
+
+                filters += '&doctypes=' + doct.join(',');
             }
         }
         return filters;
