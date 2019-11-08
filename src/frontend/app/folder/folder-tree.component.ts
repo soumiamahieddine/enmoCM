@@ -274,6 +274,7 @@ export class FolderTreeComponent implements OnInit {
                 this.treeControl.collapseAll();
                 this.openTree(nestedNode.id);
                 this.createItemNode = false;
+                this.foldersService.getPinnedFolders();
             }),
             tap(() => this.notify.success(this.lang.folderAdded)),
             catchError((err) => {
