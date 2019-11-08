@@ -1049,14 +1049,14 @@ class ResourceListController
             $dataDocTypes[]    = explode(',', $data['statuses']);
         }
         if (!empty($data['doctypes'])) {
-            $wherePriorities[] = 'type_label in (?)';
+            $wherePriorities[] = 'type_id in (?)';
             $dataPriorities[]  = explode(',', $data['doctypes']);
-            $whereCategories[] = 'type_label in (?)';
+            $whereCategories[] = 'type_id in (?)';
             $dataCategories[]  = explode(',', $data['doctypes']);
-            $whereEntities[]   = 'type_label in (?)';
+            $whereEntities[]   = 'type_id in (?)';
             $dataEntities[]    = explode(',', $data['doctypes']);
-            $whereDocTypes[]   = 'type_label in (?)';
-            $dataDocTypes[]    = explode(',', $data['doctypes']);
+            $whereStatuses[]   = 'type_id in (?)';
+            $dataStatuses[]    = explode(',', $data['doctypes']);
         }
         if (isset($data['entities'])) {
             if (empty($data['entities'])) {
@@ -1182,19 +1182,14 @@ class ResourceListController
 
         $docTypes = [];
         $rawDocType = ResModel::getOnView([
-            'select'    => ['count(res_id)', 'type_label'],
+            'select'    => ['count(res_id)', 'type_id', 'type_label'],
             'where'     => $whereDocTypes,
             'data'      => $dataDocTypes,
-            'groupBy'   => ['type_label']
+            'groupBy'   => ['type_id', 'type_label']
         ]);
         foreach ($rawDocType as $key => $value) {
-            $doc = DoctypeModel::get([
-                'select' => ['type_id'],
-                'where'  => ['description = ?'],
-                'data'   => [$value['type_label']]
-            ]);
             $docTypes[] = [
-                'id'        => empty($doc[0]['type_id']) ? null : $doc[0]['type_id'],
+                'id'        => empty($value['type_id']) ? null : $value['type_id'],
                 'label'     => empty($value['type_label']) ? '_UNDEFINED' : $value['type_label'],
                 'count'     => $value['count']
             ];
