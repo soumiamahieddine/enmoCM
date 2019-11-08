@@ -417,6 +417,17 @@ WHERE service_id = 'edit_recipient_outside_process' OR service_id = 'update_diff
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
 DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
+
+UPDATE usergroups_services SET service_id = 'manage_own_attachments_in_details' WHERE service_id = 'edit_attachments_from_detail';
+INSERT INTO usergroups_services (group_id, service_id)
+SELECT distinct(group_id), 'manage_attachments'
+FROM usergroups_services WHERE group_id IN (
+    SELECT group_id FROM usergroups_services
+    WHERE service_id = 'modify_attachments' OR service_id = 'delete_attachments'
+);
+DELETE FROM usergroups_services WHERE service_id = 'modify_attachments';
+DELETE FROM usergroups_services WHERE service_id = 'delete_attachments';
+
 UPDATE listmodels SET title = object_id WHERE title IS NULL;
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)AND', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)and', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');

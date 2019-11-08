@@ -401,6 +401,18 @@ export class PrivilegeService {
             "label": this.lang.printFolderDoc,
             "comment": this.lang.printFolderDoc,
             "unit": 'application'
+        },
+        {
+            "id": "manage_attachments",
+            "label": this.lang.manageAttachments,
+            "comment": this.lang.manageAttachments,
+            "unit": 'application'
+        },
+        {
+            "id": "manage_own_attachments_in_details",
+            "label": this.lang.manageOwnAttachmentsInDetails,
+            "comment": this.lang.manageOwnAttachmentsInDetails,
+            "unit": 'application'
         }
     ];
 

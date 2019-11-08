@@ -1303,4 +1303,6 @@ export const LANG_FR = {
     "diffListPrivilegeMsgProcess" : "lors du traitement du courrier.",
     "recordMail" : "Enregistrer un courrier",
     "closed" : "Clôturé",
+    "manageAttachments": "Modifier ou supprimer des pièces jointes",
+    "manageOwnAttachmentsInDetails": "Modifier ou supprimer ses propres pièces jointes dans la fiche détaillée",
 };

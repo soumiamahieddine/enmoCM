@@ -452,9 +452,15 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => 'Route id must be an integer val']);
         }
 
-        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['origin_id', 'res_id_master', 'attachment_type', 'res_id', 'title']]);
+        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['origin_id', 'res_id_master', 'attachment_type', 'res_id', 'title', 'typist']]);
         if (empty($attachment)) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
+        }
+
+        $user = UserModel::getById(['id' => $GLOBALS['id']]);
+        if ($user['user_id'] != $attachment['typist']
+            && !PrivilegeController::hasPrivilege(['privilegeId' => 'manage_attachments', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter2']);
         }
 
         if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
@@ -462,15 +468,20 @@ class AttachmentController
         }
 
         if ($attachment['attachment_type'] == 'signed_response') {
-            AttachmentModel::delete(['id' => $attachment['res_id']]);
+            AttachmentModel::delete([
+                'where' => ['res_id = ?'],
+                'data'  => [$attachment['res_id']]
+            ]);
         } else {
             if (empty($attachment['origin_id'])) {
                 $idToDelete = $attachment['res_id'];
             } else {
                 $idToDelete = $attachment['origin_id'];
             }
-
-            AttachmentModel::delete(['id' => $idToDelete]);
+            AttachmentModel::delete([
+                'where' => ['res_id = ? or origin_id = ?'],
+                'data'  => [$idToDelete, $idToDelete]
+            ]);
         }
         HistoryController::add([
             'tableName' => 'res_attachments',

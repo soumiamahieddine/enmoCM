@@ -1291,4 +1291,6 @@ export const LANG_NL = {
     "diffListPrivilegeMsgProcess" : "in process page.", //_TO_TRANSLATE
     "recordMail" : "Record a mail", //_TO_TRANSLATE
     "closed" : "Closed", //_TO_TRANSLATE
+    "manageAttachments": "Update or delete attachments", //_TO_TRANSLATE
+    "manageOwnAttachmentsInDetails": "Update or delete user's own attachments in the details page", //_TO_TRANSLATE
 };

@@ -287,16 +287,16 @@ abstract class AttachmentModelAbstract
 
     public static function delete(array $args)
     {
-        ValidatorModel::notEmpty($args, ['id']);
-        ValidatorModel::intVal($args, ['id']);
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
 
         DatabaseModel::update([
             'table' => 'res_attachments',
             'set'   => [
                 'status'    => 'DEL'
             ],
-            'where' => ['res_id = ? or origin_id = ?'],
-            'data'  => [$args['id'], $args['id']]
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;
