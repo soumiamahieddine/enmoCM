@@ -239,11 +239,13 @@ export class BasketListComponent implements OnInit {
     togglePanel(mode: string, row: any) {
         let thisSelect = { checked : true };
         let thisDeselect = { checked : false };
+        const previousRes = this.currentResource;
         row.checked = true;
+
         this.toggleAllRes(thisDeselect);
         this.toggleRes(thisSelect, row);
-
-        if(this.currentResource.resId == row.resId && this.sidenavRight.opened && this.currentMode == mode) {
+        
+        if(previousRes.resId == row.resId && this.sidenavRight.opened && this.currentMode == mode) {
             this.sidenavRight.close();
         } else {
             this.currentMode = mode;
