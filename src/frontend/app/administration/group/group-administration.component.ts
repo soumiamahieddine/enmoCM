@@ -99,15 +99,13 @@ export class GroupAdministrationComponent implements OnInit {
                                 services = [
                                     {
                                         "id": "indexing_diffList",
-                                        "label": this.lang.diffListPrivilegeMsg,
-                                        "label2": this.lang.diffListPrivilegeMsgIndexing,
+                                        "label": this.lang.diffListPrivilegeMsgIndexing,
                                         "current": this.group.privileges.filter((priv: any) => ['update_diffusion_indexing', 'update_diffusion_except_recipient_indexing'].indexOf(priv) > -1)[0] !== undefined ? this.group.privileges.filter((priv: any) => ['update_diffusion_indexing', 'update_diffusion_except_recipient_indexing'].indexOf(priv) > -1)[0] : '',
                                         "services": this.privilegeService.getPrivileges(['update_diffusion_indexing', 'update_diffusion_except_recipient_indexing'])
                                     },
                                     {
                                         "id": "process_diffList",
-                                        "label": this.lang.diffListPrivilegeMsg,
-                                        "label2": this.lang.diffListPrivilegeMsgProcess,
+                                        "label": this.lang.diffListPrivilegeMsgProcess,
                                         "current": this.group.privileges.filter((priv: any) => ['update_diffusion_details', 'update_diffusion_except_recipient_details'].indexOf(priv) > -1)[0] !== undefined ? this.group.privileges.filter((priv: any) => ['update_diffusion_details', 'update_diffusion_except_recipient_details'].indexOf(priv) > -1)[0] : '',
                                         "services": this.privilegeService.getPrivileges(['update_diffusion_details', 'update_diffusion_except_recipient_details'])
                                     }
