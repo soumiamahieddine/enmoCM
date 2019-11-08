@@ -139,6 +139,7 @@ define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Opslagruimtepad ontoegankelijk');
 define('_BACK_FROM_VACATION', 'bij terugkeer na afwezigheid');
 define('_DOC_DISPLAYING', 'Weergave van het document');
 define('_DOC_ADDED', 'Document toegevoegd');
+define('_ATTACHMENT_ADDED', 'Attachment added');//TRANSLATE
 define('_ATTACH_DISPLAYING', 'Weergave van de bijlage');
 define('_DOC_DELETED', 'Document deleted');//TRANSLATE
 define('_NOTE_ADDED', 'note added _TO_TRANSLATE');
@@ -349,7 +350,6 @@ define('_SIGNATURES_SEND_TO_MAARCHPARAPHEUR', 'Signatures send to Maarch Paraphe
 define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Generate and send acknowledgement receipt_TO_TRANSLATE');
 define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'Complete acknowledgement send date_TO_TRANSLATE');
 
-define('_AR_DISPLAYING', 'Displaying acknowledgement receipt_TO_TRANSLATE');
 
 define('_M2M_ACTION_DONE', 'in werking gesteld door');
 define('_M2M_ENTITY_DESTINATION', 'De brief is in de dienst');
