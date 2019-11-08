@@ -1243,10 +1243,11 @@ class ResourceListController
         ];
     }
 
-    private function compareSortOnLabel($a, $b) {
-        if ($a['label'] < $b['label']) {
+    private function compareSortOnLabel($a, $b)
+    {
+        if (strtolower($a['label']) < strtolower($b['label'])) {
             return -1;
-        } elseif ($a['label'] > $b['label']) {
+        } elseif (strtolower($a['label']) > strtolower($b['label'])) {
             return 1;
         }
         return 0;
