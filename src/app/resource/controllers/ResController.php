@@ -398,6 +398,15 @@ class ResController
         $data = $request->getQueryParams();
         if ($data['mode'] == 'base64') {
             return $response->withJson(['encodedDocument' => base64_encode($fileContent)]);
+        } elseif ($data['mode'] == 'view') {
+            $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->buffer($fileContent);
+            $pathInfo = pathinfo($pathToDocument);
+
+            $response->write($fileContent);
+            $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
+
+            return $response->withHeader('Content-Type', $mimeType);
         } else {
             $finfo    = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($fileContent);

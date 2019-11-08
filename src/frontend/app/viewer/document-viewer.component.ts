@@ -55,6 +55,8 @@ export class DocumentViewerComponent implements OnInit {
 
     @Input('resId') resId: number = null;
     @Input('editMode') editMode: boolean = false;
+    @Input('title') title: string = '';
+    @Input('mode') mode: string = 'mainDocument';
 
     loadingInfo: any = {
         mode: 'indeterminate',
@@ -91,7 +93,7 @@ export class DocumentViewerComponent implements OnInit {
                 this.maxFileSizeLabel = data.informations.maximumSizeLabel;
 
                 if (this.resId !== null) {
-                    this.loadRessource(this.resId);
+                    this.loadRessource(this.resId, this.mode);
                 } else {
                     this.loadTemplates();
                     this.loading = false;
@@ -405,11 +407,10 @@ export class DocumentViewerComponent implements OnInit {
         downloadLink.click();
     }
 
-    printPdf() {
-        const blob = this.b64toBlob(this.file.base64src, this.file.type);
-        const blobUrl = URL.createObjectURL(blob);
-        window.focus();
-        window.open(blobUrl);
+    openPdfInTab() {
+        let newWindow = window.open();
+        newWindow.document.write(`<iframe style="width: 100%;height: 100%;margin: 0;padding: 0;" src="${this.file.contentView}" frameborder="0" allowfullscreen></iframe>`);
+        newWindow.document.title = this.title;
     }
 
     loadRessource(resId: any, target: string = 'mainDocument') {
@@ -420,6 +421,7 @@ export class DocumentViewerComponent implements OnInit {
                     if (data.encodedDocument) {
                         this.file.contentMode = 'route';
                         this.file.content = `../../rest/attachments/${resId}/originalContent`;
+                        this.file.contentView = `../../rest/attachments/${resId}/content?mode=view`;
                         this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
                         this.loading = false;
                     }
@@ -445,6 +447,7 @@ export class DocumentViewerComponent implements OnInit {
                     if (data.encodedDocument) {
                         this.file.contentMode = 'route';
                         this.file.content = `../../rest/resources/${resId}/originalContent`;
+                        this.file.contentView = `../../rest/resources/${resId}/content?mode=view`
                         this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
                         this.loading = false;
                     }
@@ -465,7 +468,7 @@ export class DocumentViewerComponent implements OnInit {
                 }
             );
         }
-        
+
     }
 
     editTemplate(templateId: number) {

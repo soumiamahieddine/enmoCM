@@ -47,9 +47,9 @@
                 <button mat-icon-button (click)="downloadOriginalFile()" [matTooltip]="lang.downloadOriginalFile">
                     <mat-icon class="fa fa-download"></mat-icon>
                 </button>
-                <!--<button mat-icon-button (click)="printPdf()" matTooltip="Imprimer le pdf">
-                            <mat-icon class="fa fa-print"></mat-icon>
-                        </button>-->
+                <button *ngIf="file.contentView !== undefined" mat-icon-button (click)="openPdfInTab()" matTooltip="Ouvrir dans un nouvel onglet">
+                    <mat-icon class="fas fa-external-link-alt"></mat-icon>
+                </button>
                 <button *ngIf="editMode" mat-icon-button (click)="cleanFile()" [matTooltip]="lang.removeFile">
                     <mat-icon class="fa fa-trash" color="warn"></mat-icon>
                 </button>

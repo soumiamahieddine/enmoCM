@@ -23,7 +23,5 @@ export class AttachmentShowModalComponent {
         private notify: NotificationService) {
     }
 
-    ngOnInit(): void {
-        this.appDocumentViewer.loadRessource(this.data.attachment.res_id, 'attachment');
-    }
+    ngOnInit(): void { }
 }
