@@ -1259,7 +1259,7 @@ export const LANG_EN = {
     "ARPaper" : "Paper acknowledgement of receipt",
     "ARelectronic" : "Electronic acknowledgement of receipt",
     "allRoles" : "All roles",
-    "rolesExceptAssignee" : "Role without assignee",
+    "rolesExceptAssignee" : "Role(s) without assignee",
     "noRole" : "No role",
     "diffListPrivilegeMsg" : "Can modify user in roles: ",
     "diffListPrivilegeMsgIndexing" : "in indexing page.",

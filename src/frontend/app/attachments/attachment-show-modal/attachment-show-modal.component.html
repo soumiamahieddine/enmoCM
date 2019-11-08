@@ -1,4 +1,11 @@
-<h1 mat-dialog-title>{{data.attachment.identifier}} - {{data.attachment.title}} <button [title]="lang.close" mat-icon-button (click)="dialogRef.close();">
+<h1 mat-dialog-title>
+  <span style="flex: 1;" [title]="data.attachment.title">
+    <ng-container *ngIf="data.attachment.identifier !== null">
+      {{data.attachment.identifier}} -
+    </ng-container>
+    {{data.attachment.title | shorten: 50: '...'}}
+  </span>
+  <button [title]="lang.close" mat-icon-button (click)="dialogRef.close();">
     <mat-icon class="fa fa-times"></mat-icon>
   </button></h1>
 <mat-dialog-content class="modal-container">

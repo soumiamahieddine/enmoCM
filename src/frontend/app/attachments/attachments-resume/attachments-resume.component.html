@@ -16,7 +16,7 @@
             </div>
         </ng-template>
         <div class="info">
-            {{attachment.title}}
+            {{attachment.title | shorten: 110: '...'}}
         </div>
         <div class="attachmentType">
             {{attachment.typeLabel}}
