@@ -36,6 +36,7 @@ foreach ($customs as $custom) {
 
         $newResId = \Attachment\models\AttachmentModel::create($attachmentInfo);
 
+        migrateOrigin(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateAdrVersionAttachments(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateHistoryVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateEmailsVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
@@ -46,6 +47,16 @@ foreach ($customs as $custom) {
     }
 
     printf("Migration version attachement (CUSTOM {$custom}) : " . $migrated . " Version(s) trouvée(s) et migrée(s).\n");
+}
+
+function migrateOrigin($args = [])
+{
+    \SrcCore\models\DatabaseModel::update([
+        'set'   => ['origin' => $args['newResId'] . ',res_attachments'],
+        'table' => 'res_attachments',
+        'where' => ['origin = ?'],
+        'data'  => [$args['oldResId'] . ',res_version_attachments']
+    ]);
 }
 
 function migrateAdrVersionAttachments($args = [])
