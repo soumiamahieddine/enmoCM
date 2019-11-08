@@ -22,6 +22,7 @@ import { PanelListComponent } from './panel/panel-list.component';
 import { AppService } from '../../service/app.service';
 import { PanelFolderComponent } from '../folder/panel/panel-folder.component';
 import { FoldersService } from '../folder/folders.service';
+import { ActionsService } from '../actions/actions.service';
 
 
 declare function $j(selector: any): any;
@@ -53,11 +54,11 @@ export class BasketListComponent implements OnInit {
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
-    displayedColumnsBasket: string[] = ['res_id'];
+    displayedColumnsBasket: string[] = ['resId'];
 
     displayedMainData: any = [
         {
-            'value': 'alt_identifier',
+            'value': 'chrono',
             'cssClasses': ['softColorData', 'align_centerData', 'chronoData'],
             'icon': ''
         },
@@ -91,6 +92,7 @@ export class BasketListComponent implements OnInit {
 
     private destroy$ = new Subject<boolean>();
     subscription: Subscription;
+    subscription2: Subscription;
 
     @ViewChild('actionsListContext', { static: true }) actionsList: ActionsListComponent;
     @ViewChild('filtersTool', { static: true }) filtersTool: FiltersToolComponent;
@@ -116,7 +118,8 @@ export class BasketListComponent implements OnInit {
         public overlay: Overlay, 
         public viewContainerRef: ViewContainerRef,
         public appService: AppService,
-        private foldersService: FoldersService) {
+        private foldersService: FoldersService,
+        private actionService: ActionsService) {
             _activatedRoute.queryParams.subscribe(
                 params => this.specificChrono = params.chrono
             );
@@ -127,6 +130,10 @@ export class BasketListComponent implements OnInit {
                     this[result.content]();
                 } 
             }); 
+            this.subscription2 = this.actionService.catchAction().subscribe((message: any) => {
+                this.refreshDaoAfterAction();
+                this.panelFolder.refreshFoldersTree();
+            });
 
             $j("link[href='merged_css.php']").remove();
     }
@@ -171,6 +178,7 @@ export class BasketListComponent implements OnInit {
     ngOnDestroy() {
         this.destroy$.next(true);
         this.subscription.unsubscribe();
+        this.subscription2.unsubscribe();
     }
 
     initResultList() {
@@ -212,11 +220,11 @@ export class BasketListComponent implements OnInit {
 
     goTo(row: any) {
         this.filtersListService.filterMode = false;
-        if (this.docUrl == '../../rest/resources/' + row.res_id + '/content' && this.sidenavRight.opened) {
+        if (this.docUrl == '../../rest/resources/' + row.resId + '/content' && this.sidenavRight.opened) {
             this.sidenavRight.close();
         } else {
-            this.docUrl = '../../rest/resources/' + row.res_id + '/content';
-            this.currentChrono = row.alt_identifier;
+            this.docUrl = '../../rest/resources/' + row.resId + '/content';
+            this.currentChrono = row.chrono;
             this.innerHtml = this.sanitizer.bypassSecurityTrustHtml(
                 "<iframe style='height:100%;width:100%;' src='" + this.docUrl + "' class='embed-responsive-item'>" +
                 "</iframe>");
@@ -225,17 +233,19 @@ export class BasketListComponent implements OnInit {
     }
 
     goToDetail(row: any) {
-        location.href = "index.php?page=details&dir=indexing_searching&id=" + row.res_id;
+        location.href = "index.php?page=details&dir=indexing_searching&id=" + row.resId;
     }
 
     togglePanel(mode: string, row: any) {
         let thisSelect = { checked : true };
         let thisDeselect = { checked : false };
+        const previousRes = this.currentResource;
         row.checked = true;
+
         this.toggleAllRes(thisDeselect);
         this.toggleRes(thisSelect, row);
-
-        if(this.currentResource.res_id == row.res_id && this.sidenavRight.opened && this.currentMode == mode) {
+        
+        if(previousRes.resId == row.resId && this.sidenavRight.opened && this.currentMode == mode) {
             this.sidenavRight.close();
         } else {
             this.currentMode = mode;
@@ -271,7 +281,7 @@ export class BasketListComponent implements OnInit {
     }
 
     viewThumbnail(row: any) {
-        this.thumbnailUrl = '../../rest/resources/' + row.res_id + '/thumbnail';
+        this.thumbnailUrl = '../../rest/resources/' + row.resId + '/thumbnail';
         $j('#viewThumbnail').show();
         $j('#listContent').css({ "overflow": "hidden" });
     }
@@ -381,7 +391,7 @@ export class BasketListComponent implements OnInit {
                 key.label = this.lang[key.value];
             });
 
-            if (this.selectedRes.indexOf(element['res_id']) === -1) {
+            if (this.selectedRes.indexOf(element['resId']) === -1) {
                 element['checked'] = false;
             } else {
                 element['checked'] = true;
@@ -392,12 +402,13 @@ export class BasketListComponent implements OnInit {
 
     toggleRes(e: any, row: any) {
         if (e.checked) {
-            if (this.selectedRes.indexOf(row.res_id) === -1) {
-                this.selectedRes.push(row.res_id);
+            if (this.selectedRes.indexOf(row.resId) === -1) {
+                this.currentResource = row;
+                this.selectedRes.push(row.resId);
                 row.checked = true;
             }
         } else {
-            let index = this.selectedRes.indexOf(row.res_id);
+            let index = this.selectedRes.indexOf(row.resId);
             this.selectedRes.splice(index, 1);
             row.checked = false;
         }

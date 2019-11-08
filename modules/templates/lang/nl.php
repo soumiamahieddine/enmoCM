@@ -15,9 +15,6 @@
 if (!defined('_ADMIN_TEMPLATE_ANSWER')) {
     define('_ADMIN_TEMPLATE_ANSWER', 'De modellen beheren');
 }
-if (!defined('_ADMIN_TEMPLATES_DESC')) {
-    define('_ADMIN_TEMPLATES_DESC', 'De modellen die voor de bijlagen gebruikt worden / de meldingen / de aanmaak van brieven / het verzenden van e-mails / de aantekeningen beheren');
-}
 if (!defined('_EXPLOIT_TEMPLATE_ANSWER')) {
     define('_EXPLOIT_TEMPLATE_ANSWER', 'De modellen gebruiken');
 }
@@ -200,9 +197,6 @@ if (!defined('_NO_TARGET')) {
 }
 if (!defined('_EXTENSION_NOT_ALLOWED')) {
     define('_EXTENSION_NOT_ALLOWED', 'Niet toegestane extensie');
-}
-if (!defined('_ADMIN_TEMPLATES_DESC')) {
-    define('_ADMIN_TEMPLATES_DESC', 'De modellen die voor de bijlagen gebruikt worden, de meldingen, de aanmaak van brieven, het verzenden van e-mails en de opmerkingen beheren');
 }
 if (!defined('_ATTACH_TEMPLATE_TO_ENTITY')) {
     define('_ATTACH_TEMPLATE_TO_ENTITY', 'Het model moet aan minstens een eenheid gekoppeld zijn');

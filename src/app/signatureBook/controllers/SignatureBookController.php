@@ -21,8 +21,8 @@ use Basket\models\BasketModel;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Entity\models\ListInstanceModel;
+use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
-use Group\models\ServiceModel;
 use Link\models\LinkModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
@@ -101,7 +101,7 @@ class SignatureBookController
 
         $datas = [];
         $datas['actions']               = $actions;
-        $datas['attachments']           = SignatureBookController::getAttachmentsForSignatureBook(['resId' => $resId, 'userId' => $GLOBALS['userId']]);
+        $datas['attachments']           = SignatureBookController::getAttachmentsForSignatureBook(['resId' => $resId, 'userId' => $GLOBALS['id']]);
         $datas['documents']             = $documents;
         $datas['currentAction']         = $currentAction;
         $datas['resList']               = $resources;
@@ -111,7 +111,7 @@ class SignatureBookController
         $datas['consigne']              = UserModel::getCurrentConsigneById(['resId' => $resId]);
         $datas['hasWorkflow']           = ((int)$listInstances[0]['count'] > 0);
         $datas['listinstance']          = ListInstanceModel::getCurrentStepByResId(['resId' => $resId]);
-        $datas['canSign']               = ServiceModel::hasService(['id' => 'sign_document', 'userId' => $GLOBALS['userId'], 'location' => 'visa', 'type' => 'use']);
+        $datas['canSign']               = PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $GLOBALS['id']]);
         $datas['isCurrentWorkflowUser'] = $datas['listinstance']['item_id'] == $GLOBALS['userId'];
 
         return $response->withJson($datas);
@@ -119,17 +119,12 @@ class SignatureBookController
 
     public function unsignFile(Request $request, Response $response, array $aArgs)
     {
-        $data = $request->getParams();
-        if (!Validator::stringType()->notEmpty()->validate($data['table'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
         //TODO Check les droits de modif
-        AttachmentModel::unsignAttachment(['table' => $data['table'], 'resId' => $aArgs['resId']]);
+        AttachmentModel::unsignAttachment(['resId' => $aArgs['resId']]);
 
-        $isVersion = ($data['table'] == 'res_attachments' ? 'false' : 'true');
         $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-        if (!AttachmentModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'isVersion' => $isVersion, 'user_serial_id' => $user['id']])) {
-            $attachment = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => ($data['table'] == 'res_attachments'), 'select' => ['res_id_master']]);
+        if (!AttachmentModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'user_serial_id' => $user['id']])) {
+            $attachment = AttachmentModel::getById(['id' => $aArgs['resId'], 'select' => ['res_id_master']]);
             ListInstanceModel::update([
                 'set'   => ['signatory' => 'false'],
                 'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
@@ -155,7 +150,7 @@ class SignatureBookController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        return $response->withJson(SignatureBookController::getAttachmentsForSignatureBook(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['userId']]));
+        return $response->withJson(SignatureBookController::getAttachmentsForSignatureBook(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['id']]));
     }
 
     private static function getIncomingMailAndAttachmentsForSignatureBook(array $aArgs)
@@ -171,8 +166,8 @@ class SignatureBookController
             return ['error' => 'No Document Found'];
         }
 
-        $incomingMailAttachments = AttachmentModel::getOnView([
-            'select'      => ['res_id', 'res_id_version', 'title', 'format', 'attachment_type', 'path', 'filename'],
+        $incomingMailAttachments = AttachmentModel::get([
+            'select'      => ['res_id', 'title', 'format', 'attachment_type', 'path', 'filename'],
             'where'     => ['res_id_master = ?', 'attachment_type in (?)', "status not in ('DEL', 'TMP', 'OBS')"],
             'data'      => [$resId, ['incoming_mail_attachment', 'converted_pdf']]
         ]);
@@ -194,15 +189,9 @@ class SignatureBookController
             }
 
             $realId = 0;
-            if ($value['res_id'] == 0) {
-                $realId = $value['res_id_version'];
-                $isVersion = true;
-            } elseif ($value['res_id_version'] == 0) {
-                $realId = $value['res_id'];
-                $isVersion = false;
-            }
+            $realId = $value['res_id'];
 
-            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $realId, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $realId, 'collId' => 'attachments_coll']);
 
             if (empty($convertedAttachment['errors'])) {
                 $isConverted = true;
@@ -240,41 +229,34 @@ class SignatureBookController
         }
         $orderBy .= " ELSE {$c} END, doc_date DESC NULLS LAST, creation_date DESC";
 
-        $attachments = AttachmentModel::getOnView([
+        $attachments = AttachmentModel::get([
             'select'    => [
-                'res_id', 'res_id_version', 'title', 'identifier', 'attachment_type',
+                'res_id', 'title', 'identifier', 'attachment_type',
                 'status', 'typist', 'path', 'filename', 'updated_by', 'creation_date',
                 'validation_date', 'format', 'relation', 'dest_user', 'dest_contact_id',
-                'dest_address_id', 'origin', 'doc_date', 'attachment_id_master'
+                'dest_address_id', 'origin', 'doc_date', 'origin_id'
             ],
             'where'     => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')", 'in_signature_book = TRUE'],
             'data'      => [$aArgs['resId'], ['incoming_mail_attachment', 'print_folder']],
             'orderBy'   => [$orderBy]
         ]);
 
-        $canModify = ServiceModel::hasService(['id' => 'modify_attachments', 'userId' => $aArgs['userId'], 'location' => 'attachments', 'type' => 'use']);
-        $canDelete = ServiceModel::hasService(['id' => 'delete_attachments', 'userId' => $aArgs['userId'], 'location' => 'attachments', 'type' => 'use']);
+        $canModify = PrivilegeController::hasPrivilege(['privilegeId' => 'modify_attachments', 'userId' => $aArgs['userId']]);
+        $canDelete = PrivilegeController::hasPrivilege(['privilegeId' => 'delete_attachments', 'userId' => $aArgs['userId']]);
 
         foreach ($attachments as $key => $value) {
             if ($value['attachment_type'] == 'converted_pdf' || ($value['attachment_type'] == 'signed_response' && !empty($value['origin']))) {
                 continue;
             }
 
-            $realId = 0;
-            if ($value['res_id'] == 0) {
-                $realId = $value['res_id_version'];
-                $isVersion = true;
-            } elseif ($value['res_id_version'] == 0) {
-                $realId = $value['res_id'];
-                $isVersion = false;
-            }
+            $realId = $value['res_id'];
 
             $viewerId       = $realId;
             $viewerNoSignId = $realId;
             $pathToFind     = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
             $isConverted    = false;
 
-            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => [1], 'resId' => $realId, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => [1], 'resId' => $realId, 'collId' => 'attachments_coll']);
 
             if (empty($convertedAttachment['errors'])) {
                 $isConverted = true;
@@ -292,7 +274,6 @@ class SignatureBookController
                 if ($value['status'] == 'SIGN' && $tmpValue['attachment_type'] == 'signed_response' && !empty($tmpValue['origin'])) {
                     $signDaddy = explode(',', $tmpValue['origin']);
                     if (($signDaddy[0] == $value['res_id'] && $signDaddy[1] == "res_attachments")
-                        || ($signDaddy[0] == $value['res_id_version'] && $signDaddy[1] == "res_version_attachments")
                     ) {
                         $viewerId = $tmpValue['res_id'];
                         unset($attachments[$tmpKey]);
@@ -341,8 +322,8 @@ class SignatureBookController
             }
         }
 
-        $obsAttachments = AttachmentModel::getOnView([
-            'select'    => ['res_id', 'res_id_version', 'attachment_id_master', 'relation', 'creation_date', 'title'],
+        $obsAttachments = AttachmentModel::get([
+            'select'    => ['res_id', 'origin_id', 'relation', 'creation_date', 'title'],
             'where'     => ['res_id_master = ?', 'attachment_type not in (?)', 'status = ?'],
             'data'      => [$aArgs['resId'], ['incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response'], 'OBS'],
             'orderBy'  => ['relation ASC']
@@ -353,7 +334,7 @@ class SignatureBookController
             if ($value['relation'] == 1) {
                 $obsData[$value['res_id']][] = ['resId' => $value['res_id'], 'title' => $value['title'], 'relation' => $value['relation'], 'creation_date' => $value['creation_date']];
             } else {
-                $obsData[$value['attachment_id_master']][] = ['resId' => $value['res_id_version'], 'title' => $value['title'], 'relation' => $value['relation'], 'creation_date' => $value['creation_date']];
+                $obsData[$value['origin_id']][] = ['resId' => $value['res_id'], 'title' => $value['title'], 'relation' => $value['relation'], 'creation_date' => $value['creation_date']];
             }
         }
 
@@ -364,12 +345,12 @@ class SignatureBookController
             }
 
             $attachments[$key]['obsAttachments'] = [];
-            if ($value['relation'] > 1 && !empty($obsData[$value['attachment_id_master']])) {
-                $attachments[$key]['obsAttachments'] = $obsData[$value['attachment_id_master']];
+            if ($value['relation'] > 1 && !empty($obsData[$value['origin_id']])) {
+                $attachments[$key]['obsAttachments'] = $obsData[$value['origin_id']];
             }
 
             unset($attachments[$key]['path'], $attachments[$key]['filename'], $attachments[$key]['dest_user'],
-                $attachments[$key]['dest_contact_id'], $attachments[$key]['dest_address_id'], $attachments[$key]['attachment_id_master']
+                $attachments[$key]['dest_contact_id'], $attachments[$key]['dest_address_id'], $attachments[$key]['origin_id']
             );
         }
 
@@ -401,7 +382,7 @@ class SignatureBookController
             $resIds[] = $value['res_id'];
         }
 
-        $attachmentsInResList = AttachmentModel::getOnView([
+        $attachmentsInResList = AttachmentModel::get([
             'select'    => ['res_id_master', 'status', 'attachment_type'],
             'where'     => ['res_id_master in (?)', "attachment_type not in ('incoming_mail_attachment', 'print_folder', 'converted_pdf', 'signed_response')", "status not in ('DEL', 'TMP', 'OBS')"],
             'data'      => [$resIds]

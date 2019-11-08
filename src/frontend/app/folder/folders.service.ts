@@ -42,6 +42,10 @@ export class FoldersService {
         return this.eventAction.asObservable();
     }
 
+    setEvent(content: any) {
+        return this.eventAction.next(content);
+    }
+
     goToFolder(folder: any) {
         this.setFolder(folder);
         this.router.navigate(['/folders/' + folder.id]);

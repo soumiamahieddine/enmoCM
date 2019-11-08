@@ -17,12 +17,6 @@ CREATE INDEX res_id_idx ON res_attachments (res_id);
 CREATE INDEX res_id_master_idx ON res_attachments (res_id_master);
 CREATE INDEX res_att_external_id_idx ON res_attachments (external_id);
 
--- res_version_attachments
-CREATE INDEX res_id_version_attachments_idx ON res_version_attachments (res_id);
-CREATE INDEX res_id_master_version_attachments_idx ON res_version_attachments (res_id_master);
-CREATE INDEX attachment_id_master_idx ON res_version_attachments (attachment_id_master);
-CREATE INDEX res_vers_external_id_idx ON res_version_attachments (external_id);
-
 -- listinstance
 CREATE INDEX res_id_listinstance_idx ON listinstance (res_id);
 CREATE INDEX listinstance_coll_id_idx ON listinstance (coll_id);

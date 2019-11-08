@@ -205,7 +205,6 @@ if (isset($_REQUEST['valid'])) {
 		}
 		exit();
 	} else {
-		$core->start_page_stat();
 		?>
 		<div id="header">
         <div id="nav">

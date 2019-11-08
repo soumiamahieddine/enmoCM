@@ -17,22 +17,21 @@ namespace ContentManagement\controllers;
 use Docserver\models\DocserverModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\UrlController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use Template\models\TemplateModel;
-
-require_once 'core/class/Url.php';
 
 class JnlpController
 {
     public function generateJnlp(Request $request, Response $response)
     {
-        $data = $request->getParams();
+        $body = $request->getParsedBody();
 
-        $coreUrl = str_replace('rest/', '', \Url::coreurl());
+        $coreUrl = str_replace('rest/', '', UrlController::getCoreUrl());
         $tmpPath = CoreConfigModel::getTmpPath();
         $jnlpUniqueId = CoreConfigModel::uniqueId();
-        $jnlpFileName = $GLOBALS['userId'] . '_maarchCM_' . $jnlpUniqueId;
+        $jnlpFileName = $GLOBALS['id'] . '_maarchCM_' . $jnlpUniqueId;
         $jnlpFileNameExt = $jnlpFileName . '.jnlp';
 
         $allCookies = '';
@@ -42,11 +41,11 @@ class JnlpController
             }
             $allCookies .= $key . '=' . str_replace(' ', '+', $value);
         }
-        if (!empty($data['cookies'])) {
+        if (!empty($body['cookies'])) {
             if (!empty($allCookies)) {
                 $allCookies .= '; ';
             }
-            $allCookies .= $data['cookies'];
+            $allCookies .= $body['cookies'];
         }
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/content_management/xml/config.xml']);
@@ -64,7 +63,11 @@ class JnlpController
         $tagJnlp->appendChild($newAttribute);
 
         $newAttribute = $jnlpDocument->createAttribute('codebase');
-        $newAttribute->value = $tmpPath;
+        $newAttribute->value = $coreUrl . 'rest/jnlp/';
+        $tagJnlp->appendChild($newAttribute);
+
+        $newAttribute = $jnlpDocument->createAttribute('href');
+        $newAttribute->value = htmlentities($jnlpFileNameExt);
         $tagJnlp->appendChild($newAttribute);
 
         $tagInformation = $jnlpDocument->createElement('information');
@@ -125,17 +128,17 @@ class JnlpController
         $tagApplication->appendChild($newAttribute);
 
         $tagArg1 = $jnlpDocument->createElement('argument', $coreUrl . 'rest/jnlp/' . $jnlpUniqueId); //ProcessJnlp
-        $tagArg2 = $jnlpDocument->createElement('argument', $data['objectType']); //Type
-        $tagArg3 = $jnlpDocument->createElement('argument', $data['table']); //Table
-        $tagArg4 = $jnlpDocument->createElement('argument', $data['objectId']); //ObjectId
-        $tagArg5 = $jnlpDocument->createElement('argument', $data['uniqueId']);
+        $tagArg2 = $jnlpDocument->createElement('argument', $body['objectType']); //Type
+        $tagArg3 = $jnlpDocument->createElement('argument', urlencode(json_encode($body['data'])));
+        $tagArg4 = $jnlpDocument->createElement('argument', $body['objectId']); //ObjectId
+        $tagArg5 = $jnlpDocument->createElement('argument', 0); //Useless
         $tagArg6 = $jnlpDocument->createElement('argument', "maarchCourrierAuth={$_COOKIE['maarchCourrierAuth']}"); //MaarchCookie
         $tagArg7 = $jnlpDocument->createElement('argument', htmlentities($allCookies)); //AllCookies
         $tagArg8 = $jnlpDocument->createElement('argument', $jnlpFileName); //JnlpFileName
-        $tagArg9 = $jnlpDocument->createElement('argument', $GLOBALS['userId']); //CurrentUser
-        $tagArg10 = $jnlpDocument->createElement('argument', 'false'); //ConvertPdf
-        $tagArg11 = $jnlpDocument->createElement('argument', 'false'); //OnlyConvert
-        $tagArg12 = $jnlpDocument->createElement('argument', 0); //HashFile
+        $tagArg9 = $jnlpDocument->createElement('argument', $GLOBALS['id']); //CurrentUser //Useless
+        $tagArg10 = $jnlpDocument->createElement('argument', 'false'); //ConvertPdf //Useless
+        $tagArg11 = $jnlpDocument->createElement('argument', 'false'); //OnlyConvert //Useless
+        $tagArg12 = $jnlpDocument->createElement('argument', 0); //HashFile //Useless
 
 
         $tagJnlp->appendChild($tagInformation);
@@ -197,22 +200,23 @@ class JnlpController
     }
 
 
-    public function processJnlp(Request $request, Response $response, array $aArgs)
+    public function processJnlp(Request $request, Response $response, array $args)
     {
-        $data = $request->getParams();
+        $queryParams = $request->getQueryParams();
+        $body = $request->getParsedBody();
 
         $tmpPath = CoreConfigModel::getTmpPath();
 
-        if ($data['action'] == 'editObject') {
-            if ($data['objectType'] == 'templateCreation') {
-                $explodeFile = explode('.', $data['objectId']);
+        if ($queryParams['action'] == 'editObject') {
+            if ($queryParams['objectType'] == 'templateCreation') {
+                $explodeFile = explode('.', $queryParams['objectId']);
                 $ext = $explodeFile[count($explodeFile) - 1];
-                $newFileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$aArgs['jnlpUniqueId']}.{$ext}";
+                $newFileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$ext}";
 
-                $pathToCopy = $data['objectId'];
-            } elseif ($data['objectType'] == 'templateModification') {
+                $pathToCopy = $queryParams['objectId'];
+            } elseif ($queryParams['objectType'] == 'templateModification') {
                 $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
-                $template = TemplateModel::getById(['id' => $data['objectId'], 'select' => ['template_path', 'template_file_name']]);
+                $template = TemplateModel::getById(['id' => $queryParams['objectId'], 'select' => ['template_path', 'template_file_name']]);
                 if (empty($template)) {
                     $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => "Template does not exist"]]);
                     $response->write($xmlResponse);
@@ -221,9 +225,37 @@ class JnlpController
 
                 $explodeFile = explode('.', $template['template_file_name']);
                 $ext = $explodeFile[count($explodeFile) - 1];
-                $newFileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$aArgs['jnlpUniqueId']}.{$ext}";
+                $newFileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$ext}";
 
                 $pathToCopy = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
+            } elseif ($queryParams['objectType'] == 'resourceCreation' || $queryParams['objectType'] == 'attachmentCreation') {
+                $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
+                $template = TemplateModel::getById(['id' => $queryParams['objectId'], 'select' => ['template_path', 'template_file_name']]);
+                if (empty($template)) {
+                    $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => "Template does not exist"]]);
+                    $response->write($xmlResponse);
+                    return $response->withHeader('Content-Type', 'application/xml');
+                }
+
+                $explodeFile = explode('.', $template['template_file_name']);
+                $ext = $explodeFile[count($explodeFile) - 1];
+                $newFileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$ext}";
+
+                $pathToCopy = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
+
+                $dataToMerge = ['userId' => $GLOBALS['id']];
+                if (!empty($queryParams['objectTable'])) {
+                    $decodedData = json_decode(urldecode($queryParams['objectTable']), true);
+                    if (!empty($decodedData)) {
+                        $dataToMerge = array_merge($dataToMerge, $decodedData);
+                    }
+                }
+                $mergedDocument = MergeController::mergeDocument([
+                    'content'   => file_get_contents($pathToCopy),
+                    'data'      => $dataToMerge
+                ]);
+
+                file_put_contents($tmpPath . $newFileOnTmp, base64_decode($mergedDocument['encodedDocument']));
             } else {
                 $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => 'Wrong objectType']]);
                 $response->write($xmlResponse);
@@ -240,10 +272,10 @@ class JnlpController
 
             $result = [
                 'STATUS'            => 'ok',
-                'OBJECT_TYPE'       => $data['objectType'],
-                'OBJECT_TABLE'      => $data['objectTable'],
-                'OBJECT_ID'         => $data['objectId'],
-                'UNIQUE_ID'         => $data['uniqueId'],
+                'OBJECT_TYPE'       => $queryParams['objectType'],
+                'OBJECT_TABLE'      => $queryParams['objectTable'],
+                'OBJECT_ID'         => $queryParams['objectId'],
+                'UNIQUE_ID'         => $queryParams['uniqueId'],
                 'APP_PATH'          => 'start',
                 'FILE_CONTENT'      => base64_encode($fileContent),
                 'FILE_EXTENSION'    => $ext,
@@ -252,42 +284,42 @@ class JnlpController
             ];
             $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => $result]);
 
-        } elseif ($data['action'] == 'saveObject') {
-            if (empty($data['fileContent']) || empty($data['fileExtension'])) {
+        } elseif ($queryParams['action'] == 'saveObject') {
+            if (empty($body['fileContent']) || empty($body['fileExtension'])) {
                 $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => 'File content or file extension empty']]);
                 $response->write($xmlResponse);
                 return $response->withHeader('Content-Type', 'application/xml');
             }
 
-            $encodedFileContent = str_replace(' ', '+', $data['fileContent']);
-            $ext = str_replace(["\\", "/", '..'], '', $data['fileExtension']);
+            $encodedFileContent = str_replace(' ', '+', $body['fileContent']);
+            $ext = str_replace(["\\", "/", '..'], '', $body['fileExtension']);
             $fileContent = base64_decode($encodedFileContent);
-            $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$aArgs['jnlpUniqueId']}.{$ext}";
+            $fileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$ext}";
 
             $file = fopen($tmpPath . $fileOnTmp, 'w');
             fwrite($file, $fileContent);
             fclose($file);
 
-            if (!empty($data['step']) && $data['step'] == 'end') {
-                if (file_exists("{$tmpPath}{$GLOBALS['userId']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck")) {
-                    unlink("{$tmpPath}{$GLOBALS['userId']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck");
+            if (!empty($queryParams['step']) && $queryParams['step'] == 'end') {
+                if (file_exists("{$tmpPath}{$GLOBALS['id']}_maarchCM_{$args['jnlpUniqueId']}.lck")) {
+                    unlink("{$tmpPath}{$GLOBALS['id']}_maarchCM_{$args['jnlpUniqueId']}.lck");
                 }
             }
 
             $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => ['END_MESSAGE' => 'Update ok']]);
-        } elseif ($data['action'] == 'terminate') {
-            if (file_exists("{$tmpPath}{$GLOBALS['userId']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck")) {
-                unlink("{$tmpPath}{$GLOBALS['userId']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck");
+        } elseif ($queryParams['action'] == 'terminate') {
+            if (file_exists("{$tmpPath}{$GLOBALS['id']}_maarchCM_{$args['jnlpUniqueId']}.lck")) {
+                unlink("{$tmpPath}{$GLOBALS['id']}_maarchCM_{$args['jnlpUniqueId']}.lck");
             }
 
             $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => ['END_MESSAGE' => 'Terminate ok']]);
         } else {
             $result = [
                 'STATUS' => 'ko',
-                'OBJECT_TYPE'       => $data['objectType'],
-                'OBJECT_TABLE'      => $data['objectTable'],
-                'OBJECT_ID'         => $data['objectId'],
-                'UNIQUE_ID'         => $data['uniqueId'],
+                'OBJECT_TYPE'       => $queryParams['objectType'],
+                'OBJECT_TABLE'      => $queryParams['objectTable'],
+                'OBJECT_ID'         => $queryParams['objectId'],
+                'UNIQUE_ID'         => $queryParams['uniqueId'],
                 'APP_PATH'          => 'start',
                 'FILE_CONTENT'      => '',
                 'FILE_EXTENSION'    => '',
@@ -305,14 +337,15 @@ class JnlpController
     public function isLockFileExisting(Request $request, Response $response, array $aArgs)
     {
         $tmpPath = CoreConfigModel::getTmpPath();
-        $lockFileName = "{$GLOBALS['userId']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck";
+        $fileTrunk = "tmp_file_{$GLOBALS['id']}_{$aArgs['jnlpUniqueId']}";
+        $lockFileName = "{$GLOBALS['id']}_maarchCM_{$aArgs['jnlpUniqueId']}.lck";
 
         $fileFound = false;
         if (file_exists($tmpPath . $lockFileName)) {
             $fileFound = true;
         }
 
-        return $response->withJson(['lockFileFound' => $fileFound]);
+        return $response->withJson(['lockFileFound' => $fileFound, 'fileTrunk' => $fileTrunk]);
     }
 
     private static function generateResponse(array $aArgs)

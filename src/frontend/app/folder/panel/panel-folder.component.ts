@@ -14,8 +14,8 @@ export class PanelFolderComponent implements OnInit {
 
     lang: any = LANG;
 
-    showTree: boolean = false;
     @Input('selectedId') id: number;
+    @Input('showTree') showTree: boolean = false;
     @ViewChild('folderTree', { static: false }) folderTree: FolderTreeComponent;
     
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();

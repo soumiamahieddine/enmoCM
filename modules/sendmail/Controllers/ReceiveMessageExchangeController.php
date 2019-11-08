@@ -15,12 +15,12 @@
 
 namespace Sendmail\Controllers;
 
+use Group\controllers\PrivilegeController;
 use Resource\controllers\StoreController;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use User\models\UserModel;
 use SrcCore\models\CoreConfigModel;
-use Group\models\ServiceModel;
 use Entity\models\EntityModel;
 use Basket\models\BasketModel;
 use Resource\models\ResModel;
@@ -39,7 +39,7 @@ class ReceiveMessageExchangeController
 
     public function saveMessageExchange(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'save_numeric_package', 'userId' => $GLOBALS['userId'], 'location' => 'sendmail', 'type' => 'menu'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'save_numeric_package', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

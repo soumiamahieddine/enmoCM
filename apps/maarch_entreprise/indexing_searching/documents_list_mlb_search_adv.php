@@ -687,10 +687,10 @@ if ($mode == 'normal') {
                     if (!$core_tools->test_service('view_documents_with_notes', 'attachments', false)) {
                         $excludeAttachmentTypes[] = 'document_with_notes';
                     }
-                    $query = "SELECT count(res_id) as total FROM res_view_attachments 
+                    $query = "SELECT count(res_id) as total FROM res_attachments 
                             WHERE res_id_master = ? 
-                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN (?) AND coll_id = ?  AND (status <> 'TMP' or (typist = ? and status = 'TMP'))";
-                    $arrayPDO = array($tab[$i][0]['res_id'], $excludeAttachmentTypes, $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']);
+                            AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN (?) AND (status <> 'TMP' or (typist = ? and status = 'TMP'))";
+                    $arrayPDO = array($tab[$i][0]['res_id'], $excludeAttachmentTypes, $_SESSION['user']['UserId']);
                     $stmt2 = $db->query($query, $arrayPDO);
                     $return_count = $stmt2->fetchObject();
 

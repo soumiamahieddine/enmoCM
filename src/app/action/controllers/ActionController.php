@@ -13,13 +13,13 @@
 namespace Action\controllers;
 
 use Basket\models\GroupBasketRedirectModel;
+use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Action\models\ActionModel;
 use Status\models\StatusModel;
-use Group\models\ServiceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -27,7 +27,7 @@ class ActionController
 {
     public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_actions', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -78,7 +78,7 @@ class ActionController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_actions', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -121,7 +121,7 @@ class ActionController
 
     public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_actions', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -172,7 +172,7 @@ class ActionController
 
     public function delete(Request $request, Response $response, array $args)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_actions', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_actions', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

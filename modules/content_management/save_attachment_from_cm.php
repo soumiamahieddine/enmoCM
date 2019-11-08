@@ -122,11 +122,7 @@ if ($arrayIsAllowed['status'] == false) {
 				$docserverTypeObject = $docserverTypeControler->get($docserver->docserver_type_id);
 				$fingerprint         = Ds_doFingerprint($filetmp, $docserverTypeObject->fingerprint_mode);
 
-				if ($_SESSION['targetAttachment'] == 'add') {
-		        	$tableName = 'res_attachments';
-	        	} else if ($_SESSION['targetAttachment'] == 'edit') {
-		        	$tableName = 'res_version_attachments';
-                }
+				$tableName = 'res_attachments';
                 
                 //UPDATE NEW FILE PATH
 	        	$db->query('UPDATE '.$tableName.' SET fingerprint = ?, filesize = ?, path = ?, filename = ? WHERE res_id = ?', 
@@ -182,16 +178,9 @@ if ($arrayIsAllowed['status'] == false) {
 					$TableName      = RES_ATTACHMENTS_TABLE;
 
                 } else if ($_SESSION['targetAttachment'] == 'edit') {
-
-		            if ((int)$_SESSION['relationAttachment'] > 1) {
-		                $column_res = 'res_id_version';
-		            } else {
-		                $column_res = 'res_id';
-		            }
-
 		            $stmt = $db->query("SELECT attachment_type, identifier, relation, attachment_id_master 
-		                            FROM res_view_attachments
-		                            WHERE ".$column_res." = ? and res_id_master = ?
+		                            FROM res_attachments
+		                            WHERE res_id = ? and res_id_master = ?
 		                            ORDER BY relation desc", array($_SESSION['resIdVersionAttachment'], $_SESSION['doc_id']));
 
 					$previous_attachment = $stmt->fetchObject();
@@ -203,7 +192,7 @@ if ($arrayIsAllowed['status'] == false) {
                         $identifier      = null;    
                     }
 					$attachmentType      = $previous_attachment->attachment_type;
-					$TableName           = 'res_version_attachments';
+					$TableName           = 'res_attachments';
 
 					if ((int)$previous_attachment->attachment_id_master == 0) {
 						$attachmentIdMaster = $_SESSION['resIdVersionAttachment'];

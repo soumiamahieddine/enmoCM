@@ -1,17 +1,17 @@
 <mat-list *ngIf="!loading">
-    <plugin-autocomplete *ngIf="injectDatas.editable" [labelPlaceholder]="lang.addPerson" [routeDatas]="['/rest/autocomplete/maarchParapheurUsers']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addItem($event)" appearance="outline"></plugin-autocomplete>
+    <plugin-autocomplete *ngIf="adminMode" [labelPlaceholder]="lang.addPerson" [routeDatas]="['/rest/autocomplete/maarchParapheurUsers']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addItem($event)" appearance="outline"></plugin-autocomplete>
     <div cdkDropList #dataAvailableList="cdkDropList" [cdkDropListData]="visaWorkflow.items" class="cdk-list"
-        (cdkDropListDropped)="drop($event)" [cdkDropListDisabled]="!injectDatas.editable">
+        (cdkDropListDropped)="drop($event)" [cdkDropListDisabled]="!adminMode">
         <div class="emptyContent" *ngIf="visaWorkflow.items.length === 0">
             {{lang.noPerson}}
         </div>
         <mat-list-item *ngFor="let diffusion of visaWorkflow.items;let i=index" cdkDrag class="columns workflow"
-            [cdkDragDisabled]="!injectDatas.editable" [class.notDraggable]="!injectDatas.editable"
-            [class.notEditable]="!injectDatas.editable" [class.processed]="diffusion.process_date != null">
-            <mat-icon *ngIf="!injectDatas.editable" mat-list-icon class="fa fa-user fa-2x" color="primary"></mat-icon>
-            <mat-icon *ngIf="injectDatas.editable" class="avatar" mat-list-icon color="primary"
+            [cdkDragDisabled]="!adminMode" [class.notDraggable]="!adminMode"
+            [class.notEditable]="!adminMode" [class.processed]="diffusion.process_date != null">
+            <mat-icon *ngIf="!adminMode" mat-list-icon class="fa fa-user fa-2x" color="primary"></mat-icon>
+            <mat-icon *ngIf="adminMode" class="avatar" mat-list-icon color="primary"
                     [style.background-image]="'url('+diffusion.picture+')'"></mat-icon>
-            <ng-container *ngIf="!injectDatas.editable">
+            <ng-container *ngIf="!adminMode">
                 <mat-icon mat-list-icon class="fa fa-hourglass fa-2x"
                     [ngClass]="{'fa-hourglass': diffusion.process_date == null,'fa-check': diffusion.process_date != null}"
                     style="opacity:0.5;"></mat-icon>
@@ -30,12 +30,12 @@
                                                 | timeAgo}}</div>
                 </div>
                 <div>
-                    <button class="currentRoleButton" [color]="diffusion.requested_signature ? 'primary': '' " [disabled]="!injectDatas.editable" mat-raised-button
+                    <button class="currentRoleButton" [color]="diffusion.requested_signature ? 'primary': '' " [disabled]="!adminMode" mat-raised-button
                         title="{{lang[diffusion.currentRole+'User']}}" (click)="changeRole(i)">{{diffusion.requested_signature ? lang.signUser : lang.visaUser}}</button>
                 </div>
 
             </div>
-            <button mat-icon-button *ngIf="injectDatas.editable" (click)="deleteItem(i)">
+            <button mat-icon-button *ngIf="adminMode" (click)="deleteItem(i)">
                 <mat-icon class="fa fa-times" color="warn"></mat-icon>
             </button>
         </mat-list-item>

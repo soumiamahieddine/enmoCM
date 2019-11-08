@@ -9,9 +9,6 @@
 if (!defined('_ADMIN_BASKETS')) {
     define('_ADMIN_BASKETS', 'Bakjes');
 }
-if (!defined('_ADMIN_BASKETS_DESC')) {
-    define('_ADMIN_BASKETS_DESC', 'De inhoud van de bakjes bepalen en deze aan gebruikersgroepen toewijzen. De mogelijke omleidingen opnoemen bij het gebruik van het bakje door een gegeven groep. Een weergaveformaat van het bakje toekennen door deze groep.');
-}
 if (!defined('_USE_BASKETS')) {
     define('_USE_BASKETS', 'De bakjes gebruiken');
 }
@@ -77,9 +74,6 @@ if (!defined('_BASKET_VISIBLE')) {
 }
 if (!defined('_BASKETS_LIST')) {
     define('_BASKETS_LIST', 'Lijst van de bakjes');
-}
-if (!defined('_BASKETS')) {
-    define('_BASKETS', 'Bakjes');
 }
 if (!defined('_CHOOSE_BASKET')) {
     define('_CHOOSE_BASKET', 'Kies een bakje');

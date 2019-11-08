@@ -71,7 +71,7 @@ class ResourceListControllerTest extends TestCase
         $this->assertNotNull($responseBody->resources[0]->priorityColor);
         $this->assertNotNull($responseBody->resources[0]->statusImage);
         $this->assertNotNull($responseBody->resources[0]->statusLabel);
-        $this->assertInternalType('int', $responseBody->resources[0]->res_id);
+        $this->assertInternalType('int', $responseBody->resources[0]->resId);
         $this->assertSame('2 Breaking News : 12345 Superman is alive - PHP unit', $responseBody->resources[0]->subject);
 
         //  GET

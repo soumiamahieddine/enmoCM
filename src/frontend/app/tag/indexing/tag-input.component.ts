@@ -10,6 +10,7 @@ import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap, catchError } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
+import { PrivilegeService } from '../../../service/privileges.service';
 
 @Component({
     selector: 'app-tag-input',
@@ -53,18 +54,15 @@ export class TagInputComponent implements OnInit {
         public dialog: MatDialog,
         private headerService: HeaderService,
         public appService: AppService,
-        private latinisePipe: LatinisePipe
+        private latinisePipe: LatinisePipe,
+        private privilegeService: PrivilegeService
     ) {
 
     }
 
     ngOnInit() {
         this.controlAutocomplete.setValue(this.controlAutocomplete.value === null || this.controlAutocomplete.value === '' ? [] : this.controlAutocomplete.value);
-        this.http.get('../../rest/currentUser/privileges').pipe(
-            tap((data: any) => {
-                this.canAdd = data.privileges.canManageTags;
-            })
-        ).subscribe();
+        this.canAdd = this.privilegeService.hasCurrentUserPrivilege('manage_tags_application');
         this.initFormValue();
         this.initAutocompleteRoute();
     }

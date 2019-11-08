@@ -2,13 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { LANG } from '../../translate.component';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatSidenav } from '@angular/material/sidenav';
 import { HeaderService } from "../../../service/header.service";
-import { TechnicalAdministrationComponent } from "../technical/technical-administration.component";
 import { AppService } from '../../../service/app.service';
-
-declare function $j(selector: any): any;
+import { PrivilegeService } from '../../../service/privileges.service';
 
 @Component({
     templateUrl: "administration.component.html",
@@ -32,12 +29,8 @@ export class AdministrationComponent implements OnInit {
         public http: HttpClient, 
         private router: Router, 
         private headerService: HeaderService, 
-        private bottomSheet: MatBottomSheet,
-        public appService: AppService) {
-
-        $j("link[href='merged_css.php']").remove();
-
-    }
+        public appService: AppService,
+        private privilegeService: PrivilegeService) { }
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration);
@@ -46,32 +39,19 @@ export class AdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get('../../rest/administration')
-            .subscribe((data: any) => {
-                this.organisationServices = data.administrations.organisation;
-                this.productionServices = data.administrations.production;
-                this.classementServices = data.administrations.classement;
-                this.supervisionServices = data.administrations.supervision;
-                this.loading = false;
-            }, () => {
-                location.href = "index.php";
-            });
+        this.organisationServices = this.privilegeService.getCurrentUserAdministrationsByUnit('organisation');
+        this.productionServices = this.privilegeService.getCurrentUserAdministrationsByUnit('production');
+        this.classementServices = this.privilegeService.getCurrentUserAdministrationsByUnit('classement');
+        this.supervisionServices = this.privilegeService.getCurrentUserAdministrationsByUnit('supervision').filter(priv => priv.id !== 'view_history_batch');
+
+        this.loading = false;
     }
 
     goToSpecifiedAdministration(service: any): void {
-        if (service.angular == "true") {
-            if (service.id == 'admin_technical_configuration') {
-                this.openTechnicalAdmin();
-            } else {
-                this.router.navigate([service.servicepage]);
-            }
-            
+        if (service.angular === true) {
+            this.router.navigate([service.route]);   
         } else {
-            window.location.assign(service.servicepage);
+            window.location.assign(service.route);
         }
-    }
-
-    openTechnicalAdmin(): void {
-        this.bottomSheet.open(TechnicalAdministrationComponent);
     }
 }

@@ -1,0 +1,244 @@
+<mat-sidenav-container class="maarch-container">
+    <mat-sidenav #snavLeft class="panel-left" #snav [mode]="appService.getViewMode() ? 'over' : 'side'"
+        [fixedInViewport]="appService.getViewMode()" [opened]="appService.getViewMode() ? false : true"
+        autoFocus="false" style="overflow-x:hidden;" [ngStyle]="{'width': appService.getViewMode() ? '95%' : '600px'}">
+        <header-panel [snavLeft]="snav"
+            [navButton]="{icon: 'fa fa-inbox', label: lang.backBasket, route : '/basketList/users/'+currentUserId+'/groups/'+currentGroupId+'/baskets/'+currentBasketId}">
+        </header-panel>
+        <div class="listModels">
+            <div class="processTool">
+                <div class="processTool-module jiggle" *ngFor="let module of processTool"
+                    [class.processTool-module-active]="module.id === currentTool" matRipple
+                    (click)="currentTool = module.id">
+                    <i [class]="module.icon"></i>
+                    <span *ngIf="!appService.getViewMode()">{{module.label}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="indexing-form-container">
+            <div *ngIf="!isModalOpen() && currentTool !== 'dashboard'" style="display: flex;justify-content: flex-end;">
+                <button mat-icon-button (click)="createModal()" color="primary" [title]="lang.openInExternalModal">
+                    <mat-icon class="fas fa-external-link-alt"></mat-icon>
+                </button>
+            </div>
+            <ng-container *ngIf="currentTool === 'dashboard'">
+                <div
+                    style="display: flex;align-items: center;justify-content: flex-end;margin-top: 10px;margin-bottom: -20px;">
+                    <button mat-button class="categoryLabel" (click)="toggleMailTracking()"
+                        [title]="currentResourceInformations.mailtracking ? lang.untrackThisMail : lang.trackThisMail">
+                        {{currentResourceInformations.mailtracking ? lang.untrackThisMail : lang.trackThisMail}}
+                        <mat-icon color="primary"
+                            class="{{currentResourceInformations.mailtracking ? 'fas':'far'}} fa-star"
+                            style="font-size: 20px;"></mat-icon>
+                    </button>
+                </div>
+                <div class="banner" [style.borderColor]="currentPriorityColor">
+                    <div class="title" (click)="currentTool = 'history'">
+                        {{lang.history}}
+                        <div class="title-divider"></div>
+                    </div>
+                    <div class="content">
+                        <app-history-workflow-resume [resId]="currentResourceInformations.resId"
+                            (goTo)="currentTool = 'history'">
+                        </app-history-workflow-resume>
+                    </div>
+                </div>
+                <div class="banner" [style.borderColor]="currentPriorityColor">
+                    <div class="title" (click)="currentTool = 'notes'">
+                        {{lang.notesAlt}}
+                        <div class="title-divider"></div>
+                    </div>
+                    <div class="content">
+                        <app-note-resume [resId]="currentResourceInformations.resId" (goTo)="currentTool = 'notes'">
+                        </app-note-resume>
+                    </div>
+                </div>
+                <div class="banner" [style.borderColor]="currentPriorityColor">
+                    <div class="title" (click)="currentTool = 'attachments'">
+                        {{lang.attachments}}
+                        <div class="title-divider"></div>
+                    </div>
+                    <div class="content">
+                        <app-attachments-resume [resId]="currentResourceInformations.resId"
+                            (goTo)="currentTool = 'attachments'">
+                        </app-attachments-resume>
+                    </div>
+                </div>
+                <div class="banner" [style.borderColor]="currentPriorityColor">
+                    <div class="title" (click)="currentTool = 'mails'">
+                        {{lang.mailsSentAlt}}
+                        <div class="title-divider"></div>
+                    </div>
+                    <div class="content">
+                        <app-mail-resume [resId]="currentResourceInformations.resId" (goTo)="currentTool = 'mails'">
+                        </app-mail-resume>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!isModalOpen(); else elseTemplate">
+                <app-notes-list *ngIf="currentTool === 'notes'" #appNotesList [editMode]="true"
+                    [resId]="currentResourceInformations.resId">
+                </app-notes-list>
+                <app-diffusions-list *ngIf="currentTool === 'diffusionList'" #appDiffusionsList [adminMode]="false"
+                    [resId]="currentResourceInformations.resId" [expanded]="true">
+                </app-diffusions-list>
+                <app-visa-workflow *ngIf="currentTool === 'visa'" #appVisaWorkflow
+                    [resId]="currentResourceInformations.resId"></app-visa-workflow>
+                <app-avis-workflow *ngIf="currentTool === 'avis'" #appAvisWorkflow
+                    [resId]="currentResourceInformations.resId"></app-avis-workflow>
+                <app-attachments-list *ngIf="currentTool === 'attachments'" #appAttachmentsList
+                    [resId]="currentResourceInformations.resId">
+                </app-attachments-list>
+                <app-indexing-form *ngIf="currentTool === 'info'" #indexingForm [groupId]="currentGroupId"
+                    [indexingFormId]="1"></app-indexing-form>
+            </ng-container>
+            <ng-template #elseTemplate>
+                <div class="openedModal">
+                    <i class="fas fa-external-link-alt"></i>
+                    {{lang.openedInExternalModal}}
+                </div>
+            </ng-template>
+        </div>
+        <div class="actions-indexing-form">
+            <ng-container *ngIf="actionsList.length > 0 && selectedAction !== undefined">
+                <button mat-button class="button-form-primary" [disabled]="selectedAction.id === 0"
+                    [matMenuTriggerFor]="menu" style="width:350px;margin-right:20px;" [title]="selectedAction.label">
+                    <span class="menu-label" [innerHTML]="selectedAction.label">
+                    </span>
+                    <i class="fa fa-chevron-down menu-icon"></i></button>
+                <mat-menu #menu="matMenu" [class]="'menuForm menuAction'">
+                    <div class="menuTitle">
+                        <span>
+                            {{lang.actions}}
+                        </span>
+                        <mat-form-field floatLabel="never" appearance="outline" class="smallInput"
+                            (click)="$event.stopPropagation();">
+                            <input matInput id="searchTerm" placeholder="{{lang.filterBy}}" #listFilter
+                                autocomplete="off" (click)="$event.stopPropagation();"
+                                (keydown)="$event.stopPropagation()">
+                        </mat-form-field>
+                    </div>
+                    <ng-container *ngFor="let action of actionsList | filterList:listFilter.value:'label'">
+                        <button *ngIf="showActionInCurrentCategory(action)" mat-menu-item (click)="selectAction(action)"
+                            [title]="action.label" [class.listModels-menu-selected]="action.id === selectedAction.id">
+                            <span style="flex:1;">{{action.label}}</span>
+                        </button>
+                    </ng-container>
+                </mat-menu>
+                <button mat-button *ngIf="!appService.getViewMode()"
+                    [disabled]="actionService.loading || selectedAction.id === 0" class="button-form-primary-filled"
+                    style="width: 150px;align-items: center;justify-content: center;text-align: center;display: flex;"
+                    (click)="onSubmit()">{{lang.validate}}</button>
+                <button mat-icon-button *ngIf="appService.getViewMode()" class="button-form-primary"
+                    (click)="onSubmit()">
+                    <mat-icon class="fa fa-check"></mat-icon>
+                </button>
+            </ng-container>
+            <div class="emptyAction" *ngIf="actionsList.length === 0" [innerHTML]="lang.noAvailableActionProcess"></div>
+        </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="bg-head">
+            <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
+                <div class="bg-head-title-label">
+                    <header-left [snavLeft]="snav"></header-left>
+                </div>
+                <div class="bg-head-title-tool">
+                    <header-right></header-right>
+                </div>
+            </div>
+            <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()" style="padding-bottom: 20px;">
+                <div class="resourceInfo">
+                    <ng-container *ngIf="!loading; else elseInfoRes">
+                        <div class="title">
+                            <span style="white-space: nowrap;">
+                                {{this.currentResourceInformations.subject}}
+                            </span>
+                            <div class="title-divider"></div>
+                        </div>
+                        <div class="content">
+                            <div class="content-item" *ngIf="this.currentResourceInformations.priority !== undefined">
+                                <b><i class="fas fa-flag" [style.color]="this.currentResourceInformations.priorityColor"
+                                        style="font-size: 25px;padding-right: 20px;"></i>
+                                    {{this.currentResourceInformations.priorityLabel}}</b>
+                            </div>
+                            <div class="content-item">
+                                <div>{{lang.chronoNumberShort}} :</div>
+                                <div class="content-item-value" [title]="'N° '+this.currentResourceInformations.resId">
+                                    {{this.currentResourceInformations.chrono}}</div>
+                            </div>
+                            <div class="content-item">
+                                <div>{{lang.senders}} :</div>
+                                <div class="content-item-value">??? <i class="fas fa-circle"
+                                        style="color:#00CB55;font-size: 8px;"></i></div>
+                            </div>
+                            <div class="content-item"
+                                *ngIf="this.currentResourceInformations.processLimitDate !== undefined">
+                                <ng-container
+                                    *ngIf="this.currentResourceInformations.closingDate !== null; else elseLimitDate">
+                                    <div style="font-weight: bold;"
+                                        [title]="this.currentResourceInformations.closingDate | fullDate">
+                                        {{this.lang.closed}} {{this.lang.onRange}}
+                                        {{this.currentResourceInformations.closingDate | timeAgo}}&nbsp;&nbsp;<i
+                                            class="fa fa-lock"></i></div>
+                                </ng-container>
+                                <ng-template #elseLimitDate>
+                                    <div>{{lang.processLimitDate}} :</div>
+                                    <div class="content-item-value"
+                                        [title]="this.currentResourceInformations.processLimitDate | fullDate"
+                                        [innerHTML]="this.currentResourceInformations.processLimitDate | timeLimit : 'badge'">
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-template #elseInfoRes>
+                        <div class="loadingBanner">
+                            <mat-spinner diameter="35"></mat-spinner>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <div class="document-container" [class.fullContainer]="appService.getViewMode()">
+            <div class="content">
+                <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
+                    [resId]="currentResourceInformations.resId">
+                </app-document-viewer>
+            </div>
+        </div>
+    </mat-sidenav-content>
+    <mat-sidenav #snav2 [fixedInViewport]="appService.getViewMode()" position='end'
+        [opened]="appService.getViewMode() ? false : false" [mode]="appService.getViewMode() ? 'over' : 'side'"
+        class="panel-right" style="overflow-x:hidden;" [class.docView]="!filtersListService.filterMode"
+        [ngStyle]="{'width': appService.getViewMode() ? '80%' : '30%'}" autoFocus="false">
+    </mat-sidenav>
+</mat-sidenav-container>
+<div class="modal-module" cdkDrag *ngFor="let modal of modalModule; let i=index"
+    [class.largeModal]="modal.id === 'info'">
+    <div class="modal-module-title" cdkDragHandle>
+        <span>
+            {{modal.label}}
+        </span>
+        <button mat-icon-button (click)="removeModal(i)">
+            <mat-icon class="fas fa-times"></mat-icon>
+        </button>
+    </div>
+    <div class="modal-module-content">
+        <app-notes-list *ngIf="modal.id === 'notes'" #appNotesList [editMode]="true"
+            [resId]="currentResourceInformations.resId">
+        </app-notes-list>
+        <app-diffusions-list *ngIf="modal.id === 'diffusionList'" #appDiffusionsList [adminMode]="false"
+            [resId]="currentResourceInformations.resId" [expanded]="true">
+        </app-diffusions-list>
+        <app-visa-workflow *ngIf="modal.id === 'visa'" #appVisaWorkflow [resId]="currentResourceInformations.resId">
+        </app-visa-workflow>
+        <app-avis-workflow *ngIf="modal.id === 'avis'" #appAvisWorkflow [resId]="currentResourceInformations.resId">
+        </app-avis-workflow>
+        <app-attachments-list *ngIf="modal.id === 'attachments'" #appAttachmentsList
+            [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="reloadBadgeAttachments($event)">
+        </app-attachments-list>
+        <app-indexing-form *ngIf="modal.id === 'info'" #indexingForm [groupId]="currentGroupId" [indexingFormId]="1">
+        </app-indexing-form>
+    </div>
+</div>

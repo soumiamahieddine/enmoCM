@@ -15,9 +15,6 @@
 if (!defined('_ADMIN_REPORTS')) {
     define('_ADMIN_REPORTS', 'Statistieken');
 }
-if (!defined('_ADMIN_REPORTS_DESC')) {
-    define('_ADMIN_REPORTS_DESC', 'Beheer van de statussen en de bewerkingen');
-}
 if (!defined('_REPORTS')) {
     define('_REPORTS', 'Statistieken');
 }
@@ -26,9 +23,6 @@ if (!defined('_REPORTS_COMMENT')) {
 }
 if (!defined('_OTHER_REPORTS')) {
     define('_OTHER_REPORTS', 'Verschillende bewerkingen');
-}
-if (!defined('_REPORTS_DESC')) {
-    define('_REPORTS_DESC', 'Bewerkingen van de statussen');
 }
 if (!defined('_HAVE_TO_SELECT_GROUP')) {
     define('_HAVE_TO_SELECT_GROUP', 'U moet een groep selecteren');

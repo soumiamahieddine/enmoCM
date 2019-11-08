@@ -15,7 +15,7 @@
 namespace Configuration\controllers;
 
 use Configuration\models\ConfigurationModel;
-use Group\models\ServiceModel;
+use Group\controllers\PrivilegeController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -25,7 +25,7 @@ class ConfigurationController
 {
     public function getByService(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => $aArgs['service'], 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => $aArgs['service'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -43,7 +43,7 @@ class ConfigurationController
 
     public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => $aArgs['service'], 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => $aArgs['service'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

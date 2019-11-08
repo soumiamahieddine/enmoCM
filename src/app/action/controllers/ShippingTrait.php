@@ -54,8 +54,8 @@ trait ShippingTrait
         $shippingTemplate['account'] = json_decode($shippingTemplate['account'], true);
         $shippingTemplate['fee'] = json_decode($shippingTemplate['fee'], true);
 
-        $attachments = AttachmentModel::getOnView([
-            'select'    => ['res_id', 'res_id_version', 'title', 'dest_address_id', 'external_id'],
+        $attachments = AttachmentModel::get([
+            'select'    => ['res_id', 'title', 'dest_address_id', 'external_id'],
             'where'     => ['res_id_master = ?', 'in_send_attach = ?', 'status not in (?)', 'attachment_type not in (?)'],
             'data'      => [$args['resId'], true, ['OBS', 'DEL', 'TMP', 'FRZ'], ['print_folder']]
         ]);
@@ -65,20 +65,13 @@ trait ShippingTrait
 
         $contacts = [];
         foreach ($attachments as $attachment) {
-            if (!empty($attachment['res_id'])) {
-                $isVersion = false;
-                $attachmentId = $attachment['res_id'];
-            } else {
-                $isVersion = true;
-                $attachmentId = $attachment['res_id_version'];
-            }
+            $attachmentId = $attachment['res_id'];
 
             $convertedDocument = AdrModel::getConvertedDocumentById([
                 'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
                 'resId'     => $attachmentId,
                 'collId'    => 'attachments_coll',
-                'type'      => 'PDF',
-                'isVersion' => $isVersion
+                'type'      => 'PDF'
             ]);
             if (empty($convertedDocument)) {
                 return ['errors' => ['No conversion for attachment']];
@@ -119,13 +112,7 @@ trait ShippingTrait
         $errors = [];
         foreach ($attachments as $key => $attachment) {
             $sendingName = CoreConfigModel::uniqueId();
-            if (!empty($attachment['res_id'])) {
-                $isVersion = false;
-                $attachmentId = $attachment['res_id'];
-            } else {
-                $isVersion = true;
-                $attachmentId = $attachment['res_id_version'];
-            }
+            $attachmentId = $attachment['res_id'];
 
             $createSending = CurlModel::execSimple([
                 'url'           => $mailevaConfig['uri'] . '/mail/v1/sendings',
@@ -150,7 +137,7 @@ trait ShippingTrait
                 continue;
             }
 
-            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $attachmentId, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $attachmentId, 'collId' => 'attachments_coll']);
             $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
             if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
                 $errors[] = "Docserver does not exist for attachment {$attachmentId}";
@@ -223,7 +210,7 @@ trait ShippingTrait
 
             $externalId = json_decode($attachment['external_id'], true);
             $externalId['mailevaSendingId'] = $sendingId;
-            AttachmentModel::update(['isVersion' => $isVersion, 'set' => ['external_id' => json_encode($externalId)], 'where' => ['res_id = ?'], 'data' => [$attachmentId]]);
+            AttachmentModel::update(['set' => ['external_id' => json_encode($externalId)], 'where' => ['res_id = ?'], 'data' => [$attachmentId]]);
 
             $fee = ShippingTemplateController::calculShippingFee([
                 'fee'       => $shippingTemplate['fee'],
@@ -233,7 +220,6 @@ trait ShippingTrait
             ShippingModel::create([
                 'userId'            => $currentUser['id'],
                 'attachmentId'      => $attachmentId,
-                'isVersion'         => $isVersion,
                 'options'           => json_encode($shippingTemplate['options']),
                 'fee'               => $fee,
                 'recipientEntityId' => $recipientEntity['id'],

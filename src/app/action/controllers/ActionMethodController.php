@@ -85,14 +85,13 @@ class ActionMethodController
                 HistoryController::add([
                     'tableName' => 'res_letterbox',
                     'recordId'  => $resource,
-                    'eventType' => 'ACTION#' . $resource,
+                    'eventType' => 'ACTION#' . $aArgs['id'],
                     'moduleId'  => 'resource',
                     'eventId'   => $aArgs['id'],
                     'info'      => $info
                 ]);
 
-                //TODO M2M
-//                MessageExchangeReviewController::sendMessageExchangeReview(['res_id' => $resource, 'action_id' => $aArgs['id'], 'userId' => $GLOBALS['userId']]);
+                MessageExchangeReviewController::sendMessageExchangeReview(['res_id' => $resource, 'action_id' => $aArgs['id'], 'userId' => $GLOBALS['userId']]);
             }
         }
 

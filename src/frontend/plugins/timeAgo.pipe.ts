@@ -32,6 +32,7 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
 		month[10] = this.lang.novemberShort;
 		month[11] = this.lang.decemberShort;
 		let seconds = Math.round(Math.abs((now.getTime() - d.getTime())/1000));
+		let curentDayNumber = ('0' + now.getDate()).slice(-2);
 		let timeToUpdate = (Number.isNaN(seconds)) ? 1000 : this.getSecondsUntilUpdate(seconds) *1000;
 		this.timer = this.ngZone.runOutsideAngular(() => {
 			if (typeof window !== 'undefined') {
@@ -58,10 +59,10 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
 			return minutes + ' ' + this.lang.minutes;
 		} else if (minutes <= 90) {
 			return this.lang.oneHour;
-		} else if (hours <= 22) {
+		} else if (hours <= 24 && dayNumber === curentDayNumber) {
 			return hourNumber+':'+minuteNumber;
 			//return hours + ' heures';
-		} else if (hours <= 36) {
+		} else if (hours <= 24) {
 			return dayNumber+' '+ month[d.getMonth()];
 			//return 'un jour';
 		} else if (days <= 25) {

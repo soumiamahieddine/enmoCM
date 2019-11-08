@@ -20,15 +20,11 @@ INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readon
 VALUES ('FULLTEXT_DOCUMENT', 'FULLTEXT', 'Full text indexes for documents', 'N', 50000000000, 0, '/opt/maarch/docservers/indexes/documents/', '2019-11-01 12:00:00.123456', 'letterbox_coll');
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, size_limit_number, actual_size_number, path_template, creation_date, coll_id)
 VALUES ('FULLTEXT_ATTACHMENT', 'FULLTEXT', 'Full text indexes for attachments', 'N', 50000000000, 0, '/opt/maarch/docservers/indexes/attachments/', '2019-11-01 12:00:00.123456', 'attachments_coll');
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, size_limit_number, actual_size_number, path_template, creation_date, coll_id)
-VALUES ('FULLTEXT_ATTACHMENT_VERSION', 'FULLTEXT', 'Full text indexes for documents', 'N', 50000000000, 0, '/opt/maarch/docservers/indexes/attachments_version/', '2019-11-01 12:00:00.123456', 'attachments_version_coll');
 UPDATE docserver_types SET fingerprint_mode = NULL WHERE docserver_type_id = 'FULLTEXT';
 UPDATE res_letterbox SET fulltext_result = 'SUCCESS' WHERE fulltext_result = '1' OR fulltext_result = '2';
 UPDATE res_letterbox SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' OR fulltext_result = '-2';
 UPDATE res_attachments SET fulltext_result = 'SUCCESS' WHERE fulltext_result = '1' OR fulltext_result = '2';
 UPDATE res_attachments SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' OR fulltext_result = '-2';
-UPDATE res_version_attachments SET fulltext_result = 'SUCCESS' WHERE fulltext_result = '1' OR fulltext_result = '2';
-UPDATE res_version_attachments SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' OR fulltext_result = '-2';
 
 
 /* GROUPS INDEXING */
@@ -232,6 +228,21 @@ DO $$ BEGIN
 END$$;
 
 
+/* ATTACHMENTS */
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS origin_id;
+ALTER TABLE res_attachments ADD COLUMN origin_id INTEGER;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS modification_date;
+ALTER TABLE res_attachments ADD modification_date timestamp without time zone DEFAULT NOW();
+
+
+/* DOCSERVERS */
+UPDATE docservers SET coll_id = 'attachments_coll', is_readonly = 'Y' WHERE coll_id = 'attachments_version_coll' AND docserver_type_id = 'CONVERT';
+UPDATE docservers SET coll_id = 'attachments_coll', is_readonly = 'Y' WHERE coll_id = 'attachments_version_coll' AND docserver_type_id = 'FASTHD';
+UPDATE docservers SET coll_id = 'attachments_coll', is_readonly = 'Y' WHERE coll_id = 'attachments_version_coll' AND docserver_type_id = 'FULLTEXT';
+UPDATE docservers SET coll_id = 'attachments_coll', is_readonly = 'Y' WHERE coll_id = 'attachments_version_coll' AND docserver_type_id = 'TNL';
+UPDATE docservers SET docserver_type_id = 'DOC' WHERE coll_id = 'attachments_coll' AND docserver_type_id = 'FASTHD';
+
+
 /* MLB COLL EXT */
 DO $$ BEGIN
     IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'category_id') = 0 THEN
@@ -406,6 +417,17 @@ WHERE service_id = 'edit_recipient_outside_process' OR service_id = 'update_diff
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
 DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
+
+UPDATE usergroups_services SET service_id = 'manage_own_attachments_in_details' WHERE service_id = 'edit_attachments_from_detail';
+INSERT INTO usergroups_services (group_id, service_id)
+SELECT distinct(group_id), 'manage_attachments'
+FROM usergroups_services WHERE group_id IN (
+    SELECT group_id FROM usergroups_services
+    WHERE service_id = 'modify_attachments' OR service_id = 'delete_attachments'
+);
+DELETE FROM usergroups_services WHERE service_id = 'modify_attachments';
+DELETE FROM usergroups_services WHERE service_id = 'delete_attachments';
+
 UPDATE listmodels SET title = object_id WHERE title IS NULL;
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)AND', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)and', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
@@ -429,22 +451,17 @@ DO $$ BEGIN
   END IF;
 END$$;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS converter_result;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS converter_result;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS convert_result;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS convert_result;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS convert_result;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS convert_attempts;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS convert_attempts;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS convert_attempts;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS fulltext_attempts;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS fulltext_attempts;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS fulltext_attempts;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_attempts;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_attempts;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS tnl_attempts;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_result;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_result;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS tnl_result;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS coll_id;
 ALTER TABLE usergroups DROP COLUMN IF EXISTS enabled;
 ALTER TABLE actions DROP COLUMN IF EXISTS enabled;
 ALTER TABLE actions DROP COLUMN IF EXISTS origin;
@@ -452,7 +469,6 @@ ALTER TABLE actions DROP COLUMN IF EXISTS create_id;
 ALTER TABLE actions DROP COLUMN IF EXISTS category_id;
 DROP VIEW IF EXISTS fp_view_fileplan;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS folders_system_id;
-ALTER TABLE res_version_attachments DROP COLUMN IF EXISTS folders_system_id;
 DROP TABLE IF EXISTS foldertypes;
 DROP TABLE IF EXISTS foldertypes_doctypes;
 DROP TABLE IF EXISTS foldertypes_doctypes_level1;
@@ -477,42 +493,36 @@ ALTER TABLE listinstance DROP COLUMN IF EXISTS listinstance_type;
 ALTER TABLE listinstance DROP COLUMN IF EXISTS visible;
 ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_entity;
 ALTER TABLE usergroup_content DROP COLUMN IF EXISTS primary_group;
+ALTER TABLE emails ALTER COLUMN document type jsonb;
 
 /* M2M */
-UPDATE res_letterbox SET external_id = json_build_object('m2m', reference_number) FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id = 'message_exchange';
-UPDATE mlb SET nature_id = null, reference_number = null WHERE nature_id = 'message_exchange';
-
-/* RE CREATE VIEWS */
-CREATE VIEW res_view_attachments AS
-  SELECT '0' as res_id, res_id as res_id_version, title, subject, description, type_id, format, typist,
-  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, path,
-  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
-  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master, in_signature_book, in_send_attach, signatory_user_serial_id
-  FROM res_version_attachments
-  UNION ALL
-  SELECT res_id, '0' as res_id_version, title, subject, description, type_id, format, typist,
-  creation_date, fulltext_result, author, identifier, source, relation, doc_date, docserver_id, path,
-  filename, offset_doc, fingerprint, filesize, status, destination, validation_date, effective_date, origin, priority, initiator, dest_user, external_id,
-  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0', in_signature_book, in_send_attach, signatory_user_serial_id
-  FROM res_attachments;
-
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'mlb_coll_ext')) THEN
+    UPDATE res_letterbox SET external_id = json_build_object('m2m', reference_number), reference_number = null FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id = 'message_exchange';
+    UPDATE mlb_coll_ext SET nature_id = null WHERE nature_id = 'message_exchange';
+  END IF;
+END$$;
 
 /* DATA */
 TRUNCATE TABLE custom_fields;
 INSERT INTO custom_fields (id, label, type, values) VALUES (1, 'Nature', 'select', '["Courrier simple", "Courriel", "Courrier suivi", "Courrier avec AR", "Autre"]');
 SELECT setval('custom_fields_id_seq', (select max(id)+1 from custom_fields), false);
 
-TRUNCATE TABLE resources_custom_fields;
-INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-SELECT res_id, 1, '"Courrier simple"' FROM mlb_coll_ext WHERE nature_id = 'simple_mail';
-INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-SELECT res_id, 1, '"Courriel"' FROM mlb_coll_ext WHERE nature_id = 'email';
-INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-SELECT res_id, 1, '"Autre"' FROM mlb_coll_ext WHERE nature_id IN ('fax', 'other', 'courier');
-INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-SELECT res_id, 1, '"Courrier suivi"' FROM mlb_coll_ext WHERE nature_id IN ('chronopost', 'fedex');
-INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-SELECT res_id, 1, '"Courrier avec AR"' FROM mlb_coll_ext WHERE nature_id = 'registered_mail';
+DO $$ BEGIN
+  IF (SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'mlb_coll_ext')) THEN
+    TRUNCATE TABLE resources_custom_fields;
+    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+    SELECT res_id, 1, '"Courrier simple"' FROM mlb_coll_ext WHERE nature_id = 'simple_mail';
+    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+    SELECT res_id, 1, '"Courriel"' FROM mlb_coll_ext WHERE nature_id = 'email';
+    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+    SELECT res_id, 1, '"Autre"' FROM mlb_coll_ext WHERE nature_id IN ('fax', 'other', 'courier');
+    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+    SELECT res_id, 1, '"Courrier suivi"' FROM mlb_coll_ext WHERE nature_id IN ('chronopost', 'fedex');
+    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
+    SELECT res_id, 1, '"Courrier avec AR"' FROM mlb_coll_ext WHERE nature_id = 'registered_mail';
+  END IF;
+END$$;
 
 TRUNCATE TABLE indexing_models;
 INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (1, 'incoming', 'Courrier arrivée', TRUE, 23, FALSE);

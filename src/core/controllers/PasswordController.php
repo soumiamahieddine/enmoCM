@@ -14,7 +14,7 @@
 
 namespace SrcCore\controllers;
 
-use Group\models\ServiceModel;
+use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -31,7 +31,7 @@ class PasswordController
 
     public function updateRules(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_password_rules', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_password_rules', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

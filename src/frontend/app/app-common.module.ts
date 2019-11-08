@@ -20,6 +20,7 @@ import { CookieService }                        from 'ngx-cookie-service';
 import { TimeAgoPipe }                          from '../plugins/timeAgo.pipe';
 import { TimeLimitPipe }                        from '../plugins/timeLimit.pipe';
 import { FilterListPipe }                       from '../plugins/filterList.pipe';
+import { FullDatePipe }                       from '../plugins/fullDate.pipe';
 
 /*FRONT IMPORTS*/
 import { AppMaterialModule }                    from './app-material.module';
@@ -62,6 +63,7 @@ import { DragDropDirective }                        from '../app/viewer/upload-f
 import { DiffusionsListComponent }             from './diffusions/diffusions-list.component';
 
 import { DocumentViewerComponent }             from './viewer/document-viewer.component';
+import { HeaderService } from '../service/header.service';
 
 
 
@@ -99,6 +101,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         TimeAgoPipe,
         TimeLimitPipe,
         FilterListPipe,
+        FullDatePipe,
         IndexingGroupModalComponent,
         SmdFabSpeedDialComponent,
         SmdFabSpeedDialTrigger,
@@ -137,6 +140,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         TimeAgoPipe,
         TimeLimitPipe,
         FilterListPipe,
+        FullDatePipe,
         PdfViewerModule,
         NgStringPipesModule,
         SmdFabSpeedDialComponent,
@@ -154,6 +158,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         DragDropDirective
     ],
     providers: [
+        HeaderService,
         LatinisePipe,
         CookieService,
         {

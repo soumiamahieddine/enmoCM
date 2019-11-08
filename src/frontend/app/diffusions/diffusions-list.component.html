@@ -7,7 +7,7 @@
     </div>
     <ng-container *ngFor="let role of availableRoles">
         <mat-expansion-panel *ngIf="diffList[role.id].items.length > 0" class="diffusionList"
-            [expanded]="role.id === 'dest' || this.adminMode">
+            [expanded]="role.id === 'dest' || this.adminMode || expanded">
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     {{role.label}} <ng-container *ngIf="role.id !== 'dest'">({{diffList[role.id].items.length}})
@@ -41,7 +41,7 @@
                                 class="fa fa-chevron-down"></i></button>
                         <mat-menu #menu="matMenu" [class]="'roleListMenu'">
                             <ng-container *ngFor="let selectRole of availableRoles">
-                                <button mat-menu-item *ngIf="selectRole.canUpdate"
+                                <button mat-menu-item *ngIf="selectRole.canUpdate || (selectRole.id !== 'dest' && target === 'redirect')"
                                     (click)="changeRole(diffusion,role,selectRole)"
                                     style="font-size:13px;">{{selectRole.label}}</button>
                             </ng-container>

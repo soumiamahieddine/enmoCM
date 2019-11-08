@@ -214,8 +214,8 @@ function Bt_createAttachment($aArgs = [])
     array_push($dataValue, ['column' => 'relation',         'value' => $relation,                 'type' => 'integer']);
     array_push($dataValue, ['column' => 'in_signature_book','value' => $inSignatureBook,          'type' => 'bool']);
 
-    if (!empty($aArgs['attachment_id_master'])) {
-        array_push($dataValue, ['column' => 'attachment_id_master','value' => $aArgs['attachment_id_master'], 'type' => 'integer']);
+    if (!empty($aArgs['origin_id'])) {
+        array_push($dataValue, ['column' => 'origin_id','value' => $aArgs['origin_id'], 'type' => 'integer']);
     }
 
     $allDatas = [
@@ -292,7 +292,7 @@ function Bt_refusedSignedMail($aArgs = [])
 
 function Bt_validatedMail($aArgs = [])
 {
-    $req       = "SELECT count(1) as nbresult FROM res_view_attachments WHERE res_id_master = ? AND status = ?";
+    $req       = "SELECT count(1) as nbresult FROM res_attachments WHERE res_id_master = ? AND status = ?";
     $stmt      = $GLOBALS['db']->query($req, array($aArgs['resId'], 'FRZ'));
     $reqResult = $stmt->fetchObject();
     if ($reqResult->nbresult == 0) {

@@ -31,6 +31,8 @@
 
 
 // To activate de debug mode of the class
+use Group\controllers\PrivilegeController;
+
 $_ENV['DEBUG'] = false;
 /*
 define("_CODE_SEPARATOR","/");
@@ -79,20 +81,19 @@ class ServiceControler
 	public function loadEnabledServices()
 	{
 		$_SESSION['enabled_services'] = array();
-		for($i=0; $i<count($_SESSION['app_services']);$i++)
-		{
-			if($_SESSION['app_services'][$i]['enabled'] == "true")
-			{
-				array_push($_SESSION['enabled_services'], array('id' => $_SESSION['app_services'][$i]['id'], 'label' => $_SESSION['app_services'][$i]['name'], 'comment' =>$_SESSION['app_services'][$i]['comment'], 'type' => $_SESSION['app_services'][$i]['servicetype'],'parent' => 'application', 'system' => $_SESSION['app_services'][$i]['system_service']));
+		if (!empty($_SESSION['app_services'])) {
+			for ($i = 0; $i < count($_SESSION['app_services']); $i++) {
+				if ($_SESSION['app_services'][$i]['enabled'] == "true") {
+					array_push($_SESSION['enabled_services'], array('id' => $_SESSION['app_services'][$i]['id'], 'label' => $_SESSION['app_services'][$i]['name'], 'comment' => $_SESSION['app_services'][$i]['comment'], 'type' => $_SESSION['app_services'][$i]['servicetype'], 'parent' => 'application', 'system' => $_SESSION['app_services'][$i]['system_service']));
+				}
 			}
 		}
-		foreach(array_keys($_SESSION['modules_services']) as $value)
-		{
-			for($i=0; $i < count($_SESSION['modules_services'][$value]); $i++)
-			{
-				if($_SESSION['modules_services'][$value][$i]['enabled'] == "true")
-				{
-					array_push($_SESSION['enabled_services'], array('id' => $_SESSION['modules_services'][$value][$i]['id'], 'label' => $_SESSION['modules_services'][$value][$i]['name'], 'comment' => $_SESSION['modules_services'][$value][$i]['comment'], 'type' => $_SESSION['modules_services'][$value][$i]['servicetype'],'parent' => $value, 'system' =>$_SESSION['modules_services'][$value][$i]['system_service'] ));
+		if (!empty($_SESSION["modules_services"])) {
+			foreach (array_keys($_SESSION['modules_services']) as $value) {
+				for ($i = 0; $i < count($_SESSION['modules_services'][$value]); $i++) {
+					if ($_SESSION['modules_services'][$value][$i]['enabled'] == "true") {
+						array_push($_SESSION['enabled_services'], array('id' => $_SESSION['modules_services'][$value][$i]['id'], 'label' => $_SESSION['modules_services'][$value][$i]['name'], 'comment' => $_SESSION['modules_services'][$value][$i]['comment'], 'type' => $_SESSION['modules_services'][$value][$i]['servicetype'], 'parent' => $value, 'system' => $_SESSION['modules_services'][$value][$i]['system_service']));
+					}
 				}
 			}
 		}
@@ -112,9 +113,10 @@ class ServiceControler
 		// associés aux groupes
 		if($user_id == "superadmin")
 		{
-			$services = self::getAllServices();
+//			$services = self::getAllServices();
+			return ['adv_search_mlb' => true, 'reports' => true];
 		}
-		else
+		/*else
 		{
 			$tmpServices = array();
 			for ($i = 0; $i < count($_SESSION['enabled_services']); $i ++) {
@@ -141,7 +143,18 @@ class ServiceControler
 					$services[$serviceId] = false;
 				}
 			}
+		}*/
+
+		$services = ['adv_search_mlb' => false, 'reports' => false];
+		$userUse = \User\models\UserModel::getByLogin(['login' => $user_id, 'select' => ['id']]);
+
+		if (PrivilegeController::hasPrivilege(['privilegeId' => 'adv_search_mlb', 'userId' => $userUse['id']])) {
+			$services['adv_search_mlb'] = true;
 		}
+		if (PrivilegeController::hasPrivilege(['privilegeId' => 'reports', 'userId' => $userUse['id']])) {
+			$services['reports'] = true;
+		}
+
 		return $services;
 	}
 

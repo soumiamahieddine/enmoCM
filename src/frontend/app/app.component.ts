@@ -42,7 +42,7 @@ export class AppComponent {
         iconReg.addSvgIcon('maarchLogo', sanitizer.bypassSecurityTrustResourceUrl('static.php?filename=logo_white.svg')).addSvgIcon('maarchLogoOnly', sanitizer.bypassSecurityTrustResourceUrl('img/logo_only_white.svg'));
         iconReg.addSvgIcon('maarchLogoFull', sanitizer.bypassSecurityTrustResourceUrl('static.php?filename=logo.svg')).addSvgIcon('maarchLogoOnlyDefault', sanitizer.bypassSecurityTrustResourceUrl('img/logo.svg'));
 
-        this.headerService.loadHeader();
+        //this.headerService.loadHeader();
 
         /*REMOVE AFTER FULL MAARCH V2*/
         $j('my-app').css({"display":"block"});

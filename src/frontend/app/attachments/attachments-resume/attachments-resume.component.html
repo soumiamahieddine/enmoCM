@@ -1,0 +1,29 @@
+<ng-container *ngIf="loading; else elseTemplate">
+    <div class="loading">
+        <mat-spinner diameter="35"></mat-spinner>
+    </div>
+</ng-container>
+<ng-template #elseTemplate>
+    <div class="attachmentsList" *ngFor="let attachment of attachments" (click)="showAttachment(attachment)">
+        <ng-container *ngIf="attachment.update_date !== null; else elseTemplate">
+            <div class="date" [title]="attachment.update_date | fullDate">
+                {{attachment.update_date | timeAgo}}
+            </div>
+        </ng-container>
+        <ng-template #elseTemplate>
+            <div class="date" [title]="attachment.creation_date | fullDate">
+                {{attachment.creation_date | timeAgo}}
+            </div>
+        </ng-template>
+        <div class="info">
+            {{attachment.title | shorten: 110: '...'}}
+        </div>
+        <div class="attachmentType">
+            {{attachment.typeLabel}}
+        </div>
+    </div>
+    <button mat-button *ngIf="attachments.length === 3" class="showMore" (click)="showMore()">{{lang.showMore}}</button>
+    <div class="noData" *ngIf="attachments.length === 0">
+        {{lang.noAttachment}}
+    </div>
+</ng-template>

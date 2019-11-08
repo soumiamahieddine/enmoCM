@@ -32,9 +32,9 @@ class XParaphController
 {
     public static function sendDatas($aArgs)
     {
-        $attachments = AttachmentModel::getOnView([
+        $attachments = AttachmentModel::get([
             'select'    => [
-                'res_id', 'res_id_version', 'title', 'docserver_id', 'path', 'filename'],
+                'res_id', 'title', 'docserver_id', 'path', 'filename'],
             'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
             'data'      => [$aArgs['resIdMaster'], ['converted_pdf', 'print_folder', 'signed_response']]
         ]);
@@ -60,17 +60,10 @@ class XParaphController
         }
 
         foreach ($attachments as $value) {
-            if (!empty($value['res_id'])) {
-                $resId      = $value['res_id'];
-                $collId     = 'attachments_coll';
-                $is_version = false;
-            } else {
-                $resId      = $value['res_id_version'];
-                $collId     = 'attachments_version_coll';
-                $is_version = true;
-            }
-
-            $adrInfo       = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId, 'isVersion' => $is_version]);
+            $resId      = $value['res_id'];
+            $collId     = 'attachments_coll';
+            
+            $adrInfo       = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId]);
             $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
             $filePath      = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
             
@@ -140,8 +133,7 @@ class XParaphController
 
                 $aAttachment = AttachmentModel::getById([
                     'select'    => ['external_id'],
-                    'id'        => $resId,
-                    'isVersion' => $is_version
+                    'id'        => $resId
                 ]);
     
                 $externalId = json_decode($aAttachment[0]['external_id'], true);
@@ -150,8 +142,7 @@ class XParaphController
                 AttachmentModel::update([
                     'set'       => ['external_id' => json_encode($externalId)],
                     'where'     => ['res_id = ?'],
-                    'data'      => [$resId],
-                    'isVersion' => $is_version
+                    'data'      => [$resId]
                 ]);
             }
         }
@@ -382,7 +373,7 @@ class XParaphController
     {
         $tmpPath = CoreConfigModel::getTmpPath();
 
-        foreach (['noVersion', 'isVersion'] as $version) {
+        foreach (['noVersion'] as $version) {
             $depotsBySiret = [];
             foreach ($aArgs['idsToRetrieve'][$version] as $resId => $value) {
                 $externalId = json_decode($value->xparaphdepot, true);

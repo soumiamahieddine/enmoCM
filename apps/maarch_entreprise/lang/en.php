@@ -62,32 +62,14 @@ if (!defined('_PROCESSING_MODE')) {
 if (!defined('_ADMIN_USERS')) {
     define('_ADMIN_USERS', 'Users');
 }
-if (!defined('_ADMIN_DOCSERVERS')) {
-    define('_ADMIN_DOCSERVERS', 'Storage zones');
-}
-if (!defined('_ADMIN_USERS_DESC')) {
-    define('_ADMIN_USERS_DESC', 'Add, suspend or modify users profiles. Place the users in their affiliation groups and define their primary group.');
-}
-if (!defined('_ADMIN_DOCSERVERS_DESC')) {
-    define('_ADMIN_DOCSERVERS_DESC', 'Add, suspend or modify storage zones. Put the storage zones by kind of affiliations and define their primary group.');
-}
 if (!defined('_ADMIN_GROUPS')) {
     define('_ADMIN_GROUPS', 'users groups');
-}
-if (!defined('_ADMIN_GROUPS_DESC')) {
-    define('_ADMIN_GROUPS_DESC', 'Add, suspend or modify users groups. Set privileges or authorization to access resources.');
 }
 if (!defined('_VIEW_HISTORY')) {
     define('_VIEW_HISTORY', 'History');
 }
 if (!defined('_VIEW_HISTORY_BATCH')) {
     define('_VIEW_HISTORY_BATCH', 'Batch history');
-}
-if (!defined('_VIEW_HISTORY_DESC')) {
-    define('_VIEW_HISTORY_DESC', 'Read the events history linked to the utilisation of Maarch.');
-}
-if (!defined('_VIEW_FULL_HISTORY_DESC')) {
-    define('_VIEW_FULL_HISTORY_DESC', 'Read the full events history linked to the utilisation of Maarch GED.');
 }
 if (!defined('_VIEW_HISTORY_BATCH_DESC')) {
     define('_VIEW_HISTORY_BATCH_DESC', 'Read batch history');
@@ -109,9 +91,6 @@ if (!defined('_APPS_SERVICES')) {
 }
 if (!defined('_ADMIN_STATUS_DESC')) {
     define('_ADMIN_STATUS_DESC', 'Create or modify status.');
-}
-if (!defined('_ADMIN_ACTIONS_DESC')) {
-    define('_ADMIN_ACTIONS_DESC', 'Create or modify actions.');
 }
 if (!defined('_NO_RIGHTS_ON')) {
     define('_NO_RIGHTS_ON', 'No right on');
@@ -589,24 +568,6 @@ if (!defined('_CARD')) {
 }
 
 /************************* First login ***********************************/
-if (!defined('_MODIFICATION_PSW')) {
-    define('_MODIFICATION_PSW', 'Password modification');
-}
-if (!defined('_YOUR_FIRST_CONNEXION')) {
-    define('_YOUR_FIRST_CONNEXION', ' Welcome on Maarch !<br/> This is your first connection');
-}
-if (!defined('_PLEASE_CHANGE_PSW')) {
-    define('_PLEASE_CHANGE_PSW', ' Please define your password');
-}
-if (!defined('_ASKED_ONLY_ONCE')) {
-    define('_ASKED_ONLY_ONCE', 'This will be asked once');
-}
-if (!defined('_PSW_REINI')) {
-    define('_PSW_REINI', 'Your password has been rebooted. Please define a new one.');
-}
-if (!defined('_FIRST_CONN')) {
-    define('_FIRST_CONN', 'First connection');
-}
 if (!defined('_LOGIN')) {
     define('_LOGIN', 'Connection');
 }
@@ -626,9 +587,6 @@ if (!defined('_LOGOUT')) {
 }
 if (!defined('_MENU')) {
     define('_MENU', 'Menu');
-}
-if (!defined('_ADMIN')) {
-    define('_ADMIN', 'Administration');
 }
 if (!defined('_SUMMARY')) {
     define('_SUMMARY', 'Summary');
@@ -806,15 +764,6 @@ if (!defined('_ROLE')) {
     define('_ROLE', 'Role');
 }
 
-if (!defined('_THE_PSW')) {
-    define('_THE_PSW', 'The password');
-}
-if (!defined('_THE_PSW_VALIDATION')) {
-    define('_THE_PSW_VALIDATION', 'The password validation');
-}
-if (!defined('_MODIFICATION_PSW_SNTE')) {
-    define('_MODIFICATION_PSW_SNTE', 'To modify your password, please confirm it.');
-}
 if (!defined('_USER_ACCESS_DEPARTMENT')) {
     define('_USER_ACCESS_DEPARTMENT', 'The user has access to the following departments');
 }
@@ -1078,12 +1027,6 @@ if (!defined('_HISTORY_TITLE')) {
 }
 if (!defined('_HISTORY_BATCH_TITLE')) {
     define('_HISTORY_BATCH_TITLE', 'Batch events history');
-}
-if (!defined('_HISTORY')) {
-    define('_HISTORY', 'History');
-}
-if (!defined('_HISTORY_BATCH')) {
-    define('_HISTORY_BATCH', 'Batch history');
 }
 if (!defined('_BATCH_NAME')) {
     define('_BATCH_NAME', 'Batch name');
@@ -2140,15 +2083,6 @@ if (!defined('_DUPLICATES_BY_NAME')) {
 }
 if (!defined('_IS_ATTACHED_TO_DOC')) {
     define('_IS_ATTACHED_TO_DOC', 'Attached to documents ?');
-}
-if (!defined('_RES_ATTACHED')) {
-    define('_RES_ATTACHED', 'Attached documents');
-}
-if (!defined('_SELECT_CONTACT_TO_REPLACE')) {
-    define('_SELECT_CONTACT_TO_REPLACE', 'Select the contact and the address to replace');
-}
-if (!defined('_ARE_YOU_SURE_TO_DELETE_CONTACT')) {
-    define('_ARE_YOU_SURE_TO_DELETE_CONTACT', 'Are you sure to delete this contact ?');
 }
 if (!defined('_CONTACT_CHECK')) {
     define('_CONTACT_CHECK', 'A recently recorded mail at least is affected to the same contact.');
@@ -3225,12 +3159,6 @@ if (!defined('_MANAGE_DOCSERVER_TYPES')) {
 if (!defined('_MANAGE_DOCSERVER_TYPES_DESC')) {
     define('_MANAGE_DOCSERVER_TYPES_DESC', 'Add, modify, delete the types of storage zones ');
 }
-if (!defined('_ADMIN_DOCSERVERS')) {
-    define('_ADMIN_DOCSERVERS', ' Administration of storage zones');
-}
-if (!defined('_ADMIN_DOCSERVERS_DESC')) {
-    define('_ADMIN_DOCSERVERS_DESC', ' Add, modify, delete storage zones');
-}
 if (!defined('_DOCSERVER_ID')) {
     define('_DOCSERVER_ID', 'Document server ID');
 }
@@ -3496,9 +3424,6 @@ if (!defined('_SYNTAX_OK')) {
 /************TECHNICAL INFOS******************************/
 if (!defined('_TECHNICAL_INFORMATIONS')) {
     define('_TECHNICAL_INFORMATIONS', 'Technical information');
-}
-if (!defined('_VIEW_TECHNICAL_INFORMATIONS')) {
-    define('_VIEW_TECHNICAL_INFORMATIONS', 'See technical information');
 }
 if (!defined('_SOURCE_FILE_PROPERTIES')) {
     define('_SOURCE_FILE_PROPERTIES', 'Properties of source file');
@@ -3815,9 +3740,6 @@ if (!defined('_DEPARTMENT_OWNER')) {
 }
 
 /********************Parameters **************/
-if (!defined('_PARAMETERS')) {
-    define('_PARAMETERS', 'Configuration(s)');
-}
 if (!defined('_PARAMETER')) {
     define('_PARAMETER', 'Configuration');
 }
@@ -4020,14 +3942,6 @@ if (!defined('_EXPORT_CONTACT')) {
 //INDEXATION WITHOUT FILE
 if (!defined('_WITHOUT_FILE')) {
     define('_WITHOUT_FILE', 'Without file');
-}
-
-//SERVICE VIEW DOC HISTORY
-if (!defined('_VIEW_DOC_HISTORY')) {
-    define('_VIEW_DOC_HISTORY', 'See global mail history');
-}
-if (!defined('_VIEW_FULL_HISTORY')) {
-    define('_VIEW_FULL_HISTORY', 'See Full mail history');
 }
 
 //ONLY ALPHANUM
@@ -4280,18 +4194,12 @@ if (!defined('_CURRENT_PSW')) {
 if (!defined('_NEW_PSW')) {
     define('_NEW_PSW', 'New password');
 }
-if (!defined('_REENTER_PSW')) {
-    define('_REENTER_PSW', 'Enter the password again');
-}
 if (!defined('_UPDATED_PROFILE')) {
     define('_UPDATED_PROFILE', 'Your profile has been updated');
 }
 
 if (!defined('_WRONG_PSW')) {
     define('_WRONG_PSW', 'Wrong password');
-}
-if (!defined('_WRONG_SECOND_PSW')) {
-    define('_WRONG_SECOND_PSW', 'The second password isn\'t equivalent to the first password !');
 }
 if (!defined('_EMPTY_PSW_FORM')) {
     define('_EMPTY_PSW_FORM', 'Password form is not complete');
@@ -4433,9 +4341,6 @@ if (!defined('_DELETED_PRIORITY')) {
 if (!defined('_ADDRESS_NB')) {
     define('_ADDRESS_NB', 'Address number');
 }
-if (!defined('_SAVE_NUMERIC_PACKAGE')) {
-    define('_SAVE_NUMERIC_PACKAGE', 'Save numeric package');
-}
 if (!defined('_INVALID')) {
     define('_INVALID', 'n\'est pas valide');
 }
@@ -4461,15 +4366,6 @@ if (!defined('_SAVE_POSITION')) {
 
 /***** History *****/
 
-if (!defined('_DELETE_DOCUMENT_IN_DETAIL')) {
-    define('_DELETE_DOCUMENT_IN_DETAIL', 'Delete a document in detail page');
-}
-if (!defined('_EDIT_DOCUMENT_IN_DETAIL')) {
-    define('_EDIT_DOCUMENT_IN_DETAIL', 'Edit a document in detail page');
-}
-if (!defined('_EDIT_DOCUMENT_IN_DETAIL_DESC')) {
-    define('_EDIT_DOCUMENT_IN_DETAIL_DESC', 'Edit a document in detail page. Il will also depend on status setting (Index modification)');
-}
 if (!defined('_REF_SEARCH')) {
     define('_REF_SEARCH', 'Referential search');
 }

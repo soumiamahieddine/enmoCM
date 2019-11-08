@@ -32,7 +32,6 @@
 
 abstract class attachments_controler_Abstract
 {
-    
     public function initAttachmentInfos($resId)
     {
         $db = new Database();
@@ -161,8 +160,8 @@ abstract class attachments_controler_Abstract
         
         $stmt = $db->query(
             "SELECT * 
-                FROM res_view_attachments 
-                WHERE (res_id = ? OR res_id_version = ?) and res_id_master = ? ORDER BY relation desc",
+                FROM res_attachments 
+                WHERE res_id = ? and res_id_master = ? ORDER BY relation desc",
             array($resId, $resId, $_SESSION['doc_id'])
         );
         
@@ -210,16 +209,9 @@ abstract class attachments_controler_Abstract
             $infos['effective_date'] = $line->effective_date;
             $infos['res_id_master'] = $line->res_id_master;
             $infos['identifier'] = $line->identifier;
-            if (!empty($line->res_id_version)) {
-                $infos['is_version'] =  true;
-                if (empty($infos['target_table_origin'])) {
-                    $infos['target_table_origin'] = 'res_version_attachments';
-                }
-            } else {
-                $infos['is_version'] =  false;
-                if (empty($infos['target_table_origin'])) {
-                    $infos['target_table_origin'] = 'res_attachments';
-                }
+            
+            if (empty($infos['target_table_origin'])) {
+                $infos['target_table_origin'] = 'res_attachments';
             }
             
             //contact
@@ -281,15 +273,12 @@ abstract class attachments_controler_Abstract
         $result = 0;
         $stmt2 = $db2->query(
             "SELECT res_id
-                FROM res_view_attachments 
+                FROM res_attachments 
                 WHERE path = ? AND filename = ? and attachment_type = 'converted_pdf' ORDER BY relation desc",
                 array($infos['path'],pathinfo($infos['pathfile_pdf'], PATHINFO_BASENAME))
         );
         $line = $stmt2->fetchObject();
-        
-        if ($line->res_id != 0) {
-            $result = $line->res_id;
-        }
+
         return $result;
     }
 
@@ -305,8 +294,8 @@ abstract class attachments_controler_Abstract
         $db = new Database();
         $stmt = $db->query(
             "SELECT docserver_id, path, filename, fingerprint
-                FROM res_view_attachments
-                WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? AND status = 'TMP' AND typist = ? ORDER BY relation desc",
+                FROM res_attachments
+                WHERE res_id = ? AND res_id_master = ? AND status = 'TMP' AND typist = ? ORDER BY relation desc",
             array($resIdAttachment, $resIdAttachment, $resIdMaster, $userId)
         );
 

@@ -71,60 +71,6 @@ class FastParapheurController
                 }
             }
         }
-        foreach($aArgs['idsToRetrieve']['isVersion'] as $isVersion){
-            $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
-            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sei="http://sei.ws.fast.cdc.com/">
-                <soapenv:Header/>
-                    <soapenv:Body>
-                        <sei:history>
-                            <documentId>' .  $isVersion->external_id . '</documentId>
-                        </sei:history>
-                    </soapenv:Body>
-             </soapenv:Envelope>';
-
-            $curlReturn = \SrcCore\models\CurlModel::execSOAP([
-                'xmlPostString' => $xmlPostString,
-                'url'           => $aArgs['config']['data']['url'],
-                'options'       => [
-                    CURLOPT_SSLCERT         => $aArgs['config']['data']['certPath'],
-                    CURLOPT_SSLCERTPASSWD   => $aArgs['config']['data']['certPass'],
-                    CURLOPT_SSLCERTTYPE     => $aArgs['config']['data']['certType']
-                ]
-            ]);
-
-            $isError    = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body;
-            if(!empty($isError ->Fault[0])){
-                // TODO gestion des erreurs
-                echo _PJ_NUMBER . $isVersion->res_id . ' ' . _AND_DOC_ORIG . $isVersion->res_id_master . ' : ' . (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
-                continue;
-            }
-
-            $response = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children('http://sei.ws.fast.cdc.com/')->historyResponse->children();
-            foreach ($response->return as $res){    // Loop on all steps of the documents (prepared, send to signature, signed etc...)
-                $state = (string) $res->stateName;
-                if($state == $aArgs['config']['data']['validatedState']){
-                    $response = self::download(['config' => $aArgs['config'], 'documentId' => $isVersion->external_id]);
-                    $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->status = 'validated';
-                    $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->format = 'pdf';
-                    $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->encodedFile = $response['b64FileContent'];
-                    break;
-                }else if($state == $aArgs['config']['data']['refusedState']){
-                    $GLOBALS['db'] = new \SrcCore\models\DatabasePDO(['customId' => $GLOBALS['CustomId']]);
-                    $query = $GLOBALS['db']->query(
-                        "SELECT user_id, firstname, lastname FROM listinstance LEFT JOIN users ON item_id = user_id WHERE res_id = ? AND item_mode = ?",
-                        [$aArgs['idsToRetrieve']['noVersion'][$noVersion->res_id]->res_id_master, 'sign']
-                    );
-                    $res = $query->fetchObject();
-
-                    $response = self::getRefusalMessage(['config' => $aArgs['config'], 'documentId' => $isVersion->external_id]);
-                    $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->status = 'refused';
-                    $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->noteContent = $res->lastname . ' ' . $res->firstname . ' : ' . $response;
-                    break;
-                }else{
-                    $aArgs['idsToRetrieve']['isVersion'][$isVersion->res_id]->status = 'waiting';
-                }
-            }
-        }
         return $aArgs['idsToRetrieve'];
     }
 
@@ -146,7 +92,7 @@ class FastParapheurController
             $annexes['letterbox'][0]['filePath'] = $letterboxPath['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $annexes['letterbox'][0]['path']) . $annexes['letterbox'][0]['filename'];
         }
 
-        $annexes['attachments']     = \Attachment\models\AttachmentModel::getOnView([
+        $annexes['attachments']     = \Attachment\models\AttachmentModel::get([
             'select'                => ['res_id', 'path', 'filename', 'format'],
             'where'                 => ['res_id_master = ?', 'attachment_type not in (?)', "status NOT IN ('DEL','OBS')", 'in_signature_book = FALSE'],
             'data'                  => [$aArgs['resIdMaster'], 'print_folder']
@@ -154,28 +100,24 @@ class FastParapheurController
 
         if(!empty($annexes['attachments'])){
             for($i = 0; $i < count($annexes['attachments']); $i++){
-                $annexAttachmentInfo                    = \Attachment\models\AttachmentModel::getById(['id' => $annexes['attachments'][$i]['res_id'], 'isVersion' => false]);
+                $annexAttachmentInfo                    = \Attachment\models\AttachmentModel::getById(['id' => $annexes['attachments'][$i]['res_id']]);
                 $annexAttachmentPath                    = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $annexAttachmentInfo['docserver_id'], 'select' => ['path_template']]);
                 $annexes['attachments'][$i]['filePath'] = $annexAttachmentPath['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $annexes['attachments'][$i]['path']) . $annexes['attachments'][$i]['filename'];
             }
         }
         // END annexes
 
-        $attachments         = \Attachment\models\AttachmentModel::getOnView([
-            'select'         => ['res_id', 'res_id_version', 'title', 'attachment_type','path', 'res_id_master', 'format'],
+        $attachments         = \Attachment\models\AttachmentModel::get([
+            'select'         => ['res_id', 'title', 'attachment_type','path', 'res_id_master', 'format'],
             'where'          => ['res_id_master = ?', 'attachment_type not in (?)', "status not in ('DEL', 'OBS')", 'in_signature_book = TRUE'],
             'data'           => [$aArgs['resIdMaster'], ['converted_pdf', 'incoming_mail_attachment', 'print_folder', 'signed_response']]
         ]);
 
         $attachmentToFreeze = [];
         for($i = 0; $i < count($attachments); $i++){
-            if (!empty($attachments[$i]['res_id'])) {
-                $resId  = $attachments[$i]['res_id'];
-                $collId = 'attachments_coll';
-            } else {
-                $resId  = $attachments[$i]['res_id_master'];
-                $collId = 'attachments_version_coll';
-            }
+            $resId  = $attachments[$i]['res_id'];
+            $collId = 'attachments_coll';
+            
             $adrInfo                = \Convert\models\AdrModel::getConvertedDocumentById(['resId' => $resId, 'collId' => $collId, 'type' => 'PDF']);
 
             $attachmentPath         =  \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id'], 'select' => ['path_template']]);

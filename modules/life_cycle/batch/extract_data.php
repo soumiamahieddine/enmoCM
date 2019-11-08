@@ -306,7 +306,7 @@ try {
         #### Projet de réponse ####
         $stmt2 = Bt_doQuery(
             $GLOBALS['db'], 
-            "SELECT identifier, typist, creation_date FROM res_view_attachments WHERE attachment_type = 'response_project' and res_id_master = ? and status <> 'DEL' and status <> 'OBS' ORDER BY creation_date desc", array($selectedFile->res_id)
+            "SELECT identifier, typist, creation_date FROM res_attachments WHERE attachment_type = 'response_project' and res_id_master = ? and status <> 'DEL' and status <> 'OBS' ORDER BY creation_date desc", array($selectedFile->res_id)
         );
 
         $arrayAttachments = array();
@@ -324,7 +324,7 @@ try {
         #### Nombre de Projet de réponse ####
         $stmt2 = Bt_doQuery(
             $GLOBALS['db'], 
-            "SELECT count(*) as total FROM res_view_attachments WHERE attachment_type = 'response_project' and res_id_master = ? and status <> 'DEL' and status <> 'OBS'", array($selectedFile->res_id)
+            "SELECT count(1) as total FROM res_attachments WHERE attachment_type = 'response_project' and res_id_master = ? and status <> 'DEL' and status <> 'OBS'", array($selectedFile->res_id)
         );
 
         $NbResponseProject = $stmt2->fetchObject();
@@ -333,7 +333,7 @@ try {
         #### Nb Transmission ####
         $stmt2 = Bt_doQuery(
             $GLOBALS['db'], 
-            "SELECT count(*) as total FROM res_view_attachments WHERE attachment_type = 'transfer' and res_id_master = ? and status <> 'DEL' and status <> 'OBS'", array($selectedFile->res_id)
+            "SELECT count(1) as total FROM res_attachments WHERE attachment_type = 'transfer' and res_id_master = ? and status <> 'DEL' and status <> 'OBS'", array($selectedFile->res_id)
         );
 
         $NbTransmission = $stmt2->fetchObject();
@@ -342,7 +342,7 @@ try {
         #### Transmission ####
         $stmt2 = Bt_doQuery(
             $GLOBALS['db'], 
-            "SELECT identifier, dest_contact_id, validation_date FROM res_view_attachments WHERE attachment_type = 'transfer' and res_id_master = ? and status <> 'DEL' and status <> 'OBS' ORDER BY creation_date DESC LIMIT 4", array($selectedFile->res_id)
+            "SELECT identifier, dest_contact_id, validation_date FROM res_attachments WHERE attachment_type = 'transfer' and res_id_master = ? and status <> 'DEL' and status <> 'OBS' ORDER BY creation_date DESC LIMIT 4", array($selectedFile->res_id)
         );
 
         $arrayTransmission = array();

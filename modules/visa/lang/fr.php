@@ -1,15 +1,7 @@
 <?php
 
-if (!defined('_SIGN_DOCS')) {
-    define('_SIGN_DOCS', 'Signer les documents');
-}
-
 if (!defined('_PRINTFOLDER')) {
     define('_PRINTFOLDER', "Dossier d'impression");
-}
-
-if (!defined('_PRINT_FOLDER_DOC')) {
-    define('_PRINT_FOLDER_DOC', 'Imprimer le dossier complet');
 }
 
 if (!defined('_NO_PDF_FILE')) {
@@ -32,21 +24,11 @@ if (!defined('_VIEW_VISA_WORKFLOW')) {
 if (!defined('_VIEW_VISA_WORKFLOW_DESC')) {
     define('_VIEW_VISA_WORKFLOW_DESC', "Permet de visualiser le circuit de visa dans les parties de liste de diffusion et dans celles d'avancement.");
 }
-if (!defined('_CONFIG_VISA_WORKFLOW')) {
-    define('_CONFIG_VISA_WORKFLOW', 'Configuration du circuit de visa');
-}
 if (!defined('_EMPTY_USER_LIST')) {
     define('_EMPTY_USER_LIST', 'La liste des utilisateurs est vide');
 }
 if (!defined('_EMPTY_VISA_WORKFLOW')) {
     define('_EMPTY_VISA_WORKFLOW', 'Aucun circuit de visa paramétré');
-}
-if (!defined('_VISA_ANSWERS')) {
-    define('_VISA_ANSWERS', 'Viser les projets de réponse');
-}
-
-if (!defined('_VISA_ANSWERS_DESC')) {
-    define('_VISA_ANSWERS_DESC', 'Permet de viser les projets de réponse');
 }
 
 if (!defined('_NO_VISA')) {
@@ -68,12 +50,6 @@ if (!defined('_PLEASE_CONVERT_PDF_VISA')) {
 // CIRCUIT D"AVIS
 if (!defined('_AVIS_WORKFLOW')) {
     define('_AVIS_WORKFLOW', "Circuit d'avis");
-}
-if (!defined('_CONFIG_AVIS_WORKFLOW')) {
-    define('_CONFIG_AVIS_WORKFLOW', "Configuration du circuit d'avis");
-}
-if (!defined('_CONFIG_AVIS_WORKFLOW_DESC')) {
-    define('_CONFIG_AVIS_WORKFLOW_DESC', "Permet de configurer le circuit d'avis du courrier");
 }
 
 if (!defined('_DISSMARTCARD_SIGNER_APPLET')) {
@@ -190,14 +166,6 @@ if (!defined('_ADD_VISA_ROLE')) {
 
 if (!defined('_ADD_VISA_MODEL')) {
     define('_ADD_VISA_MODEL', 'Utiliser un modèle de circuit de visa');
-}
-
-if (!defined('_MODIFY_VISA_IN_SIGNATUREBOOK')) {
-    define('_MODIFY_VISA_IN_SIGNATUREBOOK', 'Modifier le viseur en cours depuis le parapheur');
-}
-
-if (!defined('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC')) {
-    define('_MODIFY_VISA_IN_SIGNATUREBOOK_DESC', 'Utile si le parahpeur sert en tant que parapheur de supervision');
 }
 
 if (!defined('_NO_SIGNATORY')) {
@@ -393,16 +361,8 @@ if (!defined('_IS_ALL_ATTACHMENT_SIGNED_INFO2')) {
     define('_IS_ALL_ATTACHMENT_SIGNED_INFO2', 'Toutes les pièces jointes présentes dans le parapheur ont été signées.');
 }
 
-if (!defined('_USE_DATE_IN_SIGNBLOCK')) {
-    define('_USE_DATE_IN_SIGNBLOCK', 'Inclure la date dans la griffe de signature');
-}
-
 if (!defined('_REQUESTED_SIGNATURE')) {
     define('_REQUESTED_SIGNATURE', 'Signature demandée');
-}
-
-if (!defined('_USE_DATE_IN_SIGNBLOCK_DESC')) {
-    define('_USE_DATE_IN_SIGNBLOCK_DESC', "La date de signature aparaîtra en haut de la griffe de signature (avec la ville si celle-ci a été inscrite dans l'entité racine de l'application).");
 }
 
 if (!defined('_SELECT_MESSAGE_MODEL_IXBUS')) {

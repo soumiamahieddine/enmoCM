@@ -45,8 +45,6 @@ if (!defined("_MANAGE_TAGS"))
     define("_MANAGE_TAGS", "Manage the tag");
 if (!defined("_ADMIN_TAGS"))
     define("_ADMIN_TAGS", "Tags");
-if (!defined("_ADMIN_TAGS_DESC"))
-    define("_ADMIN_TAGS_DESC", "Allows to modify, erase, add or merge tags");
 if (!defined("_ALL_TAGS"))
     define("_ALL_TAGS", "All the tags");
 if (!defined("_TAG_DELETED"))

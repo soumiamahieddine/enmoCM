@@ -34,11 +34,7 @@ $core->test_user();
 
 $db = new Database();
 
-if ($_REQUEST['mode'] == 'add') {
-    $tableName = "res_attachments";
-} else if($_REQUEST['mode'] == 'edit'){
-    $tableName = "res_version_attachments";
-}
+$tableName = "res_attachments";
 
 $stmt = $db->query(
     "SELECT docserver_id, path, filename FROM ".$tableName." WHERE res_id_master = ? AND status = 'TMP' AND typist = ?",

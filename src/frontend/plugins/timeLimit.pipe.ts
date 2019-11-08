@@ -8,8 +8,11 @@ import { LANG } from '../app/translate.component';
 export class TimeLimitPipe implements PipeTransform, OnDestroy {
 	private timer: number;
 	lang: any = LANG;
-	constructor(private changeDetectorRef: ChangeDetectorRef, private ngZone: NgZone) {}
-	transform(value:string) {
+	constructor(
+		private changeDetectorRef: ChangeDetectorRef, 
+		private ngZone: NgZone) {}
+	transform(value:string, args: string = null) {
+
 		this.removeTimer();
 		let d = new Date(value);
 		let dayNumber = ('0' + d.getDate()).slice(-2);
@@ -49,56 +52,28 @@ export class TimeLimitPipe implements PipeTransform, OnDestroy {
 		if(value == null) {
 			return '<span>' + this.lang.undefined + '</span>';
 		} else if(now > d) {
-			return '<span class="timeDanger" color="warn"><b>' + this.lang.outdated + ' !</b></span>';
+			if (args === 'badge') {
+				return this.getFormatedDate('', '<b>' + this.lang.outdated + ' ' + this.lang.fromRange.toLowerCase() + ' ' + (days-1) + ' '+ this.lang.dayS +' !</b>', 'warn', args);
+			} else {
+				return this.getFormatedDate('', '<b>' + this.lang.outdated + ' !</b>', 'warn', args);
+			}	
 		} else {
 			if (Number.isNaN(seconds)){
 				return '';
-			} else if (days <= 3) {
-				return '<span color="warn"><b>'+ days + ' ' + this.lang.dayS +'</b></span>';
-			} else if (days <= 7) {
-				return '<span class="timeWarn">'+ days + ' ' + this.lang.dayS +'</span>';
+			} else if (minutes <= 59){
+				return this.getFormatedDate(this.lang.in[0].toUpperCase() + this.lang.in.substr(1).toLowerCase(), minutes + ' ' + this.lang.minutes, 'warn', args);
+			} else if (hours <= 23){
+				return this.getFormatedDate(this.lang.in[0].toUpperCase() + this.lang.in.substr(1).toLowerCase(), hours + ' ' + this.lang.hours, 'secondary', args);
+			} else if (days <= 5) {
+				return this.getFormatedDate(this.lang.in[0].toUpperCase() + this.lang.in.substr(1).toLowerCase(), days + ' ' + this.lang.dayS, 'secondary', args);
 			} else if (days <= 345) {
-				return '<span color="accent">'+d.getDate()+' '+ month[d.getMonth()]+'</span>';
+				return this.getFormatedDate(this.lang.onRange[0].toUpperCase() + this.lang.onRange.substr(1).toLowerCase(), d.getDate()+' '+ month[d.getMonth()], 'accent', args);
 			} else if (days <= 545) {
 				return dayNumber + '/' + monthNumber + '/' + d.getFullYear();
 			} else { // (days > 545)
 				return dayNumber + '/' + monthNumber + '/' + d.getFullYear();
 			}
 		}
-		
-		
-		/*if (Number.isNaN(seconds)){
-			return '';
-		} else if (seconds <= 45) {
-			return seconds + ' secondes';
-		} else if (seconds <= 90) {
-			//return 'une minute';
-		} else if (minutes <= 45) {
-			return minutes + ' minutes';
-		} else if (minutes <= 90) {
-			//return 'une heure';
-		} else if (hours <= 22) {
-			return hourNumber+':'+minuteNumber;
-			//return hours + ' heures';
-		} else if (hours <= 36) {
-			return dayNumber+' '+ month[d.getMonth()];
-			//return 'un jour';
-		} else if (days <= 25) {
-			return d.getDate()+' '+ month[d.getMonth()];
-			//return days + ' jours';
-		} else if (days <= 45) {
-			return d.getDate()+' '+ month[d.getMonth()];
-			//return 'un mois';
-		} else if (days <= 345) {
-			return d.getDate()+' '+ month[d.getMonth()];
-			//return months + ' mois';
-		} else if (days <= 545) {
-			return dayNumber + '/' + monthNumber + '/' + d.getFullYear();
-			//return 'un an';
-		} else { // (days > 545)
-			return dayNumber + '/' + monthNumber + '/' + d.getFullYear();
-			//return years + ' ans';
-		}*/
 	}
 	ngOnDestroy(): void {
 		this.removeTimer();
@@ -121,6 +96,14 @@ export class TimeLimitPipe implements PipeTransform, OnDestroy {
 			return 300;
 		} else { // update every hour
 			return 3600;
+		}
+	}
+
+	getFormatedDate(prefix: string,content: string, color: string, mode: string) {
+		if (mode === 'badge') {
+			return `${prefix} ${content}&nbsp;<i class="fas fa-circle badgePipe_${color}"></i>`;
+		} else {
+			return `<span color="${color}">${content}</span>`;
 		}
 	}
 }

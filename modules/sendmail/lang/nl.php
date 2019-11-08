@@ -161,12 +161,6 @@ if (!defined('_ADD_TEMPLATE_MAIL')) {
 if (!defined('_EMAIL_OBJECT_ANSWER')) {
     define('_EMAIL_OBJECT_ANSWER', 'Antwoord op uw brief van');
 }
-if (!defined('_USE_MAIL_SERVICES')) {
-    define('_USE_MAIL_SERVICES', 'De e-mails van zijn diensten gebruiken als verzender');
-}
-if (!defined('_USE_MAIL_SERVICES_DESC')) {
-    define('_USE_MAIL_SERVICES_DESC', 'De e-mails van zijn diensten gebruiken als verzender');
-}
 if (!defined('_INCORRECT_SENDER')) {
     define('_INCORRECT_SENDER', 'Foute verzender');
 }

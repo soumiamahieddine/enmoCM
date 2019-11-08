@@ -1,14 +1,14 @@
 <mat-list *ngIf="!loading">
-    <mat-form-field *ngIf="injectDatas.editable" appearance="outline" floatLabel="never" [style.fontSize.px]="10">
+    <mat-form-field *ngIf="adminMode" appearance="outline" floatLabel="never" [style.fontSize.px]="10">
         <input class="metaSearch" type="text" matInput placeholder="{{lang.addPerson}}">
     </mat-form-field>
     <div cdkDropList #dataAvailableList="cdkDropList" [cdkDropListData]="avisWorkflow.items" class="cdk-list"
-        (cdkDropListDropped)="drop($event)" [cdkDropListDisabled]="!injectDatas.editable">
+        (cdkDropListDropped)="drop($event)" [cdkDropListDisabled]="!adminMode">
         <div *ngIf="avisWorkflow.items.length === 0" style="opacity: 0.5;text-align: center;font-size: 10px;padding: 10px;">
             {{lang.noPerson}}
         </div>
         <mat-list-item *ngFor="let diffusion of avisWorkflow.items;let i=index" cdkDrag class="columns"
-            [cdkDragDisabled]="!injectDatas.editable" [class.notDraggable]="injectDatas.editable" [class.notEditable]="!injectDatas.editable"
+            [cdkDragDisabled]="!adminMode" [class.notDraggable]="adminMode" [class.notEditable]="!adminMode"
             [ngStyle]="{'background': diffusion.process_date != null ? 'rgba(0, 128, 0, 0.11)' : ''}">
             <mat-icon mat-list-icon class="fa fa-user fa-2x" color="primary"></mat-icon>
             <mat-icon mat-list-icon class="fa fa-hourglass fa-2x" *ngIf="diffusion.process_date == null" style="opacity:0.5;"></mat-icon>
@@ -23,7 +23,7 @@
                     style="flex: 1;text-align: right;font-size: 90%;" color="accent">{{diffusion.process_date
                     | timeAgo}}</span>
             </p>
-            <button mat-icon-button *ngIf="injectDatas.editable" (click)="deleteItem(i)">
+            <button mat-icon-button *ngIf="adminMode" (click)="deleteItem(i)">
                 <mat-icon class="fa fa-times" color="warn"></mat-icon>
             </button>
         </mat-list-item>

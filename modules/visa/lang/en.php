@@ -1,14 +1,7 @@
 <?php
 
-if (!defined('_SIGN_DOCS')) {
-    define('_SIGN_DOCS', 'Sign the documents');
-}
-
 if (!defined('_PRINTFOLDER')) {
     define('_PRINTFOLDER', 'Print folder');
-}
-if (!defined('_PRINT_FOLDER_DOC')) {
-    define('_PRINT_FOLDER_DOC', 'Print the entire folder');
 }
 
 if (!defined('_NO_PDF_FILE')) {
@@ -31,21 +24,11 @@ if (!defined('_VIEW_VISA_WORKFLOW')) {
 if (!defined('_VIEW_VISA_WORKFLOW_DESC')) {
     define('_VIEW_VISA_WORKFLOW_DESC', 'Allows to view the visa workflow in the parts of diffusion list and in those of progress.');
 }
-if (!defined('_CONFIG_VISA_WORKFLOW')) {
-    define('_CONFIG_VISA_WORKFLOW', 'Visa workflow setting');
-}
 if (!defined('_EMPTY_USER_LIST')) {
     define('_EMPTY_USER_LIST', 'Users list is empty');
 }
 if (!defined('_EMPTY_VISA_WORKFLOW')) {
     define('_EMPTY_VISA_WORKFLOW', 'No set visa flow');
-}
-if (!defined('_VISA_ANSWERS')) {
-    define('_VISA_ANSWERS', 'Aim the responses projects');
-}
-
-if (!defined('_VISA_ANSWERS_DESC')) {
-    define('_VISA_ANSWERS_DESC', 'Allows to aim response projects');
 }
 
 if (!defined('_NO_VISA')) {
@@ -67,12 +50,6 @@ if (!defined('_PLEASE_CONVERT_PDF_VISA')) {
 // CIRCUIT D"AVIS
 if (!defined('_AVIS_WORKFLOW')) {
     define('_AVIS_WORKFLOW', 'Recommendation flow');
-}
-if (!defined('_CONFIG_AVIS_WORKFLOW')) {
-    define('_CONFIG_AVIS_WORKFLOW', 'Recommendation flow configuration');
-}
-if (!defined('_CONFIG_AVIS_WORKFLOW_DESC')) {
-    define('_CONFIG_AVIS_WORKFLOW_DESC', 'Allow to set the mail recommendation flow up');
 }
 
 if (!defined('_DISSMARTCARD_SIGNER_APPLET')) {
@@ -242,16 +219,8 @@ if (!defined('_IS_ALL_ATTACHMENT_SIGNED_INFO2')) {
     define('_IS_ALL_ATTACHMENT_SIGNED_INFO2', "You can't request a signed document to users, all attachments in signature book are signed.");
 }
 
-if (!defined('_USE_DATE_IN_SIGNBLOCK')) {
-    define('_USE_DATE_IN_SIGNBLOCK', 'Add current date in sign block');
-}
-
 if (!defined('_REQUESTED_SIGNATURE')) {
     define('_REQUESTED_SIGNATURE', 'Requested signature');
-}
-
-if (!defined('_USE_DATE_IN_SIGNBLOCK_DESC')) {
-    define('_USE_DATE_IN_SIGNBLOCK_DESC', 'The current date is added in top of sign block (with the town if it wrote in parent entity of application).');
 }
 
 if (!defined('_SELECT_MESSAGE_MODEL_IXBUS')) {

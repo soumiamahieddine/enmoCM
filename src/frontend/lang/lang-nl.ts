@@ -735,7 +735,7 @@ export const LANG_NL = {
     "printDate"                             : "_TO_TRANSLATE",
     "printResultList"                       : "_TO_TRANSLATE",
     "priorities"                            : "Prioriteit(en)",
-    "prioritiesAlt"                         : "_TO_TRANSLATE",
+    "prioritiesAlt"                         : "Prioriteiten",
     "prioritiesHelpDesc"                    : "De prioriteiten slepen-neerzetten om de volgorde te wijzigen",
     "prioritiesOrder"                       : "De volgorde van de prioriteiten beheren",
     "priority"                              : "Prioriteit",
@@ -1160,7 +1160,8 @@ export const LANG_NL = {
     "fieldNotExist" : "Field not exist", //_TO_TRANSLATE
     "saveAsModel" : "Save as Model", //_TO_TRANSLATE
     "noAvailableIndexingModel" : "No indexing model found<br /><br /><small>Please create a model in Administation > Indexing model</small>", //_TO_TRANSLATE
-    "noAvaiblableAction" : "<b>No available action</b>, please set an action in <b>Administration > User groups > Mail indexing</b>.", //_TO_TRANSLATE
+    "noAvailableAction" : "<b>No available action</b>, please set an action in <b>Administration > User groups > Mail indexing</b>.", //_TO_TRANSLATE
+    "noAvailableActionProcess" : "<b>No available action</b>, please set an action in <b>Administration > Baskets > Current basket</b>.", //_TO_TRANSLATE
     "eraseValue" : "Erase value", //_TO_TRANSLATE
     "todayDate" : "Today date", //_TO_TRANSLATE
     "noDefaultIndexingModel" : "No default indexing model found, the first model of the list have been loaded.", //_TO_TRANSLATE
@@ -1237,4 +1238,59 @@ export const LANG_NL = {
     "configVisaWorkflowDesc" : "Om het goedkeuringscircuit in te stellen dat de brief zal moeten volgen",
     "configVisaWorkflowInDetail" : "Configuratie van het goedkeuringscircuit vanuit de gedetailleerde fiche",
     "configVisaWorkflowInDetailDesc" : "Om het goedkeuringscircuit vanuit de gedetailleerde fiche te configureren",
+    "noFile" : "No file", //_TO_TRANSLATE
+    "noFileMsg" : "<b>Be careful</b>, no file uploaded.<br/><br/>Continue ?", //_TO_TRANSLATE
+    "visaAnswers" : "De antwoordontwerpen goedkeuren",
+    "visaAnswersDesc" : "Om de antwoordontwerpen te kunnen goedkeuren",
+    "signDocs": "De documenten ondertekenen",
+    "modifyVisaInSignatureBook" : "De huidige goedkeurder wijzigen vanuit het vloeiboek",
+    "modifyVisaInSignatureBookDesc" : "Nuttig indien het vloeiboek als controlevloeiboek dient",
+    "useDateInSignBlock" : "De datum in de handtekening insluiten",
+    "useDateInSignBlockDesc" : "De datum van ondertekening zal bovenaan de handtekening verschijnen (met de gemeente indien deze in de rootservice van de applicatie werd ingeschreven)",
+    "printFolderDoc" : "De volledige map afdrukken",
+    "statusesAdmin" : "Statussen aanmaken of wijzigen",
+    "actionsAdmin" : "Acties aanmaken of wijzigen",
+    "contactsAdmin" : "Contactenbeheer",
+    "templatesAdmin" : "De modellen die voor de bijlagen gebruikt worden, de meldingen, de aanmaak van brieven, het verzenden van e-mails en de opmerkingen beheren",
+    "customFieldsAdmin" : "Custom fields", //_TO_TRANSLATE
+    "notificationsAdmin" : "Meldingen voor de gebruikers aanmaken en beheren die gebaseerd zijn op gebeurtenissen van de applicatie",
+    "docserversAdmin" : "Opslagruimtes toevoegen opschorten of wijzigen. De opslagruimtes per type plaatsen waartoe ze behoren en hun primaire groep bepalen",
+    "securities" : "Veiligheden",
+    "emailServerParam" : "Mail server", //_TO_TRANSLATE
+    "emailServerParamDesc" : "Link your mail server with application in order to send emails", //_TO_TRANSLATE
+    "mailevaAdmin" : "Maileva shipping admin", //_TO_TRANSLATE
+    "mailevaAdminDesc" : "Configure mailing templates for Maileva", //_TO_TRANSLATE
+    "reportsAdmin" : "Administratie van de statistieken",
+    "historyBatchAdmin" : "De geschiedenis van de batches raadplegen",
+    "updateControl" : "Controle van de bijwerking",
+    "mailsSent" : "Resource(s) sent", //_TO_TRANSLATE
+    "dashboard" : "Dashboard", //_TO_TRANSLATE
+    "noSendmail" : "No mail sent", //_TO_TRANSLATE
+    "noEvent" : "No event", //_TO_TRANSLATE
+    "hours" : "hours", //_TO_TRANSLATE
+    "editInProgress" : "Edit in progress", //_TO_TRANSLATE
+    "chooseFile" : "Choose a file", //_TO_TRANSLATE
+    "or" : "or", //_TO_TRANSLATE
+    "dragAndDrop" : "Drag and drop", //_TO_TRANSLATE
+    "backBasket" : "Back to basket", //_TO_TRANSLATE
+    "openInExternalModal" : "Open in external modal", //_TO_TRANSLATE
+    "openedInExternalModal" : "Opened in external modal", //_TO_TRANSLATE
+    "showMore" : "Show more", //_TO_TRANSLATE
+    "notesAlt" : "Notes", //_TO_TRANSLATE
+    "mailsSentAlt" : "Resources sent", //_TO_TRANSLATE
+    "newsFeed" : "News feed", //_TO_TRANSLATE
+    "sendError" : "Send error", //_TO_TRANSLATE
+    "historyDisabled" : "History disabled", //_TO_TRANSLATE
+    "ARPaper" : "Paper acknowledgement of receipt", //_TO_TRANSLATE
+    "ARelectronic" : "Electronic acknowledgement of receipt", //_TO_TRANSLATE
+    "allRoles" : "All roles", //_TO_TRANSLATE
+    "rolesExceptAssignee" : "Role(s) without assignee", //_TO_TRANSLATE
+    "noRole" : "No role", //_TO_TRANSLATE
+    "diffListPrivilegeMsg" : "Can modify user in roles: ", //_TO_TRANSLATE
+    "diffListPrivilegeMsgIndexing" : "in indexing page.", //_TO_TRANSLATE
+    "diffListPrivilegeMsgProcess" : "in process page.", //_TO_TRANSLATE
+    "recordMail" : "Record a mail", //_TO_TRANSLATE
+    "closed" : "Closed", //_TO_TRANSLATE
+    "manageAttachments": "Update or delete attachments", //_TO_TRANSLATE
+    "manageOwnAttachmentsInDetails": "Update or delete user's own attachments in the details page", //_TO_TRANSLATE
 };

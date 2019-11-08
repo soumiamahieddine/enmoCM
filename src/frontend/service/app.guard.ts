@@ -1,10 +1,11 @@
 
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, CanDeactivate } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HeaderService } from './header.service';
+import { ProcessComponent } from '../app/process/process.component';
 
 @Injectable({
     providedIn: 'root'
@@ -24,12 +25,13 @@ export class AppGuard implements CanActivate {
                 .pipe(
                     map((data: any) => {
                         this.headerService.user = {
-                            id : data.id,
-                            userId : data.user_id,
-                            firstname : data.firstname,
+                            id: data.id,
+                            userId: data.user_id,
+                            firstname: data.firstname,
                             lastname: data.lastname,
                             entities: data.entities,
-                            groups: data.groups
+                            groups: data.groups,
+                            privileges: data.privileges
                         }
                         return true;
                     })
@@ -37,5 +39,24 @@ export class AppGuard implements CanActivate {
         } else {
             return true;
         }
+    }
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class AfterProcessGuard implements CanDeactivate<ProcessComponent> {
+    canDeactivate(component: ProcessComponent): boolean {
+        if (!component.isActionEnded()) {
+            component.unlockResource();
+        }
+        /*if(component.hasUnsavedData()){
+            if (confirm("You have unsaved changes! If you leave, your changes will be lost.")) {
+                return true;
+            } else {
+                return false;
+            }
+        }*/
+        return true;
     }
 }

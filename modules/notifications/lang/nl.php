@@ -207,9 +207,6 @@ if (!defined('_LINK_TO_MAARCH')) {
 if (!defined('_ADMIN_NOTIFICATIONS')) {
     define('_ADMIN_NOTIFICATIONS', 'Meldingen');
 }
-if (!defined('_ADMIN_NOTIFICATIONS_DESC')) {
-    define('_ADMIN_NOTIFICATIONS_DESC', 'Meldingen voor de gebruikers aanmaken en beheren die gebaseerd zijn op gebeurtenissen van de applicatie');
-}
 if (!defined('_MANAGE_NOTIFS')) {
     define('_MANAGE_NOTIFS', 'Meldingen beheren');
 }

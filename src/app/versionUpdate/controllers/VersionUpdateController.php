@@ -15,7 +15,7 @@
 namespace VersionUpdate\controllers;
 
 use Gitlab\Client;
-use Group\models\ServiceModel;
+use Group\controllers\PrivilegeController;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
@@ -24,7 +24,7 @@ class VersionUpdateController
 {
     public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_update_control', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_update_control', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -103,7 +103,7 @@ class VersionUpdateController
 
     public function update(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_update_control', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_update_control', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

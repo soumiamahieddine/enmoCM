@@ -41,7 +41,12 @@ class NoteController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $notes = NoteModel::getByUserIdForResource(['select' => ['*'], 'resId' => $args['resId'], 'userId' => $GLOBALS['id']]);
+        $queryParams = $request->getQueryParams();
+        if (!empty($queryParams['limit']) && !Validator::intVal()->validate($queryParams['limit'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an int val']);
+        }
+
+        $notes = NoteModel::getByUserIdForResource(['select' => ['*'], 'resId' => $args['resId'], 'userId' => $GLOBALS['id'], 'limit' => (int)$queryParams['limit']]);
         
         foreach ($notes as $key => $note) {
             $user = UserModel::getById(['select' => ['firstname', 'lastname', 'user_id'], 'id' => $note['user_id']]);
@@ -227,7 +232,7 @@ class NoteController
             if (!empty($resource['destination'])) {
                 $templates = TemplateModel::getWithAssociation([
                     'select'    => ['DISTINCT(templates.template_id), template_label', 'template_content'],
-                    'where'     => ['template_target = ?', 'value_field = ?', 'templates.template_id = templates_association.template_id'],
+                    'where'     => ['template_target = ?', 'value_field = ?'],
                     'data'      => ['notes', $resource['destination']],
                     'orderBy'   => ['template_label']
                 ]);

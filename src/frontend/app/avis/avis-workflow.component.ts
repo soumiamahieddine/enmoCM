@@ -20,10 +20,16 @@ export class AvisWorkflowComponent implements OnInit {
     data: any;
 
     @Input('injectDatas') injectDatas: any;
+    @Input('adminMode') adminMode: boolean;
+    @Input('resId') resId: number = null;
 
     constructor(public http: HttpClient, private notify: NotificationService) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void { 
+        if (this.resId !== null) {
+            this.loadWorkflow(this.resId);
+        }
+    }
 
     drop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {

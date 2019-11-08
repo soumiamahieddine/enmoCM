@@ -134,20 +134,12 @@ var disablePrototypeJS = function (method, pluginsToDisable) {
     });
 };
 
-/*if (Prototype.BrowserFeatures.ElementExtensions) {
-    //FIX PROTOTYPE CONFLICT
-    var pluginsToDisable = ['collapse', 'dropdown', 'modal', 'tooltip', 'popover','tab'];
-    disablePrototypeJS('show', pluginsToDisable);
-    disablePrototypeJS('hide', pluginsToDisable);
-}*/
-
-function setAttachmentInSignatureBook(id, isVersion) {
+function setAttachmentInSignatureBook(id) {
     $j.ajax({
         url: '../../rest/attachments/' + id + '/inSignatureBook',
         type: 'PUT',
         dataType: 'json',
         data: {
-            isVersion: isVersion
         },
         success: function (answer) {
             if (typeof window.parent['angularSignatureBookComponent'] !== "undefined") {

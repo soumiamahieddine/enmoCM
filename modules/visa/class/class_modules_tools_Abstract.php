@@ -106,9 +106,9 @@ abstract class visa_Abstract extends Database
 
         $db = new Database();
         if (empty($noSignableAttachments)) {
-            $stmt = $db->query("SELECT * FROM res_view_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL','OBS','TMP') AND in_signature_book = ?", [$res_id, $coll_id, true]);
+            $stmt = $db->query("SELECT * FROM res_attachments WHERE res_id_master = ? AND status NOT IN ('DEL','OBS','TMP') AND in_signature_book = ?", [$res_id, true]);
         } else {
-            $stmt = $db->query("SELECT * FROM res_view_attachments WHERE res_id_master = ? AND coll_id = ? AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN (?) AND in_signature_book = ? ", [$res_id, $coll_id, $noSignableAttachments, true]);
+            $stmt = $db->query("SELECT * FROM res_attachments WHERE res_id_master = ? AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN (?) AND in_signature_book = ? ", [$res_id, $noSignableAttachments, true]);
         }
         if ($stmt->rowCount() <= 0) {
             $this->errorMessageVisa = _NO_RESPONSE_PROJECT_VISA;
@@ -760,7 +760,7 @@ abstract class visa_Abstract extends Database
         if ($from_res_attachment === false) {
             $stmt = $db->query(
                 'select res_id, description, subject, title, format, filesize, relation, creation_date from '
-                .$table." where res_id = ? and status <> 'DEL'",
+                . " res_letterbox where res_id = ? and status <> 'DEL'",
                 array($id)
             );
         } else {
@@ -768,17 +768,16 @@ abstract class visa_Abstract extends Database
             if ($filter_attach_type == 'all') {
                 $stmt = $db->query(
                     'select res_id, description, subject, title, format, filesize, res_id_master, attachment_type, creation_date, typist from '
-                    .RES_ATTACHMENTS_TABLE
-                    ." where res_id_master = ? and coll_id = ? and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and status <> 'DEL' order by attachment_type, creation_date",
-                    array($id, $coll_id)
+                    ." res_attachments where res_id_master = ? and attachment_type <> 'converted_pdf' and attachment_type <> 'print_folder' and status <> 'DEL' order by attachment_type, creation_date",
+                    array($id)
                 );
             } else {
                 $stmt = $db->query(
-                    'select res_id, res_id_version, description, subject, title, format, filesize, res_id_master, attachment_type, creation_date, typist from '
-                    .' res_view_attachments '
-                    ." where res_id_master = ? and coll_id = ? and attachment_type = '"
+                    'select res_id, description, subject, title, format, filesize, res_id_master, attachment_type, creation_date, typist from '
+                    .' res_attachments '
+                    ." where res_id_master = ? and attachment_type = '"
                     .$filter_attach_type."' and status not in ('DEL', 'OBS') order by creation_date",
-                    array($id, $coll_id)
+                    array($id)
                 );
             }
         }
@@ -788,14 +787,8 @@ abstract class visa_Abstract extends Database
             if ($from_res_attachment) {
                 require_once 'modules/attachments/class/attachments_controler.php';
                 $ac = new attachments_controler();
-                if ($res->res_id != 0) {
-                    $idFile = $res->res_id;
-                    $isVersion = false;
-                } else {
-                    $idFile = $res->res_id_version;
-                    $isVersion = true;
-                }
-                $convertedDocument =  \Convert\models\AdrModel::getConvertedDocumentById(['select' => ['docserver_id', 'path', 'filename'], 'type' => 'PDF', 'resId' => $idFile, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+                $idFile = $res->res_id;
+                $convertedDocument =  \Convert\models\AdrModel::getConvertedDocumentById(['select' => ['docserver_id', 'path', 'filename'], 'type' => 'PDF', 'resId' => $idFile, 'collId' => 'attachments_coll']);
                 $viewLink = $_SESSION['config']['businessappurl']
                         .'index.php?display=true&module=attachments&page=view_attachment&res_id_master='
                         .$id.'&id='.$res->res_id;
@@ -813,7 +806,7 @@ abstract class visa_Abstract extends Database
                 }
             } else {
                 $idFile = $res->res_id;
-                $convertedDocument =  \Convert\models\AdrModel::getConvertedDocumentById(['select' => ['docserver_id', 'path', 'filename'], 'type' => 'PDF', 'resId' => $idFile, 'collId' => 'letterbox_coll', 'isVersion' => $isVersion]);
+                $convertedDocument =  \Convert\models\AdrModel::getConvertedDocumentById(['select' => ['docserver_id', 'path', 'filename'], 'type' => 'PDF', 'resId' => $idFile, 'collId' => 'letterbox_coll']);
                 $viewLink = $_SESSION['config']['businessappurl']
                         .'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
                         .$id;
@@ -851,10 +844,9 @@ abstract class visa_Abstract extends Database
             }
 
             if ($pdf_exist == false) {
-                $isVersionString = ($isVersion) ? 'true' : 'false';
                 $collIdConv = ($from_res_attachment) ? 'attachments_coll' : 'letterbox_coll';
                 
-                $viewLinkHtml = '<a id="gen_'.$idFile.'" style="cursor:pointer;" title="'._GENERATE_PDF .'" target="_blank" onclick="generatePdf(\''.$idFile.'\',\''.$collIdConv.'\',\''.$isVersionString.'\')">'
+                $viewLinkHtml = '<a id="gen_'.$idFile.'" style="cursor:pointer;" title="'._GENERATE_PDF .'" target="_blank" onclick="generatePdf(\''.$idFile.'\',\''.$collIdConv.'\')">'
                     .'<i id="spinner_'.$idFile.'" class="fa fa-sync-alt fa-2x" title="'._GENERATE_PDF.'"></i>'
                     .'</a>';
             } else {
@@ -869,7 +861,6 @@ abstract class visa_Abstract extends Database
                       'creation_date' => $res->creation_date, //Filesize
                       'attachment_type' => $attachment_type, //attachment_type
                       'typist' => $typist, //attachment_type
-                      'is_version' => $isVersion,
                       'pdf_exist' => $pdf_exist,
                       'version' => '',
                       'viewLink' => $viewLinkHtml,
@@ -932,21 +923,10 @@ abstract class visa_Abstract extends Database
                     $check = ' disabled title="'._NO_PDF_FILE.'"';
                 }
                 //Show data
-                if ($joined_files[$i]['is_version'] === true) {
-                    //Version
-                    $version = ' - '._VERSION.' '.$joined_files[$i]['version'];
-                    $str .= '<tr><td>'
-                            .'</td><td>'.$description.$version.'</td><td>'.$contact['firstname'].' '
-                            .$contact['lastname'].'</td><td>'.$creation_date
-                            .'</td><td><input id="join_file_'.$id_doc.'_V'.$joined_files[$i]['version']
-                            .'" type="checkbox" name="join_version[]"  value="'.$id_doc
-                            .'"/>'.$joined_files[$i]['viewLink'].'</td></tr>';
-                } else {
-                    $str .= '<tr><td></td><td>'.$description.'</td><td>'.$res->contact_society
+                $str .= '<tr><td></td><td>'.$description.'</td><td>'.$res->contact_society
                             .'</td><td>'.$creation_date.'</td><td><input id="join_file_'
                             .$id_doc.'" type="checkbox" name="join_file[]" value="'.$id_doc.'"  '.$check
                             .'/>'.$joined_files[$i]['viewLink'].'</td></tr>';
-                }
             }
         }
         //ATTACHMENTS TYPES LOOP
@@ -967,17 +947,11 @@ abstract class visa_Abstract extends Database
                         } else {
                             $check = ' disabled title="'._NO_PDF_FILE.'"';
                         }
-                        if ($joined_files[$i]['is_version'] == true) {
-                            $str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname'].' '
-                                .$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'
-                                .$id_doc.'" type="checkbox" name="join_version[]"  value="'.$id_doc.'"  '.$check
-                                .'/>'.$joined_files[$i]['viewLink'].'</td></tr>';
-                        } else {
-                            $str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname'].' '
-                                .$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'
-                                .$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
-                                .'/>'.$joined_files[$i]['viewLink'].'</td></tr>';
-                        }
+                        
+                        $str .= '<tr><td></td><td>'.$description.'</td><td>'.$contact['firstname'].' '
+                            .$contact['lastname'].'</td><td>'.$creation_date.'</td><td><input id="join_file_'
+                            .$id_doc.'" type="checkbox" name="join_attachment[]"  value="'.$id_doc.'"  '.$check
+                            .'/>'.$joined_files[$i]['viewLink'].'</td></tr>';
                     }
                 }
             }
@@ -1032,9 +1006,9 @@ abstract class visa_Abstract extends Database
     public function isAllAttachementSigned($res_id)
     {
         $db = new Database();
-        $stmt2 = $db->query("SELECT count(1) as nb from res_view_attachments WHERE in_signature_book = true AND signatory_user_serial_id IS NULL AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder','signed_response') AND res_id_master = ?", array($res_id));
+        $stmt2 = $db->query("SELECT count(1) as nb from res_attachments WHERE in_signature_book = true AND signatory_user_serial_id IS NULL AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder','signed_response') AND res_id_master = ?", array($res_id));
         $res2 = $stmt2->fetchObject();
-        $stmt3 = $db->query("SELECT count(1) as nb from res_view_attachments WHERE in_signature_book = true AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder','signed_response') AND res_id_master = ?", array($res_id));
+        $stmt3 = $db->query("SELECT count(1) as nb from res_attachments WHERE in_signature_book = true AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder','signed_response') AND res_id_master = ?", array($res_id));
         $res3 = $stmt3->fetchObject();
         if ($res3->nb == 0) {
             return 'noAttachment';
@@ -1054,7 +1028,7 @@ abstract class visa_Abstract extends Database
         $db = new Database();
         $stmt = $db->query("SELECT count(listinstance_id) as nb from listinstance l where l.res_id=? AND l.item_id=? AND l.difflist_type='VISA_CIRCUIT' AND l.requested_signature='true'", array($res_id, $user_id));
         $res = $stmt->fetchObject();
-        $stmt2 = $db->query("SELECT count(1) as nb from res_view_attachments r where r.res_id_master=? AND r.signatory_user_serial_id = (select id from users where user_id = ?) AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder')", array($res_id, $user_id));
+        $stmt2 = $db->query("SELECT count(1) as nb from res_attachments r where r.res_id_master=? AND r.signatory_user_serial_id = (select id from users where user_id = ?) AND status NOT IN ('DEL','OBS','TMP') AND attachment_type NOT IN ('converted_pdf','print_folder')", array($res_id, $user_id));
         $res2 = $stmt2->fetchObject();
 
         if ($res->nb > 0 && $res2->nb == 0) {

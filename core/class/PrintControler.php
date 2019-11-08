@@ -228,21 +228,17 @@ class PrintControler extends PrintFunctions
 				$pdf->useTemplate($tplIdx);
 			
 				/**********************************************************************/
-				
-				//THE FONT
-				$pdf->SetFont('Arial','B',11);
-				
+                //PRINT DATE
+                $pdf->SetFont('Arial','',10);
+                $pdf->Cell(40,5,utf8_decode(_PRINT_DATE . ' : ') . date('d-m-Y'),0,0, 'L', false);
+                
 				//APPLICATION NAME
-				$pdf->Cell(140,5, utf8_decode($_SESSION['config']['applicationname']),0,0, 'C', false);
-				
-				$pdf->SetFont('Arial','',10);
-				
-				//PRINT DATE
-				$pdf->Cell(40,5,utf8_decode(_PRINT_DATE . ' : ') . date('d-m-Y'),0,1, 'L', false);
+				$pdf->SetFont('Arial','B',11);
+				$pdf->Cell(110,5, utf8_decode($_SESSION['config']['applicationname']),0,1, 'C', false);
 				
 				$pdf->SetFont('Arial','B',10);
 				
-				//INITIATOR
+                //INITIATOR
                 if (!empty($resId)) {
                     $filename_QR = $_SESSION['config']['tmppath'].DIRECTORY_SEPARATOR.$_SESSION['user']['UserId'] . time() . rand() ."_QRCODE.png";
                     $parameter = \Parameter\models\ParameterModel::getById(['select' => ['param_value_int'], 'id' => 'QrCodePrefix']);
@@ -250,30 +246,23 @@ class PrintControler extends PrintFunctions
                     if ($parameter['param_value_int'] == 1) {
                         $prefix = 'Maarch_';
                     }
-                    QRcode::png($prefix . $resId, $filename_QR);
+                    QRcode::png($prefix . $resId, $filename_QR, 0, 10);
 
-                    $pdf->Image($filename_QR, 7, 3);
+                    $pdf->Image($filename_QR, 158, 5, 40, 40);
                 }
-                $pdf->Cell(20, 5, "", 0, 0, 'L', false);
+                $pdf->Cell(50, 5, "", 0, 0, 'L', false);
                 if ($this->array_print[$cpt]['initiator'] <> '') {
                     $stmt = $db->query(
                     	"select entity_label from entities where entity_id = ?", 
                     	array($this->array_print[$cpt]['initiator'])
                     );
                     $resultEntity = $stmt->fetchObject();
-                    $pdf->MultiCell(100, 5, utf8_decode(_INITIATOR . ' : '
+                    $pdf->MultiCell(90, 5, utf8_decode(_INITIATOR . ' : '
                         . $resultEntity->entity_label . " (" . $this->array_print[$cpt]['initiator'] . ")"), 0, 'C', false);
 				} elseif($this->array_print[$cpt]['typist'] <> '') {
-                    require_once "modules/entities/class/class_manage_entities.php";
-                    $entity = new entity();
-                    $initiator = $entity->get_primary_entity($this->array_print[$cpt]['typist']);
-                    $stmt = $db->query(
-                    	"select entity_label from entities where entity_id = ?", 
-                    	array($initiator['ID'])
-                    );
-                    $resultEntity = $stmt->fetchObject();
-                    $pdf->MultiCell(36,5,utf8_decode(_INITIATOR . ' : ' 
-                        . $resultEntity->entity_label . " (" . $initiator['ID'] . ")"), 0, 1, 'L', false);
+                    $primaryEntity = \User\models\UserModel::getPrimaryEntityById(['id' => $this->array_print[$cpt]['typist']]);
+                    $pdf->MultiCell(90, 5, utf8_decode(_INITIATOR . ' : ' 
+                        . $primaryEntity['entity_label'] . " (" . $primaryEntity['entity_id'] . ")"), 0, 'C', false);
                 }
 				$pdf->SetFont('Arial', 'B', 14);
 				
@@ -288,7 +277,7 @@ class PrintControler extends PrintFunctions
                 } else {
                     $fileNumber = $this->array_print[$cpt]['res_id'];
                 }
-				$pdf->Cell(182,5,utf8_decode(_PRINTED_FILE_NUMBER . ' : ') . $fileNumber, 1, 1, 'C', false);
+				$pdf->Cell(150,5,utf8_decode(_PRINTED_FILE_NUMBER . ' : ') . $fileNumber, 1, 1, 'C', false);
 				
 				//BREAK A LINE
 				$pdf->SetY($pdf->GetY()+4);
@@ -749,8 +738,6 @@ class PrintFunctions
             $query_template .= 'listinstance ';
         $query_template .= 'WHERE ';
                 $query_template .= "res_id = ##res_id## ";
-            $query_template .= "AND ";
-                $query_template .= "coll_id = '" . $collection . "' ";
             $query_template .= "AND ";
                 $query_template .= "item_mode = 'cc'";
         

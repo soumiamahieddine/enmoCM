@@ -15,7 +15,7 @@ namespace Shipping\controllers;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Entity\models\EntityModel;
-use Group\models\ServiceModel;
+use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
@@ -28,7 +28,7 @@ class ShippingTemplateController
 {
     public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_shippings', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_shippings', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -37,7 +37,7 @@ class ShippingTemplateController
 
     public function getById(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_shippings', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_shippings', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -88,7 +88,7 @@ class ShippingTemplateController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_shippings', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_shippings', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -130,7 +130,7 @@ class ShippingTemplateController
 
     public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_shippings', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_shippings', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -170,7 +170,7 @@ class ShippingTemplateController
 
     public function delete(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_shippings', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_shippings', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -252,7 +252,7 @@ class ShippingTemplateController
 
     public function initShipping(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_shippings', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_shippings', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -289,14 +289,8 @@ class ShippingTemplateController
     {
         $fee = 0;
         foreach ($aArgs['resources'] as $value) {
-            if (!empty($value['res_id'])) {
-                $isVersion = false;
-                $attachmentId = $value['res_id'];
-            } else {
-                $isVersion = true;
-                $attachmentId = $value['res_id_version'];
-            }
-            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $attachmentId, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+            $attachmentId = $value['res_id'];
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $attachmentId, 'collId' => 'attachments_coll']);
             $docserver           = DocserverModel::getByDocserverId(['docserverId' => $convertedAttachment['docserver_id'], 'select' => ['path_template']]);
             $pathToDocument      = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedAttachment['path']) . $convertedAttachment['filename'];
 

@@ -80,12 +80,4 @@
         <parameter name="page" value="update_visaPage"/>
         <parameter name="module" value="visa"/>
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="vi_view_pdf_attachement" >
-        <parameter name="page" value="view_pdf_attachement"/>
-        <parameter name="module" value="visa"/>
-    </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="vi_view_pdf_attachement" >
-        <parameter name="page" value="view_pdf_attachement"/>
-        <parameter name="module" value="visa"/>
-    </requestDefinition>
 </requestDefinitions>

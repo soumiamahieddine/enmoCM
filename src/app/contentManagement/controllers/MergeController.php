@@ -18,6 +18,7 @@ use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
+use Entity\models\ListInstanceModel;
 use Note\models\NoteModel;
 use Resource\models\ResModel;
 use SrcCore\models\TextFormatModel;
@@ -34,8 +35,8 @@ class MergeController
         ValidatorModel::notEmpty($args, ['data']);
         ValidatorModel::arrayType($args, ['data']);
         ValidatorModel::stringType($args, ['path', 'content']);
-        ValidatorModel::notEmpty($args['data'], ['resId', 'contactAddressId', 'userId']);
-        ValidatorModel::intVal($args['data'], ['resId', 'contactAddressId', 'userId']);
+        ValidatorModel::notEmpty($args['data'], ['userId']);
+        ValidatorModel::intVal($args['data'], ['userId']);
 
         $tbs = new \clsTinyButStrong();
         $tbs->NoErr = true;
@@ -79,81 +80,157 @@ class MergeController
 
     private static function getDataForMerge(array $args)
     {
-        ValidatorModel::notEmpty($args, ['resId', 'contactAddressId', 'userId']);
-        ValidatorModel::intVal($args, ['resId', 'contactAddressId', 'userId']);
+        ValidatorModel::notEmpty($args, ['userId']);
+        ValidatorModel::intVal($args, ['resId', 'userId']);
+        ValidatorModel::stringType($args, ['attachmentChrono', 'attachmentTitle']);
 
         //Resource
-        $resource = ResModel::getOnView(['select' => ['*'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]])[0];
-        $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date', 'creation_date'];
-        foreach ($allDates as $date) {
-            $resource[$date] = TextFormatModel::formatDate($resource[$date], 'd/m/Y');
-        }
-        if (!empty($resource['category_id'])) {
+        $resource = [];
+        if (!empty($args['resId'])) {
+            $resource = ResModel::getById(['select' => ['*'], 'resId' => [$args['resId']]]);
+            $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date', 'creation_date'];
+            foreach ($allDates as $date) {
+                $resource[$date] = TextFormatModel::formatDate($resource[$date], 'd/m/Y');
+            }
             $resource['category_id'] = ResModel::getCategoryLabel(['category_id' => $resource['category_id']]);
-        }
-        $doctype = DoctypeModel::getById(['id' => $resource['type_id'], 'select' => ['process_delay', 'process_mode']]);
-        $resource['process_delay'] = $doctype['process_delay'];
-        $resource['process_mode'] = $doctype['process_mode'];
 
-        if (!empty($resource['initiator'])) {
-            $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['*']]);
-            if (!empty($initiator)) {
-                foreach ($initiator as $key => $value) {
-                    $resource["initiator_{$key}"] = $value;
+            $doctype = DoctypeModel::getById(['id' => $resource['type_id'], 'select' => ['process_delay', 'process_mode', 'description']]);
+            $resource['type_label'] = $doctype['description'];
+            $resource['process_delay'] = $doctype['process_delay'];
+            $resource['process_mode'] = $doctype['process_mode'];
+
+            if (!empty($resource['initiator'])) {
+                $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['*']]);
+                if (!empty($initiator)) {
+                    foreach ($initiator as $key => $value) {
+                        $resource["initiator_{$key}"] = $value;
+                    }
+                }
+                if (!empty($initiator['parent_entity_id'])) {
+                    $parentInitiator = EntityModel::getByEntityId(['entityId' => $initiator['parent_entity_id'], 'select' => ['*']]);
                 }
             }
+            if (!empty($resource['destination'])) {
+                $destination = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['*']]);
+                if (!empty($destination['parent_entity_id'])) {
+                    $parentDestination = EntityModel::getByEntityId(['entityId' => $destination['parent_entity_id'], 'select' => ['*']]);
+                }
+            }
+        }
 
-            if (!empty($initiator['parent_entity_id'])) {
-                $parentInitiator = EntityModel::getByEntityId(['entityId' => $initiator['parent_entity_id'], 'select' => ['*']]);
-            }
-        }
-        if (!empty($resource['destination'])) {
-            $destination = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['*']]);
-            if (!empty($destination['parent_entity_id'])) {
-                $parentDestination = EntityModel::getByEntityId(['entityId' => $destination['parent_entity_id'], 'select' => ['*']]);
-            }
-        }
+        //Attachment
+        $attachment = [
+            'chrono'    => $args['attachmentChrono'] ?? null,
+            'title'     => $args['attachmentTitle'] ?? null
+        ];
 
         //User
         $currentUser = UserModel::getById(['id' => $args['userId'], 'select' => ['firstname', 'lastname', 'phone', 'mail', 'initials']]);
 
+        //Visas
+        $visas = '';
+        if (!empty($args['resId'])) {
+            $visaWorkflow = ListInstanceModel::get([
+                'select'    => ['item_id'],
+                'where'     => ['difflist_type = ?', 'res_id = ?'],
+                'data'      => ['VISA_CIRCUIT', $args['resId']],
+                'orderBy'   => ['listinstance_id']
+            ]);
+            foreach ($visaWorkflow as $value) {
+                $labelledUser = UserModel::getLabelledUserById(['id' => $value['item_id']]);
+                $primaryentity = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']]);
+                $visas .= "{$labelledUser} ({$primaryentity})\n";
+            }
+        }
+
+        //Opinions
+        $opinions = '';
+        if (!empty($args['resId'])) {
+            $opinionWorkflow = ListInstanceModel::get([
+                'select'    => ['item_id'],
+                'where'     => ['difflist_type = ?', 'res_id = ?'],
+                'data'      => ['AVIS_CIRCUIT', $args['resId']],
+                'orderBy'   => ['listinstance_id']
+            ]);
+            foreach ($opinionWorkflow as $value) {
+                $labelledUser = UserModel::getLabelledUserById(['id' => $value['item_id']]);
+                $primaryentity = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']]);
+                $opinions .= "{$labelledUser} ({$primaryentity})\n";
+            }
+        }
+
+        //Copies
+        $copies = '';
+        if (!empty($args['resId'])) {
+            $copyWorkflow = ListInstanceModel::get([
+                'select'    => ['item_id', 'item_type'],
+                'where'     => ['difflist_type = ?', 'res_id = ?', 'item_mode = ?'],
+                'data'      => ['entity_id', $args['resId'], 'cc'],
+                'orderBy'   => ['listinstance_id']
+            ]);
+            foreach ($copyWorkflow as $value) {
+                if ($value['item_type'] == 'user_id') {
+                    $labelledUser = UserModel::getLabelledUserById(['id' => $value['item_id']]);
+                    $primaryentity = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']]);
+                    $label = "{$labelledUser} ({$primaryentity})";
+                } else {
+                    $entity = EntityModel::getByEntityId(['entityId' => $value['item_id'], 'select' => ['entity_label']]);
+                    $label = $entity['entity_label'];
+                }
+                $copies .= "{$label}\n";
+            }
+        }
+
         //Contact
-        $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$args['contactAddressId']]])[0];
-        $contact['postal_address'] = ContactController::formatContactAddressAfnor($contact);
-        $contact['title'] = ContactModel::getCivilityLabel(['civilityId' => $contact['title']]);
-        if (empty($contact['title'])) {
-            $contact['title'] = ContactModel::getCivilityLabel(['civilityId' => $contact['contact_title']]);
-        }
-        if (empty($contact['firstname'])) {
-            $contact['firstname'] = $contact['contact_firstname'];
-        }
-        if (empty($contact['lastname'])) {
-            $contact['lastname'] = $contact['contact_lastname'];
-        }
-        if (empty($contact['function'])) {
-            $contact['function'] = $contact['contact_function'];
-        }
-        if (empty($contact['other_data'])) {
-            $contact['other_data'] = $contact['contact_other_data'];
-        }
+//        $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$args['contactAddressId']]])[0];
+//        $contact['postal_address'] = ContactController::formatContactAddressAfnor($contact);
+//        $contact['title'] = ContactModel::getCivilityLabel(['civilityId' => $contact['title']]);
+//        if (empty($contact['title'])) {
+//            $contact['title'] = ContactModel::getCivilityLabel(['civilityId' => $contact['contact_title']]);
+//        }
+//        if (empty($contact['firstname'])) {
+//            $contact['firstname'] = $contact['contact_firstname'];
+//        }
+//        if (empty($contact['lastname'])) {
+//            $contact['lastname'] = $contact['contact_lastname'];
+//        }
+//        if (empty($contact['function'])) {
+//            $contact['function'] = $contact['contact_function'];
+//        }
+//        if (empty($contact['other_data'])) {
+//            $contact['other_data'] = $contact['contact_other_data'];
+//        }
 
         //Notes
         $mergedNote = '';
-        $notes = NoteModel::getByUserIdForResource(['select' => ['note_text', 'creation_date', 'user_id'], 'resId' => $args['resId'], 'userId' => $args['userId']]);
-        foreach ($notes as $note) {
-            $labelledUser = UserModel::getLabelledUserById(['id' => $note['user_id']]);
-            $creationDate = TextFormatModel::formatDate($note['creation_date'], 'd/m/Y');
-            $mergedNote .= "{$labelledUser} : {$creationDate} : {$note['note_text']}\n";
+        if (!empty($args['resId'])) {
+            $notes = NoteModel::getByUserIdForResource(['select' => ['note_text', 'creation_date', 'user_id'], 'resId' => $args['resId'], 'userId' => $args['userId']]);
+            foreach ($notes as $note) {
+                $labelledUser = UserModel::getLabelledUserById(['id' => $note['user_id']]);
+                $creationDate = TextFormatModel::formatDate($note['creation_date'], 'd/m/Y');
+                $mergedNote .= "{$labelledUser} : {$creationDate} : {$note['note_text']}\n";
+            }
         }
+
+        //Datetime
+        $datetime = [
+            'date'  => date('d-m-Y'),
+            'time'  => date('H:i')
+        ];
 
         $dataToBeMerge['res_letterbox']     = $resource;
         $dataToBeMerge['initiator']         = empty($initiator) ? [] : $initiator;
         $dataToBeMerge['parentInitiator']   = empty($parentInitiator) ? [] : $parentInitiator;
         $dataToBeMerge['destination']       = empty($destination) ? [] : $destination;
         $dataToBeMerge['parentDestination'] = empty($parentDestination) ? [] : $parentDestination;
+        $dataToBeMerge['attachment']        = $attachment;
         $dataToBeMerge['user']              = $currentUser;
-        $dataToBeMerge['contact']           = $contact;
+        $dataToBeMerge['visas']             = $visas;
+        $dataToBeMerge['opinions']          = $opinions;
+        $dataToBeMerge['copies']            = $copies;
+        $dataToBeMerge['contact']           = [];
         $dataToBeMerge['notes']             = $mergedNote;
+        $dataToBeMerge['datetime']          = $datetime;
 
         return $dataToBeMerge;
     }

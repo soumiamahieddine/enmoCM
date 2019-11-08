@@ -211,15 +211,15 @@ if ($stmt->rowCount() > 0) {
 }
 $stmt = $db->query(
     'SELECT status, format, typist, creation_date, fingerprint, filesize, '
-    .'res_id, destination, source, '
-    .'description, closing_date, alt_identifier, initiator, entity_label '.$comp_fields
+    .'res_id, destination, '
+    .'closing_date, alt_identifier, initiator, entity_label '.$comp_fields
     .' FROM '.$table.' WHERE res_id = ?',
     array($s_id)
 );
 $res = $stmt->fetchObject();
 ?>
 <div id="details_div">
-<?php
+    <?php
 echo '<h1 class="titdetail"><i class="fa fa-info-circle fa-2x"></i> ';
 if (_ID_TO_DISPLAY == 'res_id') {
     $idToDisplay = $s_id;
@@ -231,8 +231,8 @@ if (_ID_TO_DISPLAY == 'res_id') {
 echo "<i style='font-style:normal;' title='{$titleToDisplay}'>"._DETAILS.' : '._MAIL." {$idToDisplay}</i>";
 echo '</h1>';
 ?>
-<div id="inner_content" class="clearfix">
-<?php
+    <div id="inner_content" class="clearfix">
+        <?php
 if ($stmt->rowCount() == 0) {
     $_SESSION['error'] = _NO_DOCUMENT_CORRESPOND_TO_IDENTIFIER;
     echo "<script language=\"javascript\" type=\"text/javascript\">window.top.location.href='index.php';</script>";
@@ -334,34 +334,34 @@ if ($stmt->rowCount() == 0) {
         $_SESSION['features']['further_informations'][$indexes[$key]['label']] = $indexes[$key]['value'];
     }
     $data = get_general_data($coll_id, $s_id, $mode_data, $param_data); ?>
-    <div class="block">
-        <b>
-        <p id="back_list">
-            <?php
+        <div class="block">
+            <b>
+                <p id="back_list">
+                    <?php
             if (!isset($_POST['up_res_id']) || !$_POST['up_res_id']) {
                 if ($_SESSION['indexation'] == false) {
                     echo '<a href="javascript:history.go(-1)"><i class="fa fa-arrow-circle-left fa-2x" title="'._BACK.'"></i></a>';
                 }
             } ?>
-        </p>
-        <p id="viewdoc">
-            <?php if ($info_mail->filename) {
+                </p>
+                <p id="viewdoc">
+                    <?php if ($info_mail->filename) {
                 ?>
-                <a href="../../rest/resources/<?php functions::xecho($s_id); ?>/content" target="_blank">
-                    <?php echo _VIEW_DOC;?>
-                    <i class="tooltip visaPjUp tooltipstered fa fa-eye fa-2x" style="height: auto; width: auto;font-size: 14px;margin-right:6px;margin-top: -9px;" title="<?php echo _VIEW_DOC; ?>"></i>
-                </a>
-                <a href="../../rest/resources/<?php functions::xecho($s_id); ?>/originalContent" target="_blank">
-                    <i class="tooltip visaPjUp tooltipstered fa fa-download fa-2x" style="height: auto; width: auto;font-size: 14px;margin-right:6px;margin-top: -9px;" title="<?php echo _DOWNLOAD_MAIN_DOCUMENT; ?>"></i>
-                </a>
-            <?php
+                    <a href="../../rest/resources/<?php functions::xecho($s_id); ?>/content" target="_blank">
+                        <?php echo _VIEW_DOC; ?>
+                        <i class="tooltip visaPjUp tooltipstered fa fa-eye fa-2x" style="height: auto; width: auto;font-size: 14px;margin-right:6px;margin-top: -9px;" title="<?php echo _VIEW_DOC; ?>"></i>
+                    </a>
+                    <a href="../../rest/resources/<?php functions::xecho($s_id); ?>/originalContent" target="_blank">
+                        <i class="tooltip visaPjUp tooltipstered fa fa-download fa-2x" style="height: auto; width: auto;font-size: 14px;margin-right:6px;margin-top: -9px;" title="<?php echo _DOWNLOAD_MAIN_DOCUMENT; ?>"></i>
+                    </a>
+                    <?php
             } ?>
-            &nbsp;&nbsp;&nbsp;
-        </p>
-        </b>&nbsp;
-    </div>
-    <br/>
-    <?php
+                    &nbsp;&nbsp;&nbsp;
+                </p>
+            </b>&nbsp;
+        </div>
+        <br />
+        <?php
     //CONSTRUCT TABS
     echo '<div class="whole-panel">';
     echo '<div style="display:flex;justify-content: flex-end;">';
@@ -528,14 +528,13 @@ if ($stmt->rowCount() == 0) {
 
     //DETAILS TAB
     echo "<div class='fa fa-info-circle detailsTab DetailsTabFunc TabSelected' id='DetailstachometerTab' style='font-size: 2em;padding-left: 15px;padding-right: 15px;padding-top: 5px;' title='"._PROPERTIES."' onclick=\"tabClicked('DetailstachometerTab',false);\"></div>";
-    echo '</div>';
-    ?>
+    echo '</div>'; ?>
 
-    <div class="detailsDisplayDiv" id = "home-panel">         
-        <br/>
-        <form method="post" name="index_doc" id="index_doc" action="index.php?page=details&dir=indexing_searching&id=<?php functions::xecho($s_id); ?>">
-        <div align="center">
-        <?php
+        <div class="detailsDisplayDiv" id="home-panel">
+            <br />
+            <form method="post" name="index_doc" id="index_doc" action="index.php?page=details&dir=indexing_searching&id=<?php functions::xecho($s_id); ?>">
+                <div align="center">
+                    <?php
         //TOOLBAR
         $toolBar = '';
 
@@ -553,14 +552,14 @@ if ($stmt->rowCount() == 0) {
     $toolBar .= '<input type="button" class="button" name="back_welcome" id="back_welcome" value="'._BACK_TO_WELCOME.'" onclick="window.top.location.href=\''.$_SESSION['config']['businessappurl'].'index.php\';" />';
 
     echo $toolBar; ?>
-        </div>
-        <h2>
-            <span class="date">
-                <b><?php echo _FILE_DATA; ?></b>
-            </span>
-        </h2>
-        <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
-        <?php
+                </div>
+                <h2>
+                    <span class="date">
+                        <b><?php echo _FILE_DATA; ?></b>
+                    </span>
+                </h2>
+                <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
+                    <?php
         $i = 0;
     if (!$modify_doc) {
         $data['process_limit_date']['readonly'] = true;
@@ -941,35 +940,35 @@ if ($stmt->rowCount() == 0) {
     echo '</tr>';
     echo '</table>';
     //END GENERAL DATAS?>
-                    
-        <div id="opt_indexes">
-            <?php if (count($indexes) > 0 || ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1))) {
+
+                    <div id="opt_indexes">
+                        <?php if (count($indexes) > 0 || ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1))) {
         ?>
-            <br/>
-            <h2>
-            <span class="date">
-                <b><?php echo _OPT_INDEXES; ?></b>
-            </span>
-            </h2>
-            <br/>
-            <div class="block forms details">
-                <table cellpadding="2" cellspacing="2" border="0" id="opt_indexes_custom" width="100%">
-                    <?php
+                        <br />
+                        <h2>
+                            <span class="date">
+                                <b><?php echo _OPT_INDEXES; ?></b>
+                            </span>
+                        </h2>
+                        <br />
+                        <div class="block forms details">
+                            <table cellpadding="2" cellspacing="2" border="0" id="opt_indexes_custom" width="100%">
+                                <?php
                     $i = 0;
         foreach (array_keys($indexes) as $key) {
             if ($i % 2 != 1 || $i == 0) { // pair
                 echo '<tr class="col">';
             } ?>
-                        <th align="left" class="picto" >
-                        <?php
+                                <th align="left" class="picto">
+                                    <?php
                         if (isset($indexes[$key]['img'])) {
                             ?>
-                            <i class="fa fa-<?php functions::xecho($indexes[$key]['img']); ?> fa-2x" title="<?php echo $indexes[$key]['label']; ?>"></i>
-                            <?php
+                                    <i class="fa fa-<?php functions::xecho($indexes[$key]['img']); ?> fa-2x" title="<?php echo $indexes[$key]['label']; ?>"></i>
+                                    <?php
                         } ?>
-                        </th>
-                        <td align="left" width="200px">
-                            <?php
+                                </th>
+                                <td align="left" width="200px">
+                                    <?php
                             echo $indexes[$key]['label']; ?>:
                                 </td>
                                 <td style="position:relative">
@@ -986,26 +985,26 @@ if ($stmt->rowCount() == 0) {
                             } ?>style="width: 99%; font-size:100%" title="
                                     <?php functions::xecho($indexes[$key]['show_value']); ?>" alt="
                                     <?php functions::xecho($indexes[$key]['show_value']); ?>" />-->
-                                    <textarea name="<?php functions::xecho($key); ?>" id="<?php functions::xecho($key); ?>"
-                                        <?php if (!isset($indexes[$key]['readonly']) || $indexes[$key]['readonly'] == true) {
+                                    <textarea name="<?php functions::xecho($key); ?>" id="<?php functions::xecho($key); ?>" <?php if (!isset($indexes[$key]['readonly']) || $indexes[$key]['readonly'] == true) {
                                 echo 'readonly="readonly" class="readonly"';
                             } elseif ($indexes[$key]['type'] == 'date') {
                                 echo 'onclick="showCalender(this);"';
                             } ?> style="width: 200px; "  title="<?php echo $indexes[$key]['show_value']; ?>" alt="<?php echo $indexes[$key]['show_value']; ?>" ><?php echo $indexes[$key]['show_value']; ?></textarea>
-                        <?php
+                                    <?php
                         } else {
                             ?>
-                            <select name="<?php functions::xecho($key); ?>" id="<?php functions::xecho($key); ?>" >
-                                <option value=""><?php echo _CHOOSE; ?>...</option>
-                                <?php
+                                    <select name="<?php functions::xecho($key); ?>" id="<?php functions::xecho($key); ?>">
+                                        <option value=""><?php echo _CHOOSE; ?>...</option>
+                                        <?php
                                 for ($j = 0; $j < count($indexes[$key]['values']); ++$j) {
                                     ?>
-                                    <option value="<?php functions::xecho($indexes[$key]['values'][$j]['id']); ?>" <?php
+                                        <option value="<?php functions::xecho($indexes[$key]['values'][$j]['id']); ?>" <?php
                                     if ($indexes[$key]['values'][$j]['id'] == $indexes[$key]['value']) {
                                         echo 'selected="selected"';
-                                    } ?>><?php echo $indexes[$key]['values'][$j]['label']; ?></option><?php
+                                    } ?>><?php echo $indexes[$key]['values'][$j]['label']; ?>
+                                        </option><?php
                                 } ?>
-                            </select><?php
+                                    </select><?php
                         }
             echo '</td>';
 
@@ -1018,47 +1017,33 @@ if ($stmt->rowCount() == 0) {
             }
             ++$i;
         } ?>
-                </table>
-                <table cellpadding="2" cellspacing="2" border="0" width="100%">
-                <?php
+                            </table>
+                            <table cellpadding="2" cellspacing="2" border="0" width="100%">
+                                <?php
                 if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
                     include_once 'modules/tags/templates/details/index.php';
-                }
-        ?>
-                </table>
-            </div>
-            <?php
+                } ?>
+                            </table>
+                        </div>
+                        <?php
     } ?>
-        </div>
-    </form>
-    <br>
-    <br>    
-    <?php
+                    </div>
+            </form>
+            <br>
+            <br>
+            <?php
 }
     ?>
-</div>
-<?php 
+        </div>
+        <?php
     $technicalInfo_frame = '<div class="detailsDisplayDiv" id="uniqueDetailsDiv" style="display:none;">';
     $technicalInfo_frame .= '<iframe src="" name="uniqueDetailsIframe" width="100%" align="left" scrolling="yes" frameborder="0" id="uniqueDetailsIframe" style="height:100%;"></iframe>';
     $technicalInfo_frame .= '</div>';
-    echo $technicalInfo_frame; ?>     
+    echo $technicalInfo_frame; ?>
     </div>
 </div>
 </div>
 <?php
 //INITIALIZE INDEX TABS
-
-//OUTGOING CREATION MODE
-if ($_SESSION['indexation'] == true && $category == 'outgoing') {
-    $_SESSION['indexation'] = false;
-    $is_outgoing_indexing_mode = false;
-    $selectAttachments = 'SELECT attachment_type FROM res_view_attachments'
-        ." WHERE res_id_master = ? and coll_id = ? and status <> 'DEL' and attachment_type in ('outgoing_mail', 'outgoing_mail_signed')";
-    $stmt = $db->query($selectAttachments, array($_SESSION['doc_id'], $_SESSION['collection_id_choice']));
-    if ($stmt->rowCount() == 0) {
-        //launch outgoing_mail creation
-        echo '<script type="text/javascript">document.getElementById(\'responses_tab\').click();showAttachmentsForm(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create&cat=outgoing\',\'98%\',\'auto\');</script>';
-    }
-}
 
 $_SESSION['info'] = '';

@@ -70,16 +70,11 @@
     	<parameter name="id" type="string" />
     	<parameter name="collId" type="collection_list" />
     	<parameter name="modeSign" type="string" />
-    	<parameter name="isVersion" type="string" />
 		<parameter name="isOutgoing" type="string" />
     </validationRule>
     <validationRule name="vi_update_visaPage" extends="standardForm" mode="error">
     	<parameter name="res_id" type="integer" />
     	<parameter name="coll_id" type="collection_list" />
     	<parameter name="action" type="string" />
-    </validationRule>
-    <validationRule name="vi_view_pdf_attachement" extends="standardForm" mode="error">
-    	<parameter name="res_id_master" type="integer" />
-    	<parameter name="id" type="integer" />
     </validationRule>
 </validationRules>

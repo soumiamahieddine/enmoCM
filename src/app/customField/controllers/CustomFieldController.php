@@ -18,7 +18,8 @@
 namespace CustomField\controllers;
 
 use CustomField\models\CustomFieldModel;
-use Group\models\ServiceModel;
+use CustomField\models\ResourceCustomFieldModel;
+use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
 use Respect\Validation\Validator;
@@ -40,7 +41,7 @@ class CustomFieldController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_custom_fields', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_custom_fields', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -79,7 +80,7 @@ class CustomFieldController
 
     public function update(Request $request, Response $response, array $args)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_custom_fields', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_custom_fields', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -132,7 +133,7 @@ class CustomFieldController
 
     public function delete(Request $request, Response $response, array $args)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_custom_fields', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_custom_fields', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -142,9 +143,8 @@ class CustomFieldController
 
         $field = CustomFieldModel::getById(['select' => ['label'], 'id' => $args['id']]);
 
-        IndexingModelFieldModel::delete(['where' => ['identifier = ?'], 'data' => [$args['id']]]);
-
-        //TODO Suppression des valeurs liés aux courriers ?
+        IndexingModelFieldModel::delete(['where' => ['identifier = ?'], 'data' => ['indexingCustomField_' . $args['id']]]);
+        ResourceCustomFieldModel::delete(['where' => ['custom_field_id = ?'], 'data' => [$args['id']]]);
 
         CustomFieldModel::delete([
             'where' => ['id = ?'],

@@ -204,7 +204,7 @@ class NoteModel
     public static function getByUserIdForResource(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['userId', 'resId', 'select']);
-        ValidatorModel::intVal($aArgs, ['userId', 'resId']);
+        ValidatorModel::intVal($aArgs, ['userId', 'resId', 'limit']);
         ValidatorModel::arrayType($aArgs, ['select']);
 
         $user = UserModel::getById(['select' => ['user_id'], 'id' => $aArgs['userId']]);
@@ -219,7 +219,8 @@ class NoteModel
             'select'    => $aArgs['select'],
             'where'     => ['identifier = ?'],
             'data'      => [$aArgs['resId']],
-            'orderBy'   => ['id desc']
+            'orderBy'   => ['id desc'],
+            'limit'     => empty($aArgs['limit']) ? null : $aArgs['limit']
         ]);
 
         $notes = [];

@@ -16,7 +16,7 @@ namespace Contact\controllers;
 
 use Contact\models\ContactFillingModel;
 use Contact\models\ContactModel;
-use Group\models\ServiceModel;
+use Group\controllers\PrivilegeController;
 use SrcCore\models\CoreConfigModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -28,10 +28,10 @@ class ContactController
 {
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']) &&
-            !ServiceModel::hasService(['id' => 'my_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
-            !ServiceModel::hasService(['id' => 'my_contacts_menu', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu']) &&
-            !ServiceModel::hasService(['id' => 'create_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]) &&
+            !PrivilegeController::hasPrivilege(['privilegeId' => 'my_contacts', 'userId' => $GLOBALS['id']]) &&
+            !PrivilegeController::hasPrivilege(['privilegeId' => 'my_contacts_menu', 'userId' => $GLOBALS['id']]) &&
+            !PrivilegeController::hasPrivilege(['privilegeId' => 'create_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -93,11 +93,11 @@ class ContactController
 
     public function createAddress(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']) &&
-            !ServiceModel::hasService(['id' => 'my_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
-            !ServiceModel::hasService(['id' => 'update_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
-            !ServiceModel::hasService(['id' => 'my_contacts_menu', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu']) &&
-            !ServiceModel::hasService(['id' => 'create_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]) &&
+            !PrivilegeController::hasPrivilege(['privilegeId' => 'my_contacts', 'userId' => $GLOBALS['id']]) &&
+            !PrivilegeController::hasPrivilege(['privilegeId' => 'update_contacts', 'userId' => $GLOBALS['id']]) &&
+            !PrivilegeController::hasPrivilege(['privilegeId' => 'my_contacts_menu', 'userId' => $GLOBALS['id']]) &&
+            !PrivilegeController::hasPrivilege(['privilegeId' => 'create_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -141,10 +141,10 @@ class ContactController
 
     public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']) &&
-            !ServiceModel::hasService(['id' => 'update_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
-            !ServiceModel::hasService(['id' => 'my_contacts_menu', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu']) &&
-            !ServiceModel::hasService(['id' => 'create_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]) &&
+            !PrivilegeController::hasPrivilege(['privilegeId' => 'update_contacts', 'userId' => $GLOBALS['id']]) &&
+            !PrivilegeController::hasPrivilege(['privilegeId' => 'my_contacts_menu', 'userId' => $GLOBALS['id']]) &&
+            !PrivilegeController::hasPrivilege(['privilegeId' => 'create_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -163,10 +163,10 @@ class ContactController
 
     public function updateAddress(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']) &&
-            !ServiceModel::hasService(['id' => 'update_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use']) &&
-            !ServiceModel::hasService(['id' => 'my_contacts_menu', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu']) &&
-            !ServiceModel::hasService(['id' => 'create_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'menu'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]) &&
+            !PrivilegeController::hasPrivilege(['privilegeId' => 'update_contacts', 'userId' => $GLOBALS['id']]) &&
+            !PrivilegeController::hasPrivilege(['privilegeId' => 'my_contacts_menu', 'userId' => $GLOBALS['id']]) &&
+            !PrivilegeController::hasPrivilege(['privilegeId' => 'create_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -208,7 +208,7 @@ class ContactController
 
     public function updateFilling(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_contacts', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

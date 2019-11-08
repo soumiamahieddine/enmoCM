@@ -29,36 +29,36 @@
                     <div class="col-md-6 adminArea_1" *ngIf="organisationServices">
                         <div class="adminArea-label">{{lang.organization}}</div>
                         <button class="col-md-4 col-xs-6 adminArea-button"
-                            mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of organisationServices"
+                            mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of organisationServices | sortBy : 'label'"
                             (click)="goToSpecifiedAdministration(modService)">
                             <i class="{{modService.style}} fa-4x"></i>
-                            <br />{{modService.name}}</button>
+                            <br />{{modService.label}}</button>
                     </div>
 
                     <div class="col-md-6 adminArea_2" *ngIf="productionServices">
                         <div class="adminArea-label">{{lang.production}}</div>
                         <button class="col-md-4 col-xs-6 adminArea-button"
-                            mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of productionServices"
+                            mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of productionServices | sortBy : 'label'"
                             (click)="goToSpecifiedAdministration(modService)">
                             <i class="{{modService.style}} fa-4x"></i>
-                            <br />{{modService.name}}</button>
+                            <br />{{modService.label}}</button>
                     </div>
                     <div class="col-md-6 adminArea_3" *ngIf="classementServices">
                         <div class="adminArea-label">{{lang.classifying}}</div>
                         <button class="col-md-4 col-xs-6 adminArea-button"
-                            mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of classementServices"
+                            mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of classementServices | sortBy : 'label'"
                             (click)="goToSpecifiedAdministration(modService)">
                             <i class="{{modService.style}} fa-4x"></i>
-                            <br />{{modService.name}}</button>
+                            <br />{{modService.label}}</button>
                     </div>
                     <div class="col-md-6 adminArea_4" *ngIf="supervisionServices">
                         <div class="adminArea-label">{{lang.supervision}}</div>
                         <ng-container>
                             <button class="col-md-4 col-xs-6 adminArea-button"
-                                mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of supervisionServices"
+                                mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of supervisionServices | sortBy : 'label'"
                                 (click)="goToSpecifiedAdministration(modService)">
                                 <i class="{{modService.style}} fa-4x"></i>
-                                <br />{{modService.name}}</button>
+                                <br />{{modService.label}}</button>
                         </ng-container>
                     </div>
                 </div>

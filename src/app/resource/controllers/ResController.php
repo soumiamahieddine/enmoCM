@@ -32,7 +32,7 @@ use Folder\controllers\FolderController;
 use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
 use Group\controllers\GroupController;
-use Group\models\ServiceModel;
+use Group\models\PrivilegeModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
 use IndexingModel\models\IndexingModelModel;
@@ -65,7 +65,7 @@ class ResController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::canIndex(['userId' => $GLOBALS['id']])) {
+        if (!PrivilegeModel::canIndex(['userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -86,13 +86,12 @@ class ResController
         if (!empty($body['encodedFile'])) {
             ConvertPdfController::convert([
                 'resId'     => $resId,
-                'collId'    => 'letterbox_coll',
-                'isVersion' => false
+                'collId'    => 'letterbox_coll'
             ]);
 
             $customId = CoreConfigModel::getCustomId();
             $customId = empty($customId) ? 'null' : $customId;
-            exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId 'letterbox_coll' --userId {$GLOBALS['id']} > /dev/null &");
+            exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId letterbox_coll --userId {$GLOBALS['id']} > /dev/null &");
         }
 
         HistoryController::add([
@@ -105,6 +104,92 @@ class ResController
         ]);
 
         return $response->withJson(['resId' => $resId]);
+    }
+
+    public function getById(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $queryParams = $request->getQueryParams();
+
+        $select = ['model_id', 'category_id', 'priority', 'subject', 'alt_identifier', 'process_limit_date', 'closing_date', 'creation_date', 'modification_date'];
+        if (empty($queryParams['light'])) {
+            $select = array_merge($select, ['type_id', 'typist', 'status', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date', 'departure_date', 'barcode']);
+        }
+
+        $document = ResModel::getById([
+            'select'    => $select,
+            'resId'     => $args['resId']
+        ]);
+        if (empty($document)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
+        }
+
+        $unchangeableData = [
+            'resId'                 => (int)$args['resId'],
+            'modelId'               => $document['model_id'],
+            'categoryId'            => $document['category_id'],
+            'chrono'                => $document['alt_identifier'],
+            'closingDate'           => $document['closing_date'],
+            'creationDate'          => $document['creation_date'],
+            'modificationDate'      => $document['modification_date']
+        ];
+        $formattedData = [
+            'subject'               => $document['subject'],
+            'processLimitDate'      => $document['process_limit_date'],
+            'priority'              => $document['priority']
+        ];
+        if (empty($queryParams['light'])) {
+            $formattedData = array_merge($formattedData, [
+                'doctype'               => $document['type_id'],
+                'typist'                => $document['typist'],
+                'typistLabel'           => UserModel::getLabelledUserById(['id' => $document['typist']]),
+                'status'                => $document['status'],
+                'destination'           => $document['destination'],
+                'initiator'             => $document['initiator'],
+                'confidentiality'       => $document['confidentiality'] == 'Y',
+                'documentDate'          => $document['doc_date'],
+                'arrivalDate'           => $document['admission_date'],
+                'departureDate'         => $document['departure_date'],
+                'barcode'               => $document['barcode']
+            ]);
+        }
+        
+        $modelFields = IndexingModelFieldModel::get([
+            'select'    => ['identifier'],
+            'where'     => ['model_id = ?'],
+            'data'      => [$document['model_id']]
+        ]);
+        $modelFields = array_column($modelFields, 'identifier');
+
+        foreach ($formattedData as $key => $data) {
+            if (!in_array($key, $modelFields)) {
+                unset($formattedData[$key]);
+            }
+        }
+        $formattedData = array_merge($unchangeableData, $formattedData);
+
+        if (!empty($formattedData['destination'])) {
+            $entity = EntityModel::getByEntityId(['entityId' => $formattedData['destination'], 'select' => ['entity_label']]);
+            $formattedData['destinationLabel'] = $entity['entity_label'];
+        }
+        if (!empty($formattedData['initiator'])) {
+            $entity = EntityModel::getByEntityId(['entityId' => $formattedData['initiator'], 'select' => ['entity_label']]);
+            $formattedData['initiatorLabel'] = $entity['entity_label'];
+        }
+        if (!empty($formattedData['status'])) {
+            $status = StatusModel::getById(['id' => $formattedData['status'], 'select' => ['label_status']]);
+            $formattedData['statusLabel'] = $status['label_status'];
+        }
+        if (!empty($formattedData['priority'])) {
+            $priority = PriorityModel::getById(['id' => $formattedData['priority'], 'select' => ['label', 'color']]);
+            $formattedData['priorityLabel'] = $priority['label'];
+            $formattedData['priorityColor'] = $priority['color'];
+        }
+
+        return $response->withJson($formattedData);
     }
 
     public function updateStatus(Request $request, Response $response)
@@ -173,22 +258,18 @@ class ResController
         }
 
         if ($document['category_id'] == 'outgoing') {
-            $attachment = AttachmentModel::getOnView([
-                'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename'],
+            $attachment = AttachmentModel::get([
+                'select'    => ['res_id', 'docserver_id', 'path', 'filename'],
                 'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
                 'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
                 'limit'     => 1
             ]);
             if (!empty($attachment[0])) {
                 $attachmentTodisplay = $attachment[0];
-                $id = (empty($attachmentTodisplay['res_id']) ? $attachmentTodisplay['res_id_version'] : $attachmentTodisplay['res_id']);
-                $isVersion = empty($attachmentTodisplay['res_id']);
-                if ($isVersion) {
-                    $collId = "attachments_version_coll";
-                } else {
-                    $collId = "attachments_coll";
-                }
-                $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => $collId, 'isVersion' => $isVersion]);
+                $id = $attachmentTodisplay['res_id'];
+                $collId = "attachments_coll";
+                
+                $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => $collId]);
                 if (empty($convertedDocument['errors'])) {
                     $attachmentTodisplay = $convertedDocument;
                 }
@@ -198,7 +279,7 @@ class ResController
                 $document['fingerprint'] = $attachmentTodisplay['fingerprint'];
             }
         } else {
-            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll', 'isVersion' => false]);
+            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll']);
 
             if (empty($convertedDocument['errors'])) {
                 $documentTodisplay = $convertedDocument;
@@ -294,18 +375,11 @@ class ResController
         }
 
         if (empty($fileContent)) {
-            $fileContent = file_get_contents($pathToDocument);
+            return $response->withStatus(404)->withJson(['errors' => 'Converted Document not found']);
         }
         if ($fileContent === false) {
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }
-
-        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->buffer($fileContent);
-        $pathInfo = pathinfo($pathToDocument);
-
-        $response->write($fileContent);
-        $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
 
         ListInstanceModel::update([
             'postSet'   => ['viewed' => 'viewed + 1'],
@@ -321,7 +395,18 @@ class ResController
             'eventId'   => 'resview',
         ]);
 
-        return $response->withHeader('Content-Type', $mimeType);
+        $data = $request->getQueryParams();
+        if ($data['mode'] == 'base64') {
+            return $response->withJson(['encodedDocument' => base64_encode($fileContent)]);
+        } else {
+            $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+            $mimeType = $finfo->buffer($fileContent);
+            $pathInfo = pathinfo($pathToDocument);
+
+            $response->write($fileContent);
+            $response = $response->withAddedHeader('Content-Disposition', "attachment; filename=maarch.{$pathInfo['extension']}");
+            return $response->withHeader('Content-Type', $mimeType);
+        }
     }
 
     public function getOriginalFileContent(Request $request, Response $response, array $aArgs)
@@ -340,8 +425,8 @@ class ResController
         }
 
         if ($document['category_id'] == 'outgoing') {
-            $attachment = AttachmentModel::getOnView([
-                'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename', 'fingerprint'],
+            $attachment = AttachmentModel::get([
+                'select'    => ['res_id', 'docserver_id', 'path', 'filename', 'fingerprint'],
                 'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
                 'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
                 'limit'     => 1
@@ -423,8 +508,8 @@ class ResController
             if (empty($tnlAdr)) {
                 $document = ResModel::getById(['select' => ['category_id'], 'resId' => $aArgs['resId']]);
                 if ($document['category_id'] == 'outgoing') {
-                    $attachment = AttachmentModel::getOnView([
-                        'select'    => ['res_id', 'res_id_version'],
+                    $attachment = AttachmentModel::get([
+                        'select'    => ['res_id'],
                         'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
                         'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
                         'limit'     => 1
@@ -433,7 +518,7 @@ class ResController
                         ConvertThumbnailController::convert([
                             'collId'            => 'letterbox_coll',
                             'resId'             => $aArgs['resId'],
-                            'outgoingId'        => empty($attachment[0]['res_id']) ? $attachment[0]['res_id_version'] : $attachment[0]['res_id'],
+                            'outgoingId'        => $attachment[0]['res_id'],
                             'isOutgoingVersion' => empty($attachment[0]['res_id'])
                         ]);
                     }
@@ -541,22 +626,17 @@ class ResController
 
         if (empty($aArgs['original'])) {
             if ($document['category_id'] == 'outgoing') {
-                $attachment = AttachmentModel::getOnView([
-                    'select'    => ['res_id', 'res_id_version', 'docserver_id', 'path', 'filename'],
+                $attachment = AttachmentModel::get([
+                    'select'    => ['res_id', 'docserver_id', 'path', 'filename'],
                     'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
                     'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
                     'limit'     => 1
                 ]);
                 if (!empty($attachment[0])) {
                     $attachmentTodisplay = $attachment[0];
-                    $id = (empty($attachmentTodisplay['res_id']) ? $attachmentTodisplay['res_id_version'] : $attachmentTodisplay['res_id']);
-                    $isVersion = empty($attachmentTodisplay['res_id']);
-                    if ($isVersion) {
-                        $collId = "attachments_version_coll";
-                    } else {
-                        $collId = "attachments_coll";
-                    }
-                    $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => $collId, 'isVersion' => $isVersion]);
+                    $id = $attachmentTodisplay['res_id'];
+                    $collId = "attachments_version_coll";
+                    $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => $collId]);
                     if (empty($convertedDocument['errors'])) {
                         $attachmentTodisplay = $convertedDocument;
                     }
@@ -566,7 +646,7 @@ class ResController
                     $document['fingerprint'] = $attachmentTodisplay['fingerprint'];
                 }
             } else {
-                $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll', 'isVersion' => false]);
+                $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll']);
 
                 if (empty($convertedDocument['errors'])) {
                     $document['docserver_id'] = $convertedDocument['docserver_id'];
@@ -749,7 +829,7 @@ class ResController
         } elseif (!Validator::intVal()->notEmpty()->validate($body['modelId'])) {
             return ['errors' => 'Body modelId is empty or not an integer'];
         } elseif ($isWebServiceUser && !Validator::stringType()->notEmpty()->validate($body['status'])) {
-            return ['errors' => 'Body modelId is empty or not an integer'];
+            return ['errors' => 'Body status is empty or not a string'];
         }
 
         $doctype = DoctypeModel::getById(['id' => $body['doctype'], 'select' => [1]]);

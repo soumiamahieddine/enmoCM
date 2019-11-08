@@ -22,8 +22,6 @@
 /*********************** SERVICES ***********************************/
 if (!defined("_ADMIN_BASKETS"))
     define("_ADMIN_BASKETS", "Baskets");
-if (!defined("_ADMIN_BASKETS_DESC"))
-    define("_ADMIN_BASKETS_DESC", "Define the baskets content and associate them to users groups.");
 if (!defined("_USE_BASKETS"))
     define("_USE_BASKETS", "Use the baskets");
 if (!defined("_DIFFUSION_LIST"))
@@ -72,8 +70,6 @@ if (!defined("_BASKETS_LIST"))
     define("_BASKETS_LIST", "Baskets list");
 
 /////// frame bannettes
-if (!defined("_BASKETS"))
-    define("_BASKETS", "Baskets");
 if (!defined("_CHOOSE_BASKET"))
     define("_CHOOSE_BASKET", "Choose a basket");
 if (!defined("_PROCESS_BASKET"))

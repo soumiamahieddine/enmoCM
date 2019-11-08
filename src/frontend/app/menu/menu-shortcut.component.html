@@ -1,38 +1,11 @@
 <mat-nav-list style="position:relative;">
-    <!--<ng-container *ngIf="appService.getViewMode()">
-        <canvas class="header-bg" style="margin-top:-8px;background-image: url('static.php?filename=login-banner.jpg');background-size:cover;border-bottom: solid 1px white;width: 100%;height: 70px;"></canvas>
-        <i title="{{lang.myProfileAccess}}" routerLink="/profile" style="cursor:pointer;z-index:1;color:white;position: absolute;left: 50%;top: 17px;background-image: url('static.php?filename=logo_only.svg');width: 70px;height: 70px;background-size: cover;background-position: top center;border-radius: 50%;border: solid white;background-color:white;transform: translateX(-50%);"></i>
-        <mat-expansion-panel>
-            <mat-expansion-panel-header>
-                <mat-panel-title style="justify-content: center;">
-                    {{headerService.user.firstname}} {{headerService.user.lastname | uppercase}}
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-list>
-                <mat-divider></mat-divider>
-                <mat-list-item *ngFor="let group of headerService.user.groups">
-                    <p mat-line style="color:#666;opacity:0.5;"> {{group.group_desc}} </p>
-                </mat-list-item>
-                <h3 mat-subheader style="color:#666;">{{lang.groups}}</h3>
-                <mat-divider></mat-divider>
-                <mat-list-item *ngFor="let group of headerService.user.groups">
-                    <p mat-line style="color:#666;opacity:0.5;"> {{group.group_desc}} </p>
-                </mat-list-item>
-                <h3 mat-subheader style="color:#666;">{{lang.entities}}</h3>
-                <mat-divider></mat-divider>
-                <mat-list-item *ngFor="let entity of headerService.user.entities">
-                    <p mat-line style="color:#666;opacity:0.5;"> {{entity.entity_label}} </p>
-                </mat-list-item>
-            </mat-list>
-        </mat-expansion-panel>
-    </ng-container>-->
 </mat-nav-list>
 <mat-nav-list>
     <h3 mat-subheader>{{lang.shortcut}}</h3>
     <div class="button-row" style="padding-left: 10px;padding-right: 10px;display: flex;width: 300px;margin-top: -10px;margin-bottom: 10px;">
-        <ng-container *ngFor="let shortcut of headerService.shortcut">
+        <ng-container *ngFor="let shortcut of shortcuts">
             <span style="flex:1;text-align: left;padding: 5px;" *ngIf="(shortcut.id == 'indexing' && shortcut.groups.length<=1) || (shortcut.id != 'indexing')">
-                <button style="z-index: 9999;" color="default" mat-fab (click)="gotToMenu(shortcut);" matTooltip="{{shortcut.name}}"
+                <button style="z-index: 9999;" color="default" mat-fab (click)="gotToMenu(shortcut);" matTooltip="{{shortcut.label}}"
                     matTooltipPosition="above">
                     <mat-icon class="fa {{shortcut.style}}" style="height:auto;font-size:22px;"></mat-icon>
                 </button>
@@ -47,8 +20,8 @@
                     </smd-fab-trigger>
 
                     <smd-fab-actions>
-                        <button color="primary" mat-mini-fab (click)="onSpeedDialFabClicked(group,shortcut)" *ngFor="let group of shortcut.groups">
-                            <span class="speedDialLabel" color="primary" style="display:none;position: absolute;margin-left: 20px;margin-top: -5px;">{{group.label}}</span>
+                        <button color="primary" mat-mini-fab (click)="onSpeedDialFabClicked(group,shortcut)" *ngFor="let group of shortcut.groups | sortBy : 'label' ">
+                            <span class="speedDialLabel" color="primary" style="display:none;position: absolute;margin-left: 20px;margin-top: -5px;">{{group.label | shorten: 20: '...'}}</span>
                             <mat-icon class="fa fa-plus"></mat-icon>
                         </button>
                     </smd-fab-actions>
@@ -57,12 +30,4 @@
         </ng-container>
     </div>
 </mat-nav-list>
-<!--<mat-nav-list *ngIf="appService.getViewMode()">
-    <a mat-list-item href="index.php?display=true&page=logout&logout=true">
-        <mat-icon color="warn" mat-list-icon class="fa fa-sign-out-alt"></mat-icon>
-        <p mat-line>
-            {{lang.logout}}
-        </p>
-    </a>
-</mat-nav-list>-->
 <mat-divider></mat-divider>

@@ -64,9 +64,6 @@ $app->post('/actions', \Action\controllers\ActionController::class . ':create');
 $app->put('/actions/{id}', \Action\controllers\ActionController::class . ':update');
 $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':delete');
 
-//Administration
-$app->get('/administration', \SrcCore\controllers\CoreController::class . ':getAdministration');
-
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');
 $app->get('/attachments/{id}/content', \Attachment\controllers\AttachmentController::class . ':getFileContent');
@@ -74,6 +71,7 @@ $app->get('/attachments/{id}/originalContent', \Attachment\controllers\Attachmen
 $app->get('/attachments/{id}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
 $app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\AttachmentController::class . ':setInSendAttachment');
 $app->get('/attachmentsTypes', \Attachment\controllers\AttachmentController::class . ':getAttachmentsTypes');
+$app->delete('/attachments/{id}', \Attachment\controllers\AttachmentController::class . ':delete');
 
 //AutoComplete
 $app->get('/autocomplete/contacts', \SrcCore\controllers\AutoCompleteController::class . ':getContacts');
@@ -216,17 +214,18 @@ $app->delete('/groups/{id}', \Group\controllers\GroupController::class . ':delet
 $app->get('/groups/{id}/details', \Group\controllers\GroupController::class . ':getDetailledById');
 $app->get('/groups/{id}/indexing', \Group\controllers\GroupController::class . ':getIndexingInformationsById');
 $app->put('/groups/{id}/indexing', \Group\controllers\GroupController::class . ':updateIndexingInformations');
-$app->put('/groups/{id}/services/{serviceId}', \Group\controllers\GroupController::class . ':updateService');
 $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupController::class . ':reassignUsers');
+$app->post('/groups/{id}/privileges/{privilegeId}', \Group\controllers\PrivilegeController::class . ':addPrivilege');
+$app->delete('/groups/{id}/privileges/{privilegeId}', \Group\controllers\PrivilegeController::class . ':removePrivilege');
 
 //Histories
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
 $app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 $app->get('/histories/resources/{resId}', \History\controllers\HistoryController::class . ':getByResourceId');
+$app->get('/histories/resources/{resId}/workflow', \History\controllers\HistoryController::class . ':getWorkflowByResourceId');
 
 //Header
 $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');
-$app->get('/shortcuts', \SrcCore\controllers\CoreController::class . ':getShortcuts');
 
 //Home
 $app->get('/home', \Home\controllers\HomeController::class . ':get');
@@ -314,6 +313,7 @@ $app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::cla
 
 //Resources
 $app->post('/resources', \Resource\controllers\ResController::class . ':create');
+$app->get('/resources/{resId}', \Resource\controllers\ResController::class . ':getById');
 $app->get('/resources/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
 $app->get('/resources/{resId}/originalContent', \Resource\controllers\ResController::class . ':getOriginalFileContent');
 $app->get('/resources/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
@@ -434,7 +434,7 @@ $app->post('/currentUser/emailSignature', \User\controllers\UserController::clas
 $app->put('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':updateCurrentUserEmailSignature');
 $app->delete('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \User\controllers\UserController::class . ':updateCurrentUserBasketPreferences');
-$app->get('/currentUser/privileges', \User\controllers\UserController::class . ':getPrivileges');
+$app->get('/currentUser/templates', \User\controllers\UserController::class . ':getTemplates');
 
 //Notifications
 $app->get('/notifications', \Notification\controllers\NotificationController::class . ':get');
@@ -452,5 +452,7 @@ $app->post('/saveMessageExchangeReturn', \Sendmail\Controllers\ReceiveMessageExc
 $app->post('/saveMessageExchangeReview', \Sendmail\Controllers\MessageExchangeReviewController::class . ':saveMessageExchangeReview');
 
 $app->get('/maarchParapheur/user/{id}/picture', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':getUserPicture');
+
+$app->get('/externalSummary/{resId}', \ExternalSummary\controllers\SummaryController::class . ':getByResId');
 
 $app->run();

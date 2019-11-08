@@ -21,7 +21,9 @@ require_once 'core/class/class_resource.php';
 function writeLogIndex($EventInfo)
 {
     $logFileOpened = fopen($_SESSION['config']['corepath'].'/modules/visa/log/signFile_'.date('Y').'_'.date('m').'_'.date('d').'.log', 'a');
-    fwrite($logFileOpened, '['.date('d').'/'.date('m').'/'.date('Y')
+    fwrite(
+        $logFileOpened,
+        '['.date('d').'/'.date('m').'/'.date('Y')
         .' '.date('H').':'.date('i').':'.date('s').'] '.$EventInfo
         ."\r\n"
     );
@@ -55,28 +57,11 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
     }
 
     $objectId = $_REQUEST['id'];
-    $tableName = 'res_view_attachments';
-    if (isset($_REQUEST['isOutgoing'])) {
-        if (isset($_REQUEST['isVersion'])) {
-            $stmt = $db->query("select relation, res_id_version, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
-                . $tableName
-                . " where attachment_type = ? and res_id_version = ?", ['outgoing_mail', $objectId]);
-        } else {
-            $stmt = $db->query("select relation, res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
-                . $tableName
-                . " where attachment_type = ? and res_id = ?", ['outgoing_mail', $objectId]);
-        }
-    } else {
-        if (isset($_REQUEST['isVersion'])) {
-            $stmt = $db->query("select relation, res_id_version, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
-                . $tableName
-                . " where attachment_type NOT IN ('converted_pdf','print_folder') and res_id_version = ?", array($objectId));
-        } else {
-            $stmt = $db->query("select relation, res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
-                . $tableName
-                . " where (attachment_type NOT IN ('converted_pdf','print_folder')) and res_id = ?", array($objectId));
-        }
-    }
+    $tableName = 'res_attachments';
+
+    $stmt = $db->query("select relation, res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
+        . $tableName
+        . " where (attachment_type NOT IN ('converted_pdf','print_folder')) and res_id = ?", array($objectId));
 
     if ($stmt->rowCount() < 1) {
         echo '{"status":1, "error" : "'._FILE.' '._UNKNOWN.'"}';
@@ -91,22 +76,17 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
         $_SESSION['visa']['last_resId_signed']['dest_address'] = $line->dest_address_id;
         $_SESSION['visa']['last_resId_signed']['dest_user'] = $line->dest_user;
 
-        if (isset($_REQUEST['isOutgoing']) || $line->attachment_type == 'response_project') {
+        if ($line->attachment_type == 'response_project') {
             //Update outgoing date
             $date = date("Y-m-d");
             $db->query("update res_letterbox SET departure_date = ? where res_id = ?", array($date,$line->res_id_master));
         }
 
-        if (isset($_REQUEST['isVersion'])) {
-            $isVersion = true;
-            $attachResId = $line->res_id_version;
-        } else {
-            $isVersion = false;
-            $attachResId = $line->res_id;
-        }
-        $convertedAttachment =  \Convert\controllers\ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $attachResId, 'collId' => 'attachments_coll', 'isVersion' => $isVersion]);
+        $attachResId = $line->res_id;
+        
+        $convertedAttachment =  \Convert\controllers\ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $attachResId, 'collId' => 'attachments_coll']);
         if (!empty($convertedAttachment['errors'])) {
-            echo "{\"status\":1, \"error\" : \""._ATTACH_PDF_NOT_FOUND . ": {$attachResId}, version : {$isVersion}\"}";
+            echo "{\"status\":1, \"error\" : \""._ATTACH_PDF_NOT_FOUND . ": {$attachResId}, version : false\"}";
             exit;
         }
 
@@ -154,7 +134,8 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
 
             $stmt = $db->query(
                 'select city from entities'
-                ." where (parent_entity_id IS NULL or parent_entity_id = '') and (city IS NOT NULL or city <> '')", array()
+                ." where (parent_entity_id IS NULL or parent_entity_id = '') and (city IS NOT NULL or city <> '')",
+                array()
             );
             $res = $stmt->fetchObject();
             if (!empty($res->city)) {

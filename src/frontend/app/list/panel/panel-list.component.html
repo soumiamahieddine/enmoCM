@@ -5,7 +5,7 @@
     <mat-icon *ngIf="this.currentResource.statusImage !== undefined"
         [ngStyle]="{'color': this.currentResource.priorityColor}" color="primary"
         class="{{this.currentResource.statusImage.charAt(0)}}{{this.currentResource.statusImage.charAt(1)}} {{this.currentResource.statusImage}} {{this.currentResource.statusImage.charAt(0)}}{{this.currentResource.statusImage.charAt(1)}}-2x">
-    </mat-icon>&nbsp;{{this.currentResource.alt_identifier}}
+    </mat-icon>&nbsp;{{this.currentResource.chrono}}
 </div>
 <div style="text-align: center;font-weight: bold;margin-bottom: 30px;padding-left: 10px;padding-right: 10px;"
     title="{{this.currentResource.subject}}">
@@ -13,14 +13,14 @@
 </div>
 <mat-tab-group *ngIf="this.mode == 'diffusion'" [(selectedIndex)]="selectedDiffusionTab" class="diffusionTab">
     <mat-tab label="{{lang.diffusionList}}">
-        <app-diffusions-list #appDiffusionsList [adminMode]="false" [resId]="injectDatasParam.resId"></app-diffusions-list>
+        <app-diffusions-list #appDiffusionsList [adminMode]="false"></app-diffusions-list>
     </mat-tab>
     <mat-tab label="{{lang.visaWorkflow}}" [disabled]="appVisaWorkflow.getVisaCount() == 0">
-        <app-visa-workflow #appVisaWorkflow [injectDatas]="injectDatasParam"></app-visa-workflow>
+        <app-visa-workflow #appVisaWorkflow [adminMode]="false" [injectDatas]="injectDatasParam"></app-visa-workflow>
     </mat-tab>
     <mat-tab label="{{lang.avis}}" [disabled]="appAvisWorkflow.getAvisCount() == 0">
-        <app-avis-workflow #appAvisWorkflow [injectDatas]="injectDatasParam"></app-avis-workflow>
+        <app-avis-workflow #appAvisWorkflow [adminMode]="false" [injectDatas]="injectDatasParam"></app-avis-workflow>
     </mat-tab>
 </mat-tab-group>
-<app-notes-list #appNotesList *ngIf="this.mode == 'note'" [injectDatas]="injectDatasParam" (reloadBadgeNotes)="reloadBadgeNotes($event)"></app-notes-list>
+<app-notes-list #appNotesList *ngIf="this.mode == 'note'" [editMode]="true" [injectDatas]="injectDatasParam" (reloadBadgeNotes)="reloadBadgeNotes($event)"></app-notes-list>
 <app-attachments-list #appAttachmentsList *ngIf="this.mode == 'attachment'" [injectDatas]="injectDatasParam" (reloadBadgeAttachments)="reloadBadgeAttachments($event)"></app-attachments-list>

@@ -57,12 +57,11 @@ class ConvertPdfController
         ValidatorModel::notEmpty($aArgs, ['collId', 'resId']);
         ValidatorModel::stringType($aArgs, ['collId']);
         ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::boolType($aArgs, ['isVersion']);
 
         if ($aArgs['collId'] == 'letterbox_coll') {
             $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['docserver_id', 'path', 'filename', 'format']]);
         } else {
-            $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => $aArgs['isVersion'], 'select' => ['docserver_id', 'path', 'filename', 'format']]);
+            $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'select' => ['docserver_id', 'path', 'filename', 'format']]);
         }
 
         if (empty($resource)) {
@@ -129,7 +128,6 @@ class ConvertPdfController
         } else {
             AdrModel::createAttachAdr([
                 'resId'         => $aArgs['resId'],
-                'isVersion'     => $aArgs['isVersion'],
                 'type'          => 'PDF',
                 'docserverId'   => $storeResult['docserver_id'],
                 'path'          => $storeResult['destination_dir'],
@@ -165,7 +163,7 @@ class ConvertPdfController
 
         $aReturn = [];
 
-        if ($aArgs['context'] == 'scan') {
+        if (!empty($aArgs['context']) && $aArgs['context'] == 'scan') {
             $aReturn["tmpFilename"] = $tmpFilename.'.pdf';
         } else {
             $aReturn["encodedResource"] = base64_encode($resource);
@@ -178,21 +176,18 @@ class ConvertPdfController
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'collId']);
         ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::boolType($aArgs, ['isVersion']);
 
         $convertedDocument = AdrModel::getConvertedDocumentById([
             'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
             'resId'     => $aArgs['resId'],
             'collId'    => $aArgs['collId'],
-            'type'      => 'PDF',
-            'isVersion' => $aArgs['isVersion']
+            'type'      => 'PDF'
         ]);
         
         if (empty($convertedDocument)) {
             $convertedDocument = ConvertPdfController::convert([
                 'resId'     => $aArgs['resId'],
-                'collId'    => $aArgs['collId'],
-                'isVersion' => $aArgs['isVersion'],
+                'collId'    => $aArgs['collId']
             ]);
         }
 
@@ -279,17 +274,39 @@ class ConvertPdfController
         }
     }
 
-    public function getConvertedFileByFilename(Request $request, Response $response, array $aArgs)
+    public function getConvertedFileByFilename(Request $request, Response $response, array $args)
     {
         $tmpPath = CoreConfigModel::getTmpPath();
 
-        if (!file_exists("{$tmpPath}{$aArgs['filename']}")) {
-            return $response->withStatus(400)->withJson(['errors' => 'File does not exists']);
+        if (!file_exists("{$tmpPath}{$args['filename']}")) {
+            return $response->withStatus(400)->withJson(['errors' => 'File does not exist']);
         }
 
-        $resource = file_get_contents("{$tmpPath}{$aArgs['filename']}");
-        unlink("{$tmpPath}{$aArgs['filename']}");
+        $resource = file_get_contents("{$tmpPath}{$args['filename']}");
+        $extension = pathinfo("{$tmpPath}{$args['filename']}", PATHINFO_EXTENSION);
+        $mimeType = mime_content_type("{$tmpPath}{$args['filename']}");
         
-        return $response->withJson(['encodedResource' => base64_encode($resource)]);
+        unlink("{$tmpPath}{$args['filename']}");
+        $encodedResource = base64_encode($resource);
+
+        $encodedFiles = ['encodedResource' => $encodedResource];
+
+        $encodedFiles['type'] = $mimeType;
+        $encodedFiles['extension'] = $extension;
+        
+
+        $queryParams = $request->getQueryParams();
+        if (!empty($queryParams['convert'])) {
+            if (ConvertPdfController::canConvert(['extension' => $extension])) {
+                $convertion = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $encodedResource]);
+                if (!empty($convertion['errors'])) {
+                    $encodedFiles['convertedResourceErrors'] = $convertion['errors'];
+                } else {
+                    $encodedFiles['encodedConvertedResource'] = $convertion['encodedResource'];
+                }
+            }
+        }
+
+        return $response->withJson($encodedFiles);
     }
 }

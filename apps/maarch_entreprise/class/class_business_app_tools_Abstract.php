@@ -447,18 +447,6 @@ abstract class business_app_tools_Abstract extends Database
             . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
             . $_SESSION['config']['lang'] . '.php';
 
-        $_SESSION['processing_modes'] = array();
-        $processingModes = $xmlfile->process_modes; 
-        if(count($processingModes) > 0) {
-            foreach ($processingModes->process_mode as $process ) {
-                $label = (string) $process->label;
-                $_SESSION['processing_modes'][(string) $process->label] = $label;
-                $process_mode_priority = (string) $process->process_mode_priority;
-                $_SESSION['process_mode_priority'][(string) $process->label] = $process_mode_priority;
-            }
-
-        }
-
         $_SESSION['attachment_types'] = array();
         $_SESSION['attachment_types_with_chrono'] = array();
         $_SESSION['attachment_types_show'] = array();

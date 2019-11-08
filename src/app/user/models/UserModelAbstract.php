@@ -128,6 +128,9 @@ abstract class UserModelAbstract
             'set'       => [
                 'status'    => 'DEL',
             ],
+            'postSet'   => [
+                'external_id' => 'external_id - \'maarchParapheur\''
+            ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
         ]);
@@ -428,6 +431,21 @@ abstract class UserModelAbstract
             'table'     => ['usergroup_content, usergroups, security'],
             'where'     => ['usergroup_content.group_id = usergroups.id', 'usergroup_content.user_id = ?','usergroups.group_id = security.group_id'],
             'data'      => [$user['id']]
+        ]);
+
+        return $aGroups;
+    }
+
+    public static function getGroupsByUser(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
+
+        $aGroups = DatabaseModel::select([
+            'select'    => ['usergroups.id', 'usergroups.can_index', 'usergroups.group_id', 'usergroups.group_desc', 'usergroups.indexation_parameters', 'usergroup_content.role', 'security.maarch_comment', 'security.where_clause'],
+            'table'     => ['usergroup_content, usergroups, security'],
+            'where'     => ['usergroup_content.group_id = usergroups.id', 'usergroup_content.user_id = ?','usergroups.group_id = security.group_id'],
+            'data'      => [$args['id']]
         ]);
 
         return $aGroups;

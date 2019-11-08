@@ -14,7 +14,7 @@
 
 namespace Report\controllers;
 
-use Group\models\ServiceModel;
+use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use Report\models\ReportModel;
@@ -25,7 +25,7 @@ class ReportController
 {
     public function getGroups(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $GLOBALS['userId'], 'location' => 'reports', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_reports', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -34,7 +34,7 @@ class ReportController
 
     public function getByGroupId(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $GLOBALS['userId'], 'location' => 'reports', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_reports', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -50,7 +50,7 @@ class ReportController
 
     public function updateForGroupId(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_reports', 'userId' => $GLOBALS['userId'], 'location' => 'reports', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_reports', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

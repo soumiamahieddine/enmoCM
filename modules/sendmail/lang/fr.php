@@ -199,12 +199,6 @@ if (!defined("_ADD_TEMPLATE_MAIL")) {
 if (!defined("_EMAIL_OBJECT_ANSWER")) {
     define("_EMAIL_OBJECT_ANSWER", "Réponse à votre courrier du");
 }
-if (!defined("_USE_MAIL_SERVICES")) {
-    define("_USE_MAIL_SERVICES", "Utiliser les courriels de ses entités en tant qu'expéditeur");
-}
-if (!defined("_USE_MAIL_SERVICES_DESC")) {
-    define("_USE_MAIL_SERVICES_DESC", "Utiliser les courriels de ses entités en tant qu'expéditeur");
-}
 if (!defined("_INCORRECT_SENDER")) {
     define("_INCORRECT_SENDER", "Expéditeur inccorect");
 }

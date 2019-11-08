@@ -30,7 +30,7 @@ class ConvertThumbnailController
         ValidatorModel::notEmpty($aArgs, ['collId', 'resId']);
         ValidatorModel::stringType($aArgs, ['collId']);
         ValidatorModel::intVal($aArgs, ['resId', 'outgoingId']);
-        ValidatorModel::boolType($aArgs, ['isOutgoingVersion','isVersion']);
+        ValidatorModel::boolType($aArgs, ['isOutgoingVersion']);
 
         if ($aArgs['collId'] == 'letterbox_coll') {
             if (empty($aArgs['outgoingId'])) {
@@ -39,27 +39,24 @@ class ConvertThumbnailController
                     'select' => ['docserver_id','path', 'filename'],
                     'resId' => $aArgs['resId'],
                     'collId' => $aArgs['collId'],
-                    'type' => 'PDF',
-                    'isVersion' => false
+                    'type' => 'PDF'
                 ]);
             } else {
-                $resource = AttachmentModel::getById(['id' => $aArgs['outgoingId'], 'isVersion' => $aArgs['isOutgoingVersion'], 'select' => ['docserver_id', 'path', 'filename']]);
+                $resource = AttachmentModel::getById(['id' => $aArgs['outgoingId'], 'select' => ['docserver_id', 'path', 'filename']]);
                 $convertedDocument = AdrModel::getConvertedDocumentById([
                     'select' => ['docserver_id','path', 'filename'],
                     'resId' => $aArgs['outgoingId'],
                     'collId' => 'attachments_coll',
-                    'type' => 'PDF',
-                    'isVersion' => $aArgs['isOutgoingVersion']
+                    'type' => 'PDF'
                 ]);
             }
         } else {
-            $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'isVersion' => $aArgs['isVersion'], 'select' => ['docserver_id', 'path', 'filename']]);
+            $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'select' => ['docserver_id', 'path', 'filename']]);
             $convertedDocument = AdrModel::getConvertedDocumentById([
                 'select' => ['docserver_id','path', 'filename'],
                 'resId' => $aArgs['resId'],
                 'collId' => $aArgs['collId'],
-                'type' => 'PDF',
-                'isVersion' => $aArgs['isVersion']
+                'type' => 'PDF'
             ]);
         }
 
@@ -138,8 +135,7 @@ class ConvertThumbnailController
                 'type'          => 'TNL',
                 'docserverId'   => $storeResult['docserver_id'],
                 'path'          => $storeResult['destination_dir'],
-                'filename'      => $storeResult['file_destination_name'],
-                'isVersion'     => $aArgs['isVersion'],
+                'filename'      => $storeResult['file_destination_name']
             ]);
         }
 

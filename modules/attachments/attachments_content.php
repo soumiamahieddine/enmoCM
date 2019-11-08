@@ -465,7 +465,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                                                     }
 
                                                     if (!empty($select)) {
-                                                        $document = \Attachment\models\AttachmentModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$id]]);
+                                                        $document = \Attachment\models\AttachmentModel::get(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$id]]);
                                                     }
                                                     if ($object['name'] == 'citoyen') {
                                                         $contact = \Contact\models\ContactModel::getOnView(['select' => ['external_id', 'ca_id'], 'where' => ['ca_id = ?'], 'data' => [$resource[0]['address_id']]]);
@@ -1020,7 +1020,6 @@ if (isset($_POST['add']) && $_POST['add']) {
             if ($_SESSION['upfile'][0]['fileNamePdfOnTmp'] != '' && $_SESSION['upfile'][0]['upAttachment'] != false) {
                 \Convert\models\AdrModel::deleteAttachAdr([
                     'resId'         => $_REQUEST['res_id'],
-                    'isVersion'     => false
                 ]);
             }
         } else {
@@ -1028,7 +1027,6 @@ if (isset($_POST['add']) && $_POST['add']) {
             if ($_SESSION['upfile'][0]['fileNamePdfOnTmp'] != '' && $_SESSION['upfile'][0]['upAttachment'] != false) {
                 \Convert\models\AdrModel::deleteAttachAdr([
                     'resId'         => $_REQUEST['res_id'],
-                    'isVersion'     => true
                 ]);
             }
         }
@@ -1044,26 +1042,22 @@ if (isset($_POST['add']) && $_POST['add']) {
             }
             $attachmentToProcess = \Attachment\models\AttachmentModel::getById([
                 'select'    => $select,
-                'id'        => $id,
-                'isVersion' => true
+                'id'        => $id
             ]);
             \Attachment\models\AttachmentModel::update([
                 'set'       => ['status' => 'DEL'],
                 'where'     => ['res_id = ?'],
-                'data'      => [$id],
-                'isVersion' => true
+                'data'      => [$id]
             ]);
         } else {
             $attachmentToProcess = \Attachment\models\AttachmentModel::getById([
                 'select'    => $select,
-                'id'        => $_REQUEST['res_id'],
-                'isVersion' => false
+                'id'        => $_REQUEST['res_id']
             ]);
             \Attachment\models\AttachmentModel::update([
                 'set'       => ['status' => 'DEL'],
                 'where'     => ['res_id = ?'],
-                'data'      => [$_REQUEST['res_id']],
-                'isVersion' => false
+                'data'      => [$_REQUEST['res_id']]
             ]);
         }
 

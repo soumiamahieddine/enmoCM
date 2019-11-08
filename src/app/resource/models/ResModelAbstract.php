@@ -14,9 +14,6 @@
 
 namespace Resource\models;
 
-use Doctype\models\DoctypeModel;
-use Resource\controllers\IndexingController;
-use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
@@ -82,7 +79,7 @@ abstract class ResModelAbstract
     public static function create(array $args)
     {
         ValidatorModel::notEmpty($args, ['res_id', 'model_id', 'category_id', 'typist', 'creation_date']);
-        ValidatorModel::stringType($args, ['category_id', 'creation_date', 'format', 'docserver_id', 'path', 'filename', 'fingerprint', ]);
+        ValidatorModel::stringType($args, ['category_id', 'creation_date', 'format', 'docserver_id', 'path', 'filename', 'fingerprint']);
         ValidatorModel::intVal($args, ['res_id', 'model_id', 'typist', 'filesize']);
 
         DatabaseModel::insert([

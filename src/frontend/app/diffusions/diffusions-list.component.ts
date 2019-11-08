@@ -57,6 +57,11 @@ export class DiffusionsListComponent implements OnInit {
     @Input('allowedEntities') allowedEntities: number[];
 
     /**
+     * Expand all roles
+     */
+    @Input('expanded') expanded: boolean = false;
+
+    /**
      * To load privilege of current list management
      * @param indexation
      * @param details
@@ -86,8 +91,8 @@ export class DiffusionsListComponent implements OnInit {
         this.adminMode = this.adminMode !== undefined ? this.adminMode : false;
         this.keepDestForRedirection = this.keepDestForRedirection !== undefined ? this.keepDestForRedirection : false;
 
-        if (this.resId !== undefined) {
-            //this.loadListinstance(this.resId);
+        if (this.resId !== undefined && this.target !== 'redirect') {
+            this.loadListinstance(this.resId);
 
         } else if (this.entityId !== undefined && this.entityId !== '') {
             // this.loadListModel(this.entityId);

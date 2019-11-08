@@ -20,7 +20,7 @@ use Basket\models\RedirectBasketModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Entity\models\ListInstanceModel;
-use Group\models\ServiceModel;
+use Group\controllers\PrivilegeController;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
 use Group\models\GroupModel;
@@ -39,6 +39,7 @@ use SrcCore\models\AuthenticationModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\PasswordModel;
+use Template\models\TemplateModel;
 use User\models\UserBasketPreferenceModel;
 use User\models\UserEntityModel;
 use User\models\UserGroupModel;
@@ -51,7 +52,7 @@ class UserController
 
     public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -131,7 +132,7 @@ class UserController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -426,6 +427,23 @@ class UserController
             'data'  => [$aArgs['id'], $aArgs['id']]
         ]);
 
+        // Delete from groups
+        UserGroupModel::delete(['where' => ['user_id = ?'], 'data' => [$aArgs['id']]]);
+        UserBasketPreferenceModel::delete([
+            'where' => ['user_serial_id = ?'],
+            'data'  => [$aArgs['id']]
+        ]);
+        RedirectBasketModel::delete([
+            'where' => ['owner_user_id = ?'],
+            'data'  => [$aArgs['id']]
+        ]);
+
+        // Delete from entities
+        UserEntityModel::delete([
+            'where' => ['user_id = ?'],
+            'data'  => [$user['user_id']]
+        ]);
+
         UserModel::delete(['id' => $aArgs['id']]);
 
         HistoryController::add([
@@ -453,6 +471,7 @@ class UserController
         $user['regroupedBaskets']   = BasketModel::getRegroupedBasketsByUserId(['userId' => $user['user_id']]);
         $user['passwordRules']      = PasswordModel::getEnabledRules();
         $user['canModifyPassword']  = true;
+        $user['privileges']         = PrivilegeController::getPrivilegesByUser(['userId' => $user['id']]);
 
         $loggingMethod = CoreConfigModel::getLoggingMethod();
         if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS)) {
@@ -676,7 +695,7 @@ class UserController
 
     public function getStatusByUserId(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
         
@@ -1315,17 +1334,50 @@ class UserController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function getPrivileges(Request $request, Response $response)
+    public function getTemplates(Request $request, Response $response)
     {
-        $privileges = [
-            'canManageTags' => false
-        ];
+        $queryParams = $request->getQueryParams();
 
-        if (ServiceModel::hasService(['id' => 'manage_tags_application', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'use'])) {
-            $privileges['canManageTags'] = true;
+        $entities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
+        $entities = array_column($entities, 'entity_id');
+        if (empty($entities)) {
+            $entities = [0];
         }
 
-        return $response->withJson(['privileges' => $privileges]);
+        $where = ['(templates_association.value_field in (?) OR templates_association.template_id IS NULL)'];
+        $data = [$entities];
+        if (!empty($queryParams['type'])) {
+            $where[] = 'templates.template_type = ?';
+            $data[] = strtoupper($queryParams['type']);
+        }
+        if (!empty($queryParams['target'])) {
+            $where[] = 'templates.template_target = ?';
+            $data[] = $queryParams['target'];
+        }
+        $templates = TemplateModel::getWithAssociation([
+            'select'    => ['DISTINCT(templates.template_id)', 'templates.template_label', 'templates.template_file_name', 'templates.template_path', 'templates.template_target', 'templates.template_attachment_type'],
+            'where'     => $where,
+            'data'      => $data,
+            'orderBy'   => ['templates.template_label']
+        ]);
+
+        $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
+        foreach ($templates as $key => $template) {
+            $explodeFile = explode('.', $template['template_file_name']);
+            $ext = $explodeFile[count($explodeFile) - 1];
+            $exists = is_file($docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name']);
+
+            $templates[$key] = [
+                'id'                => $template['template_id'],
+                'label'             => $template['template_label'],
+                'extension'         => $ext,
+                'exists'            => $exists,
+                'target'            => $template['template_target'],
+                'attachmentType'    => $template['template_attachment_type']
+            ];
+        }
+        
+        return $response->withJson(['templates' => $templates]);
     }
 
     public function updateCurrentUserBasketPreferences(Request $request, Response $response, array $aArgs)
@@ -1370,7 +1422,7 @@ class UserController
                 $error['error'] = 'User not found';
             } else {
                 if (empty($aArgs['himself']) || $GLOBALS['userId'] != $user['user_id']) {
-                    if (!ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+                    if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
                         $error['status'] = 403;
                         $error['error'] = 'Service forbidden';
                     }

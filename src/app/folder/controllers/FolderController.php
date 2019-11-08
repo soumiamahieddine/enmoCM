@@ -16,14 +16,12 @@ namespace Folder\controllers;
 
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
-use Basket\models\GroupBasketModel;
 use Entity\models\EntityModel;
 use Folder\models\EntityFolderModel;
 use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
 use Folder\models\UserPinnedFolderModel;
-use Group\models\GroupModel;
-use Group\models\ServiceModel;
+use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
@@ -174,6 +172,11 @@ class FolderController
             'level'     => $level
         ]);
 
+        UserPinnedFolderModel::create([
+            'folder_id' => $id,
+            'user_id'   => $GLOBALS['id']
+        ]);
+
         if ($public && !empty($data['parent_id'])) {
             $entitiesSharing = EntityFolderModel::getByFolderId(['folder_id' => $data['parent_id'], 'select' => ['entities.id', 'entities_folders.edition']]);
             foreach ($entitiesSharing as $entity) {
@@ -283,10 +286,13 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Body sharing/entities does not exists']);
         }
 
-        $entitiesBefore = EntityFolderModel::getByFolderId(['select' => ['entities_folders.entity_id'], 'folder_id' => $args['id']]);
+        $entitiesBefore = EntityFolderModel::getByFolderId(['select' => ['entities_folders.entity_id, edition'], 'folder_id' => $args['id']]);
         $entitiesAfter = $data['sharing']['entities'];
 
         $entitiesToRemove = array_udiff($entitiesBefore, $entitiesAfter, function ($a, $b) {
+            if ($a['entity_id'] == $b['entity_id'] && $a['edition'] != $b['edition']) {
+                return 1;
+            }
             if ($a["entity_id"] < $b["entity_id"]) {
                 return -1;
             }
@@ -297,6 +303,9 @@ class FolderController
         });
 
         $entitiesToAdd = array_udiff($entitiesAfter, $entitiesBefore, function ($a, $b) {
+            if ($a['entity_id'] == $b['entity_id'] && $a['edition'] != $b['edition']) {
+                return 1;
+            }
             if ($a["entity_id"] < $b["entity_id"]) {
                 return -1;
             }
@@ -522,11 +531,11 @@ class FolderController
             $formattedResources = [];
             if (!empty($resIds)) {
                 $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
-                if (!ServiceModel::hasService(['id' => 'view_documents_with_notes', 'userId' => $GLOBALS['userId'], 'location' => 'attachments', 'type' => 'use'])) {
+                if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
                     $excludeAttachmentTypes[] = 'document_with_notes';
                 }
 
-                $attachments = AttachmentModel::getOnView([
+                $attachments = AttachmentModel::get([
                     'select'    => ['COUNT(res_id)', 'res_id_master'],
                     'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],
                     'data'      => [$resIds, ['DEL', 'OBS'], $excludeAttachmentTypes, 'TMP', $GLOBALS['id'], 'TMP'],
@@ -794,11 +803,15 @@ class FolderController
     public function getPinnedFolders(Request $request, Response $response)
     {
         $folders = UserPinnedFolderModel::getById(['user_id' => $GLOBALS['id']]);
+        if (empty($folders)) {
+            return $response->withJson(['folders' => []]);
+        }
 
+        $foldersIds = array_column($folders, 'id');
         $foldersWithResources = FolderModel::getWithEntitiesAndResources([
             'select'   => ['COUNT(DISTINCT resources_folders.res_id)', 'resources_folders.folder_id'],
-            'where'    => ['(folders.user_id = ?)'],
-            'data'     => [$GLOBALS['id']],
+            'where'    => ['folders.id in (?)'],
+            'data'     => [$foldersIds],
             'groupBy'  => ['resources_folders.folder_id']
         ]);
 

@@ -15,9 +15,6 @@
 if (!defined('_ADMIN_REPORTS')) {
     define('_ADMIN_REPORTS', 'Statistiques');
 }
-if (!defined('_ADMIN_REPORTS_DESC')) {
-    define('_ADMIN_REPORTS_DESC', 'Administration des états et des éditions');
-}
 if (!defined('_REPORTS')) {
     define('_REPORTS', 'Statistiques');
 }
@@ -26,9 +23,6 @@ if (!defined('_REPORTS_COMMENT')) {
 }
 if (!defined('_OTHER_REPORTS')) {
     define('_OTHER_REPORTS', 'Editions diverses');
-}
-if (!defined('_REPORTS_DESC')) {
-    define('_REPORTS_DESC', 'Editions des états');
 }
 if (!defined('_HAVE_TO_SELECT_GROUP')) {
     define('_HAVE_TO_SELECT_GROUP', 'Vous devez sélectionner un groupe');

@@ -22,8 +22,6 @@
 /*********************** SERVICES ***********************************/
 if (!defined("_ADMIN_BASKETS"))
     define("_ADMIN_BASKETS", "Bannettes");
-if (!defined("_ADMIN_BASKETS_DESC"))
-    define("_ADMIN_BASKETS_DESC", "Définir le contenu des bannettes et les affecter à des groupes d'utilisateurs. Enumérer les redirections possibles lors de l'utilisation de la bannette par un groupe donné. Attribuer un format d'affichage de la bannette par ce groupe.");
 if (!defined("_USE_BASKETS"))
     define("_USE_BASKETS", "Utiliser les bannettes");
 if (!defined("_DIFFUSION_LIST"))
@@ -72,8 +70,6 @@ if (!defined("_BASKETS_LIST"))
     define("_BASKETS_LIST", "Liste des bannettes");
 
 /////// frame bannettes
-if (!defined("_BASKETS"))
-    define("_BASKETS", "Bannettes");
 if (!defined("_CHOOSE_BASKET"))
     define("_CHOOSE_BASKET", "Choisissez une bannette");
 if (!defined("_PROCESS_BASKET"))

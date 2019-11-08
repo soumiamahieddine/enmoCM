@@ -7,7 +7,7 @@
         <div class="col-md-12">
             {{lang.makeActionOn}} 
             <b *ngIf="data.resIds.length === 0" color="primary" class="highlight">{{lang.currentIndexingMail}}</b>
-            <b *ngIf="data.resIds.length == 1" color="primary" class="highlight">{{data.resource.alt_identifier}}</b>
+            <b *ngIf="data.resIds.length == 1" color="primary" class="highlight">{{data.resource.chrono}}</b>
             <b *ngIf="data.resIds.length > 1" color="primary" class="highlight">{{data.resIds.length}} {{lang.elements}}</b> ?
             <div class="alert-message alert-message-info" role="alert" style="margin-top: 30px;" [innerHTML]="lang.updateDepartureDate"></div>
         </div>

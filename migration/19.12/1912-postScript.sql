@@ -22,6 +22,9 @@ DROP TABLE IF EXISTS groupbasket_status;
 DROP TABLE IF EXISTS indexingmodels;
 
 DROP TABLE IF EXISTS mlb_coll_ext;
+DROP TABLE IF EXISTS res_version_attachments;
+DROP TABLE IF EXISTS adr_attachments_version;
+ALTER TABLE shippings DROP COLUMN IF EXISTS is_version;
 
 ALTER TABLE priorities DROP COLUMN IF EXISTS default_priority;
 

@@ -49,7 +49,7 @@
                             <span>
                                 <app-actions-list #actionsList (refreshEvent)="refreshDao()"
                                     [contextMode]="false" [totalRes]="allResInBasket.length" [selectedRes]="selectedRes"
-                                    [currentBasketInfo]="currentBasketInfo" (refreshPanelFolders)="panelFolder.refreshFoldersTree()"></app-actions-list>
+                                    [currentBasketInfo]="currentBasketInfo" [currentResource]="currentResource" (refreshPanelFolders)="panelFolder.refreshFoldersTree()"></app-actions-list>
                             </span>
                             <span>
                                 <app-tools-list #actionsList [selectedRes]="selectedRes"
@@ -63,9 +63,9 @@
                     </div>
                     <div style="height:90%;overflow:auto;position:absolute;width:100%;">
                         <table cdkDropList id="document-list" [cdkDropListConnectedTo]="listTodrag()" [cdkDropListData]="data" #tableBasketListSort="matSort" mat-table [dataSource]="data" matSort
-                            matSortActive="res_id" matSortDisableClear matSortDirection="asc" style="width:100%;" [cdkDropListDisabled]="dragInit || appService.getViewMode()">
+                            matSortActive="resId" matSortDisableClear matSortDirection="asc" style="width:100%;" [cdkDropListDisabled]="dragInit || appService.getViewMode()">
 
-                            <ng-container matColumnDef="res_id">
+                            <ng-container matColumnDef="resId">
                                 <td mat-cell *matCellDef="let row"
                                     style="padding:0;border-top: solid 1px rgba(0, 0, 0, 0.12);"
                                     [class.selected-data]="row.checked">
@@ -128,13 +128,13 @@
                                         </span>
                                         <span *ngIf="!appService.getViewMode()" class="main-info-data" style="width:200px;text-align:center;cursor:pointer;" (click)="launch(defaultAction,row);">
                                             <ng-container
-                                                *ngIf="row.alt_identifier == lang.undefined && row.barcode != lang.undefined">
+                                                *ngIf="row.chrono == lang.undefined && row.barcode != lang.undefined">
                                                 <span style="color: rgba(0,0,0,0.4);font-size: 90%;"><i
                                                         title="{{lang.barcode}}" class="fas fa-barcode"></i>
                                                     {{row.barcode}}</span>
                                             </ng-container>
                                             <ng-container *ngIf="row.barcode == lang.undefined">
-                                                {{row.alt_identifier}}
+                                                {{row.chrono}}
                                             </ng-container>
                                         </span>
                                         <span class="main-info-data" style="font-weight:bold;flex:1;cursor:pointer;"
@@ -174,7 +174,7 @@
                             <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;"
                                 (contextmenu)="open($event,row);" class="rowData" [class.locked]="row.isLocked == true" cdkDrag (cdkDragStarted)="selectSpecificRes(row);" [cdkDragData]="row" >
                                 <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
-                                <div class="dragPreview" *cdkDragPreview><i class="fas fa-envelope-open-text fa-2x"></i><br/>{{lang.classifyInFolder}} : <b>{{row.alt_identifier}}</b></div>
+                                <div class="dragPreview" *cdkDragPreview><i class="fas fa-envelope-open-text fa-2x"></i><br/>{{lang.classifyInFolder}} : <b>{{row.chrono}}</b></div>
                             </tr>
                         </table>
                     </div>

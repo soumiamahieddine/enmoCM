@@ -2798,7 +2798,7 @@ function showPreviousAttachments(path_manage_script, id) {
     new Ajax.Request(path_manage_script, {
         method: 'post',
         parameters: {
-            res_id_version: id
+            res_id: id
         },
         onSuccess: function (answer) {
             eval("response = " + answer.responseText);
@@ -2861,20 +2861,6 @@ function purposeCheck() {
 function simpleAjax(url) {
     new Ajax.Request(url, {
         method: 'post'
-    });
-}
-
-function loadAddressAttached(contact_id, select) {
-    var path_manage_script = 'index.php?display=true&page=select_attachedAddress';
-    new Ajax.Request(path_manage_script, {
-        method: 'post',
-        parameters: {
-            contact_id: contact_id,
-            select: select
-        },
-        onSuccess: function (answer) {
-            $('selectContactAddress_' + select).innerHTML = answer.responseText;
-        }
     });
 }
 
@@ -3528,16 +3514,6 @@ function ChangeH2(objet) {
     }
 }
 
-function Change2H2(objet) {
-    if (objet.getElementsByTagName('img')[0].src.indexOf("folderopen") > -1) {
-        objet.getElementsByTagName('img')[0].src = "img/folder.gif";
-        objet.getElementsByTagName('span')[0].firstChild.nodeValue = " ";
-    } else {
-        objet.getElementsByTagName('img')[0].src = "img/folderopen.gif";
-        objet.getElementsByTagName('span')[0].firstChild.nodeValue = " ";
-    }
-}
-
 var initialized = 0;
 var etat = new Array();
 
@@ -3568,18 +3544,6 @@ function ouvre(id) {
     etat[id]["etat"] = 1;
 }
 
-function ferme2(id) {
-    Effect.SlideUp(etat[id]["desc"]);
-    Change2H2(etat[id]["h2"]);
-    etat[id]["etat"] = 0;
-}
-
-function ouvre2(id) {
-    Effect.SlideDown(etat[id]["desc"]);
-    Change2H2(etat[id]["h2"]);
-    etat[id]["etat"] = 1;
-}
-
 function ferme3(id) {
     Effect.SlideUp(etat[id]["desc"]);
     etat[id]["etat"] = 0;
@@ -3604,17 +3568,6 @@ function change(id) {
             }
         }
         ouvre(id);
-    }
-}
-
-function change2(id) {
-    if (!initialized) {
-        initialise()
-    }
-    if (etat[id]["etat"]) {
-        ferme2(id);
-    } else {
-        ouvre2(id);
     }
 }
 
@@ -3872,13 +3825,12 @@ function displayAddMailing() {
 }
 
 
-function setSendAttachment(id, isVersion) {
+function setSendAttachment(id) {
     $j.ajax({
         url: '../../rest/attachments/' + id + '/inSendAttachment',
         type: 'PUT',
         dataType: 'json',
         data: {
-            isVersion: isVersion
         },
         success: function (answer) {
             if (typeof window.parent['angularSignatureBookComponent'] !== "undefined") {

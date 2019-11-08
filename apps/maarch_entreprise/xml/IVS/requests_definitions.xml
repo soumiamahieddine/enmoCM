@@ -79,11 +79,6 @@
       <parameter name="admin" value="contacts"/>
       <parameter name="display" value="true"/>
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajaxLoadDeleteContact" >
-      <parameter name="page" value="ajaxLoadDeleteContactDiv"/>
-      <parameter name="admin" value="contacts"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajaxDeleteContact" >
       <parameter name="page" value="ajaxDeleteContact"/>
       <parameter name="admin" value="contacts"/>
@@ -216,23 +211,6 @@
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="autocomplete_contacts_prepare_multi" >
       <parameter name="dir" value="indexing_searching"/>
       <parameter name="page" value="autocomplete_contacts_prepare_multi"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ix_change_category" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="change_category"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ix_change_category_actions" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="change_category_actions"/>
-      <parameter name="display" value="true"/>
-      <parameter name="resId"/>
-      <parameter name="collId"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ix_change_doctype" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="change_doctype"/>
       <parameter name="display" value="true"/>
     </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="type_id_integer" >
@@ -457,11 +435,6 @@
       <parameter name="display" value="true"/>
     </requestDefinition>
 
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="verif_pass" >
-      <parameter name="page" value="verif_pass"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="res_id_master" >
       <parameter name="page" value="loadRepList"/>
       <parameter name="display" value="true"/>
@@ -491,11 +464,6 @@
       <parameter name="page" value="users_autocomplete_list"/>
       <parameter name="display" value="true"/>
       <parameter name="Input"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="select_address" >
-      <parameter name="page" value="select_attachedAddress"/>
-      <parameter name="display" value="true"/>
     </requestDefinition>
 
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="url_path" >

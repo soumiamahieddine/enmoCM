@@ -18,8 +18,8 @@ use Basket\models\GroupBasketRedirectModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Entity\models\ListTemplateModel;
+use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
-use Group\models\ServiceModel;
 use History\controllers\HistoryController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
@@ -49,7 +49,7 @@ class EntityController
 
     public function getDetailledById(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -156,15 +156,15 @@ class EntityController
         $entity['instances'] = count($instances);
         $redirects = GroupBasketRedirectModel::get(['select' => [1], 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
         $entity['redirects'] = count($redirects);
-        $entity['canAdminUsers'] = ServiceModel::hasService(['id' => 'admin_users', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin']);
-        $entity['canAdminTemplates'] = ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin']);
+        $entity['canAdminUsers'] = PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']]);
+        $entity['canAdminTemplates'] = PrivilegeController::hasPrivilege(['privilegeId' => 'admin_templates', 'userId' => $GLOBALS['id']]);
 
         return $response->withJson(['entity' => $entity]);
     }
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -220,7 +220,7 @@ class EntityController
 
     public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -297,7 +297,7 @@ class EntityController
 
     public function delete(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -347,7 +347,7 @@ class EntityController
 
     public function reassignEntity(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -427,7 +427,7 @@ class EntityController
 
     public function updateStatus(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'manage_entities', 'userId' => $GLOBALS['userId'], 'location' => 'entities', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 

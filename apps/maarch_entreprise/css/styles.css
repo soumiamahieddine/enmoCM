@@ -354,22 +354,6 @@ a:hover {
     display: block;
 }
 
-/*admin docservers CSS*/
-
-#admin_docservers {
-    background:  url(static.php?filename=maarch_box_tmp.gif) no-repeat 2px top;
-    width: 315px;
-    min-height: 110px;
-    float: left;
-    padding-top: 0px;
-    padding-right: 18px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin: 0px 0px 15px;
-    position: relative;
-    display: block;
-}
-
 /* floated blocks */
 
 .clear {
@@ -435,7 +419,6 @@ acronym, abbr {
 
 a.next, a.change, a.suspend, a.delete, a.authorize, a.prev, a.up, a.down, a.view {
     padding-left: 20px;
-    /*background: transparent url(static.php?filename=puce_prev.gif) 10px center no-repeat;*/
     background: transparent 10px center no-repeat;
     color: #135F7F;
 }
@@ -451,13 +434,6 @@ a.prev {
     background-position: center left;
     padding-left: 10px;
 }
-
-/*a.next {
-    background-image: url(static.php?filename=puce_next.gif);
-    background-position: center right;
-    padding-left: 0;
-    padding-right: 10px;
-}*/
 
 a.change, a.suspend, a.delete, a.authorize, a.up, a.down, a.view {
     padding: 5px 0 5px 20px;
@@ -1304,27 +1280,6 @@ th.ref {
     top: 30px;
     border-top-left-radius: 3px;
     left: 262px;
-}
-
-#quicksearchform #search {
-    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-    font-size: .9em;
-    color: #666;
-    border: none;
-    padding: .2em .6em .4em .6em;
-    width: 10.7em;
-    background: transparent url(static.php?filename=bg_inputsearch.gif) top left no-repeat;
-}
-
-#quicksearchform label {
-    clear: right;
-    padding-left: 15px;
-    padding-bottom: 12px;
-}
-
-#quicksearchform input {
-    float: left;
-    margin: 0 5px 0 0;
 }
 
 #help {

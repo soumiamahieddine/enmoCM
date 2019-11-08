@@ -218,8 +218,6 @@ if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
     }
 
     //DISPLAY FULL PAGE
-    $core->start_page_stat();
-    // $core->configPosition();
     // if (isset($_SESSION['HTTP_REFERER'])) {
     //     $url = $_SESSION['HTTP_REFERER'];
     //     unset($_SESSION['HTTP_REFERER']);

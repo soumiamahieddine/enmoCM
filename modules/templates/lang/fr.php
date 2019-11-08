@@ -15,9 +15,6 @@
 if (!defined('_ADMIN_TEMPLATE_ANSWER')) {
     define('_ADMIN_TEMPLATE_ANSWER', 'Administrer les modèles');
 }
-if (!defined('_ADMIN_TEMPLATES_DESC')) {
-    define('_ADMIN_TEMPLATES_DESC', "Gérer les modèles utilisés pour les pièces jointes, les notifications, la génération de courriers, l'envoi de courriels et les annotations");
-}
 /*********************** Menu ***********************************/
 if (!defined('_EXPLOIT_TEMPLATE_ANSWER')) {
     define('_EXPLOIT_TEMPLATE_ANSWER', 'Exploiter les modèles');

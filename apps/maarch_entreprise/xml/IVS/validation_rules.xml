@@ -33,12 +33,6 @@
       <parameter name="contact_id" type="integer" />
     </validationRule>
 
-    <validationRule name="ajaxLoadDeleteContact" extends="standardForm" mode="error">
-      <parameter name="contact_id" type="integer" />
-      <parameter name="name" type="string" />
-      <parameter name="society_label" type="string" />
-    </validationRule>
-
     <validationRule name="ajaxDeleteContact" extends="standardForm" mode="error">
       <parameter name="contactId" type="integer" />
       <parameter name="replacedAddressId" type="string" />
@@ -277,28 +271,6 @@
       <parameter name="dir" type="identifier" />
     </validationRule>
 
-    <validationRule name="ix_change_category" extends="standardForm" mode="error">
-      <parameter name="category_id" type="identifier" />
-      <parameter name="dir" type="identifier" />
-    </validationRule>
-
-    <validationRule name="ix_change_category_actions" extends="standardForm" mode="error">
-      <parameter name="category_id" type="identifier" />
-      <parameter name="dir" type="identifier" />
-      <parameter name="resId" type="identifier" />
-      <parameter name="collId" type="collection_list" />
-    </validationRule>
-
-    <validationRule name="ix_change_doctype" extends="standardForm" mode="error">
-      <parameter name="type_id" type="integer" />
-      <parameter name="admission_date" type="datefr" />
-      <parameter name="id_action" type="identifier" />
-      <parameter name="priority_id" type="string" />
-      <parameter name="dir" type="identifier" />
-      <parameter name="res_id" type="identifier" />
-      <parameter name="coll_id" type="collection_list" />
-    </validationRule>
-
     <validationRule name="search_adv_result" extends="standardForm" mode="error">
       <parameter name="baskets_clause" type="identifier" />
       <parameter name="sender" type="string" />
@@ -342,7 +314,7 @@
       <parameter name="process_limit_date_to" type="string" />
       <parameter name="destinataire_chosen" type="identifier" />
       <parameter name="destinataire_available" type="identifier" />
-      <parameter name="project" type="string" />
+      <parameter name="folder" type="string" />
       <parameter name="priority" type="string" />
       <parameter name="indexingCustomField_*" type="string" />
       <parameter name="signatory_group" type="identifier" />
@@ -608,16 +580,6 @@
       <parameter name="res_id" type="NumComma" />
       <parameter name="res_id_child" type="integer" />
       <parameter name="tableHist" type="res_view_table_list" />
-    </validationRule>
-
-    <validationRule name="verif_pass" extends="standardForm" mode="error">  
-      <parameter name="FirstName" type="string" />
-      <parameter name="LastName" type="personname" />
-      <parameter name="Mail" type="email" />
-      <parameter name="Phone" type="phone" />
-      <parameter name="Submit" type="identifier" />
-      <parameter name="pass1" type="string" />
-      <parameter name="pass2" type="string" />
     </validationRule>
 
     <validationRule name="id_identifier" extends="standardForm" mode="error">  

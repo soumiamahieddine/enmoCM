@@ -14,10 +14,10 @@
 
 namespace History\controllers;
 
+use Group\controllers\PrivilegeController;
 use Resource\controllers\ResController;
 use Respect\Validation\Validator;
 use SrcCore\controllers\LogsController;
-use Group\models\ServiceModel;
 use SrcCore\models\ValidatorModel;
 use History\models\HistoryModel;
 use Notification\controllers\NotificationsEventsController;
@@ -29,7 +29,7 @@ class HistoryController
 {
     public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'view_history', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_history', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -99,7 +99,7 @@ class HistoryController
     public function getByUserId(Request $request, Response $response, array $aArgs)
     {
         $user = UserModel::getById(['id' => $aArgs['userSerialId'], 'select' => ['user_id']]);
-        if ($user['user_id'] != $GLOBALS['userId'] && !ServiceModel::hasService(['id' => 'view_history', 'userId' => $GLOBALS['userId'], 'location' => 'apps', 'type' => 'admin'])) {
+        if ($user['user_id'] != $GLOBALS['userId'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'view_history', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -115,6 +115,22 @@ class HistoryController
         }
 
         $history = HistoryModel::getByResourceId(['resId' => $args['resId'], 'select' => ['info', 'event_date']]);
+
+        return $response->withJson(['history' => $history]);
+    }
+
+    public function getWorkflowByResourceId(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $queryParams = $request->getQueryParams();
+        if (!empty($queryParams['limit']) && !Validator::intVal()->validate($queryParams['limit'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an int val']);
+        }
+
+        $history = HistoryModel::getWorkflowByResourceId(['resId' => $args['resId'], 'select' => ['info', 'event_date'], 'limit' => (int)$queryParams['limit']]);
 
         return $response->withJson(['history' => $history]);
     }

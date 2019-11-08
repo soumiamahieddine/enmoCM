@@ -549,7 +549,7 @@ class ExportController
         }
 
         foreach ($args['chunkedResIds'] as $resIds) {
-            $attachments = AttachmentModel::getOnView([
+            $attachments = AttachmentModel::get([
                 'select'    => ['creation_date', 'res_id'],
                 'where'     => ['res_id in (?)', 'attachment_type = ?', 'status = ?'],
                 'data'      => [$resIds, 'signed_response', 'TRA'],
@@ -761,8 +761,8 @@ class ExportController
 
     private static function getFolderLabel(array $args)
     {
-        $folders = FolderModel::getWithEntitiesAndResources([
-            'select'    => ['folders.label'],
+        $folders = FolderModel::getWithResources([
+            'select'    => ['folders.id, folders.label'],
             'where'     => ['resources_folders.res_id = ?'],
             'data'      => [$args['res_id']]
         ]);
@@ -772,15 +772,21 @@ class ExportController
 
         $labels = [];
         foreach ($folders as $folder) {
-            $labels[] = $folder['label'];
+            $hasFolder = FolderController::hasFolders([
+                'userId' => $GLOBALS['id'],
+                'folders' => [$folder['id']]
+            ]);
+            if ($hasFolder) {
+                $labels[] = $folder['label'];
+            }
         }
 
-        return implode(',', $labels);
+        return implode("\n", $labels);
     }
 
     private static function getParentFolderLabel(array $args)
     {
-        $folders = FolderModel::getWithEntitiesAndResources([
+        $folders = FolderModel::getWithResources([
             'select'    => ['folders.parent_id'],
             'where'     => ['resources_folders.res_id = ?'],
             'data'      => [$args['res_id']]
@@ -805,6 +811,6 @@ class ExportController
             $parentLabels[] = $parentFolder['label'];
         }
 
-        return implode(',', $parentLabels);
+        return implode("\n", $parentLabels);
     }
 }

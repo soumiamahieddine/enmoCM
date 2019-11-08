@@ -23,47 +23,26 @@ class AdrModel
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'type', 'collId']);
         ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::boolType($aArgs, ['isVersion']);
         ValidatorModel::arrayType($aArgs, ['select']);
 
         if ($aArgs['collId'] == 'letterbox_coll') {
             $table = "adr_letterbox";
-        } else if ($aArgs['collId'] == 'attachments_version_coll' || $aArgs['isVersion']) {
-            $table = "adr_attachments_version";
         } else {
             $table = "adr_attachments";
         }
 
-        $attachment = DatabaseModel::select([
+        $document = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
             'table'     => [$table],
             'where'     => ['res_id = ?', 'type = ?'],
             'data'      => [$aArgs['resId'], $aArgs['type']],
         ]);
 
-        if (empty($attachment[0])) {
+        if (empty($document[0])) {
             return [];
         }
 
-        return $attachment[0];
-    }
-
-    public static function getDocumentsAdr(array $aArgs = [])
-    {
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
-        ValidatorModel::intType($aArgs, ['limit', 'offset']);
-
-        $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['adr_letterbox'],
-            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
-            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
-            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
-            'offset'    => empty($aArgs['offset']) ? 0 : $aArgs['offset'],
-            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
-        ]);
-
-        return $aReturn;
+        return $document[0];
     }
 
     public static function getTypedDocumentAdrByResId(array $aArgs)
@@ -93,17 +72,10 @@ class AdrModel
         ValidatorModel::intVal($aArgs, ['resId']);
         ValidatorModel::stringType($aArgs, ['type']);
         ValidatorModel::arrayType($aArgs, ['select']);
-        ValidatorModel::boolType($aArgs, ['isVersion']);
-
-        if ($aArgs['isVersion']) {
-            $table = "adr_attachments_version";
-        } else {
-            $table = "adr_attachments";
-        }
 
         $adr = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => [$table],
+            'table'     => ['adr_attachments'],
             'where'     => ['res_id = ?', 'type = ?'],
             'data'      => [$aArgs['resId'], $aArgs['type']]
         ]);
@@ -141,16 +113,9 @@ class AdrModel
         ValidatorModel::notEmpty($aArgs, ['resId', 'docserverId', 'path', 'filename', 'type']);
         ValidatorModel::stringType($aArgs, ['docserverId', 'path', 'filename', 'type', 'fingerprint']);
         ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::boolType($aArgs, ['isVersion']);
-
-        if ($aArgs['isVersion']) {
-            $table = "adr_attachments_version";
-        } else {
-            $table = "adr_attachments";
-        }
 
         DatabaseModel::insert([
-            'table'         => $table,
+            'table'         => 'adr_attachments',
             'columnsValues' => [
                 'res_id'        => $aArgs['resId'],
                 'type'          => $aArgs['type'],
@@ -160,33 +125,6 @@ class AdrModel
                 'fingerprint'   => empty($aArgs['fingerprint']) ? null : $aArgs['fingerprint'],
             ]
         ]);
-        return true;
-    }
-
-    public static function updateAttachAdr(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'path', 'filename', 'type']);
-        ValidatorModel::stringType($aArgs, ['path', 'filename', 'type', 'fingerprint']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::boolType($aArgs, ['isVersion']);
-
-        if ($aArgs['isVersion']) {
-            $table = "adr_attachments_version";
-        } else {
-            $table = "adr_attachments";
-        }
-
-        DatabaseModel::update([
-            'table'     => $table,
-            'set'       => [
-                'path'    => $aArgs['path'],
-                'filename'    => $aArgs['filename'],
-                'fingerprint'    => empty($aArgs['fingerprint']) ? null : $aArgs['fingerprint'],
-            ],
-            'where'     => ['res_id = ?', 'type = ?'],
-            'data'      => [$aArgs['resId'],$aArgs['type']]
-        ]);
-
         return true;
     }
 
@@ -208,16 +146,9 @@ class AdrModel
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::boolType($aArgs, ['isVersion']);
-
-        if ($aArgs['isVersion']) {
-            $table = "adr_attachments_version";
-        } else {
-            $table = "adr_attachments";
-        }
 
         DatabaseModel::delete([
-            'table' => $table,
+            'table' => 'adr_attachments',
             'where'     => ['res_id = ?'],
             'data'      => [$aArgs['resId']]
         ]);

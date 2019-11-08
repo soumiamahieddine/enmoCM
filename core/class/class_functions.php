@@ -46,21 +46,6 @@ class functions
          */
     private $f_page;
 
-    /**
-    * To calculate the page generation time
-    * Integer
-         */
-    private $start_page;
-
-    /**
-    * Loads in the start_page variable the start time of the page loading
-    *
-    */
-    public function start_page_stat()
-    {
-        $this->start_page = microtime(true);
-    }
-
     public function normalize ($string)
     {
         $a = 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞ'
@@ -93,47 +78,6 @@ class functions
         {
             return $string;
         }
-    }
-
-    /**
-    * Ends the page loading time and displays it
-    *
-    */
-    public function show_page_stat()
-    {
-        $end_page = microtime(true);
-        $page_total = round($end_page - $this->start_page,3);
-        if($page_total > 1)
-        {
-            $page_seconds = _SECONDS;
-        }
-        else
-        {
-            $page_seconds = _SECOND;
-        }
-        echo _PAGE_GENERATED_IN." <b>".$page_total."</b> ".$page_seconds;
-    }
-
-    /**
-    * Configures the actual position of the visitor with all query strings to go to the right page after the logging action
-    *
-    * @param     $index string "index.php?" by default
-    */
-    public function configPosition($index ="index.php?")
-    {
-        $querystring = $_SERVER['QUERY_STRING'];
-        $tab_query = explode("&",$querystring);
-        $querystring = "";
-
-        for($i=0;$i<count($tab_query);$i++)
-        {
-            if(substr($tab_query[$i],0,3) <> "css" && substr($tab_query[$i],0,3) <> "CSS")
-            {
-                $querystring .= $tab_query[$i]."&";
-            }
-        }
-        $querystring = substr($querystring,0,strlen($querystring)-1);
-        $_SESSION['position'] = $index.$querystring;
     }
 
     /**
@@ -523,41 +467,6 @@ class functions
             }
         }
         return '';
-    }
-
-    /**
-    * Writes an error in pre formating format with header and footer
-    *
-    * @param   $title string Error title
-    * @param      $message  string Error message
-    * @param      $type string If 'title' then displays the title otherwise do not displays it (empty by default)
-    * @param      $img_src string Source of the image to show (empty by default)
-    */
-    public function echo_error($title,$message, $type = '', $img_src = '')
-    {
-        if ($type == 'title' || $type <> '')
-        {
-            if($img_src <> '')
-            {
-                echo '<h1><img src="'.$img_src.'" alt="" />'.$title.'</h1>';
-            }
-            else
-            {
-                echo "<h1>".$title."</h1>";
-            }
-            echo '<div id="inner_content">';
-        } ?>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <p>&nbsp;</p>
-        <?php functions::xecho($message);
-        if ($type <> '')
-        {
-            echo '</div>';
-        }
     }
 
     /**
@@ -1048,55 +957,6 @@ class functions
             }
         }
         return $foundDoc;
-    }
-    
-    /**
-    * Generate an UUID v4
-    * @return string UUID
-    */
-    function gen_uuid() 
-    {
-        return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-            // 32 bits for "time_low"
-            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-
-            // 16 bits for "time_mid"
-            mt_rand( 0, 0xffff ),
-
-            // 16 bits for "time_hi_and_version",
-            // four most significant bits holds version number 4
-            mt_rand( 0, 0x0fff ) | 0x4000,
-
-            // 16 bits, 8 bits for "clk_seq_hi_res",
-            // 8 bits for "clk_seq_low",
-            // two most significant bits holds zero and one for variant DCE1.1
-            mt_rand( 0, 0x3fff ) | 0x8000,
-
-            // 48 bits for "node"
-            mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
-        );
-    }
-    
-    /**
-    * Return the amount corresponding to the currency
-    * @param  $currency string currency of the amount
-    * @param  $amount float the amount
-    */
-    function formatAmount($currency, $amount)
-    {
-        $formattedAmount = '';
-        if ($currency == 'EUR') {
-            $formattedAmount = '€' . number_format($amount , 2 , ',' , '.' );
-        } elseif  ($currency == 'DOL') {
-            $formattedAmount = '$' . number_format($amount , 2 , ',' , '.' );
-        } elseif  ($currency == 'YEN') {
-            $formattedAmount = '¥' . number_format($amount , 2 , ',' , '.' );
-        } elseif  ($currency == 'POU') {
-            $formattedAmount = '£' . number_format($amount , 2 , ',' , '.' );
-        } else {
-            $formattedAmount = ' ' . number_format($amount , 2 , ',' , '.' );
-        }
-        return $formattedAmount;
     }
 
     /**

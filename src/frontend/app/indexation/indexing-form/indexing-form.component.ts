@@ -263,7 +263,11 @@ export class IndexingFormComponent implements OnInit {
         });
         arrIndexingModels.forEach(element => {
             if (element.today === true) {
-                element.default_value = new Date();
+                if (!this.adminMode) {
+                    element.default_value = new Date();
+                } else {
+                    element.default_value = '_TODAY';
+                }
             } else {
                 element.default_value = this.arrFormControl[element.identifier].value;
             }
@@ -343,6 +347,12 @@ export class IndexingFormComponent implements OnInit {
                         if (elem.identifier === 'documentDate') {
                             elem.startDate = '';
                             elem.endDate = '_TODAY';
+
+                            this.fieldCategories.forEach(element => {
+                                if (this['indexingModels_' + element].filter((field: any) => field.identifier === 'departureDate').length > 0) {
+                                    elem.endDate = 'departureDate';
+                                }
+                            });                            
 
                         } else if (elem.identifier === 'destination') {
                             if (this.adminMode) {

@@ -6,14 +6,14 @@
     <h1 class="admin-toolbar-title">{{headerService.headerMessage}}</h1><span class="admin-toolbar-title-small">{{headerService.subHeaderMessage}}</span>
     <span style="flex: 1 1 auto;"></span>
     <search-home></search-home>
-    <button mat-button [matMenuTriggerFor]="applications" *ngIf="!appService.getViewMode()" style="min-width:0px;width:65px;height: 40px;margin-left: 10px" matTooltip="{{lang.menu}}">
+    <button mat-button [matMenuTriggerFor]="applications" (click)="getMenus()" *ngIf="!appService.getViewMode()" style="min-width:0px;width:65px;height: 40px;margin-left: 10px" matTooltip="{{lang.menu}}">
         <mat-icon mat-list-icon class="fa fa-th" style="font-size:20px;color:white;height:auto;"></mat-icon>
     </button>
     <mat-menu #applications="matMenu" class="headerMaarchShortcut">
-        <ng-container *ngFor="let shortcut of headerService.menu">
+        <ng-container *ngFor="let shortcut of menus | sortBy: 'label'">
             <button (click)="gotToMenu(shortcut);" style="white-space:inherit;height: 100px;line-height:20px;" class="col-md-4 col-xs-6" mat-button color="primary" matTooltip="{{shortcut.comment}}">
                 <i class="{{shortcut.style}} fa-2x"></i>
-                <br/>{{shortcut.name}}
+                <br/>{{shortcut.label}}
             </button>
         </ng-container>
     </mat-menu>

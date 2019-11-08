@@ -35,14 +35,18 @@ class MessageExchangeReviewController
         }
 
         $resLetterboxData = ResModel::getOnView([
-            'select'  => ['entity_label', 'res_id', 'identifier', 'external_id'],
+            'select'  => ['entity_label', 'res_id', 'external_id'],
             'where'   => ['res_id = ?'],
             'data'    => [$aArgs['res_id']],
             'orderBy' => ['res_id'], ]);
 
         if (!empty($resLetterboxData[0]['external_id'])) {
             $resLetterboxData[0]['external_id'] = json_decode($resLetterboxData[0]['external_id'], true);
-            return $resLetterboxData[0];
+            if (!empty($resLetterboxData[0]['external_id']['m2m'])) {
+                return $resLetterboxData[0];
+            } else {
+                return false;
+            }
         } else {
             return false;
         }

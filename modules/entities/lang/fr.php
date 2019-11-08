@@ -68,9 +68,6 @@ if (!defined('_ENTITIES_LIST')) {
 if (!defined('_MANAGE_ENTITIES')) {
     define('_MANAGE_ENTITIES', 'Gérer les Entités');
 }
-if (!defined('_MANAGE_ENTITIES_DESC')) {
-    define('_MANAGE_ENTITIES_DESC', 'Gérer la structure de votre organisation (pôles, services et bureaux). Ainsi que les modèles de diffusion et circuits de visa associés aux entités.');
-}
 if (!defined('_ENTITY_MISSING')) {
     define('_ENTITY_MISSING', "Cette entité n'existe pas");
 }

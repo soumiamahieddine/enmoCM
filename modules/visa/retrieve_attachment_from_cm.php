@@ -7,18 +7,18 @@ if (!empty($objectResIdMaster)) {
 } else {
     $data = [$objectId, $objectId, $_SESSION['doc_id']];
 }
-$stmt = $db->query("SELECT relation, docserver_id, path, filename, format FROM res_view_attachments
-                        WHERE (res_id = ? OR res_id_version = ?) AND res_id_master = ? ORDER BY relation desc", $data);
+$stmt = $db->query("SELECT relation, docserver_id, path, filename, format FROM res_attachments
+                        WHERE res_id = ? AND res_id_master = ? ORDER BY relation desc", $data);
 
 if ($stmt->rowCount() == 0) {
     $result = array('ERROR' => _THE_DOC . ' ' . _EXISTS_OR_RIGHT);
     createXML('ERROR', $result);
 } else {
-    $line = $stmt->fetchObject();
+    $line      = $stmt->fetchObject();
     $docserver = $line->docserver_id;
-    $path = $line->path;
-    $filename = $line->filename;
-    $format = $line->format;
+    $path      = $line->path;
+    $filename  = $line->filename;
+    $format    = $line->format;
 	$_SESSION['visa']['repSignRel'] = $line->relation;
 	$_SESSION['visa']['repSignId'] = $objectId;
 	
@@ -28,11 +28,10 @@ if ($stmt->rowCount() == 0) {
     , array($docserver));
     $func = new functions();
     $lineDoc = $stmt2->fetchObject();
-	
-	
-    $docserver = $lineDoc->path_template;
-    $fileOnDs = $docserver . $path . str_replace(pathinfo($filename, PATHINFO_EXTENSION), "pdf",$filename);;
-    $fileOnDs = str_replace('#', DIRECTORY_SEPARATOR, $fileOnDs);
+
+    $docserver     = $lineDoc->path_template;
+    $fileOnDs      = $docserver . $path . str_replace(pathinfo($filename, PATHINFO_EXTENSION), "pdf",$filename);;
+    $fileOnDs      = str_replace('#', DIRECTORY_SEPARATOR, $fileOnDs);
     $fileExtension = $func->extractFileExt($fileOnDs);
     $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
         . '_' . rand() . '.' . $fileExtension;

@@ -216,7 +216,6 @@ if (isset($_REQUEST['valid'])) {
 		exit();
 	} else {
 		if($mode <> 'popup'){
-			$core->start_page_stat();
 			?>
 			<div id="header">
 		        <div id="nav">

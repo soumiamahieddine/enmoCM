@@ -36,16 +36,12 @@ class Install extends functions
         array('FASTHD_AI', 'ai'),
         array('FASTHD_MAN', 'manual'),
         array('FASTHD_ATTACH', 'manual_attachments'),
-        array('FASTHD_ATTACH_VERSION', 'manual_attachments_version'),
         array('CONVERT_MLB', 'convert_mlb'),
         array('CONVERT_ATTACH', 'convert_attachments'),
-        array('CONVERT_ATTACH_VERSION', 'convert_attachments_version'),
         array('TNL_MLB', 'thumbnails_mlb'),
         array('TNL_ATTACH', 'thumbnails_attachments'),
-        array('TNL_ATTACH_VERSION', 'thumbnails_attachments_version'),
         array('FULLTEXT_MLB', 'fulltext_mlb'),
         array('FULLTEXT_ATTACH', 'fulltext_attachments'),
-        array('FULLTEXT_ATTACH_VERSION', 'fulltext_attachments_version'),
         array('TEMPLATES', 'templates'),
         array('ARCHIVETRANSFER', 'archive_transfer'),
         array('ACKNOWLEDGEMENT_RECEIPTS', 'acknowledgment_receipts'),
@@ -806,16 +802,17 @@ class Install extends functions
         $chemin = $SERVER_ADDR.dirname($_SERVER['PHP_SELF'].'cs_'.$_SESSION['config']['databasename']);
         $maarchUrl = rtrim($chemin, 'install');
         $maarchUrl = $maarchUrl.'cs_'.$_SESSION['config']['databasename'].'/';
-        $CONFIG->MaarchUrl = $maarchUrl;
-        $CONFIG->MaarchApps = 'maarch_entreprise';
+        $CONFIG->MaarchUrl    = $maarchUrl;
+        $CONFIG->customID     = 'cs_'.$_SESSION['config']['databasename'];
+        $CONFIG->MaarchApps   = 'maarch_entreprise';
         $CONFIG->TmpDirectory = realpath('.').'/modules/notifications/batch/tmp/';
 
         $CONFIG_BASE = $xmlconfig->CONFIG_BASE;
-        $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
+        $CONFIG_BASE->databaseserver     = $_SESSION['config']['databaseserver'];
         $CONFIG_BASE->databaseserverport = $_SESSION['config']['databaseserverport'];
-        $CONFIG_BASE->databasename = $_SESSION['config']['databasename'];
-        $CONFIG_BASE->databaseuser = $_SESSION['config']['databaseuser'];
-        $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
+        $CONFIG_BASE->databasename       = $_SESSION['config']['databasename'];
+        $CONFIG_BASE->databaseuser       = $_SESSION['config']['databaseuser'];
+        $CONFIG_BASE->databasepassword   = $_SESSION['config']['databasepassword'];
 
         $LOG4PHP = $xmlconfig->LOG4PHP;
         $LOG4PHP->Log4PhpConfigPath = realpath('.').'/custom/cs_'.$_SESSION['config']['databasename'].'/apps/maarch_entreprise/xml/log4php.xml';

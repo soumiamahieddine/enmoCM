@@ -16,7 +16,7 @@ namespace Template\controllers;
 
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
-use Group\models\ServiceModel;
+use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -44,7 +44,7 @@ class TemplateController
 
     public function get(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_templates', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -55,7 +55,7 @@ class TemplateController
 
     public function getDetailledById(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_templates', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -99,7 +99,7 @@ class TemplateController
 
     public function create(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_templates', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -129,7 +129,7 @@ class TemplateController
                     return $response->withStatus(400)->withJson(['errors' => 'Template style is missing']);
                 }
                 $explodeStyle = explode(':', $data['template_style']);
-                $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[0]);
+                $fileOnTmp = "tmp_file_{$GLOBALS['id']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[0]);
             } else {
                 if (empty($data['uploadedFile']['base64']) || empty($data['uploadedFile']['name'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Uploaded file is missing']);
@@ -184,7 +184,7 @@ class TemplateController
 
     public function update(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_templates', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -281,7 +281,7 @@ class TemplateController
 
     public function delete(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_templates', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -307,7 +307,7 @@ class TemplateController
 
     public function duplicate(Request $request, Response $response, array $aArgs)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_templates', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -352,7 +352,7 @@ class TemplateController
 
     public function initTemplates(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'admin_templates', 'userId' => $GLOBALS['userId'], 'location' => 'templates', 'type' => 'admin'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_templates', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -407,6 +407,7 @@ class TemplateController
 
         return $check;
     }
+
     public static function mergeDatasource(array $aArgs)
     {
         include_once 'apps/maarch_entreprise/tools/tbs/tbs_class_php5.php';

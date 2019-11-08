@@ -54,9 +54,6 @@ if (!defined('_ENTITIES_LIST')) {
 if (!defined('_MANAGE_ENTITIES')) {
     define('_MANAGE_ENTITIES', 'De Eenheden beheren');
 }
-if (!defined('_MANAGE_ENTITIES_DESC')) {
-    define('_MANAGE_ENTITIES_DESC', 'De structuur van uw organisatie beheren (diensten- en kantorenpools). Evenals de verdelingsmodellen en de goedkeuringscircuits die aan de eenheden gekoppeld zijn.');
-}
 if (!defined('_ENTITY_MISSING')) {
     define('_ENTITY_MISSING', 'Deze eenheid bestaat niet');
 }

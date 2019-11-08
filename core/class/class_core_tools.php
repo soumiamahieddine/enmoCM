@@ -330,6 +330,8 @@ class core_tools extends functions
      */
     public function load_app_services()
     {
+//        $_SESSION['app_services'] = [];
+        /*
         // Reads the application config.xml file
         if (file_exists(
             $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR
@@ -447,7 +449,7 @@ class core_tools extends functions
                 ++$m;
             }
             ++$k;
-        }
+        }*/
     }
 
     /**
@@ -457,6 +459,8 @@ class core_tools extends functions
      */
     public function load_modules_services($modules)
     {
+//        $_SESSION['modules_services'] = [];
+        /*
         // Browses the enabled modules array
         for ($i = 0; $i < count($modules); ++$i) {
             // Reads the module config.xml file
@@ -575,6 +579,7 @@ class core_tools extends functions
                 }
             }
         }
+        */
     }
 
     /**
@@ -1576,13 +1581,15 @@ class core_tools extends functions
                 }
             } else {
                 $system = false;
-                for ($i = 0; $i < count($_SESSION['modules_services'][$module]); ++$i) {
-                    if ($_SESSION['modules_services'][$module][$i]['id'] == $id_service) {
-                        if ($_SESSION['modules_services'][$module][$i]['system_service'] == true) {
-                            return true;
+                if (!empty($_SESSION['modules_services'])) {
+                    for ($i = 0; $i < count($_SESSION['modules_services'][$module]); ++$i) {
+                        if ($_SESSION['modules_services'][$module][$i]['id'] == $id_service) {
+                            if ($_SESSION['modules_services'][$module][$i]['system_service'] == true) {
+                                return true;
+                            }
+                        } else {
+                            break;
                         }
-                    } else {
-                        break;
                     }
                 }
             }

@@ -45,7 +45,7 @@ trait ExternalSignatoryBookTrait
             } elseif ($config['id'] == 'fastParapheur') {
                 // TODO
             } elseif ($config['id'] == 'maarchParapheur') {
-                $attachments = AttachmentModel::getOnView([
+                $attachments = AttachmentModel::get([
                     'select'    => [
                         'count(1) as nb'
                     ],
@@ -72,7 +72,7 @@ trait ExternalSignatoryBookTrait
 
                 $historyInfo = $sendedInfo['historyInfos'];
             } elseif ($config['id'] == 'xParaph') {
-                $attachments = AttachmentModel::getOnView([
+                $attachments = AttachmentModel::get([
                     'select'    => [
                         'count(1) as nb'
                     ],
@@ -110,16 +110,6 @@ trait ExternalSignatoryBookTrait
                     foreach ($attachmentToFreeze['attachments_coll'] as $resId => $externalId) {
                         AttachmentModel::freezeAttachment([
                             'resId' => $resId,
-                            'table' => 'res_attachments',
-                            'externalId' => $externalId
-                        ]);
-                    }
-                }
-                if (!empty($attachmentToFreeze['attachments_version_coll'])) {
-                    foreach ($attachmentToFreeze['attachments_version_coll'] as $resId => $externalId) {
-                        AttachmentModel::freezeAttachment([
-                            'resId' => $resId,
-                            'table' => 'res_version_attachments',
                             'externalId' => $externalId
                         ]);
                     }

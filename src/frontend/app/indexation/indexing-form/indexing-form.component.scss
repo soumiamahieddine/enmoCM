@@ -159,6 +159,108 @@
     }
 }
 
+.input-form-filled {
+    color: white;
+    width: 500px;
+
+    transition: all 0.1s;
+
+    &:hover,
+    &[aria-expanded=true] {
+
+        ::ng-deep.mat-form-field-flex {
+            background: white !important;
+            border: solid 1px white !important;
+            color: $primary !important;
+            transition: all 0.1s;
+
+        }
+        
+        ::ng-deep.mat-select-placeholder {
+            color: $primary !important;
+        }
+
+        ::ng-deep.mat-form-field-label {
+            color: $primary !important;
+        }
+
+        ::ng-deep.mat-select-arrow {
+            color: rgba($primary, 0.54);
+        }
+    }
+
+    .mat-input-element {
+        color: $primary;
+        padding-left: 20px;
+    }
+
+    input {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    ::ng-deep.mat-select-value {
+        text-align: left;
+        font-weight: normal;
+    }
+
+    ::ng-deep.mat-select-value-text {
+        padding-left: 20px;
+        color: white;
+    }
+
+    ::ng-deep.mat-form-field-label {
+        color: white;
+        left: 20px;
+    }
+
+    ::ng-deep.mat-form-field-infix {
+        padding-bottom: 15px;
+    }
+
+    ::ng-deep.mat-form-field-flex {
+        background: $primary;
+        border-radius: 30px;
+        border: solid 1px white;
+    }
+
+    ::ng-deep .mat-form-field-underline {
+        display: none;
+    }
+
+    ::ng-deep.mat-form-field-suffix {
+        margin-right: 20px;
+    }
+
+    ::ng-deep.mat-select-arrow-wrapper {
+        padding-right: 20px;
+    }
+
+    ::ng-deep.mat-select-arrow {
+        color: rgba(255,255,255,0.54);
+    }
+
+    ::ng-deep.mat-select-placeholder {
+        color: white;
+    }
+
+    ::ng-deep.mat-list-option {
+        color: rgba(0, 0, 0, 0.54);
+    }
+
+    ::ng-deep.mat-form-field-wrapper {
+        padding: 0px;
+    }
+
+    textarea.cdk-textarea-autosize-measuring {
+        padding: 4px 0 !important;
+    }
+
+    ::ng-deep.mat-datepicker-toggle-default-icon {
+        height: auto;
+    }
+}
+
 .input-form.mat-form-field-disabled {
     ::ng-deep.mat-input-element {
         cursor: not-allowed;

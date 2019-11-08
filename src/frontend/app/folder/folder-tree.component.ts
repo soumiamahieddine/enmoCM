@@ -15,6 +15,7 @@ import { FolderUpdateComponent } from './folder-update/folder-update.component';
 import { FoldersService } from './folders.service';
 import { FormControl } from '@angular/forms';
 import { PluginAutocomplete } from '../../plugins/autocomplete/autocomplete.component';
+import { HeaderService } from '../../service/header.service';
 
 declare function $j(selector: any): any;
 /**
@@ -128,6 +129,7 @@ export class FolderTreeComponent implements OnInit {
         private dialog: MatDialog,
         private router: Router,
         private renderer: Renderer2,
+        private headerService: HeaderService,
         public foldersService: FoldersService
     ) {
         // Event after process action 
@@ -144,7 +146,9 @@ export class FolderTreeComponent implements OnInit {
             } else if (result.type === 'refreshFolderPinned') {
                 this.treeControl.dataNodes.filter(folder => folder.id === result.content.id)[0].pinned = result.content.pinned;
             } else {
-                this.openTree(this.foldersService.getCurrentFolder().id);
+                if (this.treeControl.dataNodes !== undefined) {
+                    this.openTree(this.foldersService.getCurrentFolder().id);
+                }
             }
         }); 
     }
@@ -270,6 +274,7 @@ export class FolderTreeComponent implements OnInit {
                 this.treeControl.collapseAll();
                 this.openTree(nestedNode.id);
                 this.createItemNode = false;
+                this.foldersService.getPinnedFolders();
             }),
             tap(() => this.notify.success(this.lang.folderAdded)),
             catchError((err) => {
@@ -284,6 +289,7 @@ export class FolderTreeComponent implements OnInit {
             tap(() => {
                 this.autocomplete.resetValue();
                 this.getFolders();
+                this.foldersService.getPinnedFolders();
             }),
             tap(() => this.notify.success(this.lang.folderAdded)),
             catchError((err) => {
@@ -361,7 +367,8 @@ export class FolderTreeComponent implements OnInit {
                 if (data !== undefined) {
                     this.getFolders();
                     this.foldersService.getPinnedFolders();
-                }                
+                    this.foldersService.setEvent({type:'refreshFolderInformations', content: node});
+                }
             })
         ).subscribe();
     }
@@ -369,13 +376,12 @@ export class FolderTreeComponent implements OnInit {
     checkRights(node: any) {
         let userEntities: any[] = [];
         let currentUserId: number = 0;
-        this.http.get("../../rest/currentUser/profile").pipe(
+
+        this.http.get(`../../rest/folders/${node.id}`).pipe(
             tap((data: any) => {
-                userEntities = data.entities.map((info: any) => info.id);
-                currentUserId = data.id;
-            }),
-            exhaustMap(() => this.http.get("../../rest/folders/" + node.id)),
-            tap((data: any) => {
+                userEntities = this.headerService.user.entities.map((info: any) => info.id);
+                currentUserId = this.headerService.user.id;
+
                 let canAdmin = false;
                 let canDelete = false;
                 let canAdd = true;

@@ -77,13 +77,12 @@ $template_list = array();
 
 array_push($template_list, $template_select);
 
-$select['res_view_attachments'] = array();
+$select['res_attachments'] = array();
 
-// Important de laisser cet ordre : 'res_id', 'res_id_version', 'relation', 'status'
+// Important de laisser cet ordre : 'res_id', 'relation', 'status'
 array_push(
-    $select['res_view_attachments'],
+    $select['res_attachments'],
     'res_id',
-    'res_id_version',
     'relation',
     'status',
     'identifier',
@@ -101,13 +100,13 @@ array_push(
     'in_send_attach'
 );
 
-$where = " (res_id_master = ? and coll_id = ? and status <> 'DEL' and status <> 'OBS' and (status <> 'TMP' or (typist = ? and status = 'TMP')))";
+$where = " (res_id_master = ? and status <> 'DEL' and status <> 'OBS' and (status <> 'TMP' or (typist = ? and status = 'TMP')))";
 
 if (!$core->test_service('view_documents_with_notes', 'attachments', false)) {
     $where .= ' AND attachment_type <> \'document_with_notes\'';
 }
 
-$arrayPDO = array($resId, $_SESSION['collection_id_choice'], $_SESSION['user']['UserId']);
+$arrayPDO = array($resId, $_SESSION['user']['UserId']);
 //Filtre sur le type
 if (isset($whereAttach) && $whereAttach <> '') {
     $where .= $whereAttach;
@@ -121,7 +120,7 @@ if (!empty($order_field) && !empty($order)) {
     if ($_REQUEST['order_field'] == 'identifier') {
         $orderstr = "order by order_alphanum(identifier)"." ".$order;
     } elseif ($_REQUEST['order_field'] == 'priority') {
-        $where .= ' and res_view_attachments.priority = priorities.id';
+        $where .= ' and res_attachments.priority = priorities.id';
         $select['priorities'] = ['order', 'id'];
         $orderstr = 'order by priorities.order '.$order;
     } else {
@@ -212,17 +211,6 @@ if (isset($_REQUEST['load'])) {
         false,
         $_REQUEST['start']
     );
-        // $request->show();
-
-        foreach ($attachArr as $key => $value) {
-            if ($attachArr[$key][0]["value"] == "0") {
-                array_shift($attachArr[$key]);
-                $attachArr[$key][0]["column"] = "res_id";
-            } else {
-                unset($attachArr[$key][1]);
-                $attachArr[$key] = array_values($attachArr[$key]);
-            }
-        }
 
         for ($i = 0; $i < count($attachArr); $i ++) {
             //$modifyValue = false;

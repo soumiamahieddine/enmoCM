@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../../translate.component';
 import { NotificationService } from '../../../notification.service';
@@ -9,6 +9,7 @@ import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { ConfirmComponent } from '../../../../plugins/modal/confirm.component';
 import { HeaderService } from '../../../../service/header.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MenuShortcutComponent } from '../../../menu/menu-shortcut.component';
 
 declare function $j(selector: any): any;
 
@@ -26,6 +27,7 @@ export class IndexingAdministrationComponent implements OnInit {
     loading: boolean = true;
 
     @Input('groupId') groupId: number;
+    @Output('resfreshShortcut') resfreshShortcut = new EventEmitter<string>();
 
     keywordEntities: any[] = [];
     actionList: any[] = [];
@@ -321,7 +323,7 @@ export class IndexingAdministrationComponent implements OnInit {
         this.http.put('../../rest/groups/' + this.groupId + '/indexing', { canIndex: canIndex }).pipe(
             tap(() => {
                 this.indexingInfo.canIndex = canIndex;
-                this.headerService.refreshShortcuts();
+                this.resfreshShortcut.emit();
             }),
             tap(() => {
                 if (this.indexingInfo.canIndex) {

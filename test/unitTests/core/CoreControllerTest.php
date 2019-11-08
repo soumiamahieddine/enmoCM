@@ -55,29 +55,6 @@ class CoreControllerTest extends TestCase
         $this->assertSame("ADMIN", $responseBody->user->lastname);
         $this->assertInternalType('array', $responseBody->user->groups);
         $this->assertInternalType('array', $responseBody->user->entities);
-        $this->assertNotEmpty($responseBody->menu);
-
-        foreach ($responseBody->menu as $value) {
-            $this->assertNotEmpty($value->id);
-            $this->assertNotEmpty($value->name);
-            $this->assertNotEmpty($value->comment);
-        }
-    }
-
-    public function testGetAdministration()
-    {
-        $coreController = new \SrcCore\controllers\CoreController();
-
-        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
-        $request     = \Slim\Http\Request::createFromEnvironment($environment);
-
-        $response     = $coreController->getAdministration($request, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertNotEmpty($responseBody->administrations->organisation);
-        $this->assertNotEmpty($responseBody->administrations->classement);
-        $this->assertNotEmpty($responseBody->administrations->production);
-        $this->assertNotEmpty($responseBody->administrations->supervision);
     }
 
     public function testrenderJnlp()

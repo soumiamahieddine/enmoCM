@@ -1,16 +1,16 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { HeaderService } from '../../service/header.service';
 import { AppService } from '../../service/app.service';
-import { tap, catchError, finalize, filter, map } from 'rxjs/operators';
+import { tap, catchError, finalize, filter, map, exhaustMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { AlertComponent } from '../../plugins/modal/alert.component';
 import { SortPipe } from '../../plugins/sorting.pipe';
-import { PDFProgressData } from 'ng2-pdf-viewer';
+import { templateVisitAll } from '@angular/compiler';
 
 
 @Component({
@@ -29,12 +29,15 @@ export class DocumentViewerComponent implements OnInit {
 
     lang: any = LANG;
 
-    loading: boolean = false;
+    loading: boolean = true;
     noConvertedFound: boolean = false;
+
+    noFile: boolean = false;
 
     file: any = {
         name: '',
         type: '',
+        contentMode: 'base64',
         content: null,
         src: null
     };
@@ -45,8 +48,16 @@ export class DocumentViewerComponent implements OnInit {
 
     percentInProgress: number = 0;
 
+    intervalLockFile: any;
+    editInProgress: boolean = false;
+
+    listTemplates: any[] = [];
+
+    @Input('resId') resId: number = null;
+    @Input('editMode') editMode: boolean = false;
+
     loadingInfo: any = {
-        mode: 'determinate',
+        mode: 'indeterminate',
         percent: 0,
         message: '',
     };
@@ -78,6 +89,13 @@ export class DocumentViewerComponent implements OnInit {
 
                 this.maxFileSize = data.informations.maximumSize;
                 this.maxFileSizeLabel = data.informations.maximumSizeLabel;
+
+                if (this.resId !== null) {
+                    this.loadRessource(this.resId);
+                } else {
+                    this.loadTemplates();
+                    this.loading = false;
+                }
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
@@ -86,12 +104,13 @@ export class DocumentViewerComponent implements OnInit {
         ).subscribe();
 
         if (this.tmpFilename != '' && this.tmpFilename !== undefined) {
-            this.http.get('../../rest/convertedFile/'+this.tmpFilename).pipe(
+            this.http.get('../../rest/convertedFile/' + this.tmpFilename).pipe(
                 tap((data: any) => {
                     this.file = {
                         name: this.tmpFilename,
                         format: 'pdf',
                         type: 'application/pdf',
+                        contentMode: 'base64',
                         content: this.getBase64Document(this.base64ToArrayBuffer(data.encodedResource)),
                         src: this.base64ToArrayBuffer(data.encodedResource)
                     };
@@ -104,6 +123,40 @@ export class DocumentViewerComponent implements OnInit {
                 })
             ).subscribe();
         }
+    }
+
+    loadTmpFile(filenameOnTmp: string) {
+        this.loading = true;
+        this.loadingInfo.mode = 'determinate';
+
+        this.requestWithLoader(`../../rest/convertedFile/${filenameOnTmp}?convert=true`).subscribe(
+            (data: any) => {
+                if (data.encodedResource) {
+                    this.file = {
+                        name: filenameOnTmp,
+                        format: data.extension,
+                        type: data.type,
+                        contentMode: 'base64',
+                        content: data.encodedResource,
+                        src: data.encodedConvertedResource !== undefined ? this.base64ToArrayBuffer(data.encodedConvertedResource) : null
+                    };
+                    this.editMode = true;
+                    if (data.encodedConvertedResource !== undefined) {
+                        this.noConvertedFound = false;
+                    } else {
+                        this.noConvertedFound = true;
+                        this.notify.error(data.convertedResourceErrors);
+                    }
+                    this.loading = false;
+                }
+            },
+            (err: any) => {
+                this.noConvertedFound = true;
+                this.notify.handleErrors(err);
+                this.loading = false;
+                return of(false);
+            }
+        );
     }
 
     uploadTrigger(fileInput: any) {
@@ -137,6 +190,7 @@ export class DocumentViewerComponent implements OnInit {
         this.file = {
             name: '',
             type: '',
+            contentMode: 'base64',
             content: null,
             src: null
         };
@@ -224,7 +278,7 @@ export class DocumentViewerComponent implements OnInit {
                     this.loadingInfo.percent = downloadProgress;
                     this.loadingInfo.mode = 'determinate';
                     this.loadingInfo.message = `3/3 ${this.lang.downloadConvertedFile}...`;
-                    
+
                     return { status: 'progress', message: downloadProgress };
 
                 case HttpEventType.UploadProgress:
@@ -239,6 +293,32 @@ export class DocumentViewerComponent implements OnInit {
                         this.loadingInfo.message = `1/3 ${this.lang.loadingFile}...`;
                     }
                     return { status: 'progress', message: progress };
+
+                case HttpEventType.Response:
+                    return event.body;
+                default:
+                    return `Unhandled event: ${event.type}`;
+            }
+        })
+        );
+    }
+
+    requestWithLoader(url: string) {
+        this.loadingInfo.percent = 0;
+
+        return this.http.get<any>(url, {
+            reportProgress: true,
+            observe: 'events'
+        }).pipe(map((event) => {
+            switch (event.type) {
+                case HttpEventType.DownloadProgress:
+
+                    const downloadProgress = Math.round(100 * event.loaded / event.total);
+                    this.loadingInfo.percent = downloadProgress;
+                    this.loadingInfo.mode = 'determinate';
+                    this.loadingInfo.message = ``;
+
+                    return { status: 'progressDownload', message: downloadProgress };
 
                 case HttpEventType.Response:
                     return event.body;
@@ -286,7 +366,7 @@ export class DocumentViewerComponent implements OnInit {
                     event[0]
                 ]
             }
-        }
+        };
         this.uploadTrigger(fileInput);
     }
 
@@ -302,7 +382,7 @@ export class DocumentViewerComponent implements OnInit {
     isExtensionAllowed(file: any) {
         const fileExtension = '.' + file.name.split('.').pop();
         if (this.allowedExtensions.filter(ext => ext.mimeType === file.type && ext.extension === fileExtension).length === 0) {
-            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.notAllowedExtension + ' !', msg: this.lang.file + ' : <b>' + file.name + '</b>, ' + this.lang.type + ' : <b>'+ file.type+'</b><br/><br/><u>' + this.lang.allowedExtensions + '</u> : <br/>' + this.allowedExtensions.map(ext => ext.extension).filter((elem: any, index: any, self: any) => index === self.indexOf(elem)).join(', ') } });
+            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.notAllowedExtension + ' !', msg: this.lang.file + ' : <b>' + file.name + '</b>, ' + this.lang.type + ' : <b>' + file.type + '</b><br/><br/><u>' + this.lang.allowedExtensions + '</u> : <br/>' + this.allowedExtensions.map(ext => ext.extension).filter((elem: any, index: any, self: any) => index === self.indexOf(elem)).join(', ') } });
             return false;
         } else if (file.size > this.maxFileSize) {
             this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.maxFileSizeReached + ' ! ', msg: this.lang.maxFileSize + ' : ' + this.maxFileSizeLabel } });
@@ -314,7 +394,12 @@ export class DocumentViewerComponent implements OnInit {
 
     downloadOriginalFile() {
         let downloadLink = document.createElement('a');
-        downloadLink.href = `data:${this.file.type};base64,${this.file.content}`;
+        if (this.file.contentMode === 'base64') {
+            downloadLink.href = `data:${this.file.type};base64,${this.file.content}`;
+        } else {
+            downloadLink.href = this.file.content;
+        }
+
         downloadLink.setAttribute('download', this.file.name);
         document.body.appendChild(downloadLink);
         downloadLink.click();
@@ -327,4 +412,148 @@ export class DocumentViewerComponent implements OnInit {
         window.open(blobUrl);
     }
 
+    loadRessource(resId: any, target: string = 'mainDocument') {
+        this.loading = true;
+        if (target === 'attachment') {
+            this.requestWithLoader(`../../rest/attachments/${resId}/content?mode=base64`).subscribe(
+                (data: any) => {
+                    if (data.encodedDocument) {
+                        this.file.contentMode = 'route';
+                        this.file.content = `../../rest/attachments/${resId}/originalContent`;
+                        this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
+                        this.loading = false;
+                    }
+                },
+                (err: any) => {
+                    if (err.error.errors === 'Document has no file') {
+                        this.noFile = true;
+                    } else if (err.error.errors === 'Converted Document not found') {
+                        this.file.contentMode = 'route';
+                        this.file.content = `../../rest/attachments/${resId}/originalContent`;
+                        this.noConvertedFound = true;
+                    } else {
+                        this.notify.error(err.error.errors);
+                        this.noFile = true;
+                    }
+                    this.loading = false;
+                    return of(false);
+                }
+            );
+        } else {
+            this.requestWithLoader(`../../rest/resources/${resId}/content?mode=base64`).subscribe(
+                (data: any) => {
+                    if (data.encodedDocument) {
+                        this.file.contentMode = 'route';
+                        this.file.content = `../../rest/resources/${resId}/originalContent`;
+                        this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
+                        this.loading = false;
+                    }
+                },
+                (err: any) => {
+                    if (err.error.errors === 'Document has no file') {
+                        this.noFile = true;
+                    } else if (err.error.errors === 'Converted Document not found') {
+                        this.file.contentMode = 'route';
+                        this.file.content = `../../rest/resources/${resId}/originalContent`;
+                        this.noConvertedFound = true;
+                    } else {
+                        this.notify.error(err.error.errors);
+                        this.noFile = true;
+                    }
+                    this.loading = false;
+                    return of(false);
+                }
+            );
+        }
+        
+    }
+
+    editTemplate(templateId: number) {
+        const template = this.listTemplates.filter(template => template.id === templateId)[0];
+        this.editInProgress = true;
+        const jnlp = {
+            objectType: 'resourceCreation',
+            objectId: template.id,
+            cookie: document.cookie
+        };
+        this.http.post('../../rest/jnlp', jnlp).pipe(
+            tap((data: any) => {
+                window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
+                this.checkLockFile(data.jnlpUniqueId, template);
+            })
+        ).subscribe();
+    }
+
+    checkLockFile(id: string, template: any) {
+        this.intervalLockFile = setInterval(() => {
+            this.http.get('../../rest/jnlp/lock/' + id)
+                .subscribe((data: any) => {
+                    if (!data.lockFileFound) {
+                        this.editInProgress = false;
+                        clearInterval(this.intervalLockFile);
+                        this.loadTmpFile(`${data.fileTrunk}.${template.extension}`);
+                    }
+                });
+        }, 1000);
+    }
+
+    cancelTemplateEdition() {
+        clearInterval(this.intervalLockFile);
+        this.editInProgress = false;
+    }
+
+    isEditingTemplate() {
+        return this.editInProgress;
+    }
+
+    loadTemplates() {
+        if (this.listTemplates.length === 0) {
+            let arrValues: any[] = [];
+            let arrTypes: any = [];
+            this.http.get('../../rest/attachmentsTypes').pipe(
+                tap((data: any) => {
+                    arrTypes.push({
+                        id: 'all',
+                        label: this.lang.others
+                    });
+                    Object.keys(data.attachmentsTypes).forEach(templateType => {
+                        arrTypes.push({
+                            id: templateType,
+                            label: data.attachmentsTypes[templateType].label
+                        });
+                        arrTypes = this.sortPipe.transform(arrTypes, 'label');
+                    });
+                }),
+                exhaustMap(() => this.http.get('../../rest/currentUser/templates?target=attachments&type=office')),
+                tap((data: any) => {
+                    this.listTemplates = data.templates;
+
+                    arrTypes = arrTypes.filter((type: any) => data.templates.map((template: any) => template.attachmentType).indexOf(type.id) > -1);
+
+                    arrTypes.forEach((arrType: any) => {
+                        arrValues.push({
+                            id: arrType.id,
+                            label: arrType.label,
+                            title: arrType.label,
+                            disabled: true,
+                            isTitle: true,
+                            color: '#135f7f'
+                        });
+                        data.templates.filter((template: any) => template.attachmentType === arrType.id).forEach((template: any) => {
+                            arrValues.push({
+                                id: template.id,
+                                label: '&nbsp;&nbsp;&nbsp;&nbsp;' + template.label,
+                                title: template.exists ? template.label : this.lang.fileDoesNotExists,
+                                extension: template.extension,
+                                disabled: !template.exists,
+                            });
+                        });
+                    });
+
+                    this.listTemplates = arrValues;
+                })
+
+            ).subscribe();
+        }
+    }
 }

@@ -53,13 +53,5 @@
         <parameter name="page" value="update_AvisPage"/>
         <parameter name="module" value="Avis"/>
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="view_pdf_attachement" >
-        <parameter name="page" value="view_pdf_attachement"/>
-        <parameter name="module" value="Avis"/>
-    </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="view_pdf_attachement" >
-        <parameter name="page" value="view_pdf_attachement"/>
-        <parameter name="module" value="Avis"/>
-    </requestDefinition>
 </requestDefinitions>
 </inputValidation>

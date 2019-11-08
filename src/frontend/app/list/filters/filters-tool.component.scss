@@ -161,13 +161,19 @@
 }
 
 .filterBadges>.badge-subEntities {
-    margin: 5px;
+    margin: 5px; 
     background: #9440D5;
     cursor: pointer;
 }
 
+.filterBadges>.badge-doctypes {
+    margin: 5px;
+    background: #d6716f;
+    cursor: pointer;
+}
+
 ::ng-deep.autoCompletePanelFilter {
-    left: 40px;
+    left: 25px;
     min-width: 400px !important;
     max-width: 90% !important;
 }

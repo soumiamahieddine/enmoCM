@@ -118,10 +118,9 @@ if ($s_id == '') {
 
         if ($res_outgoing->category_id == 'outgoing') {
             if(!empty($_REQUEST['editingMode'])){
-                $stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' "
-                    . "and res_id_master = ? and coll_id = ? "
-                    . "and attachment_type = 'outgoing_mail' order by res_id desc", 
-                    array($s_id, $_SESSION['collection_id_choice']));
+                $stmt = $db->query("SELECT res_id FROM res_attachments WHERE status <> 'DEL' and status <> 'OBS' "
+                    . "and res_id_master = ? and attachment_type = 'outgoing_mail' order by res_id desc", 
+                    array($s_id));
                 $res_att = $stmt->fetchObject();
                 if ($stmt->rowCount() > 0) { ?>
                     <script type="text/javascript">
@@ -130,11 +129,11 @@ if ($s_id == '') {
                     <?php exit();
                 }
             } else {
-            $stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' "
-                . "and res_id_master = ? and coll_id = ? and ((attachment_type = 'converted_pdf' and type_id = 1) "
+            $stmt = $db->query("SELECT res_id FROM res_attachments WHERE status <> 'DEL' and status <> 'OBS' "
+                . "and res_id_master = ? and ((attachment_type = 'converted_pdf' and type_id = 1) "
                 . "OR (attachment_type = 'outgoing_mail' and format = 'pdf')"
                 . "OR (attachment_type = 'signed_response' and format = 'pdf')) order by res_id desc", 
-                array($s_id, $_SESSION['collection_id_choice']));
+                array($s_id));
             $res_att = $stmt->fetchObject();
             if ($stmt->rowCount() > 0) {
                 if($_REQUEST['watermark_outgoing']=='true'){?>
@@ -153,8 +152,8 @@ if ($s_id == '') {
                     <?php exit();
                 exit();
             }  else {
-            	$stmt = $db->query("SELECT res_id FROM res_view_attachments WHERE status <> 'DEL' and status <> 'OBS' "
-                    . "and res_id_master = ? and coll_id = ? and ((attachment_type = 'converted_pdf' and (type_id = 1 or type_id = 0)) "
+            	$stmt = $db->query("SELECT res_id FROM res_attachments WHERE status <> 'DEL' and status <> 'OBS' "
+                    . "and res_id_master = ? and ((attachment_type = 'converted_pdf' and (type_id = 1 or type_id = 0)) "
                     . "OR (attachment_type = 'outgoing_mail' and format = 'pdf')"
                     . "OR (attachment_type = 'signed_response' and format = 'pdf')) order by res_id desc",
                     array($s_id, $_SESSION['collection_id_choice']));
@@ -219,23 +218,7 @@ if ($s_id == '') {
         <?php
         exit();
     }
-    if (
-        $versionTable <> '' && $versionTable == 'res_version_attachments'
-        && !isset($_REQUEST['original'])
-        && !isset($_REQUEST['aVersion'])
-    ) {
-        $selectVersions = "SELECT res_id FROM " 
-            . $versionTable . " WHERE res_id_master = ? and status <> 'DEL' order by res_id desc";
-        $db = new Database();
-        $stmt = $db->query($selectVersions, array($s_id));
-        $lineLastVersion = $stmt->fetchObject();
-        $lastVersion = $lineLastVersion->res_id;
-        if ($lastVersion <> '') {
-            $s_id = $lastVersion;
-            $table = $versionTable;
-            $adrTable = '';
-        }
-    } elseif(isset($_REQUEST['aVersion'])) {
+    if(isset($_REQUEST['aVersion'])) {
         $table = $versionTable;
     }
     $docserverControler = new docservers_controler();

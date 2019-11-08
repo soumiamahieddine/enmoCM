@@ -21,7 +21,7 @@ use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Email\models\EmailModel;
 use Entity\models\EntityModel;
-use Group\models\ServiceModel;
+use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use History\models\HistoryModel;
 use MessageExchange\models\MessageExchangeModel;
@@ -44,7 +44,7 @@ class EmailController
 {
     public function send(Request $request, Response $response)
     {
-        if (!ServiceModel::hasService(['id' => 'sendmail', 'userId' => $GLOBALS['userId'], 'location' => 'sendmail', 'type' => 'use'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'sendmail', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -100,7 +100,7 @@ class EmailController
                 if (!empty($isSent['success'])) {
                     EmailModel::update(['set' => ['status' => 'SENT', 'send_date' => 'CURRENT_TIMESTAMP'], 'where' => ['id = ?'], 'data' => [$id]]);
                 } else {
-                    EmailModel::update(['set' => ['status' => 'ERROR'], 'where' => ['id = ?'], 'data' => [$id]]);
+                    EmailModel::update(['set' => ['status' => 'ERROR', 'send_date' => 'CURRENT_TIMESTAMP'], 'where' => ['id = ?'], 'data' => [$id]]);
                 }
             } else {
                 $customId = CoreConfigModel::getCustomId();
@@ -142,11 +142,7 @@ class EmailController
             $document['attachments'] = (array)$document['attachments'];
             foreach ($document['attachments'] as $attachment) {
                 $attachment = (array)$attachment;
-                if ($attachment['isVersion']) {
-                    $email['attachments_version'][] = $attachment['id'];
-                } else {
-                    $email['attachments'][] = $attachment['id'];
-                }
+                $email['attachments'][] = $attachment['id'];
             }
         }
 
@@ -247,7 +243,12 @@ class EmailController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $emails = EmailModel::get(['select' => ['*'], 'where' => ['document->>\'id\' = ?'], 'data' => [$args['resId']]]);
+        $queryParams = $request->getQueryParams();
+        if (!empty($queryParams['limit']) && !Validator::intVal()->validate($queryParams['limit'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an int val']);
+        }
+
+        $emails = EmailModel::get(['select' => ['*'], 'where' => ['document->>\'id\' = ?'], 'data' => [$args['resId']], 'limit' => (int)$queryParams['limit']]);
 
         return $response->withJson(['emails' => $emails]);
     }
@@ -388,7 +389,7 @@ class EmailController
                     $email['document']['attachments'] = (array)$email['document']['attachments'];
                     foreach ($email['document']['attachments'] as $attachment) {
                         $attachment = (array)$attachment;
-                        $encodedDocument = AttachmentController::getEncodedDocument(['id' => $attachment['id'], 'isVersion' => $attachment['isVersion'], 'original' => $attachment['original']]);
+                        $encodedDocument = AttachmentController::getEncodedDocument(['id' => $attachment['id'], 'original' => $attachment['original']]);
                         if (empty($encodedDocument['errors'])) {
                             $phpmailer->addStringAttachment(base64_decode($encodedDocument['encodedDocument']), $encodedDocument['fileName']);
                         }
@@ -471,12 +472,11 @@ class EmailController
                 }
                 foreach ($args['data']['document']['attachments'] as $attachment) {
                     $check = Validator::intVal()->notEmpty()->validate($attachment['id']);
-                    $check = $check && Validator::boolType()->validate($attachment['isVersion']);
                     $check = $check && Validator::boolType()->validate($attachment['original']);
                     if (!$check) {
                         return ['errors' => 'Data document[attachments] errors', 'code' => 400];
                     }
-                    $checkAttachment = AttachmentModel::getById(['id' => $attachment['id'], 'isVersion' => $attachment['isVersion'], 'select' => ['res_id_master']]);
+                    $checkAttachment = AttachmentModel::getById(['id' => $attachment['id'], 'select' => ['res_id_master']]);
                     if (empty($checkAttachment) || $checkAttachment['res_id_master'] != $args['data']['document']['id']) {
                         return ['errors' => 'Attachment out of perimeter', 'code' => 403];
                     }

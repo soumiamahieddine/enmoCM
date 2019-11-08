@@ -19,6 +19,7 @@ import { SendExternalSignatoryBookActionComponent } from './send-external-signat
 import { SendExternalNoteBookActionComponent } from './send-external-note-book-action/send-external-note-book-action.component';
 import { RedirectActionComponent } from './redirect-action/redirect-action.component';
 import { SendShippingActionComponent } from './send-shipping-action/send-shipping-action.component';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ActionsService {
@@ -46,7 +47,8 @@ export class ActionsService {
     constructor(
         public http: HttpClient,
         public dialog: MatDialog,
-        private notify: NotificationService
+        private notify: NotificationService,
+        private router: Router,
     ) {
     }
 
@@ -118,25 +120,37 @@ export class ActionsService {
         if (this.setActionInformations(action, userId, groupId, basketId, resIds)) {
             this.loading = true;
             this.setResourceInformations(datas);
-            this.http.put(`../../rest/resourcesList/users/${userId}/groups/${groupId}/baskets/${basketId}/lock`, { resources: resIds }).pipe(
-                tap((data: any) => {
-                    if (this.canExecuteAction(data.lockedResources, data.lockers, resIds)) {
-                        try {
-                            this.lockResource();
-                            this[action.component]();
+            if (this.mode !== 'process') {
+                this.http.put(`../../rest/resourcesList/users/${userId}/groups/${groupId}/baskets/${basketId}/lock`, { resources: resIds }).pipe(
+                    tap((data: any) => {
+                        if (this.canExecuteAction(data.lockedResources, data.lockers, resIds)) {
+                            try {
+                                this.lockResource();
+                                this[action.component]();
+                            }
+                            catch (error) {
+                                console.log(error);
+                                console.log(action);
+                                alert(this.lang.actionNotExist);
+                            }
                         }
-                        catch (error) {
-                            console.log(error);
-                            console.log(action);
-                            alert(this.lang.actionNotExist);
-                        }
-                    }
-                }),
-                catchError((err: any) => {
-                    this.notify.handleErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else {
+                try {
+                    this[action.component]();
+                }
+                catch (error) {
+                    console.log(error);
+                    console.log(action);
+                    alert(this.lang.actionNotExist);
+                }
+            } 
+            
         }
     }
 
@@ -202,7 +216,7 @@ export class ActionsService {
 
     unlockResourceAfterActionModal(state: string) {
         this.stopRefreshResourceLock();
-        if (state !== 'success') {
+        if (state !== 'success' && this.mode !== 'process') {
             this.unlockResource();
         }
     }
@@ -506,5 +520,11 @@ export class ActionsService {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    processDocument() {
+        this.stopRefreshResourceLock();
+        this.unlockResource();
+        this.router.navigate([`/process/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/resId/${this.currentResIds}`]);
     }
 }

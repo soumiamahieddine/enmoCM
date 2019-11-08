@@ -66,8 +66,8 @@ export class FolderActionListComponent implements OnInit {
         this.contextMenuPosition.x = x + 'px';
         this.contextMenuPosition.y = y + 'px';
 
-        this.contextMenuTitle = row.alt_identifier;
-        this.contextResId = row.res_id;
+        this.contextMenuTitle = row.chrono;
+        this.contextResId = row.resId;
 
         // Opens the menu
         this.contextMenu.openMenu();

@@ -8,7 +8,7 @@
         <basket-home #basketHome [snavL]="snav"></basket-home>
         <mat-divider></mat-divider>
         <panel-folder #panelFolder *ngIf="folderInfo.id !== '' && folderInfo.id !== undefined"
-            [selectedId]="folderInfo.id"></panel-folder>
+            [selectedId]="folderInfo.id" [showTree]="true"></panel-folder>
     </mat-sidenav>
     <mat-sidenav-content>
         <mat-card id="viewThumbnail" style="display:none;position: fixed;z-index: 2;margin-left: 1px;">
@@ -89,9 +89,9 @@
                     <table #tableBasketListSort="matSort" cdkDropList id="folder-list"
                         [cdkDropListConnectedTo]="listTodrag()" [cdkDropListData]="data"
                         [cdkDropListDisabled]="dragInit || appService.getViewMode()" mat-table [dataSource]="data"
-                        matSort matSortActive="res_id" matSortDisableClear matSortDirection="asc" style="width:100%;">
+                        matSort matSortActive="resId" matSortDisableClear matSortDirection="asc" style="width:100%;">
 
-                        <ng-container matColumnDef="res_id">
+                        <ng-container matColumnDef="resId">
                             <td mat-cell *matCellDef="let row"
                                 style="padding:0;border-top: solid 1px rgba(0, 0, 0, 0.12);"
                                 [class.selected-data]="row.checked">
@@ -117,13 +117,13 @@
                                     <span *ngIf="!appService.getViewMode()" class="main-info-data"
                                         style="width:200px;text-align:center;cursor:pointer;">
                                         <ng-container
-                                            *ngIf="row.alt_identifier == lang.undefined && row.barcode != lang.undefined">
+                                            *ngIf="row.chrono == lang.undefined && row.barcode != lang.undefined">
                                             <span style="color: rgba(0,0,0,0.4);font-size: 90%;">
                                                 <i title="{{lang.barcode}}" class="fas fa-barcode"></i>
                                                 {{row.barcode}}</span>
                                         </ng-container>
                                         <ng-container *ngIf="row.barcode == lang.undefined">
-                                            {{row.alt_identifier}}
+                                            {{row.chrono}}
                                         </ng-container>
                                     </span>
                                     <span class="main-info-data" style="font-weight:bold;flex:1;cursor:pointer;"
@@ -169,7 +169,7 @@
                             <div class="dragPreview" *cdkDragPreview><i class="fas fa-envelope-open-text fa-2x"></i>
                                 <br />
                                 {{lang.classifyInFolder}} :
-                                <b>{{row.alt_identifier}}</b>
+                                <b>{{row.chrono}}</b>
                             </div>
                         </tr>
                     </table>

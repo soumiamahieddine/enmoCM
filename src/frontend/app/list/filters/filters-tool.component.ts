@@ -196,6 +196,10 @@ export class FiltersToolComponent implements OnInit {
                 letter: this.lang.subEntities,
                 names: []
             },
+            {
+                letter: this.lang.doctypes,
+                names: []
+            },
         ];
 
         this.http.get('../..' + this.routeDatas + '?init' + this.filtersListService.getUrlFilters())
@@ -258,6 +262,19 @@ export class FiltersToolComponent implements OnInit {
                             {
                                 id: 'subEntities',
                                 value: element.entityId,
+                                label: (element.id !== null ? element.label : this.lang.undefined),
+                                count: element.count
+                            }
+                        )
+                    }
+                });
+
+                data.doctypes.forEach((element: any) => {
+                    if (this.listProperties.doctypes.map((doctype: any) => (doctype.id)).indexOf(element.id) === -1) {
+                        this.stateGroups[5].names.push(
+                            {
+                                id: 'doctypes',
+                                value: element.id,
                                 label: (element.id !== null ? element.label : this.lang.undefined),
                                 count: element.count
                             }
