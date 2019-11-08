@@ -271,14 +271,20 @@ class ResourceListController
                 $queryData[] = $entitiesChildren;
             }
         }
+        if (!empty($args['data']['doctypes'])) {
+            $table[] = 'doctypes';
+            $leftJoin[] = 'doctypes.description=res_view_letterbox.type_label';
+            $where[] = 'doctypes.type_id in (?)';
+            $queryData[] = explode(',', $args['data']['doctypes']);
+        }
 
         if (!empty($args['data']['order']) && strpos($args['data']['order'], 'alt_identifier') !== false) {
             $order = 'order_alphanum(alt_identifier) ' . explode(' ', $args['data']['order'])[1];
         }
         if (!empty($args['data']['order']) && strpos($args['data']['order'], 'priority') !== false) {
             $order = 'priorities.order ' . explode(' ', $args['data']['order'])[1];
-            $table = ['priorities'];
-            $leftJoin = ['res_view_letterbox.priority = priorities.id'];
+            $table[] = 'priorities';
+            $leftJoin[] = 'res_view_letterbox.priority = priorities.id';
         }
 
         return ['table' => $table, 'leftJoin' => $leftJoin, 'where' => $where, 'queryData' => $queryData, 'order' => $order];
