@@ -42,7 +42,7 @@ export class AdministrationComponent implements OnInit {
         this.organisationServices = this.privilegeService.getCurrentUserAdministrationsByUnit('organisation');
         this.productionServices = this.privilegeService.getCurrentUserAdministrationsByUnit('production');
         this.classementServices = this.privilegeService.getCurrentUserAdministrationsByUnit('classement');
-        this.supervisionServices = this.privilegeService.getCurrentUserAdministrationsByUnit('supervision').filter(priv => priv.id !== 'view_history_batch');
+        this.supervisionServices = this.privilegeService.getCurrentUserAdministrationsByUnit('supervision');
 
         this.loading = false;
     }
