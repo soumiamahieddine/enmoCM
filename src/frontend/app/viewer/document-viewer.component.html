@@ -60,7 +60,7 @@
         <div *ngIf="file.content !== null && noConvertedFound" class="no-doc-container" appUploadFileDragDrop
             (onFileDropped)="dndUploadFile($event)" [disabled]="!editMode">
             <div class="loaded-file"><i class="fa fa-file"></i>&nbsp;<a
-                    (click)="docToUpload.click()">{{file.name}}</a>&nbsp;<b>{{lang.loaded}}</b></div>
+                    (click)="downloadOriginalFile()">{{file.name}}</a>&nbsp;<b>{{lang.loaded}}</b></div>
 
             <div class="no-view"><i class="far fa-eye-slash no-view-icon"></i><br />{{lang.noAvailablePreview}}</div>
 
