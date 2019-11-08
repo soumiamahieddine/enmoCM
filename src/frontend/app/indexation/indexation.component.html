@@ -2,7 +2,8 @@
     <mat-sidenav #snavLeft class="panel-left" #snav [mode]="appService.getViewMode() ? 'over' : 'side'"
         [fixedInViewport]="appService.getViewMode()" [opened]="appService.getViewMode() ? false : true"
         autoFocus="false" style="overflow-x:hidden;" [ngStyle]="{'width': appService.getViewMode() ? '95%' : '600px'}">
-        <header-panel [snavLeft]="snav" [navButton]="{icon: 'fa fa-home', label: lang.backHome, route : '/home'}"></header-panel>
+        <header-panel [snavLeft]="snav" [navButton]="{icon: 'fa fa-home', label: lang.backHome, route : '/home'}">
+        </header-panel>
         <ng-container *ngIf="indexingModels.length > 0">
             <div class="listModels">
                 <button mat-button class="button-form-primary listModels-button"
@@ -14,31 +15,39 @@
                     <i class="fa fa-chevron-down menu-icon"></i>
                 </button>
                 <mat-menu #IndexingModelsMenu="matMenu" [class]="'menuForm listModels-menu'">
-                    <button mat-menu-item disabled style="text-align:center;"
-                        (click)="$event.stopPropagation();">{{lang.indexingModel}}</button>
-                    <ng-container *ngFor="let indexingModel of indexingModels | sortBy: 'label'">
-                        <button mat-menu-item *ngIf="indexingModel.master === null"
-                            (click)="loadIndexingModel(indexingModel)" [title]="indexingModel.label"
-                            [class.listModels-menu-selected]="indexingModel.id === currentIndexingModel.id">{{indexingModel.label}}
-                            {{indexingModel.default ? '(' + lang.default + ')': ''}}</button>
-                        <ng-container
-                            *ngFor="let privateIndexingModel of indexingModels | sortBy: 'label' ;let itPrivate=index">
-                            <button mat-menu-item *ngIf="privateIndexingModel.master === indexingModel.id"
-                                (click)="loadIndexingModel(privateIndexingModel)" [title]="privateIndexingModel.label"
-                                [class.listModels-menu-selected]="privateIndexingModel.id === currentIndexingModel.id"
-                                style="padding-left: 50px;display: flex;align-items: center;">
-                                <div style="flex:1;">
-                                    {{privateIndexingModel.label  | shorten: 45: '...'}} <span
-                                        class="listModels-menu-badge">{{lang.private}}</span>
-                                </div>
-                                <button mat-icon-button class="listModels-menu-delete"
-                                    *ngIf="privateIndexingModel.id !== currentIndexingModel.id" [title]="lang.delete"
-                                    (click)="$event.stopPropagation();deletePrivateIndexingModel(privateIndexingModel.id, itPrivate)">
-                                    <mat-icon class="fa fa-trash" color="warn">
-                                    </mat-icon>
-                                </button>
+                    <div class="menuTitle">
+                        <span>
+                            {{lang.indexingModel}}
+                        </span>
+                        <mat-form-field floatLabel="never" appearance="outline" class="smallInput"
+                            (click)="$event.stopPropagation();" style="width: 220px !important;">
+                            <input matInput id="searchTerm" placeholder="{{lang.filterBy}}" #listFilter
+                                autocomplete="off" (click)="$event.stopPropagation();"
+                                (keydown)="$event.stopPropagation()">
+                        </mat-form-field>
+                    </div>
+                    <ng-container
+                        *ngFor="let indexingModel of indexingModels | filterList:listFilter.value:'label'; let i=index">
+                        <button mat-menu-item (click)="loadIndexingModel(indexingModel)" [title]="indexingModel.label"
+                            [class.listModels-menu-selected]="indexingModel.id === currentIndexingModel.id"
+                            [class.private]="indexingModel.private" style="display: flex;align-items: center;">
+                            <div *ngIf="!indexingModel.private" style="flex:1;">
+                                {{indexingModel.label | shorten: 45: '...'}}
+                                {{indexingModel.default ? '(' + lang.default + ')': ''}}
+                            </div>
+                            <div *ngIf="indexingModel.private" style="flex:1;">
+                                {{indexingModel.label | shorten: 45: '...'}}&nbsp;<span
+                                    class="listModels-menu-badge">{{lang.private}}</span>
+                            </div>
+                            <button mat-icon-button class="listModels-menu-delete"
+                                *ngIf="indexingModel.id !== currentIndexingModel.id && indexingModel.private"
+                                [title]="lang.delete"
+                                (click)="$event.stopPropagation();deletePrivateIndexingModel(indexingModel.id, i)">
+                                <mat-icon class="fa fa-trash" color="warn">
+                                </mat-icon>
                             </button>
-                        </ng-container>
+
+                        </button>
                     </ng-container>
                 </mat-menu>
                 <button mat-icon-button type="button" color="primary" (click)="savePrivateIndexingModel()"
@@ -51,22 +60,39 @@
                     [groupId]="currentGroupId" [indexingFormId]="currentIndexingModel.id"></app-indexing-form>
             </div>
             <div class="actions-indexing-form">
-                <ng-container *ngIf="actionsList.length > 0 && indexingForm !== undefined && selectedAction !== undefined">
-                    <button mat-button class="button-form-primary" [disabled]="selectedAction.id === 0" [matMenuTriggerFor]="menu"
-                        style="width:350px;margin-right:20px;" [title]="selectedAction.label">
+                <ng-container
+                    *ngIf="actionsList.length > 0 && indexingForm !== undefined && selectedAction !== undefined">
+                    <button mat-button class="button-form-primary" [disabled]="selectedAction.id === 0"
+                        [matMenuTriggerFor]="menu" style="width:350px;margin-right:20px;"
+                        [title]="selectedAction.label">
                         <span class="menu-label" [innerHTML]="selectedAction.label">
                         </span>
                         <i class="fa fa-chevron-down menu-icon"></i></button>
                     <mat-menu #menu="matMenu" [class]="'menuForm menuAction'">
-                        <button mat-menu-item disabled style="text-align:center;"
-                            (click)="$event.stopPropagation();">{{lang.actions}}</button>
-                        <ng-container *ngFor="let action of actionsList">
-                            <button *ngIf="showActionInCurrentCategory(action)" mat-menu-item (click)="selectAction(action)" [title]="action.label" [class.listModels-menu-selected]="action.id === selectedAction.id" [disabled]="!action.enabled">
-                                <span style="flex:1;">{{action.label}}</span><small style="position: absolute;top: 15px;left: 140px;" color="warn" *ngIf="!action.enabled">{{lang.badActionParam}}</small>
+                        <div class="menuTitle">
+                            <span>
+                                {{lang.actions}}
+                            </span>
+                            <mat-form-field floatLabel="never" appearance="outline" class="smallInput"
+                                (click)="$event.stopPropagation();">
+                                <input matInput id="searchTerm" placeholder="{{lang.filterBy}}" #listFilter
+                                    autocomplete="off" (click)="$event.stopPropagation();"
+                                    (keydown)="$event.stopPropagation()">
+                            </mat-form-field>
+                        </div>
+                        <ng-container *ngFor="let action of actionsList | filterList:listFilter.value:'label'">
+                            <button *ngIf="showActionInCurrentCategory(action)" mat-menu-item
+                                (click)="selectAction(action)" [title]="action.label"
+                                [class.listModels-menu-selected]="action.id === selectedAction.id"
+                                [disabled]="!action.enabled">
+                                <span style="flex:1;">{{action.label}}</span><small
+                                    style="position: absolute;top: 15px;left: 140px;" color="warn"
+                                    *ngIf="!action.enabled">{{lang.badActionParam}}</small>
                             </button>
                         </ng-container>
                     </mat-menu>
-                    <button mat-button *ngIf="!appService.getViewMode()" [disabled]="actionService.loading || selectedAction.id === 0 || appDocumentViewer.isEditingTemplate()"
+                    <button mat-button *ngIf="!appService.getViewMode()"
+                        [disabled]="actionService.loading || selectedAction.id === 0 || appDocumentViewer.isEditingTemplate()"
                         class="button-form-primary-filled"
                         style="width: 150px;align-items: center;justify-content: center;text-align: center;display: flex;"
                         (click)="onSubmit()">{{lang.validate}}</button>
@@ -93,7 +119,8 @@
         </div>
         <div class="document-container" [class.fullContainer]="appService.getViewMode()">
             <div class="content">
-                <app-document-viewer #appDocumentViewer [editMode]="true" [tmpFilename]="tmpFilename" style="height:100%;width:100%;">
+                <app-document-viewer #appDocumentViewer [editMode]="true" [tmpFilename]="tmpFilename"
+                    style="height:100%;width:100%;">
                 </app-document-viewer>
             </div>
         </div>

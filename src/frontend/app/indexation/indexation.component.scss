@@ -165,3 +165,23 @@
 ::ng-deep.menuAction {
     min-width: 350px !important;
 }
+
+.menuTitle {
+    display: flex;
+    padding-left: 20px;
+    align-items: center;
+    color: $primary;
+    font-weight: bold;
+}
+
+.smallInput {
+    padding: 10px;
+
+    ::ng-deep.mat-form-field-wrapper {
+        padding-bottom: 0px;
+    }
+}
+
+.private {
+    padding-left: 50px;
+}

@@ -49,8 +49,8 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        <app-note-resume [resId]="currentResourceInformations.resId"
-                            (goTo)="currentTool = 'notes'"></app-note-resume>
+                        <app-note-resume [resId]="currentResourceInformations.resId" (goTo)="currentTool = 'notes'">
+                        </app-note-resume>
                     </div>
                 </div>
                 <div class="banner" [style.borderColor]="currentPriorityColor">
@@ -70,8 +70,8 @@
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        <app-mail-resume [resId]="currentResourceInformations.resId"
-                            (goTo)="currentTool = 'mails'"></app-mail-resume>
+                        <app-mail-resume [resId]="currentResourceInformations.resId" (goTo)="currentTool = 'mails'">
+                        </app-mail-resume>
                     </div>
                 </div>
             </ng-container>
@@ -107,9 +107,18 @@
                     </span>
                     <i class="fa fa-chevron-down menu-icon"></i></button>
                 <mat-menu #menu="matMenu" [class]="'menuForm menuAction'">
-                    <button mat-menu-item disabled style="text-align:center;"
-                        (click)="$event.stopPropagation();">{{lang.actions}}</button>
-                    <ng-container *ngFor="let action of actionsList">
+                    <div class="menuTitle">
+                        <span>
+                            {{lang.actions}}
+                        </span>
+                        <mat-form-field floatLabel="never" appearance="outline" class="smallInput"
+                            (click)="$event.stopPropagation();">
+                            <input matInput id="searchTerm" placeholder="{{lang.filterBy}}" #listFilter
+                                autocomplete="off" (click)="$event.stopPropagation();"
+                                (keydown)="$event.stopPropagation()">
+                        </mat-form-field>
+                    </div>
+                    <ng-container *ngFor="let action of actionsList | filterList:listFilter.value:'label'">
                         <button *ngIf="showActionInCurrentCategory(action)" mat-menu-item (click)="selectAction(action)"
                             [title]="action.label" [class.listModels-menu-selected]="action.id === selectedAction.id">
                             <span style="flex:1;">{{action.label}}</span>
@@ -153,17 +162,22 @@
                             </div>
                             <div class="content-item">
                                 <div>{{lang.chronoNumberShort}} :</div>
-                                <div class="content-item-value" [title]="'N° '+this.currentResourceInformations.resId">{{this.currentResourceInformations.chrono}}</div>
+                                <div class="content-item-value" [title]="'N° '+this.currentResourceInformations.resId">
+                                    {{this.currentResourceInformations.chrono}}</div>
                             </div>
                             <div class="content-item">
                                 <div>{{lang.senders}} :</div>
                                 <div class="content-item-value">??? <i class="fas fa-circle"
                                         style="color:#00CB55;font-size: 8px;"></i></div>
                             </div>
-                            <div class="content-item" *ngIf="this.currentResourceInformations.processLimitDate !== undefined">
+                            <div class="content-item"
+                                *ngIf="this.currentResourceInformations.processLimitDate !== undefined">
                                 <ng-container
                                     *ngIf="this.currentResourceInformations.closingDate !== null; else elseLimitDate">
-                                    <div style="font-weight: bold;" [title]="this.currentResourceInformations.closingDate | fullDate">{{this.lang.closed}} {{this.lang.onRange}} {{this.currentResourceInformations.closingDate | timeAgo}}&nbsp;&nbsp;<i
+                                    <div style="font-weight: bold;"
+                                        [title]="this.currentResourceInformations.closingDate | fullDate">
+                                        {{this.lang.closed}} {{this.lang.onRange}}
+                                        {{this.currentResourceInformations.closingDate | timeAgo}}&nbsp;&nbsp;<i
                                             class="fa fa-lock"></i></div>
                                 </ng-container>
                                 <ng-template #elseLimitDate>

@@ -18,6 +18,7 @@ import { DocumentViewerComponent } from '../viewer/document-viewer.component';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { AddPrivateIndexingModelModalComponent } from './private-indexing-model/add-private-indexing-model-modal.component';
 import { ActionsService } from '../actions/actions.service';
+import { SortPipe } from '../../plugins/sorting.pipe';
 
 @Component({
     templateUrl: "indexation.component.html",
@@ -25,7 +26,7 @@ import { ActionsService } from '../actions/actions.service';
         'indexation.component.scss',
         'indexing-form/indexing-form.component.scss'
     ],
-    providers: [NotificationService, AppService, ActionsService],
+    providers: [NotificationService, AppService, ActionsService, SortPipe],
 })
 export class IndexationComponent implements OnInit {
 
@@ -69,7 +70,8 @@ export class IndexationComponent implements OnInit {
         public viewContainerRef: ViewContainerRef,
         public appService: AppService,
         public actionService: ActionsService,
-        private router: Router
+        private router: Router,
+        private sortPipe: SortPipe
     ) {
 
         _activatedRoute.queryParams.subscribe(
@@ -98,6 +100,7 @@ export class IndexationComponent implements OnInit {
                             this.currentIndexingModel = this.indexingModels[0];
                             this.notify.error(this.lang.noDefaultIndexingModel);
                         }
+                        this.loadIndexingModelsList();
                     }
 
                     if (this.appService.getViewMode()) {
@@ -140,6 +143,20 @@ export class IndexationComponent implements OnInit {
             (err: any) => {
                 this.notify.handleErrors(err);
             });
+    }
+
+    loadIndexingModelsList() {
+        let tmpIndexingModels:any[] = this.sortPipe.transform(this.indexingModels.filter(elem => elem.master === null), 'label');
+        let privateTmpIndexingModels:any[] = this.sortPipe.transform(this.indexingModels.filter(elem => elem.master !== null), 'label');
+        this.indexingModels = [];
+        tmpIndexingModels.forEach(indexingModel => {
+            this.indexingModels.push(indexingModel);
+            privateTmpIndexingModels.forEach(privateIndexingModel => {
+                if (privateIndexingModel.master === indexingModel.id) {
+                    this.indexingModels.push(privateIndexingModel);
+                }
+            });
+        });
     }
 
     onSubmit() {
@@ -227,6 +244,7 @@ export class IndexationComponent implements OnInit {
             tap((data) => {
                 this.indexingModels.push(data.indexingModel);
                 this.currentIndexingModel = this.indexingModels.filter(indexingModel => indexingModel.id === data.indexingModel.id)[0];
+                this.loadIndexingModelsList();
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
