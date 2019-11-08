@@ -151,7 +151,9 @@
                 <div class="resourceInfo">
                     <ng-container *ngIf="!loading; else elseInfoRes">
                         <div class="title">
-                            {{this.currentResourceInformations.subject}}
+                            <span style="white-space: nowrap;">
+                                {{this.currentResourceInformations.subject}}
+                            </span>
                             <div class="title-divider"></div>
                         </div>
                         <div class="content">
