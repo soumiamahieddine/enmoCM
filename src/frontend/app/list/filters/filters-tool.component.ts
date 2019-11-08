@@ -270,7 +270,7 @@ export class FiltersToolComponent implements OnInit {
                 });
 
                 data.doctypes.forEach((element: any) => {
-                    if (this.listProperties.doctypes.map((doctype: any) => (doctype.id)).indexOf(element.id) === -1 && this.listProperties.doctypes == 0) {
+                    if (this.listProperties.doctypes.map((doctype: any) => (doctype.id)).indexOf(element.id) === -1) {
                         this.stateGroups[5].names.push(
                             {
                                 id: 'doctypes',
