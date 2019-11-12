@@ -19,6 +19,7 @@ use Contact\models\ContactModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
+use IndexingModel\models\IndexingModelModel;
 use Note\models\NoteModel;
 use Resource\models\ResModel;
 use SrcCore\models\TextFormatModel;
@@ -85,36 +86,55 @@ class MergeController
         ValidatorModel::stringType($args, ['attachmentChrono', 'attachmentTitle']);
 
         //Resource
-        $resource = [];
         if (!empty($args['resId'])) {
             $resource = ResModel::getById(['select' => ['*'], 'resId' => [$args['resId']]]);
-            $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date', 'creation_date'];
-            foreach ($allDates as $date) {
-                $resource[$date] = TextFormatModel::formatDate($resource[$date], 'd/m/Y');
+        } else {
+            if (!empty($args['modelId'])) {
+                $indexingModel = IndexingModelModel::getById(['id' => $args['modelId'], 'select' => ['category']]);
             }
-            $resource['category_id'] = ResModel::getCategoryLabel(['category_id' => $resource['category_id']]);
+            $resource = [
+                'model_id'              => $args['modelId'] ?? null,
+                'category_id'           => $indexingModel['category'] ?? null,
+                'type_id'               => $args['doctype'] ?? null,
+                'subject'               => $args['subject'] ?? null,
+                'destination'           => $args['destination'] ?? null,
+                'initiator'             => $args['initiator'] ?? null,
+                'doc_date'              => $args['documentDate'] ?? null,
+                'admission_date'        => $args['arrivalDate'] ?? null,
+                'departure_date'        => $args['departureDate'] ?? null,
+                'process_limit_date'    => $args['processLimitDate'] ?? null,
+                'barcode'               => $args['barcode'] ?? null,
+                'origin'                => $args['origin'] ?? null
+            ];
+        }
+        $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date', 'creation_date'];
+        foreach ($allDates as $date) {
+            $resource[$date] = TextFormatModel::formatDate($resource[$date], 'd/m/Y');
+        }
+        $resource['category_id'] = ResModel::getCategoryLabel(['category_id' => $resource['category_id']]);
 
+        if (!empty($resource['type_id'])) {
             $doctype = DoctypeModel::getById(['id' => $resource['type_id'], 'select' => ['process_delay', 'process_mode', 'description']]);
             $resource['type_label'] = $doctype['description'];
             $resource['process_delay'] = $doctype['process_delay'];
             $resource['process_mode'] = $doctype['process_mode'];
+        }
 
-            if (!empty($resource['initiator'])) {
-                $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['*']]);
-                if (!empty($initiator)) {
-                    foreach ($initiator as $key => $value) {
-                        $resource["initiator_{$key}"] = $value;
-                    }
-                }
-                if (!empty($initiator['parent_entity_id'])) {
-                    $parentInitiator = EntityModel::getByEntityId(['entityId' => $initiator['parent_entity_id'], 'select' => ['*']]);
+        if (!empty($resource['initiator'])) {
+            $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['*']]);
+            if (!empty($initiator)) {
+                foreach ($initiator as $key => $value) {
+                    $resource["initiator_{$key}"] = $value;
                 }
             }
-            if (!empty($resource['destination'])) {
-                $destination = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['*']]);
-                if (!empty($destination['parent_entity_id'])) {
-                    $parentDestination = EntityModel::getByEntityId(['entityId' => $destination['parent_entity_id'], 'select' => ['*']]);
-                }
+            if (!empty($initiator['parent_entity_id'])) {
+                $parentInitiator = EntityModel::getByEntityId(['entityId' => $initiator['parent_entity_id'], 'select' => ['*']]);
+            }
+        }
+        if (!empty($resource['destination'])) {
+            $destination = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['*']]);
+            if (!empty($destination['parent_entity_id'])) {
+                $parentDestination = EntityModel::getByEntityId(['entityId' => $destination['parent_entity_id'], 'select' => ['*']]);
             }
         }
 

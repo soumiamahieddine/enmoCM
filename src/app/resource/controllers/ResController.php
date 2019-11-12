@@ -257,37 +257,14 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => 'Document has no file']);
         }
 
-        if ($document['category_id'] == 'outgoing') {
-            $attachment = AttachmentModel::get([
-                'select'    => ['res_id', 'docserver_id', 'path', 'filename'],
-                'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
-                'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
-                'limit'     => 1
-            ]);
-            if (!empty($attachment[0])) {
-                $attachmentTodisplay = $attachment[0];
-                $id = $attachmentTodisplay['res_id'];
-                $collId = "attachments_coll";
-                
-                $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => $collId]);
-                if (empty($convertedDocument['errors'])) {
-                    $attachmentTodisplay = $convertedDocument;
-                }
-                $document['docserver_id'] = $attachmentTodisplay['docserver_id'];
-                $document['path'] = $attachmentTodisplay['path'];
-                $document['filename'] = $attachmentTodisplay['filename'];
-                $document['fingerprint'] = $attachmentTodisplay['fingerprint'];
-            }
-        } else {
-            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll']);
+        $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll']);
 
-            if (empty($convertedDocument['errors'])) {
-                $documentTodisplay = $convertedDocument;
-                $document['docserver_id'] = $documentTodisplay['docserver_id'];
-                $document['path'] = $documentTodisplay['path'];
-                $document['filename'] = $documentTodisplay['filename'];
-                $document['fingerprint'] = $documentTodisplay['fingerprint'];
-            }
+        if (empty($convertedDocument['errors'])) {
+            $documentTodisplay = $convertedDocument;
+            $document['docserver_id'] = $documentTodisplay['docserver_id'];
+            $document['path'] = $documentTodisplay['path'];
+            $document['filename'] = $documentTodisplay['filename'];
+            $document['fingerprint'] = $documentTodisplay['fingerprint'];
         }
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
