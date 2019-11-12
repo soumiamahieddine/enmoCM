@@ -58,6 +58,8 @@ export class IndexationComponent implements OnInit {
 
     subscription: Subscription;
 
+    test: any = 'toto';
+
     constructor(
         private route: ActivatedRoute,
         private _activatedRoute: ActivatedRoute,
@@ -296,6 +298,10 @@ export class IndexationComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    refreshDatas() {
+        this.appDocumentViewer.setDatas(this.formatDatas(this.indexingForm.getDatas()));
     }
 
 }

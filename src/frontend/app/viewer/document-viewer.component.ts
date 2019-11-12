@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
@@ -26,6 +26,7 @@ import { templateVisitAll } from '@angular/compiler';
 export class DocumentViewerComponent implements OnInit {
 
     @Input('tmpFilename') tmpFilename: string;
+    @Output('refreshDatas') refreshDatas = new EventEmitter<string>();
 
     lang: any = LANG;
 
@@ -57,6 +58,7 @@ export class DocumentViewerComponent implements OnInit {
     @Input('editMode') editMode: boolean = false;
     @Input('title') title: string = '';
     @Input('mode') mode: string = 'mainDocument';
+    resourceDatas: any;
 
     loadingInfo: any = {
         mode: 'indeterminate',
@@ -472,12 +474,14 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     editTemplate(templateId: number) {
+        this.refreshDatas.emit();
         const template = this.listTemplates.filter(template => template.id === templateId)[0];
         this.editInProgress = true;
-        const jnlp = {
+        const jnlp: any = {
             objectType: 'resourceCreation',
             objectId: template.id,
-            cookie: document.cookie
+            cookie: document.cookie,
+            data: this.resourceDatas,
         };
         this.http.post('../../rest/jnlp', jnlp).pipe(
             tap((data: any) => {
@@ -485,6 +489,10 @@ export class DocumentViewerComponent implements OnInit {
                 this.checkLockFile(data.jnlpUniqueId, template);
             })
         ).subscribe();
+    }
+
+    setDatas(resourceDatas: any) {
+        this.resourceDatas = resourceDatas;
     }
 
     checkLockFile(id: string, template: any) {
