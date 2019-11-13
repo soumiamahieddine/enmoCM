@@ -441,6 +441,9 @@ ALTER TABLE priorities ALTER COLUMN delays SET NOT NULL;
 ALTER TABLE res_letterbox ALTER COLUMN status DROP NOT NULL;
 ALTER TABLE res_letterbox ALTER COLUMN docserver_id DROP NOT NULL;
 ALTER TABLE res_letterbox ALTER COLUMN format DROP NOT NULL;
+ALTER TABLE notif_email_stack ALTER COLUMN recipient TYPE text;
+ALTER TABLE notif_email_stack ALTER COLUMN cc TYPE text;
+ALTER TABLE notif_email_stack ALTER COLUMN bcc TYPE text;
 
 
 /* REFACTORING SUPPRESSION */
