@@ -70,8 +70,6 @@ class ChronoModel
                         $value['value'] = ChronoModel::getChronoCategory($aArgs['id']);
                     } elseif ($value['value'] == 'category_char') {
                         $value['value'] = ChronoModel::getChronoCategoryChar($aArgs['id']);
-                    } elseif ($value['value'] == 'chr_by_folder') {
-                        $value['value'] = ChronoModel::getChronoFolder($aArgs['folderId']);
                     } elseif ($value['value'] == 'chr_by_res_id') {
                         $value['value'] = $aArgs['resId'];
                     }
@@ -117,24 +115,6 @@ class ChronoModel
         ParameterModel::update(['id' => $chronoId, 'param_value_int' => $chrono + 1]);
 
         return $entityId . "/" . $chrono;
-    }
-
-    public static function getChronoFolder($folderId)
-    {
-        $chronoId = "chrono_folder_{$folderId}";
-
-        $parameter = ParameterModel::getById(['id' => $chronoId, 'select' => ['param_value_int']]);
-
-        if (empty($parameter)) {
-            ParameterModel::create(['id' => $chronoId, 'param_value_int' => 1]);
-            $chrono = 1;
-        } else {
-            $chrono = $parameter['param_value_int'];
-        }
-
-        ParameterModel::update(['id' => $chronoId, 'param_value_int' => $chrono + 1]);
-
-        return $chrono;
     }
 
     public static function getChronoCategory($categoryId)
