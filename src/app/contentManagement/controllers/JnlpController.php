@@ -129,7 +129,7 @@ class JnlpController
 
         $tagArg1 = $jnlpDocument->createElement('argument', $coreUrl . 'rest/jnlp/' . $jnlpUniqueId); //ProcessJnlp
         $tagArg2 = $jnlpDocument->createElement('argument', $body['objectType']); //Type
-        $tagArg3 = $jnlpDocument->createElement('argument', urlencode(json_encode($body['data'])));
+        $tagArg3 = $jnlpDocument->createElement('argument', base64_encode(json_encode($body['data'])));
         $tagArg4 = $jnlpDocument->createElement('argument', $body['objectId']); //ObjectId
         $tagArg5 = $jnlpDocument->createElement('argument', 0); //Useless
         $tagArg6 = $jnlpDocument->createElement('argument', "maarchCourrierAuth={$_COOKIE['maarchCourrierAuth']}"); //MaarchCookie
@@ -245,7 +245,7 @@ class JnlpController
 
                 $dataToMerge = ['userId' => $GLOBALS['id']];
                 if (!empty($queryParams['objectTable'])) {
-                    $decodedData = json_decode(urldecode($queryParams['objectTable']), true);
+                    $decodedData = json_decode(base64_decode(urldecode($queryParams['objectTable'])), true);
                     if (!empty($decodedData)) {
                         $dataToMerge = array_merge($dataToMerge, $decodedData);
                     }
@@ -304,12 +304,18 @@ class JnlpController
                 if (file_exists("{$tmpPath}{$GLOBALS['id']}_maarchCM_{$args['jnlpUniqueId']}.lck")) {
                     unlink("{$tmpPath}{$GLOBALS['id']}_maarchCM_{$args['jnlpUniqueId']}.lck");
                 }
+                if (file_exists("{$tmpPath}{$GLOBALS['id']}_maarchCM_{$args['jnlpUniqueId']}.jnlp")) {
+                    unlink("{$tmpPath}{$GLOBALS['id']}_maarchCM_{$args['jnlpUniqueId']}.jnlp");
+                }
             }
 
             $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => ['END_MESSAGE' => 'Update ok']]);
         } elseif ($queryParams['action'] == 'terminate') {
             if (file_exists("{$tmpPath}{$GLOBALS['id']}_maarchCM_{$args['jnlpUniqueId']}.lck")) {
                 unlink("{$tmpPath}{$GLOBALS['id']}_maarchCM_{$args['jnlpUniqueId']}.lck");
+            }
+            if (file_exists("{$tmpPath}{$GLOBALS['id']}_maarchCM_{$args['jnlpUniqueId']}.jnlp")) {
+                unlink("{$tmpPath}{$GLOBALS['id']}_maarchCM_{$args['jnlpUniqueId']}.jnlp");
             }
 
             $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => ['END_MESSAGE' => 'Terminate ok']]);

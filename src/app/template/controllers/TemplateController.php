@@ -218,10 +218,10 @@ class TemplateController
             if (!empty($data['jnlpUniqueId'])) {
                 if (!empty($data['template_style'])) {
                     $explodeStyle = explode(':', $data['template_style']);
-                    $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[0]);
+                    $fileOnTmp = "tmp_file_{$GLOBALS['id']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[0]);
                 } elseif (!empty($data['template_file_name'])) {
                     $explodeStyle = explode('.', $data['template_file_name']);
-                    $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[count($explodeStyle) - 1]);
+                    $fileOnTmp = "tmp_file_{$GLOBALS['id']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[count($explodeStyle) - 1]);
                 }
             } else {
                 if (empty($data['uploadedFile']['base64']) || empty($data['uploadedFile']['name'])) {

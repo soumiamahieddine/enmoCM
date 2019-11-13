@@ -375,22 +375,14 @@ class ResController
         $data = $request->getQueryParams();
         if ($data['mode'] == 'base64') {
             return $response->withJson(['encodedDocument' => base64_encode($fileContent)]);
-        } elseif ($data['mode'] == 'view') {
-            $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-            $mimeType = $finfo->buffer($fileContent);
-            $pathInfo = pathinfo($pathToDocument);
-
-            $response->write($fileContent);
-            $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
-
-            return $response->withHeader('Content-Type', $mimeType);
         } else {
             $finfo    = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($fileContent);
             $pathInfo = pathinfo($pathToDocument);
 
             $response->write($fileContent);
-            $response = $response->withAddedHeader('Content-Disposition', "attachment; filename=maarch.{$pathInfo['extension']}");
+            $contentDisposition = $data['mode'] == 'view' ? 'inline' : 'attachment';
+            $response = $response->withAddedHeader('Content-Disposition', "{$contentDisposition}; filename=maarch.{$pathInfo['extension']}");
             return $response->withHeader('Content-Type', $mimeType);
         }
     }
@@ -408,21 +400,6 @@ class ResController
 
         if (empty($document['filename'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Document has no file']);
-        }
-
-        if ($document['category_id'] == 'outgoing') {
-            $attachment = AttachmentModel::get([
-                'select'    => ['res_id', 'docserver_id', 'path', 'filename', 'fingerprint'],
-                'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
-                'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
-                'limit'     => 1
-            ]);
-            if (!empty($attachment[0])) {
-                $document['docserver_id'] = $attachment[0]['docserver_id'];
-                $document['path'] = $attachment[0]['path'];
-                $document['filename'] = $attachment[0]['filename'];
-                $document['fingerprint'] = $attachment[0]['fingerprint'];
-            }
         }
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
@@ -492,25 +469,7 @@ class ResController
                 'type'      => 'TNL'
             ]);
             if (empty($tnlAdr)) {
-                $document = ResModel::getById(['select' => ['category_id'], 'resId' => $aArgs['resId']]);
-                if ($document['category_id'] == 'outgoing') {
-                    $attachment = AttachmentModel::get([
-                        'select'    => ['res_id'],
-                        'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
-                        'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
-                        'limit'     => 1
-                    ]);
-                    if (!empty($attachment[0])) {
-                        ConvertThumbnailController::convert([
-                            'collId'            => 'letterbox_coll',
-                            'resId'             => $aArgs['resId'],
-                            'outgoingId'        => $attachment[0]['res_id'],
-                            'isOutgoingVersion' => empty($attachment[0]['res_id'])
-                        ]);
-                    }
-                } else {
-                    ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $aArgs['resId']]);
-                }
+                ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $aArgs['resId']]);
                 $tnlAdr = AdrModel::getTypedDocumentAdrByResId([
                     'select'    => ['docserver_id', 'path', 'filename'],
                     'resId'     => $aArgs['resId'],

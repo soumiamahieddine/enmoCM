@@ -92,6 +92,14 @@ class MergeController
             if (!empty($args['modelId'])) {
                 $indexingModel = IndexingModelModel::getById(['id' => $args['modelId'], 'select' => ['category']]);
             }
+            if (!empty($args['initiator'])) {
+                $entity = EntityModel::getById(['id' => $args['initiator'], 'select' => ['entity_id']]);
+                $args['initiator'] = $entity['entity_id'];
+            }
+            if (!empty($args['destination'])) {
+                $entity = EntityModel::getById(['id' => $args['destination'], 'select' => ['entity_id']]);
+                $args['destination'] = $entity['entity_id'];
+            }
             $resource = [
                 'model_id'              => $args['modelId'] ?? null,
                 'category_id'           => $indexingModel['category'] ?? null,
