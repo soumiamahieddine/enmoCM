@@ -152,7 +152,7 @@ class FullTextController
                 'table'     => ['res_letterbox'],
                 'where'     => ['status NOT IN (?)', 'fulltext_result = ?'],
                 'data'      => [['DEL'],'ERROR'],
-                'orderBy'      => ['res_id DESC'],
+                'orderBy'   => ['res_id DESC'],
             ]);
         } else {
             $resIds = AttachmentModel::get([

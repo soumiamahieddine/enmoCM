@@ -198,8 +198,7 @@ class MergeController
             ]);
             foreach ($copyWorkflow as $value) {
                 if ($value['item_type'] == 'user_id') {
-                    $userInfo      = UserModel::getByLogin(['login' => $value['item_id'], 'select' => ['id']]);
-                    $labelledUser  = UserModel::getLabelledUserById(['id' => $userInfo['id']]);
+                    $labelledUser  = UserModel::getLabelledUserById(['login' => $value['item_id']]);
                     $primaryentity = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']]);
                     $label         = "{$labelledUser} ({$primaryentity})";
                 } else {

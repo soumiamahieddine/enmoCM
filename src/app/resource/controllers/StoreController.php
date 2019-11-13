@@ -70,34 +70,39 @@ class StoreController
 
     public static function storeAttachment(array $args)
     {
-        ValidatorModel::notEmpty($args, ['encodedFile', 'format']);
-        ValidatorModel::stringType($args, ['format']);
-
         try {
-            $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $args['encodedFile']));
+            $data = [];
+            if (!empty($args['encodedFile'])) {
+                $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $args['encodedFile']));
 
-            $storeResult = DocserverController::storeResourceOnDocServer([
-                'collId'            => 'attachments_coll',
-                'docserverTypeId'   => 'DOC',
-                'encodedResource'   => base64_encode($fileContent),
-                'format'            => $args['format']
-            ]);
-            if (!empty($storeResult['errors'])) {
-                return ['errors' => '[storeAttachment] ' . $storeResult['errors']];
+                $storeResult = DocserverController::storeResourceOnDocServer([
+                    'collId'            => 'attachments_coll',
+                    'docserverTypeId'   => 'DOC',
+                    'encodedResource'   => base64_encode($fileContent),
+                    'format'            => $args['format']
+                ]);
+                if (!empty($storeResult['errors'])) {
+                    return ['errors' => '[storeAttachment] ' . $storeResult['errors']];
+                }
+
+                $data = [
+                    'docserver_id'  => $storeResult['docserver_id'],
+                    'filename'      => $storeResult['file_destination_name'],
+                    'filesize'      => $storeResult['fileSize'],
+                    'path'          => $storeResult['directory'],
+                    'fingerprint'   => $storeResult['fingerPrint']
+                ];
             }
 
-            $data = [
-                'docserver_id'  => $storeResult['docserver_id'],
-                'filename'      => $storeResult['file_destination_name'],
-                'filesize'      => $storeResult['fileSize'],
-                'path'          => $storeResult['directory'],
-                'fingerprint'   => $storeResult['fingerPrint']
-            ];
-
             $data = array_merge($args, $data);
-            $data = StoreController::prepareAttachmentStorage($data);
+            if (empty($args['id'])) {
+                $data = StoreController::prepareAttachmentStorage($data);
+                $id = AttachmentModel::create($data);
 
-            $id = AttachmentModel::create($data);
+            } else {
+                $data = StoreController::prepareUpdateAttachmentStorage($data);
+                $id = AttachmentModel::update(['set' => $data, 'where' => ['res_id = ?'], 'data' => [$args['id']]]);
+            }
 
             return $id;
         } catch (\Exception $e) {
@@ -216,6 +221,30 @@ class StoreController
             'fingerprint'           => $args['fingerprint'],
             'creation_date'         => 'CURRENT_TIMESTAMP'
         ];
+
+        return $preparedData;
+    }
+
+    public static function prepareUpdateAttachmentStorage(array $args)
+    {
+        //TODO chrono if not chrono
+        $preparedData = [
+            'title'                 => $args['title'] ?? null,
+            'attachment_type'       => $args['type'],
+            'validation_date'       => $args['validationDate'] ?? null,
+            'modification_date'     => 'CURRENT_TIMESTAMP'
+        ];
+
+        if (!empty($args['docserver_id'])) {
+            $preparedData = array_merge($preparedData, [
+                'format'                => $args['format'],
+                'docserver_id'          => $args['docserver_id'],
+                'filename'              => $args['filename'],
+                'filesize'              => $args['filesize'],
+                'path'                  => $args['path'],
+                'fingerprint'           => $args['fingerprint'],
+            ]);
+        }
 
         return $preparedData;
     }
