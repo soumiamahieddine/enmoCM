@@ -204,6 +204,8 @@ class StoreController
             'origin_id'             => $args['originId'] ?? null,
             'res_id_master'         => $args['resIdMaster'],
             'attachment_type'       => $args['type'],
+            'validation_date'       => $args['validationDate'] ?? null,
+            'effective_date'        => $args['effectiveDate'] ?? null,
             'in_signature_book'     => empty($args['inSignatureBook']) ? 'false' : 'true',
             'external_id'           => $externalId,
             'format'                => $args['format'],

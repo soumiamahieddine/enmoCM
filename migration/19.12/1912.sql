@@ -231,8 +231,12 @@ END$$;
 /* ATTACHMENTS */
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS origin_id;
 ALTER TABLE res_attachments ADD COLUMN origin_id INTEGER;
-ALTER TABLE res_attachments DROP COLUMN IF EXISTS modification_date;
-ALTER TABLE res_attachments ADD modification_date timestamp without time zone DEFAULT NOW();
+DO $$ BEGIN
+    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_attachments') AND attname = 'doc_date') THEN
+        ALTER TABLE res_attachments RENAME COLUMN doc_date TO modification_date;
+        ALTER TABLE res_attachments ALTER COLUMN modification_date set DEFAULT NOW();
+    END IF;
+END$$;
 
 
 /* DOCSERVERS */

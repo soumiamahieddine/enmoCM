@@ -123,15 +123,15 @@ class AttachmentController
         return $response->withStatus(204);
     }
 
-    public function getByResId(Request $request, Response $response, array $aArgs)
+    public function getByResId(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
         $queryParams = $request->getQueryParams();
         if (!empty($queryParams['limit']) && !Validator::intVal()->validate($queryParams['limit'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an int val']);
+            return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an integer']);
         }
 
         $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
@@ -139,33 +139,36 @@ class AttachmentController
             $excludeAttachmentTypes[] = 'document_with_notes';
         }
 
-        $attachments = AttachmentModel::getListByResIdMaster([
-            'resId'                     => $aArgs['resId'],
-            'login'                     => $GLOBALS['userId'],
-            'excludeAttachmentTypes'    => $excludeAttachmentTypes,
-            'orderBy'                   => ['res_id DESC'],
-            'limit'                     => (int)$queryParams['limit']
+        $attachments = AttachmentModel::get([
+            'select'    => [
+                'res_id as "resId"', 'identifier as chrono', 'title', 'creation_date as "creationDate"', 'modification_date as "modificationDate"',
+                'relation', 'status', 'attachment_type as type', 'origin_id as "originId"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
+            ],
+            'where'     => ['res_id_master = ?', 'status not in (?)', 'attachment_type not in (?)'],
+            'data'      => [$args['resId'], ['DEL', 'OBS'], $excludeAttachmentTypes],
+            'orderBy'   => ['modification_date DESC'],
+            'limit'     => (int)$queryParams['limit'] ?? 0
         ]);
+
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
         foreach ($attachments as $key => $attachment) {
-            $attachments[$key]['contact'] = '';
-            if (!empty($attachment['dest_address_id'])) {
-                $contact = ContactModel::getOnView([
-                    'select' => [
-                        'is_corporate_person', 'lastname', 'firstname',
-                        'ca_id', 'society', 'contact_firstname', 'contact_lastname'
+            if (!empty($attachmentsTypes[$attachment['type']]['label'])) {
+                $attachments[$key]['typeLabel'] = $attachmentsTypes[$attachment['type']]['label'];
+            }
+
+            $oldVersions = [];
+            if (!empty($attachment['originId'])) {
+                $oldVersions = AttachmentModel::get([
+                    'select'    => [
+                        'res_id as "resId"', 'identifier as chrono', 'title', 'creation_date as "creationDate"', 'modification_date as "modificationDate"',
+                        'relation', 'status', 'attachment_type as type'
                     ],
-                    'where' => ['ca_id = ?'],
-                    'data'  => [$attachment['dest_address_id']]
+                    'where'     => ['(origin_id = ? OR res_id =  ?)', 'res_id != ?', 'status not in (?)', 'attachment_type not in (?)'],
+                    'data'      => [$attachment['originId'], $attachment['originId'], $attachment['resId'], ['DEL'], $excludeAttachmentTypes],
+                    'orderBy'   => ['relation DESC']
                 ]);
-                if (!empty($contact[0])) {
-                    $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
-                    $attachments[$key]['contact'] = $contact['contact']['contact'];
-                }
             }
-            if (!empty($attachmentsTypes[$attachment['attachment_type']]['label'])) {
-                $attachments[$key]['typeLabel'] = $attachmentsTypes[$attachment['attachment_type']]['label'];
-            }
+            $attachments[$key]['versions'] = $oldVersions;
         }
 
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
@@ -721,6 +724,18 @@ class AttachmentController
     private static function controlDates(array $args)
     {
         $body = $args['body'];
+
+        if (!empty($body['validationDate'])) {
+            if (!Validator::date()->notEmpty()->validate($body['validationDate'])) {
+                return ['errors' => "Body validationDate is not a date"];
+            }
+        }
+
+        if (!empty($body['effectiveDate'])) {
+            if (!Validator::date()->notEmpty()->validate($body['effectiveDate'])) {
+                return ['errors' => "Body effectiveDate is not a date"];
+            }
+        }
 
         return true;
     }
