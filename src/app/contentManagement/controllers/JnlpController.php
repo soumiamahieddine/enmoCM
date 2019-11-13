@@ -251,18 +251,19 @@ class JnlpController
                     }
                 }
                 $mergedDocument = MergeController::mergeDocument([
-                    'content'   => file_get_contents($pathToCopy),
-                    'data'      => $dataToMerge
+                    'path' => $pathToCopy,
+                    'data' => $dataToMerge
                 ]);
 
                 file_put_contents($tmpPath . $newFileOnTmp, base64_decode($mergedDocument['encodedDocument']));
+                $pathToCopy = $tmpPath . $newFileOnTmp;
             } else {
                 $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => 'Wrong objectType']]);
                 $response->write($xmlResponse);
                 return $response->withHeader('Content-Type', 'application/xml');
             }
 
-            if (!file_exists($pathToCopy) || !copy($pathToCopy, $tmpPath . $newFileOnTmp)) {
+            if ( $pathToCopy != $tmpPath . $newFileOnTmp && (!file_exists($pathToCopy) || !copy($pathToCopy, $tmpPath . $newFileOnTmp))) {
                 $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => "Failed to copy on {$tmpPath} : {$pathToCopy}"]]);
                 $response->write($xmlResponse);
                 return $response->withHeader('Content-Type', 'application/xml');

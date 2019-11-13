@@ -87,7 +87,7 @@ class MergeController
 
         //Resource
         if (!empty($args['resId'])) {
-            $resource = ResModel::getById(['select' => ['*'], 'resId' => [$args['resId']]]);
+            $resource = ResModel::getById(['select' => ['*'], 'resId' => $args['resId']]);
         } else {
             if (!empty($args['modelId'])) {
                 $indexingModel = IndexingModelModel::getById(['id' => $args['modelId'], 'select' => ['category']]);
@@ -198,9 +198,10 @@ class MergeController
             ]);
             foreach ($copyWorkflow as $value) {
                 if ($value['item_type'] == 'user_id') {
-                    $labelledUser = UserModel::getLabelledUserById(['id' => $value['item_id']]);
+                    $userInfo      = UserModel::getByLogin(['login' => $value['item_id'], 'select' => ['id']]);
+                    $labelledUser  = UserModel::getLabelledUserById(['id' => $userInfo['id']]);
                     $primaryentity = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']]);
-                    $label = "{$labelledUser} ({$primaryentity})";
+                    $label         = "{$labelledUser} ({$primaryentity})";
                 } else {
                     $entity = EntityModel::getByEntityId(['entityId' => $value['item_id'], 'select' => ['entity_label']]);
                     $label = $entity['entity_label'];
