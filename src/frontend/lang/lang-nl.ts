@@ -1292,4 +1292,5 @@ export const LANG_NL = {
     "manageOwnAttachmentsInDetails": "Update or delete user's own attachments in the details page", //_TO_TRANSLATE
     "viewPersonalData": "View users' personal data", //_TO_TRANSLATE
     "managePersonalData": "Update or delete users' personal data", //_TO_TRANSLATE
+    "attachmentDeleted": "Attachment deleted", //_TO_TRANSLATE
 };

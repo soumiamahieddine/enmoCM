@@ -39,7 +39,11 @@
         </div>
         <input type="file" #docToUpload name="files[]" (change)="uploadTrigger($event)" style="display:none;">
         <div style="display: block;width:100%;" appUploadFileDragDrop (onFileDropped)="dndUploadFile($event)" [disabled]="!editMode">
-            <div *ngIf="!loading" class="viewer-tools">
+            <div *ngIf="!loading && file.content !== null" class="viewer-tools">
+                <button *ngIf="infoPanel !== null" mat-icon-button (click)="infoPanel.toggle()"
+                    [matTooltip]="lang.informations">
+                    <mat-icon class="fa fa-info-circle"></mat-icon>
+                </button>
                 <button *ngIf="editMode" mat-icon-button (click)="docToUpload.click()"
                     [matTooltip]="lang.uploadAnOtherFile">
                     <mat-icon class="fa fa-file-upload"></mat-icon>

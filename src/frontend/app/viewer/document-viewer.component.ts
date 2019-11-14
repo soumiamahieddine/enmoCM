@@ -7,7 +7,7 @@ import { AppService } from '../../service/app.service';
 import { tap, catchError, finalize, filter, map, exhaustMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { MatDialogRef, MatDialog, MatSidenav } from '@angular/material';
 import { AlertComponent } from '../../plugins/modal/alert.component';
 import { SortPipe } from '../../plugins/sorting.pipe';
 import { templateVisitAll } from '@angular/compiler';
@@ -55,9 +55,13 @@ export class DocumentViewerComponent implements OnInit {
     listTemplates: any[] = [];
 
     @Input('resId') resId: number = null;
+    @Input('infoPanel') infoPanel: MatSidenav = null;
     @Input('editMode') editMode: boolean = false;
     @Input('title') title: string = '';
     @Input('mode') mode: string = 'mainDocument';
+
+    @Output('triggerEvent') triggerEvent = new EventEmitter<string>();
+
     resourceDatas: any;
 
     loadingInfo: any = {
@@ -96,6 +100,9 @@ export class DocumentViewerComponent implements OnInit {
 
                 if (this.resId !== null) {
                     this.loadRessource(this.resId, this.mode);
+                    if (this.editMode) {
+                        this.loadTemplates();
+                    }
                 } else {
                     this.loadTemplates();
                     this.loading = false;
@@ -145,6 +152,7 @@ export class DocumentViewerComponent implements OnInit {
                         src: data.encodedConvertedResource !== undefined ? this.base64ToArrayBuffer(data.encodedConvertedResource) : null
                     };
                     this.editMode = true;
+                    this.triggerEvent.emit();
                     if (data.encodedConvertedResource !== undefined) {
                         this.noConvertedFound = false;
                     } else {
@@ -176,7 +184,7 @@ export class DocumentViewerComponent implements OnInit {
 
             reader.onload = (value: any) => {
                 this.file.content = this.getBase64Document(value.target.result);
-
+                this.triggerEvent.emit();
                 if (this.file.type !== 'application/pdf') {
                     this.convertDocument(this.file);
                 } else {
@@ -350,6 +358,7 @@ export class DocumentViewerComponent implements OnInit {
                     content: null,
                     src: null
                 };
+                this.triggerEvent.emit();
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
@@ -425,6 +434,7 @@ export class DocumentViewerComponent implements OnInit {
                         this.file.content = `../../rest/attachments/${resId}/originalContent`;
                         this.file.contentView = `../../rest/attachments/${resId}/content?mode=view`;
                         this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
+                        this.triggerEvent.emit();
                         this.loading = false;
                     }
                 },

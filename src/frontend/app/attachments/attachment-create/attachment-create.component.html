@@ -1,0 +1,72 @@
+<div class="attach-container">
+    <h1 mat-dialog-title>
+        <span style="flex: 1;">
+            Creation d'une pièce jointe
+        </span>
+        <button *ngIf="!loading" [title]="lang.close" mat-icon-button [disabled]="isDocLoading()" (click)="dialogRef.close();">
+            <mat-icon class="fa fa-times"></mat-icon>
+        </button></h1>
+    <mat-dialog-content class="attach-content">
+        <mat-tab-group style="width: 100%;">
+            <mat-tab *ngFor="let attachment of attachments; let i=index" label="PJ n°{{i+1}}"
+                [disabled]="isDocLoading()">
+                <div style="display:flex;height:100%;">
+                    <div class="attachment-form" *ngIf="!loading">
+                        <div class="attachment-form-item">
+                            <plugin-select-search [label]="lang.type" [placeholderLabel]="lang.type"
+                                [formControlSelect]="attachment['type']" [datas]="attachmentsTypes" style="width:100%;">
+                            </plugin-select-search>
+                        </div>
+                        <div class="attachment-form-item">
+                            <mat-form-field class="input-form">
+                                <input matInput placeholder="{{lang.subject}}" [formControl]="attachment['title']">
+                            </mat-form-field>
+                        </div>
+                        <div class="attachment-form-item">
+                            <mat-form-field class="input-form">
+                                <input matInput placeholder="{{lang.contact}}">
+                            </mat-form-field>
+                        </div>
+                        <div class="attachment-form-item">
+                            <mat-form-field class="input-form" (click)="picker.open()" style="cursor:pointer;">
+                                <mat-label>Date de retour attendu</mat-label>
+                                <input [formControl]="attachment['validationDate']" matInput [matDatepicker]="picker"
+                                    [placeholder]="'Date de retour attendu'" [min]="now" readonly
+                                    style="cursor:pointer;">
+                                <mat-datepicker-toggle matSuffix [for]="picker"
+                                    *ngIf="!attachment['validationDate'].value">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker [touchUi]="appService.getViewMode()" #picker></mat-datepicker>
+                                <button mat-button color="warn" matSuffix mat-icon-button
+                                    *ngIf="attachment['validationDate'].value && !attachment['validationDate'].disabled"
+                                    (click)="$event.stopPropagation();attachment['validationDate'].reset();"
+                                    [title]="lang.eraseValue">
+                                    <mat-icon color="warn" class="fa fa-calendar-times">
+                                    </mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                        <div class="attachment-form-item">
+                            <button mat-raised-button color="primary" (click)="newPj()" [disabled]="isDocLoading()"
+                                style="width:90%;">Nouvelle pièce jointe</button>
+                            <button mat-raised-button color="warn" *ngIf="attachments.length > 1" (click)="removePj(i)"
+                                [disabled]="isDocLoading()" style="width:90%;">Enlever la pièce jointe</button>
+                        </div>
+                    </div>
+                    <div
+                        style="display: flex;flex: 1;align-items: center;justify-content: center;text-align: center;background: #135F7F;overflow: auto;color: white;">
+                        <app-document-viewer #appDocumentViewer style="height:100%;width:100%;position: relative;" [editMode]="true"
+                            [mode]="'attachment'" (triggerEvent)="setEncodedFile(i)">
+                        </app-document-viewer>
+                    </div>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+    </mat-dialog-content>
+    <div mat-dialog-actions class="actions">
+        <button mat-raised-button color="primary" *ngIf="creationMode && !loading" (click)="onSubmit()"
+            [disabled]="!isValid() || isDocLoading()">Valider</button>
+        <button mat-raised-button mat-button *ngIf="creationMode && !loading" [disabled]="isDocLoading()"
+            [mat-dialog-close]="">{{lang.cancel}}</button>
+    </div>
+</div>

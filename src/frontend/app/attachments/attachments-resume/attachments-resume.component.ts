@@ -5,7 +5,7 @@ import { catchError, tap, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { MatDialog } from '@angular/material';
-import { AttachmentShowModalComponent } from '../attachment-show-modal/attachment-show-modal.component';
+import { AttachmentPageComponent } from '../attachments-page/attachment-page.component';
 
 
 @Component({
@@ -54,7 +54,8 @@ export class AttachmentsResumeComponent implements OnInit {
     }
 
     showAttachment(attachment: any) {
-        this.dialog.open(AttachmentShowModalComponent, { data: { attachment: attachment } });
+        console.log(attachment);
+        this.dialog.open(AttachmentPageComponent, { height: '90vh', width: '90vw', data: { attachment: attachment } });
     }
 
     showMore() {

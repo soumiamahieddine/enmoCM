@@ -23,5 +23,7 @@ export class AttachmentShowModalComponent {
         private notify: NotificationService) {
     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void { 
+        console.log(this.data);
+    }
 }

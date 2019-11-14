@@ -1267,4 +1267,5 @@ export const LANG_EN = {
     "manageOwnAttachmentsInDetails": "Update or delete user's own attachments in the details page",
     "viewPersonalData": "View users' personal data",
     "managePersonalData": "Update or delete users' personal data",
+    "attachmentDeleted": "Attachment deleted",
 };
