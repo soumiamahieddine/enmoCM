@@ -432,6 +432,9 @@ FROM usergroups_services WHERE group_id IN (
 DELETE FROM usergroups_services WHERE service_id = 'modify_attachments';
 DELETE FROM usergroups_services WHERE service_id = 'delete_attachments';
 
+ALTER TABLE usergroups_services DROP COLUMN IF EXISTS parameters;
+ALTER TABLE usergroups_services ADD parameters jsonb;
+
 UPDATE listmodels SET title = object_id WHERE title IS NULL;
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)AND', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)and', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
