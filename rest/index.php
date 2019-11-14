@@ -401,7 +401,6 @@ $app->delete('/users/{id}', \User\controllers\UserController::class . ':delete')
 $app->put('/users/{id}/suspend', \User\controllers\UserController::class . ':suspend');
 $app->get('/users/{id}/isDeletable', \User\controllers\UserController::class . ':isDeletable');
 $app->get('/users/{id}/details', \User\controllers\UserController::class . ':getDetailledById');
-$app->post('/users/{id}/password', \User\controllers\UserController::class . ':resetPassword');
 $app->put('/users/{id}/password', \User\controllers\UserController::class . ':updatePassword');
 $app->get('/users/{userId}/status', \User\controllers\UserController::class . ':getStatusByUserId');
 $app->put('/users/{id}/status', \User\controllers\UserController::class . ':updateStatus');

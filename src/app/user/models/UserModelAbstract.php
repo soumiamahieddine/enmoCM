@@ -242,15 +242,16 @@ abstract class UserModelAbstract
 
     public static function resetPassword(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
+        ValidatorModel::notEmpty($aArgs, ['id', 'password']);
         ValidatorModel::intVal($aArgs, ['id']);
 
         DatabaseModel::update([
             'table'     => 'users',
             'set'       => [
-                'password'                      => AuthenticationModel::getPasswordHash('maarch'),
-                'change_password'               => 'Y',
-                'password_modification_date'    => 'CURRENT_TIMESTAMP'
+                'password'                      => AuthenticationModel::getPasswordHash($aArgs['password']),
+                'change_password'               => 'N',
+                'password_modification_date'    => 'CURRENT_TIMESTAMP',
+                'reset_token'                   => null
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]

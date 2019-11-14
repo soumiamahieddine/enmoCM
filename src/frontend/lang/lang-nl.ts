@@ -788,7 +788,6 @@ export const LANG_NL = {
     "redirectUserListInstances"             : "Change of recipient for mail being processed", //_TO_TRANSLATE_
     "redirectWhenAbscence"                  : "Het bakje aan een persoon doorsturen",
     "reference"                             : "_TO_TRANSLATE",
-    "reinitPassword"                        : "Wachtwoord opnieuw instellen",
     "relatedBaskets"                        : "Gekoppeld(e) bakje(s)",
     "relatedContactNumber"                  : "Gekoppeld(e) contact(en)",
     "relatedContacts"                       : "Gekoppeld(e) contact(en)",
@@ -800,7 +799,6 @@ export const LANG_NL = {
     "reports"                               : "Statistieken",
     "requiredField"                         : "Vereist veld",
     "resetColor"                            : "De kleur resetten",
-    "resetPsw"                              : "Wachtwoord opnieuw instellen",
     "resId"                                 : "GED gebruikersnaam",
     "restrictedEntity"                      : "Restricted entity", //_TO_TRANSLATE
     "resultPage"                            : "Resultaatpagina",

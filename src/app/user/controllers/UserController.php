@@ -124,13 +124,8 @@ class UserController
         $user['redirectedBaskets']  = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
         $user['history']            = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['event_type', 'event_date', 'info', 'remote_ip']]);
         $user['canModifyPassword']  = false;
-        $user['canResetPassword']   = true;
         $user['canCreateMaarchParapheurUser'] = false;
 
-        $loggingMethod = CoreConfigModel::getLoggingMethod();
-        if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS) && $user['loginmode'] != 'restMode') {
-            $user['canResetPassword'] = false;
-        }
         if ($user['loginmode'] == 'restMode') {
             $user['canModifyPassword'] = true;
         }
@@ -545,22 +540,6 @@ class UserController
             'where' => ['id = ?'],
             'data'  => [$user['id']]
         ]);
-
-        return $response->withJson(['success' => 'success']);
-    }
-
-    public function resetPassword(Request $request, Response $response, array $aArgs)
-    {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $error = $this->hasUsersRights(['id' => $aArgs['id']]);
-        if (!empty($error['error'])) {
-            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
-        }
-
-        UserModel::resetPassword(['id' => $aArgs['id']]);
 
         return $response->withJson(['success' => 'success']);
     }
@@ -1616,15 +1595,7 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Password does not match security criteria']);
         }
 
-        UserModel::update([
-            'set' => [
-                'password'                    => AuthenticationModel::getPasswordHash($body['password']),
-                'password_modification_date'  => 'CURRENT_TIMESTAMP',
-                'reset_token'                 => null
-            ],
-            'where' => ['id = ?'],
-            'data'  => [$user['id']]
-        ]);
+        UserModel::resetPassword(['password' => $body['password'], 'id'  => $user['id']]);
 
         $GLOBALS['id'] = $user['id'];
 
