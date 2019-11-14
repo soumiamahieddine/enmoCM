@@ -14,6 +14,7 @@
 
 namespace ContentManagement\controllers;
 
+use Attachment\models\AttachmentModel;
 use Docserver\models\DocserverModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -199,7 +200,6 @@ class JnlpController
         return $response->withHeader('Content-Type', 'application/x-java-jnlp-file');
     }
 
-
     public function processJnlp(Request $request, Response $response, array $args)
     {
         $queryParams = $request->getQueryParams();
@@ -210,8 +210,8 @@ class JnlpController
         if ($queryParams['action'] == 'editObject') {
             if ($queryParams['objectType'] == 'templateCreation') {
                 $explodeFile = explode('.', $queryParams['objectId']);
-                $ext = $explodeFile[count($explodeFile) - 1];
-                $newFileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$ext}";
+                $extension = $explodeFile[count($explodeFile) - 1];
+                $newFileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$extension}";
 
                 $pathToCopy = $queryParams['objectId'];
             } elseif ($queryParams['objectType'] == 'templateModification') {
@@ -223,11 +223,9 @@ class JnlpController
                     return $response->withHeader('Content-Type', 'application/xml');
                 }
 
-                $explodeFile = explode('.', $template['template_file_name']);
-                $ext = $explodeFile[count($explodeFile) - 1];
-                $newFileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$ext}";
-
                 $pathToCopy = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
+                $extension  = pathinfo($pathToCopy, PATHINFO_EXTENSION);
+                $newFileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$extension}";
             } elseif ($queryParams['objectType'] == 'resourceCreation' || $queryParams['objectType'] == 'attachmentCreation') {
                 $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
                 $template = TemplateModel::getById(['id' => $queryParams['objectId'], 'select' => ['template_path', 'template_file_name']]);
@@ -237,11 +235,9 @@ class JnlpController
                     return $response->withHeader('Content-Type', 'application/xml');
                 }
 
-                $explodeFile = explode('.', $template['template_file_name']);
-                $ext = $explodeFile[count($explodeFile) - 1];
-                $newFileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$ext}";
-
                 $pathToCopy = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
+                $extension  = pathinfo($pathToCopy, PATHINFO_EXTENSION);
+                $newFileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$extension}";
 
                 $dataToMerge = ['userId' => $GLOBALS['id']];
                 if (!empty($queryParams['objectTable'])) {
@@ -257,13 +253,25 @@ class JnlpController
 
                 file_put_contents($tmpPath . $newFileOnTmp, base64_decode($mergedDocument['encodedDocument']));
                 $pathToCopy = $tmpPath . $newFileOnTmp;
+            } elseif ($queryParams['objectType'] == 'attachmentModification') {
+                $attachment = AttachmentModel::getById(['id' => $queryParams['objectId'], 'select' => ['docserver_id', 'path', 'filename']]);
+                if (empty($attachment)) {
+                    $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => "Attachment does not exist"]]);
+                    $response->write($xmlResponse);
+                    return $response->withHeader('Content-Type', 'application/xml');
+                }
+                $docserver  = DocserverModel::getById(['id' => $attachment['docserver_id'], 'select' => ['path_template']]);
+
+                $pathToCopy = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachment['path']) . $attachment['filename'];
+                $extension  = pathinfo($pathToCopy, PATHINFO_EXTENSION);
+                $newFileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$extension}";
             } else {
                 $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => 'Wrong objectType']]);
                 $response->write($xmlResponse);
                 return $response->withHeader('Content-Type', 'application/xml');
             }
 
-            if ( $pathToCopy != $tmpPath . $newFileOnTmp && (!file_exists($pathToCopy) || !copy($pathToCopy, $tmpPath . $newFileOnTmp))) {
+            if (($pathToCopy != $tmpPath . $newFileOnTmp) && (!file_exists($pathToCopy) || !copy($pathToCopy, $tmpPath . $newFileOnTmp))) {
                 $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => "Failed to copy on {$tmpPath} : {$pathToCopy}"]]);
                 $response->write($xmlResponse);
                 return $response->withHeader('Content-Type', 'application/xml');
@@ -279,12 +287,11 @@ class JnlpController
                 'UNIQUE_ID'         => $queryParams['uniqueId'],
                 'APP_PATH'          => 'start',
                 'FILE_CONTENT'      => base64_encode($fileContent),
-                'FILE_EXTENSION'    => $ext,
+                'FILE_EXTENSION'    => $extension,
                 'ERROR'             => '',
                 'END_MESSAGE'       => ''
             ];
             $xmlResponse = JnlpController::generateResponse(['type' => 'SUCCESS', 'data' => $result]);
-
         } elseif ($queryParams['action'] == 'saveObject') {
             if (empty($body['fileContent']) || empty($body['fileExtension'])) {
                 $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => 'File content or file extension empty']]);
@@ -293,9 +300,9 @@ class JnlpController
             }
 
             $encodedFileContent = str_replace(' ', '+', $body['fileContent']);
-            $ext = str_replace(["\\", "/", '..'], '', $body['fileExtension']);
+            $extension = str_replace(["\\", "/", '..'], '', $body['fileExtension']);
             $fileContent = base64_decode($encodedFileContent);
-            $fileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$ext}";
+            $fileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$extension}";
 
             $file = fopen($tmpPath . $fileOnTmp, 'w');
             fwrite($file, $fileContent);
