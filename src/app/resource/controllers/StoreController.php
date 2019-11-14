@@ -16,6 +16,7 @@
 namespace Resource\controllers;
 
 use Attachment\models\AttachmentModel;
+use ContentManagement\controllers\MergeController;
 use Docserver\controllers\DocserverController;
 use Entity\models\EntityModel;
 use IndexingModel\models\IndexingModelModel;
@@ -36,9 +37,21 @@ class StoreController
             $resId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_id_mlb_seq']);
 
             $data = ['resId' => $resId];
+            $data = array_merge($args, $data);
+            $data = StoreController::prepareStorage($data);
 
             if (!empty($args['encodedFile'])) {
                 $fileContent = base64_decode(str_replace(['-', '_'], ['+', '/'], $args['encodedFile']));
+
+                if (in_array($args['format'], MergeController::OFFICE_EXTENSIONS)) {
+                    $tmpPath = CoreConfigModel::getTmpPath();
+                    $uniqueId = CoreConfigModel::uniqueId();
+                    $tmpFilename = "storeTmp_{$GLOBALS['id']}_{$uniqueId}.{$args['format']}";
+                    file_put_contents($tmpPath . $tmpFilename, $fileContent);
+                    $fileContent = MergeController::mergeChronoDocument(['chrono' => $data['alt_identifier'], 'path' => $tmpPath . $tmpFilename]);
+                    $fileContent = base64_decode($fileContent['encodedDocument']);
+                    unlink($tmpPath . $tmpFilename);
+                }
 
                 $storeResult = DocserverController::storeResourceOnDocServer([
                     'collId'            => 'letterbox_coll',
@@ -56,9 +69,6 @@ class StoreController
                 $data['path'] = $storeResult['directory'];
                 $data['fingerprint'] = $storeResult['fingerPrint'];
             }
-
-            $data = array_merge($args, $data);
-            $data = StoreController::prepareStorage($data);
 
             ResModel::create($data);
 
@@ -113,8 +123,7 @@ class StoreController
     public static function prepareStorage(array $args)
     {
         ValidatorModel::notEmpty($args, ['resId', 'modelId']);
-        ValidatorModel::stringType($args, ['docserver_id', 'filename', 'format', 'path', 'fingerprint']);
-        ValidatorModel::intVal($args, ['resId', 'modelId', 'filesize']);
+        ValidatorModel::intVal($args, ['resId', 'modelId']);
 
         $indexingModel = IndexingModelModel::getById(['id' => $args['modelId'], 'select' => ['category']]);
 
@@ -164,12 +173,6 @@ class StoreController
             'barcode'               => $args['barcode'] ?? null,
             'origin'                => $args['origin'] ?? null,
             'external_id'           => $externalId,
-            'format'                => empty($args['encodedFile']) ? null : $args['format'],
-            'docserver_id'          => empty($args['encodedFile']) ? null : $args['docserver_id'],
-            'filename'              => empty($args['encodedFile']) ? null : $args['filename'],
-            'filesize'              => empty($args['encodedFile']) ? null : $args['filesize'],
-            'path'                  => empty($args['encodedFile']) ? null : $args['path'],
-            'fingerprint'           => empty($args['encodedFile']) ? null : $args['fingerprint'],
             'creation_date'         => 'CURRENT_TIMESTAMP'
         ];
 
