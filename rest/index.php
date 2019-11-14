@@ -324,6 +324,7 @@ $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::c
 $app->get('/resources/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getByResId');
 $app->get('/resources/{resId}/emails', \Email\controllers\EmailController::class . ':getByResId');
 $app->get('/resources/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
+$app->get('/resources/{resId}/templates', \Template\controllers\TemplateController::class . ':getByResId');
 $app->get('/res/{resId}/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
