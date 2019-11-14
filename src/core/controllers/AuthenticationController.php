@@ -46,6 +46,14 @@ class AuthenticationController
             }
         }
 
+        if (!empty($userId)) {
+            UserModel::update([
+                'set'   => ['reset_token' => null],
+                'where' => ['user_id = ?'],
+                'data'  => [$userId]
+            ]);
+        }
+
         return $userId;
     }
 
@@ -120,12 +128,12 @@ class AuthenticationController
         return _BAD_LOGIN_OR_PSW;
     }
 
-    public static function getResetJWT()
+    public static function getResetJWT($args = [])
     {
         $token = [
-            'exp'   => time() + 3600,
+            'exp'   => time() + $args['expirationTime'],
             'user'  => [
-                'id' => $GLOBALS['id']
+                'id' => $args['id']
             ]
         ];
 

@@ -203,6 +203,25 @@ class UserController
             }
         }
 
+        $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
+        if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'])) {
+            $resetToken = AuthenticationController::getResetJWT(['id' => $newUser['id'], 'expirationTime' => 1209600]); // 14 days
+            UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$newUser['id']]]);
+
+            $url = UrlController::getCoreUrl() . '#/update-password?token=' . $resetToken . '&creation=true';
+            EmailController::createEmail([
+                'userId'    => $newUser['id'],
+                'data'      => [
+                    'sender'        => ['email' => 'Notification'],
+                    'recipients'    => [$newUser['mail']],
+                    'subject'       => _NOTIFICATIONS_USER_CREATION_SUBJECT,
+                    'body'          => _NOTIFICATIONS_USER_CREATION_BODY . $url . _NOTIFICATIONS_USER_CREATION_FOOTER,
+                    'isHtml'        => true,
+                    'status'        => 'WAITING'
+                ]
+            ]);
+        }
+
         HistoryController::add([
             'tableName'    => 'users',
             'recordId'     => $GLOBALS['userId'],
@@ -1541,7 +1560,7 @@ class UserController
 
         $GLOBALS['id'] = $user['id'];
 
-        $resetToken = AuthenticationController::getResetJWT();
+        $resetToken = AuthenticationController::getResetJWT(['id' => $user['id'], 'expirationTime' => 3600]); // 1 hour
         UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$user['id']]]);
 
         $url = UrlController::getCoreUrl() . '#/update-password?token=' . $resetToken;

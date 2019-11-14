@@ -419,3 +419,11 @@ define("_NOTIFICATIONS_FORGOT_PASSWORD_BODY", "Hello,<br/>You requested to reset
 define("_NOTIFICATIONS_FORGOT_PASSWORD_FOOTER", "<br/><br/>If you did not perform this request, you can safely ignore this email.<br/>Please contact your administrator if you have any questions._TO_TRANSLATE");
 define("_PASSWORD_REINIT_SENT", "Password reset sent_TO_TRANSLATE");
 define("_PASSWORD_REINIT", "Password rest_TO_TRANSLATE");
+
+define("_NOTIFICATIONS_USER_CREATION_SUBJECT", "[Maarch Courrier] Création de compte_TO_TRANSLATE");
+define("_NOTIFICATIONS_USER_CREATION_BODY", "Bonjour,<br/>un administrateur a créé votre compte dans l'application Maarch Courrier.<br/>Pour vous connecter et définir votre mot de passe, cliquer sur le lien ci-dessous :<br/>_TO_TRANSLATE");
+define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/>Pour toutes questions, merci de contacter l'administrateur technique de la solution._TO_TRANSLATE");
+
+define("_NOTIFICATIONS_USER_CREATION_SUBJECT", "[Maarch Courrier] Account creation_TO_TRANSLATE");
+define("_NOTIFICATIONS_USER_CREATION_BODY", "Hello,<br/>an administrator created your account in Maarch Courrier software.<br/>To log in and set your password, please click on the link below :<br/>_TO_TRANSLATE");
+define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/>Pour toutes questions, merci de contacter l'administrateur technique de la solution._TO_TRANSLATE");
