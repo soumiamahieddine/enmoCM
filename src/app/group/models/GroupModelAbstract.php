@@ -15,6 +15,7 @@
 namespace Group\models;
 
 use Group\controllers\GroupController;
+use Group\controllers\PrivilegeController;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
@@ -189,16 +190,16 @@ abstract class GroupModelAbstract
     public static function getAvailableGroupsByUserId(array $aArgs = [])
     {
         ValidatorModel::notEmpty($aArgs, ['userId']);
-        ValidatorModel::stringType($aArgs, ['userId']);
+        ValidatorModel::intVal($aArgs, ['userId']);
 
-        $rawUserGroups = UserModel::getGroupsByLogin(['login' => $aArgs['userId']]);
+        $rawUserGroups = UserModel::getGroupsByUser(['id' => $aArgs['userId']]);
+        $userGroups = array_column($rawUserGroups, 'group_id');
 
-        $userGroups = [];
-        foreach ($rawUserGroups as $value) {
-            $userGroups[] = $value['group_id'];
+        if ($GLOBALS['userId'] == 'superadmin') {
+            $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
+        } else {
+            $allGroups = PrivilegeController::getAssignableGroups(['userId' => $GLOBALS['id']]);
         }
-
-        $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
 
         foreach ($allGroups as $key => $value) {
             if (in_array($value['group_id'], $userGroups)) {

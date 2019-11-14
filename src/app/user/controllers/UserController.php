@@ -112,7 +112,7 @@ class UserController
         }
 
         $user['groups']             = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
-        $user['allGroups']          = GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]);
+        $user['allGroups']          = GroupModel::getAvailableGroupsByUserId(['userId' => $user['id']]);
         $user['entities']           = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
         $user['allEntities']        = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
         $user['baskets']            = BasketModel::getBasketsByLogin(['login' => $user['user_id']]);
@@ -965,11 +965,16 @@ class UserController
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['groupId']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
+
         $group = GroupModel::getByGroupId(['select' => ['id'], 'groupId' => $data['groupId']]);
+
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         } elseif (UserModel::hasGroup(['id' => $aArgs['id'], 'groupId' => $data['groupId']])) {
             return $response->withStatus(400)->withJson(['errors' => _USER_ALREADY_LINK_GROUP]);
+        }
+        if (!PrivilegeController::canAssignGroup(['userId' => $GLOBALS['id'], 'groupId' => $group['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
         if (empty($data['role'])) {
             $data['role'] = null;
@@ -1015,6 +1020,10 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
+        if (!PrivilegeController::canAssignGroup(['userId' => $GLOBALS['id'], 'groupId' => $group['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $data = $request->getParams();
         if (empty($data['role'])) {
             $data['role'] = '';
@@ -1044,6 +1053,10 @@ class UserController
         $group = GroupModel::getByGroupId(['select' => ['id'], 'groupId' => $aArgs['groupId']]);
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
+        }
+
+        if (!PrivilegeController::canAssignGroup(['userId' => $GLOBALS['id'], 'groupId' => $group['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         UserGroupModel::delete(['where' => ['user_id = ?', 'group_id = ?'], 'data' => [$aArgs['id'], $group['id']]]);
