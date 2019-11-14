@@ -66,12 +66,14 @@ $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':de
 
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');
+$app->get('/attachments/{id}', \Attachment\controllers\AttachmentController::class . ':getById');
+$app->put('/attachments/{id}', \Attachment\controllers\AttachmentController::class . ':update');
+$app->delete('/attachments/{id}', \Attachment\controllers\AttachmentController::class . ':delete');
 $app->get('/attachments/{id}/content', \Attachment\controllers\AttachmentController::class . ':getFileContent');
 $app->get('/attachments/{id}/originalContent', \Attachment\controllers\AttachmentController::class . ':getOriginalFileContent');
 $app->get('/attachments/{id}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
 $app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\AttachmentController::class . ':setInSendAttachment');
 $app->get('/attachmentsTypes', \Attachment\controllers\AttachmentController::class . ':getAttachmentsTypes');
-$app->delete('/attachments/{id}', \Attachment\controllers\AttachmentController::class . ':delete');
 
 //AutoComplete
 $app->get('/autocomplete/contacts', \SrcCore\controllers\AutoCompleteController::class . ':getContacts');
