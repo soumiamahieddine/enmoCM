@@ -1292,4 +1292,6 @@ export const LANG_NL = {
     "closed" : "Closed", //_TO_TRANSLATE
     "manageAttachments": "Update or delete attachments", //_TO_TRANSLATE
     "manageOwnAttachmentsInDetails": "Update or delete user's own attachments in the details page", //_TO_TRANSLATE
+    "viewPersonalData": "View users' personal data", //_TO_TRANSLATE
+    "managePersonalData": "Update or delete users' personal data", //_TO_TRANSLATE
 };

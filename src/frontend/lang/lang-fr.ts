@@ -1304,4 +1304,6 @@ export const LANG_FR = {
     "closed" : "Clôturé",
     "manageAttachments": "Modifier ou supprimer des pièces jointes",
     "manageOwnAttachmentsInDetails": "Modifier ou supprimer ses propres pièces jointes dans la fiche détaillée",
+    "viewPersonalData": "Voir les données personnelles de l'utilisateur",
+    "managePersonalData": "Modifier ou supprimer les données personnelles de l'utilisateur",
 };

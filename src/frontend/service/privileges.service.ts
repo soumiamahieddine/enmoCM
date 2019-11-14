@@ -413,6 +413,18 @@ export class PrivilegeService {
             "label": this.lang.manageOwnAttachmentsInDetails,
             "comment": this.lang.manageOwnAttachmentsInDetails,
             "unit": 'application'
+        },
+        {
+            "id": "view_personal_data",
+            "label": this.lang.viewPersonalData,
+            "comment": this.lang.viewPersonalData,
+            "unit": 'application'
+        },
+        {
+            "id": "manage_personal_data",
+            "label": this.lang.managePersonalData,
+            "comment": this.lang.managePersonalData,
+            "unit": 'application'
         }
     ];
 
