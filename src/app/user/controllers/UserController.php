@@ -19,10 +19,12 @@ use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
-use Entity\models\ListInstanceModel;
-use Group\controllers\PrivilegeController;
+use Email\controllers\EmailController;
 use Entity\models\EntityModel;
+use Entity\models\ListInstanceModel;
 use Entity\models\ListTemplateModel;
+use Firebase\JWT\JWT;
+use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use History\models\HistoryModel;
@@ -34,7 +36,9 @@ use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\AuthenticationController;
 use SrcCore\controllers\PasswordController;
+use SrcCore\controllers\UrlController;
 use SrcCore\models\AuthenticationModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
@@ -1516,5 +1520,99 @@ class UserController
         }
 
         return true;
+    }
+
+    public function forgotPassword(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['login'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body login is empty']);
+        }
+
+        $user = UserModel::getByLogin(['select' => ['id', 'mail'], 'login' => strtolower($body['login'])]);
+        if (empty($user)) {
+            return $response->withStatus(204);
+        }
+
+        $GLOBALS['id'] = $user['id'];
+
+        $resetToken = AuthenticationController::getResetJWT();
+        UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$user['id']]]);
+
+        $url = UrlController::getCoreUrl() . '#/update-password?token=' . $resetToken;
+        EmailController::createEmail([
+            'userId'    => $user['id'],
+            'data'      => [
+                'sender'        => ['email' => 'Notification'],
+                'recipients'    => [$user['mail']],
+                'subject'       => _NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT,
+                'body'          => _NOTIFICATIONS_FORGOT_PASSWORD_BODY . $url . _NOTIFICATIONS_FORGOT_PASSWORD_FOOTER,
+                'isHtml'        => true,
+                'status'        => 'WAITING'
+            ]
+        ]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $body['login'],
+            'eventType'    => 'UP',
+            'eventId'      => 'userModification',
+            'info'         => _PASSWORD_REINIT_SENT
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public static function updateForgottenPassword(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        $check = Validator::stringType()->notEmpty()->validate($body['token']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($body['password']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body token or body password is empty']);
+        }
+
+        try {
+            $jwt = JWT::decode($body['token'], CoreConfigModel::getEncryptKey(), ['HS256']);
+        } catch (\Exception $e) {
+            return $response->withStatus(403)->withJson(['errors' => 'Invalid token', 'lang' => 'invalidToken']);
+        }
+
+        $user = UserModel::getById(['id' => $jwt->user->id, 'select' => ['user_id', 'id', 'reset_token']]);
+        if (empty($user)) {
+            return $response->withStatus(400)->withJson(['errors' => 'User does not exist']);
+        }
+
+        if ($body['token'] != $user['reset_token']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Invalid token', 'lang' => 'invalidToken']);
+        }
+
+        if (!PasswordController::isPasswordValid(['password' => $body['password']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Password does not match security criteria']);
+        }
+
+        UserModel::update([
+            'set' => [
+                'password'                    => AuthenticationModel::getPasswordHash($body['password']),
+                'password_modification_date'  => 'CURRENT_TIMESTAMP',
+                'reset_token'                 => null
+            ],
+            'where' => ['id = ?'],
+            'data'  => [$user['id']]
+        ]);
+
+        $GLOBALS['id'] = $user['id'];
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $user['user_id'],
+            'eventType'    => 'UP',
+            'eventId'      => 'userModification',
+            'info'         => _PASSWORD_REINIT . " {$body['login']}"
+        ]);
+
+        return $response->withStatus(204);
     }
 }

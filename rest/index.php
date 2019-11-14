@@ -423,6 +423,8 @@ $app->delete('/users/{id}/signatures/{signatureId}', \User\controllers\UserContr
 $app->post('/users/{id}/redirectedBaskets', \User\controllers\UserController::class . ':setRedirectedBaskets');
 $app->delete('/users/{id}/redirectedBaskets', \User\controllers\UserController::class . ':deleteRedirectedBasket');
 $app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':updateBasketsDisplay');
+$app->post('/password', \User\controllers\UserController::class . ':forgotPassword');
+$app->put('/password', \User\controllers\UserController::class . ':updateForgottenPassword');
 
 //VersionsUpdate
 $app->get('/versionsUpdate', \VersionUpdate\controllers\VersionUpdateController::class . ':get');

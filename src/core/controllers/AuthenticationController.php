@@ -14,6 +14,7 @@
 
 namespace SrcCore\controllers;
 
+use Firebase\JWT\JWT;
 use SrcCore\models\AuthenticationModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\PasswordModel;
@@ -117,5 +118,19 @@ class AuthenticationController
         }
 
         return _BAD_LOGIN_OR_PSW;
+    }
+
+    public static function getResetJWT()
+    {
+        $token = [
+            'exp'   => time() + 3600,
+            'user'  => [
+                'id' => $GLOBALS['id']
+            ]
+        ];
+
+        $jwt = JWT::encode($token, CoreConfigModel::getEncryptKey());
+
+        return $jwt;
     }
 }

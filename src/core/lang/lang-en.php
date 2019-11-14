@@ -408,3 +408,9 @@ define("_INDEXINGMODEL_MODIFICATION", "Indexing model modification");
 define("_INDEXINGMODEL_SUPPRESSION", "Indexing model suppression");
 
 define("_PRIORITY_DELAY_ALREADY_SET", "This time limit is already set to another priority");
+
+define("_NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT", "[Maarch Courrier] Reset password informations");
+define("_NOTIFICATIONS_FORGOT_PASSWORD_BODY", "Hello,<br/>You requested to reset the password for your Maarch Courrier account.<br/>To change your password, please click on the link below :<br/>");
+define("_NOTIFICATIONS_FORGOT_PASSWORD_FOOTER", "<br/><br/>If you did not perform this request, you can safely ignore this email.<br/>Please contact your administrator if you have any questions.");
+define("_PASSWORD_REINIT_SENT", "Password reset sent");
+define("_PASSWORD_REINIT", "Password rest");

@@ -13,6 +13,9 @@ DROP VIEW IF EXISTS res_view_letterbox;
 DROP VIEW IF EXISTS res_view_attachments;
 DROP VIEW IF EXISTS view_folders;
 
+/*USERS*/
+ALTER TABLE users DROP COLUMN IF EXISTS reset_token;
+ALTER TABLE users ADD COLUMN reset_token text;
 
 /* FULL TEXT */
 DELETE FROM docservers where docserver_type_id = 'FULLTEXT';

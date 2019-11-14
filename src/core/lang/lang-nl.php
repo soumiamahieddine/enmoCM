@@ -413,3 +413,9 @@ define("_INDEXINGMODEL_MODIFICATION", "Indexing model modification_TO_TRANSLATE"
 define("_INDEXINGMODEL_SUPPRESSION", "Indexing model suppression_TO_TRANSLATE");
 
 define("_PRIORITY_DELAY_ALREADY_SET", "Ce délai de traitement est déjà paramétré pour une autre priorité_TO_TRANSLATE");
+
+define("_NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT", "[Maarch Courrier] Reset password informations_TO_TRANSLATE");
+define("_NOTIFICATIONS_FORGOT_PASSWORD_BODY", "Hello,<br/>You requested to reset the password for your Maarch Courrier account.<br/>To change your password, please click on the link below :<br/>_TO_TRANSLATE");
+define("_NOTIFICATIONS_FORGOT_PASSWORD_FOOTER", "<br/><br/>If you did not perform this request, you can safely ignore this email.<br/>Please contact your administrator if you have any questions._TO_TRANSLATE");
+define("_PASSWORD_REINIT_SENT", "Password reset sent_TO_TRANSLATE");
+define("_PASSWORD_REINIT", "Password rest_TO_TRANSLATE");
