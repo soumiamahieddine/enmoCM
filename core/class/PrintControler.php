@@ -260,7 +260,7 @@ class PrintControler extends PrintFunctions
                     $pdf->MultiCell(90, 5, utf8_decode(_INITIATOR . ' : '
                         . $resultEntity->entity_label . " (" . $this->array_print[$cpt]['initiator'] . ")"), 0, 'C', false);
 				} elseif($this->array_print[$cpt]['typist'] <> '') {
-                    $primaryEntity = \User\models\UserModel::getPrimaryEntityById(['id' => $this->array_print[$cpt]['typist']]);
+                    $primaryEntity = \User\models\UserModel::getPrimaryEntityById(['id' => $this->array_print[$cpt]['typist'], 'select' => ['users_entities.entity_id', 'entities.entity_label']]);
                     $pdf->MultiCell(90, 5, utf8_decode(_INITIATOR . ' : ' 
                         . $primaryEntity['entity_label'] . " (" . $primaryEntity['entity_id'] . ")"), 0, 'C', false);
                 }

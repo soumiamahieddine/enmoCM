@@ -400,23 +400,24 @@ abstract class UserModelAbstract
         return $aEntity[0];
     }
 
-    public static function getPrimaryEntityById(array $aArgs)
+    public static function getPrimaryEntityById(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::notEmpty($args, ['id', 'select']);
+        ValidatorModel::intVal($args, ['id']);
+        ValidatorModel::arrayType($args, ['select']);
 
-        $aEntity = DatabaseModel::select([
-            'select'    => ['users_entities.entity_id', 'entities.entity_label', 'users_entities.user_role', 'users_entities.primary_entity'],
+        $entity = DatabaseModel::select([
+            'select'    => $args['select'],
             'table'     => ['users, users_entities, entities'],
             'where'     => ['users.user_id = users_entities.user_id', 'users_entities.entity_id = entities.entity_id', 'users.id = ?', 'users_entities.primary_entity = ?'],
-            'data'      => [$aArgs['id'], 'Y']
+            'data'      => [$args['id'], 'Y']
         ]);
 
-        if (empty($aEntity[0])) {
+        if (empty($entity[0])) {
             return [];
         }
 
-        return $aEntity[0];
+        return $entity[0];
     }
 
     public static function getGroupsByLogin(array $aArgs)

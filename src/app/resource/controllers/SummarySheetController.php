@@ -292,7 +292,7 @@ class SummarySheetController
                         foreach ($resourcesContacts as $contactsKey => $value) {
                             $entitiesFormat = '';
                             if ($value['type'] == 'user') {
-                                $userEntity = UserModel::getPrimaryEntityById(['id' => $value['item_id']]);
+                                $userEntity = UserModel::getPrimaryEntityById(['id' => $value['item_id'], 'select' => ['entities.entity_label']]);
                                 if (!empty($userEntity)) {
                                     $entitiesFormat = ' (' . $userEntity['entity_label'] . ')';
                                 }

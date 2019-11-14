@@ -135,12 +135,14 @@ class MergeController
                     $resource["initiator_{$key}"] = $value;
                 }
             }
+            $initiator['path'] = EntityModel::getEntityPathByEntityId(['entityId' => $resource['initiator'], 'path' => '']);
             if (!empty($initiator['parent_entity_id'])) {
                 $parentInitiator = EntityModel::getByEntityId(['entityId' => $initiator['parent_entity_id'], 'select' => ['*']]);
             }
         }
         if (!empty($resource['destination'])) {
             $destination = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['*']]);
+            $destination['path'] = EntityModel::getEntityPathByEntityId(['entityId' => $resource['destination'], 'path' => '']);
             if (!empty($destination['parent_entity_id'])) {
                 $parentDestination = EntityModel::getByEntityId(['entityId' => $destination['parent_entity_id'], 'select' => ['*']]);
             }
@@ -154,6 +156,10 @@ class MergeController
 
         //User
         $currentUser = UserModel::getById(['id' => $args['userId'], 'select' => ['firstname', 'lastname', 'phone', 'mail', 'initials']]);
+        $currentUserPrimaryEntity = UserModel::getPrimaryEntityById(['id' => $args['userId'], 'select' => ['entities.*', 'users_entities.user_role as role']]);
+        if (!empty($currentUserPrimaryEntity)) {
+            $currentUserPrimaryEntity['path'] = EntityModel::getEntityPathByEntityId(['entityId' => $currentUserPrimaryEntity['entity_id'], 'path' => '']);
+        }
 
         //Visas
         $visas = '';
@@ -253,6 +259,7 @@ class MergeController
         $dataToBeMerge['parentDestination'] = empty($parentDestination) ? [] : $parentDestination;
         $dataToBeMerge['attachment']        = $attachment;
         $dataToBeMerge['user']              = $currentUser;
+        $dataToBeMerge['userPrimaryEntity'] = $currentUserPrimaryEntity;
         $dataToBeMerge['visas']             = $visas;
         $dataToBeMerge['opinions']          = $opinions;
         $dataToBeMerge['copies']            = $copies;

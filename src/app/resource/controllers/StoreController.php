@@ -100,7 +100,7 @@ class StoreController
                 $id = AttachmentModel::create($data);
 
             } else {
-                $data = StoreController::prepareUpdateAttachmentStorage($data);
+                $data = StoreController::prepareUpdateAttachmentStorage($data, $args['id']);
                 $id = AttachmentModel::update(['set' => $data, 'where' => ['res_id = ?'], 'data' => [$args['id']]]);
             }
 
@@ -225,9 +225,15 @@ class StoreController
         return $preparedData;
     }
 
-    public static function prepareUpdateAttachmentStorage(array $args)
+    public static function prepareUpdateAttachmentStorage(array $args, int $id)
     {
-        //TODO chrono if not chrono
+        $attachment = AttachmentModel::getById(['id' => $id, 'select' => ['identifier', 'res_id_master']]);
+        $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
+        if ($attachmentsTypes[$args['type']]['chrono'] && empty($attachment['identifier'])) {
+            $resource = ResModel::getById(['select' => ['destination', 'type_id'], 'resId' => $attachment['res_id_master']]);
+            $chrono = ChronoModel::getChrono(['id' => 'outgoing', 'entityId' => $resource['destination'], 'typeId' => $resource['type_id'], 'resId' => $attachment['res_id_master']]);
+        }
+
         $preparedData = [
             'title'                 => $args['title'] ?? null,
             'attachment_type'       => $args['type'],
@@ -235,6 +241,9 @@ class StoreController
             'modification_date'     => 'CURRENT_TIMESTAMP'
         ];
 
+        if (!empty($chrono)) {
+            $preparedData['identifier'] = $chrono;
+        }
         if (!empty($args['docserver_id'])) {
             $preparedData = array_merge($preparedData, [
                 'format'                => $args['format'],
