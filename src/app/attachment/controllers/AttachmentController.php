@@ -510,7 +510,7 @@ class AttachmentController
         }
 
         if (empty($fileContent)) {
-            $fileContent = file_get_contents($pathToDocument);
+            return $response->withStatus(404)->withJson(['errors' => 'Converted Document not found']);
         }
         if ($fileContent === false) {
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);

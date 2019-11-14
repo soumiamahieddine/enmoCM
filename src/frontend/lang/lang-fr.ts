@@ -1305,4 +1305,8 @@ export const LANG_FR = {
     "viewPersonalData": "Voir les données personnelles de l'utilisateur",
     "managePersonalData": "Modifier ou supprimer les données personnelles de l'utilisateur",
     "attachmentDeleted": "Pièce jointe supprimée",
+    "attachment_A_TRA": "À traiter",
+    "attachment_SIGN": "Signée",
+    "attachment_FRZ": "Gelée",
+    "attachment_TRA": "Traitée",
 };

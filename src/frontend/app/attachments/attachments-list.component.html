@@ -7,13 +7,13 @@
         style="padding-left:20px;padding-right:20px;">
         <input matInput placeholder="{{lang.searchByAttachmentType}}" #listFilter>
     </mat-form-field>
-    <mat-card *ngFor="let attachment of attachments | filterList:listFilter.value:'typeLabel'"
+    <mat-card *ngFor="let attachment of attachments | filterList:listFilter.value:'typeLabel'" [class.signed]="attachment.status==='SIGN'"
         [style.background-image]="'url('+attachment.thumbnailUrl+')'"
         style="padding:0;margin: 30px;min-height: 300px;background-size: cover;overflow: hidden;" (mouseover)="$event.stopPropagation();toggleInfo(attachment,true)"
         >
         <div class="layout" *ngIf="attachment.hideMainInfo" [@myAnimation] (click)="showAttachment(attachment)">
                 <button mat-raised-button color="primary" (click)="$event.stopPropagation();showAttachment(attachment)">Voir le document</button>
-                <button mat-raised-button color="warn" (click)="$event.stopPropagation();deleteAttachment(attachment)">Supprimer le document</button>
+                <button mat-raised-button color="warn" *ngIf="attachment.status!=='SIGN'" (click)="$event.stopPropagation();deleteAttachment(attachment)">Supprimer le document</button>
             </div>
         <div class="pjToolsContent">
             <button *ngIf="attachment.relation > 1" color="primary" class="versionButton" mat-button
@@ -52,10 +52,10 @@
                 {{attachment.typeLabel}}
             </div>
             <div class="subInfos" *ngIf="attachment.hideMainInfo">
-                {{attachment.creationDate | timeAgo}}
+                signé le {{attachment.modificationDate | timeAgo}} par {{attachment.typist}} 
             </div>
             <div class="statusInfo">
-                {{attachment.status}}
+                {{lang['attachment_'+attachment.status]}}
             </div>
             <!--<mat-accordion>
                 <mat-expansion-panel>

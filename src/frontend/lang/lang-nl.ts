@@ -1293,4 +1293,8 @@ export const LANG_NL = {
     "viewPersonalData": "View users' personal data", //_TO_TRANSLATE
     "managePersonalData": "Update or delete users' personal data", //_TO_TRANSLATE
     "attachmentDeleted": "Attachment deleted", //_TO_TRANSLATE
+    "attachment_A_TRA": "To process", //_TO_TRANSLATE
+    "attachment_SIGN": "Signed", //_TO_TRANSLATE
+    "attachment_FRZ": "Freez", //_TO_TRANSLATE
+    "attachment_TRA": "Processed", //_TO_TRANSLATE
 };

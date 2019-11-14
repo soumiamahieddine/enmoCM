@@ -92,6 +92,16 @@
     color: #666;
 }
 
+.signed {
+    border: solid 1px green;
+    .infosPj {
+        background: green;
+    }
+    .mainInfos, .subInfos, .stateInfo, .statusInfo, .subInfosBottom {
+        color: white;
+    }
+}
+
 .mat-icon {
     height: auto;
 }

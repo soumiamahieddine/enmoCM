@@ -1268,4 +1268,8 @@ export const LANG_EN = {
     "viewPersonalData": "View users' personal data",
     "managePersonalData": "Update or delete users' personal data",
     "attachmentDeleted": "Attachment deleted",
+    "attachment_A_TRA": "To process",
+    "attachment_SIGN": "Signed",
+    "attachment_FRZ": "Freez",
+    "attachment_TRA": "Processed",
 };
