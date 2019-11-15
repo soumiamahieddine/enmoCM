@@ -1,11 +1,10 @@
 <?php
-function getHeaders() 
+function getHeaders()
 {
-
-    foreach ($_SERVER as $h => $v ) 
-    {      
-      if( preg_match( '/HTTP_(.+)/', $h, $hp ) )
-        $headers[$hp[1]] = $v ;
+    foreach ($_SERVER as $h => $v) {
+        if (preg_match('/HTTP_(.+)/', $h, $hp)) {
+            $headers[$hp[1]] = $v ;
+        }
     }
     return $headers;
 }
@@ -36,9 +35,12 @@ echo '<form id="formlogin" method="post" action="'
                 echo '<label>&nbsp;</label>';
                     echo '<input type="submit" class="button" name="submit" value="'._CONNECT.'" />';
                 echo '</p>';
+                echo '<p>';
+                echo '<label>&nbsp;</label>';
+                    echo '<span onclick="triggerAngular(\'#/forgot-password\')">'._FORGOT_PASSWORD.'</span>';
+                echo '</p>';
             echo '<div class="error">';
-            if(isset($_SESSION['error']))
-            {
+            if (isset($_SESSION['error'])) {
                 echo functions::xssafe($_SESSION['error']);
             }
             $_SESSION['error'] = '';

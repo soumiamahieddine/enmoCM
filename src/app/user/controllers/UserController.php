@@ -199,7 +199,7 @@ class UserController
         }
 
         $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
-        if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'])) {
+        if ($loggingMethod['id'] == 'standard') {
             $resetToken = AuthenticationController::getResetJWT(['id' => $newUser['id'], 'expirationTime' => 1209600]); // 14 days
             UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$newUser['id']]]);
 
@@ -209,7 +209,7 @@ class UserController
                 'data'      => [
                     'sender'        => ['email' => 'Notification'],
                     'recipients'    => [$newUser['mail']],
-                    'subject'       => _NOTIFICATIONS_USER_CREATION_SUBJECT,
+                    'object'        => _NOTIFICATIONS_USER_CREATION_SUBJECT,
                     'body'          => _NOTIFICATIONS_USER_CREATION_BODY . $url . _NOTIFICATIONS_USER_CREATION_FOOTER,
                     'isHtml'        => true,
                     'status'        => 'WAITING'
@@ -1538,6 +1538,7 @@ class UserController
         }
 
         $GLOBALS['id'] = $user['id'];
+        $GLOBALS['userId'] = $body['login'];
 
         $resetToken = AuthenticationController::getResetJWT(['id' => $user['id'], 'expirationTime' => 3600]); // 1 hour
         UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$user['id']]]);
@@ -1548,7 +1549,7 @@ class UserController
             'data'      => [
                 'sender'        => ['email' => 'Notification'],
                 'recipients'    => [$user['mail']],
-                'subject'       => _NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT,
+                'object'        => _NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT,
                 'body'          => _NOTIFICATIONS_FORGOT_PASSWORD_BODY . $url . _NOTIFICATIONS_FORGOT_PASSWORD_FOOTER,
                 'isHtml'        => true,
                 'status'        => 'WAITING'
@@ -1566,7 +1567,7 @@ class UserController
         return $response->withStatus(204);
     }
 
-    public static function updateForgottenPassword(Request $request, Response $response)
+    public static function passwordInitialization(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
 
@@ -1598,6 +1599,7 @@ class UserController
         UserModel::resetPassword(['password' => $body['password'], 'id'  => $user['id']]);
 
         $GLOBALS['id'] = $user['id'];
+        $GLOBALS['userId'] = $user['user_id'];
 
         HistoryController::add([
             'tableName'    => 'users',

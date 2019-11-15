@@ -1297,4 +1297,9 @@ export const LANG_NL = {
     "attachment_SIGN": "Signed", //_TO_TRANSLATE
     "attachment_FRZ": "Freez", //_TO_TRANSLATE
     "attachment_TRA": "Processed", //_TO_TRANSLATE
+    "afterClickingSendLinkChangePassword": "After clicking on <b>Send</b>, you will receive an email containing a link to change your password. This link will be active <b>1 hour</b>.", //_TO_TRANSLATE
+    "enterLogin": "Enter your username", //_TO_TRANSLATE
+    "send" : "Send", //_TO_TRANSLATE
+    "generation" : "Generation...", //_TO_TRANSLATE
+    "requestSentByEmail" : "The request has been sent to you by email.", //_TO_TRANSLATE
 };

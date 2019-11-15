@@ -1576,3 +1576,6 @@ if (!defined('_ACTION_DATE')) {
 if (!defined('_STATUS_NOT_EXISTS')) {
     define('_STATUS_NOT_EXISTS', 'Status undefined_TO_TRANSLATE');
 }
+if (!defined('_FORGOT_PASSWORD')) {
+    define('_FORGOT_PASSWORD', 'Forgot password ?_TO_TRANSLATE');
+}

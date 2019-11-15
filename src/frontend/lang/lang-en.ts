@@ -1272,4 +1272,9 @@ export const LANG_EN = {
     "attachment_SIGN": "Signed",
     "attachment_FRZ": "Freez",
     "attachment_TRA": "Processed",
+    "afterClickingSendLinkChangePassword": "After clicking on <b>Send</b>, you will receive an email containing a link to change your password. This link will be active <b>1 hour</b>.",
+    "enterLogin": "Enter your username",
+    "send" : "Send",
+    "generation" : "Generation...",
+    "requestSentByEmail" : "The request has been sent to you by email.",
 };

@@ -1309,4 +1309,9 @@ export const LANG_FR = {
     "attachment_SIGN": "Signée",
     "attachment_FRZ": "Gelée",
     "attachment_TRA": "Traitée",
+    "afterClickingSendLinkChangePassword": "Après avoir cliqué sur <b>Envoyer</b>, vous recevrez un courriel contenant un lien pour modifier votre mot de passe. Ce lien sera actif <b>1 heure</b>.",
+    "enterLogin": "Saisissez votre identifiant",
+    "send" : "Envoyer",
+    "generation" : "Génération...",
+    "requestSentByEmail" : "La demande vous a été envoyé par courriel.",
 };

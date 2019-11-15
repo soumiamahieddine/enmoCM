@@ -13,6 +13,7 @@ import { PrintSeparatorComponent }          from './separator/print-separator/pr
 import { AppGuard, AfterProcessGuard }     from '../service/app.guard';
 import { FolderDocumentListComponent }      from './folder/document-list/folder-document-list.component';
 import { IndexationComponent }              from './indexation/indexation.component';
+import { ForgotPasswordComponent }          from './login/forgotPassword/forgotPassword.component';
 import { ProcessComponent } from './process/process.component';
 
 @NgModule({
@@ -30,6 +31,7 @@ import { ProcessComponent } from './process/process.component';
             { path: 'separators/print', canActivate: [AppGuard], component: PrintSeparatorComponent },
             { path: 'signatureBook/users/:userId/groups/:groupId/baskets/:basketId/resources/:resId', canActivate: [AppGuard],component: SignatureBookComponent },
             { path: 'indexing/:groupId', canActivate: [AppGuard],component: IndexationComponent },
+            { path: 'forgot-password', component: ForgotPasswordComponent },
             { path: '**',  redirectTo: 'home', pathMatch: 'full' },
         ], { useHash: true }),
     ],

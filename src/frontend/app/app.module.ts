@@ -67,6 +67,7 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
 import { PrintSeparatorComponent }                        from './separator/print-separator/print-separator.component';
 
 import { IndexationComponent }                        from './indexation/indexation.component';
+import { ForgotPasswordComponent }          from './login/forgotPassword/forgotPassword.component';
 import { HistoryWorkflowResumeComponent }                        from './history/history-workflow-resume/history-workflow-resume.component';
 import { NoteResumeComponent }                        from './notes/note-resume/note-resume.component';
 import { AttachmentShowModalComponent }                        from './attachments/attachment-show-modal/attachment-show-modal.component';
@@ -140,6 +141,7 @@ import { ActionsService } from './actions/actions.service';
         FolderUpdateComponent,
         FolderActionListComponent,
         IndexationComponent,
+        ForgotPasswordComponent,
         HistoryWorkflowResumeComponent,
         NoteResumeComponent,
         AttachmentsResumeComponent,
