@@ -31,13 +31,13 @@ echo '<form id="formlogin" method="post" action="'
                     echo '<label for="pass">'._PASSWORD.'</label>';
                     echo '<input name="pass" id="pass" value="" type="password"  />';
                 echo '</p>';
+                echo '<p style="cursor: pointer;font-size: 11px;">';
+                echo '<label>&nbsp;</label>';
+                    echo '<span onclick="triggerAngular(\'#/forgot-password\')">'._FORGOT_PASSWORD.'</span>';
+                echo '</p><br>';
                 echo '<p>';
                 echo '<label>&nbsp;</label>';
                     echo '<input type="submit" class="button" name="submit" value="'._CONNECT.'" />';
-                echo '</p>';
-                echo '<p>';
-                echo '<label>&nbsp;</label>';
-                    echo '<span onclick="triggerAngular(\'#/forgot-password\')">'._FORGOT_PASSWORD.'</span>';
                 echo '</p>';
             echo '<div class="error">';
             if (isset($_SESSION['error'])) {
