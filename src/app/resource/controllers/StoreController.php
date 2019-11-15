@@ -68,6 +68,7 @@ class StoreController
                 $data['filesize']       = $storeResult['fileSize'];
                 $data['path']           = $storeResult['directory'];
                 $data['fingerprint']    = $storeResult['fingerPrint'];
+                $data['format']         = $args['format'];
             }
 
             ResModel::create($data);
