@@ -17,6 +17,7 @@ namespace Resource\controllers;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Contact\models\ContactModel;
+use CustomField\models\ResourceCustomFieldModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Folder\controllers\FolderController;
@@ -281,6 +282,8 @@ class ExportController
                         } else {
                             $csvContent[] = '';
                         }
+                    } elseif (strpos($value['value'], 'custom_', 0) !== false) {
+                        $csvContent[] = ExportController::getCustomFieldValue(['custom' => $value['value'], 'resId' => $resource['res_id']]);
                     }
                 } else {
                     $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date'];
@@ -401,6 +404,8 @@ class ExportController
                         } else {
                             $content[] = '';
                         }
+                    } elseif (strpos($value['value'], 'custom_', 0) !== false) {
+                        $content[] = ExportController::getCustomFieldValue(['custom' => $value['value'], 'resId' => $resource['res_id']]);
                     }
                 } else {
                     $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date'];
@@ -812,5 +817,43 @@ class ExportController
         }
 
         return implode("\n", $parentLabels);
+    }
+
+    private static function getCustomFieldValue(array $args) {
+        ValidatorModel::notEmpty($args, ['custom', 'resId']);
+        ValidatorModel::stringType($args, ['custom']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $customField = explode('_', $args['custom']);
+        // Custom fields must be in this format : 'custom_<id custom field>'
+        // So if the explode returns an array with more or less than 2 elements, the format is wrong
+        if (count($customField) != 2) {
+            return null;
+        }
+        $customFieldId = $customField[1];
+        $customValues = ResourceCustomFieldModel::get([
+            'select'    => ['value'],
+            'where'     => ['custom_field_id = ?', 'res_id = ?'],
+            'data'      => [$customFieldId, $args['resId']],
+            'orderBy'   => ['value']
+        ]);
+        $customValues = array_column($customValues, 'value');
+
+        if (empty($customValues)) {
+            return null;
+        }
+
+        $customValues = $customValues[0];
+        $customValues = json_decode($customValues);
+
+        if (!isset($customValues)) {
+            return null;
+        }
+
+        if (is_array($customValues)) {
+            return implode("\n", $customValues);
+        }
+
+        return $customValues;
     }
 }
