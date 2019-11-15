@@ -122,7 +122,7 @@ class MergeController
         foreach ($allDates as $date) {
             $resource[$date] = TextFormatModel::formatDate($resource[$date], 'd/m/Y');
         }
-        $resource['category_id'] = ResModel::getCategoryLabel(['category_id' => $resource['category_id']]);
+        $resource['category_id'] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
 
         if (!empty($resource['type_id'])) {
             $doctype = DoctypeModel::getById(['id' => $resource['type_id'], 'select' => ['process_delay', 'process_mode', 'description']]);
@@ -174,7 +174,7 @@ class MergeController
                 'orderBy'   => ['listinstance_id']
             ]);
             foreach ($visaWorkflow as $value) {
-                $labelledUser = UserModel::getLabelledUserById(['id' => $value['item_id']]);
+                $labelledUser = UserModel::getLabelledUserById(['login' => $value['item_id']]);
                 $primaryentity = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']]);
                 $visas .= "{$labelledUser} ({$primaryentity})\n";
             }
@@ -190,7 +190,7 @@ class MergeController
                 'orderBy'   => ['listinstance_id']
             ]);
             foreach ($opinionWorkflow as $value) {
-                $labelledUser = UserModel::getLabelledUserById(['id' => $value['item_id']]);
+                $labelledUser = UserModel::getLabelledUserById(['login' => $value['item_id']]);
                 $primaryentity = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']]);
                 $opinions .= "{$labelledUser} ({$primaryentity})\n";
             }

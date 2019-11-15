@@ -241,6 +241,7 @@ class StoreController
             'title'                 => $args['title'] ?? null,
             'attachment_type'       => $args['type'],
             'validation_date'       => $args['validationDate'] ?? null,
+            'effective_date'        => $args['effectiveDate'] ?? null,
             'modification_date'     => 'CURRENT_TIMESTAMP'
         ];
 

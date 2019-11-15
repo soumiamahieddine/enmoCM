@@ -73,7 +73,7 @@ class AttachmentController
             'tableName' => 'res_letterbox',
             'recordId'  => $body['resIdMaster'],
             'eventType' => 'ADD',
-            'info'      => _ATTACHMENT_ADDED,
+            'info'      => _ATTACHMENT_ADDED . " : {$id}",
             'moduleId'  => 'attachment',
             'eventId'   => 'attachmentAdd'
         ]);
@@ -91,7 +91,7 @@ class AttachmentController
                 'fulltext_result as "fulltextResult"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
             ]
         ]);
-        if (empty($attachment) || $attachment['status'] == 'DEL') {
+        if (empty($attachment) || !in_array($attachment['status'], ['A_TRA', 'TRA'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
         }
 
@@ -138,7 +138,7 @@ class AttachmentController
     public function update(Request $request, Response $response, array $args)
     {
         $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master', 'status', 'typist']]);
-        if (empty($attachment) || $attachment['status'] == 'DEL') {
+        if (empty($attachment) || !in_array($attachment['status'], ['A_TRA', 'TRA'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
         }
         if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
@@ -201,7 +201,7 @@ class AttachmentController
             'tableName' => 'res_letterbox',
             'recordId'  => $attachment['res_id_master'],
             'eventType' => 'UP',
-            'info'      => _ATTACHMENT_UPDATED,
+            'info'      => _ATTACHMENT_UPDATED . " : {$args['id']}",
             'moduleId'  => 'attachment',
             'eventId'   => 'attachmentModification'
         ]);
