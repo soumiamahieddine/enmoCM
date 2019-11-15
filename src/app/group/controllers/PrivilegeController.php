@@ -86,7 +86,7 @@ class PrivilegeController
         return $response->withStatus(204);
     }
 
-    public static function updatePrivilegeParameters(Request $request, Response $response, array $args)
+    public static function updateParameters(Request $request, Response $response, array $args)
     {
         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -95,10 +95,6 @@ class PrivilegeController
         $group = GroupModel::getById(['id' => $args['id']]);
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
-        }
-
-        if (!Validator::stringType()->notEmpty()->validate($args['privilegeId'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Query privilegeId is empty or not a string']);
         }
 
         $data = $request->getParams();
@@ -202,7 +198,7 @@ class PrivilegeController
         $privileges = PrivilegeModel::getByUserAndPrivilege(['userId' => $args['userId'], 'privilegeId' => 'admin_users']);
         $privileges = array_column($privileges, 'parameters');
 
-        if ($privileges == null) {
+        if (empty($privileges)) {
             return false;
         }
         $assignable = [];
