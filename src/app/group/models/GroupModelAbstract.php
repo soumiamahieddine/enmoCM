@@ -195,17 +195,23 @@ abstract class GroupModelAbstract
         $rawUserGroups = UserModel::getGroupsByUser(['id' => $aArgs['userId']]);
         $userGroups = array_column($rawUserGroups, 'group_id');
 
-        if ($GLOBALS['userId'] == 'superadmin') {
-            $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
-        } else {
-            $allGroups = PrivilegeController::getAssignableGroups(['userId' => $GLOBALS['id']]);
+        $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
+        $assignableGroups = PrivilegeController::getAssignableGroups(['userId' => $GLOBALS['id']]);
+        $assignableGroups = array_column($assignableGroups, 'group_id');
+
+        foreach ($allGroups as $key => $value) {
+            if (in_array($value['group_id'], $assignableGroups)) {
+                $allGroups[$key]['enabled'] = true;
+            } else {
+                $allGroups[$key]['enabled'] = false;
+            }
         }
 
         foreach ($allGroups as $key => $value) {
             if (in_array($value['group_id'], $userGroups)) {
-                $allGroups[$key]['disabled'] = true;
+                $allGroups[$key]['checked'] = true;
             } else {
-                $allGroups[$key]['disabled'] = false;
+                $allGroups[$key]['checked'] = false;
             }
         }
 
