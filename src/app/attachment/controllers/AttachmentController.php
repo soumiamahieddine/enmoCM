@@ -171,6 +171,7 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
 
+        $body['id'] = $args['id'];
         $isStored = StoreController::storeAttachment($body);
         if (empty($isStored) || !empty($isStored['errors'])) {
             return $response->withStatus(500)->withJson(['errors' => '[AttachmentController update] ' . $isStored['errors']]);
