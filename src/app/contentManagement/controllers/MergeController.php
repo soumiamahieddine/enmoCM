@@ -153,7 +153,7 @@ class MergeController
 
         //Attachment
         $attachment = [
-            'chrono'    => $args['attachmentChrono'] ?? null,
+            'chrono'    => '[attachment.chrono]',
             'title'     => $args['attachmentTitle'] ?? null
         ];
 
@@ -303,6 +303,7 @@ class MergeController
         }
 
         $tbs->MergeField('res_letterbox', ['alt_identifier' => $args['chrono']]);
+        $tbs->MergeField('attachment', ['chrono' => $args['chrono']]);
 
         if (in_array($extension, MergeController::OFFICE_EXTENSIONS)) {
             $tbs->Show(OPENTBS_STRING);
