@@ -788,7 +788,6 @@ export const LANG_NL = {
     "redirectUserListInstances"             : "Change of recipient for mail being processed", //_TO_TRANSLATE_
     "redirectWhenAbscence"                  : "Het bakje aan een persoon doorsturen",
     "reference"                             : "_TO_TRANSLATE",
-    "reinitPassword"                        : "Wachtwoord opnieuw instellen",
     "relatedBaskets"                        : "Gekoppeld(e) bakje(s)",
     "relatedContactNumber"                  : "Gekoppeld(e) contact(en)",
     "relatedContacts"                       : "Gekoppeld(e) contact(en)",
@@ -800,7 +799,6 @@ export const LANG_NL = {
     "reports"                               : "Statistieken",
     "requiredField"                         : "Vereist veld",
     "resetColor"                            : "De kleur resetten",
-    "resetPsw"                              : "Wachtwoord opnieuw instellen",
     "resId"                                 : "GED gebruikersnaam",
     "restrictedEntity"                      : "Restricted entity", //_TO_TRANSLATE
     "resultPage"                            : "Resultaatpagina",
@@ -1286,11 +1284,17 @@ export const LANG_NL = {
     "allRoles" : "All roles", //_TO_TRANSLATE
     "rolesExceptAssignee" : "Role(s) without assignee", //_TO_TRANSLATE
     "noRole" : "No role", //_TO_TRANSLATE
-    "diffListPrivilegeMsg" : "Can modify user in roles: ", //_TO_TRANSLATE
-    "diffListPrivilegeMsgIndexing" : "in indexing page.", //_TO_TRANSLATE
-    "diffListPrivilegeMsgProcess" : "in process page.", //_TO_TRANSLATE
+    "diffListPrivilegeMsgIndexing" : "In indexing page, modify user in roles: ", //_TO_TRANSLATE
+    "diffListPrivilegeMsgProcess" : "In process page, modify user in roles: ", //_TO_TRANSLATE
     "recordMail" : "Record a mail", //_TO_TRANSLATE
     "closed" : "Closed", //_TO_TRANSLATE
     "manageAttachments": "Update or delete attachments", //_TO_TRANSLATE
     "manageOwnAttachmentsInDetails": "Update or delete user's own attachments in the details page", //_TO_TRANSLATE
+    "viewPersonalData": "View users' personal data", //_TO_TRANSLATE
+    "managePersonalData": "Update or delete users' personal data", //_TO_TRANSLATE
+    "attachmentDeleted": "Attachment deleted", //_TO_TRANSLATE
+    "attachment_A_TRA": "To process", //_TO_TRANSLATE
+    "attachment_SIGN": "Signed", //_TO_TRANSLATE
+    "attachment_FRZ": "Freez", //_TO_TRANSLATE
+    "attachment_TRA": "Processed", //_TO_TRANSLATE
 };

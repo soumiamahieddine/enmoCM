@@ -15,7 +15,6 @@
 namespace Attachment\controllers;
 
 use Attachment\models\AttachmentModel;
-use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
@@ -30,7 +29,6 @@ use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use SrcCore\controllers\AutoCompleteController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
@@ -66,57 +64,232 @@ class AttachmentController
             'tableName' => 'res_attachments',
             'recordId'  => $id,
             'eventType' => 'ADD',
-            'info'      => _DOC_ADDED,
+            'info'      => _ATTACHMENT_ADDED,
             'moduleId'  => 'attachment',
-            'eventId'   => 'attachmentAdd',
+            'eventId'   => 'attachmentAdd'
+        ]);
+
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $body['resIdMaster'],
+            'eventType' => 'ADD',
+            'info'      => _ATTACHMENT_ADDED,
+            'moduleId'  => 'attachment',
+            'eventId'   => 'attachmentAdd'
         ]);
 
         return $response->withJson(['id' => $id]);
     }
 
-    public function getByResId(Request $request, Response $response, array $aArgs)
+    public function getById(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        $attachment = AttachmentModel::getById([
+            'id'        => $args['id'],
+            'select'    => [
+                'res_id_master', 'status', 'title', 'identifier as chrono', 'relation', 'attachment_type as type',
+                'origin_id as "originId"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"',
+                'fulltext_result as "fulltextResult"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
+            ]
+        ]);
+        if (empty($attachment) || $attachment['status'] == 'DEL') {
+            return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
         }
 
-        $queryParams = $request->getQueryParams();
-        if (!empty($queryParams['limit']) && !Validator::intVal()->validate($queryParams['limit'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an int val']);
+        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Attachment out of perimeter']);
         }
 
         $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
             $excludeAttachmentTypes[] = 'document_with_notes';
         }
+        if (in_array($attachment['type'], $excludeAttachmentTypes)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Attachment type out of perimeter']);
+        }
 
-        $attachments = AttachmentModel::getListByResIdMaster([
-            'resId'                     => $aArgs['resId'],
-            'login'                     => $GLOBALS['userId'],
-            'excludeAttachmentTypes'    => $excludeAttachmentTypes,
-            'orderBy'                   => ['res_id DESC'],
-            'limit'                     => (int)$queryParams['limit']
+        $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
+        if (!empty($attachmentsTypes[$attachment['type']]['label'])) {
+            $attachment['typeLabel'] = $attachmentsTypes[$attachment['type']]['label'];
+        }
+
+        $oldVersions = [];
+        if (!empty($attachment['originId'])) {
+            $oldVersions = AttachmentModel::get([
+                'select'    => ['res_id as "resId"', 'relation'],
+                'where'     => ['(origin_id = ? OR res_id = ?)', 'res_id != ?', 'status not in (?)', 'attachment_type not in (?)'],
+                'data'      => [$attachment['originId'], $attachment['originId'], $args['id'], ['DEL'], $excludeAttachmentTypes],
+                'orderBy'   => ['relation DESC']
+            ]);
+        }
+        $attachment['versions'] = $oldVersions;
+
+        $signedResponse = AttachmentModel::get([
+            'select'    => ['res_id'],
+            'where'     => ['origin = ?', 'status not in (?)'],
+            'data'      => ["{$args['id']},res_attachments", ['DEL']]
         ]);
+        if (!empty($signedResponse[0])) {
+            $attachment['signedResponse'] = $signedResponse[0]['res_id'];
+        }
+
+        return $response->withJson($attachment);
+    }
+
+    public function update(Request $request, Response $response, array $args)
+    {
+        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master', 'status', 'typist']]);
+        if (empty($attachment) || $attachment['status'] == 'DEL') {
+            return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
+        }
+        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Attachment out of perimeter']);
+        }
+        if ($GLOBALS['userId'] != $attachment['typist'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'manage_attachments', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Attachment out of perimeter']);
+        }
+
+        $body = $request->getParsedBody();
+
+        if (empty($body)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body is not set or empty']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['type'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body type is empty or not a string']);
+        }
+
+        $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
+        if (empty($attachmentsTypes[$body['type']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body type does not exist']);
+        }
+
+        $control = AttachmentController::controlFileData(['body' => $body]);
+        if (!empty($control['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+        }
+
+        $control = AttachmentController::controlDates(['body' => $body]);
+        if (!empty($control['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+        }
+
+        $isStored = StoreController::storeAttachment($body);
+        if (empty($isStored) || !empty($isStored['errors'])) {
+            return $response->withStatus(500)->withJson(['errors' => '[AttachmentController update] ' . $isStored['errors']]);
+        }
+
+        if (!empty($body['encodedFile'])) {
+            AdrModel::deleteAttachmentAdr(['where' => ['res_id = ?'], 'data' => [$args['id']]]);
+            ConvertPdfController::convert([
+                'resId'     => $args['id'],
+                'collId'    => 'attachments_coll'
+            ]);
+
+            $customId = CoreConfigModel::getCustomId();
+            $customId = empty($customId) ? 'null' : $customId;
+            exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$args['id']} --collId attachments_coll --userId {$GLOBALS['id']} > /dev/null &");
+        }
+
+        HistoryController::add([
+            'tableName' => 'res_attachments',
+            'recordId'  => $args['id'],
+            'eventType' => 'UP',
+            'info'      => _ATTACHMENT_UPDATED,
+            'moduleId'  => 'attachment',
+            'eventId'   => 'attachmentModification'
+        ]);
+
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $attachment['res_id_master'],
+            'eventType' => 'UP',
+            'info'      => _ATTACHMENT_UPDATED,
+            'moduleId'  => 'attachment',
+            'eventId'   => 'attachmentModification'
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function delete(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id must be an integer val']);
+        }
+
+        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['origin_id', 'res_id_master', 'attachment_type', 'res_id', 'title', 'typist', 'status']]);
+        if (empty($attachment) || $attachment['status'] == 'DEL') {
+            return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
+        }
+        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+        if ($GLOBALS['userId'] != $attachment['typist'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'manage_attachments', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        if (empty($attachment['origin_id'])) {
+            $idToDelete = $attachment['res_id'];
+        } else {
+            $idToDelete = $attachment['origin_id'];
+        }
+        AttachmentModel::delete([
+            'where' => ['res_id = ? or origin_id = ?'],
+            'data'  => [$idToDelete, $idToDelete]
+        ]);
+
+        HistoryController::add([
+            'tableName' => 'res_attachments',
+            'recordId'  => $args['id'],
+            'eventType' => 'DEL',
+            'info'      =>  _DOC_DELETED . " : {$attachment['title']}",
+            'eventId'   => 'attachmentSuppression',
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function getByResId(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $queryParams = $request->getQueryParams();
+        if (!empty($queryParams['limit']) && !Validator::intVal()->validate($queryParams['limit'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an integer']);
+        }
+
+        $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'signed_response'];
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
+            $excludeAttachmentTypes[] = 'document_with_notes';
+        }
+
+        $attachments = AttachmentModel::get([
+            'select'    => [
+                'res_id as "resId"', 'identifier as chrono', 'title', 'creation_date as "creationDate"', 'modification_date as "modificationDate"',
+                'relation', 'status', 'attachment_type as type', 'origin_id as "originId"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
+            ],
+            'where'     => ['res_id_master = ?', 'status not in (?)', 'attachment_type not in (?)'],
+            'data'      => [$args['resId'], ['DEL', 'OBS'], $excludeAttachmentTypes],
+            'orderBy'   => ['modification_date DESC'],
+            'limit'     => (int)$queryParams['limit'] ?? 0
+        ]);
+
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
         foreach ($attachments as $key => $attachment) {
-            $attachments[$key]['contact'] = '';
-            if (!empty($attachment['dest_address_id'])) {
-                $contact = ContactModel::getOnView([
-                    'select' => [
-                        'is_corporate_person', 'lastname', 'firstname',
-                        'ca_id', 'society', 'contact_firstname', 'contact_lastname'
-                    ],
-                    'where' => ['ca_id = ?'],
-                    'data'  => [$attachment['dest_address_id']]
+            if (!empty($attachmentsTypes[$attachment['type']]['label'])) {
+                $attachments[$key]['typeLabel'] = $attachmentsTypes[$attachment['type']]['label'];
+            }
+
+            $oldVersions = [];
+            if (!empty($attachment['originId'])) {
+                $oldVersions = AttachmentModel::get([
+                    'select'    => ['res_id as "resId"'],
+                    'where'     => ['(origin_id = ? OR res_id = ?)', 'res_id != ?', 'status not in (?)', 'attachment_type not in (?)'],
+                    'data'      => [$attachment['originId'], $attachment['originId'], $attachment['resId'], ['DEL'], $excludeAttachmentTypes],
+                    'orderBy'   => ['relation DESC']
                 ]);
-                if (!empty($contact[0])) {
-                    $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
-                    $attachments[$key]['contact'] = $contact['contact']['contact'];
-                }
             }
-            if (!empty($attachmentsTypes[$attachment['attachment_type']]['label'])) {
-                $attachments[$key]['typeLabel'] = $attachmentsTypes[$attachment['attachment_type']]['label'];
-            }
+            $attachments[$key]['versions'] = $oldVersions;
         }
 
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
@@ -181,8 +354,6 @@ class AttachmentController
         }
 
         $pathToThumbnail = 'apps/maarch_entreprise/img/noThumbnail.png';
-        $attachmentTodisplay = $attachment[0];
-        $collId = "attachments_coll";
 
         $tnlAdr = AdrModel::getTypedAttachAdrByResId([
             'select'    => ['docserver_id', 'path', 'filename'],
@@ -191,7 +362,7 @@ class AttachmentController
         ]);
 
         if (empty($tnlAdr)) {
-            ConvertThumbnailController::convert(['collId' => $collId, 'resId' => $args['id']]);
+            ConvertThumbnailController::convert(['collId' => 'attachments_coll', 'resId' => $args['id']]);
             
             $tnlAdr = AdrModel::getTypedAttachAdrByResId([
                 'select'    => ['docserver_id', 'path', 'filename'],
@@ -339,7 +510,7 @@ class AttachmentController
         }
 
         if (empty($fileContent)) {
-            $fileContent = file_get_contents($pathToDocument);
+            return $response->withStatus(404)->withJson(['errors' => 'Converted Document not found']);
         }
         if ($fileContent === false) {
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
@@ -444,48 +615,6 @@ class AttachmentController
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
 
         return $response->withJson(['attachmentsTypes' => $attachmentsTypes]);
-    }
-
-    public function delete(Request $request, Response $response, array $args)
-    {
-        if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Route id must be an integer val']);
-        }
-
-        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['origin_id', 'res_id_master', 'attachment_type', 'res_id', 'title', 'typist', 'status']]);
-        if (empty($attachment) || $attachment['status'] == 'DEL') {
-            return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
-        }
-
-        $user = UserModel::getById(['id' => $GLOBALS['id']]);
-        if ($user['user_id'] != $attachment['typist']
-            && !PrivilegeController::hasPrivilege(['privilegeId' => 'manage_attachments', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        }
-
-        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        }
-
-        if (empty($attachment['origin_id'])) {
-            $idToDelete = $attachment['res_id'];
-        } else {
-            $idToDelete = $attachment['origin_id'];
-        }
-        AttachmentModel::delete([
-            'where' => ['res_id = ? or origin_id = ?'],
-            'data'  => [$idToDelete, $idToDelete]
-        ]);
-
-        HistoryController::add([
-            'tableName' => 'res_attachments',
-            'recordId'  => $args['id'],
-            'eventType' => 'DEL',
-            'info'      =>  _DOC_DELETED . " : {$attachment['title']}",
-            'eventId'   => 'attachmentSuppression',
-        ]);
-
-        return $response->withStatus(204);
     }
 
     public static function getEncodedDocument(array $aArgs)
@@ -714,6 +843,18 @@ class AttachmentController
     private static function controlDates(array $args)
     {
         $body = $args['body'];
+
+        if (!empty($body['validationDate'])) {
+            if (!Validator::date()->notEmpty()->validate($body['validationDate'])) {
+                return ['errors' => "Body validationDate is not a date"];
+            }
+        }
+
+        if (!empty($body['effectiveDate'])) {
+            if (!Validator::date()->notEmpty()->validate($body['effectiveDate'])) {
+                return ['errors' => "Body effectiveDate is not a date"];
+            }
+        }
 
         return true;
     }

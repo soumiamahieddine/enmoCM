@@ -29,6 +29,7 @@ export class ActionsService {
     mode: string = 'indexing';
 
     currentResourceLock: any = null;
+    lockMode: boolean = true;
 
     currentAction: any = null;
     currentUserId: number = null;
@@ -116,11 +117,12 @@ export class ActionsService {
     }
 
 
-    launchAction(action: any, userId: number, groupId: number, basketId: number, resIds: number[], datas: any) {
+    launchAction(action: any, userId: number, groupId: number, basketId: number, resIds: number[], datas: any, lockRes: boolean = true) {
         if (this.setActionInformations(action, userId, groupId, basketId, resIds)) {
             this.loading = true;
+            this.lockMode = lockRes;
             this.setResourceInformations(datas);
-            if (this.mode !== 'process') {
+            if (this.lockMode) {
                 this.http.put(`../../rest/resourcesList/users/${userId}/groups/${groupId}/baskets/${basketId}/lock`, { resources: resIds }).pipe(
                     tap((data: any) => {
                         if (this.canExecuteAction(data.lockedResources, data.lockers, resIds)) {
@@ -216,7 +218,7 @@ export class ActionsService {
 
     unlockResourceAfterActionModal(state: string) {
         this.stopRefreshResourceLock();
-        if (state !== 'success' && this.mode !== 'process') {
+        if (state !== 'success' && this.lockMode) {
             this.unlockResource();
         }
     }

@@ -231,7 +231,7 @@ export class ProcessComponent implements OnInit {
     }
 
     onSubmit() {
-        this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations);
+        this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false);
     }
 
     showActionInCurrentCategory(action: any) {

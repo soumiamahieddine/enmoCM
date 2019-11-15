@@ -14,6 +14,7 @@
 
 namespace SrcCore\controllers;
 
+use Firebase\JWT\JWT;
 use SrcCore\models\AuthenticationModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\PasswordModel;
@@ -43,6 +44,14 @@ class AuthenticationController
                 AuthenticationModel::setCookieAuth(['userId' => $cookie['userId']]);
                 $userId = $cookie['userId'];
             }
+        }
+
+        if (!empty($userId)) {
+            UserModel::update([
+                'set'   => ['reset_token' => null],
+                'where' => ['user_id = ?'],
+                'data'  => [$userId]
+            ]);
         }
 
         return $userId;
@@ -117,5 +126,19 @@ class AuthenticationController
         }
 
         return _BAD_LOGIN_OR_PSW;
+    }
+
+    public static function getResetJWT($args = [])
+    {
+        $token = [
+            'exp'   => time() + $args['expirationTime'],
+            'user'  => [
+                'id' => $args['id']
+            ]
+        ];
+
+        $jwt = JWT::encode($token, CoreConfigModel::getEncryptKey());
+
+        return $jwt;
     }
 }

@@ -413,6 +413,18 @@ export class PrivilegeService {
             "label": this.lang.manageOwnAttachmentsInDetails,
             "comment": this.lang.manageOwnAttachmentsInDetails,
             "unit": 'application'
+        },
+        {
+            "id": "view_personal_data",
+            "label": this.lang.viewPersonalData,
+            "comment": this.lang.viewPersonalData,
+            "unit": 'application'
+        },
+        {
+            "id": "manage_personal_data",
+            "label": this.lang.managePersonalData,
+            "comment": this.lang.managePersonalData,
+            "unit": 'application'
         }
     ];
 
@@ -579,7 +591,12 @@ export class PrivilegeService {
     }
 
     getCurrentUserAdministrationsByUnit(unit: string): Array<administration> {
-        return this.administrations.filter(elem => elem.unit === unit).filter(elem => this.headerService.user.privileges.indexOf(elem.id) > -1);
+        if (this.hasCurrentUserPrivilege('view_history') && this.hasCurrentUserPrivilege('view_history_batch')) {
+            return this.administrations.filter(elem => elem.unit === unit).filter(elem => this.headerService.user.privileges.indexOf(elem.id) > -1).filter(priv => priv.id !== 'view_history_batch');
+        } else {
+            return this.administrations.filter(elem => elem.unit === unit).filter(elem => this.headerService.user.privileges.indexOf(elem.id) > -1);
+        }
+        
     }
 
     hasCurrentUserPrivilege(privilegeId: string) {

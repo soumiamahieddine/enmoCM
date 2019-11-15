@@ -71,6 +71,8 @@ import { HistoryWorkflowResumeComponent }                        from './history
 import { NoteResumeComponent }                        from './notes/note-resume/note-resume.component';
 import { AttachmentShowModalComponent }                        from './attachments/attachment-show-modal/attachment-show-modal.component';
 import { AttachmentsResumeComponent }                        from './attachments/attachments-resume/attachments-resume.component';
+import { AttachmentPageComponent }                        from './attachments/attachments-page/attachment-page.component';
+import { AttachmentCreateComponent }                        from './attachments/attachment-create/attachment-create.component';
 import { MailResumeComponent }                        from './mail/mail-resume/mail-resume.component';
 import { AddPrivateIndexingModelModalComponent }                        from './indexation/private-indexing-model/add-private-indexing-model-modal.component';
 import { FoldersService } from './folder/folders.service';
@@ -141,6 +143,8 @@ import { ActionsService } from './actions/actions.service';
         HistoryWorkflowResumeComponent,
         NoteResumeComponent,
         AttachmentsResumeComponent,
+        AttachmentPageComponent,
+        AttachmentCreateComponent,
         AddPrivateIndexingModelModalComponent,
         AttachmentShowModalComponent,
         MailResumeComponent
@@ -169,6 +173,8 @@ import { ActionsService } from './actions/actions.service';
         ViewDocActionComponent,
         FolderUpdateComponent,
         AddPrivateIndexingModelModalComponent,
+        AttachmentPageComponent,
+        AttachmentCreateComponent,
         AttachmentShowModalComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, NotificationService, PrivilegeService ],

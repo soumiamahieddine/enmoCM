@@ -5,14 +5,14 @@
 </ng-container>
 <ng-template #elseTemplate>
     <div class="attachmentsList" *ngFor="let attachment of attachments" (click)="showAttachment(attachment)">
-        <ng-container *ngIf="attachment.update_date !== null; else elseTemplate">
-            <div class="date" [title]="attachment.update_date | fullDate">
-                {{attachment.update_date | timeAgo}}
+        <ng-container *ngIf="attachment.modificationDate !== null; else elseTemplate">
+            <div class="date" [title]="attachment.modificationDate | fullDate">
+                {{attachment.modificationDate | timeAgo}}
             </div>
         </ng-container>
         <ng-template #elseTemplate>
             <div class="date" [title]="attachment.creation_date | fullDate">
-                {{attachment.creation_date | timeAgo}}
+                {{attachment.creationDate | timeAgo}}
             </div>
         </ng-template>
         <div class="info">

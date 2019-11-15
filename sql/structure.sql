@@ -200,6 +200,7 @@ CREATE TABLE usergroups_services
 (
   group_id character varying NOT NULL,
   service_id character varying NOT NULL,
+  parameters jsonb,
   CONSTRAINT usergroups_services_pkey PRIMARY KEY (group_id, service_id)
 )
 WITH (OIDS=FALSE);
@@ -223,6 +224,7 @@ CREATE TABLE users
   loginmode character varying(50) DEFAULT NULL::character varying,
   cookie_key character varying(255) DEFAULT NULL::character varying,
   cookie_date timestamp without time zone,
+  reset_token text,
   failed_authentication INTEGER DEFAULT 0,
   locked_until TIMESTAMP without time zone,
   external_id jsonb DEFAULT '{}',
@@ -252,11 +254,11 @@ CREATE TABLE res_attachments
   format character varying(50) NOT NULL,
   typist character varying(128) NOT NULL,
   creation_date timestamp without time zone NOT NULL,
+  modification_date timestamp without time zone DEFAULT NOW(),
   author character varying(255) DEFAULT NULL::character varying,
   identifier character varying(255) DEFAULT NULL::character varying,
   source character varying(255) DEFAULT NULL::character varying,
   relation bigint,
-  doc_date timestamp without time zone,
   docserver_id character varying(32) NOT NULL,
   path character varying(255) DEFAULT NULL::character varying,
   filename character varying(255) DEFAULT NULL::character varying,
@@ -718,9 +720,9 @@ CREATE TABLE notif_email_stack
   email_stack_sid bigint NOT NULL DEFAULT nextval('notif_email_stack_seq'::regclass),
   sender character varying(255) NOT NULL,
   reply_to character varying(255),
-  recipient character varying(2000) NOT NULL,
-  cc character varying(2000),
-  bcc character varying(2000),
+  recipient text NOT NULL,
+  cc text,
+  bcc text,
   subject character varying(255),
   html_body text,
   text_body text,

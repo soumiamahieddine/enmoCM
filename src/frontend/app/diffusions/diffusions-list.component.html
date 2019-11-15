@@ -41,7 +41,7 @@
                                 class="fa fa-chevron-down"></i></button>
                         <mat-menu #menu="matMenu" [class]="'roleListMenu'">
                             <ng-container *ngFor="let selectRole of availableRoles">
-                                <button mat-menu-item *ngIf="selectRole.canUpdate || (selectRole.id !== 'dest' && target === 'redirect')"
+                                <button mat-menu-item *ngIf="(selectRole.canUpdate && target !== 'redirect')  || (selectRole.id !== 'dest' && target === 'redirect' && selectRole.canUpdate)"
                                     (click)="changeRole(diffusion,role,selectRole)"
                                     style="font-size:13px;">{{selectRole.label}}</button>
                             </ng-container>

@@ -138,8 +138,9 @@ define('_MAX_SIZE_UPLOAD_REACHED', 'Taille maximum de fichier dépassée');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Chemin de la zone de stockage inaccessible');
 define('_BACK_FROM_VACATION', 'de retour de son absence');
 define('_DOC_DISPLAYING', 'Visualisation du document');
-define('_AR_DISPLAYING', 'Visualisation de l\'accusé de réception');
 define('_DOC_ADDED', 'Document ajouté');
+define('_ATTACHMENT_ADDED', 'Pièce jointe ajoutée');
+define('_ATTACHMENT_UPDATED', 'Pièce jointe modifiée');
 define('_ATTACH_DISPLAYING', 'Visualisation de la pièce jointe');
 define('_DOC_DELETED', 'Document supprimé');
 define('_NOTE_ADDED', 'Annotation ajoutée');
@@ -406,3 +407,13 @@ define("_INDEXINGMODEL_MODIFICATION", "Modèle d'enregistrement modifié");
 define("_INDEXINGMODEL_SUPPRESSION", "Modèle d'enregistrement supprimé");
 
 define("_PRIORITY_DELAY_ALREADY_SET", "Ce délai de traitement est déjà défini pour une autre priorité");
+
+define("_NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT", "[Maarch Courrier] Demande de réinitialisation de mot de passe");
+define("_NOTIFICATIONS_FORGOT_PASSWORD_BODY", "Bonjour,<br/>Vous avez demandé à retrouver le mot de passe d'accès à votre compte Maarch Courrier.<br/>Pour modifier votre mot de passe, merci de bien vouloir cliquer sur le lien ci-dessous :<br/><br/>");
+define("_NOTIFICATIONS_FORGOT_PASSWORD_FOOTER", "<br/><br/>Si vous n'êtes pas à l'origine de cette demande, merci d'ignorer ce courriel.<br/>Pour toutes questions, merci de contacter l'administrateur technique de la solution.");
+define("_PASSWORD_REINIT_SENT", "Réinitialisation du mot de passe envoyé");
+define("_PASSWORD_REINIT", "Mot de passe réinitialisé");
+
+define("_NOTIFICATIONS_USER_CREATION_SUBJECT", "[Maarch Courrier] Création de votre compte");
+define("_NOTIFICATIONS_USER_CREATION_BODY", "Bonjour,<br/>Un administrateur a créé votre compte dans l'application Maarch Courrier.<br/>Pour vous connecter et définir votre mot de passe, merci de bien vouloir cliquer sur le lien ci-dessous :<br/><br/>");
+define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/><br/>Ce message est envoyé automatiquement. Merci de ne pas y répondre.<br/>Pour toutes questions, merci de contacter l'administrateur technique de la solution.");

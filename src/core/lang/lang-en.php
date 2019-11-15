@@ -138,8 +138,9 @@ define('_MAX_SIZE_UPLOAD_REACHED', 'File maximum size is exceeded');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Inaccessible Docserver path');
 define('_BACK_FROM_VACATION', 'back from vacation');
 define('_DOC_DISPLAYING', 'Displaying document');
-define('_AR_DISPLAYING', 'Displaying acknowledgement receipt');
 define('_DOC_ADDED', 'Document added');
+define('_ATTACHMENT_ADDED', 'Attachment added');
+define('_ATTACHMENT_UPDATED', 'Attachment updated');
 define('_ATTACH_DISPLAYING', 'Displaying attachment');
 define('_DOC_DELETED', 'Document deleted');
 define('_NOTE_ADDED', 'Note added');
@@ -407,3 +408,13 @@ define("_INDEXINGMODEL_MODIFICATION", "Indexing model modification");
 define("_INDEXINGMODEL_SUPPRESSION", "Indexing model suppression");
 
 define("_PRIORITY_DELAY_ALREADY_SET", "This time limit is already set to another priority");
+
+define("_NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT", "[Maarch Courrier] Reset password informations");
+define("_NOTIFICATIONS_FORGOT_PASSWORD_BODY", "Hello,<br/>You requested to reset the password for your Maarch Courrier account.<br/>To change your password, please click on the link below :<br/>");
+define("_NOTIFICATIONS_FORGOT_PASSWORD_FOOTER", "<br/><br/>If you did not perform this request, you can safely ignore this email.<br/>Please contact your administrator if you have any questions.");
+define("_PASSWORD_REINIT_SENT", "Password reset sent");
+define("_PASSWORD_REINIT", "Password rest");
+
+define("_NOTIFICATIONS_USER_CREATION_SUBJECT", "[Maarch Courrier] Account creation");
+define("_NOTIFICATIONS_USER_CREATION_BODY", "Hello,<br/>an administrator created your account in Maarch Courrier software.<br/>To log in and set your password, please click on the link below :<br/>");
+define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/>Pour toutes questions, merci de contacter l'administrateur technique de la solution.");

@@ -128,29 +128,29 @@ class AdrModel
         return true;
     }
 
-    public static function deleteDocumentAdr(array $aArgs)
+    public static function deleteDocumentAdr(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
-        ValidatorModel::arrayType($aArgs, ['where', 'data']);
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
 
         DatabaseModel::delete([
             'table' => 'adr_letterbox',
-            'where' => $aArgs['where'],
-            'data'  => $aArgs['data']
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;
     }
 
-    public static function deleteAttachAdr(array $aArgs)
+    public static function deleteAttachmentAdr(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
 
         DatabaseModel::delete([
             'table' => 'adr_attachments',
-            'where'     => ['res_id = ?'],
-            'data'      => [$aArgs['resId']]
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;

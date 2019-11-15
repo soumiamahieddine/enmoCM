@@ -39,7 +39,11 @@
         </div>
         <input type="file" #docToUpload name="files[]" (change)="uploadTrigger($event)" style="display:none;">
         <div style="display: block;width:100%;" appUploadFileDragDrop (onFileDropped)="dndUploadFile($event)" [disabled]="!editMode">
-            <div *ngIf="!loading" class="viewer-tools">
+            <div *ngIf="!loading && file.content !== null" class="viewer-tools">
+                <button *ngIf="infoPanel !== null" mat-icon-button (click)="infoPanel.toggle()"
+                    [matTooltip]="lang.informations">
+                    <mat-icon class="fa fa-info-circle"></mat-icon>
+                </button>
                 <button *ngIf="editMode" mat-icon-button (click)="docToUpload.click()"
                     [matTooltip]="lang.uploadAnOtherFile">
                     <mat-icon class="fa fa-file-upload"></mat-icon>
@@ -47,9 +51,9 @@
                 <button mat-icon-button (click)="downloadOriginalFile()" [matTooltip]="lang.downloadOriginalFile">
                     <mat-icon class="fa fa-download"></mat-icon>
                 </button>
-                <!--<button mat-icon-button (click)="printPdf()" matTooltip="Imprimer le pdf">
-                            <mat-icon class="fa fa-print"></mat-icon>
-                        </button>-->
+                <button *ngIf="file.contentView !== undefined" mat-icon-button (click)="openPdfInTab()" matTooltip="Ouvrir dans un nouvel onglet">
+                    <mat-icon class="fas fa-external-link-alt"></mat-icon>
+                </button>
                 <button *ngIf="editMode" mat-icon-button (click)="cleanFile()" [matTooltip]="lang.removeFile">
                     <mat-icon class="fa fa-trash" color="warn"></mat-icon>
                 </button>

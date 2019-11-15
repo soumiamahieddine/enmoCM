@@ -3,6 +3,22 @@
 .mat-card {
     box-shadow: none;
     border: solid 1px #E0E0E0;
+    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.75);
+}
+
+.layout {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #0003;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    .mat-raised-button {
+        width: 200px;
+    }
 }
 
 .infosPj {
@@ -12,6 +28,9 @@
     width: 100%;
     bottom: 0;
     padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
     ::ng-deep.mat-expansion-panel-body {
         padding: 0px;
@@ -22,16 +41,65 @@
     }
 }
 
+.mainInfos {
+    display: block;
+    font-size: 16px;
+    color: #666;
+}
+
 .subInfos {
+    display: block;
+    font-size: 10px;
+    color: $primary;
+}
+
+.stateInfo {
     display: block;
     font-size: 12px;
     color: $primary;
-    font-weight: bold;
+    opacity: 0.5;
+    position: absolute;
+    left: 0px;
+    height: 100%;
+    top: 0px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    font-style: italic;
+    padding-left: 10px;
+}
+
+.statusInfo {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    opacity: 0.5;
+    position: absolute;
+    right: 0px;
+    height: 100%;
+    top: 0px;
+    width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-style: italic;
 }
 
 .subInfosBottom {
+    font-style: italic;
     font-size: 12px;
     color: #666;
+}
+
+.signed {
+    border: solid 1px green;
+    .infosPj {
+        background: green;
+    }
+    .mainInfos, .subInfos, .stateInfo, .statusInfo, .subInfosBottom {
+        color: white;
+    }
 }
 
 .mat-icon {
@@ -46,11 +114,15 @@
     border-bottom-left-radius: 5px;
     background: white;
 
-    .downloadButton, .actionsButton, .versionButton {
+    .downloadButton,
+    .actionsButton,
+    .versionButton {
         font-size: 10px;
     }
 
-    .downloadButton:hover, .downloadButton:active, .downloadButton:focus {
+    .downloadButton:hover,
+    .downloadButton:active,
+    .downloadButton:focus {
         text-decoration: none;
     }
 

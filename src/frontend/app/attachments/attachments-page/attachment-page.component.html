@@ -1,0 +1,84 @@
+<h1 mat-dialog-title>
+    <span style="flex: 1;" [title]="attachment.title">
+        <ng-container *ngIf="attachment.chrono !== null">
+            {{attachment.chrono}} -
+        </ng-container>
+        {{attachment.title | shorten: 50: '...'}}
+    </span>
+    <button [title]="lang.close" mat-icon-button (click)="dialogRef.close();">
+        <mat-icon class="fa fa-times"></mat-icon>
+    </button></h1>
+<mat-dialog-content class="modal-container">
+    <mat-sidenav-container class="maarch-container">
+        <mat-sidenav #snavLeft class="panel-left" [mode]="appService.getViewMode() ? 'over' : 'side'"
+            [fixedInViewport]="appService.getViewMode()" opened autoFocus="false" style="overflow-x:hidden;"
+            [ngStyle]="{'width': appService.getViewMode() ? '95%' : '200px'}">
+            <div class="attachment-form">
+                <mat-form-field>
+                    <input matInput placeholder="{{lang.status}}" [(ngModel)]="attachment.status">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="{{lang.type}}" [(ngModel)]="attachment.typeLabel">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="{{lang.subject}}" [(ngModel)]="attachment.title">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="{{lang.contact}}">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Date de retour attendu">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Date de retour effective">
+                </mat-form-field>
+            </div>
+            <div style="text-align: center;">
+                <button mat-raised-button color="primary" *ngIf="creationMode">Valider</button>
+                <button mat-raised-button color="primary" *ngIf="!creationMode">Modifier</button>
+                <button mat-raised-button color="primary" *ngIf="!creationMode">Nouvelle version</button>
+                <button mat-raised-button color="warn" *ngIf="!creationMode">Supprimer la réponse signée</button>
+            </div>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <mat-tab-group>
+                <mat-tab label="Document principal" *ngIf="attachment.resIdMaster !== null">
+                    <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
+                        [resId]="attachment.resId" [title]="'Document principal'" [infoPanel]="snavLeft">
+                    </app-document-viewer>
+                </mat-tab>
+                <mat-tab *ngIf="!creationMode">
+                    <ng-template mat-tab-label>
+                        <span style="color:green">Pièce jointe signé</span>
+                    </ng-template>
+                    <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
+                        [resId]="attachment.resId" [mode]="'attachment'"
+                        [title]="attachment.chrono + ' - ' + attachment.title" [infoPanel]="snavLeft">
+                    </app-document-viewer>
+                </mat-tab>
+                <mat-tab>
+                    <ng-template mat-tab-label>
+                        <span style="color:#135f7f">Pièce jointe</span>
+                    </ng-template>
+                    <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="true"
+                        [resId]="attachment.resId" [mode]="'attachment'" [infoPanel]="snavLeft">
+                    </app-document-viewer>
+                </mat-tab>
+                <mat-tab label="Pièce jointe (version 1)" *ngIf="!creationMode">
+                    <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
+                        [resId]="attachment.resId" [mode]="'attachment'"
+                        [title]="attachment.chrono + ' - ' + attachment.title" [infoPanel]="snavLeft">
+                    </app-document-viewer>
+                </mat-tab>
+            </mat-tab-group>
+
+
+        </mat-sidenav-content>
+        <mat-sidenav #snav2 [fixedInViewport]="appService.getViewMode()" position='end'
+            [opened]="appService.getViewMode() ? false : false" [mode]="appService.getViewMode() ? 'over' : 'side'"
+            class="panel-right" style="overflow-x:hidden;"
+            [ngStyle]="{'width': appService.getViewMode() ? '80%' : '100px'}" autoFocus="false">
+
+        </mat-sidenav>
+    </mat-sidenav-container>
+</mat-dialog-content>

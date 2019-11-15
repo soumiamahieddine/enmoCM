@@ -19,10 +19,12 @@ use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
-use Entity\models\ListInstanceModel;
-use Group\controllers\PrivilegeController;
+use Email\controllers\EmailController;
 use Entity\models\EntityModel;
+use Entity\models\ListInstanceModel;
 use Entity\models\ListTemplateModel;
+use Firebase\JWT\JWT;
+use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use History\models\HistoryModel;
@@ -34,7 +36,9 @@ use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\AuthenticationController;
 use SrcCore\controllers\PasswordController;
+use SrcCore\controllers\UrlController;
 use SrcCore\models\AuthenticationModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
@@ -101,10 +105,18 @@ class UserController
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'status', 'phone', 'mail', 'initials', 'loginmode', 'external_id']]);
         $user['external_id']        = json_decode($user['external_id'], true);
-        $user['signatures']         = UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']]);
-        $user['emailSignatures']    = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
+
+        if (PrivilegeController::hasPrivilege(['privilegeId' => 'view_personal_data', 'userId' => $GLOBALS['id']])) {
+            $user['signatures'] = UserSignatureModel::getByUserSerialId(['userSerialid' => $aArgs['id']]);
+            $user['emailSignatures'] = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
+        } else {
+            $user['signatures'] = [];
+            $user['emailSignatures'] = [];
+            unset($user['phone']);
+        }
+
         $user['groups']             = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
-        $user['allGroups']          = GroupModel::getAvailableGroupsByUserId(['userId' => $user['user_id']]);
+        $user['allGroups']          = GroupModel::getAvailableGroupsByUserId(['userId' => $user['id']]);
         $user['entities']           = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
         $user['allEntities']        = EntityModel::getAvailableEntitiesForAdministratorByUserId(['userId' => $user['user_id'], 'administratorUserId' => $GLOBALS['userId']]);
         $user['baskets']            = BasketModel::getBasketsByLogin(['login' => $user['user_id']]);
@@ -112,13 +124,8 @@ class UserController
         $user['redirectedBaskets']  = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
         $user['history']            = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['event_type', 'event_date', 'info', 'remote_ip']]);
         $user['canModifyPassword']  = false;
-        $user['canResetPassword']   = true;
         $user['canCreateMaarchParapheurUser'] = false;
 
-        $loggingMethod = CoreConfigModel::getLoggingMethod();
-        if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS) && $user['loginmode'] != 'restMode') {
-            $user['canResetPassword'] = false;
-        }
         if ($user['loginmode'] == 'restMode') {
             $user['canModifyPassword'] = true;
         }
@@ -172,6 +179,10 @@ class UserController
             $data['changePassword']= 'N';
         }
 
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
+            $data['phone'] = null;
+        }
+
         UserModel::create(['user' => $data]);
 
         $newUser = UserModel::getByLogin(['login' => $data['userId']]);
@@ -185,6 +196,25 @@ class UserController
             if ($activeUser[0]['count'] > $userQuota['param_value_int']) {
                 NotificationsEventsController::fillEventStack(['eventId' => 'user_quota', 'tableName' => 'users', 'recordId' => 'quota_exceed', 'userId' => 'superadmin', 'info' => _QUOTA_EXCEEDED]);
             }
+        }
+
+        $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
+        if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'])) {
+            $resetToken = AuthenticationController::getResetJWT(['id' => $newUser['id'], 'expirationTime' => 1209600]); // 14 days
+            UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$newUser['id']]]);
+
+            $url = UrlController::getCoreUrl() . '#/update-password?token=' . $resetToken . '&creation=true';
+            EmailController::createEmail([
+                'userId'    => $newUser['id'],
+                'data'      => [
+                    'sender'        => ['email' => 'Notification'],
+                    'recipients'    => [$newUser['mail']],
+                    'subject'       => _NOTIFICATIONS_USER_CREATION_SUBJECT,
+                    'body'          => _NOTIFICATIONS_USER_CREATION_BODY . $url . _NOTIFICATIONS_USER_CREATION_FOOTER,
+                    'isHtml'        => true,
+                    'status'        => 'WAITING'
+                ]
+            ]);
         }
 
         HistoryController::add([
@@ -219,10 +249,14 @@ class UserController
             'firstname' => $data['firstname'],
             'lastname'  => $data['lastname'],
             'mail'      => $data['mail'],
-            'phone'     => $data['phone'],
             'initials'  => $data['initials'],
             'loginmode' => empty($data['loginmode']) ? 'standard' : $data['loginmode'],
         ];
+
+        if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
+            $set['phone'] = $data['phone'];
+        }
+
         if (!empty($data['status']) && $data['status'] == 'OK') {
             $set['status'] = 'OK';
         }
@@ -510,18 +544,6 @@ class UserController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function resetPassword(Request $request, Response $response, array $aArgs)
-    {
-        $error = $this->hasUsersRights(['id' => $aArgs['id']]);
-        if (!empty($error['error'])) {
-            return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
-        }
-
-        UserModel::resetPassword(['id' => $aArgs['id']]);
-
-        return $response->withJson(['success' => 'success']);
-    }
-
     public function updatePassword(Request $request, Response $response, array $aArgs)
     {
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
@@ -742,6 +764,12 @@ class UserController
         if (!Validator::intVal()->validate($aArgs['id']) || !Validator::intVal()->validate($aArgs['signatureId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
+
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_personal_data', 'userId' => $GLOBALS['id']])
+            && $aArgs['id'] != $GLOBALS['id']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
@@ -777,6 +805,11 @@ class UserController
 
     public function addSignature(Request $request, Response $response, array $aArgs)
     {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])
+            && $aArgs['id'] != $GLOBALS['id']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
@@ -832,6 +865,11 @@ class UserController
 
     public function updateSignature(Request $request, Response $response, array $aArgs)
     {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])
+            && $aArgs['id'] != $GLOBALS['id']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
@@ -856,6 +894,11 @@ class UserController
 
     public function deleteSignature(Request $request, Response $response, array $aArgs)
     {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])
+            && $aArgs['id'] != $GLOBALS['id']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $error = $this->hasUsersRights(['id' => $aArgs['id'], 'himself' => true]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
@@ -928,11 +971,16 @@ class UserController
         if (!$this->checkNeededParameters(['data' => $data, 'needed' => ['groupId']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
+
         $group = GroupModel::getByGroupId(['select' => ['id'], 'groupId' => $data['groupId']]);
+
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         } elseif (UserModel::hasGroup(['id' => $aArgs['id'], 'groupId' => $data['groupId']])) {
             return $response->withStatus(400)->withJson(['errors' => _USER_ALREADY_LINK_GROUP]);
+        }
+        if (!PrivilegeController::canAssignGroup(['userId' => $GLOBALS['id'], 'groupId' => $group['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
         if (empty($data['role'])) {
             $data['role'] = null;
@@ -978,6 +1026,10 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
         }
 
+        if (!PrivilegeController::canAssignGroup(['userId' => $GLOBALS['id'], 'groupId' => $group['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $data = $request->getParams();
         if (empty($data['role'])) {
             $data['role'] = '';
@@ -1007,6 +1059,10 @@ class UserController
         $group = GroupModel::getByGroupId(['select' => ['id'], 'groupId' => $aArgs['groupId']]);
         if (empty($group)) {
             return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
+        }
+
+        if (!PrivilegeController::canAssignGroup(['userId' => $GLOBALS['id'], 'groupId' => $group['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         UserGroupModel::delete(['where' => ['user_id = ?', 'group_id = ?'], 'data' => [$aArgs['id'], $group['id']]]);
@@ -1466,5 +1522,91 @@ class UserController
         }
 
         return true;
+    }
+
+    public function forgotPassword(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::stringType()->notEmpty()->validate($body['login'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body login is empty']);
+        }
+
+        $user = UserModel::getByLogin(['select' => ['id', 'mail'], 'login' => strtolower($body['login'])]);
+        if (empty($user)) {
+            return $response->withStatus(204);
+        }
+
+        $GLOBALS['id'] = $user['id'];
+
+        $resetToken = AuthenticationController::getResetJWT(['id' => $user['id'], 'expirationTime' => 3600]); // 1 hour
+        UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$user['id']]]);
+
+        $url = UrlController::getCoreUrl() . '#/update-password?token=' . $resetToken;
+        EmailController::createEmail([
+            'userId'    => $user['id'],
+            'data'      => [
+                'sender'        => ['email' => 'Notification'],
+                'recipients'    => [$user['mail']],
+                'subject'       => _NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT,
+                'body'          => _NOTIFICATIONS_FORGOT_PASSWORD_BODY . $url . _NOTIFICATIONS_FORGOT_PASSWORD_FOOTER,
+                'isHtml'        => true,
+                'status'        => 'WAITING'
+            ]
+        ]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $body['login'],
+            'eventType'    => 'UP',
+            'eventId'      => 'userModification',
+            'info'         => _PASSWORD_REINIT_SENT
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public static function updateForgottenPassword(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        $check = Validator::stringType()->notEmpty()->validate($body['token']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($body['password']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body token or body password is empty']);
+        }
+
+        try {
+            $jwt = JWT::decode($body['token'], CoreConfigModel::getEncryptKey(), ['HS256']);
+        } catch (\Exception $e) {
+            return $response->withStatus(403)->withJson(['errors' => 'Invalid token', 'lang' => 'invalidToken']);
+        }
+
+        $user = UserModel::getById(['id' => $jwt->user->id, 'select' => ['user_id', 'id', 'reset_token']]);
+        if (empty($user)) {
+            return $response->withStatus(400)->withJson(['errors' => 'User does not exist']);
+        }
+
+        if ($body['token'] != $user['reset_token']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Invalid token', 'lang' => 'invalidToken']);
+        }
+
+        if (!PasswordController::isPasswordValid(['password' => $body['password']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Password does not match security criteria']);
+        }
+
+        UserModel::resetPassword(['password' => $body['password'], 'id'  => $user['id']]);
+
+        $GLOBALS['id'] = $user['id'];
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $user['user_id'],
+            'eventType'    => 'UP',
+            'eventId'      => 'userModification',
+            'info'         => _PASSWORD_REINIT . " {$body['login']}"
+        ]);
+
+        return $response->withStatus(204);
     }
 }

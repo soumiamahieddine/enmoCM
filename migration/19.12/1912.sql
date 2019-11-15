@@ -13,6 +13,9 @@ DROP VIEW IF EXISTS res_view_letterbox;
 DROP VIEW IF EXISTS res_view_attachments;
 DROP VIEW IF EXISTS view_folders;
 
+/*USERS*/
+ALTER TABLE users DROP COLUMN IF EXISTS reset_token;
+ALTER TABLE users ADD COLUMN reset_token text;
 
 /* FULL TEXT */
 DELETE FROM docservers where docserver_type_id = 'FULLTEXT';
@@ -231,8 +234,12 @@ END$$;
 /* ATTACHMENTS */
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS origin_id;
 ALTER TABLE res_attachments ADD COLUMN origin_id INTEGER;
-ALTER TABLE res_attachments DROP COLUMN IF EXISTS modification_date;
-ALTER TABLE res_attachments ADD modification_date timestamp without time zone DEFAULT NOW();
+DO $$ BEGIN
+    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_attachments') AND attname = 'doc_date') THEN
+        ALTER TABLE res_attachments RENAME COLUMN doc_date TO modification_date;
+        ALTER TABLE res_attachments ALTER COLUMN modification_date set DEFAULT NOW();
+    END IF;
+END$$;
 
 
 /* DOCSERVERS */
@@ -428,6 +435,15 @@ FROM usergroups_services WHERE group_id IN (
 DELETE FROM usergroups_services WHERE service_id = 'modify_attachments';
 DELETE FROM usergroups_services WHERE service_id = 'delete_attachments';
 
+ALTER TABLE usergroups_services DROP COLUMN IF EXISTS parameters;
+ALTER TABLE usergroups_services ADD parameters jsonb;
+UPDATE usergroups_services SET parameters = (
+    cast('{"groups": [' || (
+        SELECT string_agg(cast(id AS VARCHAR), ', ' ORDER BY id) FROM usergroups
+    ) || ']}' AS jsonb)
+    )
+WHERE service_id = 'admin_users';
+
 UPDATE listmodels SET title = object_id WHERE title IS NULL;
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)AND', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)and', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
@@ -441,6 +457,9 @@ ALTER TABLE priorities ALTER COLUMN delays SET NOT NULL;
 ALTER TABLE res_letterbox ALTER COLUMN status DROP NOT NULL;
 ALTER TABLE res_letterbox ALTER COLUMN docserver_id DROP NOT NULL;
 ALTER TABLE res_letterbox ALTER COLUMN format DROP NOT NULL;
+ALTER TABLE notif_email_stack ALTER COLUMN recipient TYPE text;
+ALTER TABLE notif_email_stack ALTER COLUMN cc TYPE text;
+ALTER TABLE notif_email_stack ALTER COLUMN bcc TYPE text;
 
 
 /* REFACTORING SUPPRESSION */

@@ -85,14 +85,10 @@ abstract class AttachmentModelAbstract
 
         $aAttachments = DatabaseModel::select([
             'select'    => [
-                'res_id', 'res_attachments.identifier', 'title', 'format', 'creation_date',
-                'doc_date as update_date', 'validation_date as return_date', 'effective_date as real_return_date',
-                'u.firstname as firstname_updated', 'u.lastname as lastname_updated', 'relation', 'docserver_id', 'path',
-                'filename', 'fingerprint', 'filesize', 'label_status as status', 'attachment_type', 'dest_contact_id',
-                'dest_address_id', 'ut.firstname as firstname_typist', 'ut.lastname as lastname_typist', 'in_signature_book', 'in_send_attach'
+                'res_id', 'identifier', 'title', 'creation_date', 'modification_date', 'validation_date as return_date', 'effective_date as real_return_date',
+                'relation', 'status', 'attachment_type', 'in_signature_book', 'in_send_attach'
             ],
-            'table'     => ['res_attachments', 'users ut', 'status', 'users u'],
-            'left_join' => ['res_attachments.typist = ut.user_id', 'res_attachments.status = status.id', 'res_attachments.updated_by = u.user_id'],
+            'table'     => ['res_attachments'],
             'where'     => ['res_id_master = ?', 'res_attachments.status not in (?)', 'attachment_type not in (?)', '((res_attachments.status = ? AND typist = ?) OR res_attachments.status != ?)'],
             'data'      => [$aArgs['resId'], ['OBS', 'DEL'], $aArgs['excludeAttachmentTypes'], 'TMP', $aArgs['login'], 'TMP'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],

@@ -95,26 +95,26 @@
                                     <ng-template #elseTemplate>
                                         <mat-list-item *ngFor="let fakePrivilege of unit.services" color="primary"
                                             style="font-size: 16px;">
-                                            {{fakePrivilege.label}}
+                                            <span [innerHTML]="fakePrivilege.label"></span>
                                             <mat-form-field
                                                 style="width: 250px !important;padding-left: 10px;padding-right: 10px;">
-                                                <mat-select [(ngModel)]="fakePrivilege.current" (selectionChange)="changeDifflistPrivilege($event, fakePrivilege.id)">
+                                                <mat-select [(ngModel)]="fakePrivilege.current"
+                                                    (selectionChange)="changeDifflistPrivilege($event, fakePrivilege.id)">
                                                     <mat-option value="">{{lang.noRole}}</mat-option>
                                                     <mat-option *ngFor="let subservice of fakePrivilege.services"
                                                         [value]="subservice.id">{{subservice.label}}</mat-option>
                                                 </mat-select>
-                                            </mat-form-field> {{fakePrivilege.label2}}
+                                            </mat-form-field>.
                                         </mat-list-item>
                                     </ng-template>
-
-
                                 </mat-expansion-panel>
                             </mat-tab>
                         </mat-tab-group>
                     </mat-tab>
                     <mat-tab label="{{lang.indexation}}" *ngIf="!creationMode">
                         <ng-template matTabContent>
-                            <app-indexing-administration [groupId]="group.id" (resfreshShortcut)="resfreshShortcut()"></app-indexing-administration>
+                            <app-indexing-administration [groupId]="group.id" (resfreshShortcut)="resfreshShortcut()">
+                            </app-indexing-administration>
                         </ng-template>
                     </mat-tab>
                     <mat-tab label="{{lang.relatedUsers}}" *ngIf="!creationMode">

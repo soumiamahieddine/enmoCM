@@ -92,7 +92,7 @@ export class ActionsListComponent implements OnInit {
             this.currentResource = row;
         }
 
-        this.actionService.launchAction(action, this.currentBasketInfo.ownerId, this.currentBasketInfo.groupId, this.currentBasketInfo.basketId, this.selectedRes, this.currentResource);
+        this.actionService.launchAction(action, this.currentBasketInfo.ownerId, this.currentBasketInfo.groupId, this.currentBasketInfo.basketId, this.selectedRes, this.currentResource, true);
 
     }
 

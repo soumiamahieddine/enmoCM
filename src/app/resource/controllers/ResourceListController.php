@@ -22,7 +22,6 @@ use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
 use Contact\models\ContactModel;
-use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Folder\models\FolderModel;
@@ -1221,6 +1220,19 @@ class ResourceListController
             ];
         }
 
+        usort($entities, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
+
+        usort($priorities, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
+
+        usort($categories, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
+
+        usort($statuses, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
+
+        usort($entitiesChildren, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
+
+        usort($docTypes, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
+
+
         return [
             'entities' => $entities,
             'priorities' => $priorities,
@@ -1229,5 +1241,15 @@ class ResourceListController
             'entitiesChildren' => $entitiesChildren,
             'doctypes' => $docTypes
         ];
+    }
+
+    private static function compareSortOnLabel($a, $b)
+    {
+        if (strtolower($a['label']) < strtolower($b['label'])) {
+            return -1;
+        } elseif (strtolower($a['label']) > strtolower($b['label'])) {
+            return 1;
+        }
+        return 0;
     }
 }

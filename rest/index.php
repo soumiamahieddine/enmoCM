@@ -30,7 +30,7 @@ $app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRo
 
 //Authentication
 $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
-    $routesWithoutAuthentication = ['GET/jnlp/{jnlpUniqueId}'];
+    $routesWithoutAuthentication = ['GET/jnlp/{jnlpUniqueId}', 'POST/password', 'PUT/password'];
     $route = $request->getAttribute('route');
     $currentMethod = empty($route) ? '' : $route->getMethods()[0];
     $currentRoute = empty($route) ? '' : $route->getPattern();
@@ -66,12 +66,14 @@ $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':de
 
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');
+$app->get('/attachments/{id}', \Attachment\controllers\AttachmentController::class . ':getById');
+$app->put('/attachments/{id}', \Attachment\controllers\AttachmentController::class . ':update');
+$app->delete('/attachments/{id}', \Attachment\controllers\AttachmentController::class . ':delete');
 $app->get('/attachments/{id}/content', \Attachment\controllers\AttachmentController::class . ':getFileContent');
 $app->get('/attachments/{id}/originalContent', \Attachment\controllers\AttachmentController::class . ':getOriginalFileContent');
 $app->get('/attachments/{id}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
 $app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\AttachmentController::class . ':setInSendAttachment');
 $app->get('/attachmentsTypes', \Attachment\controllers\AttachmentController::class . ':getAttachmentsTypes');
-$app->delete('/attachments/{id}', \Attachment\controllers\AttachmentController::class . ':delete');
 
 //AutoComplete
 $app->get('/autocomplete/contacts', \SrcCore\controllers\AutoCompleteController::class . ':getContacts');
@@ -217,6 +219,7 @@ $app->put('/groups/{id}/indexing', \Group\controllers\GroupController::class . '
 $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupController::class . ':reassignUsers');
 $app->post('/groups/{id}/privileges/{privilegeId}', \Group\controllers\PrivilegeController::class . ':addPrivilege');
 $app->delete('/groups/{id}/privileges/{privilegeId}', \Group\controllers\PrivilegeController::class . ':removePrivilege');
+$app->put('/groups/{id}/privileges/{privilegeId}/parameters', \Group\controllers\PrivilegeController::class . ':updatePrivilegeParameters');
 
 //Histories
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
@@ -321,6 +324,7 @@ $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::c
 $app->get('/resources/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getByResId');
 $app->get('/resources/{resId}/emails', \Email\controllers\EmailController::class . ':getByResId');
 $app->get('/resources/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
+$app->get('/resources/{resId}/templates', \Template\controllers\TemplateController::class . ':getByResId');
 $app->get('/res/{resId}/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
@@ -397,7 +401,6 @@ $app->delete('/users/{id}', \User\controllers\UserController::class . ':delete')
 $app->put('/users/{id}/suspend', \User\controllers\UserController::class . ':suspend');
 $app->get('/users/{id}/isDeletable', \User\controllers\UserController::class . ':isDeletable');
 $app->get('/users/{id}/details', \User\controllers\UserController::class . ':getDetailledById');
-$app->post('/users/{id}/password', \User\controllers\UserController::class . ':resetPassword');
 $app->put('/users/{id}/password', \User\controllers\UserController::class . ':updatePassword');
 $app->get('/users/{userId}/status', \User\controllers\UserController::class . ':getStatusByUserId');
 $app->put('/users/{id}/status', \User\controllers\UserController::class . ':updateStatus');
@@ -422,6 +425,8 @@ $app->delete('/users/{id}/signatures/{signatureId}', \User\controllers\UserContr
 $app->post('/users/{id}/redirectedBaskets', \User\controllers\UserController::class . ':setRedirectedBaskets');
 $app->delete('/users/{id}/redirectedBaskets', \User\controllers\UserController::class . ':deleteRedirectedBasket');
 $app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':updateBasketsDisplay');
+$app->post('/password', \User\controllers\UserController::class . ':forgotPassword');
+$app->put('/password', \User\controllers\UserController::class . ':updateForgottenPassword');
 
 //VersionsUpdate
 $app->get('/versionsUpdate', \VersionUpdate\controllers\VersionUpdateController::class . ':get');

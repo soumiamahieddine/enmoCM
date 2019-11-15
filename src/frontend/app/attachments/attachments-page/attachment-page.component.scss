@@ -1,0 +1,18 @@
+@import "../../../css/vars.scss";
+
+.mat-dialog-title {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+.modal-container{
+    overflow: auto;
+}
+
+.mat-dialog-content {
+    height:100%;
+}
+
+.attachment-form {
+    padding: 10px;
+}

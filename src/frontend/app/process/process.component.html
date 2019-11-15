@@ -203,7 +203,7 @@
         <div class="document-container" [class.fullContainer]="appService.getViewMode()">
             <div class="content">
                 <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
-                    [resId]="currentResourceInformations.resId">
+                    [resId]="currentResourceInformations.resId" [title]="currentResourceInformations.chrono + ' - ' + currentResourceInformations.subject">
                 </app-document-viewer>
             </div>
         </div>

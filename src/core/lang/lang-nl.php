@@ -139,6 +139,8 @@ define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Opslagruimtepad ontoegankelijk');
 define('_BACK_FROM_VACATION', 'bij terugkeer na afwezigheid');
 define('_DOC_DISPLAYING', 'Weergave van het document');
 define('_DOC_ADDED', 'Document toegevoegd');
+define('_ATTACHMENT_ADDED', 'Attachment added');//TRANSLATE
+define('_ATTACHMENT_UPDATED', 'Attachment updated');//TRANSLATE
 define('_ATTACH_DISPLAYING', 'Weergave van de bijlage');
 define('_DOC_DELETED', 'Document deleted');//TRANSLATE
 define('_NOTE_ADDED', 'note added _TO_TRANSLATE');
@@ -349,7 +351,6 @@ define('_SIGNATURES_SEND_TO_MAARCHPARAPHEUR', 'Signatures send to Maarch Paraphe
 define('_CREATE_ACKNOWLEDGEMENT_RECEIPT', 'Generate and send acknowledgement receipt_TO_TRANSLATE');
 define('_UPDATE_ACKNOWLEDGEMENT_SEND_DATE', 'Complete acknowledgement send date_TO_TRANSLATE');
 
-define('_AR_DISPLAYING', 'Displaying acknowledgement receipt_TO_TRANSLATE');
 
 define('_M2M_ACTION_DONE', 'in werking gesteld door');
 define('_M2M_ENTITY_DESTINATION', 'De brief is in de dienst');
@@ -412,3 +413,17 @@ define("_INDEXINGMODEL_MODIFICATION", "Indexing model modification_TO_TRANSLATE"
 define("_INDEXINGMODEL_SUPPRESSION", "Indexing model suppression_TO_TRANSLATE");
 
 define("_PRIORITY_DELAY_ALREADY_SET", "Ce délai de traitement est déjà paramétré pour une autre priorité_TO_TRANSLATE");
+
+define("_NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT", "[Maarch Courrier] Reset password informations_TO_TRANSLATE");
+define("_NOTIFICATIONS_FORGOT_PASSWORD_BODY", "Hello,<br/>You requested to reset the password for your Maarch Courrier account.<br/>To change your password, please click on the link below :<br/>_TO_TRANSLATE");
+define("_NOTIFICATIONS_FORGOT_PASSWORD_FOOTER", "<br/><br/>If you did not perform this request, you can safely ignore this email.<br/>Please contact your administrator if you have any questions._TO_TRANSLATE");
+define("_PASSWORD_REINIT_SENT", "Password reset sent_TO_TRANSLATE");
+define("_PASSWORD_REINIT", "Password rest_TO_TRANSLATE");
+
+define("_NOTIFICATIONS_USER_CREATION_SUBJECT", "[Maarch Courrier] Création de compte_TO_TRANSLATE");
+define("_NOTIFICATIONS_USER_CREATION_BODY", "Bonjour,<br/>un administrateur a créé votre compte dans l'application Maarch Courrier.<br/>Pour vous connecter et définir votre mot de passe, cliquer sur le lien ci-dessous :<br/>_TO_TRANSLATE");
+define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/>Pour toutes questions, merci de contacter l'administrateur technique de la solution._TO_TRANSLATE");
+
+define("_NOTIFICATIONS_USER_CREATION_SUBJECT", "[Maarch Courrier] Account creation_TO_TRANSLATE");
+define("_NOTIFICATIONS_USER_CREATION_BODY", "Hello,<br/>an administrator created your account in Maarch Courrier software.<br/>To log in and set your password, please click on the link below :<br/>_TO_TRANSLATE");
+define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/>Pour toutes questions, merci de contacter l'administrateur technique de la solution._TO_TRANSLATE");

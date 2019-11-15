@@ -18,6 +18,8 @@ use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
+use Resource\controllers\ResController;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -27,6 +29,7 @@ use Template\models\TemplateAssociationModel;
 use Template\models\TemplateModel;
 use Attachment\models\AttachmentModel;
 use Entity\models\EntityModel;
+use User\models\UserModel;
 
 class TemplateController
 {
@@ -218,10 +221,10 @@ class TemplateController
             if (!empty($data['jnlpUniqueId'])) {
                 if (!empty($data['template_style'])) {
                     $explodeStyle = explode(':', $data['template_style']);
-                    $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[0]);
+                    $fileOnTmp = "tmp_file_{$GLOBALS['id']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[0]);
                 } elseif (!empty($data['template_file_name'])) {
                     $explodeStyle = explode('.', $data['template_file_name']);
-                    $fileOnTmp = "tmp_file_{$GLOBALS['userId']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[count($explodeStyle) - 1]);
+                    $fileOnTmp = "tmp_file_{$GLOBALS['id']}_{$data['jnlpUniqueId']}." . strtolower($explodeStyle[count($explodeStyle) - 1]);
                 }
             } else {
                 if (empty($data['uploadedFile']['base64']) || empty($data['uploadedFile']['name'])) {
@@ -378,6 +381,60 @@ class TemplateController
             'datasources'     => TemplateModel::getDatasources(),
             'entities'        => $entities,
         ]);
+    }
+
+    public function getByResId(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
+        }
+        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['destination']]);
+        if (!empty($resource['destination'])) {
+            $entities = [$resource['destination']];
+        } else {
+            $entities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
+            $entities = array_column($entities, 'entity_id');
+            if (empty($entities)) {
+                $entities = [0];
+            }
+        }
+        $where = ['(templates_association.value_field in (?) OR templates_association.template_id IS NULL)', 'templates.template_type = ?', 'templates.template_target = ?'];
+        $data = [$entities, 'OFFICE', 'attachments'];
+
+        $queryParams = $request->getQueryParams();
+
+        if (!empty($queryParams['attachmentType'])) {
+            $where[] = 'templates.template_attachment_type in (?)';
+            $data[] = explode(',', $queryParams['attachmentType']);
+        }
+        
+        $templates = TemplateModel::getWithAssociation([
+            'select'    => ['DISTINCT(templates.template_id)', 'templates.template_label', 'templates.template_file_name', 'templates.template_path', 'templates.template_attachment_type'],
+            'where'     => $where,
+            'data'      => $data,
+            'orderBy'   => ['templates.template_label']
+        ]);
+
+        $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
+        foreach ($templates as $key => $template) {
+            $explodeFile = explode('.', $template['template_file_name']);
+            $ext = $explodeFile[count($explodeFile) - 1];
+            $exists = is_file($docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name']);
+
+            $templates[$key] = [
+                'id'                => $template['template_id'],
+                'label'             => $template['template_label'],
+                'extension'         => $ext,
+                'exists'            => $exists,
+                'attachmentType'    => $template['template_attachment_type']
+            ];
+        }
+
+        return $response->withJson(['templates' => $templates]);
     }
 
     private static function checkData(array $aArgs)
