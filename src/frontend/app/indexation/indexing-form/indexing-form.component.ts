@@ -262,21 +262,37 @@ export class IndexingFormComponent implements OnInit {
             arrIndexingModels = arrIndexingModels.concat(this['indexingModels_' + category]);
         });
         arrIndexingModels.forEach(element => {
-            if (element.today === true) {
-                if (!this.adminMode) {
-                    element.default_value = new Date();
+
+            if (element.type === 'date' && this.arrFormControl[element.identifier].value !== null) {
+                
+                if (element.today === true) {
+                    if (!this.adminMode) {
+                        const now = new Date();
+                        element.default_value = ('00' + now.getDate()).slice(-2) + '-' + ('00' + (now.getMonth() + 1)).slice(-2) + '-' + now.getFullYear();
+                    } else {
+                        element.default_value = '_TODAY';
+                    }
                 } else {
-                    element.default_value = '_TODAY';
-                }
+                    let day = this.arrFormControl[element.identifier].value.getDate();
+                    let month = this.arrFormControl[element.identifier].value.getMonth() + 1;
+                    let year = this.arrFormControl[element.identifier].value.getFullYear();
+                    if (element.identifier === 'processLimitDate') {
+                        element.default_value = ('00' + day).slice(-2) + '-' + ('00' + month).slice(-2) + '-' + year + ' 23:59:59';
+                    } else {
+                        element.default_value = ('00' + day).slice(-2) + '-' + ('00' + month).slice(-2) + '-' + year;
+                    }
+                }   
             } else {
                 element.default_value = this.arrFormControl[element.identifier].value;
             }
+
             if (element.identifier === "destination" && !this.adminMode) {
                 arrIndexingModels.push({
-                    identifier : 'diffusionList',
-                    default_value : this.arrFormControl['diffusionList'].value
+                    identifier: 'diffusionList',
+                    default_value: this.arrFormControl['diffusionList'].value
                 });
             }
+
         });
 
         if (!this.adminMode) {
@@ -352,7 +368,7 @@ export class IndexingFormComponent implements OnInit {
                                 if (this['indexingModels_' + element].filter((field: any) => field.identifier === 'departureDate').length > 0) {
                                     elem.endDate = 'departureDate';
                                 }
-                            });                            
+                            });
 
                         } else if (elem.identifier === 'destination') {
                             if (this.adminMode) {
@@ -674,7 +690,7 @@ export class IndexingFormComponent implements OnInit {
             if (field.mandatory) {
                 valArr.push(Validators.required);
             }
-            
+
             this.arrFormControl['diffusionList'] = new FormControl({ value: null, disabled: false });
 
             this.arrFormControl['diffusionList'].setValidators(valArr);
