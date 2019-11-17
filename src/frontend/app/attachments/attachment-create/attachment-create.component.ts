@@ -169,4 +169,8 @@ export class AttachmentCreateComponent implements OnInit {
         this.attachments.splice(i,1);
         this.attachFormGroup.splice(i,1);
     }
+
+    getAttachType(attachType: any, i: number) {
+        this.appDocumentViewer.toArray()[i].loadTemplatesByResId(this.data.resIdMaster, attachType);
+    }
 }

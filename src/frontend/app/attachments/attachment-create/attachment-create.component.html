@@ -14,7 +14,7 @@
                     <div class="attachment-form" *ngIf="!loading">
                         <div class="attachment-form-item">
                             <plugin-select-search [label]="lang.type" [placeholderLabel]="lang.type"
-                                [formControlSelect]="attachment['type']" [datas]="attachmentsTypes" style="width:100%;">
+                                [formControlSelect]="attachment['type']" [datas]="attachmentsTypes" (afterSelected)="getAttachType($event, i)" style="width:100%;">
                             </plugin-select-search>
                         </div>
                         <div class="attachment-form-item">

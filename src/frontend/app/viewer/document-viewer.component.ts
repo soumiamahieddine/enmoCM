@@ -11,6 +11,7 @@ import { MatDialogRef, MatDialog, MatSidenav } from '@angular/material';
 import { AlertComponent } from '../../plugins/modal/alert.component';
 import { SortPipe } from '../../plugins/sorting.pipe';
 import { templateVisitAll } from '@angular/compiler';
+import { PluginSelectSearchComponent } from '../../plugins/select-search/select-search.component';
 
 
 @Component({
@@ -71,6 +72,8 @@ export class DocumentViewerComponent implements OnInit {
     };
 
     dialogRef: MatDialogRef<any>;
+
+    @ViewChild('templateList', { static: true }) templateList: PluginSelectSearchComponent;
 
     constructor(
         public http: HttpClient,
@@ -525,6 +528,56 @@ export class DocumentViewerComponent implements OnInit {
 
     isEditingTemplate() {
         return this.editInProgress;
+    }
+
+    loadTemplatesByResId(resId: number, attachType: string) {
+        let arrValues: any[] = [];
+        let arrTypes: any = [];
+        this.listTemplates = [];
+        this.http.get('../../rest/attachmentsTypes').pipe(
+            tap((data: any) => {
+                arrTypes.push({
+                    id: 'all',
+                    label: this.lang.others
+                });
+                Object.keys(data.attachmentsTypes).forEach(templateType => {
+                    arrTypes.push({
+                        id: templateType,
+                        label: data.attachmentsTypes[templateType].label
+                    });
+                    arrTypes = this.sortPipe.transform(arrTypes, 'label');
+                });
+            }),
+            exhaustMap(() => this.http.get(`../../rest/resources/${resId}/templates?attachmentType=${attachType},all`)),
+            tap((data: any) => {
+                this.listTemplates = data.templates;
+
+                arrTypes = arrTypes.filter((type: any) => data.templates.map((template: any) => template.attachmentType).indexOf(type.id) > -1);
+
+                arrTypes.forEach((arrType: any) => {
+                    arrValues.push({
+                        id: arrType.id,
+                        label: arrType.label,
+                        title: arrType.label,
+                        disabled: true,
+                        isTitle: true,
+                        color: '#135f7f'
+                    });
+                    data.templates.filter((template: any) => template.attachmentType === arrType.id).forEach((template: any) => {
+                        arrValues.push({
+                            id: template.id,
+                            label: '&nbsp;&nbsp;&nbsp;&nbsp;' + template.label,
+                            title: template.exists ? template.label : this.lang.fileDoesNotExists,
+                            extension: template.extension,
+                            disabled: !template.exists,
+                        });
+                    });
+                });
+
+                this.listTemplates = arrValues;
+            })
+
+        ).subscribe();
     }
 
     loadTemplates() {
