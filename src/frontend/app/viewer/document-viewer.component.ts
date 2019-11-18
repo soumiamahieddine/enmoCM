@@ -540,17 +540,19 @@ export class DocumentViewerComponent implements OnInit {
         this.listTemplates = [];
         this.http.get('../../rest/attachmentsTypes').pipe(
             tap((data: any) => {
-                arrTypes.push({
-                    id: 'all',
-                    label: this.lang.others
-                });
+                
                 Object.keys(data.attachmentsTypes).forEach(templateType => {
                     arrTypes.push({
                         id: templateType,
                         label: data.attachmentsTypes[templateType].label
                     });
-                    arrTypes = this.sortPipe.transform(arrTypes, 'label');
                 });
+                arrTypes = this.sortPipe.transform(arrTypes, 'label');
+                arrTypes.push({
+                    id: 'all',
+                    label: this.lang.others
+                });
+
             }),
             exhaustMap(() => this.http.get(`../../rest/resources/${resId}/templates?attachmentType=${attachType},all`)),
             tap((data: any) => {
