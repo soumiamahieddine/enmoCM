@@ -270,7 +270,13 @@ class MergeController
                 'orderBy'   => ['value']
             ]);
             foreach ($customs as $custom) {
-                $customField[$custom['custom_field_id']] = $custom['value'];
+                $decoded = json_decode($custom['value']);
+
+                if (is_array($decoded)) {
+                    $customField[$custom['custom_field_id']] = implode("\n", $decoded);
+                } else {
+                    $customField[$custom['custom_field_id']] = $decoded;
+                }
             }
         } else {
             if (!empty($args['customFields'])) {
