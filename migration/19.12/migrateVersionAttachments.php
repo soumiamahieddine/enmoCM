@@ -67,6 +67,12 @@ foreach ($customs as $custom) {
 
         $newResId = \Attachment\models\AttachmentModel::create($attachmentInfo);
 
+        if ($attachmentInfo['fingerprint'] == 1) {
+            echo "Le document avec res_version_attachments.res_id = " . $oldResId
+                . " (nouveau res_id : res_attachment.res_id = " . $newResId . ") n'a pas été trouvé sur le docserver (path = '" . $pathToDocument . "')"
+                . ", le fingerprint du document est assigné à 1";
+        }
+
         migrateOrigin(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateAdrVersionAttachments(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateHistoryVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
