@@ -87,11 +87,11 @@ class AttachmentController
             'id'        => $args['id'],
             'select'    => [
                 'res_id_master', 'status', 'title', 'identifier as chrono', 'relation', 'attachment_type as type',
-                'origin_id as "originId"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"',
+                'origin_id as "originId"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"', 'validation_date as "validationDate"',
                 'fulltext_result as "fulltextResult"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
             ]
         ]);
-        if (empty($attachment) || !in_array($attachment['status'], ['A_TRA', 'TRA'])) {
+        if (empty($attachment) || !in_array($attachment['status'], ['A_TRA', 'TRA', 'SIGN'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
         }
 
@@ -511,7 +511,7 @@ class AttachmentController
         }
 
         if (empty($fileContent)) {
-            return $response->withStatus(404)->withJson(['errors' => 'Converted Document not found']);
+            $fileContent = file_get_contents($pathToDocument);
         }
         if ($fileContent === false) {
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
