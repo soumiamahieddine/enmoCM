@@ -274,7 +274,6 @@ CREATE TABLE res_attachments
   priority character varying(16),
   initiator character varying(50) DEFAULT NULL::character varying,
   dest_user character varying(128) DEFAULT NULL::character varying,
-  coll_id character varying(32) NOT NULL,
   res_id_master bigint,
   origin_id INTEGER,
   attachment_type character varying(255) DEFAULT NULL::character varying,
