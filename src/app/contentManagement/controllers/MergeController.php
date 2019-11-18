@@ -255,6 +255,18 @@ class MergeController
             'time'  => date('H:i')
         ];
 
+        // Custom fields
+        $customFields = [];
+        if (!empty($args['customFields'])) {
+            foreach ($args['customFields'] as $key => $customField) {
+                if (is_array($customField)) {
+                    $customFields[$key] .= implode("\n", $customField);
+                } else {
+                    $customFields[$key] .= $customField;
+                }
+            }
+        }
+
         $dataToBeMerge['res_letterbox']     = $resource;
         $dataToBeMerge['initiator']         = empty($initiator) ? [] : $initiator;
         $dataToBeMerge['parentInitiator']   = empty($parentInitiator) ? [] : $parentInitiator;
@@ -269,6 +281,7 @@ class MergeController
         $dataToBeMerge['contact']           = [];
         $dataToBeMerge['notes']             = $mergedNote;
         $dataToBeMerge['datetime']          = $datetime;
+        $dataToBeMerge['custom']            = $customFields;
 
         return $dataToBeMerge;
     }
