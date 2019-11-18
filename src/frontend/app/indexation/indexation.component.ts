@@ -58,8 +58,6 @@ export class IndexationComponent implements OnInit {
 
     subscription: Subscription;
 
-    test: any = 'toto';
-
     constructor(
         private route: ActivatedRoute,
         private _activatedRoute: ActivatedRoute,
