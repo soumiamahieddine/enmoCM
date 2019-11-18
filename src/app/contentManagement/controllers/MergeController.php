@@ -16,6 +16,7 @@ namespace ContentManagement\controllers;
 
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
+use CustomField\models\ResourceCustomFieldModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
@@ -68,8 +69,18 @@ class MergeController
 
         $dataToBeMerge = MergeController::getDataForMerge($args['data']);
 
-        foreach ($dataToBeMerge as $key => $value) {
-            $tbs->MergeField($key, $value);
+        $pages = 1;
+        if ($extension == 'xlsx') {
+            $pages = $tbs->PlugIn(OPENTBS_COUNT_SHEETS);
+        }
+
+        for ($i = 0; $i < $pages; ++$i) {
+            if ($extension == 'xlsx') {
+                $tbs->PlugIn(OPENTBS_SELECT_SHEET, $i + 1);
+            }
+            foreach ($dataToBeMerge as $key => $value) {
+                $tbs->MergeField($key, $value);
+            }
         }
 
         if (in_array($extension, MergeController::OFFICE_EXTENSIONS)) {
@@ -251,12 +262,30 @@ class MergeController
 
         //CustomFields
         $customFields = [];
-        if (!empty($args['customFields'])) {
-            foreach ($args['customFields'] as $key => $customField) {
-                if (is_array($customField)) {
-                    $customFields[$key] = implode("\n", $customField);
+        if (!empty($args['resId'])) {
+            $customs = ResourceCustomFieldModel::get([
+                'select'    => ['custom_field_id, value'],
+                'where'     => ['res_id = ?'],
+                'data'      => [$args['resId']],
+                'orderBy'   => ['value']
+            ]);
+            foreach ($customs as $custom) {
+                $decoded = json_decode($custom['value']);
+
+                if (is_array($decoded)) {
+                    $customField[$custom['custom_field_id']] = implode("\n", $decoded);
                 } else {
-                    $customFields[$key] = $customField;
+                    $customField[$custom['custom_field_id']] = $decoded;
+                }
+            }
+        } else {
+            if (!empty($args['customFields'])) {
+                foreach ($args['customFields'] as $key => $customField) {
+                    if (is_array($customField)) {
+                        $customFields[$key] = implode("\n", $customField);
+                    } else {
+                        $customFields[$key] = $customField;
+                    }
                 }
             }
         }

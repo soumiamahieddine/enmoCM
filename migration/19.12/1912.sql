@@ -529,6 +529,21 @@ ALTER TABLE listinstance DROP COLUMN IF EXISTS visible;
 ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_entity;
 ALTER TABLE usergroup_content DROP COLUMN IF EXISTS primary_group;
 ALTER TABLE emails ALTER COLUMN document type jsonb;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS subject;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS description;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS type_id;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS author;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS source;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS folders_system_id;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS offset_doc;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS destination;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS priotity;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS initiator;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_multicontacts;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_multi_docservers;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_path;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_filename;
+
 
 /* M2M */
 DO $$ BEGIN

@@ -1317,4 +1317,7 @@ export const LANG_FR = {
     "logInOncePasswordChanged": "Vous serez amené à vous connecter une fois la modification du mot de passe effectuée.",
     "samePassword" : "Les mots de passe sont identiques",
     "sending" : "Envoi...",
+    "newVersion" : "Nouvelle version",
+    "deleteSignedVersion" : "Supprimer la version signée",
+    "signedAttachment" : "Pièce jointe signée",
 };

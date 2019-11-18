@@ -830,11 +830,13 @@ class AttachmentController
             if (!Validator::intVal()->notEmpty()->validate($body['originId'])) {
                 return ['errors' => 'Body originId is not an integer'];
             }
-            $origin = AttachmentModel::getById(['id' => $body['originId'], 'select' => ['res_id_master']]);
+            $origin = AttachmentModel::getById(['id' => $body['originId'], 'select' => ['res_id_master', 'origin_id']]);
             if (empty($origin)) {
                 return ['errors' => 'Body originId does not exist'];
             } elseif ($origin['res_id_master'] != $body['resIdMaster']) {
                 return ['errors' => 'Body resIdMaster is different from origin'];
+            } elseif (!empty($origin['origin_id'])) {
+                return ['errors' => 'Body originId can not be a version, it must be the original version'];
             }
         }
 

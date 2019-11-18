@@ -1280,4 +1280,7 @@ export const LANG_EN = {
     "logInOncePasswordChanged": "You will be asked to log in once the password has been changed.",
     "samePassword" : "Passwords match",
     "sending" : "Sending...",
+    "newVersion" : "New version",
+    "deleteSignedVersion" : "Delete signed version",
+    "signedAttachment" : "Signed attachment",
 };

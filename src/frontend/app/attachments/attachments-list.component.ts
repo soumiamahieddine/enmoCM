@@ -97,7 +97,7 @@ export class AttachmentsListComponent implements OnInit {
     setInSignatureBook(attachment: any) {
         this.http.put("../../rest/attachments/" + attachment.resId + "/inSignatureBook", {})
             .subscribe(() => {
-                attachment.in_signature_book = !attachment.in_signature_book;
+                attachment.inSignatureBook = !attachment.inSignatureBook;
                 this.notify.success(this.lang.actionDone);
             }, (err: any) => {
                 this.notify.error(err.error.errors);
@@ -107,7 +107,7 @@ export class AttachmentsListComponent implements OnInit {
     setInSendAttachment(attachment: any) {
         this.http.put("../../rest/attachments/" + attachment.resId + "/inSendAttachment", {})
             .subscribe(() => {
-                attachment.in_send_attach = !attachment.in_send_attach;
+                attachment.inSendAttach = !attachment.inSendAttach;
                 this.notify.success(this.lang.actionDone);
             }, (err: any) => {
                 this.notify.error(err.error.errors);
@@ -128,7 +128,18 @@ export class AttachmentsListComponent implements OnInit {
     }
 
     showAttachment(attachment: any) {
-        this.dialog.open(AttachmentShowModalComponent, { data: { attachment: attachment } });
+        this.dialogRef = this.dialog.open(AttachmentPageComponent, { height: '99vh', width: '99vw', disableClose: true, data: { resId: attachment.resId} });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'success'),
+            tap(() => {
+                this.loadAttachments(this.resId);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     createAttachment() {

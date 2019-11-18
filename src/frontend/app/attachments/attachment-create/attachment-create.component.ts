@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output, Inject, ViewChildren, QueryList } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { catchError, tap, finalize } from 'rxjs/operators';
+import { catchError, tap, finalize, exhaustMap } from 'rxjs/operators';
 import { of, forkJoin } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
@@ -53,6 +53,9 @@ export class AttachmentCreateComponent implements OnInit {
         this.loadAttachmentTypes();
     }
 
+    loadMailresource(resIdMaster: number) {
+
+    }
 
     loadAttachmentTypes() {
         this.http.get('../../rest/attachmentsTypes').pipe(
@@ -66,9 +69,12 @@ export class AttachmentCreateComponent implements OnInit {
                     }
                 });
                 this.attachmentsTypes = this.sortPipe.transform(this.attachmentsTypes, 'label')
-                //this.attachmentsTypes = data.attachmentsTypes.filter((attachmentType: any) => attachmentType.show === true)
+
+            }),
+            exhaustMap(() => this.http.get(`../../rest/resources/${this.data.resIdMaster}?light=true`)),
+            tap((data: any) => {
                 this.attachments.push({
-                    title: new FormControl({ value: '', disabled: false }, [Validators.required]),
+                    title: new FormControl({ value: data.subject, disabled: false }, [Validators.required]),
                     contact: new FormControl({ value: '', disabled: false }),
                     type: new FormControl({ value: '', disabled: false }, [Validators.required]),
                     validationDate: new FormControl({ value: '', disabled: false }),
@@ -120,13 +126,6 @@ export class AttachmentCreateComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
-
-        /*this.http.post('../../rest/attachments', attach[0]).pipe(
-            tap(() => {
-                this.dialogRef.close('success');
-            }),
-            finalize(() => this.loading = false)
-        ).subscribe();*/
     }
 
     isValid() {
@@ -162,7 +161,7 @@ export class AttachmentCreateComponent implements OnInit {
             encodedFile: new FormControl({ value: '', disabled: false }, [Validators.required])
         });
 
-        this.attachFormGroup.push(new FormGroup(this.attachments[this.attachments.length]));
+        this.attachFormGroup.push(new FormGroup(this.attachments[this.attachments.length-1]));
     }
 
     removePj(i: number) {

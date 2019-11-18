@@ -122,8 +122,7 @@ class SignatureBookController
         //TODO Check les droits de modif
         AttachmentModel::unsignAttachment(['resId' => $aArgs['resId']]);
 
-        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-        if (!AttachmentModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'user_serial_id' => $user['id']])) {
+        if (!AttachmentModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'user_serial_id' => $GLOBALS['id']])) {
             $attachment = AttachmentModel::getById(['id' => $aArgs['resId'], 'select' => ['res_id_master']]);
             ListInstanceModel::update([
                 'set'   => ['signatory' => 'false'],
