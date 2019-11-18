@@ -60,6 +60,7 @@ export class DocumentViewerComponent implements OnInit {
     @Input('editMode') editMode: boolean = false;
     @Input('title') title: string = '';
     @Input('mode') mode: string = 'mainDocument';
+    @Input('attachType') attachType: string = null;
 
     @Output('triggerEvent') triggerEvent = new EventEmitter<string>();
 
@@ -104,7 +105,11 @@ export class DocumentViewerComponent implements OnInit {
                 if (this.resId !== null) {
                     this.loadRessource(this.resId, this.mode);
                     if (this.editMode) {
-                        this.loadTemplates();
+                        if (this.attachType !== null && this.mode === 'attachment') {
+                            this.loadTemplatesByResId(this.resId, this.attachType);
+                        } else {
+                            this.loadTemplates();
+                        }
                     }
                 } else {
                     this.loadTemplates();
@@ -437,7 +442,6 @@ export class DocumentViewerComponent implements OnInit {
                         this.file.content = `../../rest/attachments/${resId}/originalContent`;
                         this.file.contentView = `../../rest/attachments/${resId}/content?mode=view`;
                         this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
-                        this.triggerEvent.emit();
                         this.loading = false;
                     }
                 },

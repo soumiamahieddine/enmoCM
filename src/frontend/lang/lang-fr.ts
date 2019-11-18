@@ -1314,4 +1314,7 @@ export const LANG_FR = {
     "send" : "Envoyer",
     "generation" : "Génération...",
     "requestSentByEmail" : "La demande vous a été envoyé par courriel.",
+    "newVersion" : "Nouvelle version",
+    "deleteSignedVersion" : "Supprimer la version signée",
+    "signedAttachment" : "Pièce jointe signée",
 };

@@ -1277,4 +1277,7 @@ export const LANG_EN = {
     "send" : "Send",
     "generation" : "Generation...",
     "requestSentByEmail" : "The request has been sent to you by email.",
+    "newVersion" : "New version",
+    "deleteSignedVersion" : "Delete signed version",
+    "signedAttachment" : "Signed attachment",
 };

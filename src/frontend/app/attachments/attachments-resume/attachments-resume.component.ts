@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { catchError, tap, finalize } from 'rxjs/operators';
+import { catchError, tap, finalize, filter } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { AttachmentPageComponent } from '../attachments-page/attachment-page.component';
 
 
@@ -27,6 +27,8 @@ export class AttachmentsResumeComponent implements OnInit {
     @Input('resId') resId: number = null;
     @Output('goTo') goTo = new EventEmitter<string>();
 
+    dialogRef: MatDialogRef<any>;
+    
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
@@ -54,8 +56,18 @@ export class AttachmentsResumeComponent implements OnInit {
     }
 
     showAttachment(attachment: any) {
-        console.log(attachment);
-        this.dialog.open(AttachmentPageComponent, { height: '90vh', width: '90vw', data: { attachment: attachment } });
+        this.dialogRef = this.dialog.open(AttachmentPageComponent, { height: '99vh', width: '99vw', disableClose: true, data: { resId: attachment.resId} });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'success'),
+            tap(() => {
+                this.loadAttachments(this.resId);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     showMore() {

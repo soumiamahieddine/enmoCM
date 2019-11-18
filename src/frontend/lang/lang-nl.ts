@@ -1302,4 +1302,8 @@ export const LANG_NL = {
     "send" : "Send", //_TO_TRANSLATE
     "generation" : "Generation...", //_TO_TRANSLATE
     "requestSentByEmail" : "The request has been sent to you by email.", //_TO_TRANSLATE
+    "newVersion" : "New version", //_TO_TRANSLATE
+    "deleteSignedVersion" : "Delete signed version", //_TO_TRANSLATE
+    "signedAttachment" : "Signed attachment", //_TO_TRANSLATE
+    
 };
