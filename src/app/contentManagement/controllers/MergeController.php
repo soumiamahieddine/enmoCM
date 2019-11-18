@@ -68,8 +68,18 @@ class MergeController
 
         $dataToBeMerge = MergeController::getDataForMerge($args['data']);
 
-        foreach ($dataToBeMerge as $key => $value) {
-            $tbs->MergeField($key, $value);
+        $pages = 1;
+        if ($extension == 'xlsx') {
+            $pages = $tbs->PlugIn(OPENTBS_COUNT_SHEETS);
+        }
+
+        for ($i = 0; $i < $pages; ++$i) {
+            if ($extension == 'xlsx') {
+                $tbs->PlugIn(OPENTBS_SELECT_SHEET, $i + 1);
+            }
+            foreach ($dataToBeMerge as $key => $value) {
+                $tbs->MergeField($key, $value);
+            }
         }
 
         if (in_array($extension, MergeController::OFFICE_EXTENSIONS)) {

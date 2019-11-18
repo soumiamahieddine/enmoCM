@@ -200,8 +200,8 @@ class StoreController
 
         $relation = 1;
         if (!empty($args['originId'])) {
-            $relations = AttachmentModel::get(['select' => ['relation'], 'where' => ['origin_id = ?'], 'data' => [$args['originId']], 'orderBy' => ['relation DESC'], 'limit' => 1]);
-            $relation = $relations[0]['relation'] == 1 ? 2 : $relations[0]['relation'] + 1;
+            $relations = AttachmentModel::get(['select' => ['relation'], 'where' => ['(origin_id = ? or res_id = ?)'], 'data' => [$args['originId'], $args['originId']], 'orderBy' => ['relation DESC'], 'limit' => 1]);
+            $relation = $relations[0]['relation'] + 1;
             AttachmentModel::update(['set' => ['status' => 'OBS'], 'where' => ['(origin_id = ? OR res_id = ?)'], 'data' => [$args['originId'], $args['originId']]]);
         }
 
