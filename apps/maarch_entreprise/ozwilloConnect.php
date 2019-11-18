@@ -34,7 +34,7 @@ if (empty($user)) {
     }
     $firstname = empty($profile->given_name) ? 'utilisateur' : $profile->given_name;
     $lastname = empty($profile->family_name) ? 'utilisateur' : $profile->family_name;
-    \User\models\UserModel::create(['user' => ['userId' => $idToken->sub, 'firstname' => $firstname, 'lastname' => $lastname, 'changePassword' => 'N']]);
+    \User\models\UserModel::create(['user' => ['userId' => $idToken->sub, 'firstname' => $firstname, 'lastname' => $lastname]]);
     $user = \User\models\UserModel::getByLogin(['login' => $idToken->sub]);
     \User\models\UserModel::addGroup(['id' => $user['id'], 'groupId' => $ozwilloConfig['groupId']]);
     \User\models\UserEntityModel::addUserEntity(['id' => $user['id'], 'entityId' => $ozwilloConfig['entityId'], 'primaryEntity' => 'Y']);

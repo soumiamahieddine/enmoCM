@@ -40,12 +40,17 @@ class AttachmentControllerTest extends TestCase
         self::$id = $responseBody->id;
         $this->assertInternalType('int', self::$id);
 
-        $response     = $attachmentController->create($fullRequest, new \Slim\Http\Response());
+        // CHECK ERROR EMPTY TYPE
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgsFail   = $aArgs;
+        unset($aArgsFail['type']);
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgsFail, $request);
+        $response = $attachmentController->create($fullRequest, new \Slim\Http\Response());
         $this->assertSame(400, $response->getStatusCode());
         $response = (array)json_decode((string)$response->getBody());
 
         $this->assertSame('Body type is empty or not a string', $response['errors']);
-
 
         //  READ
         $res = \Attachment\models\AttachmentModel::getById(['id' => self::$id, 'select' => ['*']]);
@@ -76,8 +81,8 @@ class AttachmentControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'title'         => 'La plus chétive cabane renferme plus de vertus que les palais des rois.',
-            'type'          => 'response_project',
+            'title' => 'La plus chétive cabane renferme plus de vertus que les palais des rois.',
+            'type'  => 'response_project',
         ];
 
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
@@ -85,8 +90,12 @@ class AttachmentControllerTest extends TestCase
         $response     = $attachmentController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $this->assertSame(204, $response->getStatusCode());
 
-        unset($aArgs['type']);
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        // CHECK ERROR EMPTY TYPE
+        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request     = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgsFail   = $aArgs;
+        unset($aArgsFail['type']);
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgsFail, $request);
 
         $response     = $attachmentController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $this->assertSame(400, $response->getStatusCode());

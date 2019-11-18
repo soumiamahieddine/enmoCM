@@ -175,10 +175,6 @@ class UserController
             $data['loginmode'] = 'standard';
         }
 
-        if ($data['loginmode'] == 'restMode') {
-            $data['changePassword']= 'N';
-        }
-
         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
             $data['phone'] = null;
         }
@@ -259,10 +255,6 @@ class UserController
 
         if (!empty($data['status']) && $data['status'] == 'OK') {
             $set['status'] = 'OK';
-        }
-
-        if ($set['loginmode'] == 'restMode') {
-            $set['change_password']= 'N';
         }
 
         $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);

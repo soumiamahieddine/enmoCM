@@ -15,6 +15,7 @@ DROP VIEW IF EXISTS view_folders;
 
 /*USERS*/
 ALTER TABLE users DROP COLUMN IF EXISTS reset_token;
+ALTER TABLE users DROP COLUMN IF EXISTS change_password;
 ALTER TABLE users ADD COLUMN reset_token text;
 
 /* FULL TEXT */

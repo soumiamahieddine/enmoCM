@@ -81,7 +81,7 @@ abstract class UserModelAbstract
     {
         ValidatorModel::notEmpty($aArgs, ['user']);
         ValidatorModel::notEmpty($aArgs['user'], ['userId', 'firstname', 'lastname']);
-        ValidatorModel::stringType($aArgs['user'], ['userId', 'firstname', 'lastname', 'mail', 'initials', 'phone', 'changePassword', 'loginmode']);
+        ValidatorModel::stringType($aArgs['user'], ['userId', 'firstname', 'lastname', 'mail', 'initials', 'phone', 'loginmode']);
 
         $length = rand(50, 70);
         $chars = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcefghijklmnopqrstuvwxyz!@$%^*_=+,.?';
@@ -101,7 +101,6 @@ abstract class UserModelAbstract
                 'phone'                         => $aArgs['user']['phone'],
                 'initials'                      => $aArgs['user']['initials'],
                 'status'                        => 'OK',
-                'change_password'               => empty($aArgs['user']['changePassword']) ? 'Y' : $aArgs['user']['changePassword'],
                 'loginmode'                     => empty($aArgs['user']['loginmode']) ? 'standard' : $aArgs['user']['loginmode'],
                 'password'                      => AuthenticationModel::getPasswordHash($password),
                 'password_modification_date'    => 'CURRENT_TIMESTAMP'
@@ -238,8 +237,7 @@ abstract class UserModelAbstract
             'table'     => 'users',
             'set'       => [
                 'password'                      => AuthenticationModel::getPasswordHash($aArgs['password']),
-                'password_modification_date'    => 'CURRENT_TIMESTAMP',
-                'change_password'               => 'N',
+                'password_modification_date'    => 'CURRENT_TIMESTAMP'
             ],
             'where'     => ['id = ?'],
             'data'      => [$aArgs['id']]
@@ -257,7 +255,6 @@ abstract class UserModelAbstract
             'table'     => 'users',
             'set'       => [
                 'password'                      => AuthenticationModel::getPasswordHash($aArgs['password']),
-                'change_password'               => 'N',
                 'password_modification_date'    => 'CURRENT_TIMESTAMP',
                 'reset_token'                   => null
             ],

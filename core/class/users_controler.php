@@ -39,7 +39,7 @@ try {
     require_once('core' . DIRECTORY_SEPARATOR . 'class'
         . DIRECTORY_SEPARATOR . 'class_security.php');
     require_once 'modules/entities/class/class_users_entities.php';
-} catch (Exception $e){
+} catch (Exception $e) {
     functions::xecho($e->getMessage()) . ' // ';
 }
 
@@ -89,10 +89,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $result = $db->query($query, array($userId));
         $lastname = $result->fetchObject();
 
-        if (isset($lastname))
+        if (isset($lastname)) {
             return $lastname->lastname;
-        else
+        } else {
             return null;
+        }
     }
 
     public function getFirstName($userId)
@@ -104,10 +105,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $result = $db->query($query, array($userId));
         $firstname = $result->fetchObject();
 
-        if (isset($firstname))
+        if (isset($firstname)) {
             return $firstname->firstname;
-        else
+        } else {
             return null;
+        }
     }
 
 
@@ -126,7 +128,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $user = self::advanced_getWithComp($userId, USERS_TABLE, $compWhere, $params);
 
         if (isset($user)
-            && ($user->__get('status') == 'OK' 
+            && ($user->__get('status') == 'OK'
             || $user->__get('status') == 'ABS')
         ) {
             return $user;
@@ -145,18 +147,20 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     *   otherwise returns even the disabled (true by default)
     * @return Array of user objects with properties from the database
     */
-    public function getAllUsers($orderStr='order by user_id asc',
-        $enabledOnly=true)
-    {
+    public function getAllUsers(
+        $orderStr='order by user_id asc',
+        $enabledOnly=true
+    ) {
         $db = new Database();
         $query = 'select * from ' . USERS_TABLE .' ';
         if ($enabledOnly) {
             $query .= "where enabled = 'Y'";
         }
         $query .= $orderStr;
-        try{
+        try {
             $stmt = $db->query($query);
-        } catch (Exception $e){}
+        } catch (Exception $e) {
+        }
 
         $users = array();
         while ($res = $stmt->fetchObject()) {
@@ -192,12 +196,12 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $query = 'select u.group_id, uc.role from usergroup_content uc, usergroups u where uc.user_id = ? and uc.group_id = u.id ';
         try {
             $stmt = self::$db->query($query, array($userUse['id']));
-        } catch (Exception $e){
+        } catch (Exception $e) {
             echo _NO_USER_WITH_ID.' '.functions::xssafe($userId).' // ';
         }
         while ($res = $stmt->fetchObject()) {
             array_push(
-                $groups, 
+                $groups,
                 array(
                     'USER_ID' => $userId,
                     'GROUP_ID' => $res->group_id,
@@ -245,13 +249,13 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             $control = array(
                 'status' => 'ko',
                 'value'  => '',
-                'error'  => _USER_EMPTY,          
+                'error'  => _USER_EMPTY,
             );
             return $control;
         }
         // If mode not up or add, return an error
-        if (! isset($mode) || empty($mode) 
-            || ($mode <> 'add' && $mode <> 'up' )
+        if (! isset($mode) || empty($mode)
+            || ($mode <> 'add' && $mode <> 'up')
         ) {
             $control = array(
                 'status' => 'ko',
@@ -273,7 +277,9 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             $_SESSION['service_tag'] = 'user_' . $mode;
             if (isset($params['modules_services'])) {
                 $core->execute_modules_services(
-                    $params['modules_services'], 'users_add_db', 'include'
+                    $params['modules_services'],
+                    'users_add_db',
+                    'include'
                 );
             }
             if ($mode == 'up') {
@@ -287,7 +293,10 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                     if ($params['log_user_up'] == 'true') {
                         $history = new history();
                         $history->add(
-                            USERS_TABLE, $user->user_id, 'UP', 'usersup',
+                            USERS_TABLE,
+                            $user->user_id,
+                            'UP',
+                            'usersup',
                             _USER_UPDATE . ' : ' . $user->user_id,
                             $params['databasetype']
                         );
@@ -309,7 +318,10 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                     if ($params['log_user_add'] == 'true') {
                         $history = new history();
                         $history->add(
-                            USERS_TABLE, $user->user_id, 'ADD', 'usersadd',
+                            USERS_TABLE,
+                            $user->user_id,
+                            'ADD',
+                            'usersadd',
                             _USER_ADDED . ' : ' . $user->user_id,
                             $params['databasetype']
                         );
@@ -393,10 +405,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             $sec = new security();
             $user->password =  $sec->getPasswordHash($params['userdefaultpassword']);
 
-            if($_SESSION['config']['ldap'] == "true" || isset($_SESSION['web_cas_url']) || isset($_SESSION['web_sso_url'])){
-                $user->change_password = "N";
-            }
-
             if (self::userExists($user->user_id)) {
                 $error .= _USER . ' ' . _ALREADY_EXISTS;
             }
@@ -430,7 +438,9 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $core = new core_tools();
         if (isset($params['modules_services'])) {
             $core->execute_modules_services(
-                $params['modules_services'], 'user_check', 'include'
+                $params['modules_services'],
+                'user_check',
+                'include'
             );
         }
         $error .= $_SESSION['error'];
@@ -493,12 +503,12 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         self::$db = new Database();
         $func = new functions();
         $query = 'select user_id from ' . USERS_TABLE . " where user_id = ? and status<>'DEL'";
-        try{
+        try {
             $stmt = self::$db->query($query, array($userId));
-        } catch (Exception $e){
+        } catch (Exception $e) {
             echo _UNKNOWN . ' ' . _USER . ' ' . functions::xssafe($userId) . ' // ';
         }
-        if ($stmt->rowCount() > 0) {   
+        if ($stmt->rowCount() > 0) {
             return true;
         }
         
@@ -538,7 +548,10 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             ) {
                 $history = new history();
                 $history->add(
-                    USERS_TABLE, $user->user_id, 'BAN', 'usersban',
+                    USERS_TABLE,
+                    $user->user_id,
+                    'BAN',
+                    'usersban',
                     _SUSPENDED_USER . ' : ' . $user->lastname . ' '
                     . $user->firstname . ' (' . $user->user_id . ')',
                     $params['databasetype']
@@ -586,7 +599,10 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             ) {
                 $history = new history();
                 $history->add(
-                    USERS_TABLE, $user->user_id, 'VAL', 'usersval',
+                    USERS_TABLE,
+                    $user->user_id,
+                    'VAL',
+                    'usersval',
                     _AUTORIZED_USER .' : ' . $user->lastname . ' '
                     . $user->firstname . ' (' . $user->user_id . ')',
                     $params['databasetype']
@@ -600,21 +616,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             );
         }
         return $control;
-    }
-
-    public function changePassword($userId, $newPassword)
-    {
-        if (! isset($userId) || empty($userId) || ! isset($newPassword) 
-            || empty($newPassword)
-        ) {
-            return false;
-        }
-        self::$db = new Database();
-        $func = new functions();
-        $query = 'update ' . USERS_TABLE 
-            . " set password = ?, change_password = 'Y' where user_id = ?";
-        $stmt = self::$db->query($query, array($newPassword, $userId));
-        return $stmt;
     }
 
     /**
@@ -633,7 +634,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $query = 'select user_id from ' . USERS_TABLE . " where lower(user_id) = lower(?) and status = 'DEL'";
         try {
             $stmt = self::$db->query($query, array($userId));
-        } catch (Exception $e){
+        } catch (Exception $e) {
             echo _UNKNOWN . ' ' . _USER . ' ' . functions::xssafe($userId) . ' // ';
         }
         if ($stmt->rowCount() > 0) {
@@ -654,13 +655,13 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $user = self::_isAUser($user);
         self::set_foolish_ids(array('user_id', 'docserver_location_id'));
         self::set_specific_id('user_id');
-        if(self::advanced_reactivate($user)){
+        if (self::advanced_reactivate($user)) {
             self::$db = new Database();
             $query = "update users set user_id = ? where lower(user_id)=lower(?)";
             $stmt = self::$db->query($query, array($user->user_id, $user->user_id));
             return true;
-        }else{
-          return false;
+        } else {
+            return false;
         }
     }
 
@@ -683,15 +684,15 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                     FROM users_entities ue, entities e 
                     WHERE ue.user_id = ? and e.enabled = 'Y' and e.entity_id = ue.entity_id
                     ORDER BY primary_entity desc";
-                    // set primary entity to the first row
+        // set primary entity to the first row
         try {
             $stmt = self::$db->query($query, array($userId));
-        } catch (Exception $e){
+        } catch (Exception $e) {
             echo _NO_USER_WITH_ID.' '.functions::xssafe($userId).' // ';
         }
         while ($res = $stmt->fetchObject()) {
             array_push(
-                $entities, 
+                $entities,
                 array(
                     'USER_ID' => $userId,
                     'ENTITY_ID' => $res->entity_id,
@@ -710,7 +711,8 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     * @param  $userId string  $entityType string
     * @return Array or null
     */
-   public function getParentEntitiesWithType($userId, $entityType) {
+    public function getParentEntitiesWithType($userId, $entityType)
+    {
         $userEntities = self::getEntities($userId);
         $parentEntitiesWithType = array();
 
@@ -726,7 +728,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                 $res = $stmt->fetchObject();
                 if (!$res) {
                     $isRightEntityType = true;
-                } else if ($res->entity_type == $entityType) {
+                } elseif ($res->entity_type == $entityType) {
                     if (!in_array($entity, $parentEntitiesWithType)) {
                         $parentEntitiesWithType[] = $entity;
                     }
@@ -739,5 +741,4 @@ class users_controler extends ObjectControler implements ObjectControlerIF
 
         return $parentEntitiesWithType;
     }
-
 }

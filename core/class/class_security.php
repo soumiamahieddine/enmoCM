@@ -163,7 +163,6 @@ class security extends Database
                     }
                 }
                 $array = array(
-                    'change_pass' => $user->__get('change_password'),
                     'UserId' => $user->__get('user_id'),
                     'FirstName' => $user->__get('firstname'),
                     'LastName' => $user->__get('lastname'),

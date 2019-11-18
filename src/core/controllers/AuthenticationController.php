@@ -63,7 +63,7 @@ class AuthenticationController
         ValidatorModel::stringType($aArgs, ['login', 'currentRoute']);
 
         if ($aArgs['currentRoute'] != '/initialize') {
-            $user = UserModel::getByLogin(['select' => ['status', 'change_password'], 'login' => $aArgs['login']]);
+            $user = UserModel::getByLogin(['select' => ['status'], 'login' => $aArgs['login']]);
 
             if ($user['status'] == 'ABS' && !in_array($aArgs['currentRoute'], ['/users/{id}/status', '/currentUser/profile', '/header', '/passwordRules', '/users/{id}/password'])) {
                 return ['isRouteAvailable' => false, 'errors' => 'User is ABS and must be activated'];
@@ -75,9 +75,7 @@ class AuthenticationController
                 if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'])) {
 
                     $passwordRules = PasswordModel::getEnabledRules();
-                    if ($user['change_password'] == 'Y') {
-                        return ['isRouteAvailable' => false, 'errors' => 'User must change his password'];
-                    } elseif (!empty($passwordRules['renewal'])) {
+                    if (!empty($passwordRules['renewal'])) {
                         $currentDate = new \DateTime();
                         $lastModificationDate = new \DateTime($user['password_modification_date']);
                         $lastModificationDate->add(new \DateInterval("P{$passwordRules['renewal']}D"));

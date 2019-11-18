@@ -693,15 +693,6 @@ class UserControllerTest extends TestCase
         $checkPassword = \SrcCore\models\AuthenticationModel::authentication(['userId' => $GLOBALS['userId'], 'password' => 'superadmin']);
 
         $this->assertSame(true, $checkPassword);
-
-        \SrcCore\models\DatabaseModel::update([
-            'table'     => 'users',
-            'set'       => [
-                'change_password'   => 'N'
-            ],
-            'where'     => ['user_id = ?'],
-            'data'      => [$GLOBALS['userId']]
-        ]);
     }
 
     public function testUpdateProfile()
