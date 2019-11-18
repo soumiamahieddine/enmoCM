@@ -1,5 +1,7 @@
 <?php
 
+use SrcCore\models\CoreConfigModel;
+
 require '../../vendor/autoload.php';
 
 chdir('../..');
@@ -18,6 +20,14 @@ foreach ($customs as $custom) {
         'table' => 'res_attachments',
         'where' => ['relation > 1']
     ]);
+
+    $superadmin = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => 'superadmin']);
+    if (empty($superadmin)) {
+        $firstMan = \User\models\UserModel::get(['select' => ['id'], 'orderBy' => ['id'], 'limit' => 1]);
+        $masterOwnerId = $firstMan[0]['id'];
+    } else {
+        $masterOwnerId = $superadmin['id'];
+    }
 
     $migrated = 0;
     $attachmentsInfo = \SrcCore\models\DatabaseModel::select([
@@ -63,6 +73,7 @@ foreach ($customs as $custom) {
         migrateEmailsVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateMessageExchangeVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateShippingVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
+        migrateFullText(['newResId' => $newResId, 'customId' => $custom, 'userId' => $masterOwnerId]);
 
         $migrated++;
     }
@@ -155,4 +166,10 @@ function migrateShippingVersion($args = [])
         'where' => ['attachment_id = ?', 'is_version = ?'],
         'data'  => [$args['oldResId'], 'true']
     ]);
+}
+
+function migrateFullText($args = [])
+{
+    $GLOBALS['id'] = $args['userId'];
+    exec("php src/app/convert/scripts/FullTextScript.php --customId {$args['customId']} --resId {$args['newResId']} --collId attachments_coll --userId {$GLOBALS['id']} > /dev/null");
 }

@@ -94,21 +94,13 @@ class FullTextScript
             if ($args['collId'] == 'letterbox_coll') {
                 ResModel::update(['set' => ['fulltext_result' => 'SUCCESS'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             } else {
-                AttachmentModel::update([
-                    'set'       => ['fulltext_result' => 'SUCCESS'],
-                    'where'     => ['res_id = ?'],
-                    'data'      => [$args['resId']]
-                ]);
+                AttachmentModel::update(['set' => ['fulltext_result' => 'SUCCESS'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             }
         } else {
             if ($args['collId'] == 'letterbox_coll') {
                 ResModel::update(['set' => ['fulltext_result' => 'ERROR'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             } else {
-                AttachmentModel::update([
-                    'set'       => ['fulltext_result' => 'ERROR'],
-                    'where'     => ['res_id = ?'],
-                    'data'      => [$args['resId']]
-                ]);
+                AttachmentModel::update(['set' => ['fulltext_result' => 'ERROR'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             }
             LogsController::add([
                 'isTech'    => true,

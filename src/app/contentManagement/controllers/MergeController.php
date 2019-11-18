@@ -249,23 +249,23 @@ class MergeController
             }
         }
 
+        //CustomFields
+        $customFields = [];
+        if (!empty($args['customFields'])) {
+            foreach ($args['customFields'] as $key => $customField) {
+                if (is_array($customField)) {
+                    $customFields[$key] = implode("\n", $customField);
+                } else {
+                    $customFields[$key] = $customField;
+                }
+            }
+        }
+
         //Datetime
         $datetime = [
             'date'  => date('d-m-Y'),
             'time'  => date('H:i')
         ];
-
-        // Custom fields
-        $customFields = [];
-        if (!empty($args['customFields'])) {
-            foreach ($args['customFields'] as $key => $customField) {
-                if (is_array($customField)) {
-                    $customFields[$key] .= implode("\n", $customField);
-                } else {
-                    $customFields[$key] .= $customField;
-                }
-            }
-        }
 
         $dataToBeMerge['res_letterbox']     = $resource;
         $dataToBeMerge['initiator']         = empty($initiator) ? [] : $initiator;
@@ -280,8 +280,8 @@ class MergeController
         $dataToBeMerge['copies']            = $copies;
         $dataToBeMerge['contact']           = [];
         $dataToBeMerge['notes']             = $mergedNote;
-        $dataToBeMerge['datetime']          = $datetime;
         $dataToBeMerge['custom']            = $customFields;
+        $dataToBeMerge['datetime']          = $datetime;
 
         return $dataToBeMerge;
     }

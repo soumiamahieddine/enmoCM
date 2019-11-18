@@ -65,11 +65,6 @@
         <script_search_result>list_results_attachments.php</script_search_result>
         <script_details>details_attachments.php</script_details>
     </COLLECTION>
-    <COLLECTION>
-        <id>archive_transfer_coll</id>
-        <label>_ARCHVIE_TRANSFER_COLL</label>
-        <table>message_exchange</table>
-    </COLLECTION>
     <HISTORY>
         <usersdel>true</usersdel>
         <usersban>true</usersban>
