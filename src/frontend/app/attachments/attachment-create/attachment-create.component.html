@@ -1,9 +1,13 @@
 <div class="attach-container">
+    <div class="example-loading-shade" *ngIf="sendingData">
+        <mat-spinner></mat-spinner>
+    </div>
     <h1 mat-dialog-title>
         <span style="flex: 1;">
             Creation d'une pièce jointe
         </span>
-        <button *ngIf="!loading" [title]="lang.close" mat-icon-button [disabled]="isDocLoading()" (click)="dialogRef.close();">
+        <button *ngIf="!loading" [title]="lang.close" mat-icon-button [disabled]="isDocLoading()"
+            (click)="dialogRef.close();">
             <mat-icon class="fa fa-times"></mat-icon>
         </button></h1>
     <mat-dialog-content class="attach-content">
@@ -14,7 +18,8 @@
                     <div class="attachment-form" *ngIf="!loading">
                         <div class="attachment-form-item">
                             <plugin-select-search [label]="lang.type" [placeholderLabel]="lang.type"
-                                [formControlSelect]="attachment['type']" [datas]="attachmentsTypes" (afterSelected)="getAttachType($event, i)" style="width:100%;">
+                                [formControlSelect]="attachment['type']" [datas]="attachmentsTypes"
+                                (afterSelected)="getAttachType($event, i)" style="width:100%;">
                             </plugin-select-search>
                         </div>
                         <div class="attachment-form-item">
@@ -55,8 +60,8 @@
                     </div>
                     <div
                         style="display: flex;flex: 1;align-items: center;justify-content: center;text-align: center;background: #135F7F;overflow: auto;color: white;">
-                        <app-document-viewer #appDocumentViewer style="height:100%;width:100%;position: relative;" [editMode]="true"
-                            [mode]="'attachment'" (triggerEvent)="setEncodedFile(i)">
+                        <app-document-viewer #appDocumentViewer style="height:100%;width:100%;position: relative;"
+                            [editMode]="true" [mode]="'attachment'" (triggerEvent)="setEncodedFile(i)">
                         </app-document-viewer>
                     </div>
                 </div>

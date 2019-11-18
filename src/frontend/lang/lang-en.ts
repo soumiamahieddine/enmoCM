@@ -1283,4 +1283,8 @@ export const LANG_EN = {
     "newVersion" : "New version",
     "deleteSignedVersion" : "Delete signed version",
     "signedAttachment" : "Signed attachment",
+    "attachmentAdded" : "Attachment added",
+    "attachmentUpdated" : "Attachment updated",
+    "signedVersionDeleted" : "Signed version deleted",
+    "newVersionAdded" : "New version added",
 };

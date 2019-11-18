@@ -56,7 +56,7 @@ export class AttachmentsResumeComponent implements OnInit {
     }
 
     showAttachment(attachment: any) {
-        this.dialogRef = this.dialog.open(AttachmentPageComponent, { height: '99vh', width: '99vw', disableClose: true, data: { resId: attachment.resId} });
+        this.dialogRef = this.dialog.open(AttachmentPageComponent, { height: '99vh', width: '99vw', disableClose: true, panelClass: 'modal-container', data: { resId: attachment.resId} });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'success'),

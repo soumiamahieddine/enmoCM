@@ -1,16 +1,35 @@
 @import "../../../css/vars.scss";
 
+::ng-deep.modal-container {
+    ::ng-deep.mat-dialog-container {
+        padding: 0px;
+    }
+}
+
+.attach-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    ::ng-deep.mat-tab-body-wrapper,
+    ::ng-deep.mat-tab-body-content {
+        height: 100% !important;
+    }
+}
+
 .mat-dialog-title {
-    padding: 10px;
+    margin: 0px !important;
     display: flex;
     align-items: center;
 }
 
-.modal-container {
+.attach-content {
+    margin: 0px;
+    padding: 0px !important;
+    height: 100%;
+    display: flex;
     overflow: auto;
-}
-
-.mat-dialog-content {
     max-height: 100vh !important;
     height: calc(100% - 75px);
 }
@@ -53,4 +72,13 @@
         height: 100% !important;
         text-align: center;
     }
+}
+
+.example-loading-shade {
+    background: #ffffffc4;
+    z-index: 2;
+}
+
+.actions {
+    margin: 0px;
 }

@@ -128,7 +128,7 @@ export class AttachmentsListComponent implements OnInit {
     }
 
     showAttachment(attachment: any) {
-        this.dialogRef = this.dialog.open(AttachmentPageComponent, { height: '99vh', width: '99vw', disableClose: true, data: { resId: attachment.resId} });
+        this.dialogRef = this.dialog.open(AttachmentPageComponent, { height: '99vh', width: '99vw', panelClass: 'modal-container', disableClose: true, data: { resId: attachment.resId} });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'success'),
@@ -149,7 +149,6 @@ export class AttachmentsListComponent implements OnInit {
             filter((data: string) => data === 'success'),
             tap(() => {
                 this.loadAttachments(this.resId);
-                this.notify.success('success');
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);

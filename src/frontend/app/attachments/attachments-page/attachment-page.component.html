@@ -1,124 +1,132 @@
-<h1 mat-dialog-title>
-    <span *ngIf="!loading" style="flex: 1;" [title]="attachment.title.value">
-        <ng-container *ngIf="attachment.chrono.value !== null">
-            {{attachment.chrono.value}} -
-        </ng-container>
-        {{attachment.title.value | shorten: 50: '...'}}
-    </span>
-    <button [title]="lang.close" mat-icon-button (click)="dialogRef.close();">
-        <mat-icon class="fa fa-times"></mat-icon>
-    </button></h1>
-<mat-dialog-content class="modal-container">
-    <mat-sidenav-container class="maarch-container">
-        <mat-sidenav #snavLeft class="panel-left" [mode]="appService.getViewMode() ? 'over' : 'side'"
-            [fixedInViewport]="appService.getViewMode()" [opened]="!hidePanel" autoFocus="false"
-            style="overflow-x:hidden;" [ngStyle]="{'width': appService.getViewMode() ? '95%' : '200px'}">
-            <ng-container *ngIf="!loading">
-                <div class="attachment-form">
-                    <div class="attachment-form-item">
-                        <mat-form-field class="input-form">
-                            <input matInput placeholder="{{lang.version}}" [formControl]="attachment['relation']"
-                                [value]="lang.version + ' ' + attachment.relation.value">
-                        </mat-form-field>
-                    </div>
-                    <div class="attachment-form-item">
-                        <mat-form-field class="input-form">
-                            <input matInput placeholder="{{lang.status}}" [formControl]="attachment['status']"
-                                [value]="lang['attachment_'+attachment['status'].value]">
-                        </mat-form-field>
-                    </div>
-                    <div class="attachment-form-item">
-                        <plugin-select-search [label]="lang.type" [placeholderLabel]="lang.type"
-                            [formControlSelect]="attachment['type']" [datas]="attachmentsTypes"
-                            (afterSelected)="getAttachType($event)" style="width:100%;">
-                        </plugin-select-search>
-                    </div>
-                    <div class="attachment-form-item">
-                        <mat-form-field class="input-form">
-                            <input matInput placeholder="{{lang.subject}}" [formControl]="attachment['title']">
-                        </mat-form-field>
-                    </div>
-                    <div class="attachment-form-item">
-                        <mat-form-field class="input-form">
-                            <input matInput placeholder="{{lang.contact}}">
-                        </mat-form-field>
-                    </div>
-                    <div class="attachment-form-item">
-                        <mat-form-field class="input-form" (click)="picker.open()" style="cursor:pointer;">
-                            <input [formControl]="attachment['validationDate']" matInput [matDatepicker]="picker"
-                                [placeholder]="lang.expectedReturnDate" [min]="now" readonly style="cursor:pointer;">
-                            <mat-datepicker-toggle matSuffix [for]="picker" *ngIf="!attachment['validationDate'].value">
-                            </mat-datepicker-toggle>
-                            <mat-datepicker [touchUi]="appService.getViewMode()" #picker></mat-datepicker>
-                            <button mat-button color="warn" matSuffix mat-icon-button
-                                *ngIf="attachment['validationDate'].value && !attachment['validationDate'].disabled"
-                                (click)="$event.stopPropagation();attachment['validationDate'].reset();"
-                                [title]="lang.eraseValue">
-                                <mat-icon color="warn" class="fa fa-calendar-times">
-                                </mat-icon>
-                            </button>
-                        </mat-form-field>
-                    </div>
-                </div>
-                <div style="text-align: center;">
-                    <button mat-raised-button color="primary" (click)="updateAttachment()"
-                        [disabled]="!editMode">{{lang.update}}</button>
-                    <button mat-raised-button color="primary" (click)="createNewVersion()"
-                        [disabled]="!editMode || attachment['encodedFile'].value === null">{{lang.newVersion}}</button>
-                    <button mat-raised-button color="warn" *ngIf="attachment.status.value === 'SIGN'"
-                        (click)="deleteSignedVersion()">{{lang.deleteSignedVersion}}</button>
-                </div>
+<div class="attach-container">
+    <div class="example-loading-shade" *ngIf="sendingData">
+        <mat-spinner></mat-spinner>
+    </div>
+    <h1 mat-dialog-title>
+        <span *ngIf="!loading" style="flex: 1;" [title]="attachment.title.value">
+            <ng-container *ngIf="attachment.chrono.value !== null">
+                {{attachment.chrono.value}} -
             </ng-container>
+            {{attachment.title.value | shorten: 50: '...'}}
+        </span>
+        <button [title]="lang.close" mat-icon-button (click)="dialogRef.close();">
+            <mat-icon class="fa fa-times"></mat-icon>
+        </button></h1>
+    <mat-dialog-content class="attach-content">
 
-        </mat-sidenav>
-        <mat-sidenav-content>
-            <mat-tab-group [selectedIndex]="1" class="pjList" *ngIf="!loading">
-                <mat-tab label="Document principal" *ngIf="attachment.res_id_master !== null">
-                    <ng-template matTabContent>
+        <mat-sidenav-container class="maarch-container">
+            <mat-sidenav #snavLeft class="panel-left" [mode]="appService.getViewMode() ? 'over' : 'side'"
+                [fixedInViewport]="appService.getViewMode()" [opened]="!hidePanel" autoFocus="false"
+                style="overflow-x:hidden;" [ngStyle]="{'width': appService.getViewMode() ? '95%' : '200px'}">
+                <ng-container *ngIf="!loading">
+                    <div class="attachment-form">
+                        <div class="attachment-form-item">
+                            <mat-form-field class="input-form">
+                                <input matInput placeholder="{{lang.version}}" [formControl]="attachment['relation']"
+                                    [value]="lang.version + ' ' + attachment.relation.value">
+                            </mat-form-field>
+                        </div>
+                        <div class="attachment-form-item">
+                            <mat-form-field class="input-form">
+                                <input matInput placeholder="{{lang.status}}" [formControl]="attachment['status']"
+                                    [value]="lang['attachment_'+attachment['status'].value]">
+                            </mat-form-field>
+                        </div>
+                        <div class="attachment-form-item">
+                            <plugin-select-search [label]="lang.type" [placeholderLabel]="lang.type"
+                                [formControlSelect]="attachment['type']" [datas]="attachmentsTypes"
+                                (afterSelected)="getAttachType($event)" style="width:100%;">
+                            </plugin-select-search>
+                        </div>
+                        <div class="attachment-form-item">
+                            <mat-form-field class="input-form">
+                                <input matInput placeholder="{{lang.subject}}" [formControl]="attachment['title']">
+                            </mat-form-field>
+                        </div>
+                        <div class="attachment-form-item">
+                            <mat-form-field class="input-form">
+                                <input matInput placeholder="{{lang.contact}}">
+                            </mat-form-field>
+                        </div>
+                        <div class="attachment-form-item">
+                            <mat-form-field class="input-form" (click)="picker.open()" style="cursor:pointer;">
+                                <input [formControl]="attachment['validationDate']" matInput [matDatepicker]="picker"
+                                    [placeholder]="lang.expectedReturnDate" [min]="now" readonly
+                                    style="cursor:pointer;">
+                                <mat-datepicker-toggle matSuffix [for]="picker"
+                                    *ngIf="!attachment['validationDate'].value">
+                                </mat-datepicker-toggle>
+                                <mat-datepicker [touchUi]="appService.getViewMode()" #picker></mat-datepicker>
+                                <button mat-button color="warn" matSuffix mat-icon-button
+                                    *ngIf="attachment['validationDate'].value && !attachment['validationDate'].disabled"
+                                    (click)="$event.stopPropagation();attachment['validationDate'].reset();"
+                                    [title]="lang.eraseValue">
+                                    <mat-icon color="warn" class="fa fa-calendar-times">
+                                    </mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div style="text-align: center;">
+                        <button mat-raised-button color="primary" (click)="updateAttachment()"
+                            [disabled]="!editMode">{{lang.update}}</button>
+                        <button mat-raised-button color="primary" (click)="createNewVersion()"
+                            [disabled]="!editMode || attachment['encodedFile'].value === null">{{lang.newVersion}}</button>
+                        <button mat-raised-button color="warn" *ngIf="attachment.status.value === 'SIGN'"
+                            (click)="deleteSignedVersion()">{{lang.deleteSignedVersion}}</button>
+                    </div>
+                </ng-container>
+
+            </mat-sidenav>
+            <mat-sidenav-content>
+                <mat-tab-group [selectedIndex]="1" class="pjList" *ngIf="!loading" animationDuration="0">
+                    <mat-tab label="Document principal" *ngIf="attachment.res_id_master !== null">
+                        <ng-template matTabContent>
+                            <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
+                                [resId]="attachment.resIdMaster.value" [title]="'Document principal'">
+                            </app-document-viewer>
+                        </ng-template>
+                    </mat-tab>
+                    <mat-tab *ngIf="attachment.status.value === 'SIGN'">
+                        <ng-template mat-tab-label>
+                            <span style="color:green">{{lang.signedAttachment}}</span>
+                        </ng-template>
                         <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
-                            [resId]="attachment.resIdMaster.value" [title]="'Document principal'">
+                            [resId]="attachment.signedResponse.value" [mode]="'attachment'"
+                            [title]="attachment.chrono.value + ' - ' + attachment.title.value + '(' + lang.signed + ')'">
                         </app-document-viewer>
-                    </ng-template>
-                </mat-tab>
-                <mat-tab *ngIf="attachment.status.value === 'SIGN'">
-                    <ng-template mat-tab-label>
-                        <span style="color:green">{{lang.signedAttachment}}</span>
-                    </ng-template>
-                    <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
-                        [resId]="attachment.signedResponse.value" [mode]="'attachment'"
-                        [title]="attachment.chrono.value + ' - ' + attachment.title.value + '(' + lang.signed + ')'">
-                    </app-document-viewer>
-                </mat-tab>
-                <mat-tab>
-                    <ng-template mat-tab-label>
-                        <span style="color:#135f7f">{{lang.attachment}}</span>
-                    </ng-template>
-                    <app-document-viewer #appAttachmentViewer style="height:100%;width:100%;" [editMode]="editMode"
-                        [resId]="data.resId" [mode]="'attachment'" [attachType]="attachment['type'].value"
-                        [infoPanel]="snavLeft" (triggerEvent)="setEncodedFile()"
-                        [title]="attachment.chrono.value + ' - ' + attachment.title.value">
-                    </app-document-viewer>
-                </mat-tab>
-                <mat-tab label="{{lang.attachment}} ({{lang.version}} {{version.relation}})"
-                    *ngFor="let version of attachment.versions">
-                    <ng-template matTabContent>
-                        <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
-                            [resId]="version.resId" [mode]="'attachment'"
-                            [title]="attachment.chrono.value + ' - ' + attachment.title.value + ' (' + version.relation + ')'">
+                    </mat-tab>
+                    <mat-tab>
+                        <ng-template mat-tab-label>
+                            <span style="color:#135f7f">{{lang.attachment}}</span>
+                        </ng-template>
+                        <app-document-viewer #appAttachmentViewer style="height:100%;width:100%;" [editMode]="editMode"
+                            [resId]="data.resId" [mode]="'attachment'" [attachType]="attachment['type'].value"
+                            [infoPanel]="snavLeft" (triggerEvent)="setEncodedFile()"
+                            [title]="attachment.chrono.value + ' - ' + attachment.title.value">
                         </app-document-viewer>
-                    </ng-template>
+                    </mat-tab>
+                    <mat-tab label="{{lang.attachment}} ({{lang.version}} {{version.relation}})"
+                        *ngFor="let version of attachment.versions">
+                        <ng-template matTabContent>
+                            <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
+                                [resId]="version.resId" [mode]="'attachment'"
+                                [title]="attachment.chrono.value + ' - ' + attachment.title.value + ' (' + version.relation + ')'">
+                            </app-document-viewer>
+                        </ng-template>
 
-                </mat-tab>
-            </mat-tab-group>
-        </mat-sidenav-content>
-        <mat-sidenav #snav2 [fixedInViewport]="appService.getViewMode()" position='end'
-            [opened]="appService.getViewMode() ? false : false" [mode]="appService.getViewMode() ? 'over' : 'side'"
-            class="panel-right" style="overflow-x:hidden;"
-            [ngStyle]="{'width': appService.getViewMode() ? '80%' : '100px'}" autoFocus="false">
+                    </mat-tab>
+                </mat-tab-group>
+            </mat-sidenav-content>
+            <mat-sidenav #snav2 [fixedInViewport]="appService.getViewMode()" position='end'
+                [opened]="appService.getViewMode() ? false : false" [mode]="appService.getViewMode() ? 'over' : 'side'"
+                class="panel-right" style="overflow-x:hidden;"
+                [ngStyle]="{'width': appService.getViewMode() ? '80%' : '100px'}" autoFocus="false">
 
-        </mat-sidenav>
-    </mat-sidenav-container>
-</mat-dialog-content>
-<div mat-dialog-actions>
-    <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.close}}</button>
+            </mat-sidenav>
+        </mat-sidenav-container>
+    </mat-dialog-content>
+    <div mat-dialog-actions class="actions">
+        <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.close}}</button>
+    </div>
 </div>

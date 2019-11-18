@@ -1308,4 +1308,8 @@ export const LANG_NL = {
     "newVersion" : "New version", //_TO_TRANSLATE
     "deleteSignedVersion" : "Delete signed version", //_TO_TRANSLATE
     "signedAttachment" : "Signed attachment", //_TO_TRANSLATE
+    "attachmentAdded" : "Attachment added", //_TO_TRANSLATE
+    "attachmentUpdated" : "Attachment updated", //_TO_TRANSLATE
+    "signedVersionDeleted" : "Signed version deleted", //_TO_TRANSLATE
+    "newVersionAdded" : "New version added", //_TO_TRANSLATE
 };

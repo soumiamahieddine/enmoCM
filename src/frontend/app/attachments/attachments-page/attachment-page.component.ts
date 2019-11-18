@@ -26,6 +26,7 @@ export class AttachmentPageComponent implements OnInit {
     lang: any = LANG;
 
     loading: boolean = true;
+    sendingData: boolean = false;
 
     attachmentsTypes: any[] = [];
     attachment: any;
@@ -99,12 +100,13 @@ export class AttachmentPageComponent implements OnInit {
     }
 
     createNewVersion() {
+        this.sendingData = true;
         this.http.post(`../../rest/attachments`, this.getAttachmentValues(true)).pipe(
             tap((data: any) => {
-                this.notify.success('Nouvelle version créée');
+                this.notify.success(this.lang.newVersionAdded);
                 this.dialogRef.close('success');
             }),
-            finalize(() => this.loading = false),
+            finalize(() => this.sendingData = false),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
@@ -113,12 +115,13 @@ export class AttachmentPageComponent implements OnInit {
     }
 
     updateAttachment() {
+        this.sendingData = true;
         this.http.put(`../../rest/attachments/${this.attachment.resId.value}`, this.getAttachmentValues()).pipe(
             tap((data: any) => {
-                this.notify.success('Pièce jointe modifiée');
+                this.notify.success(this.lang.attachmentUpdated);
                 this.dialogRef.close('success');
             }),
-            finalize(() => this.loading = false),
+            finalize(() => this.sendingData = false),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
@@ -185,7 +188,7 @@ export class AttachmentPageComponent implements OnInit {
                     this.editMode = true;
                     this.enableForm(this.editMode);
                 }
-                this.notify.success('Version signée supprimée');
+                this.notify.success(this.lang.signedVersionDeleted);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);

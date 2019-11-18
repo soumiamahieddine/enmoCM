@@ -25,6 +25,8 @@ export class AttachmentCreateComponent implements OnInit {
 
     loading: boolean = true;
 
+    sendingData: boolean = false;
+
     attachmentsTypes: any[] = [];
 
     creationMode: boolean = true;
@@ -109,6 +111,7 @@ export class AttachmentCreateComponent implements OnInit {
     }
 
     onSubmit() {
+        this.sendingData = true;
         const attach = this.formatAttachments();
         let arrayRoutes: any = [];
 
@@ -118,9 +121,10 @@ export class AttachmentCreateComponent implements OnInit {
 
         forkJoin(arrayRoutes).pipe(
             tap(() => {
+                this.notify.success(this.lang.attachmentAdded);
                 this.dialogRef.close('success');
             }),
-            finalize(() => this.loading = false),
+            finalize(() => this.sendingData),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);

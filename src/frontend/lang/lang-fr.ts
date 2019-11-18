@@ -1320,4 +1320,8 @@ export const LANG_FR = {
     "newVersion" : "Nouvelle version",
     "deleteSignedVersion" : "Supprimer la version signée",
     "signedAttachment" : "Pièce jointe signée",
+    "attachmentAdded" : "Pièce jointe créée",
+    "attachmentUpdated" : "Pièce jointe modifiée",
+    "signedVersionDeleted" : "Version signée supprimée",
+    "newVersionAdded" : "Nouvelle version créée",
 };
