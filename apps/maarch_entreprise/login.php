@@ -169,6 +169,11 @@ if (isset($_SESSION['info']) && $_SESSION['info'] != '') {
     echo '</script>';
 }
 $loginObj->execute_login_script($loginMethods);
+if ($_GET['update-password-token']) {
+    echo "<script>";
+    echo "triggerAngular('#/update-password?token=". $_REQUEST['update-password-token']."')";
+    echo "</script>";
+}
 
 echo '</div>';
 

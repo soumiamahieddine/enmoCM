@@ -1314,4 +1314,7 @@ export const LANG_FR = {
     "send" : "Envoyer",
     "generation" : "Génération...",
     "requestSentByEmail" : "La demande vous a été envoyé par courriel.",
+    "logInOncePasswordChanged": "Vous serez amené à vous connecter une fois la modification du mot de passe effectuée.",
+    "samePassword" : "Les mots de passe sont identiques",
+    "sending" : "Envoi...",
 };

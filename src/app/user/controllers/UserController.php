@@ -199,7 +199,7 @@ class UserController
             $resetToken = AuthenticationController::getResetJWT(['id' => $newUser['id'], 'expirationTime' => 1209600]); // 14 days
             UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$newUser['id']]]);
 
-            $url = UrlController::getCoreUrl() . '#/update-password?token=' . $resetToken . '&creation=true';
+            $url = UrlController::getCoreUrl() . 'apps/maarch_entreprise/index.php?display=true&page=login&update-password-token=' . $resetToken;
             EmailController::createEmail([
                 'userId'    => $newUser['id'],
                 'data'      => [
@@ -1535,7 +1535,7 @@ class UserController
         $resetToken = AuthenticationController::getResetJWT(['id' => $user['id'], 'expirationTime' => 3600]); // 1 hour
         UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$user['id']]]);
 
-        $url = UrlController::getCoreUrl() . '#/update-password?token=' . $resetToken;
+        $url = UrlController::getCoreUrl() . 'apps/maarch_entreprise/index.php?display=true&page=login&update-password-token=' . $resetToken;
         EmailController::createEmail([
             'userId'    => $user['id'],
             'data'      => [
