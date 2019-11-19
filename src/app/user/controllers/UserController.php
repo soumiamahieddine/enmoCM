@@ -194,7 +194,7 @@ class UserController
             }
         }
 
-        $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
+        $loggingMethod = CoreConfigModel::getLoggingMethod();
         if ($loggingMethod['id'] == 'standard') {
             $resetToken = AuthenticationController::getResetJWT(['id' => $newUser['id'], 'expirationTime' => 1209600]); // 14 days
             UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$newUser['id']]]);

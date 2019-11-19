@@ -30,7 +30,7 @@ $app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRo
 
 //Authentication
 $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
-    $routesWithoutAuthentication = ['GET/jnlp/{jnlpUniqueId}', 'POST/password', 'PUT/password', 'GET/initialize', 'GET/passwordRules'];
+    $routesWithoutAuthentication = ['GET/jnlp/{jnlpUniqueId}', 'POST/password', 'PUT/password', 'GET/passwordRules'];
     $route = $request->getAttribute('route');
     $currentMethod = empty($route) ? '' : $route->getMethods()[0];
     $currentRoute = empty($route) ? '' : $route->getPattern();
@@ -45,7 +45,7 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
                     return $response->withStatus(405)->withJson(['errors' => $r['errors']]);
                 }
             }
-        } else {
+        } elseif ($currentMethod.$currentRoute != 'GET/initialize') {
             return $response->withStatus(401)->withJson(['errors' => 'Authentication Failed']);
         }
     }
