@@ -139,10 +139,11 @@ define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Chemin de la zone de stockage inacc
 define('_BACK_FROM_VACATION', 'de retour de son absence');
 define('_DOC_DISPLAYING', 'Visualisation du document');
 define('_DOC_ADDED', 'Document ajouté');
+define('_DOC_UPDATED', 'Document modifié');
+define('_DOC_DELETED', 'Document supprimé');
 define('_ATTACHMENT_ADDED', 'Pièce jointe ajoutée');
 define('_ATTACHMENT_UPDATED', 'Pièce jointe modifiée');
 define('_ATTACH_DISPLAYING', 'Visualisation de la pièce jointe');
-define('_DOC_DELETED', 'Document supprimé');
 define('_NOTE_ADDED', 'Annotation ajoutée');
 define('_NOTE_UPDATED', 'Annotation modifiée');
 define('_NOTE_DELETED', 'Annotation supprimée');

@@ -30,20 +30,22 @@ class StoreController
 {
     public static function storeResource(array $args)
     {
-        ValidatorModel::notEmpty($args, ['doctype', 'modelId']);
-        ValidatorModel::intVal($args, ['doctype', 'modelId']);
-
         try {
-            $resId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_id_mlb_seq']);
+            if (empty($args['resId'])) {
+                $resId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'res_id_mlb_seq']);
 
-            $data = ['resId' => $resId];
-            $data = array_merge($args, $data);
-            $data = StoreController::prepareStorage($data);
+                $data = ['resId' => $resId];
+                $data = array_merge($args, $data);
+                $data = StoreController::prepareResourceStorage($data);
+            } else {
+                $resId = $args['resId'];
+                $data = StoreController::prepareUpdateResourceStorage($args);
+            }
 
             if (!empty($args['encodedFile'])) {
                 $fileContent = base64_decode(str_replace(['-', '_'], ['+', '/'], $args['encodedFile']));
 
-                if (in_array($args['format'], MergeController::OFFICE_EXTENSIONS)) {
+                if (empty($args['resId']) && in_array($args['format'], MergeController::OFFICE_EXTENSIONS)) {
                     $tmpPath = CoreConfigModel::getTmpPath();
                     $uniqueId = CoreConfigModel::uniqueId();
                     $tmpFilename = "storeTmp_{$GLOBALS['id']}_{$uniqueId}.{$args['format']}";
@@ -71,7 +73,11 @@ class StoreController
                 $data['format']         = $args['format'];
             }
 
-            ResModel::create($data);
+            if (empty($args['resId'])) {
+                ResModel::create($data);
+            } else {
+                ResModel::update(['set' => $data, 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            }
 
             return $resId;
         } catch (\Exception $e) {
@@ -122,7 +128,8 @@ class StoreController
             if (empty($args['id'])) {
                 $id = AttachmentModel::create($data);
             } else {
-                $id = AttachmentModel::update(['set' => $data, 'where' => ['res_id = ?'], 'data' => [$args['id']]]);
+                AttachmentModel::update(['set' => $data, 'where' => ['res_id = ?'], 'data' => [$args['id']]]);
+                $id = $args['id'];
             }
 
             return $id;
@@ -131,7 +138,7 @@ class StoreController
         }
     }
 
-    public static function prepareStorage(array $args)
+    public static function prepareResourceStorage(array $args)
     {
         ValidatorModel::notEmpty($args, ['resId', 'modelId']);
         ValidatorModel::intVal($args, ['resId', 'modelId']);
@@ -186,6 +193,59 @@ class StoreController
             'external_id'           => $externalId,
             'creation_date'         => 'CURRENT_TIMESTAMP'
         ];
+
+        return $preparedData;
+    }
+
+    public static function prepareUpdateResourceStorage(array $args)
+    {
+        $preparedData = [
+            'modification_date' => 'CURRENT_TIMESTAMP'
+        ];
+
+        if (!empty($args['doctype'])) {
+            $preparedData['type_id'] = $args['doctype'];
+        }
+        if (isset($args['subject'])) {
+            $preparedData['subject'] = $args['subject'];
+        }
+        if (isset($args['confidentiality'])) {
+            $preparedData['confidentiality'] = empty($args['confidentiality']) ? 'N' : 'Y';
+        }
+        if (!empty($args['initiator'])) {
+            $entity = EntityModel::getById(['id' => $args['initiator'], 'select' => ['entity_id']]);
+            $preparedData['initiator'] = $entity['entity_id'];
+        }
+        if (!empty($args['destination'])) {
+            $entity = EntityModel::getById(['id' => $args['destination'], 'select' => ['entity_id']]);
+            $preparedData['destination'] = $entity['entity_id'];
+        }
+
+        if (isset($args['documentDate'])) {
+            $preparedData['doc_date'] = $args['documentDate'];
+        }
+        if (isset($args['arrivalDate'])) {
+            $preparedData['admission_date'] = $args['arrivalDate'];
+        }
+        if (isset($args['departureDate'])) {
+            $preparedData['departure_date'] = $args['departureDate'];
+        }
+        if (isset($args['processLimitDate'])) {
+            $preparedData['process_limit_date'] = $args['processLimitDate'];
+        }
+        if (isset($args['priority'])) {
+            $preparedData['priority'] = $args['priority'];
+        }
+        if (!empty($args['processLimitDate']) && !empty($args['priority'])) {
+            $preparedData['priority'] = IndexingController::calculatePriorityWithProcessLimitDate(['processLimitDate' => $args['processLimitDate']]);
+        }
+
+        if (!empty($args['externalId']) && is_array($args['externalId'])) {
+            $resource = ResModel::getById(['resId' => $args['id'], 'select' => ['external_id']]);
+            $externalId = array_merge(json_decode($resource['external_id'], true), $args['externalId']);
+            $externalId = json_encode($externalId);
+            $preparedData['external_id'] = $externalId;
+        }
 
         return $preparedData;
     }

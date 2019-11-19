@@ -86,7 +86,7 @@ class AttachmentController
         $attachment = AttachmentModel::getById([
             'id'        => $args['id'],
             'select'    => [
-                'res_id_master', 'status', 'title', 'identifier as chrono', 'relation', 'attachment_type as type',
+                'res_id as "resId"', 'res_id_master', 'status', 'title', 'identifier as chrono', 'relation', 'attachment_type as type',
                 'origin_id as "originId"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"', 'validation_date as "validationDate"',
                 'fulltext_result as "fulltextResult"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
             ]

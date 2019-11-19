@@ -425,6 +425,7 @@ WHERE service_id = 'edit_recipient_outside_process' OR service_id = 'update_diff
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
 DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
+UPDATE usergroups_services SET service_id = 'edit_resource' WHERE service_id = 'edit_document_in_detail';
 
 UPDATE usergroups_services SET service_id = 'manage_own_attachments_in_details' WHERE service_id = 'edit_attachments_from_detail';
 INSERT INTO usergroups_services (group_id, service_id)

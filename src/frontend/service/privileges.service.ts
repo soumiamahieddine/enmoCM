@@ -277,9 +277,9 @@ export class PrivilegeService {
             "unit": 'history'
         },
         {
-            "id": "edit_document_in_detail",
-            "label": this.lang.editDocumentInDetail,
-            "comment": this.lang.editDocumentInDetailDesc,
+            "id": "edit_resource",
+            "label": this.lang.editResource,
+            "comment": this.lang.editResourceDesc,
             "unit": 'application'
         },
         {

@@ -1213,8 +1213,8 @@ export const LANG_NL = {
     "viewHistoryDesc" : "De geschiedenis van de gebeurtenissen met betrekking tot het gebruik van Maarch Courrier raadplegen.",
     "viewFullHistory" : "De volledige geschiedenis van het document bekijken",
     "viewFullHistoryDesc" : "De volledige geschiedenis van de evenementen over het gebruik van GED Maarch raadplegen.",
-    "editDocumentInDetail" : "Een document in de gedetailleerde fiche wijzigen",
-    "editDocumentInDetailDesc" : "Een document in de gedetailleerde fiche wijzigen Dat zal ook van de instelling van de status afhangen (Wijziging van de indexen)",
+    "editResource" : "Een document in de gedetailleerde",
+    "editResourceDesc" : "Een document in de gedetailleerde. Dat zal ook van de instelling van de status afhangen (Wijziging van de indexen)",
     "deleteDocumentInDetail" : "Een document in de gedetailleerde fiche verwijderen",
     "manageTagsInApplication" : "Create tags", //_TO_TRANSLATE
     "manageTagsInApplicationDesc" : "Create tags while indexing, processing and in details", //_TO_TRANSLATE

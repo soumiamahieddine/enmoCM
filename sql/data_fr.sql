@@ -53,7 +53,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view_full_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_links');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'delete_document_in_detail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_document_in_detail');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_resource');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_diffusion_indexing');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_diffusion_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'entities_print_sep_mlb');
@@ -108,7 +108,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_full_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_links');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'delete_document_in_detail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'edit_document_in_detail');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'edit_resource');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_diffusion_indexing');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_diffusion_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'sendmail');
@@ -174,7 +174,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_parameters');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_priorities');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'delete_document_in_detail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'edit_document_in_detail');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'edit_resource');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_email_server');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_shippings');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_baskets');
@@ -212,7 +212,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'admin');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'view_doc_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'view_full_history');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'edit_document_in_detail');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'edit_resource');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'admin_templates');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'admin_tag');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'adv_search_mlb');
