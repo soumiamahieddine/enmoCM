@@ -141,6 +141,7 @@ define('_DOC_DISPLAYING', 'Visualisation du document');
 define('_DOC_ADDED', 'Document ajouté');
 define('_DOC_UPDATED', 'Document modifié');
 define('_DOC_DELETED', 'Document supprimé');
+define('_FILE_UPDATED', 'Fichier modifié');
 define('_ATTACHMENT_ADDED', 'Pièce jointe ajoutée');
 define('_ATTACHMENT_UPDATED', 'Pièce jointe modifiée');
 define('_ATTACH_DISPLAYING', 'Visualisation de la pièce jointe');

@@ -225,6 +225,15 @@ class ResController
             $customId = CoreConfigModel::getCustomId();
             $customId = empty($customId) ? 'null' : $customId;
             exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$args['resId']} --collId letterbox_coll --userId {$GLOBALS['id']} > /dev/null &");
+
+            HistoryController::add([
+                'tableName' => 'res_letterbox',
+                'recordId'  => $args['resId'],
+                'eventType' => 'UP',
+                'info'      => _FILE_UPDATED,
+                'moduleId'  => 'resource',
+                'eventId'   => 'fileModification'
+            ]);
         }
 
         HistoryController::add([
@@ -233,7 +242,7 @@ class ResController
             'eventType' => 'UP',
             'info'      => _DOC_UPDATED,
             'moduleId'  => 'resource',
-            'eventId'   => 'resourceModification',
+            'eventId'   => 'resourceModification'
         ]);
 
         return $response->withStatus(204);
