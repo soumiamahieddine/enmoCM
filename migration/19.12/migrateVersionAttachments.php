@@ -1,7 +1,5 @@
 <?php
 
-use SrcCore\models\CoreConfigModel;
-
 require '../../vendor/autoload.php';
 
 chdir('../..');
@@ -79,7 +77,9 @@ foreach ($customs as $custom) {
         migrateEmailsVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateMessageExchangeVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateShippingVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
-        migrateFullText(['newResId' => $newResId, 'customId' => $custom, 'userId' => $masterOwnerId]);
+        if (in_array($attachmentInfo['status'], ['A_TRA', 'TRA'])) {
+            migrateFullText(['newResId' => $newResId, 'customId' => $custom, 'userId' => $masterOwnerId]);
+        }
 
         $migrated++;
     }

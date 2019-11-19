@@ -47,7 +47,7 @@ class FullTextScript
         $mode     = '';
 
         if (array_search('--customId', $args) > 0) {
-            $cmd = array_search('--limit', $args);
+            $cmd = array_search('--customId', $args);
             $customId = $args[$cmd+1];
         }
         
