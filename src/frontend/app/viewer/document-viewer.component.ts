@@ -12,6 +12,7 @@ import { AlertComponent } from '../../plugins/modal/alert.component';
 import { SortPipe } from '../../plugins/sorting.pipe';
 import { templateVisitAll } from '@angular/compiler';
 import { PluginSelectSearchComponent } from '../../plugins/select-search/select-search.component';
+import { FormControl } from '@angular/forms';
 
 
 @Component({
@@ -54,6 +55,8 @@ export class DocumentViewerComponent implements OnInit {
     editInProgress: boolean = false;
 
     listTemplates: any[] = [];
+
+    templateListForm = new FormControl();
 
     @Input('resId') resId: number = null;
     @Input('infoPanel') infoPanel: MatSidenav = null;
@@ -491,19 +494,35 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     editTemplate(templateId: number) {
-        this.refreshDatas.emit();
-        const template = this.listTemplates.filter(template => template.id === templateId)[0];
-        this.editInProgress = true;
-        const jnlp: any = {
-            objectType: 'resourceCreation',
-            objectId: template.id,
-            cookie: document.cookie,
-            data: this.resourceDatas,
-        };
-        this.http.post('../../rest/jnlp', jnlp).pipe(
-            tap((data: any) => {
-                window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
-                this.checkLockFile(data.jnlpUniqueId, template);
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.templateEdition, msg: this.lang.editionAttachmentConfirm } });
+
+        this.dialogRef.afterClosed().pipe(
+            tap((data: string) => {
+                if (data !== 'ok') {
+                    this.templateListForm.reset();
+                }
+            }),
+            filter((data: string) => data === 'ok'),
+            tap(() => {
+                this.refreshDatas.emit();
+                const template = this.listTemplates.filter(template => template.id === templateId)[0];
+                this.editInProgress = true;
+                const jnlp: any = {
+                    objectType: 'resourceCreation',
+                    objectId: template.id,
+                    cookie: document.cookie,
+                    data: this.resourceDatas,
+                };
+                this.http.post('../../rest/jnlp', jnlp).pipe(
+                    tap((data: any) => {
+                        window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
+                        this.checkLockFile(data.jnlpUniqueId, template);
+                    })
+                ).subscribe();
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
             })
         ).subscribe();
     }
