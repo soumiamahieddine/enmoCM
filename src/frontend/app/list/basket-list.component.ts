@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef, ApplicationRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
-import { merge, Observable, of as observableOf, Subject, Subscription  } from 'rxjs';
+import { merge, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
 import { NotificationService } from '../notification.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -23,6 +23,7 @@ import { AppService } from '../../service/app.service';
 import { PanelFolderComponent } from '../folder/panel/panel-folder.component';
 import { FoldersService } from '../folder/folders.service';
 import { ActionsService } from '../actions/actions.service';
+import { ContactsListModalComponent } from '../contact/list/modal/contacts-list-modal.component';
 
 
 declare function $j(selector: any): any;
@@ -80,7 +81,7 @@ export class BasketListComponent implements OnInit {
     currentMode: string = '';
     defaultAction = {
         id: 19,
-        component : 'processAction'
+        component: 'processAction'
     };
     thumbnailUrl: string = '';
 
@@ -106,36 +107,36 @@ export class BasketListComponent implements OnInit {
     @ViewChild('tableBasketListSort', { static: true }) sort: MatSort;
 
     constructor(
-        private router: Router, 
+        private router: Router,
         private _activatedRoute: ActivatedRoute,
-        private route: ActivatedRoute, 
-        public http: HttpClient, 
-        public dialog: MatDialog, 
-        private sanitizer: DomSanitizer, 
-        private headerService: HeaderService, 
-        public filtersListService: FiltersListService, 
-        private notify: NotificationService, 
-        public overlay: Overlay, 
+        private route: ActivatedRoute,
+        public http: HttpClient,
+        public dialog: MatDialog,
+        private sanitizer: DomSanitizer,
+        private headerService: HeaderService,
+        public filtersListService: FiltersListService,
+        private notify: NotificationService,
+        public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
         public appService: AppService,
         private foldersService: FoldersService,
         private actionService: ActionsService) {
-            _activatedRoute.queryParams.subscribe(
-                params => this.specificChrono = params.chrono
-            );
+        _activatedRoute.queryParams.subscribe(
+            params => this.specificChrono = params.chrono
+        );
 
-            // Event after process action 
-            this.subscription = this.foldersService.catchEvent().subscribe((result: any) => {
-                if (result.type === 'function') {
-                    this[result.content]();
-                } 
-            }); 
-            this.subscription2 = this.actionService.catchAction().subscribe((message: any) => {
-                this.refreshDaoAfterAction();
-                this.panelFolder.refreshFoldersTree();
-            });
+        // Event after process action 
+        this.subscription = this.foldersService.catchEvent().subscribe((result: any) => {
+            if (result.type === 'function') {
+                this[result.content]();
+            }
+        });
+        this.subscription2 = this.actionService.catchAction().subscribe((message: any) => {
+            this.refreshDaoAfterAction();
+            this.panelFolder.refreshFoldersTree();
+        });
 
-            $j("link[href='merged_css.php']").remove();
+        $j("link[href='merged_css.php']").remove();
     }
 
     ngOnInit(): void {
@@ -237,15 +238,15 @@ export class BasketListComponent implements OnInit {
     }
 
     togglePanel(mode: string, row: any) {
-        let thisSelect = { checked : true };
-        let thisDeselect = { checked : false };
+        let thisSelect = { checked: true };
+        let thisDeselect = { checked: false };
         const previousRes = this.currentResource;
         row.checked = true;
 
         this.toggleAllRes(thisDeselect);
         this.toggleRes(thisSelect, row);
-        
-        if(previousRes.resId == row.resId && this.sidenavRight.opened && this.currentMode == mode) {
+
+        if (previousRes.resId == row.resId && this.sidenavRight.opened && this.currentMode == mode) {
             this.sidenavRight.close();
         } else {
             this.currentMode = mode;
@@ -257,7 +258,7 @@ export class BasketListComponent implements OnInit {
 
     refreshBadgeNotes(nb: number) {
         this.currentResource.countNotes = nb;
-    }                                     
+    }
 
     refreshBadgeAttachments(nb: number) {
         this.currentResource.countAttachments = nb;
@@ -272,8 +273,8 @@ export class BasketListComponent implements OnInit {
         this.sidenavRight.close();
         this.refreshDao();
         this.basketHome.refreshBasketHome();
-        const e:any = {checked : false};
-        this.toggleAllRes(e); 
+        const e: any = { checked: false };
+        this.toggleAllRes(e);
     }
 
     filterThis(value: string) {
@@ -305,11 +306,13 @@ export class BasketListComponent implements OnInit {
 
             // Process secondary datas
             element.display.forEach((key: any) => {
+                key.event = false;
                 key.displayTitle = key.displayValue;
                 if ((key.displayValue == null || key.displayValue == '') && ['getCreationAndProcessLimitDates', 'getParallelOpinionsNumber'].indexOf(key.value) === -1) {
                     key.displayValue = this.lang.undefined;
                     key.displayTitle = '';
                 } else if (["getSenders", "getRecipients"].indexOf(key.value) > -1) {
+                    key.event = true;
                     if (key.displayValue.length > 1) {
                         key.displayTitle = key.displayValue.join(' - ');
                         key.displayValue = '<b>' + key.displayValue.length + '</b> ' + this.lang.contacts;
@@ -397,6 +400,7 @@ export class BasketListComponent implements OnInit {
                 element['checked'] = true;
             }
         });
+        console.log(data);
         return data;
     }
 
@@ -429,18 +433,18 @@ export class BasketListComponent implements OnInit {
     }
 
     selectSpecificRes(row: any) {
-        let thisSelect = { checked : true };
-        let thisDeselect = { checked : false };
-        
+        let thisSelect = { checked: true };
+        let thisDeselect = { checked: false };
+
         this.toggleAllRes(thisDeselect);
         this.toggleRes(thisSelect, row);
     }
 
     open({ x, y }: MouseEvent, row: any) {
-        
-        let thisSelect = { checked : true };
-        let thisDeselect = { checked : false };
-        if ( row.checked === false) {
+
+        let thisSelect = { checked: true };
+        let thisDeselect = { checked: false };
+        if (row.checked === false) {
             row.checked = true;
             this.toggleAllRes(thisDeselect);
             this.toggleRes(thisSelect, row);
@@ -452,12 +456,12 @@ export class BasketListComponent implements OnInit {
     }
 
     launch(action: any, row: any) {
-        let thisSelect = { checked : true };
-        let thisDeselect = { checked : false };
+        let thisSelect = { checked: true };
+        let thisDeselect = { checked: false };
         row.checked = true;
         this.toggleAllRes(thisDeselect);
         this.toggleRes(thisSelect, row);
-        
+
         setTimeout(() => {
             this.actionsList.launchEvent(action, row);
         }, 200);
@@ -466,6 +470,20 @@ export class BasketListComponent implements OnInit {
     listTodrag() {
         return this.foldersService.getDragIds();
     }
+
+    launchEventSubData(data: any, row: any) {
+        if (data.event) {
+            if (["getSenders", "getRecipients"].indexOf(data.value) > -1) {
+                const mode = data.value === 'getSenders' ? 'sender' : 'recipient';
+                this.openContact(row, mode);
+            }
+        }
+    }
+
+    openContact(row: any, mode: string) {
+        this.dialog.open(ContactsListModalComponent, { data: { title: `${row.chrono} - ${row.subject}`, mode: mode, resId: row.resId } });
+    }
+
 }
 export interface BasketList {
     displayFolderTags: boolean;

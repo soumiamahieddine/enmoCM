@@ -80,6 +80,8 @@ import { AddPrivateIndexingModelModalComponent }                        from './
 import { FoldersService } from './folder/folders.service';
 import { PrivilegeService } from '../service/privileges.service';
 import { ActionsService } from './actions/actions.service';
+import { ContactsListComponent } from './contact/list/contacts-list.component';
+import { ContactsListModalComponent } from './contact/list/modal/contacts-list-modal.component';
 
 
 @NgModule({
@@ -151,7 +153,9 @@ import { ActionsService } from './actions/actions.service';
         AttachmentCreateComponent,
         AddPrivateIndexingModelModalComponent,
         AttachmentShowModalComponent,
-        MailResumeComponent
+        MailResumeComponent,
+        ContactsListComponent,
+        ContactsListModalComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,
@@ -179,7 +183,8 @@ import { ActionsService } from './actions/actions.service';
         AddPrivateIndexingModelModalComponent,
         AttachmentPageComponent,
         AttachmentCreateComponent,
-        AttachmentShowModalComponent
+        AttachmentShowModalComponent,
+        ContactsListModalComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, NotificationService, PrivilegeService ],
     bootstrap: [ AppComponent ]

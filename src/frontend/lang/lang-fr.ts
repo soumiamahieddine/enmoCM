@@ -1325,4 +1325,10 @@ export const LANG_FR = {
     "signedVersionDeleted" : "Version signée supprimée",
     "newVersionAdded" : "Nouvelle version créée",
     "editionAttachmentConfirm" : "Toutes les variables de fusion seront remplacées en prenant en compte ce que vous avez saisie dans le formulaire à gauche. <br><br>Seul le <b>numéro chrono</b> ([res_letterbox.alt_identifier]) sera remplacée après l'enregistrement du courrier",
+    "othersInfos" : "Autre(s) information(s)",
+    "contactDetails" : "Coordonnées",
+    "contactsFillingRate" : "Taux de complétude",
+    "contact_physical" : "Contact physique",
+    "contact_corporate" : "Contact moral",
+    "contact_internal" : "Utilisateur interne",
 };

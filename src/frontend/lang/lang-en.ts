@@ -1288,4 +1288,10 @@ export const LANG_EN = {
     "signedVersionDeleted" : "Signed version deleted",
     "newVersionAdded" : "New version added",
     "editionAttachmentConfirm" : "All merge variables will be replaced taking into account what you entered in the form on the left. <br> <br> Only <b> chrono number </b> ([res_letterbox.alt_identifier]) will be replaced after mail registration",
+    "othersInfos" : "Other(s) information(s)",
+    "contactDetails" : "Details",
+    "contactsFillingRate" : "Filling rate",
+    "contact_physical" : "Physical contact",
+    "contact_corporate" : "Corporate contact",
+    "contact_internal" : "Internal user",
 };

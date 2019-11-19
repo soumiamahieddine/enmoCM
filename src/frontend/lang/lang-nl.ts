@@ -1312,4 +1312,10 @@ export const LANG_NL = {
     "attachmentUpdated" : "Attachment updated", //_TO_TRANSLATE
     "signedVersionDeleted" : "Signed version deleted", //_TO_TRANSLATE
     "newVersionAdded" : "New version added", //_TO_TRANSLATE
+    "othersInfos" : "Other(s) information(s)", //_TO_TRANSLATE
+    "contactDetails" : "Details", //_TO_TRANSLATE
+    "contactsFillingRate" : "Filling rate", //_TO_TRANSLATE
+    "contact_physical" : "Physical contact", //_TO_TRANSLATE
+    "contact_corporate" : "Corporate contact", //_TO_TRANSLATE
+    "contact_internal" : "Internal user", //_TO_TRANSLATE
 };
