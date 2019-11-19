@@ -911,7 +911,7 @@ class ResController
     {
         $body = $args['body'];
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status']]);
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status', 'model_id']]);
         if (empty($resource['status'])) {
             return ['errors' => 'Resource status is empty. It can not be modified'];
         }
@@ -941,6 +941,7 @@ class ResController
             return ['errors' => $control['errors']];
         }
 
+        $body['modelId'] = $resource['model_id'];
         $control = ResController::controlIndexingModelFields(['body' => $body]);
         if (!empty($control['errors'])) {
             return ['errors' => $control['errors']];
