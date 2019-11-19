@@ -461,11 +461,13 @@ class BasketController
             }
         }
         $data['list_display'] = json_encode($data['list_display']);
+        $data['list_event_data'] = empty($data['list_event_data']) ? null : json_encode($data['list_event_data']);
 
         GroupBasketModel::update([
             'set'   => [
-                'list_display' => $data['list_display'],
-                'list_event' => $data['list_event']
+                'list_display'      => $data['list_display'],
+                'list_event'        => $data['list_event'],
+                'list_event_data'   => $data['list_event_data']
             ],
             'where' => ['group_id = ?', 'basket_id = ?'],
             'data'  => [$aArgs['groupId'], $aArgs['id']]
