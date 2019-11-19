@@ -400,7 +400,6 @@ export class BasketListComponent implements OnInit {
                 element['checked'] = true;
             }
         });
-        console.log(data);
         return data;
     }
 

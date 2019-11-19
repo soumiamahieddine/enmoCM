@@ -36,7 +36,7 @@ export class ContactsListComponent implements OnInit {
         country: 'FRANCE',
         otherData: 'Editeur du logiciel libre Maarch',
         website: 'www.maarchcourrier.com',
-        filling: 'ff5733'
+        filling: '#ff5733'
     },
     {
         mode: 'internal',
@@ -56,7 +56,7 @@ export class ContactsListComponent implements OnInit {
         country: '',
         otherData: '',
         website: '',
-        filling: 'ff5733'
+        filling: '#ff5733'
     }];
 
     /**
