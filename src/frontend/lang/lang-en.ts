@@ -1294,4 +1294,8 @@ export const LANG_EN = {
     "contact_physical" : "Physical contact",
     "contact_corporate" : "Corporate contact",
     "contact_internal" : "Internal user",
+    "goToAdminParams" : "Access to admin settings",
+    "adminParamsUsers" : "Settings for users administration",
+    "chooseAllowedGroups" : "Choose allowed groups",
+    "reallyWantToDeleteThisGroup"   : "Do you really want to remove this group ?",
 };

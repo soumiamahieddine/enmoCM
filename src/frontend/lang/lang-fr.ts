@@ -1331,4 +1331,8 @@ export const LANG_FR = {
     "contact_physical" : "Contact physique",
     "contact_corporate" : "Contact moral",
     "contact_internal" : "Utilisateur interne",
+    "goToAdminParams" : "Accéder aux paramètres de l'administration",
+    "adminParamsUsers" : "Options administration utilisateurs",
+    "chooseAllowedGroups" : "Choissisez les groupes d'affectation autorisés",
+    "reallyWantToDeleteThisGroup"   : "Êtes-vous sûr de vouloir supprimer ce groupe ?",
 };

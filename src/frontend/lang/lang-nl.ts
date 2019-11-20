@@ -1318,4 +1318,8 @@ export const LANG_NL = {
     "contact_physical" : "Physical contact", //_TO_TRANSLATE
     "contact_corporate" : "Corporate contact", //_TO_TRANSLATE
     "contact_internal" : "Internal user", //_TO_TRANSLATE
+    "goToAdminParams" : "Access to admin settings", //_TO_TRANSLATE
+    "adminParamsUsers" : "Settings for users administration", //_TO_TRANSLATE
+    "chooseAllowedGroups" : "Choose allowed groups", //_TO_TRANSLATE
+    "reallyWantToDeleteThisGroup"   : "Do you really want to remove this group ?", //_TO_TRANSLATE
 };

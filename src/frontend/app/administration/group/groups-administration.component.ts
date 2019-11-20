@@ -77,7 +77,7 @@ export class GroupsAdministrationComponent implements OnInit {
 
     preDelete(group: any) {
         if (group.users.length == 0) {
-            let r = confirm("Etes vous sûr de vouloir supprimer ce groupe ?");
+            let r = confirm(this.lang.reallyWantToDeleteThisGroup);
 
             if (r) {
                 this.deleteGroup(group);
