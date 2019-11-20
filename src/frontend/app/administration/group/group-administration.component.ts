@@ -248,6 +248,7 @@ export class GroupAdministrationComponent implements OnInit {
         if (ev.checked) {
             this.addService(service);
         } else {
+            this.sidenavRight.close();
             this.removeService(service);
         }
     }
