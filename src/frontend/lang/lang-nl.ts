@@ -1322,4 +1322,6 @@ export const LANG_NL = {
     "adminParamsUsers" : "Settings for users administration", //_TO_TRANSLATE
     "chooseAllowedGroups" : "Choose allowed groups", //_TO_TRANSLATE
     "reallyWantToDeleteThisGroup"   : "Do you really want to remove this group ?", //_TO_TRANSLATE
+    "contact_entity"   : "Entity", //_TO_TRANSLATE
+    "contact_third"   : "Contact third", //_TO_TRANSLATE
 };

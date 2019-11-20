@@ -1335,4 +1335,6 @@ export const LANG_FR = {
     "adminParamsUsers" : "Options administration utilisateurs",
     "chooseAllowedGroups" : "Choisissez les groupes d'affectations autorisés",
     "reallyWantToDeleteThisGroup"   : "Êtes-vous sûr de vouloir supprimer ce groupe ?",
+    "contact_entity"   : "Entité",
+    "contact_third"   : "Tier bénéficiaire",
 };

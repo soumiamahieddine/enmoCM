@@ -1298,4 +1298,6 @@ export const LANG_EN = {
     "adminParamsUsers" : "Settings for users administration",
     "chooseAllowedGroups" : "Choose allowed groups",
     "reallyWantToDeleteThisGroup"   : "Do you really want to remove this group ?",
+    "contact_entity"   : "Entity",
+    "contact_third"   : "Contact third",
 };
