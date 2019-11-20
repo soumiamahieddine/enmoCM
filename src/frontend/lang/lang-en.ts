@@ -1272,7 +1272,7 @@ export const LANG_EN = {
     "attachment_SIGN": "Signed",
     "attachment_FRZ": "Freez",
     "attachment_TRA": "Processed",
-    "afterClickingSendLinkChangePassword": "After clicking on <b>Send</b>, you will receive an email containing a link to change your password. This link will be active <b>1 hour</b>.",
+    "afterClickingSendLinkChangePassword": "After clicking on <b>Send</b>, you will receive an email containing a link to change your password. This link will be active for <b>1 hour</b>.",
     "enterLogin": "Enter your username",
     "send" : "Send",
     "generation" : "Generation...",
@@ -1296,4 +1296,6 @@ export const LANG_EN = {
     "adminParamsUsers" : "Settings for users administration",
     "chooseAllowedGroups" : "Choose allowed groups",
     "reallyWantToDeleteThisGroup"   : "Do you really want to remove this group ?",
+    "contact_entity"   : "Entity",
+    "contact_third"   : "Contact third",
 };

@@ -547,7 +547,7 @@ ALTER TABLE res_attachments DROP COLUMN IF EXISTS source;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS folders_system_id;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS offset_doc;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS destination;
-ALTER TABLE res_attachments DROP COLUMN IF EXISTS priotity;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS priority;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS initiator;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_multicontacts;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_multi_docservers;

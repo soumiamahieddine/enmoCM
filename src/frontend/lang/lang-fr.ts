@@ -1313,7 +1313,7 @@ export const LANG_FR = {
     "enterLogin": "Saisissez votre identifiant",
     "send" : "Envoyer",
     "generation" : "Génération...",
-    "requestSentByEmail" : "La demande vous a été envoyé par courriel.",
+    "requestSentByEmail" : "La demande vous a été envoyée par courriel.",
     "logInOncePasswordChanged": "Vous serez amené à vous connecter une fois la modification du mot de passe effectuée.",
     "newVersion" : "Nouvelle version",
     "deleteSignedVersion" : "Supprimer la version signée",
@@ -1331,7 +1331,9 @@ export const LANG_FR = {
     "contact_internal" : "Utilisateur interne",
     "goToAdminParams" : "Accéder aux paramètres de l'administration",
     "adminParamsUsers" : "Options administration utilisateurs",
-    "chooseAllowedGroups" : "Choissisez les groupes d'affectation autorisés",
+    "chooseAllowedGroups" : "Choisissez les groupes d'affectations autorisés",
     "reallyWantToDeleteThisGroup"   : "Êtes-vous sûr de vouloir supprimer ce groupe ?",
-    "invalidToken" : "Le jeton est expiré ou n'existe plus"
+    "invalidToken" : "Le jeton est expiré ou n'existe plus",
+    "contact_entity"   : "Entité",
+    "contact_third"   : "Tier bénéficiaire",
 };
