@@ -126,7 +126,7 @@ abstract class PrivilegeModelAbstract
             return null;
         }
 
-        $extra = json_decode($extra[0]);
+        $extra = json_decode($extra[0], true);
 
         return $extra;
     }

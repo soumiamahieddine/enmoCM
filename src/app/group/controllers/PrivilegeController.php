@@ -110,6 +110,28 @@ class PrivilegeController
         return $response->withStatus(204);
     }
 
+    public static function getParameters(Request $request, Response $response, array $args)
+    {
+        $group = GroupModel::getById(['id' => $args['id']]);
+        if (empty($group)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group not found']);
+        }
+
+        $queryParams = $request->getQueryParams();
+
+        $parameters = PrivilegeModel::getParametersFromGroupPrivilege(['groupId' => $group['group_id'], 'privilegeId' => $args['privilegeId']]);
+
+        if (!empty($queryParams['parameter'])) {
+            if (!isset($parameters[$queryParams['parameter']])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Parameter not found']);
+            }
+
+            $parameters = $parameters[$queryParams['parameter']];
+        }
+
+        return $response->withJson($parameters);
+    }
+
     public static function hasPrivilege(array $args)
     {
         ValidatorModel::notEmpty($args, ['privilegeId', 'userId']);
@@ -169,8 +191,8 @@ class PrivilegeController
         $assignable = [];
         foreach ($userGroups as $userGroup) {
             $groups = PrivilegeModel::getParametersFromGroupPrivilege(['groupId' => $userGroup, 'privilegeId' => 'admin_users']);
-            if (isset($groups) && isset($groups->groups)) {
-                $groups = $groups->groups;
+            if (isset($groups) && isset($groups['groups'])) {
+                $groups = $groups['groups'];
                 $assignable = array_merge($assignable, $groups);
             }
         }
