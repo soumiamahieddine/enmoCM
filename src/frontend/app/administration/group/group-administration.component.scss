@@ -1,4 +1,10 @@
+@import '../../../css/vars.scss';
+
 textarea.mat-input-element {
     padding: 0;
     margin: 0;
+}
+
+.active {
+    color: $secondary;
 }

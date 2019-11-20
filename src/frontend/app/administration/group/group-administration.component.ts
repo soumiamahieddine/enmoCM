@@ -10,9 +10,10 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AppService } from '../../../service/app.service';
 import { PrivilegeService } from '../../../service/privileges.service';
-import { tap, catchError, exhaustMap } from 'rxjs/operators';
+import { tap, catchError, exhaustMap, map, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { MenuShortcutComponent } from '../../menu/menu-shortcut.component';
+import { MatSelectionList } from '@angular/material';
 
 declare function $j(selector: any): any;
 
@@ -28,6 +29,7 @@ export class GroupAdministrationComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = false;
+    paramsLoading: boolean = false;
 
     group: any = {
         security: {}
@@ -41,6 +43,9 @@ export class GroupAdministrationComponent implements OnInit {
     basketsDataSource: any;
 
     unitPrivileges: any[] = [];
+
+    authorizedGroupsUserParams: any[] = [];
+    panelMode = 'keywordInfos';
 
     @ViewChild('paginatorBaskets', { static: false }) paginatorBaskets: MatPaginator;
     @ViewChild('sortBaskets', { static: true }) sortBaskets: MatSort;
@@ -208,8 +213,8 @@ export class GroupAdministrationComponent implements OnInit {
     resfreshShortcut() {
         this.headerService.resfreshCurrentUser();
         setTimeout(() => {
-            this.appShortcut.loadShortcuts();   
-        }, 200); 
+            this.appShortcut.loadShortcuts();
+        }, 200);
     }
 
     getCurrentPrivListDiff(serviceId: string) {
@@ -297,5 +302,63 @@ export class GroupAdministrationComponent implements OnInit {
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
+    }
+
+    openUserParams(id: string) {
+        this.sidenavRight.toggle();
+        if (!this.sidenavRight.opened) {
+            this.panelMode = '';
+        } else {
+            this.panelMode = id;
+            this.paramsLoading = true;
+            this.http.get(`../../rest/groups`).pipe(
+                map((data: any) => {
+                    data.groups = data.groups.map((group: any) => {
+                        return {
+                            id: group.id,
+                            label: group.group_desc
+                        }
+                    });
+                    return data;
+                }),
+                tap((data: any) => {
+                    this.authorizedGroupsUserParams = data.groups;
+                }),
+                exhaustMap(() => this.http.get(`../../rest/groups/${this.group.id}/privileges/${this.panelMode}/parameters?parameter=groups`)),
+                tap((data: any) => {
+                    const allowedGroups: any[] = data;
+                    this.authorizedGroupsUserParams.forEach(group => {
+                        if (allowedGroups.indexOf(group.id) > -1) {
+                            group.checked = true;
+                        } else {
+                            group.checked = false;
+                        }
+                    });
+                }),
+                finalize(() => this.paramsLoading = false),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
+    }
+
+    updatePrivilegeParams(paramList: any) {
+        let obj = {};
+        if (this.panelMode === 'admin_users') {
+            obj = {
+                groups: paramList.map((param: any) => param.value)
+            }
+        }
+        this.http.put(`../../rest/groups/${this.group.id}/privileges/${this.panelMode}/parameters`, { parameters: obj }).pipe(
+            tap(() => {
+                this.notify.success('parametres modifiés');
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 }

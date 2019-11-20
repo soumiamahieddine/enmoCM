@@ -99,15 +99,15 @@ abstract class ListInstanceModelAbstract
         return true;
     }
 
-    public static function delete(array $aArgs)
+    public static function delete(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
-        ValidatorModel::arrayType($aArgs, ['where', 'data']);
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
 
         DatabaseModel::delete([
             'table' => 'listinstance',
-            'where' => $aArgs['where'],
-            'data'  => $aArgs['data']
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;

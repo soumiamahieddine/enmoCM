@@ -7,7 +7,7 @@ DELETE FROM security WHERE group_id = 'MAARCHTOGEC';
 INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('MAARCHTOGEC', 'letterbox_coll', '1=0', 'Aucun courrier');
 
 DELETE FROM users WHERE user_id = 'cchaplin';
-INSERT INTO users (user_id, password, firstname, lastname, mail, enabled, change_password, status, loginmode) VALUES ('cchaplin', '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', 'Jean', 'WEBSERVICE', 'info@maarch.org', 'Y', 'N', 'OK', 'restMode');
+INSERT INTO users (user_id, password, firstname, lastname, mail, enabled, status, loginmode) VALUES ('cchaplin', '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', 'Jean', 'WEBSERVICE', 'info@maarch.org', 'Y', 'OK', 'restMode');
 DELETE FROM usergroup_content WHERE user_id = 'cchaplin';
 INSERT INTO usergroup_content (user_id, group_id, role) VALUES ('cchaplin', 'MAARCHTOGEC', '');
 

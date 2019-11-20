@@ -21,6 +21,7 @@ interface administration {
     'style': string, //icone used interface
     'unit': 'organisation' | 'classement' | 'production' | 'supervision' //category of administration
     'angular': boolean //to navigate in V1 <=>V2
+    'hasParams' : boolean
 }
 
 interface privilege {
@@ -43,7 +44,8 @@ export class PrivilegeService {
             "route": "/administration/users",
             "unit": "organisation",
             "style": "fa fa-user",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : true
         },
         {
             "id": "admin_groups",
@@ -52,7 +54,8 @@ export class PrivilegeService {
             "route": "/administration/groups",
             "unit": "organisation",
             "style": "fa fa-users",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "manage_entities",
@@ -61,7 +64,8 @@ export class PrivilegeService {
             "route": "/administration/entities",
             "unit": "organisation",
             "style": "fa fa-sitemap",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_listmodels",
@@ -70,7 +74,8 @@ export class PrivilegeService {
             "route": "/administration/diffusionModels",
             "unit": "organisation",
             "style": "fa fa-th-list",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_architecture",
@@ -79,7 +84,8 @@ export class PrivilegeService {
             "route": "/administration/doctypes",
             "unit": "classement",
             "style": "fa fa-suitcase",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_tag",
@@ -88,7 +94,8 @@ export class PrivilegeService {
             "route": "index.php?page=manage_tag_list_controller&module=tags",
             "unit": "classement",
             "style": "fa fa-tags",
-            "angular" : false
+            "angular" : false,
+            "hasParams" : false
         },
         {
             "id": "admin_baskets",
@@ -97,7 +104,8 @@ export class PrivilegeService {
             "route": "/administration/baskets",
             "unit": "production",
             "style": "fa fa-inbox",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_status",
@@ -106,7 +114,8 @@ export class PrivilegeService {
             "route": "/administration/statuses",
             "unit": "production",
             "style": "fa fa-check-circle",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_actions",
@@ -115,7 +124,8 @@ export class PrivilegeService {
             "route": "/administration/actions",
             "unit": "production",
             "style": "fa fa-exchange-alt",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_contacts",
@@ -124,7 +134,8 @@ export class PrivilegeService {
             "route": "index.php?page=admin_contacts&admin=contacts",
             "unit": "production",
             "style": "fa fa-book",
-            "angular" : false
+            "angular" : false,
+            "hasParams" : false
         },
         {
             "id": "admin_priorities",
@@ -133,7 +144,8 @@ export class PrivilegeService {
             "route": "/administration/priorities",
             "unit": "production",
             "style": "fa fa-clock",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_templates",
@@ -142,7 +154,8 @@ export class PrivilegeService {
             "route": "/administration/templates",
             "unit": "production",
             "style": "fa fa-file-alt",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_indexing_models",
@@ -151,7 +164,8 @@ export class PrivilegeService {
             "route": "/administration/indexingModels",
             "unit": "production",
             "style": "fab fa-wpforms",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_custom_fields",
@@ -160,7 +174,8 @@ export class PrivilegeService {
             "route": "/administration/customFields",
             "unit": "production",
             "style": "fa fa-code",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_notif",
@@ -169,7 +184,8 @@ export class PrivilegeService {
             "route": "/administration/notifications",
             "unit": "production",
             "style": "fa fa-bell",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "update_status_mail",
@@ -178,7 +194,8 @@ export class PrivilegeService {
             "route": "/administration/update-status",
             "unit": "supervision",
             "style": "fa fa-envelope-square",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_docservers",
@@ -187,7 +204,8 @@ export class PrivilegeService {
             "route": "/administration/docservers",
             "unit": "supervision",
             "style": "fa fa-hdd",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_parameters",
@@ -196,7 +214,8 @@ export class PrivilegeService {
             "route": "/administration/parameters",
             "unit": "supervision",
             "style": "fa fa-wrench",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_password_rules",
@@ -205,7 +224,8 @@ export class PrivilegeService {
             "route": "/administration/securities",
             "unit": "supervision",
             "style": "fa fa-lock",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_email_server",
@@ -214,7 +234,8 @@ export class PrivilegeService {
             "route": "/administration/sendmail",
             "unit": "supervision",
             "style": "fa fa-mail-bulk",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_shippings",
@@ -223,7 +244,8 @@ export class PrivilegeService {
             "route": "/administration/shippings",
             "unit": "supervision",
             "style": "fa fa-shipping-fast",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_reports",
@@ -232,7 +254,8 @@ export class PrivilegeService {
             "route": "/administration/reports",
             "unit": "supervision",
             "style": "fa fa-chart-area",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "view_history",
@@ -241,7 +264,8 @@ export class PrivilegeService {
             "route": "/administration/history",
             "unit": "supervision",
             "style": "fa fa-history",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "view_history_batch",
@@ -250,7 +274,8 @@ export class PrivilegeService {
             "route": "/administration/history",
             "unit": "supervision",
             "style": "fa fa-history",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         },
         {
             "id": "admin_update_control",
@@ -259,7 +284,8 @@ export class PrivilegeService {
             "route": "/administration/versions-update",
             "unit": "supervision",
             "style": "fa fa-sync",
-            "angular" : true
+            "angular" : true,
+            "hasParams" : false
         }
     ];
 
@@ -277,9 +303,9 @@ export class PrivilegeService {
             "unit": 'history'
         },
         {
-            "id": "edit_document_in_detail",
-            "label": this.lang.editDocumentInDetail,
-            "comment": this.lang.editDocumentInDetailDesc,
+            "id": "edit_resource",
+            "label": this.lang.editResource,
+            "comment": this.lang.editResourceDesc,
             "unit": 'application'
         },
         {

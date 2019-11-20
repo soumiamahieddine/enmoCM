@@ -30,7 +30,7 @@ $app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRo
 
 //Authentication
 $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
-    $routesWithoutAuthentication = ['GET/jnlp/{jnlpUniqueId}', 'POST/password', 'PUT/password'];
+    $routesWithoutAuthentication = ['GET/jnlp/{jnlpUniqueId}', 'POST/password', 'PUT/password', 'GET/passwordRules'];
     $route = $request->getAttribute('route');
     $currentMethod = empty($route) ? '' : $route->getMethods()[0];
     $currentRoute = empty($route) ? '' : $route->getPattern();
@@ -45,7 +45,7 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
                     return $response->withStatus(405)->withJson(['errors' => $r['errors']]);
                 }
             }
-        } else {
+        } elseif ($currentMethod.$currentRoute != 'GET/initialize') {
             return $response->withStatus(401)->withJson(['errors' => 'Authentication Failed']);
         }
     }
@@ -219,7 +219,8 @@ $app->put('/groups/{id}/indexing', \Group\controllers\GroupController::class . '
 $app->put('/groups/{id}/reassign/{newGroupId}', \Group\controllers\GroupController::class . ':reassignUsers');
 $app->post('/groups/{id}/privileges/{privilegeId}', \Group\controllers\PrivilegeController::class . ':addPrivilege');
 $app->delete('/groups/{id}/privileges/{privilegeId}', \Group\controllers\PrivilegeController::class . ':removePrivilege');
-$app->put('/groups/{id}/privileges/{privilegeId}/parameters', \Group\controllers\PrivilegeController::class . ':updatePrivilegeParameters');
+$app->put('/groups/{id}/privileges/{privilegeId}/parameters', \Group\controllers\PrivilegeController::class . ':updateParameters');
+$app->get('/groups/{id}/privileges/{privilegeId}/parameters', \Group\controllers\PrivilegeController::class . ':getParameters');
 
 //Histories
 $app->get('/histories', \History\controllers\HistoryController::class . ':get');
@@ -317,6 +318,7 @@ $app->put('/reports/groups/{groupId}', \Report\controllers\ReportController::cla
 //Resources
 $app->post('/resources', \Resource\controllers\ResController::class . ':create');
 $app->get('/resources/{resId}', \Resource\controllers\ResController::class . ':getById');
+$app->put('/resources/{resId}', \Resource\controllers\ResController::class . ':update');
 $app->get('/resources/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
 $app->get('/resources/{resId}/originalContent', \Resource\controllers\ResController::class . ':getOriginalFileContent');
 $app->get('/resources/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
@@ -426,7 +428,7 @@ $app->post('/users/{id}/redirectedBaskets', \User\controllers\UserController::cl
 $app->delete('/users/{id}/redirectedBaskets', \User\controllers\UserController::class . ':deleteRedirectedBasket');
 $app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':updateBasketsDisplay');
 $app->post('/password', \User\controllers\UserController::class . ':forgotPassword');
-$app->put('/password', \User\controllers\UserController::class . ':updateForgottenPassword');
+$app->put('/password', \User\controllers\UserController::class . ':passwordInitialization');
 
 //VersionsUpdate
 $app->get('/versionsUpdate', \VersionUpdate\controllers\VersionUpdateController::class . ':get');

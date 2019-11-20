@@ -328,7 +328,9 @@ class EmailController
             $phpmailer->isHTML(true);
 
             $dom = new \DOMDocument();
+            $internalErrors = libxml_use_internal_errors(true);
             $dom->loadHTML($email['body'], LIBXML_NOWARNING);
+            libxml_use_internal_errors($internalErrors);
             $images = $dom->getElementsByTagName('img');
 
             foreach ($images as $key => $image) {

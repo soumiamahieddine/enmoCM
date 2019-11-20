@@ -14,8 +14,7 @@
 
 namespace ContentManagement\controllers;
 
-use Contact\controllers\ContactController;
-use Contact\models\ContactModel;
+use CustomField\models\ResourceCustomFieldModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
@@ -68,8 +67,18 @@ class MergeController
 
         $dataToBeMerge = MergeController::getDataForMerge($args['data']);
 
-        foreach ($dataToBeMerge as $key => $value) {
-            $tbs->MergeField($key, $value);
+        $pages = 1;
+        if ($extension == 'xlsx') {
+            $pages = $tbs->PlugIn(OPENTBS_COUNT_SHEETS);
+        }
+
+        for ($i = 0; $i < $pages; ++$i) {
+            if ($extension == 'xlsx') {
+                $tbs->PlugIn(OPENTBS_SELECT_SHEET, $i + 1);
+            }
+            foreach ($dataToBeMerge as $key => $value) {
+                $tbs->MergeField($key, $value);
+            }
         }
 
         if (in_array($extension, MergeController::OFFICE_EXTENSIONS)) {
@@ -122,7 +131,7 @@ class MergeController
         foreach ($allDates as $date) {
             $resource[$date] = TextFormatModel::formatDate($resource[$date], 'd/m/Y');
         }
-        $resource['category_id'] = ResModel::getCategoryLabel(['category_id' => $resource['category_id']]);
+        $resource['category_id'] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
 
         if (!empty($resource['type_id'])) {
             $doctype = DoctypeModel::getById(['id' => $resource['type_id'], 'select' => ['process_delay', 'process_mode', 'description']]);
@@ -153,7 +162,7 @@ class MergeController
 
         //Attachment
         $attachment = [
-            'chrono'    => $args['attachmentChrono'] ?? null,
+            'chrono'    => '[attachment.chrono]',
             'title'     => $args['attachmentTitle'] ?? null
         ];
 
@@ -174,7 +183,7 @@ class MergeController
                 'orderBy'   => ['listinstance_id']
             ]);
             foreach ($visaWorkflow as $value) {
-                $labelledUser = UserModel::getLabelledUserById(['id' => $value['item_id']]);
+                $labelledUser = UserModel::getLabelledUserById(['login' => $value['item_id']]);
                 $primaryentity = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']]);
                 $visas .= "{$labelledUser} ({$primaryentity})\n";
             }
@@ -190,7 +199,7 @@ class MergeController
                 'orderBy'   => ['listinstance_id']
             ]);
             foreach ($opinionWorkflow as $value) {
-                $labelledUser = UserModel::getLabelledUserById(['id' => $value['item_id']]);
+                $labelledUser = UserModel::getLabelledUserById(['login' => $value['item_id']]);
                 $primaryentity = UserModel::getPrimaryEntityByUserId(['userId' => $value['item_id']]);
                 $opinions .= "{$labelledUser} ({$primaryentity})\n";
             }
@@ -249,6 +258,35 @@ class MergeController
             }
         }
 
+        //CustomFields
+        if (!empty($args['resId'])) {
+            $customs = ResourceCustomFieldModel::get([
+                'select'    => ['custom_field_id, value'],
+                'where'     => ['res_id = ?'],
+                'data'      => [$args['resId']],
+                'orderBy'   => ['value']
+            ]);
+            foreach ($customs as $custom) {
+                $decoded = json_decode($custom['value']);
+
+                if (is_array($decoded)) {
+                    $resource['customField_' . $custom['custom_field_id']] = implode("\n", $decoded);
+                } else {
+                    $resource['customField_' . $custom['custom_field_id']] = $decoded;
+                }
+            }
+        } else {
+            if (!empty($args['customFields'])) {
+                foreach ($args['customFields'] as $key => $customField) {
+                    if (is_array($customField)) {
+                        $resource['customField_' . $key] = implode("\n", $customField);
+                    } else {
+                        $resource['customField_' . $key] = $customField;
+                    }
+                }
+            }
+        }
+
         //Datetime
         $datetime = [
             'date'  => date('d-m-Y'),
@@ -303,6 +341,7 @@ class MergeController
         }
 
         $tbs->MergeField('res_letterbox', ['alt_identifier' => $args['chrono']]);
+        $tbs->MergeField('attachment', ['chrono' => $args['chrono']]);
 
         if (in_array($extension, MergeController::OFFICE_EXTENSIONS)) {
             $tbs->Show(OPENTBS_STRING);

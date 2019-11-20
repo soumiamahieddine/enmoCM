@@ -34,7 +34,8 @@
                                     required matTextareaAutosize matAutosizeMinRows="1"
                                     matAutosizeMaxRows="5"></textarea>
                                 <mat-icon style="cursor:pointer;" color="primary" matSuffix class="fa fa-info-circle"
-                                    matTooltip="{{lang.keywordHelper}}" (click)="snav2.toggle()"></mat-icon>
+                                    matTooltip="{{lang.keywordHelper}}"
+                                    (click)="panelMode='keywordInfos';snav2.toggle()"></mat-icon>
                             </mat-form-field>
                             <div class="col-md-12 text-center" style="padding:10px;">
                                 <button mat-raised-button [disabled]="!groupForm.form.valid"
@@ -67,6 +68,12 @@
                                         (change)="toggleService($event,administration)"
                                         matTooltip="{{administration.comment}}">{{administration.label}}
                                     </mat-slide-toggle>
+                                    <button mat-icon-button [class.active]="panelMode === administration.id"
+                                        *ngIf="administration.hasParams"
+                                        (click)="$event.stopPropagation();openUserParams(administration.id)"
+                                        color="primary" [title]="lang.goToAdminParams">
+                                        <mat-icon class="fa fa-cogs"></mat-icon>
+                                    </button>
                                 </div>
                             </mat-tab>
                             <mat-tab label="{{lang.functionnalities}}">
@@ -189,39 +196,59 @@
         <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'"
             [fixedInViewport]="appService.getViewMode()" fixedTopGap="56" position='end'
             [opened]="appService.getViewMode() ? false : false">
-
-            <mat-nav-list>
-                <h3 mat-subheader>{{lang.keywordHelp}}</h3>
-            </mat-nav-list>
-            <mat-list role="list" style="width: 400px;padding: 5px;">
-                <p style="font-size:10px;">{{lang.keywordHelpDesc_11}}</p>
-                <div style="border:1px black solid; padding:3px;font-size:10px;">
-                    <b>DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])</b>
-                </div>
-                <h4 mat-line style="font-weight:bold;font-size:10px;">@user :</h4>
-                <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_1}}</p>
-                <h4 mat-line style="font-weight:bold;font-size:10px;">@user_id :</h4>
-                <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_12}}</p>
-                <h4 mat-line style="font-weight:bold;font-size:10px;">@email :</h4>
-                <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_2}}</p>
-                <h4 mat-line style="font-weight:bold;font-size:10px;">@my_entities :</h4>
-                <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_3}}</p>
-                <h4 mat-line style="font-weight:bold;font-size:10px;">@my_primary_entity :</h4>
-                <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_4}}</p>
-                <h4 mat-line style="font-weight:bold;font-size:10px;">@subentities[('entity_1',...,'entity_n')] :</h4>
-                <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_5}}</p>
-                <h4 mat-line style="font-weight:bold;font-size:10px;">@parent_entity['entity_id'] :</h4>
-                <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_6}}</p>
-                <h4 mat-line style="font-weight:bold;font-size:10px;">@sisters_entities['entity_id'] :</h4>
-                <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_7}}</p>
-                <h4 mat-line style="font-weight:bold;font-size:10px;">@entity_type['type'] :</h4>
-                <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_8}}</p>
-                <h4 mat-line style="font-weight:bold;font-size:10px;">@all_entities :</h4>
-                <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_9}}</p>
-                <h4 mat-line style="font-weight:bold;font-size:10px;">@immediate_children['entity_1',..., 'entity_id'] :
-                </h4>
-                <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_10}}</p>
-            </mat-list>
+            <ng-container *ngIf="panelMode === 'keywordInfos'">
+                <mat-nav-list>
+                    <h3 mat-subheader>{{lang.keywordHelp}}</h3>
+                </mat-nav-list>
+                <mat-list role="list" style="width: 400px;padding: 5px;">
+                    <p style="font-size:10px;">{{lang.keywordHelpDesc_11}}</p>
+                    <div style="border:1px black solid; padding:3px;font-size:10px;">
+                        <b>DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])</b>
+                    </div>
+                    <h4 mat-line style="font-weight:bold;font-size:10px;">@user :</h4>
+                    <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_1}}</p>
+                    <h4 mat-line style="font-weight:bold;font-size:10px;">@user_id :</h4>
+                    <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_12}}</p>
+                    <h4 mat-line style="font-weight:bold;font-size:10px;">@email :</h4>
+                    <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_2}}</p>
+                    <h4 mat-line style="font-weight:bold;font-size:10px;">@my_entities :</h4>
+                    <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_3}}</p>
+                    <h4 mat-line style="font-weight:bold;font-size:10px;">@my_primary_entity :</h4>
+                    <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_4}}</p>
+                    <h4 mat-line style="font-weight:bold;font-size:10px;">@subentities[('entity_1',...,'entity_n')] :
+                    </h4>
+                    <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_5}}</p>
+                    <h4 mat-line style="font-weight:bold;font-size:10px;">@parent_entity['entity_id'] :</h4>
+                    <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_6}}</p>
+                    <h4 mat-line style="font-weight:bold;font-size:10px;">@sisters_entities['entity_id'] :</h4>
+                    <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_7}}</p>
+                    <h4 mat-line style="font-weight:bold;font-size:10px;">@entity_type['type'] :</h4>
+                    <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_8}}</p>
+                    <h4 mat-line style="font-weight:bold;font-size:10px;">@all_entities :</h4>
+                    <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_9}}</p>
+                    <h4 mat-line style="font-weight:bold;font-size:10px;">@immediate_children['entity_1',...,
+                        'entity_id'] :
+                    </h4>
+                    <p mat-line style="font-size:10px;">{{lang.keywordHelpDesc_10}}</p>
+                </mat-list>
+            </ng-container>
+            <ng-container *ngIf="panelMode === 'admin_users'">
+                <mat-nav-list>
+                    <h3 mat-subheader>{{lang.adminParamsUsers}}</h3>
+                </mat-nav-list>
+                <mat-list role="list" style="width: 400px;padding: 5px;">
+                    <p color="primary" style="text-decoration: underline;">
+                        {{lang.chooseAllowedGroups}} :
+                    </p>
+                    <mat-selection-list #paramsList (selectionChange)="updatePrivilegeParams(paramsList.selectedOptions.selected)">
+                        <mat-list-option color="primary" style="font-size: 13px;" checkboxPosition="before"
+                            *ngFor="let authorizedGroup of authorizedGroupsUserParams"
+                            [selected]="authorizedGroup.checked" [value]="authorizedGroup.id">
+                            {{authorizedGroup.label}}
+                        </mat-list-option>
+                    </mat-selection-list>
+                </mat-list>
+            </ng-container>
         </mat-sidenav>
     </mat-sidenav-container>
 </div>

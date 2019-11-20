@@ -1213,8 +1213,8 @@ export const LANG_NL = {
     "viewHistoryDesc" : "De geschiedenis van de gebeurtenissen met betrekking tot het gebruik van Maarch Courrier raadplegen.",
     "viewFullHistory" : "De volledige geschiedenis van het document bekijken",
     "viewFullHistoryDesc" : "De volledige geschiedenis van de evenementen over het gebruik van GED Maarch raadplegen.",
-    "editDocumentInDetail" : "Een document in de gedetailleerde fiche wijzigen",
-    "editDocumentInDetailDesc" : "Een document in de gedetailleerde fiche wijzigen Dat zal ook van de instelling van de status afhangen (Wijziging van de indexen)",
+    "editResource" : "Een document in de gedetailleerde",
+    "editResourceDesc" : "Een document in de gedetailleerde. Dat zal ook van de instelling van de status afhangen (Wijziging van de indexen)",
     "deleteDocumentInDetail" : "Een document in de gedetailleerde fiche verwijderen",
     "manageTagsInApplication" : "Create tags", //_TO_TRANSLATE
     "manageTagsInApplicationDesc" : "Create tags while indexing, processing and in details", //_TO_TRANSLATE
@@ -1297,4 +1297,29 @@ export const LANG_NL = {
     "attachment_SIGN": "Signed", //_TO_TRANSLATE
     "attachment_FRZ": "Freez", //_TO_TRANSLATE
     "attachment_TRA": "Processed", //_TO_TRANSLATE
+    "afterClickingSendLinkChangePassword": "After clicking on <b>Send</b>, you will receive an email containing a link to change your password. This link will be active <b>1 hour</b>.", //_TO_TRANSLATE
+    "enterLogin": "Enter your username", //_TO_TRANSLATE
+    "send" : "Send", //_TO_TRANSLATE
+    "generation" : "Generation...", //_TO_TRANSLATE
+    "requestSentByEmail" : "The request has been sent to you by email.", //_TO_TRANSLATE
+    "logInOncePasswordChanged": "You will be asked to log in once the password has been changed.", //_TO_TRANSLATE
+    "samePassword" : "Passwords match", //_TO_TRANSLATE
+    "sending" : "Sending...", //_TO_TRANSLATE
+    "newVersion" : "New version", //_TO_TRANSLATE
+    "deleteSignedVersion" : "Delete signed version", //_TO_TRANSLATE
+    "signedAttachment" : "Signed attachment", //_TO_TRANSLATE
+    "attachmentAdded" : "Attachment added", //_TO_TRANSLATE
+    "attachmentUpdated" : "Attachment updated", //_TO_TRANSLATE
+    "signedVersionDeleted" : "Signed version deleted", //_TO_TRANSLATE
+    "newVersionAdded" : "New version added", //_TO_TRANSLATE
+    "othersInfos" : "Other(s) information(s)", //_TO_TRANSLATE
+    "contactDetails" : "Details", //_TO_TRANSLATE
+    "contactsFillingRate" : "Filling rate", //_TO_TRANSLATE
+    "contact_physical" : "Physical contact", //_TO_TRANSLATE
+    "contact_corporate" : "Corporate contact", //_TO_TRANSLATE
+    "contact_internal" : "Internal user", //_TO_TRANSLATE
+    "goToAdminParams" : "Access to admin settings", //_TO_TRANSLATE
+    "adminParamsUsers" : "Settings for users administration", //_TO_TRANSLATE
+    "chooseAllowedGroups" : "Choose allowed groups", //_TO_TRANSLATE
+    "reallyWantToDeleteThisGroup"   : "Do you really want to remove this group ?", //_TO_TRANSLATE
 };

@@ -98,7 +98,7 @@ class ResourceListController
                 'groupBy'   => ['res_id_master']
             ]);
 
-            $groupBasket = GroupBasketModel::get(['select' => ['list_display', 'list_event'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
+            $groupBasket = GroupBasketModel::get(['select' => ['list_display', 'list_event', 'list_event_data'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
             $listDisplay = json_decode($groupBasket[0]['list_display']);
 
             $select = [
@@ -152,6 +152,7 @@ class ResourceListController
             ]);
 
             $defaultAction['component'] = $groupBasket[0]['list_event'];
+            $defaultAction['data'] = json_decode($groupBasket[0]['list_event_data'], true);
 
             if (in_array('getFolders', array_column($listDisplay, 'value'))) {
                 $displayFolderTags = true;

@@ -15,6 +15,7 @@ DROP VIEW IF EXISTS view_folders;
 
 /*USERS*/
 ALTER TABLE users DROP COLUMN IF EXISTS reset_token;
+ALTER TABLE users DROP COLUMN IF EXISTS change_password;
 ALTER TABLE users ADD COLUMN reset_token text;
 
 /* FULL TEXT */
@@ -67,6 +68,8 @@ FROM (
 WHERE groupbasket.basket_id = subquery.basket_id AND groupbasket.group_id = subquery.group_id;
 UPDATE actions SET component = 'confirmAction', action_page = 'confirm_status' WHERE action_page in ('validate_mail', 'process', 'visa_mail');
 DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
+ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_event_data;
+ALTER TABLE groupbasket ADD COLUMN list_event_data jsonb;
 
 
 /* FOLDERS */
@@ -238,6 +241,13 @@ DO $$ BEGIN
     IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_attachments') AND attname = 'doc_date') THEN
         ALTER TABLE res_attachments RENAME COLUMN doc_date TO modification_date;
         ALTER TABLE res_attachments ALTER COLUMN modification_date set DEFAULT NOW();
+    END IF;
+END$$;
+DO $$ BEGIN
+    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_attachments') AND attname = 'updated_by') THEN
+        ALTER TABLE res_attachments ADD COLUMN modified_by integer;
+        UPDATE res_attachments set modified_by = (select id FROM users where users.user_id = res_attachments.updated_by);
+        ALTER TABLE res_attachments DROP COLUMN IF EXISTS updated_by;
     END IF;
 END$$;
 
@@ -424,6 +434,7 @@ WHERE service_id = 'edit_recipient_outside_process' OR service_id = 'update_diff
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
 DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
+UPDATE usergroups_services SET service_id = 'edit_resource' WHERE service_id = 'edit_document_in_detail';
 
 UPDATE usergroups_services SET service_id = 'manage_own_attachments_in_details' WHERE service_id = 'edit_attachments_from_detail';
 INSERT INTO usergroups_services (group_id, service_id)
@@ -443,6 +454,21 @@ UPDATE usergroups_services SET parameters = (
     ) || ']}' AS jsonb)
     )
 WHERE service_id = 'admin_users';
+
+DELETE FROM usergroups_services WHERE service_id = 'view_personal_data' or service_id = 'manage_personal_data';
+INSERT INTO usergroups_services (group_id, service_id)
+SELECT distinct(group_id), 'view_personal_data'
+FROM usergroups_services WHERE group_id IN (
+    SELECT group_id FROM usergroups_services
+    WHERE service_id = 'admin_users'
+);
+INSERT INTO usergroups_services (group_id, service_id)
+SELECT distinct(group_id), 'manage_personal_data'
+FROM usergroups_services WHERE group_id IN (
+    SELECT group_id FROM usergroups_services
+    WHERE service_id = 'admin_users'
+);
+
 
 UPDATE listmodels SET title = object_id WHERE title IS NULL;
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)AND', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
@@ -513,6 +539,21 @@ ALTER TABLE listinstance DROP COLUMN IF EXISTS visible;
 ALTER TABLE listinstance_history_details DROP COLUMN IF EXISTS added_by_entity;
 ALTER TABLE usergroup_content DROP COLUMN IF EXISTS primary_group;
 ALTER TABLE emails ALTER COLUMN document type jsonb;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS subject;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS description;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS type_id;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS author;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS source;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS folders_system_id;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS offset_doc;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS destination;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS priotity;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS initiator;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_multicontacts;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_multi_docservers;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_path;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_filename;
+
 
 /* M2M */
 DO $$ BEGIN

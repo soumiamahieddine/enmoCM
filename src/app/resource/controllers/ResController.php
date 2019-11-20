@@ -15,7 +15,6 @@
 namespace Resource\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
-use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\RedirectBasketModel;
 use Convert\controllers\ConvertPdfController;
@@ -32,6 +31,7 @@ use Folder\controllers\FolderController;
 use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
 use Group\controllers\GroupController;
+use Group\controllers\PrivilegeController;
 use Group\models\PrivilegeModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
@@ -190,6 +190,62 @@ class ResController
         }
 
         return $response->withJson($formattedData);
+    }
+
+    public function update(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => 'edit_resource', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $body = $request->getParsedBody();
+
+        $control = ResController::controlUpdateResource(['body' => $body, 'resId' => $args['resId']]);
+        if (!empty($control['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+        }
+
+        $body['resId'] = $args['resId'];
+        $resId = StoreController::storeResource($body);
+        if (empty($resId) || !empty($resId['errors'])) {
+            return $response->withStatus(500)->withJson(['errors' => '[ResController update] ' . $resId['errors']]);
+        }
+
+        ResController::updateAdjacentData(['body' => $body, 'resId' => $args['resId']]);
+
+        if (!empty($body['encodedFile'])) {
+            AdrModel::deleteDocumentAdr(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            ConvertPdfController::convert([
+                'resId'     => $args['resId'],
+                'collId'    => 'letterbox_coll'
+            ]);
+
+            $customId = CoreConfigModel::getCustomId();
+            $customId = empty($customId) ? 'null' : $customId;
+            exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$args['resId']} --collId letterbox_coll --userId {$GLOBALS['id']} > /dev/null &");
+
+            HistoryController::add([
+                'tableName' => 'res_letterbox',
+                'recordId'  => $args['resId'],
+                'eventType' => 'UP',
+                'info'      => _FILE_UPDATED,
+                'moduleId'  => 'resource',
+                'eventId'   => 'fileModification'
+            ]);
+        }
+
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $args['resId'],
+            'eventType' => 'UP',
+            'info'      => _DOC_UPDATED,
+            'moduleId'  => 'resource',
+            'eventId'   => 'resourceModification'
+        ]);
+
+        return $response->withStatus(204);
     }
 
     public function updateStatus(Request $request, Response $response)
@@ -352,7 +408,7 @@ class ResController
         }
 
         if (empty($fileContent)) {
-            return $response->withStatus(404)->withJson(['errors' => 'Converted Document not found']);
+            $fileContent = file_get_contents($pathToDocument);
         }
         if ($fileContent === false) {
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
@@ -567,38 +623,16 @@ class ResController
         ValidatorModel::intVal($aArgs, ['resId']);
         ValidatorModel::boolType($aArgs, ['original']);
 
-        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'subject', 'category_id'], 'resId' => $aArgs['resId']]);
+        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'subject'], 'resId' => $aArgs['resId']]);
 
         if (empty($aArgs['original'])) {
-            if ($document['category_id'] == 'outgoing') {
-                $attachment = AttachmentModel::get([
-                    'select'    => ['res_id', 'docserver_id', 'path', 'filename'],
-                    'where'     => ['res_id_master = ?', 'attachment_type = ?', 'status not in (?)'],
-                    'data'      => [$aArgs['resId'], 'outgoing_mail', ['DEL', 'OBS']],
-                    'limit'     => 1
-                ]);
-                if (!empty($attachment[0])) {
-                    $attachmentTodisplay = $attachment[0];
-                    $id = $attachmentTodisplay['res_id'];
-                    $collId = "attachments_version_coll";
-                    $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => $collId]);
-                    if (empty($convertedDocument['errors'])) {
-                        $attachmentTodisplay = $convertedDocument;
-                    }
-                    $document['docserver_id'] = $attachmentTodisplay['docserver_id'];
-                    $document['path'] = $attachmentTodisplay['path'];
-                    $document['filename'] = $attachmentTodisplay['filename'];
-                    $document['fingerprint'] = $attachmentTodisplay['fingerprint'];
-                }
-            } else {
-                $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll']);
+            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll']);
 
-                if (empty($convertedDocument['errors'])) {
-                    $document['docserver_id'] = $convertedDocument['docserver_id'];
-                    $document['path'] = $convertedDocument['path'];
-                    $document['filename'] = $convertedDocument['filename'];
-                    $document['fingerprint'] = $convertedDocument['fingerprint'];
-                }
+            if (empty($convertedDocument['errors'])) {
+                $document['docserver_id'] = $convertedDocument['docserver_id'];
+                $document['path'] = $convertedDocument['path'];
+                $document['filename'] = $convertedDocument['filename'];
+                $document['fingerprint'] = $convertedDocument['fingerprint'];
             }
         }
 
@@ -760,6 +794,53 @@ class ResController
         return true;
     }
 
+    private static function updateAdjacentData(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId', 'body']);
+        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::arrayType($args, ['body']);
+
+        $body = $args['body'];
+
+        if (!empty($body['diffusionList'])) {
+            ListInstanceModel::delete(['where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$args['resId'], 'entity_id']]);
+            foreach ($body['diffusionList'] as $diffusion) {
+                if ($diffusion['mode'] == 'dest') {
+                    ResModel::update(['set' => ['dest_user' => $diffusion['id']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+                }
+                ListInstanceModel::create([
+                    'res_id'            => $args['resId'],
+                    'sequence'          => 0,
+                    'item_id'           => $diffusion['id'],
+                    'item_type'         => $diffusion['type'] == 'user' ? 'user_id' : 'entity_id',
+                    'item_mode'         => $diffusion['mode'],
+                    'added_by_user'     => $GLOBALS['userId'],
+                    'difflist_type'     => 'entity_id'
+                ]);
+            }
+        }
+        if (!empty($body['customFields'])) {
+            ResourceCustomFieldModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            foreach ($body['customFields'] as $key => $value) {
+                ResourceCustomFieldModel::create(['res_id' => $args['resId'], 'custom_field_id' => $key, 'value' => json_encode($value)]);
+            }
+        }
+        if (!empty($body['folders'])) {
+            ResourceFolderModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            foreach ($body['folders'] as $folder) {
+                ResourceFolderModel::create(['res_id' => $args['resId'], 'folder_id' => $folder]);
+            }
+        }
+        if (!empty($body['tags'])) {
+            TagResModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            foreach ($body['tags'] as $tag) {
+                TagResModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
+            }
+        }
+
+        return true;
+    }
+
     private static function controlResource(array $args)
     {
         $currentUser = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['loginmode']]);
@@ -830,6 +911,66 @@ class ResController
             if (empty($status)) {
                 return ['errors' => 'Body status does not exist'];
             }
+        }
+
+        return true;
+    }
+
+    private static function controlUpdateResource(array $args)
+    {
+        $body = $args['body'];
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status', 'model_id']]);
+        if (empty($resource['status'])) {
+            return ['errors' => 'Resource status is empty. It can not be modified'];
+        }
+        $status = StatusModel::getById(['id' => $resource['status'], 'select' => ['can_be_modified']]);
+        if ($status['can_be_modified'] != 'Y') {
+            return ['errors' => 'Resource can not be modified because of status'];
+        }
+
+        if (empty($body)) {
+            return ['errors' => 'Body is not set or empty'];
+        } elseif (!Validator::intVal()->notEmpty()->validate($body['doctype'])) {
+            return ['errors' => 'Body doctype is empty or not an integer'];
+        }
+
+        $doctype = DoctypeModel::getById(['id' => $body['doctype'], 'select' => [1]]);
+        if (empty($doctype)) {
+            return ['errors' => 'Body doctype does not exist'];
+        }
+
+        $control = ResController::controlFileData(['body' => $body]);
+        if (!empty($control['errors'])) {
+            return ['errors' => $control['errors']];
+        }
+
+        $control = ResController::controlAdjacentData(['body' => $body, 'isWebServiceUser' => false]);
+        if (!empty($control['errors'])) {
+            return ['errors' => $control['errors']];
+        }
+
+        $body['modelId'] = $resource['model_id'];
+        $control = ResController::controlIndexingModelFields(['body' => $body]);
+        if (!empty($control['errors'])) {
+            return ['errors' => $control['errors']];
+        }
+
+        if (!empty($body['initiator'])) {
+            $userEntities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
+            $userEntities = array_column($userEntities, 'id');
+            if (!in_array($body['initiator'], $userEntities)) {
+                return ['errors' => "Body initiator does not belong to your entities"];
+            }
+        }
+
+        $control = ResController::controlDestination(['body' => $body]);
+        if (!empty($control['errors'])) {
+            return ['errors' => $control['errors']];
+        }
+        $control = ResController::controlDates(['body' => $body, 'resId' => $args['resId']]);
+        if (!empty($control['errors'])) {
+            return ['errors' => $control['errors']];
         }
 
         return true;
@@ -1001,11 +1142,19 @@ class ResController
                 return ['errors' => "Body processLimitDate is not a date"];
             }
 
+            if (!empty($args['resId'])) {
+                $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['process_limit_date']]);
+                if (!empty($resource['process_limit_date'])) {
+                    $originProcessLimitDate = new \DateTime($resource['process_limit_date']);
+                }
+            }
             $processLimitDate = new \DateTime($body['processLimitDate']);
-            $today = new \DateTime();
-            $today->setTime(00, 00, 00);
-            if ($processLimitDate < $today) {
-                return ['errors' => "Body processLimitDate is not a valid date"];
+            if (empty($originProcessLimitDate) || $originProcessLimitDate != $processLimitDate) {
+                $today = new \DateTime();
+                $today->setTime(00, 00, 00);
+                if ($processLimitDate < $today) {
+                    return ['errors' => "Body processLimitDate is not a valid date"];
+                }
             }
         } elseif (!empty($body['priority'])) {
             $priority = PriorityModel::getById(['id' => $body['priority'], 'select' => [1]]);

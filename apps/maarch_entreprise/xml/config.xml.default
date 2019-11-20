@@ -67,7 +67,7 @@
     </COLLECTION>
     <COLLECTION>
         <id>archive_transfer_coll</id>
-        <label>_ARCHVIE_TRANSFER_COLL</label>
+        <label>_ARCHIVE_TRANSFER_COLL</label>
         <table>message_exchange</table>
     </COLLECTION>
     <HISTORY>

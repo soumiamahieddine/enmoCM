@@ -19,6 +19,14 @@ foreach ($customs as $custom) {
         'where' => ['relation > 1']
     ]);
 
+    $superadmin = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => 'superadmin']);
+    if (empty($superadmin)) {
+        $firstMan = \User\models\UserModel::get(['select' => ['id'], 'orderBy' => ['id'], 'limit' => 1]);
+        $masterOwnerId = $firstMan[0]['id'];
+    } else {
+        $masterOwnerId = $superadmin['id'];
+    }
+
     $migrated = 0;
     $attachmentsInfo = \SrcCore\models\DatabaseModel::select([
         'select'   => ['res_id', 'title', 'subject', 'description', 'type_id', 'format', 'typist', 'creation_date', 'fulltext_result', 'author', 'identifier', 'source', 'relation', 'doc_date', 'docserver_id', 'path', 'filename', 'offset_doc', 'fingerprint', 'filesize', 'status', 'destination', 'validation_date', 'effective_date', 'origin', 'priority', 'initiator', 'dest_user', 'res_id_master', 'attachment_type', 'dest_contact_id', 'dest_address_id', 'updated_by', 'is_multicontacts', 'in_signature_book', 'signatory_user_serial_id', 'in_send_attach', 'external_id', 'attachment_id_master'],
@@ -57,12 +65,21 @@ foreach ($customs as $custom) {
 
         $newResId = \Attachment\models\AttachmentModel::create($attachmentInfo);
 
+        if ($attachmentInfo['fingerprint'] == 1) {
+            echo "Le document avec res_version_attachments.res_id = " . $oldResId
+                . " (nouveau res_id : res_attachment.res_id = " . $newResId . ") n'a pas été trouvé sur le docserver (path = '" . $pathToDocument . "')"
+                . ", le fingerprint du document est assigné à 1";
+        }
+
         migrateOrigin(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateAdrVersionAttachments(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateHistoryVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateEmailsVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateMessageExchangeVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateShippingVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
+        if (in_array($attachmentInfo['status'], ['A_TRA', 'TRA'])) {
+            migrateFullText(['newResId' => $newResId, 'customId' => $custom, 'userId' => $masterOwnerId]);
+        }
 
         $migrated++;
     }
@@ -155,4 +172,10 @@ function migrateShippingVersion($args = [])
         'where' => ['attachment_id = ?', 'is_version = ?'],
         'data'  => [$args['oldResId'], 'true']
     ]);
+}
+
+function migrateFullText($args = [])
+{
+    $GLOBALS['id'] = $args['userId'];
+    exec("php src/app/convert/scripts/FullTextScript.php --customId {$args['customId']} --resId {$args['newResId']} --collId attachments_coll --userId {$GLOBALS['id']} > /dev/null");
 }

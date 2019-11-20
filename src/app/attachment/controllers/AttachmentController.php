@@ -73,7 +73,7 @@ class AttachmentController
             'tableName' => 'res_letterbox',
             'recordId'  => $body['resIdMaster'],
             'eventType' => 'ADD',
-            'info'      => _ATTACHMENT_ADDED,
+            'info'      => _ATTACHMENT_ADDED . " : {$id}",
             'moduleId'  => 'attachment',
             'eventId'   => 'attachmentAdd'
         ]);
@@ -86,12 +86,12 @@ class AttachmentController
         $attachment = AttachmentModel::getById([
             'id'        => $args['id'],
             'select'    => [
-                'res_id_master', 'status', 'title', 'identifier as chrono', 'relation', 'attachment_type as type',
-                'origin_id as "originId"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"',
+                'res_id as "resId"', 'res_id_master', 'status', 'title', 'identifier as chrono', 'typist', 'modified_by as "modifiedBy"', 'relation', 'attachment_type as type',
+                'origin_id as "originId"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"', 'validation_date as "validationDate"',
                 'fulltext_result as "fulltextResult"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
             ]
         ]);
-        if (empty($attachment) || $attachment['status'] == 'DEL') {
+        if (empty($attachment) || !in_array($attachment['status'], ['A_TRA', 'TRA', 'SIGN'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
         }
 
@@ -106,6 +106,9 @@ class AttachmentController
         if (in_array($attachment['type'], $excludeAttachmentTypes)) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment type out of perimeter']);
         }
+
+        $attachment['typist'] = UserModel::getLabelledUserById(['login' => $attachment['typist']]);
+        $attachment['modifiedBy'] = UserModel::getLabelledUserById(['id' => $attachment['modifiedBy']]);
 
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
         if (!empty($attachmentsTypes[$attachment['type']]['label'])) {
@@ -123,13 +126,17 @@ class AttachmentController
         }
         $attachment['versions'] = $oldVersions;
 
-        $signedResponse = AttachmentModel::get([
-            'select'    => ['res_id'],
-            'where'     => ['origin = ?', 'status not in (?)'],
-            'data'      => ["{$args['id']},res_attachments", ['DEL']]
-        ]);
-        if (!empty($signedResponse[0])) {
-            $attachment['signedResponse'] = $signedResponse[0]['res_id'];
+        if ($attachment['status'] == 'SIGN') {
+            $signedResponse = AttachmentModel::get([
+                'select'    => ['res_id', 'creation_date', 'typist'],
+                'where'     => ['origin = ?', 'status not in (?)'],
+                'data'      => ["{$args['id']},res_attachments", ['DEL']]
+            ]);
+            if (!empty($signedResponse[0])) {
+                $attachment['signedResponse'] = $signedResponse[0]['res_id'];
+                $attachment['signatory'] = UserModel::getLabelledUserById(['login' => $signedResponse[0]['typist']]);
+                $attachment['signDate'] = $signedResponse[0]['creation_date'];
+            }
         }
 
         return $response->withJson($attachment);
@@ -138,7 +145,7 @@ class AttachmentController
     public function update(Request $request, Response $response, array $args)
     {
         $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master', 'status', 'typist']]);
-        if (empty($attachment) || $attachment['status'] == 'DEL') {
+        if (empty($attachment) || !in_array($attachment['status'], ['A_TRA', 'TRA'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
         }
         if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
@@ -171,6 +178,7 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
 
+        $body['id'] = $args['id'];
         $isStored = StoreController::storeAttachment($body);
         if (empty($isStored) || !empty($isStored['errors'])) {
             return $response->withStatus(500)->withJson(['errors' => '[AttachmentController update] ' . $isStored['errors']]);
@@ -201,7 +209,7 @@ class AttachmentController
             'tableName' => 'res_letterbox',
             'recordId'  => $attachment['res_id_master'],
             'eventType' => 'UP',
-            'info'      => _ATTACHMENT_UPDATED,
+            'info'      => _ATTACHMENT_UPDATED . " : {$args['id']}",
             'moduleId'  => 'attachment',
             'eventId'   => 'attachmentModification'
         ]);
@@ -265,7 +273,7 @@ class AttachmentController
 
         $attachments = AttachmentModel::get([
             'select'    => [
-                'res_id as "resId"', 'identifier as chrono', 'title', 'creation_date as "creationDate"', 'modification_date as "modificationDate"',
+                'res_id as "resId"', 'identifier as chrono', 'title', 'typist', 'modified_by as "modifiedBy"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"',
                 'relation', 'status', 'attachment_type as type', 'origin_id as "originId"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
             ],
             'where'     => ['res_id_master = ?', 'status not in (?)', 'attachment_type not in (?)'],
@@ -276,6 +284,9 @@ class AttachmentController
 
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
         foreach ($attachments as $key => $attachment) {
+            $attachments[$key]['typist'] = UserModel::getLabelledUserById(['login' => $attachment['typist']]);
+            $attachments[$key]['modifiedBy'] = UserModel::getLabelledUserById(['id' => $attachment['modifiedBy']]);
+
             if (!empty($attachmentsTypes[$attachment['type']]['label'])) {
                 $attachments[$key]['typeLabel'] = $attachmentsTypes[$attachment['type']]['label'];
             }
@@ -290,6 +301,18 @@ class AttachmentController
                 ]);
             }
             $attachments[$key]['versions'] = $oldVersions;
+
+            if ($attachment['status'] == 'SIGN') {
+                $signedResponse = AttachmentModel::get([
+                    'select'    => ['creation_date', 'typist'],
+                    'where'     => ['origin = ?', 'status not in (?)'],
+                    'data'      => ["{$attachment['resId']},res_attachments", ['DEL']]
+                ]);
+                if (!empty($signedResponse[0])) {
+                    $attachments[$key]['signatory'] = UserModel::getLabelledUserById(['login' => $signedResponse[0]['typist']]);
+                    $attachments[$key]['signDate'] = $signedResponse[0]['creation_date'];
+                }
+            }
         }
 
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
@@ -510,7 +533,7 @@ class AttachmentController
         }
 
         if (empty($fileContent)) {
-            return $response->withStatus(404)->withJson(['errors' => 'Converted Document not found']);
+            $fileContent = file_get_contents($pathToDocument);
         }
         if ($fileContent === false) {
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
@@ -829,11 +852,13 @@ class AttachmentController
             if (!Validator::intVal()->notEmpty()->validate($body['originId'])) {
                 return ['errors' => 'Body originId is not an integer'];
             }
-            $origin = AttachmentModel::getById(['id' => $body['originId'], 'select' => ['res_id_master']]);
+            $origin = AttachmentModel::getById(['id' => $body['originId'], 'select' => ['res_id_master', 'origin_id']]);
             if (empty($origin)) {
                 return ['errors' => 'Body originId does not exist'];
             } elseif ($origin['res_id_master'] != $body['resIdMaster']) {
                 return ['errors' => 'Body resIdMaster is different from origin'];
+            } elseif (!empty($origin['origin_id'])) {
+                return ['errors' => 'Body originId can not be a version, it must be the original version'];
             }
         }
 

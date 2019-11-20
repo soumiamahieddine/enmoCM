@@ -139,10 +139,12 @@ define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Opslagruimtepad ontoegankelijk');
 define('_BACK_FROM_VACATION', 'bij terugkeer na afwezigheid');
 define('_DOC_DISPLAYING', 'Weergave van het document');
 define('_DOC_ADDED', 'Document toegevoegd');
+define('_DOC_UPDATED', 'Document updated');//translate
+define('_DOC_DELETED', 'Document deleted');//TRANSLATE
+define('_FILE_UPDATED', 'File updated');//translate
 define('_ATTACHMENT_ADDED', 'Attachment added');//TRANSLATE
 define('_ATTACHMENT_UPDATED', 'Attachment updated');//TRANSLATE
 define('_ATTACH_DISPLAYING', 'Weergave van de bijlage');
-define('_DOC_DELETED', 'Document deleted');//TRANSLATE
 define('_NOTE_ADDED', 'note added _TO_TRANSLATE');
 define('_NOTE_UPDATED', 'Note updated');//TRANSLATE
 define('_NOTE_DELETED', 'Note deleted');//TRANSLATE
@@ -420,10 +422,6 @@ define("_NOTIFICATIONS_FORGOT_PASSWORD_FOOTER", "<br/><br/>If you did not perfor
 define("_PASSWORD_REINIT_SENT", "Password reset sent_TO_TRANSLATE");
 define("_PASSWORD_REINIT", "Password rest_TO_TRANSLATE");
 
-define("_NOTIFICATIONS_USER_CREATION_SUBJECT", "[Maarch Courrier] Création de compte_TO_TRANSLATE");
-define("_NOTIFICATIONS_USER_CREATION_BODY", "Bonjour,<br/>un administrateur a créé votre compte dans l'application Maarch Courrier.<br/>Pour vous connecter et définir votre mot de passe, cliquer sur le lien ci-dessous :<br/>_TO_TRANSLATE");
-define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/>Pour toutes questions, merci de contacter l'administrateur technique de la solution._TO_TRANSLATE");
-
 define("_NOTIFICATIONS_USER_CREATION_SUBJECT", "[Maarch Courrier] Account creation_TO_TRANSLATE");
 define("_NOTIFICATIONS_USER_CREATION_BODY", "Hello,<br/>an administrator created your account in Maarch Courrier software.<br/>To log in and set your password, please click on the link below :<br/>_TO_TRANSLATE");
-define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/>Pour toutes questions, merci de contacter l'administrateur technique de la solution._TO_TRANSLATE");
+define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/>For any questions, please contact your software administrator_TO_TRANSLATE");

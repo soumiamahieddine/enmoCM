@@ -11,6 +11,8 @@ import { MatDialogRef, MatDialog, MatSidenav } from '@angular/material';
 import { AlertComponent } from '../../plugins/modal/alert.component';
 import { SortPipe } from '../../plugins/sorting.pipe';
 import { templateVisitAll } from '@angular/compiler';
+import { PluginSelectSearchComponent } from '../../plugins/select-search/select-search.component';
+import { FormControl } from '@angular/forms';
 
 
 @Component({
@@ -54,11 +56,14 @@ export class DocumentViewerComponent implements OnInit {
 
     listTemplates: any[] = [];
 
+    templateListForm = new FormControl();
+
     @Input('resId') resId: number = null;
     @Input('infoPanel') infoPanel: MatSidenav = null;
     @Input('editMode') editMode: boolean = false;
     @Input('title') title: string = '';
     @Input('mode') mode: string = 'mainDocument';
+    @Input('attachType') attachType: string = null;
 
     @Output('triggerEvent') triggerEvent = new EventEmitter<string>();
 
@@ -71,6 +76,8 @@ export class DocumentViewerComponent implements OnInit {
     };
 
     dialogRef: MatDialogRef<any>;
+
+    @ViewChild('templateList', { static: true }) templateList: PluginSelectSearchComponent;
 
     constructor(
         public http: HttpClient,
@@ -101,7 +108,11 @@ export class DocumentViewerComponent implements OnInit {
                 if (this.resId !== null) {
                     this.loadRessource(this.resId, this.mode);
                     if (this.editMode) {
-                        this.loadTemplates();
+                        if (this.attachType !== null && this.mode === 'attachment') {
+                            this.loadTemplatesByResId(this.resId, this.attachType);
+                        } else {
+                            this.loadTemplates();
+                        }
                     }
                 } else {
                     this.loadTemplates();
@@ -434,7 +445,6 @@ export class DocumentViewerComponent implements OnInit {
                         this.file.content = `../../rest/attachments/${resId}/originalContent`;
                         this.file.contentView = `../../rest/attachments/${resId}/content?mode=view`;
                         this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
-                        this.triggerEvent.emit();
                         this.loading = false;
                     }
                 },
@@ -484,19 +494,35 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     editTemplate(templateId: number) {
-        this.refreshDatas.emit();
-        const template = this.listTemplates.filter(template => template.id === templateId)[0];
-        this.editInProgress = true;
-        const jnlp: any = {
-            objectType: 'resourceCreation',
-            objectId: template.id,
-            cookie: document.cookie,
-            data: this.resourceDatas,
-        };
-        this.http.post('../../rest/jnlp', jnlp).pipe(
-            tap((data: any) => {
-                window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
-                this.checkLockFile(data.jnlpUniqueId, template);
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.templateEdition, msg: this.lang.editionAttachmentConfirm } });
+
+        this.dialogRef.afterClosed().pipe(
+            tap((data: string) => {
+                if (data !== 'ok') {
+                    this.templateListForm.reset();
+                }
+            }),
+            filter((data: string) => data === 'ok'),
+            tap(() => {
+                this.refreshDatas.emit();
+                const template = this.listTemplates.filter(template => template.id === templateId)[0];
+                this.editInProgress = true;
+                const jnlp: any = {
+                    objectType: 'resourceCreation',
+                    objectId: template.id,
+                    cookie: document.cookie,
+                    data: this.resourceDatas,
+                };
+                this.http.post('../../rest/jnlp', jnlp).pipe(
+                    tap((data: any) => {
+                        window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
+                        this.checkLockFile(data.jnlpUniqueId, template);
+                    })
+                ).subscribe();
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
             })
         ).subscribe();
     }
@@ -525,6 +551,58 @@ export class DocumentViewerComponent implements OnInit {
 
     isEditingTemplate() {
         return this.editInProgress;
+    }
+
+    loadTemplatesByResId(resId: number, attachType: string) {
+        let arrValues: any[] = [];
+        let arrTypes: any = [];
+        this.listTemplates = [];
+        this.http.get('../../rest/attachmentsTypes').pipe(
+            tap((data: any) => {
+                
+                Object.keys(data.attachmentsTypes).forEach(templateType => {
+                    arrTypes.push({
+                        id: templateType,
+                        label: data.attachmentsTypes[templateType].label
+                    });
+                });
+                arrTypes = this.sortPipe.transform(arrTypes, 'label');
+                arrTypes.push({
+                    id: 'all',
+                    label: this.lang.others
+                });
+
+            }),
+            exhaustMap(() => this.http.get(`../../rest/resources/${resId}/templates?attachmentType=${attachType},all`)),
+            tap((data: any) => {
+                this.listTemplates = data.templates;
+
+                arrTypes = arrTypes.filter((type: any) => data.templates.map((template: any) => template.attachmentType).indexOf(type.id) > -1);
+
+                arrTypes.forEach((arrType: any) => {
+                    arrValues.push({
+                        id: arrType.id,
+                        label: arrType.label,
+                        title: arrType.label,
+                        disabled: true,
+                        isTitle: true,
+                        color: '#135f7f'
+                    });
+                    data.templates.filter((template: any) => template.attachmentType === arrType.id).forEach((template: any) => {
+                        arrValues.push({
+                            id: template.id,
+                            label: '&nbsp;&nbsp;&nbsp;&nbsp;' + template.label,
+                            title: template.exists ? template.label : this.lang.fileDoesNotExists,
+                            extension: template.extension,
+                            disabled: !template.exists,
+                        });
+                    });
+                });
+
+                this.listTemplates = arrValues;
+            })
+
+        ).subscribe();
     }
 
     loadTemplates() {

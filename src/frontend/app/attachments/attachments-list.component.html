@@ -17,7 +17,7 @@
             </div>
         <div class="pjToolsContent">
             <button *ngIf="attachment.relation > 1" color="primary" class="versionButton" mat-button
-                [matMenuTriggerFor]="menu" matBadge="{{attachment.relation}}">{{lang.version}}</button>
+                [matMenuTriggerFor]="menu">{{lang.version}} <b color="secondary">{{attachment.relation}}</b></button>
             <mat-menu #menu="matMenu">
                 <button mat-menu-item *ngFor="let version of attachment.versions; let i = index" (click)="showAttachment(version)">{{lang.version}} {{i+1}}</button>
             </mat-menu>
@@ -26,11 +26,11 @@
             </button>
             <mat-menu #menuPjAction="matMenu">
                 <button mat-menu-item (click)="setInSignatureBook(attachment)">
-                    <mat-checkbox color="primary" [(ngModel)]="attachment.in_signature_book"></mat-checkbox>
+                    <mat-checkbox color="primary" [(ngModel)]="attachment.inSignatureBook"></mat-checkbox>
                     {{lang.putInSignatureBook}}
                 </button>
                 <button mat-menu-item (click)="setInSendAttachment(attachment)" [disabled]="!mailevaEnabled">
-                    <mat-checkbox color="primary" [(ngModel)]="attachment.in_send_attach" [disabled]="!mailevaEnabled">
+                    <mat-checkbox color="primary" [(ngModel)]="attachment.inSendAttach" [disabled]="!mailevaEnabled">
                     </mat-checkbox>
                     {{lang.putInSendAttach}}
                 </button>
@@ -39,8 +39,8 @@
 
         <div class="infosPj">
             <div class="stateInfo">
-                <i class="fas fa-file-signature" *ngIf="attachment.in_signature_book"></i>
-                <i class="fa fa-shipping-fast" *ngIf="attachment.in_send_attach"></i>
+                <i class="fas fa-file-signature" *ngIf="attachment.inSignatureBook"></i>&nbsp;
+                <i class="fa fa-shipping-fast" *ngIf="attachment.inSendAttach"></i>
             </div>
             <div class="mainInfos" *ngIf="!attachment.hideMainInfo">
                 {{attachment.chrono}}

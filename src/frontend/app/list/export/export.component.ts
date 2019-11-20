@@ -5,6 +5,8 @@ import { NotificationService } from '../../notification.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { SortPipe } from '../../../plugins/sorting.pipe';
+import {catchError, map, tap} from "rxjs/operators";
+import {of} from "rxjs";
 
 declare function $j(selector: any): any;
 
@@ -231,6 +233,26 @@ export class ExportComponent implements OnInit {
             }, (err: any) => {
                 this.notify.handleErrors(err);
             });
+
+        this.http.get("../../rest/customFields").pipe(
+            map((data: any) => {
+                data.customFields = data.customFields.map((custom: any) => {
+                    return {
+                        value: 'custom_' + custom.id,
+                        label: custom.label,
+                        isFunction: true
+                    }
+                });
+                return data;
+            }),
+            tap((data: any) => {
+                this.dataAvailable = this.dataAvailable.concat(data.customFields);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     drop(event: CdkDragDrop<string[]>) {

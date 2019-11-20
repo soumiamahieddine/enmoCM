@@ -28,8 +28,9 @@
             {{lang.dragAndDrop}}<br />{{lang.or}}
             <div style="display: flex;">
                 <div style="margin-right:20px;align-items: center;justify-content: center;text-align: center;display: flex;">
-                    <plugin-select-search *ngIf="listTemplates.length > 0" [label]="lang.chooseModel"
+                    <plugin-select-search #templateList *ngIf="listTemplates.length > 0" [label]="lang.chooseModel"
                         [placeholderLabel]="lang.chooseModel" [datas]="listTemplates" [class]="'input-form-filled'"
+                        [formControlSelect]="templateListForm"
                         (afterSelected)="editTemplate($event)" style="width: 240px;text-align: left;font-weight:normal;font-size: 13px;">
                     </plugin-select-search>
                 </div>

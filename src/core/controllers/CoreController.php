@@ -14,7 +14,6 @@
 
 namespace SrcCore\controllers;
 
-use Group\controllers\PrivilegeController;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
@@ -30,7 +29,9 @@ class CoreController
         $aInit['applicationName']    = CoreConfigModel::getApplicationName();
         $aInit['applicationVersion'] = CoreConfigModel::getApplicationVersion();
         $aInit['lang']               = CoreConfigModel::getLanguage();
-        $aInit['user']               = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
+        if (!empty($GLOBALS['userId'])) {
+            $aInit['user']               = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname']]);
+        }
         $aInit['customLanguage']     = CoreConfigModel::getCustomLanguage(['lang' => $aInit['lang']]);
 
         $aInit['scriptsToinject'] = [];

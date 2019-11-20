@@ -47,7 +47,7 @@ class FullTextScript
         $mode     = '';
 
         if (array_search('--customId', $args) > 0) {
-            $cmd = array_search('--limit', $args);
+            $cmd = array_search('--customId', $args);
             $customId = $args[$cmd+1];
         }
         
@@ -94,21 +94,13 @@ class FullTextScript
             if ($args['collId'] == 'letterbox_coll') {
                 ResModel::update(['set' => ['fulltext_result' => 'SUCCESS'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             } else {
-                AttachmentModel::update([
-                    'set'       => ['fulltext_result' => 'SUCCESS'],
-                    'where'     => ['res_id = ?'],
-                    'data'      => [$args['resId']]
-                ]);
+                AttachmentModel::update(['set' => ['fulltext_result' => 'SUCCESS'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             }
         } else {
             if ($args['collId'] == 'letterbox_coll') {
                 ResModel::update(['set' => ['fulltext_result' => 'ERROR'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             } else {
-                AttachmentModel::update([
-                    'set'       => ['fulltext_result' => 'ERROR'],
-                    'where'     => ['res_id = ?'],
-                    'data'      => [$args['resId']]
-                ]);
+                AttachmentModel::update(['set' => ['fulltext_result' => 'ERROR'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             }
             LogsController::add([
                 'isTech'    => true,

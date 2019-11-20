@@ -164,7 +164,7 @@ if (isset($s_id) && !empty($s_id) && $_SESSION['history']['resview'] == 'true') 
     );
 }
 
-$modify_doc = $core->test_service('edit_document_in_detail', 'apps', false);
+$modify_doc = $core->test_service('edit_resource', 'apps', false);
 
 //UPDATE DATAS (IF FIELDS CAN BE MODIFIED) OF DOC
 if (isset($_POST['submit_index_doc'])) {

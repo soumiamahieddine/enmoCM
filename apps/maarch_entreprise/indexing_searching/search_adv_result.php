@@ -378,7 +378,7 @@ where lower(translate(folders.label , 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓ�
 
                                 $where_request .= " res_id IN ($Liste_Ids) ";
 
-                                if ($key == 2) {
+                                if ($key == 1) {
                                     $where_request .= ') and ';
                                 } else {
                                     $where_request .= ' or ';
@@ -390,7 +390,7 @@ where lower(translate(folders.label , 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓ�
 
                                 $where_request .= " 1=-1 ";
 
-                                if ($key == 2) {
+                                if ($key == 1) {
                                     $where_request .= ') and ';
                                 } else {
                                     $where_request .= ' or ';
@@ -403,7 +403,7 @@ where lower(translate(folders.label , 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓ�
 
                             $where_request .= " 1=-1 ";
 
-                            if ($key == 2) {
+                            if ($key == 1) {
                                 $where_request .= ') and ';
                             } else {
                                 $where_request .= ' or ';

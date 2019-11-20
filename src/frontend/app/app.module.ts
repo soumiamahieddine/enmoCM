@@ -67,6 +67,8 @@ import { AvisWorkflowComponent }             from './avis/avis-workflow.componen
 import { PrintSeparatorComponent }                        from './separator/print-separator/print-separator.component';
 
 import { IndexationComponent }                        from './indexation/indexation.component';
+import { ForgotPasswordComponent }          from './login/forgotPassword/forgotPassword.component';
+import { UpdatePasswordComponent }          from './login/updatePassword/updatePassword.component';
 import { HistoryWorkflowResumeComponent }                        from './history/history-workflow-resume/history-workflow-resume.component';
 import { NoteResumeComponent }                        from './notes/note-resume/note-resume.component';
 import { AttachmentShowModalComponent }                        from './attachments/attachment-show-modal/attachment-show-modal.component';
@@ -78,6 +80,8 @@ import { AddPrivateIndexingModelModalComponent }                        from './
 import { FoldersService } from './folder/folders.service';
 import { PrivilegeService } from '../service/privileges.service';
 import { ActionsService } from './actions/actions.service';
+import { ContactsListComponent } from './contact/list/contacts-list.component';
+import { ContactsListModalComponent } from './contact/list/modal/contacts-list-modal.component';
 
 
 @NgModule({
@@ -140,6 +144,8 @@ import { ActionsService } from './actions/actions.service';
         FolderUpdateComponent,
         FolderActionListComponent,
         IndexationComponent,
+        ForgotPasswordComponent,
+        UpdatePasswordComponent,
         HistoryWorkflowResumeComponent,
         NoteResumeComponent,
         AttachmentsResumeComponent,
@@ -147,7 +153,9 @@ import { ActionsService } from './actions/actions.service';
         AttachmentCreateComponent,
         AddPrivateIndexingModelModalComponent,
         AttachmentShowModalComponent,
-        MailResumeComponent
+        MailResumeComponent,
+        ContactsListComponent,
+        ContactsListModalComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,
@@ -175,7 +183,8 @@ import { ActionsService } from './actions/actions.service';
         AddPrivateIndexingModelModalComponent,
         AttachmentPageComponent,
         AttachmentCreateComponent,
-        AttachmentShowModalComponent
+        AttachmentShowModalComponent,
+        ContactsListModalComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, NotificationService, PrivilegeService ],
     bootstrap: [ AppComponent ]
