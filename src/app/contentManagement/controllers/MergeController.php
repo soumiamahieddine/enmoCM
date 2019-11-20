@@ -14,8 +14,6 @@
 
 namespace ContentManagement\controllers;
 
-use Contact\controllers\ContactController;
-use Contact\models\ContactModel;
 use CustomField\models\ResourceCustomFieldModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
@@ -261,7 +259,6 @@ class MergeController
         }
 
         //CustomFields
-        $customFields = [];
         if (!empty($args['resId'])) {
             $customs = ResourceCustomFieldModel::get([
                 'select'    => ['custom_field_id, value'],
@@ -273,18 +270,18 @@ class MergeController
                 $decoded = json_decode($custom['value']);
 
                 if (is_array($decoded)) {
-                    $customField[$custom['custom_field_id']] = implode("\n", $decoded);
+                    $resource['customField_' . $custom['custom_field_id']] = implode("\n", $decoded);
                 } else {
-                    $customField[$custom['custom_field_id']] = $decoded;
+                    $resource['customField_' . $custom['custom_field_id']] = $decoded;
                 }
             }
         } else {
             if (!empty($args['customFields'])) {
                 foreach ($args['customFields'] as $key => $customField) {
                     if (is_array($customField)) {
-                        $customFields[$key] = implode("\n", $customField);
+                        $resource['customField_' . $key] = implode("\n", $customField);
                     } else {
-                        $customFields[$key] = $customField;
+                        $resource['customField_' . $key] = $customField;
                     }
                 }
             }
@@ -309,7 +306,6 @@ class MergeController
         $dataToBeMerge['copies']            = $copies;
         $dataToBeMerge['contact']           = [];
         $dataToBeMerge['notes']             = $mergedNote;
-        $dataToBeMerge['custom']            = $customFields;
         $dataToBeMerge['datetime']          = $datetime;
 
         return $dataToBeMerge;
