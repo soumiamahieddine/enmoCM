@@ -1315,8 +1315,6 @@ export const LANG_FR = {
     "generation" : "Génération...",
     "requestSentByEmail" : "La demande vous a été envoyé par courriel.",
     "logInOncePasswordChanged": "Vous serez amené à vous connecter une fois la modification du mot de passe effectuée.",
-    "samePassword" : "Les mots de passe sont identiques",
-    "sending" : "Envoi...",
     "newVersion" : "Nouvelle version",
     "deleteSignedVersion" : "Supprimer la version signée",
     "signedAttachment" : "Pièce jointe signée",
@@ -1335,4 +1333,5 @@ export const LANG_FR = {
     "adminParamsUsers" : "Options administration utilisateurs",
     "chooseAllowedGroups" : "Choissisez les groupes d'affectation autorisés",
     "reallyWantToDeleteThisGroup"   : "Êtes-vous sûr de vouloir supprimer ce groupe ?",
+    "invalidToken" : "Le jeton est expiré ou n'existe plus"
 };
