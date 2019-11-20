@@ -623,7 +623,7 @@ class ExportController
                                 }
                             } else {
                                 $rawContacts[] = [
-                                    'login'         => $ext['dest_user_id'],
+                                    'login'         => $ext['exp_user_id'],
                                     'address_id'    => $ext['address_id'],
                                 ];
                             }

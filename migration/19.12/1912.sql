@@ -243,6 +243,13 @@ DO $$ BEGIN
         ALTER TABLE res_attachments ALTER COLUMN modification_date set DEFAULT NOW();
     END IF;
 END$$;
+DO $$ BEGIN
+    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_attachments') AND attname = 'updated_by') THEN
+        ALTER TABLE res_attachments ADD COLUMN modified_by integer;
+        UPDATE res_attachments set modified_by = (select id FROM users where users.user_id = res_attachments.updated_by);
+        ALTER TABLE res_attachments DROP COLUMN IF EXISTS updated_by;
+    END IF;
+END$$;
 
 
 /* DOCSERVERS */

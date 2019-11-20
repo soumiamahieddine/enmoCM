@@ -86,7 +86,7 @@ class AttachmentController
         $attachment = AttachmentModel::getById([
             'id'        => $args['id'],
             'select'    => [
-                'res_id as "resId"', 'res_id_master', 'status', 'title', 'identifier as chrono', 'relation', 'attachment_type as type',
+                'res_id as "resId"', 'res_id_master', 'status', 'title', 'identifier as chrono', 'typist', 'modified_by as "modifiedBy"', 'relation', 'attachment_type as type',
                 'origin_id as "originId"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"', 'validation_date as "validationDate"',
                 'fulltext_result as "fulltextResult"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
             ]
@@ -107,6 +107,9 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => 'Attachment type out of perimeter']);
         }
 
+        $attachment['typist'] = UserModel::getLabelledUserById(['login' => $attachment['typist']]);
+        $attachment['modifiedBy'] = UserModel::getLabelledUserById(['id' => $attachment['modifiedBy']]);
+
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
         if (!empty($attachmentsTypes[$attachment['type']]['label'])) {
             $attachment['typeLabel'] = $attachmentsTypes[$attachment['type']]['label'];
@@ -123,13 +126,17 @@ class AttachmentController
         }
         $attachment['versions'] = $oldVersions;
 
-        $signedResponse = AttachmentModel::get([
-            'select'    => ['res_id'],
-            'where'     => ['origin = ?', 'status not in (?)'],
-            'data'      => ["{$args['id']},res_attachments", ['DEL']]
-        ]);
-        if (!empty($signedResponse[0])) {
-            $attachment['signedResponse'] = $signedResponse[0]['res_id'];
+        if ($attachment['status'] == 'SIGN') {
+            $signedResponse = AttachmentModel::get([
+                'select'    => ['res_id', 'creation_date', 'typist'],
+                'where'     => ['origin = ?', 'status not in (?)'],
+                'data'      => ["{$args['id']},res_attachments", ['DEL']]
+            ]);
+            if (!empty($signedResponse[0])) {
+                $attachment['signedResponse'] = $signedResponse[0]['res_id'];
+                $attachment['signatory'] = UserModel::getLabelledUserById(['login' => $signedResponse[0]['typist']]);
+                $attachment['signDate'] = $signedResponse[0]['creation_date'];
+            }
         }
 
         return $response->withJson($attachment);
@@ -266,7 +273,7 @@ class AttachmentController
 
         $attachments = AttachmentModel::get([
             'select'    => [
-                'res_id as "resId"', 'identifier as chrono', 'title', 'creation_date as "creationDate"', 'modification_date as "modificationDate"',
+                'res_id as "resId"', 'identifier as chrono', 'title', 'typist', 'modified_by as "modifiedBy"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"',
                 'relation', 'status', 'attachment_type as type', 'origin_id as "originId"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
             ],
             'where'     => ['res_id_master = ?', 'status not in (?)', 'attachment_type not in (?)'],
@@ -277,6 +284,9 @@ class AttachmentController
 
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
         foreach ($attachments as $key => $attachment) {
+            $attachments[$key]['typist'] = UserModel::getLabelledUserById(['login' => $attachment['typist']]);
+            $attachments[$key]['modifiedBy'] = UserModel::getLabelledUserById(['id' => $attachment['modifiedBy']]);
+
             if (!empty($attachmentsTypes[$attachment['type']]['label'])) {
                 $attachments[$key]['typeLabel'] = $attachmentsTypes[$attachment['type']]['label'];
             }
@@ -291,6 +301,18 @@ class AttachmentController
                 ]);
             }
             $attachments[$key]['versions'] = $oldVersions;
+
+            if ($attachment['status'] == 'SIGN') {
+                $signedResponse = AttachmentModel::get([
+                    'select'    => ['creation_date', 'typist'],
+                    'where'     => ['origin = ?', 'status not in (?)'],
+                    'data'      => ["{$attachment['resId']},res_attachments", ['DEL']]
+                ]);
+                if (!empty($signedResponse[0])) {
+                    $attachments[$key]['signatory'] = UserModel::getLabelledUserById(['login' => $signedResponse[0]['typist']]);
+                    $attachments[$key]['signDate'] = $signedResponse[0]['creation_date'];
+                }
+            }
         }
 
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
