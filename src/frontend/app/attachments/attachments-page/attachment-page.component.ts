@@ -10,6 +10,7 @@ import { SortPipe } from '../../../plugins/sorting.pipe';
 import { FormControl, Validators } from '@angular/forms';
 import { DocumentViewerComponent } from '../../viewer/document-viewer.component';
 import { PrivilegeService } from '../../../service/privileges.service';
+import { HeaderService } from '../../../service/header.service';
 
 @Component({
     selector: 'app-attachment-page',
@@ -43,6 +44,7 @@ export class AttachmentPageComponent implements OnInit {
         public appService: AppService,
         private notify: NotificationService,
         private sortPipe: SortPipe,
+        private headerService: HeaderService,
         private privilegeService: PrivilegeService) {
     }
 
@@ -65,7 +67,7 @@ export class AttachmentPageComponent implements OnInit {
             tap((data: any) => {
                 //this.attachment = data;
 
-                if (this.privilegeService.hasCurrentUserPrivilege('manage_attachments') && data.status !== 'SIGN') {
+                if ((this.privilegeService.hasCurrentUserPrivilege('manage_attachments') || this.headerService.user.id === data.typist)  && data.status !== 'SIGN') {
                     this.editMode = true;
                 }
 
@@ -144,8 +146,6 @@ export class AttachmentPageComponent implements OnInit {
     getAttachmentValues(newAttachment: boolean = false) {
         let attachmentValues = {};
         Object.keys(this.attachment).forEach(element => {
-            console.log(element);
-            console.log(this.attachment[element]);
             if (this.attachment[element] !== undefined && (this.attachment[element].value !== null && this.attachment[element].value !== undefined)) {
                 if (element === 'validationDate') {
                     let day = this.attachment[element].value.getDate();
