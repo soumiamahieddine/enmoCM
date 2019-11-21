@@ -494,7 +494,13 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     editTemplate(templateId: number) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.templateEdition, msg: this.lang.editionAttachmentConfirm } });
+        let confirmMsg = '';
+        if (this.mode == 'attachment') {
+            confirmMsg = this.lang.editionAttachmentConfirmFirst;
+        } else {
+            confirmMsg = this.lang.editionAttachmentConfirmFirst + '<br><br>' + this.lang.editionAttachmentConfirmSecond;
+        }
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.templateEdition, msg: confirmMsg } });
 
         this.dialogRef.afterClosed().pipe(
             tap((data: string) => {
