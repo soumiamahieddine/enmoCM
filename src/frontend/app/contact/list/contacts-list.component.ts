@@ -103,7 +103,7 @@ export class ContactsListComponent implements OnInit {
      * Ressource identifier to load contact List
      */
     @Input('resId') resId: number;
-    @Input('mode') mode: 'recipient' | 'sender';
+    @Input('mode') mode: 'recipients' | 'senders';
 
     constructor(
         public http: HttpClient,
@@ -113,7 +113,7 @@ export class ContactsListComponent implements OnInit {
     ngOnInit(): void {
         // TO DO : WAIT BACK
         this.loading = false;
-        /*this.http.get(`../../rest/resources/${this.resId}/contacts`).pipe(
+        /*this.http.get(`../../rest/resources/${this.resId}/contacts?type=${this.mode}`).pipe(
             tap((data: any) => {
                 this.contacts = data.contacts;
             }),
