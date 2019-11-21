@@ -633,7 +633,7 @@ class ResController
         $contacts = [];
         if ($queryParams['type'] == 'senders') {
             if ($resource['category_id'] == 'outgoing') {
-                $contacts = ResController::getFormattedContacts(['resource' => $resource, 'tableMulti' => 'resource_contacts', 'columnRes' => 'dest_user_id']);
+                $contacts = ResController::getFormattedContacts(['resource' => $resource, 'tableMulti' => 'resource_contacts', 'columnRes' => null]);
             } else {
                 $contacts = ResController::getFormattedContacts(['resource' => $resource, 'tableMulti' => 'contacts_res', 'columnRes' => 'exp_user_id']);
             }
@@ -857,7 +857,34 @@ class ResController
             }
         }
         if (!empty($body['folders'])) {
-            ResourceFolderModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            // Delete association with user's folders
+            $idToDelete = FolderModel::getWithResources([
+                'select'    => ['resources_folders.id'],
+                'where'     => ['resources_folders.res_id = ?', 'folders.user_id = ?'],
+                'data'      => [$args['resId'], $GLOBALS['id']]
+            ]);
+            $idToDelete = array_column($idToDelete, 'id');
+            if (!empty($idToDelete)) {
+                ResourceFolderModel::delete(['where' => ['id in (?)'], 'data' => [$idToDelete]]);
+            }
+
+            // Delete association with folders the user can see
+            $entities = EntityModel::getWithUserEntities([
+                'select' => ['entities.id'],
+                'where'  => ['user_id = ?'],
+                'data'   => [$GLOBALS['userId']]
+            ]);
+            $entities = array_column($entities, 'id');
+            $idToDelete = FolderModel::getWithEntitiesAndResources([
+                'select'    => ['resources_folders.id'],
+                'where'     => ['resources_folders.res_id = ?', 'entities_folders.entity_id in (?)'],
+                'data'      => [$args['resId'], $entities]
+            ]);
+            $idToDelete = array_column($idToDelete, 'id');
+            if (!empty($idToDelete)) {
+                ResourceFolderModel::delete(['where' => ['id in (?)'], 'data' => [$idToDelete]]);
+            }
+
             foreach ($body['folders'] as $folder) {
                 ResourceFolderModel::create(['res_id' => $args['resId'], 'folder_id' => $folder]);
             }
