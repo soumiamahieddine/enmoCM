@@ -55,14 +55,14 @@
             </div>
             <div class="subInfos" *ngIf="attachment.hideMainInfo">
                 <ng-container *ngIf="attachment.signDate !== undefined; else elseTemplate">
-                    {{lang.signedAlt}} {{attachment.signDate | timeAgo}} {{lang.by}} {{attachment.signatory}}
+                    {{lang.signedAlt}} <b>{{attachment.signDate | timeAgo : 'full'}}</b> {{lang.by | lowercase}} <b>{{attachment.signatory}}</b>
                 </ng-container>
                 <ng-template #elseTemplate>
                     <ng-container *ngIf="attachment.modificationDate !== null; else creationTemplate">
-                        {{lang.modified}} {{attachment.modificationDate | timeAgo}} {{lang.by}} {{attachment.modifiedBy}}
+                        {{lang.modified}} <b>{{attachment.modificationDate | timeAgo : 'full'}}</b> {{lang.by | lowercase}} <b>{{attachment.modifiedBy}}</b>
                     </ng-container>
                     <ng-template #creationTemplate>
-                        {{lang.created}} {{attachment.creationDate | timeAgo}} {{lang.by}} {{attachment.typistLabel}}
+                        {{lang.created}} <b>{{attachment.creationDate | timeAgo : 'full'}}</b> {{lang.by | lowercase}} <b>{{attachment.typistLabel}}</b>
                     </ng-template>
                 </ng-template>
             </div>

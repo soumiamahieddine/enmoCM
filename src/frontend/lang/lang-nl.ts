@@ -1329,5 +1329,7 @@ export const LANG_NL = {
     "signedAlt"   : "Signed", //_TO_TRANSLATE
     "deleteResource"   : "Delete document", //_TO_TRANSLATE
     "viewResource"   : "View document", //_TO_TRANSLATE
-    "addAttachment"   : "Add an attachment",  //_TO_TRANSLATE
+    "addAttachment"   : "Add an attachment", //_TO_TRANSLATE
+    "dateAgo"   : "Since", //_TO_TRANSLATE
+    "dateTo"   : "The", //_TO_TRANSLATE
 };

@@ -1305,4 +1305,6 @@ export const LANG_EN = {
     "deleteResource"   : "Delete document",
     "viewResource"   : "View document",
     "addAttachment"   : "Add an attachment",
+    "dateAgo"   : "Since",
+    "dateTo"   : "The"
 };

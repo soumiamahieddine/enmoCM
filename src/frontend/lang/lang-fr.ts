@@ -1343,4 +1343,6 @@ export const LANG_FR = {
     "deleteResource"   : "Supprimer le document",
     "viewResource"   : "Voir le document",
     "addAttachment"   : "Ajouter une pièce jointe",
+    "dateAgo"   : "Il y a",
+    "dateTo"   : "Le",
 };
