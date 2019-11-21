@@ -1443,8 +1443,8 @@ class ResController
                 }
 
                 $phone = '';
-                if (!empty($phone) || ($user['id'] != $GLOBALS['id']
-                        && PrivilegeController::hasPrivilege(['privilegeId' => 'view_personal_data', 'userId' => $GLOBALS['id']]))) {
+                if (!empty($phone) && ($user['id'] == $GLOBALS['id']
+                        || PrivilegeController::hasPrivilege(['privilegeId' => 'view_personal_data', 'userId' => $GLOBALS['id']]))) {
                     $phone = $user['phone'];
                 }
 
