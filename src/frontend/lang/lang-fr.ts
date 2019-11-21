@@ -1337,4 +1337,5 @@ export const LANG_FR = {
     "invalidToken" : "Le jeton est expiré ou n'existe plus",
     "contact_entity"   : "Entité",
     "contact_third"   : "Tier bénéficiaire",
+    "confidentialityAndSecurity"   : "Vie privée et sécurité",
 };

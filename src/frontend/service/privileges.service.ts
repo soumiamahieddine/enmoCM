@@ -444,13 +444,13 @@ export class PrivilegeService {
             "id": "view_personal_data",
             "label": this.lang.viewPersonalData,
             "comment": this.lang.viewPersonalData,
-            "unit": 'application'
+            "unit": 'confidentialityAndSecurity'
         },
         {
             "id": "manage_personal_data",
             "label": this.lang.managePersonalData,
             "comment": this.lang.managePersonalData,
-            "unit": 'application'
+            "unit": 'confidentialityAndSecurity'
         }
     ];
 

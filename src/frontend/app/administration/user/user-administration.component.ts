@@ -15,6 +15,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { AccountLinkComponent } from './account-link/account-link.component';
 import { AppService } from '../../../service/app.service';
 import { MenuShortcutComponent } from '../../menu/menu-shortcut.component';
+import { PrivilegeService } from '../../../service/privileges.service';
 
 declare function $j(selector: any): any;
 
@@ -84,6 +85,9 @@ export class UserAdministrationComponent implements OnInit {
     selectedTabIndex: number = 0;
     maarchParapheurConnectionStatus = true;
 
+    canViewPersonalDatas: boolean = false;
+    canManagePersonalDatas: boolean = false;
+
     @ViewChild('appShortcut', { static: false }) appShortcut: MenuShortcutComponent;
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -118,7 +122,8 @@ export class UserAdministrationComponent implements OnInit {
         public dialog: MatDialog, 
         private headerService: HeaderService, 
         private _formBuilder: FormBuilder,
-        public appService: AppService
+        public appService: AppService,
+        private privilegeService: PrivilegeService
     ) {
         $j("link[href='merged_css.php']").remove();
         window['angularUserAdministrationComponent'] = {
@@ -137,6 +142,8 @@ export class UserAdministrationComponent implements OnInit {
 
                 this.headerService.setHeader(this.lang.userCreation);
                 this.creationMode = true;
+                this.canViewPersonalDatas = true;
+                this.canManagePersonalDatas = true;
                 this.loading = false;
             } else {
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
@@ -148,6 +155,18 @@ export class UserAdministrationComponent implements OnInit {
                     .subscribe((data: any) => {
                         this.user = data;
 
+                        if (this.headerService.user.id === this.user.id) {
+                            this.canViewPersonalDatas = true;
+                            this.canManagePersonalDatas = true;
+                        } else {
+                            this.canViewPersonalDatas = this.privilegeService.hasCurrentUserPrivilege('view_personal_data');
+                            this.canManagePersonalDatas = this.privilegeService.hasCurrentUserPrivilege('manage_personal_data');
+                        }
+                        
+                        
+                        if (!this.canViewPersonalDatas) {
+                            this.user.phone = '****';
+                        }
                         this.data = data.history;
                         this.userId = data.user_id;
                         this.minDate = new Date(this.CurrentYear + '-' + this.currentMonth + '-01');

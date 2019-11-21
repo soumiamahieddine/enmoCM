@@ -1299,4 +1299,5 @@ export const LANG_EN = {
     "reallyWantToDeleteThisGroup"   : "Do you really want to remove this group ?",
     "contact_entity"   : "Entity",
     "contact_third"   : "Contact third",
+    "confidentialityAndSecurity"   : "Confidentiality and security",
 };
