@@ -1264,7 +1264,6 @@ export const LANG_EN = {
     "recordMail" : "Record a mail",
     "closed" : "Closed",
     "manageAttachments": "Update or delete attachments",
-    "manageOwnAttachmentsInDetails": "Update or delete user's own attachments in the details page",
     "viewPersonalData": "View users' personal data",
     "managePersonalData": "Update or delete users' personal data",
     "attachmentDeleted": "Attachment deleted",
@@ -1300,4 +1299,10 @@ export const LANG_EN = {
     "contact_entity"   : "Entity",
     "contact_third"   : "Contact third",
     "confidentialityAndSecurity"   : "Confidentiality and security",
+    "modified"   : "Modified",
+    "created"   : "Created",
+    "signedAlt"   : "Signed",
+    "deleteResource"   : "Delete document",
+    "viewResource"   : "View document",
+    "addAttachment"   : "Add an attachment",
 };

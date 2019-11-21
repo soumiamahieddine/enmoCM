@@ -4,13 +4,13 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { tap, finalize, catchError, filter, exhaustMap } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { AttachmentShowModalComponent } from './attachment-show-modal/attachment-show-modal.component';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { AttachmentPageComponent } from './attachments-page/attachment-page.component';
 import { AttachmentCreateComponent } from './attachment-create/attachment-create.component';
-import { ConfirmActionComponent } from '../actions/confirm-action/confirm-action.component';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
+import { PrivilegeService } from '../../service/privileges.service';
+import { HeaderService } from '../../service/header.service';
 
 @Component({
     selector: 'app-attachments-list',
@@ -56,7 +56,9 @@ export class AttachmentsListComponent implements OnInit {
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
-        public dialog: MatDialog) { }
+        public dialog: MatDialog,
+        private headerService: HeaderService,
+        private privilegeService: PrivilegeService) { }
 
     ngOnInit(): void {
         if (this.resId !== null) {
@@ -66,6 +68,7 @@ export class AttachmentsListComponent implements OnInit {
                     this.attachments = data.attachments;
                     this.attachments.forEach((element: any) => {
                         element.thumbnailUrl = '../../rest/attachments/' + element.resId + '/thumbnail';
+                        element.canDelete = this.privilegeService.hasCurrentUserPrivilege('manage_attachments') || this.headerService.user.id === element.typist;
                     });
                 }),
                 finalize(() => this.loading = false),

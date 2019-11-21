@@ -1289,7 +1289,6 @@ export const LANG_NL = {
     "recordMail" : "Record a mail", //_TO_TRANSLATE
     "closed" : "Closed", //_TO_TRANSLATE
     "manageAttachments": "Update or delete attachments", //_TO_TRANSLATE
-    "manageOwnAttachmentsInDetails": "Update or delete user's own attachments in the details page", //_TO_TRANSLATE
     "viewPersonalData": "View users' personal data", //_TO_TRANSLATE
     "managePersonalData": "Update or delete users' personal data", //_TO_TRANSLATE
     "attachmentDeleted": "Attachment deleted", //_TO_TRANSLATE
@@ -1325,4 +1324,10 @@ export const LANG_NL = {
     "contact_entity"   : "Entity", //_TO_TRANSLATE
     "contact_third"   : "Contact third", //_TO_TRANSLATE
     "confidentialityAndSecurity"   : "Confidentiality and security", //_TO_TRANSLATE
+    "modified"   : "Modified", //_TO_TRANSLATE
+    "created"   : "Created", //_TO_TRANSLATE
+    "signedAlt"   : "Signed", //_TO_TRANSLATE
+    "deleteResource"   : "Delete document", //_TO_TRANSLATE
+    "viewResource"   : "View document", //_TO_TRANSLATE
+    "addAttachment"   : "Add an attachment",  //_TO_TRANSLATE
 };
