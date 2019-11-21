@@ -107,7 +107,12 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => 'Attachment type out of perimeter']);
         }
 
-        $attachment['typist'] = UserModel::getLabelledUserById(['login' => $attachment['typist']]);
+        if ($attachment['modificationDate'] == $attachment['creationDate']) {
+            $attachment['modificationDate'] = null;
+        }
+        $typist = UserModel::getByLogin(['login' => $attachment['typist'], 'select' => ['id', 'firstname', 'lastname']]);
+        $attachment['typist'] = $typist['id'];
+        $attachment['typistLabel'] = $typist['firstname']. ' ' .$typist['lastname'];
         $attachment['modifiedBy'] = UserModel::getLabelledUserById(['id' => $attachment['modifiedBy']]);
 
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
@@ -231,7 +236,7 @@ class AttachmentController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
         if ($GLOBALS['userId'] != $attachment['typist'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'manage_attachments', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         if (empty($attachment['origin_id'])) {
@@ -284,7 +289,12 @@ class AttachmentController
 
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
         foreach ($attachments as $key => $attachment) {
-            $attachments[$key]['typist'] = UserModel::getLabelledUserById(['login' => $attachment['typist']]);
+            if ($attachment['modificationDate'] == $attachment['creationDate']) {
+                $attachments[$key]['modificationDate'] = null;
+            }
+            $typist = UserModel::getByLogin(['login' => $attachment['typist'], 'select' => ['id', 'firstname', 'lastname']]);
+            $attachments[$key]['typist'] = $typist['id'];
+            $attachments[$key]['typistLabel'] = $typist['firstname']. ' ' .$typist['lastname'];
             $attachments[$key]['modifiedBy'] = UserModel::getLabelledUserById(['id' => $attachment['modifiedBy']]);
 
             if (!empty($attachmentsTypes[$attachment['type']]['label'])) {
