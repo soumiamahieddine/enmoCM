@@ -71,6 +71,17 @@ DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_event_data;
 ALTER TABLE groupbasket ADD COLUMN list_event_data jsonb;
 
+update groupbasket set list_event_data = '"info"', list_event = 'processDocument'
+where group_id in (
+    select group_id
+    from actions_groupbaskets
+    where id_action in (
+        select id
+        from actions
+        where action_page = 'validate_mail'
+    ) and groupbasket.basket_id = actions_groupbaskets.basket_id
+);
+
 
 /* FOLDERS */
 DO $$ BEGIN
