@@ -16,6 +16,10 @@
     ::ng-deep.mat-tab-body-content {
         height: 100% !important;
     }
+
+    ::ng-deep.mat-drawer-inner-container {
+        overflow-x: hidden;
+    }
 }
 
 .mat-dialog-title {
@@ -38,9 +42,12 @@
     width: 300px;
     padding: 10px;
 
+    ::ng-deep.mat-expansion-panel-body {
+        padding: 0px;
+    }
+    
     &-item {
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
         padding-top: 10px;
@@ -81,4 +88,40 @@
 
 .actions {
     margin: 0px;
+}
+
+.complete {
+    color: green;
+    font-weight: bold;
+}
+
+.fieldState {
+    width: auto !important;
+    padding-top: 0px !important;
+}
+
+.stateDoc {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.documentContent {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: $primary;
+    overflow: auto;
+    color: white;
+}
+
+.mat-expansion-panel {
+    box-shadow: none !important;
+}
+
+.mat-expansion-panel-header-title {
+    font-size: 14px;
+    color: #666;
 }

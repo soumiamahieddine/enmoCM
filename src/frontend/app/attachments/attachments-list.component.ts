@@ -89,6 +89,7 @@ export class AttachmentsListComponent implements OnInit {
                 this.attachments = data.attachments;
                 this.attachments.forEach((element: any) => {
                     element.thumbnailUrl = '../../rest/attachments/' + element.resId + '/thumbnail';
+                    element.canDelete = this.privilegeService.hasCurrentUserPrivilege('manage_attachments') || this.headerService.user.id === element.typist;
                 });
                 this.reloadBadgeNotes.emit(`${this.attachments.length}`);
                 this.loading = false;

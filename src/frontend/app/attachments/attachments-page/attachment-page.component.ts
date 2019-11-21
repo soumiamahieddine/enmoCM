@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output, Inject, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { catchError, tap, finalize, exhaustMap } from 'rxjs/operators';
+import { catchError, tap, finalize, exhaustMap, filter } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
@@ -11,6 +11,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { DocumentViewerComponent } from '../../viewer/document-viewer.component';
 import { PrivilegeService } from '../../../service/privileges.service';
 import { HeaderService } from '../../../service/header.service';
+import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 
 @Component({
     selector: 'app-attachment-page',
@@ -40,6 +41,7 @@ export class AttachmentPageComponent implements OnInit {
     constructor(
         public http: HttpClient,
         @Inject(MAT_DIALOG_DATA) public data: any,
+        public dialog: MatDialog,
         public dialogRef: MatDialogRef<AttachmentPageComponent>,
         public appService: AppService,
         private notify: NotificationService,
@@ -67,11 +69,18 @@ export class AttachmentPageComponent implements OnInit {
             tap((data: any) => {
                 //this.attachment = data;
 
-                if ((this.privilegeService.hasCurrentUserPrivilege('manage_attachments') || this.headerService.user.id === data.typist)  && data.status !== 'SIGN') {
+                if ((this.privilegeService.hasCurrentUserPrivilege('manage_attachments') || this.headerService.user.id === data.typist) && data.status !== 'SIGN') {
                     this.editMode = true;
                 }
 
                 this.attachment = {
+                    typist: new FormControl({ value: data.typist, disabled: true }, [Validators.required]),
+                    typistLabel: new FormControl({ value: data.typistLabel, disabled: true }, [Validators.required]),
+                    creationDate: new FormControl({ value: data.creationDate, disabled: true }, [Validators.required]),
+                    modificationDate: new FormControl({ value: data.modificationDate, disabled: true }),
+                    modifiedBy: new FormControl({ value: data.modifiedBy, disabled: true }),
+                    signatory: new FormControl({ value: data.signatory, disabled: true }),
+                    signDate: new FormControl({ value: data.signDate, disabled: true }),
                     resId: new FormControl({ value: this.data.resId, disabled: true }, [Validators.required]),
                     chrono: new FormControl({ value: data.chrono, disabled: true }),
                     originId: new FormControl({ value: data.originId, disabled: true }),
@@ -133,13 +142,15 @@ export class AttachmentPageComponent implements OnInit {
 
     enableForm(state: boolean) {
         Object.keys(this.attachment).forEach(element => {
-            if (this.attachment[element] !== undefined && (this.attachment[element].value !== null && this.attachment[element].value !== undefined)) {
+            if (['status', 'typistLabel', 'creationDate', 'relation', 'versions', 'modificationDate', 'modifiedBy'].indexOf(element) === -1) {
+
                 if (state) {
                     this.attachment[element].enable();
-                } else{
+                } else {
                     this.attachment[element].disable();
                 }
             }
+
         });
     }
 
@@ -163,7 +174,7 @@ export class AttachmentPageComponent implements OnInit {
 
         if (newAttachment) {
             attachmentValues['originId'] = this.attachment['originId'].value !== null ? this.attachment['originId'].value : attachmentValues['resId'];
-            
+
             attachmentValues['relation'] = this.attachment['relation'].value + 1;
             delete attachmentValues['resId'];
         }
@@ -180,15 +191,20 @@ export class AttachmentPageComponent implements OnInit {
     }
 
     deleteSignedVersion() {
-        this.http.put(`../../rest/signatureBook/${this.attachment['resId'].value}/unsign`, {}).pipe(
+        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+
+        dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.put(`../../rest/signatureBook/${this.attachment['resId'].value}/unsign`, {})),
             tap(() => {
                 this.attachment.status.setValue('A_TRA');
                 this.attachment.signedResponse.setValue(null);
-                if (this.privilegeService.hasCurrentUserPrivilege('manage_attachments')) {
+                if (this.privilegeService.hasCurrentUserPrivilege('manage_attachments') || this.headerService.user.id === this.attachment['typist'].value) {
                     this.editMode = true;
                     this.enableForm(this.editMode);
                 }
                 this.notify.success(this.lang.signedVersionDeleted);
+                this.dialogRef.close('success');
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
