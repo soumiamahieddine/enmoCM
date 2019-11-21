@@ -363,6 +363,7 @@ export class DocumentViewerComponent implements OnInit {
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             tap(() => {
+                this.templateListForm.reset();
                 this.file = {
                     name: '',
                     type: '',

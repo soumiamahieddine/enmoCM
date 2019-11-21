@@ -1332,4 +1332,8 @@ export const LANG_NL = {
     "addAttachment"   : "Add an attachment", //_TO_TRANSLATE
     "dateAgo"   : "Since", //_TO_TRANSLATE
     "dateTo"   : "The", //_TO_TRANSLATE
+    "attachmentCreation": "Attachment creation", //_TO_TRANSLATE
+    "newAttachment": "New attachment", //_TO_TRANSLATE
+    "delAttachment": "Delete this attachment", //_TO_TRANSLATE
+    "mustCompleteAllAttachments": "Please, complete all attachments", //_TO_TRANSLATE
 };

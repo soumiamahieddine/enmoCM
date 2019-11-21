@@ -4,7 +4,7 @@
     </div>
     <h1 mat-dialog-title>
         <span style="flex: 1;">
-            Creation d'une pièce jointe
+            {{lang.attachmentCreation}}
         </span>
         <button *ngIf="!loading" [title]="lang.close" mat-icon-button [disabled]="isDocLoading()"
             (click)="dialogRef.close();">
@@ -12,8 +12,11 @@
         </button></h1>
     <mat-dialog-content class="attach-content">
         <mat-tab-group style="width: 100%;">
-            <mat-tab *ngFor="let attachment of attachments; let i=index" label="PJ n°{{i+1}}"
-                [disabled]="isDocLoading()">
+            <mat-tab *ngFor="let attachment of attachments; let i=index" [disabled]="isDocLoading()">
+                <ng-template mat-tab-label>
+                    <span [class.complete]="isPjValid(i)">PJ n°{{i+1}}&nbsp;<i *ngIf="isPjValid(i)"
+                            class="fa fa-check"></i></span>
+                </ng-template>
                 <div style="display:flex;height:100%;">
                     <div class="attachment-form" *ngIf="!loading">
                         <div class="attachment-form-item">
@@ -21,16 +24,29 @@
                                 [formControlSelect]="attachment['type']" [datas]="attachmentsTypes"
                                 (afterSelected)="getAttachType($event, i)" style="width:100%;">
                             </plugin-select-search>
+                            <div class="fieldState">
+                                <i class="fas fa-asterisk" *ngIf="!attachment['type'].hasError('required')"></i>
+                                <i class="fas fa-times" style="color:red;font-size:15px;"
+                                    *ngIf="attachment['type'].hasError('required')"></i>
+                            </div>
                         </div>
                         <div class="attachment-form-item">
                             <mat-form-field class="input-form">
                                 <input matInput placeholder="{{lang.subject}}" [formControl]="attachment['title']">
                             </mat-form-field>
+                            <div class="fieldState">
+                                <i class="fas fa-asterisk" *ngIf="!attachment['title'].hasError('required')"></i>
+                                <i class="fas fa-times" style="color:red;font-size:15px;"
+                                    *ngIf="attachment['title'].hasError('required')"></i>
+                            </div>
                         </div>
                         <div class="attachment-form-item">
                             <mat-form-field class="input-form">
                                 <input matInput placeholder="{{lang.contact}}">
                             </mat-form-field>
+                            <div class="fieldState">
+                                <i class="fas fa-asterisk noMandatory"></i>
+                            </div>
                         </div>
                         <div class="attachment-form-item">
                             <mat-form-field class="input-form" (click)="picker.open()" style="cursor:pointer;">
@@ -50,19 +66,29 @@
                                     </mat-icon>
                                 </button>
                             </mat-form-field>
+                            <div class="fieldState">
+                                <i class="fas fa-asterisk noMandatory"></i>
+                            </div>
                         </div>
-                        <div class="attachment-form-item">
+                        <div class="attachment-form-item-action">
                             <button mat-raised-button color="primary" (click)="newPj()" [disabled]="isDocLoading()"
-                                style="width:90%;">Nouvelle pièce jointe</button>
+                                style="width:90%;">{{lang.newAttachment}}</button>
                             <button mat-raised-button color="warn" *ngIf="attachments.length > 1" (click)="removePj(i)"
-                                [disabled]="isDocLoading()" style="width:90%;">Enlever la pièce jointe</button>
+                                [disabled]="isDocLoading()" style="width:90%;">{{lang.delAttachment}}</button>
+                            <div class="fieldState">
+                                <i class="fas fa-asterisk noMandatory"></i>
+                            </div>
                         </div>
                     </div>
-                    <div
-                        style="display: flex;flex: 1;align-items: center;justify-content: center;text-align: center;background: #135F7F;overflow: auto;color: white;">
+                    <div class="documentContent">
                         <app-document-viewer #appDocumentViewer style="height:100%;width:100%;position: relative;"
                             [editMode]="true" [mode]="'attachment'" (triggerEvent)="setEncodedFile(i)">
                         </app-document-viewer>
+                        <div class="fieldState stateDoc">
+                            <i class="fas fa-asterisk" *ngIf="!attachment['encodedFile'].hasError('required')"></i>
+                            <i class="fas fa-times" style="color:red;font-size:15px;"
+                                *ngIf="attachment['encodedFile'].hasError('required')"></i>
+                        </div>
                     </div>
                 </div>
             </mat-tab>
@@ -70,7 +96,7 @@
     </mat-dialog-content>
     <div mat-dialog-actions class="actions">
         <button mat-raised-button color="primary" *ngIf="creationMode && !loading" (click)="onSubmit()"
-            [disabled]="!isValid() || isDocLoading()">Valider</button>
+            [disabled]="isDocLoading()">{{lang.validate}}</button>
         <button mat-raised-button mat-button *ngIf="creationMode && !loading" [disabled]="isDocLoading()"
             [mat-dialog-close]="">{{lang.cancel}}</button>
     </div>

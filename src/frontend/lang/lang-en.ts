@@ -1306,5 +1306,9 @@ export const LANG_EN = {
     "viewResource"   : "View document",
     "addAttachment"   : "Add an attachment",
     "dateAgo"   : "Since",
-    "dateTo"   : "The"
+    "dateTo"   : "The",
+    "attachmentCreation": "Attachment creation",
+    "newAttachment": "New attachment",
+    "delAttachment": "Delete this attachment",
+    "mustCompleteAllAttachments": "Please, complete all attachments",
 };
