@@ -101,7 +101,7 @@
                                     <i class="fas fa-asterisk noMandatory"></i>
                                 </div>
                             </div>
-                            <div class="attachment-form-item" *ngIf="attachment['modificationDate'] !== null">
+                            <div class="attachment-form-item" *ngIf="attachment['modificationDate'].value !== null">
                                 <mat-form-field class="input-form">
                                     <input matInput placeholder="{{lang.modified}}"
                                         [formControl]="attachment['modificationDate']"
@@ -111,7 +111,7 @@
                                     <i class="fas fa-asterisk noMandatory"></i>
                                 </div>
                             </div>
-                            <div class="attachment-form-item" *ngIf="attachment['modificationDate'] !== null">
+                            <div class="attachment-form-item" *ngIf="attachment['modificationDate'].value !== null">
                                 <mat-form-field class="input-form">
                                     <input matInput placeholder="{{lang.modified}} {{lang.by}}"
                                         [formControl]="attachment['modifiedBy']">

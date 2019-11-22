@@ -121,7 +121,7 @@ export class AttachmentCreateComponent implements OnInit {
                     this.notify.success(this.lang.attachmentAdded);
                     this.dialogRef.close('success');
                 }),
-                finalize(() => this.sendingData),
+                finalize(() => this.sendingData = false),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
