@@ -86,12 +86,12 @@ class AttachmentController
         $attachment = AttachmentModel::getById([
             'id'        => $args['id'],
             'select'    => [
-                'res_id as "resId"', 'res_id_master', 'status', 'title', 'identifier as chrono', 'typist', 'modified_by as "modifiedBy"', 'relation', 'attachment_type as type',
+                'res_id as "resId"', 'res_id_master as "resIdMaster"', 'status', 'title', 'identifier as chrono', 'typist', 'modified_by as "modifiedBy"', 'relation', 'attachment_type as type',
                 'origin_id as "originId"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"', 'validation_date as "validationDate"',
                 'fulltext_result as "fulltextResult"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
             ]
         ]);
-        if (empty($attachment) || !in_array($attachment['status'], ['A_TRA', 'TRA', 'SIGN'])) {
+        if (empty($attachment) || in_array($attachment['status'], ['DEL', 'OBS'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
         }
 

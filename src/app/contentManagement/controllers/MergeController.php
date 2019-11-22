@@ -94,7 +94,6 @@ class MergeController
     {
         ValidatorModel::notEmpty($args, ['userId']);
         ValidatorModel::intVal($args, ['resId', 'userId']);
-        ValidatorModel::stringType($args, ['attachmentChrono', 'attachmentTitle']);
 
         //Resource
         if (!empty($args['resId'])) {
@@ -163,7 +162,7 @@ class MergeController
         //Attachment
         $attachment = [
             'chrono'    => '[attachment.chrono]',
-            'title'     => $args['attachmentTitle'] ?? null
+            'title'     => $args['attachment_title'] ?? null
         ];
 
         //User

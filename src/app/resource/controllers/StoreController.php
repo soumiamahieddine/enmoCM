@@ -303,6 +303,7 @@ class StoreController
             'attachment_type'       => $args['type'],
             'validation_date'       => $args['validationDate'] ?? null,
             'effective_date'        => $args['effectiveDate'] ?? null,
+            'modified_by'           => $GLOBALS['id'],
             'modification_date'     => 'CURRENT_TIMESTAMP'
         ];
 
