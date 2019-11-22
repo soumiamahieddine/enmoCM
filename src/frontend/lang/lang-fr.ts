@@ -1349,4 +1349,5 @@ export const LANG_FR = {
     "newAttachment": "Nouvelle pièce jointe",
     "delAttachment": "Enlever la pièce jointe",
     "mustCompleteAllAttachments": "Veuillez compléter l'ensemble des pièces jointes",
+    "editDocument": "Editer le document",
 };

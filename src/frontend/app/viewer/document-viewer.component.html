@@ -58,6 +58,9 @@
                 <button *ngIf="editMode" mat-icon-button (click)="cleanFile()" [matTooltip]="lang.removeFile">
                     <mat-icon class="fa fa-trash" color="warn"></mat-icon>
                 </button>
+                <button *ngIf="editMode && mode === 'attachment' && resId !== null" mat-icon-button (click)="editAttachment()" [matTooltip]="lang.editDocument">
+                    <mat-icon class="fa fa-edit"></mat-icon>
+                </button>
             </div>
             <pdf-viewer *ngIf="file.src!==null" [src]="file.src" [render-text]="true" [autoresize]="true"
                 [original-size]="false" [show-all]="true" (error)="onError($event)" style="width:100%;"></pdf-viewer>

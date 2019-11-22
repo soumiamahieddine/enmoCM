@@ -161,8 +161,16 @@ export class AttachmentCreateComponent implements OnInit {
         return state;
     }
 
-    setEncodedFile(i: number) {
+    setDatasViewer(i: number) {
+        let datas: any = {};
+        Object.keys(this.attachments[i]).forEach(element => {
+            if (['title', 'validationDate'].indexOf(element) > -1) {
+                datas[element] = this.attachments[i][element].value;
+            }
+        });
+        console.log(datas);
         this.attachments[i].encodedFile.setValue(this.appDocumentViewer.toArray()[i].getFile().content);
+        this.appDocumentViewer.toArray()[i].setDatas(datas);
     }
 
     newPj() {

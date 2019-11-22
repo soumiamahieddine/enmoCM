@@ -511,7 +511,7 @@ export class DocumentViewerComponent implements OnInit {
             }),
             filter((data: string) => data === 'ok'),
             tap(() => {
-                this.refreshDatas.emit();
+                this.triggerEvent.emit();
                 const template = this.listTemplates.filter(template => template.id === templateId)[0];
                 this.editInProgress = true;
                 const jnlp: any = {
@@ -523,7 +523,7 @@ export class DocumentViewerComponent implements OnInit {
                 this.http.post('../../rest/jnlp', jnlp).pipe(
                     tap((data: any) => {
                         window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
-                        this.checkLockFile(data.jnlpUniqueId, template);
+                        this.checkLockFile(data.jnlpUniqueId, template.extension);
                     })
                 ).subscribe();
             }),
@@ -534,18 +534,35 @@ export class DocumentViewerComponent implements OnInit {
         ).subscribe();
     }
 
+    editAttachment() {
+        this.editInProgress = true;
+        const jnlp: any = {
+            objectType: 'attachmentModification',
+            objectId: this.resId,
+            cookie: document.cookie,
+            data: this.resourceDatas,
+        };
+
+        this.http.post('../../rest/jnlp', jnlp).pipe(
+            tap((data: any) => {
+                window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
+                this.checkLockFile(data.jnlpUniqueId, 'odt');
+            })
+        ).subscribe();
+    }
+
     setDatas(resourceDatas: any) {
         this.resourceDatas = resourceDatas;
     }
 
-    checkLockFile(id: string, template: any) {
+    checkLockFile(id: string, extension: string) {
         this.intervalLockFile = setInterval(() => {
             this.http.get('../../rest/jnlp/lock/' + id)
                 .subscribe((data: any) => {
                     if (!data.lockFileFound) {
                         this.editInProgress = false;
                         clearInterval(this.intervalLockFile);
-                        this.loadTmpFile(`${data.fileTrunk}.${template.extension}`);
+                        this.loadTmpFile(`${data.fileTrunk}.${extension}`);
                     }
                 });
         }, 1000);
@@ -566,7 +583,7 @@ export class DocumentViewerComponent implements OnInit {
         this.listTemplates = [];
         this.http.get('../../rest/attachmentsTypes').pipe(
             tap((data: any) => {
-                
+
                 Object.keys(data.attachmentsTypes).forEach(templateType => {
                     arrTypes.push({
                         id: templateType,

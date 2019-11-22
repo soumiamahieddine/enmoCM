@@ -182,8 +182,15 @@ export class AttachmentPageComponent implements OnInit {
         return attachmentValues;
     }
 
-    setEncodedFile() {
-        this.attachment['encodedFile'].setValue(this.appAttachmentViewer.getFile().content);
+    setDatasViewer() {
+        let datas: any = {};
+        Object.keys(this.attachment).forEach(element => {
+            if (['title', 'validationDate', 'effectiveDate'].indexOf(element) > -1) {
+                datas[element] = this.attachment[element].value;
+            }
+        });
+        this.attachment.encodedFile.setValue(this.appAttachmentViewer.getFile().content);
+        this.appAttachmentViewer.setDatas(datas);
     }
 
     getAttachType(attachType: any) {

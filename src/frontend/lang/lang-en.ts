@@ -1311,4 +1311,5 @@ export const LANG_EN = {
     "newAttachment": "New attachment",
     "delAttachment": "Delete this attachment",
     "mustCompleteAllAttachments": "Please, complete all attachments",
+    "editDocument": "Edit document",
 };

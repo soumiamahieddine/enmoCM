@@ -187,7 +187,7 @@
                         </ng-template>
                         <app-document-viewer #appAttachmentViewer style="height:100%;width:100%;" [editMode]="editMode"
                             [resId]="data.resId" [mode]="'attachment'" [attachType]="attachment['type'].value"
-                            [infoPanel]="snavLeft" (triggerEvent)="setEncodedFile()"
+                            [infoPanel]="snavLeft" (triggerEvent)="setDatasViewer()"
                             [title]="attachment.chrono.value + ' - ' + attachment.title.value">
                         </app-document-viewer>
                     </mat-tab>

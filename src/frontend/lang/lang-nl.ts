@@ -1336,4 +1336,5 @@ export const LANG_NL = {
     "newAttachment": "New attachment", //_TO_TRANSLATE
     "delAttachment": "Delete this attachment", //_TO_TRANSLATE
     "mustCompleteAllAttachments": "Please, complete all attachments", //_TO_TRANSLATE
+    "editDocument": "Edit document", //_TO_TRANSLATE
 };
