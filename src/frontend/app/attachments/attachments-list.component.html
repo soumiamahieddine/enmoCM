@@ -1,74 +1,88 @@
-<div *ngIf="!loading" (mouseover)="resetToggleInfo()">
-    <div *ngIf="attachments.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
-        {{lang.noAttachment}}
+<ng-container *ngIf="loading; else elseLoading">
+    <div class="loading">
+        <mat-spinner></mat-spinner>
     </div>
-    <button mat-button color="primary" (click)="createAttachment()">{{lang.addAttachment}}</button>
-    <mat-form-field [style.visibility]="attachments.length > 0 ? 'visible' : 'hidden'" floatLabel="never"
-        style="padding-left:20px;padding-right:20px;">
-        <input matInput placeholder="{{lang.searchByAttachmentType}}" #listFilter>
-    </mat-form-field>
-    <mat-card *ngFor="let attachment of attachments | filterList:listFilter.value:'typeLabel'"
-        [class.signed]="attachment.status==='SIGN'" [style.background-image]="'url('+attachment.thumbnailUrl+')'"
-        style="padding:0;margin: 30px;min-height: 300px;background-size: cover;overflow: hidden;"
-        (mouseover)="$event.stopPropagation();toggleInfo(attachment,true)">
-        <div class="layout" *ngIf="attachment.hideMainInfo" [@myAnimation] (click)="showAttachment(attachment)">
-            <button mat-raised-button color="primary" (click)="$event.stopPropagation();showAttachment(attachment)">{{lang.viewResource}}</button>
-            <button mat-raised-button color="warn" *ngIf="attachment.status!=='SIGN'"
-                (click)="$event.stopPropagation();deleteAttachment(attachment)" [disabled]="!attachment.canDelete">{{lang.deleteResource}}</button>
+</ng-container>
+<ng-template #elseLoading>
+    <div (mouseover)="resetToggleInfo()">
+        <div *ngIf="attachments.length == 0" style="text-align:center;font-size:24px;font-weight:bold;opacity:0.3;">
+            {{lang.noAttachment}}
         </div>
-        <div class="pjToolsContent">
-            <button *ngIf="attachment.relation > 1" color="primary" class="versionButton" mat-button
-                [matMenuTriggerFor]="menu">{{lang.version}} <b color="secondary">{{attachment.relation}}</b></button>
-            <mat-menu #menu="matMenu">
-                <button mat-menu-item *ngFor="let version of attachment.versions; let i = index"
-                    (click)="showAttachment(version)">{{lang.version}} {{i+1}}</button>
-            </mat-menu>
-            <button color="primary" class="actionsButton" mat-icon-button [matMenuTriggerFor]="menuPjAction">
-                <mat-icon fontSet="fas" fontIcon="fa-ellipsis-v"></mat-icon>
-            </button>
-            <mat-menu #menuPjAction="matMenu">
-                <button mat-menu-item (click)="setInSignatureBook(attachment)">
-                    <mat-checkbox color="primary" [(ngModel)]="attachment.inSignatureBook"></mat-checkbox>
-                    {{lang.putInSignatureBook}}
+        <button mat-button color="primary" (click)="createAttachment()">{{lang.addAttachment}}</button>
+        <mat-form-field [style.visibility]="attachments.length > 0 ? 'visible' : 'hidden'" floatLabel="never"
+            style="padding-left:20px;padding-right:20px;">
+            <input matInput placeholder="{{lang.searchByAttachmentType}}" #listFilter>
+        </mat-form-field>
+        <mat-card *ngFor="let attachment of attachments | filterList:listFilter.value:'typeLabel'"
+            [class.signed]="attachment.status==='SIGN'" [style.background-image]="'url('+attachment.thumbnailUrl+')'"
+            style="padding:0;margin: 30px;min-height: 300px;background-size: cover;overflow: hidden;"
+            (mouseover)="$event.stopPropagation();toggleInfo(attachment,true)">
+            <div class="layout" *ngIf="attachment.hideMainInfo" [@myAnimation] (click)="showAttachment(attachment)">
+                <button mat-raised-button color="primary"
+                    (click)="$event.stopPropagation();showAttachment(attachment)">{{lang.viewResource}}</button>
+                <button mat-raised-button color="warn" *ngIf="attachment.status!=='SIGN'"
+                    (click)="$event.stopPropagation();deleteAttachment(attachment)"
+                    [disabled]="!attachment.canDelete">{{lang.deleteResource}}</button>
+            </div>
+            <div class="pjToolsContent">
+                <button *ngIf="attachment.relation > 1" color="primary" class="versionButton" mat-button
+                    [matMenuTriggerFor]="menu">{{lang.version}} <b
+                        color="secondary">{{attachment.relation}}</b></button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item *ngFor="let version of attachment.versions; let i = index"
+                        (click)="showAttachment(version)">{{lang.version}} {{i+1}}</button>
+                </mat-menu>
+                <button color="primary" class="actionsButton" mat-icon-button [matMenuTriggerFor]="menuPjAction">
+                    <mat-icon fontSet="fas" fontIcon="fa-ellipsis-v"></mat-icon>
                 </button>
-                <button mat-menu-item (click)="setInSendAttachment(attachment)" [disabled]="!mailevaEnabled">
-                    <mat-checkbox color="primary" [(ngModel)]="attachment.inSendAttach" [disabled]="!mailevaEnabled">
-                    </mat-checkbox>
-                    {{lang.putInSendAttach}}
-                </button>
-            </mat-menu>
-        </div>
+                <mat-menu #menuPjAction="matMenu">
+                    <button mat-menu-item (click)="setInSignatureBook(attachment)">
+                        <mat-checkbox color="primary" [(ngModel)]="attachment.inSignatureBook"></mat-checkbox>
+                        {{lang.putInSignatureBook}}
+                    </button>
+                    <button mat-menu-item (click)="setInSendAttachment(attachment)" [disabled]="!mailevaEnabled">
+                        <mat-checkbox color="primary" [(ngModel)]="attachment.inSendAttach"
+                            [disabled]="!mailevaEnabled">
+                        </mat-checkbox>
+                        {{lang.putInSendAttach}}
+                    </button>
+                </mat-menu>
+            </div>
 
-        <div class="infosPj">
-            <div class="stateInfo">
-                <i class="fas fa-file-signature" *ngIf="attachment.inSignatureBook"></i>&nbsp;
-                <i class="fa fa-shipping-fast" *ngIf="attachment.inSendAttach"></i>
-            </div>
-            <div class="mainInfos" *ngIf="!attachment.hideMainInfo">
-                {{attachment.chrono}}&nbsp;
-            </div>
-            <div class="mainInfos" *ngIf="attachment.hideMainInfo">
-                {{attachment.title | shorten : 40:'...'}}
-            </div>
-            <div class="subInfos" *ngIf="!attachment.hideMainInfo">
-                {{attachment.typeLabel}}
-            </div>
-            <div class="subInfos" *ngIf="attachment.hideMainInfo">
-                <ng-container *ngIf="attachment.signDate !== undefined; else elseTemplate">
-                    {{lang.signedAlt}} <b>{{attachment.signDate | timeAgo : 'full'}}</b> {{lang.by | lowercase}} <b>{{attachment.signatory}}</b>
-                </ng-container>
-                <ng-template #elseTemplate>
-                    <ng-container *ngIf="attachment.modificationDate !== null; else creationTemplate">
-                        {{lang.modified}} <b>{{attachment.modificationDate | timeAgo : 'full'}}</b> {{lang.by | lowercase}} <b>{{attachment.modifiedBy}}</b>
+            <div class="infosPj">
+                <div class="stateInfo">
+                    <i class="fas fa-file-signature" *ngIf="attachment.inSignatureBook"></i>&nbsp;
+                    <i class="fa fa-shipping-fast" *ngIf="attachment.inSendAttach"></i>
+                </div>
+                <div class="mainInfos" *ngIf="!attachment.hideMainInfo">
+                    {{attachment.chrono}}&nbsp;
+                </div>
+                <div class="mainInfos" *ngIf="attachment.hideMainInfo">
+                    {{attachment.title | shorten : 40:'...'}}
+                </div>
+                <div class="subInfos" *ngIf="!attachment.hideMainInfo">
+                    {{attachment.typeLabel}}
+                </div>
+                <div class="subInfos" *ngIf="attachment.hideMainInfo">
+                    <ng-container *ngIf="attachment.signDate !== undefined; else elseTemplate">
+                        {{lang.signedAlt}} <b>{{attachment.signDate | timeAgo : 'full'}}</b> {{lang.by | lowercase}}
+                        <b>{{attachment.signatory}}</b>
                     </ng-container>
-                    <ng-template #creationTemplate>
-                        {{lang.created}} <b>{{attachment.creationDate | timeAgo : 'full'}}</b> {{lang.by | lowercase}} <b>{{attachment.typistLabel}}</b>
+                    <ng-template #elseTemplate>
+                        <ng-container *ngIf="attachment.modificationDate !== null; else creationTemplate">
+                            {{lang.modified}} <b>{{attachment.modificationDate | timeAgo : 'full'}}</b>
+                            {{lang.by | lowercase}} <b>{{attachment.modifiedBy}}</b>
+                        </ng-container>
+                        <ng-template #creationTemplate>
+                            {{lang.created}} <b>{{attachment.creationDate | timeAgo : 'full'}}</b>
+                            {{lang.by | lowercase}} <b>{{attachment.typistLabel}}</b>
+                        </ng-template>
                     </ng-template>
-                </ng-template>
+                </div>
+                <div class="statusInfo">
+                    {{lang['attachment_'+attachment.status]}}
+                </div>
             </div>
-            <div class="statusInfo">
-                {{lang['attachment_'+attachment.status]}}
-            </div>
-        </div>
-    </mat-card>
-</div>
+        </mat-card>
+    </div>
+</ng-template>

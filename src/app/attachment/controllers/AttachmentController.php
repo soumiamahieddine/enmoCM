@@ -95,7 +95,7 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
         }
 
-        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
+        if (!ResController::hasRightByResId(['resId' => [$attachment['resIdMaster']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment out of perimeter']);
         }
 

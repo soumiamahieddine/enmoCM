@@ -186,7 +186,7 @@
                             <span style="color:#135f7f">{{lang.attachment}}</span>
                         </ng-template>
                         <app-document-viewer #appAttachmentViewer style="height:100%;width:100%;" [editMode]="editMode"
-                            [resId]="data.resId" [mode]="'attachment'" [attachType]="attachment['type'].value"
+                            [resId]="data.resId" [resIdMaster]="attachment['resIdMaster'].value" [mode]="'attachment'" [attachType]="attachment['type'].value"
                             [infoPanel]="snavLeft" (triggerEvent)="setDatasViewer()"
                             [title]="attachment.chrono.value + ' - ' + attachment.title.value">
                         </app-document-viewer>

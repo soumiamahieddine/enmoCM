@@ -59,6 +59,7 @@ export class DocumentViewerComponent implements OnInit {
     templateListForm = new FormControl();
 
     @Input('resId') resId: number = null;
+    @Input('resIdMaster') resIdMaster: number = null;
     @Input('infoPanel') infoPanel: MatSidenav = null;
     @Input('editMode') editMode: boolean = false;
     @Input('title') title: string = '';
@@ -109,7 +110,7 @@ export class DocumentViewerComponent implements OnInit {
                     this.loadRessource(this.resId, this.mode);
                     if (this.editMode) {
                         if (this.attachType !== null && this.mode === 'attachment') {
-                            this.loadTemplatesByResId(this.resId, this.attachType);
+                            this.loadTemplatesByResId(this.resIdMaster, this.attachType);
                         } else {
                             this.loadTemplates();
                         }

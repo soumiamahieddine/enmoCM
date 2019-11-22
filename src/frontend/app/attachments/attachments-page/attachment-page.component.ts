@@ -84,7 +84,7 @@ export class AttachmentPageComponent implements OnInit {
                     resId: new FormControl({ value: this.data.resId, disabled: true }, [Validators.required]),
                     chrono: new FormControl({ value: data.chrono, disabled: true }),
                     originId: new FormControl({ value: data.originId, disabled: true }),
-                    resIdMaster: new FormControl({ value: data.res_id_master, disabled: true }, [Validators.required]),
+                    resIdMaster: new FormControl({ value: data.resIdMaster, disabled: true }, [Validators.required]),
                     status: new FormControl({ value: data.status, disabled: true }, [Validators.required]),
                     relation: new FormControl({ value: data.relation, disabled: true }, [Validators.required]),
                     title: new FormControl({ value: data.title, disabled: !this.editMode }, [Validators.required]),
@@ -186,9 +186,10 @@ export class AttachmentPageComponent implements OnInit {
         let datas: any = {};
         Object.keys(this.attachment).forEach(element => {
             if (['title', 'validationDate', 'effectiveDate'].indexOf(element) > -1) {
-                datas[element] = this.attachment[element].value;
+                datas['attachment_' + element] = this.attachment[element].value;
             }
         });
+        datas['resId'] = this.attachment['resIdMaster'].value;
         this.attachment.encodedFile.setValue(this.appAttachmentViewer.getFile().content);
         this.appAttachmentViewer.setDatas(datas);
     }
