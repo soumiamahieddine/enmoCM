@@ -235,7 +235,7 @@ class ContactController
 
     public function getContacts(Request $request, Response $response, array $args)
     {
-        $resource = ResModel::getById(['select', ['*'], 'resId' => $args['resId']]);
+        $resource = ResModel::getById(['select' => ['*'], 'resId' => $args['resId']]);
 
         if (empty($resource)) {
             return $response->withStatus(404)->withJson(['errors' => 'Document does not exist']);

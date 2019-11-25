@@ -827,18 +827,6 @@ class ResController
             }
         }
         if (!empty($body['folders'])) {
-            // Delete association with user's folders
-            $idToDelete = FolderModel::getWithResources([
-                'select'    => ['resources_folders.id'],
-                'where'     => ['resources_folders.res_id = ?', 'folders.user_id = ?'],
-                'data'      => [$args['resId'], $GLOBALS['id']]
-            ]);
-            $idToDelete = array_column($idToDelete, 'id');
-            if (!empty($idToDelete)) {
-                ResourceFolderModel::delete(['where' => ['id in (?)'], 'data' => [$idToDelete]]);
-            }
-
-            // Delete association with folders the user can see
             $entities = EntityModel::getWithUserEntities([
                 'select' => ['entities.id'],
                 'where'  => ['user_id = ?'],
@@ -847,8 +835,8 @@ class ResController
             $entities = array_column($entities, 'id');
             $idToDelete = FolderModel::getWithEntitiesAndResources([
                 'select'    => ['resources_folders.id'],
-                'where'     => ['resources_folders.res_id = ?', 'entities_folders.entity_id in (?)'],
-                'data'      => [$args['resId'], $entities]
+                'where'     => ['resources_folders.res_id = ?', 'entities_folders.entity_id in (?) || folders.user_id = ?'],
+                'data'      => [$args['resId'], $entities, $GLOBALS['id']]
             ]);
             $idToDelete = array_column($idToDelete, 'id');
             if (!empty($idToDelete)) {
