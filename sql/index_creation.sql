@@ -19,7 +19,6 @@ CREATE INDEX res_att_external_id_idx ON res_attachments (external_id);
 
 -- listinstance
 CREATE INDEX res_id_listinstance_idx ON listinstance (res_id);
-CREATE INDEX listinstance_coll_id_idx ON listinstance (coll_id);
 CREATE INDEX sequence_idx ON listinstance (sequence);
 CREATE INDEX item_id_idx ON listinstance (item_id);
 CREATE INDEX item_type_idx ON listinstance (item_type);
