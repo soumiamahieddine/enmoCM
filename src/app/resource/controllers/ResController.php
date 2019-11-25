@@ -835,7 +835,7 @@ class ResController
             $entities = array_column($entities, 'id');
             $idToDelete = FolderModel::getWithEntitiesAndResources([
                 'select'    => ['resources_folders.id'],
-                'where'     => ['resources_folders.res_id = ?', 'entities_folders.entity_id in (?) || folders.user_id = ?'],
+                'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
                 'data'      => [$args['resId'], $entities, $GLOBALS['id']]
             ]);
             $idToDelete = array_column($idToDelete, 'id');
