@@ -41,6 +41,8 @@ foreach ($customs as $custom) {
         unset($attachmentInfo['res_id']);
         $attachmentInfo['origin_id'] = $attachmentInfo['attachment_id_master'];
         unset($attachmentInfo['attachment_id_master']);
+        $attachmentInfo['modification_date'] = $attachmentInfo['doc_date'];
+        unset($attachmentInfo['doc_date']);
         if (!empty($attachmentInfo['updated_by'])) {
             $userSerialId = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => $attachmentInfo['updated_by']]);
             $attachmentInfo['modified_by'] = $userSerialId['id'];
@@ -86,7 +88,7 @@ foreach ($customs as $custom) {
         migrateHistoryVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateEmailsVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateMessageExchangeVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
-        // migrateShippingVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
+        migrateShippingVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
         if (!in_array($attachmentInfo['status'], ['DEL', 'OBS', 'TMP'])) {
             migrateFullText(['newResId' => $newResId, 'customId' => $custom, 'userId' => $masterOwnerId]);
         }
