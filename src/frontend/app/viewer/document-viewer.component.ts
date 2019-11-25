@@ -59,6 +59,7 @@ export class DocumentViewerComponent implements OnInit {
     templateListForm = new FormControl();
 
     @Input('resId') resId: number = null;
+    @Input('resIdMaster') resIdMaster: number = null;
     @Input('infoPanel') infoPanel: MatSidenav = null;
     @Input('editMode') editMode: boolean = false;
     @Input('title') title: string = '';
@@ -109,7 +110,7 @@ export class DocumentViewerComponent implements OnInit {
                     this.loadRessource(this.resId, this.mode);
                     if (this.editMode) {
                         if (this.attachType !== null && this.mode === 'attachment') {
-                            this.loadTemplatesByResId(this.resId, this.attachType);
+                            this.loadTemplatesByResId(this.resIdMaster, this.attachType);
                         } else {
                             this.loadTemplates();
                         }
@@ -363,6 +364,7 @@ export class DocumentViewerComponent implements OnInit {
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             tap(() => {
+                this.templateListForm.reset();
                 this.file = {
                     name: '',
                     type: '',
@@ -395,7 +397,7 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     canBeConverted(file: any): boolean {
-        const fileExtension = '.' + file.name.split('.').pop();
+        const fileExtension = '.' + file.name.toLowerCase().split('.').pop();
         if (this.allowedExtensions.filter(ext => ext.canConvert === true && ext.mimeType === file.type && ext.extension === fileExtension).length > 0) {
             return true;
         } else {
@@ -404,7 +406,7 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     isExtensionAllowed(file: any) {
-        const fileExtension = '.' + file.name.split('.').pop();
+        const fileExtension = '.' + file.name.toLowerCase().split('.').pop();
         if (this.allowedExtensions.filter(ext => ext.mimeType === file.type && ext.extension === fileExtension).length === 0) {
             this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.notAllowedExtension + ' !', msg: this.lang.file + ' : <b>' + file.name + '</b>, ' + this.lang.type + ' : <b>' + file.type + '</b><br/><br/><u>' + this.lang.allowedExtensions + '</u> : <br/>' + this.allowedExtensions.map(ext => ext.extension).filter((elem: any, index: any, self: any) => index === self.indexOf(elem)).join(', ') } });
             return false;
@@ -494,7 +496,13 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     editTemplate(templateId: number) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.templateEdition, msg: this.lang.editionAttachmentConfirm } });
+        let confirmMsg = '';
+        if (this.mode == 'attachment') {
+            confirmMsg = this.lang.editionAttachmentConfirmFirst;
+        } else {
+            confirmMsg = this.lang.editionAttachmentConfirmFirst + '<br><br>' + this.lang.editionAttachmentConfirmSecond;
+        }
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.templateEdition, msg: confirmMsg } });
 
         this.dialogRef.afterClosed().pipe(
             tap((data: string) => {
@@ -504,7 +512,7 @@ export class DocumentViewerComponent implements OnInit {
             }),
             filter((data: string) => data === 'ok'),
             tap(() => {
-                this.refreshDatas.emit();
+                this.triggerEvent.emit();
                 const template = this.listTemplates.filter(template => template.id === templateId)[0];
                 this.editInProgress = true;
                 const jnlp: any = {
@@ -516,7 +524,7 @@ export class DocumentViewerComponent implements OnInit {
                 this.http.post('../../rest/jnlp', jnlp).pipe(
                     tap((data: any) => {
                         window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
-                        this.checkLockFile(data.jnlpUniqueId, template);
+                        this.checkLockFile(data.jnlpUniqueId, template.extension);
                     })
                 ).subscribe();
             }),
@@ -527,18 +535,35 @@ export class DocumentViewerComponent implements OnInit {
         ).subscribe();
     }
 
+    editAttachment() {
+        this.editInProgress = true;
+        const jnlp: any = {
+            objectType: 'attachmentModification',
+            objectId: this.resId,
+            cookie: document.cookie,
+            data: this.resourceDatas,
+        };
+
+        this.http.post('../../rest/jnlp', jnlp).pipe(
+            tap((data: any) => {
+                window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
+                this.checkLockFile(data.jnlpUniqueId, 'odt');
+            })
+        ).subscribe();
+    }
+
     setDatas(resourceDatas: any) {
         this.resourceDatas = resourceDatas;
     }
 
-    checkLockFile(id: string, template: any) {
+    checkLockFile(id: string, extension: string) {
         this.intervalLockFile = setInterval(() => {
             this.http.get('../../rest/jnlp/lock/' + id)
                 .subscribe((data: any) => {
                     if (!data.lockFileFound) {
                         this.editInProgress = false;
                         clearInterval(this.intervalLockFile);
-                        this.loadTmpFile(`${data.fileTrunk}.${template.extension}`);
+                        this.loadTmpFile(`${data.fileTrunk}.${extension}`);
                     }
                 });
         }, 1000);
@@ -559,7 +584,7 @@ export class DocumentViewerComponent implements OnInit {
         this.listTemplates = [];
         this.http.get('../../rest/attachmentsTypes').pipe(
             tap((data: any) => {
-                
+
                 Object.keys(data.attachmentsTypes).forEach(templateType => {
                     arrTypes.push({
                         id: templateType,

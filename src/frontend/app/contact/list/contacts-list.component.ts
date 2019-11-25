@@ -57,13 +57,53 @@ export class ContactsListComponent implements OnInit {
         otherData: '',
         website: '',
         filling: '#ff5733'
+    },
+    {
+        mode: 'entity',
+        firstname: '',
+        lastname: 'Pôle Jeunesse et Sport',
+        email: 'PJS@maarch.org',
+        phone: '',
+        society: '',
+        department: '',
+        occupancy: '',
+        function: '',
+        num: '',
+        street: '',
+        complement: '',
+        town: '',
+        postalCode: '',
+        country: '',
+        otherData: '',
+        website: '',
+        filling: ''
+    },
+    {
+        mode: 'third',
+        firstname: 'Jean',
+        lastname: 'DUBOIS',
+        email: 'jean.dubois@maarch.org',
+        phone: '06 11 12 13 14',
+        society: 'MAARCH',
+        department: 'Pôle maarch Courrier',
+        occupancy: '1er étage',
+        function: 'Développeur',
+        num: '11',
+        street: 'boulevard du sud-est',
+        complement: 'portail vert',
+        town: 'NANTERRE',
+        postalCode: '92000',
+        country: 'FRANCE',
+        otherData: 'Editeur du logiciel libre Maarch',
+        website: 'www.maarchcourrier.com',
+        filling: '#ff5733'
     }];
 
     /**
      * Ressource identifier to load contact List
      */
     @Input('resId') resId: number;
-    @Input('mode') mode: 'recipient' | 'sender';
+    @Input('mode') mode: 'recipients' | 'senders';
 
     constructor(
         public http: HttpClient,
@@ -73,7 +113,7 @@ export class ContactsListComponent implements OnInit {
     ngOnInit(): void {
         // TO DO : WAIT BACK
         this.loading = false;
-        /*this.http.get(`../../rest/resources/${this.resId}/contacts`).pipe(
+        /*this.http.get(`../../rest/resources/${this.resId}/contacts?type=${this.mode}`).pipe(
             tap((data: any) => {
                 this.contacts = data.contacts;
             }),

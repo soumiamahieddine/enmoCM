@@ -55,10 +55,6 @@ export class AttachmentCreateComponent implements OnInit {
         this.loadAttachmentTypes();
     }
 
-    loadMailresource(resIdMaster: number) {
-
-    }
-
     loadAttachmentTypes() {
         this.http.get('../../rest/attachmentsTypes').pipe(
             tap((data: any) => {
@@ -111,25 +107,30 @@ export class AttachmentCreateComponent implements OnInit {
     }
 
     onSubmit() {
-        this.sendingData = true;
-        const attach = this.formatAttachments();
-        let arrayRoutes: any = [];
-
-        this.attachments.forEach((element, index: number) => {
-            arrayRoutes.push(this.http.post('../../rest/attachments', attach[index]));
-        });
-
-        forkJoin(arrayRoutes).pipe(
-            tap(() => {
-                this.notify.success(this.lang.attachmentAdded);
-                this.dialogRef.close('success');
-            }),
-            finalize(() => this.sendingData),
-            catchError((err: any) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+        if (this.isValid()) {
+            this.sendingData = true;
+            const attach = this.formatAttachments();
+            let arrayRoutes: any = [];
+    
+            this.attachments.forEach((element, index: number) => {
+                arrayRoutes.push(this.http.post('../../rest/attachments', attach[index]));
+            });
+    
+            forkJoin(arrayRoutes).pipe(
+                tap(() => {
+                    this.notify.success(this.lang.attachmentAdded);
+                    this.dialogRef.close('success');
+                }),
+                finalize(() => this.sendingData = false),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.notify.error(this.lang.mustCompleteAllAttachments);
+        }
+        
     }
 
     isValid() {
@@ -139,6 +140,14 @@ export class AttachmentCreateComponent implements OnInit {
                 state = false;
             }
         });
+        return state;
+    }
+
+    isPjValid(index: number) {
+        let state = true;
+        if (this.attachFormGroup[index].status === 'INVALID') {
+            state = false;
+        }
         return state;
     }
 
@@ -152,8 +161,16 @@ export class AttachmentCreateComponent implements OnInit {
         return state;
     }
 
-    setEncodedFile(i: number) {
+    setDatasViewer(i: number) {
+        let datas: any = {};
+        Object.keys(this.attachments[i]).forEach(element => {
+            if (['title', 'validationDate'].indexOf(element) > -1) {
+                datas['attachment_' + element] = this.attachments[i][element].value;
+            }
+        });
+        datas['resId'] = this.data.resIdMaster;
         this.attachments[i].encodedFile.setValue(this.appDocumentViewer.toArray()[i].getFile().content);
+        this.appDocumentViewer.toArray()[i].setDatas(datas);
     }
 
     newPj() {
@@ -165,12 +182,12 @@ export class AttachmentCreateComponent implements OnInit {
             encodedFile: new FormControl({ value: '', disabled: false }, [Validators.required])
         });
 
-        this.attachFormGroup.push(new FormGroup(this.attachments[this.attachments.length-1]));
+        this.attachFormGroup.push(new FormGroup(this.attachments[this.attachments.length - 1]));
     }
 
     removePj(i: number) {
-        this.attachments.splice(i,1);
-        this.attachFormGroup.splice(i,1);
+        this.attachments.splice(i, 1);
+        this.attachFormGroup.splice(i, 1);
     }
 
     getAttachType(attachType: any, i: number) {

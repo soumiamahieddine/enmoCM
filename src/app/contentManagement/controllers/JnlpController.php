@@ -260,7 +260,7 @@ class JnlpController
                     $response->write($xmlResponse);
                     return $response->withHeader('Content-Type', 'application/xml');
                 }
-                $docserver  = DocserverModel::getById(['id' => $attachment['docserver_id'], 'select' => ['path_template']]);
+                $docserver  = DocserverModel::getByDocserverId(['docserverId' => $attachment['docserver_id'], 'select' => ['path_template']]);
 
                 $pathToCopy = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachment['path']) . $attachment['filename'];
                 $extension  = pathinfo($pathToCopy, PATHINFO_EXTENSION);

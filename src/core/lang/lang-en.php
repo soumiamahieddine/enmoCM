@@ -224,6 +224,8 @@ define('_PUT_IN_COPY', 'Add on copy');
 define('_PUT_IN_COPY_DESC', 'Opens a modal ONLY to add or delete COPY people from the mailing list.');
 define('_SIMPLE_CONFIRM', 'Simple confirmation');
 define('_SIMPLE_CONFIRM_DESC', "Simply open a modal of confirmation of the action to be performed.");
+define('_NO_CONFIRM', 'No confirmation');
+define('_NO_CONFIRM_DESC', "Perform the action without confirmation");
 define('_VIEW_DOC', 'See the mail');
 define('_CLOSE_MAIL', 'Close a mail');
 define('_CLOSE_MAIL_DESC', 'Allows you to update the closing date of a mail. ESSENTIAL in order to complete your document workflow.');

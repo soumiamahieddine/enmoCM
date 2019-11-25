@@ -224,6 +224,8 @@ define('_PUT_IN_COPY', 'In kopie toevoegen');
 define('_PUT_IN_COPY_DESC', 'Opent een modaliteit die ENKEL toelaat personen in KOPIE aan de verdelingslijst toe te voegen of ervan te verwijderen.');
 define('_SIMPLE_CONFIRM', 'Eenvoudige bevestiging');
 define('_SIMPLE_CONFIRM_DESC', 'Opent eenvoudigweg een bevestigingsmodaliteit van de uit te voeren actie.');
+define('_NO_CONFIRM', 'No confirmation'); //_TO_TRANSLATE
+define('_NO_CONFIRM_DESC', "Perform the action without confirmation"); //_TO_TRANSLATE
 define('_VIEW_DOC', 'Het brief bekijken');
 define('_CLOSE_MAIL', 'Een brief afsluiten');
 define('_CLOSE_MAIL_DESC', 'Om de afsluitingsdatum van een brief bij te werken. ESSENTIEEL om uw documentworkflow af te sluiten.');

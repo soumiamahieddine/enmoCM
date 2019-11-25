@@ -29,7 +29,10 @@ foreach ($customs as $custom) {
 
     $migrated = 0;
     $attachmentsInfo = \SrcCore\models\DatabaseModel::select([
-        'select'   => ['res_id', 'title', 'subject', 'description', 'type_id', 'format', 'typist', 'creation_date', 'fulltext_result', 'author', 'identifier', 'source', 'relation', 'doc_date', 'docserver_id', 'path', 'filename', 'offset_doc', 'fingerprint', 'filesize', 'status', 'destination', 'validation_date', 'effective_date', 'origin', 'priority', 'initiator', 'dest_user', 'res_id_master', 'attachment_type', 'dest_contact_id', 'dest_address_id', 'updated_by', 'is_multicontacts', 'in_signature_book', 'signatory_user_serial_id', 'in_send_attach', 'external_id', 'attachment_id_master'],
+        'select'   => ['res_id', 'title', 'format', 'typist', 'creation_date', 'fulltext_result', 'identifier', 'relation', 'doc_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize',
+                        'status', 'validation_date', 'effective_date', 'origin', 'dest_user', 'res_id_master', 'attachment_type', 'dest_contact_id', 'dest_address_id', 'updated_by', 'in_signature_book',
+                        'signatory_user_serial_id', 'in_send_attach', 'external_id', 'attachment_id_master'
+        ],
         'table'    => ['res_version_attachments']
     ]);
 
@@ -38,6 +41,13 @@ foreach ($customs as $custom) {
         unset($attachmentInfo['res_id']);
         $attachmentInfo['origin_id'] = $attachmentInfo['attachment_id_master'];
         unset($attachmentInfo['attachment_id_master']);
+        if (!empty($attachmentInfo['updated_by'])) {
+            $userSerialId = \User\models\UserModel::getByLogin(['select' => ['id'], 'login' => $attachmentInfo['updated_by']]);
+            $attachmentInfo['modified_by'] = $userSerialId['id'];
+        } else {
+            $attachmentInfo['modified_by'] = null;
+        }
+        unset($attachmentInfo['updated_by']);
         $attachmentInfo['in_signature_book'] = empty($attachmentInfo['in_signature_book']) ?  'false' : 'true';
         $attachmentInfo['in_send_attach']    = empty($attachmentInfo['in_send_attach']) ?  'false' : 'true';
         $attachmentInfo['format']            = empty($attachmentInfo['format']) ?  pathinfo($attachmentInfo['filename'], PATHINFO_EXTENSION) : $attachmentInfo['format'];
@@ -76,8 +86,8 @@ foreach ($customs as $custom) {
         migrateHistoryVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateEmailsVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
         migrateMessageExchangeVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
-        migrateShippingVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
-        if (in_array($attachmentInfo['status'], ['A_TRA', 'TRA'])) {
+        // migrateShippingVersion(['oldResId' => $oldResId, 'newResId' => $newResId]);
+        if (!in_array($attachmentInfo['status'], ['DEL', 'OBS', 'TMP'])) {
             migrateFullText(['newResId' => $newResId, 'customId' => $custom, 'userId' => $masterOwnerId]);
         }
 

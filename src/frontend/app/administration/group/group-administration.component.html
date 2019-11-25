@@ -71,7 +71,7 @@
                                     <button mat-icon-button [class.active]="panelMode === administration.id"
                                         *ngIf="administration.hasParams"
                                         (click)="$event.stopPropagation();openUserParams(administration.id)"
-                                        color="primary" [title]="lang.goToAdminParams">
+                                        color="primary" [title]="lang.goToAdminParams" [disabled]="group.privileges.indexOf(administration.id) === -1">
                                         <mat-icon class="fa fa-cogs"></mat-icon>
                                     </button>
                                 </div>
@@ -237,7 +237,7 @@
                     <h3 mat-subheader>{{lang.adminParamsUsers}}</h3>
                 </mat-nav-list>
                 <mat-list role="list" style="width: 400px;padding: 5px;">
-                    <p color="primary" style="text-decoration: underline;">
+                    <p color="primary">
                         {{lang.chooseAllowedGroups}} :
                     </p>
                     <mat-selection-list #paramsList (selectionChange)="updatePrivilegeParams(paramsList.selectedOptions.selected)">

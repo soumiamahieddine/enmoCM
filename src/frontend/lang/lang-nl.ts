@@ -1070,7 +1070,7 @@ export const LANG_NL = {
     "indexation" : "Mail indexation", //_TO_TRANSLATE
     "keywordAdded" : "Keyword added", //_TO_TRANSLATE
     "keywordDeleted" : "Keyword deleted", //_TO_TRANSLATE
-    "actionsInfo" : "Only actions with \"simple confirmation\" and \"close mail\" will be displayed", //_TO_TRANSLATE
+    "actionsInfo" : "Only actions with \"simple confirmation\", \"close mail\" and \"no confirmation\" will be displayed", //_TO_TRANSLATE
     "eventList" : "Open page", //_TO_TRANSLATE
     "folderAdded" : "Folder added", //_TO_TRANSLATE
     "folderDeleted" : "Folder deleted", //_TO_TRANSLATE
@@ -1289,7 +1289,6 @@ export const LANG_NL = {
     "recordMail" : "Record a mail", //_TO_TRANSLATE
     "closed" : "Closed", //_TO_TRANSLATE
     "manageAttachments": "Update or delete attachments", //_TO_TRANSLATE
-    "manageOwnAttachmentsInDetails": "Update or delete user's own attachments in the details page", //_TO_TRANSLATE
     "viewPersonalData": "View users' personal data", //_TO_TRANSLATE
     "managePersonalData": "Update or delete users' personal data", //_TO_TRANSLATE
     "attachmentDeleted": "Attachment deleted", //_TO_TRANSLATE
@@ -1303,8 +1302,6 @@ export const LANG_NL = {
     "generation" : "Generation...", //_TO_TRANSLATE
     "requestSentByEmail" : "The request has been sent to you by email.", //_TO_TRANSLATE
     "logInOncePasswordChanged": "You will be asked to log in once the password has been changed.", //_TO_TRANSLATE
-    "samePassword" : "Passwords match", //_TO_TRANSLATE
-    "sending" : "Sending...", //_TO_TRANSLATE
     "newVersion" : "New version", //_TO_TRANSLATE
     "deleteSignedVersion" : "Delete signed version", //_TO_TRANSLATE
     "signedAttachment" : "Signed attachment", //_TO_TRANSLATE
@@ -1312,6 +1309,8 @@ export const LANG_NL = {
     "attachmentUpdated" : "Attachment updated", //_TO_TRANSLATE
     "signedVersionDeleted" : "Signed version deleted", //_TO_TRANSLATE
     "newVersionAdded" : "New version added", //_TO_TRANSLATE
+    "editionAttachmentConfirmFirst" : "All merge variables will be replaced taking into account what you entered in the form on the left.", //_TO_TRANSLATE
+    "editionAttachmentConfirmSecond" : "Only <b> chrono number </b> ([res_letterbox.alt_identifier]) will be replaced after mail registration", //_TO_TRANSLATE
     "othersInfos" : "Other(s) information(s)", //_TO_TRANSLATE
     "contactDetails" : "Details", //_TO_TRANSLATE
     "contactsFillingRate" : "Filling rate", //_TO_TRANSLATE
@@ -1322,4 +1321,20 @@ export const LANG_NL = {
     "adminParamsUsers" : "Settings for users administration", //_TO_TRANSLATE
     "chooseAllowedGroups" : "Choose allowed groups", //_TO_TRANSLATE
     "reallyWantToDeleteThisGroup"   : "Do you really want to remove this group ?", //_TO_TRANSLATE
+    "contact_entity"   : "Entity", //_TO_TRANSLATE
+    "contact_third"   : "Contact third", //_TO_TRANSLATE
+    "confidentialityAndSecurity"   : "Confidentiality and security", //_TO_TRANSLATE
+    "modified"   : "Modified", //_TO_TRANSLATE
+    "created"   : "Created", //_TO_TRANSLATE
+    "signedAlt"   : "Signed", //_TO_TRANSLATE
+    "deleteResource"   : "Delete document", //_TO_TRANSLATE
+    "viewResource"   : "View document", //_TO_TRANSLATE
+    "addAttachment"   : "Add an attachment", //_TO_TRANSLATE
+    "dateAgo"   : "Since", //_TO_TRANSLATE
+    "dateTo"   : "The", //_TO_TRANSLATE
+    "attachmentCreation": "Attachment creation", //_TO_TRANSLATE
+    "newAttachment": "New attachment", //_TO_TRANSLATE
+    "delAttachment": "Delete this attachment", //_TO_TRANSLATE
+    "mustCompleteAllAttachments": "Please, complete all attachments", //_TO_TRANSLATE
+    "editDocument": "Edit document", //_TO_TRANSLATE
 };

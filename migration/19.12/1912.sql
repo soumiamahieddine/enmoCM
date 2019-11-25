@@ -71,6 +71,17 @@ DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_event_data;
 ALTER TABLE groupbasket ADD COLUMN list_event_data jsonb;
 
+update groupbasket set list_event_data = '"info"'
+where group_id in (
+    select group_id
+    from actions_groupbaskets
+    where id_action in (
+        select id
+        from actions
+        where action_page = 'validate_mail'
+    ) and groupbasket.basket_id = actions_groupbaskets.basket_id
+);
+
 
 /* FOLDERS */
 DO $$ BEGIN
@@ -547,7 +558,7 @@ ALTER TABLE res_attachments DROP COLUMN IF EXISTS source;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS folders_system_id;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS offset_doc;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS destination;
-ALTER TABLE res_attachments DROP COLUMN IF EXISTS priotity;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS priority;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS initiator;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_multicontacts;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_multi_docservers;

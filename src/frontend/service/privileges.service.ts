@@ -435,22 +435,16 @@ export class PrivilegeService {
             "unit": 'application'
         },
         {
-            "id": "manage_own_attachments_in_details",
-            "label": this.lang.manageOwnAttachmentsInDetails,
-            "comment": this.lang.manageOwnAttachmentsInDetails,
-            "unit": 'application'
-        },
-        {
             "id": "view_personal_data",
             "label": this.lang.viewPersonalData,
             "comment": this.lang.viewPersonalData,
-            "unit": 'application'
+            "unit": 'confidentialityAndSecurity'
         },
         {
             "id": "manage_personal_data",
             "label": this.lang.managePersonalData,
             "comment": this.lang.managePersonalData,
-            "unit": 'application'
+            "unit": 'confidentialityAndSecurity'
         }
     ];
 

@@ -217,7 +217,7 @@ class GroupController
         $group['indexationParameters'] = json_decode($group['indexation_parameters'], true);
         unset($group['can_index'], $group['indexation_parameters']);
 
-        $allActions = ActionModel::get(['select' => ['id', 'label_action'], 'where' => ['component in (?)'], 'data' => [['confirmAction', 'closeMailAction']]]);
+        $allActions = ActionModel::get(['select' => ['id', 'label_action'], 'where' => ['component in (?)'], 'data' => [['confirmAction', 'closeMailAction', 'noConfirmAction']]]);
 
         $allEntities = EntityModel::get([
             'select'    => ['e1.id', 'e1.entity_id', 'e1.entity_label', 'e2.id as parent_id'],

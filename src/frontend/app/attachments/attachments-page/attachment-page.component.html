@@ -22,50 +22,136 @@
                     <div class="attachment-form">
                         <div class="attachment-form-item">
                             <mat-form-field class="input-form">
-                                <input matInput placeholder="{{lang.version}}" [formControl]="attachment['relation']"
-                                    [value]="lang.version + ' ' + attachment.relation.value">
-                            </mat-form-field>
-                        </div>
-                        <div class="attachment-form-item">
-                            <mat-form-field class="input-form">
                                 <input matInput placeholder="{{lang.status}}" [formControl]="attachment['status']"
                                     [value]="lang['attachment_'+attachment['status'].value]">
                             </mat-form-field>
+                            <div class="fieldState">
+                                <i class="fas fa-asterisk noMandatory"></i>
+                            </div>
                         </div>
                         <div class="attachment-form-item">
                             <plugin-select-search [label]="lang.type" [placeholderLabel]="lang.type"
                                 [formControlSelect]="attachment['type']" [datas]="attachmentsTypes"
                                 (afterSelected)="getAttachType($event)" style="width:100%;">
                             </plugin-select-search>
+                            <div class="fieldState">
+                                <i class="fas fa-asterisk" *ngIf="!attachment['type'].hasError('required')"></i>
+                                <i class="fas fa-times" style="color:red;font-size:15px;"
+                                    *ngIf="attachment['type'].hasError('required')"></i>
+                            </div>
                         </div>
                         <div class="attachment-form-item">
                             <mat-form-field class="input-form">
                                 <input matInput placeholder="{{lang.subject}}" [formControl]="attachment['title']">
                             </mat-form-field>
+                            <div class="fieldState">
+                                <i class="fas fa-asterisk" *ngIf="!attachment['title'].hasError('required')"></i>
+                                <i class="fas fa-times" style="color:red;font-size:15px;"
+                                    *ngIf="attachment['title'].hasError('required')"></i>
+                            </div>
                         </div>
                         <div class="attachment-form-item">
                             <mat-form-field class="input-form">
                                 <input matInput placeholder="{{lang.contact}}">
                             </mat-form-field>
+                            <div class="fieldState">
+                                <i class="fas fa-asterisk noMandatory"></i>
+                            </div>
                         </div>
-                        <div class="attachment-form-item">
-                            <mat-form-field class="input-form" (click)="picker.open()" style="cursor:pointer;">
-                                <input [formControl]="attachment['validationDate']" matInput [matDatepicker]="picker"
-                                    [placeholder]="lang.expectedReturnDate" [min]="now" readonly
-                                    style="cursor:pointer;">
-                                <mat-datepicker-toggle matSuffix [for]="picker"
-                                    *ngIf="!attachment['validationDate'].value">
-                                </mat-datepicker-toggle>
-                                <mat-datepicker [touchUi]="appService.getViewMode()" #picker></mat-datepicker>
-                                <button mat-button color="warn" matSuffix mat-icon-button
-                                    *ngIf="attachment['validationDate'].value && !attachment['validationDate'].disabled"
-                                    (click)="$event.stopPropagation();attachment['validationDate'].reset();"
-                                    [title]="lang.eraseValue">
-                                    <mat-icon color="warn" class="fa fa-calendar-times">
-                                    </mat-icon>
-                                </button>
+                        <div class="attachment-form-item" *ngIf="attachment['signedResponse'].value !== undefined">
+                            <mat-form-field class="input-form">
+                                <input matInput placeholder="{{lang.signedAlt}}" [formControl]="attachment['signDate']"
+                                    [value]="attachment['signDate'].value | timeAgo : 'full'">
                             </mat-form-field>
+                            <div class="fieldState">
+                                <i class="fas fa-asterisk noMandatory"></i>
+                            </div>
                         </div>
+                        <div class="attachment-form-item" *ngIf="attachment['signedResponse'].value !== undefined">
+                            <mat-form-field class="input-form">
+                                <input matInput placeholder="{{lang.signedAlt}} {{lang.by}}"
+                                    [formControl]="attachment['signatory']">
+                            </mat-form-field>
+                            <div class="fieldState">
+                                <i class="fas fa-asterisk noMandatory"></i>
+                            </div>
+                        </div>
+                        <mat-expansion-panel>
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    {{lang.othersInfos}}
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div class="attachment-form-item">
+                                <mat-form-field class="input-form">
+                                    <input matInput placeholder="{{lang.created}}"
+                                        [formControl]="attachment['creationDate']"
+                                        [value]="attachment['creationDate'].value | timeAgo : 'full'">
+                                </mat-form-field>
+                                <div class="fieldState">
+                                    <i class="fas fa-asterisk noMandatory"></i>
+                                </div>
+                            </div>
+                            <div class="attachment-form-item">
+                                <mat-form-field class="input-form">
+                                    <input matInput placeholder="{{lang.created}} {{lang.by}}"
+                                        [formControl]="attachment['typistLabel']">
+                                </mat-form-field>
+                                <div class="fieldState">
+                                    <i class="fas fa-asterisk noMandatory"></i>
+                                </div>
+                            </div>
+                            <div class="attachment-form-item" *ngIf="attachment['modificationDate'].value !== null">
+                                <mat-form-field class="input-form">
+                                    <input matInput placeholder="{{lang.modified}}"
+                                        [formControl]="attachment['modificationDate']"
+                                        [value]="attachment['modificationDate'].value | timeAgo : 'full'">
+                                </mat-form-field>
+                                <div class="fieldState">
+                                    <i class="fas fa-asterisk noMandatory"></i>
+                                </div>
+                            </div>
+                            <div class="attachment-form-item" *ngIf="attachment['modificationDate'].value !== null">
+                                <mat-form-field class="input-form">
+                                    <input matInput placeholder="{{lang.modified}} {{lang.by}}"
+                                        [formControl]="attachment['modifiedBy']">
+                                </mat-form-field>
+                                <div class="fieldState">
+                                    <i class="fas fa-asterisk noMandatory"></i>
+                                </div>
+                            </div>
+                            <div class="attachment-form-item">
+                                <mat-form-field class="input-form">
+                                    <input matInput placeholder="{{lang.version}}"
+                                        [formControl]="attachment['relation']"
+                                        [value]="lang.version + ' ' + attachment.relation.value">
+                                </mat-form-field>
+                                <div class="fieldState">
+                                    <i class="fas fa-asterisk noMandatory"></i>
+                                </div>
+                            </div>
+                            <div class="attachment-form-item">
+                                <mat-form-field class="input-form" (click)="picker.open()" style="cursor:pointer;">
+                                    <input [formControl]="attachment['validationDate']" matInput
+                                        [matDatepicker]="picker" [placeholder]="lang.expectedReturnDate" [min]="now"
+                                        readonly style="cursor:pointer;">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"
+                                        *ngIf="!attachment['validationDate'].value">
+                                    </mat-datepicker-toggle>
+                                    <mat-datepicker [touchUi]="appService.getViewMode()" #picker></mat-datepicker>
+                                    <button mat-button color="warn" matSuffix mat-icon-button
+                                        *ngIf="attachment['validationDate'].value && !attachment['validationDate'].disabled"
+                                        (click)="$event.stopPropagation();attachment['validationDate'].reset();"
+                                        [title]="lang.eraseValue">
+                                        <mat-icon color="warn" class="fa fa-calendar-times">
+                                        </mat-icon>
+                                    </button>
+                                </mat-form-field>
+                                <div class="fieldState">
+                                    <i class="fas fa-asterisk noMandatory"></i>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
                     </div>
                     <div style="text-align: center;">
                         <button mat-raised-button color="primary" (click)="updateAttachment()"
@@ -76,7 +162,6 @@
                             (click)="deleteSignedVersion()">{{lang.deleteSignedVersion}}</button>
                     </div>
                 </ng-container>
-
             </mat-sidenav>
             <mat-sidenav-content>
                 <mat-tab-group [selectedIndex]="1" class="pjList" *ngIf="!loading" animationDuration="0">
@@ -93,7 +178,7 @@
                         </ng-template>
                         <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
                             [resId]="attachment.signedResponse.value" [mode]="'attachment'"
-                            [title]="attachment.chrono.value + ' - ' + attachment.title.value + '(' + lang.signed + ')'">
+                            [title]="attachment.chrono.value + ' - ' + attachment.title.value + ' (' + lang.signed + ')'">
                         </app-document-viewer>
                     </mat-tab>
                     <mat-tab>
@@ -101,8 +186,8 @@
                             <span style="color:#135f7f">{{lang.attachment}}</span>
                         </ng-template>
                         <app-document-viewer #appAttachmentViewer style="height:100%;width:100%;" [editMode]="editMode"
-                            [resId]="data.resId" [mode]="'attachment'" [attachType]="attachment['type'].value"
-                            [infoPanel]="snavLeft" (triggerEvent)="setEncodedFile()"
+                            [resId]="data.resId" [resIdMaster]="attachment['resIdMaster'].value" [mode]="'attachment'" [attachType]="attachment['type'].value"
+                            [infoPanel]="snavLeft" (triggerEvent)="setDatasViewer()"
                             [title]="attachment.chrono.value + ' - ' + attachment.title.value">
                         </app-document-viewer>
                     </mat-tab>

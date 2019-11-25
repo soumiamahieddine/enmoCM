@@ -86,16 +86,16 @@ class AttachmentController
         $attachment = AttachmentModel::getById([
             'id'        => $args['id'],
             'select'    => [
-                'res_id as "resId"', 'res_id_master', 'status', 'title', 'identifier as chrono', 'typist', 'modified_by as "modifiedBy"', 'relation', 'attachment_type as type',
+                'res_id as "resId"', 'res_id_master as "resIdMaster"', 'status', 'title', 'identifier as chrono', 'typist', 'modified_by as "modifiedBy"', 'relation', 'attachment_type as type',
                 'origin_id as "originId"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"', 'validation_date as "validationDate"',
                 'fulltext_result as "fulltextResult"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
             ]
         ]);
-        if (empty($attachment) || !in_array($attachment['status'], ['A_TRA', 'TRA', 'SIGN'])) {
+        if (empty($attachment) || in_array($attachment['status'], ['DEL', 'OBS'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
         }
 
-        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
+        if (!ResController::hasRightByResId(['resId' => [$attachment['resIdMaster']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment out of perimeter']);
         }
 
@@ -107,7 +107,12 @@ class AttachmentController
             return $response->withStatus(400)->withJson(['errors' => 'Attachment type out of perimeter']);
         }
 
-        $attachment['typist'] = UserModel::getLabelledUserById(['login' => $attachment['typist']]);
+        if ($attachment['modificationDate'] == $attachment['creationDate']) {
+            $attachment['modificationDate'] = null;
+        }
+        $typist = UserModel::getByLogin(['login' => $attachment['typist'], 'select' => ['id', 'firstname', 'lastname']]);
+        $attachment['typist'] = $typist['id'];
+        $attachment['typistLabel'] = $typist['firstname']. ' ' .$typist['lastname'];
         $attachment['modifiedBy'] = UserModel::getLabelledUserById(['id' => $attachment['modifiedBy']]);
 
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
@@ -231,7 +236,7 @@ class AttachmentController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
         if ($GLOBALS['userId'] != $attachment['typist'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'manage_attachments', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         if (empty($attachment['origin_id'])) {
@@ -284,7 +289,12 @@ class AttachmentController
 
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
         foreach ($attachments as $key => $attachment) {
-            $attachments[$key]['typist'] = UserModel::getLabelledUserById(['login' => $attachment['typist']]);
+            if ($attachment['modificationDate'] == $attachment['creationDate']) {
+                $attachments[$key]['modificationDate'] = null;
+            }
+            $typist = UserModel::getByLogin(['login' => $attachment['typist'], 'select' => ['id', 'firstname', 'lastname']]);
+            $attachments[$key]['typist'] = $typist['id'];
+            $attachments[$key]['typistLabel'] = $typist['firstname']. ' ' .$typist['lastname'];
             $attachments[$key]['modifiedBy'] = UserModel::getLabelledUserById(['id' => $attachment['modifiedBy']]);
 
             if (!empty($attachmentsTypes[$attachment['type']]['label'])) {
@@ -425,7 +435,7 @@ class AttachmentController
         }
 
         $attachment = AttachmentModel::get([
-            'select'    => ['res_id', 'docserver_id', 'path', 'filename', 'res_id_master'],
+            'select'    => ['res_id', 'docserver_id', 'res_id_master'],
             'where'     => ['res_id = ?', 'status not in (?)'],
             'data'      => [$args['id'], ['DEL']],
             'limit'     => 1
@@ -433,22 +443,19 @@ class AttachmentController
         if (empty($attachment[0])) {
             return $response->withStatus(403)->withJson(['errors' => 'Attachment not found']);
         }
-
-        if (!ResController::hasRightByResId(['resId' => [$attachment[0]['res_id_master']], 'userId' => $GLOBALS['id']])) {
+        $attachment = $attachment[0];
+        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $attachmentTodisplay = $attachment[0];
-        $id = $attachmentTodisplay['res_id'];
-
-        $convertedAttachment = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => 'attachments_coll']);
-        if (empty($convertedAttachment['errors'])) {
-            $attachmentTodisplay = $convertedAttachment;
+        $document = ConvertPdfController::getConvertedPdfById(['resId' => $attachment['res_id'], 'collId' => 'attachments_coll']);
+        if (!empty($document['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Conversion error : ' . $document['errors']]);
         }
-        $document['docserver_id'] = $attachmentTodisplay['docserver_id'];
-        $document['path'] = $attachmentTodisplay['path'];
-        $document['filename'] = $attachmentTodisplay['filename'];
-        $document['fingerprint'] = $attachmentTodisplay['fingerprint'];
+
+        if ($document['docserver_id'] == $attachment['docserver_id']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document can not be converted']);
+        }
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
         if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
@@ -536,14 +543,14 @@ class AttachmentController
             $fileContent = file_get_contents($pathToDocument);
         }
         if ($fileContent === false) {
-            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+            return $response->withStatus(400)->withJson(['errors' => 'Document not found on docserver']);
         }
 
         HistoryController::add([
             'tableName' => 'res_attachments',
             'recordId'  => $args['id'],
             'eventType' => 'VIEW',
-            'info'      => _ATTACH_DISPLAYING . " : {$id}",
+            'info'      => _ATTACH_DISPLAYING . " : {$args['id']}",
             'moduleId'  => 'attachments',
             'eventId'   => 'resview',
         ]);

@@ -39,7 +39,6 @@
 
     &-item {
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
         padding-top: 10px;
@@ -57,6 +56,10 @@
                 padding-right: 5px;
             }
         }
+
+        &-action {
+            flex-direction: column;
+        }
     }
 }
 
@@ -67,4 +70,31 @@
 
 .actions {
     margin: 0px;
+}
+
+.complete {
+    color: green;
+    font-weight: bold;
+}
+
+.fieldState {
+    width: auto !important;
+    padding-top: 0px !important;
+}
+
+.stateDoc {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
+
+.documentContent {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: $primary;
+    overflow: auto;
+    color: white;
 }

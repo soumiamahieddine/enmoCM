@@ -63,6 +63,15 @@ class PrivilegeController
 
         PrivilegeModel::addPrivilegeToGroup(['privilegeId' => $args['privilegeId'], 'groupId' => $group['group_id']]);
 
+        if ($args['privilegeId'] == 'admin_users') {
+            $groups = GroupModel::get(['select' => ['id']]);
+            $groups = array_column($groups, 'id');
+
+            $parameters = json_encode(['groups' => $groups]);
+
+            PrivilegeModel::updateParameters(['groupId' => $group['group_id'], 'privilegeId' => $args['privilegeId'], 'parameters' => $parameters]);
+        }
+
         return $response->withStatus(204);
     }
 
@@ -191,7 +200,7 @@ class PrivilegeController
         $assignable = [];
         foreach ($userGroups as $userGroup) {
             $groups = PrivilegeModel::getParametersFromGroupPrivilege(['groupId' => $userGroup, 'privilegeId' => 'admin_users']);
-            if (isset($groups) && isset($groups['groups'])) {
+            if (!empty($groups)) {
                 $groups = $groups['groups'];
                 $assignable = array_merge($assignable, $groups);
             }
