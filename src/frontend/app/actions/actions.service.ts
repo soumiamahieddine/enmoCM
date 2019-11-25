@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../app/translate.component';
-import { tap, catchError, filter, finalize } from 'rxjs/operators';
+import {tap, catchError, filter, finalize, exhaustMap} from 'rxjs/operators';
 import { of, Subject, Observable } from 'rxjs';
 import { NotificationService } from '../notification.service';
 import { ConfirmActionComponent } from './confirm-action/confirm-action.component';
@@ -522,6 +522,39 @@ export class ActionsService {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    noConfirmAction() {
+        let dataActionToSend = this.setDatasActionToSend();
+        if ( dataActionToSend.resIds.length === 0) {
+            this.http.post('../../rest/resources', dataActionToSend.resource).pipe(
+                tap((data: any) => {
+                    dataActionToSend.resIds = [data.resId];
+                }),
+                exhaustMap(() => this.http.put(dataActionToSend.indexActionRoute, {
+                    resource: dataActionToSend.resIds[0]
+                })),
+                tap((result: any) => {
+                    this.endAction(result);
+                }),
+                finalize(() => this.loading = false),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.http.put(dataActionToSend.processActionRoute, {resources : this.setDatasActionToSend().resIds}).pipe(
+                tap((result: any) => {
+                    this.endAction(result);
+                }),
+                finalize(() => this.loading = false),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
     }
 
     processDocument() {

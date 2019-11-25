@@ -224,6 +224,8 @@ define('_PUT_IN_COPY', 'Ajouter en copie');
 define('_PUT_IN_COPY_DESC', "Ouvre une modal permettant UNIQUEMENT d'ajouter ou de supprimer des personnes en COPIE de la liste de diffusion.");
 define('_SIMPLE_CONFIRM', 'Confirmation simple');
 define('_SIMPLE_CONFIRM_DESC', "Ouvre simplement une modal de confirmation de l'action à effectuer.");
+define('_NO_CONFIRM', 'Sans confirmation');
+define('_NO_CONFIRM_DESC', "Effectue l'action sans confirmation");
 define('_VIEW_DOC', 'Voir le courrier');
 define('_CLOSE_MAIL', 'Clôturer un courrier');
 define('_CLOSE_MAIL_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier. ESSENTIEL afin de terminer votre workflow de courrier.');

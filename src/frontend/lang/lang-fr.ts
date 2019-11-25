@@ -1077,7 +1077,7 @@ export const LANG_FR = {
     "indexation" : "Enregistrement de courrier",
     "keywordAdded" : "Mot-clé ajouté",
     "keywordDeleted" : "Mot-clé supprimé",
-    "actionsInfo" : "Seules les actions avec \"confirmation simple\" et \"clôturer un courrier\" seront affichées",
+    "actionsInfo" : "Seules les actions avec \"confirmation simple\", \"clôturer un courrier\" et \"sans confirmation\" seront affichées",
     "noEventList" : "Ne rien faire",
     "eventVisaMail" : "Parapheur électronique",
     "eventProcessDoc" : "Fiche de traitement",

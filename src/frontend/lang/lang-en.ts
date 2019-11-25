@@ -1044,7 +1044,7 @@ export const LANG_EN = {
     "indexation" : "Mail indexation",
     "keywordAdded" : "Keyword added",
     "keywordDeleted" : "Keyword deleted",
-    "actionsInfo" : "Only actions with \"simple confirmation\" and \"close mail\" will be displayed",
+    "actionsInfo" : "Only actions with \"simple confirmation\", \"close mail\" and \"no confirmation\" will be displayed",
     "eventList" : "Open page",
     "folderAdded" : "Folder added",
     "folderDeleted" : "Folder deleted",
