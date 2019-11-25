@@ -314,14 +314,15 @@ class ResController
         }
 
         $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll']);
-
-        if (empty($convertedDocument['errors'])) {
-            $documentTodisplay = $convertedDocument;
-            $document['docserver_id'] = $documentTodisplay['docserver_id'];
-            $document['path'] = $documentTodisplay['path'];
-            $document['filename'] = $documentTodisplay['filename'];
-            $document['fingerprint'] = $documentTodisplay['fingerprint'];
+        if (!empty($convertedDocument['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Conversion error : ' . $convertedDocument['errors']]);
         }
+
+        if ($document['docserver_id'] == $convertedDocument['docserver_id']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document can not be converted']);
+        }
+
+        $document = $convertedDocument;
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
         if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {

@@ -435,7 +435,7 @@ class AttachmentController
         }
 
         $attachment = AttachmentModel::get([
-            'select'    => ['res_id', 'docserver_id', 'path', 'filename', 'res_id_master'],
+            'select'    => ['res_id', 'docserver_id', 'res_id_master'],
             'where'     => ['res_id = ?', 'status not in (?)'],
             'data'      => [$args['id'], ['DEL']],
             'limit'     => 1
@@ -443,22 +443,19 @@ class AttachmentController
         if (empty($attachment[0])) {
             return $response->withStatus(403)->withJson(['errors' => 'Attachment not found']);
         }
-
-        if (!ResController::hasRightByResId(['resId' => [$attachment[0]['res_id_master']], 'userId' => $GLOBALS['id']])) {
+        $attachment = $attachment[0];
+        if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $attachmentTodisplay = $attachment[0];
-        $id = $attachmentTodisplay['res_id'];
-
-        $convertedAttachment = ConvertPdfController::getConvertedPdfById(['resId' => $id, 'collId' => 'attachments_coll']);
-        if (empty($convertedAttachment['errors'])) {
-            $attachmentTodisplay = $convertedAttachment;
+        $document = ConvertPdfController::getConvertedPdfById(['resId' => $attachment['res_id'], 'collId' => 'attachments_coll']);
+        if (!empty($document['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Conversion error : ' . $document['errors']]);
         }
-        $document['docserver_id'] = $attachmentTodisplay['docserver_id'];
-        $document['path'] = $attachmentTodisplay['path'];
-        $document['filename'] = $attachmentTodisplay['filename'];
-        $document['fingerprint'] = $attachmentTodisplay['fingerprint'];
+
+        if ($document['docserver_id'] == $attachment['docserver_id']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document can not be converted']);
+        }
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
         if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
@@ -546,14 +543,14 @@ class AttachmentController
             $fileContent = file_get_contents($pathToDocument);
         }
         if ($fileContent === false) {
-            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+            return $response->withStatus(400)->withJson(['errors' => 'Document not found on docserver']);
         }
 
         HistoryController::add([
             'tableName' => 'res_attachments',
             'recordId'  => $args['id'],
             'eventType' => 'VIEW',
-            'info'      => _ATTACH_DISPLAYING . " : {$id}",
+            'info'      => _ATTACH_DISPLAYING . " : {$args['id']}",
             'moduleId'  => 'attachments',
             'eventId'   => 'resview',
         ]);
