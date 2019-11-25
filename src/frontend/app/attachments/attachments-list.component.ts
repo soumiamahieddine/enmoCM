@@ -41,7 +41,6 @@ export class AttachmentsListComponent implements OnInit {
     lang: any = LANG;
     attachments: any;
     loading: boolean = true;
-    resIds: number[] = [];
     pos = 0;
     mailevaEnabled: boolean = false;
 
@@ -81,9 +80,9 @@ export class AttachmentsListComponent implements OnInit {
     }
 
     loadAttachments(resId: number) {
-        this.resIds[0] = resId;
+        this.resId = resId;
         this.loading = true;
-        this.http.get("../../rest/resources/" + this.resIds[0] + "/attachments")
+        this.http.get("../../rest/resources/" + this.resId + "/attachments")
             .subscribe((data: any) => {
                 this.mailevaEnabled = data.mailevaEnabled;
                 this.attachments = data.attachments;
