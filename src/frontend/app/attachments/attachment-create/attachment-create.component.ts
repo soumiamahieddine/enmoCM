@@ -165,10 +165,10 @@ export class AttachmentCreateComponent implements OnInit {
         let datas: any = {};
         Object.keys(this.attachments[i]).forEach(element => {
             if (['title', 'validationDate'].indexOf(element) > -1) {
-                datas[element] = this.attachments[i][element].value;
+                datas['attachment_' + element] = this.attachments[i][element].value;
             }
         });
-        console.log(datas);
+        datas['resId'] = this.data.resIdMaster;
         this.attachments[i].encodedFile.setValue(this.appDocumentViewer.toArray()[i].getFile().content);
         this.appDocumentViewer.toArray()[i].setDatas(datas);
     }
