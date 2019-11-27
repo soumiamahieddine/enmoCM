@@ -419,11 +419,12 @@ define("_INDEXINGMODEL_SUPPRESSION", "Indexing model suppression_TO_TRANSLATE");
 define("_PRIORITY_DELAY_ALREADY_SET", "Ce délai de traitement est déjà paramétré pour une autre priorité_TO_TRANSLATE");
 
 define("_NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT", "[Maarch Courrier] Reset password informations_TO_TRANSLATE");
-define("_NOTIFICATIONS_FORGOT_PASSWORD_BODY", "Hello,<br/>You requested to reset the password for your Maarch Courrier account.<br/>To change your password, please click on the link below :<br/>_TO_TRANSLATE");
-define("_NOTIFICATIONS_FORGOT_PASSWORD_FOOTER", "<br/><br/>If you did not perform this request, you can safely ignore this email.<br/>Please contact your administrator if you have any questions._TO_TRANSLATE");
+define("_NOTIFICATIONS_FORGOT_PASSWORD_BODY", "Hello,<br/><br/>You requested to reset the password for your Maarch Courrier account.<br/><br/>To change your password, please click on the link below :<br/>_TO_TRANSLATE");
+define("_NOTIFICATIONS_FORGOT_PASSWORD_FOOTER", "<br/><br/>If you did not perform this request, you can safely ignore this email.<br/><br/>Please contact your administrator if you have any questions._TO_TRANSLATE");
 define("_PASSWORD_REINIT_SENT", "Password reset sent_TO_TRANSLATE");
 define("_PASSWORD_REINIT", "Password rest_TO_TRANSLATE");
 
-define("_NOTIFICATIONS_USER_CREATION_SUBJECT", "[Maarch Courrier] Account creation_TO_TRANSLATE");
-define("_NOTIFICATIONS_USER_CREATION_BODY", "Hello,<br/>an administrator created your account in Maarch Courrier software.<br/>To log in and set your password, please click on the link below :<br/>_TO_TRANSLATE");
-define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/>For any questions, please contact your software administrator_TO_TRANSLATE");
+define("_NOTIFICATIONS_USER_CREATION_SUBJECT", "[Maarch Courrier] Activate your user account_TO_TRANSLATE");
+define("_NOTIFICATIONS_USER_CREATION_BODY", "Welcome,<br/><br/>You have now an account to Maarch Courrier.<br/><br/>To log in and set your password, please click on the link below :<br/><br/>_TO_TRANSLATE");
+define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/><br/>This message is sent automatically as a result of an administrator action.<br/>Please do not answer.<br/><br/>For any questions, please contact your software administrator_TO_TRANSLATE");
+define("_CLICK_HERE", "Click-here_TO_TRANSLATE");
