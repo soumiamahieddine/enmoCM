@@ -182,9 +182,16 @@
     }
 }
 
-.addPj {
+.addPjProcess {
     position: fixed;
     z-index: 2;
     bottom: 80px;
+    margin-left: 10px;
+}
+
+.addPjPanel {
+    position: fixed;
+    z-index: 2;
+    bottom: 10px;
     margin-left: 10px;
 }

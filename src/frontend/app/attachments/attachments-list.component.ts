@@ -53,6 +53,7 @@ export class AttachmentsListComponent implements OnInit {
 
     @Input('injectDatas') injectDatas: any;
     @Input('resId') resId: number = null;
+    @Input('target') target: string = 'panel';
     @Output('reloadBadgeAttachments') reloadBadgeNotes = new EventEmitter<string>();
 
     constructor(
