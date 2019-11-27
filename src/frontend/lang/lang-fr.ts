@@ -1301,8 +1301,8 @@ export const LANG_FR = {
     "recordMail" : "Enregistrer un courrier",
     "closed" : "Clôturé",
     "manageAttachments": "Modifier ou supprimer des pièces jointes",
-    "viewPersonalData": "Voir les données personnelles de l'utilisateur",
-    "managePersonalData": "Modifier ou supprimer les données personnelles de l'utilisateur",
+    "viewPersonalData": "Consultées",
+    "managePersonalData": "Consultées et modifiées",
     "attachmentDeleted": "Pièce jointe supprimée",
     "attachment_A_TRA": "À traiter",
     "attachment_SIGN": "Signée",
@@ -1350,4 +1350,6 @@ export const LANG_FR = {
     "delAttachment": "Enlever la pièce jointe",
     "mustCompleteAllAttachments": "Veuillez compléter l'ensemble des pièces jointes",
     "editDocument": "Editer le document",
+    "personalDataMsg": "Les données personnelles de l'utilisateur peuvent être : ",
+    "notVisible": "Non visible",
 };

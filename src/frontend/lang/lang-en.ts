@@ -1264,8 +1264,8 @@ export const LANG_EN = {
     "recordMail" : "Record a mail",
     "closed" : "Closed",
     "manageAttachments": "Update or delete attachments",
-    "viewPersonalData": "View users' personal data",
-    "managePersonalData": "Update or delete users' personal data",
+    "viewPersonalData": "Viewed",
+    "managePersonalData": "Viewed and modified",
     "attachmentDeleted": "Attachment deleted",
     "attachment_A_TRA": "To process",
     "attachment_SIGN": "Signed",
@@ -1312,4 +1312,6 @@ export const LANG_EN = {
     "delAttachment": "Delete this attachment",
     "mustCompleteAllAttachments": "Please, complete all attachments",
     "editDocument": "Edit document",
+    "personalDataMsg": "Users personal data can be",
+    "notVisible": "Not visible",
 };
