@@ -1345,7 +1345,7 @@ export const LANG_FR = {
     "addAttachment": "Ajouter une pièce jointe",
     "dateAgo": "Il y a",
     "dateTo": "Le",
-    "attachmentCreation": "Creation d'une pièce jointe",
+    "attachmentCreation": "Création d'une pièce jointe",
     "newAttachment": "Nouvelle pièce jointe",
     "delAttachment": "Enlever la pièce jointe",
     "mustCompleteAllAttachments": "Veuillez compléter l'ensemble des pièces jointes",

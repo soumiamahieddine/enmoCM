@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output, Inject, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { catchError, tap, finalize, exhaustMap } from 'rxjs/operators';
+import { catchError, tap, finalize, exhaustMap, filter } from 'rxjs/operators';
 import { of, forkJoin } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatTabGroup } from '@angular/material';
@@ -9,6 +9,7 @@ import { AppService } from '../../../service/app.service';
 import { DocumentViewerComponent } from '../../viewer/document-viewer.component';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 
 @Component({
     templateUrl: "attachment-create.component.html",
@@ -50,7 +51,8 @@ export class AttachmentCreateComponent implements OnInit {
         public dialogRef: MatDialogRef<AttachmentCreateComponent>,
         public appService: AppService,
         private notify: NotificationService,
-        private sortPipe: SortPipe) {
+        private sortPipe: SortPipe,
+        public dialog: MatDialog) {
     }
 
     ngOnInit(): void {
@@ -184,12 +186,25 @@ export class AttachmentCreateComponent implements OnInit {
         });
 
         this.attachFormGroup.push(new FormGroup(this.attachments[this.attachments.length - 1]));
+        this.indexTab = this.attachments.length - 1;
     }
 
     removePj(i: number) {
-        this.indexTab = 0;
-        this.attachments.splice(i, 1);
-        this.attachFormGroup.splice(i, 1);
+        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete+ ' : PJ n°'+ (i+1), msg: this.lang.confirmAction } });
+
+        dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            tap(() => {
+                this.indexTab = 0;
+                this.attachments.splice(i, 1);
+                this.attachFormGroup.splice(i, 1);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+
     }
 
     getAttachType(attachType: any, i: number) {
