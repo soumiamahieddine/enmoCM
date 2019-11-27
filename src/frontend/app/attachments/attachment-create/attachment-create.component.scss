@@ -30,6 +30,13 @@
     height: 100%;
     display: flex;
     overflow: auto;
+
+    ::ng-deep.mat-tab-label:last-child {
+        min-width: 50px;
+        padding: 0;
+        opacity: 1;
+        color: $primary;
+    }
 }
 
 .attachment-form {
@@ -55,10 +62,6 @@
                 padding-left: 5px;
                 padding-right: 5px;
             }
-        }
-
-        &-action {
-            flex-direction: column;
         }
     }
 }

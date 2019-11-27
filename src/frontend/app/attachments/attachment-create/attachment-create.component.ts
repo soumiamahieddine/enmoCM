@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, EventEmitter, Output, Inject, ViewChildren, QueryList } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, Inject, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { catchError, tap, finalize, exhaustMap } from 'rxjs/operators';
 import { of, forkJoin } from 'rxjs';
 import { NotificationService } from '../../notification.service';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatTabGroup } from '@angular/material';
 import { AppService } from '../../../service/app.service';
 import { DocumentViewerComponent } from '../../viewer/document-viewer.component';
 import { SortPipe } from '../../../plugins/sorting.pipe';
@@ -36,6 +36,8 @@ export class AttachmentCreateComponent implements OnInit {
     attachments: any[] = [];
 
     now: Date = new Date();
+
+    indexTab: number = 0;
 
     @Input('resId') resId: number = null;
 
@@ -80,7 +82,6 @@ export class AttachmentCreateComponent implements OnInit {
                 });
 
                 this.attachFormGroup.push(new FormGroup(this.attachments[0]));
-
             }),
             finalize(() => this.loading = false)
         ).subscribe();
@@ -186,6 +187,7 @@ export class AttachmentCreateComponent implements OnInit {
     }
 
     removePj(i: number) {
+        this.indexTab = 0;
         this.attachments.splice(i, 1);
         this.attachFormGroup.splice(i, 1);
     }
