@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, Renderer2 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { catchError, tap, finalize, exhaustMap, filter } from 'rxjs/operators';
