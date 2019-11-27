@@ -33,6 +33,7 @@ export class AttachmentPageComponent implements OnInit {
     attachmentsTypes: any[] = [];
     attachment: any;
     hidePanel: boolean = false;
+    newVersion: boolean = false;
 
     editMode: boolean = false;
 
@@ -192,10 +193,31 @@ export class AttachmentPageComponent implements OnInit {
         datas['resId'] = this.attachment['resIdMaster'].value;
         this.attachment.encodedFile.setValue(this.appAttachmentViewer.getFile().content);
         this.appAttachmentViewer.setDatas(datas);
+        console.log('event!');
+
+        this.setNewVersion();
     }
 
     getAttachType(attachType: any) {
         this.appAttachmentViewer.loadTemplatesByResId(this.attachment['resIdMaster'].value, attachType);
+    }
+
+    setNewVersion() {
+        if (!this.newVersion) {
+            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.createNewVersion, msg: this.lang.confirmAction } });
+
+            dialogRef.afterClosed().pipe(
+                filter((data: string) => data === 'ok'),
+                tap(() => {
+                    this.newVersion = true;
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
+
     }
 
     deleteSignedVersion() {

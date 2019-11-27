@@ -1302,7 +1302,7 @@ export const LANG_NL = {
     "generation" : "Generation...", //_TO_TRANSLATE
     "requestSentByEmail" : "The request has been sent to you by email.", //_TO_TRANSLATE
     "logInOncePasswordChanged": "You will be asked to log in once the password has been changed.", //_TO_TRANSLATE
-    "newVersion" : "New version", //_TO_TRANSLATE
+    "createNewVersion" : "Create a new version", //_TO_TRANSLATE
     "deleteSignedVersion" : "Delete signed version", //_TO_TRANSLATE
     "signedAttachment" : "Signed attachment", //_TO_TRANSLATE
     "attachmentAdded" : "Attachment added", //_TO_TRANSLATE

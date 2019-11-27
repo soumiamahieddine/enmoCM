@@ -1314,7 +1314,7 @@ export const LANG_FR = {
     "generation" : "Génération...",
     "requestSentByEmail" : "La demande vous a été envoyée par courriel.",
     "logInOncePasswordChanged": "Vous serez amené à vous connecter une fois la modification du mot de passe effectuée.",
-    "newVersion" : "Nouvelle version",
+    "createNewVersion" : "Créer une nouvelle version",
     "deleteSignedVersion" : "Supprimer la version signée",
     "signedAttachment" : "Pièce jointe signée",
     "attachmentAdded" : "Pièce(s) jointe(s) créée(s)",

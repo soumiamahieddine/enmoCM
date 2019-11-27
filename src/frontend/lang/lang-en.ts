@@ -1277,7 +1277,7 @@ export const LANG_EN = {
     "generation" : "Generation...",
     "requestSentByEmail" : "The request has been sent to you by email.",
     "logInOncePasswordChanged": "You will be asked to log in once the password has been changed.",
-    "newVersion" : "New version",
+    "createNewVersion" : "Create a new version",
     "deleteSignedVersion" : "Delete signed version",
     "signedAttachment" : "Signed attachment",
     "attachmentAdded" : "Attachment added",
