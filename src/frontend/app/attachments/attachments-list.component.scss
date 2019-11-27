@@ -3,7 +3,7 @@
 .mat-card {
     box-shadow: none;
     border: solid 1px #E0E0E0;
-    box-shadow: 0px 0px 8px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.75);
 }
 
 .layout {
@@ -16,6 +16,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+
     .mat-raised-button {
         width: 200px;
     }
@@ -93,10 +94,16 @@
 
 .signed {
     border: solid 1px green;
+
     .infosPj {
         background: green;
     }
-    .mainInfos, .subInfos, .stateInfo, .statusInfo, .subInfosBottom {
+
+    .mainInfos,
+    .subInfos,
+    .stateInfo,
+    .statusInfo,
+    .subInfosBottom {
         color: white;
     }
 }
@@ -133,7 +140,7 @@
 }
 
 .loading {
-    display:flex;
+    display: flex;
     justify-content: center;
     top: 0;
     left: 0;
@@ -141,4 +148,43 @@
     background: #ffffffb3;
     z-index: 1;
     overflow: hidden;
+}
+
+.filterTypes {
+    margin-left: 10px;
+    ::ng-deep.mat-button-toggle-checked {
+        background: $secondary;
+        color: white;
+        font-weight: bold;
+        height: 25px;
+        font-size: 10px;
+
+        .mat-button-toggle-label-content {
+            line-height: 0px;
+        }
+
+        .mat-button-toggle-button {
+            height: 100%;
+        }
+    }
+
+    :not(::ng-deep.mat-button-toggle-checked) {
+        ::ng-deep.mat-button-toggle-button {
+            color: $primary;
+            font-weight: bold;
+            height: 25px;
+            font-size: 10px;
+
+            .mat-button-toggle-label-content {
+                line-height: 0px;
+            }
+        }
+    }
+}
+
+.addPj {
+    position: fixed;
+    z-index: 2;
+    bottom: 80px;
+    margin-left: 10px;
 }
