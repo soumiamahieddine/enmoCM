@@ -12,7 +12,6 @@ use PHPUnit\Framework\TestCase;
 class ContactControllerTest extends TestCase
 {
     private static $id = null;
-    private static $addressId = null;
 
     public function testCreate()
     {
@@ -22,354 +21,308 @@ class ContactControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $aArgs = [
+        $args = [
+            'civility'          => 'Sir',
             'firstname'         => 'Hal',
             'lastname'          => 'Jordan',
-            'contactType'       => '106',
-            'contactPurposeId'  => '3',
-            'isCorporatePerson' => 'N',
-            'email'             => 'hal.jordan@glc.com',
-            'society'           => 'Green Lantern Corps',
-            'societyShort'      => 'GLC',
-            'title'             => 'title1',
+            'company'           => 'Green Lantern Corps',
+            'department'        => 'Sector 2814',
             'function'          => 'member',
-            'addressNum'        => '1',
+            'addressNumber'     => '1',
             'addressStreet'     => 'somewhere',
-            'addressCountry'    => 'OA',
+            'addressPostcode'   => '99000',
+            'addressTown'       => 'Bluehaven',
+            'addressCountry'    => 'USA',
+            'email'             => 'hal.jordan@glc.com',
             'phone'             => '911',
+            'notes'             => 'In brightest day',
         ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
 
         $response     = $contactController->create($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertInternalType('int', $responseBody->contactId);
-        $this->assertInternalType('int', $responseBody->addressId);
-
-        self::$id = $responseBody->contactId;
-        self::$addressId = $responseBody->addressId;
+        $this->assertInternalType('int', $responseBody['id']);
+        self::$id = $responseBody['id'];
 
 
-        //  READ
-        $contact = \Contact\models\ContactModel::getById(['id' => self::$id]);
+        //  GET
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $this->assertInternalType('array', $contact);
-        $this->assertSame(self::$id, $contact['contact_id']);
-        $this->assertSame(106, $contact['contact_type']);
-        $this->assertSame('Green Lantern Corps', $contact['society']);
-        $this->assertSame('GLC', $contact['society_short']);
-        $this->assertSame('Hal', $contact['firstname']);
-        $this->assertSame('Jordan', $contact['lastname']);
-        $this->assertSame('title1', $contact['title']);
-        $this->assertSame('member', $contact['function']);
-        $this->assertSame('superadmin', $contact['user_id']);
-        $this->assertSame('SUPERADMIN', $contact['entity_id']);
-        $this->assertSame('Y', $contact['enabled']);
+        $response = $contactController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
 
-        $contact = \Contact\models\ContactModel::getByAddressId(['addressId' => self::$addressId]);
+        $this->assertSame(self::$id, $responseBody['id']);
+        $this->assertSame($args['civility'], $responseBody['civility']);
+        $this->assertSame($args['firstname'], $responseBody['firstname']);
+        $this->assertSame($args['lastname'], $responseBody['lastname']);
+        $this->assertSame($args['company'], $responseBody['company']);
+        $this->assertSame($args['department'], $responseBody['department']);
+        $this->assertSame($args['function'], $responseBody['function']);
+        $this->assertSame($args['addressNumber'], $responseBody['addressNumber']);
+        $this->assertSame($args['addressStreet'], $responseBody['addressStreet']);
+        $this->assertSame($args['addressPostcode'], $responseBody['addressPostcode']);
+        $this->assertSame($args['addressTown'], $responseBody['addressTown']);
+        $this->assertSame($args['addressCountry'], $responseBody['addressCountry']);
+        $this->assertSame($args['email'], $responseBody['email']);
+        $this->assertSame($args['phone'], $responseBody['phone']);
+        $this->assertSame($args['notes'], $responseBody['notes']);
+        $this->assertSame(true, $responseBody['enabled']);
+        $this->assertSame($GLOBALS['id'], $responseBody['creator']);
+        $this->assertNotNull($responseBody['creatorLabel']);
+        $this->assertNotNull($responseBody['creationDate']);
+        $this->assertNull($responseBody['modificationDate']);
 
-        $this->assertInternalType('array', $contact);
-        $this->assertSame(self::$addressId, $contact['id']);
-        $this->assertSame(self::$id, $contact['contact_id']);
-        $this->assertSame(3, $contact['contact_purpose_id']);
-        $this->assertSame(null, $contact['firstname']);
-        $this->assertSame(null, $contact['lastname']);
-        $this->assertSame('hal.jordan@glc.com', $contact['email']);
-        $this->assertSame('1', $contact['address_num']);
-        $this->assertSame(null, $contact['address_town']);
-        $this->assertSame('somewhere', $contact['address_street']);
-        $this->assertSame('OA', $contact['address_country']);
-        $this->assertSame('911', $contact['phone']);
-        $this->assertSame('superadmin', $contact['user_id']);
-        $this->assertSame('SUPERADMIN', $contact['entity_id']);
-        $this->assertSame('Y', $contact['enabled']);
-    }
 
-    public function testCreateAddress()
-    {
-        $contactController = new \Contact\controllers\ContactController();
-
-        //  CREATE
+        //  ERRORS
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'POST']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $aArgs = [
-            "contactPurposeId"  => 2,
-            "email"             => "office@group.com",
-            "phone"             => "+33120212223",
-            "addressNum"        => "14",
-            "addressStreet"     => "Avenue du Pérou",
-            "addressZip"        => "75016",
-            "addressTown"       => "Paris",
-            "addressCountry"    => "France"
+        $args = [
+            'civility'          => 'Sir',
+            'firstname'         => 'Hal',
+            'department'        => 'Sector 2814',
+            'function'          => 'member',
+            'addressNumber'     => '1',
+            'addressStreet'     => 'somewhere',
+            'addressPostcode'   => '99000',
+            'addressTown'       => 'Bluehaven',
+            'addressCountry'    => 'USA',
+            'email'             => 'hal.jordan@glc.com',
+            'phone'             => '911',
+            'notes'             => 'In brightest day',
         ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
 
-        $response     = $contactController->createAddress($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
-        $responseBody = json_decode((string)$response->getBody());
+        $response     = $contactController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertInternalType('int', $responseBody->addressId);
-
-        $contact = \Contact\models\ContactModel::getByAddressId(['addressId' => $responseBody->addressId]);
-
-        $this->assertInternalType('array', $contact);
-        $this->assertSame($responseBody->addressId, $contact['id']);
-        $this->assertSame(self::$id, $contact['contact_id']);
-        $this->assertSame(2, $contact['contact_purpose_id']);
-        $this->assertSame(null, $contact['firstname']);
-        $this->assertSame(null, $contact['lastname']);
-        $this->assertSame('office@group.com', $contact['email']);
-        $this->assertSame('14', $contact['address_num']);
-        $this->assertSame('Avenue du Pérou', $contact['address_street']);
-        $this->assertSame('75016', $contact['address_postal_code']);
-        $this->assertSame('Paris', $contact['address_town']);
-        $this->assertSame('France', $contact['address_country']);
-        $this->assertSame('+33120212223', $contact['phone']);
-        $this->assertSame('superadmin', $contact['user_id']);
-        $this->assertSame('SUPERADMIN', $contact['entity_id']);
-        $this->assertSame('Y', $contact['enabled']);
-
-        \SrcCore\models\DatabaseModel::delete([
-            'table' => 'contact_addresses',
-            'where' => ['id = ?'],
-            'data'  => [$responseBody->addressId]
-        ]);
-
-        //  READ
-        $contact = \Contact\models\ContactModel::getByAddressId(['addressId' => $responseBody->addressId]);
-        $this->assertInternalType('array', $contact);
-        $this->assertEmpty($contact);
-
-        $aArgs = [
-            "contactPurposeId"  => 2
-        ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-
-        $response     = $contactController->createAddress($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertSame('Bad Request', $responseBody->errors);
+        $this->assertSame('Body lastname or company is mandatory', $responseBody['errors']);
     }
 
     public function testUpdate()
     {
         $contactController = new \Contact\controllers\ContactController();
 
-        //  CREATE
+        //  UPDATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $aArgs = [
-            'firstname'         => 'Guy',
-            'lastname'          => 'Gardner',
-            'title'             => 'title2',
-            'function'          => '2nd member',
+        $args = [
+            'civility'          => 'Sir',
+            'lastname'          => 'Sinestro',
+            'company'           => 'Yellow Lantern Corps',
+            'department'        => 'Sector 2813',
+            'function'          => 'Head',
+            'addressNumber'     => '666',
+            'addressStreet'     => 'anywhere',
+            'addressPostcode'   => '98000',
+            'addressTown'       => 'Redhaven',
+            'addressCountry'    => 'U.S.A',
+            'email'             => 'sinestro@ylc.com',
+            'phone'             => '919',
+            'notes'             => 'In blackest day',
         ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
 
-        $response     = $contactController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertSame('success', $responseBody->success);
-
-        //  READ
-        $contact = \Contact\models\ContactModel::getById(['id' => self::$id]);
-
-        $this->assertInternalType('array', $contact);
-        $this->assertSame(self::$id, $contact['contact_id']);
-        $this->assertSame(106, $contact['contact_type']);
-        $this->assertSame('Green Lantern Corps', $contact['society']);
-        $this->assertSame('GLC', $contact['society_short']);
-        $this->assertSame('Guy', $contact['firstname']);
-        $this->assertSame('Gardner', $contact['lastname']);
-        $this->assertSame('title2', $contact['title']);
-        $this->assertSame('2nd member', $contact['function']);
-        $this->assertSame('superadmin', $contact['user_id']);
-        $this->assertSame('SUPERADMIN', $contact['entity_id']);
-        $this->assertSame('Y', $contact['enabled']);
-
-        $aArgs = [
-            'firstname'         => 'Guy',
-            'lastname'          => 'Gardner',
-            'title'             => 'title2',
-            'function'          => '2nd member',
-        ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-
-        $response     = $contactController->update($fullRequest, new \Slim\Http\Response(), ['id' => -1]);
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertSame('Contact does not exist', $responseBody->errors);
-    }
-
-    public function testUpdateAddress()
-    {
-        $contactController = new \Contact\controllers\ContactController();
-
-        //  CREATE
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
-        $request        = \Slim\Http\Request::createFromEnvironment($environment);
-
-        $aArgs = [
-            "contact_purpose_id"    => 2,
-            "email"                 => "updatedemail@mail.com",
-            "phone"                 => "+66",
-            "address_num"           => "23",
-            "address_street"        => "Rue des GL",
-            "address_postal_code"   => "75000",
-            "address_town"          => "Paris",
-            "address_country"       => "France"
-        ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-
-        $response     = $contactController->updateAddress($fullRequest, new \Slim\Http\Response(), ['id' => self::$id, 'addressId' => self::$addressId]);
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertSame('success', $responseBody->success);
-
-        $contact = \Contact\models\ContactModel::getByAddressId(['addressId' => self::$addressId]);
-
-        $this->assertInternalType('array', $contact);
-        $this->assertSame(self::$addressId, $contact['id']);
-        $this->assertSame(self::$id, $contact['contact_id']);
-        $this->assertSame(2, $contact['contact_purpose_id']);
-        $this->assertSame(null, $contact['firstname']);
-        $this->assertSame(null, $contact['lastname']);
-        $this->assertSame('updatedemail@mail.com', $contact['email']);
-        $this->assertSame('23', $contact['address_num']);
-        $this->assertSame('Rue des GL', $contact['address_street']);
-        $this->assertSame('75000', $contact['address_postal_code']);
-        $this->assertSame('Paris', $contact['address_town']);
-        $this->assertSame('France', $contact['address_country']);
-        $this->assertSame('+66', $contact['phone']);
-        $this->assertSame('superadmin', $contact['user_id']);
-        $this->assertSame('SUPERADMIN', $contact['entity_id']);
-        $this->assertSame('Y', $contact['enabled']);
+        $response = $contactController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(204, $response->getStatusCode());
 
 
-        $aArgs = [
-            "contact_purpose_id"    => 2,
-            "email"                 => "updatedemail@mail.com",
-            "phone"                 => "+66",
-            "address_num"           => "23",
-            "address_street"        => "Rue des GL",
-            "address_postal_code"   => "75000",
-            "address_town"          => "Paris",
-            "address_country"       => "France"
-        ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-
-        $response     = $contactController->updateAddress($fullRequest, new \Slim\Http\Response(), ['id' => -1, 'addressId' => self::$addressId]);
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertSame('Contact or address do not exist', $responseBody->errors);
-    }
-
-    public function testGetContactCommunicationByContactId()
-    {
+        //  GET
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $contactController = new \Contact\controllers\ContactController();
-        $response          = $contactController->getCommunicationByContactId($request, new \Slim\Http\Response(), ['contactId' => (string)self::$id]);
-        $responseBody      = json_decode((string)$response->getBody());
+        $response = $contactController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertInternalType('array', $responseBody);
+        $this->assertSame(self::$id, $responseBody['id']);
+        $this->assertSame($args['civility'], $responseBody['civility']);
+        $this->assertNull($responseBody['firstname']);
+        $this->assertSame($args['lastname'], $responseBody['lastname']);
+        $this->assertSame($args['company'], $responseBody['company']);
+        $this->assertSame($args['department'], $responseBody['department']);
+        $this->assertSame($args['function'], $responseBody['function']);
+        $this->assertSame($args['addressNumber'], $responseBody['addressNumber']);
+        $this->assertSame($args['addressStreet'], $responseBody['addressStreet']);
+        $this->assertSame($args['addressPostcode'], $responseBody['addressPostcode']);
+        $this->assertSame($args['addressTown'], $responseBody['addressTown']);
+        $this->assertSame($args['addressCountry'], $responseBody['addressCountry']);
+        $this->assertSame($args['email'], $responseBody['email']);
+        $this->assertSame($args['phone'], $responseBody['phone']);
+        $this->assertSame($args['notes'], $responseBody['notes']);
+        $this->assertSame(true, $responseBody['enabled']);
+        $this->assertSame($GLOBALS['id'], $responseBody['creator']);
+        $this->assertNotNull($responseBody['creatorLabel']);
+        $this->assertNotNull($responseBody['creationDate']);
+        $this->assertNotNull($responseBody['modificationDate']);
+
+
+        //  ERRORS
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $args = [
+            'civility'          => 'Sir',
+            'firstname'         => 'Hal',
+            'department'        => 'Sector 2814',
+            'function'          => 'member',
+            'addressNumber'     => '1',
+            'addressStreet'     => 'somewhere',
+            'addressPostcode'   => '99000',
+            'addressTown'       => 'Bluehaven',
+            'addressCountry'    => 'USA',
+            'email'             => 'hal.jordan@glc.com',
+            'phone'             => '911',
+            'notes'             => 'In brightest day',
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+
+        $response = $contactController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertSame('Body lastname or company is mandatory', $responseBody['errors']);
+    }
+
+    public function testGet()
+    {
+        $contactController = new \Contact\controllers\ContactController();
+
+        //  GET
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response = $contactController->get($request, new \Slim\Http\Response());
+        $this->assertSame(200, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
+
+        $this->assertNotNull($responseBody['contacts'][0]['id']);
+        $this->assertNotNull($responseBody['contacts'][0]['lastname']);
+        $this->assertNotNull($responseBody['contacts'][0]['company']);
     }
 
     public function testDelete()
     {
-        //  DELETE
-        \SrcCore\models\DatabaseModel::delete([
-            'table' => 'contacts_v2',
-            'where' => ['contact_id = ?'],
-            'data'  => [self::$id]
-        ]);
-        \SrcCore\models\DatabaseModel::delete([
-            'table' => 'contact_addresses',
-            'where' => ['id = ?'],
-            'data'  => [self::$addressId]
-        ]);
-
-        //  READ
-        $contact = \Contact\models\ContactModel::getById(['id' => self::$id]);
-        $this->assertInternalType('array', $contact);
-        $this->assertEmpty($contact);
-
-        $contact = \Contact\models\ContactModel::getByAddressId(['addressId' => self::$addressId]);
-        $this->assertInternalType('array', $contact);
-        $this->assertEmpty($contact);
-    }
-
-    public function testControlLengthNameAfnor()
-    {
-        $name = \Contact\controllers\ContactController::controlLengthNameAfnor(['title' => 'title1', 'fullName' => 'Prénom NOM', 'strMaxLength' => 38]);
-
-        $this->assertSame('Monsieur Prénom NOM', $name);
-
-        $name = \Contact\controllers\ContactController::controlLengthNameAfnor(['title' => 'title3', 'fullName' => 'Prénom NOM TROP LOOOOOOOOOOOOONG', 'strMaxLength' => 38]);
-
-        $this->assertSame('Mlle Prénom NOM TROP LOOOOOOOOOOOOONG', $name);
-    }
-
-    public function testAvailableReferential()
-    {
         $contactController = new \Contact\controllers\ContactController();
-        $availableReferential = $contactController->availableReferential();
-        $this->assertInternalType('array', $availableReferential);
-        $this->assertNotEmpty($availableReferential);
-    }
 
-    public function testGetFilling()
-    {
+        //  DELETE
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response = $contactController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(204, $response->getStatusCode());
+
+
+        //  GET
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $contactController = new \Contact\controllers\ContactController();
-        $response          = $contactController->getFilling($request, new \Slim\Http\Response());
-        $responseBody      = json_decode((string)$response->getBody());
+        $response = $contactController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertInternalType('array', (array)$responseBody->contactsFilling);
-    }
+        $this->assertSame('Contact does not exist', $responseBody['errors']);
 
-    public function testUpdateFilling()
-    {
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+
+        //  ERRORS
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $aArgs = [
-            "enable"            => true,
-            "rating_columns"    => ["society", "function"],
-            "first_threshold"   => 22,
-            "second_threshold"  => 85
-        ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+        $response = $contactController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $this->assertSame(400, $response->getStatusCode());
+        $responseBody = json_decode((string)$response->getBody(), true);
 
-        $contactController = new \Contact\controllers\ContactController();
-        $response          = $contactController->updateFilling($fullRequest, new \Slim\Http\Response());
-        $responseBody      = json_decode((string)$response->getBody());
-
-        $this->assertSame('success', $responseBody->success);
-
-        $response          = $contactController->getFilling($request, new \Slim\Http\Response());
-        $responseBody      = json_decode((string)$response->getBody());
-
-        $this->assertSame(true, $responseBody->contactsFilling->enable);
-        $this->assertSame(22, $responseBody->contactsFilling->first_threshold);
-        $this->assertSame(85, $responseBody->contactsFilling->second_threshold);
-        $this->assertSame('society', $responseBody->contactsFilling->rating_columns[0]);
-        $this->assertSame('function', $responseBody->contactsFilling->rating_columns[1]);
-
-        $aArgs = [
-            "enable"            => true,
-            "first_threshold"   => 22,
-            "second_threshold"  => 85
-        ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-
-        $response          = $contactController->updateFilling($fullRequest, new \Slim\Http\Response());
-        $responseBody      = json_decode((string)$response->getBody());
-
-        $this->assertSame('Bad Request', $responseBody->errors);
+        $this->assertSame('Contact does not exist', $responseBody['errors']);
     }
+
+//
+//    public function testGetContactCommunicationByContactId()
+//    {
+//        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+//        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+//
+//        $contactController = new \Contact\controllers\ContactController();
+//        $response          = $contactController->getCommunicationByContactId($request, new \Slim\Http\Response(), ['contactId' => (string)self::$id]);
+//        $responseBody      = json_decode((string)$response->getBody());
+//
+//        $this->assertInternalType('array', $responseBody);
+//    }
+//
+//    public function testControlLengthNameAfnor()
+//    {
+//        $name = \Contact\controllers\ContactController::controlLengthNameAfnor(['title' => 'title1', 'fullName' => 'Prénom NOM', 'strMaxLength' => 38]);
+//
+//        $this->assertSame('Monsieur Prénom NOM', $name);
+//
+//        $name = \Contact\controllers\ContactController::controlLengthNameAfnor(['title' => 'title3', 'fullName' => 'Prénom NOM TROP LOOOOOOOOOOOOONG', 'strMaxLength' => 38]);
+//
+//        $this->assertSame('Mlle Prénom NOM TROP LOOOOOOOOOOOOONG', $name);
+//    }
+//
+//    public function testAvailableReferential()
+//    {
+//        $contactController = new \Contact\controllers\ContactController();
+//        $availableReferential = $contactController->availableReferential();
+//        $this->assertInternalType('array', $availableReferential);
+//        $this->assertNotEmpty($availableReferential);
+//    }
+//
+//    public function testGetFilling()
+//    {
+//        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+//        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+//
+//        $contactController = new \Contact\controllers\ContactController();
+//        $response          = $contactController->getFilling($request, new \Slim\Http\Response());
+//        $responseBody      = json_decode((string)$response->getBody());
+//
+//        $this->assertInternalType('array', (array)$responseBody->contactsFilling);
+//    }
+//
+//    public function testUpdateFilling()
+//    {
+//        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+//        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+//
+//        $aArgs = [
+//            "enable"            => true,
+//            "rating_columns"    => ["society", "function"],
+//            "first_threshold"   => 22,
+//            "second_threshold"  => 85
+//        ];
+//        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+//
+//        $contactController = new \Contact\controllers\ContactController();
+//        $response          = $contactController->updateFilling($fullRequest, new \Slim\Http\Response());
+//        $responseBody      = json_decode((string)$response->getBody());
+//
+//        $this->assertSame('success', $responseBody->success);
+//
+//        $response          = $contactController->getFilling($request, new \Slim\Http\Response());
+//        $responseBody      = json_decode((string)$response->getBody());
+//
+//        $this->assertSame(true, $responseBody->contactsFilling->enable);
+//        $this->assertSame(22, $responseBody->contactsFilling->first_threshold);
+//        $this->assertSame(85, $responseBody->contactsFilling->second_threshold);
+//        $this->assertSame('society', $responseBody->contactsFilling->rating_columns[0]);
+//        $this->assertSame('function', $responseBody->contactsFilling->rating_columns[1]);
+//
+//        $aArgs = [
+//            "enable"            => true,
+//            "first_threshold"   => 22,
+//            "second_threshold"  => 85
+//        ];
+//        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+//
+//        $response          = $contactController->updateFilling($fullRequest, new \Slim\Http\Response());
+//        $responseBody      = json_decode((string)$response->getBody());
+//
+//        $this->assertSame('Bad Request', $responseBody->errors);
+//    }
 }
