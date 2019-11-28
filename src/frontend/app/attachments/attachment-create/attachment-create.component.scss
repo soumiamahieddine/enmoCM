@@ -53,12 +53,13 @@
 
         ::ng-deep.mat-form-field-should-float {
             ::ng-deep.mat-form-field-label-wrapper {
-                margin-top: -5px;
+                margin-top: -7px;
             }
 
             ::ng-deep.mat-form-field-label {
                 background: white;
                 width: auto !important;
+                padding-top: 5px;
                 padding-left: 5px;
                 padding-right: 5px;
             }

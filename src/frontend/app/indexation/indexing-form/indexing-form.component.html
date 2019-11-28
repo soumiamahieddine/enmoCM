@@ -48,15 +48,15 @@
                                     </button>
                                 </mat-menu>
                             </div>
-                            <div class="fieldInput" [class.checkboxInput]="field.type === 'checkbox'">
+                            <div class="fieldInput" [class.textareaInput]="field.type === 'string'" [class.checkboxInput]="field.type === 'checkbox'">
                                 <ng-container *ngIf="field.type === 'string'">
                                     <mat-form-field class="input-form"
                                         [floatLabel]="appService.getViewMode() ? '' : 'never'">
                                         <mat-label *ngIf="appService.getViewMode()">{{field.label}}</mat-label>
-                                        <textarea matInput [formControl]="arrFormControl[field.identifier]"
+                                        <textarea matInput matTextareaAutosize
+                                             [formControl]="arrFormControl[field.identifier]"
                                             [placeholder]="!adminMode ? lang.typeValue : lang.defaultValue"
-                                            matTextareaAutosize matAutosizeMinRows="1"
-                                            cdkAutosizeMaxRows="6" class="subject"></textarea>
+                                             class="subject"></textarea>
                                     </mat-form-field>
                                 </ng-container>
                                 <ng-container *ngIf="field.type === 'integer'">
