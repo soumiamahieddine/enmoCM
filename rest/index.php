@@ -117,6 +117,7 @@ $app->post('/contacts', \Contact\controllers\ContactController::class . ':create
 $app->get('/contacts/{id}', \Contact\controllers\ContactController::class . ':getById');
 $app->put('/contacts/{id}', \Contact\controllers\ContactController::class . ':update');
 $app->delete('/contacts/{id}', \Contact\controllers\ContactController::class . ':delete');
+$app->put('/contacts/{id}/activation', \Contact\controllers\ContactController::class . ':updateActivation');
 
 $app->get('/contacts/{contactId}/communication', \Contact\controllers\ContactController::class . ':getCommunicationByContactId');
 $app->get('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':get');

@@ -8,7 +8,6 @@
 
 /**
  * @brief Contact Controller
- *
  * @author dev@maarch.org
  */
 
@@ -43,11 +42,12 @@ class ContactController
         //TODO privileges
 
         $body = $request->getParsedBody();
-        if (!Validator::stringType()->notEmpty()->validate($body['lastname']) && !Validator::stringType()->notEmpty()->validate($body['company'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body lastname or company is mandatory']);
+
+        $control = ContactController::controlContact(['body' => $body]);
+        if (!empty($control['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
 
-        $body['email'] = filter_var($body['email'], FILTER_VALIDATE_EMAIL) ? $body['email'] : null;
         if (!empty($body['email'])) {
             $contact = ContactModel::get(['select' => ['id'], 'where' => ['email = ?'], 'data' => [$body['email']]]);
             if (!empty($contact[0]['id'])) {
@@ -133,17 +133,17 @@ class ContactController
     {
         //TODO privileges
 
+        $body = $request->getParsedBody();
+
+        $control = ContactController::controlContact(['body' => $body]);
+        if (!empty($control['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+        }
+
         $contact = ContactModel::getById(['id' => $args['id'], 'select' => [1]]);
         if (empty($contact)) {
             return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
         }
-
-        $body = $request->getParsedBody();
-        if (!Validator::stringType()->notEmpty()->validate($body['lastname']) && !Validator::stringType()->notEmpty()->validate($body['company'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body lastname or company is mandatory']);
-        }
-
-        $body['email'] = filter_var($body['email'], FILTER_VALIDATE_EMAIL) ? $body['email'] : null;
 
         if (!empty($body['communicationMeans'])) {
             if (filter_var($body['communicationMeans'], FILTER_VALIDATE_EMAIL)) {
@@ -166,11 +166,11 @@ class ContactController
                     'company'               => $body['company'] ?? null,
                     'department'            => $body['department'] ?? null,
                     'function'              => $body['function'] ?? null,
-                    'address_number'         => $body['addressNumber'] ?? null,
-                    'address_street'         => $body['addressStreet'] ?? null,
-                    'address_postcode'       => $body['addressPostcode'] ?? null,
-                    'address_town'           => $body['addressTown'] ?? null,
-                    'address_country'        => $body['addressCountry'] ?? null,
+                    'address_number'        => $body['addressNumber'] ?? null,
+                    'address_street'        => $body['addressStreet'] ?? null,
+                    'address_postcode'      => $body['addressPostcode'] ?? null,
+                    'address_town'          => $body['addressTown'] ?? null,
+                    'address_country'       => $body['addressCountry'] ?? null,
                     'email'                 => $body['email'] ?? null,
                     'phone'                 => $body['phone'] ?? null,
                     'communication_means'   => !empty($body['communicationMeans']) ? json_encode($body['communicationMeans']) : null,
@@ -178,6 +178,26 @@ class ContactController
                     'modification_date'     => 'CURRENT_TIMESTAMP',
                     'external_id'           => $externalId
                 ],
+            'where' => ['id = ?'],
+            'data'  => [$args['id']]
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function updateActivation(Request $request, Response $response, array $args)
+    {
+        //TODO privileges
+
+        $contact = ContactModel::getById(['id' => $args['id'], 'select' => [1]]);
+        if (empty($contact)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
+        }
+
+        $body = $request->getParsedBody();
+
+        ContactModel::update([
+            'set'   => ['enabled' => empty($body['enabled']) ? 'false' : 'true'],
             'where' => ['id = ?'],
             'data'  => [$args['id']]
         ]);
@@ -661,5 +681,44 @@ class ContactController
         }
 
         return $contacts;
+    }
+
+    private static function controlContact(array $args)
+    {
+        $body = $args['body'];
+
+        if (empty($body)) {
+            return ['errors' => 'Body is not set or empty'];
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['lastname']) && !Validator::stringType()->notEmpty()->validate($body['company'])) {
+            return ['errors' => 'Body lastname or company is mandatory'];
+        } elseif (!empty($body['email']) && !filter_var($body['email'], FILTER_VALIDATE_EMAIL)) {
+            return ['errors' => 'Body email is not valid'];
+        } elseif (!empty($body['phone']) && !preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/", $body['phone'])) {
+            return ['errors' => 'Body phone is not valid'];
+        }
+
+        $lengthFields = [
+            'civility',
+            'firstname',
+            'lastname',
+            'company',
+            'department',
+            'function',
+            'addressNumber',
+            'addressStreet',
+            'addressPostcode',
+            'addressTown',
+            'addressCountry',
+            'email',
+            'phone'
+        ];
+
+        foreach ($lengthFields as $field) {
+            if (!empty($body[$field]) && !Validator::stringType()->length(1, 256)->validate($body[$field])) {
+                return ['errors' => "Body {$field} length is not valid (1..256)"];
+            }
+        }
+
+        return true;
     }
 }
