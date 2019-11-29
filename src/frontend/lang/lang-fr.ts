@@ -1352,4 +1352,5 @@ export const LANG_FR = {
     "editDocument": "Editer le document",
     "personalDataMsg": "Les données personnelles de l'utilisateur sont : ",
     "notVisible": "Non visibles",
+    "enableGroupMsg": "Ce groupe pourra potentiellement avoir accès à l'ensemble des fonctionnalités de l'application.",
 };

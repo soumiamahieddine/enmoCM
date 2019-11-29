@@ -1339,4 +1339,5 @@ export const LANG_NL = {
     "editDocument": "Edit document", //_TO_TRANSLATE
     "personalDataMsg": "Users personal data are", //_TO_TRANSLATE
     "notVisible": "Not visible", //_TO_TRANSLATE
+    "enableGroupMsg": "This group could access to all functionnalities.", //_TO_TRANSLATE
 };

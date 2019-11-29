@@ -10,10 +10,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AppService } from '../../../service/app.service';
 import { PrivilegeService } from '../../../service/privileges.service';
-import { tap, catchError, exhaustMap, map, finalize } from 'rxjs/operators';
+import { tap, catchError, exhaustMap, map, finalize, filter } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { MenuShortcutComponent } from '../../menu/menu-shortcut.component';
-import { MatSelectionList } from '@angular/material';
+import { MatSelectionList, MatDialog, MatSlideToggle } from '@angular/material';
+import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 
 declare function $j(selector: any): any;
 
@@ -44,6 +45,8 @@ export class GroupAdministrationComponent implements OnInit {
 
     unitPrivileges: any[] = [];
 
+    administrationPrivileges: any[] = [];
+
     authorizedGroupsUserParams: any[] = [];
     panelMode = 'keywordInfos';
 
@@ -71,7 +74,8 @@ export class GroupAdministrationComponent implements OnInit {
         private notify: NotificationService,
         private headerService: HeaderService,
         public appService: AppService,
-        private privilegeService: PrivilegeService
+        private privilegeService: PrivilegeService,
+        private dialog: MatDialog
     ) {
         $j("link[href='merged_css.php']").remove();
     }
@@ -96,6 +100,15 @@ export class GroupAdministrationComponent implements OnInit {
                 this.http.get("../../rest/groups/" + params['id'] + "/details")
                     .subscribe((data: any) => {
                         this.group = data['group'];
+
+                        this.administrationPrivileges = this.privilegeService.getAdministrations();
+
+                        this.administrationPrivileges = this.administrationPrivileges.map(admin => {
+                            return {
+                                ...admin,
+                                checked : this.group.privileges.indexOf(admin.id) > -1
+                            }
+                        })
 
                         this.privilegeService.getUnitsPrivileges().forEach(element => {
                             let services: any[] = this.privilegeService.getPrivilegesByUnit(element);
@@ -289,7 +302,28 @@ export class GroupAdministrationComponent implements OnInit {
 
     toggleService(ev: any, service: any) {
         if (ev.checked) {
-            this.addService(service);
+            if (service.id === 'admin_groups') {
+                const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirmAction, msg: this.lang.enableGroupMsg } });
+
+                dialogRef.afterClosed().pipe(
+                    tap((data: string) => {
+                        if (data !== 'ok') {
+                            service.checked = false;
+                        }
+                    }),
+                    filter((data: string) => data === 'ok'),
+                    tap(() => {
+                        this.addService(service);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else {
+                this.addService(service);
+            }
+
         } else {
             this.sidenavRight.close();
             this.removeService(service);

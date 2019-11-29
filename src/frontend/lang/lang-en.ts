@@ -1314,4 +1314,5 @@ export const LANG_EN = {
     "editDocument": "Edit document",
     "personalDataMsg": "Users personal data are",
     "notVisible": "Not visible",
+    "enableGroupMsg": "This group could access to all functionnalities.",
 };
