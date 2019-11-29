@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HeaderService } from './header.service';
 import { ProcessComponent } from '../app/process/process.component';
+import { PrivilegeService } from './privileges.service';
 
 @Injectable({
     providedIn: 'root'
@@ -14,13 +15,15 @@ export class AppGuard implements CanActivate {
 
     constructor(public http: HttpClient,
         private router: Router,
-        public headerService: HeaderService) { }
+        public headerService: HeaderService,
+        private privilegeService: PrivilegeService) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
         // TO DO : CAN BE REMOVE AFTER FULL V2
         localStorage.setItem('PreviousV2Route', state.url);
 
         if (this.headerService.user.id === undefined) {
+            
             return this.http.get('../../rest/currentUser/profile')
                 .pipe(
                     map((data: any) => {
@@ -31,7 +34,7 @@ export class AppGuard implements CanActivate {
                             lastname: data.lastname,
                             entities: data.entities,
                             groups: data.groups,
-                            privileges: data.privileges
+                            privileges: data.privileges[0] === 'ALL_PRIVILEGES' ? this.privilegeService.getAllPrivileges() : data.privileges
                         }
                         return true;
                     })
