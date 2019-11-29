@@ -116,11 +116,17 @@ export class GroupAdministrationComponent implements OnInit {
                                     }
                                 ];
                             } else if (element === 'confidentialityAndSecurity') {
+                                let priv = '';
+                                if (this.group.privileges.filter((priv: any) => priv === 'manage_personal_data')[0]) {
+                                    priv = 'manage_personal_data';
+                                } else if (this.group.privileges.filter((priv: any) => priv === 'view_personal_data')[0]) {
+                                    priv = 'view_personal_data';
+                                }
                                 services = [
                                     {
                                         "id": "confidentialityAndSecurity_personal_data",
                                         "label": this.lang.personalDataMsg,
-                                        "current": this.group.privileges.filter((priv: any) => ['view_personal_data', 'manage_personal_data'].indexOf(priv) > -1)[0] !== undefined ? this.group.privileges.filter((priv: any) => ['view_personal_data', 'manage_personal_data'].indexOf(priv) > -1)[0] : '',
+                                        "current": priv,
                                         "services": this.privilegeService.getPrivileges(['view_personal_data', 'manage_personal_data'])
                                     }
                                 ];
