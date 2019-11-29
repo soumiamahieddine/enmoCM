@@ -170,7 +170,7 @@ class UserController
             ]);
 
             if ($loggingMethod['id'] == 'standard') {
-                AuthenticationController::sendUserCreationNotification(['userId' => $existingUser['id'], 'userEmail' => $existingUser['mail']]);
+                AuthenticationController::sendAccountActivationNotification(['userId' => $existingUser['id'], 'userEmail' => $existingUser['mail']]);
             }
 
             return $response->withJson(['id' => $existingUser['id']]);
@@ -198,7 +198,7 @@ class UserController
         }
 
         if ($loggingMethod['id'] == 'standard') {
-            AuthenticationController::sendUserCreationNotification(['userId' => $id, 'userEmail' => $data['mail']]);
+            AuthenticationController::sendAccountActivationNotification(['userId' => $id, 'userEmail' => $data['mail']]);
         }
 
         HistoryController::add([
@@ -1443,56 +1443,64 @@ class UserController
         ]);
     }
 
-    public function hasUsersRights(array $aArgs)
+    public function sendAccountActivationNotification(Request $request, Response $response, array $args)
     {
-        $error = [
-            'status'    => 200,
-            'error'     => ''
-        ];
-
-        if (!is_numeric($aArgs['id'])) {
-            $error['status'] = 400;
-            $error['error'] = 'id must be an integer';
-        } else {
-            $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
-            if (empty($user['user_id'])) {
-                $error['status'] = 400;
-                $error['error'] = 'User not found';
-            } else {
-                if (empty($aArgs['himself']) || $GLOBALS['userId'] != $user['user_id']) {
-                    if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
-                        $error['status'] = 403;
-                        $error['error'] = 'Service forbidden';
-                    }
-                    if ($GLOBALS['userId'] != 'superadmin') {
-                        $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
-                        $users = UserEntityModel::getWithUsers([
-                            'select'    => ['users.id'],
-                            'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
-                            'data'      => [$entities, 'DEL']
-                        ]);
-                        $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id']]);
-                        $users = array_merge($users, $usersNoEntities);
-                        $allowed = false;
-                        foreach ($users as $value) {
-                            if ($value['id'] == $aArgs['id']) {
-                                $allowed = true;
-                            }
-                        }
-                        if (!$allowed) {
-                            $error['status'] = 403;
-                            $error['error'] = 'UserId out of perimeter';
-                        }
-                    }
-                } elseif ($aArgs['delete'] && $GLOBALS['userId'] == $user['user_id']) {
-                    $error['status'] = 403;
-                    $error['error'] = 'Can not delete yourself';
-                }
-            }
+        $control = $this->hasUsersRights(['id' => $args['id']]);
+        if (!empty($control['error'])) {
+            return $response->withStatus($control['status'])->withJson(['errors' => $control['error']]);
         }
 
+        $loggingMethod = CoreConfigModel::getLoggingMethod();
+        if ($loggingMethod['id'] != 'standard') {
+            return $response->withStatus($control['status'])->withJson(['errors' => $control['error']]);
+        }
 
-        return $error;
+        $user = UserModel::getById(['id' => $args['id'], 'select' => ['mail']]);
+
+        AuthenticationController::sendAccountActivationNotification(['userId' => $args['id'], 'userEmail' => $user['mail']]);
+
+        return $response->withStatus(204);
+    }
+
+    public function hasUsersRights(array $args)
+    {
+        if (!is_numeric($args['id'])) {
+            return ['status' => 400, 'error' => 'id must be an integer'];
+        }
+
+        $user = UserModel::getById(['id' => $args['id'], 'select' => ['user_id']]);
+        if (empty($user['user_id'])) {
+            return ['status' => 400, 'error' => 'User not found'];
+        }
+
+        if (empty($args['himself']) || $GLOBALS['userId'] != $user['user_id']) {
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
+                return ['status' => 403, 'error' => 'Service forbidden'];
+            }
+            if ($GLOBALS['userId'] != 'superadmin') {
+                $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
+                $users = UserEntityModel::getWithUsers([
+                    'select'    => ['users.id'],
+                    'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
+                    'data'      => [$entities, 'DEL']
+                ]);
+                $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id']]);
+                $users = array_merge($users, $usersNoEntities);
+                $allowed = false;
+                foreach ($users as $value) {
+                    if ($value['id'] == $args['id']) {
+                        $allowed = true;
+                    }
+                }
+                if (!$allowed) {
+                    return ['status' => 403, 'error' => 'UserId out of perimeter'];
+                }
+            }
+        } elseif ($args['delete'] && $GLOBALS['userId'] == $user['user_id']) {
+            return ['status' => 403, 'error' => 'Can not delete yourself'];
+        }
+
+        return true;
     }
 
     private function checkNeededParameters(array $aArgs)

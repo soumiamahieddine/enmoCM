@@ -141,7 +141,7 @@ class AuthenticationController
         return $jwt;
     }
 
-    public static function sendUserCreationNotification(array $args)
+    public static function sendAccountActivationNotification(array $args)
     {
         $resetToken = AuthenticationController::getResetJWT(['id' => $args['userId'], 'expirationTime' => 1209600]); // 14 days
         UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$args['userId']]]);
