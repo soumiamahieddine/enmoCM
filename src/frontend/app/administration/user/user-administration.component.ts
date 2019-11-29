@@ -369,6 +369,19 @@ export class UserAdministrationComponent implements OnInit {
         this.selectedSignatureLabel = this.user.signatures[index].signature_label;
     }
 
+    resendActivationNotification(user: any) {
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.sendActivationNotification);
+
+        if (r) {
+            this.http.put("../../rest/users/" + this.serialId + "/accountActivationNotification", {})
+                .subscribe((data: any) => {
+                    this.notify.success(this.lang.activationNotificationSend);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+    }
+
     toggleGroup(group: any) {
         if ($j('#' + group.group_id + '-input').is(':checked') == true) {
             var groupReq = {

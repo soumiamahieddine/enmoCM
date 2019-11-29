@@ -1315,4 +1315,6 @@ export const LANG_EN = {
     "personalDataMsg": "Users personal data are",
     "notVisible": "Not visible",
     "enableGroupMsg": "This group could access to all functionnalities.",
+    "sendActivationNotification": "Send activation notification",
+    "activationNotificationSend": "Activation notification send",
 };

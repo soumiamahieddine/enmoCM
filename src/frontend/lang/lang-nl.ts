@@ -1340,4 +1340,6 @@ export const LANG_NL = {
     "personalDataMsg": "Users personal data are", //_TO_TRANSLATE
     "notVisible": "Not visible", //_TO_TRANSLATE
     "enableGroupMsg": "This group could access to all functionnalities.", //_TO_TRANSLATE
+    "sendActivationNotification": "Send activation notification", //_TO_TRANSLATE
+    "activationNotificationSend": "Activation notification send", //_TO_TRANSLATE
 };
