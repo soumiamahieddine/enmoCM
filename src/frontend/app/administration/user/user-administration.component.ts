@@ -865,12 +865,13 @@ export class UserAdministrationComponent implements OnInit {
                                 } else {
                                     this.notify.success(this.lang.userAdded);
                                 }
-                                this.router.navigate(["/administration/users/" + data.user.id]);
+                                this.router.navigate(["/administration/users/" + data.id]);
                             }, (err: any) => {
                                 this.notify.error(err.error.errors);
                             });
                     }
-                }, () => {
+                }, (err: any) => {
+                    this.notify.error(err.error.errors);
                 });
         } else {
             this.http.put("../../rest/users/" + this.serialId, this.user)

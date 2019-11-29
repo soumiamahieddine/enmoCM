@@ -156,18 +156,24 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $existingUser = UserModel::getByLowerLogin(['login' => $data['userId'], 'select' => ['id', 'status']]);
+        $loggingMethod = CoreConfigModel::getLoggingMethod();
+        $existingUser = UserModel::getByLowerLogin(['login' => $data['userId'], 'select' => ['id', 'status', 'mail']]);
 
         if (!empty($existingUser) && $existingUser['status'] == 'DEL') {
             UserModel::update([
                 'set'   => [
-                    'status'   => 'OK'
+                    'status'    => 'OK',
+                    'password'  => AuthenticationModel::getPasswordHash(AuthenticationModel::generatePassword()),
                 ],
                 'where' => ['id = ?'],
                 'data'  => [$existingUser['id']]
             ]);
 
-            return $response->withJson(['user' => $existingUser]);
+            if ($loggingMethod['id'] == 'standard') {
+                AuthenticationController::sendUserCreationNotification(['userId' => $existingUser['id'], 'userEmail' => $existingUser['mail']]);
+            }
+
+            return $response->withJson(['id' => $existingUser['id']]);
         } elseif (!empty($existingUser)) {
             return $response->withStatus(400)->withJson(['errors' => _USER_ID_ALREADY_EXISTS]);
         }
@@ -181,12 +187,7 @@ class UserController
             $data['loginmode'] = 'standard';
         }
 
-        UserModel::create(['user' => $data]);
-
-        $newUser = UserModel::getByLogin(['login' => $data['userId']]);
-        if (!Validator::intType()->notEmpty()->validate($newUser['id'])) {
-            return $response->withStatus(500)->withJson(['errors' => 'User Creation Error']);
-        }
+        $id = UserModel::create(['user' => $data]);
 
         $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);
         if (!empty($userQuota['param_value_int'])) {
@@ -196,23 +197,8 @@ class UserController
             }
         }
 
-        $loggingMethod = CoreConfigModel::getLoggingMethod();
         if ($loggingMethod['id'] == 'standard') {
-            $resetToken = AuthenticationController::getResetJWT(['id' => $newUser['id'], 'expirationTime' => 1209600]); // 14 days
-            UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$newUser['id']]]);
-
-            $url = UrlController::getCoreUrl() . 'apps/maarch_entreprise/index.php?display=true&page=login&update-password-token=' . $resetToken;
-            EmailController::createEmail([
-                'userId'    => $newUser['id'],
-                'data'      => [
-                    'sender'        => ['email' => 'Notification'],
-                    'recipients'    => [$newUser['mail']],
-                    'object'        => _NOTIFICATIONS_USER_CREATION_SUBJECT,
-                    'body'          => _NOTIFICATIONS_USER_CREATION_BODY . '<a href="' . $url . '">'._CLICK_HERE.'</a>' . _NOTIFICATIONS_USER_CREATION_FOOTER,
-                    'isHtml'        => true,
-                    'status'        => 'WAITING'
-                ]
-            ]);
+            AuthenticationController::sendUserCreationNotification(['userId' => $id, 'userEmail' => $data['mail']]);
         }
 
         HistoryController::add([
@@ -223,7 +209,7 @@ class UserController
             'info'         => _USER_CREATED . " {$data['userId']}"
         ]);
 
-        return $response->withJson(['user' => $newUser]);
+        return $response->withJson(['id' => $id]);
     }
 
     public function update(Request $request, Response $response, array $aArgs)
