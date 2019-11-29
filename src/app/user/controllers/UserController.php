@@ -123,12 +123,18 @@ class UserController
         $user['assignedBaskets']    = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
         $user['redirectedBaskets']  = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
         $user['history']            = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['event_type', 'event_date', 'info', 'remote_ip']]);
-        $user['canModifyPassword']  = false;
-        $user['canCreateMaarchParapheurUser'] = false;
+        $user['canModifyPassword']              = false;
+        $user['canSendActivationNotification']  = false;
+        $user['canCreateMaarchParapheurUser']   = false;
 
         if ($user['loginmode'] == 'restMode') {
             $user['canModifyPassword'] = true;
         }
+        $loggingMethod = CoreConfigModel::getLoggingMethod();
+        if ($user['loginmode'] != 'restMode' && $loggingMethod['id'] == 'standard') {
+            $user['canSendActivationNotification'] = true;
+        }
+
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
         if ((string)$loadedXml->signatoryBookEnabled == 'maarchParapheur' && $user['loginmode'] != 'restMode' && empty($user['external_id']['maarchParapheur'])) {
             $user['canCreateMaarchParapheurUser'] = true;
