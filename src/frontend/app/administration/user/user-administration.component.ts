@@ -142,8 +142,8 @@ export class UserAdministrationComponent implements OnInit {
 
                 this.headerService.setHeader(this.lang.userCreation);
                 this.creationMode = true;
-                this.canViewPersonalDatas = true;
-                this.canManagePersonalDatas = true;
+                this.canViewPersonalDatas = false;
+                this.canManagePersonalDatas = this.privilegeService.hasCurrentUserPrivilege('manage_personal_data');
                 this.loading = false;
             } else {
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
