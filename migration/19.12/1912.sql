@@ -369,6 +369,38 @@ DO $$ BEGIN
 END$$;
 
 
+/* CONTACTS */
+DROP TABLE IF EXISTS contacts;
+CREATE TABLE contacts
+(
+    id SERIAL NOT NULL,
+    civility CHARACTER VARYING(256),
+    firstname CHARACTER VARYING(256),
+    lastname CHARACTER VARYING(256),
+    company CHARACTER VARYING(256),
+    department CHARACTER VARYING(256),
+    function CHARACTER VARYING(256),
+    address_number CHARACTER VARYING(256),
+    address_street CHARACTER VARYING(256),
+    address_additional1 CHARACTER VARYING(256),
+    address_additional2 CHARACTER VARYING(256),
+    address_postcode CHARACTER VARYING(256),
+    address_town CHARACTER VARYING(256),
+    address_country CHARACTER VARYING(256),
+    email CHARACTER VARYING(256),
+    phone CHARACTER VARYING(256),
+    communication_means jsonb,
+    notes text,
+    creator INTEGER NOT NULL,
+    creation_date TIMESTAMP without time zone NOT NULL DEFAULT NOW(),
+    modification_date TIMESTAMP without time zone,
+    enabled boolean NOT NULL DEFAULT TRUE,
+    external_id jsonb DEFAULT '{}',
+    CONSTRAINT contacts_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+
 /* REFACTORING DATA */
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'usergroups') AND attname = 'enabled') THEN

@@ -45,7 +45,7 @@
     ::ng-deep.mat-expansion-panel-body {
         padding: 0px;
     }
-    
+
     &-item {
         display: flex;
         align-items: center;
@@ -55,11 +55,13 @@
 
         ::ng-deep.mat-form-field-should-float {
             ::ng-deep.mat-form-field-label-wrapper {
-                margin-top: -5px;
+                margin-top: -7px;
             }
+
             ::ng-deep.mat-form-field-label {
                 background: white;
                 width: auto !important;
+                padding-top: 5px;
                 padding-left: 5px;
                 padding-right: 5px;
             }
@@ -70,8 +72,17 @@
 .pjList {
     flex: 1;
 
+    ::ng-deep.mat-tab-header {
+        position: fixed;
+        z-index: 2;
+        height: 50px;
+        background: white;
+        width: 63.7vw;
+    }
+
     ::ng-deep.mat-tab-body-wrapper {
         flex: 1;
+        padding-top: 55px;
     }
 
     ::ng-deep.mat-tab-body-content {

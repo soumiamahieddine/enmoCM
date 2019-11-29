@@ -46,10 +46,14 @@ export class AttachmentsListComponent implements OnInit {
 
     hideMainInfo: boolean = false;
 
+    filterAttachTypes: any[] = [];
+    currentFilter: string = '';
+
     dialogRef: MatDialogRef<any>;
 
     @Input('injectDatas') injectDatas: any;
     @Input('resId') resId: number = null;
+    @Input('target') target: string = 'panel';
     @Output('reloadBadgeAttachments') reloadBadgeNotes = new EventEmitter<string>();
 
     constructor(
@@ -66,6 +70,12 @@ export class AttachmentsListComponent implements OnInit {
                     this.mailevaEnabled = data.mailevaEnabled;
                     this.attachments = data.attachments;
                     this.attachments.forEach((element: any) => {
+                        if (this.filterAttachTypes.filter(attachType => attachType.id === element.type).length === 0) {
+                            this.filterAttachTypes.push( {
+                                id: element.type,
+                                label: element.typeLabel
+                            });
+                        }
                         element.thumbnailUrl = '../../rest/attachments/' + element.resId + '/thumbnail';
                         element.canDelete = this.privilegeService.hasCurrentUserPrivilege('manage_attachments') || this.headerService.user.id === element.typist;
                     });
@@ -82,14 +92,24 @@ export class AttachmentsListComponent implements OnInit {
     loadAttachments(resId: number) {
         this.resId = resId;
         this.loading = true;
+        this.filterAttachTypes = [];
         this.http.get("../../rest/resources/" + this.resId + "/attachments")
             .subscribe((data: any) => {
                 this.mailevaEnabled = data.mailevaEnabled;
                 this.attachments = data.attachments;
                 this.attachments.forEach((element: any) => {
+                    if (this.filterAttachTypes.filter(attachType => attachType.id === element.type).length === 0) {
+                        this.filterAttachTypes.push( {
+                            id: element.type,
+                            label: element.typeLabel
+                        });
+                    }
                     element.thumbnailUrl = '../../rest/attachments/' + element.resId + '/thumbnail';
                     element.canDelete = this.privilegeService.hasCurrentUserPrivilege('manage_attachments') || this.headerService.user.id === element.typist;
                 });
+                if (this.attachments.filter((attach: any) => attach.type === this.currentFilter).length === 0) {
+                    this.currentFilter = '';
+                }
                 this.reloadBadgeNotes.emit(`${this.attachments.length}`);
                 this.loading = false;
             }, (err: any) => {
@@ -175,5 +195,9 @@ export class AttachmentsListComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    filterType(ev: any) {
+        this.currentFilter = ev.value;
     }
 }

@@ -21,6 +21,10 @@
                 <ng-container *ngIf="!loading">
                     <div class="attachment-form">
                         <div class="attachment-form-item">
+                            <mat-slide-toggle [checked]="newVersion" color="primary"
+                                (change)="newVersion = !newVersion">Nouvelle version</mat-slide-toggle>
+                        </div>
+                        <div class="attachment-form-item">
                             <mat-form-field class="input-form">
                                 <input matInput placeholder="{{lang.status}}" [formControl]="attachment['status']"
                                     [value]="lang['attachment_'+attachment['status'].value]">
@@ -153,14 +157,6 @@
                             </div>
                         </mat-expansion-panel>
                     </div>
-                    <div style="text-align: center;">
-                        <button mat-raised-button color="primary" (click)="updateAttachment()"
-                            [disabled]="!editMode">{{lang.update}}</button>
-                        <button mat-raised-button color="primary" (click)="createNewVersion()"
-                            [disabled]="!editMode || attachment['encodedFile'].value === null">{{lang.newVersion}}</button>
-                        <button mat-raised-button color="warn" *ngIf="attachment.status.value === 'SIGN'"
-                            (click)="deleteSignedVersion()">{{lang.deleteSignedVersion}}</button>
-                    </div>
                 </ng-container>
             </mat-sidenav>
             <mat-sidenav-content>
@@ -186,8 +182,9 @@
                             <span style="color:#135f7f">{{lang.attachment}}</span>
                         </ng-template>
                         <app-document-viewer #appAttachmentViewer style="height:100%;width:100%;" [editMode]="editMode"
-                            [resId]="data.resId" [resIdMaster]="attachment['resIdMaster'].value" [mode]="'attachment'" [attachType]="attachment['type'].value"
-                            [infoPanel]="snavLeft" (triggerEvent)="setDatasViewer()"
+                            [resId]="data.resId" [resIdMaster]="attachment['resIdMaster'].value" [mode]="'attachment'"
+                            [attachType]="attachment['type'].value" [infoPanel]="snavLeft"
+                            (triggerEvent)="setDatasViewer()"
                             [title]="attachment.chrono.value + ' - ' + attachment.title.value">
                         </app-document-viewer>
                     </mat-tab>
@@ -212,6 +209,12 @@
         </mat-sidenav-container>
     </mat-dialog-content>
     <div mat-dialog-actions class="actions">
+        <button mat-raised-button color="primary" *ngIf="!newVersion" (click)="updateAttachment()"
+            [disabled]="!editMode">{{lang.update}}</button>
+        <button mat-raised-button color="primary" *ngIf="newVersion" (click)="createNewVersion()"
+            [disabled]="!editMode || attachment['encodedFile'].value === null">{{lang.createNewVersion}}</button>
+        <button mat-raised-button color="warn" *ngIf=" !loading && attachment.status.value === 'SIGN'"
+            (click)="deleteSignedVersion()">{{lang.deleteSignedVersion}}</button>
         <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.close}}</button>
     </div>
 </div>

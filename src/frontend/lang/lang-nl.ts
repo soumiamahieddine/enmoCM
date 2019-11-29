@@ -1289,8 +1289,8 @@ export const LANG_NL = {
     "recordMail" : "Record a mail", //_TO_TRANSLATE
     "closed" : "Closed", //_TO_TRANSLATE
     "manageAttachments": "Update or delete attachments", //_TO_TRANSLATE
-    "viewPersonalData": "View users' personal data", //_TO_TRANSLATE
-    "managePersonalData": "Update or delete users' personal data", //_TO_TRANSLATE
+    "viewPersonalData": "Viewable", //_TO_TRANSLATE
+    "managePersonalData": "Viewable and updatable", //_TO_TRANSLATE
     "attachmentDeleted": "Attachment deleted", //_TO_TRANSLATE
     "attachment_A_TRA": "To process", //_TO_TRANSLATE
     "attachment_SIGN": "Signed", //_TO_TRANSLATE
@@ -1302,7 +1302,7 @@ export const LANG_NL = {
     "generation" : "Generation...", //_TO_TRANSLATE
     "requestSentByEmail" : "The request has been sent to you by email.", //_TO_TRANSLATE
     "logInOncePasswordChanged": "You will be asked to log in once the password has been changed.", //_TO_TRANSLATE
-    "newVersion" : "New version", //_TO_TRANSLATE
+    "createNewVersion" : "Create a new version", //_TO_TRANSLATE
     "deleteSignedVersion" : "Delete signed version", //_TO_TRANSLATE
     "signedAttachment" : "Signed attachment", //_TO_TRANSLATE
     "attachmentAdded" : "Attachment added", //_TO_TRANSLATE
@@ -1337,4 +1337,6 @@ export const LANG_NL = {
     "delAttachment": "Delete this attachment", //_TO_TRANSLATE
     "mustCompleteAllAttachments": "Please, complete all attachments", //_TO_TRANSLATE
     "editDocument": "Edit document", //_TO_TRANSLATE
+    "personalDataMsg": "Users personal data are", //_TO_TRANSLATE
+    "notVisible": "Not visible", //_TO_TRANSLATE
 };

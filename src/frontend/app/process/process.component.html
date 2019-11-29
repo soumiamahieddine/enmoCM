@@ -87,7 +87,7 @@
                 <app-avis-workflow *ngIf="currentTool === 'avis'" #appAvisWorkflow
                     [resId]="currentResourceInformations.resId"></app-avis-workflow>
                 <app-attachments-list *ngIf="currentTool === 'attachments'" #appAttachmentsList
-                    [resId]="currentResourceInformations.resId">
+                    [resId]="currentResourceInformations.resId" [target]="'process'">
                 </app-attachments-list>
                 <app-indexing-form *ngIf="currentTool === 'info'" #indexingForm [groupId]="currentGroupId"
                     [indexingFormId]="1"></app-indexing-form>

@@ -128,7 +128,7 @@ export class ActionsService {
                         if (this.canExecuteAction(data.lockedResources, data.lockers, resIds)) {
                             try {
                                 this.lockResource();
-                                this[action.component]();
+                                this[action.component](action.data);
                             }
                             catch (error) {
                                 console.log(error);
@@ -230,7 +230,7 @@ export class ActionsService {
     }
 
     /* OPEN SPECIFIC ACTION */
-    confirmAction() {
+    confirmAction(options: any = null) {
 
         const dialogRef = this.dialog.open(ConfirmActionComponent, {
             disableClose: true,
@@ -254,7 +254,7 @@ export class ActionsService {
         ).subscribe();
     }
 
-    closeMailAction() {
+    closeMailAction(options: any = null) {
         const dialogRef = this.dialog.open(CloseMailActionComponent, {
             disableClose: true,
             width: '500px',
@@ -276,7 +276,7 @@ export class ActionsService {
         ).subscribe();
     }
 
-    closeAndIndexAction() {
+    closeAndIndexAction(options: any = null) {
         const dialogRef = this.dialog.open(CloseAndIndexActionComponent, {
             disableClose: true,
             width: '500px',
@@ -298,7 +298,7 @@ export class ActionsService {
         ).subscribe();
     }
 
-    updateAcknowledgementSendDateAction() {
+    updateAcknowledgementSendDateAction(options: any = null) {
         const dialogRef = this.dialog.open(UpdateAcknowledgementSendDateActionComponent, {
             disableClose: true,
             width: '500px',
@@ -320,7 +320,7 @@ export class ActionsService {
         ).subscribe();
     }
 
-    createAcknowledgementReceiptsAction() {
+    createAcknowledgementReceiptsAction(options: any = null) {
         const dialogRef = this.dialog.open(CreateAcknowledgementReceiptActionComponent, {
             disableClose: true,
             width: '600px',
@@ -342,7 +342,7 @@ export class ActionsService {
         ).subscribe();
     }
 
-    updateDepartureDateAction() {
+    updateDepartureDateAction(options: any = null) {
         const dialogRef = this.dialog.open(UpdateDepartureDateActionComponent, {
             disableClose: true,
             width: '500px',
@@ -364,7 +364,7 @@ export class ActionsService {
         ).subscribe();
     }
 
-    disabledBasketPersistenceAction() {
+    disabledBasketPersistenceAction(options: any = null) {
         const dialogRef = this.dialog.open(DisabledBasketPersistenceActionComponent, {
             disableClose: true,
             width: '500px',
@@ -386,7 +386,7 @@ export class ActionsService {
         ).subscribe();
     }
 
-    enabledBasketPersistenceAction() {
+    enabledBasketPersistenceAction(options: any = null) {
         const dialogRef = this.dialog.open(EnabledBasketPersistenceActionComponent, {
             disableClose: true,
             width: '500px',
@@ -408,7 +408,7 @@ export class ActionsService {
         ).subscribe();
     }
 
-    resMarkAsReadAction() {
+    resMarkAsReadAction(options: any = null) {
         const dialogRef = this.dialog.open(ResMarkAsReadActionComponent, {
             disableClose: true,
             width: '500px',
@@ -430,14 +430,14 @@ export class ActionsService {
         ).subscribe();
     }
 
-    viewDoc() {
+    viewDoc(options: any = null) {
         this.dialog.open(ViewDocActionComponent, {
             panelClass: 'no-padding-full-dialog',
             data: this.setDatasActionToSend()
         });
     }
 
-    sendExternalSignatoryBookAction() {
+    sendExternalSignatoryBookAction(options: any = null) {
         const dialogRef = this.dialog.open(SendExternalSignatoryBookActionComponent, {
             disableClose: true,
             width: '500px',
@@ -459,7 +459,7 @@ export class ActionsService {
         ).subscribe();
     }
 
-    sendExternalNoteBookAction() {
+    sendExternalNoteBookAction(options: any = null) {
         const dialogRef = this.dialog.open(SendExternalNoteBookActionComponent, {
             disableClose: true,
             width: '500px',
@@ -481,7 +481,7 @@ export class ActionsService {
         ).subscribe();
     }
 
-    redirectAction() {
+    redirectAction(options: any = null) {
         const dialogRef = this.dialog.open(RedirectActionComponent, {
             disableClose: true,
             data: this.setDatasActionToSend()
@@ -502,7 +502,7 @@ export class ActionsService {
         ).subscribe();
     }
 
-    sendShippingAction() {
+    sendShippingAction(options: any = null) {
         const dialogRef = this.dialog.open(SendShippingActionComponent, {
             disableClose: true,
             width: '500px',
@@ -524,7 +524,7 @@ export class ActionsService {
         ).subscribe();
     }
 
-    noConfirmAction() {
+    noConfirmAction(options: any = null) {
         let dataActionToSend = this.setDatasActionToSend();
         if ( dataActionToSend.resIds.length === 0) {
             this.http.post('../../rest/resources', dataActionToSend.resource).pipe(
@@ -557,13 +557,13 @@ export class ActionsService {
         }
     }
 
-    processDocument() {
+    processDocument(options: any = null) {
         this.stopRefreshResourceLock();
         this.unlockResource();
-        this.router.navigate([`/process/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/resId/${this.currentResIds}`]);
+        this.router.navigate([`/process/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/resId/${this.currentResIds}`], { queryParams: { tab: options } });
     }
 
-    signatureBookAction() {
+    signatureBookAction(options: any = null) {
         this.router.navigate([`/signatureBook/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/resources/${this.currentResIds}`]);
     }
 }

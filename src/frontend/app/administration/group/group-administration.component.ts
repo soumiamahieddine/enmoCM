@@ -115,6 +115,15 @@ export class GroupAdministrationComponent implements OnInit {
                                         "services": this.privilegeService.getPrivileges(['update_diffusion_details', 'update_diffusion_except_recipient_details'])
                                     }
                                 ];
+                            } else if (element === 'confidentialityAndSecurity') {
+                                services = [
+                                    {
+                                        "id": "confidentialityAndSecurity_personal_data",
+                                        "label": this.lang.personalDataMsg,
+                                        "current": this.group.privileges.filter((priv: any) => ['view_personal_data', 'manage_personal_data'].indexOf(priv) > -1)[0] !== undefined ? this.group.privileges.filter((priv: any) => ['view_personal_data', 'manage_personal_data'].indexOf(priv) > -1)[0] : '',
+                                        "services": this.privilegeService.getPrivileges(['view_personal_data', 'manage_personal_data'])
+                                    }
+                                ];
                             }
 
                             this.unitPrivileges.push({
@@ -146,34 +155,34 @@ export class GroupAdministrationComponent implements OnInit {
         if (mode === 'indexing_diffList') {
             if (ev.value === 'update_diffusion_indexing') {
 
-                this.manageDiffListServices(['update_diffusion_indexing', 'update_diffusion_except_recipient_indexing']);
+                this.manageServices(['update_diffusion_indexing', 'update_diffusion_except_recipient_indexing']);
 
             } else if (ev.value === 'update_diffusion_except_recipient_indexing') {
 
-                this.manageDiffListServices(['update_diffusion_except_recipient_indexing', 'update_diffusion_indexing']);
+                this.manageServices(['update_diffusion_except_recipient_indexing', 'update_diffusion_indexing']);
 
             } else {
-                this.manageDiffListServices(['update_diffusion_indexing', 'update_diffusion_except_recipient_indexing'], 'deleteAll');
+                this.manageServices(['update_diffusion_indexing', 'update_diffusion_except_recipient_indexing'], 'deleteAll');
             }
         } else {
             if (ev.value === 'update_diffusion_details') {
 
-                this.manageDiffListServices(['update_diffusion_details', 'update_diffusion_except_recipient_details']);
+                this.manageServices(['update_diffusion_details', 'update_diffusion_except_recipient_details']);
 
             } else if (ev.value === 'update_diffusion_except_recipient_details') {
 
-                this.manageDiffListServices(['update_diffusion_except_recipient_details', 'update_diffusion_details']);
+                this.manageServices(['update_diffusion_except_recipient_details', 'update_diffusion_details']);
 
             } else {
 
-                this.manageDiffListServices(['update_diffusion_details', 'update_diffusion_except_recipient_details'], 'deleteAll');
+                this.manageServices(['update_diffusion_details', 'update_diffusion_except_recipient_details'], 'deleteAll');
 
             }
         }
 
     }
 
-    manageDiffListServices(servicesId: any[], mode: string = null) {
+    manageServices(servicesId: any[], mode: string = null) {
         if (mode !== 'deleteAll') {
             this.http.post(`../../rest/groups/${this.group.id}/privileges/${servicesId[0]}`, {}).pipe(
                 tap(() => {
@@ -206,6 +215,34 @@ export class GroupAdministrationComponent implements OnInit {
                     return of(false);
                 })
             ).subscribe();
+        }
+    }
+
+    changePersonalDataPrivilege(ev: any) {
+
+        if (ev.value === 'view_personal_data') {
+
+            this.manageServices(['view_personal_data', 'manage_personal_data']);
+
+        } else if (ev.value === 'manage_personal_data') {
+            this.http.post(`../../rest/groups/${this.group.id}/privileges/view_personal_data`, {}).pipe(
+                tap(() => {
+                    this.group.privileges.push('view_personal_data');
+                }),
+                exhaustMap(() => this.http.post(`../../rest/groups/${this.group.id}/privileges/manage_personal_data`, {})),
+                tap(() => {
+                    this.group.privileges.splice(this.group.privileges.indexOf('manage_personal_data'), 1);
+                    this.headerService.resfreshCurrentUser();
+                    this.notify.success(this.lang.groupServicesUpdated);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+
+        } else {
+            this.manageServices(['view_personal_data', 'manage_personal_data'], 'deleteAll');
         }
 
     }

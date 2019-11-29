@@ -805,43 +805,34 @@ CREATE TABLE templates_doctype_ext
 )
 WITH (OIDS=FALSE);
 
-
--- apps/maarch_entreprise/sql/structure/apps.postgresql.sql
-
-CREATE SEQUENCE contact_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 200
-  CACHE 1;
-
-CREATE TABLE contacts (
-contact_id bigint NOT NULL DEFAULT nextval('contact_id_seq'::regclass),
-lastname character varying(255),
-firstname character varying(255),
-society character varying(255),
-function character varying(255),
-address_num character varying(32)  ,
-address_street character varying(255),
-address_complement character varying(255),
-address_town character varying(255),
-address_postal_code character varying(255),
-address_country character varying(255),
-email character varying(255),
-phone character varying(20),
-other_data text  ,
-is_corporate_person character(1) NOT NULL DEFAULT 'Y'::bpchar,
-user_id character varying(128),
-title character varying(255),
-business_id character varying(255),
-ref_identifier character varying(255),
-acc_number character varying(50),
-entity_id character varying(32),
-contact_type character varying(255) NOT NULL DEFAULT 'letter'::character varying,
-enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
-is_private character varying(1) NOT NULL DEFAULT 'N'::character varying,
-CONSTRAINT contacts_pkey PRIMARY KEY  (contact_id)
-) WITH (OIDS=FALSE);
+CREATE TABLE contacts
+(
+    id SERIAL NOT NULL,
+    civility CHARACTER VARYING(256),
+    firstname CHARACTER VARYING(256),
+    lastname CHARACTER VARYING(256),
+    company CHARACTER VARYING(256),
+    department CHARACTER VARYING(256),
+    function CHARACTER VARYING(256),
+    address_number CHARACTER VARYING(256),
+    address_street CHARACTER VARYING(256),
+    address_additional1 CHARACTER VARYING(256),
+    address_additional2 CHARACTER VARYING(256),
+    address_postcode CHARACTER VARYING(256),
+    address_town CHARACTER VARYING(256),
+    address_country CHARACTER VARYING(256),
+    email CHARACTER VARYING(256),
+    phone CHARACTER VARYING(256),
+    communication_means jsonb,
+    notes text,
+    creator INTEGER NOT NULL,
+    creation_date TIMESTAMP without time zone NOT NULL DEFAULT NOW(),
+    modification_date TIMESTAMP without time zone,
+    enabled boolean NOT NULL DEFAULT TRUE,
+    external_id jsonb DEFAULT '{}',
+    CONSTRAINT contacts_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
 
 CREATE SEQUENCE query_id_seq
   INCREMENT 1

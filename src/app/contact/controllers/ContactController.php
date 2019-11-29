@@ -18,6 +18,7 @@ use Contact\models\ContactFillingModel;
 use Contact\models\ContactModel;
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
+use Resource\controllers\ResController;
 use Resource\models\ResModel;
 use SrcCore\models\CoreConfigModel;
 use Respect\Validation\Validator;
@@ -30,167 +31,175 @@ use User\models\UserModel;
 
 class ContactController
 {
+    public function get(Request $request, Response $response)
+    {
+        //TODO privileges
+
+        return $response->withJson(['contacts' => ContactModel::get(['select' => ['id', 'firstname', 'lastname', 'company']])]);
+    }
+
     public function create(Request $request, Response $response)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]) &&
-            !PrivilegeController::hasPrivilege(['privilegeId' => 'my_contacts', 'userId' => $GLOBALS['id']]) &&
-            !PrivilegeController::hasPrivilege(['privilegeId' => 'my_contacts_menu', 'userId' => $GLOBALS['id']]) &&
-            !PrivilegeController::hasPrivilege(['privilegeId' => 'create_contacts', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        //TODO privileges
+
+        $body = $request->getParsedBody();
+        if (!Validator::stringType()->notEmpty()->validate($body['lastname']) && !Validator::stringType()->notEmpty()->validate($body['company'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body lastname or company is mandatory']);
         }
 
-        $data = $request->getParams();
-
-        $check = Validator::intVal()->notEmpty()->validate($data['contactType']);
-        $check = $check && Validator::intVal()->notEmpty()->validate($data['contactPurposeId']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['isCorporatePerson']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['email']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
-
-        if (empty($data['userId'])) {
-            $data['userId'] = 'superadmin';
-        }
-        if (empty($data['entityId'])) {
-            $data['entityId'] = 'SUPERADMIN';
-        }
-        if ($data['isCorporatePerson'] != 'Y') {
-            $data['isCorporatePerson'] = 'N';
-            if (!Validator::stringType()->notEmpty()->validate($data['lastname'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Body lastname is empty or not a string']);
+        $body['email'] = filter_var($body['email'], FILTER_VALIDATE_EMAIL) ? $body['email'] : null;
+        if (!empty($body['email'])) {
+            $contact = ContactModel::get(['select' => ['id'], 'where' => ['email = ?'], 'data' => [$body['email']]]);
+            if (!empty($contact[0]['id'])) {
+                return $response->withJson(['id' => $contact[0]['id']]);
             }
+        }
+
+        if (!empty($body['communicationMeans'])) {
+            if (filter_var($body['communicationMeans'], FILTER_VALIDATE_EMAIL)) {
+                $body['communicationMeans'] = ['email' => $body['communicationMeans']];
+            } elseif (filter_var($body['communicationMeans'], FILTER_VALIDATE_URL)) {
+                $body['communicationMeans'] = ['url' => $body['communicationMeans']];
+            }
+        }
+        if (!empty($body['externalId']) && is_array($body['externalId'])) {
+            $externalId = json_encode($body['externalId']);
         } else {
-            if (!Validator::stringType()->notEmpty()->validate($data['society'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Body society is empty or not a string']);
-            }
-            $data['addressFirstname'] = $data['firstname'];
-            $data['addressLastname'] = $data['lastname'];
-            $data['addressTitle'] = $data['title'];
-            $data['addressFunction'] = $data['function'];
-            unset($data['firstname'], $data['lastname'], $data['title'], $data['function']);
+            $externalId = '{}';
         }
 
-        if (empty($data['isPrivate'])) {
-            $data['isPrivate'] = 'N';
-        } elseif ($data['isPrivate'] != 'N') {
-            $data['isPrivate'] = 'Y';
-        }
+        $id = ContactModel::create([
+            'civility'              => $body['civility'] ?? null,
+            'firstname'             => $body['firstname'] ?? null,
+            'lastname'              => $body['lastname'] ?? null,
+            'company'               => $body['company'] ?? null,
+            'department'            => $body['department'] ?? null,
+            'function'              => $body['function'] ?? null,
+            'address_number'        => $body['addressNumber'] ?? null,
+            'address_street'        => $body['addressStreet'] ?? null,
+            'address_postcode'      => $body['addressPostcode'] ?? null,
+            'address_town'          => $body['addressTown'] ?? null,
+            'address_country'       => $body['addressCountry'] ?? null,
+            'email'                 => $body['email'] ?? null,
+            'phone'                 => $body['phone'] ?? null,
+            'communication_means'   => !empty($body['communicationMeans']) ? json_encode($body['communicationMeans']) : null,
+            'notes'                 => $body['notes'] ?? null,
+            'creator'               => $GLOBALS['id'],
+            'enabled'               => 'true',
+            'external_id'           => $externalId
+        ]);
 
-        $contact = ContactModel::getByEmail(['email' => $data['email'], 'select' => ['contacts_v2.contact_id', 'contact_addresses.id']]);
-        if (!empty($contact['id'])) {
-            return $response->withJson(['contactId' => $contact['contact_id'], 'addressId' => $contact['id']]);
-        }
-
-        $contactId = ContactModel::create($data);
-
-        $data['contactId'] = $contactId;
-        $data['external_id'] = empty($data['external_id']) ? '{}' : json_encode($data['external_id']);
-        $addressId = ContactModel::createAddress($data);
-
-        if (empty($contactId) || empty($addressId)) {
-            return $response->withStatus(500)->withJson(['errors' => '[ContactController create] Contact creation has failed']);
-        }
-
-        return $response->withJson(['contactId' => $contactId, 'addressId' => $addressId]);
+        return $response->withJson(['id' => $id]);
     }
 
-    public function createAddress(Request $request, Response $response, array $aArgs)
+    public function getById(Request $request, Response $response, array $args)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]) &&
-            !PrivilegeController::hasPrivilege(['privilegeId' => 'my_contacts', 'userId' => $GLOBALS['id']]) &&
-            !PrivilegeController::hasPrivilege(['privilegeId' => 'update_contacts', 'userId' => $GLOBALS['id']]) &&
-            !PrivilegeController::hasPrivilege(['privilegeId' => 'my_contacts_menu', 'userId' => $GLOBALS['id']]) &&
-            !PrivilegeController::hasPrivilege(['privilegeId' => 'create_contacts', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        //TODO privileges
+
+        $rawContact = ContactModel::getById(['id' => $args['id'], 'select' => ['*']]);
+        if (empty($rawContact)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
         }
 
-        $contact = ContactModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
+        $contact = [
+            'id'                    => $rawContact['id'],
+            'civility'              => $rawContact['civility'],
+            'firstname'             => $rawContact['firstname'],
+            'lastname'              => $rawContact['lastname'],
+            'company'               => $rawContact['company'],
+            'department'            => $rawContact['department'],
+            'function'              => $rawContact['function'],
+            'addressNumber'         => $rawContact['address_number'],
+            'addressStreet'         => $rawContact['address_street'],
+            'addressPostcode'       => $rawContact['address_postcode'],
+            'addressTown'           => $rawContact['address_town'],
+            'addressCountry'        => $rawContact['address_country'],
+            'email'                 => $rawContact['email'],
+            'phone'                 => $rawContact['phone'],
+            'communicationMeans'    => !empty($rawContact['communication_means']) ? json_decode($rawContact['communication_means']) : null,
+            'notes'                 => $rawContact['notes'],
+            'creator'               => $rawContact['creator'],
+            'creatorLabel'          => UserModel::getLabelledUserById(['id' => $rawContact['creator']]),
+            'enabled'               => $rawContact['enabled'],
+            'creationDate'          => $rawContact['creation_date'],
+            'modificationDate'      => $rawContact['modification_date'],
+            'externalId'            => json_decode($rawContact['external_id'], true)
+        ];
+
+        return $response->withJson($contact);
+    }
+
+    public function update(Request $request, Response $response, array $args)
+    {
+        //TODO privileges
+
+        $contact = ContactModel::getById(['id' => $args['id'], 'select' => [1]]);
         if (empty($contact)) {
             return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
         }
 
-        $data = $request->getParams();
-
-        $check = Validator::intVal()->notEmpty()->validate($data['contactPurposeId']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['email']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        $body = $request->getParsedBody();
+        if (!Validator::stringType()->notEmpty()->validate($body['lastname']) && !Validator::stringType()->notEmpty()->validate($body['company'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body lastname or company is mandatory']);
         }
 
-        if (empty($data['userId'])) {
-            $data['userId'] = 'superadmin';
-        }
-        if (empty($data['entityId'])) {
-            $data['entityId'] = 'SUPERADMIN';
-        }
-        $data['addressFirstname'] = $data['firstname'];
-        $data['addressLastname'] = $data['lastname'];
-        $data['addressTitle'] = $data['title'];
-        $data['addressFunction'] = $data['function'];
-        unset($data['firstname'], $data['lastname'], $data['title'], $data['function']);
+        $body['email'] = filter_var($body['email'], FILTER_VALIDATE_EMAIL) ? $body['email'] : null;
 
-        if (empty($data['isPrivate'])) {
-            $data['isPrivate'] = 'N';
-        } elseif ($data['isPrivate'] != 'N') {
-            $data['isPrivate'] = 'Y';
+        if (!empty($body['communicationMeans'])) {
+            if (filter_var($body['communicationMeans'], FILTER_VALIDATE_EMAIL)) {
+                $body['communicationMeans'] = ['email' => $body['communicationMeans']];
+            } elseif (filter_var($body['communicationMeans'], FILTER_VALIDATE_URL)) {
+                $body['communicationMeans'] = ['url' => $body['communicationMeans']];
+            }
         }
-        $data['external_id'] = empty($data['external_id']) ? '{}' : json_encode($data['external_id']);
+        if (!empty($body['externalId']) && is_array($body['externalId'])) {
+            $externalId = json_encode($body['externalId']);
+        } else {
+            $externalId = '{}';
+        }
 
-        $data['contactId'] = $aArgs['id'];
-        $addressId = ContactModel::createAddress($data);
+        ContactModel::update([
+            'set'   => [
+                    'civility'              => $body['civility'] ?? null,
+                    'firstname'             => $body['firstname'] ?? null,
+                    'lastname'              => $body['lastname'] ?? null,
+                    'company'               => $body['company'] ?? null,
+                    'department'            => $body['department'] ?? null,
+                    'function'              => $body['function'] ?? null,
+                    'address_number'         => $body['addressNumber'] ?? null,
+                    'address_street'         => $body['addressStreet'] ?? null,
+                    'address_postcode'       => $body['addressPostcode'] ?? null,
+                    'address_town'           => $body['addressTown'] ?? null,
+                    'address_country'        => $body['addressCountry'] ?? null,
+                    'email'                 => $body['email'] ?? null,
+                    'phone'                 => $body['phone'] ?? null,
+                    'communication_means'   => !empty($body['communicationMeans']) ? json_encode($body['communicationMeans']) : null,
+                    'notes'                 => $body['notes'] ?? null,
+                    'modification_date'     => 'CURRENT_TIMESTAMP',
+                    'external_id'           => $externalId
+                ],
+            'where' => ['id = ?'],
+            'data'  => [$args['id']]
+        ]);
 
-        return $response->withJson(['addressId' => $addressId]);
+        return $response->withStatus(204);
     }
 
-    public function update(Request $request, Response $response, array $aArgs)
+    public function delete(Request $request, Response $response, array $args)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]) &&
-            !PrivilegeController::hasPrivilege(['privilegeId' => 'update_contacts', 'userId' => $GLOBALS['id']]) &&
-            !PrivilegeController::hasPrivilege(['privilegeId' => 'my_contacts_menu', 'userId' => $GLOBALS['id']]) &&
-            !PrivilegeController::hasPrivilege(['privilegeId' => 'create_contacts', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
+        //TODO privileges
 
-        $contact = ContactModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
+        $contact = ContactModel::getById(['id' => $args['id'], 'select' => [1]]);
         if (empty($contact)) {
             return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
         }
 
-        $data = $request->getParams();
-        unset($data['contact_id'], $data['user_id']);
+        ContactModel::delete([
+            'where' => ['id = ?'],
+            'data'  => [$args['id']]
+        ]);
 
-        ContactModel::update(['set' => $data, 'where' => ['contact_id = ?'], 'data' => [$aArgs['id']]]);
-
-        return $response->withJson(['success' => 'success']);
-    }
-
-    public function updateAddress(Request $request, Response $response, array $aArgs)
-    {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']]) &&
-            !PrivilegeController::hasPrivilege(['privilegeId' => 'update_contacts', 'userId' => $GLOBALS['id']]) &&
-            !PrivilegeController::hasPrivilege(['privilegeId' => 'my_contacts_menu', 'userId' => $GLOBALS['id']]) &&
-            !PrivilegeController::hasPrivilege(['privilegeId' => 'create_contacts', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        $contact = ContactModel::getById(['id' => $aArgs['id'], 'select' => [1]]);
-        $address = ContactModel::getByAddressId(['addressId' => $aArgs['addressId'], 'select' => ['external_id']]);
-        if (empty($contact) || empty($address)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Contact or address do not exist']);
-        }
-
-        $data = $request->getParams();
-        unset($data['contact_id'], $data['id'], $data['user_id']);
-        if (!empty($data['external_id'])) {
-            $data['external_id'] =  array_merge((array)json_encode($address['external_id']), $data['external_id']);
-        } else {
-            $data['external_id'] = $address['external_id'];
-        }
-
-        ContactModel::updateAddress(['set' => $data, 'where' => ['contact_id = ?', 'id = ?'], 'data' => [$aArgs['id'], $aArgs['addressId']]]);
-
-        return $response->withJson(['success' => 'success']);
+        return $response->withStatus(204);
     }
 
     public function getCommunicationByContactId(Request $request, Response $response, array $aArgs)
@@ -233,8 +242,12 @@ class ContactController
         return $response->withJson(['success' => 'success']);
     }
 
-    public function getContacts(Request $request, Response $response, array $args)
+    public function getByResId(Request $request, Response $response, array $args)
     {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
         $resource = ResModel::getById(['select' => ['*'], 'resId' => $args['resId']]);
 
         if (empty($resource)) {

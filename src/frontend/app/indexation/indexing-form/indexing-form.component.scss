@@ -117,16 +117,20 @@
     }
 
     ::ng-deep.mat-form-field-label {
+        top: 15px;
         left: 20px;
     }
 
     ::ng-deep.mat-form-field-infix {
-        padding-bottom: 15px;
+        display: flex;
+        padding-top: 3px;
+        padding-bottom: 5px;
     }
 
     ::ng-deep.mat-form-field-flex {
         background: white;
-        border-radius: 30px;
+        height: 40px;
+        border-radius: 15px;
         border: solid 1px $primary;
     }
 
@@ -150,12 +154,18 @@
         padding: 0px;
     }
 
-    textarea.cdk-textarea-autosize-measuring {
+    /*textarea.cdk-textarea-autosize-measuring {
         padding: 4px 0 !important;
-    }
+    }*/
 
     ::ng-deep.mat-datepicker-toggle-default-icon {
         height: auto;
+    }
+}
+
+.input-form.search-select {
+    ::ng-deep.mat-form-field-infix {
+        padding-top: 0px;
     }
 }
 
@@ -175,7 +185,7 @@
             transition: all 0.1s;
 
         }
-        
+
         ::ng-deep.mat-select-placeholder {
             color: $primary !important;
         }
@@ -237,7 +247,7 @@
     }
 
     ::ng-deep.mat-select-arrow {
-        color: rgba(255,255,255,0.54);
+        color: rgba(255, 255, 255, 0.54);
     }
 
     ::ng-deep.mat-select-placeholder {
@@ -266,6 +276,7 @@
         cursor: not-allowed;
         padding-left: 20px;
     }
+
     ::ng-deep.mat-form-field-flex {
         cursor: not-allowed;
         border: dashed 1px rgb(53, 50, 50);
@@ -531,8 +542,12 @@
 }
 
 .input-radio {
+    ::ng-deep.mat-form-field-infix {
+        padding-top: 0px;
+    }
+
     ::ng-deep.mat-form-field-flex {
-        height: 55px;
+        height: 40px;
     }
 
     ::ng-deep.mat-form-field-label {
@@ -600,7 +615,24 @@
     font-weight: bold;
 }
 
-.subject {
-    height: 33px !important;
-    width: fit-content;
+.textareaInput {
+    ::ng-deep.mat-form-field {
+        line-height: normal;
+    }
+
+    .mat-input-element {
+        padding: 0px;
+        margin: 0px;
+        color: $primary;
+    }
+
+    ::ng-deep.mat-form-field-flex {
+        padding-left: 20px;
+        height: auto !important;
+        min-height: 40px !important;
+    }
+
+    ::ng-deep.mat-form-field-label {
+        left: 0px;
+    }
 }

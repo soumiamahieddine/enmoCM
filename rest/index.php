@@ -112,10 +112,12 @@ $app->get('/configurations/{service}', \Configuration\controllers\ConfigurationC
 $app->put('/configurations/{service}', \Configuration\controllers\ConfigurationController::class . ':update');
 
 //Contacts
+$app->get('/contacts', \Contact\controllers\ContactController::class . ':get');
 $app->post('/contacts', \Contact\controllers\ContactController::class . ':create');
+$app->get('/contacts/{id}', \Contact\controllers\ContactController::class . ':getById');
 $app->put('/contacts/{id}', \Contact\controllers\ContactController::class . ':update');
-$app->post('/contacts/{id}/addresses', \Contact\controllers\ContactController::class . ':createAddress');
-$app->put('/contacts/{id}/addresses/{addressId}', \Contact\controllers\ContactController::class . ':updateAddress');
+$app->delete('/contacts/{id}', \Contact\controllers\ContactController::class . ':delete');
+
 $app->get('/contacts/{contactId}/communication', \Contact\controllers\ContactController::class . ':getCommunicationByContactId');
 $app->get('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':get');
 $app->post('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':create');
@@ -324,6 +326,7 @@ $app->get('/resources/{resId}/originalContent', \Resource\controllers\ResControl
 $app->get('/resources/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
 $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
 $app->get('/resources/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getByResId');
+$app->get('/resources/{resId}/contacts', \Contact\controllers\ContactController::class . ':getByResId');
 $app->get('/resources/{resId}/emails', \Email\controllers\EmailController::class . ':getByResId');
 $app->get('/resources/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
 $app->get('/resources/{resId}/templates', \Template\controllers\TemplateController::class . ':getByResId');
@@ -334,7 +337,6 @@ $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class
 $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':updateExternalInfos');
 $app->get('/categories', \Resource\controllers\ResController::class . ':getCategories');
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
-$app->get('/resources/{resId}/contacts', \Contact\controllers\ContactController::class . ':getContacts');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');

@@ -11,11 +11,14 @@
             <mat-icon class="fa fa-times"></mat-icon>
         </button></h1>
     <mat-dialog-content class="attach-content">
-        <mat-tab-group style="width: 100%;">
+        <mat-tab-group #pjList style="width: 100%;" [(selectedIndex)]="indexTab" *ngIf="!loading">
             <mat-tab *ngFor="let attachment of attachments; let i=index" [disabled]="isDocLoading()">
                 <ng-template mat-tab-label>
                     <span [class.complete]="isPjValid(i)">PJ n°{{i+1}}&nbsp;<i *ngIf="isPjValid(i)"
-                            class="fa fa-check"></i></span>
+                            class="fa fa-check"></i><button mat-icon-button *ngIf="attachments.length > 1" color="warn"
+                            [title]="lang.delAttachment" (click)="$event.stopPropagation();removePj(i)">
+                            <mat-icon class="fa fa-minus"></mat-icon>
+                        </button></span>
                 </ng-template>
                 <div style="display:flex;height:100%;">
                     <div class="attachment-form" *ngIf="!loading">
@@ -70,15 +73,6 @@
                                 <i class="fas fa-asterisk noMandatory"></i>
                             </div>
                         </div>
-                        <div class="attachment-form-item-action">
-                            <button mat-raised-button color="primary" (click)="newPj()" [disabled]="isDocLoading()"
-                                style="width:90%;">{{lang.newAttachment}}</button>
-                            <button mat-raised-button color="warn" *ngIf="attachments.length > 1" (click)="removePj(i)"
-                                [disabled]="isDocLoading()" style="width:90%;">{{lang.delAttachment}}</button>
-                            <div class="fieldState">
-                                <i class="fas fa-asterisk noMandatory"></i>
-                            </div>
-                        </div>
                     </div>
                     <div class="documentContent">
                         <app-document-viewer #appDocumentViewer style="height:100%;width:100%;position: relative;"
@@ -91,6 +85,13 @@
                         </div>
                     </div>
                 </div>
+            </mat-tab>
+            <mat-tab disabled class="addPJ">
+                <ng-template mat-tab-label>
+                    <span><button mat-icon-button [title]="lang.newAttachment" (click)="$event.stopPropagation();newPj()">
+                            <mat-icon class="fa fa-plus"></mat-icon>
+                        </button></span>
+                </ng-template>
             </mat-tab>
         </mat-tab-group>
     </mat-dialog-content>

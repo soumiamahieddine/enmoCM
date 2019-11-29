@@ -143,6 +143,11 @@ export class ProcessComponent implements OnInit {
         this.headerService.setHeader(this.lang.eventProcessDoc);
 
         this.route.params.subscribe(params => {
+            this.route.queryParams.subscribe(queryParams => {
+                if (queryParams['tab'] !== undefined) {
+                    this.currentTool = queryParams['tab'];
+                }
+            });
             this.currentUserId = params['userSerialId'];
             this.currentGroupId = params['groupSerialId'];
             this.currentBasketId = params['basketId'];

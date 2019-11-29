@@ -71,7 +71,8 @@
                                     <button mat-icon-button [class.active]="panelMode === administration.id"
                                         *ngIf="administration.hasParams"
                                         (click)="$event.stopPropagation();openUserParams(administration.id)"
-                                        color="primary" [title]="lang.goToAdminParams" [disabled]="group.privileges.indexOf(administration.id) === -1">
+                                        color="primary" [title]="lang.goToAdminParams"
+                                        [disabled]="group.privileges.indexOf(administration.id) === -1">
                                         <mat-icon class="fa fa-cogs"></mat-icon>
                                     </button>
                                 </div>
@@ -87,7 +88,8 @@
                                             {{unit.label}}
                                         </mat-panel-title>
                                     </mat-expansion-panel-header>
-                                    <ng-container *ngIf="unit.id !== 'diffusionList'; else elseTemplate">
+                                    <ng-container
+                                        *ngIf="['diffusionList','confidentialityAndSecurity'].indexOf(unit.id) === -1">
                                         <mat-list>
                                             <mat-list-item
                                                 *ngFor="let privilege of unit.services | sortBy: 'label' | filterList:listFilter.value:'label'">
@@ -99,7 +101,7 @@
                                             </mat-list-item>
                                         </mat-list>
                                     </ng-container>
-                                    <ng-template #elseTemplate>
+                                    <ng-container *ngIf="unit.id === 'diffusionList'">
                                         <mat-list-item *ngFor="let fakePrivilege of unit.services" color="primary"
                                             style="font-size: 16px;">
                                             <span [innerHTML]="fakePrivilege.label"></span>
@@ -113,7 +115,23 @@
                                                 </mat-select>
                                             </mat-form-field>.
                                         </mat-list-item>
-                                    </ng-template>
+                                    </ng-container>
+                                    <ng-container *ngIf="unit.id === 'confidentialityAndSecurity'">
+                                        <mat-list-item *ngFor="let fakePrivilege of unit.services" color="primary"
+                                            style="font-size: 16px;">
+                                            <span [innerHTML]="fakePrivilege.label"></span>
+                                            <mat-form-field
+                                                style="width: 300px !important;padding-left: 10px;padding-right: 10px;">
+                                                <mat-select [(ngModel)]="fakePrivilege.current"
+                                                    (selectionChange)="changePersonalDataPrivilege($event)">
+                                                    <mat-option value="">{{lang.notVisible}}</mat-option>
+                                                    <mat-option *ngFor="let subservice of fakePrivilege.services"
+                                                        [value]="subservice.id">{{subservice.label}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>.
+                                        </mat-list-item>
+                                    </ng-container>
+
                                 </mat-expansion-panel>
                             </mat-tab>
                         </mat-tab-group>
@@ -240,7 +258,8 @@
                     <p color="primary">
                         {{lang.chooseAllowedGroups}} :
                     </p>
-                    <mat-selection-list #paramsList (selectionChange)="updatePrivilegeParams(paramsList.selectedOptions.selected)">
+                    <mat-selection-list #paramsList
+                        (selectionChange)="updatePrivilegeParams(paramsList.selectedOptions.selected)">
                         <mat-list-option color="primary" style="font-size: 13px;" checkboxPosition="before"
                             *ngFor="let authorizedGroup of authorizedGroupsUserParams"
                             [selected]="authorizedGroup.checked" [value]="authorizedGroup.id">

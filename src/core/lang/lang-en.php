@@ -414,11 +414,14 @@ define("_INDEXINGMODEL_SUPPRESSION", "Indexing model suppression");
 define("_PRIORITY_DELAY_ALREADY_SET", "This time limit is already set to another priority");
 
 define("_NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT", "[Maarch Courrier] Reset password informations");
-define("_NOTIFICATIONS_FORGOT_PASSWORD_BODY", "Hello,<br/>You requested to reset the password for your Maarch Courrier account.<br/>To change your password, please click on the link below :<br/>");
-define("_NOTIFICATIONS_FORGOT_PASSWORD_FOOTER", "<br/><br/>If you did not perform this request, you can safely ignore this email.<br/>Please contact your administrator if you have any questions.");
+define("_NOTIFICATIONS_FORGOT_PASSWORD_BODY", "Hello,<br/><br/>You requested to reset the password for your Maarch Courrier account.<br/><br/>To change your password, please click on the link below :<br/>");
+define("_NOTIFICATIONS_FORGOT_PASSWORD_FOOTER", "<br/><br/>If you did not perform this request, you can safely ignore this email.<br/><br/>Please contact your administrator if you have any questions.");
 define("_PASSWORD_REINIT_SENT", "Password reset sent");
 define("_PASSWORD_REINIT", "Password rest");
 
-define("_NOTIFICATIONS_USER_CREATION_SUBJECT", "[Maarch Courrier] Account creation");
-define("_NOTIFICATIONS_USER_CREATION_BODY", "Hello,<br/>an administrator created your account in Maarch Courrier software.<br/>To log in and set your password, please click on the link below :<br/>");
-define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/>For any questions, please contact your software administrator");
+define("_NOTIFICATIONS_USER_CREATION_SUBJECT", "[Maarch Courrier] Activate your user account");
+define("_NOTIFICATIONS_USER_CREATION_BODY", "Welcome,<br/><br/>You have now an account to Maarch Courrier.<br/><br/>To log in and set your password, please click on the link below :<br/><br/>");
+define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/><br/>This message is sent automatically as a result of an administrator action.<br/>Please do not answer.<br/><br/>For any questions, please contact your software administrator");
+define("_CLICK_HERE", "Click-here");
+
+define("_DATE_LOCALE", "en_US.utf8");

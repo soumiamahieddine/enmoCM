@@ -175,10 +175,6 @@ class UserController
             $data['loginmode'] = 'standard';
         }
 
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
-            $data['phone'] = null;
-        }
-
         UserModel::create(['user' => $data]);
 
         $newUser = UserModel::getByLogin(['login' => $data['userId']]);
@@ -206,7 +202,7 @@ class UserController
                     'sender'        => ['email' => 'Notification'],
                     'recipients'    => [$newUser['mail']],
                     'object'        => _NOTIFICATIONS_USER_CREATION_SUBJECT,
-                    'body'          => _NOTIFICATIONS_USER_CREATION_BODY . $url . _NOTIFICATIONS_USER_CREATION_FOOTER,
+                    'body'          => _NOTIFICATIONS_USER_CREATION_BODY . '<a href="' . $url . '">'._CLICK_HERE.'</a>' . _NOTIFICATIONS_USER_CREATION_FOOTER,
                     'isHtml'        => true,
                     'status'        => 'WAITING'
                 ]
@@ -236,7 +232,11 @@ class UserController
         $check = Validator::stringType()->notEmpty()->validate($data['firstname']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
         $check = $check && (empty($data['mail']) || filter_var($data['mail'], FILTER_VALIDATE_EMAIL));
-        $check = $check && (empty($data['phone']) || preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/", $data['phone']));
+
+        if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
+            $check = $check && (empty($data['phone']) || preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/", $data['phone']));
+        }
+
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
@@ -1542,7 +1542,7 @@ class UserController
                 'sender'        => ['email' => 'Notification'],
                 'recipients'    => [$user['mail']],
                 'object'        => _NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT,
-                'body'          => _NOTIFICATIONS_FORGOT_PASSWORD_BODY . $url . _NOTIFICATIONS_FORGOT_PASSWORD_FOOTER,
+                'body'          => _NOTIFICATIONS_FORGOT_PASSWORD_BODY . '<a href="' . $url . '">'._CLICK_HERE.'</a>' . _NOTIFICATIONS_FORGOT_PASSWORD_FOOTER,
                 'isHtml'        => true,
                 'status'        => 'WAITING'
             ]
