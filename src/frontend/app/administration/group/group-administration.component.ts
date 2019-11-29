@@ -397,7 +397,7 @@ export class GroupAdministrationComponent implements OnInit {
         }
         this.http.put(`../../rest/groups/${this.group.id}/privileges/${this.panelMode}/parameters`, { parameters: obj }).pipe(
             tap(() => {
-                this.notify.success('parametres modifiés');
+                this.notify.success(this.lang.parameterUpdated);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
