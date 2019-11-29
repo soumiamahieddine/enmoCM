@@ -149,7 +149,9 @@ class UserController
         $check = $check && Validator::stringType()->notEmpty()->validate($data['firstname']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
         $check = $check && (empty($data['mail']) || filter_var($data['mail'], FILTER_VALIDATE_EMAIL));
-        $check = $check && (empty($data['phone']) || preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/", $data['phone']));
+        if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
+            $check = $check && (empty($data['phone']) || preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/", $data['phone']));
+        }
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
@@ -168,6 +170,10 @@ class UserController
             return $response->withJson(['user' => $existingUser]);
         } elseif (!empty($existingUser)) {
             return $response->withStatus(400)->withJson(['errors' => _USER_ID_ALREADY_EXISTS]);
+        }
+
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
+            $data['phone'] = null;
         }
 
         $logingModes = ['standard', 'restMode'];
@@ -232,11 +238,9 @@ class UserController
         $check = Validator::stringType()->notEmpty()->validate($data['firstname']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
         $check = $check && (empty($data['mail']) || filter_var($data['mail'], FILTER_VALIDATE_EMAIL));
-
         if (PrivilegeController::hasPrivilege(['privilegeId' => 'manage_personal_data', 'userId' => $GLOBALS['id']])) {
             $check = $check && (empty($data['phone']) || preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/", $data['phone']));
         }
-
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }

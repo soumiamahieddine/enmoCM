@@ -97,7 +97,7 @@ class StoreController
             if (!empty($args['encodedFile'])) {
                 $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $args['encodedFile']));
 
-                if (in_array($args['format'], MergeController::OFFICE_EXTENSIONS)) {
+                if (empty($args['id']) && in_array($args['format'], MergeController::OFFICE_EXTENSIONS)) {
                     $tmpPath = CoreConfigModel::getTmpPath();
                     $uniqueId = CoreConfigModel::uniqueId();
                     $tmpFilename = "storeTmp_{$GLOBALS['id']}_{$uniqueId}.{$args['format']}";

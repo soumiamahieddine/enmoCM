@@ -13,39 +13,6 @@ use User\models\UserModel;
 
 class PrivilegeController
 {
-    const PRIVILEGES = [
-        "admin",
-        "adv_search_mlb",
-        "entities_print_sep_mlb",
-        "reports",
-        "save_numeric_package",
-        "admin_users",
-        "admin_groups",
-        "manage_entities",
-        "admin_listmodels",
-        "admin_architecture",
-        "admin_tag",
-        "admin_baskets",
-        "admin_status",
-        "admin_actions",
-        "admin_contacts",
-        "admin_priorities",
-        "admin_templates",
-        "admin_indexing_models",
-        "admin_custom_fields",
-        "admin_notif",
-        "update_status_mail",
-        "admin_docservers",
-        "admin_parameters",
-        "admin_password_rules",
-        "admin_email_server",
-        "admin_shippings",
-        "admin_reports",
-        "view_history",
-        "view_history_batch",
-        "admin_update_control",
-    ];
-
     public static function addPrivilege(Request $request, Response $response, array $args)
     {
         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
@@ -180,7 +147,7 @@ class PrivilegeController
             'id'        => $args['userId']
         ]);
         if ($user['user_id'] == 'superadmin') {
-            return PrivilegeController::PRIVILEGES;
+            return ['ALL_PRIVILEGES'];
         }
 
         $privilegesStoredInDB = PrivilegeModel::getByUser(['id' => $args['userId']]);
