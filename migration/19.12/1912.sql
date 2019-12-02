@@ -165,6 +165,32 @@ CREATE TABLE resources_custom_fields
 WITH (OIDS=FALSE);
 
 
+/* CONTACTS CUSTOM FIELDS */
+DROP TABLE IF EXISTS contacts_custom_fields_list;
+CREATE TABLE contacts_custom_fields_list
+(
+  id serial NOT NULL,
+  label character varying(256) NOT NULL,
+  type character varying(256) NOT NULL,
+  values jsonb,
+  CONSTRAINT contacts_custom_fields_list_pkey PRIMARY KEY (id),
+  CONSTRAINT contacts_custom_fields_list_unique_key UNIQUE (label)
+)
+WITH (OIDS=FALSE);
+
+DROP TABLE IF EXISTS contacts_custom_fields;
+CREATE TABLE contacts_custom_fields
+(
+    id serial NOT NULL,
+    contact_id INTEGER NOT NULL,
+    custom_field_id INTEGER NOT NULL,
+    value jsonb NOT NULL,
+    CONSTRAINT contacts_custom_fields_pkey PRIMARY KEY (id),
+    CONSTRAINT contacts_custom_fields_unique_key UNIQUE (contact_id, custom_field_id)
+)
+WITH (OIDS=FALSE);
+
+
 /* INDEXING MODELS */
 DROP TABLE IF EXISTS indexing_models;
 CREATE TABLE indexing_models
