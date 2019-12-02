@@ -153,6 +153,9 @@
 }
 
 .filterTypes {
+    overflow: auto;
+    width: auto;
+    max-width: 100%;
     margin-left: 10px;
     ::ng-deep.mat-button-toggle-checked {
         background: $secondary;
