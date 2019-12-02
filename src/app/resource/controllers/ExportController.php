@@ -256,13 +256,9 @@ class ExportController
                     } elseif ($value['value'] == 'getDestinationEntityType') {
                         $csvContent[] = $resource['enthree.entity_type'];
                     } elseif ($value['value'] == 'getSenders') {
-                        $senders = ExportController::getSenders(['chunkedResIds' => $aArgs['chunkedResIds']]);
-                        $aSenders = empty($senders[$resource['res_id']]) ? [] : $senders[$resource['res_id']];
-                        $csvContent[] = implode("\n\n", $aSenders);
+                        $csvContent[] = ExportController::getContacts(['chunkedResIds' => $aArgs['chunkedResIds'], 'mode' => 'sender']);
                     } elseif ($value['value'] == 'getRecipients') {
-                        $recipients = ExportController::getRecipients(['chunkedResIds' => $aArgs['chunkedResIds']]);
-                        $aRecipients = empty($recipients[$resource['res_id']]) ? [] : $recipients[$resource['res_id']];
-                        $csvContent[] = implode("\n\n", $aRecipients);
+                        $csvContent[] = ExportController::getContacts(['chunkedResIds' => $aArgs['chunkedResIds'], 'mode' => 'recipient']);
                     } elseif ($value['value'] == 'getTypist') {
                         $csvContent[] = UserModel::getLabelledUserById(['id' => $resource['typist']]);
                     } elseif ($value['value'] == 'getAssignee') {
@@ -658,6 +654,53 @@ class ExportController
         }
 
         return $aSenders;
+    }
+
+    private static function getContacts(array $args) {
+        ValidatorModel::notEmpty($args, ['chunkedResIds', 'mode']);
+        ValidatorModel::arrayType($args, ['chunkedResIds']);
+        ValidatorModel::stringType($args, ['mode']);
+
+        $senders = [];
+
+        foreach ($args['chunkedResIds'] as $resIds) {
+            $resources = ResModel::get([
+                'select' => ['res_id'],
+                'where' => ['res_id in (?)'],
+                'data' => [$resIds]
+            ]);
+
+            if (!empty($resources)) {
+                foreach ($resources as $key => $res) {
+                    $resourceContacts = ResourceContactModel::getByResIdAndMode(['resId' => $res['res_id'], 'mode' => $args['mode']]);
+
+                    foreach ($resourceContacts as $resourceContact) {
+                        $contact = '';
+                        if ($resourceContact['type'] == 'contact') {
+                            $contactRaw = ContactModel::getById([
+                                'select'    => ['*'],
+                                'id'        => $resourceContact['item_id']
+                            ]);
+
+                            $contact = $contactRaw['firstname'] . ' ' . $contactRaw['lastname'];
+                        } else if ($resourceContact['type'] == 'user') {
+                            $contact = UserModel::getLabelledUserById(['id' => $resourceContact['item_id']]);
+                        } else if ($resourceContact['type'] == 'entity') {
+                            $entity = EntityModel::getById(['id' => $resourceContact['item_id'], 'select' => ['entity_label']]);
+                            $contact = $entity['entity_label'];
+                        }
+
+                        $senders[] = $contact;
+                    }
+                }
+            }
+        }
+
+        if (empty($senders)) {
+            return '';
+        }
+
+        return implode("\n", $senders);
     }
 
     private static function getRecipients(array $args)

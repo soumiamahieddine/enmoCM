@@ -38,6 +38,22 @@ class ResourceContactModel
         return $aContacts;
     }
 
+    public static function getByResIdAndMode(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId', 'mode']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::stringType($aArgs, ['mode']);
+
+        $aContacts = DatabaseModel::select([
+            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'table'     => ['resource_contacts'],
+            'where'     => ['res_id = ?', 'mode = ?'],
+            'data'      => [$aArgs['resId'], $aArgs['mode']],
+        ]);
+
+        return $aContacts;
+    }
+
     public static function getFormattedByResId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
