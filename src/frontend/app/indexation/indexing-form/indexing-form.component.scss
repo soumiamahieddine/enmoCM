@@ -66,7 +66,7 @@
     width: 40px;
     justify-content: center;
     align-items: normal !important;
-    padding-top: 20px;
+    padding-top: 15px;
 
     i {
         font-size: 5px;
@@ -166,6 +166,10 @@
 .input-form.search-select {
     ::ng-deep.mat-form-field-infix {
         padding-top: 0px;
+    }
+
+    ::ng-deep.mat-form-field-label-wrapper {
+        top: -15px;
     }
 }
 
