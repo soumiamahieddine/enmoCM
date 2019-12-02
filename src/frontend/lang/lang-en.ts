@@ -1317,4 +1317,5 @@ export const LANG_EN = {
     "enableGroupMsg": "This group could access to all functionnalities.",
     "sendActivationNotification": "Send activation notification",
     "activationNotificationSend": "Activation notification send",
+    "tabProcessPosition": "Move to tab"
 };

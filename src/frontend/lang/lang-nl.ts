@@ -1342,4 +1342,5 @@ export const LANG_NL = {
     "enableGroupMsg": "This group could access to all functionnalities.", //_TO_TRANSLATE
     "sendActivationNotification": "Send activation notification", //_TO_TRANSLATE
     "activationNotificationSend": "Activation notification send", //_TO_TRANSLATE
+    "tabProcessPosition": "Move to tab" //_TO_TRANSLATE
 };
