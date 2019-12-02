@@ -27,13 +27,8 @@
                     [disabled]="!attachment.canDelete">{{lang.deleteResource}}</button>
             </div>
             <div class="pjToolsContent">
-                <button *ngIf="attachment.relation > 1" color="primary" class="versionButton" mat-button
-                    [matMenuTriggerFor]="menu">{{lang.version}} <b
-                        color="secondary">{{attachment.relation}}</b></button>
-                <mat-menu #menu="matMenu">
-                    <button mat-menu-item *ngFor="let version of attachment.versions; let i = index"
-                        (click)="showAttachment(version)">{{lang.version}} {{i+1}}</button>
-                </mat-menu>
+                <span *ngIf="attachment.relation > 1" color="primary" class="versionButton">{{lang.version}} <b
+                        color="secondary">{{attachment.relation}}</b></span>
                 <button color="primary" class="actionsButton" mat-icon-button [matMenuTriggerFor]="menuPjAction">
                     <mat-icon fontSet="fas" fontIcon="fa-ellipsis-v"></mat-icon>
                 </button>
