@@ -209,7 +209,10 @@ export class ListAdministrationComponent implements OnInit {
             label: this.lang.informations,
         }
     ];
-    selectedProcessTool: string = null;
+    selectedProcessTool: any = {
+        defaultTab : null,
+        canUpdate: false, 
+    };
     selectedProcessToolClone: string = null;
 
     @Input('currentBasketGroup') private basketGroup: any;
@@ -235,8 +238,9 @@ export class ListAdministrationComponent implements OnInit {
         this.selectedListEvent = this.basketGroup.list_event === null ? 'noEvent' : this.basketGroup.list_event;
         this.selectedListEventClone = this.selectedListEvent;
 
-        this.selectedProcessTool = this.basketGroup.list_event_data === null && this.basketGroup.list_event === 'processDocument' ? 'dashboard' : this.basketGroup.list_event;
-        this.selectedProcessToolClone = this.selectedProcessTool;
+        this.selectedProcessTool.defaultTab = this.basketGroup.list_event_data === null && this.basketGroup.list_event === 'processDocument' ? 'dashboard' : this.basketGroup.list_event_data.defaultTab;
+        this.selectedProcessTool.canUpdate = this.basketGroup.list_event_data === null ? false : this.basketGroup.list_event_data.canUpdate;
+        this.selectedProcessToolClone = JSON.parse(JSON.stringify(this.selectedProcessTool));
         this.displayedSecondaryDataClone = JSON.parse(JSON.stringify(this.displayedSecondaryData));
     }
 
@@ -322,7 +326,7 @@ export class ListAdministrationComponent implements OnInit {
                 this.selectedListEvent = this.selectedListEvent === null ? 'noEvent' : this.selectedListEvent;
                 this.basketGroup.list_event = this.selectedListEvent;
                 this.selectedListEventClone = this.selectedListEvent;
-                this.selectedProcessToolClone = this.selectedProcessTool;
+                this.selectedProcessToolClone = JSON.parse(JSON.stringify(this.selectedProcessTool));
                 this.notify.success(this.lang.resultPageUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -341,7 +345,7 @@ export class ListAdministrationComponent implements OnInit {
     }
 
     checkModif() { 
-        if (JSON.stringify(this.displayedSecondaryData) === JSON.stringify(this.displayedSecondaryDataClone) && this.selectedListEvent === this.selectedListEventClone && this.selectedProcessTool === this.selectedProcessToolClone) {
+        if (JSON.stringify(this.displayedSecondaryData) === JSON.stringify(this.displayedSecondaryDataClone) && this.selectedListEvent === this.selectedListEventClone && JSON.stringify(this.selectedProcessTool) === JSON.stringify(this.selectedProcessToolClone)) {
             return true 
         } else {
            return false;

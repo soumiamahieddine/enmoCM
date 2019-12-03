@@ -9,7 +9,7 @@
             <div class="processTool">
                 <div class="processTool-module jiggle" *ngFor="let module of processTool"
                     [class.processTool-module-active]="module.id === currentTool" matRipple
-                    (click)="currentTool = module.id">
+                    (click)="changeTab(module.id)">
                     <i [class]="module.icon"></i>
                     <span *ngIf="!appService.getViewMode()">{{module.label}}</span>
                 </div>
@@ -90,7 +90,7 @@
                     [resId]="currentResourceInformations.resId" [target]="'process'">
                 </app-attachments-list>
                 <app-indexing-form *ngIf="currentTool === 'info'" #indexingForm [groupId]="currentGroupId"
-                    [indexingFormId]="1"></app-indexing-form>
+                    [indexingFormId]="1" [resId]="currentResourceInformations.resId" [mode]="'process'"></app-indexing-form>
             </ng-container>
             <ng-template #elseTemplate>
                 <div class="openedModal">
@@ -178,8 +178,7 @@
                                     *ngIf="this.currentResourceInformations.closingDate !== null; else elseLimitDate">
                                     <div style="font-weight: bold;"
                                         [title]="this.currentResourceInformations.closingDate | fullDate">
-                                        {{this.lang.closed}} {{this.lang.onRange}}
-                                        {{this.currentResourceInformations.closingDate | timeAgo}}&nbsp;&nbsp;<i
+                                        {{this.lang.closed}} {{this.currentResourceInformations.closingDate | timeAgo : 'full'}}&nbsp;&nbsp;<i
                                             class="fa fa-lock"></i></div>
                                 </ng-container>
                                 <ng-template #elseLimitDate>
@@ -238,7 +237,7 @@
         <app-attachments-list *ngIf="modal.id === 'attachments'" #appAttachmentsList
             [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="reloadBadgeAttachments($event)">
         </app-attachments-list>
-        <app-indexing-form *ngIf="modal.id === 'info'" #indexingForm [groupId]="currentGroupId" [indexingFormId]="1">
+        <app-indexing-form *ngIf="modal.id === 'info'" #indexingForm [groupId]="currentGroupId" [indexingFormId]="1" [resId]="currentResourceInformations.resId" [mode]="'process'">
         </app-indexing-form>
     </div>
 </div>

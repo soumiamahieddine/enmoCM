@@ -12,9 +12,11 @@ import { FiltersListService } from '../../service/filtersList.service';
 import { Overlay } from '@angular/cdk/overlay';
 import { AppService } from '../../service/app.service';
 import { ActionsService } from '../actions/actions.service';
-import { tap, catchError, map, finalize } from 'rxjs/operators';
+import { tap, catchError, map, finalize, filter } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { DocumentViewerComponent } from '../viewer/document-viewer.component';
+import { IndexingFormComponent } from '../indexation/indexing-form/indexing-form.component';
+import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 
 @Component({
     templateUrl: "process.component.html",
@@ -114,6 +116,7 @@ export class ProcessComponent implements OnInit {
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     @ViewChild('appDocumentViewer', { static: true }) appDocumentViewer: DocumentViewerComponent;
+    @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
     
     constructor(
         private route: ActivatedRoute,
@@ -236,7 +239,25 @@ export class ProcessComponent implements OnInit {
     }
 
     onSubmit() {
-        this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false);
+        if (this.currentTool === 'info' && this.indexingForm.isResourceModified()) {
+            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.saveModifiedData } });
+
+                dialogRef.afterClosed().pipe(
+                    filter((data: string) => data === 'ok'),
+                    tap(() => {
+                        this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+                    }),
+                    finalize(() => this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false)),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+        } else {
+            this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false);
+        }
+
+        
     }
 
     showActionInCurrentCategory(action: any) {
@@ -279,4 +300,31 @@ export class ProcessComponent implements OnInit {
         this.subscription.unsubscribe();
     }
 
+    changeTab(tabId: string) {
+        if (this.currentTool === 'info' && this.indexingForm.isResourceModified()) {
+            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.saveModifiedData } });
+
+                dialogRef.afterClosed().pipe(
+                    tap((data: string) => {
+                        if (data !== 'ok') {
+                            this.currentTool = tabId;
+                        }
+                    }),
+                    filter((data: string) => data === 'ok'),
+                    tap(() => {
+                        this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+                        setTimeout(() => {
+                            this.loadResource();
+                        }, 400);
+                        this.currentTool = tabId;
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+        } else {
+            this.currentTool = tabId;
+        }
+    }
 }

@@ -27,8 +27,11 @@ export class IndexingFormComponent implements OnInit {
     loading: boolean = true;
 
     @Input('indexingFormId') indexingFormId: number;
+    @Input('resId') resId: number = null;
     @Input('groupId') groupId: number;
     @Input('admin') adminMode: boolean;
+    @Input('canEdit') canEdit: boolean = true;
+    @Input('mode') mode: string = 'indexation';
 
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
 
@@ -85,11 +88,11 @@ export class IndexingFormComponent implements OnInit {
             values: []
         },
         {
-            identifier: 'confidential',
+            identifier: 'confidentiality',
             label: this.lang.confidential,
             type: 'radio',
             default_value: '',
-            values: [{ 'id': 'true', 'label': this.lang.yes }, { 'id': 'false', 'label': this.lang.no }]
+            values: [{ 'id': true, 'label': this.lang.yes }, { 'id': false, 'label': this.lang.no }]
         },
         {
             identifier: 'initiator',
@@ -168,6 +171,8 @@ export class IndexingFormComponent implements OnInit {
 
     currentCategory: string = '';
     currentPriorityColor: string = '';
+
+    currentResourceValues: any = null;
 
     constructor(
         public http: HttpClient,
@@ -256,7 +261,7 @@ export class IndexingFormComponent implements OnInit {
         }
     }
 
-    getDatas() {
+    getDatas(withDiffusionList = true) {
         let arrIndexingModels: any[] = [];
         this.fieldCategories.forEach(category => {
             arrIndexingModels = arrIndexingModels.concat(this['indexingModels_' + category]);
@@ -286,7 +291,7 @@ export class IndexingFormComponent implements OnInit {
                 element.default_value = this.arrFormControl[element.identifier].value;
             }
 
-            if (element.identifier === "destination" && !this.adminMode) {
+            if (element.identifier === "destination" && !this.adminMode && withDiffusionList) {
                 arrIndexingModels.push({
                     identifier: 'diffusionList',
                     default_value: this.arrFormControl['diffusionList'].value
@@ -302,6 +307,40 @@ export class IndexingFormComponent implements OnInit {
             });
         }
         return arrIndexingModels;
+    }
+
+    saveData(userId: number, groupId: number, basketId: number) {
+        const formatdatas = this.formatDatas(this.getDatas());
+
+        this.http.put(`../../rest/resources/${this.resId}/users/${userId}/groups/${groupId}/baskets/${basketId}`, formatdatas ).pipe(
+            tap(() => {
+                this.currentResourceValues = this.getDatas();
+                this.notify.success(this.lang.dataUpdated);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    formatDatas(datas: any) {
+        let formatData: any = {};
+        const regex = /indexingCustomField_[.]*/g;
+
+        formatData['customFields'] = {};
+
+        datas.forEach((element: any) => {
+
+            if (element.identifier.match(regex) !== null) {
+
+                formatData['customFields'][element.identifier.split('_')[1]] = element.default_value;
+
+            } else {
+                formatData[element.identifier] = element.default_value;
+            }
+        });
+        return formatData;
     }
 
     getCategory() {
@@ -331,6 +370,14 @@ export class IndexingFormComponent implements OnInit {
             }
         });
         return state;
+    }
+
+    isResourceModified() {
+        if (JSON.stringify(this.currentResourceValues) === JSON.stringify(this.getDatas(false))) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     setModification() {
@@ -489,9 +536,42 @@ export class IndexingFormComponent implements OnInit {
                     });
                 });
             }),
+            filter(() => this.resId !== null),
+            exhaustMap(() => this.http.get(`../../rest/resources/${this.resId}`)),
+            tap((data: any) => {
+                this.fieldCategories.forEach(element => {
+                    this['indexingModels_' + element].forEach((elem: any) => {
+
+                        if (Object.keys(data).indexOf(elem.identifier) > -1) {
+                            let fieldValue = data[elem.identifier];
+                            
+                            if (elem.type === 'date') {
+                                fieldValue = new Date(fieldValue);
+                            }
+                            
+                            if (elem.identifier === 'priority') {
+                                this.setPriorityColor(null, fieldValue);
+                            }
+
+                            if (elem.identifier === 'destination') {
+                                if (this.mode === 'process') {
+                                    this.arrFormControl[elem.identifier].disable();
+                                }
+                                this.arrFormControl['diffusionList'].disable();
+                            }
+                            this.arrFormControl[elem.identifier].setValue(fieldValue);
+                        }
+                        if (!this.canEdit) {
+                            this.arrFormControl[elem.identifier].disable();
+                        }
+                    });
+                });
+            }),
+            tap(() => {
+                this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));
+            }),
             finalize(() => this.loading = false)
         ).subscribe();
-
     }
 
     initializeRoutes() {
@@ -501,7 +581,7 @@ export class IndexingFormComponent implements OnInit {
         this.fieldCategories.forEach(element => {
             this['indexingModels_' + element].forEach((elem: any) => {
                 if (elem.identifier === 'destination') {
-                    if (this.adminMode) {
+                    if (this.adminMode || this.mode !== 'indexation') {
                         arrayRoutes.push(this.http.get('../../rest/indexingModels/entities'));
 
                     } else {

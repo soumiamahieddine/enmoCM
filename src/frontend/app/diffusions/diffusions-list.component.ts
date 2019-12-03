@@ -34,7 +34,7 @@ export class DiffusionsListComponent implements OnInit {
     /**
      * Ressource identifier to load listinstance (Incompatible with templateId)
      */
-    @Input('resId') resId: number;
+    @Input('resId') resId: number = null;
 
     /**
      * Add previous dest in copy (Only compatible with resId)
@@ -91,7 +91,7 @@ export class DiffusionsListComponent implements OnInit {
         this.adminMode = this.adminMode !== undefined ? this.adminMode : false;
         this.keepDestForRedirection = this.keepDestForRedirection !== undefined ? this.keepDestForRedirection : false;
 
-        if (this.resId !== undefined && this.target !== 'redirect') {
+        if (this.resId !== null && this.target !== 'redirect') {
             this.loadListinstance(this.resId);
 
         } else if (this.entityId !== undefined && this.entityId !== '') {
@@ -135,7 +135,7 @@ export class DiffusionsListComponent implements OnInit {
 
         arrayRoutes.push(this.http.get('../../rest/listTemplates/entities/' + entityId));
 
-        if (this.resId !== undefined) {
+        if (this.resId !== null) {
             arrayRoutes.push(this.http.get('../../rest/resources/' + this.resId + '/listInstance'));
         }
 
@@ -270,6 +270,11 @@ export class DiffusionsListComponent implements OnInit {
                         this.diffList[element.item_mode].items.push(element);
                     }
                 });
+            }),
+            tap((data: any) => {
+                if (this.diffFormControl !== undefined) {
+                    this.setFormValues();
+                }
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
