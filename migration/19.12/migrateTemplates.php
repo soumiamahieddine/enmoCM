@@ -65,7 +65,7 @@ const DATA_TO_REPLACE = [
     'user.email' => '[userPrimaryEntity.email]',
     'user.parent_entity_id' => '[userPrimaryEntity.parent_entity_id]',
     'user.entity_type' => '[userPrimaryEntity.entity_type]',
-    'user.path' => '[userPrimaryEntity.path]',
+    'user.entity_path' => '[userPrimaryEntity.path]',
 ];
 
 
