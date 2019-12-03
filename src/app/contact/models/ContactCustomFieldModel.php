@@ -48,7 +48,7 @@ class ContactCustomFieldModel
         DatabaseModel::insert([
             'table'         => 'contacts_custom_fields',
             'columnsValues' => [
-                'contact_id'        => $args['res_id'],
+                'contact_id'        => $args['contact_id'],
                 'custom_field_id'   => $args['custom_field_id'],
                 'value'             => $args['value'],
             ]

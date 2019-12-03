@@ -17,15 +17,15 @@ foreach ($customs as $custom) {
     // TRUNCATE CONTACTS TABLES
     \SrcCore\models\DatabaseModel::delete([
         'table' => 'contacts',
-        'where' => ['id > 1']
+        'where' => ['id > 0']
     ]);
     \SrcCore\models\DatabaseModel::delete([
         'table' => 'contacts_custom_fields',
-        'where' => ['id > 1']
+        'where' => ['id > 0']
     ]);
     \SrcCore\models\DatabaseModel::delete([
         'table' => 'contacts_custom_fields_list',
-        'where' => ['id > 1']
+        'where' => ['id > 0']
     ]);
 
     $migrated = 0;
@@ -51,7 +51,7 @@ foreach ($customs as $custom) {
         'select' => ['label'],
         'table'  => ['contact_purposes']
     ]);
-    $contactTypes = array_column($contactTypes, 'label');
+    $contactPurposes = array_column($contactPurposes, 'label');
 
     $customFields= [
         ['oldId' => 'salutation_header',     'label' => 'Formule de politesse (Début)',     'type' => 'string',     'value' => ['']],
@@ -139,8 +139,6 @@ foreach ($customs as $custom) {
         // Enabled
         $contactInfo['enabled'] = $contactInfo['enabled'] == 'Y' ? 'true' : 'false';
 
-        $id = \Contact\models\ContactModel::create($contactInfo);
-
         $contactCustomInfo= [
             'salutation_header' =>     $contactInfo['salutation_header'],
             'salutation_footer' =>     $contactInfo['salutation_footer'],
@@ -149,6 +147,14 @@ foreach ($customs as $custom) {
             'contact_purpose_label' => $contactInfo['contact_purpose_label'],
             'society_short' =>         $contactInfo['society_short'],
         ];
+
+        unset($contactInfo['salutation_header']);
+        unset($contactInfo['salutation_footer']);
+        unset($contactInfo['website']);
+        unset($contactInfo['contact_type_label']);
+        unset($contactInfo['contact_purpose_label']);
+        unset($contactInfo['society_short']);
+        $id = \Contact\models\ContactModel::create($contactInfo);
 
         migrateCustomField(['newContactId' => $id, 'contactCustomInfo' => $contactCustomInfo, 'newCustomFields' => $newCustomFields]);
 
@@ -167,7 +173,7 @@ function addCustomFields($args = [])
             'type'   => $value['type'],
             'values' => json_encode($value['value'])
         ]);
-        $customFields[$customFields['oldId']] = $customFieldId;
+        $customFields[$value['oldId']] = $customFieldId;
     }
     
     return $customFields;
@@ -176,10 +182,12 @@ function addCustomFields($args = [])
 function migrateCustomField($args = [])
 {
     foreach ($args['contactCustomInfo'] as $key => $value) {
-        \Contact\models\ContactCustomFieldModel::create([
-            'contactId'  => $args['newContactId'],
-            'custom_field_id'   => $args['newCustomFields'][$key],
-            'value' => json_encode($value)
-        ]);
+        if (!empty($value)) {
+            \Contact\models\ContactCustomFieldModel::create([
+                'contact_id'      => $args['newContactId'],
+                'custom_field_id' => $args['newCustomFields'][$key],
+                'value'           => json_encode($value)
+            ]);
+        }
     }
 }
