@@ -1321,7 +1321,7 @@ export const LANG_FR = {
     "attachmentUpdated" : "Pièce jointe modifiée",
     "signedVersionDeleted" : "Version signée supprimée",
     "newVersionAdded" : "Nouvelle version créée",
-    "editionAttachmentConfirmFirst" : "Toutes les variables de fusion seront remplacées en prenant en compte ce que vous avez saisie dans le formulaire de gauche.",
+    "editionAttachmentConfirmFirst" : "Toutes les variables de fusion seront remplacées en prenant en compte ce que vous avez saisi dans le formulaire de gauche.",
     "editionAttachmentConfirmSecond" : "Seul le <b>numéro chrono</b> ([res_letterbox.alt_identifier]) sera remplacée après l'enregistrement du courrier",
     "othersInfos" : "Autre(s) information(s)",
     "contactDetails" : "Coordonnées",

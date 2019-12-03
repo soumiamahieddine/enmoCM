@@ -7,9 +7,16 @@
 -- *************************************************************************--
 
 DROP VIEW IF EXISTS res_view_letterbox;
+DROP VIEW IF EXISTS view_contacts;
 
 DROP TABLE IF EXISTS cases;
 DROP TABLE IF EXISTS cases_res;
+
+DROP TABLE IF EXISTS contact_addresses;
+DROP TABLE IF EXISTS contact_communication;
+DROP TABLE IF EXISTS contact_purposes;
+DROP TABLE IF EXISTS contact_types;
+DROP TABLE IF EXISTS contacts_v2;
 
 DROP TABLE IF EXISTS fp_fileplan;
 DROP TABLE IF EXISTS fp_fileplan_positions;
