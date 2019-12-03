@@ -564,35 +564,60 @@ class ExportController
 
         $contacts = [];
 
-        $resources = ResModel::get([
-            'select' => ['res_id'],
-            'where' => ['res_id in (?)'],
-            'data' => [$args['resId']]
+        $resourceContacts = ResourceContactModel::get([
+            'where'     => ['res_id = ?', 'mode = ?'],
+            'data'      => [$args['resId'], $args['mode']]
         ]);
 
-        if (!empty($resources)) {
-            foreach ($resources as $key => $res) {
-                $resourceContacts = ResourceContactModel::getByResIdAndMode(['resId' => $res['res_id'], 'mode' => $args['mode']]);
+        foreach ($resourceContacts as $resourceContact) {
+            $contact = '';
+            if ($resourceContact['type'] == 'contact') {
+                $contactRaw = ContactModel::getById([
+                    'select'    => ['*'],
+                    'id'        => $resourceContact['item_id']
+                ]);
 
-                foreach ($resourceContacts as $resourceContact) {
-                    $contact = '';
-                    if ($resourceContact['type'] == 'contact') {
-                        $contactRaw = ContactModel::getById([
-                            'select'    => ['*'],
-                            'id'        => $resourceContact['item_id']
-                        ]);
-
-                        $contact = $contactRaw['firstname'] . ' ' . $contactRaw['lastname'];
-                    } else if ($resourceContact['type'] == 'user') {
-                        $contact = UserModel::getLabelledUserById(['id' => $resourceContact['item_id']]);
-                    } else if ($resourceContact['type'] == 'entity') {
-                        $entity = EntityModel::getById(['id' => $resourceContact['item_id'], 'select' => ['entity_label']]);
-                        $contact = $entity['entity_label'];
-                    }
-
-                    $contacts[] = $contact;
+                $address = '';
+                if (!empty($contactRaw['address_number'])) {
+                    $address .= $contactRaw['address_number'] . ' ';
                 }
+                if (!empty($contactRaw['address_street'])) {
+                    $address .= $contactRaw['address_street'] . ' ';
+                }
+                if (!empty($contactRaw['address_postcode'])) {
+                    $address .= $contactRaw['address_postcode'] . ' ';
+                }
+                if (!empty($contactRaw['address_town'])) {
+                    $address .= $contactRaw['address_town'] . ' ';
+                }
+                if (!empty($contactRaw['address_country'])) {
+                    $address .= $contactRaw['address_country'];
+                }
+
+                $contactToDisplay = '';
+                if (!empty($contactRaw['firstname'])) {
+                    $contactToDisplay .= $contactRaw['firstname'] . ' ';
+                }
+                if (!empty($contactRaw['lastname'])) {
+                    $contactToDisplay .= $contactRaw['lastname'];
+                }
+                if (!empty($contactRaw['company'])) {
+                    $contactToDisplay .= " ({$contactRaw['company']})";
+                }
+
+                if (!empty($address)) {
+                    $contactToDisplay .= ' - ' . $address;
+                }
+
+                $contact = $contactToDisplay;
+            } else if ($resourceContact['type'] == 'user') {
+                $contact = UserModel::getLabelledUserById(['id' => $resourceContact['item_id']]);
+            } else if ($resourceContact['type'] == 'entity') {
+                $entity = EntityModel::getById(['id' => $resourceContact['item_id'], 'select' => ['entity_label']]);
+                $contact = $entity['entity_label'];
             }
+
+            $contacts[] = $contact;
         }
 
         if (empty($contacts)) {
