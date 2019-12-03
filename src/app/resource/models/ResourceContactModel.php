@@ -96,34 +96,34 @@ class ResourceContactModel
         return $aContacts;
     }
 
-    public static function create(array $aArgs)
+    public static function create(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['res_id', 'item_id', 'type', 'mode']);
-        ValidatorModel::intVal($aArgs, ['res_id', 'item_id']);
-        ValidatorModel::stringType($aArgs, ['type', 'mode']);
+        ValidatorModel::notEmpty($args, ['res_id', 'item_id', 'type', 'mode']);
+        ValidatorModel::intVal($args, ['res_id', 'item_id']);
+        ValidatorModel::stringType($args, ['type', 'mode']);
 
         DatabaseModel::insert([
             'table'         => 'resource_contacts',
             'columnsValues' => [
-                'res_id'    => $aArgs['res_id'],
-                'item_id'   => $aArgs['item_id'],
-                'type'      => $aArgs['type'],
-                'mode'      => $aArgs['mode']
+                'res_id'    => $args['res_id'],
+                'item_id'   => $args['item_id'],
+                'type'      => $args['type'],
+                'mode'      => $args['mode']
             ]
         ]);
 
         return true;
     }
 
-    public static function delete(array $aArgs)
+    public static function delete(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['where', 'data']);
-        ValidatorModel::arrayType($aArgs, ['where', 'data']);
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
 
         DatabaseModel::delete([
             'table' => 'resource_contacts',
-            'where' => $aArgs['where'],
-            'data'  => $aArgs['data']
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;

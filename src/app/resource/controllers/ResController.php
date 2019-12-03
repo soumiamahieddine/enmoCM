@@ -18,6 +18,7 @@ use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
+use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
@@ -41,6 +42,7 @@ use IndexingModel\models\IndexingModelModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
@@ -870,6 +872,16 @@ class ResController
                 TagResModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
             }
         }
+        if (!empty($body['senders'])) {
+            foreach ($body['senders'] as $sender) {
+                ResourceContactModel::create(['res_id' => $args['resId'], 'item_id' => $sender['id'], 'type' => $sender['type'], 'mode' => 'sender']);
+            }
+        }
+        if (!empty($body['recipients'])) {
+            foreach ($body['recipients'] as $recipient) {
+                ResourceContactModel::create(['res_id' => $args['resId'], 'item_id' => $recipient['id'], 'type' => $recipient['type'], 'mode' => 'recipient']);
+            }
+        }
 
         return true;
     }
@@ -930,6 +942,17 @@ class ResController
             TagResModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             foreach ($body['tags'] as $tag) {
                 TagResModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
+            }
+        }
+        ResourceContactModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+        if (!empty($body['senders'])) {
+            foreach ($body['senders'] as $sender) {
+                ResourceContactModel::create(['res_id' => $args['resId'], 'item_id' => $sender['id'], 'type' => $sender['type'], 'mode' => 'sender']);
+            }
+        }
+        if (!empty($body['recipients'])) {
+            foreach ($body['recipients'] as $recipient) {
+                ResourceContactModel::create(['res_id' => $args['resId'], 'item_id' => $recipient['id'], 'type' => $recipient['type'], 'mode' => 'recipient']);
             }
         }
 
@@ -1119,6 +1142,50 @@ class ResController
             $tags = TagModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [$body['tags']]]);
             if (count($body['tags']) != $tags[0]['count']) {
                 return ['errors' => 'Body tags : One or more tags do not exist'];
+            }
+        }
+        if (!empty($body['senders'])) {
+            if (!Validator::arrayType()->notEmpty()->validate($body['senders'])) {
+                return ['errors' => 'Body senders is not an array'];
+            }
+            foreach ($body['senders'] as $key => $sender) {
+                if (!Validator::arrayType()->notEmpty()->validate($sender)) {
+                    return ['errors' => "Body senders[{$key}] is not an array"];
+                }
+                if ($sender['type'] == 'contact') {
+                    $senderItem = ContactModel::getById(['id' => $sender['id'], 'select' => [1]]);
+                } elseif ($sender['type'] == 'user') {
+                    $senderItem = UserModel::getById(['id' => $sender['id'], 'select' => [1]]);
+                } elseif ($sender['type'] == 'entity') {
+                    $senderItem = EntityModel::getById(['id' => $sender['id'], 'select' => [1]]);
+                } else {
+                    return ['errors' => "Body senders[{$key}] type is not valid"];
+                }
+                if (empty($senderItem)) {
+                    return ['errors' => "Body senders[{$key}] id does not exist"];
+                }
+            }
+        }
+        if (!empty($body['recipients'])) {
+            if (!Validator::arrayType()->notEmpty()->validate($body['recipients'])) {
+                return ['errors' => 'Body recipients is not an array'];
+            }
+            foreach ($body['recipients'] as $key => $recipient) {
+                if (!Validator::arrayType()->notEmpty()->validate($recipient)) {
+                    return ['errors' => "Body recipients[{$key}] is not an array"];
+                }
+                if ($recipient['type'] == 'contact') {
+                    $recipientItem = ContactModel::getById(['id' => $recipient['id'], 'select' => [1]]);
+                } elseif ($recipient['type'] == 'user') {
+                    $recipientItem = UserModel::getById(['id' => $recipient['id'], 'select' => [1]]);
+                } elseif ($recipient['type'] == 'entity') {
+                    $recipientItem = EntityModel::getById(['id' => $recipient['id'], 'select' => [1]]);
+                } else {
+                    return ['errors' => "Body recipients[{$key}] type is not valid"];
+                }
+                if (empty($recipientItem)) {
+                    return ['errors' => "Body recipients[{$key}] id does not exist"];
+                }
             }
         }
         if (!empty($body['diffusionList'])) {

@@ -1619,3 +1619,25 @@ CREATE TABLE indexing_models_fields
     CONSTRAINT indexing_models_fields_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+
+CREATE TABLE contacts_custom_fields_list
+(
+    id serial NOT NULL,
+    label character varying(256) NOT NULL,
+    type character varying(256) NOT NULL,
+    values jsonb,
+    CONSTRAINT contacts_custom_fields_list_pkey PRIMARY KEY (id),
+    CONSTRAINT contacts_custom_fields_list_unique_key UNIQUE (label)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE contacts_custom_fields
+(
+    id serial NOT NULL,
+    contact_id INTEGER NOT NULL,
+    custom_field_id INTEGER NOT NULL,
+    value jsonb NOT NULL,
+    CONSTRAINT contacts_custom_fields_pkey PRIMARY KEY (id),
+    CONSTRAINT contacts_custom_fields_unique_key UNIQUE (contact_id, custom_field_id)
+)
+WITH (OIDS=FALSE);
