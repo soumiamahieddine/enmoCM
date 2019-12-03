@@ -3,7 +3,7 @@
 $aDataIncoming['incoming'] = [
     'doctype'               => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'priority'              => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
-    'confidential'          => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
+    'confidentiality'          => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'docDate'               => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'arrivalDate'           => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'subject'               => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
@@ -20,7 +20,7 @@ $aDataIncoming['incoming'] = [
 $aDataIncoming['outgoing'] = [
     'doctype'               => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'priority'              => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
-    'confidential'          => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
+    'confidentiality'          => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'docDate'               => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'subject'               => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'indexingCustomField_1' => ['mandatory' => 'false', 'default_value' => '""', 'unit' => 'mail'],
@@ -36,7 +36,7 @@ $aDataIncoming['outgoing'] = [
 $aDataIncoming['internal'] = [
     'doctype'               => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'priority'              => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
-    'confidential'          => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
+    'confidentiality'          => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'docDate'               => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'subject'               => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'indexingCustomField_1' => ['mandatory' => 'false', 'default_value' => '""', 'unit' => 'mail'],
@@ -51,7 +51,7 @@ $aDataIncoming['internal'] = [
 
 $aDataIncoming['ged_doc'] = [
     'doctype'               => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
-    'confidential'          => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
+    'confidentiality'          => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'docDate'               => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'subject'               => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'mail'],
     'senders'               => ['mandatory' => 'true', 'default_value' => '""', 'unit' => 'contact'],

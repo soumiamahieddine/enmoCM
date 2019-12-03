@@ -553,7 +553,7 @@ class DoctypeControllerTest extends TestCase
             'status'        => 'NEW',
             'encodedFile'   => $encodedFile,
             'format'        => 'txt',
-            'confidential'  => false,
+            'confidentiality'   => false,
             'documentDate'  => '2019-01-01 17:18:47',
             'arrivalDate'   => '2019-01-01 17:18:47',
             'processLimitDate'  => '2029-01-01',
