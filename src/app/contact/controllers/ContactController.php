@@ -13,6 +13,8 @@
 
 namespace Contact\controllers;
 
+use Contact\models\ContactCustomFieldListModel;
+use Contact\models\ContactCustomFieldModel;
 use Contact\models\ContactFillingModel;
 use Contact\models\ContactModel;
 use Entity\models\EntityModel;
@@ -88,6 +90,8 @@ class ContactController
             'enabled'               => 'true',
             'external_id'           => $externalId
         ]);
+
+        ContactController::createAdjacentData(['body' => $body, 'id' => $id]);
 
         return $response->withJson(['id' => $id]);
     }
@@ -708,6 +712,33 @@ class ContactController
         foreach ($lengthFields as $field) {
             if (!empty($body[$field]) && !Validator::stringType()->length(1, 256)->validate($body[$field])) {
                 return ['errors' => "Body {$field} length is not valid (1..256)"];
+            }
+        }
+
+        if (!empty($body['customFields'])) {
+            if (!Validator::arrayType()->notEmpty()->validate($body['customFields'])) {
+                return ['errors' => 'Body customFields is not an array'];
+            }
+            $customFields = ContactCustomFieldListModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [array_keys($body['customFields'])]]);
+            if (count($body['customFields']) != $customFields[0]['count']) {
+                return ['errors' => 'Body tags : One or more custom fields do not exist'];
+            }
+        }
+
+        return true;
+    }
+
+    private static function createAdjacentData(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['id', 'body']);
+        ValidatorModel::intVal($args, ['id']);
+        ValidatorModel::arrayType($args, ['body']);
+
+        $body = $args['body'];
+
+        if (!empty($body['customFields'])) {
+            foreach ($body['customFields'] as $key => $value) {
+                ContactCustomFieldModel::create(['contact_id' => $args['id'], 'custom_field_id' => $key, 'value' => json_encode($value)]);
             }
         }
 

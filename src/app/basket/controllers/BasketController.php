@@ -228,7 +228,8 @@ class BasketController
                     $groups[$key]['group_desc'] = $value['group_desc'];
                 }
             }
-            $groups[$key]['list_display'] = json_decode($group['list_display']);
+            $groups[$key]['list_display'] = json_decode($group['list_display'], true);
+            $groups[$key]['list_event_data'] = json_decode($group['list_event_data'], true);
             $actionsForGroup = $allActions;
             $actions = ActionGroupBasketModel::get([
                 'select'    => ['id_action', 'where_clause', 'used_in_basketlist', 'used_in_action_page', 'default_action_list'],
