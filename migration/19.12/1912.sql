@@ -426,6 +426,27 @@ CREATE TABLE contacts
 )
 WITH (OIDS=FALSE);
 
+DROP TABLE IF EXISTS contacts_parameters;
+CREATE TABLE contacts_parameters
+(
+    id SERIAL NOT NULL,
+    identifier text NOT NULL,
+    mandatory boolean NOT NULL DEFAULT FALSE,
+    filling boolean NOT NULL DEFAULT FALSE,
+    searchable boolean NOT NULL DEFAULT FALSE,
+    displayable boolean NOT NULL DEFAULT FALSE,
+    CONSTRAINT contacts_parameters_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+ALTER TABLE acknowledgement_receipts DROP COLUMN IF EXISTS contact_id;
+ALTER TABLE acknowledgement_receipts ADD COLUMN contact_id integer;
+ALTER TABLE contacts_groups_lists DROP COLUMN IF EXISTS contact_id;
+ALTER TABLE contacts_groups_lists ADD COLUMN contact_id integer;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS contact_id;
+ALTER TABLE res_attachments ADD COLUMN contact_id integer;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS dest_user_id;
+ALTER TABLE res_attachments ADD COLUMN dest_user_id integer;
 
 /* REFACTORING DATA */
 DO $$ BEGIN

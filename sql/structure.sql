@@ -264,12 +264,11 @@ CREATE TABLE res_attachments
   effective_date timestamp without time zone,
   work_batch bigint,
   origin character varying(50) DEFAULT NULL::character varying,
-  dest_user character varying(128) DEFAULT NULL::character varying,
+  dest_user_id INTEGER,
   res_id_master bigint,
   origin_id INTEGER,
   attachment_type character varying(255) DEFAULT NULL::character varying,
-  dest_contact_id bigint,
-  dest_address_id bigint,
+  contact_id integer,
   in_signature_book boolean DEFAULT FALSE,
   in_send_attach boolean DEFAULT FALSE,
   signatory_user_serial_id int,
@@ -834,122 +833,18 @@ CREATE TABLE contacts
 )
 WITH (OIDS=FALSE);
 
-CREATE SEQUENCE query_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 10
-  CACHE 1;
-
-  -- multicontacts
-CREATE TABLE contacts_res
+CREATE TABLE contacts_parameters
 (
-  coll_id character varying(32) NOT NULL,
-  res_id bigint NOT NULL,
-  contact_id character varying(128) NOT NULL,
-  address_id bigint NOT NULL,
-  mode character varying NOT NULL DEFAULT 'multi'::character varying
- );
+    id SERIAL NOT NULL,
+    identifier text NOT NULL,
+    mandatory boolean NOT NULL DEFAULT FALSE,
+    filling boolean NOT NULL DEFAULT FALSE,
+    searchable boolean NOT NULL DEFAULT FALSE,
+    displayable boolean NOT NULL DEFAULT FALSE,
+    CONSTRAINT contacts_parameters_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
 
--- contacts v2
-CREATE SEQUENCE contact_types_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 200
-  CACHE 1;
-
-CREATE TABLE contact_types 
-(
-  id bigint NOT NULL DEFAULT nextval('contact_types_id_seq'::regclass),
-  label character varying(255) NOT NULL,
-  can_add_contact character varying(1) NOT NULL DEFAULT 'Y'::character varying,
-  contact_target character varying(50),
-  CONSTRAINT contact_types_pkey PRIMARY KEY  (id)
-) WITH (OIDS=FALSE);
-
-CREATE SEQUENCE contact_v2_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 100
-  CACHE 1;
-
-CREATE TABLE contacts_v2 
-(
-  contact_id bigint NOT NULL DEFAULT nextval('contact_v2_id_seq'::regclass),
-  contact_type bigint NOT NULL,
-  is_corporate_person character(1) DEFAULT 'Y'::bpchar,
-  is_external_contact character(1) DEFAULT 'N'::bpchar,
-  society character varying(255),
-  society_short character varying(32),
-  firstname character varying(255),
-  lastname character varying(255),
-  title character varying(255),
-  function character varying(255),
-  other_data text,
-  user_id character varying(255) NOT NULL,
-  entity_id character varying(32) NOT NULL,
-  creation_date timestamp without time zone NOT NULL,
-  update_date timestamp without time zone,
-  enabled character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
-  CONSTRAINT contacts_v2_pkey PRIMARY KEY  (contact_id)
-) WITH (OIDS=FALSE);
-
-CREATE SEQUENCE contact_purposes_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 100
-  CACHE 1;
-
-CREATE TABLE contact_purposes 
-(
-  id bigint NOT NULL DEFAULT nextval('contact_purposes_id_seq'::regclass),
-  label character varying(255) NOT NULL,
-  CONSTRAINT contact_purposes_pkey PRIMARY KEY  (id)
-) WITH (OIDS=FALSE);
-
-CREATE SEQUENCE contact_addresses_id_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 100
-  CACHE 1;
-
-CREATE TABLE contact_addresses 
-(
-  id bigint NOT NULL DEFAULT nextval('contact_addresses_id_seq'::regclass),
-  contact_id bigint NOT NULL,
-  contact_purpose_id bigint DEFAULT 1,
-  departement character varying(255),
-  firstname character varying(255),
-  lastname character varying(255),
-  title character varying(255),
-  function character varying(255),
-  occupancy character varying(1024),
-  address_num character varying(32)  ,
-  address_street character varying(255),
-  address_complement character varying(255),
-  address_town character varying(255),
-  address_postal_code character varying(255),
-  address_country character varying(255),
-  phone character varying(20),
-  email character varying(255),
-  website character varying(255),
-  salutation_header character varying(255),
-  salutation_footer character varying(255),
-  other_data character varying(255),
-  user_id character varying(255) NOT NULL,
-  entity_id character varying(32) NOT NULL,
-  is_private character(1) NOT NULL DEFAULT 'N'::bpchar,
-  enabled character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
-  external_id jsonb DEFAULT '{}',
-  ban_id character varying(128),
-  CONSTRAINT contact_addresses_pkey PRIMARY KEY  (id)
-) WITH (OIDS=FALSE);
-
-DROP TABLE IF EXISTS contacts_groups;
 CREATE TABLE contacts_groups
 (
   id serial,
@@ -963,16 +858,22 @@ CREATE TABLE contacts_groups
 )
 WITH (OIDS=FALSE);
 
-DROP TABLE IF EXISTS contacts_groups_lists;
 CREATE TABLE contacts_groups_lists
 (
   id serial,
   contacts_groups_id integer NOT NULL,
-  contact_addresses_id integer NOT NULL,
+  contact_id integer NOT NULL,
   CONSTRAINT contacts_groups_lists_pkey PRIMARY KEY (id),
-  CONSTRAINT contacts_groups_lists_key UNIQUE (contacts_groups_id, contact_addresses_id)
+  CONSTRAINT contacts_groups_lists_key UNIQUE (contacts_groups_id, contact_id)
 )
 WITH (OIDS=FALSE);
+
+CREATE SEQUENCE query_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 10
+  CACHE 1;
 
 CREATE TABLE saved_queries (
   query_id bigint NOT NULL DEFAULT nextval('query_id_seq'::regclass),
@@ -985,25 +886,6 @@ CREATE TABLE saved_queries (
   last_modification_date timestamp without time zone,
   CONSTRAINT saved_queries_pkey PRIMARY KEY  (query_id)
 ) WITH (OIDS=FALSE);
-
-DROP SEQUENCE IF EXISTS contact_communication_id_seq CASCADE;
-CREATE SEQUENCE contact_communication_id_seq
-INCREMENT 1
-MINVALUE 1
-MAXVALUE 9223372036854775807
-START 1
-CACHE 1;
-
-DROP TABLE IF EXISTS contact_communication;
-CREATE TABLE contact_communication
-(
-  id bigint NOT NULL DEFAULT nextval('contact_communication_id_seq'::regclass),
-  contact_id bigint NOT NULL,
-  type character varying(255) NOT NULL,
-  value character varying(255) NOT NULL,
-  CONSTRAINT contact_communication_pkey PRIMARY KEY (id)
-) WITH (OIDS=FALSE);
-
 
 CREATE SEQUENCE doctypes_first_level_id_seq
   INCREMENT 1
@@ -1112,10 +994,6 @@ CREATE TABLE res_letterbox
   barcode text,
   external_signatory_book_id integer,
   category_id character varying(32)  NOT NULL,
-  exp_contact_id integer,
-  exp_user_id character varying(128),
-  dest_contact_id integer,
-  dest_user_id character varying(128),
   alt_identifier character varying(255),
   admission_date timestamp without time zone,
   process_limit_date timestamp without time zone,
@@ -1124,7 +1002,6 @@ CREATE TABLE res_letterbox
   alarm2_date timestamp without time zone,
   flag_alarm1 char(1) default 'N'::character varying,
   flag_alarm2 char(1) default 'N'::character varying,
-  is_multicontacts char(1),
   address_id bigint,
   model_id integer NOT NULL,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
@@ -1321,11 +1198,6 @@ SELECT r.res_id,
        r.dest_user,
        r.confidentiality,
        r.category_id,
-       r.exp_contact_id,
-       r.exp_user_id,
-       r.dest_user_id,
-       r.dest_contact_id,
-       r.address_id,
        r.alt_identifier,
        r.admission_date,
        r.process_limit_date,
@@ -1334,43 +1206,18 @@ SELECT r.res_id,
        r.alarm2_date,
        r.flag_alarm1,
        r.flag_alarm2,
-       r.is_multicontacts,
        r.subject,
        r.priority,
        r.locker_user_id,
        r.locker_time,
        en.entity_label,
-       en.entity_type AS entitytype,
-       cont.contact_id,
-       cont.firstname AS contact_firstname,
-       cont.lastname AS contact_lastname,
-       cont.society AS contact_society,
-       u.lastname AS user_lastname,
-       u.firstname AS user_firstname
+       en.entity_type AS entitytype
 FROM doctypes d,
      doctypes_first_level dfl,
      doctypes_second_level dsl,
      res_letterbox r
-         LEFT JOIN entities en ON r.destination::text = en.entity_id::text
-         LEFT JOIN contacts_v2 cont ON r.exp_contact_id = cont.contact_id OR r.dest_contact_id = cont.contact_id
-         LEFT JOIN users u ON r.exp_user_id::text = u.user_id::text OR r.dest_user_id::text = u.user_id::text
+    LEFT JOIN entities en ON r.destination::text = en.entity_id::text
 WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
-  
-
---view for contacts_v2
-DROP VIEW IF EXISTS view_contacts;
-CREATE OR REPLACE VIEW view_contacts AS 
- SELECT c.contact_id, c.contact_type, c.is_corporate_person, c.society, c.society_short, c.firstname AS contact_firstname
-, c.lastname AS contact_lastname, c.title AS contact_title, c.function AS contact_function, c.other_data AS contact_other_data
-, c.user_id AS contact_user_id, c.entity_id AS contact_entity_id, c.creation_date, c.update_date, c.enabled AS contact_enabled, ca.id AS ca_id
-, ca.contact_purpose_id, ca.departement, ca.firstname, ca.lastname, ca.title, ca.function, ca.occupancy
-, ca.address_num, ca.address_street, ca.address_complement, ca.address_town, ca.address_postal_code, ca.address_country
-, ca.phone, ca.email, ca.website, ca.salutation_header, ca.salutation_footer, ca.other_data, ca.user_id, ca.entity_id, ca.is_private, ca.enabled, ca.external_id
-, cp.label as contact_purpose_label, ct.label as contact_type_label
-   FROM contacts_v2 c
-   RIGHT JOIN contact_addresses ca ON c.contact_id = ca.contact_id
-   LEFT JOIN contact_purposes cp ON ca.contact_purpose_id = cp.id
-   LEFT JOIN contact_types ct ON c.contact_type = ct.id;
 
 CREATE FUNCTION order_alphanum(text) RETURNS text AS $$
   SELECT regexp_replace(regexp_replace(regexp_replace(regexp_replace($1,
@@ -1492,7 +1339,6 @@ CREATE TABLE contacts_filling
 (
   id serial NOT NULL,
   enable boolean NOT NULL,
-  rating_columns text NOT NULL,
   first_threshold int NOT NULL,
   second_threshold int NOT NULL,
   CONSTRAINT contacts_filling_pkey PRIMARY KEY (id)
@@ -1561,7 +1407,7 @@ res_id INTEGER NOT NULL,
 type CHARACTER VARYING(16) NOT NULL,
 format CHARACTER VARYING(8) NOT NULL,
 user_id INTEGER NOT NULL,
-contact_address_id INTEGER NOT NULL,
+contact_id INTEGER NOT NULL,
 creation_date timestamp without time zone NOT NULL,
 send_date timestamp without time zone,
 docserver_id CHARACTER VARYING(128) NOT NULL,
