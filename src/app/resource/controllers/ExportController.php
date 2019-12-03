@@ -16,6 +16,7 @@ namespace Resource\controllers;
 
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
+use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
 use CustomField\models\ResourceCustomFieldModel;
 use Entity\models\EntityModel;
@@ -254,9 +255,11 @@ class ExportController
                     } elseif ($value['value'] == 'getDestinationEntityType') {
                         $csvContent[] = $resource['enthree.entity_type'];
                     } elseif ($value['value'] == 'getSenders') {
-                        $csvContent[] = ExportController::getContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
+                        $senders = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
+                        $csvContent[] = implode("\n", $senders);
                     } elseif ($value['value'] == 'getRecipients') {
-                        $csvContent[] = ExportController::getContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
+                        $recipients = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
+                        $csvContent[] = implode("\n", $recipients);
                     } elseif ($value['value'] == 'getTypist') {
                         $csvContent[] = UserModel::getLabelledUserById(['id' => $resource['typist']]);
                     } elseif ($value['value'] == 'getAssignee') {
@@ -364,9 +367,11 @@ class ExportController
                     } elseif ($value['value'] == 'getDestinationEntityType') {
                         $content[] = $resource['enthree.entity_type'];
                     } elseif ($value['value'] == 'getSenders') {
-                        $content[] = ExportController::getContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
+                        $senders = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
+                        $content[] = implode("\n", $senders);
                     } elseif ($value['value'] == 'getRecipients') {
-                        $content[] = ExportController::getContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
+                        $recipients = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
+                        $content[] = implode("\n", $recipients);
                     } elseif ($value['value'] == 'getTypist') {
                         $content[] = UserModel::getLabelledUserById(['id' => $resource['typist']]);
                     } elseif ($value['value'] == 'getAssignee') {
@@ -555,76 +560,6 @@ class ExportController
         }
 
         return $aSignatureDates;
-    }
-
-    private static function getContacts(array $args) {
-        ValidatorModel::notEmpty($args, ['resId', 'mode']);
-        ValidatorModel::intVal($args, ['resId']);
-        ValidatorModel::stringType($args, ['mode']);
-
-        $contacts = [];
-
-        $resourceContacts = ResourceContactModel::get([
-            'where'     => ['res_id = ?', 'mode = ?'],
-            'data'      => [$args['resId'], $args['mode']]
-        ]);
-
-        foreach ($resourceContacts as $resourceContact) {
-            $contact = '';
-            if ($resourceContact['type'] == 'contact') {
-                $contactRaw = ContactModel::getById([
-                    'select'    => ['*'],
-                    'id'        => $resourceContact['item_id']
-                ]);
-
-                $address = '';
-                if (!empty($contactRaw['address_number'])) {
-                    $address .= $contactRaw['address_number'] . ' ';
-                }
-                if (!empty($contactRaw['address_street'])) {
-                    $address .= $contactRaw['address_street'] . ' ';
-                }
-                if (!empty($contactRaw['address_postcode'])) {
-                    $address .= $contactRaw['address_postcode'] . ' ';
-                }
-                if (!empty($contactRaw['address_town'])) {
-                    $address .= $contactRaw['address_town'] . ' ';
-                }
-                if (!empty($contactRaw['address_country'])) {
-                    $address .= $contactRaw['address_country'];
-                }
-
-                $contactToDisplay = '';
-                if (!empty($contactRaw['firstname'])) {
-                    $contactToDisplay .= $contactRaw['firstname'] . ' ';
-                }
-                if (!empty($contactRaw['lastname'])) {
-                    $contactToDisplay .= $contactRaw['lastname'];
-                }
-                if (!empty($contactRaw['company'])) {
-                    $contactToDisplay .= " ({$contactRaw['company']})";
-                }
-
-                if (!empty($address)) {
-                    $contactToDisplay .= ' - ' . $address;
-                }
-
-                $contact = $contactToDisplay;
-            } else if ($resourceContact['type'] == 'user') {
-                $contact = UserModel::getLabelledUserById(['id' => $resourceContact['item_id']]);
-            } else if ($resourceContact['type'] == 'entity') {
-                $entity = EntityModel::getById(['id' => $resourceContact['item_id'], 'select' => ['entity_label']]);
-                $contact = $entity['entity_label'];
-            }
-
-            $contacts[] = $contact;
-        }
-
-        if (empty($contacts)) {
-            return '';
-        }
-
-        return implode("\n", $contacts);
     }
 
     private static function getMaximumHeight(Fpdi $pdf, array $args)
