@@ -15,7 +15,7 @@
  * @author dev@maarch.org
  */
 
-namespace CustomField\models;
+namespace Contact\models;
 
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
