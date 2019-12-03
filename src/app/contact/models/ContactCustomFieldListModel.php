@@ -17,7 +17,7 @@ namespace CustomField\models;
 use SrcCore\models\ValidatorModel;
 use SrcCore\models\DatabaseModel;
 
-class ContactCustomFieldModelList
+class ContactCustomFieldListModel
 {
     public static function get(array $args = [])
     {
