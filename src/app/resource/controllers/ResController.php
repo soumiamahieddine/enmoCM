@@ -16,6 +16,7 @@ namespace Resource\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Basket\models\BasketModel;
+use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
 use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
@@ -32,6 +33,7 @@ use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
 use Group\controllers\GroupController;
 use Group\controllers\PrivilegeController;
+use Group\models\GroupModel;
 use Group\models\PrivilegeModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
@@ -200,6 +202,81 @@ class ResController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => 'edit_resource', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $body = $request->getParsedBody();
+
+        $control = ResController::controlUpdateResource(['body' => $body, 'resId' => $args['resId']]);
+        if (!empty($control['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+        }
+
+        $body['resId'] = $args['resId'];
+        $resId = StoreController::storeResource($body);
+        if (empty($resId) || !empty($resId['errors'])) {
+            return $response->withStatus(500)->withJson(['errors' => '[ResController update] ' . $resId['errors']]);
+        }
+
+        ResController::updateAdjacentData(['body' => $body, 'resId' => $args['resId']]);
+
+        if (!empty($body['encodedFile'])) {
+            AdrModel::deleteDocumentAdr(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            ConvertPdfController::convert([
+                'resId'     => $args['resId'],
+                'collId'    => 'letterbox_coll'
+            ]);
+
+            $customId = CoreConfigModel::getCustomId();
+            $customId = empty($customId) ? 'null' : $customId;
+            exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$args['resId']} --collId letterbox_coll --userId {$GLOBALS['id']} > /dev/null &");
+
+            HistoryController::add([
+                'tableName' => 'res_letterbox',
+                'recordId'  => $args['resId'],
+                'eventType' => 'UP',
+                'info'      => _FILE_UPDATED,
+                'moduleId'  => 'resource',
+                'eventId'   => 'fileModification'
+            ]);
+        }
+
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $args['resId'],
+            'eventType' => 'UP',
+            'info'      => _DOC_UPDATED,
+            'moduleId'  => 'resource',
+            'eventId'   => 'resourceModification'
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function updateFromBasket(Request $request, Response $response, array $args)
+    {
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $user   = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+        $basket = BasketModel::getById(['id' => $args['basketId'], 'select' => ['basket_id', 'basket_clause']]);
+        $group  = GroupModel::getById(['id' => $args['groupId'], 'select' => ['group_id']]);
+
+        $groupBasket = GroupBasketModel::get(['select' => ['list_event_data', 'list_event'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
+        $listEventData = json_decode($groupBasket[0]['list_event_data'], true);
+        if ($groupBasket[0]['list_event'] != 'processDocument' || !$listEventData['canUpdate']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Basket can not update resources']);
+        }
+
+        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+        $resource = ResModel::getOnView([
+            'select'    => [1],
+            'where'     => [$whereClause, 'res_view_letterbox.res_id = ?'],
+            'data'      => [$args['resId']]
+        ]);
+        if (empty($resource)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Resource does not belong to this basket']);
         }
 
         $body = $request->getParsedBody();
