@@ -142,12 +142,6 @@ class ResController
             'priority'              => $document['priority']
         ];
         if (empty($queryParams['light'])) {
-            if (!empty($document['destination'])) {
-                $destination = EntityModel::getByEntityId(['entityId' => $document['destination'], 'select' => ['id']]);
-            }
-            if (!empty($document['initiator'])) {
-                $initiator = EntityModel::getByEntityId(['entityId' => $document['initiator'], 'select' => ['id']]);
-            }
             $formattedData = array_merge($formattedData, [
                 'doctype'               => $document['type_id'],
                 'typist'                => $document['typist'],
@@ -178,11 +172,13 @@ class ResController
         $formattedData = array_merge($unchangeableData, $formattedData);
 
         if (!empty($formattedData['destination'])) {
-            $entity = EntityModel::getByEntityId(['entityId' => $formattedData['destination'], 'select' => ['entity_label']]);
+            $entity = EntityModel::getByEntityId(['entityId' => $formattedData['destination'], 'select' => ['entity_label', 'id']]);
+            $formattedData['destination'] = $entity['id'];
             $formattedData['destinationLabel'] = $entity['entity_label'];
         }
         if (!empty($formattedData['initiator'])) {
-            $entity = EntityModel::getByEntityId(['entityId' => $formattedData['initiator'], 'select' => ['entity_label']]);
+            $entity = EntityModel::getByEntityId(['entityId' => $formattedData['initiator'], 'select' => ['entity_label', 'id']]);
+            $formattedData['initiator'] = $entity['id'];
             $formattedData['initiatorLabel'] = $entity['entity_label'];
         }
         if (!empty($formattedData['status'])) {
