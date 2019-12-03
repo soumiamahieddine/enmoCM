@@ -461,13 +461,18 @@ class BasketController
             }
         }
         $data['list_display'] = json_encode($data['list_display']);
-        $data['list_event_data'] = empty($data['list_event_data']) ? null : json_encode($data['list_event_data']);
+        if ($data['list_event'] == 'processDocument') {
+            $listEventData = [
+                'canUpdate'     => !empty($data['list_event_data']['canUpdate']),
+                'defaultTab'    => $data['list_event_data']['defaultTab'] ?? 'dashboard'
+            ];
+        }
 
         GroupBasketModel::update([
             'set'   => [
                 'list_display'      => $data['list_display'],
                 'list_event'        => $data['list_event'],
-                'list_event_data'   => $data['list_event_data']
+                'list_event_data'   => empty($listEventData) ? null : json_encode($listEventData)
             ],
             'where' => ['group_id = ?', 'basket_id = ?'],
             'data'  => [$aArgs['groupId'], $aArgs['id']]

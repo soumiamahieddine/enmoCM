@@ -142,13 +142,19 @@ class ResController
             'priority'              => $document['priority']
         ];
         if (empty($queryParams['light'])) {
+            if (!empty($document['destination'])) {
+                $destination = EntityModel::getByEntityId(['entityId' => $document['destination'], 'select' => ['id']]);
+            }
+            if (!empty($document['initiator'])) {
+                $initiator = EntityModel::getByEntityId(['entityId' => $document['initiator'], 'select' => ['id']]);
+            }
             $formattedData = array_merge($formattedData, [
                 'doctype'               => $document['type_id'],
                 'typist'                => $document['typist'],
                 'typistLabel'           => UserModel::getLabelledUserById(['id' => $document['typist']]),
                 'status'                => $document['status'],
-                'destination'           => $document['destination'],
-                'initiator'             => $document['initiator'],
+                'destination'           => $destination ?? null,
+                'initiator'             => $initiator ?? null,
                 'confidentiality'       => $document['confidentiality'] == 'Y',
                 'documentDate'          => $document['doc_date'],
                 'arrivalDate'           => $document['admission_date'],
