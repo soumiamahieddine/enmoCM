@@ -187,14 +187,13 @@ class AutoCompleteController
     {
         $data = $request->getQueryParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['search']);
-        if (!$check) {
+        if (!Validator::stringType()->notEmpty()->validate($data['search'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
         $searchItems = explode(' ', $data['search']);
 
-        $fields = ['contact_firstname', 'contact_lastname', 'firstname', 'lastname', 'society', 'address_num', 'address_street', 'address_town', 'address_postal_code'];
+        $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'];
         foreach ($fields as $key => $field) {
             $fields[$key] = "translate({$field}, 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ', 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')";
             $fields[$key] .= "ilike translate(?, 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ', 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')";
@@ -207,17 +206,17 @@ class AutoCompleteController
         foreach ($searchItems as $item) {
             if (strlen($item) >= 2) {
                 $where[] = $fields;
-                for ($i = 0; $i < 9; $i++) {
+                for ($i = 0; $i < 7; $i++) {
                     $requestData[] = "%{$item}%";
                 }
             }
         }
 
-        $contacts = ContactModel::getOnView([
+        $contacts = ContactModel::get([
             'select'    => ['*'],
             'where'     => $where,
             'data'      => $requestData,
-            'orderBy'   => ["is_corporate_person DESC", "case is_corporate_person when 'Y' then (society, lastname) else (contact_lastname, society) end"],
+            'orderBy'   => ["company, lastname"],
             'limit'     => self::TINY_LIMIT
         ]);
 
@@ -230,7 +229,7 @@ class AutoCompleteController
                 $autocompleteData[] = AutoCompleteController::getFormattedOnlyContact(['contact' => $contact])['contact'];
                 $onlyContacts[] = $contact['contact_id'];
             }
-            $autocompleteData[] = AutoCompleteController::getFormattedContact(['contact' => $contact, 'color' => $color])['contact'];
+            $autocompleteData[] = AutoCompleteController::getFormattedContactV2(['contact' => $contact, 'color' => $color])['contact'];
         }
 
         $excludedUsers = ['superadmin'];
@@ -761,32 +760,99 @@ class AutoCompleteController
         return ['contact' => $contact];
     }
 
-    public static function getFormattedOnlyContact(array $aArgs)
+    public static function getFormattedContactV2(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['contact']);
-        ValidatorModel::arrayType($aArgs, ['contact']);
+        ValidatorModel::notEmpty($args, ['contact']);
+        ValidatorModel::arrayType($args, ['contact']);
+        ValidatorModel::boolType($args, ['color']);
 
-        if ($aArgs['contact']['is_corporate_person'] == 'Y') {
-            $contact = [
-                'type'          => 'onlyContact',
-                'id'            => $aArgs['contact']['contact_id'],
-                'idToDisplay'   => $aArgs['contact']['society'],
-                'otherInfo'     => $aArgs['contact']['society'],
-                'rateColor'     => ''
-            ];
-        } else {
-            $contactToDisplay = "{$aArgs['contact']['contact_firstname']} {$aArgs['contact']['contact_lastname']}";
-            if (!empty($aArgs['contact']['society'])) {
-                $contactToDisplay .= " ({$aArgs['contact']['society']})";
-            }
-            $contact = [
-                'type'          => 'onlyContact',
-                'id'            => $aArgs['contact']['contact_id'],
-                'idToDisplay'   => $contactToDisplay,
-                'otherInfo'     => $contactToDisplay,
-                'rateColor'     => ''
-            ];
+        if (!empty($args['color'])) {
+            $rate = ContactController::getFillingRate(['contact' => $args['contact']]);
         }
+        $rateColor = empty($rate['color']) ? '' : $rate['color'];
+
+        $address = '';
+
+        if (!empty($args['contact']['address_number'])) {
+            $address.= $args['contact']['address_number'] . ' ';
+        }
+        if (!empty($args['contact']['address_street'])) {
+            $address.= $args['contact']['address_street'] . ' ';
+        }
+        if (!empty($args['contact']['address_postcode'])) {
+            $address.= $args['contact']['address_postcode'] . ' ';
+        }
+        if (!empty($args['contact']['address_town'])) {
+            $address.= $args['contact']['address_town'] . ' ';
+        }
+        if (!empty($args['contact']['address_country'])) {
+            $address.= $args['contact']['address_country'];
+        }
+
+        $contactName = '';
+        if (!empty($args['contact']['firstname'])) {
+            $contactName .= $args['contact']['firstname'] . ' ';
+        }
+        if (!empty($args['contact']['lastname'])) {
+            $contactName .= $args['contact']['lastname'] . ' ';
+        }
+
+        $company = '';
+        if (!empty($args['contact']['company'])) {
+            $company = $args['contact']['company'];
+
+            if (!empty($contactName)) {
+                $company = '(' . $company . ') ';
+            }
+        }
+
+        $contactToDisplay = $contactName . $company;
+
+        $otherInfo = empty($address) ? "{$contactToDisplay}" : "{$contactToDisplay} - {$address}";
+        $contact = [
+            'type'          => 'contact',
+            'id'            => $args['contact']['id'],
+            'contact'       => $contactToDisplay,
+            'address'       => $address,
+            'idToDisplay'   => "{$contactToDisplay}<br/>{$address}",
+            'otherInfo'     => $otherInfo,
+            'rateColor'     => $rateColor
+        ];
+
+        return ['contact' => $contact];
+    }
+
+    public static function getFormattedOnlyContact(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['contact']);
+        ValidatorModel::arrayType($args, ['contact']);
+
+        $contactName = '';
+        if (!empty($args['contact']['firstname'])) {
+            $contactName .= $args['contact']['firstname'] . ' ';
+        }
+        if (!empty($args['contact']['lastname'])) {
+            $contactName .= $args['contact']['lastname'] . ' ';
+        }
+
+        $company = '';
+        if (!empty($args['contact']['company'])) {
+            $company = $args['contact']['company'];
+
+            if (!empty($contactName)) {
+                $company = '(' . $company . ') ';
+            }
+        }
+
+        $contactToDisplay = $contactName . $company;
+
+        $contact = [
+            'type'          => 'onlyContact',
+            'id'            => $args['contact']['id'],
+            'idToDisplay'   => $contactToDisplay,
+            'otherInfo'     => $contactToDisplay,
+            'rateColor'     => ''
+        ];
 
         return ['contact' => $contact];
     }
