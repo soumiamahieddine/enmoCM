@@ -199,6 +199,7 @@ export class IndexingFormComponent implements OnInit {
                     this.availableCustomFields = data.customFields.map((info: any) => {
                         info.identifier = 'indexingCustomField_' + info.id;
                         info.system = false;
+                        info.default_value = null;
                         info.values = info.values.length > 0 ? info.values.map((custVal: any) => {
                             return {
                                 id: custVal,
@@ -668,6 +669,7 @@ export class IndexingFormComponent implements OnInit {
                     this.availableCustomFields = data.customFields.map((info: any) => {
                         info.identifier = 'indexingCustomField_' + info.id;
                         info.system = false;
+                        info.default_value = null;
                         info.values = info.values.length > 0 ? info.values.map((custVal: any) => {
                             return {
                                 id: custVal,
@@ -752,7 +754,7 @@ export class IndexingFormComponent implements OnInit {
 
     initValidator(field: any) {
         let valArr: ValidatorFn[] = [];
-
+        console.log(field.default_value);
         this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.today && this.adminMode) ? true : false });
 
         if (field.type === 'integer') {
