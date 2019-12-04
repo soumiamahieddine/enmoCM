@@ -34,20 +34,6 @@ abstract class PrivilegeModelAbstract
         return $aServices;
     }
 
-    public static function canIndex(array $args)
-    {
-        ValidatorModel::notEmpty($args, ['userId']);
-        ValidatorModel::intVal($args, ['userId']);
-
-        $canIndex = UserGroupModel::getWithGroups([
-            'select'    => [1],
-            'where'     => ['usergroup_content.user_id = ?', 'usergroups.can_index = ?'],
-            'data'      => [$args['userId'], true]
-        ]);
-
-        return !empty($canIndex);
-    }
-
     public static function getPrivilegesByGroupId(array $args)
     {
         ValidatorModel::notEmpty($args, ['groupId']);
@@ -65,7 +51,8 @@ abstract class PrivilegeModelAbstract
         return $privileges;
     }
 
-    public static function addPrivilegeToGroup(array $args) {
+    public static function addPrivilegeToGroup(array $args)
+    {
         ValidatorModel::notEmpty($args, ['privilegeId', 'groupId']);
         ValidatorModel::stringType($args, ['privilegeId', 'groupId']);
 
@@ -80,7 +67,8 @@ abstract class PrivilegeModelAbstract
         return true;
     }
 
-    public static function removePrivilegeToGroup(array $args) {
+    public static function removePrivilegeToGroup(array $args)
+    {
         ValidatorModel::notEmpty($args, ['privilegeId', 'groupId']);
         ValidatorModel::stringType($args, ['privilegeId', 'groupId']);
 

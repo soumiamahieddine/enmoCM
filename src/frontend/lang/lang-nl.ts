@@ -1350,4 +1350,7 @@ export const LANG_NL = {
     "manageCreateContactsDesc": "Create contacts from indexing/processing/detail page", //_TO_TRANSLATE
     "manageUpdateContacts": "Update contacts", //_TO_TRANSLATE
     "manageUpdateContactsDesc": "Update contacts from indexing/processing/detail page", //_TO_TRANSLATE
+    "newVersion": "New version", //_TO_TRANSLATE
+    "information": "Information", //_TO_TRANSLATE
+    "mustEditDocument": "You must <b>edit</b> document in order to <b>validate</b> modifications.", //_TO_TRANSLATE
 };

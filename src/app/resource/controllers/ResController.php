@@ -58,18 +58,9 @@ use User\models\UserModel;
 
 class ResController
 {
-    //*****************************************************************************************
-    //LOG ONLY LOG FOR DEBUG
-    // ob_flush();
-    // ob_start();
-    // print_r($data);
-    // file_put_contents("storeResourceLogs.log", ob_get_flush());
-    //END LOG FOR DEBUG ONLY
-    //*****************************************************************************************
-
     public function create(Request $request, Response $response)
     {
-        if (!PrivilegeModel::canIndex(['userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::canIndex(['userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -104,7 +95,7 @@ class ResController
             'eventType' => 'ADD',
             'info'      => _DOC_ADDED,
             'moduleId'  => 'resource',
-            'eventId'   => 'resadd',
+            'eventId'   => 'resourceCreation',
         ]);
 
         return $response->withJson(['resId' => $resId]);
@@ -200,15 +191,22 @@ class ResController
 
     public function update(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => 'edit_resource', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        $queryParams = $request->getQueryParams();
+
+        $control = PrivilegeController::canUpdateResource(['currentUserId' => $GLOBALS['id'], 'resId' => $args['resId'], 'queryParams' => $queryParams]);
+        if (!empty($control['errors'])) {
+            return $response->withStatus(403)->withJson(['errors' => $control['errors']]);
         }
 
         $body = $request->getParsedBody();
 
-        $control = ResController::controlUpdateResource(['body' => $body, 'resId' => $args['resId']]);
+        $isProcessing = !empty($queryParams['basketId']);
+        if ($isProcessing) {
+            unset($body['destination']);
+            unset($body['diffusionList']);
+        }
+
+        $control = ResController::controlUpdateResource(['body' => $body, 'resId' => $args['resId'], 'isProcessing' => $isProcessing]);
         if (!empty($control['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
@@ -221,6 +219,7 @@ class ResController
 
         ResController::updateAdjacentData(['body' => $body, 'resId' => $args['resId']]);
 
+        $resource = ResModel::getById(['id' => $args['resId'], 'select' => ['alt_identifier']]);
         if (!empty($body['encodedFile'])) {
             AdrModel::deleteDocumentAdr(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             ConvertPdfController::convert([
@@ -236,7 +235,7 @@ class ResController
                 'tableName' => 'res_letterbox',
                 'recordId'  => $args['resId'],
                 'eventType' => 'UP',
-                'info'      => _FILE_UPDATED,
+                'info'      => _FILE_UPDATED . " : {$resource['alt_identifier']}",
                 'moduleId'  => 'resource',
                 'eventId'   => 'fileModification'
             ]);
@@ -246,82 +245,7 @@ class ResController
             'tableName' => 'res_letterbox',
             'recordId'  => $args['resId'],
             'eventType' => 'UP',
-            'info'      => _DOC_UPDATED,
-            'moduleId'  => 'resource',
-            'eventId'   => 'resourceModification'
-        ]);
-
-        return $response->withStatus(204);
-    }
-
-    public function updateFromBasket(Request $request, Response $response, array $args)
-    {
-        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
-        if (!empty($errors['errors'])) {
-            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
-        }
-
-        $user   = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
-        $basket = BasketModel::getById(['id' => $args['basketId'], 'select' => ['basket_id', 'basket_clause']]);
-        $group  = GroupModel::getById(['id' => $args['groupId'], 'select' => ['group_id']]);
-
-        $groupBasket = GroupBasketModel::get(['select' => ['list_event_data', 'list_event'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
-        $listEventData = json_decode($groupBasket[0]['list_event_data'], true);
-        if ($groupBasket[0]['list_event'] != 'processDocument' || !$listEventData['canUpdate']) {
-            return $response->withStatus(400)->withJson(['errors' => 'Basket can not update resources']);
-        }
-
-        $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
-        $resource = ResModel::getOnView([
-            'select'    => [1],
-            'where'     => [$whereClause, 'res_view_letterbox.res_id = ?'],
-            'data'      => [$args['resId']]
-        ]);
-        if (empty($resource)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Resource does not belong to this basket']);
-        }
-
-        $body = $request->getParsedBody();
-
-        $control = ResController::controlUpdateResource(['body' => $body, 'resId' => $args['resId']]);
-        if (!empty($control['errors'])) {
-            return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
-        }
-
-        $body['resId'] = $args['resId'];
-        $resId = StoreController::storeResource($body);
-        if (empty($resId) || !empty($resId['errors'])) {
-            return $response->withStatus(500)->withJson(['errors' => '[ResController update] ' . $resId['errors']]);
-        }
-
-        ResController::updateAdjacentData(['body' => $body, 'resId' => $args['resId']]);
-
-        if (!empty($body['encodedFile'])) {
-            AdrModel::deleteDocumentAdr(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
-            ConvertPdfController::convert([
-                'resId'     => $args['resId'],
-                'collId'    => 'letterbox_coll'
-            ]);
-
-            $customId = CoreConfigModel::getCustomId();
-            $customId = empty($customId) ? 'null' : $customId;
-            exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$args['resId']} --collId letterbox_coll --userId {$GLOBALS['id']} > /dev/null &");
-
-            HistoryController::add([
-                'tableName' => 'res_letterbox',
-                'recordId'  => $args['resId'],
-                'eventType' => 'UP',
-                'info'      => _FILE_UPDATED,
-                'moduleId'  => 'resource',
-                'eventId'   => 'fileModification'
-            ]);
-        }
-
-        HistoryController::add([
-            'tableName' => 'res_letterbox',
-            'recordId'  => $args['resId'],
-            'eventType' => 'UP',
-            'info'      => _DOC_UPDATED,
+            'info'      => _DOC_UPDATED . " : {$resource['alt_identifier']}",
             'moduleId'  => 'resource',
             'eventId'   => 'resourceModification'
         ]);
@@ -911,35 +835,34 @@ class ResController
                 ]);
             }
         }
+        ResourceCustomFieldModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
         if (!empty($body['customFields'])) {
-            ResourceCustomFieldModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             foreach ($body['customFields'] as $key => $value) {
                 ResourceCustomFieldModel::create(['res_id' => $args['resId'], 'custom_field_id' => $key, 'value' => json_encode($value)]);
             }
         }
+        $entities = EntityModel::getWithUserEntities([
+            'select' => ['entities.id'],
+            'where'  => ['user_id = ?'],
+            'data'   => [$GLOBALS['userId']]
+        ]);
+        $entities = array_column($entities, 'id');
+        $idToDelete = FolderModel::getWithEntitiesAndResources([
+            'select'    => ['resources_folders.id'],
+            'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
+            'data'      => [$args['resId'], $entities, $GLOBALS['id']]
+        ]);
+        $idToDelete = array_column($idToDelete, 'id');
+        if (!empty($idToDelete)) {
+            ResourceFolderModel::delete(['where' => ['id in (?)'], 'data' => [$idToDelete]]);
+        }
         if (!empty($body['folders'])) {
-            $entities = EntityModel::getWithUserEntities([
-                'select' => ['entities.id'],
-                'where'  => ['user_id = ?'],
-                'data'   => [$GLOBALS['userId']]
-            ]);
-            $entities = array_column($entities, 'id');
-            $idToDelete = FolderModel::getWithEntitiesAndResources([
-                'select'    => ['resources_folders.id'],
-                'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
-                'data'      => [$args['resId'], $entities, $GLOBALS['id']]
-            ]);
-            $idToDelete = array_column($idToDelete, 'id');
-            if (!empty($idToDelete)) {
-                ResourceFolderModel::delete(['where' => ['id in (?)'], 'data' => [$idToDelete]]);
-            }
-
             foreach ($body['folders'] as $folder) {
                 ResourceFolderModel::create(['res_id' => $args['resId'], 'folder_id' => $folder]);
             }
         }
+        TagResModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
         if (!empty($body['tags'])) {
-            TagResModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             foreach ($body['tags'] as $tag) {
                 TagResModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
             }
@@ -1069,7 +992,7 @@ class ResController
         }
 
         $body['modelId'] = $resource['model_id'];
-        $control = ResController::controlIndexingModelFields(['body' => $body]);
+        $control = ResController::controlIndexingModelFields(['body' => $body, 'isProcessing' => $args['isProcessing']]);
         if (!empty($control['errors'])) {
             return ['errors' => $control['errors']];
         }
@@ -1256,6 +1179,8 @@ class ResController
                         return ['errors' => "Body customFields[{$customFieldId}] is not a date"];
                     }
                 }
+            } elseif ($indexingModelField['identifier'] == 'destination' && !empty($args['isProcessing'])) {
+                continue;
             } elseif ($indexingModelField['mandatory'] && empty($body[$indexingModelField['identifier']])) {
                 return ['errors' => "Body {$indexingModelField['identifier']} is empty"];
             }

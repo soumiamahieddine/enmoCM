@@ -292,7 +292,7 @@ class IndexingModelController
                         'model_id'      => $child['id'],
                         'identifier'    => $field['identifier'],
                         'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
-                        'default_value' => empty($field['default_value']) ? null : json_encode($field['default_value']),
+                        'default_value' => !isset($field['default_value']) ? null : json_encode($field['default_value']),
                         'unit'          => $field['unit']
                     ]);
                 }
@@ -315,7 +315,7 @@ class IndexingModelController
                 'model_id'      => $args['id'],
                 'identifier'    => $field['identifier'],
                 'mandatory'     => empty($field['mandatory']) ? 'false' : 'true',
-                'default_value' => empty($field['default_value']) ? null : json_encode($field['default_value']),
+                'default_value' => !isset($field['default_value']) ? null : json_encode($field['default_value']),
                 'unit'          => $field['unit']
             ]);
         }

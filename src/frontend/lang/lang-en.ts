@@ -1325,4 +1325,7 @@ export const LANG_EN = {
     "manageCreateContactsDesc": "Create contacts from indexing/processing/detail page",
     "manageUpdateContacts": "Update contacts",
     "manageUpdateContactsDesc": "Update contacts from indexing/processing/detail page",
+    "newVersion": "New version",
+    "information": "Information",
+    "mustEditDocument": "You must <b>edit</b> document in order to <b>validate</b> modifications.",
 };

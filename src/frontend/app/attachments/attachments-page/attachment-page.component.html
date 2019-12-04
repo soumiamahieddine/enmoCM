@@ -22,7 +22,7 @@
                     <div class="attachment-form">
                         <div class="attachment-form-item">
                             <mat-slide-toggle [checked]="newVersion" color="primary"
-                                (change)="newVersion = !newVersion">Nouvelle version</mat-slide-toggle>
+                                (change)="toggleNewVersion()">{{lang.newVersion}}</mat-slide-toggle>
                         </div>
                         <div class="attachment-form-item">
                             <mat-form-field class="input-form">

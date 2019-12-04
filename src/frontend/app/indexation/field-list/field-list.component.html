@@ -80,7 +80,7 @@
                 {{field.label}}
             </div>
             <div class="fieldInput">
-                <ng-container *ngIf="field.type === 'string'">
+                <ng-container *ngIf="field.type === 'string' || field.type === 'autocomplete'">
                     <mat-form-field class="input-form" floatLabel="never">
                         <textarea matInput [placeholder]="lang[field.type + 'Input']" matTextareaAutosize
                             matAutosizeMinRows="1" cdkAutosizeMaxRows="6" disabled></textarea>

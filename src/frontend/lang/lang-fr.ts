@@ -1363,4 +1363,7 @@ export const LANG_FR = {
     "manageCreateContactsDesc": "Créer des contacts depuis les pages d'indexation/traitement/détaillée",
     "manageUpdateContacts": "Mettre à jour les contacts",
     "manageUpdateContactsDesc": "Mettre à jour les contacts depuis les pages d'indexation/traitement/détaillée",
+    "newVersion": "Nouvelle version",
+    "information": "Information",
+    "mustEditDocument": "Vous devez <b>éditer</b> votre document afin de pouvoir <b>valider</b> vos modifications.",
 };

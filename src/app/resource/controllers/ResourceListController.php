@@ -584,7 +584,7 @@ class ResourceListController
         $group = GroupModel::getById(['id' => $aArgs['groupId'], 'select' => ['group_id']]);
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_id', 'basket_clause', 'basket_res_order', 'basket_name']]);
         if (empty($group) || empty($basket)) {
-            return ['errors' => 'Group or basket does not exist', 'code' => 400];
+            return ['errors' => 'Group or basket does not exist', 'code' => 403];
         }
 
         if ($aArgs['userId'] == $aArgs['currentUserId']) {
@@ -609,19 +609,14 @@ class ResourceListController
 
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
         $groups = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
-        $groupFound = false;
-        foreach ($groups as $value) {
-            if ($value['id'] == $aArgs['groupId']) {
-                $groupFound = true;
-            }
-        }
-        if (!$groupFound) {
-            return ['errors' => 'Group is not linked to this user', 'code' => 400];
+        $groups = array_column($groups, 'id');
+        if (!in_array($aArgs['groupId'], $groups)) {
+            return ['errors' => 'Group is not linked to this user', 'code' => 403];
         }
 
         $isBasketLinked = GroupBasketModel::get(['select' => [1], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
         if (empty($isBasketLinked)) {
-            return ['errors' => 'Group is not linked to this basket', 'code' => 400];
+            return ['errors' => 'Group is not linked to this basket', 'code' => 403];
         }
 
         return ['success' => 'success'];
