@@ -77,70 +77,70 @@ export class IndexingFormComponent implements OnInit {
             identifier: 'getRecipients',
             label: this.lang.getRecipients,
             type: 'autocomplete',
-            default_value: '',
+            default_value: null,
             values: []
         },
         {
             identifier: 'priority',
             label: this.lang.priority,
             type: 'select',
-            default_value: '',
+            default_value: null,
             values: []
         },
         {
             identifier: 'confidentiality',
             label: this.lang.confidential,
             type: 'radio',
-            default_value: '',
+            default_value: null,
             values: [{ 'id': true, 'label': this.lang.yes }, { 'id': false, 'label': this.lang.no }]
         },
         {
             identifier: 'initiator',
             label: this.lang.initiatorEntityAlt,
             type: 'select',
-            default_value: '',
+            default_value: null,
             values: []
         },
         {
             identifier: 'departureDate',
             label: this.lang.departureDate,
             type: 'date',
-            default_value: '',
+            default_value: null,
             values: []
         },
         {
             identifier: 'processLimitDate',
             label: this.lang.processLimitDate,
             type: 'date',
-            default_value: '',
+            default_value: null,
             values: []
         },
         {
             identifier: 'tags',
             label: this.lang.tags,
             type: 'autocomplete',
-            default_value: '',
+            default_value: null,
             values: ['/rest/autocomplete/tags', '/rest/tags']
         },
         {
             identifier: 'senders',
             label: this.lang.getSenders,
             type: 'autocomplete',
-            default_value: '',
+            default_value: null,
             values: ['/rest/autocomplete/contacts']
         },
         {
             identifier: 'destination',
             label: this.lang.destination,
             type: 'select',
-            default_value: '',
+            default_value: null,
             values: []
         },
         {
             identifier: 'folders',
             label: this.lang.folders,
             type: 'autocomplete',
-            default_value: '',
+            default_value: null,
             values: ['/rest/autocomplete/folders', '/rest/folders']
         },
         {
@@ -148,7 +148,7 @@ export class IndexingFormComponent implements OnInit {
             label: this.lang.docDate,
             unit: 'mail',
             type: 'date',
-            default_value: '',
+            default_value: null,
             values: []
         },
         {
@@ -156,7 +156,7 @@ export class IndexingFormComponent implements OnInit {
             label: this.lang.arrivalDate,
             unit: 'mail',
             type: 'date',
-            default_value: '',
+            default_value: null,
             values: []
         },
     ];
@@ -288,7 +288,7 @@ export class IndexingFormComponent implements OnInit {
                     }
                 }   
             } else {
-                element.default_value = this.arrFormControl[element.identifier].value;
+                element.default_value = this.arrFormControl[element.identifier].value === '' ? null : this.arrFormControl[element.identifier].value;
             }
 
             if (element.identifier === "destination" && !this.adminMode && withDiffusionList) {
