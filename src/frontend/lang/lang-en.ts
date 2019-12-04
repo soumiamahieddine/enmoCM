@@ -1321,4 +1321,7 @@ export const LANG_EN = {
     "saveModifiedData": "Do you want to save modified data ?",
     "dataUpdated": "Data updated",
     "canUpdateData": "Can update resource data",
+    "newVersion": "New version",
+    "information": "Information",
+    "mustEditDocument": "You must <b>edit</b> document in order to <b>validate</b> modifications.",
 };

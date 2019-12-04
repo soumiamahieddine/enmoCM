@@ -1359,4 +1359,7 @@ export const LANG_FR = {
     "saveModifiedData": "Voulez-vous sauvegarder les modifications ?",
     "dataUpdated": "Données modifiées",
     "canUpdateData": "Pouvoir modifier les métadonnées du courrier",
+    "newVersion": "Nouvelle version",
+    "information": "Information",
+    "mustEditDocument": "Vous devez <b>éditer</b> votre document afin de pouvoir <b>valider</b> vos modifications.",
 };

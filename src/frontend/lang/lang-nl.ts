@@ -1346,4 +1346,7 @@ export const LANG_NL = {
     "saveModifiedData": "Do you want to save modified data ?", //_TO_TRANSLATE
     "dataUpdated": "Data updated", //_TO_TRANSLATE
     "canUpdateData": "Can update resource data", //_TO_TRANSLATE
+    "newVersion": "New version", //_TO_TRANSLATE
+    "information": "Information", //_TO_TRANSLATE
+    "mustEditDocument": "You must <b>edit</b> document in order to <b>validate</b> modifications.", //_TO_TRANSLATE
 };
