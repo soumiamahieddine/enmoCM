@@ -2,13 +2,20 @@
 
 namespace Group\controllers;
 
+use Basket\models\BasketModel;
+use Basket\models\GroupBasketModel;
 use Group\models\GroupModel;
 use Group\models\PrivilegeModel;
+use Resource\controllers\ResController;
+use Resource\controllers\ResourceListController;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
+use User\models\UserGroupModel;
 use User\models\UserModel;
 
 class PrivilegeController
@@ -214,5 +221,61 @@ class PrivilegeController
         }
 
         return in_array($args['groupId'], $assignable);
+    }
+
+    public static function canIndex(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['userId']);
+        ValidatorModel::intVal($args, ['userId']);
+
+        $canIndex = UserGroupModel::getWithGroups([
+            'select'    => [1],
+            'where'     => ['usergroup_content.user_id = ?', 'usergroups.can_index = ?'],
+            'data'      => [$args['userId'], true]
+        ]);
+
+        return !empty($canIndex);
+    }
+
+    public static function canUpdateResource(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['currentUserId', 'resId']);
+        ValidatorModel::intVal($args, ['currentUserId', 'resId']);
+        ValidatorModel::arrayType($args, ['queryParams']);
+
+        if (!empty($args['queryParams']['userId']) && !empty($args['queryParams']['groupId']) && !empty($args['queryParams']['basketId'])) {
+            $errors = ResourceListController::listControl(['groupId' => $args['queryParams']['groupId'], 'userId' => $args['queryParams']['userId'], 'basketId' => $args['queryParams']['basketId'], 'currentUserId' => $args['currentUserId']]);
+            if (!empty($errors['errors'])) {
+                return ['errors' => $errors['errors']];
+            }
+
+            $user   = UserModel::getById(['id' => $args['queryParams']['userId'], 'select' => ['user_id']]);
+            $basket = BasketModel::getById(['id' => $args['queryParams']['basketId'], 'select' => ['basket_id', 'basket_clause']]);
+            $group  = GroupModel::getById(['id' => $args['queryParams']['groupId'], 'select' => ['group_id']]);
+
+            $groupBasket = GroupBasketModel::get(['select' => ['list_event_data', 'list_event'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
+            $listEventData = json_decode($groupBasket[0]['list_event_data'], true);
+            if ($groupBasket[0]['list_event'] != 'processDocument' || !$listEventData['canUpdate']) {
+                return ['errors' => 'Basket can not update resources'];
+            }
+
+            $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
+            $resource = ResModel::getOnView([
+                'select'    => [1],
+                'where'     => [$whereClause, 'res_view_letterbox.res_id = ?'],
+                'data'      => [$args['resId']]
+            ]);
+            if (empty($resource)) {
+                return ['errors' => 'Resource does not belong to this basket'];
+            }
+        } else {
+            if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $args['currentUserId']])) {
+                return ['errors' => 'Resource out of perimeter'];
+            } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => 'edit_resource', 'userId' => $args['currentUserId']])) {
+                return ['errors' => 'Service forbidden'];
+            }
+        }
+
+        return true;
     }
 }

@@ -338,7 +338,6 @@ $app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class
 $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':updateExternalInfos');
 $app->get('/categories', \Resource\controllers\ResController::class . ':getCategories');
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
-$app->put('/resources/{resId}/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResController::class . ':updateFromBasket');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
