@@ -17,7 +17,6 @@ namespace Resource\controllers;
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
-use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
@@ -35,8 +34,6 @@ use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
 use Group\controllers\GroupController;
 use Group\controllers\PrivilegeController;
-use Group\models\GroupModel;
-use Group\models\PrivilegeModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
 use IndexingModel\models\IndexingModelModel;
@@ -1185,8 +1182,8 @@ class ResController
                 }
             } elseif ($indexingModelField['identifier'] == 'destination' && !empty($args['isProcessing'])) {
                 continue;
-            } elseif ($indexingModelField['mandatory'] && empty($body[$indexingModelField['identifier']])) {
-                return ['errors' => "Body {$indexingModelField['identifier']} is empty"];
+            } elseif ($indexingModelField['mandatory'] && !isset($body[$indexingModelField['identifier']])) {
+                return ['errors' => "Body {$indexingModelField['identifier']} is not set"];
             }
         }
 
