@@ -288,7 +288,31 @@ export class ProcessComponent implements OnInit {
     }
 
     removeModal(index: number) {
-        this.modalModule.splice(index, 1);
+        if (this.modalModule[index].id === 'info' && this.indexingForm.isResourceModified()) {
+            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.saveModifiedData } });
+
+                dialogRef.afterClosed().pipe(
+                    tap((data: string) => {
+                        if (data !== 'ok') {
+                            this.modalModule.splice(index, 1);
+                        }
+                    }),
+                    filter((data: string) => data === 'ok'),
+                    tap(() => {
+                        this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+                        setTimeout(() => {
+                            this.loadResource();
+                        }, 400);
+                        this.modalModule.splice(index, 1);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+        } else {
+            this.modalModule.splice(index, 1);
+        }
     }
 
     isModalOpen() {
@@ -301,7 +325,7 @@ export class ProcessComponent implements OnInit {
     }
 
     changeTab(tabId: string) {
-        if (this.currentTool === 'info' && this.indexingForm.isResourceModified()) {
+        if (this.currentTool === 'info' && this.indexingForm.isResourceModified() && !this.isModalOpen()) {
             const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.saveModifiedData } });
 
                 dialogRef.afterClosed().pipe(

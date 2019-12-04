@@ -76,21 +76,21 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="!isModalOpen(); else elseTemplate">
-                <app-notes-list *ngIf="currentTool === 'notes'" #appNotesList [editMode]="true"
+                <app-notes-list *ngIf="currentTool === 'notes' && !loading" #appNotesList [editMode]="true"
                     [resId]="currentResourceInformations.resId">
                 </app-notes-list>
-                <app-diffusions-list *ngIf="currentTool === 'diffusionList'" #appDiffusionsList [adminMode]="false"
+                <app-diffusions-list *ngIf="currentTool === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="false"
                     [resId]="currentResourceInformations.resId" [expanded]="true">
                 </app-diffusions-list>
-                <app-visa-workflow *ngIf="currentTool === 'visa'" #appVisaWorkflow
+                <app-visa-workflow *ngIf="currentTool === 'visa' && !loading" #appVisaWorkflow
                     [resId]="currentResourceInformations.resId"></app-visa-workflow>
-                <app-avis-workflow *ngIf="currentTool === 'avis'" #appAvisWorkflow
+                <app-avis-workflow *ngIf="currentTool === 'avis' && !loading" #appAvisWorkflow
                     [resId]="currentResourceInformations.resId"></app-avis-workflow>
-                <app-attachments-list *ngIf="currentTool === 'attachments'" #appAttachmentsList
+                <app-attachments-list *ngIf="currentTool === 'attachments' && !loading" #appAttachmentsList
                     [resId]="currentResourceInformations.resId" [target]="'process'">
                 </app-attachments-list>
-                <app-indexing-form *ngIf="currentTool === 'info'" #indexingForm [groupId]="currentGroupId"
-                    [indexingFormId]="1" [resId]="currentResourceInformations.resId" [mode]="'process'"></app-indexing-form>
+                <app-indexing-form *ngIf="currentTool === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
+                    [resId]="currentResourceInformations.resId" [indexingFormId]="currentResourceInformations.modelId" [mode]="'process'"></app-indexing-form>
             </ng-container>
             <ng-template #elseTemplate>
                 <div class="openedModal">
@@ -224,20 +224,20 @@
         </button>
     </div>
     <div class="modal-module-content">
-        <app-notes-list *ngIf="modal.id === 'notes'" #appNotesList [editMode]="true"
+        <app-notes-list *ngIf="modal.id === 'notes' && !loading" #appNotesList [editMode]="true"
             [resId]="currentResourceInformations.resId">
         </app-notes-list>
-        <app-diffusions-list *ngIf="modal.id === 'diffusionList'" #appDiffusionsList [adminMode]="false"
+        <app-diffusions-list *ngIf="modal.id === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="false"
             [resId]="currentResourceInformations.resId" [expanded]="true">
         </app-diffusions-list>
-        <app-visa-workflow *ngIf="modal.id === 'visa'" #appVisaWorkflow [resId]="currentResourceInformations.resId">
+        <app-visa-workflow *ngIf="modal.id === 'visa' && !loading" #appVisaWorkflow [resId]="currentResourceInformations.resId">
         </app-visa-workflow>
-        <app-avis-workflow *ngIf="modal.id === 'avis'" #appAvisWorkflow [resId]="currentResourceInformations.resId">
+        <app-avis-workflow *ngIf="modal.id === 'avis' && !loading" #appAvisWorkflow [resId]="currentResourceInformations.resId">
         </app-avis-workflow>
-        <app-attachments-list *ngIf="modal.id === 'attachments'" #appAttachmentsList
+        <app-attachments-list *ngIf="modal.id === 'attachments'  && !loading" #appAttachmentsList
             [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="reloadBadgeAttachments($event)">
         </app-attachments-list>
-        <app-indexing-form *ngIf="modal.id === 'info'" #indexingForm [groupId]="currentGroupId" [indexingFormId]="1" [resId]="currentResourceInformations.resId" [mode]="'process'">
+        <app-indexing-form *ngIf="modal.id === 'info' && !loading" #indexingForm [groupId]="currentGroupId" [indexingFormId]="currentResourceInformations.modelId" [resId]="currentResourceInformations.resId" [mode]="'process'">
         </app-indexing-form>
     </div>
 </div>
