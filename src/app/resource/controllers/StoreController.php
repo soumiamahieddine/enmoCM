@@ -279,6 +279,8 @@ class StoreController
             'origin_id'             => $args['originId'] ?? null,
             'res_id_master'         => $args['resIdMaster'],
             'attachment_type'       => $args['type'],
+            'recipient_id'          => $args['recipientId'] ?? null,
+            'recipient_type'        => $args['recipientType'] ?? null,
             'validation_date'       => $args['validationDate'] ?? null,
             'effective_date'        => $args['effectiveDate'] ?? null,
             'in_signature_book'     => empty($args['inSignatureBook']) ? 'false' : 'true',
@@ -300,6 +302,8 @@ class StoreController
 
         $preparedData = [
             'title'                 => $args['title'] ?? null,
+            'recipient_id'          => $args['recipientId'] ?? null,
+            'recipient_type'        => $args['recipientType'] ?? null,
             'attachment_type'       => $args['type'],
             'validation_date'       => $args['validationDate'] ?? null,
             'effective_date'        => $args['effectiveDate'] ?? null,

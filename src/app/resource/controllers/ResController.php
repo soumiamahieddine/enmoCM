@@ -223,7 +223,7 @@ class ResController
 
         ResController::updateAdjacentData(['body' => $body, 'resId' => $args['resId']]);
 
-        $resource = ResModel::getById(['id' => $args['resId'], 'select' => ['alt_identifier']]);
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
         if (!empty($body['encodedFile'])) {
             AdrModel::deleteDocumentAdr(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             ConvertPdfController::convert([

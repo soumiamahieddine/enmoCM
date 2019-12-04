@@ -18,8 +18,6 @@ use SrcCore\models\AuthenticationModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
-require_once 'core/class/Url.php';
-
 abstract class UserModelAbstract
 {
     public static function get(array $aArgs)
@@ -39,23 +37,28 @@ abstract class UserModelAbstract
         return $aUsers;
     }
 
-    public static function getById(array $aArgs)
+    public static function getById(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
 
-        $aUser = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+        $where = ['id = ?'];
+        if (!empty($args['noDeleted'])) {
+            $where[] = "status != 'DEL'";
+        }
+
+        $user = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
             'table'     => ['users'],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'where'     => $where,
+            'data'      => [$args['id']]
         ]);
 
-        if (empty($aUser)) {
+        if (empty($user[0])) {
             return [];
         }
 
-        return $aUser[0];
+        return $user[0];
     }
 
     public static function getByExternalId(array $aArgs)

@@ -15,6 +15,7 @@
 namespace Attachment\controllers;
 
 use Attachment\models\AttachmentModel;
+use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
@@ -87,8 +88,8 @@ class AttachmentController
             'id'        => $args['id'],
             'select'    => [
                 'res_id as "resId"', 'res_id_master as "resIdMaster"', 'status', 'title', 'identifier as chrono', 'typist', 'modified_by as "modifiedBy"', 'relation', 'attachment_type as type',
-                'origin_id as "originId"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"', 'validation_date as "validationDate"',
-                'fulltext_result as "fulltextResult"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
+                'recipient_id', 'recipient_type', 'origin_id as "originId"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"',
+                'validation_date as "validationDate"', 'fulltext_result as "fulltextResult"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
             ]
         ]);
         if (empty($attachment) || in_array($attachment['status'], ['DEL', 'OBS'])) {
@@ -177,7 +178,10 @@ class AttachmentController
         if (!empty($control['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
-
+        $control = AttachmentController::controlRecipient(['body' => $body]);
+        if (!empty($control['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+        }
         $control = AttachmentController::controlDates(['body' => $body]);
         if (!empty($control['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
@@ -812,6 +816,11 @@ class AttachmentController
             return ['errors' => $control['errors']];
         }
 
+        $control = AttachmentController::controlRecipient(['body' => $body]);
+        if (!empty($control['errors'])) {
+            return ['errors' => $control['errors']];
+        }
+
         $control = AttachmentController::controlDates(['body' => $body]);
         if (!empty($control['errors'])) {
             return ['errors' => $control['errors']];
@@ -855,6 +864,30 @@ class AttachmentController
                 return ['errors' => 'Body resIdMaster is different from origin'];
             } elseif (!empty($origin['origin_id'])) {
                 return ['errors' => 'Body originId can not be a version, it must be the original version'];
+            }
+        }
+
+        return true;
+    }
+
+    private static function controlRecipient(array $args)
+    {
+        $body = $args['body'];
+
+        if (!empty($body['recipientId'])) {
+            if (!Validator::intVal()->notEmpty()->validate($body['recipientId'])) {
+                return ['errors' => 'Body recipientId is not an integer'];
+            }
+            if (empty($body['recipientType']) || !in_array($body['recipientType'], ['user', 'contact'])) {
+                return ['errors' => 'Body recipientType is empty or not in [user, contact]'];
+            }
+            if ($body['recipientType'] == 'user') {
+                $recipient = UserModel::getById(['id' => $body['destUserId'], 'select' => [1], 'noDeleted' => true]);
+            } elseif ($body['recipientType'] == 'contact') {
+                $recipient = ContactModel::getById(['id' => $body['contactId'], 'select' => [1]]);
+            }
+            if (empty($recipient)) {
+                return ['errors' => 'Body recipientId does not exist'];
             }
         }
 
