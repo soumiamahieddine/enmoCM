@@ -303,7 +303,7 @@ function migrateResourceContacts($args = [])
 function migrateResAttachments($args = [])
 {
     \SrcCore\models\DatabaseModel::update([
-        'set'   => ['contact_id' => $args['newContactId']],
+        'set'   => ['recipient_id' => $args['newContactId'], 'recipient_type' => 'contact'],
         'table' => 'res_attachments',
         'where' => ['dest_contact_id = ?', 'dest_address_id = ?'],
         'data'  => [$args['oldContactId'], $args['oldAddressId']],
@@ -423,7 +423,7 @@ function migrateResattachments_Users()
         }
 
         \SrcCore\models\DatabaseModel::update([
-            'set'   => ['dest_user_id' => $user],
+            'set'   => ['recipient_id' => $user, 'recipient_type' => 'user'],
             'table' => 'res_attachments',
             'where' => ['res_id = ?'],
             'data'  => [$value['res_id']],

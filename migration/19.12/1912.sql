@@ -443,10 +443,10 @@ ALTER TABLE acknowledgement_receipts DROP COLUMN IF EXISTS contact_id;
 ALTER TABLE acknowledgement_receipts ADD COLUMN contact_id integer;
 ALTER TABLE contacts_groups_lists DROP COLUMN IF EXISTS contact_id;
 ALTER TABLE contacts_groups_lists ADD COLUMN contact_id integer;
-ALTER TABLE res_attachments DROP COLUMN IF EXISTS contact_id;
-ALTER TABLE res_attachments ADD COLUMN contact_id integer;
-ALTER TABLE res_attachments DROP COLUMN IF EXISTS dest_user_id;
-ALTER TABLE res_attachments ADD COLUMN dest_user_id integer;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS recipient_type;
+ALTER TABLE res_attachments ADD COLUMN recipient_type character varying(256);
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS recipient_id;
+ALTER TABLE res_attachments ADD COLUMN recipient_id integer;
 
 /* REFACTORING DATA */
 DO $$ BEGIN
