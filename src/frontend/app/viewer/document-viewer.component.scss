@@ -29,36 +29,45 @@
 
 .viewer-tools {
   position: fixed;
-  margin-top: 20px;
+  margin-top: 5px;
   z-index: 1;
   background: $primary;
-  margin-left: 20px;
+  margin-left: 5px;
   border-radius: 10px;
-  opacity: 0.5;
+  //opacity: 0.5;
+  color: white;
+  display: flex;
+  align-items: left;
   transition: all 0.5s;
 
-  .mat-icon-button {
-    height: 50px;
-    width: 50px;
 
-    .mat-icon {
-      color: white;
-      font-size: 20px;
-      transition: all 0.2s;
-    }
+  .mat-button {
+    font-size: 10px;
+  }
+}
+
+::ng-deep.optionsListMenu {
+  min-height: auto;
+  .mat-menu-content {
+    font-size: 13px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .mat-icon {
+    height: auto;
   }
 }
 
 .viewer-tools:hover {
-  opacity: 1;
-  transition: all 0.5s;
-
-  .mat-icon-button:hover {
-    .mat-icon {
-      font-size: 30px;
-      transition: all 0.2s;
+    .mat-icon-button:hover {
+      .mat-icon {
+        transition: all 0.5s;
+        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.2);
+      }
     }
-  }
+    
 }
 
 .no-doc-container {
@@ -131,6 +140,7 @@
 }
 
 @-webkit-keyframes bounce {
+
   from,
   20%,
   53%,
@@ -164,6 +174,7 @@
 }
 
 @keyframes bounce {
+
   from,
   20%,
   53%,
