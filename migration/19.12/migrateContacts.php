@@ -176,6 +176,7 @@ foreach ($customs as $custom) {
     migrateResletterbox_Users();
     migrateResattachments_Users();
     migrateContactParameters();
+    migrateContactPrivileges();
     \SrcCore\models\DatabaseModel::update([
         'set'   => ['type' => 'contact'],
         'table' => 'resource_contacts',
@@ -471,6 +472,67 @@ function migrateContactParameters()
                 'searchable'  => $value['searchable'],
                 'displayable' => $value['displayable'],
             ]
+        ]);
+    }
+}
+
+function migrateContactPrivileges()
+{
+    $usergroupServices = \SrcCore\models\DatabaseModel::select([
+        'select' => ['group_id'],
+        'table'  => ['usergroups_services'],
+        'where'  => ['service_id = ?'],
+        'data'   => ['create_contacts']
+    ]);
+
+    foreach ($usergroupServices as $usergroupService) {
+        $servicesEnabled = \SrcCore\models\DatabaseModel::select([
+            'select' => ['group_id'],
+            'table'  => ['usergroups_services'],
+            'where'  => ['service_id = ?', 'group_id = ?'],
+            'data'   => ['update_contacts', $usergroupService['group_id']]
+        ]);
+        if (empty($servicesEnabled)) {
+            \SrcCore\models\DatabaseModel::insert([
+                'table'         => 'usergroups_services',
+                'columnsValues' => [
+                    'service_id' => 'update_contacts',
+                    'group_id'   => $usergroupService['group_id']
+                ]
+            ]);
+        }
+    }
+
+    foreach (['my_contacts_menu', 'my_contacts'] as $service) {
+        $usergroupServices = \SrcCore\models\DatabaseModel::select([
+            'select' => ['group_id'],
+            'table'  => ['usergroups_services'],
+            'where'  => ['service_id = ?'],
+            'data'   => [$service]
+        ]);
+    
+        foreach ($usergroupServices as $usergroupService) {
+            $servicesEnabled = \SrcCore\models\DatabaseModel::select([
+                'select' => ['group_id', 'service_id'],
+                'table'  => ['usergroups_services'],
+                'where'  => ['service_id = ?', 'group_id = ?'],
+                'data'   => ['create_contacts', $usergroupService['group_id']]
+            ]);
+            if (empty($servicesEnabled)) {
+                \SrcCore\models\DatabaseModel::insert([
+                    'table'         => 'usergroups_services',
+                    'columnsValues' => [
+                        'service_id' => 'create_contacts',
+                        'group_id'   => $usergroupService['group_id']
+                    ]
+                ]);
+            }
+        }
+
+        \SrcCore\models\DatabaseModel::delete([
+            'table' => 'usergroups_services',
+            'where' => ['service_id = ?'],
+            'data'  => [$service]
         ]);
     }
 }

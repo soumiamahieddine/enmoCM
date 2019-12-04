@@ -504,6 +504,7 @@ DELETE FROM usergroups_services WHERE service_id = 'graphics_reports';
 DELETE FROM usergroups_services WHERE service_id = 'show_reports';
 DELETE FROM usergroups_services WHERE service_id = 'param_templates_doctypes';
 DELETE FROM usergroups_services WHERE service_id = 'doctype_template_use';
+DELETE FROM usergroups_services WHERE service_id = 'search_contacts';
 
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'update_diffusion_indexing'
