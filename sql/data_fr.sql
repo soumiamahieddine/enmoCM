@@ -42,9 +42,6 @@ DELETE FROM usergroups WHERE group_id = 'WEBSERVICE';
 DELETE FROM usergroups_services WHERE group_id = 'WEBSERVICE';
 INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('WEBSERVICE', 'Utilisateurs de WebService', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'search_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'my_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'my_contacts_menu');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'create_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_status_mail');
@@ -75,10 +72,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', '_pri
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'physical_archive_print_sep_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'save_numeric_package');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'search_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'my_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'my_contacts_menu');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_contacts');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'create_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_doc_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_links');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_diffusion_indexing');
@@ -100,10 +95,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_tag
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'private_tag');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'tag_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'search_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'my_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'my_contacts_menu');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_contacts');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'create_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_doc_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_full_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_links');
@@ -122,9 +115,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'private_tag');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'tag_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'search_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'my_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'my_contacts_menu');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'create_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'update_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_doc_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_links');
@@ -153,7 +144,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'p
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'tag_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'search_contacts');
 INSERT INTO usergroups_services (group_id, service_id, parameters) VALUES ('ADMINISTRATEUR_N1', 'admin_users', '{"groups": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]}');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_groups');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_architecture');
@@ -162,8 +152,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_status');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_actions');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'my_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'my_contacts_menu');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'create_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'update_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'update_status_mail');
@@ -217,6 +205,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'admin_tag');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'create_contacts');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'update_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'view_technical_infos');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'view_doc_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'view_full_history');
@@ -843,50 +832,18 @@ INSERT INTO usergroup_content (user_id, group_id, role) VALUES (24, 13, '');
 ------------
 -- CONTACTS
 ------------
-TRUNCATE TABLE contact_types;
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (100, '1. Entreprises', 'Y', 'corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (101, '2. Associations', 'Y', 'both');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (102, '3. Administrations', 'Y', 'corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (103, '4. Collectivités territoriales', 'Y', 'corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (104, '5. Autorités juridictionnelles', 'Y', 'corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (105, '6. Organisations syndicales', 'Y', 'corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (106, '0. Particuliers', 'Y', 'no_corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (107, '7. Banques', 'Y', 'corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (108, '8. CCI', 'Y', 'corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (109, 'NON DEFINI', 'N', 'no_corporate');
-select setval('contact_types_id_seq', (select max(id)+1 from contact_types), false);
-TRUNCATE TABLE contact_purposes;
-INSERT INTO contact_purposes (id, label) VALUES (1, 'Siège social France');
-INSERT INTO contact_purposes (id, label) VALUES (2, 'Siège social Sénégal');
-INSERT INTO contact_purposes (id, label) VALUES (3, 'Adresse principale');
-Select setval('contact_purposes_id_seq', (select max(id)+1 from contact_purposes), false);
-TRUNCATE TABLE contacts_v2;
-INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (1, 100, 'Y', 'MAARCH', '', '', '', '', '', 'Editeur du logiciel libre Maarch', 'bblier', 'VILLE', '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', 'Y');
-INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (2, 102, 'Y', 'Préfecture de Maarch Les Bains', '', '', '', '', '', 'Préfecture de Maarch Les Bains', 'bblier', 'VILLE', '2018-04-18 12:43:54.97424', '2018-04-18 16:28:38.498185', 'Y');
-INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (3, 100, 'Y', 'ACME', '', '', '', '', '', 'Archivage et Conservation des Mémoires Electroniques', 'bblier', 'VILLE', '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', 'Y');
-INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (4, 106, 'N', '', '', 'Bernard', 'PASCONTENT', 'title1', '', '', 'bblier', 'VILLE', '2019-03-20 13:59:09.23436', NULL, 'Y');
-INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (5, 106, 'N', '', '', 'Jacques', 'DUPONT', 'title1', '', '', 'bblier', 'VILLE', '2019-03-20 13:59:09.23436', NULL, 'Y');
-INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (6, 106, 'N', '', '', 'Pierre', 'BRUNEL', 'title1', '', '', 'bblier', 'VILLE', '2019-03-20 13:59:09.23436', NULL, 'Y');
-INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (7, 106, 'N', '', '', 'Eric', 'MACKIN', 'title1', '', '', 'bblier', 'VILLE', '2019-03-20 13:59:09.23436', NULL, 'Y');
-INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (8, 106, 'N', '', '', 'Martin Donald', 'PELLE', 'title1', '', '', 'bblier', 'VILLE', '2019-03-20 13:59:09.23436', NULL, 'Y');
-Select setval('contact_v2_id_seq', (select max(contact_id)+1 from contacts_v2), false);
--- Default adresses
-TRUNCATE TABLE contact_addresses;
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (1, 1, 1, '', 'Jean-Louis', 'ERCOLANI', 'title1', 'Directeur Général', '', '11', 'Boulevard du Sud-Est', '', 'MAARCH LES BAINS', '99000', 'France', '', 'support@maarch.fr', 'http://www.maarch.com', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (2, 1, 2, '', 'Karim', 'SY', 'title1', 'Administrateur', '', '', 'Sacré Coeur 3', 'Villa 9653 4ème phase', 'DAKAR', '', 'SENEGAL', '', 'support@maarch.fr', 'http://www.maarch.com', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (3, 1, 1, '', 'Laurent', 'GIOVANNONI', 'title1', 'Directeur Général Adjoint', NULL, '11', 'Boulevard du Sud-Est', '', 'MAARCH LES BAINS', '99000', 'FRANCE', '', 'support@maarch.fr', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled, external_id) VALUES (4, 2, 1, '', 'Nicolas', 'MARTIN', 'title1', '', NULL, '13', 'RUE LA PREFECTURE', '', 'MAARCH LES BAINS', '', '', '', '', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y', '{"m2m":"org_987654321_DGS_SF"}');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (5, 3, 1, '', 'Brigitte', 'BERGER', 'title1', 'Directrice Générale', NULL, '25', 'PLACE DES MIMOSAS', '', 'MAARCH LES BAINS', '99000', 'FRANCE', '', 'support@maarch.fr', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (6, 4, 3, '', '', '', '', '', NULL, '25', 'route de Pampelone', '', 'MAARCH-LES-BAINS', '99000', '', '06 08 09 07 55', 'bernard.pascontent@gmail.com', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (7, 5, 3, '', '', '', '', '', NULL, '1', 'rue du Peuplier', '', 'NANTERRE', '92000', '', '', '', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (8, 6, 3, '', '', '', '', '', NULL, '5', 'allée des Pommiers', '', 'MAARCH-LES-BAINS', '99000', '', '06 08 09 07 55', 'support@maarch.fr', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (9, 7, 3, '', '', '', '', '', NULL, '13', 'rue du Square Carré', '', 'MAARCH-LES-BAINS', '99000', '', '06 11 12 13 14', '', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (10, 1, 1, '', 'Carole', 'COTIN', 'title1', 'Directrice Administrative et Qualité', NULL, '11', 'Boulevard du Sud-Est', '', 'MAARCH LES BAINS', '99000', 'FRANCE', '', 'support@maarch.fr', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (11, 8, 3, '', '', '', '', '', NULL, '17', 'rue de la Demande', '', 'MAARCH-LES-BAINS', '99000', '', '01 23 24 21 22', 'support@maarch.fr', '', '', '', '', 'bblier', 'COU', 'N', 'Y');
-Select setval('contact_addresses_id_seq', (select max(id)+1 from contact_addresses), false);
--- Default contact_communication
-TRUNCATE TABLE contact_communication;
-INSERT INTO contact_communication (contact_id, type, value) VALUES (2, 'url', 'https://cchaplin:maarch@demo.maarchcourrier.com');
+TRUNCATE TABLE contacts;
+INSERT INTO contacts VALUES (1, 'title1', 'Jean-Louis', 'ERCOLANI', 'MAARCH', '', 'Directeur Général', '11', 'Boulevard du Sud-Est', '', '', '99000', 'MAARCH LES BAINS', 'France', 'info@maarch.org', '', NULL, 'Editeur du logiciel libre Maarch', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
+INSERT INTO contacts VALUES (2, 'title1', 'Karim', 'SY', 'MAARCH', '', 'Administrateur', '', 'Sacré Coeur 3', '', 'Villa 9653 4ème phase', '', 'DAKAR', 'SENEGAL', 'info@maarch.org', '', NULL, 'Editeur du logiciel libre Maarch', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
+INSERT INTO contacts VALUES (3, 'title1', 'Laurent', 'GIOVANNONI', 'MAARCH', '', 'Directeur Général Adjoint', '11', 'Boulevard du Sud-Est', NULL, '', '99000', 'MAARCH LES BAINS', 'FRANCE', 'info@maarch.org', '', NULL, 'Editeur du logiciel libre Maarch', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
+INSERT INTO contacts VALUES (4, 'title1', 'Nicolas', 'MARTIN', 'Préfecture de Maarch Les Bains', '', '', '13', 'RUE LA PREFECTURE', NULL, '', '', 'MAARCH LES BAINS', '', '', '', '{"url": "https://cchaplin:maarch@demo.maarchcourrier.com"}', 'Préfecture de Maarch Les Bains', 21, '2018-04-18 12:43:54.97424', '2018-04-18 16:28:38.498185', true, '{"m2m": "org_987654321_DGS_SF"}');
+INSERT INTO contacts VALUES (5, 'title1', 'Brigitte', 'BERGER', 'ACME', '', 'Directrice Générale', '25', 'PLACE DES MIMOSAS', NULL, '', '99000', 'MAARCH LES BAINS', 'FRANCE', 'info@maarch.org', '', NULL, 'Archivage et Conservation des Mémoires Electroniques', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
+INSERT INTO contacts VALUES (6, 'title1', 'Bernard', 'PASCONTENT', '', '', '', '25', 'route de Pampelone', NULL, '', '99000', 'MAARCH-LES-BAINS', '', 'bernard.pascontent@gmail.com', '06 08 09 07 55', NULL, '', 21, '2019-03-20 13:59:09.23436', NULL, true, '{}');
+INSERT INTO contacts VALUES (7, 'title1', 'Jacques', 'DUPONT', '', '', '', '1', 'rue du Peuplier', NULL, '', '92000', 'NANTERRE', '', '', '', NULL, '', 21, '2019-03-20 13:59:09.23436', NULL, true, '{}');
+INSERT INTO contacts VALUES (8, 'title1', 'Pierre', 'BRUNEL', '', '', '', '5', 'allée des Pommiers', NULL, '', '99000', 'MAARCH-LES-BAINS', '', 'info@maarch.org', '06 08 09 07 55', NULL, '', 21, '2019-03-20 13:59:09.23436', NULL, true, '{}');
+INSERT INTO contacts VALUES (9, 'title1', 'Eric', 'MACKIN', '', '', '', '13', 'rue du Square Carré', NULL, '', '99000', 'MAARCH-LES-BAINS', '', '', '06 11 12 13 14', NULL, '', 21, '2019-03-20 13:59:09.23436', NULL, true, '{}');
+INSERT INTO contacts VALUES (10, 'title1', 'Carole', 'COTIN', 'MAARCH', '', 'Directrice Administrative et Qualité', '11', 'Boulevard du Sud-Est', NULL, '', '99000', 'MAARCH LES BAINS', 'FRANCE', 'info@maarch.org', '', NULL, 'Editeur du logiciel libre Maarch', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
+INSERT INTO contacts VALUES (11, 'title1', 'Martin Donald', 'PELLE', '', '', '', '17', 'rue de la Demande', NULL, '', '99000', 'MAARCH-LES-BAINS', '', 'info@maarch.org', '01 23 24 21 22', NULL, '', 21, '2019-03-20 13:59:09.23436', NULL, true, '{}');
 
 ------------
 --STATUS-
@@ -1665,7 +1622,7 @@ TRUNCATE TABLE indexing_models_fields;
 /* Arrivée */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'doctype', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'priority', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'confidential', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'confidentiality', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'documentDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'arrivalDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'subject', TRUE, null, 'mail');
@@ -1680,7 +1637,7 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 /* Départ */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'doctype', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'priority', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'confidential', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'confidentiality', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'documentDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'departureDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'subject', TRUE, null, 'mail');
@@ -1695,7 +1652,7 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 /* Interne */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'doctype', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'priority', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'confidential', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'confidentiality', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'documentDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'subject', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'senders', FALSE, null, 'contact');
@@ -1708,7 +1665,7 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 
 /* GED */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'doctype', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'confidential', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'confidentiality', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'documentDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'subject', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'senders', FALSE, null, 'contact');

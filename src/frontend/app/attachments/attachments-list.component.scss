@@ -123,6 +123,8 @@
     .downloadButton,
     .actionsButton,
     .versionButton {
+        padding-left: 10px;
+        padding-right: 10px;
         font-size: 10px;
     }
 
@@ -151,6 +153,10 @@
 }
 
 .filterTypes {
+    overflow: auto;
+    overflow-y: hidden;
+    width: auto;
+    max-width: 100%;
     margin-left: 10px;
     ::ng-deep.mat-button-toggle-checked {
         background: $secondary;

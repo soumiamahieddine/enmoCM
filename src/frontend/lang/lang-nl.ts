@@ -1339,4 +1339,18 @@ export const LANG_NL = {
     "editDocument": "Edit document", //_TO_TRANSLATE
     "personalDataMsg": "Users personal data are", //_TO_TRANSLATE
     "notVisible": "Not visible", //_TO_TRANSLATE
+    "enableGroupMsg": "This group could access to all functionnalities.", //_TO_TRANSLATE
+    "sendActivationNotification": "Send activation notification", //_TO_TRANSLATE
+    "activationNotificationSend": "Activation notification send", //_TO_TRANSLATE
+    "tabProcessPosition": "Move to tab", //_TO_TRANSLATE
+    "saveModifiedData": "Do you want to save modified data ?", //_TO_TRANSLATE
+    "dataUpdated": "Data updated", //_TO_TRANSLATE
+    "canUpdateData": "Can update resource data", //_TO_TRANSLATE
+    "manageCreateContacts": "Create contacts", //_TO_TRANSLATE
+    "manageCreateContactsDesc": "Create contacts from indexing/processing/detail page", //_TO_TRANSLATE
+    "manageUpdateContacts": "Update contacts", //_TO_TRANSLATE
+    "manageUpdateContactsDesc": "Update contacts from indexing/processing/detail page", //_TO_TRANSLATE
+    "newVersion": "New version", //_TO_TRANSLATE
+    "information": "Information", //_TO_TRANSLATE
+    "mustEditDocument": "You must <b>edit</b> document in order to <b>validate</b> modifications.", //_TO_TRANSLATE
 };

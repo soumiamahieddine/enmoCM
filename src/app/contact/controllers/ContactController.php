@@ -8,23 +8,24 @@
 
 /**
  * @brief Contact Controller
- *
  * @author dev@maarch.org
  */
 
 namespace Contact\controllers;
 
+use Contact\models\ContactCustomFieldListModel;
+use Contact\models\ContactCustomFieldModel;
 use Contact\models\ContactFillingModel;
 use Contact\models\ContactModel;
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
 use Resource\controllers\ResController;
 use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
 use SrcCore\models\CoreConfigModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
@@ -33,21 +34,27 @@ class ContactController
 {
     public function get(Request $request, Response $response)
     {
-        //TODO privileges
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         return $response->withJson(['contacts' => ContactModel::get(['select' => ['id', 'firstname', 'lastname', 'company']])]);
     }
 
     public function create(Request $request, Response $response)
     {
-        //TODO privileges
-
-        $body = $request->getParsedBody();
-        if (!Validator::stringType()->notEmpty()->validate($body['lastname']) && !Validator::stringType()->notEmpty()->validate($body['company'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body lastname or company is mandatory']);
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'create_contacts', 'userId' => $GLOBALS['id']])
+            && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $body['email'] = filter_var($body['email'], FILTER_VALIDATE_EMAIL) ? $body['email'] : null;
+        $body = $request->getParsedBody();
+
+        $control = ContactController::controlContact(['body' => $body]);
+        if (!empty($control['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+        }
+
         if (!empty($body['email'])) {
             $contact = ContactModel::get(['select' => ['id'], 'where' => ['email = ?'], 'data' => [$body['email']]]);
             if (!empty($contact[0]['id'])) {
@@ -89,12 +96,16 @@ class ContactController
             'external_id'           => $externalId
         ]);
 
+        ContactController::createAdjacentData(['body' => $body, 'id' => $id]);
+
         return $response->withJson(['id' => $id]);
     }
 
     public function getById(Request $request, Response $response, array $args)
     {
-        //TODO privileges
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
 
         $rawContact = ContactModel::getById(['id' => $args['id'], 'select' => ['*']]);
         if (empty($rawContact)) {
@@ -131,19 +142,26 @@ class ContactController
 
     public function update(Request $request, Response $response, array $args)
     {
-        //TODO privileges
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'update_contacts', 'userId' => $GLOBALS['id']])
+            && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
+
+        $body = $request->getParsedBody();
+
+        $control = ContactController::controlContact(['body' => $body]);
+        if (!empty($control['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+        }
 
         $contact = ContactModel::getById(['id' => $args['id'], 'select' => [1]]);
         if (empty($contact)) {
             return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
         }
-
-        $body = $request->getParsedBody();
-        if (!Validator::stringType()->notEmpty()->validate($body['lastname']) && !Validator::stringType()->notEmpty()->validate($body['company'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body lastname or company is mandatory']);
-        }
-
-        $body['email'] = filter_var($body['email'], FILTER_VALIDATE_EMAIL) ? $body['email'] : null;
 
         if (!empty($body['communicationMeans'])) {
             if (filter_var($body['communicationMeans'], FILTER_VALIDATE_EMAIL)) {
@@ -166,11 +184,11 @@ class ContactController
                     'company'               => $body['company'] ?? null,
                     'department'            => $body['department'] ?? null,
                     'function'              => $body['function'] ?? null,
-                    'address_number'         => $body['addressNumber'] ?? null,
-                    'address_street'         => $body['addressStreet'] ?? null,
-                    'address_postcode'       => $body['addressPostcode'] ?? null,
-                    'address_town'           => $body['addressTown'] ?? null,
-                    'address_country'        => $body['addressCountry'] ?? null,
+                    'address_number'        => $body['addressNumber'] ?? null,
+                    'address_street'        => $body['addressStreet'] ?? null,
+                    'address_postcode'      => $body['addressPostcode'] ?? null,
+                    'address_town'          => $body['addressTown'] ?? null,
+                    'address_country'       => $body['addressCountry'] ?? null,
                     'email'                 => $body['email'] ?? null,
                     'phone'                 => $body['phone'] ?? null,
                     'communication_means'   => !empty($body['communicationMeans']) ? json_encode($body['communicationMeans']) : null,
@@ -185,9 +203,41 @@ class ContactController
         return $response->withStatus(204);
     }
 
+    public function updateActivation(Request $request, Response $response, array $args)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
+
+        $contact = ContactModel::getById(['id' => $args['id'], 'select' => [1]]);
+        if (empty($contact)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
+        }
+
+        $body = $request->getParsedBody();
+
+        ContactModel::update([
+            'set'   => ['enabled' => empty($body['enabled']) ? 'false' : 'true'],
+            'where' => ['id = ?'],
+            'data'  => [$args['id']]
+        ]);
+
+        return $response->withStatus(204);
+    }
+
     public function delete(Request $request, Response $response, array $args)
     {
-        //TODO privileges
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
 
         $contact = ContactModel::getById(['id' => $args['id'], 'select' => [1]]);
         if (empty($contact)) {
@@ -202,17 +252,12 @@ class ContactController
         return $response->withStatus(204);
     }
 
-    public function getCommunicationByContactId(Request $request, Response $response, array $aArgs)
-    {
-        $contact = ContactModel::getCommunicationByContactId([
-            'contactId' => $aArgs['contactId'],
-        ]);
-
-        return $response->withJson([$contact]);
-    }
-
     public function getFilling(Request $request, Response $response)
     {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $contactsFilling = ContactFillingModel::get();
         $contactsFilling['rating_columns'] = json_decode($contactsFilling['rating_columns']);
 
@@ -248,7 +293,7 @@ class ContactController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $resource = ResModel::getById(['select' => ['*'], 'resId' => $args['resId']]);
+        $resource = ResModel::getById(['select' => ['res_id'], 'resId' => $args['resId']]);
 
         if (empty($resource)) {
             return $response->withStatus(404)->withJson(['errors' => 'Document does not exist']);
@@ -258,17 +303,9 @@ class ContactController
 
         $contacts = [];
         if ($queryParams['type'] == 'senders') {
-            if ($resource['category_id'] == 'outgoing') {
-                $contacts = ContactController::getFormattedContacts(['resource' => $resource, 'tableMulti' => 'resource_contacts', 'columnRes' => null]);
-            } else {
-                $contacts = ContactController::getFormattedContacts(['resource' => $resource, 'tableMulti' => 'contacts_res', 'columnRes' => 'exp_user_id']);
-            }
+            $contacts = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
         } elseif ($queryParams['type'] == 'recipients') {
-            if ($resource['category_id'] == 'outgoing') {
-                $contacts = ContactController::getFormattedContacts(['resource' => $resource, 'tableMulti' => 'contact_res', 'columnRes' => 'exp_user_id']);
-            } else {
-                $contacts = ContactController::getFormattedContacts(['resource' => $resource, 'tableMulti' => 'resource_contacts', 'columnRes' => null]);
-            }
+            $contacts = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
         }
 
         return $response->withJson(['contacts' => $contacts]);
@@ -286,7 +323,6 @@ class ContactController
             if ($aArgs['contact']['is_corporate_person'] == 'N') {
                 foreach ($contactsFilling['rating_columns'] as $key => $value) {
                     if (in_array($value, ['firstname', 'lastname', 'title', 'function'])) {
-
                         $contactsFilling['rating_columns'][$key] = 'contact_' . $value;
                     }
                 }
@@ -408,7 +444,6 @@ class ContactController
                     'strMaxLength'  => 38
                 ]);
             }
-
         }
         // Ligne 3
         if (!empty($aArgs['address_complement'])) {
@@ -490,106 +525,50 @@ class ContactController
 
     public static function getFormattedContacts(array $args)
     {
-        ValidatorModel::notEmpty($args, ['resource', 'tableMulti']);
-        ValidatorModel::arrayType($args, ['resource']);
-        ValidatorModel::stringType($args, ['tableMulti', 'columnRes']);
-
-        $resource = $args['resource'];
-
-        $rawContacts = [];
-        if ($resource['is_multicontacts'] == 'Y' || !isset($args['columnRes'])) {
-            if ($args['tableMulti'] == 'contacts_res') {
-                $multiContacts = DatabaseModel::select([
-                    'select' => ['contact_id', 'address_id', 'mode'],
-                    'table' => ['contacts_res'],
-                    'where' => ['res_id = ?'],
-                    'data' => [$resource['res_id']]
-                ]);
-
-                foreach ($multiContacts as $multiContact) {
-                    $rawContacts[] = [
-                        'login'         => $multiContact['contact_id'],
-                        'address_id'    => $multiContact['address_id'],
-                        'mode'          => $multiContact['mode']
-                    ];
-                }
-            } elseif ($args['tableMulti'] == 'resource_contacts') {
-                $multiContacts = DatabaseModel::select([
-                    'select' => ['item_id', 'type', 'mode'],
-                    'table' => ['resource_contacts'],
-                    'where' => ['res_id = ?'],
-                    'data' => [$resource['res_id']]
-                ]);
-
-                foreach ($multiContacts as $multiContact) {
-                    $rawContacts[] = [
-                        'user_id' => $multiContact['type'] == 'user' ? $multiContact['item_id'] : null,
-                        'address_id' => $multiContact['type'] == 'contact' ? $multiContact['item_id'] : null,
-                        'entity_id' => $multiContact['type'] == 'entity' ? $multiContact['item_id'] : null,
-                    ];
-                }
-            }
-        } else {
-            $rawContacts[] = [
-                'login'         => $resource[$args['columnRes']],
-                'address_id'    => $resource['address_id'],
-            ];
-        }
+        ValidatorModel::notEmpty($args, ['resId', 'mode']);
+        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::stringType($args, ['mode']);
 
         $contacts = [];
 
-        foreach ($rawContacts as $rawContact) {
-            if (!empty($rawContact['address_id'])) {
-                $contactView = ContactModel::getOnView([
-                    'select' => [
-                        'is_corporate_person', 'lastname', 'firstname', 'address_num', 'address_street', 'address_complement',
-                        'address_town', 'address_postal_code', 'address_country', 'ca_id', 'society', 'website', 'phone',
-                        'contact_firstname', 'contact_lastname', 'address_country', 'email', 'function', 'contact_other_data',
-                        'occupancy'
-                    ],
-                    'where'     => ['ca_id = ?'],
-                    'data'      => [$rawContact['address_id']]
+        $resourceContacts = ResourceContactModel::get([
+            'where'     => ['res_id = ?', 'mode = ?'],
+            'data'      => [$args['resId'], $args['mode']]
+        ]);
+
+        foreach ($resourceContacts as $resourceContact) {
+            $contact = [];
+            if ($resourceContact['type'] == 'contact') {
+                $contactRaw = ContactModel::getById([
+                    'select'    => ['*'],
+                    'id'        => $resourceContact['item_id']
                 ]);
 
-                $contactView = $contactView[0];
-
-                if (!empty($rawContact['mode']) && $rawContact['mode'] == 'third') {
-                    $mode = 'third';
-                } else {
-                    $mode = $contactView['is_corporate_person'] == 'Y' ? 'corporate' : 'physical';
-                }
-
                 $contact = [
-                    'mode'      => $mode,
-                    'firstname' => $contactView['firstname'] ?? '',
-                    'lastname'  => $contactView['lastname'] ?? '',
-                    'email'     => $contactView['email'] ?? '',
-                    'phone'     => $contactView['phone'] ?? '',
-                    'society'   => $contactView['society'] ?? '',
-                    'function'  => $contactView['function'] ?? '',
-                    'num'       => $contactView['address_num'] ?? '',
-                    'street'    => $contactView['address_street'] ?? '',
-                    'complement'=> $contactView['address_complement'] ?? '',
-                    'town'      => $contactView['address_town'] ?? '',
-                    'postalCode'=> $contactView['address_postal_code'] ?? '',
-                    'country'   => $contactView['address_country'] ?? '',
-                    'otherData' => $contactView['contact_other_data'] ?? '',
-                    'website'   => $contactView['website'] ?? '',
-                    'occupancy' => $contactView['occupancy'] ?? '',
-                    'department' => $contactView['departement'] ?? ''
+                    'mode'      => 'physical', // ??
+                    'firstname' => $contactRaw['firstname'] ?? '',
+                    'lastname'  => $contactRaw['lastname'] ?? '',
+                    'email'     => $contactRaw['email'] ?? '',
+                    'phone'     => $contactRaw['phone'] ?? '',
+                    'company'   => $contactRaw['company'] ?? '',
+                    'function'  => $contactRaw['function'] ?? '',
+                    'number'       => $contactRaw['address_number'] ?? '',
+                    'street'    => $contactRaw['address_street'] ?? '',
+                    'complement'=> '', // <-- ??
+                    'town'      => $contactRaw['address_town'] ?? '',
+                    'postalCode'=> $contactRaw['address_postcode'] ?? '',
+                    'country'   => $contactRaw['address_country'] ?? '',
+                    'otherData' => '', // <-- ??
+                    'website'   => '', // ??
+                    'occupancy' => '', // <-- ??
+                    'department' => $contactRaw['department'] ?? ''
                 ];
 
                 $filling = ContactController::getFillingRate(['contact' => $contact]);
 
                 $contact['filling'] = $filling['color'];
-
-                $contacts[] = $contact;
-            } elseif (!empty($rawContact['login'] || !empty($rawContact['user_id']))) {
-                if (!empty($rawContact['login'])) {
-                    $user = UserModel::getByLowerLogin(['login' => $rawContact['login']]);
-                } else {
-                    $user = UserModel::getById(['id' => $rawContact['user_id']]);
-                }
+            } elseif ($resourceContact['type'] == 'user') {
+                $user = UserModel::getById(['id' => $resourceContact['item_id']]);
 
                 $phone = '';
                 if (!empty($phone) && ($user['id'] == $GLOBALS['id']
@@ -597,7 +576,7 @@ class ContactController
                     $phone = $user['phone'];
                 }
 
-                $primaryEntity = UserModel::getPrimaryEntityById(['id' => $user['id']]);
+                $primaryEntity = UserModel::getPrimaryEntityById(['select' => ['entity_label'], 'id' => $user['id']]);
 
                 $userEntities = UserModel::getNonPrimaryEntitiesById(['id' => $user['id']]);
                 $userEntities = array_column($userEntities, 'entity_label');
@@ -610,9 +589,9 @@ class ContactController
                     'lastname'  => $user['lastname'],
                     'email'     => $user['mail'],
                     'phone'     => $phone,
-                    'society'   => '',
+                    'company'   => '',
                     'function'  => '',
-                    'num'       => '',
+                    'number'       => '',
                     'street'    => '',
                     'complement'=> '',
                     'town'      => '',
@@ -623,14 +602,8 @@ class ContactController
                     'occupancy' => $nonPrimaryEntities,
                     'department' => $primaryEntity['entity_label']
                 ];
-
-                $filling = ContactController::getFillingRate(['contact' => $contact]);
-
-                $contact['filling'] = $filling['color'];
-
-                $contacts[] = $contact;
-            } elseif (!empty($rawContact['entity_id'])) {
-                $entity = EntityModel::getById(['id' => $rawContact['entity_id']]);
+            } elseif ($resourceContact['type'] == 'entity') {
+                $entity = EntityModel::getById(['id' => $resourceContact['item_id'], 'select' => ['entity_label', 'email']]);
 
                 $contact = [
                     'mode'      => 'entity',
@@ -638,9 +611,9 @@ class ContactController
                     'lastname'  => $entity['entity_label'],
                     'email'     => $entity['email'],
                     'phone'     => '',
-                    'society'   => '',
+                    'company'   => '',
                     'function'  => '',
-                    'num'       => '',
+                    'number'       => '',
                     'street'    => '',
                     'complement'=> '',
                     'town'      => '',
@@ -651,15 +624,144 @@ class ContactController
                     'occupancy' => '',
                     'department' => ''
                 ];
-
-                $filling = ContactController::getFillingRate(['contact' => $contact]);
-
-                $contact['filling'] = $filling['color'];
-
-                $contacts[] = $contact;
             }
+
+            $contacts[] = $contact;
         }
 
         return $contacts;
+    }
+
+    public static function getFormattedExportContacts(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId', 'mode']);
+        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::stringType($args, ['mode']);
+
+        $contacts = [];
+
+        $resourceContacts = ResourceContactModel::get([
+            'where'     => ['res_id = ?', 'mode = ?'],
+            'data'      => [$args['resId'], $args['mode']]
+        ]);
+
+        foreach ($resourceContacts as $resourceContact) {
+            $contact = '';
+            if ($resourceContact['type'] == 'contact') {
+                $contactRaw = ContactModel::getById([
+                    'select'    => ['*'],
+                    'id'        => $resourceContact['item_id']
+                ]);
+
+                $address = '';
+                if (!empty($contactRaw['address_number'])) {
+                    $address .= $contactRaw['address_number'] . ' ';
+                }
+                if (!empty($contactRaw['address_street'])) {
+                    $address .= $contactRaw['address_street'] . ' ';
+                }
+                if (!empty($contactRaw['address_postcode'])) {
+                    $address .= $contactRaw['address_postcode'] . ' ';
+                }
+                if (!empty($contactRaw['address_town'])) {
+                    $address .= $contactRaw['address_town'] . ' ';
+                }
+                if (!empty($contactRaw['address_country'])) {
+                    $address .= $contactRaw['address_country'];
+                }
+
+                $contactToDisplay = '';
+                if (!empty($contactRaw['firstname'])) {
+                    $contactToDisplay .= $contactRaw['firstname'] . ' ';
+                }
+                if (!empty($contactRaw['lastname'])) {
+                    $contactToDisplay .= $contactRaw['lastname'];
+                }
+                if (!empty($contactRaw['company'])) {
+                    $contactToDisplay .= " ({$contactRaw['company']})";
+                }
+
+                if (!empty($address)) {
+                    $contactToDisplay .= ' - ' . $address;
+                }
+
+                $contact = $contactToDisplay;
+            } elseif ($resourceContact['type'] == 'user') {
+                $contact = UserModel::getLabelledUserById(['id' => $resourceContact['item_id']]);
+            } elseif ($resourceContact['type'] == 'entity') {
+                $entity = EntityModel::getById(['id' => $resourceContact['item_id'], 'select' => ['entity_label']]);
+                $contact = $entity['entity_label'];
+            }
+
+            $contacts[] = $contact;
+        }
+
+        return $contacts;
+    }
+
+    private static function controlContact(array $args)
+    {
+        $body = $args['body'];
+
+        if (empty($body)) {
+            return ['errors' => 'Body is not set or empty'];
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['lastname']) && !Validator::stringType()->notEmpty()->validate($body['company'])) {
+            return ['errors' => 'Body lastname or company is mandatory'];
+        } elseif (!empty($body['email']) && !filter_var($body['email'], FILTER_VALIDATE_EMAIL)) {
+            return ['errors' => 'Body email is not valid'];
+        } elseif (!empty($body['phone']) && !preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/", $body['phone'])) {
+            return ['errors' => 'Body phone is not valid'];
+        }
+
+        $lengthFields = [
+            'civility',
+            'firstname',
+            'lastname',
+            'company',
+            'department',
+            'function',
+            'addressNumber',
+            'addressStreet',
+            'addressPostcode',
+            'addressTown',
+            'addressCountry',
+            'email',
+            'phone'
+        ];
+
+        foreach ($lengthFields as $field) {
+            if (!empty($body[$field]) && !Validator::stringType()->length(1, 256)->validate($body[$field])) {
+                return ['errors' => "Body {$field} length is not valid (1..256)"];
+            }
+        }
+
+        if (!empty($body['customFields'])) {
+            if (!Validator::arrayType()->notEmpty()->validate($body['customFields'])) {
+                return ['errors' => 'Body customFields is not an array'];
+            }
+            $customFields = ContactCustomFieldListModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [array_keys($body['customFields'])]]);
+            if (count($body['customFields']) != $customFields[0]['count']) {
+                return ['errors' => 'Body tags : One or more custom fields do not exist'];
+            }
+        }
+
+        return true;
+    }
+
+    private static function createAdjacentData(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['id', 'body']);
+        ValidatorModel::intVal($args, ['id']);
+        ValidatorModel::arrayType($args, ['body']);
+
+        $body = $args['body'];
+
+        if (!empty($body['customFields'])) {
+            foreach ($body['customFields'] as $key => $value) {
+                ContactCustomFieldModel::create(['contact_id' => $args['id'], 'custom_field_id' => $key, 'value' => json_encode($value)]);
+            }
+        }
+
+        return true;
     }
 }

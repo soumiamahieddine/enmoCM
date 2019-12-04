@@ -1,11 +1,23 @@
 <mat-form-field class="eventList" appearance="outline">
     <mat-label>{{lang.eventList}}</mat-label>
-    <mat-select [(ngModel)]="selectedListEvent">
+    <mat-select [(ngModel)]="selectedListEvent" (selectionChange)="changeEventList($event)">
         <mat-option *ngFor="let event of listEvent" [value]="event.value">
             {{lang[event.id]}}
         </mat-option>
     </mat-select>
 </mat-form-field>
+<div style="display: grid;grid-template-columns: 1fr auto;grid-gap: 10px;align-items: center;" *ngIf="selectedListEvent === 'processDocument'">
+    <mat-form-field class="eventList" appearance="outline">
+        <mat-label>{{lang.tabProcessPosition}}</mat-label>
+        <mat-select [(ngModel)]="selectedProcessTool.defaultTab">
+            <mat-option *ngFor="let tool of processTool | sortBy: 'label'" [value]="tool.id">
+                {{tool.label}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-slide-toggle color="primary" [(ngModel)]="selectedProcessTool.canUpdate">{{lang.canUpdateData}}</mat-slide-toggle>
+</div>
+
 <hr />
 <mat-toolbar class="editorTool">
     <span>

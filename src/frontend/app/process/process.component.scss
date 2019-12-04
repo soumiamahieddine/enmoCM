@@ -249,7 +249,7 @@
     display: grid;
     grid-template-columns: 20% 20% 20% 20% 20%;
     background-color: #fff;
-    color: #dedede;
+    color: #b3b3b3;
     border: solid 1px #dedede;
     padding: 5px;
     border-radius: 15px;
@@ -291,6 +291,14 @@
             color: $primary;
         }
     }
+}
+
+.haveContent {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    font-size: 10px !important;
+    color: $secondary;
 }
 
 .banner {

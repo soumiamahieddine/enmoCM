@@ -228,7 +228,8 @@ class BasketController
                     $groups[$key]['group_desc'] = $value['group_desc'];
                 }
             }
-            $groups[$key]['list_display'] = json_decode($group['list_display']);
+            $groups[$key]['list_display'] = json_decode($group['list_display'], true);
+            $groups[$key]['list_event_data'] = json_decode($group['list_event_data'], true);
             $actionsForGroup = $allActions;
             $actions = ActionGroupBasketModel::get([
                 'select'    => ['id_action', 'where_clause', 'used_in_basketlist', 'used_in_action_page', 'default_action_list'],
@@ -461,13 +462,18 @@ class BasketController
             }
         }
         $data['list_display'] = json_encode($data['list_display']);
-        $data['list_event_data'] = empty($data['list_event_data']) ? null : json_encode($data['list_event_data']);
+        if ($data['list_event'] == 'processDocument') {
+            $listEventData = [
+                'canUpdate'     => !empty($data['list_event_data']['canUpdate']),
+                'defaultTab'    => $data['list_event_data']['defaultTab'] ?? 'dashboard'
+            ];
+        }
 
         GroupBasketModel::update([
             'set'   => [
                 'list_display'      => $data['list_display'],
                 'list_event'        => $data['list_event'],
-                'list_event_data'   => $data['list_event_data']
+                'list_event_data'   => empty($listEventData) ? null : json_encode($listEventData)
             ],
             'where' => ['group_id = ?', 'basket_id = ?'],
             'data'  => [$aArgs['groupId'], $aArgs['id']]

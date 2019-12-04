@@ -12,9 +12,11 @@ import { FiltersListService } from '../../service/filtersList.service';
 import { Overlay } from '@angular/cdk/overlay';
 import { AppService } from '../../service/app.service';
 import { ActionsService } from '../actions/actions.service';
-import { tap, catchError, map, finalize } from 'rxjs/operators';
+import { tap, catchError, map, finalize, filter } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { DocumentViewerComponent } from '../viewer/document-viewer.component';
+import { IndexingFormComponent } from '../indexation/indexing-form/indexing-form.component';
+import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 
 @Component({
     templateUrl: "process.component.html",
@@ -54,51 +56,61 @@ export class ProcessComponent implements OnInit {
             id: 'dashboard',
             icon: 'fas fa-columns',
             label: this.lang.newsFeed,
+            count : 0
         },
         {
             id: 'history',
             icon: 'fas fa-history',
             label: this.lang.history,
+            count : 0
         },
         {
             id: 'notes',
             icon: 'fas fa-pen-square',
             label: this.lang.notesAlt,
+            count : 0
         },
         {
             id: 'attachments',
             icon: 'fas fa-paperclip',
             label: this.lang.attachments,
+            count : 0
         },
         {
             id: 'link',
             icon: 'fas fa-link',
             label: this.lang.links,
+            count : 0
         },
         {
             id: 'diffusionList',
             icon: 'fas fa-share-alt',
             label: this.lang.diffusionList,
+            count : 0
         },
         {
             id: 'mails',
             icon: 'fas fa-envelope',
             label: this.lang.mailsSentAlt,
+            count : 0
         },
         {
             id: 'visa',
             icon: 'fas fa-list-ol',
             label: this.lang.visaWorkflow,
+            count : 0
         },
         {
             id: 'avis',
             icon: 'fas fa-comment-alt',
             label: this.lang.avis,
+            count : 0
         },
         {
             id: 'info',
             icon: 'fas fa-info-circle',
             label: this.lang.informations,
+            count : 0
         }
     ];
 
@@ -114,6 +126,7 @@ export class ProcessComponent implements OnInit {
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     @ViewChild('appDocumentViewer', { static: true }) appDocumentViewer: DocumentViewerComponent;
+    @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
     
     constructor(
         private route: ActivatedRoute,
@@ -196,6 +209,7 @@ export class ProcessComponent implements OnInit {
         this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}?light=true`).pipe(
             tap((data: any) => {
                 this.currentResourceInformations = data;
+                this.loadBadges();
                 this.headerService.setHeader(this.lang.eventProcessDoc, this.lang[this.currentResourceInformations.categoryId]);
             }),
             finalize(() => this.loading = false),
@@ -204,6 +218,12 @@ export class ProcessComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    loadBadges() {
+        this.processTool.forEach(element => {
+            element.count = this.currentResourceInformations[element.id] !== undefined ? this.currentResourceInformations[element.id] : 0;
+        });
     }
 
     lockResource() {
@@ -236,7 +256,25 @@ export class ProcessComponent implements OnInit {
     }
 
     onSubmit() {
-        this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false);
+        if (this.currentTool === 'info' && this.indexingForm.isResourceModified()) {
+            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.saveModifiedData } });
+
+                dialogRef.afterClosed().pipe(
+                    filter((data: string) => data === 'ok'),
+                    tap(() => {
+                        this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+                    }),
+                    finalize(() => this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false)),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+        } else {
+            this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false);
+        }
+
+        
     }
 
     showActionInCurrentCategory(action: any) {
@@ -267,7 +305,31 @@ export class ProcessComponent implements OnInit {
     }
 
     removeModal(index: number) {
-        this.modalModule.splice(index, 1);
+        if (this.modalModule[index].id === 'info' && this.indexingForm.isResourceModified()) {
+            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.saveModifiedData } });
+
+                dialogRef.afterClosed().pipe(
+                    tap((data: string) => {
+                        if (data !== 'ok') {
+                            this.modalModule.splice(index, 1);
+                        }
+                    }),
+                    filter((data: string) => data === 'ok'),
+                    tap(() => {
+                        this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+                        setTimeout(() => {
+                            this.loadResource();
+                        }, 400);
+                        this.modalModule.splice(index, 1);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+        } else {
+            this.modalModule.splice(index, 1);
+        }
     }
 
     isModalOpen() {
@@ -279,4 +341,35 @@ export class ProcessComponent implements OnInit {
         this.subscription.unsubscribe();
     }
 
+    changeTab(tabId: string) {
+        if (this.currentTool === 'info' && this.indexingForm.isResourceModified() && !this.isModalOpen()) {
+            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.saveModifiedData } });
+
+                dialogRef.afterClosed().pipe(
+                    tap((data: string) => {
+                        if (data !== 'ok') {
+                            this.currentTool = tabId;
+                        }
+                    }),
+                    filter((data: string) => data === 'ok'),
+                    tap(() => {
+                        this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+                        setTimeout(() => {
+                            this.loadResource();
+                        }, 400);
+                        this.currentTool = tabId;
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+        } else {
+            this.currentTool = tabId;
+        }
+    }
+
+    refreshBadge(nbRres: any, id: string) {
+      this.processTool.filter(tool => tool.id === id)[0].count = nbRres;
+    }
 }

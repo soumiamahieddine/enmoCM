@@ -142,8 +142,8 @@ export class UserAdministrationComponent implements OnInit {
 
                 this.headerService.setHeader(this.lang.userCreation);
                 this.creationMode = true;
-                this.canViewPersonalDatas = true;
-                this.canManagePersonalDatas = true;
+                this.canViewPersonalDatas = false;
+                this.canManagePersonalDatas = this.privilegeService.hasCurrentUserPrivilege('manage_personal_data');
                 this.loading = false;
             } else {
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
@@ -367,6 +367,19 @@ export class UserAdministrationComponent implements OnInit {
     displaySignatureEditionForm(index: number) {
         this.selectedSignature = index;
         this.selectedSignatureLabel = this.user.signatures[index].signature_label;
+    }
+
+    resendActivationNotification(user: any) {
+        let r = confirm(this.lang.confirmAction + ' ' + this.lang.sendActivationNotification);
+
+        if (r) {
+            this.http.put("../../rest/users/" + this.serialId + "/accountActivationNotification", {})
+                .subscribe((data: any) => {
+                    this.notify.success(this.lang.activationNotificationSend);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
     }
 
     toggleGroup(group: any) {
@@ -865,12 +878,13 @@ export class UserAdministrationComponent implements OnInit {
                                 } else {
                                     this.notify.success(this.lang.userAdded);
                                 }
-                                this.router.navigate(["/administration/users/" + data.user.id]);
+                                this.router.navigate(["/administration/users/" + data.id]);
                             }, (err: any) => {
                                 this.notify.error(err.error.errors);
                             });
                     }
-                }, () => {
+                }, (err: any) => {
+                    this.notify.error(err.error.errors);
                 });
         } else {
             this.http.put("../../rest/users/" + this.serialId, this.user)

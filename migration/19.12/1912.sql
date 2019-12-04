@@ -71,7 +71,7 @@ DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_event_data;
 ALTER TABLE groupbasket ADD COLUMN list_event_data jsonb;
 
-update groupbasket set list_event_data = '"info"'
+update groupbasket set list_event_data = '{"canUpdate":true,"defaultTab":"info"}'
 where group_id in (
     select group_id
     from actions_groupbaskets
@@ -161,6 +161,32 @@ CREATE TABLE resources_custom_fields
     value jsonb NOT NULL,
     CONSTRAINT resources_custom_fields_pkey PRIMARY KEY (id),
     CONSTRAINT resources_custom_fields_unique_key UNIQUE (res_id, custom_field_id)
+)
+WITH (OIDS=FALSE);
+
+
+/* CONTACTS CUSTOM FIELDS */
+DROP TABLE IF EXISTS contacts_custom_fields_list;
+CREATE TABLE contacts_custom_fields_list
+(
+  id serial NOT NULL,
+  label character varying(256) NOT NULL,
+  type character varying(256) NOT NULL,
+  values jsonb,
+  CONSTRAINT contacts_custom_fields_list_pkey PRIMARY KEY (id),
+  CONSTRAINT contacts_custom_fields_list_unique_key UNIQUE (label)
+)
+WITH (OIDS=FALSE);
+
+DROP TABLE IF EXISTS contacts_custom_fields;
+CREATE TABLE contacts_custom_fields
+(
+    id serial NOT NULL,
+    contact_id INTEGER NOT NULL,
+    custom_field_id INTEGER NOT NULL,
+    value jsonb NOT NULL,
+    CONSTRAINT contacts_custom_fields_pkey PRIMARY KEY (id),
+    CONSTRAINT contacts_custom_fields_unique_key UNIQUE (contact_id, custom_field_id)
 )
 WITH (OIDS=FALSE);
 
@@ -400,6 +426,27 @@ CREATE TABLE contacts
 )
 WITH (OIDS=FALSE);
 
+DROP TABLE IF EXISTS contacts_parameters;
+CREATE TABLE contacts_parameters
+(
+    id SERIAL NOT NULL,
+    identifier text NOT NULL,
+    mandatory boolean NOT NULL DEFAULT FALSE,
+    filling boolean NOT NULL DEFAULT FALSE,
+    searchable boolean NOT NULL DEFAULT FALSE,
+    displayable boolean NOT NULL DEFAULT FALSE,
+    CONSTRAINT contacts_parameters_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+ALTER TABLE acknowledgement_receipts DROP COLUMN IF EXISTS contact_id;
+ALTER TABLE acknowledgement_receipts ADD COLUMN contact_id integer;
+ALTER TABLE contacts_groups_lists DROP COLUMN IF EXISTS contact_id;
+ALTER TABLE contacts_groups_lists ADD COLUMN contact_id integer;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS recipient_type;
+ALTER TABLE res_attachments ADD COLUMN recipient_type character varying(256);
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS recipient_id;
+ALTER TABLE res_attachments ADD COLUMN recipient_id integer;
 
 /* REFACTORING DATA */
 DO $$ BEGIN
@@ -457,6 +504,7 @@ DELETE FROM usergroups_services WHERE service_id = 'graphics_reports';
 DELETE FROM usergroups_services WHERE service_id = 'show_reports';
 DELETE FROM usergroups_services WHERE service_id = 'param_templates_doctypes';
 DELETE FROM usergroups_services WHERE service_id = 'doctype_template_use';
+DELETE FROM usergroups_services WHERE service_id = 'search_contacts';
 
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'update_diffusion_indexing'
@@ -600,7 +648,7 @@ ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_filename;
 
 /* M2M */
 DO $$ BEGIN
-  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'mlb_coll_ext')) THEN
+  IF (SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'mlb_coll_ext')) THEN
     UPDATE res_letterbox SET external_id = json_build_object('m2m', reference_number), reference_number = null FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id = 'message_exchange';
     UPDATE mlb_coll_ext SET nature_id = null WHERE nature_id = 'message_exchange';
   END IF;
@@ -638,7 +686,7 @@ TRUNCATE TABLE indexing_models_fields;
 /* Arrivée */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'doctype', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'priority', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'confidential', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'confidentiality', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'documentDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'arrivalDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'subject', TRUE, null, 'mail');
@@ -654,7 +702,7 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 /* Départ */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'doctype', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'priority', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'confidential', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'confidentiality', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'documentDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'departureDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'subject', TRUE, null, 'mail');
@@ -670,7 +718,7 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 /* Interne */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'doctype', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'priority', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'confidential', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'confidentiality', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'documentDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'subject', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'indexingCustomField_1', FALSE, '"Courrier simple"', 'mail');
@@ -684,7 +732,7 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 
 /* GED */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'doctype', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'confidential', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'confidentiality', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'documentDate', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'subject', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'senders', FALSE, null, 'contact');

@@ -50,7 +50,7 @@ class UserControllerTest extends TestCase
         $response     = $userController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-        self::$id = $responseBody->user->id;
+        self::$id = $responseBody->id;
 
         $this->assertInternalType('int', self::$id);
 
@@ -88,7 +88,8 @@ class UserControllerTest extends TestCase
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response     = $userController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
-        $responseBody = json_decode((string)$response->getBody());
+        $this->assertSame(204, $response->getStatusCode());
+
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);

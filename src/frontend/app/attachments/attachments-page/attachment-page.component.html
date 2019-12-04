@@ -22,7 +22,7 @@
                     <div class="attachment-form">
                         <div class="attachment-form-item">
                             <mat-slide-toggle [checked]="newVersion" color="primary"
-                                (change)="newVersion = !newVersion">Nouvelle version</mat-slide-toggle>
+                                (change)="toggleNewVersion()">{{lang.newVersion}}</mat-slide-toggle>
                         </div>
                         <div class="attachment-form-item">
                             <mat-form-field class="input-form">
@@ -39,9 +39,8 @@
                                 (afterSelected)="getAttachType($event)" style="width:100%;">
                             </plugin-select-search>
                             <div class="fieldState">
-                                <i class="fas fa-asterisk" *ngIf="!attachment['type'].hasError('required')"></i>
-                                <i class="fas fa-times" style="color:red;font-size:15px;"
-                                    *ngIf="attachment['type'].hasError('required')"></i>
+                                <i class="fas fa-asterisk fieldRequired" *ngIf="!attachment['type'].hasError('required')"></i>
+                                <i class="fas fa-exclamation-triangle fieldError" *ngIf="attachment['type'].hasError('required')"></i>
                             </div>
                         </div>
                         <div class="attachment-form-item">
@@ -49,9 +48,8 @@
                                 <input matInput placeholder="{{lang.subject}}" [formControl]="attachment['title']">
                             </mat-form-field>
                             <div class="fieldState">
-                                <i class="fas fa-asterisk" *ngIf="!attachment['title'].hasError('required')"></i>
-                                <i class="fas fa-times" style="color:red;font-size:15px;"
-                                    *ngIf="attachment['title'].hasError('required')"></i>
+                                <i class="fas fa-asterisk fieldRequired" *ngIf="!attachment['title'].hasError('required')"></i>
+                                <i class="fas fa-exclamation-triangle fieldError" *ngIf="attachment['title'].hasError('required')"></i>
                             </div>
                         </div>
                         <div class="attachment-form-item">

@@ -14,6 +14,7 @@
 
 namespace SrcCore\controllers;
 
+use Email\controllers\EmailController;
 use Firebase\JWT\JWT;
 use SrcCore\models\AuthenticationModel;
 use SrcCore\models\CoreConfigModel;
@@ -138,5 +139,26 @@ class AuthenticationController
         $jwt = JWT::encode($token, CoreConfigModel::getEncryptKey());
 
         return $jwt;
+    }
+
+    public static function sendAccountActivationNotification(array $args)
+    {
+        $resetToken = AuthenticationController::getResetJWT(['id' => $args['userId'], 'expirationTime' => 1209600]); // 14 days
+        UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$args['userId']]]);
+
+        $url = UrlController::getCoreUrl() . 'apps/maarch_entreprise/index.php?display=true&page=login&update-password-token=' . $resetToken;
+        EmailController::createEmail([
+            'userId'    => $args['userId'],
+            'data'      => [
+                'sender'        => ['email' => 'Notification'],
+                'recipients'    => [$args['userEmail']],
+                'object'        => _NOTIFICATIONS_USER_CREATION_SUBJECT,
+                'body'          => _NOTIFICATIONS_USER_CREATION_BODY . '<a href="' . $url . '">'._CLICK_HERE.'</a>' . _NOTIFICATIONS_USER_CREATION_FOOTER,
+                'isHtml'        => true,
+                'status'        => 'WAITING'
+            ]
+        ]);
+
+        return true;
     }
 }

@@ -9,7 +9,8 @@
             <div class="processTool">
                 <div class="processTool-module jiggle" *ngFor="let module of processTool"
                     [class.processTool-module-active]="module.id === currentTool" matRipple
-                    (click)="currentTool = module.id">
+                    (click)="changeTab(module.id)">
+                    <i *ngIf="module.count > 0" class="fas fa-circle haveContent"></i>
                     <i [class]="module.icon"></i>
                     <span *ngIf="!appService.getViewMode()">{{module.label}}</span>
                 </div>
@@ -76,21 +77,21 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="!isModalOpen(); else elseTemplate">
-                <app-notes-list *ngIf="currentTool === 'notes'" #appNotesList [editMode]="true"
+                <app-notes-list *ngIf="currentTool === 'notes' && !loading" #appNotesList [editMode]="true"
                     [resId]="currentResourceInformations.resId">
                 </app-notes-list>
-                <app-diffusions-list *ngIf="currentTool === 'diffusionList'" #appDiffusionsList [adminMode]="false"
+                <app-diffusions-list *ngIf="currentTool === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="false"
                     [resId]="currentResourceInformations.resId" [expanded]="true">
                 </app-diffusions-list>
-                <app-visa-workflow *ngIf="currentTool === 'visa'" #appVisaWorkflow
+                <app-visa-workflow *ngIf="currentTool === 'visa' && !loading" #appVisaWorkflow
                     [resId]="currentResourceInformations.resId"></app-visa-workflow>
-                <app-avis-workflow *ngIf="currentTool === 'avis'" #appAvisWorkflow
+                <app-avis-workflow *ngIf="currentTool === 'avis' && !loading" #appAvisWorkflow
                     [resId]="currentResourceInformations.resId"></app-avis-workflow>
-                <app-attachments-list *ngIf="currentTool === 'attachments'" #appAttachmentsList
-                    [resId]="currentResourceInformations.resId" [target]="'process'">
+                <app-attachments-list *ngIf="currentTool === 'attachments' && !loading" #appAttachmentsList
+                    [resId]="currentResourceInformations.resId" [target]="'process'" (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
                 </app-attachments-list>
-                <app-indexing-form *ngIf="currentTool === 'info'" #indexingForm [groupId]="currentGroupId"
-                    [indexingFormId]="1"></app-indexing-form>
+                <app-indexing-form *ngIf="currentTool === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
+                    [resId]="currentResourceInformations.resId" [indexingFormId]="currentResourceInformations.modelId" [mode]="'process'"></app-indexing-form>
             </ng-container>
             <ng-template #elseTemplate>
                 <div class="openedModal">
@@ -178,8 +179,7 @@
                                     *ngIf="this.currentResourceInformations.closingDate !== null; else elseLimitDate">
                                     <div style="font-weight: bold;"
                                         [title]="this.currentResourceInformations.closingDate | fullDate">
-                                        {{this.lang.closed}} {{this.lang.onRange}}
-                                        {{this.currentResourceInformations.closingDate | timeAgo}}&nbsp;&nbsp;<i
+                                        {{this.lang.closed}} {{this.currentResourceInformations.closingDate | timeAgo : 'full'}}&nbsp;&nbsp;<i
                                             class="fa fa-lock"></i></div>
                                 </ng-container>
                                 <ng-template #elseLimitDate>
@@ -225,20 +225,20 @@
         </button>
     </div>
     <div class="modal-module-content">
-        <app-notes-list *ngIf="modal.id === 'notes'" #appNotesList [editMode]="true"
+        <app-notes-list *ngIf="modal.id === 'notes' && !loading" #appNotesList [editMode]="true"
             [resId]="currentResourceInformations.resId">
         </app-notes-list>
-        <app-diffusions-list *ngIf="modal.id === 'diffusionList'" #appDiffusionsList [adminMode]="false"
+        <app-diffusions-list *ngIf="modal.id === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="false"
             [resId]="currentResourceInformations.resId" [expanded]="true">
         </app-diffusions-list>
-        <app-visa-workflow *ngIf="modal.id === 'visa'" #appVisaWorkflow [resId]="currentResourceInformations.resId">
+        <app-visa-workflow *ngIf="modal.id === 'visa' && !loading" #appVisaWorkflow [resId]="currentResourceInformations.resId">
         </app-visa-workflow>
-        <app-avis-workflow *ngIf="modal.id === 'avis'" #appAvisWorkflow [resId]="currentResourceInformations.resId">
+        <app-avis-workflow *ngIf="modal.id === 'avis' && !loading" #appAvisWorkflow [resId]="currentResourceInformations.resId">
         </app-avis-workflow>
-        <app-attachments-list *ngIf="modal.id === 'attachments'" #appAttachmentsList
-            [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="reloadBadgeAttachments($event)">
+        <app-attachments-list *ngIf="modal.id === 'attachments'  && !loading" #appAttachmentsList
+            [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
         </app-attachments-list>
-        <app-indexing-form *ngIf="modal.id === 'info'" #indexingForm [groupId]="currentGroupId" [indexingFormId]="1">
+        <app-indexing-form *ngIf="modal.id === 'info' && !loading" #indexingForm [groupId]="currentGroupId" [indexingFormId]="currentResourceInformations.modelId" [resId]="currentResourceInformations.resId" [mode]="'process'">
         </app-indexing-form>
     </div>
 </div>

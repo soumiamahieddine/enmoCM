@@ -97,7 +97,7 @@ class StoreController
             if (!empty($args['encodedFile'])) {
                 $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $args['encodedFile']));
 
-                if (in_array($args['format'], MergeController::OFFICE_EXTENSIONS)) {
+                if (empty($args['id']) && in_array($args['format'], MergeController::OFFICE_EXTENSIONS)) {
                     $tmpPath = CoreConfigModel::getTmpPath();
                     $uniqueId = CoreConfigModel::uniqueId();
                     $tmpFilename = "storeTmp_{$GLOBALS['id']}_{$uniqueId}.{$args['format']}";
@@ -279,6 +279,8 @@ class StoreController
             'origin_id'             => $args['originId'] ?? null,
             'res_id_master'         => $args['resIdMaster'],
             'attachment_type'       => $args['type'],
+            'recipient_id'          => $args['recipientId'] ?? null,
+            'recipient_type'        => $args['recipientType'] ?? null,
             'validation_date'       => $args['validationDate'] ?? null,
             'effective_date'        => $args['effectiveDate'] ?? null,
             'in_signature_book'     => empty($args['inSignatureBook']) ? 'false' : 'true',
@@ -300,6 +302,8 @@ class StoreController
 
         $preparedData = [
             'title'                 => $args['title'] ?? null,
+            'recipient_id'          => $args['recipientId'] ?? null,
+            'recipient_type'        => $args['recipientType'] ?? null,
             'attachment_type'       => $args['type'],
             'validation_date'       => $args['validationDate'] ?? null,
             'effective_date'        => $args['effectiveDate'] ?? null,

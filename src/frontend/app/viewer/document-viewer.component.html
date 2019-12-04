@@ -27,11 +27,12 @@
             <i class="fa fa-file-upload upload-icon"></i><br />
             {{lang.dragAndDrop}}<br />{{lang.or}}
             <div style="display: flex;">
-                <div style="margin-right:20px;align-items: center;justify-content: center;text-align: center;display: flex;">
+                <div
+                    style="margin-right:20px;align-items: center;justify-content: center;text-align: center;display: flex;">
                     <plugin-select-search #templateList *ngIf="listTemplates.length > 0" [label]="lang.chooseModel"
                         [placeholderLabel]="lang.chooseModel" [datas]="listTemplates" [class]="'input-form-filled'"
-                        [formControlSelect]="templateListForm"
-                        (afterSelected)="editTemplate($event)" style="width: 240px;text-align: left;font-weight:normal;font-size: 13px;">
+                        [formControlSelect]="templateListForm" (afterSelected)="editTemplate($event)"
+                        style="width: 240px;text-align: left;font-weight:normal;font-size: 13px;">
                     </plugin-select-search>
                 </div>
                 <button mat-button (click)="docToUpload.click()" class="button-form-primary-alt"
@@ -39,31 +40,39 @@
             </div>
         </div>
         <input type="file" #docToUpload name="files[]" (change)="uploadTrigger($event)" style="display:none;">
-        <div style="display: block;width:100%;" appUploadFileDragDrop (onFileDropped)="dndUploadFile($event)" [disabled]="!editMode">
+        <div style="display: block;width:100%;" appUploadFileDragDrop (onFileDropped)="dndUploadFile($event)"
+            [disabled]="!editMode">
             <div *ngIf="!loading && file.content !== null" class="viewer-tools">
-                <button *ngIf="infoPanel !== null" mat-icon-button (click)="infoPanel.toggle()"
-                    [matTooltip]="lang.informations">
-                    <mat-icon class="fa fa-info-circle"></mat-icon>
-                </button>
-                <button *ngIf="editMode" mat-icon-button (click)="docToUpload.click()"
-                    [matTooltip]="lang.uploadAnOtherFile">
-                    <mat-icon class="fa fa-file-upload"></mat-icon>
-                </button>
                 <button mat-icon-button (click)="downloadOriginalFile()" [matTooltip]="lang.downloadOriginalFile">
                     <mat-icon class="fa fa-download"></mat-icon>
-                </button>
-                <button *ngIf="file.contentView !== undefined" mat-icon-button (click)="openPdfInTab()" matTooltip="Ouvrir dans un nouvel onglet">
-                    <mat-icon class="fas fa-external-link-alt"></mat-icon>
-                </button>
-                <button *ngIf="editMode" mat-icon-button (click)="cleanFile()" [matTooltip]="lang.removeFile">
-                    <mat-icon class="fa fa-trash" color="warn"></mat-icon>
                 </button>
                 <button *ngIf="editMode && mode === 'attachment' && resId !== null" mat-icon-button (click)="editAttachment()" [matTooltip]="lang.editDocument">
                     <mat-icon class="fa fa-edit"></mat-icon>
                 </button>
+                <button mat-icon-button [matMenuTriggerFor]="menuOptions">
+                    <mat-icon class="fas fa-chevron-down"></mat-icon>
+                </button>
+                <mat-menu #menuOptions="matMenu" [class]="'optionsListMenu'">
+                    <button mat-menu-item *ngIf="file.contentView !== undefined" (click)="openPdfInTab()">
+                        <mat-icon color="primary" class="fas fa-external-link-alt"></mat-icon>
+                        <span>Ouvrir dans un nouvel onglet</span>
+                    </button>
+                    <button mat-menu-item *ngIf="editMode" (click)="docToUpload.click()">
+                        <mat-icon color="primary" class="fa fa-file-upload"></mat-icon>
+                        <span>{{lang.uploadAnOtherFile}}</span>
+                    </button>
+                    <button mat-menu-item *ngIf="editMode" (click)="cleanFile()">
+                        <mat-icon class="fa fa-trash" color="warn"></mat-icon>
+                        <span>{{lang.removeFile}}</span>
+                    </button>
+                </mat-menu>
             </div>
-            <pdf-viewer *ngIf="file.src!==null" [src]="file.src" [render-text]="true" [autoresize]="true"
-                [original-size]="false" [show-all]="true" (error)="onError($event)" style="width:100%;"></pdf-viewer>
+            <div>
+                <pdf-viewer *ngIf="file.src!==null" [src]="file.src" [render-text]="true" [autoresize]="true"
+                    [original-size]="false" [show-all]="true" (error)="onError($event)" style="width:100%;">
+                </pdf-viewer>
+            </div>
+
         </div>
         <div *ngIf="file.content !== null && noConvertedFound" class="no-doc-container" appUploadFileDragDrop
             (onFileDropped)="dndUploadFile($event)" [disabled]="!editMode">

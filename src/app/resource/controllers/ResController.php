@@ -15,8 +15,10 @@
 namespace Resource\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
+use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\RedirectBasketModel;
+use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
@@ -32,13 +34,13 @@ use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
 use Group\controllers\GroupController;
 use Group\controllers\PrivilegeController;
-use Group\models\PrivilegeModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
 use IndexingModel\models\IndexingModelModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
@@ -54,18 +56,9 @@ use User\models\UserModel;
 
 class ResController
 {
-    //*****************************************************************************************
-    //LOG ONLY LOG FOR DEBUG
-    // ob_flush();
-    // ob_start();
-    // print_r($data);
-    // file_put_contents("storeResourceLogs.log", ob_get_flush());
-    //END LOG FOR DEBUG ONLY
-    //*****************************************************************************************
-
     public function create(Request $request, Response $response)
     {
-        if (!PrivilegeModel::canIndex(['userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::canIndex(['userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -100,7 +93,7 @@ class ResController
             'eventType' => 'ADD',
             'info'      => _DOC_ADDED,
             'moduleId'  => 'resource',
-            'eventId'   => 'resadd',
+            'eventId'   => 'resourceCreation',
         ]);
 
         return $response->withJson(['resId' => $resId]);
@@ -172,11 +165,13 @@ class ResController
         $formattedData = array_merge($unchangeableData, $formattedData);
 
         if (!empty($formattedData['destination'])) {
-            $entity = EntityModel::getByEntityId(['entityId' => $formattedData['destination'], 'select' => ['entity_label']]);
+            $entity = EntityModel::getByEntityId(['entityId' => $formattedData['destination'], 'select' => ['entity_label', 'id']]);
+            $formattedData['destination'] = $entity['id'];
             $formattedData['destinationLabel'] = $entity['entity_label'];
         }
         if (!empty($formattedData['initiator'])) {
-            $entity = EntityModel::getByEntityId(['entityId' => $formattedData['initiator'], 'select' => ['entity_label']]);
+            $entity = EntityModel::getByEntityId(['entityId' => $formattedData['initiator'], 'select' => ['entity_label', 'id']]);
+            $formattedData['initiator'] = $entity['id'];
             $formattedData['initiatorLabel'] = $entity['entity_label'];
         }
         if (!empty($formattedData['status'])) {
@@ -189,20 +184,30 @@ class ResController
             $formattedData['priorityColor'] = $priority['color'];
         }
 
+        $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
+        $formattedData['attachments'] = $attachments[0]['count'];
+
         return $response->withJson($formattedData);
     }
 
     public function update(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => 'edit_resource', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        $queryParams = $request->getQueryParams();
+
+        $control = PrivilegeController::canUpdateResource(['currentUserId' => $GLOBALS['id'], 'resId' => $args['resId'], 'queryParams' => $queryParams]);
+        if (!empty($control['errors'])) {
+            return $response->withStatus(403)->withJson(['errors' => $control['errors']]);
         }
 
         $body = $request->getParsedBody();
 
-        $control = ResController::controlUpdateResource(['body' => $body, 'resId' => $args['resId']]);
+        $isProcessing = !empty($queryParams['basketId']);
+        if ($isProcessing) {
+            unset($body['destination']);
+            unset($body['diffusionList']);
+        }
+
+        $control = ResController::controlUpdateResource(['body' => $body, 'resId' => $args['resId'], 'isProcessing' => $isProcessing]);
         if (!empty($control['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
@@ -215,6 +220,7 @@ class ResController
 
         ResController::updateAdjacentData(['body' => $body, 'resId' => $args['resId']]);
 
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
         if (!empty($body['encodedFile'])) {
             AdrModel::deleteDocumentAdr(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             ConvertPdfController::convert([
@@ -230,7 +236,7 @@ class ResController
                 'tableName' => 'res_letterbox',
                 'recordId'  => $args['resId'],
                 'eventType' => 'UP',
-                'info'      => _FILE_UPDATED,
+                'info'      => _FILE_UPDATED . " : {$resource['alt_identifier']}",
                 'moduleId'  => 'resource',
                 'eventId'   => 'fileModification'
             ]);
@@ -240,7 +246,7 @@ class ResController
             'tableName' => 'res_letterbox',
             'recordId'  => $args['resId'],
             'eventType' => 'UP',
-            'info'      => _DOC_UPDATED,
+            'info'      => _DOC_UPDATED . " : {$resource['alt_identifier']}",
             'moduleId'  => 'resource',
             'eventId'   => 'resourceModification'
         ]);
@@ -791,6 +797,16 @@ class ResController
                 TagResModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
             }
         }
+        if (!empty($body['senders'])) {
+            foreach ($body['senders'] as $sender) {
+                ResourceContactModel::create(['res_id' => $args['resId'], 'item_id' => $sender['id'], 'type' => $sender['type'], 'mode' => 'sender']);
+            }
+        }
+        if (!empty($body['recipients'])) {
+            foreach ($body['recipients'] as $recipient) {
+                ResourceContactModel::create(['res_id' => $args['resId'], 'item_id' => $recipient['id'], 'type' => $recipient['type'], 'mode' => 'recipient']);
+            }
+        }
 
         return true;
     }
@@ -820,37 +836,47 @@ class ResController
                 ]);
             }
         }
+        ResourceCustomFieldModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
         if (!empty($body['customFields'])) {
-            ResourceCustomFieldModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             foreach ($body['customFields'] as $key => $value) {
                 ResourceCustomFieldModel::create(['res_id' => $args['resId'], 'custom_field_id' => $key, 'value' => json_encode($value)]);
             }
         }
+        $entities = EntityModel::getWithUserEntities([
+            'select' => ['entities.id'],
+            'where'  => ['user_id = ?'],
+            'data'   => [$GLOBALS['userId']]
+        ]);
+        $entities = array_column($entities, 'id');
+        $idToDelete = FolderModel::getWithEntitiesAndResources([
+            'select'    => ['resources_folders.id'],
+            'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
+            'data'      => [$args['resId'], $entities, $GLOBALS['id']]
+        ]);
+        $idToDelete = array_column($idToDelete, 'id');
+        if (!empty($idToDelete)) {
+            ResourceFolderModel::delete(['where' => ['id in (?)'], 'data' => [$idToDelete]]);
+        }
         if (!empty($body['folders'])) {
-            $entities = EntityModel::getWithUserEntities([
-                'select' => ['entities.id'],
-                'where'  => ['user_id = ?'],
-                'data'   => [$GLOBALS['userId']]
-            ]);
-            $entities = array_column($entities, 'id');
-            $idToDelete = FolderModel::getWithEntitiesAndResources([
-                'select'    => ['resources_folders.id'],
-                'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
-                'data'      => [$args['resId'], $entities, $GLOBALS['id']]
-            ]);
-            $idToDelete = array_column($idToDelete, 'id');
-            if (!empty($idToDelete)) {
-                ResourceFolderModel::delete(['where' => ['id in (?)'], 'data' => [$idToDelete]]);
-            }
-
             foreach ($body['folders'] as $folder) {
                 ResourceFolderModel::create(['res_id' => $args['resId'], 'folder_id' => $folder]);
             }
         }
+        TagResModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
         if (!empty($body['tags'])) {
-            TagResModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             foreach ($body['tags'] as $tag) {
                 TagResModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
+            }
+        }
+        ResourceContactModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+        if (!empty($body['senders'])) {
+            foreach ($body['senders'] as $sender) {
+                ResourceContactModel::create(['res_id' => $args['resId'], 'item_id' => $sender['id'], 'type' => $sender['type'], 'mode' => 'sender']);
+            }
+        }
+        if (!empty($body['recipients'])) {
+            foreach ($body['recipients'] as $recipient) {
+                ResourceContactModel::create(['res_id' => $args['resId'], 'item_id' => $recipient['id'], 'type' => $recipient['type'], 'mode' => 'recipient']);
             }
         }
 
@@ -967,7 +993,7 @@ class ResController
         }
 
         $body['modelId'] = $resource['model_id'];
-        $control = ResController::controlIndexingModelFields(['body' => $body]);
+        $control = ResController::controlIndexingModelFields(['body' => $body, 'isProcessing' => $args['isProcessing']]);
         if (!empty($control['errors'])) {
             return ['errors' => $control['errors']];
         }
@@ -1042,6 +1068,50 @@ class ResController
                 return ['errors' => 'Body tags : One or more tags do not exist'];
             }
         }
+        if (!empty($body['senders'])) {
+            if (!Validator::arrayType()->notEmpty()->validate($body['senders'])) {
+                return ['errors' => 'Body senders is not an array'];
+            }
+            foreach ($body['senders'] as $key => $sender) {
+                if (!Validator::arrayType()->notEmpty()->validate($sender)) {
+                    return ['errors' => "Body senders[{$key}] is not an array"];
+                }
+                if ($sender['type'] == 'contact') {
+                    $senderItem = ContactModel::getById(['id' => $sender['id'], 'select' => [1]]);
+                } elseif ($sender['type'] == 'user') {
+                    $senderItem = UserModel::getById(['id' => $sender['id'], 'select' => [1]]);
+                } elseif ($sender['type'] == 'entity') {
+                    $senderItem = EntityModel::getById(['id' => $sender['id'], 'select' => [1]]);
+                } else {
+                    return ['errors' => "Body senders[{$key}] type is not valid"];
+                }
+                if (empty($senderItem)) {
+                    return ['errors' => "Body senders[{$key}] id does not exist"];
+                }
+            }
+        }
+        if (!empty($body['recipients'])) {
+            if (!Validator::arrayType()->notEmpty()->validate($body['recipients'])) {
+                return ['errors' => 'Body recipients is not an array'];
+            }
+            foreach ($body['recipients'] as $key => $recipient) {
+                if (!Validator::arrayType()->notEmpty()->validate($recipient)) {
+                    return ['errors' => "Body recipients[{$key}] is not an array"];
+                }
+                if ($recipient['type'] == 'contact') {
+                    $recipientItem = ContactModel::getById(['id' => $recipient['id'], 'select' => [1]]);
+                } elseif ($recipient['type'] == 'user') {
+                    $recipientItem = UserModel::getById(['id' => $recipient['id'], 'select' => [1]]);
+                } elseif ($recipient['type'] == 'entity') {
+                    $recipientItem = EntityModel::getById(['id' => $recipient['id'], 'select' => [1]]);
+                } else {
+                    return ['errors' => "Body recipients[{$key}] type is not valid"];
+                }
+                if (empty($recipientItem)) {
+                    return ['errors' => "Body recipients[{$key}] id does not exist"];
+                }
+            }
+        }
         if (!empty($body['diffusionList'])) {
             if (!Validator::arrayType()->notEmpty()->validate($body['diffusionList'])) {
                 return ['errors' => 'Body diffusionList is not an array'];
@@ -1110,8 +1180,10 @@ class ResController
                         return ['errors' => "Body customFields[{$customFieldId}] is not a date"];
                     }
                 }
-            } elseif ($indexingModelField['mandatory'] && empty($body[$indexingModelField['identifier']])) {
-                return ['errors' => "Body {$indexingModelField['identifier']} is empty"];
+            } elseif ($indexingModelField['identifier'] == 'destination' && !empty($args['isProcessing'])) {
+                continue;
+            } elseif ($indexingModelField['mandatory'] && !isset($body[$indexingModelField['identifier']])) {
+                return ['errors' => "Body {$indexingModelField['identifier']} is not set"];
             }
         }
 

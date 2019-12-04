@@ -1,163 +1,73 @@
 <?php
 
 use Docserver\models\DocserverModel;
+use Template\models\TemplateModel;
 
 require '../../vendor/autoload.php';
 
-include_once('/var/www/html/MaarchCourrierDev/vendor/tinybutstrong/opentbs/tbs_plugin_opentbs.php');
+include_once('../../vendor/tinybutstrong/opentbs/tbs_plugin_opentbs.php');
 
 const OFFICE_EXTENSIONS = ['odt', 'ods', 'odp', 'xlsx', 'pptx', 'docx', 'odf'];
 
-const DATA_TO_MERGE = [
-    'res_letterbox' => [
-        'destination' => '[destination.entity_id]',
-        'entity_label' => '[destination.entity_label]',
-        'process_notes' => '[notes]',
+const DATA_TO_REPLACE = [
+    'res_letterbox.destination' => '[destination.entity_id]',
+    'res_letterbox.entity_label' => '[destination.entity_label]',
+    'res_letterbox.process_notes' => '[notes]',
 
-        'nature_id' => '[res_letterbox.custom_1]',
+    'res_letterbox.nature_id' => '[res_letterbox.custom_1]',
 
-        // Initiator
-        'initiator_entity_id' => '[initiator.entity_id]',
-        'initiator_entity_label' => '[initiator.entity_label]',
-        'initiator_short_label' => '[initiator.short_label]',
-        'initiator_email' => '[initiator.email]',
-        'initiator_parent_entity_id' => '[initiator.parent_entity_id]',
-        'initiator_parent_entity_label' => '[initiator.parent_entity_label]',
-        'initiator_entity_type' => '[initiator.entity_type]',
-        'initiator_entity_path' => '[initiator.entity_path]',
-        'initiator_entity_fullname' => '[initiator.entity_fullname]',
-        'initiator_zipcode' => '[initiator.zipcode]',
-        'initiator_city' => '[initiator.city]',
-        'initiator_country' => '[initiator.country]',
-        'initiator_ldap_id' => '[initiator.ldap_id]',
-        'initiator_archival_agence' => '[initiator.archival_agence]',
-        'initiator_archival_agreement' => '[initiator.archival_agreement]',
-        'initiator_business_id' => '[initiator.business_id]',
+    // Initiator
+    'res_letterbox.initiator_entity_id' => '[initiator.entity_id]',
+    'res_letterbox.initiator_entity_label' => '[initiator.entity_label]',
+    'res_letterbox.initiator_short_label' => '[initiator.short_label]',
+    'res_letterbox.initiator_email' => '[initiator.email]',
+    'res_letterbox.initiator_parent_entity_id' => '[initiator.parent_entity_id]',
+    'res_letterbox.initiator_parent_entity_label' => '[initiator.parent_entity_label]',
+    'res_letterbox.initiator_entity_type' => '[initiator.entity_type]',
+    'res_letterbox.initiator_entity_path' => '[initiator.entity_path]',
+    'res_letterbox.initiator_entity_fullname' => '[initiator.entity_fullname]',
+    'res_letterbox.initiator_zipcode' => '[initiator.zipcode]',
+    'res_letterbox.initiator_city' => '[initiator.city]',
+    'res_letterbox.initiator_country' => '[initiator.country]',
+    'res_letterbox.initiator_ldap_id' => '[initiator.ldap_id]',
+    'res_letterbox.initiator_archival_agence' => '[initiator.archival_agence]',
+    'res_letterbox.initiator_archival_agreement' => '[initiator.archival_agreement]',
+    'res_letterbox.initiator_business_id' => '[initiator.business_id]',
 
-        // Not changed
-        'type_label' => '[res_letterbox.type_label]',
-        'category_id' => '[res_letterbox.category_id]',
-        'admission_date' => '[res_letterbox.admission_date]',
-        'doc_date' => '[res_letterbox.doc_date]',
-        'process_limit_date' => '[res_letterbox.process_limit_date]',
-        'closing_date' => '[res_letterbox.closing_date]',
-        'subject' => '[res_letterbox.subject]',
-        'alt_identifier' => '[res_letterbox.alt_identifier]',
-        'creation_date' => '[res_letterbox.creation_date]'
-    ],
-    'attachments' => [
-        'chrono' => '[attachment.chrono]',
-        'chronoBarCode' => '[attachments.chronoBarCode;ope=changepic;tagpos=inside;adjust;unique]'
-    ],
-    'visa' => [
-        'firstnameSign' => '[visas]',
-        'lastnameSign' => '[visas]',
-        'entitySign' => '[visas]',
-        'firstname1' => '[visas]',
-        'lastname1' => '[visas]',
-        'entity1' => '[visas]'
-    ],
-    'avis' => [
-        'firstname1' => '[opinions]',
-        'lastname1' => '[opinions]',
-        'role1' => '[opinions]',
-        'entity1' => '[opinions]',
-        'note1' => '[opinions]'
-    ],
-    'copies' => [
-        'firstname1' => '[copies]',
-        'lastname1' => '[copies]',
-        'entity1' => '[copies]'
-    ],
-    'user' => [
-        'role' => '[userPrimaryEntity.role]',
-        'entity_id' => '[userPrimaryEntity.entity_id]',
-        'entity_label' => '[userPrimaryEntity.entity_label]',
-        'short_label' => '[userPrimaryEntity.short_label]',
-        'adrs_1' => '[userPrimaryEntity.adrs_1]',
-        'adrs_2' => '[userPrimaryEntity.adrs_2]',
-        'adrs_3' => '[userPrimaryEntity.adrs_3]',
-        'zipcode' => '[userPrimaryEntity.zipcode]',
-        'city' => '[userPrimaryEntity.city]',
-        'email' => '[userPrimaryEntity.email]',
-        'parent_entity_id' => '[userPrimaryEntity.parent_entity_id]',
-        'entity_type' => '[userPrimaryEntity.entity_type]',
-        'path' => '[userPrimaryEntity.path]',
+    'attachments.chrono' => '[attachment.chrono]',
 
-        // Not changed
-        'lastname' => '[user.lastname]',
-        'firstname' => '[user.firstname]',
-        'initials' => '[user.initials]',
-        'phone' => '[user.phone]',
-        'mail' => '[user.mail]'
-    ]
+    'visa.firstnameSign' => '',
+    'visa.lastnameSign' => '[visas]',
+    'visa.entitySign' => '',
+    'visa.firstname1' => '',
+    'visa.lastname1' => '[visas]',
+    'visa.entity1' => '',
+
+    'avis.firstname1' => '',
+    'avis.lastname1' => '[opinions]',
+    'avis.role1' => '',
+    'avis.entity1' => '',
+    'avis.note1' => '',
+
+    'copies.firstname1' => '',
+    'copies.lastname1' => '[copies]',
+    'copies.entity1' => '',
+
+    'user.role' => '[userPrimaryEntity.role]',
+    'user.entity_id' => '[userPrimaryEntity.entity_id]',
+    'user.entity_label' => '[userPrimaryEntity.entity_label]',
+    'user.short_label' => '[userPrimaryEntity.short_label]',
+    'user.adrs_1' => '[userPrimaryEntity.adrs_1]',
+    'user.adrs_2' => '[userPrimaryEntity.adrs_2]',
+    'user.adrs_3' => '[userPrimaryEntity.adrs_3]',
+    'user.zipcode' => '[userPrimaryEntity.zipcode]',
+    'user.city' => '[userPrimaryEntity.city]',
+    'user.email' => '[userPrimaryEntity.email]',
+    'user.parent_entity_id' => '[userPrimaryEntity.parent_entity_id]',
+    'user.entity_type' => '[userPrimaryEntity.entity_type]',
+    'user.entity_path' => '[userPrimaryEntity.path]',
 ];
 
-function browseFiles($pathDirectory) {
-    $files = scandir($pathDirectory);
-    $nb = 0;
-
-    if (count($files) == 2) {
-        return 0;
-    }
-
-    foreach ($files as $file) {
-        if ($file == '.' || $file == '..') {
-            continue;
-        }
-
-        $pathToDocument = $pathDirectory . '/' . $file;
-
-        if (is_dir($pathToDocument)) {
-            $nb += browseFiles($pathToDocument);
-            continue;
-        }
-
-        $pathInfo = pathinfo($pathToDocument);
-        $extension = $pathInfo['extension'];
-
-        if (!in_array($extension, OFFICE_EXTENSIONS)) {
-            continue;
-        }
-
-        $tbs = new clsTinyButStrong();
-        $tbs->NoErr = true;
-        $tbs->PlugIn(TBS_INSTALL, OPENTBS_PLUGIN);
-
-        $tbs->LoadTemplate($pathToDocument, OPENTBS_ALREADY_UTF8);
-
-        $pages = 1;
-        if ($extension == 'xlsx') {
-            $pages = $tbs->PlugIn(OPENTBS_COUNT_SHEETS);
-        }
-
-        for ($i = 0; $i < $pages; ++$i) {
-            if ($extension == 'xlsx') {
-                $tbs->PlugIn(OPENTBS_SELECT_SHEET, $i + 1);
-            }
-            foreach (DATA_TO_MERGE as $key => $value) {
-                $tbs->MergeField($key, $value);
-            }
-        }
-
-        if (in_array($extension, OFFICE_EXTENSIONS)) {
-            $tbs->Show(OPENTBS_STRING);
-        } else {
-            $tbs->Show(TBS_NOTHING);
-        }
-
-        $content = base64_encode($tbs->Source);
-
-        $result = file_put_contents($pathToDocument, base64_decode($content));
-        if ($result !== false) {
-            $nb++;
-        } else {
-            echo "Erreur lors de la migration du modèle : $pathToDocument\n";
-        }
-    }
-
-    return $nb;
-}
 
 chdir('../..');
 
@@ -173,9 +83,84 @@ foreach ($customs as $custom) {
 
     $migrated = 0;
 
+    $nonMigrated = 0;
+
     $docserver = DocserverModel::getByDocserverId(['docserverId' => 'TEMPLATES']);
 
-    $migrated = browseFiles($docserver['path_template']);
+    $templatesPath = $docserver['path_template'];
 
-    printf("Migration de Modèles d'enregistrements (CUSTOM {$custom}) : " . $migrated . " Modèle(s) migré(s).\n");
+    $templates = TemplateModel::get();
+
+    foreach ($templates as $template) {
+        if ($template['template_type'] == 'HTML' || $template['template_type'] == 'TXT' || $template['template_type'] == 'OFFICE_HTML') {
+            $content = $template['template_content'];
+
+            $newContent = $content;
+            foreach (DATA_TO_REPLACE as $key => $value) {
+                    $newContent = str_replace('[' . $key . ']', $value, $newContent);
+            }
+
+            if ($content != $newContent) {
+                TemplateModel::update([
+                    'set' => [
+                        'template_content' => $newContent
+                    ],
+                    'where' => ['template_id = ?'],
+                    'data' => [$template['template_id']]
+                ]);
+                $migrated++;
+            } else {
+                $nonMigrated++;
+            }
+        }
+        if ($template['template_type'] == 'OFFICE' || $template['template_type'] == 'OFFICE_HTML') {
+            $path = str_replace('#', '/', $template['template_path']);
+
+            $pathToDocument = $templatesPath . $path . $template['template_file_name'];
+
+            $pathInfo = pathinfo($pathToDocument);
+            $extension = $pathInfo['extension'];
+
+            if (!in_array($extension, OFFICE_EXTENSIONS)) {
+                continue;
+            }
+
+            $tbs = new clsTinyButStrong();
+            $tbs->NoErr = true;
+            $tbs->PlugIn(TBS_INSTALL, OPENTBS_PLUGIN);
+
+            $tbs->LoadTemplate($pathToDocument, OPENTBS_ALREADY_UTF8);
+
+            $pages = 1;
+            if ($extension == 'xlsx') {
+                $pages = $tbs->PlugIn(OPENTBS_COUNT_SHEETS);
+            }
+
+            for ($i = 0; $i < $pages; ++$i) {
+                if ($extension == 'xlsx') {
+                    $tbs->PlugIn(OPENTBS_SELECT_SHEET, $i + 1);
+                }
+
+                $tbs->ReplaceFields(DATA_TO_REPLACE);
+            }
+
+            if (in_array($extension, OFFICE_EXTENSIONS)) {
+                $tbs->Show(OPENTBS_STRING);
+            } else {
+                $tbs->Show(TBS_NOTHING);
+            }
+
+            $content = base64_encode($tbs->Source);
+
+            $result = file_put_contents($pathToDocument, base64_decode($content));
+            if ($result !== false) {
+                $migrated++;
+            } else {
+                echo "Erreur lors de la migration du modèle : $pathToDocument\n";
+                $nonMigrated++;
+            }
+        }
+    }
+
+    printf("Migration de Modèles d'enregistrements (CUSTOM {$custom}) : " . $migrated . " Modèle(s) migré(s), $nonMigrated non migré(s).\n");
 }

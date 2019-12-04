@@ -7,9 +7,33 @@
 -- *************************************************************************--
 
 DROP VIEW IF EXISTS res_view_letterbox;
+DROP VIEW IF EXISTS view_contacts;
 
 DROP TABLE IF EXISTS cases;
 DROP TABLE IF EXISTS cases_res;
+
+DROP TABLE IF EXISTS contacts_res;
+DROP TABLE IF EXISTS contact_addresses;
+DROP TABLE IF EXISTS contact_communication;
+DROP TABLE IF EXISTS contact_purposes;
+DROP TABLE IF EXISTS contact_types;
+DROP TABLE IF EXISTS contacts_v2;
+
+ALTER TABLE acknowledgement_receipts ALTER COLUMN contact_id set not null;
+ALTER TABLE acknowledgement_receipts DROP COLUMN IF EXISTS contact_address_id;
+ALTER TABLE contacts_groups_lists ALTER COLUMN contact_id set not null;
+ALTER TABLE contacts_groups_lists DROP COLUMN IF EXISTS contact_address_id;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS dest_contact_id;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS dest_address_id;
+ALTER TABLE res_attachments DROP COLUMN IF EXISTS dest_user;
+ALTER TABLE contacts_filling DROP COLUMN IF EXISTS rating_columns;
+
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS exp_contact_id;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS exp_user_id;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS dest_contact_id;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS dest_user_id;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS address_id;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS is_multicontacts;
 
 DROP TABLE IF EXISTS fp_fileplan;
 DROP TABLE IF EXISTS fp_fileplan_positions;
@@ -114,11 +138,6 @@ SELECT r.res_id,
        r.dest_user,
        r.confidentiality,
        r.category_id,
-       r.exp_contact_id,
-       r.exp_user_id,
-       r.dest_user_id,
-       r.dest_contact_id,
-       r.address_id,
        r.alt_identifier,
        r.admission_date,
        r.process_limit_date,
@@ -127,24 +146,15 @@ SELECT r.res_id,
        r.alarm2_date,
        r.flag_alarm1,
        r.flag_alarm2,
-       r.is_multicontacts,
        r.subject,
        r.priority,
        r.locker_user_id,
        r.locker_time,
        en.entity_label,
-       en.entity_type AS entitytype,
-       cont.contact_id,
-       cont.firstname AS contact_firstname,
-       cont.lastname AS contact_lastname,
-       cont.society AS contact_society,
-       u.lastname AS user_lastname,
-       u.firstname AS user_firstname
+       en.entity_type AS entitytype
 FROM doctypes d,
      doctypes_first_level dfl,
      doctypes_second_level dsl,
      res_letterbox r
-         LEFT JOIN entities en ON r.destination::text = en.entity_id::text
-         LEFT JOIN contacts_v2 cont ON r.exp_contact_id = cont.contact_id OR r.dest_contact_id = cont.contact_id
-         LEFT JOIN users u ON r.exp_user_id::text = u.user_id::text OR r.dest_user_id::text = u.user_id::text
+    LEFT JOIN entities en ON r.destination::text = en.entity_id::text
 WHERE r.type_id = d.type_id AND d.doctypes_first_level_id = dfl.doctypes_first_level_id AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;

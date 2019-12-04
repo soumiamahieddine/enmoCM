@@ -299,21 +299,6 @@ class ContactModel
         return $aContact[0];
     }
 
-    public static function getCommunicationByContactId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['contactId']);
-        ValidatorModel::stringType($aArgs, ['contactId']);
-
-        $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['contact_communication'],
-            'where'     => ['contact_id = ?'],
-            'data'      => [$aArgs['contactId']],
-        ]);
-
-        return $aReturn[0];
-    }
-
     public static function getCivilities()
     {
         static $civilities;

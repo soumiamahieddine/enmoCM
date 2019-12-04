@@ -61,10 +61,10 @@
                                     <input matInput placeholder="{{lang.filterBy}}" #listFilterAdmin>
                                 </mat-form-field>
                                 <div class="col-md-3"
-                                    *ngFor="let administration of privilegeService.getAdministrations() | sortBy: 'label' | filterList:listFilterAdmin.value:'label'"
+                                    *ngFor="let administration of administrationPrivileges | sortBy: 'label' | filterList:listFilterAdmin.value:'label'"
                                     style="padding:10px;">
-                                    <mat-slide-toggle color="primary" name="{{administration.label}}"
-                                        [checked]="group.privileges.indexOf(administration.id) > -1"
+                                    <mat-slide-toggle color="primary" name="{{administration.label}}" [(ngModel)]="administration.checked"
+                                        [checked]="administration.checked"
                                         (change)="toggleService($event,administration)"
                                         matTooltip="{{administration.comment}}">{{administration.label}}
                                     </mat-slide-toggle>

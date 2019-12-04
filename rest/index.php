@@ -117,8 +117,8 @@ $app->post('/contacts', \Contact\controllers\ContactController::class . ':create
 $app->get('/contacts/{id}', \Contact\controllers\ContactController::class . ':getById');
 $app->put('/contacts/{id}', \Contact\controllers\ContactController::class . ':update');
 $app->delete('/contacts/{id}', \Contact\controllers\ContactController::class . ':delete');
+$app->put('/contacts/{id}/activation', \Contact\controllers\ContactController::class . ':updateActivation');
 
-$app->get('/contacts/{contactId}/communication', \Contact\controllers\ContactController::class . ':getCommunicationByContactId');
 $app->get('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':get');
 $app->post('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':create');
 $app->get('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':getById');
@@ -430,6 +430,7 @@ $app->delete('/users/{id}/signatures/{signatureId}', \User\controllers\UserContr
 $app->post('/users/{id}/redirectedBaskets', \User\controllers\UserController::class . ':setRedirectedBaskets');
 $app->delete('/users/{id}/redirectedBaskets', \User\controllers\UserController::class . ':deleteRedirectedBasket');
 $app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':updateBasketsDisplay');
+$app->put('/users/{id}/accountActivationNotification', \User\controllers\UserController::class . ':sendAccountActivationNotification');
 $app->post('/password', \User\controllers\UserController::class . ':forgotPassword');
 $app->put('/password', \User\controllers\UserController::class . ':passwordInitialization');
 

@@ -20,3 +20,4 @@ php ./migrateM2MConfiguration.php
 php ./removeNatureFromPrint.php
 php ./migrateCustomValues.php
 php ./migrateVersionAttachments.php
+php ./migrateContacts.php

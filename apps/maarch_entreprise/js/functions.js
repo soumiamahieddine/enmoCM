@@ -1651,33 +1651,6 @@ function unlock(path_script, id, coll) // A FAIRE
     }
 }
 
-function checkCommunication(contactId) {
-    if (!contactId || !Number.isInteger(parseInt(contactId))) {
-        Element.setStyle($('type_contact_communication_icon'), {
-            visibility: 'hidden'
-        });
-        return false;
-    }
-
-    $j.ajax({
-        url: '../../rest/contacts/' + contactId + '/communication',
-        type: 'get',
-        data: {},
-        success: function (answer) {
-            if (answer[0]) {
-                Element.setStyle($('type_contact_communication_icon'), {
-                    visibility: 'visible'
-                });
-            } else {
-                Element.setStyle($('type_contact_communication_icon'), {
-                    visibility: 'hidden'
-                });
-            }
-
-        }
-    });
-}
-
 function setContactType(mode, creation) {
     new Ajax.Request("index.php?dir=my_contacts&page=setContactType", {
         method: 'post',

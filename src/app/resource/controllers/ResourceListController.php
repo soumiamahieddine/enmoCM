@@ -21,7 +21,7 @@ use Basket\models\ActionGroupBasketModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
-use Contact\models\ContactModel;
+use Contact\controllers\ContactController;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Folder\models\FolderModel;
@@ -30,14 +30,11 @@ use Group\models\GroupModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
-use Resource\models\ResourceContactModel;
 use Resource\models\ResourceListModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use SrcCore\controllers\AutoCompleteController;
 use SrcCore\controllers\PreparedClauseController;
-use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
@@ -584,7 +581,7 @@ class ResourceListController
         $group = GroupModel::getById(['id' => $aArgs['groupId'], 'select' => ['group_id']]);
         $basket = BasketModel::getById(['id' => $aArgs['basketId'], 'select' => ['basket_id', 'basket_clause', 'basket_res_order', 'basket_name']]);
         if (empty($group) || empty($basket)) {
-            return ['errors' => 'Group or basket does not exist', 'code' => 400];
+            return ['errors' => 'Group or basket does not exist', 'code' => 403];
         }
 
         if ($aArgs['userId'] == $aArgs['currentUserId']) {
@@ -609,19 +606,14 @@ class ResourceListController
 
         $user = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
         $groups = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
-        $groupFound = false;
-        foreach ($groups as $value) {
-            if ($value['id'] == $aArgs['groupId']) {
-                $groupFound = true;
-            }
-        }
-        if (!$groupFound) {
-            return ['errors' => 'Group is not linked to this user', 'code' => 400];
+        $groups = array_column($groups, 'id');
+        if (!in_array($aArgs['groupId'], $groups)) {
+            return ['errors' => 'Group is not linked to this user', 'code' => 403];
         }
 
         $isBasketLinked = GroupBasketModel::get(['select' => [1], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
         if (empty($isBasketLinked)) {
-            return ['errors' => 'Group is not linked to this basket', 'code' => 400];
+            return ['errors' => 'Group is not linked to this basket', 'code' => 403];
         }
 
         return ['success' => 'success'];
@@ -701,118 +693,6 @@ class ResourceListController
         }
 
         return $users;
-    }
-
-    private static function getSenders(array $args)
-    {
-        ValidatorModel::notEmpty($args, ['resId']);
-        ValidatorModel::intVal($args, ['resId']);
-
-        $resource = ResModel::getById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $args['resId']]);
-
-        $senders = [];
-        if (!empty($resource)) {
-            if ($resource['category_id'] == 'outgoing') {
-                $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $args['resId']]);
-                foreach ($resourcesContacts as $resourcesContact) {
-                    $senders[] = $resourcesContact['restrictedFormat'];
-                }
-            } else {
-                $rawContacts = [];
-                if ($resource['is_multicontacts'] == 'Y') {
-                    $multiContacts = DatabaseModel::select([
-                        'select'    => ['contact_id', 'address_id'],
-                        'table'     => ['contacts_res'],
-                        'where'     => ['res_id = ?', 'mode = ?'],
-                        'data'      => [$args['resId'], 'multi']
-                    ]);
-                    foreach ($multiContacts as $multiContact) {
-                        $rawContacts[] = [
-                            'login'         => $multiContact['contact_id'],
-                            'address_id'    => $multiContact['address_id'],
-                        ];
-                    }
-                } else {
-                    $rawContacts[] = [
-                        'login'         => $resource['exp_user_id'],
-                        'address_id'    => $resource['address_id'],
-                    ];
-                }
-                foreach ($rawContacts as $rawContact) {
-                    if (!empty($rawContact['address_id'])) {
-                        $contact = ContactModel::getOnView([
-                            'select'    => ['is_corporate_person', 'ca_id', 'society', 'contact_firstname', 'contact_lastname'],
-                            'where'     => ['ca_id = ?'],
-                            'data'      => [$rawContact['address_id']]
-                        ]);
-                        if (isset($contact[0])) {
-                            $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
-                            $senders[] = $contact['contact']['contact'];
-                        }
-                    } else {
-                        $senders[] = UserModel::getLabelledUserById(['login' => $rawContact['login']]);
-                    }
-                }
-            }
-        }
-
-        return $senders;
-    }
-
-    private static function getRecipients(array $args)
-    {
-        ValidatorModel::notEmpty($args, ['resId']);
-        ValidatorModel::intVal($args, ['resId']);
-
-        $resource = ResModel::getById(['select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts'], 'resId' => $args['resId']]);
-
-        $recipients = [];
-        if (!empty($resource)) {
-            if ($resource['category_id'] == 'outgoing') {
-                $rawContacts = [];
-                if ($resource['is_multicontacts'] == 'Y') {
-                    $multiContacts = DatabaseModel::select([
-                        'select'    => ['contact_id', 'address_id'],
-                        'table'     => ['contacts_res'],
-                        'where'     => ['res_id = ?', 'mode = ?'],
-                        'data'      => [$args['resId'], 'multi']
-                    ]);
-                    foreach ($multiContacts as $multiContact) {
-                        $rawContacts[] = [
-                            'login'         => $multiContact['contact_id'],
-                            'address_id'    => $multiContact['address_id'],
-                        ];
-                    }
-                } else {
-                    $rawContacts[] = [
-                        'login'         => $resource['dest_user_id'],
-                        'address_id'    => $resource['address_id'],
-                    ];
-                }
-                foreach ($rawContacts as $rawContact) {
-                    if (!empty($rawContact['address_id'])) {
-                        $contact = ContactModel::getOnView([
-                            'select'    => ['is_corporate_person', 'ca_id', 'society', 'contact_firstname', 'contact_lastname'],
-                            'where'     => ['ca_id = ?'],
-                            'data'      => [$rawContact['address_id']]
-                        ]);
-                        if (isset($contact[0])) {
-                            $contact = AutoCompleteController::getFormattedContact(['contact' => $contact[0]]);
-                            $recipients[] = $contact['contact']['contact'];
-                        }
-                    } else {
-                        $recipients[] = UserModel::getLabelledUserById(['login' => $rawContact['login']]);
-                    }
-                }
-            } else {
-                $resourcesContacts = ResourceContactModel::getFormattedByResId(['resId' => $args['resId']]);
-                foreach ($resourcesContacts as $resourcesContact) {
-                    $recipients[] = $resourcesContact['restrictedFormat'];
-                }
-            }
-        }
-
-        return $recipients;
     }
 
     private static function getParallelOpinionsNumber(array $args)
@@ -932,10 +812,10 @@ class ResourceListController
                         $value['displayValue'] = ResourceListController::getAssignee(['resId' => $resource['res_id']]);
                         $display[] = $value;
                     } elseif ($value['value'] == 'getSenders') {
-                        $value['displayValue'] = ResourceListController::getSenders(['resId' => $resource['res_id']]);
+                        $value['displayValue'] = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
                         $display[] = $value;
                     } elseif ($value['value'] == 'getRecipients') {
-                        $value['displayValue'] = ResourceListController::getRecipients(['resId' => $resource['res_id']]);
+                        $value['displayValue'] = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
                         $display[] = $value;
                     } elseif ($value['value'] == 'getVisaWorkflow') {
                         $value['displayValue'] = ResourceListController::getVisaWorkflow(['resId' => $resource['res_id']]);

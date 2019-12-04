@@ -157,6 +157,64 @@ export class ListAdministrationComponent implements OnInit {
     selectedListEvent: string = null;
     selectedListEventClone: string = null;
 
+    processTool: any[] = [
+        {
+            id: 'dashboard',
+            icon: 'fas fa-columns',
+            label: this.lang.newsFeed,
+        },
+        {
+            id: 'history',
+            icon: 'fas fa-history',
+            label: this.lang.history,
+        },
+        {
+            id: 'notes',
+            icon: 'fas fa-pen-square',
+            label: this.lang.notesAlt,
+        },
+        {
+            id: 'attachments',
+            icon: 'fas fa-paperclip',
+            label: this.lang.attachments,
+        },
+        {
+            id: 'link',
+            icon: 'fas fa-link',
+            label: this.lang.links,
+        },
+        {
+            id: 'diffusionList',
+            icon: 'fas fa-share-alt',
+            label: this.lang.diffusionList,
+        },
+        {
+            id: 'mails',
+            icon: 'fas fa-envelope',
+            label: this.lang.mailsSentAlt,
+        },
+        {
+            id: 'visa',
+            icon: 'fas fa-list-ol',
+            label: this.lang.visaWorkflow,
+        },
+        {
+            id: 'avis',
+            icon: 'fas fa-comment-alt',
+            label: this.lang.avis,
+        },
+        {
+            id: 'info',
+            icon: 'fas fa-info-circle',
+            label: this.lang.informations,
+        }
+    ];
+    selectedProcessTool: any = {
+        defaultTab : null,
+        canUpdate: false, 
+    };
+    selectedProcessToolClone: string = null;
+
     @Input('currentBasketGroup') private basketGroup: any;
 
     constructor(public http: HttpClient, private notify: NotificationService) { }
@@ -179,6 +237,10 @@ export class ListAdministrationComponent implements OnInit {
         });
         this.selectedListEvent = this.basketGroup.list_event === null ? 'noEvent' : this.basketGroup.list_event;
         this.selectedListEventClone = this.selectedListEvent;
+
+        this.selectedProcessTool.defaultTab = this.basketGroup.list_event_data === null && this.basketGroup.list_event === 'processDocument' ? 'dashboard' : this.basketGroup.list_event_data.defaultTab;
+        this.selectedProcessTool.canUpdate = this.basketGroup.list_event_data === null ? false : this.basketGroup.list_event_data.canUpdate;
+        this.selectedProcessToolClone = JSON.parse(JSON.stringify(this.selectedProcessTool));
         this.displayedSecondaryDataClone = JSON.parse(JSON.stringify(this.displayedSecondaryData));
     }
 
@@ -257,13 +319,14 @@ export class ListAdministrationComponent implements OnInit {
             );
         });
 
-        this.http.put("../../rest/baskets/" + this.basketGroup.basket_id + "/groups/" + this.basketGroup.group_id, { 'list_display': template, 'list_event': this.selectedListEvent })
+        this.http.put("../../rest/baskets/" + this.basketGroup.basket_id + "/groups/" + this.basketGroup.group_id, { 'list_display': template, 'list_event': this.selectedListEvent, 'list_event_data': this.selectedProcessTool })
             .subscribe(() => {
                 this.displayedSecondaryDataClone = JSON.parse(JSON.stringify(this.displayedSecondaryData));
                 this.basketGroup.list_display = template;
                 this.selectedListEvent = this.selectedListEvent === null ? 'noEvent' : this.selectedListEvent;
                 this.basketGroup.list_event = this.selectedListEvent;
                 this.selectedListEventClone = this.selectedListEvent;
+                this.selectedProcessToolClone = JSON.parse(JSON.stringify(this.selectedProcessTool));
                 this.notify.success(this.lang.resultPageUpdated);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -282,7 +345,7 @@ export class ListAdministrationComponent implements OnInit {
     }
 
     checkModif() { 
-        if (JSON.stringify(this.displayedSecondaryData) === JSON.stringify(this.displayedSecondaryDataClone) && this.selectedListEvent === this.selectedListEventClone) {
+        if (JSON.stringify(this.displayedSecondaryData) === JSON.stringify(this.displayedSecondaryDataClone) && this.selectedListEvent === this.selectedListEventClone && JSON.stringify(this.selectedProcessTool) === JSON.stringify(this.selectedProcessToolClone)) {
             return true 
         } else {
            return false;
@@ -292,6 +355,7 @@ export class ListAdministrationComponent implements OnInit {
     cancelModification() {
         this.displayedSecondaryData = JSON.parse(JSON.stringify(this.displayedSecondaryDataClone));
         this.selectedListEvent = this.selectedListEventClone;
+        this.selectedProcessTool = this.selectedProcessToolClone;
         this.availableData = JSON.parse(JSON.stringify(this.availableDataClone));
         
         let indexData: number = 0;
@@ -307,6 +371,14 @@ export class ListAdministrationComponent implements OnInit {
             return true
         } else {
             return false;
+        }
+    }
+
+    changeEventList(ev: any) {
+        if (ev.value === 'processDocument') {
+            this.selectedProcessTool = 'dashboard';
+        } else {
+            this.selectedProcessTool = null;
         }
     }
 }
