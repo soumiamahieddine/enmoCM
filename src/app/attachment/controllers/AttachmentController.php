@@ -279,7 +279,7 @@ class AttachmentController
         $attachments = AttachmentModel::get([
             'select'    => [
                 'res_id as "resId"', 'identifier as chrono', 'title', 'typist', 'modified_by as "modifiedBy"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"',
-                'relation', 'status', 'attachment_type as type', 'origin_id as "originId"', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
+                'relation', 'status', 'attachment_type as type', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
             ],
             'where'     => ['res_id_master = ?', 'status not in (?)', 'attachment_type not in (?)'],
             'data'      => [$args['resId'], ['DEL', 'OBS'], $excludeAttachmentTypes],
@@ -300,17 +300,6 @@ class AttachmentController
             if (!empty($attachmentsTypes[$attachment['type']]['label'])) {
                 $attachments[$key]['typeLabel'] = $attachmentsTypes[$attachment['type']]['label'];
             }
-
-            $oldVersions = [];
-            if (!empty($attachment['originId'])) {
-                $oldVersions = AttachmentModel::get([
-                    'select'    => ['res_id as "resId"'],
-                    'where'     => ['(origin_id = ? OR res_id = ?)', 'res_id != ?', 'status not in (?)', 'attachment_type not in (?)'],
-                    'data'      => [$attachment['originId'], $attachment['originId'], $attachment['resId'], ['DEL'], $excludeAttachmentTypes],
-                    'orderBy'   => ['relation DESC']
-                ]);
-            }
-            $attachments[$key]['versions'] = $oldVersions;
 
             if ($attachment['status'] == 'SIGN') {
                 $signedResponse = AttachmentModel::get([

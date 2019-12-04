@@ -15,6 +15,7 @@
 namespace Resource\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
+use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
@@ -185,6 +186,9 @@ class ResController
             $formattedData['priorityLabel'] = $priority['label'];
             $formattedData['priorityColor'] = $priority['color'];
         }
+
+        $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
+        $formattedData['attachments'] = $attachments[0]['count'];
 
         return $response->withJson($formattedData);
     }
