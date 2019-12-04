@@ -10,6 +10,7 @@
                 <div class="processTool-module jiggle" *ngFor="let module of processTool"
                     [class.processTool-module-active]="module.id === currentTool" matRipple
                     (click)="changeTab(module.id)">
+                    <i *ngIf="module.count > 0" class="fas fa-circle haveContent"></i>
                     <i [class]="module.icon"></i>
                     <span *ngIf="!appService.getViewMode()">{{module.label}}</span>
                 </div>
@@ -87,7 +88,7 @@
                 <app-avis-workflow *ngIf="currentTool === 'avis' && !loading" #appAvisWorkflow
                     [resId]="currentResourceInformations.resId"></app-avis-workflow>
                 <app-attachments-list *ngIf="currentTool === 'attachments' && !loading" #appAttachmentsList
-                    [resId]="currentResourceInformations.resId" [target]="'process'">
+                    [resId]="currentResourceInformations.resId" [target]="'process'" (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
                 </app-attachments-list>
                 <app-indexing-form *ngIf="currentTool === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
                     [resId]="currentResourceInformations.resId" [indexingFormId]="currentResourceInformations.modelId" [mode]="'process'"></app-indexing-form>
@@ -235,7 +236,7 @@
         <app-avis-workflow *ngIf="modal.id === 'avis' && !loading" #appAvisWorkflow [resId]="currentResourceInformations.resId">
         </app-avis-workflow>
         <app-attachments-list *ngIf="modal.id === 'attachments'  && !loading" #appAttachmentsList
-            [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="reloadBadgeAttachments($event)">
+            [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
         </app-attachments-list>
         <app-indexing-form *ngIf="modal.id === 'info' && !loading" #indexingForm [groupId]="currentGroupId" [indexingFormId]="currentResourceInformations.modelId" [resId]="currentResourceInformations.resId" [mode]="'process'">
         </app-indexing-form>

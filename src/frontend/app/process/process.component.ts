@@ -56,51 +56,61 @@ export class ProcessComponent implements OnInit {
             id: 'dashboard',
             icon: 'fas fa-columns',
             label: this.lang.newsFeed,
+            count : 0
         },
         {
             id: 'history',
             icon: 'fas fa-history',
             label: this.lang.history,
+            count : 0
         },
         {
             id: 'notes',
             icon: 'fas fa-pen-square',
             label: this.lang.notesAlt,
+            count : 0
         },
         {
             id: 'attachments',
             icon: 'fas fa-paperclip',
             label: this.lang.attachments,
+            count : 0
         },
         {
             id: 'link',
             icon: 'fas fa-link',
             label: this.lang.links,
+            count : 0
         },
         {
             id: 'diffusionList',
             icon: 'fas fa-share-alt',
             label: this.lang.diffusionList,
+            count : 0
         },
         {
             id: 'mails',
             icon: 'fas fa-envelope',
             label: this.lang.mailsSentAlt,
+            count : 0
         },
         {
             id: 'visa',
             icon: 'fas fa-list-ol',
             label: this.lang.visaWorkflow,
+            count : 0
         },
         {
             id: 'avis',
             icon: 'fas fa-comment-alt',
             label: this.lang.avis,
+            count : 0
         },
         {
             id: 'info',
             icon: 'fas fa-info-circle',
             label: this.lang.informations,
+            count : 0
         }
     ];
 
@@ -199,6 +209,7 @@ export class ProcessComponent implements OnInit {
         this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}?light=true`).pipe(
             tap((data: any) => {
                 this.currentResourceInformations = data;
+                this.loadBadges();
                 this.headerService.setHeader(this.lang.eventProcessDoc, this.lang[this.currentResourceInformations.categoryId]);
             }),
             finalize(() => this.loading = false),
@@ -207,6 +218,12 @@ export class ProcessComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    loadBadges() {
+        this.processTool.forEach(element => {
+            element.count = this.currentResourceInformations[element.id] !== undefined ? this.currentResourceInformations[element.id] : 0;
+        });
     }
 
     lockResource() {
@@ -350,5 +367,9 @@ export class ProcessComponent implements OnInit {
         } else {
             this.currentTool = tabId;
         }
+    }
+
+    refreshBadge(nbRres: any, id: string) {
+      this.processTool.filter(tool => tool.id === id)[0].count = nbRres;
     }
 }

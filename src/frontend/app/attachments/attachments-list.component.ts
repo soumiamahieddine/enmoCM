@@ -54,7 +54,7 @@ export class AttachmentsListComponent implements OnInit {
     @Input('injectDatas') injectDatas: any;
     @Input('resId') resId: number = null;
     @Input('target') target: string = 'panel';
-    @Output('reloadBadgeAttachments') reloadBadgeNotes = new EventEmitter<string>();
+    @Output('reloadBadgeAttachments') reloadBadgeAttachments = new EventEmitter<string>();
 
     constructor(
         public http: HttpClient,
@@ -110,7 +110,7 @@ export class AttachmentsListComponent implements OnInit {
                 if (this.attachments.filter((attach: any) => attach.type === this.currentFilter).length === 0) {
                     this.currentFilter = '';
                 }
-                this.reloadBadgeNotes.emit(`${this.attachments.length}`);
+                this.reloadBadgeAttachments.emit(`${this.attachments.length}`);
                 this.loading = false;
             }, (err: any) => {
                 this.notify.error(err.error.errors);
