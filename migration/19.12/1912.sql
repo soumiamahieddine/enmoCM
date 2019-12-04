@@ -647,7 +647,7 @@ ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_filename;
 
 /* M2M */
 DO $$ BEGIN
-  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'mlb_coll_ext')) THEN
+  IF (SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'mlb_coll_ext')) THEN
     UPDATE res_letterbox SET external_id = json_build_object('m2m', reference_number), reference_number = null FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id = 'message_exchange';
     UPDATE mlb_coll_ext SET nature_id = null WHERE nature_id = 'message_exchange';
   END IF;
