@@ -1359,4 +1359,8 @@ export const LANG_FR = {
     "saveModifiedData": "Voulez-vous sauvegarder les modifications ?",
     "dataUpdated": "Données modifiées",
     "canUpdateData": "Pouvoir modifier les métadonnées du courrier",
+    "manageCreateContacts": "Créer des contacts",
+    "manageCreateContactsDesc": "Créer des contacts depuis les pages d'indexation/traitement/détaillée",
+    "manageUpdateContacts": "Mettre à jour les contacts",
+    "manageUpdateContactsDesc": "Mettre à jour les contacts depuis les pages d'indexation/traitement/détaillée",
 };

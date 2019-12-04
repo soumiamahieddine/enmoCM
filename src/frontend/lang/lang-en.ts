@@ -1321,4 +1321,8 @@ export const LANG_EN = {
     "saveModifiedData": "Do you want to save modified data ?",
     "dataUpdated": "Data updated",
     "canUpdateData": "Can update resource data",
+    "manageCreateContacts": "Create contacts",
+    "manageCreateContactsDesc": "Create contacts from indexing/processing/detail page",
+    "manageUpdateContacts": "Update contacts",
+    "manageUpdateContactsDesc": "Update contacts from indexing/processing/detail page",
 };

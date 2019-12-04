@@ -1346,4 +1346,8 @@ export const LANG_NL = {
     "saveModifiedData": "Do you want to save modified data ?", //_TO_TRANSLATE
     "dataUpdated": "Data updated", //_TO_TRANSLATE
     "canUpdateData": "Can update resource data", //_TO_TRANSLATE
+    "manageCreateContacts": "Create contacts", //_TO_TRANSLATE
+    "manageCreateContactsDesc": "Create contacts from indexing/processing/detail page", //_TO_TRANSLATE
+    "manageUpdateContacts": "Update contacts", //_TO_TRANSLATE
+    "manageUpdateContactsDesc": "Update contacts from indexing/processing/detail page", //_TO_TRANSLATE
 };

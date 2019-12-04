@@ -34,14 +34,19 @@ class ContactController
 {
     public function get(Request $request, Response $response)
     {
-        //TODO privileges
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         return $response->withJson(['contacts' => ContactModel::get(['select' => ['id', 'firstname', 'lastname', 'company']])]);
     }
 
     public function create(Request $request, Response $response)
     {
-        //TODO privileges
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'create_contacts', 'userId' => $GLOBALS['id']])
+            && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $body = $request->getParsedBody();
 
@@ -98,7 +103,9 @@ class ContactController
 
     public function getById(Request $request, Response $response, array $args)
     {
-        //TODO privileges
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
 
         $rawContact = ContactModel::getById(['id' => $args['id'], 'select' => ['*']]);
         if (empty($rawContact)) {
@@ -135,7 +142,14 @@ class ContactController
 
     public function update(Request $request, Response $response, array $args)
     {
-        //TODO privileges
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'update_contacts', 'userId' => $GLOBALS['id']])
+            && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
 
         $body = $request->getParsedBody();
 
@@ -191,7 +205,13 @@ class ContactController
 
     public function updateActivation(Request $request, Response $response, array $args)
     {
-        //TODO privileges
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
 
         $contact = ContactModel::getById(['id' => $args['id'], 'select' => [1]]);
         if (empty($contact)) {
@@ -211,7 +231,13 @@ class ContactController
 
     public function delete(Request $request, Response $response, array $args)
     {
-        //TODO privileges
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
 
         $contact = ContactModel::getById(['id' => $args['id'], 'select' => [1]]);
         if (empty($contact)) {
@@ -226,17 +252,12 @@ class ContactController
         return $response->withStatus(204);
     }
 
-    public function getCommunicationByContactId(Request $request, Response $response, array $aArgs)
-    {
-        $contact = ContactModel::getCommunicationByContactId([
-            'contactId' => $aArgs['contactId'],
-        ]);
-
-        return $response->withJson([$contact]);
-    }
-
     public function getFilling(Request $request, Response $response)
     {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $contactsFilling = ContactFillingModel::get();
         $contactsFilling['rating_columns'] = json_decode($contactsFilling['rating_columns']);
 
@@ -283,7 +304,7 @@ class ContactController
         $contacts = [];
         if ($queryParams['type'] == 'senders') {
             $contacts = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
-        } else if ($queryParams['type'] == 'recipients') {
+        } elseif ($queryParams['type'] == 'recipients') {
             $contacts = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
         }
 
@@ -302,7 +323,6 @@ class ContactController
             if ($aArgs['contact']['is_corporate_person'] == 'N') {
                 foreach ($contactsFilling['rating_columns'] as $key => $value) {
                     if (in_array($value, ['firstname', 'lastname', 'title', 'function'])) {
-
                         $contactsFilling['rating_columns'][$key] = 'contact_' . $value;
                     }
                 }
@@ -424,7 +444,6 @@ class ContactController
                     'strMaxLength'  => 38
                 ]);
             }
-
         }
         // Ligne 3
         if (!empty($aArgs['address_complement'])) {
@@ -548,7 +567,7 @@ class ContactController
                 $filling = ContactController::getFillingRate(['contact' => $contact]);
 
                 $contact['filling'] = $filling['color'];
-            } else if ($resourceContact['type'] == 'user') {
+            } elseif ($resourceContact['type'] == 'user') {
                 $user = UserModel::getById(['id' => $resourceContact['item_id']]);
 
                 $phone = '';
@@ -583,7 +602,7 @@ class ContactController
                     'occupancy' => $nonPrimaryEntities,
                     'department' => $primaryEntity['entity_label']
                 ];
-            } else if ($resourceContact['type'] == 'entity') {
+            } elseif ($resourceContact['type'] == 'entity') {
                 $entity = EntityModel::getById(['id' => $resourceContact['item_id'], 'select' => ['entity_label', 'email']]);
 
                 $contact = [
@@ -613,7 +632,8 @@ class ContactController
         return $contacts;
     }
 
-    public static function getFormattedExportContacts(array $args) {
+    public static function getFormattedExportContacts(array $args)
+    {
         ValidatorModel::notEmpty($args, ['resId', 'mode']);
         ValidatorModel::intVal($args, ['resId']);
         ValidatorModel::stringType($args, ['mode']);
@@ -666,9 +686,9 @@ class ContactController
                 }
 
                 $contact = $contactToDisplay;
-            } else if ($resourceContact['type'] == 'user') {
+            } elseif ($resourceContact['type'] == 'user') {
                 $contact = UserModel::getLabelledUserById(['id' => $resourceContact['item_id']]);
-            } else if ($resourceContact['type'] == 'entity') {
+            } elseif ($resourceContact['type'] == 'entity') {
                 $entity = EntityModel::getById(['id' => $resourceContact['item_id'], 'select' => ['entity_label']]);
                 $contact = $entity['entity_label'];
             }

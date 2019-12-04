@@ -321,6 +321,18 @@ export class PrivilegeService {
             "unit": 'application'
         },
         {
+            "id": "create_contacts",
+            "label": this.lang.manageCreateContacts,
+            "comment": this.lang.manageCreateContactsDesc,
+            "unit": 'application'
+        },
+        {
+            "id": "update_contacts",
+            "label": this.lang.manageUpdateContacts,
+            "comment": this.lang.manageUpdateContactsDesc,
+            "unit": 'application'
+        },
+        {
             "id": "update_diffusion_indexing",
             "label": this.lang.allRoles,
             "comment": this.lang.updateDiffusionWhileIndexing,

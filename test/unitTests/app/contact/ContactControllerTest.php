@@ -242,18 +242,6 @@ class ContactControllerTest extends TestCase
     }
 
 //
-//    public function testGetContactCommunicationByContactId()
-//    {
-//        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
-//        $request        = \Slim\Http\Request::createFromEnvironment($environment);
-//
-//        $contactController = new \Contact\controllers\ContactController();
-//        $response          = $contactController->getCommunicationByContactId($request, new \Slim\Http\Response(), ['contactId' => (string)self::$id]);
-//        $responseBody      = json_decode((string)$response->getBody());
-//
-//        $this->assertInternalType('array', $responseBody);
-//    }
-//
 //    public function testControlLengthNameAfnor()
 //    {
 //        $name = \Contact\controllers\ContactController::controlLengthNameAfnor(['title' => 'title1', 'fullName' => 'Prénom NOM', 'strMaxLength' => 38]);
