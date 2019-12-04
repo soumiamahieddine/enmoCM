@@ -754,7 +754,6 @@ export class IndexingFormComponent implements OnInit {
 
     initValidator(field: any) {
         let valArr: ValidatorFn[] = [];
-        console.log(field.default_value);
         this.arrFormControl[field.identifier] = new FormControl({ value: field.default_value, disabled: (field.today && this.adminMode) ? true : false });
 
         if (field.type === 'integer') {
