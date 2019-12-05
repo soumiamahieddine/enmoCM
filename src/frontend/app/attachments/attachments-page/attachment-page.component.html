@@ -22,7 +22,11 @@
                     <div class="attachment-form">
                         <div class="attachment-form-item">
                             <mat-slide-toggle [checked]="newVersion" color="primary"
-                                (change)="toggleNewVersion()">{{lang.newVersion}}</mat-slide-toggle>
+                                (change)="newVersion = !newVersion;">{{lang.newVersion}}</mat-slide-toggle>
+                        </div>
+                        <div *ngIf="newVersion" class="attachment-form-item">
+                            <div class="alert-message alert-message-danger" role="alert"
+                                [innerHTML]="lang.mustEditDocument"></div>
                         </div>
                         <div class="attachment-form-item">
                             <mat-form-field class="input-form">

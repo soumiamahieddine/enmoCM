@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild, Renderer2 } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { catchError, tap, finalize, exhaustMap, filter } from 'rxjs/operators';
@@ -12,7 +12,6 @@ import { DocumentViewerComponent } from '../../viewer/document-viewer.component'
 import { PrivilegeService } from '../../../service/privileges.service';
 import { HeaderService } from '../../../service/header.service';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
-import { AlertComponent } from '../../../plugins/modal/alert.component';
 
 @Component({
     selector: 'app-attachment-page',
@@ -242,12 +241,5 @@ export class AttachmentPageComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
-    }
-
-    toggleNewVersion() {
-        if(!this.newVersion) {
-            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.information, msg: this.lang.mustEditDocument } });
-        }
-        this.newVersion = !this.newVersion;
     }
 }

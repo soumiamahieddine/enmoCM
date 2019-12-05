@@ -313,7 +313,7 @@ export class IndexingFormComponent implements OnInit {
     saveData(userId: number, groupId: number, basketId: number) {
         const formatdatas = this.formatDatas(this.getDatas());
 
-        this.http.put(`../../rest/resources/${this.resId}/users/${userId}/groups/${groupId}/baskets/${basketId}`, formatdatas ).pipe(
+        this.http.put(`../../rest/resources/${this.resId}?userId=${userId}&groupId=${groupId}&basketId=${basketId}`, formatdatas ).pipe(
             tap(() => {
                 this.currentResourceValues = this.getDatas();
                 this.notify.success(this.lang.dataUpdated);
