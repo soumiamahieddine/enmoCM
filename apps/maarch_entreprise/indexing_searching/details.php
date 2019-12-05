@@ -333,7 +333,7 @@ if ($stmt->rowCount() == 0) {
         }
         $_SESSION['features']['further_informations'][$indexes[$key]['label']] = $indexes[$key]['value'];
     }
-    $data = get_general_data($coll_id, $s_id, $mode_data, $param_data); ?>
+    $data = []; ?>
         <div class="block">
             <b>
                 <p id="back_list">
@@ -634,7 +634,7 @@ if ($stmt->rowCount() == 0) {
                     $rate = [];
                     if ($key == 'exp_contact_id') {
                         if (!empty($data[$key]['address_value'])) {
-                            $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$data[$key]['address_value']]]);
+                            $contactData = [];
                             if (!empty($contactData[0])) {
                                 $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
                             } else {
@@ -663,9 +663,6 @@ if ($stmt->rowCount() == 0) {
                     $_SESSION['adresses']['addressid'] = array();
                     $_SESSION['adresses']['contactid'] = array();
 
-                    $path_to_script = $_SESSION['config']['businessappurl']
-                                        .'index.php?display=true&dir=indexing_searching&page=add_multi_contacts&coll_id='.$collId;
-
                     if (empty($disabledAttr)) {
                         echo "<div id='input_multi_contact_add' style=''>";
                         echo "<input type='text' placeholder='"._CONTACTS_USERS_SEARCH."' name='{$key}' id='{$key}' value='' title='' alt='' size='40' style='width:140px;'/>";
@@ -689,7 +686,7 @@ if ($stmt->rowCount() == 0) {
                             $_SESSION['adresses']['addressid'][] = $data[$key]['multi']['address_id'][$icontacts];
                             $_SESSION['adresses']['contactid'][] = $data[$key]['multi']['contact_id'][$icontacts];
 
-                            $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$data[$key]['multi']['address_id'][$icontacts]]]);
+                            $contactData = [];
                             if (!empty($contactData[0])) {
                                 $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
                             } else {
@@ -716,7 +713,7 @@ if ($stmt->rowCount() == 0) {
                     echo "<input type='hidden' name='contactid' id='contactid' value='' title='' alt='' size='40' />";
                     echo "<input type='hidden' name='addressid' id='addressid' value='' title='' alt='' size='40' />";
                 } elseif ($key == 'resourceContact') {
-                    $resourceContacts = \Resource\models\ResourceContactModel::getFormattedByResId(['resId' => $s_id]);
+                    $resourceContacts = [];
                     foreach ($resourceContacts as $resourceContact) {
                         if ($resourceContact['mode'] == 'recipient' && ($data['category_id']['value'] == 'incoming' || $data['category_id']['value'] == 'internal')) {
                             $sr = $resourceContact;
@@ -726,7 +723,7 @@ if ($stmt->rowCount() == 0) {
                     }
                     $rate = [];
                     if (!empty($sr['type']) && $sr['type'] == 'contact') {
-                        $contactData = \Contact\models\ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$sr['item_id']]]);
+                        $contactData = [];
                         if (!empty($contactData[0])) {
                             $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$contactData[0]]);
                         }

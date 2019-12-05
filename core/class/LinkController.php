@@ -32,7 +32,7 @@ class LinkController
 
         foreach ($arrayToFormat as $key => $value) {
             //GET RES INFOS
-            $infos = get_general_data('letterbox_coll', $key, 'full');
+            $infos = [];
             $stmt = $db->query('SELECT dest_user, status FROM res_letterbox WHERE res_id = ?', array($key));
             $otherInfos = $stmt->fetchObject();
             $chronoNumber = $this->getAltIdentifier($key);

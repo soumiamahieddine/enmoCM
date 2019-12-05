@@ -177,12 +177,6 @@
     </requestDefinition>
 
     <!-- indexing_searching  -->
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="multi_contacts" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="add_multi_contacts"/>
-      <parameter name="display" value="true"/>
-      <parameter name="coll_id"/>
-    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="addresses_list" >
       <parameter name="dir" value="indexing_searching"/>
       <parameter name="page" value="addresses_list"/>
@@ -442,11 +436,6 @@
 
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="identifier_integer" >
       <parameter name="page" value="loadNoteList"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="res_id_integer" >
-      <parameter name="page" value="loadContactsList"/>
       <parameter name="display" value="true"/>
     </requestDefinition>
 

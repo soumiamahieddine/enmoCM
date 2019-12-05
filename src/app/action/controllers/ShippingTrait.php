@@ -55,7 +55,7 @@ trait ShippingTrait
         $shippingTemplate['fee'] = json_decode($shippingTemplate['fee'], true);
 
         $attachments = AttachmentModel::get([
-            'select'    => ['res_id', 'title', 'dest_address_id', 'external_id'],
+            'select'    => ['res_id', 'title', 'recipient_id', 'recipient_type', 'external_id'],
             'where'     => ['res_id_master = ?', 'in_send_attach = ?', 'status not in (?)', 'attachment_type not in (?)'],
             'data'      => [$args['resId'], true, ['OBS', 'DEL', 'TMP', 'FRZ'], ['print_folder']]
         ]);
@@ -76,17 +76,17 @@ trait ShippingTrait
             if (empty($convertedDocument)) {
                 return ['errors' => ['No conversion for attachment']];
             }
-            if (empty($attachment['dest_address_id'])) {
+            if (empty($attachment['recipient_id']) || $attachment['recipient_type'] != 'contact') {
                 return ['errors' => ['Contact is empty for attachment']];
             }
-            $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$attachment['dest_address_id']]]);
-            if (empty($contact[0])) {
+            $contact = ContactModel::getById(['select' => ['*'], 'id' => $attachment['recipient_id']]);
+            if (empty($contact)) {
                 return ['errors' => ['Contact does not exist for attachment']];
             }
-            if (!empty($contact[0]['address_country']) && strtoupper(trim($contact[0]['address_country'])) != 'FRANCE') {
+            if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
                 return ['errors' => ['Contact country is not France']];
             }
-            $afnorAddress = ContactController::getContactAfnor($contact[0]);
+            $afnorAddress = ContactController::getContactAfnor($contact);
             if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6]) || !preg_match("/^\d{5}\s/", $afnorAddress[6])) {
                 return ['errors' => ['Contact is not fill enough for attachment']];
             }

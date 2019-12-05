@@ -604,8 +604,8 @@ class PrintFunctions
 	
 		$db = new Database();
 		
-		$query = "select * from view_contacts where contact_id = ? AND ca_id = ?";
-		$stmt = $db->query($query, array($contactId, $addressId));
+		$query = "select * from contacts where id = ?";
+		$stmt = $db->query($query, array($contactId));
         while($result = $stmt->fetchObject()) {
         	if ($result->society <> '' || $result->society_short <> '') {
 				if ($result->society <> '') {

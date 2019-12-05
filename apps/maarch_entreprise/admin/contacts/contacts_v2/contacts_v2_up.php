@@ -84,11 +84,6 @@ require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "cla
 require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_list_show.php";
 $func = new functions();
 
-$select['view_contacts'] = array();
-array_push(
-    $select['view_contacts'],
-    "ca_id as id", "contact_id", "contact_purpose_id", "departement", "lastname", "firstname", "function", "address_num", "address_street", "address_postal_code", "address_town", "phone", "email", "enabled", "contact_purpose_label"
-);
 $what = "";
 $where = "contact_id = :contactid ";
 $arrayPDO = array(":contactid" => $id);

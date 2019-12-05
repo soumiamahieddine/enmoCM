@@ -21,24 +21,6 @@ use SrcCore\models\ValidatorModel;
 
 class ContactModel
 {
-    public static function getOnView(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['select']);
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
-        ValidatorModel::intType($aArgs, ['limit']);
-
-        $aContacts = DatabaseModel::select([
-            'select'    => $aArgs['select'],
-            'table'     => ['view_contacts'],
-            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
-            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
-            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
-            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
-        ]);
-
-        return $aContacts;
-    }
-
     public static function get(array $args)
     {
         ValidatorModel::notEmpty($args, ['select']);
@@ -120,59 +102,6 @@ class ContactModel
         ]);
 
         return true;
-    }
-
-    public static function getFullAddressById(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['addressId']);
-        ValidatorModel::intVal($aArgs, ['addressId']);
-
-        $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['view_contacts'],
-            'where'     => ['ca_id = ?'],
-            'data'      => [$aArgs['addressId']],
-        ]);
-
-        return $aReturn;
-    }
-
-    public static function getContactFullLabel(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['addressId']);
-        ValidatorModel::intVal($aArgs, ['addressId']);
-
-        $fullAddress = ContactModel::getFullAddressById($aArgs);
-        $fullAddress = $fullAddress[0];
-        $fullAddress['external_id'] = (array)json_decode($fullAddress['external_id']);
-
-        if ($fullAddress['is_corporate_person'] == 'Y') {
-            $contactName = strtoupper($fullAddress['society']) . ' ' ;
-            if (!empty($fullAddress['society_short'])) {
-                $contactName .= '('.$fullAddress['society_short'].') ';
-            }
-        } else {
-            $contactName = strtoupper($fullAddress['contact_lastname']) . ' ' . $fullAddress['contact_firstname'] . ' ';
-            if (!empty($fullAddress['society'])) {
-                $contactName .= '(' . $fullAddress['society'] . ') ';
-            }
-        }
-        if (!empty($fullAddress['external_id']['m2m'])) {
-            $contactName .= ' - <b>' . $fullAddress['external_id']['m2m'] . '</b> ';
-        }
-        if ($fullAddress['is_private'] == 'Y') {
-            $contactName .= '('._CONFIDENTIAL_ADDRESS.')';
-        } else {
-            $contactName .= '- ' . $fullAddress['contact_purpose_label'] . ' : ';
-            if (!empty($fullAddress['lastname']) || !empty($fullAddress['firstname'])) {
-                $contactName .= $fullAddress['lastname'] . ' ' . $fullAddress['firstname'] . ' ';
-            }
-            if (!empty($fullAddress['address_num']) || !empty($fullAddress['address_street']) || !empty($fullAddress['address_postal_code']) || !empty($fullAddress['address_town'])) {
-                $contactName .= ', '.$fullAddress['address_num'] .' ' . $fullAddress['address_street'] .' ' . $fullAddress['address_postal_code'] .' ' . strtoupper($fullAddress['address_town']);
-            }
-        }
-
-        return $contactName;
     }
 
     public static function getContactCommunication(array $aArgs)
@@ -353,7 +282,7 @@ class ContactModel
                 try {
                     $res = DatabaseModel::select([
                         'select' => ['contact_id', 'ca_id'],
-                        'table'  => ['view_contacts'],
+                        'table'  => ['contacts'],
                         'where'  => ["external_id->>'m2m' = ?", 'enabled = ?'],
                         'data'   => [$value['value'], 'Y'],
                     ]);

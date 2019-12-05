@@ -252,8 +252,8 @@ if ($mode == 'add') {
     }
     if ($formContent != 'messageExchange') {
         if ($address_id != null) {
-            $adr = \Contact\models\ContactModel::getFullAddressById(['select' => ['email'], 'addressId' => $address_id]);
-            $adress_mail = $adr[0]['email'];
+            $adr = \Contact\models\ContactModel::getById(['select' => ['email'], 'id' => $address_id]);
+            $adress_mail = $adr['email'];
         } elseif ($exp_user_id != null) {
             $stmt = $db->query('SELECT mail FROM users WHERE user_id = ?', array($exp_user_id));
             $adr = $stmt->fetchObject();
@@ -273,10 +273,6 @@ if ($mode == 'add') {
             $communicationTypeModel = \Contact\models\ContactModel::getContactCommunication(['contactId' => $contact_id]);
             $contactInfo = \Contact\models\ContactModel::getByAddressId(['select' => ['external_id'], 'addressId' => $address_id]);
             $externalId = (array)json_decode($contactInfo['external_id']);
-            if (!empty($communicationTypeModel) && !empty($externalId['m2m'])) {
-                $adress_mail = \Contact\models\ContactModel::getContactFullLabel(['addressId' => $address_id]);
-                $adress_mail .= '. ('._COMMUNICATION_TYPE.' : '.$communicationTypeModel['value'].')';
-            }
         }
     }
     if ($adress_mail != null and $_SESSION['user']['UserId'] != $exp_user_id and $_SESSION['user']['UserId'] != $dest_user_id) {

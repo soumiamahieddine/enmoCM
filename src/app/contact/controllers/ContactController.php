@@ -496,7 +496,7 @@ class ContactController
         return $formattedAddress;
     }
 
-    public static function getContactAfnor(array $aArgs)
+    public static function getContactAfnor(array $args)
     {
         $afnorAddress = ['Afnor',
             '',
@@ -507,67 +507,59 @@ class ContactController
             ''
         ];
 
-        if ($aArgs['is_corporate_person'] == 'Y') {
+        if (!empty($args['company'])) {
             // Ligne 1
-            $afnorAddress[1] = substr($aArgs['society'], 0, 38);
-
-            // Ligne 2
-            if (!empty($aArgs['title']) || !empty($aArgs['firstname']) || !empty($aArgs['lastname'])) {
-                $afnorAddress[2] = ContactController::controlLengthNameAfnor([
-                    'title'         => $aArgs['title'],
-                    'fullName'      => $aArgs['firstname'].' '.$aArgs['lastname'],
-                    'strMaxLength'  => 38
-                ]);
-            }
-        } else {
-            // Ligne 2
-            if (!empty($aArgs['contact_title']) || !empty($aArgs['contact_firstname']) || !empty($aArgs['contact_lastname'])) {
-                $afnorAddress[2] = ContactController::controlLengthNameAfnor([
-                    'title'         => $aArgs['contact_title'],
-                    'fullName'      => $aArgs['contact_firstname'].' '.$aArgs['contact_lastname'],
-                    'strMaxLength'  => 38
-                ]);
-            }
+            $afnorAddress[1] = substr($args['company'], 0, 38);
         }
+
+        // Ligne 2
+        if (!empty($args['civility']) || !empty($args['firstname']) || !empty($args['lastname'])) {
+            $afnorAddress[2] = ContactController::controlLengthNameAfnor([
+                'civility'      => $args['civility'],
+                'fullName'      => $args['firstname'].' '.$args['lastname'],
+                'strMaxLength'  => 38
+            ]);
+        }
+
         // Ligne 3
-        if (!empty($aArgs['address_complement'])) {
-            $afnorAddress[3] = substr($aArgs['address_complement'], 0, 38);
+        if (!empty($args['address_additional1'])) {
+            $afnorAddress[3] = substr($args['address_additional1'], 0, 38);
         }
 
         // Ligne 4
-        if (!empty($aArgs['address_num'])) {
-            $aArgs['address_num'] = TextFormatModel::normalize(['string' => $aArgs['address_num']]);
-            $aArgs['address_num'] = preg_replace('/[^\w]/s', ' ', $aArgs['address_num']);
-            $aArgs['address_num'] = strtoupper($aArgs['address_num']);
+        if (!empty($args['address_number'])) {
+            $args['address_number'] = TextFormatModel::normalize(['string' => $args['address_number']]);
+            $args['address_number'] = preg_replace('/[^\w]/s', ' ', $args['address_number']);
+            $args['address_number'] = strtoupper($args['address_number']);
         }
-        if (!empty($aArgs['address_street'])) {
-            $aArgs['address_street'] = TextFormatModel::normalize(['string' => $aArgs['address_street']]);
-            $aArgs['address_street'] = preg_replace('/[^\w]/s', ' ', $aArgs['address_street']);
-            $aArgs['address_street'] = strtoupper($aArgs['address_street']);
+        if (!empty($args['address_street'])) {
+            $args['address_street'] = TextFormatModel::normalize(['string' => $args['address_street']]);
+            $args['address_street'] = preg_replace('/[^\w]/s', ' ', $args['address_street']);
+            $args['address_street'] = strtoupper($args['address_street']);
         }
-        $afnorAddress[4] = substr($aArgs['address_num'].' '.$aArgs['address_street'], 0, 38);
+        $afnorAddress[4] = substr($args['address_number'].' '.$args['address_street'], 0, 38);
 
         // Ligne 5
         $afnorAddress[5] = '';
 
         // Ligne 6
-        $aArgs['address_postal_code'] = strtoupper($aArgs['address_postal_code']);
-        $aArgs['address_town'] = strtoupper($aArgs['address_town']);
-        $afnorAddress[6] = substr($aArgs['address_postal_code'].' '.$aArgs['address_town'], 0, 38);
+        $args['address_postcode'] = strtoupper($args['address_postcode']);
+        $args['address_town'] = strtoupper($args['address_town']);
+        $afnorAddress[6] = substr($args['address_postcode'].' '.$args['address_town'], 0, 38);
 
         return $afnorAddress;
     }
 
-    public static function controlLengthNameAfnor(array $aArgs)
+    public static function controlLengthNameAfnor(array $args)
     {
         $aCivility = ContactModel::getCivilities();
-        if (strlen($aArgs['title'].' '.$aArgs['fullName']) > $aArgs['strMaxLength']) {
-            $aArgs['title'] = $aCivility[$aArgs['title']]['abbreviation'];
+        if (strlen($args['civility'].' '.$args['fullName']) > $args['strMaxLength']) {
+            $args['civility'] = $aCivility[$args['civility']]['abbreviation'];
         } else {
-            $aArgs['title'] = $aCivility[$aArgs['title']]['label'];
+            $args['civility'] = $aCivility[$args['civility']]['label'];
         }
 
-        return substr($aArgs['title'].' '.$aArgs['fullName'], 0, $aArgs['strMaxLength']);
+        return substr($args['civility'].' '.$args['fullName'], 0, $args['strMaxLength']);
     }
 
     public function availableReferential()

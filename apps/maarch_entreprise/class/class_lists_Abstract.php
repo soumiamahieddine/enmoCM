@@ -1582,11 +1582,6 @@ abstract class lists_Abstract extends Database
             }
         }
 
-        if ($isMultiContacts == 'Y') {
-            $return .= '<i class="fa fa-book fa-2x" style="cursor: pointer;" title="'
-                ._VIEW_CONTACTS.'"onclick="loadContactsList('.$resMultiContacts.');" ></i>';
-        }
-
         return $return;
     }
 

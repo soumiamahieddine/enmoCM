@@ -709,18 +709,23 @@ class PreProcessActionController
         }
 
         if (!empty($aTemplates)) {
-            $aAttachments = AttachmentModel::getAttachmentToSend(['ids' => $data['resources']]);
+            $aAttachments = AttachmentModel::get([
+                'select'    => ['max(relation) as relation', 'res_id_master', 'title', 'res_id', 'identifier', 'recipient_id', 'recipient_type'],
+                'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', 'in_send_attach = ?'],
+                'data'      => [$data['resources'], ['OBS', 'DEL', 'TMP', 'FRZ'], ['print_folder'], true],
+                'groupBy'   => ['res_id_master', 'title', 'res_id', 'identifier', 'dest_address_id']
+            ]);
+
             foreach ($data['resources'] as $valueResId) {
                 $resIdFound = false;
                 foreach ($aAttachments as $key => $attachment) {
                     if ($attachment['res_id_master'] == $valueResId) {
                         $resIdFound = true;
                         $attachmentId = $attachment['res_id'];
-                        $collId       = 'attachments_coll';
                         $convertedDocument = ConvertPdfController::getConvertedPdfById([
                             'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
                             'resId'     => $attachmentId,
-                            'collId'    => $collId,
+                            'collId'    => 'attachments_coll',
                             'type'      => 'PDF'
                         ]);
                         if (empty($convertedDocument['docserver_id'])) {
@@ -729,26 +734,26 @@ class PreProcessActionController
                             unset($aAttachments[$key]);
                             break;
                         }
-                        if (empty($attachment['dest_address_id'])) {
+                        if (empty($attachment['recipient_id']) || $attachment['recipient_type'] != 'contact') {
                             $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                             $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
-                        $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$attachment['dest_address_id']]]);
-                        if (empty($contact[0])) {
+                        $contact = ContactModel::getById(['select' => ['*'], 'id' => $attachment['recipient_id']]);
+                        if (empty($contact)) {
                             $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                             $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
-                        if (!empty($contact[0]['address_country']) && strtoupper(trim($contact[0]['address_country'])) != 'FRANCE') {
+                        if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
                             $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                             $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noFranceContact', 'attachmentIdentifier' => $attachment['identifier']];
                             unset($aAttachments[$key]);
                             break;
                         }
-                        $afnorAddress = ContactController::getContactAfnor($contact[0]);
+                        $afnorAddress = ContactController::getContactAfnor($contact);
                         if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6]) || !preg_match("/^\d{5}\s/", $afnorAddress[6])) {
                             $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                             $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'incompleteAddressForPostal', 'attachmentIdentifier' => $attachment['identifier']];

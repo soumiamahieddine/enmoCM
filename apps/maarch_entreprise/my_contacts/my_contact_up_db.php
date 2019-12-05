@@ -36,5 +36,4 @@ if(isset($_GET['mycontact']) &&  $_GET['mycontact'] <> ''){
 	$mycontact = 'Y';
 }
 
-$contact->addupcontact($_POST['mode'], false, $confirm, $mycontact);
 ?>

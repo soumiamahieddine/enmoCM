@@ -2724,26 +2724,6 @@ function loadDiffList(id) {
 
 }
 
-function loadContactsList(id) {
-    new Effect.toggle('contactsList_' + id, 'appear', {
-        delay: 0.2
-    });
-
-    var path_manage_script = 'index.php?page=loadContactsList&display=true';
-
-
-    new Ajax.Request(path_manage_script, {
-        method: 'post',
-        parameters: {
-            res_id: id
-        },
-        onSuccess: function (answer) {
-            eval("response = " + answer.responseText);
-            $('divContactsList_' + id).innerHTML = response.toShow;
-        }
-    });
-}
-
 function loadNoteList(id) {
     new Effect.toggle('noteList_' + id, 'appear', {
         delay: 0.2

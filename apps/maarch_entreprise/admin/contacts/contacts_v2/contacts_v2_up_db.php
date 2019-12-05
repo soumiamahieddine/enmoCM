@@ -53,5 +53,4 @@ if(isset($_GET['confirm']) &&  $_GET['confirm'] <> ''){
 } else {
 	$confirm = 'N';
 }
-$contact->addupcontact($_POST['mode'], true, $confirm);
 ?>

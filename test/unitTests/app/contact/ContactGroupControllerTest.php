@@ -106,8 +106,8 @@ class ContactGroupControllerTest extends TestCase
     {
         $contactGroupController = new \Contact\controllers\ContactGroupController();
 
-        $contacts = \Contact\models\ContactModel::getOnView([
-            'select'    => ['ca_id'],
+        $contacts = \Contact\models\ContactModel::get([
+            'select'    => ['id'],
             'limit'     => 1
         ]);
 
@@ -117,7 +117,7 @@ class ContactGroupControllerTest extends TestCase
             $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
             $aArgs = [
-                'contacts'  => [$contacts[0]['ca_id']]
+                'contacts'  => [$contacts[0]['id']]
             ];
             $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -127,7 +127,7 @@ class ContactGroupControllerTest extends TestCase
             $this->assertSame(self::$id, $responseBody->contactsGroup->id);
             $this->assertNotEmpty($responseBody->contactsGroup);
             $this->assertNotEmpty($responseBody->contactsGroup->contacts);
-            $this->assertSame($contacts[0]['ca_id'], $responseBody->contactsGroup->contacts[0]->addressId);
+            $this->assertSame($contacts[0]['id'], $responseBody->contactsGroup->contacts[0]->addressId);
             $this->assertSame(0, $responseBody->contactsGroup->contacts[0]->position);
             $this->assertInternalType('string', $responseBody->contactsGroup->contacts[0]->contact);
             $this->assertInternalType('string', $responseBody->contactsGroup->contacts[0]->address);
@@ -138,8 +138,8 @@ class ContactGroupControllerTest extends TestCase
     {
         $contactGroupController = new \Contact\controllers\ContactGroupController();
 
-        $contacts = \Contact\models\ContactModel::getOnView([
-            'select'    => ['ca_id'],
+        $contacts = \Contact\models\ContactModel::get([
+            'select'    => ['id'],
             'limit'     => 1
         ]);
 
@@ -148,7 +148,7 @@ class ContactGroupControllerTest extends TestCase
             $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
             $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-            $response     = $contactGroupController->deleteContact($request, new \Slim\Http\Response(), ['id' => self::$id, 'addressId' => $contacts[0]['ca_id']]);
+            $response     = $contactGroupController->deleteContact($request, new \Slim\Http\Response(), ['id' => self::$id, 'addressId' => $contacts[0]['id']]);
             $responseBody = json_decode((string)$response->getBody());
 
             $this->assertSame('success', $responseBody->success);
