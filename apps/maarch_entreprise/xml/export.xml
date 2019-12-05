@@ -20,18 +20,18 @@
             <LIBELLE>Date d'arrivée</LIBELLE>
             <DATABASE_FIELD>doc_date</DATABASE_FIELD>
         </FIELD>
-        <FIELD>
-            <LIBELLE>Prénom de l'expéditeur</LIBELLE>
-            <DATABASE_FIELD>contact_firstname</DATABASE_FIELD>
-        </FIELD>
-        <FIELD>
-            <LIBELLE>Nom de l'expéditeur</LIBELLE>
-            <DATABASE_FIELD>contact_lastname</DATABASE_FIELD>
-        </FIELD>
-        <FIELD>
-            <LIBELLE>Société de l'expéditeur</LIBELLE>
-            <DATABASE_FIELD>contact_society</DATABASE_FIELD>
-        </FIELD>
+<!--        <FIELD>-->
+<!--            <LIBELLE>Prénom de l'expéditeur</LIBELLE>-->
+<!--            <DATABASE_FIELD>contact_firstname</DATABASE_FIELD>-->
+<!--        </FIELD>-->
+<!--        <FIELD>-->
+<!--            <LIBELLE>Nom de l'expéditeur</LIBELLE>-->
+<!--            <DATABASE_FIELD>contact_lastname</DATABASE_FIELD>-->
+<!--        </FIELD>-->
+<!--        <FIELD>-->
+<!--            <LIBELLE>Société de l'expéditeur</LIBELLE>-->
+<!--            <DATABASE_FIELD>contact_society</DATABASE_FIELD>-->
+<!--        </FIELD>-->
         <FIELD>
             <LIBELLE>Service destinataire</LIBELLE>
             <DATABASE_FIELD>destination</DATABASE_FIELD>
@@ -61,10 +61,10 @@
                 <LIBELLE>Services en copie</LIBELLE>
                 <CALL>retrieve_copies</CALL>
             </FUNCTION>
-            <FUNCTION>
-                <LIBELLE>Page détail</LIBELLE>
-                <CALL>makeLink_detail</CALL>
-            </FUNCTION>
+<!--            <FUNCTION>-->
+<!--                <LIBELLE>Page détail</LIBELLE>-->
+<!--                <CALL>makeLink_detail</CALL>-->
+<!--            </FUNCTION>-->
 
 <!--             <FUNCTION>
                 <LIBELLE>Thème</LIBELLE>

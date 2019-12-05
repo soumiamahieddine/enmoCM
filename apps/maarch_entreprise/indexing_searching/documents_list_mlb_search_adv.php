@@ -374,6 +374,8 @@ if ($mode == 'normal') {
 //Result array
     $tabI = count($tab);
 
+    $resIdList = [];
+
     for ($i = 0; $i < $tabI; ++$i) {
         $tabJ = count($tab[$i]);
         for ($j = 0; $j < $tabJ; ++$j) {
@@ -399,6 +401,7 @@ if ($mode == 'normal') {
                 }
 
                 if ($tab[$i][$j][$value] == 'res_id') {
+                    $resIdList[] = intval($tab[$i][$j]['value']);
                     $tab[$i][$j]['res_id'] = $tab[$i][$j]['value'];
                     $tab[$i][$j]['label'] = _GED_NUM;
                     $tab[$i][$j]['size'] = '4';
@@ -792,28 +795,30 @@ if ($mode == 'normal') {
                 // Contacts
                 if ($tab[$i][$j][$value] == 'real_dest') {
                     $resId = $tab[$i][$j]['value'];
-//                    $tab[$i][$j]['value'] = \Resource\models\ResourceContactModel::getFormattedByResId2(['resId' => $resId, 'type' => 'recipients']);
                     $contactList = \Contact\controllers\ContactController::getFormattedContacts(['resId' => $resId, 'mode' => 'recipient', 'onlyContact' => true]);
 
                     $formattedRecipients = implode("<br>", $contactList);
-
-                    $formattedRecipients = '<b>'._FOR_CONTACT_C.'</b>'.$formattedRecipients;
 
                     $contactList = \Contact\controllers\ContactController::getFormattedContacts(['resId' => $resId, 'mode' => 'sender', 'onlyContact' => true]);
 
                     $formattedSenders = implode("<br>", $contactList);
 
-                    $formattedSenders = '<b>'._TO_CONTACT_C.'</b>'.$formattedSenders;
 
-                    $tab[$i][$j]['value'] = $formattedSenders . "<br>" . $formattedRecipients;
+                    $tab[$i][$j]['value'] = '';
 
-//                    if (empty(trim($tab[$i][$j]['value']))) {
-//                        $tab[$i][$j]['value'] = null;
-//                    } elseif ($_SESSION['mlb_search_current_category_id'] == 'outgoing') {
-//                        $tab[$i][$j]['value'] = '<b>'._TO_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
-//                    } else {
-//                        $tab[$i][$j]['value'] = '<b>'._FOR_CONTACT_C.'</b>'.$tab[$i][$j]['value'];
-//                    }
+                    if (!empty($formattedSenders)) {
+                        $formattedSenders = '<b>'._TO_CONTACT_C.'</b>'.$formattedSenders;
+                        $tab[$i][$j]['value'] .= $formattedSenders;
+
+                        if (!empty($formattedRecipients)) {
+                            $tab[$i][$j]['value'] .= "<br>";
+                        }
+                    }
+                    if (!empty($formattedRecipients)) {
+                        $formattedRecipients = '<b>'._FOR_CONTACT_C.'</b>'.$formattedRecipients;
+                        $tab[$i][$j]['value'] .= $formattedRecipients;
+                    }
+
                     $tab[$i][$j]['order'] = false;
                 }
             }
@@ -900,8 +905,11 @@ if ($nbTab > 0) {
     }
 
     if ($printTool) {
+        $resIdList = json_encode($resIdList);
+        $urlPrint = $_SESSION['config']['businessappurl'] . '../../rest/resourcesList/summarySheets?resources=' . $resIdList;
         $print = array(
-                    'script' => "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=print', '_blank');",
+//                    'script' => "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=print', '_blank');",
+                    'script' => "window.open('" . $urlPrint . "', '_blank');",
                     'icon' => 'link',
                     'tooltip' => _PRINT_DOC_FROM_LIST,
                     'disabledRules' => $nbTab.' == 0',
