@@ -369,6 +369,32 @@ class ContactController
         return $response->withJson(['contacts' => $contacts]);
     }
 
+    public static function getLightFormattedContact(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params id is not an integer']);
+        }
+
+        if ($args['type'] == 'contact') {
+            $contact = ContactModel::getById([
+                'select'    => [
+                    'firstname', 'lastname', 'company', 'address_number as "addressNumber"', 'address_street as "addressStreet"',
+                    'address_postcode as "addressPostcode"', 'address_town as "addressTown"', 'address_country as "addressCountry"'],
+                'id'        => $args['id']
+            ]);
+        } elseif ($args['type'] == 'user') {
+            $contact = UserModel::getById(['id' => $args['id'], 'select' => ['firstname', 'lastname']]);
+        } elseif ($args['type'] == 'entity') {
+            $contact = EntityModel::getById(['id' => $args['id'], 'select' => ['entity_label as label']]);
+        }
+
+        if (empty($contact)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
+        }
+
+        return $response->withJson(['contact' => $contact]);
+    }
+
     public static function getFillingRate(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['contact']);
@@ -799,7 +825,7 @@ class ContactController
             }
             $customFields = ContactCustomFieldListModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [array_keys($body['customFields'])]]);
             if (count($body['customFields']) != $customFields[0]['count']) {
-                return ['errors' => 'Body tags : One or more custom fields do not exist'];
+                return ['errors' => 'Body customFields : One or more custom fields do not exist'];
             }
         }
 

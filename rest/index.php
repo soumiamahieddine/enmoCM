@@ -118,6 +118,7 @@ $app->get('/contacts/{id}', \Contact\controllers\ContactController::class . ':ge
 $app->put('/contacts/{id}', \Contact\controllers\ContactController::class . ':update');
 $app->delete('/contacts/{id}', \Contact\controllers\ContactController::class . ':delete');
 $app->put('/contacts/{id}/activation', \Contact\controllers\ContactController::class . ':updateActivation');
+$app->get('/formattedContacts/{id}/types/{type}', \Contact\controllers\ContactController::class . ':getLightFormattedContact');
 
 $app->get('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':get');
 $app->post('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':create');
@@ -126,7 +127,6 @@ $app->put('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::c
 $app->delete('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':delete');
 $app->post('/contactsGroups/{id}/contacts', \Contact\controllers\ContactGroupController::class . ':addContacts');
 $app->delete('/contactsGroups/{id}/contacts/{addressId}', \Contact\controllers\ContactGroupController::class . ':deleteContact');
-$app->get('/contactsTypes', \Contact\controllers\ContactTypeController::class . ':get');
 $app->get('/contactsFilling', \Contact\controllers\ContactController::class . ':getFilling');
 $app->put('/contactsFilling', \Contact\controllers\ContactController::class . ':updateFilling');
 

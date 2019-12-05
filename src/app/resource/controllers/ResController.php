@@ -149,7 +149,7 @@ class ResController
                 'barcode'               => $document['barcode']
             ]);
         }
-        
+
         $modelFields = IndexingModelFieldModel::get([
             'select'    => ['identifier'],
             'where'     => ['model_id = ?'],
@@ -182,6 +182,21 @@ class ResController
             $priority = PriorityModel::getById(['id' => $formattedData['priority'], 'select' => ['label', 'color']]);
             $formattedData['priorityLabel'] = $priority['label'];
             $formattedData['priorityColor'] = $priority['color'];
+        }
+
+        if (in_array('senders', $modelFields)) {
+            $formattedData['senders'] = ResourceContactModel::get([
+                'select'    => ['item_id as id', 'type'],
+                'where'     => ['res_id = ?', 'mode = ?'],
+                'data'      => [$args['resId'], 'sender']
+            ]);
+        }
+        if (in_array('recipients', $modelFields) && empty($queryParams['light'])) {
+            $formattedData['recipients'] = ResourceContactModel::get([
+                'select'    => ['item_id as id', 'type'],
+                'where'     => ['res_id = ?', 'mode = ?'],
+                'data'      => [$args['resId'], 'recipient']
+            ]);
         }
 
         $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
@@ -1048,7 +1063,7 @@ class ResController
             }
             $customFields = CustomFieldModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [array_keys($body['customFields'])]]);
             if (count($body['customFields']) != $customFields[0]['count']) {
-                return ['errors' => 'Body tags : One or more custom fields do not exist'];
+                return ['errors' => 'Body customFields : One or more custom fields do not exist'];
             }
         }
         if (!empty($body['folders'])) {
