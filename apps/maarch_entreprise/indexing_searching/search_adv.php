@@ -365,13 +365,13 @@ $arr_tmp2 = array('label' => _VISA_USER_SEARCH_MIN, 'type' => 'input_text', 'par
 $param['visa_user'] = $arr_tmp2;
 
 //contact_type
-$stmt = $conn->query('SELECT id, label  FROM  contact_types order by label asc', array());
-$arr_tmp = array();
-while ($res = $stmt->fetchObject()) {
-    array_push($arr_tmp, array('VALUE' => $res->id, 'LABEL' => functions::show_string($res->label)));
-}
-$arr_tmp2 = array('label' => _CONTACT_TYPE, 'type' => 'select_simple', 'param' => array('field_label' => _CONTACT_TYPE, 'label_title' => _CONTACT_TYPE, 'id' => 'contact_type', 'options' => $arr_tmp));
-$param['contact_type'] = $arr_tmp2;
+//$stmt = $conn->query('SELECT id, label  FROM  contact_types order by label asc', array());
+//$arr_tmp = array();
+//while ($res = $stmt->fetchObject()) {
+//    array_push($arr_tmp, array('VALUE' => $res->id, 'LABEL' => functions::show_string($res->label)));
+//}
+//$arr_tmp2 = array('label' => _CONTACT_TYPE, 'type' => 'select_simple', 'param' => array('field_label' => _CONTACT_TYPE, 'label_title' => _CONTACT_TYPE, 'id' => 'contact_type', 'options' => $arr_tmp));
+//$param['contact_type'] = $arr_tmp2;
 
 // Sorts the param array
 function cmp($a, $b)
