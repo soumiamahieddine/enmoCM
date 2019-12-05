@@ -284,8 +284,8 @@ class SummarySheetController
                 $pdf->MultiCell($widthNotes, 30, _PRIORITY . " : {$priority}", 1, 'L', false, 0, '', '', true, 0, true);
                 $pdf->MultiCell($widthNotes, 30, _PROCESS_LIMIT_DATE . " : {$processLimitDate}", 1, 'L', false, 1, '', '', true, 0, true);
             } elseif ($unit['unit'] == 'senderRecipientInformations') {
-                $senders = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
-                $recipients = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
+                $senders = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
+                $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
 
                 if (!empty($senders) && count($senders) > 2) {
                     $nbSenders = count($senders);

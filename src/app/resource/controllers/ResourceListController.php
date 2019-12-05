@@ -812,10 +812,10 @@ class ResourceListController
                         $value['displayValue'] = ResourceListController::getAssignee(['resId' => $resource['res_id']]);
                         $display[] = $value;
                     } elseif ($value['value'] == 'getSenders') {
-                        $value['displayValue'] = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
+                        $value['displayValue'] = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender', 'onlyContact' => true]);
                         $display[] = $value;
                     } elseif ($value['value'] == 'getRecipients') {
-                        $value['displayValue'] = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
+                        $value['displayValue'] = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient', 'onlyContact' => true]);
                         $display[] = $value;
                     } elseif ($value['value'] == 'getVisaWorkflow') {
                         $value['displayValue'] = ResourceListController::getVisaWorkflow(['resId' => $resource['res_id']]);

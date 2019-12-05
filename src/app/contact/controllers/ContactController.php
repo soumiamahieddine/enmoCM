@@ -361,9 +361,9 @@ class ContactController
 
         $contacts = [];
         if ($queryParams['type'] == 'senders') {
-            $contacts = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
+            $contacts = ContactController::getParsedContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
         } elseif ($queryParams['type'] == 'recipients') {
-            $contacts = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
+            $contacts = ContactController::getParsedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
         }
 
         return $response->withJson(['contacts' => $contacts]);
@@ -599,7 +599,7 @@ class ContactController
         }
     }
 
-    public static function getFormattedContacts(array $args)
+    public static function getParsedContacts(array $args)
     {
         ValidatorModel::notEmpty($args, ['resId', 'mode']);
         ValidatorModel::intVal($args, ['resId']);
@@ -708,11 +708,12 @@ class ContactController
         return $contacts;
     }
 
-    public static function getFormattedExportContacts(array $args)
+    public static function getFormattedContacts(array $args)
     {
         ValidatorModel::notEmpty($args, ['resId', 'mode']);
         ValidatorModel::intVal($args, ['resId']);
         ValidatorModel::stringType($args, ['mode']);
+        ValidatorModel::boolType($args, ['onlyContact']);
 
         $contacts = [];
 
@@ -729,37 +730,13 @@ class ContactController
                     'id'        => $resourceContact['item_id']
                 ]);
 
-                $address = '';
-                if (!empty($contactRaw['address_number'])) {
-                    $address .= $contactRaw['address_number'] . ' ';
-                }
-                if (!empty($contactRaw['address_street'])) {
-                    $address .= $contactRaw['address_street'] . ' ';
-                }
-                if (!empty($contactRaw['address_postcode'])) {
-                    $address .= $contactRaw['address_postcode'] . ' ';
-                }
-                if (!empty($contactRaw['address_town'])) {
-                    $address .= $contactRaw['address_town'] . ' ';
-                }
-                if (!empty($contactRaw['address_country'])) {
-                    $address .= $contactRaw['address_country'];
+                if (isset($args['onlyContact']) && $args['onlyContact']) {
+                    $contactToDisplay = ContactController::getFormattedOnlyContact(['contact' => $contactRaw]);
+                } else {
+                    $contactToDisplay = ContactController::getFormattedContactWithAddress(['contact' => $contactRaw]);
                 }
 
-                $contactToDisplay = '';
-                if (!empty($contactRaw['firstname'])) {
-                    $contactToDisplay .= $contactRaw['firstname'] . ' ';
-                }
-                if (!empty($contactRaw['lastname'])) {
-                    $contactToDisplay .= $contactRaw['lastname'];
-                }
-                if (!empty($contactRaw['company'])) {
-                    $contactToDisplay .= " ({$contactRaw['company']})";
-                }
-
-                if (!empty($address)) {
-                    $contactToDisplay .= ' - ' . $address;
-                }
+                $contactToDisplay = $contactToDisplay['contact']['otherInfo'];
 
                 $contact = $contactToDisplay;
             } elseif ($resourceContact['type'] == 'user') {
@@ -839,5 +816,102 @@ class ContactController
         }
 
         return true;
+    }
+
+    public static function getFormattedOnlyContact(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['contact']);
+        ValidatorModel::arrayType($args, ['contact']);
+
+        $contactName = '';
+        if (!empty($args['contact']['firstname'])) {
+            $contactName .= $args['contact']['firstname'] . ' ';
+        }
+        if (!empty($args['contact']['lastname'])) {
+            $contactName .= $args['contact']['lastname'] . ' ';
+        }
+
+        $company = '';
+        if (!empty($args['contact']['company'])) {
+            $company = $args['contact']['company'];
+
+            if (!empty($contactName)) {
+                $company = '(' . $company . ') ';
+            }
+        }
+
+        $contactToDisplay = $contactName . $company;
+
+        $contact = [
+            'type'          => 'onlyContact',
+            'id'            => $args['contact']['id'],
+            'idToDisplay'   => $contactToDisplay,
+            'otherInfo'     => $contactToDisplay,
+            'rateColor'     => ''
+        ];
+
+        return ['contact' => $contact];
+    }
+
+    public static function getFormattedContactWithAddress(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['contact']);
+        ValidatorModel::arrayType($args, ['contact']);
+        ValidatorModel::boolType($args, ['color']);
+
+        if (!empty($args['color'])) {
+            $rate = ContactController::getFillingRate(['contact' => $args['contact']]);
+        }
+        $rateColor = empty($rate['color']) ? '' : $rate['color'];
+
+        $address = '';
+
+        if (!empty($args['contact']['address_number'])) {
+            $address.= $args['contact']['address_number'] . ' ';
+        }
+        if (!empty($args['contact']['address_street'])) {
+            $address.= $args['contact']['address_street'] . ' ';
+        }
+        if (!empty($args['contact']['address_postcode'])) {
+            $address.= $args['contact']['address_postcode'] . ' ';
+        }
+        if (!empty($args['contact']['address_town'])) {
+            $address.= $args['contact']['address_town'] . ' ';
+        }
+        if (!empty($args['contact']['address_country'])) {
+            $address.= $args['contact']['address_country'];
+        }
+
+        $contactName = '';
+        if (!empty($args['contact']['firstname'])) {
+            $contactName .= $args['contact']['firstname'] . ' ';
+        }
+        if (!empty($args['contact']['lastname'])) {
+            $contactName .= $args['contact']['lastname'] . ' ';
+        }
+
+        $company = '';
+        if (!empty($args['contact']['company'])) {
+            $company = $args['contact']['company'];
+
+            if (!empty($contactName)) {
+                $company = '(' . $company . ') ';
+            }
+        }
+
+        $contactToDisplay = $contactName . $company;
+
+        $otherInfo = empty($address) ? "{$contactToDisplay}" : "{$contactToDisplay} - {$address}";
+        $contact = [
+            'type'          => 'contact',
+            'id'            => $args['contact']['id'],
+            'contact'       => $contactToDisplay,
+            'address'       => $address,
+            'idToDisplay'   => "{$contactToDisplay}<br/>{$address}",
+            'otherInfo'     => $otherInfo,
+            'rateColor'     => $rateColor
+        ];
+
+        return ['contact' => $contact];
     }
 }
