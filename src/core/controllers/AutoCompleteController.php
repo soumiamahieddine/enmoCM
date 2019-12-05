@@ -496,7 +496,7 @@ class AutoCompleteController
 
         $data = [];
         foreach ($contacts as $contact) {
-            $data[] = AutoCompleteController::getFormattedContactV2(['contact' => $contact])['contact'];
+            $data[] = ContactController::getFormattedContactWithAddress(['contact' => $contact])['contact'];
         }
 
         return $response->withJson($data);

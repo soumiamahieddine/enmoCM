@@ -14,6 +14,7 @@
 
 namespace Contact\controllers;
 
+use Contact\controllers\ContactController;
 use Contact\models\ContactGroupModel;
 use Contact\models\ContactModel;
 use Group\controllers\PrivilegeController;
@@ -21,7 +22,6 @@ use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use SrcCore\controllers\AutoCompleteController;
 use User\models\UserModel;
 
 class ContactGroupController
@@ -270,7 +270,7 @@ class ContactGroupController
             ]);
 
             if (!empty($contact[0])) {
-                $contact = AutoCompleteController::getFormattedContactV2(['contact' => $contact[0], 'position' => $position])['contact'];
+                $contact = ContactController::getFormattedContactWithAddress(['contact' => $contact[0], 'position' => $position])['contact'];
                 $contact['position'] = !empty($position) ? $position : 0;
                 $contacts[] = $contact;
                 ++$position;
