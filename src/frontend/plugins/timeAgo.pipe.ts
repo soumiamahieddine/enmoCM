@@ -63,14 +63,11 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
 			return this.getFormatedDate(this.lang.at.toLowerCase(), hourNumber + ':' + minuteNumber, args);
 			//return hours + ' heures';
 		} else if (hours <= 24) {
-			return this.getFormatedDate(this.lang.dateTo.toLowerCase(), dayNumber + ' ' + month[d.getMonth()], args);
+			return this.getFormatedDate(this.lang.dateAgo.toLowerCase(), days + ' ' + this.lang.dayS, args);
 			//return 'un jour';
-		} else if (days <= 25) {
-			return this.getFormatedDate(this.lang.dateTo.toLowerCase(), d.getDate() + ' ' + month[d.getMonth()], args);
+		} else if (days <= 5) {
+			return this.getFormatedDate(this.lang.dateAgo.toLowerCase(), days + ' ' + this.lang.dayS, args);
 			//return days + ' jours';
-		} else if (days <= 45) {
-			return this.getFormatedDate(this.lang.dateTo.toLowerCase(), d.getDate() + ' ' + month[d.getMonth()], args);
-			//return 'un mois';
 		} else if (days <= 345) {
 			return this.getFormatedDate(this.lang.dateTo.toLowerCase(), d.getDate() + ' ' + month[d.getMonth()], args);
 			//return months + ' mois';
