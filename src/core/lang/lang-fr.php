@@ -406,6 +406,14 @@ define("_CUSTOMFIELDS_CREATION", "Champ personnalisé créé");
 define("_CUSTOMFIELDS_MODIFICATION", "Champ personnalisé modifié");
 define("_CUSTOMFIELDS_SUPPRESSION", "Champ personnalisé supprimé");
 
+define("_CONTACT_CUSTOMFIELDS_CREATION", "Champ personnalisé de contact créé");
+define("_CONTACT_CUSTOMFIELDS_MODIFICATION", "Champ personnalisé de contact modifié");
+define("_CONTACT_CUSTOMFIELDS_SUPPRESSION", "Champ personnalisé de contact supprimé");
+
+define("_CONTACT_CREATION", "Contact créé");
+define("_CONTACT_MODIFICATION", "Contact modifié");
+define("_CONTACT_SUPPRESSION", "Contact supprimé");
+
 define("_INDEXINGMODEL_CREATION", "Modèle d'enregistrement créé");
 define("_INDEXINGMODEL_MODIFICATION", "Modèle d'enregistrement modifié");
 define("_INDEXINGMODEL_SUPPRESSION", "Modèle d'enregistrement supprimé");

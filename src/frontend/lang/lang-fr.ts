@@ -1353,7 +1353,7 @@ export const LANG_FR = {
     "personalDataMsg": "Les données personnelles de l'utilisateur sont : ",
     "notVisible": "Non visibles",
     "enableGroupMsg": "Ce groupe pourra potentiellement avoir accès à l'ensemble des fonctionnalités de l'application.",
-    "sendActivationNotification": "Envoyer à nouveau le courriel d'activation",
+    "sendActivationNotification": "Renvoyer le courriel d'activation",
     "activationNotificationSend": "Le courriel d'activation a été envoyé",
     "tabProcessPosition": "Se positionner sur l'onglet",
     "saveModifiedData": "Voulez-vous sauvegarder les modifications ?",

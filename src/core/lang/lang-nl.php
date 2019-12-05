@@ -412,6 +412,14 @@ define("_CUSTOMFIELDS_CREATION", "Custom field creation_TO_TRANSLATE");
 define("_CUSTOMFIELDS_MODIFICATION", "Custom field modification_TO_TRANSLATE");
 define("_CUSTOMFIELDS_SUPPRESSION", "Custom field suppression_TO_TRANSLATE");
 
+define("_CONTACT_CUSTOMFIELDS_CREATION", "Contact custom field creation_TO_TRANSLATE");
+define("_CONTACT_CUSTOMFIELDS_MODIFICATION", "Contact custom field modification_TO_TRANSLATE");
+define("_CONTACT_CUSTOMFIELDS_SUPPRESSION", "Contact custom field suppression_TO_TRANSLATE");
+
+define("_CONTACT_CREATION", "Contact creation_TO_TRANSLATE");
+define("_CONTACT_MODIFICATION", "Contact modification_TO_TRANSLATE");
+define("_CONTACT_SUPPRESSION", "Contact suppression_TO_TRANSLATE");
+
 define("_INDEXINGMODEL_CREATION", "Indexing model creation_TO_TRANSLATE");
 define("_INDEXINGMODEL_MODIFICATION", "Indexing model modification_TO_TRANSLATE");
 define("_INDEXINGMODEL_SUPPRESSION", "Indexing model suppression_TO_TRANSLATE");

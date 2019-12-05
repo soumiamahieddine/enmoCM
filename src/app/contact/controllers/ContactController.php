@@ -19,13 +19,14 @@ use Contact\models\ContactFillingModel;
 use Contact\models\ContactModel;
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
+use History\controllers\HistoryController;
 use Resource\controllers\ResController;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
-use SrcCore\models\CoreConfigModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
@@ -94,6 +95,25 @@ class ContactController
             'creator'               => $GLOBALS['id'],
             'enabled'               => 'true',
             'external_id'           => $externalId
+        ]);
+
+        $historyInfoContact = '';
+        if (!empty($body['firstname']) || !empty($body['lastname'])) {
+            $historyInfoContact .= $body['firstname'] . ' ' . $body['lastname'];
+        }
+        if (!empty($historyInfoContact) && !empty($body['company'])) {
+            $historyInfoContact .= ' (' . $body['company'] . ')';
+        } else {
+            $historyInfoContact .= $body['company'];
+        }
+
+        HistoryController::add([
+            'tableName' => 'contacts',
+            'recordId'  => $id,
+            'eventType' => 'ADD',
+            'info'      => _CONTACT_CREATION . " : " . trim($historyInfoContact),
+            'moduleId'  => 'contact',
+            'eventId'   => 'contactCreation',
         ]);
 
         ContactController::createAdjacentData(['body' => $body, 'id' => $id]);
@@ -200,6 +220,25 @@ class ContactController
             'data'  => [$args['id']]
         ]);
 
+        $historyInfoContact = '';
+        if (!empty($body['firstname']) || !empty($body['lastname'])) {
+            $historyInfoContact .= $body['firstname'] . ' ' . $body['lastname'];
+        }
+        if (!empty($historyInfoContact) && !empty($body['company'])) {
+            $historyInfoContact .= ' (' . $body['company'] . ')';
+        } else {
+            $historyInfoContact .= $body['company'];
+        }
+
+        HistoryController::add([
+            'tableName' => 'contacts',
+            'recordId'  => $args['id'],
+            'eventType' => 'UP',
+            'info'      => _CONTACT_MODIFICATION . " : " . trim($historyInfoContact),
+            'moduleId'  => 'contact',
+            'eventId'   => 'contactModification',
+        ]);
+
         return $response->withStatus(204);
     }
 
@@ -239,7 +278,7 @@ class ContactController
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
-        $contact = ContactModel::getById(['id' => $args['id'], 'select' => [1]]);
+        $contact = ContactModel::getById(['id' => $args['id'], 'select' => ['lastname', 'firstname', 'company']]);
         if (empty($contact)) {
             return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
         }
@@ -247,6 +286,25 @@ class ContactController
         ContactModel::delete([
             'where' => ['id = ?'],
             'data'  => [$args['id']]
+        ]);
+
+        $historyInfoContact = '';
+        if (!empty($contact[0]['firstname']) || !empty($contact[0]['lastname'])) {
+            $historyInfoContact .= $contact[0]['firstname'] . ' ' . $contact[0]['lastname'];
+        }
+        if (!empty($historyInfoContact) && !empty($contact[0]['company'])) {
+            $historyInfoContact .= ' (' . $contact[0]['company'] . ')';
+        } else {
+            $historyInfoContact .= $contact[0]['company'];
+        }
+
+        HistoryController::add([
+            'tableName' => 'contacts',
+            'recordId'  => $args['id'],
+            'eventType' => 'DEL',
+            'info'      => _CONTACT_SUPPRESSION . " : " . trim($historyInfoContact),
+            'moduleId'  => 'contact',
+            'eventId'   => 'contactSuppression',
         ]);
 
         return $response->withStatus(204);

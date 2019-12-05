@@ -15,7 +15,6 @@
 
 namespace Contact\models;
 
-
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 

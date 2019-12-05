@@ -407,6 +407,14 @@ define("_CUSTOMFIELDS_CREATION", "Custom field creation");
 define("_CUSTOMFIELDS_MODIFICATION", "Custom field modification");
 define("_CUSTOMFIELDS_SUPPRESSION", "Custom field suppression");
 
+define("_CONTACT_CUSTOMFIELDS_CREATION", "Contact custom field creation");
+define("_CONTACT_CUSTOMFIELDS_MODIFICATION", "Contact custom field modification");
+define("_CONTACT_CUSTOMFIELDS_SUPPRESSION", "Contact custom field suppression");
+
+define("_CONTACT_CREATION", "Contact creation");
+define("_CONTACT_MODIFICATION", "Contact modification");
+define("_CONTACT_SUPPRESSION", "Contact suppression");
+
 define("_INDEXINGMODEL_CREATION", "Indexing model creation");
 define("_INDEXINGMODEL_MODIFICATION", "Indexing model modification");
 define("_INDEXINGMODEL_SUPPRESSION", "Indexing model suppression");
