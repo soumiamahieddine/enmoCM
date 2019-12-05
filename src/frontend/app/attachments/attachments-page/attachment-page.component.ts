@@ -190,7 +190,7 @@ export class AttachmentPageComponent implements OnInit {
         return attachmentValues;
     }
 
-    setDatasViewer() {
+    setDatasViewer(ev: any) {
         let datas: any = {};
         Object.keys(this.attachment).forEach(element => {
             if (['title', 'validationDate', 'effectiveDate'].indexOf(element) > -1) {
@@ -200,9 +200,9 @@ export class AttachmentPageComponent implements OnInit {
         datas['resId'] = this.attachment['resIdMaster'].value;
         this.attachment.encodedFile.setValue(this.appAttachmentViewer.getFile().content);
         this.appAttachmentViewer.setDatas(datas);
-        console.log('event!');
-
-        this.setNewVersion();
+        if (ev !== 'cleanFile') {
+            this.setNewVersion();
+        }
     }
 
     getAttachType(attachType: any) {
