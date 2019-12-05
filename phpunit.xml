@@ -11,7 +11,6 @@
             <file>test/unitTests/app/basket/BasketControllerTest.php</file>
             <file>test/unitTests/app/contact/ContactControllerTest.php</file>
             <file>test/unitTests/app/contact/ContactGroupControllerTest.php</file>
-            <file>test/unitTests/app/contact/ContactTypeControllerTest.php</file>
             <file>test/unitTests/app/customField/CustomFieldControllerTest.php</file>
             <file>test/unitTests/core/CoreControllerTest.php</file>
             <file>test/unitTests/app/docserver/DocserverControllerTest.php</file>

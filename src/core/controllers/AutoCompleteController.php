@@ -15,7 +15,6 @@
 namespace SrcCore\controllers;
 
 use Contact\controllers\ContactController;
-use Contact\controllers\ContactGroupController;
 use Contact\models\ContactModel;
 use Entity\models\EntityModel;
 use Respect\Validation\Validator;
@@ -467,34 +466,28 @@ class AutoCompleteController
         $data = $request->getQueryParams();
 
         $check = Validator::stringType()->notEmpty()->validate($data['search']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['type']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
         $searchItems = explode(' ', $data['search']);
 
-        $fields = '(contact_firstname ilike ? OR contact_lastname ilike ? OR firstname ilike ? OR lastname ilike ? OR society ilike ? 
-                    OR address_num ilike ? OR address_street ilike ? OR address_town ilike ? OR address_postal_code ilike ?)';
+        $fields = '(firstname ilike ? OR lastname ilike ? OR company ilike ? 
+                    OR address_number ilike ? OR address_street ilike ? OR address_town ilike ? OR address_postcode ilike ?)';
         $where = [];
         $requestData = [];
-        if ($data['type'] != 'all') {
-            $where = ['contact_type = ?'];
-            $requestData = [$data['type']];
-        }
         foreach ($searchItems as $item) {
             if (strlen($item) >= 2) {
                 $where[] = $fields;
-                for ($i = 0; $i < 9; $i++) {
+                for ($i = 0; $i < 7; $i++) {
                     $requestData[] = "%{$item}%";
                 }
             }
         }
 
-        $contacts = ContactModel::getOnView([
+        $contacts = ContactModel::get([
             'select'    => [
-                'ca_id', 'firstname', 'lastname', 'contact_lastname', 'contact_firstname', 'society', 'address_num',
-                'address_street', 'address_town', 'address_postal_code', 'is_corporate_person'
+                'id', 'firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'
             ],
             'where'     => $where,
             'data'      => $requestData,
@@ -503,7 +496,7 @@ class AutoCompleteController
 
         $data = [];
         foreach ($contacts as $contact) {
-            $data[] = ContactGroupController::getFormattedContact(['contact' => $contact])['contact'];
+            $data[] = AutoCompleteController::getFormattedContactV2(['contact' => $contact])['contact'];
         }
 
         return $response->withJson($data);

@@ -21,7 +21,7 @@ use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use SrcCore\models\ValidatorModel;
+use SrcCore\controllers\AutoCompleteController;
 use User\models\UserModel;
 
 class ContactGroupController
@@ -200,15 +200,15 @@ class ContactGroupController
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $rawList = ContactGroupModel::getListById(['select' => ['contact_addresses_id'], 'id' => $aArgs['id']]);
+        $rawList = ContactGroupModel::getListById(['select' => ['contact_id'], 'id' => $aArgs['id']]);
         $list = [];
         foreach ($rawList as $rawListItem) {
-            $list[] = $rawListItem['contact_addresses_id'];
+            $list[] = $rawListItem['contact_id'];
         }
 
-        foreach ($data['contacts'] as $addressId) {
-            if (!in_array($addressId, $list)) {
-                ContactGroupModel::addContact(['id' => $aArgs['id'], 'addressId' => $addressId]);
+        foreach ($data['contacts'] as $contactId) {
+            if (!in_array($contactId, $list)) {
+                ContactGroupModel::addContact(['id' => $aArgs['id'], 'contactId' => $contactId]);
             }
         }
 
@@ -240,7 +240,7 @@ class ContactGroupController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        ContactGroupModel::deleteContact(['id' => $aArgs['id'], 'addressId' => $aArgs['addressId']]);
+        ContactGroupModel::deleteContact(['id' => $aArgs['id'], 'contactId' => $aArgs['contactId']]);
 
         HistoryController::add([
             'tableName' => 'contacts_groups_lists',
@@ -256,85 +256,27 @@ class ContactGroupController
 
     public static function getFormattedListById(array $aArgs)
     {
-        $list = ContactGroupModel::getListById(['select' => ['contact_addresses_id'], 'id' => $aArgs['id']]);
+        $list = ContactGroupModel::getListById(['select' => ['contact_id'], 'id' => $aArgs['id']]);
 
         $contacts = [];
         $position = 0;
         foreach ($list as $listItem) {
-            $contact = ContactModel::getOnView([
+            $contact = ContactModel::get([
                 'select'    => [
-                    'ca_id', 'firstname', 'lastname', 'contact_lastname', 'contact_firstname', 'society', 'address_num',
-                    'address_street', 'address_town', 'address_postal_code', 'is_corporate_person'
+                    'id', 'firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'
                 ],
-                'where'     => ['ca_id = ?'],
-                'data'      => [$listItem['contact_addresses_id']]
+                'where'     => ['id = ?'],
+                'data'      => [$listItem['contact_id']]
             ]);
 
             if (!empty($contact[0])) {
-                $contacts[] = ContactGroupController::getFormattedContact(['contact' => $contact[0], 'position' => $position])['contact'];
+                $contact = AutoCompleteController::getFormattedContactV2(['contact' => $contact[0], 'position' => $position])['contact'];
+                $contact['position'] = !empty($position) ? $position : 0;
+                $contacts[] = $contact;
                 ++$position;
             }
         }
 
         return ['list' => $contacts];
-    }
-
-    public static function getFormattedContact(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['contact']);
-        ValidatorModel::arrayType($aArgs, ['contact']);
-        ValidatorModel::intType($aArgs, ['position']);
-
-        $address = '';
-        if (empty($aArgs['position'])) {
-            $aArgs['position'] = 0;
-        }
-        if ($aArgs['contact']['is_corporate_person'] == 'Y') {
-            $address.= $aArgs['contact']['firstname'];
-            $address.= (empty($address) ? $aArgs['contact']['lastname'] : " {$aArgs['contact']['lastname']}");
-            if (!empty($address)) {
-                $address.= ', ';
-            }
-            if (!empty($aArgs['contact']['address_num'])) {
-                $address.= $aArgs['contact']['address_num'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_street'])) {
-                $address.= $aArgs['contact']['address_street'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_town'])) {
-                $address.= $aArgs['contact']['address_town'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_postal_code'])) {
-                $address.= $aArgs['contact']['address_postal_code'] . ' ';
-            }
-            $contact = [
-                'position'  => $aArgs['position'],
-                'addressId' => $aArgs['contact']['ca_id'],
-                'contact'   => $aArgs['contact']['society'],
-                'address'   => $address
-            ];
-        } else {
-            if (!empty($aArgs['contact']['address_num'])) {
-                $address.= $aArgs['contact']['address_num'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_street'])) {
-                $address.= $aArgs['contact']['address_street'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_town'])) {
-                $address.= $aArgs['contact']['address_town'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_postal_code'])) {
-                $address.= $aArgs['contact']['address_postal_code'] . ' ';
-            }
-
-            $contact = [
-                'position'  => $aArgs['position'],
-                'addressId' => $aArgs['contact']['ca_id'],
-                'contact'   => "{$aArgs['contact']['contact_firstname']} {$aArgs['contact']['contact_lastname']} {$aArgs['contact']['society']}",
-                'address'   => $address
-            ];
-        }
-
-        return ['contact' => $contact];
     }
 }

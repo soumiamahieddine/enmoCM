@@ -663,6 +663,8 @@ if ($stmt->rowCount() == 0) {
                     $_SESSION['adresses']['addressid'] = array();
                     $_SESSION['adresses']['contactid'] = array();
 
+                    $path_to_script = ''; // removed
+
                     if (empty($disabledAttr)) {
                         echo "<div id='input_multi_contact_add' style=''>";
                         echo "<input type='text' placeholder='"._CONTACTS_USERS_SEARCH."' name='{$key}' id='{$key}' value='' title='' alt='' size='40' style='width:140px;'/>";

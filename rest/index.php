@@ -126,7 +126,7 @@ $app->get('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::c
 $app->put('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':update');
 $app->delete('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':delete');
 $app->post('/contactsGroups/{id}/contacts', \Contact\controllers\ContactGroupController::class . ':addContacts');
-$app->delete('/contactsGroups/{id}/contacts/{addressId}', \Contact\controllers\ContactGroupController::class . ':deleteContact');
+$app->delete('/contactsGroups/{id}/contacts/{contactId}', \Contact\controllers\ContactGroupController::class . ':deleteContact');
 $app->get('/contactsFilling', \Contact\controllers\ContactController::class . ':getFilling');
 $app->put('/contactsFilling', \Contact\controllers\ContactController::class . ':updateFilling');
 

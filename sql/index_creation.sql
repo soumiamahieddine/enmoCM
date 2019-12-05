@@ -26,9 +26,9 @@ CREATE INDEX item_mode_idx ON listinstance (item_mode);
 CREATE INDEX listinstance_difflist_type_idx ON listinstance (difflist_type);
 
 -- contacts
-CREATE INDEX firstname_contacts_idx ON contacts_v2 (firstname);
-CREATE INDEX lastname_contacts_idx ON contacts_v2 (lastname);
-CREATE INDEX society_idx ON contacts_v2 (society);
+CREATE INDEX firstname_idx ON contacts (firstname);
+CREATE INDEX lastname_idx ON contacts (lastname);
+CREATE INDEX company_idx ON contacts (society);
 
 -- doctypes_first_level
 CREATE INDEX doctypes_first_level_label_idx ON doctypes_first_level (doctypes_first_level_label);
@@ -74,9 +74,6 @@ CREATE INDEX user_id_res_mark_as_read_idx ON res_mark_as_read (user_id);
 
 -- listmodels
 CREATE INDEX object_id_listmodels_idx ON listmodels (object_id);
-
--- contact_addresses
-CREATE INDEX contact_id_contact_addresses_idx ON contact_addresses (contact_id);
 
 -- resource_contacts
 CREATE INDEX resource_contacts_res_id_idx ON resource_contacts (res_id);

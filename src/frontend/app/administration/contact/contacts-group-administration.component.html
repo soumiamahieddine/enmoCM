@@ -44,16 +44,6 @@
                     </mat-tab>
                     <mat-tab label="{{lang.addContacts}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;">
-                            <div class="col-sm-4">
-                                <mat-form-field>
-                                    <mat-select [(ngModel)]="contactTypeSearch" placeholder="{{lang.chooseContactType}}" id="contactTypeSearch" name="contactTypeSearch">
-                                        <mat-option value="all">{{lang.all}}</mat-option>
-                                        <mat-option *ngFor="let contactType of contactTypes" [value]="contactType.id">
-                                            {{contactType.label}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-                            </div>
                             <div class="col-md-8" style="padding:5px;">
                                 <mat-form-field hintLabel="3 caractères minium">
                                     <span matPrefix>
@@ -78,8 +68,8 @@
                                     </mat-checkbox>
                                 </mat-header-cell>
                                 <mat-cell *matCellDef="let element" style="flex:1;">
-                                    <mat-checkbox id="check_{{element.addressId}}" color="primary" (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(element.addressId) : null"
-                                        [disabled]="isInGrp(element)" [checked]="selection.isSelected(element.addressId)">
+                                    <mat-checkbox id="check_{{element.id}}" color="primary" (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(element.id) : null"
+                                        [disabled]="isInGrp(element)" [checked]="selection.isSelected(element.id)">
                                     </mat-checkbox>
                                 </mat-cell>
                             </ng-container>
@@ -92,7 +82,7 @@
                                 <mat-cell *matCellDef="let element" style="flex:3;"> {{element.address}} </mat-cell>
                             </ng-container>
                             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-                            <mat-row *matRowDef="let element; columns: displayedColumns;" (click)="selectAddress(element.addressId);" [ngStyle]="{'opacity': !isInGrp(element) ? '' : '0.5'}"
+                            <mat-row *matRowDef="let element; columns: displayedColumns;" (click)="selectContact(element.id);" [ngStyle]="{'opacity': !isInGrp(element) ? '' : '0.5'}"
                                 style="cursor: pointer;"></mat-row>
                         </mat-table>
                         <div class="form-group">
