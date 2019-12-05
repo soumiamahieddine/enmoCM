@@ -14,12 +14,8 @@
 
 namespace Resource\models;
 
-use Contact\models\ContactModel;
-use Entity\models\EntityModel;
-use SrcCore\controllers\AutoCompleteController;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
-use User\models\UserModel;
 
 class ResourceContactModel
 {

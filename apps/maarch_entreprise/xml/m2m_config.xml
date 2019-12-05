@@ -8,12 +8,6 @@
     <res_attachments>
         <attachment_type>simple_attachment</attachment_type>
     </res_attachments>
-    <contacts_v2>
-        <contact_type>100</contact_type>
-    </contacts_v2>
-    <contact_addresses>
-        <contact_purpose_id>1</contact_purpose_id>
-    </contact_addresses>
     <basketRedirection_afterUpload>NumericBasket</basketRedirection_afterUpload><!--basketId-->
     <indexingModelId>1</indexingModelId>
     <m2m_communication>https://cchaplin:maarch@demo.maarchcourrier.com</m2m_communication><!--moyen de communication de l'instance : email ou uri -->
