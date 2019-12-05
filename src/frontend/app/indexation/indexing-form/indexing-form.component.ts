@@ -542,10 +542,17 @@ export class IndexingFormComponent implements OnInit {
             tap((data: any) => {
                 this.fieldCategories.forEach(element => {
                     this['indexingModels_' + element].forEach((elem: any) => {
-
-                        if (Object.keys(data).indexOf(elem.identifier) > -1) {
-                            let fieldValue = data[elem.identifier];
+                        const customId: any = Object.keys(data.customFields).filter(index => index === elem.identifier.split('indexingCustomField_')[1])[0];
+                        
+                        if (Object.keys(data).indexOf(elem.identifier) > -1 || customId !== undefined) {
+                            let fieldValue: any = '';
                             
+                            if (customId !== undefined) {
+                                fieldValue = data.customFields[customId]; 
+                            } else {
+                                fieldValue = data[elem.identifier];  
+                            }
+                                                       
                             if (elem.type === 'date') {
                                 fieldValue = new Date(fieldValue);
                             }
@@ -560,6 +567,7 @@ export class IndexingFormComponent implements OnInit {
                                 }
                                 this.arrFormControl['diffusionList'].disable();
                             }
+                            
                             this.arrFormControl[elem.identifier].setValue(fieldValue);
                         }
                         if (!this.canEdit) {
