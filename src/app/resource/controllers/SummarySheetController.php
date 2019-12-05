@@ -16,7 +16,6 @@ namespace Resource\controllers;
 
 use Basket\models\BasketModel;
 use Contact\controllers\ContactController;
-use Contact\models\ContactModel;
 use Endroid\QrCode\QrCode;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
@@ -25,15 +24,12 @@ use Note\models\NoteModel;
 use Parameter\models\ParameterModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
-use Resource\models\ResourceContactModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use SrcCore\controllers\AutoCompleteController;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
-use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
@@ -147,12 +143,6 @@ class SummarySheetController
                     'where'  => ['difflist_type = ?', 'res_id in (?)'],
                     'data'   => ['entity_id', $tmpIds],
                     'orderBy' => ['listinstance_id']
-                ]);
-            } elseif ($unit['unit'] == 'senderRecipientInformations') {
-                $data['senderRecipient'] = ResModel::get([
-                    'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
-                    'where' => ['res_id in (?)'],
-                    'data' => [$tmpIds]
                 ]);
             }
         }
