@@ -145,11 +145,11 @@ export class FoldersService {
     }
 
     classifyDocument(ev: any, folder: any) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.classify + ' ' + ev.item.data.alt_identifier, msg: this.lang.classifyQuestion + ' <b>' + ev.item.data.alt_identifier + '</b> ' + this.lang.in + ' <b>' + folder.label + '</b>&nbsp;?' } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.classify + ' ' + ev.item.data.chrono, msg: this.lang.classifyQuestion + ' <b>' + ev.item.data.chrono + '</b> ' + this.lang.in + ' <b>' + folder.label + '</b>&nbsp;?' } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.post(`../../rest/folders/${folder.id}/resources`, { resources: [ev.item.data.res_id] })),
+            exhaustMap(() => this.http.post(`../../rest/folders/${folder.id}/resources`, { resources: [ev.item.data.resId] })),
             tap((data: any) => {
 
 
