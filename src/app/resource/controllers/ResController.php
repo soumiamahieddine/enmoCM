@@ -199,6 +199,30 @@ class ResController
             ]);
         }
 
+        if (empty($queryParams['light'])) {
+            $formattedData['customFields'] = [];
+            $customFields = ResourceCustomFieldModel::get(['select' => ['value', 'custom_field_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            foreach ($customFields as $customField) {
+                $formattedData['customFields'][$customField['custom_field_id']] = json_decode($customField['value'], true);
+            }
+
+            $entities = EntityModel::getWithUserEntities([
+                'select' => ['entities.id'],
+                'where'  => ['user_id = ?'],
+                'data'   => [$GLOBALS['userId']]
+            ]);
+            $entities = array_column($entities, 'id');
+            $folders = FolderModel::getWithEntitiesAndResources([
+                'select'    => ['resources_folders.id'],
+                'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
+                'data'      => [$args['resId'], $entities, $GLOBALS['id']]
+            ]);
+            $formattedData['folders'] = array_column($folders, 'id');
+
+            $tags = TagResModel::get(['select' => ['tag_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            $formattedData['tags'] = array_column($tags, 'tag_id');
+        }
+
         $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
         $formattedData['attachments'] = $attachments[0]['count'];
 
