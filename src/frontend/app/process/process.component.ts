@@ -56,61 +56,61 @@ export class ProcessComponent implements OnInit {
             id: 'dashboard',
             icon: 'fas fa-columns',
             label: this.lang.newsFeed,
-            count : 0
+            count: 0
         },
         {
             id: 'history',
             icon: 'fas fa-history',
             label: this.lang.history,
-            count : 0
+            count: 0
         },
         {
             id: 'notes',
             icon: 'fas fa-pen-square',
             label: this.lang.notesAlt,
-            count : 0
+            count: 0
         },
         {
             id: 'attachments',
             icon: 'fas fa-paperclip',
             label: this.lang.attachments,
-            count : 0
+            count: 0
         },
         {
             id: 'link',
             icon: 'fas fa-link',
             label: this.lang.links,
-            count : 0
+            count: 0
         },
         {
             id: 'diffusionList',
             icon: 'fas fa-share-alt',
             label: this.lang.diffusionList,
-            count : 0
+            count: 0
         },
         {
             id: 'mails',
             icon: 'fas fa-envelope',
             label: this.lang.mailsSentAlt,
-            count : 0
+            count: 0
         },
         {
             id: 'visa',
             icon: 'fas fa-list-ol',
             label: this.lang.visaWorkflow,
-            count : 0
+            count: 0
         },
         {
             id: 'avis',
             icon: 'fas fa-comment-alt',
             label: this.lang.avis,
-            count : 0
+            count: 0
         },
         {
             id: 'info',
             icon: 'fas fa-info-circle',
             label: this.lang.informations,
-            count : 0
+            count: 0
         }
     ];
 
@@ -121,13 +121,13 @@ export class ProcessComponent implements OnInit {
     subscription: Subscription;
 
     actionEnded: boolean = false;
-    
+
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     @ViewChild('appDocumentViewer', { static: true }) appDocumentViewer: DocumentViewerComponent;
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
-    
+
     constructor(
         private route: ActivatedRoute,
         private _activatedRoute: ActivatedRoute,
@@ -233,7 +233,7 @@ export class ProcessComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
-        
+
         this.currentResourceLock = setInterval(() => {
             this.http.put(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/lock`, { resources: [this.currentResourceInformations.resId] }).pipe(
                 catchError((err: any) => {
@@ -257,24 +257,31 @@ export class ProcessComponent implements OnInit {
 
     onSubmit() {
         if (this.currentTool === 'info' && this.indexingForm.isResourceModified()) {
-            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.saveModifiedData } });
-
-                dialogRef.afterClosed().pipe(
-                    filter((data: string) => data === 'ok'),
-                    tap(() => {
-                        this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
-                    }),
-                    finalize(() => this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false)),
-                    catchError((err: any) => {
-                        this.notify.handleErrors(err);
-                        return of(false);
-                    })
-                ).subscribe();
+            const dialogRef = this.openConfirmModification();
+            dialogRef.afterClosed().pipe(
+                tap((data: string) => {
+                    if (data !== 'ok') {
+                        this.currentTool = '';
+                        setTimeout(() => {
+                            this.currentTool = 'info';
+                        }, 0);
+                    }
+                }),
+                filter((data: string) => data === 'ok'),
+                tap(() => {
+                    this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+                }),
+                finalize(() => this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false)),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
         } else {
             this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false);
         }
 
-        
+
     }
 
     showActionInCurrentCategory(action: any) {
@@ -306,27 +313,27 @@ export class ProcessComponent implements OnInit {
 
     removeModal(index: number) {
         if (this.modalModule[index].id === 'info' && this.indexingForm.isResourceModified()) {
-            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.saveModifiedData } });
+            const dialogRef = this.openConfirmModification();
 
-                dialogRef.afterClosed().pipe(
-                    tap((data: string) => {
-                        if (data !== 'ok') {
-                            this.modalModule.splice(index, 1);
-                        }
-                    }),
-                    filter((data: string) => data === 'ok'),
-                    tap(() => {
-                        this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
-                        setTimeout(() => {
-                            this.loadResource();
-                        }, 400);
+            dialogRef.afterClosed().pipe(
+                tap((data: string) => {
+                    if (data !== 'ok') {
                         this.modalModule.splice(index, 1);
-                    }),
-                    catchError((err: any) => {
-                        this.notify.handleErrors(err);
-                        return of(false);
-                    })
-                ).subscribe();
+                    }
+                }),
+                filter((data: string) => data === 'ok'),
+                tap(() => {
+                    this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+                    setTimeout(() => {
+                        this.loadResource();
+                    }, 400);
+                    this.modalModule.splice(index, 1);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
         } else {
             this.modalModule.splice(index, 1);
         }
@@ -343,33 +350,41 @@ export class ProcessComponent implements OnInit {
 
     changeTab(tabId: string) {
         if (this.currentTool === 'info' && this.indexingForm.isResourceModified() && !this.isModalOpen()) {
-            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.saveModifiedData } });
+            const dialogRef = this.openConfirmModification();
 
-                dialogRef.afterClosed().pipe(
-                    tap((data: string) => {
-                        if (data !== 'ok') {
-                            this.currentTool = tabId;
-                        }
-                    }),
-                    filter((data: string) => data === 'ok'),
-                    tap(() => {
-                        this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
-                        setTimeout(() => {
-                            this.loadResource();
-                        }, 400);
+            dialogRef.afterClosed().pipe(
+                tap((data: string) => {
+                    if (data !== 'ok') {
                         this.currentTool = tabId;
-                    }),
-                    catchError((err: any) => {
-                        this.notify.handleErrors(err);
-                        return of(false);
-                    })
-                ).subscribe();
+                    }
+                }),
+                filter((data: string) => data === 'ok'),
+                tap(() => {
+                    this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+                    setTimeout(() => {
+                        this.loadResource();
+                    }, 400);
+                    this.currentTool = tabId;
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
         } else {
             this.currentTool = tabId;
         }
     }
 
+    openConfirmModification() {
+        return this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.saveModifiedData, buttonValidate: this.lang.yes, buttonCancel: this.lang.no } });
+    }
+
+    confirmModification() {
+        this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+    }
+
     refreshBadge(nbRres: any, id: string) {
-      this.processTool.filter(tool => tool.id === id)[0].count = nbRres;
+        this.processTool.filter(tool => tool.id === id)[0].count = nbRres;
     }
 }

@@ -2,8 +2,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, CanDeactivate } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, tap, catchError } from 'rxjs/operators';
 import { HeaderService } from './header.service';
 import { ProcessComponent } from '../app/process/process.component';
 import { PrivilegeService } from './privileges.service';
@@ -52,6 +52,11 @@ export class AfterProcessGuard implements CanDeactivate<ProcessComponent> {
     canDeactivate(component: ProcessComponent): boolean {
         if (!component.isActionEnded()) {
             component.unlockResource();
+        }
+        if (component.currentTool === 'info' && component.indexingForm.isResourceModified()) {
+            if (confirm(component.lang.saveModifiedData)) {
+                component.confirmModification();
+            }
         }
         /*if(component.hasUnsavedData()){
             if (confirm("You have unsaved changes! If you leave, your changes will be lost.")) {

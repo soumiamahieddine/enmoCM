@@ -14,5 +14,13 @@ export class ConfirmComponent {
         if (this.data.msg === null) {
             this.data.msg = '';
         }
+
+        if (this.data.buttonCancel === undefined) {
+            this.data.buttonCancel = this.lang.cancel;
+        }
+
+        if (this.data.buttonValidate === undefined) {
+            this.data.buttonValidate = this.lang.ok;
+        }
     }
 }
