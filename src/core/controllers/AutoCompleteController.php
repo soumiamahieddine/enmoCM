@@ -48,20 +48,20 @@ class AutoCompleteController
 
         $searchItems = explode(' ', $data['search']);
 
-        $fields = '(contact_firstname ilike ? OR contact_lastname ilike ? OR firstname ilike ? OR lastname ilike ? OR society ilike ? 
-                    OR address_num ilike ? OR address_street ilike ? OR address_town ilike ? OR address_postal_code ilike ?)';
+        $fields = '(firstname ilike ? OR lastname ilike ? OR company ilike ? 
+                    OR address_number ilike ? OR address_street ilike ? OR address_town ilike ? OR address_postalcode ilike ?)';
         $where = [];
         $requestData = [];
         foreach ($searchItems as $item) {
             if (strlen($item) >= 2) {
                 $where[] = $fields;
-                for ($i = 0; $i < 9; $i++) {
+                for ($i = 0; $i < 7; $i++) {
                     $requestData[] = "%{$item}%";
                 }
             }
         }
 
-        $contacts = ContactModel::getOnView([
+        $contacts = ContactModel::get([
             'select'    => ['*'],
             'where'     => $where,
             'data'      => $requestData,
@@ -194,12 +194,7 @@ class AutoCompleteController
         $searchItems = explode(' ', $data['search']);
 
         $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'];
-        foreach ($fields as $key => $field) {
-            $fields[$key] = "translate({$field}, 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ', 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')";
-            $fields[$key] .= "ilike translate(?, 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ', 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')";
-        }
-        $fields = implode(' OR ', $fields);
-        $fields = "($fields)";
+        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
 
         $where = [];
         $requestData = [];
