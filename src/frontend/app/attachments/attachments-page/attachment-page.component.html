@@ -43,8 +43,12 @@
                                 (afterSelected)="getAttachType($event)" style="width:100%;">
                             </plugin-select-search>
                             <div class="fieldState">
-                                <i class="fas fa-asterisk fieldRequired" *ngIf="!attachment['type'].hasError('required')"></i>
-                                <i class="fas fa-exclamation-triangle fieldError" *ngIf="attachment['type'].hasError('required')"></i>
+                                <i class="fas fa-asterisk fieldRequired"
+                                    *ngIf="attachment['type'].hasError('required') && attachment['type'].untouched"></i>
+                                <i class="fas fa-exclamation-triangle fieldError"
+                                    *ngIf="attachment['type'].touched && attachment['type'].hasError('required')"></i>
+                                <i class="fas fa-check fieldFull"
+                                    *ngIf="attachment['type'].valid && !isEmptyField(attachment['type'])"></i>
                             </div>
                         </div>
                         <div class="attachment-form-item">
@@ -52,8 +56,12 @@
                                 <input matInput placeholder="{{lang.subject}}" [formControl]="attachment['title']">
                             </mat-form-field>
                             <div class="fieldState">
-                                <i class="fas fa-asterisk fieldRequired" *ngIf="!attachment['title'].hasError('required')"></i>
-                                <i class="fas fa-exclamation-triangle fieldError" *ngIf="attachment['title'].hasError('required')"></i>
+                                <i class="fas fa-asterisk fieldRequired"
+                                    *ngIf="attachment['title'].hasError('required') && attachment['title'].untouched"></i>
+                                <i class="fas fa-exclamation-triangle fieldError"
+                                    *ngIf="attachment['title'].touched && attachment['title'].hasError('required')"></i>
+                                <i class="fas fa-check fieldFull"
+                                    *ngIf="attachment['title'].valid && !isEmptyField(attachment['title'])"></i>
                             </div>
                         </div>
                         <div class="attachment-form-item">
@@ -154,7 +162,10 @@
                                     </button>
                                 </mat-form-field>
                                 <div class="fieldState">
-                                    <i class="fas fa-asterisk noMandatory"></i>
+                                    <i class="fas fa-asterisk noMandatory"
+                                        *ngIf="attachment['validationDate'].valid && isEmptyField(attachment['validationDate'])"></i>
+                                    <i class="fas fa-check fieldFull"
+                                        *ngIf="attachment['validationDate'].valid && !isEmptyField(attachment['validationDate'])"></i>
                                 </div>
                             </div>
                         </mat-expansion-panel>
@@ -191,7 +202,7 @@
                         </app-document-viewer>
                     </mat-tab>
                     <mat-tab label="{{lang.attachment}} ({{lang.version}} {{version.relation}})"
-                        *ngFor="let version of attachment.versions">
+                        *ngFor="let version of versions">
                         <ng-template matTabContent>
                             <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
                                 [resId]="version.resId" [mode]="'attachment'"
@@ -212,7 +223,7 @@
     </mat-dialog-content>
     <div mat-dialog-actions class="actions">
         <button mat-raised-button color="primary" *ngIf="!newVersion" (click)="updateAttachment()"
-            [disabled]="!editMode">{{lang.update}}</button>
+            [disabled]="!loading && (!editMode || !attachFormGroup.valid)">{{lang.update}}</button>
         <button mat-raised-button color="primary" *ngIf="newVersion" (click)="createNewVersion()"
             [disabled]="!editMode || attachment['encodedFile'].value === null">{{lang.createNewVersion}}</button>
         <button mat-raised-button color="warn" *ngIf=" !loading && attachment.status.value === 'SIGN'"

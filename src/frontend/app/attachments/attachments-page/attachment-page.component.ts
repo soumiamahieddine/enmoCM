@@ -7,7 +7,7 @@ import { NotificationService } from '../../notification.service';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { AppService } from '../../../service/app.service';
 import { SortPipe } from '../../../plugins/sorting.pipe';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { DocumentViewerComponent } from '../../viewer/document-viewer.component';
 import { PrivilegeService } from '../../../service/privileges.service';
 import { HeaderService } from '../../../service/header.service';
@@ -32,8 +32,12 @@ export class AttachmentPageComponent implements OnInit {
 
     attachmentsTypes: any[] = [];
     attachment: any;
+
+    versions: any[] = [];
     hidePanel: boolean = false;
     newVersion: boolean = false;
+
+    attachFormGroup: FormGroup = null;
 
     editMode: boolean = false;
 
@@ -93,9 +97,12 @@ export class AttachmentPageComponent implements OnInit {
                     type: new FormControl({ value: data.type, disabled: !this.editMode }, [Validators.required]),
                     validationDate: new FormControl({ value: data.validationDate !== null ? new Date(data.validationDate) : null, disabled: !this.editMode }),
                     signedResponse: new FormControl({ value: data.signedResponse, disabled: false }),
-                    encodedFile: new FormControl({ value: null, disabled: !this.editMode }),
-                    versions: data.versions
+                    encodedFile: new FormControl({ value: null, disabled: !this.editMode })
                 };
+
+                this.versions = data.versions;
+
+                this.attachFormGroup = new FormGroup(this.attachment);
 
                 this.loading = false;
             }),
@@ -143,7 +150,7 @@ export class AttachmentPageComponent implements OnInit {
 
     enableForm(state: boolean) {
         Object.keys(this.attachment).forEach(element => {
-            if (['status', 'typistLabel', 'creationDate', 'relation', 'versions', 'modificationDate', 'modifiedBy'].indexOf(element) === -1) {
+            if (['status', 'typistLabel', 'creationDate', 'relation', 'modificationDate', 'modifiedBy'].indexOf(element) === -1) {
 
                 if (state) {
                     this.attachment[element].enable();
@@ -241,5 +248,23 @@ export class AttachmentPageComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    isEmptyField(field: any) {
+
+        if (field.value === null) {
+            return true;
+
+        } else if (Array.isArray(field.value)) {
+            if (field.value.length > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (String(field.value) !== '') {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

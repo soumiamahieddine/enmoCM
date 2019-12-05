@@ -70,8 +70,7 @@ export class AttachmentCreateComponent implements OnInit {
                         });
                     }
                 });
-                this.attachmentsTypes = this.sortPipe.transform(this.attachmentsTypes, 'label')
-
+                this.attachmentsTypes = this.sortPipe.transform(this.attachmentsTypes, 'label');      
             }),
             exhaustMap(() => this.http.get(`../../rest/resources/${this.data.resIdMaster}?light=true`)),
             tap((data: any) => {
@@ -142,6 +141,9 @@ export class AttachmentCreateComponent implements OnInit {
             if (formgroup.status === 'INVALID') {
                 state = false;
             }
+            Object.keys(formgroup.controls).forEach(key => {
+                formgroup.controls[key].markAsTouched();
+            });
         });
         return state;
     }
@@ -209,5 +211,23 @@ export class AttachmentCreateComponent implements OnInit {
 
     getAttachType(attachType: any, i: number) {
         this.appDocumentViewer.toArray()[i].loadTemplatesByResId(this.data.resIdMaster, attachType);
+    }
+
+    isEmptyField(field: any) {
+
+        if (field.value === null) {
+            return true;
+
+        } else if (Array.isArray(field.value)) {
+            if (field.value.length > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (String(field.value) !== '') {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

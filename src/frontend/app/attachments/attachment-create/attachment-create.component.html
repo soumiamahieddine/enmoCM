@@ -28,8 +28,12 @@
                                 (afterSelected)="getAttachType($event, i)" style="width:100%;">
                             </plugin-select-search>
                             <div class="fieldState">
-                                <i class="fas fa-asterisk fieldRequired" *ngIf="!attachment['type'].hasError('required')"></i>
-                                <i class="fas fa-exclamation-triangle fieldError" *ngIf="attachment['type'].hasError('required')"></i>
+                                <i class="fas fa-asterisk fieldRequired"
+                                    *ngIf="attachment['type'].hasError('required') && attachment['type'].untouched"></i>
+                                <i class="fas fa-exclamation-triangle fieldError"
+                                    *ngIf="attachment['type'].touched && attachment['type'].hasError('required')"></i>
+                                <i class="fas fa-check fieldFull"
+                                    *ngIf="attachment['type'].valid && !isEmptyField(attachment['type'])"></i>
                             </div>
                         </div>
                         <div class="attachment-form-item">
@@ -37,8 +41,12 @@
                                 <input matInput placeholder="{{lang.subject}}" [formControl]="attachment['title']">
                             </mat-form-field>
                             <div class="fieldState">
-                                <i class="fas fa-asterisk fieldRequired" *ngIf="!attachment['title'].hasError('required')"></i>
-                                <i class="fas fa-exclamation-triangle fieldError" *ngIf="attachment['title'].hasError('required')"></i>
+                                <i class="fas fa-asterisk fieldRequired"
+                                    *ngIf="attachment['title'].hasError('required') && attachment['title'].untouched"></i>
+                                <i class="fas fa-exclamation-triangle fieldError"
+                                    *ngIf="attachment['title'].touched && attachment['title'].hasError('required')"></i>
+                                <i class="fas fa-check fieldFull"
+                                    *ngIf="attachment['title'].valid && !isEmptyField(attachment['title'])"></i>
                             </div>
                         </div>
                         <div class="attachment-form-item">
@@ -50,7 +58,8 @@
                             </div>
                         </div>
                         <div class="attachment-form-item">
-                            <mat-form-field class="input-form input-date" (click)="picker.open()" style="cursor:pointer;">
+                            <mat-form-field class="input-form input-date" (click)="picker.open()"
+                                style="cursor:pointer;">
                                 <mat-label>Date de retour attendu</mat-label>
                                 <input [formControl]="attachment['validationDate']" matInput [matDatepicker]="picker"
                                     [placeholder]="'Date de retour attendu'" [min]="now" readonly
@@ -68,7 +77,10 @@
                                 </button>
                             </mat-form-field>
                             <div class="fieldState">
-                                <i class="fas fa-asterisk noMandatory"></i>
+                                <i class="fas fa-asterisk noMandatory"
+                                    *ngIf="attachment['validationDate'].valid && isEmptyField(attachment['validationDate'])"></i>
+                                <i class="fas fa-check fieldFull"
+                                    *ngIf="attachment['validationDate'].valid && !isEmptyField(attachment['validationDate'])"></i>
                             </div>
                         </div>
                     </div>
@@ -77,15 +89,16 @@
                             [editMode]="true" [mode]="'attachment'" (triggerEvent)="setDatasViewer(i)">
                         </app-document-viewer>
                         <div class="fieldState stateDoc">
-                            <i class="fas fa-asterisk fieldRequired" *ngIf="!attachment['encodedFile'].hasError('required')"></i>
-                            <i class="fas fa-exclamation-triangle fieldError" *ngIf="attachment['encodedFile'].hasError('required')"></i>
+                            <i class="fas fa-exclamation-triangle fieldError"
+                                *ngIf="attachment['encodedFile'].touched && attachment['encodedFile'].hasError('required')"></i>
                         </div>
                     </div>
                 </div>
             </mat-tab>
             <mat-tab disabled class="addPJ">
                 <ng-template mat-tab-label>
-                    <span><button mat-icon-button [title]="lang.newAttachment" (click)="$event.stopPropagation();newPj()">
+                    <span><button mat-icon-button [title]="lang.newAttachment"
+                            (click)="$event.stopPropagation();newPj()">
                             <mat-icon class="fa fa-plus"></mat-icon>
                         </button></span>
                 </ng-template>
