@@ -41,16 +41,64 @@ const DATA_TO_REPLACE = [
     'visa.entitySign' => '',
     'visa.firstname1' => '',
     'visa.lastname1' => '[visas]',
+    'visa.firstname2' => '',
+    'visa.lastname2' => '[visas]',
+    'visa.firstname3' => '',
+    'visa.lastname3' => '[visas]',
+    'visa.firstname4' => '',
+    'visa.lastname4' => '[visas]',
+    'visa.firstname5' => '',
+    'visa.lastname5' => '[visas]',
+    'visa.firstname6' => '',
+    'visa.lastname6' => '[visas]',
+    'visa.firstname7' => '',
+    'visa.lastname7' => '[visas]',
+    'visa.firstname8' => '',
+    'visa.lastname8' => '[visas]',
+    'visa.firstname9' => '',
+    'visa.lastname9' => '[visas]',
     'visa.entity1' => '',
 
     'avis.firstname1' => '',
     'avis.lastname1' => '[opinions]',
+    'avis.firstname2' => '',
+    'avis.lastname2' => '[opinions]',
+    'avis.firstname3' => '',
+    'avis.lastname3' => '[opinions]',
+    'avis.firstname4' => '',
+    'avis.lastname4' => '[opinions]',
+    'avis.firstname5' => '',
+    'avis.lastname5' => '[opinions]',
+    'avis.firstname6' => '',
+    'avis.lastname6' => '[opinions]',
+    'avis.firstname7' => '',
+    'avis.lastname7' => '[opinions]',
+    'avis.firstname8' => '',
+    'avis.lastname8' => '[opinions]',
+    'avis.firstname9' => '',
+    'avis.lastname9' => '[opinions]',
     'avis.role1' => '',
     'avis.entity1' => '',
     'avis.note1' => '',
 
     'copies.firstname1' => '',
     'copies.lastname1' => '[copies]',
+    'copies.firstname2' => '',
+    'copies.lastname2' => '[copies]',
+    'copies.firstname3' => '',
+    'copies.lastname3' => '[copies]',
+    'copies.firstname4' => '',
+    'copies.lastname4' => '[copies]',
+    'copies.firstname5' => '',
+    'copies.lastname5' => '[copies]',
+    'copies.firstname6' => '',
+    'copies.lastname6' => '[copies]',
+    'copies.firstname7' => '',
+    'copies.lastname7' => '[copies]',
+    'copies.firstname8' => '',
+    'copies.lastname8' => '[copies]',
+    'copies.firstname9' => '',
+    'copies.lastname9' => '[copies]',
     'copies.entity1' => '',
 
     'user.role' => '[userPrimaryEntity.role]',
@@ -122,6 +170,12 @@ foreach ($customs as $custom) {
             $extension = $pathInfo['extension'];
 
             if (!in_array($extension, OFFICE_EXTENSIONS)) {
+                $nonMigrated++;
+                continue;
+            }
+
+            if (!is_writable($pathToDocument)) {
+                $nonMigrated++;
                 continue;
             }
 
