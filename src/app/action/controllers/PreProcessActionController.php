@@ -713,7 +713,7 @@ class PreProcessActionController
                 'select'    => ['max(relation) as relation', 'res_id_master', 'title', 'res_id', 'identifier', 'recipient_id', 'recipient_type'],
                 'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', 'in_send_attach = ?'],
                 'data'      => [$data['resources'], ['OBS', 'DEL', 'TMP', 'FRZ'], ['print_folder'], true],
-                'groupBy'   => ['res_id_master', 'title', 'res_id', 'identifier', 'dest_address_id']
+                'groupBy'   => ['res_id_master', 'title', 'res_id', 'identifier', 'recipient_id', 'recipient_type']
             ]);
 
             foreach ($data['resources'] as $valueResId) {
