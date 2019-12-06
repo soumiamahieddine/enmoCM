@@ -47,9 +47,7 @@ export class ProcessComponent implements OnInit {
         categoryUse: []
     };
 
-    currentResourceInformations: any = {
-
-    };
+    currentResourceInformations: any = {};
 
     processTool: any[] = [
         {
@@ -122,6 +120,8 @@ export class ProcessComponent implements OnInit {
 
     actionEnded: boolean = false;
 
+    canEditData: boolean = false;
+
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
@@ -156,11 +156,6 @@ export class ProcessComponent implements OnInit {
         this.headerService.setHeader(this.lang.eventProcessDoc);
 
         this.route.params.subscribe(params => {
-            this.route.queryParams.subscribe(queryParams => {
-                if (queryParams['tab'] !== undefined) {
-                    this.currentTool = queryParams['tab'];
-                }
-            });
             this.currentUserId = params['userSerialId'];
             this.currentGroupId = params['groupSerialId'];
             this.currentBasketId = params['basketId'];
@@ -173,6 +168,19 @@ export class ProcessComponent implements OnInit {
             this.lockResource();
 
             this.loadResource();
+
+            this.http.get(`../../rest/baskets/${this.currentBasketId}/groups/${this.currentGroupId}/listEventData`).pipe(
+                tap((data: any) => {
+                    if (data.listEventData !== null) {
+                        this.currentTool = data.listEventData.defaultTab;
+                        this.canEditData = data.listEventData.canUpdate;
+                    }
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
 
             this.http.get(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/actions?resId=${this.currentResourceInformations.resId}`).pipe(
                 map((data: any) => {

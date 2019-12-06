@@ -91,7 +91,7 @@
                     [resId]="currentResourceInformations.resId" [target]="'process'" (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
                 </app-attachments-list>
                 <app-indexing-form *ngIf="currentTool === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
-                    [resId]="currentResourceInformations.resId" [indexingFormId]="currentResourceInformations.modelId" [mode]="'process'"></app-indexing-form>
+                    [resId]="currentResourceInformations.resId" [indexingFormId]="currentResourceInformations.modelId" [mode]="'process'" [canEdit]="canEditData"></app-indexing-form>
                     <button mat-raised-button *ngIf="indexingForm !== undefined && currentTool === 'info'" [disabled]="!indexingForm.isResourceModified()" (click)="confirmModification()" color="primary" [title]="lang.openInExternalModal" style="position:absolute;top:0px;">
                         {{lang.save}}
                     </button>
@@ -244,7 +244,7 @@
         <app-attachments-list *ngIf="modal.id === 'attachments'  && !loading" #appAttachmentsList
             [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
         </app-attachments-list>
-        <app-indexing-form *ngIf="modal.id === 'info' && !loading" #indexingForm [groupId]="currentGroupId" [indexingFormId]="currentResourceInformations.modelId" [resId]="currentResourceInformations.resId" [mode]="'process'">
+        <app-indexing-form *ngIf="modal.id === 'info' && !loading" #indexingForm [groupId]="currentGroupId" [indexingFormId]="currentResourceInformations.modelId" [resId]="currentResourceInformations.resId" [mode]="'process'" [canEdit]="canEditData">
         </app-indexing-form>
     </div>
 </div>
