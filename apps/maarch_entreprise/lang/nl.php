@@ -1517,7 +1517,7 @@ if (!defined('_REDACTOR')) { define('_REDACTOR', 'Opsteller');}
 if (!defined('_ASSIGNEE')) { define('_ASSIGNEE', 'Toegekende persoon');}
 if (!defined('_CONTACTS_USERS_LIST')) { define('_CONTACTS_USERS_LIST', 'Directory contacten / gebruikers');}
 if (!defined('_ENTITIES_LIST')) { define('_ENTITIES_LIST', 'Directory eenheden');}
-if (!defined('_CONTACTS_USERS_SEARCH')) { define('_CONTACTS_USERS_SEARCH', 'Een contact / gebruiker zoeken');}
+if (!defined('_CONTACTS_USERS_SEARCH')) { define('_CONTACTS_USERS_SEARCH', 'Contacts / users / entities search');} // _TO_TRANSLATE
 if (!defined('_CONTACTS_USERS_GROUPS_SEARCH')) { define('_CONTACTS_USERS_GROUPS_SEARCH', 'Een contact / gebruiker / contactgroepering zoeken');}
 if (!defined('_USER_MAARCH_PARAPHEUR')) { define('_USER_MAARCH_PARAPHEUR', 'Maarch vloeiboek gebruiker');}
 if (!defined('_DOCUMENT_WITH_NOTES')) { define('_DOCUMENT_WITH_NOTES', 'Document met opmerkingen');}

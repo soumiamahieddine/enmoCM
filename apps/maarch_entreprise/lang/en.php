@@ -4439,7 +4439,7 @@ if (!defined('_ENTITIES_LIST')) {
     define('_ENTITIES_LIST', 'Entities list');
 }
 if (!defined('_CONTACTS_USERS_SEARCH')) {
-    define('_CONTACTS_USERS_SEARCH', 'Contacts / users search');
+    define('_CONTACTS_USERS_SEARCH', 'Contacts / users / entities search');
 }
 if (!defined('_CONTACTS_USERS_GROUPS_SEARCH')) {
     define('_CONTACTS_USERS_GROUPS_SEARCH', 'Contacts / users / contacts groups search');

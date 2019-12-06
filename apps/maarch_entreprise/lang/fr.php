@@ -4651,7 +4651,7 @@ if (!defined('_ENTITIES_LIST')) {
     define('_ENTITIES_LIST', 'Répertoire entités');
 }
 if (!defined('_CONTACTS_USERS_SEARCH')) {
-    define('_CONTACTS_USERS_SEARCH', 'Rechercher un contact / utilisateur');
+    define('_CONTACTS_USERS_SEARCH', 'Rechercher un contact / utilisateur / entité');
 }
 if (!defined('_CONTACTS_USERS_GROUPS_SEARCH')) {
     define('_CONTACTS_USERS_GROUPS_SEARCH', 'Rechercher un contact / utilisateur / groupement de contacts');

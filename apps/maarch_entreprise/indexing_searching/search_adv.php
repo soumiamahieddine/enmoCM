@@ -574,11 +574,10 @@ if ($core_tools->is_module_loaded('basket') == true) {
                 <label for="sender" class="bold"><?php echo _SENDER; ?></label>
             </div>
             <div class="adv_search_field indexing_field">
-            <i id="sender_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType('sender','contactsUsers', true);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="<?php echo _CONTACTS_USERS_LIST; ?>" ></i> <i id="sender_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType('sender','entities');" style="display: inline-block;cursor:pointer;" title="<?php echo _ENTITIES_LIST; ?>" ></i>
                 <span style="position:relative;">
                     <div class="typeahead__container"><div class="typeahead__field">
                         <span class="typeahead__query">
-                            <input name="sender" type="text" id="sender" autocomplete="off" placeholder="<?php echo _CONTACTS_USERS_SEARCH; ?>"/>
+                            <input name="sender" type="text" id="sender" autocomplete="off" placeholder="<?php echo _CONTACTS_USERS_SEARCH; ?>" title="<?php echo _CONTACTS_USERS_SEARCH; ?>"/>
                             <input type="hidden" name="meta[]" value="sender#sender#input_text" />
                         </span>
                     </div></div>
@@ -598,11 +597,10 @@ if ($core_tools->is_module_loaded('basket') == true) {
                 <label for="recipient" class="bold"><?php echo _DEST; ?></label>
             </div>
             <div class="adv_search_field indexing_field">
-            <i id="recipient_icon_contactsUsers" class="fa fa-user" onclick="switchAutoCompleteType('recipient','contactsUsers', true);" style="color:#135F7F;display: inline-block;cursor:pointer;" title="<?php echo _CONTACTS_USERS_LIST; ?>" ></i> <i id="recipient_icon_entities" class="fa fa-sitemap" onclick="switchAutoCompleteType('recipient','entities');" style="display: inline-block;cursor:pointer;" title="<?php echo _ENTITIES_LIST; ?>" ></i>
                 <span style="position:relative;">
                     <div class="typeahead__container"><div class="typeahead__field">
                         <span class="typeahead__query">
-                            <input name="recipient" type="text" id="recipient" autocomplete="off" placeholder="<?php echo _CONTACTS_USERS_SEARCH; ?>"/>
+                            <input name="recipient" type="text" id="recipient" autocomplete="off" placeholder="<?php echo _CONTACTS_USERS_SEARCH; ?>" title="<?php echo _CONTACTS_USERS_SEARCH; ?>"/>
                             <span class="green_asterisk" style="position: absolute;right: -10px;top: 0px;"><i class="fa fa-star"></i></span>
                             <input type="hidden" name="meta[]" value="recipient#recipient#input_text" />
                         </span>
