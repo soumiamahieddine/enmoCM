@@ -17,4 +17,4 @@ if (angularGlobals.customLanguage != null) {
     dictionary = {...dictionary, ...angularGlobals.customLanguage};
 }
 
-export const LANG = dictionary;
+export const LANG: any = dictionary;

@@ -592,12 +592,7 @@ function loadInfoContact(){
 }
 
 function initSenderRecipientAutocomplete(inputId, mode, alternateVersion, cardId) {
-    var route = '';
-    if (mode == 'contactsUsers') {
-        route = '../../rest/autocomplete/contactsUsers';
-    } else {
-        route = '../../rest/autocomplete/entities';
-    }
+    var route = '../../rest/autocomplete/all';
 
     $j("#" + inputId).typeahead({
         // order: "asc",
@@ -613,9 +608,9 @@ function initSenderRecipientAutocomplete(inputId, mode, alternateVersion, cardId
                     type: "GET",
                     url: route,
                     data: {
-                        search          : query,
-                        onlyContacts    : alternateVersion,
-                        color           : !alternateVersion
+                        search              : query,
+                        noContactsGroups    : true,
+                        color               : !alternateVersion
                     }
                 }
             }

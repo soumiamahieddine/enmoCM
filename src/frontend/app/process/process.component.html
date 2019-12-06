@@ -92,6 +92,9 @@
                 </app-attachments-list>
                 <app-indexing-form *ngIf="currentTool === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
                     [resId]="currentResourceInformations.resId" [indexingFormId]="currentResourceInformations.modelId" [mode]="'process'"></app-indexing-form>
+                    <button mat-raised-button *ngIf="indexingForm !== undefined && currentTool === 'info'" [disabled]="!indexingForm.isResourceModified()" (click)="confirmModification()" color="primary" [title]="lang.openInExternalModal" style="position:absolute;top:0px;">
+                        {{lang.save}}
+                    </button>
             </ng-container>
             <ng-template #elseTemplate>
                 <div class="openedModal">
@@ -225,6 +228,9 @@
         </button>
     </div>
     <div class="modal-module-content">
+            <button mat-raised-button *ngIf="indexingForm !== undefined && currentTool === 'info'" [disabled]="!indexingForm.isResourceModified()" (click)="confirmModification()" color="primary" [title]="lang.openInExternalModal">
+                    {{lang.save}}
+                </button>
         <app-notes-list *ngIf="modal.id === 'notes' && !loading" #appNotesList [editMode]="true"
             [resId]="currentResourceInformations.resId">
         </app-notes-list>

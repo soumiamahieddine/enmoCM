@@ -1328,4 +1328,5 @@ export const LANG_EN = {
     "newVersion": "New version",
     "information": "Information",
     "mustEditDocument": "You must <b>edit</b> document in order to <b>validate</b> modifications.",
+    "langISO": "en-US",
 };

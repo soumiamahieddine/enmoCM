@@ -1360,4 +1360,5 @@ export const LANG_FR = {
     "autocompletionSearchable": "Recherchable dans l'autocomplétion",
     "autocompletionDisplayable": "Affichable dans l'autocompletion",
     "contactsParameters": "Paramétrage des contacts",
+    "langISO": "fr-FR",
 };

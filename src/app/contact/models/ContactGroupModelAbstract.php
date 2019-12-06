@@ -18,19 +18,21 @@ use SrcCore\models\DatabaseModel;
 
 abstract class ContactGroupModelAbstract
 {
-    public static function get(array $aArgs = [])
+    public static function get(array $args = [])
     {
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($args, ['limit']);
 
-        $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+        $contactGroups = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
             'table'     => ['contacts_groups'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data'],
-            'order_by'  => $aArgs['orderBy']
+            'where'     => empty($args['where']) ? [] : $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data'],
+            'order_by'  => empty($args['orderBy']) ? [] : $args['orderBy'],
+            'limit'     => empty($args['limit']) ? 0 : $args['limit']
         ]);
 
-        return $aReturn;
+        return $contactGroups;
     }
 
     public static function getById(array $aArgs)

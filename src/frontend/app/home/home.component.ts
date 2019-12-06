@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit {
         let event = new Date();
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
-        this.currentDate = event.toLocaleDateString('fr-FR', options);
+        this.currentDate = event.toLocaleDateString(this.lang.langISO, options);
 
         this.http.get("../../rest/home")
             .subscribe((data: any) => {

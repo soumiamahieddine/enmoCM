@@ -15,6 +15,7 @@
 namespace SrcCore\controllers;
 
 use Contact\controllers\ContactController;
+use Contact\models\ContactGroupModel;
 use Contact\models\ContactModel;
 use Entity\models\EntityModel;
 use Respect\Validation\Validator;
@@ -38,36 +39,30 @@ class AutoCompleteController
 
     public static function getContacts(Request $request, Response $response)
     {
-        $data = $request->getQueryParams();
+        $queryParams = $request->getQueryParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['search']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        if (!Validator::stringType()->notEmpty()->validate($queryParams['search'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
         }
 
-        $searchItems = explode(' ', $data['search']);
-
-        $fields = '(firstname ilike ? OR lastname ilike ? OR company ilike ? 
-                    OR address_number ilike ? OR address_street ilike ? OR address_town ilike ? OR address_postalcode ilike ?)';
-        $where = [];
-        $requestData = [];
-        foreach ($searchItems as $item) {
-            if (strlen($item) >= 2) {
-                $where[] = $fields;
-                for ($i = 0; $i < 7; $i++) {
-                    $requestData[] = "%{$item}%";
-                }
-            }
-        }
+        $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'];
+        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+        $requestData = AutoCompleteController::getDataForRequest([
+            'search'        => $queryParams['search'],
+            'fields'        => $fields,
+            'where'         => ['enabled = ?'],
+            'data'          => [true],
+            'fieldsNumber'  => 7,
+        ]);
 
         $contacts = ContactModel::get([
             'select'    => ['*'],
-            'where'     => $where,
-            'data'      => $requestData,
+            'where'     => $requestData['where'],
+            'data'      => $requestData['data'],
             'limit'     => self::TINY_LIMIT
         ]);
 
-        $color = (!empty($data['color']) && $data['color'] == 'true');
+        $color = isset($queryParams['color']) && filter_var($queryParams['color'], FILTER_VALIDATE_BOOLEAN);
         $autocompleteData = [];
         foreach ($contacts as $contact) {
             $autocompleteData[] = AutoCompleteController::getFormattedContact(['contact' => $contact, 'color' => $color])['contact'];
@@ -182,79 +177,144 @@ class AutoCompleteController
         }
     }
 
-    public static function getContactsAndUsers(Request $request, Response $response)
+    public static function getAll(Request $request, Response $response)
     {
-        $data = $request->getQueryParams();
+        $queryParams = $request->getQueryParams();
 
-        if (!Validator::stringType()->notEmpty()->validate($data['search'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        if (!Validator::stringType()->notEmpty()->validate($queryParams['search'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
         }
 
-        $searchItems = explode(' ', $data['search']);
+        //Contacts
+        $autocompleteContacts = [];
+        if (empty($queryParams['noContacts'])) {
+            $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'];
+            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+            $requestData = AutoCompleteController::getDataForRequest([
+                'search'        => $queryParams['search'],
+                'fields'        => $fields,
+                'where'         => ['enabled = ?'],
+                'data'          => [true],
+                'fieldsNumber'  => 7,
+            ]);
 
-        $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'];
-        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+            $contacts = ContactModel::get([
+                'select'    => ['*'],
+                'where'     => $requestData['where'],
+                'data'      => $requestData['data'],
+                'orderBy'   => ['company', 'lastname'],
+                'limit'     => self::TINY_LIMIT
+            ]);
 
-        $where = [];
-        $requestData = [];
-        foreach ($searchItems as $item) {
-            if (strlen($item) >= 2) {
-                $where[] = $fields;
-                for ($i = 0; $i < 7; $i++) {
-                    $requestData[] = "%{$item}%";
-                }
+            $color = isset($queryParams['color']) && filter_var($queryParams['color'], FILTER_VALIDATE_BOOLEAN);
+
+            foreach ($contacts as $contact) {
+                $autocompleteContacts[] = ContactController::getFormattedContactWithAddress(['contact' => $contact, 'color' => $color])['contact'];
             }
         }
 
-        $contacts = ContactModel::get([
-            'select'    => ['*'],
-            'where'     => $where,
-            'data'      => $requestData,
-            'orderBy'   => ["company, lastname"],
-            'limit'     => self::TINY_LIMIT
-        ]);
+        //Users
+        $autocompleteUsers = [];
+        if (empty($queryParams['noUsers'])) {
+            $fields = ['firstname', 'lastname'];
+            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+            $requestData = AutoCompleteController::getDataForRequest([
+                'search'        => $queryParams['search'],
+                'fields'        => $fields,
+                'where'         => ['status not in (?)', 'user_id not in (?)'],
+                'data'          => [['DEL', 'SPD'], ['superadmin']],
+                'fieldsNumber'  => 2,
+            ]);
 
-        $color = (!empty($data['color']) && $data['color'] == 'true');
+            $users = UserModel::get([
+                'select'    => ['id', 'firstname', 'lastname'],
+                'where'     => $requestData['where'],
+                'data'      => $requestData['data'],
+                'orderBy'   => ['lastname'],
+                'limit'     => self::TINY_LIMIT
+            ]);
 
-        $onlyContacts = [];
-        $autocompleteData = [];
-        foreach ($contacts as $contact) {
-            if (!empty($data['onlyContacts']) && $data['onlyContacts'] == 'true' && !in_array($contact['contact_id'], $onlyContacts)) {
-                $autocompleteData[] = ContactController::getFormattedOnlyContact(['contact' => $contact])['contact'];
-                $onlyContacts[] = $contact['contact_id'];
+            foreach ($users as $user) {
+                $autocompleteUsers[] = [
+                    'type'          => 'user',
+                    'id'            => $user['id'],
+                    'idToDisplay'   => "{$user['firstname']} {$user['lastname']}",
+                    'otherInfo'     => "{$user['firstname']} {$user['lastname']}"
+                ];
             }
-            $autocompleteData[] = ContactController::getFormattedContactWithAddress(['contact' => $contact, 'color' => $color])['contact'];
         }
 
-        $excludedUsers = ['superadmin'];
+        //Entities
+        $autocompleteEntities = [];
+        if (empty($queryParams['noEntities'])) {
+            $fields = ['entity_label'];
+            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+            $requestData = AutoCompleteController::getDataForRequest([
+                'search'        => $queryParams['search'],
+                'fields'        => $fields,
+                'where'         => ['enabled = ?'],
+                'data'          => ['Y'],
+                'fieldsNumber'  => 1,
+            ]);
 
-        $fields = ['firstname', 'lastname'];
-        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+            $entities = EntityModel::get([
+                'select'    => ['id', 'entity_id', 'entity_label', 'short_label'],
+                'where'     => $requestData['where'],
+                'data'      => $requestData['data'],
+                'orderBy'   => ['entity_label'],
+                'limit'     => self::TINY_LIMIT
+            ]);
 
-        $requestData = AutoCompleteController::getDataForRequest([
-            'search'        => $data['search'],
-            'fields'        => $fields,
-            'where'         => ['status not in (?)', 'user_id not in (?)'],
-            'data'          => [['DEL', 'SPD'], $excludedUsers],
-            'fieldsNumber'  => 2,
-        ]);
-
-        $users = UserModel::get([
-            'select'    => ['id', 'user_id', 'firstname', 'lastname'],
-            'where'     => $requestData['where'],
-            'data'      => $requestData['data'],
-            'orderBy'   => ['lastname'],
-            'limit'     => self::TINY_LIMIT
-        ]);
-
-        foreach ($users as $value) {
-            $autocompleteData[] = [
-                'type'          => 'user',
-                'id'            => $value['id'],
-                'idToDisplay'   => "{$value['firstname']} {$value['lastname']}",
-                'otherInfo'     => "{$value['firstname']} {$value['lastname']}"
-            ];
+            foreach ($entities as $value) {
+                $autocompleteEntities[] = [
+                    'type'          => 'entity',
+                    'id'            => $value['id'],
+                    'idToDisplay'   => $value['entity_label'],
+                    'otherInfo'     => $value['short_label']
+                ];
+            }
         }
+
+        //Contacts Groups
+        $autocompleteContactsGroups = [];
+        if (empty($queryParams['noContactsGroups'])) {
+            $fields = ['label'];
+            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+            $requestData = AutoCompleteController::getDataForRequest([
+                'search'        => $queryParams['search'],
+                'fields'        => $fields,
+                'where'         => ['(public = ? OR owner = ?)'],
+                'data'          => [true, $GLOBALS['id']],
+                'fieldsNumber'  => 1,
+            ]);
+
+            $contactsGroups = ContactGroupModel::get([
+                'select'    => ['id', 'label'],
+                'where'     => $requestData['where'],
+                'data'      => $requestData['data'],
+                'orderBy'   => ['label'],
+                'limit'     => self::TINY_LIMIT
+            ]);
+
+            foreach ($contactsGroups as $value) {
+                $autocompleteContactsGroups[] = [
+                    'type'          => 'contactGroup',
+                    'id'            => $value['id'],
+                    'idToDisplay'   => $value['label'],
+                    'otherInfo'     => $value['label']
+                ];
+            }
+        }
+
+        $total = count($autocompleteContacts) + count($autocompleteUsers) + count($autocompleteEntities) + count($autocompleteContactsGroups);
+        if ($total > self::TINY_LIMIT) {
+            $divider = $total / self::TINY_LIMIT;
+            $autocompleteContacts = array_slice($autocompleteContacts, 0, round(count($autocompleteContacts) / $divider));
+            $autocompleteUsers = array_slice($autocompleteUsers, 0, round(count($autocompleteUsers) / $divider));
+            $autocompleteEntities = array_slice($autocompleteEntities, 0, round(count($autocompleteEntities) / $divider));
+            $autocompleteContactsGroups = array_slice($autocompleteContactsGroups, 0, round(count($autocompleteContactsGroups) / $divider));
+        }
+        $autocompleteData = array_merge($autocompleteContacts, $autocompleteUsers, $autocompleteEntities, $autocompleteContactsGroups);
 
         return $response->withJson($autocompleteData);
     }
