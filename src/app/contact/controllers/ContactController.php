@@ -17,6 +17,7 @@ use Contact\models\ContactCustomFieldListModel;
 use Contact\models\ContactCustomFieldModel;
 use Contact\models\ContactFillingModel;
 use Contact\models\ContactModel;
+use Contact\models\ContactParameterModel;
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
@@ -310,37 +311,60 @@ class ContactController
         return $response->withStatus(204);
     }
 
-    public function getFilling(Request $request, Response $response)
+    public function getContactsParameters(Request $request, Response $response)
     {
         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $contactsFilling = ContactFillingModel::get();
-        $contactsFilling['rating_columns'] = json_decode($contactsFilling['rating_columns']);
+        $contactParameters = ContactParameterModel::get(['select' => ['*']]);
+        foreach ($contactParameters as $key => $parameter) {
+            if (strpos($parameter['identifier'], 'contactCustomField_') !== false) {
+                $contactCustomId = str_replace("contactCustomField_", "", $parameter['identifier']);
+                $customField = ContactCustomFieldListModel::getById(['select' => ['label'], 'id' => $contactCustomId]);
+                $contactParameters[$key]['label'] = $customField['label'];
+            } else {
+                $contactParameters[$key]['label'] = null;
+            }
+        }
 
-        return $response->withJson(['contactsFilling' => $contactsFilling]);
+        return $response->withJson(['contactsFilling' => $contactsFilling, 'contactsParameters' => $contactParameters]);
     }
 
-    public function updateFilling(Request $request, Response $response)
+    public function updateContactsParameters(Request $request, Response $response)
     {
         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $data = $request->getParams();
-        $check = Validator::boolType()->validate($data['enable']);
-        $check = $check && Validator::arrayType()->validate($data['rating_columns']);
-        $check = $check && Validator::intVal()->notEmpty()->validate($data['first_threshold']) && $data['first_threshold'] > 0 && $data['first_threshold'] < 99;
-        $check = $check && Validator::intVal()->notEmpty()->validate($data['second_threshold']) && $data['second_threshold'] > 1 && $data['second_threshold'] < 100;
-        $check = $check && $data['first_threshold'] < $data['second_threshold'];
+        $check = Validator::arrayType()->validate($data['contactsParameters']);
+        $check = $check && Validator::arrayType()->validate($data['contactsFilling']);
+        $check = $check && Validator::boolType()->validate($data['contactsFilling']['enable']);
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['contactsFilling']['first_threshold']) && $data['contactsFilling']['first_threshold'] > 0 && $data['contactsFilling']['first_threshold'] < 99;
+        $check = $check && Validator::intVal()->notEmpty()->validate($data['contactsFilling']['second_threshold']) && $data['contactsFilling']['second_threshold'] > 1 && $data['contactsFilling']['second_threshold'] < 100;
+        $check = $check && $data['contactsFilling']['first_threshold'] < $data['contactsFilling']['second_threshold'];
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
-        $data['rating_columns'] = json_encode($data['rating_columns']);
-
-        ContactFillingModel::update($data);
+        foreach ($data['contactsParameters'] as $contactParameter) {
+            unset($contactParameter['label']);
+            ContactParameterModel::update([
+                'set'   => [
+                    'id' => $contactParameter['id'],
+                    'mandatory'   => empty($contactParameter['mandatory']) ? 'false' : 'true',
+                    'filling'     => empty($contactParameter['filling']) ? 'false' : 'true',
+                    'searchable'  => empty($contactParameter['searchable']) ? 'false' : 'true',
+                    'displayable' => empty($contactParameter['displayable']) ? 'false' : 'true',
+                ],
+                'where' => ['id = ?'],
+                'data'  => [$contactParameter['id']]
+            ]);
+        }
+        
+        ContactFillingModel::update($data['contactsFilling']);
 
         return $response->withJson(['success' => 'success']);
     }
