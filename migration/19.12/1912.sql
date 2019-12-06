@@ -451,7 +451,7 @@ ALTER TABLE res_attachments ADD COLUMN recipient_id integer;
 /* REFACTORING DATA */
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'usergroups') AND attname = 'enabled') THEN
-    DELETE FROM usergroup_content WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+    DELETE FROM usergroup_content WHERE group_id in (SELECT id FROM usergroups WHERE enabled = 'N');
     DELETE FROM usergroups_reports WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
     DELETE FROM usergroups_services WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
     DELETE FROM security WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
