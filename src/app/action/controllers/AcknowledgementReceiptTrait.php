@@ -22,6 +22,7 @@ use Doctype\models\DoctypeModel;
 use Email\controllers\EmailController;
 use Entity\models\EntityModel;
 use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use Template\models\TemplateModel;
@@ -30,30 +31,22 @@ use User\models\UserModel;
 
 trait AcknowledgementReceiptTrait
 {
-    public static function createAcknowledgementReceipts(array $aArgs)
+    public static function createAcknowledgementReceipts(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
 
-        $resource = ResModel::getById(['select' => ['type_id', 'destination', 'subject', 'category_id', 'address_id', 'is_multicontacts'], 'resId' => $aArgs['resId']]);
+        $resource = ResModel::getById(['select' => ['type_id', 'destination', 'subject', 'category_id'], 'resId' => $args['resId']]);
         if (empty($resource) || $resource['category_id'] != 'incoming') {
             return [];
         }
 
-        $contactsToProcess = [];
-        if ($resource['is_multicontacts'] == 'Y') {
-            $multiContacts = DatabaseModel::select([
-                'select'    => ['address_id'],
-                'table'     => ['contacts_res'],
-                'where'     => ['res_id = ?', 'mode = ?', 'address_id != ?'],
-                'data'      => [$aArgs['resId'], 'multi', 0]
-            ]);
-            foreach ($multiContacts as $multiContact) {
-                $contactsToProcess[] = $multiContact['address_id'];
-            }
-        } else {
-            $contactsToProcess[] = $resource['address_id'];
-        }
+        $contactsToProcess = ResourceContactModel::get([
+            'select' => ['item_id'],
+            'where' => ['res_id = ?', 'type = ?', 'mode = ?'],
+            'data' => [$args['resId'], 'contact', 'sender']
+        ]);
+        $contactsToProcess = array_column($contactsToProcess, 'item_id');
 
         foreach ($contactsToProcess as $contactToProcess) {
             if (empty($contactToProcess)) {
@@ -88,9 +81,9 @@ trait AcknowledgementReceiptTrait
         $emailsToSend = [];
         DatabaseModel::beginTransaction();
         foreach ($contactsToProcess as $contactToProcess) {
-            $contact = ContactModel::getByAddressId(['addressId' => $contactToProcess, 'select' => ['email', 'address_street', 'address_town', 'address_postal_code']]);
+            $contact = ContactModel::getById(['select' => ['email', 'address_street', 'address_town', 'address_postcode'], 'id' => $contactToProcess]);
 
-            if (empty($contact['email']) && (empty($contact['address_street']) || empty($contact['address_town']) || empty($contact['address_postal_code']))) {
+            if (empty($contact['email']) && (empty($contact['address_street']) || empty($contact['address_town']) || empty($contact['address_postcode']))) {
                 DatabaseModel::rollbackTransaction();
                 return [];
             }
@@ -102,7 +95,7 @@ trait AcknowledgementReceiptTrait
                 }
                 $mergedDocument = MergeController::mergeDocument([
                     'content'   => $template[0]['template_content'],
-                    'data'      => ['resId' => $aArgs['resId'], 'contactAddressId' => $contactToProcess, 'userId' => $currentUser['id']]
+                    'data'      => ['resId' => $args['resId'], 'contactId' => $contactToProcess, 'userId' => $currentUser['id']]
                 ]);
                 $format = 'html';
             } else {
@@ -112,7 +105,7 @@ trait AcknowledgementReceiptTrait
                 }
                 $mergedDocument = MergeController::mergeDocument([
                     'path'  => $pathToDocument,
-                    'data'  => ['resId' => $aArgs['resId'], 'contactAddressId' => $contactToProcess, 'userId' => $currentUser['id']]
+                    'data'  => ['resId' => $args['resId'], 'contactId' => $contactToProcess, 'userId' => $currentUser['id']]
                 ]);
                 $encodedDocument = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $mergedDocument['encodedDocument']]);
                 $mergedDocument['encodedDocument'] = $encodedDocument["encodedResource"];
@@ -137,11 +130,11 @@ trait AcknowledgementReceiptTrait
             }
 
             $id = AcknowledgementReceiptModel::create([
-                'resId'             => $aArgs['resId'],
+                'resId'             => $args['resId'],
                 'type'              => $templateAttachmentType,
                 'format'            => $format,
                 'userId'            => $currentUser['id'],
-                'contactAddressId'  => $contactToProcess,
+                'contactId'         => $contactToProcess,
                 'docserverId'       => 'ACKNOWLEDGEMENT_RECEIPTS',
                 'path'              => $storeResult['directory'],
                 'filename'          => $storeResult['file_destination_name'],
@@ -168,7 +161,7 @@ trait AcknowledgementReceiptTrait
                     'recipients'    => [$email['email']],
                     'object'        => '[AR] ' . (empty($resource['subject']) ? '' : substr($resource['subject'], 0, 100)),
                     'body'          => base64_decode($email['encodedHtml']),
-                    'document'      => ['id' => $aArgs['resId'], 'isLinked' => false, 'original' => true],
+                    'document'      => ['id' => $args['resId'], 'isLinked' => false, 'original' => true],
                     'isHtml'        => true,
                     'status'        => 'TO_SEND'
                 ],

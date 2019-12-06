@@ -28,6 +28,7 @@ use Parameter\models\ParameterModel;
 use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
 use Respect\Validation\Validator;
 use Shipping\controllers\ShippingTemplateController;
 use Shipping\models\ShippingTemplateModel;
@@ -35,7 +36,6 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
-use SrcCore\models\DatabaseModel;
 use Template\models\TemplateModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;
@@ -150,11 +150,11 @@ class PreProcessActionController
         return $response->withJson(['entities' => $allEntities, 'users' => $users, 'keepDestForRedirection' => !empty($parameter['param_value_int'])]);
     }
 
-    public function checkAcknowledgementReceipt(Request $request, Response $response, array $aArgs)
+    public function checkAcknowledgementReceipt(Request $request, Response $response, array $args)
     {
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
-        $errors = ResourceListController::listControl(['groupId' => $aArgs['groupId'], 'userId' => $aArgs['userId'], 'basketId' => $aArgs['basketId'], 'currentUserId' => $currentUser['id']]);
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $currentUser['id']]);
         if (!empty($errors['errors'])) {
             return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
         }
@@ -206,7 +206,7 @@ class PreProcessActionController
         $data['resources'] = $resourcesForProcess;
 
         foreach ($data['resources'] as $resId) {
-            $resource = ResModel::getById(['select' => ['res_id', 'category_id', 'address_id', 'is_multicontacts', 'alt_identifier', 'type_id', 'destination'], 'resId' => $resId]);
+            $resource = ResModel::getById(['select' => ['res_id', 'category_id', 'alt_identifier', 'type_id', 'destination'], 'resId' => $resId]);
 
             if (empty($resource)) {
                 $noSendAR['number'] += 1;
@@ -290,25 +290,12 @@ class PreProcessActionController
             }
 
             //Verify associated contact
-            $contactsToProcess = [];
-            if ($resource['is_multicontacts'] == 'Y') {
-                $multiContacts = DatabaseModel::select([
-                    'select'    => ['address_id'],
-                    'table'     => ['contacts_res'],
-                    'where'     => ['res_id = ?', 'mode = ?', 'address_id != ?'],
-                    'data'      => [$resId, 'multi', 0]
-                ]);
-                foreach ($multiContacts as $multiContact) {
-                    $contactsToProcess[] = $multiContact['address_id'];
-                }
-            } else {
-                $contactsToProcess[] = $resource['address_id'];
-            }
-            if (empty($contactsToProcess)) {
-                $noSendAR['number'] += 1;
-                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'info' => _NO_CONTACT ];
-                continue;
-            }
+            $contactsToProcess = ResourceContactModel::get([
+                'select' => ['item_id'],
+                'where' => ['res_id = ?', 'type = ?', 'mode = ?'],
+                'data' => [$resId, 'contact', 'sender']
+            ]);
+            $contactsToProcess = array_column($contactsToProcess, 'item_id');
 
             //Verify contact informations
             $email = 0;
@@ -320,9 +307,9 @@ class PreProcessActionController
                     continue 2;
                 }
 
-                $contact = ContactModel::getByAddressId(['addressId' => $contactToProcess, 'select' => ['email', 'address_street', 'address_town', 'address_postal_code']]);
+                $contact = ContactModel::getById(['select' => ['*'], 'id' => $contactToProcess]);
 
-                if (empty($contact['email']) && (empty($contact['address_street']) || empty($contact['address_town']) || empty($contact['address_postal_code']))) {
+                if (empty($contact['email']) && (empty($contact['address_street']) || empty($contact['address_town']) || empty($contact['address_postcode']))) {
                     $noSendAR['number'] += 1;
                     $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'info' => _USER_MISSING_INFORMATIONS ];
                     continue 2;
@@ -336,7 +323,7 @@ class PreProcessActionController
                     } else {
                         $email += 1;
                     }
-                } elseif (!empty($contact['address_street']) && !empty($contact['address_town']) && !empty($contact['address_postal_code'])) {
+                } elseif (!empty($contact['address_street']) && !empty($contact['address_town']) && !empty($contact['address_postcode'])) {
                     if (!file_exists($pathToDocument) || !is_file($pathToDocument)) {
                         $noSendAR['number'] += 1;
                         $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'info' => _NO_PAPER_TEMPLATE . ' \'' . $templateAttachmentType . '\' ' . _FOR_ENTITY . ' ' . $entity['entity_label'] ];

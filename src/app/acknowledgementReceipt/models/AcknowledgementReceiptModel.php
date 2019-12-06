@@ -70,7 +70,7 @@ class AcknowledgementReceiptModel
 
     public static function create(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'type', 'format', 'userId', 'contactAddressId', 'docserverId', 'path', 'filename', 'fingerprint']);
+        ValidatorModel::notEmpty($aArgs, ['resId', 'type', 'format', 'userId', 'contactId', 'docserverId', 'path', 'filename', 'fingerprint']);
         ValidatorModel::intVal($aArgs, ['resId', 'userId']);
         ValidatorModel::stringType($aArgs, ['type', 'format', 'docserverId', 'path', 'filename', 'fingerprint']);
 
@@ -84,7 +84,7 @@ class AcknowledgementReceiptModel
                 'type'                  => $aArgs['type'],
                 'format'                => $aArgs['format'],
                 'user_id'               => $aArgs['userId'],
-                'contact_address_id'    => $aArgs['contactAddressId'],
+                'contact_id'            => $aArgs['contactId'],
                 'creation_date'         => 'CURRENT_TIMESTAMP',
                 'docserver_id'          => $aArgs['docserverId'],
                 'path'                  => $aArgs['path'],
