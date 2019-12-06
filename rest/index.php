@@ -87,6 +87,8 @@ $app->get('/autocomplete/statuses', \SrcCore\controllers\AutoCompleteController:
 $app->get('/autocomplete/banAddresses', \SrcCore\controllers\AutoCompleteController::class . ':getBanAddresses');
 $app->get('/autocomplete/folders', \SrcCore\controllers\AutoCompleteController::class . ':getFolders');
 $app->get('/autocomplete/tags', \SrcCore\controllers\AutoCompleteController::class . ':getTags');
+$app->get('/autocomplete/ouM2MAnnuary', \SrcCore\controllers\AutoCompleteController::class . ':getOuM2MAnnuary');
+$app->get('/autocomplete/businessIdM2MAnnuary', \SrcCore\controllers\AutoCompleteController::class . ':getBusinessIdM2MAnnuary');
 
 //Baskets
 $app->get('/baskets', \Basket\controllers\BasketController::class . ':get');
