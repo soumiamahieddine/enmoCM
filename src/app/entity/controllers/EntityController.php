@@ -21,6 +21,8 @@ use Entity\models\ListTemplateModel;
 use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
+use MessageExchange\controllers\AnnuaryController;
+use Parameter\models\ParameterModel;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -158,6 +160,8 @@ class EntityController
         $entity['redirects'] = count($redirects);
         $entity['canAdminUsers'] = PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']]);
         $entity['canAdminTemplates'] = PrivilegeController::hasPrivilege(['privilegeId' => 'admin_templates', 'userId' => $GLOBALS['id']]);
+        $siret = ParameterModel::getById(['id' => 'siret', 'select' => ['param_value_string']]);
+        $entity['canSynchronizeSiret'] = !empty($siret['param_value_string']);
 
         return $response->withJson(['entity' => $entity]);
     }
@@ -301,7 +305,7 @@ class EntityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $entity = EntityModel::getByEntityId(['entityId' => $aArgs['id'], 'select' => ['id']]);
+        $entity = EntityModel::getByEntityId(['entityId' => $aArgs['id'], 'select' => ['id', 'business_id']]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
@@ -325,6 +329,15 @@ class EntityController
             return $response->withStatus(400)->withJson(['errors' => 'Entity is still used']);
         }
 
+        $entities = [];
+        if (!empty($entity['business_id'])) {
+            $control = AnnuaryController::deleteEntityToOrganization(['entityId' => $aArgs['id']]);
+            if (!empty($control['errors'])) {
+                return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+            }
+            $entities['deleted'] = $control['deleted'];
+        }
+
         ListTemplateModel::delete(['where' => ['object_id = ?'], 'data' => [$aArgs['id']]]);
         GroupModel::update([
             'postSet'   => ['indexation_parameters' => "jsonb_set(indexation_parameters, '{entities}', (indexation_parameters->'entities') - '{$entity['id']}')"],
@@ -342,7 +355,8 @@ class EntityController
             'eventId'   => 'entitySuppression',
         ]);
 
-        return $response->withJson(['entities' => EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']])]);
+        $entities['entities'] = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
+        return $response->withJson($entities);
     }
 
     public function reassignEntity(Request $request, Response $response, array $aArgs)
@@ -351,7 +365,7 @@ class EntityController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $dyingEntity = EntityModel::getByEntityId(['entityId' => $aArgs['id'], 'select' => ['parent_entity_id', 'id']]);
+        $dyingEntity = EntityModel::getByEntityId(['entityId' => $aArgs['id'], 'select' => ['id', 'parent_entity_id', 'business_id']]);
         $successorEntity = EntityModel::getByEntityId(['entityId' => $aArgs['newEntityId'], 'select' => [1]]);
         if (empty($dyingEntity) || empty($successorEntity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity does not exist']);
@@ -361,6 +375,15 @@ class EntityController
             if (($entity['entity_id'] == $aArgs['id'] && $entity['allowed'] == false) || ($entity['entity_id'] == $aArgs['newEntityId'] && $entity['allowed'] == false)) {
                 return $response->withStatus(403)->withJson(['errors' => 'Entity out of perimeter']);
             }
+        }
+
+        $entities = [];
+        if (!empty($dyingEntity['business_id'])) {
+            $control = AnnuaryController::deleteEntityToOrganization(['entityId' => $aArgs['id']]);
+            if (!empty($control['errors'])) {
+                return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+            }
+            $entities['deleted'] = $control['deleted'];
         }
 
         //Documents
@@ -422,7 +445,8 @@ class EntityController
             'eventId'   => 'entitySuppression',
         ]);
 
-        return $response->withJson(['entities' => EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']])]);
+        $entities['entities'] = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
+        return $response->withJson($entities);
     }
 
     public function updateStatus(Request $request, Response $response, array $aArgs)

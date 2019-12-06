@@ -437,4 +437,10 @@ define("_NOTIFICATIONS_USER_CREATION_BODY", "Welcome,<br/><br/>You have now an a
 define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/><br/>This message is sent automatically as a result of an administrator action.<br/>Please do not answer.<br/><br/>For any questions, please contact your software administrator_TO_TRANSLATE");
 define("_CLICK_HERE", "Click-here_TO_TRANSLATE");
 
+define("_M2M_ANNUARY_IS_NOT_SET", "M2M annuary is not set");//TO TRANSLATE
+define("_M2M_LDAP_AUTHENTICATION_FAILED", "M2M annuary authentication failed");//TO TRANSLATE
+define("_M2M_LDAP_ADD_FAILED", "Problem while adding contact in M2M annuary");//TO TRANSLATE
+define("_NO_M2M_ANNUARY_AVAILABLE", "No M2M annuary available");//TO TRANSLATE
+define("_CANNOT_SYNCHRONIZE_M2M_ANNUARY", "Contact can not be added in M2M annuary because one of these field is empty : Society, communication means, department");//TO TRANSLATE
+
 define("_DATE_LOCALE", "en_US.utf8");

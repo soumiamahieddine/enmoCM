@@ -431,4 +431,10 @@ define("_NOTIFICATIONS_USER_CREATION_BODY", "Bienvenue,<br/><br/>Vous disposez m
 define("_CLICK_HERE", "Cliquez-ici pour définir votre mot de passe");
 define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/><br/>Ce message est envoyé automatiquement à la suite d'une action de l'administrateur.<br/>Merci de ne pas y répondre.<br/><br/>Pour toutes questions, merci de contacter l'administrateur technique de la solution.");
 
+define("_M2M_ANNUARY_IS_NOT_SET", "Aucun annuaire M2M paramétré");
+define("_M2M_LDAP_AUTHENTICATION_FAILED", "Connexion impossible à l'annuaire M2M");
+define("_M2M_LDAP_ADD_FAILED", "Problème lors de l'ajout du contact dans l'annuaire M2M");
+define("_NO_M2M_ANNUARY_AVAILABLE", "Aucun annuaire M2M disponible");
+define("_CANNOT_SYNCHRONIZE_M2M_ANNUARY", "Le contact ne peut pas être ajouté dans l'annuaire car un des champs suivants est manquant : Société, moyen de communication, service");
+
 define("_DATE_LOCALE", "fr_FR.utf8");
