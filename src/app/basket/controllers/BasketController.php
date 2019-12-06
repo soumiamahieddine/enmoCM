@@ -517,7 +517,13 @@ class BasketController
 
     public function getlistEventData(Request $request, Response $response, array $args)
     {
-        $groupBasket = GroupBasketModel::get(['select' => ['list_event_data'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$args['id'], $args['groupId']]]);
+        $basket = BasketModel::getById(['id' => $args['id'], 'select' => ['basket_id']]);
+        $group = GroupModel::getById(['id' => $args['groupId'], 'select' => ['group_id']]);
+        if (empty($group) || empty($basket)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group or basket does not exist']);
+        }
+
+        $groupBasket = GroupBasketModel::get(['select' => ['list_event_data'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
 
         if (empty($groupBasket[0]['list_event_data'])) {
             return $response->withJson(['listEventData' => null]);

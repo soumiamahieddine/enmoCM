@@ -196,7 +196,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
             }
             $color                        = 'LightYellow';
 
-            $rate = \Contact\controllers\ContactController::getFillingRate(['contact' => (array)$res]);
+            $rate = \Contact\controllers\ContactController::getFillingRate(['contactId' => (array)$res]);
             if (!empty($rate)) {
                 $color = $rate['color'];
             }

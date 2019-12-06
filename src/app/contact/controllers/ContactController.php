@@ -429,7 +429,7 @@ class ContactController
 
         if ($contactsFilling['enable'] && !empty($contactsParameters)) {
             $contactRaw = ContactModel::getById([
-                'select'    => ['civility', 'firstname', 'lastname', 'company', 'department', 'function', 'address_number', 'address_street', 'address_additional1', 'addres_additional2', 'address_postcode', 'address_town', 'address_country', 'email', 'phone'],
+                'select'    => ['civility', 'firstname', 'lastname', 'company', 'department', 'function', 'address_number', 'address_street', 'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country', 'email', 'phone'],
                 'id'        => $aArgs['contactId']
             ]);
             $contactCustomRaw = ContactCustomFieldModel::getByContactId([
@@ -441,7 +441,7 @@ class ContactController
             foreach ($contactsParameters as $ratingColumn) {
                 if (strpos($ratingColumn['identifier'], 'contactCustomField_') !== false && !empty($contactCustomRaw[str_replace("contactCustomField_", "", $ratingColumn['identifier'])])) {
                     $percent++;
-                } elseif (strpos($ratingColumn['identifier'], 'contactCustomField_') === false && !empty($contactRaw[$ratingColumn])) {
+                } elseif (!empty($contactRaw[$ratingColumn['identifier']])) {
                     $percent++;
                 }
             }
@@ -804,7 +804,7 @@ class ContactController
         ValidatorModel::boolType($args, ['color']);
 
         if (!empty($args['color'])) {
-            $rate = ContactController::getFillingRate(['contact' => $args['contact']['id']]);
+            $rate = ContactController::getFillingRate(['contactId' => $args['contact']['id']]);
         }
         $rateColor = empty($rate['color']) ? '' : $rate['color'];
 

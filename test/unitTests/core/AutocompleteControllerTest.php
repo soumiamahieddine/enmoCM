@@ -13,70 +13,6 @@ use PHPUnit\Framework\TestCase;
 
 class AutocompleteControllerTest extends TestCase
 {
-    public function testGetContacts()
-    {
-        $autocompleteController = new \SrcCore\controllers\AutoCompleteController();
-
-        //  GET COLOR
-        $environment = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
-        $request     = \Slim\Http\Request::createFromEnvironment($environment);
-
-        $aArgs = [
-            'search'    => 'maarch',
-            'color'      => true
-        ];
-        $fullRequest = $request->withQueryParams($aArgs);
-
-        $response     = $autocompleteController->getContacts($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertInternalType('array', $responseBody);
-        $this->assertNotEmpty($responseBody);
-
-        foreach ($responseBody as $value) {
-            $this->assertSame('contact', $value->type);
-            $this->assertInternalType('int', $value->id);
-            $this->assertInternalType('string', $value->contact);
-            $this->assertInternalType('string', $value->address);
-            $this->assertInternalType('string', $value->idToDisplay);
-            $this->assertInternalType('string', $value->otherInfo);
-            $this->assertSame('#', substr($value->rateColor, 0, 1));
-            $this->assertInternalType('string', substr($value->rateColor, 0));
-            $this->assertNotEmpty($value->id);
-            $this->assertNotEmpty($value->contact);
-            $this->assertNotEmpty($value->idToDisplay);
-            $this->assertNotEmpty($value->otherInfo);
-            $this->assertNotEmpty(substr($value->rateColor, 1));
-        }
-
-        //  GET NO COLOR
-        $aArgs = [
-            'search'    => 'maarch',
-            'color'      => false
-        ];
-        $fullRequest = $request->withQueryParams($aArgs);
-
-        $response     = $autocompleteController->getContacts($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertInternalType('array', $responseBody);
-        $this->assertNotEmpty($responseBody);
-
-        foreach ($responseBody as $value) {
-            $this->assertSame('contact', $value->type);
-            $this->assertInternalType('int', $value->id);
-            $this->assertInternalType('string', $value->contact);
-            $this->assertInternalType('string', $value->address);
-            $this->assertInternalType('string', $value->idToDisplay);
-            $this->assertInternalType('string', $value->otherInfo);
-            $this->assertNotEmpty($value->id);
-            $this->assertNotEmpty($value->contact);
-            $this->assertNotEmpty($value->idToDisplay);
-            $this->assertNotEmpty($value->otherInfo);
-            $this->assertEmpty($value->rateColor);
-        }
-    }
-
     public function testGetContactsForGroups()
     {
         $autocompleteController = new \SrcCore\controllers\AutoCompleteController();
@@ -99,13 +35,13 @@ class AutocompleteControllerTest extends TestCase
 
         foreach ($responseBody as $value) {
             $this->assertInternalType('int', $value->position);
-            $this->assertInternalType('int', $value->addressId);
+            $this->assertInternalType('int', $value->id);
             $this->assertInternalType('string', $value->contact);
             $this->assertInternalType('string', $value->address);
         }
     }
 
-    public function testGetContactsAndUsers()
+    public function testGetAll()
     {
         $autocompleteController = new \SrcCore\controllers\AutoCompleteController();
 
@@ -115,12 +51,11 @@ class AutocompleteControllerTest extends TestCase
 
         $aArgs = [
             'search'    => 'maarch',
-            'color'      => true,
-            'onlyContacts' => 'true'
+            'color'      => true
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $autocompleteController->getContactsAndUsers($fullRequest, new \Slim\Http\Response());
+        $response     = $autocompleteController->getAll($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         foreach ($responseBody as $value) {
