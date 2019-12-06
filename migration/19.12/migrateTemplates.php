@@ -174,7 +174,7 @@ foreach ($customs as $custom) {
                 continue;
             }
 
-            if (!is_writable($pathToDocument)) {
+            if (!is_writable($pathToDocument) || !is_readable($pathToDocument)) {
                 $nonMigrated++;
                 continue;
             }
