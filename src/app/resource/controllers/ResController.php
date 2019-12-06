@@ -213,11 +213,11 @@ class ResController
             ]);
             $entities = array_column($entities, 'id');
             $folders = FolderModel::getWithEntitiesAndResources([
-                'select'    => ['resources_folders.id'],
+                'select'    => ['resources_folders.folder_id'],
                 'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
                 'data'      => [$args['resId'], $entities, $GLOBALS['id']]
             ]);
-            $formattedData['folders'] = array_column($folders, 'id');
+            $formattedData['folders'] = array_column($folders, 'folder_id');
 
             $tags = TagResModel::get(['select' => ['tag_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             $formattedData['tags'] = array_column($tags, 'tag_id');
