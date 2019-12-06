@@ -955,11 +955,6 @@ if (!defined('_WARNING')) { define('_WARNING', 'Let op');}
 if (!defined('_STRING')) { define('_STRING', 'Karakterreeks');}
 if (!defined('_INTEGER')) { define('_INTEGER', 'Geheel');}
 if (!defined('_FLOAT')) { define('_FLOAT', 'Zwevend');}
-if (!defined('_CUSTOM_T1')) { define('_CUSTOM_T1', 'Veld tekst 1');}
-if (!defined('_CUSTOM_T2')) { define('_CUSTOM_T2', 'Veld tekst 2');}
-if (!defined('_CUSTOM_D1')) { define('_CUSTOM_D1', 'Veld Datum');}
-if (!defined('_CUSTOM_N1')) { define('_CUSTOM_N1', 'Veld Geheel');}
-if (!defined('_CUSTOM_F1')) { define('_CUSTOM_F1', 'Veld Zwevend');}
 if (!defined('_ITEM_NOT_IN_LIST')) { define('_ITEM_NOT_IN_LIST', 'Element niet in de lijst van de toegelaten waarden');}
 if (!defined('_PB_WITH_FINGERPRINT_OF_DOCUMENT')) { define('_PB_WITH_FINGERPRINT_OF_DOCUMENT', 'De initiële digitale afdruk van het document komt niet overeen met die van het document waarnaar verwezen wordt');}
 if (!defined('_MISSING')) { define('_MISSING', 'ontbrekend(e)');}

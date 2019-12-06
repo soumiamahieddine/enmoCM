@@ -2986,21 +2986,6 @@ if (!defined('_INTEGER')) {
 if (!defined('_FLOAT')) {
     define('_FLOAT', 'Floating');
 }
-if (!defined('_CUSTOM_T1')) {
-    define('_CUSTOM_T1', 'Text field 1');
-}
-if (!defined('_CUSTOM_T2')) {
-    define('_CUSTOM_T2', 'Text field 2');
-}
-if (!defined('_CUSTOM_D1')) {
-    define('_CUSTOM_D1', 'Date field');
-}
-if (!defined('_CUSTOM_N1')) {
-    define('_CUSTOM_N1', 'Integer field');
-}
-if (!defined('_CUSTOM_F1')) {
-    define('_CUSTOM_F1', 'Floating field');
-}
 
 if (!defined('_ITEM_NOT_IN_LIST')) {
     define('_ITEM_NOT_IN_LIST', 'Missing element from the allowed values list');

@@ -612,32 +612,11 @@ abstract class business_app_tools_Abstract extends Database
     }
 
     /**
-    * Loads current folder identifier in session
-    *
-    */
-    protected function _loadCurrentFolder($userId)
-    {
-        if (isset($userId)) {
-            $db = new Database();
-            $stmt = $db->query(
-                "SELECT custom_t1 FROM " . USERS_TABLE . " WHERE user_id = ?",
-                array($userId)
-            );
-            $res = $stmt->fetchObject();
-
-            $_SESSION['current_folder_id'] = $res->custom_t1;
-        }
-    }
-
-    /**
     * Loads app specific vars in session
     *
     */
     public function load_app_var_session($userData = '')
     {
-        if (is_array($userData)) {
-            $this->_loadCurrentFolder($userData['UserId']);
-        }
         $this->_loadEntrepriseVar();
         $this->load_features(
             'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']

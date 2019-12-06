@@ -3013,22 +3013,6 @@ if (!defined('_INTEGER')) {
 if (!defined('_FLOAT')) {
     define('_FLOAT', 'Flottant');
 }
-if (!defined('_CUSTOM_T1')) {
-    define('_CUSTOM_T1', 'Champ Texte 1');
-}
-if (!defined('_CUSTOM_T2')) {
-    define('_CUSTOM_T2', 'Champ Texte 2');
-}
-if (!defined('_CUSTOM_D1')) {
-    define('_CUSTOM_D1', 'Champ Date');
-}
-if (!defined('_CUSTOM_N1')) {
-    define('_CUSTOM_N1', 'Champ Entier');
-}
-if (!defined('_CUSTOM_F1')) {
-    define('_CUSTOM_F1', 'Champ Flottant');
-}
-
 if (!defined('_ITEM_NOT_IN_LIST')) {
     define('_ITEM_NOT_IN_LIST', 'Elèment absent de la liste des valeurs autorisées');
 }
