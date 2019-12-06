@@ -895,11 +895,11 @@ class ContactController
             $company = $args['contact']['company'];
 
             if (!empty($contactName)) {
-                $company = '(' . $company . ') ';
+                $company = '(' . $company . ')';
             }
         }
 
-        $contactToDisplay = $contactName . $company;
+        $contactToDisplay = trim($contactName . $company);
 
         $otherInfo = empty($address) ? "{$contactToDisplay}" : "{$contactToDisplay} - {$address}";
         $contact = [

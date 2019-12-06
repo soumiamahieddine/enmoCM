@@ -143,11 +143,6 @@ class MergeController
 
         if (!empty($resource['initiator'])) {
             $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['*']]);
-            if (!empty($initiator)) {
-                foreach ($initiator as $key => $value) {
-                    $resource["initiator_{$key}"] = $value;
-                }
-            }
             $initiator['path'] = EntityModel::getEntityPathByEntityId(['entityId' => $resource['initiator'], 'path' => '']);
             if (!empty($initiator['parent_entity_id'])) {
                 $parentInitiator = EntityModel::getByEntityId(['entityId' => $initiator['parent_entity_id'], 'select' => ['*']]);
@@ -227,26 +222,6 @@ class MergeController
                 $copies .= "{$label}\n";
             }
         }
-
-        //Contact
-//        $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$args['contactAddressId']]])[0];
-//        $contact['postal_address'] = ContactController::formatContactAddressAfnor($contact);
-//        $contact['title'] = ContactModel::getCivilityLabel(['civilityId' => $contact['title']]);
-//        if (empty($contact['title'])) {
-//            $contact['title'] = ContactModel::getCivilityLabel(['civilityId' => $contact['contact_title']]);
-//        }
-//        if (empty($contact['firstname'])) {
-//            $contact['firstname'] = $contact['contact_firstname'];
-//        }
-//        if (empty($contact['lastname'])) {
-//            $contact['lastname'] = $contact['contact_lastname'];
-//        }
-//        if (empty($contact['function'])) {
-//            $contact['function'] = $contact['contact_function'];
-//        }
-//        if (empty($contact['other_data'])) {
-//            $contact['other_data'] = $contact['contact_other_data'];
-//        }
 
         //Notes
         $mergedNote = '';
