@@ -127,7 +127,7 @@ export class IndexingFormComponent implements OnInit {
             label: this.lang.getSenders,
             type: 'autocomplete',
             default_value: null,
-            values: ['/rest/autocomplete/contacts']
+            values: ['/rest/autocomplete/all']
         },
         {
             identifier: 'destination',

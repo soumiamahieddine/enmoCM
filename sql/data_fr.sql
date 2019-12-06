@@ -845,6 +845,22 @@ INSERT INTO contacts VALUES (9, 'title1', 'Eric', 'MACKIN', '', '', '', '13', 'r
 INSERT INTO contacts VALUES (10, 'title1', 'Carole', 'COTIN', 'MAARCH', '', 'Directrice Administrative et Qualité', '11', 'Boulevard du Sud-Est', NULL, '', '99000', 'MAARCH LES BAINS', 'FRANCE', 'info@maarch.org', '', NULL, 'Editeur du logiciel libre Maarch', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
 INSERT INTO contacts VALUES (11, 'title1', 'Martin Donald', 'PELLE', '', '', '', '17', 'rue de la Demande', NULL, '', '99000', 'MAARCH-LES-BAINS', '', 'info@maarch.org', '01 23 24 21 22', NULL, '', 21, '2019-03-20 13:59:09.23436', NULL, true, '{}');
 
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (7, 'civility', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (8, 'firstname', false, true, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (9, 'lastname', true, true, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (10, 'company', true, false, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (11, 'department', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (12, 'function', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (13, 'address_number', false, false, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (14, 'address_street', false, true, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (15, 'address_additional1', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (16, 'address_additional2', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (17, 'address_postcode', false, true, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (18, 'address_town', false, true, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (19, 'address_country', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (20, 'email', false, true, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (21, 'phone', false, true, false, false);
+
 ------------
 --STATUS-
 ------------
@@ -1595,7 +1611,7 @@ INSERT INTO password_rules (label, "value") VALUES ('renewal', 90);
 -- Contacts completion ratio
 -----
 TRUNCATE TABLE contacts_filling;
-INSERT INTO contacts_filling (enable, rating_columns, first_threshold, second_threshold) VALUES (true, '["address_street","address_postal_code","address_town","lastname","firstname","phone","email"]', 33, 66);
+INSERT INTO contacts_filling (enable, first_threshold, second_threshold) VALUES (true, 33, 66);
 
 /* Configurations */
 TRUNCATE TABLE configurations;

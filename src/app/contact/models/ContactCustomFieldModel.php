@@ -39,6 +39,26 @@ class ContactCustomFieldModel
         return $customFields;
     }
 
+    public static function getByContactId(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['contactId', 'select']);
+        ValidatorModel::intVal($args, ['contactId']);
+        ValidatorModel::arrayType($args, ['select']);
+
+        $contact = DatabaseModel::select([
+            'select'    => $args['select'],
+            'table'     => ['contacts_custom_fields'],
+            'where'     => ['contact_id = ?'],
+            'data'      => [$args['contactId']],
+        ]);
+
+        if (empty($contact[0])) {
+            return [];
+        }
+
+        return $contact[0];
+    }
+
     public static function create(array $args)
     {
         ValidatorModel::notEmpty($args, ['contact_id', 'custom_field_id', 'value']);

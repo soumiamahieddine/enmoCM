@@ -37,40 +37,6 @@ class AutoCompleteController
     const LIMIT = 50;
     const TINY_LIMIT = 10;
 
-    public static function getContacts(Request $request, Response $response)
-    {
-        $queryParams = $request->getQueryParams();
-
-        if (!Validator::stringType()->notEmpty()->validate($queryParams['search'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
-        }
-
-        $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'];
-        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
-        $requestData = AutoCompleteController::getDataForRequest([
-            'search'        => $queryParams['search'],
-            'fields'        => $fields,
-            'where'         => ['enabled = ?'],
-            'data'          => [true],
-            'fieldsNumber'  => 7,
-        ]);
-
-        $contacts = ContactModel::get([
-            'select'    => ['*'],
-            'where'     => $requestData['where'],
-            'data'      => $requestData['data'],
-            'limit'     => self::TINY_LIMIT
-        ]);
-
-        $color = isset($queryParams['color']) && filter_var($queryParams['color'], FILTER_VALIDATE_BOOLEAN);
-        $autocompleteData = [];
-        foreach ($contacts as $contact) {
-            $autocompleteData[] = AutoCompleteController::getFormattedContact(['contact' => $contact, 'color' => $color])['contact'];
-        }
-
-        return $response->withJson($autocompleteData);
-    }
-
     public static function getUsers(Request $request, Response $response)
     {
         $data = $request->getQueryParams();
@@ -728,83 +694,5 @@ class AutoCompleteController
         $fields = "($fields)";
 
         return $fields;
-    }
-
-    public static function getFormattedContact(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['contact']);
-        ValidatorModel::arrayType($aArgs, ['contact']);
-        ValidatorModel::boolType($aArgs, ['color']);
-
-        if (!empty($aArgs['color'])) {
-            $rate = ContactController::getFillingRate(['contact' => $aArgs['contact']]);
-        }
-        $rateColor = empty($rate['color']) ? '' : $rate['color'];
-
-        $address = '';
-        if ($aArgs['contact']['is_corporate_person'] == 'Y') {
-            $address.= $aArgs['contact']['firstname'];
-            $address.= (empty($address) ? $aArgs['contact']['lastname'] : " {$aArgs['contact']['lastname']}");
-            $address .= ', ';
-            if (!empty($aArgs['contact']['address_num'])) {
-                $address.= $aArgs['contact']['address_num'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_street'])) {
-                $address.= $aArgs['contact']['address_street'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_postal_code'])) {
-                $address.= $aArgs['contact']['address_postal_code'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_town'])) {
-                $address.= $aArgs['contact']['address_town'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_country'])) {
-                $address.= $aArgs['contact']['address_country'];
-            }
-            $address = rtrim($address, ', ');
-            $otherInfo = empty($address) ? "{$aArgs['contact']['society']}" : "{$aArgs['contact']['society']} - {$address}";
-            $contact = [
-                'type'          => 'contact',
-                'id'            => $aArgs['contact']['ca_id'],
-                'contact'       => $aArgs['contact']['society'],
-                'address'       => $address,
-                'idToDisplay'   => "{$aArgs['contact']['society']}<br/>{$address}",
-                'otherInfo'     => $otherInfo,
-                'rateColor'     => $rateColor
-            ];
-        } else {
-            if (!empty($aArgs['contact']['address_num'])) {
-                $address.= $aArgs['contact']['address_num'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_street'])) {
-                $address.= $aArgs['contact']['address_street'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_postal_code'])) {
-                $address.= $aArgs['contact']['address_postal_code'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_town'])) {
-                $address.= $aArgs['contact']['address_town'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_country'])) {
-                $address.= $aArgs['contact']['address_country'];
-            }
-            $contactToDisplay = "{$aArgs['contact']['contact_firstname']} {$aArgs['contact']['contact_lastname']}";
-            if (!empty($aArgs['contact']['society'])) {
-                $contactToDisplay .= " ({$aArgs['contact']['society']})";
-            }
-
-            $otherInfo = empty($address) ? "{$contactToDisplay}" : "{$contactToDisplay} - {$address}";
-            $contact = [
-                'type'          => 'contact',
-                'id'            => $aArgs['contact']['ca_id'],
-                'contact'       => $contactToDisplay,
-                'address'       => $address,
-                'idToDisplay'   => "{$contactToDisplay}<br/>{$address}",
-                'otherInfo'     => $otherInfo,
-                'rateColor'     => $rateColor
-            ];
-        }
-
-        return ['contact' => $contact];
     }
 }

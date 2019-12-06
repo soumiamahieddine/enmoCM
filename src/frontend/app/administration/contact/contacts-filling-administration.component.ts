@@ -88,7 +88,7 @@ export class ContactsFillingAdministrationComponent implements OnInit {
         }
         this.http.put('../../rest/contactsParameters', {'contactsFilling': this.contactsFilling, 'contactsParameters': this.contactsParameters})
             .subscribe(() => {
-                this.notify.success(this.lang.contactsFillingUpdated);
+                this.notify.success(this.lang.parameterUpdated);
 
             }, (err) => {
                 this.notify.error(err.error.errors);

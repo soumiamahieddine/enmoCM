@@ -421,27 +421,31 @@ class ContactController
 
     public static function getFillingRate(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['contact']);
-        ValidatorModel::arrayType($aArgs, ['contact']);
+        ValidatorModel::notEmpty($aArgs, ['contactId']);
+        ValidatorModel::intVal($aArgs, ['contactId']);
 
         $contactsFilling = ContactFillingModel::get();
-        $contactsFilling['rating_columns'] = json_decode($contactsFilling['rating_columns']);
+        $contactsParameters = ContactParameterModel::get(['select' => ['identifier'], 'where' => ['filling = ?'], 'data' => ['true']]);
 
-        if ($contactsFilling['enable'] && !empty($contactsFilling['rating_columns'])) {
-            if ($aArgs['contact']['is_corporate_person'] == 'N') {
-                foreach ($contactsFilling['rating_columns'] as $key => $value) {
-                    if (in_array($value, ['firstname', 'lastname', 'title', 'function'])) {
-                        $contactsFilling['rating_columns'][$key] = 'contact_' . $value;
-                    }
-                }
-            }
+        if ($contactsFilling['enable'] && !empty($contactsParameters)) {
+            $contactRaw = ContactModel::getById([
+                'select'    => ['civility', 'firstname', 'lastname', 'company', 'department', 'function', 'address_number', 'address_street', 'address_additional1', 'addres_additional2', 'address_postcode', 'address_town', 'address_country', 'email', 'phone'],
+                'id'        => $aArgs['contactId']
+            ]);
+            $contactCustomRaw = ContactCustomFieldModel::getByContactId([
+                'select'    => ['value'],
+                'contactId' => $aArgs['contactId']
+            ]);
+
             $percent = 0;
-            foreach ($contactsFilling['rating_columns'] as $ratingColumn) {
-                if (!empty($aArgs['contact'][$ratingColumn])) {
+            foreach ($contactsParameters as $ratingColumn) {
+                if (strpos($ratingColumn['identifier'], 'contactCustomField_') !== false && !empty($contactCustomRaw[str_replace("contactCustomField_", "", $ratingColumn['identifier'])])) {
+                    $percent++;
+                } elseif (strpos($ratingColumn['identifier'], 'contactCustomField_') === false && !empty($contactRaw[$ratingColumn])) {
                     $percent++;
                 }
             }
-            $percent = $percent * 100 / count($contactsFilling['rating_columns']);
+            $percent = $percent * 100 / count($contactsParameters);
             if ($percent <= $contactsFilling['first_threshold']) {
                 $color = '#ff9e9e';
             } elseif ($percent <= $contactsFilling['second_threshold']) {
@@ -454,70 +458,6 @@ class ContactController
         }
 
         return [];
-    }
-
-    public static function formatContactAddressAfnor(array $aArgs)
-    {
-        $formattedAddress = '';
-
-        // Entete pour societe
-        if ($aArgs['is_corporate_person'] == 'Y') {
-            // Ligne 1
-            $formattedAddress .= substr($aArgs['society'], 0, 38)."\n";
-
-            // Ligne 2
-            if (!empty($aArgs['title']) || !empty($aArgs['firstname']) || !empty($aArgs['lastname'])) {
-                $formattedAddress .= ContactController::controlLengthNameAfnor([
-                    'title' => $aArgs['title'],
-                    'fullName' => $aArgs['firstname'].' '.$aArgs['lastname'],
-                    'strMaxLength' => 38, ])."\n";
-            }
-
-            // Ligne 3
-            if (!empty($aArgs['address_complement'])) {
-                $formattedAddress .= substr($aArgs['address_complement'], 0, 38)."\n";
-            }
-        } else {
-            // Ligne 1
-            $formattedAddress .= ContactController::controlLengthNameAfnor([
-                                    'title' => $aArgs['contact_title'],
-                                    'fullName' => $aArgs['contact_firstname'].' '.$aArgs['contact_lastname'],
-                                    'strMaxLength' => 38, ])."\n";
-
-            // Ligne 2
-            if (!empty($aArgs['occupancy'])) {
-                $formattedAddress .= substr($aArgs['occupancy'], 0, 38)."\n";
-            }
-
-            // Ligne 3
-            if (!empty($aArgs['address_complement'])) {
-                $formattedAddress .= substr($aArgs['address_complement'], 0, 38)."\n";
-            }
-        }
-        // Ligne 4
-        if (!empty($aArgs['address_num'])) {
-            $aArgs['address_num'] = TextFormatModel::normalize(['string' => $aArgs['address_num']]);
-            $aArgs['address_num'] = preg_replace('/[^\w]/s', ' ', $aArgs['address_num']);
-            $aArgs['address_num'] = strtoupper($aArgs['address_num']);
-        }
-
-        if (!empty($aArgs['address_street'])) {
-            $aArgs['address_street'] = TextFormatModel::normalize(['string' => $aArgs['address_street']]);
-            $aArgs['address_street'] = preg_replace('/[^\w]/s', ' ', $aArgs['address_street']);
-            $aArgs['address_street'] = strtoupper($aArgs['address_street']);
-        }
-
-        $formattedAddress .= substr($aArgs['address_num'].' '.$aArgs['address_street'], 0, 38)."\n";
-
-        // Ligne 5
-        // $formattedAddress .= "\n";
-
-        // Ligne 6
-        $aArgs['address_postal_code'] = strtoupper($aArgs['address_postal_code']);
-        $aArgs['address_town'] = strtoupper($aArgs['address_town']);
-        $formattedAddress .= substr($aArgs['address_postal_code'].' '.$aArgs['address_town'], 0, 38);
-
-        return $formattedAddress;
     }
 
     public static function getContactAfnor(array $args)
@@ -644,27 +584,7 @@ class ContactController
                     'id'        => $resourceContact['item_id']
                 ]);
 
-                $contact = [
-                    'mode'      => 'physical', // ??
-                    'firstname' => $contactRaw['firstname'] ?? '',
-                    'lastname'  => $contactRaw['lastname'] ?? '',
-                    'email'     => $contactRaw['email'] ?? '',
-                    'phone'     => $contactRaw['phone'] ?? '',
-                    'company'   => $contactRaw['company'] ?? '',
-                    'function'  => $contactRaw['function'] ?? '',
-                    'number'       => $contactRaw['address_number'] ?? '',
-                    'street'    => $contactRaw['address_street'] ?? '',
-                    'complement'=> '', // <-- ??
-                    'town'      => $contactRaw['address_town'] ?? '',
-                    'postalCode'=> $contactRaw['address_postcode'] ?? '',
-                    'country'   => $contactRaw['address_country'] ?? '',
-                    'otherData' => '', // <-- ??
-                    'website'   => '', // ??
-                    'occupancy' => '', // <-- ??
-                    'department' => $contactRaw['department'] ?? ''
-                ];
-
-                $filling = ContactController::getFillingRate(['contact' => $contact]);
+                $filling = ContactController::getFillingRate(['contactId' => $resourceContact['item_id']]);
 
                 $contact['filling'] = $filling['color'];
             } elseif ($resourceContact['type'] == 'user') {
@@ -884,7 +804,7 @@ class ContactController
         ValidatorModel::boolType($args, ['color']);
 
         if (!empty($args['color'])) {
-            $rate = ContactController::getFillingRate(['contact' => $args['contact']]);
+            $rate = ContactController::getFillingRate(['contact' => $args['contact']['id']]);
         }
         $rateColor = empty($rate['color']) ? '' : $rate['color'];
 

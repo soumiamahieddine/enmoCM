@@ -76,7 +76,6 @@ $app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\Attachme
 $app->get('/attachmentsTypes', \Attachment\controllers\AttachmentController::class . ':getAttachmentsTypes');
 
 //AutoComplete
-$app->get('/autocomplete/contacts', \SrcCore\controllers\AutoCompleteController::class . ':getContacts');
 $app->get('/autocomplete/users', \SrcCore\controllers\AutoCompleteController::class . ':getUsers');
 $app->get('/autocomplete/maarchParapheurUsers', \SrcCore\controllers\AutoCompleteController::class . ':getMaarchParapheurUsers');
 $app->get('/autocomplete/all', \SrcCore\controllers\AutoCompleteController::class . ':getAll');
