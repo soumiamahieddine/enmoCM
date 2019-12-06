@@ -1,6 +1,8 @@
+import { LANG } from '../app/translate.component';
 import { NativeDateAdapter, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from "@angular/material/core";
 
 export class AppDateAdapter extends NativeDateAdapter {
+    lang: any = LANG;
     parse(value: any): Date | null {
         if ((typeof value === 'string') && (value.indexOf('/') > -1)) {
             const str = value.split('/');
@@ -21,7 +23,7 @@ export class AppDateAdapter extends NativeDateAdapter {
             return this._to2digit(day) + '/' + this._to2digit(month) + '/' + year;
         } else {
             const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
-            return date.toLocaleDateString('fr-FR', options);
+            return date.toLocaleDateString(this.lang.langISO, options);
         }
     }
 
@@ -166,7 +168,7 @@ import { getFrenchPaginatorIntl } from './french-paginator-intl';
     ],
     providers: [
         { provide: MatPaginatorIntl, useValue: getFrenchPaginatorIntl() },
-        { provide: MAT_DATE_LOCALE, useValue: 'fr-FR' },
+        { provide: MAT_DATE_LOCALE, useValue: LANG.langISO },
         { provide: DateAdapter, useClass: AppDateAdapter },
         { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS },
     ]
