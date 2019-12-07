@@ -184,7 +184,7 @@ class ContactGroupController
 
     public function addContacts(Request $request, Response $response, array $aArgs)
     {
-        $contactsGroup = ContactGroupModel::getById(['select' => ['owner', 'label'], 'id' => $aArgs['id']]);
+        $contactsGroup = ContactGroupModel::getById(['id' => $aArgs['id']]);
         if (empty($contactsGroup)) {
             return $response->withStatus(400)->withJson(['errors' => 'Contacts Group does not exist']);
         }
@@ -221,7 +221,6 @@ class ContactGroupController
             'eventId'   => 'contactsGroupListCreation',
         ]);
 
-        $contactsGroup = ContactGroupModel::getById(['id' => $aArgs['id']]);
         $contactsGroup['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
         $contactsGroup['contacts'] = ContactGroupController::getFormattedListById(['id' => $aArgs['id']])['list'];
 
@@ -261,16 +260,15 @@ class ContactGroupController
         $contacts = [];
         $position = 0;
         foreach ($list as $listItem) {
-            $contact = ContactModel::get([
+            $contact = ContactModel::getById([
                 'select'    => [
                     'id', 'firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'
                 ],
-                'where'     => ['id = ?'],
-                'data'      => [$listItem['contact_id']]
+                'id'      => $listItem['contact_id']
             ]);
 
-            if (!empty($contact[0])) {
-                $contact = ContactController::getFormattedContactWithAddress(['contact' => $contact[0], 'position' => $position])['contact'];
+            if (!empty($contact)) {
+                $contact = ContactController::getFormattedContactWithAddress(['contact' => $contact, 'position' => $position])['contact'];
                 $contact['position'] = !empty($position) ? $position : 0;
                 $contacts[] = $contact;
                 ++$position;

@@ -34,7 +34,6 @@ class AutocompleteControllerTest extends TestCase
         $this->assertNotEmpty($responseBody);
 
         foreach ($responseBody as $value) {
-            $this->assertInternalType('int', $value->position);
             $this->assertInternalType('int', $value->id);
             $this->assertInternalType('string', $value->contact);
             $this->assertInternalType('string', $value->address);

@@ -4,43 +4,46 @@ TRUNCATE TABLE usergroups;
 TRUNCATE TABLE usergroups_services;
 DELETE FROM usergroups WHERE group_id = 'COURRIER';
 DELETE FROM usergroups_services WHERE group_id = 'COURRIER';
-INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('COURRIER', 'Opérateur de numérisation', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+INSERT INTO usergroups (id, group_id,group_desc, can_index, indexation_parameters) VALUES (1, 'COURRIER', 'Opérateur de numérisation', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'AGENT';
 DELETE FROM usergroups_services WHERE group_id = 'AGENT';
-INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('AGENT', 'Utilisateur', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+INSERT INTO usergroups (id, group_id,group_desc, can_index, indexation_parameters) VALUES (2, 'AGENT', 'Utilisateur', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'RESP_COURRIER';
 DELETE FROM usergroups_services WHERE group_id = 'RESP_COURRIER';
-INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('RESP_COURRIER', 'Superviseur Courrier', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+INSERT INTO usergroups (id, group_id,group_desc, can_index, indexation_parameters) VALUES (3, 'RESP_COURRIER', 'Superviseur Courrier', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'RESPONSABLE';
 DELETE FROM usergroups_services WHERE group_id = 'RESPONSABLE';
-INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('RESPONSABLE', 'Manager', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+INSERT INTO usergroups (id, group_id,group_desc, can_index, indexation_parameters) VALUES (4, 'RESPONSABLE', 'Manager', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'ADMINISTRATEUR_N1';
 DELETE FROM usergroups_services WHERE group_id = 'ADMINISTRATEUR_N1';
-INSERT INTO usergroups (group_id,group_desc) VALUES ('ADMINISTRATEUR_N1', 'Admin. Fonctionnel N1');
+INSERT INTO usergroups (id, group_id,group_desc) VALUES (5, 'ADMINISTRATEUR_N1', 'Admin. Fonctionnel N1');
 DELETE FROM usergroups WHERE group_id = 'ADMINISTRATEUR_N2';
 DELETE FROM usergroups_services WHERE group_id = 'ADMINISTRATEUR_N2';
-INSERT INTO usergroups (group_id,group_desc) VALUES ('ADMINISTRATEUR_N2', 'Admin. Fonctionnel N2');
+INSERT INTO usergroups (id, group_id,group_desc) VALUES (6, 'ADMINISTRATEUR_N2', 'Admin. Fonctionnel N2');
 DELETE FROM usergroups WHERE group_id = 'DIRECTEUR';
 DELETE FROM usergroups_services WHERE group_id = 'DIRECTEUR';
-INSERT INTO usergroups (group_id,group_desc) VALUES ('DIRECTEUR', 'Directeur');
+INSERT INTO usergroups (id, group_id,group_desc) VALUES (7, 'DIRECTEUR', 'Directeur');
 DELETE FROM usergroups WHERE group_id = 'ELU';
 DELETE FROM usergroups_services WHERE group_id = 'ELU';
-INSERT INTO usergroups (group_id,group_desc) VALUES ('ELU', 'Elu');
+INSERT INTO usergroups (id, group_id,group_desc) VALUES (8, 'ELU', 'Elu');
 DELETE FROM usergroups WHERE group_id = 'CABINET';
 DELETE FROM usergroups_services WHERE group_id = 'CABINET';
-INSERT INTO usergroups (group_id,group_desc) VALUES ('CABINET', 'Cabinet');
+INSERT INTO usergroups (id, group_id,group_desc) VALUES (9, 'CABINET', 'Cabinet');
 DELETE FROM usergroups WHERE group_id = 'ARCHIVISTE';
 DELETE FROM usergroups_services WHERE group_id = 'ARCHIVISTE';
-INSERT INTO usergroups (group_id,group_desc) VALUES ('ARCHIVISTE', 'Archiviste');
+INSERT INTO usergroups (id, group_id,group_desc) VALUES (10, 'ARCHIVISTE', 'Archiviste');
 DELETE FROM usergroups WHERE group_id = 'MAARCHTOGEC';
 DELETE FROM usergroups_services WHERE group_id = 'MAARCHTOGEC';
-INSERT INTO usergroups (group_id,group_desc) VALUES ('MAARCHTOGEC', 'Envoi dématérialisé');
+INSERT INTO usergroups (id, group_id,group_desc) VALUES (11, 'MAARCHTOGEC', 'Envoi dématérialisé');
 DELETE FROM usergroups WHERE group_id = 'SERVICE';
 DELETE FROM usergroups_services WHERE group_id = 'SERVICE';
-INSERT INTO usergroups (group_id,group_desc) VALUES ('SERVICE', 'Service');
+INSERT INTO usergroups (id, group_id,group_desc) VALUES (12, 'SERVICE', 'Service');
 DELETE FROM usergroups WHERE group_id = 'WEBSERVICE';
 DELETE FROM usergroups_services WHERE group_id = 'WEBSERVICE';
-INSERT INTO usergroups (group_id,group_desc, can_index, indexation_parameters) VALUES ('WEBSERVICE', 'Utilisateurs de WebService', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+INSERT INTO usergroups (id, group_id,group_desc, can_index, indexation_parameters) VALUES (13, 'WEBSERVICE', 'Utilisateurs de WebService', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+
+select setval('usergroups_id_seq', (select max(id)+1 from usergroups), false);
+
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'create_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_contacts');
@@ -821,7 +824,7 @@ VALUES ('ACKNOWLEDGEMENT_RECEIPTS', 'ACKNOWLEDGEMENT_RECEIPTS', 'Dépôt des AR'
 --SUPERADMIN USER
 ------------
 DELETE FROM users WHERE user_id='superadmin';
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, custom_t2, custom_t3, status, loginmode) VALUES ('superadmin', '$2y$10$Vq244c5s2zmldjblmMXEN./Q2qZrqtGVgrbz/l1WfsUJbLco4E.e.', 'Super', 'ADMIN', '0147245159', 'support@maarch.fr', NULL, NULL, 'OK', 'standard');
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, status, loginmode) VALUES ('superadmin', '$2y$10$Vq244c5s2zmldjblmMXEN./Q2qZrqtGVgrbz/l1WfsUJbLco4E.e.', 'Super', 'ADMIN', '0147245159', 'support@maarch.fr', 'OK', 'standard');
 --MAARCH2GEC USER
 DELETE FROM users WHERE user_id = 'cchaplin';
 INSERT INTO users (user_id, password, firstname, lastname, mail, status, loginmode) VALUES ('cchaplin', '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', 'Charlie', 'CHAPLIN', 'support@maarch.fr', 'OK', 'restMode');
@@ -845,21 +848,26 @@ INSERT INTO contacts VALUES (9, 'title1', 'Eric', 'MACKIN', '', '', '', '13', 'r
 INSERT INTO contacts VALUES (10, 'title1', 'Carole', 'COTIN', 'MAARCH', '', 'Directrice Administrative et Qualité', '11', 'Boulevard du Sud-Est', NULL, '', '99000', 'MAARCH LES BAINS', 'FRANCE', 'info@maarch.org', '', NULL, 'Editeur du logiciel libre Maarch', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
 INSERT INTO contacts VALUES (11, 'title1', 'Martin Donald', 'PELLE', '', '', '', '17', 'rue de la Demande', NULL, '', '99000', 'MAARCH-LES-BAINS', '', 'info@maarch.org', '01 23 24 21 22', NULL, '', 21, '2019-03-20 13:59:09.23436', NULL, true, '{}');
 
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (7, 'civility', false, false, false, false);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (8, 'firstname', false, true, true, true);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (9, 'lastname', true, true, true, true);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (10, 'company', true, false, true, true);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (11, 'department', false, false, false, false);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (12, 'function', false, false, false, false);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (13, 'address_number', false, false, true, true);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (14, 'address_street', false, true, true, true);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (15, 'address_additional1', false, false, false, false);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (16, 'address_additional2', false, false, false, false);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (17, 'address_postcode', false, true, true, true);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (18, 'address_town', false, true, true, true);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (19, 'address_country', false, false, false, false);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (20, 'email', false, true, false, false);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (21, 'phone', false, true, false, false);
+select setval('contacts_id_seq', (select max(id)+1 from contacts), false);
+
+TRUNCATE TABLE contacts_parameters;
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (1, 'civility', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (2, 'firstname', false, true, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (3, 'lastname', true, true, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (4, 'company', true, false, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (5, 'department', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (6, 'function', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (7, 'address_number', false, false, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (8, 'address_street', false, true, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (9, 'address_additional1', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (10, 'address_additional2', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (11, 'address_postcode', false, true, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (12, 'address_town', false, true, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (13, 'address_country', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (14, 'email', false, true, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (15, 'phone', false, true, false, false);
+
+select setval('contacts_parameters_id_seq', (select max(id)+1 from contacts_parameters), false);
 
 ------------
 --STATUS-
