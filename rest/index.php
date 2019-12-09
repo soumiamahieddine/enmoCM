@@ -101,7 +101,6 @@ $app->post('/baskets/{id}/groups', \Basket\controllers\BasketController::class .
 $app->put('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController::class . ':updateGroup');
 $app->put('/baskets/{id}/groups/{groupId}/actions', \Basket\controllers\BasketController::class . ':updateGroupActions');
 $app->delete('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController::class . ':deleteGroup');
-$app->get('/baskets/{id}/groups/{groupId}/listEventData', \Basket\controllers\BasketController::class . ':getlistEventData');
 $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getSorted');
 $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
@@ -349,6 +348,7 @@ $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/fil
 $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/exports', \Resource\controllers\ExportController::class . ':updateExport');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/summarySheets', \Resource\controllers\SummarySheetController::class . ':createList');
 $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}', \Resource\controllers\ResourceListController::class . ':setAction');
+$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/listEventData', \Basket\controllers\BasketController::class . ':getlistEventData');
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplates');
 $app->get('/resourcesList/summarySheets', \Resource\controllers\SummarySheetController::class . ':createListWithAll');
 $app->post('/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');

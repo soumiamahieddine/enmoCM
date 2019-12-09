@@ -1322,5 +1322,9 @@ export const LANG_EN = {
     "autocompletionSearchable": "Searchable in autocomplétion",
     "autocompletionDisplayable": "Displayable in autocompletion",
     "contactsParameters": "Paramétrage des contacts",
+    "siretGenerated": "SIRET number generated",
+    "siretGeneratedAndSynchronizationDone": "SIRET number generated and annuary synchronization done",
+    "siretGeneratedButAnnuaryUnreachable": "SIRET number generated but annuary is unreachable",
+    "entityDeletedButAnnuaryUnreachable": "Entity deleted but annuary is unreachable",
     "langISO": "en-US",
 };

@@ -883,6 +883,11 @@ class ResController
         ResourceCustomFieldModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
         if (!empty($body['customFields'])) {
             foreach ($body['customFields'] as $key => $value) {
+                $customField = CustomFieldModel::getById(['id' => $key, 'select' => ['type']]);
+                if ($customField['type'] == 'date') {
+                    $date = new \DateTime($value);
+                    $value = $date->format('Y-m-d');
+                }
                 ResourceCustomFieldModel::create(['res_id' => $args['resId'], 'custom_field_id' => $key, 'value' => json_encode($value)]);
             }
         }

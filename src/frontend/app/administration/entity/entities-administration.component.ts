@@ -392,7 +392,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                             this.sidenavRight.close();
 
                             if (typeof data['deleted'] !== "undefined" && !data['deleted']) {
-                                this.notify.success("Entité supprimée mais l'annuaire est injoignable, l'entité est possiblement toujours présente dedans");
+                                this.notify.success(this.lang.entityDeletedButAnnuaryUnreachable);
                             } else {
                                 this.notify.success(this.lang.entityDeleted);
                             }
@@ -437,7 +437,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                         $j('#jstree').jstree("refresh");
                         this.sidenavRight.close();
                         if (typeof data['deleted'] !== "undefined" && !data['deleted']) {
-                            this.notify.success("Entité supprimée mais l'annuaire est injoignable, l'entité est possiblement toujours présente dedans");
+                            this.notify.success(this.lang.entityDeletedButAnnuaryUnreachable);
                         } else {
                             this.notify.success(this.lang.entityDeleted);
                         }
@@ -738,12 +738,12 @@ export class EntitiesAdministrationComponent implements OnInit {
             .subscribe((data: any) => {
                 this.currentEntity.business_id = data['entitySiret'];
                 if (typeof data['synchronized'] === "undefined") {
-                    this.notify.success("Numéro SIRET généré");
+                    this.notify.success(this.lang.siretGenerated);
                 } else {
                     if (data['synchronized']) {
-                        this.notify.success("Numéro SIRET généré et synchronisation annuaire effectuée");
+                        this.notify.success(this.lang.siretGeneratedAndSynchronizationDone);
                     } else {
-                        this.notify.success("Numéro SIRET généré mais l'annuaire est injoignable");
+                        this.notify.success(this.lang.siretGeneratedButAnnuaryUnreachable);
                     }
                 }
             }, (err: any) => {

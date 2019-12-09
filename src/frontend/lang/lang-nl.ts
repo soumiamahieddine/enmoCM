@@ -1347,5 +1347,9 @@ export const LANG_NL = {
     "autocompletionSearchable": "Recherchable dans l'autocomplétion", //_TO_TRANSLATE
     "autocompletionDisplayable": "Affichable dans l'autocompletion", //_TO_TRANSLATE
     "contactsParameters": "Paramétrage des contacts", //_TO_TRANSLATE
+    "siretGenerated": "SIRET number generated",//_TO_TRANSLATE
+    "siretGeneratedAndSynchronizationDone": "SIRET number generated and annuary synchronization done",//_TO_TRANSLATE
+    "siretGeneratedButAnnuaryUnreachable": "SIRET number generated but annuary is unreachable",//_TO_TRANSLATE
+    "entityDeletedButAnnuaryUnreachable": "Entity deleted but annuary is unreachable",//_TO_TRANSLATE
     "langISO": "nl-FR",
 };
