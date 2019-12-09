@@ -14,6 +14,8 @@
 
 namespace ContentManagement\controllers;
 
+use Contact\controllers\ContactController;
+use Contact\models\ContactModel;
 use CustomField\models\ResourceCustomFieldModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
@@ -170,6 +172,28 @@ class MergeController
             $currentUserPrimaryEntity['path'] = EntityModel::getEntityPathByEntityId(['entityId' => $currentUserPrimaryEntity['entity_id'], 'path' => '']);
         }
 
+        //Recipient
+        $recipient = [];
+        if (!empty($args['recipientId']) && !empty($args['recipientType'])) {
+            if ($args['recipientType'] == 'contact') {
+                $recipient = ContactModel::getById([
+                    'id' => $args['recipientId'],
+                    'select' => [
+                        'civility', 'firstname', 'lastname', 'company', 'department', 'function', 'address_number', 'address_street', 'address_town',
+                        'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country', 'phone', 'email'
+                    ]
+                ]);
+                $recipient['civility'] = ContactModel::getCivilityLabel(['civilityId' => $recipient['civility']]);
+                $postalAddress = ContactController::getContactAfnor($recipient);
+                unset($postalAddress[0]);
+                $recipient['postal_address'] = implode("\n", $postalAddress);
+            } elseif ($args['recipientType'] == 'user') {
+                $recipient = UserModel::getById(['id' => $args['recipientId'], 'select' => ['firstname', 'lastname']]);
+            } elseif ($args['recipientType'] == 'entity') {
+                $recipient = EntityModel::getById(['id' => $args['recipientId'], 'select' => ['entity_label as lastname']]);
+            }
+        }
+
         //Visas
         $visas = '';
         if (!empty($args['resId'])) {
@@ -277,6 +301,7 @@ class MergeController
         $dataToBeMerge['parentDestination'] = empty($parentDestination) ? [] : $parentDestination;
         $dataToBeMerge['attachment']        = $attachment;
         $dataToBeMerge['user']              = $currentUser;
+        $dataToBeMerge['recipient']         = $recipient;
         $dataToBeMerge['userPrimaryEntity'] = $currentUserPrimaryEntity;
         $dataToBeMerge['visas']             = $visas;
         $dataToBeMerge['opinions']          = $opinions;
