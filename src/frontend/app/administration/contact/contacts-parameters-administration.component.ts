@@ -10,10 +10,10 @@ import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 declare function $j(selector: any): any;
 
 @Component({
-    templateUrl: "contacts-filling-administration.component.html",
+    templateUrl: "contacts-parameters-administration.component.html",
     providers: [NotificationService, AppService]
 })
-export class ContactsFillingAdministrationComponent implements OnInit {
+export class ContactsParametersAdministrationComponent implements OnInit {
 
     @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;

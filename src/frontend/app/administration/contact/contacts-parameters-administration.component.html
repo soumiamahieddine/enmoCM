@@ -56,7 +56,7 @@
                         </mat-card>
                     </div>
                 </div>
-                <mat-table #table [dataSource]="dataSource" matSort matSortActive="identifier" matSortDirection="asc">
+                <mat-table #table [dataSource]="dataSource" matSort>
                         <ng-container matColumnDef="identifier">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.label}}</mat-header-cell>
                             <mat-cell *matCellDef="let element">
@@ -66,19 +66,19 @@
                         </ng-container>
                         <ng-container matColumnDef="mandatory">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.mandatory}}</mat-header-cell>
-                            <mat-cell *matCellDef="let element"><mat-slide-toggle style="margin-left:11px" color="primary" (change)="addCriteria($event, element, 'mandatory')" [checked]="element.mandatory"></mat-slide-toggle></mat-cell>
+                            <mat-cell *matCellDef="let element"><mat-slide-toggle style="margin-left:11px" color="primary" title="{{lang.mandatory}}" (change)="addCriteria($event, element, 'mandatory')" [checked]="element.mandatory"></mat-slide-toggle></mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="filling">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.contactsFillingCriteria}}</mat-header-cell>
-                                <mat-cell *matCellDef="let element"> <mat-slide-toggle style="margin-left:11px" color="primary" (change)="addCriteria($event, element, 'filling')" [checked]="element.filling"></mat-slide-toggle> </mat-cell>
+                                <mat-cell *matCellDef="let element"> <mat-slide-toggle style="margin-left:11px" color="primary" title="{{lang.contactsFillingCriteria}}" (change)="addCriteria($event, element, 'filling')" [checked]="element.filling"></mat-slide-toggle> </mat-cell>
                             </ng-container>
                         <ng-container matColumnDef="displayable">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.autocompletionSearchable}}</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> <mat-slide-toggle style="margin-left:11px" color="primary" (change)="addCriteria($event, element, 'searchable')" [checked]="element.searchable"></mat-slide-toggle> </mat-cell>
+                            <mat-cell *matCellDef="let element"> <mat-slide-toggle style="margin-left:11px" color="primary" title="{{lang.autocompletionSearchable}}" (change)="addCriteria($event, element, 'searchable')" [checked]="element.searchable"></mat-slide-toggle> </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="searchable">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.autocompletionDisplayable}}</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> <mat-slide-toggle style="margin-left:11px" color="primary" (change)="addCriteria($event, element, 'displayable')" [checked]="element.displayable"></mat-slide-toggle> </mat-cell>
+                            <mat-cell *matCellDef="let element"> <mat-slide-toggle style="margin-left:11px" color="primary" title="{{lang.autocompletionDisplayable}}" (change)="addCriteria($event, element, 'displayable')" [checked]="element.displayable"></mat-slide-toggle> </mat-cell>
                         </ng-container>
                         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
                         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>

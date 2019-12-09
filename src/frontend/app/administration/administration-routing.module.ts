@@ -27,7 +27,7 @@ import { HistoryAdministrationComponent }               from './history/history-
 import { UpdateStatusAdministrationComponent }          from './updateStatus/update-status-administration.component';
 import { ContactsGroupsAdministrationComponent }        from './contact/contacts-groups-administration.component';
 import { ContactsGroupAdministrationComponent }         from './contact/contacts-group-administration.component';
-import { ContactsFillingAdministrationComponent }       from './contact/contacts-filling-administration.component';
+import { ContactsParametersAdministrationComponent }       from './contact/contacts-parameters-administration.component';
 import { VersionsUpdateAdministrationComponent }        from './versionUpdate/versions-update-administration.component';
 import { DocserversAdministrationComponent }            from './docserver/docservers-administration.component';
 import { DocserverAdministrationComponent }             from './docserver/docserver-administration.component';
@@ -81,7 +81,7 @@ import { IndexingModelsAdministrationComponent }        from './indexingModel/in
             { path: 'administration/contacts-groups', canActivate: [AppGuard], component: ContactsGroupsAdministrationComponent },
             { path: 'administration/contacts-groups/new', canActivate: [AppGuard], component: ContactsGroupAdministrationComponent },
             { path: 'administration/contacts-groups/:id', canActivate: [AppGuard], component: ContactsGroupAdministrationComponent },
-            { path: 'administration/contacts-filling', canActivate: [AppGuard], component: ContactsFillingAdministrationComponent },
+            { path: 'administration/contacts-parameters', canActivate: [AppGuard], component: ContactsParametersAdministrationComponent },
             { path: 'administration/versions-update', canActivate: [AppGuard], component: VersionsUpdateAdministrationComponent },
             { path: 'administration/docservers', canActivate: [AppGuard], component: DocserversAdministrationComponent },
             { path: 'administration/docservers/new', canActivate: [AppGuard], component: DocserverAdministrationComponent },
