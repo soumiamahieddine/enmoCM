@@ -80,6 +80,7 @@ where group_id in (
     ) and groupbasket.basket_id = actions_groupbaskets.basket_id
 );
 
+-- /!\ Do not move : update actions AFTER all updates on groupbasket
 UPDATE actions SET component = 'confirmAction', action_page = 'confirm_status' WHERE action_page in ('validate_mail', 'process', 'visa_mail');
 DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
 
