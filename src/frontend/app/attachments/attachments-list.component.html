@@ -48,8 +48,8 @@
 
             <div class="infosPj">
                 <div class="stateInfo">
-                    <i class="fas fa-file-signature" *ngIf="attachment.inSignatureBook"></i>&nbsp;
-                    <i class="fa fa-shipping-fast" *ngIf="attachment.inSendAttach"></i>
+                    <i title="{{lang.inSignatureBook}}" class="fas fa-file-signature" *ngIf="attachment.inSignatureBook"></i>&nbsp;
+                    <i title="{{lang.inShipping}}" class="fa fa-shipping-fast" *ngIf="attachment.inSendAttach"></i>
                 </div>
                 <div class="mainInfos" *ngIf="!attachment.hideMainInfo">
                     {{attachment.chrono}}&nbsp;

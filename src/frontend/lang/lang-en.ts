@@ -724,6 +724,8 @@ export const LANG_EN = {
     "public"                                : "Public",
     "putInSendAttach"                       : "Put in send attachement Maileva",
     "putInSignatureBook"                    : "Put in signature book",
+    "inSignatureBook"                       : "In signature Book",
+    "inShipping"                            : "In shipping",
     "quickSearchInfo"                       : "Target search ",
     "quickSearchTarget"                     : "subject (mail / attachment), chrono number (courrier / attachment), reference mail, notes content, barcode, attachment contact (society / lastanme / firstname)",
     "reactivateUserDeleted"                 : "The id filled is linked to a deleted user. Voulez-vous le réactiver ?",

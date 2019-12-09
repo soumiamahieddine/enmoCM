@@ -756,6 +756,8 @@ export const LANG_FR = {
     "public"                                : "Public",
     "putInSendAttach"                       : "Intégrer aux envois Maileva",
     "putInSignatureBook"                    : "Intégrer au parapheur",
+    "inSignatureBook"                       : "Intégré au parapheur",
+    "inShipping"                            : "Intégré à l'envoi Maileva",
     "quickSearchInfo"                       : "Cible de la recherche",
     "quickSearchTarget"                     : "sujet (courrier / pièce jointe), numéro chrono (courrier / pièce jointe), référence courrier expéditeur, contenu d'annotations, code à barre, contact pièce jointe (société / nom / prénom)",
     "reactivateUserDeleted"                 : "L'identifiant renseigné est attribué à un utilisateur supprimé. Voulez-vous le réactiver ?",

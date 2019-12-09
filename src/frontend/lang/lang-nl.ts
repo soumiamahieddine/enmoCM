@@ -751,6 +751,8 @@ export const LANG_NL = {
     "putInSendAttach"                       : "Put in send attachement Maileva", //_TO_TRANSLATE
     "putInSignatureBook"                    : "Put in signature book", //_TO_TRANSLATE
     "quickSearchInfo"                       : "Target search ", //_TO_TRANSLATE
+    "inSignatureBook"                       : "In signature Book", //_TO_TRANSLATE
+    "inShipping"                            : "In shipping", //_TO_TRANSLATE
     "quickSearchTarget"                     : "subject (mail / attachment), chrono number (courrier / attachment), reference mail, notes content, barcode, attachment contact (society / lastanme / firstname)", //_TO_TRANSLATE
     "quota"                                 : "Quota",
     "quotaExceeded"                         : "Quota overschreden",
