@@ -132,11 +132,13 @@ const DATA_TO_REPLACE = [
     'contact.society' => '[recipient.company]',
     'contact.departement' => '[recipient.department]',
     'contact.title' => '[recipient.civility]',
+    'contact.contact_title' => '[recipient.civility]',
     'contact.contact_lastname' => '[recipient.lastname]',
     'contact.contact_firstname' => '[recipient.firstname]',
     'contact.lastname' => '[recipient.lastname]',
     'contact.firstname' => '[recipient.firstname]',
     'contact.function' => '[recipient.function]',
+    'contact.postal_address;strconv=no' => '[recipient.postal_address;strconv=no]',
     'contact.postal_address' => '[recipient.postal_address]',
     'contact.address_num' => '[recipient.address_number]',
     'contact.address_street' => '[recipient.address_street]',
@@ -178,7 +180,7 @@ foreach ($customs as $custom) {
 
             $newContent = $content;
             foreach (DATA_TO_REPLACE as $key => $value) {
-                    $newContent = str_replace('[' . $key . ']', $value, $newContent);
+                $newContent = str_replace('[' . $key . ']', $value, $newContent);
             }
 
             if ($content != $newContent) {
