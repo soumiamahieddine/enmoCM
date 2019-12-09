@@ -44,6 +44,7 @@ class MergeController
 
         $tbs = new \clsTinyButStrong();
         $tbs->NoErr = true;
+        $tbs->Protect = false;
         $tbs->PlugIn(TBS_INSTALL, OPENTBS_PLUGIN);
 
         if (!empty($args['path'])) {

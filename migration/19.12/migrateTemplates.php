@@ -181,6 +181,7 @@ foreach ($customs as $custom) {
 
             $tbs = new clsTinyButStrong();
             $tbs->NoErr = true;
+            $tbs->Protect = false;
             $tbs->PlugIn(TBS_INSTALL, OPENTBS_PLUGIN);
 
             $tbs->LoadTemplate($pathToDocument, OPENTBS_ALREADY_UTF8);
