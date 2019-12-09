@@ -66,8 +66,6 @@ FROM (
        WHERE ag.default_action_list = 'Y' AND a.action_page in ('visa_mail')
      ) AS subquery
 WHERE groupbasket.basket_id = subquery.basket_id AND groupbasket.group_id = subquery.group_id;
-UPDATE actions SET component = 'confirmAction', action_page = 'confirm_status' WHERE action_page in ('validate_mail', 'process', 'visa_mail');
-DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_event_data;
 ALTER TABLE groupbasket ADD COLUMN list_event_data jsonb;
 
@@ -81,6 +79,9 @@ where group_id in (
         where action_page = 'validate_mail'
     ) and groupbasket.basket_id = actions_groupbaskets.basket_id
 );
+
+UPDATE actions SET component = 'confirmAction', action_page = 'confirm_status' WHERE action_page in ('validate_mail', 'process', 'visa_mail');
+DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
 
 
 /* FOLDERS */
