@@ -353,7 +353,6 @@ class ContactController
             unset($contactParameter['label']);
             ContactParameterModel::update([
                 'set'   => [
-                    'id' => $contactParameter['id'],
                     'mandatory'   => empty($contactParameter['mandatory']) ? 'false' : 'true',
                     'filling'     => empty($contactParameter['filling']) ? 'false' : 'true',
                     'searchable'  => empty($contactParameter['searchable']) ? 'false' : 'true',
@@ -584,6 +583,25 @@ class ContactController
                     'id'        => $resourceContact['item_id']
                 ]);
 
+                $contact = [
+                    'mode'      => 'physical',
+                    'firstname' => $contactRaw['firstname'] ?? '',
+                    'lastname'  => $contactRaw['lastname'] ?? '',
+                    'email'     => $contactRaw['email'] ?? '',
+                    'phone'     => $contactRaw['phone'] ?? '',
+                    'company'   => $contactRaw['company'] ?? '',
+                    'function'  => $contactRaw['function'] ?? '',
+                    'number'    => $contactRaw['address_number'] ?? '',
+                    'street'    => $contactRaw['address_street'] ?? '',
+                    'complement'=> $contactRaw['address_additional1'] ?? '',
+                    'town'      => $contactRaw['address_town'] ?? '',
+                    'postalCode'=> $contactRaw['address_postcode'] ?? '',
+                    'country'   => $contactRaw['country'] ?? '',
+                    'otherData' => $contactRaw['notes'] ?? '',
+                    'occupancy' => $contactRaw['address_additional1'] ?? '',
+                    'department' => $contactRaw['department'] ?? ''
+                ];
+
                 $filling = ContactController::getFillingRate(['contactId' => $resourceContact['item_id']]);
 
                 $contact['filling'] = $filling['color'];
@@ -618,7 +636,6 @@ class ContactController
                     'postalCode'=> '',
                     'country'   => '',
                     'otherData' => '',
-                    'website'   => '',
                     'occupancy' => $nonPrimaryEntities,
                     'department' => $primaryEntity['entity_label']
                 ];
@@ -640,7 +657,6 @@ class ContactController
                     'postalCode'=> '',
                     'country'   => '',
                     'otherData' => '',
-                    'website'   => '',
                     'occupancy' => '',
                     'department' => ''
                 ];
