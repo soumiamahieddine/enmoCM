@@ -234,6 +234,7 @@ DO $$ BEGIN
 END$$;
 SELECT setval('tags_id_seq', (SELECT MAX(id) from tags));
 
+DROP TABLE IF EXISTS tags_entities;
 
 /* DOCTYPES */
 DO $$ BEGIN

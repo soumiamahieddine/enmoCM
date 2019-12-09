@@ -151,6 +151,7 @@ define('_NOTE_DELETED', 'Note deleted');
 define('_TAG_ADDED', 'Tag added');
 define('_TAG_DELETED', 'Tag deleted');
 define('_TAG_UPDATED', 'Tag updated');
+define('_TAG_MERGED', 'Tag merged');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');

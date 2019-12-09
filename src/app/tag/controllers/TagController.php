@@ -193,14 +193,17 @@ class TagController
            'data'   => [$tagMerge['id']]
         ]);
 
-        TagModel::deleteTagEntities([
-           'where'  => ['tag_id = ?'],
-           'data'   => [$tagMerge['id']]
-        ]);
-
         TagModel::delete([
             'where' => ['id = ?'],
             'data'  => [$tagMerge['id']]
+        ]);
+
+        HistoryController::add([
+            'tableName' => 'tags',
+            'recordId'  => $tagMaster['id'],
+            'eventType' => 'DEL',
+            'info'      =>  _TAG_MERGED . " : {$tagMerge['label']} vers {$tagMaster['label']}",
+            'eventId'   => 'tagSuppression',
         ]);
 
         return $response->withStatus(204);

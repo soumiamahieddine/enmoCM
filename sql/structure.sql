@@ -938,16 +938,6 @@ WITH (
   OIDS=FALSE
 );
 
-CREATE TABLE tags_entities
-(
-  tag_id bigint,
-  entity_id character varying(32),
-  CONSTRAINT tags_entities_pkey PRIMARY KEY (tag_id,entity_id)
-)
-WITH (
-  OIDS=FALSE
-);
-
 CREATE SEQUENCE res_id_mlb_seq
   INCREMENT 1
   MINVALUE 1

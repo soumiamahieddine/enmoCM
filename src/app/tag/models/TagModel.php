@@ -103,17 +103,4 @@ class TagModel
         return true;
     }
 
-    public static function deleteTagEntities(array $args)
-    {
-        ValidatorModel::notEmpty($args, ['where', 'data']);
-        ValidatorModel::arrayType($args, ['where', 'data']);
-
-        DatabaseModel::delete([
-            'table' => 'tags_entities',
-            'where' => $args['where'],
-            'data'  => $args['data']
-        ]);
-
-        return true;
-    }
 }

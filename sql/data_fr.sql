@@ -1215,21 +1215,6 @@ INSERT INTO tags (label, entity_id_owner) VALUES ('QUARTIERS', 'COU');
 INSERT INTO tags (label, entity_id_owner) VALUES ('LITTORAL', 'COU');
 INSERT INTO tags (label, entity_id_owner) VALUES ('SPORT', 'COU');
 
-TRUNCATE TABLE tags_entities;
-INSERT INTO tags_entities (tag_id, entity_id) VALUES (1, 'COU');
-INSERT INTO tags_entities (tag_id, entity_id) VALUES (2, 'COU');
-INSERT INTO tags_entities (tag_id, entity_id) VALUES (3, 'COU');
-INSERT INTO tags_entities (tag_id, entity_id) VALUES (4, 'COU');
-INSERT INTO tags_entities (tag_id, entity_id) VALUES (5, 'COU');
-INSERT INTO tags_entities (tag_id, entity_id) VALUES (6, 'COU');
-INSERT INTO tags_entities (tag_id, entity_id) VALUES (7, 'COU');
-INSERT INTO tags_entities (tag_id, entity_id) VALUES (8, 'COU');
-INSERT INTO tags_entities (tag_id, entity_id) VALUES (9, 'COU');
-INSERT INTO tags_entities (tag_id, entity_id) VALUES (10, 'COU');
-INSERT INTO tags_entities (tag_id, entity_id) VALUES (11, 'COU');
-INSERT INTO tags_entities (tag_id, entity_id) VALUES (12, 'COU');
-INSERT INTO tags_entities (tag_id, entity_id) VALUES (13, 'COU');
-
 ------------
 ------------
 --TEMPLATES
