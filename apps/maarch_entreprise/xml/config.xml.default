@@ -31,10 +31,6 @@
         <doctypes_second_level>doctypes_second_level</doctypes_second_level>
         <doctypes_indexes>doctypes_indexes</doctypes_indexes>
         <saved_queries>saved_queries</saved_queries>
-        <contacts_v2>contacts_v2</contacts_v2>
-        <contact_types>contact_types</contact_types>
-        <contact_purposes>contact_purposes</contact_purposes>
-        <contact_addresses>contact_addresses</contact_addresses>
         <tags>tags</tags>
     </TABLENAME>
     <WORKBATCH>
@@ -123,9 +119,6 @@
         <contact_types_del>true</contact_types_del>
         <contact_types_add>true</contact_types_add>
         <contact_types_up>true</contact_types_up>
-        <contact_purposes_del>true</contact_purposes_del>
-        <contact_purposes_add>true</contact_purposes_add>
-        <contact_purposes_up>true</contact_purposes_up>
         <contact_addresses_del>true</contact_addresses_del>
         <contact_addresses_add>true</contact_addresses_add>
         <contact_addresses_up>true</contact_addresses_up>

@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS contacts_v2;
 ALTER TABLE acknowledgement_receipts ALTER COLUMN contact_id set not null;
 ALTER TABLE acknowledgement_receipts DROP COLUMN IF EXISTS contact_address_id;
 ALTER TABLE contacts_groups_lists ALTER COLUMN contact_id set not null;
-ALTER TABLE contacts_groups_lists DROP COLUMN IF EXISTS contact_address_id;
+ALTER TABLE contacts_groups_lists DROP COLUMN IF EXISTS contact_addresses_id;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS dest_contact_id;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS dest_address_id;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS dest_user;

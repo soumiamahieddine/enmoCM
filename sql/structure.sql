@@ -215,9 +215,6 @@ CREATE TABLE users
   phone character varying(32) DEFAULT NULL::character varying,
   mail character varying(255) DEFAULT NULL::character varying,
   initials character varying(32) DEFAULT NULL::character varying,
-  custom_t1 character varying(50) DEFAULT '0'::character varying,
-  custom_t2 character varying(50) DEFAULT NULL::character varying,
-  custom_t3 character varying(50) DEFAULT NULL::character varying,
   status character varying(10) NOT NULL DEFAULT 'OK'::character varying,
   password_modification_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
   loginmode character varying(50) DEFAULT NULL::character varying,
@@ -264,11 +261,11 @@ CREATE TABLE res_attachments
   effective_date timestamp without time zone,
   work_batch bigint,
   origin character varying(50) DEFAULT NULL::character varying,
-  dest_user_id INTEGER,
   res_id_master bigint,
   origin_id INTEGER,
   attachment_type character varying(255) DEFAULT NULL::character varying,
-  contact_id integer,
+  recipient_id integer,
+  recipient_type character varying(256),
   in_signature_book boolean DEFAULT FALSE,
   in_send_attach boolean DEFAULT FALSE,
   signatory_user_serial_id int,
@@ -936,16 +933,6 @@ CREATE TABLE tag_res
   res_id bigint NOT NULL,
   tag_id bigint NOT NULL,
   CONSTRAINT tag_res_pkey PRIMARY KEY (res_id,tag_id)
-)
-WITH (
-  OIDS=FALSE
-);
-
-CREATE TABLE tags_entities
-(
-  tag_id bigint,
-  entity_id character varying(32),
-  CONSTRAINT tags_entities_pkey PRIMARY KEY (tag_id,entity_id)
 )
 WITH (
   OIDS=FALSE

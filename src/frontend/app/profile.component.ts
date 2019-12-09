@@ -114,12 +114,10 @@ export class ProfileComponent implements OnInit {
     contactsGroup: any = { public: false };
 
     //Group contacts List Autocomplete
-    contactTypeSearch: string = "all";
     initAutoCompleteContact = true;
 
     searchTerm: FormControl = new FormControl();
     searchResult: any = [];
-    contactTypes: string[] = [];
     displayedColumnsContactsListAutocomplete: string[] = ['select', 'contact', 'address'];
     dataSourceContactsListAutocomplete: any;
     @ViewChild('paginatorGroupsListAutocomplete', { static: false }) paginatorGroupsListAutocomplete: MatPaginator;
@@ -127,8 +125,8 @@ export class ProfileComponent implements OnInit {
     masterToggle(event: any) {
         if (event.checked) {
             this.dataSourceContactsListAutocomplete.data.forEach((row: any) => {
-                if (!$j("#check_" + row.addressId + '-input').is(":disabled")) {
-                    this.selection.select(row.addressId);
+                if (!$j("#check_" + row.id + '-input').is(":disabled")) {
+                    this.selection.select(row.id);
                 }
             });
         } else {
@@ -179,7 +177,7 @@ export class ProfileComponent implements OnInit {
             debounceTime(500),
             filter(value => value.length > 2),
             distinctUntilChanged(),
-            switchMap(data => this.http.get('../../rest/autocomplete/contacts/groups', { params: { "search": data, "type": this.contactTypeSearch } }))
+            switchMap(data => this.http.get('../../rest/autocomplete/contacts/groups', { params: { "search": data } }))
         ).subscribe((response: any) => {
             this.searchResult = response;
             this.dataSourceContactsListAutocomplete = new MatTableDataSource(this.searchResult);
@@ -316,10 +314,6 @@ export class ProfileComponent implements OnInit {
 
     loadContactsGroup(contactsGroup: any) {
         this.contactsListMode = true;
-        this.http.get('../../rest/contactsTypes')
-            .subscribe((data: any) => {
-                this.contactTypes = data.contactsTypes;
-            });
 
         this.http.get('../../rest/contactsGroups/' + contactsGroup.id)
             .subscribe((data: any) => {
@@ -361,7 +355,7 @@ export class ProfileComponent implements OnInit {
     }
 
     removeContact(contact: any, row: any) {
-        this.http.delete("../../rest/contactsGroups/" + this.contactsGroup.id + "/contacts/" + contact['addressId'])
+        this.http.delete("../../rest/contactsGroups/" + this.contactsGroup.id + "/contacts/" + contact['id'])
             .subscribe(() => {
                 var lastElement = this.contactsGroup.contacts.length - 1;
                 this.contactsGroup.contacts[row] = this.contactsGroup.contacts[lastElement];
@@ -384,19 +378,19 @@ export class ProfileComponent implements OnInit {
         }
     }
 
-    isInGrp(address: any): boolean {
+    isInGrp(contact: any): boolean {
         let isInGrp = false;
         this.contactsGroup.contacts.forEach((row: any) => {
-            if (row.addressId == address.addressId) {
+            if (row.id == contact.id) {
                 isInGrp = true;
             }
         });
         return isInGrp;
     }
 
-    selectAddress(addressId: any) {
-        if (!$j("#check_" + addressId + '-input').is(":disabled")) {
-            this.selection.toggle(addressId);
+    selectContact(id: any) {
+        if (!$j("#check_" + id + '-input').is(":disabled")) {
+            this.selection.toggle(id);
         }
     }
 

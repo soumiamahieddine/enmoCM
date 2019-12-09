@@ -515,6 +515,23 @@ class BasketController
         return $response->withJson(['success' => 'success']);
     }
 
+    public function getlistEventData(Request $request, Response $response, array $args)
+    {
+        $basket = BasketModel::getById(['id' => $args['id'], 'select' => ['basket_id']]);
+        $group = GroupModel::getById(['id' => $args['groupId'], 'select' => ['group_id']]);
+        if (empty($group) || empty($basket)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Group or basket does not exist']);
+        }
+
+        $groupBasket = GroupBasketModel::get(['select' => ['list_event_data'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
+
+        if (empty($groupBasket[0]['list_event_data'])) {
+            return $response->withJson(['listEventData' => null]);
+        }
+
+        return $response->withJson(['listEventData' => json_decode($groupBasket[0]['list_event_data'], true)]);
+    }
+
     private static function checkGroupActions(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['groupActions', 'userId']);

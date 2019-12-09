@@ -390,8 +390,12 @@ export class EntitiesAdministrationComponent implements OnInit {
                             $j('#jstree').jstree(true).settings.core.data = this.entities;
                             $j('#jstree').jstree("refresh");
                             this.sidenavRight.close();
-                            this.notify.success(this.lang.entityDeleted);
 
+                            if (typeof data['deleted'] !== "undefined" && !data['deleted']) {
+                                this.notify.success("Entité supprimée mais l'annuaire est injoignable, l'entité est possiblement toujours présente dedans");
+                            } else {
+                                this.notify.success(this.lang.entityDeleted);
+                            }
                         }, (err) => {
                             this.notify.error(err.error.errors);
                         });
@@ -432,8 +436,12 @@ export class EntitiesAdministrationComponent implements OnInit {
                         $j('#jstree').jstree(true).settings.core.data = this.entities;
                         $j('#jstree').jstree("refresh");
                         this.sidenavRight.close();
-                        this.notify.success(this.lang.entityDeleted);
-                    }, (err) => {
+                        if (typeof data['deleted'] !== "undefined" && !data['deleted']) {
+                            this.notify.success("Entité supprimée mais l'annuaire est injoignable, l'entité est possiblement toujours présente dedans");
+                        } else {
+                            this.notify.success(this.lang.entityDeleted);
+                        }
+                    }, (err: any) => {
                         this.notify.error(err.error.errors);
                     });
             }
@@ -708,7 +716,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                     user_id : newUser.otherInfo,
                     firstname : displayName[0],
                     lastname : displayName[1]
-                }
+                };
                 this.currentEntity.users.push(user);
                 this.dataSourceUsers = new MatTableDataSource(this.currentEntity.users);
                 this.dataSourceUsers.paginator = this.paginatorUsers;
@@ -723,6 +731,24 @@ export class EntitiesAdministrationComponent implements OnInit {
         if(this.currentEntity.canAdminTemplates) {
             this.router.navigate(['/administration/templates/' + templateId]);
         }
+    }
+
+    addEntityToAnnuary() {
+        this.http.put("../../rest/entities/" + this.currentEntity.id + "/annuaries", this.currentEntity)
+            .subscribe((data: any) => {
+                this.currentEntity.business_id = data['entitySiret'];
+                if (typeof data['synchronized'] === "undefined") {
+                    this.notify.success("Numéro SIRET généré");
+                } else {
+                    if (data['synchronized']) {
+                        this.notify.success("Numéro SIRET généré et synchronisation annuaire effectuée");
+                    } else {
+                        this.notify.success("Numéro SIRET généré mais l'annuaire est injoignable");
+                    }
+                }
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+            });
     }
 }
 @Component({

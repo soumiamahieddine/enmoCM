@@ -274,8 +274,8 @@ class ExportFunctions
 
         $collection = $this->collection;
 
-        $query = 'SELECT item_id, ue.entity_id FROM listinstance l LEFT JOIN users_entities ue on l.item_id = ue.user_id WHERE l.res_id = ? AND l.coll_id = ? AND l.item_mode = ?';
-        $stmt = $db->query($query, array($res_id, $this->collection, 'cc'));
+        $query = 'SELECT item_id, ue.entity_id FROM listinstance l LEFT JOIN users_entities ue on l.item_id = ue.user_id WHERE l.res_id = ? AND l.item_mode = ?';
+        $stmt = $db->query($query, array($res_id, 'cc'));
 
         $arr_copy = [];
         while ($result = $stmt->fetchObject()) {

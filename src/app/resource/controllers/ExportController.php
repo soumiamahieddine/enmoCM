@@ -255,10 +255,10 @@ class ExportController
                     } elseif ($value['value'] == 'getDestinationEntityType') {
                         $csvContent[] = $resource['enthree.entity_type'];
                     } elseif ($value['value'] == 'getSenders') {
-                        $senders = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
+                        $senders = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
                         $csvContent[] = implode("\n", $senders);
                     } elseif ($value['value'] == 'getRecipients') {
-                        $recipients = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
+                        $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
                         $csvContent[] = implode("\n", $recipients);
                     } elseif ($value['value'] == 'getTypist') {
                         $csvContent[] = UserModel::getLabelledUserById(['id' => $resource['typist']]);
@@ -367,10 +367,10 @@ class ExportController
                     } elseif ($value['value'] == 'getDestinationEntityType') {
                         $content[] = $resource['enthree.entity_type'];
                     } elseif ($value['value'] == 'getSenders') {
-                        $senders = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
+                        $senders = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
                         $content[] = implode("\n", $senders);
                     } elseif ($value['value'] == 'getRecipients') {
-                        $recipients = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
+                        $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
                         $content[] = implode("\n", $recipients);
                     } elseif ($value['value'] == 'getTypist') {
                         $content[] = UserModel::getLabelledUserById(['id' => $resource['typist']]);

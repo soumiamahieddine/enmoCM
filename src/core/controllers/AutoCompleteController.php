@@ -15,7 +15,7 @@
 namespace SrcCore\controllers;
 
 use Contact\controllers\ContactController;
-use Contact\controllers\ContactGroupController;
+use Contact\models\ContactGroupModel;
 use Contact\models\ContactModel;
 use Entity\models\EntityModel;
 use Respect\Validation\Validator;
@@ -31,51 +31,12 @@ use Tag\models\TagModel;
 use User\models\UserModel;
 use Folder\models\FolderModel;
 use Folder\controllers\FolderController;
+use MessageExchange\controllers\AnnuaryController;
 
 class AutoCompleteController
 {
     const LIMIT = 50;
     const TINY_LIMIT = 10;
-
-    public static function getContacts(Request $request, Response $response)
-    {
-        $data = $request->getQueryParams();
-
-        $check = Validator::stringType()->notEmpty()->validate($data['search']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
-        }
-
-        $searchItems = explode(' ', $data['search']);
-
-        $fields = '(contact_firstname ilike ? OR contact_lastname ilike ? OR firstname ilike ? OR lastname ilike ? OR society ilike ? 
-                    OR address_num ilike ? OR address_street ilike ? OR address_town ilike ? OR address_postal_code ilike ?)';
-        $where = [];
-        $requestData = [];
-        foreach ($searchItems as $item) {
-            if (strlen($item) >= 2) {
-                $where[] = $fields;
-                for ($i = 0; $i < 9; $i++) {
-                    $requestData[] = "%{$item}%";
-                }
-            }
-        }
-
-        $contacts = ContactModel::getOnView([
-            'select'    => ['*'],
-            'where'     => $where,
-            'data'      => $requestData,
-            'limit'     => self::TINY_LIMIT
-        ]);
-
-        $color = (!empty($data['color']) && $data['color'] == 'true');
-        $autocompleteData = [];
-        foreach ($contacts as $contact) {
-            $autocompleteData[] = AutoCompleteController::getFormattedContact(['contact' => $contact, 'color' => $color])['contact'];
-        }
-
-        return $response->withJson($autocompleteData);
-    }
 
     public static function getUsers(Request $request, Response $response)
     {
@@ -183,84 +144,144 @@ class AutoCompleteController
         }
     }
 
-    public static function getContactsAndUsers(Request $request, Response $response)
+    public static function getAll(Request $request, Response $response)
     {
-        $data = $request->getQueryParams();
+        $queryParams = $request->getQueryParams();
 
-        if (!Validator::stringType()->notEmpty()->validate($data['search'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        if (!Validator::stringType()->notEmpty()->validate($queryParams['search'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
         }
 
-        $searchItems = explode(' ', $data['search']);
+        //Contacts
+        $autocompleteContacts = [];
+        if (empty($queryParams['noContacts'])) {
+            $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'];
+            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+            $requestData = AutoCompleteController::getDataForRequest([
+                'search'        => $queryParams['search'],
+                'fields'        => $fields,
+                'where'         => ['enabled = ?'],
+                'data'          => [true],
+                'fieldsNumber'  => 7,
+            ]);
 
-        $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'];
-        foreach ($fields as $key => $field) {
-            $fields[$key] = "translate({$field}, 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ', 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')";
-            $fields[$key] .= "ilike translate(?, 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ', 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')";
-        }
-        $fields = implode(' OR ', $fields);
-        $fields = "($fields)";
+            $contacts = ContactModel::get([
+                'select'    => ['*'],
+                'where'     => $requestData['where'],
+                'data'      => $requestData['data'],
+                'orderBy'   => ['company', 'lastname'],
+                'limit'     => self::TINY_LIMIT
+            ]);
 
-        $where = [];
-        $requestData = [];
-        foreach ($searchItems as $item) {
-            if (strlen($item) >= 2) {
-                $where[] = $fields;
-                for ($i = 0; $i < 7; $i++) {
-                    $requestData[] = "%{$item}%";
-                }
+            $color = isset($queryParams['color']) && filter_var($queryParams['color'], FILTER_VALIDATE_BOOLEAN);
+
+            foreach ($contacts as $contact) {
+                $autocompleteContacts[] = ContactController::getFormattedContactWithAddress(['contact' => $contact, 'color' => $color])['contact'];
             }
         }
 
-        $contacts = ContactModel::get([
-            'select'    => ['*'],
-            'where'     => $where,
-            'data'      => $requestData,
-            'orderBy'   => ["company, lastname"],
-            'limit'     => self::TINY_LIMIT
-        ]);
+        //Users
+        $autocompleteUsers = [];
+        if (empty($queryParams['noUsers'])) {
+            $fields = ['firstname', 'lastname'];
+            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+            $requestData = AutoCompleteController::getDataForRequest([
+                'search'        => $queryParams['search'],
+                'fields'        => $fields,
+                'where'         => ['status not in (?)', 'user_id not in (?)'],
+                'data'          => [['DEL', 'SPD'], ['superadmin']],
+                'fieldsNumber'  => 2,
+            ]);
 
-        $color = (!empty($data['color']) && $data['color'] == 'true');
+            $users = UserModel::get([
+                'select'    => ['id', 'firstname', 'lastname'],
+                'where'     => $requestData['where'],
+                'data'      => $requestData['data'],
+                'orderBy'   => ['lastname'],
+                'limit'     => self::TINY_LIMIT
+            ]);
 
-        $onlyContacts = [];
-        $autocompleteData = [];
-        foreach ($contacts as $contact) {
-            if (!empty($data['onlyContacts']) && $data['onlyContacts'] == 'true' && !in_array($contact['contact_id'], $onlyContacts)) {
-                $autocompleteData[] = AutoCompleteController::getFormattedOnlyContact(['contact' => $contact])['contact'];
-                $onlyContacts[] = $contact['contact_id'];
+            foreach ($users as $user) {
+                $autocompleteUsers[] = [
+                    'type'          => 'user',
+                    'id'            => $user['id'],
+                    'idToDisplay'   => "{$user['firstname']} {$user['lastname']}",
+                    'otherInfo'     => "{$user['firstname']} {$user['lastname']}"
+                ];
             }
-            $autocompleteData[] = AutoCompleteController::getFormattedContactV2(['contact' => $contact, 'color' => $color])['contact'];
         }
 
-        $excludedUsers = ['superadmin'];
+        //Entities
+        $autocompleteEntities = [];
+        if (empty($queryParams['noEntities'])) {
+            $fields = ['entity_label'];
+            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+            $requestData = AutoCompleteController::getDataForRequest([
+                'search'        => $queryParams['search'],
+                'fields'        => $fields,
+                'where'         => ['enabled = ?'],
+                'data'          => ['Y'],
+                'fieldsNumber'  => 1,
+            ]);
 
-        $fields = ['firstname', 'lastname'];
-        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+            $entities = EntityModel::get([
+                'select'    => ['id', 'entity_id', 'entity_label', 'short_label'],
+                'where'     => $requestData['where'],
+                'data'      => $requestData['data'],
+                'orderBy'   => ['entity_label'],
+                'limit'     => self::TINY_LIMIT
+            ]);
 
-        $requestData = AutoCompleteController::getDataForRequest([
-            'search'        => $data['search'],
-            'fields'        => $fields,
-            'where'         => ['status not in (?)', 'user_id not in (?)'],
-            'data'          => [['DEL', 'SPD'], $excludedUsers],
-            'fieldsNumber'  => 2,
-        ]);
-
-        $users = UserModel::get([
-            'select'    => ['id', 'user_id', 'firstname', 'lastname'],
-            'where'     => $requestData['where'],
-            'data'      => $requestData['data'],
-            'orderBy'   => ['lastname'],
-            'limit'     => self::TINY_LIMIT
-        ]);
-
-        foreach ($users as $value) {
-            $autocompleteData[] = [
-                'type'          => 'user',
-                'id'            => $value['id'],
-                'idToDisplay'   => "{$value['firstname']} {$value['lastname']}",
-                'otherInfo'     => "{$value['firstname']} {$value['lastname']}"
-            ];
+            foreach ($entities as $value) {
+                $autocompleteEntities[] = [
+                    'type'          => 'entity',
+                    'id'            => $value['id'],
+                    'idToDisplay'   => $value['entity_label'],
+                    'otherInfo'     => $value['short_label']
+                ];
+            }
         }
+
+        //Contacts Groups
+        $autocompleteContactsGroups = [];
+        if (empty($queryParams['noContactsGroups'])) {
+            $fields = ['label'];
+            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+            $requestData = AutoCompleteController::getDataForRequest([
+                'search'        => $queryParams['search'],
+                'fields'        => $fields,
+                'where'         => ['(public = ? OR owner = ?)'],
+                'data'          => [true, $GLOBALS['id']],
+                'fieldsNumber'  => 1,
+            ]);
+
+            $contactsGroups = ContactGroupModel::get([
+                'select'    => ['id', 'label'],
+                'where'     => $requestData['where'],
+                'data'      => $requestData['data'],
+                'orderBy'   => ['label'],
+                'limit'     => self::TINY_LIMIT
+            ]);
+
+            foreach ($contactsGroups as $value) {
+                $autocompleteContactsGroups[] = [
+                    'type'          => 'contactGroup',
+                    'id'            => $value['id'],
+                    'idToDisplay'   => $value['label'],
+                    'otherInfo'     => $value['label']
+                ];
+            }
+        }
+
+        $total = count($autocompleteContacts) + count($autocompleteUsers) + count($autocompleteEntities) + count($autocompleteContactsGroups);
+        if ($total > self::TINY_LIMIT) {
+            $divider = $total / self::TINY_LIMIT;
+            $autocompleteContacts = array_slice($autocompleteContacts, 0, round(count($autocompleteContacts) / $divider));
+            $autocompleteUsers = array_slice($autocompleteUsers, 0, round(count($autocompleteUsers) / $divider));
+            $autocompleteEntities = array_slice($autocompleteEntities, 0, round(count($autocompleteEntities) / $divider));
+            $autocompleteContactsGroups = array_slice($autocompleteContactsGroups, 0, round(count($autocompleteContactsGroups) / $divider));
+        }
+        $autocompleteData = array_merge($autocompleteContacts, $autocompleteUsers, $autocompleteEntities, $autocompleteContactsGroups);
 
         return $response->withJson($autocompleteData);
     }
@@ -472,34 +493,28 @@ class AutoCompleteController
         $data = $request->getQueryParams();
 
         $check = Validator::stringType()->notEmpty()->validate($data['search']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['type']);
         if (!$check) {
             return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
         }
 
         $searchItems = explode(' ', $data['search']);
 
-        $fields = '(contact_firstname ilike ? OR contact_lastname ilike ? OR firstname ilike ? OR lastname ilike ? OR society ilike ? 
-                    OR address_num ilike ? OR address_street ilike ? OR address_town ilike ? OR address_postal_code ilike ?)';
+        $fields = '(firstname ilike ? OR lastname ilike ? OR company ilike ? 
+                    OR address_number ilike ? OR address_street ilike ? OR address_town ilike ? OR address_postcode ilike ?)';
         $where = [];
         $requestData = [];
-        if ($data['type'] != 'all') {
-            $where = ['contact_type = ?'];
-            $requestData = [$data['type']];
-        }
         foreach ($searchItems as $item) {
             if (strlen($item) >= 2) {
                 $where[] = $fields;
-                for ($i = 0; $i < 9; $i++) {
+                for ($i = 0; $i < 7; $i++) {
                     $requestData[] = "%{$item}%";
                 }
             }
         }
 
-        $contacts = ContactModel::getOnView([
+        $contacts = ContactModel::get([
             'select'    => [
-                'ca_id', 'firstname', 'lastname', 'contact_lastname', 'contact_firstname', 'society', 'address_num',
-                'address_street', 'address_town', 'address_postal_code', 'is_corporate_person'
+                'id', 'firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'
             ],
             'where'     => $where,
             'data'      => $requestData,
@@ -508,7 +523,7 @@ class AutoCompleteController
 
         $data = [];
         foreach ($contacts as $contact) {
-            $data[] = ContactGroupController::getFormattedContact(['contact' => $contact])['contact'];
+            $data[] = ContactController::getFormattedContactWithAddress(['contact' => $contact])['contact'];
         }
 
         return $response->withJson($data);
@@ -572,6 +587,127 @@ class AutoCompleteController
 
         return $response->withJson($addresses);
     }
+
+    public static function getOuM2MAnnuary(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['society']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query society is empty']);
+        }
+
+        $control = AnnuaryController::getAnnuaries();
+        if (!isset($control['annuaries'])) {
+            if (isset($control['errors'])) {
+                return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+            }
+        }
+
+        $unitOrganizations = [];
+        if (!empty($control['annuaries'])) {
+            foreach ($control['annuaries'] as $annuary) {
+                $ldap = @ldap_connect($annuary['uri']);
+                if ($ldap === false) {
+                    continue;
+                }
+                ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+                ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
+                ldap_set_option($ldap, LDAP_OPT_NETWORK_TIMEOUT, 5);
+    
+                $search = @ldap_search($ldap, $annuary['baseDN'], "(ou=*{$data['society']}*)", ['ou', 'postOfficeBox', 'destinationIndicator', 'labeledURI']);
+                if ($search === false) {
+                    continue;
+                }
+                $entries = ldap_get_entries($ldap, $search);
+    
+                foreach ($entries as $key => $value) {
+                    if (!is_numeric($key)) {
+                        continue;
+                    }
+                    if (!empty($value['postofficebox'])) {
+                        $unitOrganizations[] = [
+                            'communicationValue' => $value['postofficebox'][0],
+                            'businessIdValue'    => $value['destinationindicator'][0],
+                            'unitOrganization'   => "{$value['ou'][0]} ({$value['postofficebox'][0]})"
+                        ];
+                    }
+                    if (!empty($value['labeleduri'])) {
+                        $unitOrganizations[] = [
+                            'communicationValue' => $value['labeleduri'][0],
+                            'businessIdValue'    => $value['destinationindicator'][0],
+                            'unitOrganization'   => "{$value['ou'][0]} ({$value['labeleduri'][0]})"
+                        ];
+                    }
+                }
+    
+                break;
+            }
+        }
+        
+        return $response->withJson($unitOrganizations);
+    }
+
+    public static function getBusinessIdM2MAnnuary(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+
+        $check = Validator::stringType()->notEmpty()->validate($data['communicationValue']);
+        if (!$check) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query communicationValue is empty']);
+        }
+
+        $control = AnnuaryController::getAnnuaries();
+        if (!isset($control['annuaries'])) {
+            if (isset($control['errors'])) {
+                return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+            }
+        }
+
+        foreach ($control['annuaries'] as $annuary) {
+            $ldap = @ldap_connect($annuary['uri']);
+            if ($ldap === false) {
+                $error = 'Ldap connect failed : uri is maybe wrong';
+                continue;
+            }
+            ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+            ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
+            ldap_set_option($ldap, LDAP_OPT_NETWORK_TIMEOUT, 5);
+
+            if (filter_var($data['communicationValue'], FILTER_VALIDATE_EMAIL)) {
+                $search = @ldap_search($ldap, $annuary['baseDN'], "(postofficebox={$data['communicationValue']})", ['destinationIndicator']);
+            } else {
+                $search = @ldap_search($ldap, $annuary['baseDN'], "(labeleduri={$data['communicationValue']})", ['destinationIndicator']);
+            }
+            if ($search === false) {
+                $error = 'Ldap search failed : baseDN is maybe wrong => ' . ldap_error($ldap);
+                continue;
+            }
+            $entriesOu = ldap_get_entries($ldap, $search);
+            foreach ($entriesOu as $keyOu => $valueOu) {
+                if (!is_numeric($keyOu)) {
+                    continue;
+                }
+                $siret   = $valueOu['destinationindicator'][0];
+                $search  = @ldap_search($ldap, $valueOu['dn'], "(cn=*)", ['cn', 'initials', 'entryUUID']);
+                $entries = ldap_get_entries($ldap, $search);
+
+                foreach ($entries as $key => $value) {
+                    if (!is_numeric($key)) {
+                        continue;
+                    }
+                    $unitOrganizations[] = [
+                        'entryuuid'        => $value['entryuuid'][0],
+                        'businessIdValue'  => $siret . '/' . $value['initials'][0],
+                        'unitOrganization' => "{$value['cn'][0]} - {$siret}/{$value['initials'][0]}"
+                    ];
+                }
+            }
+
+            return $response->withJson($unitOrganizations);
+        }
+    }
+
 
     public static function getFolders(Request $request, Response $response)
     {
@@ -680,180 +816,5 @@ class AutoCompleteController
         $fields = "($fields)";
 
         return $fields;
-    }
-
-    public static function getFormattedContact(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['contact']);
-        ValidatorModel::arrayType($aArgs, ['contact']);
-        ValidatorModel::boolType($aArgs, ['color']);
-
-        if (!empty($aArgs['color'])) {
-            $rate = ContactController::getFillingRate(['contact' => $aArgs['contact']]);
-        }
-        $rateColor = empty($rate['color']) ? '' : $rate['color'];
-
-        $address = '';
-        if ($aArgs['contact']['is_corporate_person'] == 'Y') {
-            $address.= $aArgs['contact']['firstname'];
-            $address.= (empty($address) ? $aArgs['contact']['lastname'] : " {$aArgs['contact']['lastname']}");
-            $address .= ', ';
-            if (!empty($aArgs['contact']['address_num'])) {
-                $address.= $aArgs['contact']['address_num'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_street'])) {
-                $address.= $aArgs['contact']['address_street'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_postal_code'])) {
-                $address.= $aArgs['contact']['address_postal_code'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_town'])) {
-                $address.= $aArgs['contact']['address_town'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_country'])) {
-                $address.= $aArgs['contact']['address_country'];
-            }
-            $address = rtrim($address, ', ');
-            $otherInfo = empty($address) ? "{$aArgs['contact']['society']}" : "{$aArgs['contact']['society']} - {$address}";
-            $contact = [
-                'type'          => 'contact',
-                'id'            => $aArgs['contact']['ca_id'],
-                'contact'       => $aArgs['contact']['society'],
-                'address'       => $address,
-                'idToDisplay'   => "{$aArgs['contact']['society']}<br/>{$address}",
-                'otherInfo'     => $otherInfo,
-                'rateColor'     => $rateColor
-            ];
-        } else {
-            if (!empty($aArgs['contact']['address_num'])) {
-                $address.= $aArgs['contact']['address_num'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_street'])) {
-                $address.= $aArgs['contact']['address_street'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_postal_code'])) {
-                $address.= $aArgs['contact']['address_postal_code'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_town'])) {
-                $address.= $aArgs['contact']['address_town'] . ' ';
-            }
-            if (!empty($aArgs['contact']['address_country'])) {
-                $address.= $aArgs['contact']['address_country'];
-            }
-            $contactToDisplay = "{$aArgs['contact']['contact_firstname']} {$aArgs['contact']['contact_lastname']}";
-            if (!empty($aArgs['contact']['society'])) {
-                $contactToDisplay .= " ({$aArgs['contact']['society']})";
-            }
-
-            $otherInfo = empty($address) ? "{$contactToDisplay}" : "{$contactToDisplay} - {$address}";
-            $contact = [
-                'type'          => 'contact',
-                'id'            => $aArgs['contact']['ca_id'],
-                'contact'       => $contactToDisplay,
-                'address'       => $address,
-                'idToDisplay'   => "{$contactToDisplay}<br/>{$address}",
-                'otherInfo'     => $otherInfo,
-                'rateColor'     => $rateColor
-            ];
-        }
-
-        return ['contact' => $contact];
-    }
-
-    public static function getFormattedContactV2(array $args)
-    {
-        ValidatorModel::notEmpty($args, ['contact']);
-        ValidatorModel::arrayType($args, ['contact']);
-        ValidatorModel::boolType($args, ['color']);
-
-        if (!empty($args['color'])) {
-            $rate = ContactController::getFillingRate(['contact' => $args['contact']]);
-        }
-        $rateColor = empty($rate['color']) ? '' : $rate['color'];
-
-        $address = '';
-
-        if (!empty($args['contact']['address_number'])) {
-            $address.= $args['contact']['address_number'] . ' ';
-        }
-        if (!empty($args['contact']['address_street'])) {
-            $address.= $args['contact']['address_street'] . ' ';
-        }
-        if (!empty($args['contact']['address_postcode'])) {
-            $address.= $args['contact']['address_postcode'] . ' ';
-        }
-        if (!empty($args['contact']['address_town'])) {
-            $address.= $args['contact']['address_town'] . ' ';
-        }
-        if (!empty($args['contact']['address_country'])) {
-            $address.= $args['contact']['address_country'];
-        }
-
-        $contactName = '';
-        if (!empty($args['contact']['firstname'])) {
-            $contactName .= $args['contact']['firstname'] . ' ';
-        }
-        if (!empty($args['contact']['lastname'])) {
-            $contactName .= $args['contact']['lastname'] . ' ';
-        }
-
-        $company = '';
-        if (!empty($args['contact']['company'])) {
-            $company = $args['contact']['company'];
-
-            if (!empty($contactName)) {
-                $company = '(' . $company . ') ';
-            }
-        }
-
-        $contactToDisplay = $contactName . $company;
-
-        $otherInfo = empty($address) ? "{$contactToDisplay}" : "{$contactToDisplay} - {$address}";
-        $contact = [
-            'type'          => 'contact',
-            'id'            => $args['contact']['id'],
-            'contact'       => $contactToDisplay,
-            'address'       => $address,
-            'idToDisplay'   => "{$contactToDisplay}<br/>{$address}",
-            'otherInfo'     => $otherInfo,
-            'rateColor'     => $rateColor
-        ];
-
-        return ['contact' => $contact];
-    }
-
-    public static function getFormattedOnlyContact(array $args)
-    {
-        ValidatorModel::notEmpty($args, ['contact']);
-        ValidatorModel::arrayType($args, ['contact']);
-
-        $contactName = '';
-        if (!empty($args['contact']['firstname'])) {
-            $contactName .= $args['contact']['firstname'] . ' ';
-        }
-        if (!empty($args['contact']['lastname'])) {
-            $contactName .= $args['contact']['lastname'] . ' ';
-        }
-
-        $company = '';
-        if (!empty($args['contact']['company'])) {
-            $company = $args['contact']['company'];
-
-            if (!empty($contactName)) {
-                $company = '(' . $company . ') ';
-            }
-        }
-
-        $contactToDisplay = $contactName . $company;
-
-        $contact = [
-            'type'          => 'onlyContact',
-            'id'            => $args['contact']['id'],
-            'idToDisplay'   => $contactToDisplay,
-            'otherInfo'     => $contactToDisplay,
-            'rateColor'     => ''
-        ];
-
-        return ['contact' => $contact];
     }
 }

@@ -340,20 +340,6 @@ a:hover {
     display: block;
 }
 
-#view_tree_contacts {
-    background:  url(static.php?filename=manage_architecture.gif) no-repeat 2px top;
-    width: 315px;
-    min-height: 110px;
-    float: left;
-    padding-top: 0px;
-    padding-right: 18px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin: 0px 0px 15px;
-    position: relative;
-    display: block;
-}
-
 /* floated blocks */
 
 .clear {

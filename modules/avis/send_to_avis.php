@@ -31,7 +31,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
     $res_id = $values[0];
 
-    $data = get_general_data($coll_id, $res_id, 'minimal');
+//    $data = get_general_data($coll_id, $res_id, 'minimal');
     //print_r($data);
     $avis = new avis_controler();
     $ent = new entity();

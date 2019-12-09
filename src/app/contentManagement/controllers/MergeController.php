@@ -14,6 +14,8 @@
 
 namespace ContentManagement\controllers;
 
+use Contact\controllers\ContactController;
+use Contact\models\ContactModel;
 use CustomField\models\ResourceCustomFieldModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
@@ -44,6 +46,7 @@ class MergeController
 
         $tbs = new \clsTinyButStrong();
         $tbs->NoErr = true;
+        $tbs->Protect = false;
         $tbs->PlugIn(TBS_INSTALL, OPENTBS_PLUGIN);
 
         if (!empty($args['path'])) {
@@ -143,11 +146,6 @@ class MergeController
 
         if (!empty($resource['initiator'])) {
             $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['*']]);
-            if (!empty($initiator)) {
-                foreach ($initiator as $key => $value) {
-                    $resource["initiator_{$key}"] = $value;
-                }
-            }
             $initiator['path'] = EntityModel::getEntityPathByEntityId(['entityId' => $resource['initiator'], 'path' => '']);
             if (!empty($initiator['parent_entity_id'])) {
                 $parentInitiator = EntityModel::getByEntityId(['entityId' => $initiator['parent_entity_id'], 'select' => ['*']]);
@@ -172,6 +170,28 @@ class MergeController
         $currentUserPrimaryEntity = UserModel::getPrimaryEntityById(['id' => $args['userId'], 'select' => ['entities.*', 'users_entities.user_role as role']]);
         if (!empty($currentUserPrimaryEntity)) {
             $currentUserPrimaryEntity['path'] = EntityModel::getEntityPathByEntityId(['entityId' => $currentUserPrimaryEntity['entity_id'], 'path' => '']);
+        }
+
+        //Recipient
+        $recipient = [];
+        if (!empty($args['recipientId']) && !empty($args['recipientType'])) {
+            if ($args['recipientType'] == 'contact') {
+                $recipient = ContactModel::getById([
+                    'id' => $args['recipientId'],
+                    'select' => [
+                        'civility', 'firstname', 'lastname', 'company', 'department', 'function', 'address_number', 'address_street', 'address_town',
+                        'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country', 'phone', 'email'
+                    ]
+                ]);
+                $recipient['civility'] = ContactModel::getCivilityLabel(['civilityId' => $recipient['civility']]);
+                $postalAddress = ContactController::getContactAfnor($recipient);
+                unset($postalAddress[0]);
+                $recipient['postal_address'] = implode("\n", $postalAddress);
+            } elseif ($args['recipientType'] == 'user') {
+                $recipient = UserModel::getById(['id' => $args['recipientId'], 'select' => ['firstname', 'lastname']]);
+            } elseif ($args['recipientType'] == 'entity') {
+                $recipient = EntityModel::getById(['id' => $args['recipientId'], 'select' => ['entity_label as lastname']]);
+            }
         }
 
         //Visas
@@ -228,26 +248,6 @@ class MergeController
             }
         }
 
-        //Contact
-//        $contact = ContactModel::getOnView(['select' => ['*'], 'where' => ['ca_id = ?'], 'data' => [$args['contactAddressId']]])[0];
-//        $contact['postal_address'] = ContactController::formatContactAddressAfnor($contact);
-//        $contact['title'] = ContactModel::getCivilityLabel(['civilityId' => $contact['title']]);
-//        if (empty($contact['title'])) {
-//            $contact['title'] = ContactModel::getCivilityLabel(['civilityId' => $contact['contact_title']]);
-//        }
-//        if (empty($contact['firstname'])) {
-//            $contact['firstname'] = $contact['contact_firstname'];
-//        }
-//        if (empty($contact['lastname'])) {
-//            $contact['lastname'] = $contact['contact_lastname'];
-//        }
-//        if (empty($contact['function'])) {
-//            $contact['function'] = $contact['contact_function'];
-//        }
-//        if (empty($contact['other_data'])) {
-//            $contact['other_data'] = $contact['contact_other_data'];
-//        }
-
         //Notes
         $mergedNote = '';
         if (!empty($args['resId'])) {
@@ -301,6 +301,7 @@ class MergeController
         $dataToBeMerge['parentDestination'] = empty($parentDestination) ? [] : $parentDestination;
         $dataToBeMerge['attachment']        = $attachment;
         $dataToBeMerge['user']              = $currentUser;
+        $dataToBeMerge['recipient']         = $recipient;
         $dataToBeMerge['userPrimaryEntity'] = $currentUserPrimaryEntity;
         $dataToBeMerge['visas']             = $visas;
         $dataToBeMerge['opinions']          = $opinions;

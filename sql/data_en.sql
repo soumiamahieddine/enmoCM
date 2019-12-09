@@ -763,43 +763,6 @@ DELETE FROM usergroup_content WHERE user_id = 24;
 INSERT INTO usergroup_content (user_id, group_id, role) VALUES (24, 11,'');
 
 ------------
--- CONTACTS
-------------
-TRUNCATE TABLE contact_types;
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (100, '1. Companies', 'Y', 'corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (101, '2. Associations', 'Y', 'both');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (102, '3. Administrations', 'Y', 'corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (103, '4. --', 'Y', 'corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (104, '5. --', 'Y', 'corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (105, '6. --', 'Y', 'corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (106, '0. Individual', 'Y', 'no_corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (107, '7. Banks', 'Y', 'corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (108, '8. --', 'Y', 'corporate');
-INSERT INTO contact_types (id, label, can_add_contact, contact_target) VALUES (109, 'UNDEFINED', 'N', 'no_corporate');
-select setval('contact_types_id_seq', (select max(id)+1 from contact_types), false);
-TRUNCATE TABLE contact_purposes;
-INSERT INTO contact_purposes (id, label) VALUES (1, 'Headquarters France');
-INSERT INTO contact_purposes (id, label) VALUES (2, 'Sengal subsidiary');
-INSERT INTO contact_purposes (id, label) VALUES (3, 'Main location');
-Select setval('contact_purposes_id_seq', (select max(id)+1 from contact_purposes), false);
-TRUNCATE TABLE contacts_v2;
-INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (1, 100, 'Y', 'MAARCH', '', '', '', '', '', 'Editeur du logiciel libre Maarch', 'bblier', 'VILLE', '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', 'Y');
-INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (2, 102, 'Y', 'Préfecture de Maarch Les Bains', '', '', '', '', '', 'Préfecture de Maarch Les Bains', 'bblier', 'VILLE', '2018-04-18 12:43:54.97424', '2018-04-18 16:28:38.498185', 'Y');
-INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (3, 100, 'Y', 'ACME', '', '', '', '', '', 'Archivage et Conservation des Mémoires Electroniques', 'bblier', 'VILLE', '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', 'Y');
-Select setval('contact_v2_id_seq', (select max(contact_id)+1 from contacts_v2), false);
--- Default adresses
-TRUNCATE TABLE contact_addresses;
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (1, 1, 1, '', 'Jean-Louis', 'ERCOLANI', 'title1', 'Directeur Général', '', '11', 'Boulevard du Sud-Est', '', 'MAARCH LES BAINS', '99000', 'France', '', 'jeanlouis.ercolani@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (2, 1, 2, '', 'Karim', 'SY', 'title1', 'Administrateur', '', '', 'Sacré Coeur 3', 'Villa 9653 4ème phase', 'DAKAR', '', 'SENEGAL', '', 'karim.sy@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (3, 1, 1, '', 'Laurent', 'GIOVANNONI', 'title1', 'Directeur Général Adjoint', NULL, '11', 'Boulevard du Sud-Est', '', 'MAARCH LES BAINS', '99000', 'FRANCE', '', 'laurent.giovannoni@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled, external_id) VALUES (4, 2, 1, '', 'Nicolas', 'MARTIN', 'title1', '', NULL, '13', 'RUE LA PREFECTURE', '', 'MAARCH LES BAINS', '', '', '', '', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y', '{"m2m":"org_987654321_DGS_SF"}');
-INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (5, 3, 1, '', 'Brigitte', 'BERGER', 'title1', 'Directrice Générale', NULL, '25', 'PLACE DES MIMOSAS', '', 'MAARCH LES BAINS', '99000', 'FRANCE', '', 'info@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'COU', 'N', 'Y');
-Select setval('contact_addresses_id_seq', (select max(id)+1 from contact_addresses), false);
--- Default contact_communication
-TRUNCATE TABLE contact_communication;
-INSERT INTO contact_communication (contact_id, type, value) VALUES (2, 'url', 'https://cchaplin:maarch@demo.maarchcourrier.com');
-
-------------
 --STATUS-
 ------------
 TRUNCATE TABLE status;
@@ -1579,6 +1542,7 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'initiator', TRUE, '""', 'process');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'destination', TRUE, '""', 'process');
 
+INSERT INTO parameters (id, description, param_value_string) VALUES ('siret', 'SIRET company number', '45239273100025');
 
 --Inscrire ici les clauses de conversion spécifiques en cas de reprise
 --Update res_letterbox set status='VAL' where res_id=108;

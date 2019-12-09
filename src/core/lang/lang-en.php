@@ -151,6 +151,7 @@ define('_NOTE_DELETED', 'Note deleted');
 define('_TAG_ADDED', 'Tag added');
 define('_TAG_DELETED', 'Tag deleted');
 define('_TAG_UPDATED', 'Tag updated');
+define('_TAG_MERGED', 'Tag merged');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');
@@ -407,6 +408,14 @@ define("_CUSTOMFIELDS_CREATION", "Custom field creation");
 define("_CUSTOMFIELDS_MODIFICATION", "Custom field modification");
 define("_CUSTOMFIELDS_SUPPRESSION", "Custom field suppression");
 
+define("_CONTACT_CUSTOMFIELDS_CREATION", "Contact custom field creation");
+define("_CONTACT_CUSTOMFIELDS_MODIFICATION", "Contact custom field modification");
+define("_CONTACT_CUSTOMFIELDS_SUPPRESSION", "Contact custom field suppression");
+
+define("_CONTACT_CREATION", "Contact creation");
+define("_CONTACT_MODIFICATION", "Contact modification");
+define("_CONTACT_SUPPRESSION", "Contact suppression");
+
 define("_INDEXINGMODEL_CREATION", "Indexing model creation");
 define("_INDEXINGMODEL_MODIFICATION", "Indexing model modification");
 define("_INDEXINGMODEL_SUPPRESSION", "Indexing model suppression");
@@ -423,5 +432,11 @@ define("_NOTIFICATIONS_USER_CREATION_SUBJECT", "[Maarch Courrier] Activate your 
 define("_NOTIFICATIONS_USER_CREATION_BODY", "Welcome,<br/><br/>You have now an account to Maarch Courrier.<br/><br/>To log in and set your password, please click on the link below :<br/><br/>");
 define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/><br/>This message is sent automatically as a result of an administrator action.<br/>Please do not answer.<br/><br/>For any questions, please contact your software administrator");
 define("_CLICK_HERE", "Click-here");
+
+define("_M2M_ANNUARY_IS_NOT_SET", "M2M annuary is not set");
+define("_M2M_LDAP_AUTHENTICATION_FAILED", "M2M annuary authentication failed");
+define("_M2M_LDAP_ADD_FAILED", "Problem while adding contact in M2M annuary");
+define("_NO_M2M_ANNUARY_AVAILABLE", "No M2M annuary available");
+define("_CANNOT_SYNCHRONIZE_M2M_ANNUARY", "Contact can not be added in M2M annuary because one of these field is empty : Society, communication means, department");
 
 define("_DATE_LOCALE", "en_US.utf8");

@@ -193,23 +193,6 @@ Par :
 
 	var cat_id = $(category_id).options[$(category_id).selectedIndex].value;
 	if(cat_id != 'attachment') Element.setStyle(contact_id_tr, {display : 'table-row'});
-
-Ajout d'une nouvelle fonction affiche_chrono_reconciliation(), basé sur affiche_chrono()
-    
-    function affiche_chrono_reconciliation(){
-        new Ajax.Request('index.php?display=true&module=attachments&page=get_chrono_attachment',
-        {
-            method:'post',
-            onSuccess: function(answer){
-                eval("response = "+answer.responseText);
-                var chrono_number = $('chrono_number');
-                chrono_number.value=response.chronoNB;
-                chrono_number.setAttribute('readonly','readonly');
-                chrono_number.setAttribute('class','readonly');
-                $('chrono_number_generate').style.display = 'none';
-            }
-        });
-    }
     
 **Modifier le fichier custom/modules/attachments/get_chrono_attachment.php - Ligne 65**
 

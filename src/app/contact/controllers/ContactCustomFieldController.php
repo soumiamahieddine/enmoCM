@@ -15,6 +15,8 @@ namespace Contact\controllers;
 
 use Contact\models\ContactCustomFieldListModel;
 use Contact\models\ContactCustomFieldModel;
+use Contact\models\ContactParameterModel;
+use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -35,7 +37,9 @@ class ContactCustomFieldController
 
     public function create(Request $request, Response $response)
     {
-        //TODO privileges
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $body = $request->getParsedBody();
 
@@ -62,7 +66,7 @@ class ContactCustomFieldController
             'tableName' => 'contacts_custom_fields_list',
             'recordId'  => $id,
             'eventType' => 'ADD',
-            'info'      => _CUSTOMFIELDS_CREATION . " : {$body['label']}",
+            'info'      => _CONTACT_CUSTOMFIELDS_CREATION . " : {$body['label']}",
             'moduleId'  => 'contactCustomFieldList',
             'eventId'   => 'contactCustomFieldListCreation',
         ]);
@@ -72,7 +76,9 @@ class ContactCustomFieldController
 
     public function update(Request $request, Response $response, array $args)
     {
-        //TODO privileges
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Param id is empty or not an integer']);
@@ -113,7 +119,7 @@ class ContactCustomFieldController
             'tableName' => 'contacts_custom_fields_list',
             'recordId'  => $args['id'],
             'eventType' => 'UP',
-            'info'      => _CUSTOMFIELDS_MODIFICATION . " : {$body['label']}",
+            'info'      => _CONTACT_CUSTOMFIELDS_MODIFICATION . " : {$body['label']}",
             'moduleId'  => 'contactCustomFieldList',
             'eventId'   => 'contactCustomFieldListModification',
         ]);
@@ -123,7 +129,9 @@ class ContactCustomFieldController
 
     public function delete(Request $request, Response $response, array $args)
     {
-        //TODO privileges
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         if (!Validator::intVal()->notEmpty()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Param id is empty or not an integer']);
@@ -132,6 +140,7 @@ class ContactCustomFieldController
         $field = ContactCustomFieldListModel::getById(['select' => ['label'], 'id' => $args['id']]);
 
         ContactCustomFieldModel::delete(['where' => ['custom_field_id = ?'], 'data' => [$args['id']]]);
+        ContactParameterModel::delete(['where' => ['identifier = ?'], 'data' => ['contactCustomField_' . $args['id']]]);
 
         ContactCustomFieldListModel::delete([
             'where' => ['id = ?'],
@@ -142,7 +151,7 @@ class ContactCustomFieldController
             'tableName' => 'contacts_custom_fields_list',
             'recordId'  => $args['id'],
             'eventType' => 'DEL',
-            'info'      => _CUSTOMFIELDS_SUPPRESSION . " : {$field['label']}",
+            'info'      => _CONTACT_CUSTOMFIELDS_SUPPRESSION . " : {$field['label']}",
             'moduleId'  => 'contactCustomFieldList',
             'eventId'   => 'contactCustomFieldListSuppression',
         ]);

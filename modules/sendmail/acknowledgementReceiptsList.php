@@ -87,9 +87,6 @@ if (!empty($tab)) {
                 if ($tab[$i][$j][$value]=="contact_address_id") {
                     $tab[$i][$j]["label"]       = _CONTACT;
                     $contactInfo = _UNDEFINED;
-                    if (!empty($tab[$i][$j]["value"])) {
-                        $contactInfo = \Contact\models\ContactModel::getContactFullLabel(['addressId' => $tab[$i][$j]["value"]]);
-                    }
                     $tab[$i][$j]["value"]       = $contactInfo;
                     $tab[$i][$j]["size"]        = "4";
                     $tab[$i][$j]["label_align"] = "left";

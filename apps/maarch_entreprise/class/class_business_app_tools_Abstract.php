@@ -122,11 +122,6 @@ abstract class business_app_tools_Abstract extends Database
             $_SESSION['tablename']['doctypes_second_level'] = (string) $tablename->doctypes_second_level;
             $_SESSION['tablename']['doctypes_indexes']      = (string) $tablename->doctypes_indexes;
             $_SESSION['tablename']['saved_queries']         = (string) $tablename->saved_queries;
-            $_SESSION['tablename']['contacts_v2']           = (string) $tablename->contacts_v2;
-            $_SESSION['tablename']['contact_types']         = (string) $tablename->contact_types;
-            $_SESSION['tablename']['contact_purposes']      = (string) $tablename->contact_purposes;
-            $_SESSION['tablename']['contact_addresses']     = (string) $tablename->contact_addresses;
-            $_SESSION['tablename']['contact_communication'] = 'contact_communication';
             $_SESSION['tablename']['tags']                  = (string) $tablename->tags;
             
             $_SESSION['config']['tmppath'] = \SrcCore\models\CoreConfigModel::getTmpPath();
@@ -241,15 +236,6 @@ abstract class business_app_tools_Abstract extends Database
             $_SESSION['history']['docserverstypesdel']       = (string) $history->docserverstypesdel;
             $_SESSION['history']['docserverstypesallow']     = (string) $history->docserverstypesallow;
             $_SESSION['history']['docserverstypesban']       = (string) $history->docserverstypesban;
-            $_SESSION['history']['contact_types_del']        = (string) $history->contact_types_del;
-            $_SESSION['history']['contact_types_add']        = (string) $history->contact_types_add;
-            $_SESSION['history']['contact_types_up']         = (string) $history->contact_types_up;
-            $_SESSION['history']['contact_purposes_del']     = (string) $history->contact_purposes_del;
-            $_SESSION['history']['contact_purposes_add']     = (string) $history->contact_purposes_add;
-            $_SESSION['history']['contact_purposes_up']      = (string) $history->contact_purposes_up;
-            $_SESSION['history']['contact_addresses_del']    = (string) $history->contact_addresses_del;
-            $_SESSION['history']['contact_addresses_add']    = (string) $history->contact_addresses_add;
-            $_SESSION['history']['contact_addresses_up']     = (string) $history->contact_addresses_up;
             $_SESSION['history_keywords'] = array();
             foreach ($xmlconfig->KEYWORDS as $keyword) {
                 $tmp = (string) $keyword->label;
@@ -612,32 +598,11 @@ abstract class business_app_tools_Abstract extends Database
     }
 
     /**
-    * Loads current folder identifier in session
-    *
-    */
-    protected function _loadCurrentFolder($userId)
-    {
-        if (isset($userId)) {
-            $db = new Database();
-            $stmt = $db->query(
-                "SELECT custom_t1 FROM " . USERS_TABLE . " WHERE user_id = ?",
-                array($userId)
-            );
-            $res = $stmt->fetchObject();
-
-            $_SESSION['current_folder_id'] = $res->custom_t1;
-        }
-    }
-
-    /**
     * Loads app specific vars in session
     *
     */
     public function load_app_var_session($userData = '')
     {
-        if (is_array($userData)) {
-            $this->_loadCurrentFolder($userData['UserId']);
-        }
         $this->_loadEntrepriseVar();
         $this->load_features(
             'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
@@ -647,146 +612,6 @@ abstract class business_app_tools_Abstract extends Database
         $this->_loadListsConfig();
     }
 
-    /**
-    * Return a specific path or false
-    *
-    */
-    public function insert_app_page($name)
-    {
-        if (! isset($name) || empty($name)) {
-            return false;
-        }
-        if ($name == 'contact_types' || $name == 'contact_types_list_by_name'
-            || $name == 'contact_types_up' || $name == 'contact_types_del'
-        ) {
-            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
-                  . 'contacts' . DIRECTORY_SEPARATOR . 'contact_types'
-                  . DIRECTORY_SEPARATOR . $name . '.php';
-            return $path;
-        } else if ($name == 'contact_purposes' || $name == 'contact_purposes_list_by_name'
-            || $name == 'contact_purposes_up' || $name == 'contact_purposes_del'
-        ) {
-            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
-                  . 'contacts' . DIRECTORY_SEPARATOR . 'contact_purposes'
-                  . DIRECTORY_SEPARATOR . $name . '.php';
-            return $path;
-        } else if ($name == 'contacts_v2' || $name == 'contacts_v2_list_by_name'
-            || $name == 'contacts_v2_up' || $name == 'contacts_v2_del' || $name == 'contacts_v2_add'
-            || $name == 'contacts_v2_up_db' || $name == 'contacts_v2_confirm' || $name == 'contacts_v2_status'
-        ) {
-            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
-                  . 'contacts' . DIRECTORY_SEPARATOR . 'contacts_v2'
-                  . DIRECTORY_SEPARATOR . $name . '.php';
-            return $path;
-        } else if ($name == 'contact_addresses' || $name == 'contact_addresses_list_by_name'
-            || $name == 'contact_addresses_up' || $name == 'contact_addresses_del' || $name == 'contact_addresses_add'
-            || $name == 'contact_addresses_up_db' || $name == 'contact_addresses_list' || $name == 'contact_addresses_status'
-        ) {
-            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
-                  . 'contacts' . DIRECTORY_SEPARATOR . 'contact_addresses'
-                  . DIRECTORY_SEPARATOR . $name . '.php';
-            return $path;
-        } else if ($name == 'view_tree_contacts' || $name == 'show_tree_contacts' || $name == 'get_tree_children_contact') {
-            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
-                  . 'contacts' . DIRECTORY_SEPARATOR . 'contact_tree'
-                  . DIRECTORY_SEPARATOR . $name . '.php';
-            return $path;
-        } else {
-            return false;
-        }
-    }
-
-    public function get_titles()
-    {
-        $core = new core_tools();
-        if (file_exists(
-            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-            . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
-            . 'entreprise.xml'
-        )
-        ) {
-            $path = $_SESSION['config']['corepath'] . 'custom'
-                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
-                  . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
-                  . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml'
-                  . DIRECTORY_SEPARATOR . 'entreprise.xml';
-        } else {
-            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                  . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
-                  . 'entreprise.xml';
-        }
-        $xmlfile = simplexml_load_file($path);
-        $langPath = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                  . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
-                  . $_SESSION['config']['lang'] . '.php';
-
-        $resTitles = array();
-        $titles = $xmlfile->titles;
-        foreach ($titles->title as $title ) {
-            $label = (string) $title->label;
-            if (!empty($label) && defined($label)
-                && constant($label) <> NULL
-            ) {
-                $label = constant($label);
-            }
-
-            $resTitles[(string) $title->id] = $label;
-        }
-
-        asort($resTitles, SORT_LOCALE_STRING);
-        $defaultTitle = (string) $titles->default_title;
-        return array('titles' => $resTitles, 'default_title' => $defaultTitle);
-    }
-
-
-    public function get_label_title($titleId)
-    {
-        $core = new core_tools();
-        if (file_exists(
-            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-            . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
-            . 'entreprise.xml'
-        )
-        ) {
-            $path = $_SESSION['config']['corepath'] . 'custom'
-                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
-                  . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
-                  . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR .'xml'
-                  . DIRECTORY_SEPARATOR . 'entreprise.xml';
-        } else {
-            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
-            . 'entreprise.xml';
-        }
-        $xmlfile = simplexml_load_file($path);
-        $langPath = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                  . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
-                  . $_SESSION['config']['lang'] . '.php';
-        $titles = $xmlfile->titles;
-        foreach ($titles->title as $title ) {
-            if ($titleId == (string) $title->id) {
-                $label = (string) $title->label;
-                if (!empty($label) && defined($label)
-                    && constant($label) <> NULL
-                ) {
-                    $label = constant($label);
-                }
-
-                return $label;
-            }
-        }
-        return '';
-    }
-    
     protected function _loadListsConfig() {
 
         if (file_exists(

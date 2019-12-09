@@ -241,38 +241,38 @@ class ContactControllerTest extends TestCase
         $this->assertSame('Contact does not exist', $responseBody['errors']);
     }
 
-//
-//    public function testControlLengthNameAfnor()
-//    {
-//        $name = \Contact\controllers\ContactController::controlLengthNameAfnor(['title' => 'title1', 'fullName' => 'Prénom NOM', 'strMaxLength' => 38]);
-//
-//        $this->assertSame('Monsieur Prénom NOM', $name);
-//
-//        $name = \Contact\controllers\ContactController::controlLengthNameAfnor(['title' => 'title3', 'fullName' => 'Prénom NOM TROP LOOOOOOOOOOOOONG', 'strMaxLength' => 38]);
-//
-//        $this->assertSame('Mlle Prénom NOM TROP LOOOOOOOOOOOOONG', $name);
-//    }
-//
-//    public function testAvailableReferential()
-//    {
-//        $contactController = new \Contact\controllers\ContactController();
-//        $availableReferential = $contactController->availableReferential();
-//        $this->assertInternalType('array', $availableReferential);
-//        $this->assertNotEmpty($availableReferential);
-//    }
-//
-//    public function testGetFilling()
-//    {
-//        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
-//        $request        = \Slim\Http\Request::createFromEnvironment($environment);
-//
-//        $contactController = new \Contact\controllers\ContactController();
-//        $response          = $contactController->getFilling($request, new \Slim\Http\Response());
-//        $responseBody      = json_decode((string)$response->getBody());
-//
-//        $this->assertInternalType('array', (array)$responseBody->contactsFilling);
-//    }
-//
+
+    public function testControlLengthNameAfnor()
+    {
+        $name = \Contact\controllers\ContactController::controlLengthNameAfnor(['civility' => 'title1', 'fullName' => 'Prénom NOM', 'strMaxLength' => 38]);
+
+        $this->assertSame('Monsieur Prénom NOM', $name);
+
+        $name = \Contact\controllers\ContactController::controlLengthNameAfnor(['civility' => 'title3', 'fullName' => 'Prénom NOM TROP LOOOOOOOOOOOOONG', 'strMaxLength' => 38]);
+
+        $this->assertSame('Mlle Prénom NOM TROP LOOOOOOOOOOOOONG', $name);
+    }
+
+    public function testAvailableReferential()
+    {
+        $contactController = new \Contact\controllers\ContactController();
+        $availableReferential = $contactController->availableReferential();
+        $this->assertInternalType('array', $availableReferential);
+        $this->assertNotEmpty($availableReferential);
+    }
+
+    public function testGetContactsParameters()
+    {
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $contactController = new \Contact\controllers\ContactController();
+        $response          = $contactController->getContactsParameters($request, new \Slim\Http\Response());
+        $responseBody      = json_decode((string)$response->getBody());
+
+        $this->assertInternalType('array', (array)$responseBody->contactsFilling);
+    }
+
 //    public function testUpdateFilling()
 //    {
 //        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);

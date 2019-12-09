@@ -15,7 +15,6 @@
 
 namespace Contact\models;
 
-
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
@@ -35,9 +34,7 @@ class ContactFillingModel
 
     public static function update(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['rating_columns']);
         ValidatorModel::boolType($aArgs, ['enable']);
-        ValidatorModel::stringType($aArgs, ['rating_columns']);
         ValidatorModel::intVal($aArgs, ['first_threshold', 'second_threshold']);
 
         $aArgs['enable'] = $aArgs['enable'] ? 'true' : 'false';
@@ -46,7 +43,6 @@ class ContactFillingModel
             'table'     => 'contacts_filling',
             'set'       => [
                 'enable'            => $aArgs['enable'],
-                'rating_columns'    => $aArgs['rating_columns'],
                 'first_threshold'   => $aArgs['first_threshold'],
                 'second_threshold'  => $aArgs['second_threshold']
             ],

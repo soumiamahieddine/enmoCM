@@ -238,8 +238,11 @@ export class ListAdministrationComponent implements OnInit {
         this.selectedListEvent = this.basketGroup.list_event === null ? 'noEvent' : this.basketGroup.list_event;
         this.selectedListEventClone = this.selectedListEvent;
 
-        this.selectedProcessTool.defaultTab = this.basketGroup.list_event_data === null && this.basketGroup.list_event === 'processDocument' ? 'dashboard' : this.basketGroup.list_event_data.defaultTab;
-        this.selectedProcessTool.canUpdate = this.basketGroup.list_event_data === null ? false : this.basketGroup.list_event_data.canUpdate;
+        if (this.basketGroup.list_event === 'processDocument') {
+            this.selectedProcessTool.defaultTab = this.basketGroup.list_event_data === null ? 'dashboard' : this.basketGroup.list_event_data.defaultTab;
+            this.selectedProcessTool.canUpdate = this.basketGroup.list_event_data === null ? false : this.basketGroup.list_event_data.canUpdate;
+        }
+       
         this.selectedProcessToolClone = JSON.parse(JSON.stringify(this.selectedProcessTool));
         this.displayedSecondaryDataClone = JSON.parse(JSON.stringify(this.displayedSecondaryData));
     }

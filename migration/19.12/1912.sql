@@ -66,8 +66,6 @@ FROM (
        WHERE ag.default_action_list = 'Y' AND a.action_page in ('visa_mail')
      ) AS subquery
 WHERE groupbasket.basket_id = subquery.basket_id AND groupbasket.group_id = subquery.group_id;
-UPDATE actions SET component = 'confirmAction', action_page = 'confirm_status' WHERE action_page in ('validate_mail', 'process', 'visa_mail');
-DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_event_data;
 ALTER TABLE groupbasket ADD COLUMN list_event_data jsonb;
 
@@ -81,6 +79,9 @@ where group_id in (
         where action_page = 'validate_mail'
     ) and groupbasket.basket_id = actions_groupbaskets.basket_id
 );
+
+UPDATE actions SET component = 'confirmAction', action_page = 'confirm_status' WHERE action_page in ('validate_mail', 'process', 'visa_mail');
+DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
 
 
 /* FOLDERS */
@@ -233,6 +234,7 @@ DO $$ BEGIN
 END$$;
 SELECT setval('tags_id_seq', (SELECT MAX(id) from tags));
 
+DROP TABLE IF EXISTS tags_entities;
 
 /* DOCTYPES */
 DO $$ BEGIN
@@ -451,7 +453,7 @@ ALTER TABLE res_attachments ADD COLUMN recipient_id integer;
 /* REFACTORING DATA */
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'usergroups') AND attname = 'enabled') THEN
-    DELETE FROM usergroup_content WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
+    DELETE FROM usergroup_content WHERE group_id in (SELECT id FROM usergroups WHERE enabled = 'N');
     DELETE FROM usergroups_reports WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
     DELETE FROM usergroups_services WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
     DELETE FROM security WHERE group_id in (SELECT group_id FROM usergroups WHERE enabled = 'N');
@@ -644,6 +646,9 @@ ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_multicontacts;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS is_multi_docservers;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_path;
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_filename;
+ALTER TABLE users DROP COLUMN IF EXISTS custom_t1;
+ALTER TABLE users DROP COLUMN IF EXISTS custom_t2;
+ALTER TABLE users DROP COLUMN IF EXISTS custom_t3;
 
 
 /* M2M */

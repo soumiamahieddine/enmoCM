@@ -116,9 +116,9 @@ class SendMessageExchangeController
 
         foreach ($_SESSION['adresses']['to'] as $key => $value) {
             /******** GET ARCHIVAl INFORMATIONs **************/
-            $contactInfo                       = \Contact\models\ContactModel::getFullAddressById(['addressId' => $key]);
+//            $contactInfo                       = \Contact\models\ContactModel::getFullAddressById(['addressId' => $key]); //TODO
             $ArchivalAgencyCommunicationType   = \Contact\models\ContactModel::getContactCommunication(['contactId' => $contactInfo[0]['contact_id']]);
-            $ArchivalAgencyContactInformations = \Contact\models\ContactModel::getFullAddressById(['addressId' => $key]);
+//            $ArchivalAgencyContactInformations = \Contact\models\ContactModel::getFullAddressById(['addressId' => $key]); //TODO
 
             /******** GENERATE MESSAGE EXCHANGE OBJECT *********/
             $dataObject = self::generateMessageObject([

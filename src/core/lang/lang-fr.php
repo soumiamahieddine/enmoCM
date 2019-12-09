@@ -151,6 +151,7 @@ define('_NOTE_DELETED', 'Annotation supprimée');
 define('_TAG_ADDED', 'Mot-clé ajouté');
 define('_TAG_DELETED', 'Mot-clé supprimé');
 define('_TAG_UPDATED', 'Mot-clé modifié');
+define('_TAG_MERGED', 'Mot-clé fusionné');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');
@@ -406,6 +407,14 @@ define("_CUSTOMFIELDS_CREATION", "Champ personnalisé créé");
 define("_CUSTOMFIELDS_MODIFICATION", "Champ personnalisé modifié");
 define("_CUSTOMFIELDS_SUPPRESSION", "Champ personnalisé supprimé");
 
+define("_CONTACT_CUSTOMFIELDS_CREATION", "Champ personnalisé de contact créé");
+define("_CONTACT_CUSTOMFIELDS_MODIFICATION", "Champ personnalisé de contact modifié");
+define("_CONTACT_CUSTOMFIELDS_SUPPRESSION", "Champ personnalisé de contact supprimé");
+
+define("_CONTACT_CREATION", "Contact créé");
+define("_CONTACT_MODIFICATION", "Contact modifié");
+define("_CONTACT_SUPPRESSION", "Contact supprimé");
+
 define("_INDEXINGMODEL_CREATION", "Modèle d'enregistrement créé");
 define("_INDEXINGMODEL_MODIFICATION", "Modèle d'enregistrement modifié");
 define("_INDEXINGMODEL_SUPPRESSION", "Modèle d'enregistrement supprimé");
@@ -422,5 +431,11 @@ define("_NOTIFICATIONS_USER_CREATION_SUBJECT", "[Maarch Courrier] Activer votre 
 define("_NOTIFICATIONS_USER_CREATION_BODY", "Bienvenue,<br/><br/>Vous disposez maintenant d'un compte dans l'application de gestion électronique de courrier Maarch Courrier.<br/><br/>Pour vous connecter et définir votre mot de passe, merci de bien vouloir cliquer sur le lien ci-dessous :<br/><br/>");
 define("_CLICK_HERE", "Cliquez-ici pour définir votre mot de passe");
 define("_NOTIFICATIONS_USER_CREATION_FOOTER", "<br/><br/>Ce message est envoyé automatiquement à la suite d'une action de l'administrateur.<br/>Merci de ne pas y répondre.<br/><br/>Pour toutes questions, merci de contacter l'administrateur technique de la solution.");
+
+define("_M2M_ANNUARY_IS_NOT_SET", "Aucun annuaire M2M paramétré");
+define("_M2M_LDAP_AUTHENTICATION_FAILED", "Connexion impossible à l'annuaire M2M");
+define("_M2M_LDAP_ADD_FAILED", "Problème lors de l'ajout du contact dans l'annuaire M2M");
+define("_NO_M2M_ANNUARY_AVAILABLE", "Aucun annuaire M2M disponible");
+define("_CANNOT_SYNCHRONIZE_M2M_ANNUARY", "Le contact ne peut pas être ajouté dans l'annuaire car un des champs suivants est manquant : Société, moyen de communication, service");
 
 define("_DATE_LOCALE", "fr_FR.utf8");

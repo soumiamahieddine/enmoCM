@@ -371,7 +371,7 @@ export class DocumentViewerComponent implements OnInit {
                     content: null,
                     src: null
                 };
-                this.triggerEvent.emit();
+                this.triggerEvent.emit('cleanFile');
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);

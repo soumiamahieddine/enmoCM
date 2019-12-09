@@ -33,12 +33,6 @@
       <parameter name="contact_id" type="integer" />
     </validationRule>
 
-    <validationRule name="ajaxDeleteContact" extends="standardForm" mode="error">
-      <parameter name="contactId" type="integer" />
-      <parameter name="replacedAddressId" type="string" />
-      <parameter name="replacedContactId" type="string" />
-    </validationRule>
-
     <validationRule name="admin_types_up_db" extends="standardForm" mode="error">
       <parameter name="Submit" type="string" />
       <parameter name="collection" type="collection_list" />
@@ -111,37 +105,6 @@
       <parameter name="status_id" type="identifier" />
     </validationRule>
 
-    <validationRule name="contactAddressesUpDb" extends="standardForm" mode="error">
-      <parameter name="Submit" type="string" />
-      <parameter name="add_comp" type="string" />
-      <parameter name="comp_data" type="string" />
-      <parameter name="contact_purposes" type="string" />
-      <parameter name="country" type="string" />
-      <parameter name="cp" type="alnum" />
-      <parameter name="departement" type="string" />
-      <parameter name="firstname" type="string" />
-      <parameter name="function" type="string" />
-      <parameter name="is_private" type="YN" />
-      <parameter name="lastname" type="personname" />
-      <parameter name="mail" type="email" />
-      <parameter name="new_id" type="string" />
-      <parameter name="num" type="alnumSpace" />
-      <parameter name="occupancy" type="string" />
-      <parameter name="phone" type="phone" />
-      <parameter name="salutation_footer" type="string" />
-      <parameter name="salutation_header" type="string" />
-      <parameter name="street" type="string" />
-      <parameter name="title" type="identifier" />
-      <parameter name="town" type="string" />
-      <parameter name="website" type="string" />
-      <parameter name="mycontact" type="string" />
-      <parameter name="dir" type="identifier" />
-      <parameter name="m2m_id" type="string" />
-      <parameter name="refMaarch" type="YN" />
-      <parameter name="searchAddress" type="string" />
-      <parameter name="ban_id" type="string" />
-    </validationRule>
-
     <validationRule name="admin_architecture" extends="standardForm" mode="error">
       <parameter name="tree_id" type="integer" />
     </validationRule>
@@ -181,75 +144,10 @@
       <parameter name="coll_id" type="collection_list" />
     </validationRule>
 
-    <validationRule name="contactAddressDel" extends="standardForm" mode="error">
-      <parameter name="id" type="integer" />
-      <parameter name="move" type="string" />
-      <parameter name="delete" type="string" />
-      <parameter name="new_contact_id_reaffect" type="integer" />
-      <parameter name="new_contact_reaffect" type="string" />
-      <parameter name="mycontact" type="YN" />
-    </validationRule>
-
-    <validationRule name="contactAddressUp" extends="standardForm" mode="error">
-      <parameter name="id" type="integer" />
-      <parameter name="mycontact" type="identifier" />
-      <parameter name="fromSearchContacts" type="string" />
-    </validationRule>
-
-    <validationRule name="setContactType" extends="standardForm" mode="error">
-      <parameter name="contact_target" type="identifier" />
-      <parameter name="can_add_contact" type="YN" />
-      <parameter name="dir" type="identifier" />
-    </validationRule>
-
-    <validationRule name="contactPurposesDel" extends="standardForm" mode="error">
-      <parameter name="valid" type="string" />
-      <parameter name="id" type="integer" />
-      <parameter name="new" type="integer" />
-      <parameter name="new_id" type="string" />
-    </validationRule>
-
-    <validationRule name="contactPurposesUp" extends="standardForm" mode="error">
-      <parameter name="ID_contact_purposes" type="integer" />
-      <parameter name="desc_contact_purposes" type="string" />
-      <parameter name="valid" type="string" />
-    </validationRule>
-
-    <validationRule name="contactTypesUp" extends="standardForm" mode="error">
-      <parameter name="ID_contact_types" type="integer" />
-      <parameter name="desc_contact_types" type="string" />
-      <parameter name="contact_target" type="identifier" />
-      <parameter name="contact_creation" type="YN" />
-      <parameter name="valid" type="string" />
-    </validationRule>
-
     <validationRule name="getTreeChildrenContact" extends="standardForm" mode="error">
       <parameter name="branch" type="string" />
       <parameter name="branch_id" type="identifier" />
       <parameter name="tree_id" type="identifier" />
-    </validationRule>
-
-    <validationRule name="contacts_v2_up_db" extends="standardForm" mode="error">
-      <parameter name="Submit" type="string" />
-      <parameter name="comp_data" type="string" />
-      <parameter name="contact_type" type="integer" />
-      <parameter name="firstname" type="string" />
-      <parameter name="function" type="string" />
-      <parameter name="is_corporate" type="YN" />
-      <parameter name="is_external" type="YN" />
-      <parameter name="m2m_id" type="string" />
-      <parameter name="lastname" type="personname" />
-      <parameter name="society" type="string" />
-      <parameter name="society_short" type="string" />
-      <parameter name="title" type="string" />
-      <parameter name="dir" type="identifier" />
-      <parameter name="mycontact" type="identifier" />
-      <parameter name="communication_type" type="string" />
-      <parameter name="communication_value" type="string" />
-    </validationRule>
-
-    <validationRule name="contactConfirm" extends="standardForm" mode="error">
-      <parameter name="mycontact" type="string" />
     </validationRule>
 
     <validationRule name="listContactId" extends="standardForm" mode="error">
@@ -394,18 +292,6 @@
       <parameter name="dir" type="identifier" />
       <parameter name="id" type="integer" />
     </validationRule>
-    
-    <validationRule name="autocomplete_contacts" extends="standardForm" mode="error">  
-      <parameter name="Input" type="string" />
-      <parameter name="table" type="contact_user_list" />
-      <parameter name="dir" type="identifier" />
-      <parameter name="contact_type" type="string" />
-    </validationRule>
-    
-    <validationRule name="autocomplete_contacts_prepare_multi" extends="standardForm" mode="error">  
-      <parameter name="paramsRequest" type="contact_user_list" />
-      <parameter name="dir" type="identifier" />
-    </validationRule>
 
     <validationRule name="ajax_ShowCP" extends="standardForm" mode="error">  
       <parameter name="what" type="safetext" />
@@ -432,15 +318,6 @@
     <validationRule name="addressid" extends="standardForm" mode="error">  
       <parameter name="addressid" type="integer" />
       <parameter name="dir" type="identifier" />
-    </validationRule>
-
-    <validationRule name="contact_check" extends="standardForm" mode="error">  
-      <parameter name="address_id" type="string" />
-      <parameter name="category" type="string" />
-      <parameter name="contact_id" type="string" />
-      <parameter name="res_id" type="alnum" />
-      <parameter name="dir" type="identifier" />
-      <parameter name="coll_id" type="collection_list" />
     </validationRule>
 
     <validationRule name="contact_view" extends="standardForm" mode="error">  
@@ -491,13 +368,6 @@
     
     <validationRule name="multiLink" extends="standardForm" mode="error">  
       <parameter name="courrier_purpose" type="integer" />
-      <parameter name="dir" type="identifier" />
-    </validationRule>
-
-    <validationRule name="update_process_date" extends="standardForm" mode="error">  
-      <parameter name="admission_date" type="datefr" />
-      <parameter name="priority_id" type="string" />
-      <parameter name="type_id" type="integer" />
       <parameter name="dir" type="identifier" />
     </validationRule>
 

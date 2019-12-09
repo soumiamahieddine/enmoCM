@@ -76,10 +76,9 @@ $app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\Attachme
 $app->get('/attachmentsTypes', \Attachment\controllers\AttachmentController::class . ':getAttachmentsTypes');
 
 //AutoComplete
-$app->get('/autocomplete/contacts', \SrcCore\controllers\AutoCompleteController::class . ':getContacts');
 $app->get('/autocomplete/users', \SrcCore\controllers\AutoCompleteController::class . ':getUsers');
 $app->get('/autocomplete/maarchParapheurUsers', \SrcCore\controllers\AutoCompleteController::class . ':getMaarchParapheurUsers');
-$app->get('/autocomplete/contactsUsers', \SrcCore\controllers\AutoCompleteController::class . ':getContactsAndUsers');
+$app->get('/autocomplete/all', \SrcCore\controllers\AutoCompleteController::class . ':getAll');
 $app->get('/autocomplete/contacts/groups', \SrcCore\controllers\AutoCompleteController::class . ':getContactsForGroups');
 $app->get('/autocomplete/users/administration', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForAdministration');
 $app->get('/autocomplete/users/visa', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForVisa');
@@ -88,6 +87,8 @@ $app->get('/autocomplete/statuses', \SrcCore\controllers\AutoCompleteController:
 $app->get('/autocomplete/banAddresses', \SrcCore\controllers\AutoCompleteController::class . ':getBanAddresses');
 $app->get('/autocomplete/folders', \SrcCore\controllers\AutoCompleteController::class . ':getFolders');
 $app->get('/autocomplete/tags', \SrcCore\controllers\AutoCompleteController::class . ':getTags');
+$app->get('/autocomplete/ouM2MAnnuary', \SrcCore\controllers\AutoCompleteController::class . ':getOuM2MAnnuary');
+$app->get('/autocomplete/businessIdM2MAnnuary', \SrcCore\controllers\AutoCompleteController::class . ':getBusinessIdM2MAnnuary');
 
 //Baskets
 $app->get('/baskets', \Basket\controllers\BasketController::class . ':get');
@@ -100,7 +101,7 @@ $app->post('/baskets/{id}/groups', \Basket\controllers\BasketController::class .
 $app->put('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController::class . ':updateGroup');
 $app->put('/baskets/{id}/groups/{groupId}/actions', \Basket\controllers\BasketController::class . ':updateGroupActions');
 $app->delete('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController::class . ':deleteGroup');
-$app->get('/baskets/{id}/groups/data', \Basket\controllers\BasketController::class . ':getDataForGroupById');
+$app->get('/baskets/{id}/groups/{groupId}/listEventData', \Basket\controllers\BasketController::class . ':getlistEventData');
 $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getSorted');
 $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
@@ -118,6 +119,7 @@ $app->get('/contacts/{id}', \Contact\controllers\ContactController::class . ':ge
 $app->put('/contacts/{id}', \Contact\controllers\ContactController::class . ':update');
 $app->delete('/contacts/{id}', \Contact\controllers\ContactController::class . ':delete');
 $app->put('/contacts/{id}/activation', \Contact\controllers\ContactController::class . ':updateActivation');
+$app->get('/formattedContacts/{id}/types/{type}', \Contact\controllers\ContactController::class . ':getLightFormattedContact');
 
 $app->get('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':get');
 $app->post('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':create');
@@ -125,10 +127,9 @@ $app->get('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::c
 $app->put('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':update');
 $app->delete('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':delete');
 $app->post('/contactsGroups/{id}/contacts', \Contact\controllers\ContactGroupController::class . ':addContacts');
-$app->delete('/contactsGroups/{id}/contacts/{addressId}', \Contact\controllers\ContactGroupController::class . ':deleteContact');
-$app->get('/contactsTypes', \Contact\controllers\ContactTypeController::class . ':get');
-$app->get('/contactsFilling', \Contact\controllers\ContactController::class . ':getFilling');
-$app->put('/contactsFilling', \Contact\controllers\ContactController::class . ':updateFilling');
+$app->delete('/contactsGroups/{id}/contacts/{contactId}', \Contact\controllers\ContactGroupController::class . ':deleteContact');
+$app->get('/contactsParameters', \Contact\controllers\ContactController::class . ':getContactsParameters');
+$app->put('/contactsParameters', \Contact\controllers\ContactController::class . ':updateContactsParameters');
 
 //Convert
 $app->post('/convertedFile', \Convert\controllers\ConvertPdfController::class . ':convertedFile');
@@ -185,6 +186,7 @@ $app->get('/entities/{id}/details', \Entity\controllers\EntityController::class 
 $app->get('/entities/{id}/users', \Entity\controllers\EntityController::class . ':getUsersById');
 $app->put('/entities/{id}/reassign/{newEntityId}', \Entity\controllers\EntityController::class . ':reassignEntity');
 $app->put('/entities/{id}/status', \Entity\controllers\EntityController::class . ':updateStatus');
+$app->put('/entities/{id}/annuaries', \MessageExchange\controllers\AnnuaryController::class . ':updateEntityToOrganization');
 $app->get('/entityTypes', \Entity\controllers\EntityController::class . ':getTypes');
 $app->post('/entitySeparators', \Entity\controllers\EntitySeparatorController::class . ':create');
 
@@ -348,6 +350,7 @@ $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/exp
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/summarySheets', \Resource\controllers\SummarySheetController::class . ':createList');
 $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}', \Resource\controllers\ResourceListController::class . ':setAction');
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplates');
+$app->get('/resourcesList/summarySheets', \Resource\controllers\SummarySheetController::class . ':createListWithAll');
 $app->post('/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
 //PreProcess
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \Action\controllers\PreProcessActionController::class . ':checkAcknowledgementReceipt');

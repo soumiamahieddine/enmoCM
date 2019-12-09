@@ -5,10 +5,7 @@ Select setval('user_signatures_seq', (select max(id)+1 from user_signatures), fa
 Select setval('templates_seq', (select max(template_id)+1 from templates), false);
 Select setval('groupbasket_redirect_system_id_seq', (select max(system_id)+1 from groupbasket_redirect), false);
 Select setval('actions_id_seq', (select max(id)+1 from actions), false);
-Select setval('contact_addresses_id_seq', (select max(id)+1 from contact_addresses), false);
-Select setval('contact_v2_id_seq', (select max(contact_id)+1 from contacts_v2), false);
-Select setval('contact_purposes_id_seq', (select max(id)+1 from contact_purposes), false);
-select setval('contact_types_id_seq', (select max(id)+1 from contact_types), false);
+Select setval('contacts_id_seq', (select max(contact_id)+1 from contacts), false);
 select setval('doctypes_type_id_seq', (select max(type_id)+1 from doctypes), false);
 select setval('doctypes_first_level_id_seq', (select max(doctypes_first_level_id)+1 from doctypes_first_level), false);
 select setval('doctypes_second_level_id_seq', (select max(doctypes_second_level_id)+1 from doctypes_second_level), false);

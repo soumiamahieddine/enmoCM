@@ -221,12 +221,13 @@ if (count($_REQUEST['meta']) > 0) {
                 $arrayPDO = array_merge($arrayPDO, array(":noteText" => "%".$s_doc_notes."%"));
             }
             // CONTACT TYPE
-            elseif ($tab_id_fields[$j] == 'contact_type' && !empty($_REQUEST['contact_type'])) {
-                $json_txt .= " 'contact_type' : ['".addslashes(trim($_REQUEST['contact_type']))."'],";
-                $where_request .= " (res_id in (select res_id from contacts_res where contact_id in(select cast (contact_id as varchar) from view_contacts where contact_type = :contactType)) or ";
-                $where_request .= " (contact_id in(select contact_id from view_contacts where contact_type = :contactType))) and ";
-                $arrayPDO = array_merge($arrayPDO, array(":contactType" => $_REQUEST['contact_type']));
-            } elseif ($tab_id_fields[$j] == 'folder' && !empty($_REQUEST['folder'])) {
+//            elseif ($tab_id_fields[$j] == 'contact_type' && !empty($_REQUEST['contact_type'])) {
+//                $json_txt .= " 'contact_type' : ['".addslashes(trim($_REQUEST['contact_type']))."'],";
+//                $where_request .= " (res_id in (select res_id from contacts_res where contact_id in(select cast (contact_id as varchar) from view_contacts where contact_type = :contactType)) or ";
+//                $where_request .= " (contact_id in(select contact_id from view_contacts where contact_type = :contactType))) and ";
+//                $arrayPDO = array_merge($arrayPDO, array(":contactType" => $_REQUEST['contact_type']));
+//            }
+            elseif ($tab_id_fields[$j] == 'folder' && !empty($_REQUEST['folder'])) {
                 $json_txt .= " 'folder' : ['".addslashes(trim($_REQUEST['folder']))."'],";
                 $folder = $func->wash($_REQUEST['folder'], "no", _MARKET, "no");
 

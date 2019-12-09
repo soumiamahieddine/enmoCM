@@ -127,7 +127,7 @@ export class IndexingFormComponent implements OnInit {
             label: this.lang.getSenders,
             type: 'autocomplete',
             default_value: null,
-            values: ['/rest/autocomplete/contacts']
+            values: ['/rest/autocomplete/all']
         },
         {
             identifier: 'destination',
@@ -313,9 +313,9 @@ export class IndexingFormComponent implements OnInit {
     saveData(userId: number, groupId: number, basketId: number) {
         const formatdatas = this.formatDatas(this.getDatas());
 
-        this.http.put(`../../rest/resources/${this.resId}/users/${userId}/groups/${groupId}/baskets/${basketId}`, formatdatas ).pipe(
+        this.http.put(`../../rest/resources/${this.resId}?userId=${userId}&groupId=${groupId}&basketId=${basketId}`, formatdatas ).pipe(
             tap(() => {
-                this.currentResourceValues = this.getDatas();
+                this.currentResourceValues = this.getDatas(false);
                 this.notify.success(this.lang.dataUpdated);
             }),
             catchError((err: any) => {
@@ -542,10 +542,17 @@ export class IndexingFormComponent implements OnInit {
             tap((data: any) => {
                 this.fieldCategories.forEach(element => {
                     this['indexingModels_' + element].forEach((elem: any) => {
-
-                        if (Object.keys(data).indexOf(elem.identifier) > -1) {
-                            let fieldValue = data[elem.identifier];
+                        const customId: any = Object.keys(data.customFields).filter(index => index === elem.identifier.split('indexingCustomField_')[1])[0];
+                        
+                        if (Object.keys(data).indexOf(elem.identifier) > -1 || customId !== undefined) {
+                            let fieldValue: any = '';
                             
+                            if (customId !== undefined) {
+                                fieldValue = data.customFields[customId]; 
+                            } else {
+                                fieldValue = data[elem.identifier];  
+                            }
+                                                       
                             if (elem.type === 'date') {
                                 fieldValue = new Date(fieldValue);
                             }
@@ -560,6 +567,7 @@ export class IndexingFormComponent implements OnInit {
                                 }
                                 this.arrFormControl['diffusionList'].disable();
                             }
+                            
                             this.arrFormControl[elem.identifier].setValue(fieldValue);
                         }
                         if (!this.canEdit) {

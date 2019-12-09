@@ -560,7 +560,7 @@ export class ActionsService {
     processDocument(options: any = null) {
         this.stopRefreshResourceLock();
         this.unlockResource();
-        this.router.navigate([`/process/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/resId/${this.currentResIds}`], { queryParams: { tab: options.defaultTab } });
+        this.router.navigate([`/process/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/resId/${this.currentResIds}`]);
     }
 
     signatureBookAction(options: any = null) {

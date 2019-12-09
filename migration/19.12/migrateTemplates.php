@@ -41,16 +41,64 @@ const DATA_TO_REPLACE = [
     'visa.entitySign' => '',
     'visa.firstname1' => '',
     'visa.lastname1' => '[visas]',
+    'visa.firstname2' => '',
+    'visa.lastname2' => '[visas]',
+    'visa.firstname3' => '',
+    'visa.lastname3' => '[visas]',
+    'visa.firstname4' => '',
+    'visa.lastname4' => '[visas]',
+    'visa.firstname5' => '',
+    'visa.lastname5' => '[visas]',
+    'visa.firstname6' => '',
+    'visa.lastname6' => '[visas]',
+    'visa.firstname7' => '',
+    'visa.lastname7' => '[visas]',
+    'visa.firstname8' => '',
+    'visa.lastname8' => '[visas]',
+    'visa.firstname9' => '',
+    'visa.lastname9' => '[visas]',
     'visa.entity1' => '',
 
     'avis.firstname1' => '',
     'avis.lastname1' => '[opinions]',
+    'avis.firstname2' => '',
+    'avis.lastname2' => '[opinions]',
+    'avis.firstname3' => '',
+    'avis.lastname3' => '[opinions]',
+    'avis.firstname4' => '',
+    'avis.lastname4' => '[opinions]',
+    'avis.firstname5' => '',
+    'avis.lastname5' => '[opinions]',
+    'avis.firstname6' => '',
+    'avis.lastname6' => '[opinions]',
+    'avis.firstname7' => '',
+    'avis.lastname7' => '[opinions]',
+    'avis.firstname8' => '',
+    'avis.lastname8' => '[opinions]',
+    'avis.firstname9' => '',
+    'avis.lastname9' => '[opinions]',
     'avis.role1' => '',
     'avis.entity1' => '',
     'avis.note1' => '',
 
     'copies.firstname1' => '',
     'copies.lastname1' => '[copies]',
+    'copies.firstname2' => '',
+    'copies.lastname2' => '[copies]',
+    'copies.firstname3' => '',
+    'copies.lastname3' => '[copies]',
+    'copies.firstname4' => '',
+    'copies.lastname4' => '[copies]',
+    'copies.firstname5' => '',
+    'copies.lastname5' => '[copies]',
+    'copies.firstname6' => '',
+    'copies.lastname6' => '[copies]',
+    'copies.firstname7' => '',
+    'copies.lastname7' => '[copies]',
+    'copies.firstname8' => '',
+    'copies.lastname8' => '[copies]',
+    'copies.firstname9' => '',
+    'copies.lastname9' => '[copies]',
     'copies.entity1' => '',
 
     'user.role' => '[userPrimaryEntity.role]',
@@ -66,6 +114,31 @@ const DATA_TO_REPLACE = [
     'user.parent_entity_id' => '[userPrimaryEntity.parent_entity_id]',
     'user.entity_type' => '[userPrimaryEntity.entity_type]',
     'user.entity_path' => '[userPrimaryEntity.path]',
+
+    'contact.contact_type_label' => '',
+    'contact.society_short' => '',
+    'contact.contact_purpose_label' => '',
+    'contact.website' => '',
+    'contact.salutation_header' => '',
+    'contact.salutation_footer' => '',
+    'contact.society' => '[recipient.company]',
+    'contact.departement' => '[recipient.department]',
+    'contact.title' => '[recipient.civility]',
+    'contact.contact_lastname' => '[recipient.lastname]',
+    'contact.contact_firstname' => '[recipient.firstname]',
+    'contact.lastname' => '[recipient.lastname]',
+    'contact.firstname' => '[recipient.firstname]',
+    'contact.function' => '[recipient.function]',
+    'contact.postal_address' => '[recipient.postal_address]',
+    'contact.address_num' => '[recipient.address_number]',
+    'contact.address_street' => '[recipient.address_street]',
+    'contact.occupancy' => '[recipient.address_additional1]',
+    'contact.address_complement' => '[recipient.address_additional2]',
+    'contact.address_town' => '[recipient.address_town]',
+    'contact.address_postal_code' => '[recipient.address_postcode]',
+    'contact.address_country' => '[recipient.address_country]',
+    'contact.phone' => '[recipient.phone]',
+    'contact.email' => '[recipient.email]',
 ];
 
 
@@ -122,11 +195,18 @@ foreach ($customs as $custom) {
             $extension = $pathInfo['extension'];
 
             if (!in_array($extension, OFFICE_EXTENSIONS)) {
+                $nonMigrated++;
+                continue;
+            }
+
+            if (!is_writable($pathToDocument) || !is_readable($pathToDocument)) {
+                $nonMigrated++;
                 continue;
             }
 
             $tbs = new clsTinyButStrong();
             $tbs->NoErr = true;
+            $tbs->Protect = false;
             $tbs->PlugIn(TBS_INSTALL, OPENTBS_PLUGIN);
 
             $tbs->LoadTemplate($pathToDocument, OPENTBS_ALREADY_UTF8);

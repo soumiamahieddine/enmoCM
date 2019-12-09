@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../app/translate.component';
-import { tap, catchError, filter, map } from 'rxjs/operators';
+import { tap, catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 @Injectable()
@@ -35,7 +35,7 @@ export class HeaderService {
                         lastname: data.lastname,
                         entities: data.entities,
                         groups: data.groups,
-                        privileges: data.privileges
+                        privileges: data.privileges[0] === 'ALL_PRIVILEGES' ? this.user.privileges : data.privileges
                     }
                 })
             ).subscribe();

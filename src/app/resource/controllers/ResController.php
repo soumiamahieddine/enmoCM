@@ -149,7 +149,7 @@ class ResController
                 'barcode'               => $document['barcode']
             ]);
         }
-        
+
         $modelFields = IndexingModelFieldModel::get([
             'select'    => ['identifier'],
             'where'     => ['model_id = ?'],
@@ -182,6 +182,45 @@ class ResController
             $priority = PriorityModel::getById(['id' => $formattedData['priority'], 'select' => ['label', 'color']]);
             $formattedData['priorityLabel'] = $priority['label'];
             $formattedData['priorityColor'] = $priority['color'];
+        }
+
+        if (in_array('senders', $modelFields)) {
+            $formattedData['senders'] = ResourceContactModel::get([
+                'select'    => ['item_id as id', 'type'],
+                'where'     => ['res_id = ?', 'mode = ?'],
+                'data'      => [$args['resId'], 'sender']
+            ]);
+        }
+        if (in_array('recipients', $modelFields) && empty($queryParams['light'])) {
+            $formattedData['recipients'] = ResourceContactModel::get([
+                'select'    => ['item_id as id', 'type'],
+                'where'     => ['res_id = ?', 'mode = ?'],
+                'data'      => [$args['resId'], 'recipient']
+            ]);
+        }
+
+        if (empty($queryParams['light'])) {
+            $formattedData['customFields'] = [];
+            $customFields = ResourceCustomFieldModel::get(['select' => ['value', 'custom_field_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            foreach ($customFields as $customField) {
+                $formattedData['customFields'][$customField['custom_field_id']] = json_decode($customField['value'], true);
+            }
+
+            $entities = EntityModel::getWithUserEntities([
+                'select' => ['entities.id'],
+                'where'  => ['user_id = ?'],
+                'data'   => [$GLOBALS['userId']]
+            ]);
+            $entities = array_column($entities, 'id');
+            $folders = FolderModel::getWithEntitiesAndResources([
+                'select'    => ['resources_folders.folder_id'],
+                'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
+                'data'      => [$args['resId'], $entities, $GLOBALS['id']]
+            ]);
+            $formattedData['folders'] = array_column($folders, 'folder_id');
+
+            $tags = TagResModel::get(['select' => ['tag_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            $formattedData['tags'] = array_column($tags, 'tag_id');
         }
 
         $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
@@ -784,6 +823,11 @@ class ResController
         }
         if (!empty($body['customFields'])) {
             foreach ($body['customFields'] as $key => $value) {
+                $customField = CustomFieldModel::getById(['id' => $key, 'select' => ['type']]);
+                if ($customField['type'] == 'date') {
+                    $date = new \DateTime($value);
+                    $value = $date->format('Y-m-d');
+                }
                 ResourceCustomFieldModel::create(['res_id' => $args['resId'], 'custom_field_id' => $key, 'value' => json_encode($value)]);
             }
         }
@@ -1048,7 +1092,7 @@ class ResController
             }
             $customFields = CustomFieldModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [array_keys($body['customFields'])]]);
             if (count($body['customFields']) != $customFields[0]['count']) {
-                return ['errors' => 'Body tags : One or more custom fields do not exist'];
+                return ['errors' => 'Body customFields : One or more custom fields do not exist'];
             }
         }
         if (!empty($body['folders'])) {

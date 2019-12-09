@@ -468,7 +468,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                                                         $document = \Attachment\models\AttachmentModel::get(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$id]]);
                                                     }
                                                     if ($object['name'] == 'citoyen') {
-                                                        $contact = \Contact\models\ContactModel::getOnView(['select' => ['external_id', 'ca_id'], 'where' => ['ca_id = ?'], 'data' => [$resource[0]['address_id']]]);
+                                                        $contact = \Contact\models\ContactModel::get(['select' => ['external_id', 'ca_id'], 'where' => ['ca_id = ?'], 'data' => [$resource[0]['address_id']]]);
                                                         $externalId = json_decode($contact[0]['external_id'], true);
                                                     }
                                                     foreach ($object['rawData'] as $key => $value) {

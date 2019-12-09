@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+    <res_letterbox>
+        <type_id>101</type_id>
+        <status>NUMQUAL</status>
+        <priority>poiuytre1357nbvc</priority>
+    </res_letterbox>
+    <res_attachments>
+        <attachment_type>simple_attachment</attachment_type>
+    </res_attachments>
+    <contacts_v2>
+        <contact_type>100</contact_type>
+    </contacts_v2>
+    <contact_addresses>
+        <contact_purpose_id>1</contact_purpose_id>
+    </contact_addresses>
+    <basketRedirection_afterUpload>NumericBasket</basketRedirection_afterUpload><!--basketId-->
+    <m2m_communication>https://cchaplin:maarch@demo.maarchcourrier.com</m2m_communication><!--moyen de communication de l'instance : email ou uri -->
+    <annuaries>
+        <enabled>false</enabled>
+        <organization>organization</organization>
+        <annuary>
+            <uri>1.1.1.1</uri>
+            <baseDN>base</baseDN>
+            <login>Administrateur</login>
+            <password>ThePassword</password>
+            <ssl>false</ssl>
+        </annuary>
+        <annuary>
+            <uri>2.2.2.2</uri>
+            <baseDN>base</baseDN>
+            <login>Administrateur</login>
+            <password>ThePassword</password>
+            <ssl>false</ssl>
+        </annuary>
+    </annuaries>
+</ROOT>

@@ -2159,20 +2159,6 @@ if (!defined('_LIMIT_DATE_PROCESS')) {
     define('_LIMIT_DATE_PROCESS', 'Processing deadline');
 }
 
-if (!defined('_MANAGE_CONTACT_TYPES_DESC')) {
-    define('_MANAGE_CONTACT_TYPES_DESC', 'Contact types management');
-}
-if (!defined('_MANAGE_CONTACT_TYPES')) {
-    define('_MANAGE_CONTACT_TYPES', 'Contact types management <br/>(Level 1)');
-}
-
-if (!defined('_MANAGE_CONTACT_PURPOSES_DESC')) {
-    define('_MANAGE_CONTACT_PURPOSES_DESC', 'Denomination management');
-}
-if (!defined('_MANAGE_CONTACT_PURPOSES')) {
-    define('_MANAGE_CONTACT_PURPOSES', 'Denomination management <br/>(Level 3)');
-}
-
 if (!defined('_MANAGE_CONTACTS_DESC')) {
     define('_MANAGE_CONTACTS_DESC', 'Contacts management');
 }
@@ -2277,61 +2263,6 @@ if (!defined('_CONTACT_ALREADY_CREATED_INFORMATION')) {
     define('_CONTACT_ALREADY_CREATED_INFORMATION', '(for information)');
 }
 
-if (!defined('_CONTACT_PURPOSES_LIST')) {
-    define('_CONTACT_PURPOSES_LIST', 'Denomination list');
-}
-if (!defined('_DESC_CONTACT_PURPOSES')) {
-    define('_DESC_CONTACT_PURPOSES', 'Denomination');
-}
-if (!defined('_NEW_CONTACT_PURPOSE_ADDED')) {
-    define('_NEW_CONTACT_PURPOSE_ADDED', 'Addition of a new denomination');
-}
-if (!defined('_ALL_CONTACT_PURPOSES')) {
-    define('_ALL_CONTACT_PURPOSES', 'All');
-}
-if (!defined('_CONTACT_PURPOSE')) {
-    define('_CONTACT_PURPOSE', 'Denomination');
-}
-if (!defined('_THIS_CONTACT_PURPOSE')) {
-    define('_THIS_CONTACT_PURPOSE', 'This denomination');
-}
-if (!defined('_CONTACT_PURPOSE_MISSING')) {
-    define('_CONTACT_PURPOSE_MISSING', 'Denomination is missing');
-}
-if (!defined('_CONTACT_PURPOSES')) {
-    define('_CONTACT_PURPOSES', 'naming(s)');
-}
-if (!defined('_A_CONTACT_PURPOSE')) {
-    define('_A_CONTACT_PURPOSE', 'a naming');
-}
-if (!defined('_NEW_CONTACT_PURPOSE')) {
-    define('_NEW_CONTACT_PURPOSE', 'New denomination');
-}
-if (!defined('_CONTACT_PURPOSE_MODIF')) {
-    define('_CONTACT_PURPOSE_MODIF', 'Denomination modification');
-}
-if (!defined('_ID_CONTACT_PURPOSE_PB')) {
-    define('_ID_CONTACT_PURPOSE_PB', 'There is an issue with a denomination ID');
-}
-if (!defined('_THE_CONTACT_PURPOSE')) {
-    define('_THE_CONTACT_PURPOSE', 'The denomination');
-}
-if (!defined('_CONTACT_PURPOSE_DEL')) {
-    define('_CONTACT_PURPOSE_DEL', 'Deletion of a denomination');
-}
-if (!defined('_DELETED_CONTACT_PURPOSE')) {
-    define('_DELETED_CONTACT_PURPOSE', 'Deleted denomination');
-}
-if (!defined('_CONTACT_PURPOSE_REAFFECT')) {
-    define('_CONTACT_PURPOSE_REAFFECT', 'Addresses reallocation');
-}
-if (!defined('_WARNING_MESSAGE_DEL_CONTACT_PURPOSE')) {
-    define('_WARNING_MESSAGE_DEL_CONTACT_PURPOSE', 'Warning :<br> The denomination deletion leads to addresses reallocation to a new denomination.');
-}
-if (!defined('_CONTACT_PURPOSE_WILL_BE_CREATED')) {
-    define('_CONTACT_PURPOSE_WILL_BE_CREATED', "This denomination doesn't exist. It will automatically be created.");
-}
-
 if (!defined('_SEARCH_CONTACTS')) {
     define('_SEARCH_CONTACTS', 'Search a contact');
 }
@@ -2431,9 +2362,6 @@ if (!defined('_THE_ADDRESS')) {
 }
 if (!defined('_MODIFY_ADDRESS')) {
     define('_MODIFY_ADDRESS', 'Address modification');
-}
-if (!defined('_CHOOSE_CONTACT_PURPOSES')) {
-    define('_CHOOSE_CONTACT_PURPOSES', 'Choose a denomination');
 }
 if (!defined('_WEBSITE')) {
     define('_WEBSITE', 'Website');
@@ -2985,21 +2913,6 @@ if (!defined('_INTEGER')) {
 }
 if (!defined('_FLOAT')) {
     define('_FLOAT', 'Floating');
-}
-if (!defined('_CUSTOM_T1')) {
-    define('_CUSTOM_T1', 'Text field 1');
-}
-if (!defined('_CUSTOM_T2')) {
-    define('_CUSTOM_T2', 'Text field 2');
-}
-if (!defined('_CUSTOM_D1')) {
-    define('_CUSTOM_D1', 'Date field');
-}
-if (!defined('_CUSTOM_N1')) {
-    define('_CUSTOM_N1', 'Integer field');
-}
-if (!defined('_CUSTOM_F1')) {
-    define('_CUSTOM_F1', 'Floating field');
 }
 
 if (!defined('_ITEM_NOT_IN_LIST')) {
@@ -4439,7 +4352,7 @@ if (!defined('_ENTITIES_LIST')) {
     define('_ENTITIES_LIST', 'Entities list');
 }
 if (!defined('_CONTACTS_USERS_SEARCH')) {
-    define('_CONTACTS_USERS_SEARCH', 'Contacts / users search');
+    define('_CONTACTS_USERS_SEARCH', 'Contacts / users / entities search');
 }
 if (!defined('_CONTACTS_USERS_GROUPS_SEARCH')) {
     define('_CONTACTS_USERS_GROUPS_SEARCH', 'Contacts / users / contacts groups search');

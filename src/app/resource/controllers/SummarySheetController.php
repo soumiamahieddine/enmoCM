@@ -16,7 +16,6 @@ namespace Resource\controllers;
 
 use Basket\models\BasketModel;
 use Contact\controllers\ContactController;
-use Contact\models\ContactModel;
 use Endroid\QrCode\QrCode;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
@@ -25,15 +24,12 @@ use Note\models\NoteModel;
 use Parameter\models\ParameterModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
-use Resource\models\ResourceContactModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use SrcCore\controllers\AutoCompleteController;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
-use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
@@ -107,55 +103,120 @@ class SummarySheetController
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
 
-        $tmpIds = [];
-        foreach ($resources as $resource) {
-            $tmpIds[] = $resource['res_id'];
-        }
+        $resourcesIds = array_column($resources, 'res_id');
 
         // Data for resources
-        $data = [];
-        foreach ($units as $unit) {
-            if ($unit['unit'] == 'notes') {
-                $data['notes'] = NoteModel::get([
-                    'select'   => ['id', 'note_text', 'user_id', 'creation_date', 'identifier'],
-                    'where'    => ['identifier in (?)'],
-                    'data'     => [$tmpIds],
-                    'order_by' => ['identifier']]);
+        $data = SummarySheetController::prepareData(['units' => $units, 'resourcesIds' => $resourcesIds]);
 
-                $userEntities = EntityModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['entity_id']]);
-                $data['userEntities'] = [];
-                foreach ($userEntities as $userEntity) {
-                    $data['userEntities'][] = $userEntity['entity_id'];
-                }
-            } elseif ($unit['unit'] == 'opinionWorkflow') {
-                $data['listInstancesOpinion'] = ListInstanceModel::get([
-                    'select'    => ['item_id', 'process_date', 'res_id'],
-                    'where'     => ['difflist_type = ?', 'res_id in (?)'],
-                    'data'      => ['AVIS_CIRCUIT', $tmpIds],
-                    'orderBy'   => ['listinstance_id']
-                ]);
-            } elseif ($unit['unit'] == 'visaWorkflow') {
-                $data['listInstancesVisa'] = ListInstanceModel::get([
-                    'select'    => ['item_id', 'requested_signature', 'process_date', 'res_id'],
-                    'where'     => ['difflist_type = ?', 'res_id in (?)'],
-                    'data'      => ['VISA_CIRCUIT', $tmpIds],
-                    'orderBy'   => ['listinstance_id']
-                ]);
-            } elseif ($unit['unit'] == 'diffusionList') {
-                $data['listInstances'] = ListInstanceModel::get([
-                    'select' => ['item_id', 'item_type', 'item_mode', 'res_id'],
-                    'where'  => ['difflist_type = ?', 'res_id in (?)'],
-                    'data'   => ['entity_id', $tmpIds],
-                    'orderBy' => ['listinstance_id']
-                ]);
-            } elseif ($unit['unit'] == 'senderRecipientInformations') {
-                $data['senderRecipient'] = ResModel::get([
-                    'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
-                    'where' => ['res_id in (?)'],
-                    'data' => [$tmpIds]
-                ]);
-            }
+        foreach ($resources as $resource) {
+            SummarySheetController::createSummarySheet($pdf, ['resource' => $resource, 'units' => $units, 'login' => $GLOBALS['userId'], 'data' => $data]);
         }
+
+        $fileContent = $pdf->Output('', 'S');
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($fileContent);
+
+        $response->write($fileContent);
+        $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.pdf");
+
+        return $response->withHeader('Content-Type', $mimeType);
+    }
+
+    public function createListWithAll(Request $request, Response $response)
+    {
+        set_time_limit(240);
+
+        $bodyData = $request->getQueryParams();
+        $units    = [
+            [
+                "unit" => "qrcode",
+                "label" => ""
+            ],
+            [
+                "unit" => "primaryInformations",
+                "label" => "Informations pricipales"
+            ],
+            [
+                "unit" => "senderRecipientInformations",
+                "label" => "Informations de destination"
+            ],
+            [
+                "unit" => "secondaryInformations",
+                "label" => "Informations secondaires"
+            ],
+            [
+                "unit" => "diffusionList",
+                "label" => "Liste de diffusion"
+            ],
+            [
+                "unit" => "opinionWorkflow",
+                "label" => "Circuit d'avis"
+            ],
+            [
+                "unit" => "visaWorkflow",
+                "label" => "Circuit de visa"
+            ],
+            [
+                "unit" => "notes",
+                "label" => "Annotation(s)"
+            ]
+        ];
+
+        $resourcesData = json_decode($bodyData['resources']);
+
+        if (!Validator::arrayType()->notEmpty()->validate($resourcesData)) {
+            return $response->withStatus(403)->withJson(['errors' => 'Resources is not set or empty']);
+        }
+
+        $resourcesData = array_slice($resourcesData, 0, 500);
+
+        $rawResourcesInBasket = ResModel::getOnView([
+            'select'    => ['res_id'],
+            'where'     => ['res_view_letterbox.res_id in (?)'],
+            'data'      => [$resourcesData]
+        ]);
+        $allResourcesInBasket = array_column($rawResourcesInBasket, 'res_id');
+
+        $order = 'CASE res_view_letterbox.res_id ';
+        foreach ($resourcesData as $key => $resId) {
+            if (!in_array($resId, $allResourcesInBasket)) {
+                return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
+            }
+            $order .= "WHEN {$resId} THEN {$key} ";
+        }
+        $order .= 'END';
+
+        $select = [
+            'res_id',
+            'subject',
+            'alt_identifier',
+            'admission_date',
+            'creation_date',
+            'doc_date',
+            'type_label',
+            'initiator',
+            'typist',
+            'category_id',
+            'priority',
+            'process_limit_date',
+            'status',
+            'destination'
+        ];
+
+        $resources = ResModel::getOnView([
+            'select'    => $select,
+            'where'     => ['res_view_letterbox.res_id in (?)'],
+            'data'      => [$resourcesData],
+            'orderBy'   => [$order]
+        ]);
+
+        $pdf = new Fpdi('P', 'pt');
+        $pdf->setPrintHeader(false);
+
+        $resourcesIds = array_column($resources, 'res_id');
+
+        // Data for resources
+        $data = SummarySheetController::prepareData(['units' => $units, 'resourcesIds' => $resourcesIds]);
 
         foreach ($resources as $resource) {
             SummarySheetController::createSummarySheet($pdf, ['resource' => $resource, 'units' => $units, 'login' => $GLOBALS['userId'], 'data' => $data]);
@@ -284,8 +345,8 @@ class SummarySheetController
                 $pdf->MultiCell($widthNotes, 30, _PRIORITY . " : {$priority}", 1, 'L', false, 0, '', '', true, 0, true);
                 $pdf->MultiCell($widthNotes, 30, _PROCESS_LIMIT_DATE . " : {$processLimitDate}", 1, 'L', false, 1, '', '', true, 0, true);
             } elseif ($unit['unit'] == 'senderRecipientInformations') {
-                $senders = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
-                $recipients = ContactController::getFormattedExportContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
+                $senders = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
+                $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
 
                 if (!empty($senders) && count($senders) > 2) {
                     $nbSenders = count($senders);
@@ -519,5 +580,51 @@ class SummarySheetController
                 $pdf->Cell(0, 60, '', 1, 2, 'L', false);
             }
         }
+    }
+
+    private static function prepareData(array $args)
+    {
+        $units = $args['units'];
+        $tmpIds = $args['resourcesIds'];
+
+        $data = [];
+        foreach ($units as $unit) {
+            if ($unit['unit'] == 'notes') {
+                $data['notes'] = NoteModel::get([
+                    'select'   => ['id', 'note_text', 'user_id', 'creation_date', 'identifier'],
+                    'where'    => ['identifier in (?)'],
+                    'data'     => [$tmpIds],
+                    'order_by' => ['identifier']]);
+
+                $userEntities = EntityModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['entity_id']]);
+                $data['userEntities'] = [];
+                foreach ($userEntities as $userEntity) {
+                    $data['userEntities'][] = $userEntity['entity_id'];
+                }
+            } elseif ($unit['unit'] == 'opinionWorkflow') {
+                $data['listInstancesOpinion'] = ListInstanceModel::get([
+                    'select'    => ['item_id', 'process_date', 'res_id'],
+                    'where'     => ['difflist_type = ?', 'res_id in (?)'],
+                    'data'      => ['AVIS_CIRCUIT', $tmpIds],
+                    'orderBy'   => ['listinstance_id']
+                ]);
+            } elseif ($unit['unit'] == 'visaWorkflow') {
+                $data['listInstancesVisa'] = ListInstanceModel::get([
+                    'select'    => ['item_id', 'requested_signature', 'process_date', 'res_id'],
+                    'where'     => ['difflist_type = ?', 'res_id in (?)'],
+                    'data'      => ['VISA_CIRCUIT', $tmpIds],
+                    'orderBy'   => ['listinstance_id']
+                ]);
+            } elseif ($unit['unit'] == 'diffusionList') {
+                $data['listInstances'] = ListInstanceModel::get([
+                    'select' => ['item_id', 'item_type', 'item_mode', 'res_id'],
+                    'where'  => ['difflist_type = ?', 'res_id in (?)'],
+                    'data'   => ['entity_id', $tmpIds],
+                    'orderBy' => ['listinstance_id']
+                ]);
+            }
+        }
+
+        return $data;
     }
 }

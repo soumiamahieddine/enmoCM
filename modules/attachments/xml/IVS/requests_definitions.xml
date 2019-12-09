@@ -66,12 +66,6 @@
       <parameter name="page" value="get_other_chrono_attachment"/>
     </requestDefinition>
 
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="setFinalVersion" >
-	  <parameter name="module" type="identifier" />
-	  <parameter name="display" value="true"/>
-      <parameter name="page" value="setFinalVersion"/>
-    </requestDefinition>
-
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="view_attachment" >
 	  <parameter name="module" type="identifier" />
 	  <parameter name="display" value="true"/>

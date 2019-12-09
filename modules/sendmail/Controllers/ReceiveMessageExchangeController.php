@@ -15,18 +15,19 @@
 
 namespace Sendmail\Controllers;
 
+use Basket\models\BasketModel;
+use Contact\models\ContactModel;
+use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
+use History\controllers\HistoryController;
+use Note\models\NoteModel;
 use Resource\controllers\StoreController;
+use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use User\models\UserModel;
 use SrcCore\models\CoreConfigModel;
-use Entity\models\EntityModel;
-use Basket\models\BasketModel;
-use Resource\models\ResModel;
-use Note\models\NoteModel;
-use History\controllers\HistoryController;
-use Contact\models\ContactModel;
+use User\models\UserModel;
 
 require_once 'modules/export_seda/Controllers/ReceiveMessage.php';
 require_once 'modules/export_seda/Controllers/SendMessage.php';
@@ -240,8 +241,6 @@ class ReceiveMessageExchangeController
             $destUser = UserModel::getByEmail(['mail' => $email]);
         }
 
-        $contact = $aArgs['contact'];
-
         $dataValue = [];
         $user      = UserModel::getByLogin(['login' => 'superadmin', 'select' => ['id']]);
         $entityId  = EntityModel::getByEntityId(['entityId' => $destination[0]['entity_id'], 'select' => ['id']]);
@@ -256,9 +255,6 @@ class ReceiveMessageExchangeController
         array_push($dataValue, ['priority'         => $defaultConfig['priority']]);
         array_push($dataValue, ['confidentiality'  => false]);
         array_push($dataValue, ['chrono'           => true]);
-        // TODO CONTACT
-        // array_push($dataValue, ['exp_contact_id'   => $contact['contactId']]);
-        // array_push($dataValue, ['address_id'       => $contact['addressId']]);
         $date = new \DateTime();
         array_push($dataValue, ['arrivalDate'  => $date->format('d-m-Y H:i')]);
         array_push($dataValue, ['encodedFile'  => $documentMetaData->Attachment->value]);
@@ -266,58 +262,69 @@ class ReceiveMessageExchangeController
         array_push($dataValue, ['status'       => $defaultConfig['status']]);
         array_push($dataValue, ['modelId'      => $defaultConfig['indexingModelId']]);
 
-        return StoreController::storeResource($dataValue);
+        $storeResource = StoreController::storeResource($dataValue);
+        if (!empty($storeResource['errors'])) {
+            ResourceContactModel::create(['res_id' => $storeResource, 'item_id' => $aArgs['contact']['id'], 'type' => 'contact', 'mode' => 'sender']);
+        }
+
+        return $storeResource;
     }
 
     protected static function saveContact($aArgs = [])
     {
         $dataObject                 = $aArgs['dataObject'];
-        $defaultConfigContacts      = $aArgs['defaultConfig']['contacts_v2'];
-        $defaultConfigAddress       = $aArgs['defaultConfig']['contact_addresses'];
         $transferringAgency         = $dataObject->TransferringAgency;
         $transferringAgencyMetadata = $transferringAgency->OrganizationDescriptiveMetadata;
 
-        $aDataContact = [];
-        array_push($aDataContact, ['column' => 'contact_type',        'value' => $defaultConfigContacts['contact_type'],           'type' => 'integer', 'table' => 'contacts_v2']);
-        array_push($aDataContact, ['column' => 'society',             'value' => $transferringAgencyMetadata->LegalClassification, 'type' => 'string',  'table' => 'contacts_v2']);
-        array_push($aDataContact, ['column' => 'is_corporate_person', 'value' => 'Y', 'type' => 'string',  'table' => 'contacts_v2']);
-        array_push($aDataContact, ['column' => 'is_external_contact', 'value' => 'Y', 'type' => 'string',  'table' => 'contacts_v2']);
+        if (strrpos($transferringAgencyMetadata->Communication[0]->value, "/rest/") !== false) {
+            $contactCommunicationValue = substr($transferringAgencyMetadata->Communication[0]->value, 0, strrpos($transferringAgencyMetadata->Communication[0]->value, "/rest/")+1);
+        } else {
+            $contactCommunicationValue = $transferringAgencyMetadata->Communication[0]->value;
+        }
+        
+        if (filter_var($contactCommunicationValue, FILTER_VALIDATE_EMAIL)) {
+            $aCommunicationMeans['email'] = $contactCommunicationValue;
+            $whereAlreadyExist = "communication_means->>'email' = ?";
+        } elseif (filter_var($contactCommunicationValue, FILTER_VALIDATE_URL)) {
+            $aCommunicationMeans['url'] = $contactCommunicationValue;
+            $whereAlreadyExist = "communication_means->>'url' = ?";
+        }
+        $dataAlreadyExist = $contactCommunicationValue;
 
-        array_push($aDataContact, ['column' => 'contact_purpose_id',  'value' => $defaultConfigAddress['contact_purpose_id'],      'type' => 'integer', 'table' => 'contact_addresses']);
-        array_push($aDataContact, ['column' => 'external_id', 'value' => $transferringAgency->Identifier->value,           'type' => 'string',  'table' => 'contact_addresses']);
-        array_push($aDataContact, ['column' => 'departement',         'value' => $transferringAgencyMetadata->Name,                'type' => 'string',  'table' => 'contact_addresses']);
-
-        $contactAlreadyCreated = ContactModel::getOnView([
-            'select'    => ['contact_id', 'ca_id'],
-            'where'     => ["external_id->>'m2m' = ?"],
-            'data'      => [$transferringAgency->Identifier->value],
+        $contactAlreadyCreated = ContactModel::get([
+            'select'    => ['id', 'communication_means'],
+            'where'     => ["external_id->>'m2m' = ?", $whereAlreadyExist],
+            'data'      => [$transferringAgency->Identifier->value, $dataAlreadyExist],
             'limit'     => 1
         ]);
-        if (!empty($contactAlreadyCreated)) {
-            $contact['contactId'] = $contactAlreadyCreated[0]['contact_id'];
-            $contact['addressId'] = $contactAlreadyCreated[0]['ca_id'];
-        } else {
-            $contact = ContactModel::createContactM2M(['data' => $aDataContact, 'contactCommunication' => $transferringAgencyMetadata->Communication[0]->value]);
-        }
-        $contactCommunicationExisted = ContactModel::getContactCommunication([
-            "contactId" => $contact['contactId']
-        ]);
 
-        $contactCommunication = $transferringAgencyMetadata->Communication;
-        if (empty($contactCommunicationExisted) && !empty($contactCommunication)) {
-            foreach ($contactCommunication as $value) {
-                if (strrpos($value->value, "/rest/") !== false) {
-                    $contactCommunicationValue = substr($value->value, 0, strrpos($value->value, "/rest/")+1);
-                } else {
-                    $contactCommunicationValue = $value->value;
-                }
-                ContactModel::createContactCommunication([
-                    "contactId" => $contact['contactId'],
-                    "type"      => $value->Channel,
-                    "value"     => $contactCommunicationValue
-                ]);
+        if (!empty($contactAlreadyCreated[0]['id'])) {
+            $contact = [
+                'id'         => $contactAlreadyCreated[0]['id'],
+                'returnCode' => (int) 0
+            ];
+        } else {
+            $aDataContact = [
+                'company'             => $transferringAgencyMetadata->LegalClassification,
+                'external_id'         => json_encode(['m2m' => $transferringAgency->Identifier->value]),
+                'department'          => $transferringAgencyMetadata->Name,
+                'communication_means' => json_encode($aCommunicationMeans)
+            ];
+
+            $contactId = ContactModel::create(['data' => $aDataContact]);
+            if (empty($contactId)) {
+                $contact = [
+                    'returnCode'  => (int) -1,
+                    'error'       => 'Contact creation error',
+                ];
+            } else {
+                $contact = [
+                    'id'         => $contactId,
+                    'returnCode' => (int) 0
+                ];
             }
         }
+
         return $contact;
     }
 
