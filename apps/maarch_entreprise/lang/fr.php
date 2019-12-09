@@ -2180,20 +2180,6 @@ if (!defined('_LIMIT_DATE_PROCESS')) {
     define('_LIMIT_DATE_PROCESS', 'Date limite de traitement');
 }
 
-if (!defined('_MANAGE_CONTACT_TYPES_DESC')) {
-    define('_MANAGE_CONTACT_TYPES_DESC', 'Gestion des types de contact');
-}
-if (!defined('_MANAGE_CONTACT_TYPES')) {
-    define('_MANAGE_CONTACT_TYPES', 'Gestion des types de contact <br/>(Niveau 1)');
-}
-
-if (!defined('_MANAGE_CONTACT_PURPOSES_DESC')) {
-    define('_MANAGE_CONTACT_PURPOSES_DESC', 'Gestion des dénominations');
-}
-if (!defined('_MANAGE_CONTACT_PURPOSES')) {
-    define('_MANAGE_CONTACT_PURPOSES', 'Gestion des dénominations <br/>(Niveau 3)');
-}
-
 if (!defined('_MANAGE_CONTACTS_DESC')) {
     define('_MANAGE_CONTACTS_DESC', 'Gestion des contacts');
 }
@@ -2301,61 +2287,6 @@ if (!defined('_CONTACT_ALREADY_CREATED_INFORMATION')) {
     define('_CONTACT_ALREADY_CREATED_INFORMATION', '(pour information)');
 }
 
-if (!defined('_CONTACT_PURPOSES_LIST')) {
-    define('_CONTACT_PURPOSES_LIST', 'Liste des dénominations');
-}
-if (!defined('_DESC_CONTACT_PURPOSES')) {
-    define('_DESC_CONTACT_PURPOSES', 'Dénomination');
-}
-if (!defined('_NEW_CONTACT_PURPOSE_ADDED')) {
-    define('_NEW_CONTACT_PURPOSE_ADDED', "Ajout d'une nouvelle dénomination");
-}
-if (!defined('_ALL_CONTACT_PURPOSES')) {
-    define('_ALL_CONTACT_PURPOSES', 'Toutes');
-}
-if (!defined('_CONTACT_PURPOSE')) {
-    define('_CONTACT_PURPOSE', 'Dénomination');
-}
-if (!defined('_THIS_CONTACT_PURPOSE')) {
-    define('_THIS_CONTACT_PURPOSE', 'Cette dénomination');
-}
-if (!defined('_CONTACT_PURPOSE_MISSING')) {
-    define('_CONTACT_PURPOSE_MISSING', 'Dénomination est manquant');
-}
-if (!defined('_CONTACT_PURPOSES')) {
-    define('_CONTACT_PURPOSES', 'dénomination(s)');
-}
-if (!defined('_A_CONTACT_PURPOSE')) {
-    define('_A_CONTACT_PURPOSE', 'une dénomination');
-}
-if (!defined('_NEW_CONTACT_PURPOSE')) {
-    define('_NEW_CONTACT_PURPOSE', 'Nouvelle dénomination');
-}
-if (!defined('_CONTACT_PURPOSE_MODIF')) {
-    define('_CONTACT_PURPOSE_MODIF', "Modification d'une dénomination");
-}
-if (!defined('_ID_CONTACT_PURPOSE_PB')) {
-    define('_ID_CONTACT_PURPOSE_PB', "Il y a un problème avec l'identifiant d'une dénomination");
-}
-if (!defined('_THE_CONTACT_PURPOSE')) {
-    define('_THE_CONTACT_PURPOSE', 'La dénomination');
-}
-if (!defined('_CONTACT_PURPOSE_DEL')) {
-    define('_CONTACT_PURPOSE_DEL', "Suppression d'une dénomination");
-}
-if (!defined('_DELETED_CONTACT_PURPOSE')) {
-    define('_DELETED_CONTACT_PURPOSE', 'Dénomination supprimée');
-}
-if (!defined('_CONTACT_PURPOSE_REAFFECT')) {
-    define('_CONTACT_PURPOSE_REAFFECT', 'Réaffectation des adresses');
-}
-if (!defined('_WARNING_MESSAGE_DEL_CONTACT_PURPOSE')) {
-    define('_WARNING_MESSAGE_DEL_CONTACT_PURPOSE', "Avertissement : La suppression d'une dénomination entraine la réaffectation des adresses à une nouvelle dénomination.");
-}
-if (!defined('_CONTACT_PURPOSE_WILL_BE_CREATED')) {
-    define('_CONTACT_PURPOSE_WILL_BE_CREATED', "Cette dénomination n'existe pas. Elle sera créée automatiquement.");
-}
-
 if (!defined('_SEARCH_CONTACTS')) {
     define('_SEARCH_CONTACTS', 'Rechercher un contact');
 }
@@ -2455,9 +2386,6 @@ if (!defined('_THE_ADDRESS')) {
 }
 if (!defined('_MODIFY_ADDRESS')) {
     define('_MODIFY_ADDRESS', "Modification de l'adresse");
-}
-if (!defined('_CHOOSE_CONTACT_PURPOSES')) {
-    define('_CHOOSE_CONTACT_PURPOSES', 'Choisissez une dénomination');
 }
 if (!defined('_WEBSITE')) {
     define('_WEBSITE', 'Site internet');

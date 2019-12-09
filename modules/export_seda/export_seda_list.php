@@ -12,7 +12,6 @@
 */
 require_once 'core/class/class_request.php';
 require_once 'core/class/class_security.php';
-require_once 'apps/'.$_SESSION['config']['app_id'].'/class/class_contacts_v2.php';
 require_once 'core/class/class_manage_status.php';
 require_once 'apps/'.$_SESSION['config']['app_id'].'/class/class_lists.php';
 
@@ -20,7 +19,6 @@ $status_obj = new manage_status();
 $security = new security();
 $core_tools = new core_tools();
 $request = new request();
-$contact = new contacts_v2();
 $list = new lists();
 
 //Include definition fields
@@ -384,7 +382,7 @@ for ($i = 0; $i < $tabI; ++$i) {
                 $tab[$i][$j]['valign'] = 'bottom';
                 $tab[$i][$j]['show'] = false;
                 $tab[$i][$j]['value_export'] = $tab[$i][$j]['value'];
-                $tab[$i][$j]['value'] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
+//                $tab[$i][$j]['value'] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
                 $tab[$i][$j]['order'] = false;
             }
             if ($tab[$i][$j][$value] == 'dest_user') {

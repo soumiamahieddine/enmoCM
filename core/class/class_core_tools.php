@@ -1282,25 +1282,6 @@ class core_tools extends functions
                     require $_SESSION['maarchFilesWhiteList']['apps'][$cptM];
                     $found = true;
                     break;
-                } else {
-                    require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_business_app_tools.php';
-                    $app = new business_app_tools();
-                    $path = $app->insert_app_page($this->f_page);
-                    if (
-                        $_SESSION['maarchFilesWhiteList']['apps'][$cptM]
-                            == 'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path
-                    ) {
-                        require $_SESSION['maarchFilesWhiteList']['apps'][$cptM];
-                        $found = true;
-                        break;
-                    } elseif (
-                        $_SESSION['maarchFilesWhiteList']['apps'][$cptM]
-                            == $path
-                    ) {
-                        require $_SESSION['maarchFilesWhiteList']['apps'][$cptM];
-                        $found = true;
-                        break;
-                    }
                 }
             }
             if (!$found) {

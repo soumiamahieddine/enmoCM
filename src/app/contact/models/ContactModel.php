@@ -15,6 +15,7 @@
 namespace Contact\models;
 
 use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
@@ -147,30 +148,10 @@ class ContactModel
         ValidatorModel::notEmpty($aArgs, ['id']);
         ValidatorModel::intVal($aArgs, ['id']);
 
-        $firstCount = ResModel::getOnView([
-            'select'    => ['count(*) as count'],
-            'where'     => ['contact_id = ?'],
-            'data'      => [$aArgs['id']],
-        ]);
+        $count = ResourceContactModel::get(['select' => ['count(1)'], 'where' => ['item_id = ?', 'type= ?'], 'data' => [$aArgs['id'], 'contact']]);
 
-        $secondCount = DatabaseModel::select([
-            'select'    => ['count(*) as count'],
-            'table'     => ['contacts_res'],
-            'where'     => ['contact_id = ?'],
-            'data'      => [$aArgs['id']],
-        ]);
-
-        if ($firstCount[0]['count'] < 1 && $secondCount[0]['count'] < 1) {
-            DatabaseModel::delete([
-                'table' => 'contact_addresses',
-                'where' => ['contact_id = ?'],
-                'data'  => [$aArgs['id']]
-            ]);
-            DatabaseModel::delete([
-                'table' => 'contacts_v2',
-                'where' => ['contact_id = ?'],
-                'data'  => [$aArgs['id']]
-            ]);
+        if ($count[0]['count'] < 1) {
+            ContactModel::delete(['where' => ['id = ?'], 'data' => [$aArgs['id']]]);
         }
     }
 

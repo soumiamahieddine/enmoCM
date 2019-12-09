@@ -482,64 +482,45 @@ while ($GLOBALS['state'] <> "END") {
         /*                          DELETE_CONTACTS_ON_DB                     */
         /*                                                                    */
         /**********************************************************************/
-        case "DELETE_CONTACTS_ON_DB" :
-
-            if ($GLOBALS['CleanContactsMoral'] == "true" || $GLOBALS['CleanContactsNonMoral'] == "true") {
-
-                $GLOBALS['logger']->write('Clean contacts case', 'INFO');
-
-                if ($GLOBALS['CleanContactsMoral'] == "true"){
-                    $GLOBALS['logger']->write('Clean Moral Contacts', 'INFO');
-                    $stmt = Bt_doQuery(
-                        $GLOBALS['db'], 
-                        "SELECT contact_id FROM contacts_v2 WHERE is_corporate_person = 'Y' "
-                    );
-                } else if ($GLOBALS['CleanContactsNonMoral'] == "true"){
-                    $GLOBALS['logger']->write('Clean Non Moral Contacts', 'INFO');
-                     $stmt = Bt_doQuery(
-                        $GLOBALS['db'], 
-                        "SELECT contact_id FROM contacts_v2 WHERE is_corporate_person = 'N' "
-                    );                   
-                }
-
-                while($ContactToClean = $stmt->fetchObject()){
-                    $stmt2 = Bt_doQuery(
-                        $GLOBALS['db'], 
-                        "SELECT count(*) as total FROM res_view_letterbox WHERE contact_id = ? ", 
-                        array($ContactToClean->contact_id)
-                    );
-                    $totalContacts = $stmt2->fetchObject();
-
-                    $stmt3 = Bt_doQuery(
-                        $GLOBALS['db'], 
-                        "SELECT count(*) as total FROM contacts_res WHERE contact_id = ? ", 
-                        array($ContactToClean->contact_id)
-                    );
-                    $totalContactsMulti = $stmt3->fetchObject();
-
-                    if ($totalContacts->total < 1 && $totalContactsMulti->total < 1) {
-
-                        $GLOBALS['logger']->write('Clean Contact ' . $ContactToClean->contact_id, 'DEBUG');
-
-                        Bt_doQuery(
-                            $GLOBALS['db'], 
-                            "DELETE FROM contact_addresses WHERE contact_id = ?", 
-                            array($ContactToClean->contact_id)
-                        );
-
-                        Bt_doQuery(
-                            $GLOBALS['db'], 
-                            "DELETE FROM contacts_v2 WHERE contact_id = ? ", 
-                            array($ContactToClean->contact_id)
-                        );                        
-                    }
-                }
-
-            }
-
-            $state = 'END';
-            break;
-
+//        case "DELETE_CONTACTS_ON_DB" :
+//
+//            if ($GLOBALS['CleanContactsMoral'] == "true" || $GLOBALS['CleanContactsNonMoral'] == "true") {
+//
+//                $GLOBALS['logger']->write('Clean contacts case', 'INFO');
+//
+//                if ($GLOBALS['CleanContactsMoral'] == "true"){
+//                    $GLOBALS['logger']->write('Clean Moral Contacts', 'INFO');
+//                } else if ($GLOBALS['CleanContactsNonMoral'] == "true"){
+//                    $GLOBALS['logger']->write('Clean Non Moral Contacts', 'INFO');
+//                }
+//
+//                while($ContactToClean = $stmt->fetchObject()){
+//
+//                    $totalContactsMulti = $stmt3->fetchObject();
+//
+//                    if ($totalContacts->total < 1 && $totalContactsMulti->total < 1) {
+//
+//                        $GLOBALS['logger']->write('Clean Contact ' . $ContactToClean->contact_id, 'DEBUG');
+//
+//                        Bt_doQuery(
+//                            $GLOBALS['db'],
+//                            "DELETE FROM contact_addresses WHERE contact_id = ?",
+//                            array($ContactToClean->contact_id)
+//                        );
+//
+//                        Bt_doQuery(
+//                            $GLOBALS['db'],
+//                            "DELETE FROM contacts_v2 WHERE contact_id = ? ",
+//                            array($ContactToClean->contact_id)
+//                        );
+//                    }
+//                }
+//
+//            }
+//
+//            $state = 'END';
+//            break;
+//
     }
 
 }

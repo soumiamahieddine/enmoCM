@@ -19,61 +19,6 @@ use SrcCore\models\ValidatorModel;
 
 class ResourceListModel
 {
-    public static function get(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resIds']);
-        ValidatorModel::arrayType($aArgs, ['resIds']);
-
-        $order = 'CASE res_letterbox.res_id ';
-        foreach ($aArgs['resIds'] as $key => $resId) {
-            $order .= "WHEN {$resId} THEN {$key} ";
-        }
-        $order .= 'END';
-
-        $resources = DatabaseModel::select([
-            'select'    => [
-                'res_letterbox.res_id',
-                'res_letterbox.subject',
-                'res_letterbox.creation_date',
-                'res_letterbox.barcode',
-                'res_letterbox.alt_identifier',
-                'res_letterbox.category_id',
-                'res_letterbox.closing_date',
-                'res_letterbox.process_limit_date',
-                'res_letterbox.is_multicontacts',
-                'entities.entity_label as entity_destination',
-                'doctypes.description as doctype_label',
-                'contacts_v2.firstname as contact_firstname',
-                'contacts_v2.lastname as contact_lastname',
-                'contacts_v2.society as contact_society',
-                'users.firstname as user_firstname',
-                'users.lastname as user_lastname',
-                'priorities.color as priority_color',
-                'priorities.label as priority_label',
-                'status.img_filename as status_icon',
-                'status.label_status as status_label',
-                'status.id as status_id',
-                'us.lastname as user_dest_lastname',
-                'us.firstname as user_dest_firstname',
-            ],
-            'table'     => ['res_letterbox', 'entities', 'doctypes', 'contacts_v2', 'users', 'priorities', 'status', 'users us'],
-            'left_join' => [
-                'res_letterbox.destination = entities.entity_id',
-                'res_letterbox.type_id = doctypes.type_id',
-                'res_letterbox.exp_contact_id = contacts_v2.contact_id OR res_letterbox.dest_contact_id = contacts_v2.contact_id',
-                'res_letterbox.exp_user_id = users.user_id OR res_letterbox.dest_user_id = users.user_id',
-                'res_letterbox.priority = priorities.id',
-                'res_letterbox.status = status.id',
-                'res_letterbox.dest_user = us.user_id'
-            ],
-            'where'     => ['res_letterbox.res_id in (?)'],
-            'data'      => [$aArgs['resIds']],
-            'order_by'  => [$order]
-        ]);
-
-        return $resources;
-    }
-
     public static function getOnResource(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['select']);

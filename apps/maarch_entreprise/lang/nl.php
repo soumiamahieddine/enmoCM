@@ -697,10 +697,6 @@ if (!defined('_VALIDATE_MAIL')) { define('_VALIDATE_MAIL', 'Bevestiging brief');
 if (!defined('_LETTER_INFO')) { define('_LETTER_INFO', 'Informatie over de brief');}
 if (!defined('_DATE_START')) { define('_DATE_START', 'Aankomstdatum');}
 if (!defined('_LIMIT_DATE_PROCESS')) { define('_LIMIT_DATE_PROCESS', 'Verwerkingsdeadline');}
-if (!defined('_MANAGE_CONTACT_TYPES_DESC')) { define('_MANAGE_CONTACT_TYPES_DESC', 'Beheer van de contacttypes');}
-if (!defined('_MANAGE_CONTACT_TYPES')) { define('_MANAGE_CONTACT_TYPES', 'Beheer van de contacttypes<br/>(Niveau 1)');}
-if (!defined('_MANAGE_CONTACT_PURPOSES_DESC')) { define('_MANAGE_CONTACT_PURPOSES_DESC', 'Beheer van de benamingen');}
-if (!defined('_MANAGE_CONTACT_PURPOSES')) { define('_MANAGE_CONTACT_PURPOSES', 'Beheer van de benamingen<br/>(Niveau 3)');}
 if (!defined('_MANAGE_CONTACTS_DESC')) { define('_MANAGE_CONTACTS_DESC', 'Beheer van de contacten');}
 if (!defined('_MANAGE_CONTACTS')) { define('_MANAGE_CONTACTS', 'Beheer van de contacten<br/>(Niveau 2)');}
 if (!defined('_SEE_ALL_ADDRESSES')) { define('_SEE_ALL_ADDRESSES', 'Alle adressen bekijken');}
@@ -731,24 +727,6 @@ if (!defined('_CONTACT_TYPE_REAFFECT')) { define('_CONTACT_TYPE_REAFFECT', 'Cont
 if (!defined('_ALL')) { define('_ALL', 'Alle');}
 if (!defined('_CONTACT_ALREADY_CREATED')) { define('_CONTACT_ALREADY_CREATED', 'Reeds bestaande contacten');}
 if (!defined('_CONTACT_ALREADY_CREATED_INFORMATION')) { define('_CONTACT_ALREADY_CREATED_INFORMATION', '(ter informatie)');}
-if (!defined('_CONTACT_PURPOSES_LIST')) { define('_CONTACT_PURPOSES_LIST', 'Benamingenlijst');}
-if (!defined('_DESC_CONTACT_PURPOSES')) { define('_DESC_CONTACT_PURPOSES', 'Benaming');}
-if (!defined('_NEW_CONTACT_PURPOSE_ADDED')) { define('_NEW_CONTACT_PURPOSE_ADDED', 'Toevoeging van een nieuwe benaming');}
-if (!defined('_ALL_CONTACT_PURPOSES')) { define('_ALL_CONTACT_PURPOSES', 'Alle');}
-if (!defined('_CONTACT_PURPOSE')) { define('_CONTACT_PURPOSE', 'Benaming');}
-if (!defined('_THIS_CONTACT_PURPOSE')) { define('_THIS_CONTACT_PURPOSE', 'Deze benaming');}
-if (!defined('_CONTACT_PURPOSE_MISSING')) { define('_CONTACT_PURPOSE_MISSING', 'Benaming ontbreekt');}
-if (!defined('_CONTACT_PURPOSES')) { define('_CONTACT_PURPOSES', 'benaming(en)');}
-if (!defined('_A_CONTACT_PURPOSE')) { define('_A_CONTACT_PURPOSE', 'een benaming');}
-if (!defined('_NEW_CONTACT_PURPOSE')) { define('_NEW_CONTACT_PURPOSE', 'Nieuwe benaming');}
-if (!defined('_CONTACT_PURPOSE_MODIF')) { define('_CONTACT_PURPOSE_MODIF', 'Wijziging van een benaming');}
-if (!defined('_ID_CONTACT_PURPOSE_PB')) { define('_ID_CONTACT_PURPOSE_PB', 'Er is een probleem met de gebruikersnaam van een benaming');}
-if (!defined('_THE_CONTACT_PURPOSE')) { define('_THE_CONTACT_PURPOSE', 'De benaming');}
-if (!defined('_CONTACT_PURPOSE_DEL')) { define('_CONTACT_PURPOSE_DEL', 'Verwijderen van een benaming');}
-if (!defined('_DELETED_CONTACT_PURPOSE')) { define('_DELETED_CONTACT_PURPOSE', 'Benaming verwijderd');}
-if (!defined('_CONTACT_PURPOSE_REAFFECT')) { define('_CONTACT_PURPOSE_REAFFECT', 'Adressen opnieuw toewijzen');}
-if (!defined('_WARNING_MESSAGE_DEL_CONTACT_PURPOSE')) { define('_WARNING_MESSAGE_DEL_CONTACT_PURPOSE', 'Waarschuwing: Het verwijderen van een benaming leidt tot het opnieuw toewijzen van de adressen aan een nieuwe benaming.');}
-if (!defined('_CONTACT_PURPOSE_WILL_BE_CREATED')) { define('_CONTACT_PURPOSE_WILL_BE_CREATED', 'Deze benaming bestaat niet. Ze zal automatisch aangemaakt worden.');}
 if (!defined('_SEARCH_CONTACTS')) { define('_SEARCH_CONTACTS', 'Een contact zoeken');}
 if (!defined('_YOU_SHOULD_ADD_AN_ADDRESS')) { define('_YOU_SHOULD_ADD_AN_ADDRESS', 'Na bevestiging, een adres aan dit contact toevoegen');}
 if (!defined('_ADDRESSES')) { define('_ADDRESSES', 'adres(sen)');}
@@ -780,7 +758,6 @@ if (!defined('_DEPARTEMENT')) { define('_DEPARTEMENT', 'Afdeling');}
 if (!defined('_ADDITION_ADDRESS')) { define('_ADDITION_ADDRESS', 'Een adres toevoegen');}
 if (!defined('_THE_ADDRESS')) { define('_THE_ADDRESS', 'Het adres');}
 if (!defined('_MODIFY_ADDRESS')) { define('_MODIFY_ADDRESS', 'Het adres wijzigen');}
-if (!defined('_CHOOSE_CONTACT_PURPOSES')) { define('_CHOOSE_CONTACT_PURPOSES', 'Kies een benaming');}
 if (!defined('_WEBSITE')) { define('_WEBSITE', 'Website');}
 if (!defined('_OCCUPANCY')) { define('_OCCUPANCY', 'Nr. app verdieping trap');}
 if (!defined('_ADDRESS_ADDED')) { define('_ADDRESS_ADDED', 'Adres toegevoegd');}

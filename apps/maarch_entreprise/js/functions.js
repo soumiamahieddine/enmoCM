@@ -2,34 +2,11 @@ var isAlreadyClick = false;
 
 page_result_final = '';
 
-function capitalizeFirstLetter(theString) {
-    return theString && theString[0].toUpperCase() + theString.slice(1);
-}
-
 function whatIsTheDivStatus(theDiv, divStatus) {
     if ($j('#' + theDiv).css('display') == 'none') {
         $j('#' + divStatus).html('<i class="fa fa-minus-square"></i>');
     } else {
         $j('#' + divStatus).html('<i class="fa fa-plus-square"></i>');
-    }
-}
-
-function deletePriority(rowToDelete) {
-    var rep = confirm("Confirmation de suppression ?");
-    var index = rowToDelete.getAttribute("data-index");
-
-    if (index >= 0 && rep) {
-        var path_manage_script = "index.php?page=priorityManager&admin=priorities";
-        new Ajax.Request(path_manage_script, {
-            method: "POST",
-            parameters: {
-                mode: "delete",
-                indexToDelete: index
-            },
-            onSuccess: function () {
-                window.top.location.reload();
-            }
-        });
     }
 }
 
@@ -104,56 +81,6 @@ var initList_hidden_input = function (idField, idList, theUrlToListScript, param
             minChars: minCharsSrv,
             afterUpdateElement: function (text, li) {
                 $j('#' + new_value).val(li.id);
-            }
-        });
-};
-
-var initList_hidden_input2 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value) {
-    new Ajax.Autocompleter(
-        idField,
-        idList,
-        theUrlToListScript, {
-            paramName: paramNameSrv,
-            minChars: minCharsSrv,
-            afterUpdateElement: function (text, li) {
-                var str = li.id;
-                var res = str.split(",");
-                $j("#" + new_value).val(res[1]);
-                $j("#" + actual_value).val(res[0]);
-                $j('#country').val('FRANCE');
-            }
-        });
-};
-
-var initList_hidden_input3 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value) {
-    new Ajax.Autocompleter(
-        idField,
-        idList,
-        theUrlToListScript, {
-            paramName: paramNameSrv,
-            minChars: minCharsSrv,
-            afterUpdateElement: function (text, li) {
-                var str = li.id;
-                var res = str.split(",");
-                $j("#" + new_value).val(res[0]);
-                $j("#" + actual_value).val(res[1]);
-                $j('#country').val('FRANCE');
-            }
-        });
-};
-
-var initList_hidden_input_before = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, previous_name, previous_field) {
-    new Ajax.Autocompleter(
-        idField,
-        idList,
-        theUrlToListScript, {
-            paramName: paramNameSrv,
-            minChars: minCharsSrv,
-            callback: function (element, entry) {
-                return entry + "&" + previous_name + "=" + $j("#" + previous_field).val();
-            },
-            afterUpdateElement: function (text, li) {
-                $j("#" + new_value).val(li.id);
             }
         });
 };
@@ -463,57 +390,6 @@ function initMenu() {
 
 if (document.createElement) window.onload = initMenu;
 
-/************** fonction pour afficher/cacher le menu     ***********/
-
-function ShowHideMenu(menu, onouoff) {
-    if (typeof ($) == 'function') {
-        monmenu = $j("#" + menu)[0];
-        mondivmenu = $j("#menu")[0];
-        monadmin = $j("#admin")[0];
-        monhelp = $j("#aide")[0];
-    } else if (document.all) {
-        monmenu = document.all[menu];
-        mondivmenu = document.all["menu"];
-        monadmin = document.all["admin"];
-        monhelp = document.all["aide"];
-    } else return;
-
-    if (menu == "ssnav") {
-        if (onouoff == "fermee") {
-            monmenu.style.display = "block";
-            monadmin.className = "on";
-        } else if (onouoff == "ouverte") {
-            monmenu.style.display = "none";
-            monadmin.className = "off";
-        }
-    } else if (menu == "ssnavaide") {
-        if (onouoff == "fermee") {
-            monmenu.style.display = "block";
-            monhelp.className = "on";
-        } else if (onouoff == "ouverte") {
-            monmenu.style.display = "none";
-            monhelp.className = "off";
-        }
-    } else {
-        if (onouoff == "on") {
-            monmenu.style.display = "block";
-            mondivmenu.className = "on";
-        } else if (onouoff == "off") {
-            monmenu.style.display = "none";
-            mondivmenu.className = "off";
-        }
-    }
-}
-
-
-/****************************************/
-
-
-function ouvreFenetre(page, largeur, hauteur) {
-    window.open(page, "", "scrollbars=yes,menubar=no,toolbar=no,resizable=yes,width=" +
-        largeur + ",height=" + hauteur);
-}
-
 /************** Fonction utilisées pour la gestion des listes multiples  ***********/
 
 /**
@@ -715,19 +591,6 @@ var BrowserDetect = {
 };
 
 BrowserDetect.init();
-
-function resize_frame_contact(mode) {
-    if (parent.$('contact_iframe_attach') && mode == 'contact') {
-        var contentHeight = 370;
-        parent.$('contact_iframe_attach').style.height = contentHeight + "px";
-    } else if (parent.$('info_contact_iframe_attach') && mode != 'contact') {
-        var contentHeight = Math.round($j('#inner_content_contact').height()) + 100;
-        parent.$('info_contact_iframe_attach').style.height = contentHeight + "px";
-    } else {
-        var contentHeight = Math.round($j('#inner_content_contact').height()) + 100;
-        parent.$('iframe_tab').style.height = contentHeight + "px";
-    }
-}
 
 /**
  * Resize frames in a modal
@@ -1532,16 +1395,6 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
 /*************** Xml management functions : used with tiny_mce to load mapping_file *****************/
 
 /**
- * Remove a node in a xml file
- *
- * @param node Node Object Node to remove
- */
-function remove_tag(node) {
-    if (!node.data.replace(/\s/g, ''))
-        node.parentNode.removeChild(node);
-}
-
-/**
  * Resize the current window
  *
  * @param x Integer  X size
@@ -1651,122 +1504,6 @@ function unlock(path_script, id, coll) // A FAIRE
     }
 }
 
-function setContactType(mode, creation) {
-    new Ajax.Request("index.php?dir=my_contacts&page=setContactType", {
-        method: 'post',
-        parameters: {
-            contact_target: mode,
-            can_add_contact: creation
-        },
-        onSuccess: function (answer) {
-            $('contact_type').innerHTML = answer.responseText;
-        }
-    });
-}
-
-function checkContactType(mode, creation) {
-    var bool = false;
-    $j.ajax({
-        url: 'index.php?dir=my_contacts&page=setContactType&display=false',
-        type: 'POST',
-        async: false,
-        data: {
-            contact_target: mode,
-            can_add_contact: creation
-        },
-        success: function (answer) {
-            if (answer.substring(0, 5) == 'false') {
-                bool = false;
-            } else {
-                bool = true;
-            }
-        }
-    });
-    return bool;
-}
-
-/**
- * Show or hide the data related to a person in the contacts admin
- *
- * @param is_corporate Bool True the contact is corporate, Fasle otherwise
- **/
-function show_admin_contacts(is_corporate, display) {
-    var display_value = display || 'inline';
-    var title = $j("#title_p");
-    var lastname = $j("#lastname_p");
-    var firstname = $j("#firstname_p");
-    var function_p = $j("#function_p");
-    var lastname_mandatory = $j("#lastname_mandatory");
-    var society_mandatory = $j("#society_mandatory");
-    if (is_corporate == true) {
-        if (title) {
-            title.css('display', 'none');
-        }
-        if (lastname) {
-            lastname.css('display', 'none');
-        }
-        if (firstname) {
-            firstname.css('display', 'none');
-        }
-        if (function_p) {
-            function_p.css('display', 'none');
-        }
-        if (lastname_mandatory) {
-            lastname_mandatory.css('display', 'none');
-        }
-        if (society_mandatory) {
-            society_mandatory.css('display', 'none');
-        }
-    } else {
-        if (title) {
-            title.css('display', display_value);
-        }
-        if (lastname) {
-            lastname.css('display', display_value);
-        }
-        if (firstname) {
-            firstname.css('display', display_value);
-
-        }
-        if (function_p) {
-            function_p.css('display', display_value);
-
-        }
-        if (lastname_mandatory) {
-            lastname_mandatory.css('display', 'inline');
-
-        }
-        if (society_mandatory) {
-            society_mandatory.css('display', 'none');
-        }
-    }
-}
-/**
- * Show or hide the data related to a person in the external contacts admin
- *
- * @param is_external Bool True the contact is external contact
- **/
-function show_admin_external_contact(is_external, display) {
-    var display_value = display || 'inline';
-    var searchDirectory = $("search_directory");
-    var externalContactLabel = $("m2m_id");
-    if (is_external === false) {
-        if (searchDirectory) {
-            searchDirectory.style.display = "none";
-        }
-        if (externalContactLabel) {
-            externalContactLabel.style.display = "none";
-        }
-    } else {
-        if (searchDirectory) {
-            searchDirectory.style.display = display_value;
-        }
-        if (externalContactLabel) {
-            externalContactLabel.style.display = display_value;
-        }
-    }
-}
-
 /**
  * Returns in an array all values selected from check boxes or radio buttons
  *
@@ -1782,35 +1519,6 @@ function get_checked_values(name_input) {
         }
     }
     return arr;
-}
-
-/**
- * Clears a form (empties it)
- *
- * @param form_id String Form identifier
- **/
-function clear_form(form_id) {
-    var frm = $(form_id);
-    if (frm) {
-        var items = frm.getElementsByTagName('INPUT');
-        for (var i = 0; i < items.length; i++) {
-            if (items[i].type == "text") {
-                items[i].value = '';
-            }
-        }
-        items = frm.getElementsByTagName('TEXTAREA');
-        for (var i = 0; i < items.length; i++) {
-            items[i].value = '';
-        }
-        items = frm.getElementsByTagName('SELECT');
-        for (var i = 0; i < items.length; i++) {
-            if (items[i].multiple == "true") {
-                // TO DO
-            } else {
-                items[i].options[0].selected = 'selected';
-            }
-        }
-    }
 }
 
 /*************** Apps Reports functions *****************/
@@ -2037,31 +1745,6 @@ function valid_report_by_period(url) {
 }
 
 /**
- * Launch the Ajax autocomplete object to activate autocompletion on a field
- *
- * @param path_script String Path to the Ajax script
- **/
-function launch_autocompleter(path_script, id_text, id_div, minCharSearch) {
-    var input = id_text;
-    var div = id_div;
-    var minCharSearch = minCharSearch || 2;
-    if (path_script) {
-        // Ajax autocompleter object creation
-        new Ajax.Autocompleter(input, div, path_script, {
-            method: 'get',
-            paramName: 'Input',
-            minChars: 2
-        });
-    } else {
-        if (console != null) {
-            console.log('error parameters launch_autocompleter function');
-        } else {
-            alert('error parameters launch_autocompleter function');
-        }
-    }
-}
-
-/**
  * Launch the Ajax autocomplete object to activate autocompletion on a field and then update an input field
  *
  * @param path_script String Path to the Ajax script
@@ -2081,71 +1764,6 @@ function launch_autocompleter_update(path_script, id_text, id_div, minCharSearch
     });
 }
 
-/**
- * Gets the indexes for a given collection and fills a div with it
- *
- * @param url String Url to the Ajax script
- * @param id_coll String Collection identifier
- **/
-function get_opt_index(url, id_coll) {
-    if (url && id_coll) {
-        new Ajax.Request(url, {
-            method: 'post',
-            parameters: {
-                coll_id: id_coll
-            },
-            onSuccess: function (answer) {
-                var div_to_fill = $('opt_index');
-
-                if (div_to_fill) {
-                    div_to_fill.innerHTML = answer.responseText;
-                }
-            }
-        });
-    }
-}
-
-/**
- * Gets the indexes for a given document type (used in details page)
- *
- * @param doctype_id String Document type identifier
- * @param url String Url to the Ajax script
- * @param error_empty_type Message to displays if the type is empty
- **/
-function change_doctype_details(doctype_id, url, error_empty_type, res_id) {
-    if (doctype_id != null && doctype_id != '' && doctype_id != NaN) {
-        new Ajax.Request(url, {
-            method: 'post',
-            parameters: {
-                type_id: doctype_id,
-                res_id: res_id
-            },
-            onSuccess: function (answer) {
-                eval("response = " + answer.responseText);
-                //  alert(answer.responseText);
-                if (response.status == 0) {
-                    var indexes = response.new_opt_indexes;
-                    var div_indexes = $('opt_indexes_custom');
-                    if (div_indexes) {
-                        div_indexes.update(indexes);
-                    }
-
-                } else {
-                    try {
-                        //  $('main_error').innerHTML = response.error_txt;
-                    } catch (e) {
-
-                    }
-                }
-            }
-        });
-    } else {
-        try {
-            //$('main_error').innerHTML = error_empty_type;
-        } catch (e) {}
-    }
-}
-
 function updateContent(url, id_div_to_update, onComplete_callback) {
     new Ajax.Updater(id_div_to_update, url, {
         parameters: {},
@@ -2155,33 +1773,6 @@ function updateContent(url, id_div_to_update, onComplete_callback) {
             }
         }
     });
-}
-
-function showValuesList(listId, spanId) {
-    if (window.document.getElementById(listId).style.display == 'none') {
-        window.document.getElementById(listId).style.display = 'block';
-        window.document.getElementById(spanId).style.display = 'none';
-    } else {
-        window.document.getElementById(listId).style.display = 'none';
-        window.document.getElementById(spanId).style.display = 'block';
-    }
-}
-
-function hideIndex(mode_hide, display_val) {
-    var displayVal = $(display_val);
-    if (mode_hide == true) {
-        if (displayVal) {
-            Element.setStyle(displayVal, {
-                display: 'none'
-            });
-        }
-    } else {
-        if (displayVal) {
-            Element.setStyle(displayVal, {
-                display: 'block'
-            });
-        }
-    }
 }
 
 function checkAll() {
@@ -2205,16 +1796,6 @@ function unCheckAll() {
             stockCheckbox('index.php?display=true&dir=indexing_searching&page=multiLink&uncheckAll', e.value);
         }
     )
-}
-
-function show_attach(state) {
-    if (state == 'true') {
-        $('attach_show').slideDown();
-    } else {
-        $('attach_show').setStyle({
-            display: 'none'
-        });
-    }
 }
 
 function addLinks(path_manage_script, child, parent, action, tableHist) {
@@ -2399,66 +1980,6 @@ function f_filterResults(n_win, n_docel, n_body) {
     if (n_docel && (!n_result || (n_result > n_docel)))
         n_result = n_docel;
     return n_body && (!n_result || (n_result > n_body)) ? n_body : n_result;
-}
-
-function loadDocList(id) {
-    //new Effect.toggle('docList_'+id, 'appear' , {delay:0.2});
-
-    if ($('docList_' + id).style.display == 'none') {
-        $('docList_' + id).setStyle({
-            display: 'table'
-        });
-    } else {
-        $('docList_' + id).setStyle({
-            display: 'none'
-        });
-    }
-    var path_manage_script = 'index.php?admin=contacts&page=ajaxLoadDocList&display=true';
-
-    new Ajax.Request(path_manage_script, {
-        method: 'post',
-        parameters: {
-            contact_id: id
-        },
-        onSuccess: function (answer) {
-            eval("response = " + answer.responseText);
-            $('divDocList_' + id).innerHTML = response.toShow;
-        }
-    });
-}
-
-function deleteContact(id, replaced_contact_id, replaced_address_id) {
-    //alert(id+' '+replaced_contact_id);
-    var path_manage_script = 'index.php?admin=contacts&page=ajaxDeleteContact&display=true';
-
-    new Ajax.Request(path_manage_script, {
-        method: 'post',
-        parameters: {
-            contactId: id,
-            replacedContactId: replaced_contact_id,
-            replacedAddressId: replaced_address_id
-        },
-        onSuccess: function (answer) {
-            eval("response = " + answer.responseText);
-            //alert(response.status);
-            if (response.status == 0) {
-                new Effect.toggle('divDeleteContact_' + id, 'blind', {
-                    delay: 0.2
-                });
-                new Effect.toggle('deleteContactDiv_' + id, 'blind', {
-                    delay: 0.2
-                });
-                new Effect.toggle('divDocList_' + id, 'blind', {
-                    delay: 0.2
-                });
-                new Effect.toggle('tr_' + id, 'blind', {
-                    delay: 0.2
-                });
-            } else {
-                alert('Choisissez une adresse et un contact d\'abord');
-            }
-        }
-    });
 }
 
 /************************************ LISTS ****************************************/
@@ -2760,54 +2281,12 @@ function showPreviousAttachments(path_manage_script, id) {
     });
 }
 
-function affiche_reference() {
-    var nature = document.getElementById('nature_id').options[document.getElementById('nature_id').selectedIndex];
-
-    if (nature.getAttribute('with_reference') == 'true') {
-        $j('#reference_number_tr').css('display', 'table-row');
-    } else {
-        $j('#reference_number_tr').css('display', 'none');
-        $j('#reference_number').val('');
-    }
-}
-
 function erase_contact_external_id(id, erase_id) {
     if ($j('#' + id).val() == '') {
         $j('#' + erase_id).val('');
         if (id == "contact") {
             $j('#contact').css("background-color", "");
         }
-    }
-}
-
-function purposeCheck() {
-    var contact_purpose_id = $('contact_purposes').value;
-    var contact_purpose_name = $('new_id').value;
-    var path_manage_script = 'index.php?page=purpose_check&dir=my_contacts&display=true';
-    if (contact_purpose_name != null && contact_purpose_id == null) {
-        $('purpose_to_create').setStyle({
-            display: 'table-row'
-        });
-    } else if (contact_purpose_name != null && contact_purpose_id != null) {
-        new Ajax.Request(path_manage_script, {
-            method: 'post',
-            parameters: {
-                contact_purpose: contact_purpose_name,
-                contact_purpose_id: contact_purpose_id
-            },
-            onSuccess: function (answer) {
-                eval("response = " + answer.responseText);
-                if (response.status == 1) {
-                    $('purpose_to_create').setStyle({
-                        display: 'table-row'
-                    });
-                } else if (response.status == 0) {
-                    $('purpose_to_create').setStyle({
-                        display: 'none'
-                    });
-                }
-            }
-        });
     }
 }
 
@@ -2834,190 +2313,6 @@ function loadDiffListHistory(listinstance_history_id) {
             $('divDiffListHistory_' + listinstance_history_id).innerHTML = response.toShow;
         }
     });
-}
-
-function saveSizeInBytes() {
-    if (!isNaN($('size_limit_number').value)) {
-        if ($('size_format').value == "MB") {
-            $('size_limit_hidden').value = $('size_limit_number').value * (1000 * 1000);
-        }
-        if ($('size_format').value == "GB") {
-            $('size_limit_hidden').value = $('size_limit_number').value * (1000 * 1000 * 1000);
-        }
-        if ($('size_format').value == "TB") {
-            $('size_limit_hidden').value = $('size_limit_number').value * (1000 * 1000 * 1000 * 1000);
-        }
-    } else {
-        window.alert('WRONG FORMAT');
-    }
-}
-
-function convertSize() {
-    if (!isNaN($('size_limit_number').value)) {
-        if ($('size_format').value == "MB") {
-            $('size_limit_number').value = $('size_limit_hidden').value / (1000 * 1000);
-            $('actual_size_number').value = $('actual_size_hidden').value / (1000 * 1000);
-        }
-        if ($('size_format').value == "GB") {
-            $('size_limit_number').value = $('size_limit_hidden').value / (1000 * 1000 * 1000);
-            $('actual_size_number').value = $('actual_size_hidden').value / (1000 * 1000 * 1000);
-        }
-        if ($('size_format').value == "TB") {
-            $('size_limit_number').value = $('size_limit_hidden').value / (1000 * 1000 * 1000 * 1000);
-            $('actual_size_number').value = $('actual_size_hidden').value / (1000 * 1000 * 1000 * 1000);
-        }
-    } else {
-        window.alert('WRONG FORMAT');
-    }
-}
-
-function setPreviousAddress(address) {
-    if (address != "") {
-        var allCoordoate = address.split('||');
-        $('num').value = allCoordoate[0];
-        $('street').value = allCoordoate[1];
-        $('add_comp').value = allCoordoate[2];
-        $('cp').value = allCoordoate[3];
-        $('town').value = allCoordoate[4];
-        $('country').value = allCoordoate[5];
-        $('website').value = allCoordoate[6];
-    }
-}
-
-function checkOthersDuplicate(id_form, checkbox_name, radio_name) {
-
-    elem = document.forms[id_form];
-    var state = false;
-    for (var i = 0; i < elem.length; i++) {
-        if (document.forms[id_form][i].name == checkbox_name) {
-            document.forms[id_form][i].checked = true;
-        } else if (document.forms[id_form][i].name == radio_name && state == false) {
-            document.forms[id_form][i].checked = true;
-            state = true;
-        } else {
-            document.forms[id_form][i].checked = false;
-        }
-
-        if (document.forms[id_form][i] == radio_name && state == false) {
-            document.forms[id_form][i].checked = true;
-            state = true;
-        }
-    }
-
-}
-
-function linkDuplicate(id_form) {
-    elem = document.forms[id_form];
-    var slave = [];
-    var address_del = [];
-    var master = '';
-    var master_address = '';
-    for (var i = 0; i < elem.length; i++) {
-        if (document.forms[id_form][i].type == 'checkbox' && document.forms[id_form][i].checked == true) {
-            if (document.forms[id_form][i].name == 'delete_address') {
-                address_del.push(document.forms[id_form][i].value);
-            } else {
-                slave.push(document.forms[id_form][i].value);
-            }
-        }
-        if (document.forms[id_form][i].type == 'radio' && document.forms[id_form][i].checked == true) {
-            master = document.forms[id_form][i].value;
-            master_address = document.getElementById('master_address_fusion_id_' + document.forms[id_form][i].value).value
-        }
-    }
-    var index = slave.indexOf(master);
-    slave.splice(index, 1);
-
-    if (slave.length == 0) {
-        alert('Aucun contact à fusionner !');
-        return false;
-    }
-
-    if (master == '') {
-        alert('Aucun contact Maitre sélectionné !');
-        return false;
-    }
-    var address_del_string = '';
-    address_del_string = address_del.join();
-    if (address_del_string != '') {
-        address_del_string = '(Les adresses suivantes seront effacées : ' + address_del_string + ')';
-    }
-    if (confirm('Vous êtes sur le point de substituer les contacts suivants : ' + slave.join() + '\navec le contact : ' + master + ' ' + address_del_string)) {
-        var path_manage_script = 'index.php?admin=contacts&page=fusionContact&display=true';
-        new Ajax.Request(path_manage_script, {
-            method: 'post',
-            parameters: {
-                master_address_id: master_address,
-                slave_contact_id: slave.join(),
-                del_address_id: address_del.join(),
-                master_contact_id: master
-            },
-            onSuccess: function (answer) {
-                eval("response = " + answer.responseText);
-                if (response.status == 0) {
-                    console.log(response);
-                } else if (response.status == 1) {
-                    alert('Erreur!');
-                }
-            }
-        });
-        alert('Opération terminée!');
-    }
-}
-
-function loadTab(resId, collId, titleTab, pathScriptTab, module) {
-    if (document.getElementById('show_tab').getAttribute('module') == module) {
-        document.getElementById('show_tab').style.display = 'none';
-        if (document.getElementById(module + '_tab') != undefined) {
-            document.getElementById(module + '_tab').innerHTML = '<i class="fa fa-plus-square"></i>';
-        }
-        document.getElementById('show_tab').setAttribute('module', '');
-        return false;
-
-    }
-
-    var path_manage_script = 'index.php?display=true&page=display_tab';
-    $j.ajax({
-        url: path_manage_script,
-        type: 'POST',
-        data: {
-            resId: resId,
-            collId: collId,
-            titleTab: titleTab,
-            pathScriptTab: pathScriptTab
-        },
-        success: function (answer) {
-            document.getElementById('show_tab').style.display = 'block';
-            document.getElementById('show_tab').setAttribute('module', module);
-
-            $j("span[class='tab_module']").each(function (i, e) {
-                e.innerHTML = '<i class="fa fa-plus-square"></i>';
-            })
-            if (document.getElementById(module + '_tab') != undefined) {
-                document.getElementById(module + '_tab').innerHTML = '<i class="fa fa-minus-square"></i>';
-            }
-            document.getElementById('show_tab').innerHTML = answer;
-        }
-    });
-}
-
-function loadSpecificTab(id_iframe, pathScriptTab) {
-    document.getElementById(id_iframe).src = pathScriptTab;
-}
-
-function tabClicked(TabId, toHide) {
-    var doc = $j("#home-panel");
-    if (toHide) {
-        doc.css("display", "none");
-        $j("#uniqueDetailsDiv").css("display", "");
-    } else {
-        $j("#uniqueDetailsDiv").css("display", "none");
-        doc.css("display", "");
-    }
-
-    $j(".DetailsTabFunc").removeClass("TabSelected");
-    $j("#" + TabId).addClass("TabSelected");
-
 }
 
 //LOAD BADGES TOOLBAR
@@ -3564,114 +2859,6 @@ function print_current_result_list(path) {
     }
 }
 
-function toggleRefMaarch() {
-    if ($j('#refMaarch').is(":checked")) {
-        $j('#refSearch').css({
-            "display": "flex"
-        });
-        $j(".refMaarch input").addClass("readonly");
-        $j(".refMaarch input").prop("readonly", true);
-    } else {
-        $j('#refSearch').hide();
-        $j(".refMaarch input").removeClass("readonly");
-        $j(".refMaarch input").prop("readonly", false);
-    }
-}
-
-function setRefAdresse(item) {
-    $j("#ban_id").val(item.banId);
-    $j(".refMaarch #num").val(item.number);
-    $j(".refMaarch #street").val(item.afnorName);
-    $j(".refMaarch #cp").val(item.postalCode);
-    $j(".refMaarch #town").val(item.city);
-    $j(".refMaarch #country").val("FRANCE");
-}
-
-function toggleBlock(div, divIcon) {
-    $j('#' + div).slideToggle('slow');
-    if ($j('#' + divIcon + ' i').hasClass('fa-minus-square')) {
-        $j('#' + divIcon + ' i').removeClass('fa-minus-square');
-        $j('#' + divIcon + ' i').addClass('fa-plus-square');
-    } else {
-        $j('#' + divIcon + ' i').removeClass('fa-plus-square');
-        $j('#' + divIcon + ' i').addClass('fa-minus-square');
-    }
-}
-
-function loadTypeahead(input, order, dynamic, url) {
-    $j.typeahead({
-        input: input,
-        order: order,
-        dynamic: dynamic,
-        debug: false,
-        source: {
-            ajax: function (query) {
-                return {
-                    type: 'POST',
-                    url: url,
-                    data: {
-                        Input: "{{query}}"
-                    }
-                }
-            }
-        }
-    });
-}
-
-function reloadTypeahead(elem) {
-    $j(".typeahead__result").remove();
-    $j("#searchAddress").val('');
-    $j("#searchAddress").attr("placeholder", "Rechercher dans le référentiel du " + $j('#' + elem.id).val());
-    $j("#searchAddress").typeahead({
-        delay: '500',
-        minLength: 3,
-        order: "asc",
-        maxItem: 10,
-        filter: false,
-        dynamic: true,
-        display: "address",
-        templateValue: "{{address}}",
-        emptyTemplate: "Aucune adresse n'existe avec <b>{{query}}</b>",
-        source: {
-            ajax: {
-                type: "GET",
-                dataType: "json",
-                url: "../../rest/autocomplete/banAddresses",
-                data: {
-                    address: "{{query}}",
-                    department: $j('#' + elem.id).val()
-                }
-            }
-        },
-        callback: {
-            onClickAfter: function (node, a, item, event) {
-                setRefAdresse(item);
-            }
-        }
-    });
-}
-
-function checkMultiIndexingGroup(url) {
-    $j.ajax({
-        url: '../../rest/header',
-        type: 'get',
-        data: {},
-        success: function (answer) {
-            if (answer.user.indexingGroups.length > 1) {
-                var link = '';
-                answer.user.indexingGroups.each(function (group, key) {
-                    link += '<li style="padding:5px;"><a href="'+url+'&groupId='+group.groupId+'">'+group.label+'</a></li>';
-                });  
-                var modal = $j('<div id="indexingGroupSelect" class="modal" style="position: fixed;left: 50%;transform: translate(-50%, -50%);top: 25%;"><h2>Profil d\'indexation :</h2><ul style="text-align:left;font-size: 24px;">'+link+'</ul><div style="display: flex;justify-content: center;"><input style="width: 70px;text-align: center;" class="button" value="Annuler" onclick="$j(\'#indexingGroupSelect\').remove();$j(\'#maarch_content\').css({opacity:1})"/></div></div>');
-                modal.appendTo('body');
-                $j('#maarch_content').css({opacity:0.2});
-            } else {
-                window.location.href=url;
-            }
-        }
-    });
-}
-
 function writeLocationBar(path,label,level) {
     if ($j('#ariane a:last').length == 0) {
         var home = $j('<a href="'+path+'" onclick="localStorage.setItem(\'PreviousV2Route\', \'/home\');">'+label+'</a>');
@@ -3683,100 +2870,6 @@ function writeLocationBar(path,label,level) {
         separator.insertBefore(elem);
     }    
 }
-
-function contactMapping(fieldsCtrl, formId) {
-    for (var j = 0, fieldsCtrlElem; fieldsCtrlElem = fieldsCtrl[j++];) {
-        if (fieldsCtrlElem === "department") {
-            fieldsCtrl[j-1] = "departement";
-        }
-        if (fieldsCtrlElem === "address_complement") {
-            fieldsCtrl[j-1] = "add_comp";
-        }
-        if (fieldsCtrlElem === "address_num") {
-            fieldsCtrl[j-1] = "num";
-        }
-        if (fieldsCtrlElem === "address_street") {
-            fieldsCtrl[j-1] = "street";
-        }
-        if (fieldsCtrlElem === "address_postal_code") {
-            fieldsCtrl[j-1] = "cp";
-        }
-        if (fieldsCtrlElem === "address_town") {
-            fieldsCtrl[j-1] = "town";
-        }
-        if (fieldsCtrlElem === "address_country") {
-            fieldsCtrl[j-1] = "country";
-        }
-        if (fieldsCtrlElem === "email") {
-            fieldsCtrl[j-1] = "mail";
-        }
-        if (fieldsCtrlElem === "add_comp") {
-            fieldsCtrl[j-1] = "comp_data";
-        }
-        if (fieldsCtrlElem === "other_data") {
-            fieldsCtrl[j-1] = "comp_data";
-        }
-    }
-    var elements = document.getElementById(formId).elements;
-
-    for (var i = 0, element; element = elements[i++];) {
-        for (var j = 0, fieldsCtrlElem; fieldsCtrlElem = fieldsCtrl[j++];) {
-            if (element.name === fieldsCtrlElem) {
-                element.style.borderWidth = "2px";
-                element.style.borderColor = "#CCFFCC";
-            }
-        }
-    }
-}
-
-function switchAutoCompleteType(id, mode, alternateVersion) {
-    if (mode == 'contactsUsers' && $j('#'+id+'_icon_contactsUsers').css('color') != 'rgb(19, 95, 127)') {
-        $j('#'+id+'_icon_contactsUsers').css({'color' : '#135F7F'});
-        $j('#'+id+'_icon_entities').css({'color' : '#666'});
-        $j('#'+id+'').attr('placeholder','Rechercher un contact / utilisateur');
-        $j(".typeahead__result").remove();
-        initSenderRecipientAutocomplete(id, 'contactsUsers', alternateVersion);
-        $j('#'+id).val('');
-        $j('#'+id+'_id').val('');
-        $j('#'+id+'_type').val('');
-        $j('#'+id+'').css('background-color', 'white');
-    } else if (mode == 'entities' && $j('#'+id+'_icon_entities').css('color') != 'rgb(19, 95, 127)') {
-        $j('#'+id+'_icon_contactsUsers').css({'color' : '#666'});
-        $j('#'+id+'_icon_entities').css({'color' : '#135F7F'});
-        $j('#'+id+'').attr('placeholder','Rechercher une entité');
-        $j(".typeahead__result").remove();
-        initSenderRecipientAutocomplete(id, 'entities', alternateVersion);
-        $j('#'+id).val('');
-        $j('#'+id+'_id').val('');
-        $j('#'+id+'_type').val('');
-        $j('#'+id+'').css('background-color', 'white');
-    }
-}
-
-function openSenderInfoContact(id, type) {
-    var height = '';
-    if (id == '') {
-        alert('Aucun contact sélectionné');
-        return false;
-    }
-    if(type == 'entity'){
-        alert('Aucune information disponible pour les entités');
-    } else {
-        if(type == 'user'){
-            height = '400';
-        } else {
-            height = '800';
-        }
-        window.open('index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=editDetailSender&editDetailSender&popup&sender_recipient_id='+id+'&sender_recipient_type='+type, 'contact_info', 'height='+height+', width=1000,scrollbars=yes,resizable=yes');
-    }
-}
-
-function displayAddMailing() {
-    if ($j("#mailingInfo").is(":visible")) {
-        $j("#addMailing").show();
-    }
-}
-
 
 function setSendAttachment(id) {
     $j.ajax({

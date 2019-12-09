@@ -71,14 +71,6 @@
 		<parameter name="type_id" type="identifier" />
 	</validationRule>
 
-	<validationRule name="setFinalVersion" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="fromDetail" type="identifier" />
-		<parameter name="id" type="integer" />
-		<parameter name="page" type="identifier" />
-		<parameter name="relation" type="integer" />
-	</validationRule>
-
 	<validationRule name="view_attachment" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="res_id_master" type="integer" />
