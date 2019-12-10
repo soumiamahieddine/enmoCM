@@ -281,7 +281,7 @@ class IndexingController
 
             $diffUpdated = 0;
             for ($i = 1; $i <= $diff; $i++) {
-                $tmpDate = $now;
+                $tmpDate = new \DateTime();
                 $tmpDate->add(new \DateInterval("P{$i}D"));
                 if (in_array($tmpDate->format('N'), [6, 7]) || in_array($tmpDate->format('d-m'), $hollidays)) {
                     continue;
