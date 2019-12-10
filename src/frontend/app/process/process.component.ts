@@ -390,6 +390,9 @@ export class ProcessComponent implements OnInit {
 
     confirmModification() {
         this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+        setTimeout(() => {
+            this.loadResource();
+        }, 400);
     }
 
     refreshBadge(nbRres: any, id: string) {
