@@ -36,7 +36,7 @@ class JnlpController
         $jnlpFileNameExt = $jnlpFileName . '.jnlp';
 
         $allCookies = '';
-        foreach($_COOKIE as $key => $value) {
+        foreach ($_COOKIE as $key => $value) {
             if (!empty($allCookies)) {
                 $allCookies .= '; ';
             }
@@ -379,5 +379,26 @@ class JnlpController
         }
 
         return $response->saveXML();
+    }
+
+    public static function test(Request $request, Response $response)
+    {
+        if (($body_stream = file_get_contents("php://input"))===false) {
+            echo "Bad Request";
+        }
+        
+        $data = json_decode($body_stream, true);
+        
+        if ($data["status"] == 2) {
+            $downloadUri = $data["url"];
+                
+            if (($new_data = file_get_contents($downloadUri))===false) {
+                echo "Bad Response";
+            } else {
+                echo $new_data;
+                //file_put_contents($path_for_save, $new_data, LOCK_EX);
+            }
+        }
+        return $response->withJson(['error' => 0]);
     }
 }

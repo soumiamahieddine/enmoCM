@@ -21,6 +21,7 @@ import { TimeAgoPipe }                          from '../plugins/timeAgo.pipe';
 import { TimeLimitPipe }                        from '../plugins/timeLimit.pipe';
 import { FilterListPipe }                       from '../plugins/filterList.pipe';
 import { FullDatePipe }                       from '../plugins/fullDate.pipe';
+import { EcplOnlyofficeViewerComponent }                       from '../plugins/onlyoffice-api-js/onlyoffice-viewer.component';
 
 /*FRONT IMPORTS*/
 import { AppMaterialModule }                    from './app-material.module';
@@ -116,7 +117,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         TagInputComponent,
         DiffusionsListComponent,
         DocumentViewerComponent,
-        DragDropDirective
+        DragDropDirective,
+        EcplOnlyofficeViewerComponent
     ],
     exports: [
         CommonModule,
@@ -155,7 +157,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         TagInputComponent,
         DiffusionsListComponent,
         DocumentViewerComponent,
-        DragDropDirective
+        DragDropDirective,
+        EcplOnlyofficeViewerComponent
     ],
     providers: [
         HeaderService,

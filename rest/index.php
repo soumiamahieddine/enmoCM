@@ -25,7 +25,6 @@ if (file_exists("custom/{$customId}/src/core/lang/lang-{$language}.php")) {
 }
 require_once("src/core/lang/lang-{$language}.php");
 
-
 $app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRouteBeforeAppMiddleware' => true, 'addContentLengthHeader' => true ]]);
 
 //Authentication
@@ -34,8 +33,7 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
     $route = $request->getAttribute('route');
     $currentMethod = empty($route) ? '' : $route->getMethods()[0];
     $currentRoute = empty($route) ? '' : $route->getPattern();
-
-    if (!in_array($currentMethod.$currentRoute, $routesWithoutAuthentication)) {
+    if (!in_array($currentMethod.$currentRoute, $routesWithoutAuthentication) && preg_match('/POST\/test*/', $currentMethod.$currentRoute) == 0) {
         $login = \SrcCore\controllers\AuthenticationController::authentication();
         if (!empty($login)) {
             \SrcCore\controllers\CoreController::setGlobals(['login' => $login]);
@@ -258,6 +256,7 @@ $app->put('/indexingModels/{id}/enable', \IndexingModel\controllers\IndexingMode
 $app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
 
 //Jnlp
+$app->post('/test', \ContentManagement\controllers\JnlpController::class . ':test');
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
 $app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
 $app->post('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
