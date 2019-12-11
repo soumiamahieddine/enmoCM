@@ -797,7 +797,7 @@ export const LANG_FR = {
     "resId"                                 : "Identifiant GED",
     "restrictedEntity"                      : "Entité restreinte",
     "resultPage"                            : "Liste de résultats",
-    "resultPageUpdated"                     : "Liste résultats modifiée",
+    "resultPageUpdated"                     : "Liste de résultats modifiée",
     "retentionFinalDisposition"             : "Sort final",
     "retentionRule"                         : "Règle de conservation",
     "returnDate"                            : "Date de retour",

@@ -371,19 +371,25 @@ class SummarySheetController
                 $pdf->Cell($widthMultiCell, 15, _SENDERS, 1, 0, 'C', false);
                 $pdf->Cell($widthCell, 15, '', 0, 0, 'C', false);
                 $pdf->Cell($widthMultiCell, 15, _RECIPIENTS, 1, 1, 'C', false);
-                for ($i = 0; !empty($senders[$i]) || !empty($recipients[$i]); $i++) {
-                    if ($i == 0 && empty($senders[$i])) {
-                        $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, 0, '', '', true, 0, true);
-                    } else {
-                        $pdf->MultiCell($widthMultiCell, 40, empty($senders[$i]) ? '' : $senders[$i], empty($senders[$i]) ? 0 : 1, 'L', false, 0, '', '', true, 0, true);
-                    }
-
+                if (empty($senders) && empty($recipients)) {
+                    $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, 0, '', '', true, 0, true);
                     $pdf->MultiCell($widthCell, 40, '', 0, 'L', false, 0, '', '', true, 0, true);
+                    $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, 1, '', '', true, 0, true);
+                } else {
+                    for ($i = 0; !empty($senders[$i]) || !empty($recipients[$i]); $i++) {
+                        if ($i == 0 && empty($senders[$i])) {
+                            $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, 0, '', '', true, 0, true);
+                        } else {
+                            $pdf->MultiCell($widthMultiCell, 40, empty($senders[$i]) ? '' : $senders[$i], empty($senders[$i]) ? 0 : 1, 'L', false, 0, '', '', true, 0, true);
+                        }
 
-                    if ($i == 0 && empty($recipients[$i])) {
-                        $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, 1, '', '', true, 0, true);
-                    } else {
-                        $pdf->MultiCell($widthMultiCell, 40, empty($recipients[$i]) ? '' : $recipients[$i], empty($recipients[$i]) ? 0 : 1, 'L', false, 1, '', '', true, 0, true);
+                        $pdf->MultiCell($widthCell, 40, '', 0, 'L', false, 0, '', '', true, 0, true);
+
+                        if ($i == 0 && empty($recipients[$i])) {
+                            $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, 1, '', '', true, 0, true);
+                        } else {
+                            $pdf->MultiCell($widthMultiCell, 40, empty($recipients[$i]) ? '' : $recipients[$i], empty($recipients[$i]) ? 0 : 1, 'L', false, 1, '', '', true, 0, true);
+                        }
                     }
                 }
             } elseif ($unit['unit'] == 'diffusionList') {
