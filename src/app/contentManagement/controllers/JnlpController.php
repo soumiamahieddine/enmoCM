@@ -383,22 +383,26 @@ class JnlpController
 
     public static function test(Request $request, Response $response)
     {
+
         if (($body_stream = file_get_contents("php://input"))===false) {
             echo "Bad Request";
         }
         
         $data = json_decode($body_stream, true);
-        
-        if ($data["status"] == 2) {
+        if ($data["status"] == 2 || $data["status"] == 6) {
             $downloadUri = $data["url"];
                 
             if (($new_data = file_get_contents($downloadUri))===false) {
                 echo "Bad Response";
             } else {
-                echo $new_data;
+                $tmpPath = CoreConfigModel::getTmpPath();
+                $fileOnTmp = "tmp_file_onlyoffice_{$data["key"]}.odt";
+                file_put_contents($tmpPath.$fileOnTmp, $new_data, LOCK_EX);
+                // echo $new_data;
                 //file_put_contents($path_for_save, $new_data, LOCK_EX);
             }
         }
+
         return $response->withJson(['error' => 0]);
     }
 }

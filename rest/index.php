@@ -33,7 +33,7 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
     $route = $request->getAttribute('route');
     $currentMethod = empty($route) ? '' : $route->getMethods()[0];
     $currentRoute = empty($route) ? '' : $route->getPattern();
-    if (!in_array($currentMethod.$currentRoute, $routesWithoutAuthentication) && preg_match('/POST\/test*/', $currentMethod.$currentRoute) == 0) {
+    if (!in_array($currentMethod.$currentRoute, $routesWithoutAuthentication)) {
         $login = \SrcCore\controllers\AuthenticationController::authentication();
         if (!empty($login)) {
             \SrcCore\controllers\CoreController::setGlobals(['login' => $login]);

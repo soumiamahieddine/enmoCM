@@ -33,59 +33,59 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
     docEditor: any;
     showModalWindow: boolean = false;
 
-    @HostListener('window:message',['$event'])
+    @HostListener('window:message', ['$event'])
     onMessage(e: any) {
         console.log(e);
         const response = JSON.parse(e.data);
-        
+
         if (response.event === 'onDownloadAs') {
-            this.onDownloadAs(response.data);
+            this.saveDocument();
         }
     }
-    constructor(private zone: NgZone, public http: HttpClient) { }    
+    constructor(private zone: NgZone, public http: HttpClient) { }
 
     quit() {
         this.docEditor.downloadAs();
-        //this.docEditor.destroyEditor();
     }
 
-    onDocumentStateChange(event: any) {
-        if (event.data) {
-            console.log('The document changed');
-            console.log(event);
-        } else {
-            console.log('Changes are collected on document editing service');
+    saveDocument() {
+        const content = {
+            "c": "forcesave",
+            "key": "azerty4",
+            "userdata": "Bernard BLIER"
         }
-    }
 
-    onDownloadAs(url: any) {
         const optionRequete = {
             headers: new HttpHeaders({ 
               'Access-Control-Allow-Origin':'*',
-            })
-          };
-        this.http.get(url, optionRequete).pipe(
-            tap((data: any) => {
-                console.log(data);
             }),
-            catchError((err: any) => {
-                console.log(err)
-                return of(false);
-            })
-        ).subscribe();
+            params: content
+          };
+
+        this.http.post('http://10.2.95.76:8765/coauthoring/CommandService.ashx', {}, optionRequete).pipe().subscribe();
     }
-    
+
 
     ngOnInit() { }
+
+    generateUniqueId(length: number = 5) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+    }
 
     ngAfterViewInit() {
         this.editorConfig = {
             documentType: 'text',
             document: {
                 fileType: 'odt',
-                key: 'toto',
+                key: 'azerty4',
                 title: this.onlyofficeName,
-                url: `http://10.2.95.76/rep_standard.odt`,
+                url: `http://cchaplin:maarch@10.2.95.76/maarch_courrier_develop/rest/resources/1660/originalContent`,
                 permissions: {
                     comment: false,
                     download: true,
@@ -95,7 +95,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                 }
             },
             editorConfig: {
-                callbackUrl: 'http://10.2.95.76/maarch_courrier_develop/rest/test',
+                callbackUrl: 'http://cchaplin:maarch@10.2.95.76/maarch_courrier_develop/rest/test',
                 lang: 'fr-FR',
                 mode: 'edit',
                 customization: {
@@ -103,7 +103,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                     comments: false,
                     compactToolbar: false,
                     feedback: false,
-                    forcesave: false,
+                    forcesave: true,
                     goback: false,
                     hideRightMenu: true,
                     showReviewChanges: false,
