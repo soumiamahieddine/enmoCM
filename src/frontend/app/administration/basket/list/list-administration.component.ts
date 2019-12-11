@@ -379,7 +379,9 @@ export class ListAdministrationComponent implements OnInit {
 
     changeEventList(ev: any) {
         if (ev.value === 'processDocument') {
-            this.selectedProcessTool = 'dashboard';
+            this.selectedProcessTool = {
+                defaultTab: 'dashboard'
+            };
         } else {
             this.selectedProcessTool = null;
         }
