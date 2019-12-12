@@ -150,7 +150,7 @@ if ($customID <> '') {
     $_SESSION['custom_override_id'] = $customID;
     $customIDPath = $customID . '_';
 }
-
+chdir($maarchDirectory);
 $maarchApps = (string) $config->MaarchApps;
 
 $GLOBALS['TmpDirectory'] = (string)$config->TmpDirectory;
@@ -213,6 +213,9 @@ $coreTools->load_lang($lang, $GLOBALS['maarchDirectory'], $maarchApps);
 $GLOBALS['func'] = new functions();
 
 $GLOBALS['db'] = new Database($GLOBALS['configFile']);
+
+\SrcCore\models\DatabasePDO::reset();
+new \SrcCore\models\DatabasePDO(['customId' => $_SESSION['custom_override_id']]);
 
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR
                          . $customIDPath . $GLOBALS['batchName'] . '_error.lck';
