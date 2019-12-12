@@ -260,6 +260,7 @@ $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':gen
 $app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
 $app->post('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
 $app->get('/jnlp/lock/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':isLockFileExisting');
+$app->get('/onlyOffice/mergedFile', \ContentManagement\controllers\JnlpController::class . ':getMergedFileForOnlyOffice');
 $app->get('/onlyOffice/encodedFile', \ContentManagement\controllers\JnlpController::class . ':getEncodedFileFromOnlyOffice');
 
 //Links

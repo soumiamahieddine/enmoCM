@@ -382,6 +382,66 @@ class JnlpController
         return $response->saveXML();
     }
 
+    public static function getMergedFileForOnlyOffice(Request $request, Response $response)
+    {
+        $queryParams = $request->getQueryParams();
+
+        if ($queryParams['objectType'] == 'templateCreation') {
+            $path = null;
+            $fileContent = null;
+        } elseif ($queryParams['objectType'] == 'templateModification') {
+            $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
+            $template = TemplateModel::getById(['id' => $queryParams['objectId'], 'select' => ['template_path', 'template_file_name']]);
+            if (empty($template)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
+            }
+
+            $path = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
+            $fileContent = file_get_contents($path);
+        } elseif ($queryParams['objectType'] == 'resourceCreation' || $queryParams['objectType'] == 'attachmentCreation') {
+            $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
+            $template = TemplateModel::getById(['id' => $queryParams['objectId'], 'select' => ['template_path', 'template_file_name']]);
+            if (empty($template)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
+            }
+
+            $path = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
+
+            $dataToMerge = ['userId' => $GLOBALS['id']];
+            if (!empty($queryParams['data'])) {
+                $decodedData = json_decode(base64_decode(urldecode($queryParams['data'])), true);
+                if (!empty($decodedData)) {
+                    $dataToMerge = array_merge($dataToMerge, $decodedData);
+                }
+            }
+            $mergedDocument = MergeController::mergeDocument([
+                'path' => $path,
+                'data' => $dataToMerge
+            ]);
+            $fileContent = base64_decode($mergedDocument['encodedDocument']);
+        } elseif ($queryParams['objectType'] == 'attachmentModification') {
+            $attachment = AttachmentModel::getById(['id' => $queryParams['objectId'], 'select' => ['docserver_id', 'path', 'filename']]);
+            if (empty($attachment)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
+            }
+            $docserver  = DocserverModel::getByDocserverId(['docserverId' => $attachment['docserver_id'], 'select' => ['path_template']]);
+
+            $path = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachment['path']) . $attachment['filename'];
+            $fileContent = file_get_contents($path);
+        } else {
+            return $response->withStatus(400)->withJson(['errors' => 'Query param objectType does not exist']);
+        }
+
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($fileContent);
+        $pathInfo = pathinfo($path);
+
+        $response->write($fileContent);
+        $response = $response->withAddedHeader('Content-Disposition', "attachment; filename=maarch.{$pathInfo['extension']}");
+
+        return $response->withHeader('Content-Type', $mimeType);
+    }
+
     public static function getEncodedFileFromOnlyOffice(Request $request, Response $response)
     {
         $queryParams = $request->getQueryParams();
