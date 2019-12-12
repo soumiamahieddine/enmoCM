@@ -180,18 +180,6 @@ CREATE TABLE contacts_custom_fields_list
 )
 WITH (OIDS=FALSE);
 
-DROP TABLE IF EXISTS contacts_custom_fields;
-CREATE TABLE contacts_custom_fields
-(
-    id serial NOT NULL,
-    contact_id INTEGER NOT NULL,
-    custom_field_id INTEGER NOT NULL,
-    value jsonb NOT NULL,
-    CONSTRAINT contacts_custom_fields_pkey PRIMARY KEY (id),
-    CONSTRAINT contacts_custom_fields_unique_key UNIQUE (contact_id, custom_field_id)
-)
-WITH (OIDS=FALSE);
-
 
 /* INDEXING MODELS */
 DROP TABLE IF EXISTS indexing_models;
@@ -424,6 +412,7 @@ CREATE TABLE contacts
     creation_date TIMESTAMP without time zone NOT NULL DEFAULT NOW(),
     modification_date TIMESTAMP without time zone,
     enabled boolean NOT NULL DEFAULT TRUE,
+    custom_fields jsonb,
     external_id jsonb DEFAULT '{}',
     CONSTRAINT contacts_pkey PRIMARY KEY (id)
 )

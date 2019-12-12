@@ -14,7 +14,6 @@
 
 namespace Contact\models;
 
-use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\DatabaseModel;

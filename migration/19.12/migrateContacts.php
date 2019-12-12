@@ -20,10 +20,6 @@ foreach ($customs as $custom) {
         'where' => ['id > 0']
     ]);
     \SrcCore\models\DatabaseModel::delete([
-        'table' => 'contacts_custom_fields',
-        'where' => ['id > 0']
-    ]);
-    \SrcCore\models\DatabaseModel::delete([
         'table' => 'contacts_custom_fields_list',
         'where' => ['id > 0']
     ]);
@@ -226,15 +222,23 @@ function addCustomFields($args = [])
 
 function migrateCustomField($args = [])
 {
-    $customFields = [];
     foreach ($args['contactCustomInfo'] as $key => $value) {
         if (!empty($value)) {
-            $id = \Contact\models\ContactCustomFieldModel::create([
-                'contact_id'      => $args['newContactId'],
-                'custom_field_id' => $args['newCustomFields'][$key],
-                'value'           => json_encode($value)
-            ]);
-            $customFields[$key] = $id;
+            $contact = \Contact\models\ContactModel::getById(['id' => $args['newContactId'], 'select' => ['custom_fields']]);
+            $value = json_encode($value);
+            if (empty($contact['custom_fields'])) {
+                \Contact\models\ContactModel::update([
+                    'postSet' => ['custom_fields' => "jsonb_set('{}', '{{$args['newCustomFields'][$key]}}', '{$value}')"],
+                    'where' => ['id = ?'],
+                    'data' => [$args['newContactId']]
+                ]);
+            } else {
+                \Contact\models\ContactModel::update([
+                    'postSet' => ['custom_fields' => "jsonb_set(custom_fields, '{{$args['newCustomFields'][$key]}}', '{$value}')"],
+                    'where' => ['id = ?'],
+                    'data' => [$args['newContactId']]
+                ]);
+            }
         }
     }
 }

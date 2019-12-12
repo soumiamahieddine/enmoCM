@@ -1463,14 +1463,3 @@ CREATE TABLE contacts_custom_fields_list
     CONSTRAINT contacts_custom_fields_list_unique_key UNIQUE (label)
 )
 WITH (OIDS=FALSE);
-
-CREATE TABLE contacts_custom_fields
-(
-    id serial NOT NULL,
-    contact_id INTEGER NOT NULL,
-    custom_field_id INTEGER NOT NULL,
-    value jsonb NOT NULL,
-    CONSTRAINT contacts_custom_fields_pkey PRIMARY KEY (id),
-    CONSTRAINT contacts_custom_fields_unique_key UNIQUE (contact_id, custom_field_id)
-)
-WITH (OIDS=FALSE);
