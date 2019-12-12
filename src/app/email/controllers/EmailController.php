@@ -85,24 +85,6 @@ class EmailController
             'messageExchangeId'     => empty($args['data']['messageExchangeId']) ? null : $args['data']['messageExchangeId']
         ]);
 
-        HistoryController::add([
-            'tableName'    => 'emails',
-            'recordId'     => $id,
-            'eventType'    => 'ADD',
-            'eventId'      => 'emailCreation',
-            'info'         => _EMAIL_ADDED
-        ]);
-
-        if (!empty($args['data']['document']['id'])) {
-            HistoryController::add([
-                'tableName' => 'res_letterbox',
-                'recordId'  => $args['data']['document']['id'],
-                'eventType' => 'ADD',
-                'eventId'   => 'emailCreation',
-                'info'      => _EMAIL_ADDED
-            ]);
-        }
-
         $isSent = ['success' => 'success'];
         if ($args['data']['status'] != 'DRAFT') {
             if ($args['data']['status'] == 'EXPRESS') {
@@ -120,6 +102,43 @@ class EmailController
                 $encryptKey = CoreConfigModel::getEncryptKey();
                 $options = empty($args['options']) ? '' : serialize($args['options']);
                 exec("php src/app/email/scripts/sendEmail.php {$customId} {$id} {$args['userId']} '{$encryptKey}' '{$options}' > /dev/null &");
+            }
+            if (!empty($isSent)) {
+                HistoryController::add([
+                    'tableName' => 'emails',
+                    'recordId'  => $id,
+                    'eventType' => 'ADD',
+                    'eventId'   => 'emailCreation',
+                    'info'      => _EMAIL_ADDED
+                ]);
+
+                if (!empty($args['data']['document']['id'])) {
+                    HistoryController::add([
+                        'tableName' => 'res_letterbox',
+                        'recordId'  => $args['data']['document']['id'],
+                        'eventType' => 'ADD',
+                        'eventId'   => 'emailCreation',
+                        'info'      => _EMAIL_ADDED
+                    ]);
+                }
+            }
+        } else {
+            HistoryController::add([
+                'tableName'    => 'emails',
+                'recordId'     => $id,
+                'eventType'    => 'ADD',
+                'eventId'      => 'emailDraftCreation',
+                'info'         => _EMAIL_DRAFT_SAVED
+            ]);
+
+            if (!empty($args['data']['document']['id'])) {
+                HistoryController::add([
+                    'tableName' => 'res_letterbox',
+                    'recordId'  => $args['data']['document']['id'],
+                    'eventType' => 'ADD',
+                    'eventId'   => 'emailDraftCreation',
+                    'info'      => _EMAIL_DRAFT_SAVED
+                ]);
             }
         }
 
@@ -201,24 +220,6 @@ class EmailController
             'data'  => [$args['id']]
         ]);
 
-        HistoryController::add([
-            'tableName'    => 'emails',
-            'recordId'     => $args['id'],
-            'eventType'    => 'UP',
-            'eventId'      => 'emailModification',
-            'info'         => _EMAIL_UPDATED
-        ]);
-
-        if (!empty($args['data']['document']['id'])) {
-            HistoryController::add([
-                'tableName' => 'res_letterbox',
-                'recordId'  => $args['data']['document']['id'],
-                'eventType' => 'UP',
-                'eventId'   => 'emailModification',
-                'info'      => _EMAIL_UPDATED
-            ]);
-        }
-
         if ($body['status'] != 'DRAFT') {
             $customId = CoreConfigModel::getCustomId();
             if (empty($customId)) {
@@ -226,6 +227,42 @@ class EmailController
             }
             $encryptKey = CoreConfigModel::getEncryptKey();
             exec("php src/app/email/scripts/sendEmail.php {$customId} {$args['id']} {$GLOBALS['id']} '{$encryptKey}' > /dev/null &");
+
+            HistoryController::add([
+                'tableName' => 'emails',
+                'recordId'  => $args['emailId'],
+                'eventType' => 'ADD',
+                'eventId'   => 'emailCreation',
+                'info'      => _EMAIL_ADDED
+            ]);
+
+            if (!empty($args['data']['document']['id'])) {
+                HistoryController::add([
+                    'tableName' => 'res_letterbox',
+                    'recordId'  => $args['data']['document']['id'],
+                    'eventType' => 'ADD',
+                    'eventId'   => 'emailCreation',
+                    'info'      => _EMAIL_ADDED
+                ]);
+            }
+        } else {
+            HistoryController::add([
+                'tableName'    => 'emails',
+                'recordId'     => $args['emailId'],
+                'eventType'    => 'UP',
+                'eventId'      => 'emailModification',
+                'info'         => _EMAIL_UPDATED
+            ]);
+
+            if (!empty($args['data']['document']['id'])) {
+                HistoryController::add([
+                    'tableName' => 'res_letterbox',
+                    'recordId'  => $args['data']['document']['id'],
+                    'eventType' => 'UP',
+                    'eventId'   => 'emailModification',
+                    'info'      => _EMAIL_UPDATED
+                ]);
+            }
         }
 
         return $response->withStatus(204);
