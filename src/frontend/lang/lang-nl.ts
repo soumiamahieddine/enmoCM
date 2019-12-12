@@ -1354,4 +1354,5 @@ export const LANG_NL = {
     "langISO": "nl-FR",
     "noSelectedContact": "No associated contact", //_TO_TRANSLATE
     "searchContact": "Search a contact", //_TO_TRANSLATE
+    "acknowledgementReceiptGenerationImpossible": "Acknowledgement receipt generation impossible : no sender(s) associated with resource(s)", //_TO_TRANSLATE
 };
