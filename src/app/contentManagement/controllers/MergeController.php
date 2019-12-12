@@ -180,13 +180,18 @@ class MergeController
                     'id' => $args['recipientId'],
                     'select' => [
                         'civility', 'firstname', 'lastname', 'company', 'department', 'function', 'address_number', 'address_street', 'address_town',
-                        'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country', 'phone', 'email'
+                        'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country', 'phone', 'email', 'custom_fields'
                     ]
                 ]);
                 $recipient['civility'] = ContactModel::getCivilityLabel(['civilityId' => $recipient['civility']]);
                 $postalAddress = ContactController::getContactAfnor($recipient);
                 unset($postalAddress[0]);
                 $recipient['postal_address'] = implode("\n", $postalAddress);
+                $customFields = json_decode($recipient['custom_fields'], true);
+                unset($recipient['custom_fields']);
+                foreach ($customFields as $key => $customField) {
+                    $recipient["customField_{$key}"] = is_array($customField) ?  implode("\n", $customField) : $customField;
+                }
             } elseif ($args['recipientType'] == 'user') {
                 $recipient = UserModel::getById(['id' => $args['recipientId'], 'select' => ['firstname', 'lastname']]);
             } elseif ($args['recipientType'] == 'entity') {

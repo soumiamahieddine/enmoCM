@@ -511,7 +511,9 @@ class ContactController
         $afnorAddress[4] = substr($args['address_number'].' '.$args['address_street'], 0, 38);
 
         // Ligne 5
-        $afnorAddress[5] = '';
+        if (!empty($args['address_additional2'])) {
+            $afnorAddress[5] = substr($args['address_additional2'], 0, 38);
+        }
 
         // Ligne 6
         $args['address_postcode'] = strtoupper($args['address_postcode']);
