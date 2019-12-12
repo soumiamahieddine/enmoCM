@@ -733,7 +733,7 @@ class ContactController
         } elseif (!empty($body['phone']) && !preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/", $body['phone'])) {
             return ['errors' => 'Body phone is not valid'];
         }
-
+        
         $lengthFields = [
             'civility',
             'firstname',
@@ -763,6 +763,38 @@ class ContactController
             $customFields = ContactCustomFieldListModel::get(['select' => ['count(1)'], 'where' => ['id in (?)'], 'data' => [array_keys($body['customFields'])]]);
             if (count($body['customFields']) != $customFields[0]['count']) {
                 return ['errors' => 'Body customFields : One or more custom fields do not exist'];
+            }
+        }
+
+        $mappingFields = [
+            'civility'              => 'civility',
+            'firstname'             => 'firstname',
+            'lastname'              => 'lastname',
+            'company'               => 'company',
+            'department'            => 'department',
+            'function'              => 'function',
+            'address_number'        => 'addressNumber',
+            'address_street'        => 'addressStreet',
+            'address_additional1'   => 'addressAdditional1',
+            'address_additional2'   => 'addressAdditional2',
+            'address_postcode'      => 'addressPostcode',
+            'address_town'          => 'addressTown',
+            'address_country'       => 'addressCountry',
+            'email'                 => 'email',
+            'phone'                 => 'phone',
+            'notes'                 => 'notes'
+        ];
+        $mandatoryParameters = ContactParameterModel::get(['select' => ['identifier'], 'where' => ['mandatory = ?'], 'data' => [true]]);
+        foreach ($mandatoryParameters as $mandatoryParameter) {
+            if (strpos($mandatoryParameter['identifier'], 'contactCustomField_') !== false) {
+                $customId = explode('_', $mandatoryParameter['identifier'])[1];
+                if (empty($body['customFields'][$customId])) {
+                    return ['errors' => "Body {$body['customFields'][$customId]} is mandatory"];
+                }
+            } else {
+                if (empty($body[$mappingFields[$mandatoryParameter]])) {
+                    return ['errors' => "Body {$mappingFields[$mandatoryParameter]} is mandatory"];
+                }
             }
         }
 

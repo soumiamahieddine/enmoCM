@@ -96,6 +96,16 @@ class UserController
         return $response->withJson(['users' => $users, 'quota' => $quota]);
     }
 
+    public function getById(Request $request, Response $response, array $args)
+    {
+        $user = UserModel::getById(['id' => $args['id'], 'select' => ['id', 'firstname', 'lastname']]);
+        if (empty($user)) {
+            return $response->withStatus(400)->withJson(['errors' => 'User does not exist']);
+        }
+
+        return $response->withJson($user);
+    }
+
     public function getDetailledById(Request $request, Response $response, array $aArgs)
     {
         $error = $this->hasUsersRights(['id' => $aArgs['id']]);

@@ -825,6 +825,7 @@ CREATE TABLE contacts
     creation_date TIMESTAMP without time zone NOT NULL DEFAULT NOW(),
     modification_date TIMESTAMP without time zone,
     enabled boolean NOT NULL DEFAULT TRUE,
+    custom_fields jsonb,
     external_id jsonb DEFAULT '{}',
     CONSTRAINT contacts_pkey PRIMARY KEY (id)
 )

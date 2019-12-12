@@ -403,6 +403,7 @@ $app->get('/administration/templates/new', \Template\controllers\TemplateControl
 //Users
 $app->get('/users', \User\controllers\UserController::class . ':get');
 $app->post('/users', \User\controllers\UserController::class . ':create');
+$app->get('/users/{id}', \User\controllers\UserController::class . ':getById');
 $app->put('/users/{id}', \User\controllers\UserController::class . ':update');
 $app->delete('/users/{id}', \User\controllers\UserController::class . ':delete');
 $app->put('/users/{id}/suspend', \User\controllers\UserController::class . ':suspend');
