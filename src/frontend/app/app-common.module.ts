@@ -59,6 +59,7 @@ import { PluginSelectSearchComponent }                        from '../plugins/s
 import { FolderInputComponent }                        from '../app/folder/indexing/folder-input.component';
 import { TagInputComponent }                        from '../app/tag/indexing/tag-input.component';
 import { DragDropDirective }                        from '../app/viewer/upload-file-dnd.directive';
+import { ContactAutocompleteComponent } from './contact/autocomplete/contact-autocomplete.component';
 
 
 import { DiffusionsListComponent }             from './diffusions/diffusions-list.component';
@@ -118,7 +119,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         DiffusionsListComponent,
         DocumentViewerComponent,
         DragDropDirective,
-        EcplOnlyofficeViewerComponent
+        EcplOnlyofficeViewerComponent,
+        ContactAutocompleteComponent
     ],
     exports: [
         CommonModule,
@@ -158,7 +160,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         DiffusionsListComponent,
         DocumentViewerComponent,
         DragDropDirective,
-        EcplOnlyofficeViewerComponent
+        EcplOnlyofficeViewerComponent,
+        ContactAutocompleteComponent
     ],
     providers: [
         HeaderService,

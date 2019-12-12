@@ -142,6 +142,11 @@
                                         [manageDatas]="!adminMode ? field.values[1] : undefined" style="width:100%;">
                                     </plugin-autocomplete>
                                 </ng-container>-->
+                                
+                                <ng-container *ngIf="field.identifier === 'senders'">
+                                    <app-contact-autocomplete [control]="arrFormControl[field.identifier]" style="width:100%;">
+                                    </app-contact-autocomplete>
+                                </ng-container>
                                 <ng-container *ngIf="field.identifier === 'folders'">
                                     <app-folder-input [control]="arrFormControl[field.identifier]" style="width:100%;">
                                     </app-folder-input>

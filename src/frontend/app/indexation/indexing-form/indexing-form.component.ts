@@ -74,7 +74,7 @@ export class IndexingFormComponent implements OnInit {
 
     availableFields: any[] = [
         {
-            identifier: 'getRecipients',
+            identifier: 'recipients',
             label: this.lang.getRecipients,
             type: 'autocomplete',
             default_value: null,

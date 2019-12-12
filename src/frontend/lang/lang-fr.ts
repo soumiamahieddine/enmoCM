@@ -1365,4 +1365,6 @@ export const LANG_FR = {
     "siretGeneratedButAnnuaryUnreachable": "Numéro SIRET généré mais l'annuaire est injoignable",
     "entityDeletedButAnnuaryUnreachable": "Entité supprimée mais l'annuaire est injoignable, l'entité est possiblement toujours présente dedans",
     "langISO": "fr-FR",
+    "noSelectedContact": "Aucun contact associé",
+    "searchContact": "Recherchez un contact",
 };

@@ -143,7 +143,7 @@ export const LANG_EN = {
     "checkSendmail"                         : "Check mail server status",
     "chooseAnotherEntityUser"               : "Choose another person from the entity",
     "chooseBasket"                          : "Choose a basket",
-    "chooseCategoryAssociation"             : "Choose one or some associatedd categories",
+    "chooseCategoryAssociation"             : "Choose one or some associated categories",
     "chooseColor"                           : "Choose a color",
     "chooseContactType"                     : "Choose a contact type",
     "chooseDefaultAction"                   : "Choose main action",
@@ -1327,4 +1327,6 @@ export const LANG_EN = {
     "siretGeneratedButAnnuaryUnreachable": "SIRET number generated but annuary is unreachable",
     "entityDeletedButAnnuaryUnreachable": "Entity deleted but annuary is unreachable",
     "langISO": "en-US",
+    "noSelectedContact": "No associated contact",
+    "searchContact": "Search a contact",
 };
