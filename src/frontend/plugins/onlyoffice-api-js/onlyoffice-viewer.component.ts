@@ -39,30 +39,22 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
         const response = JSON.parse(e.data);
 
         if (response.event === 'onDownloadAs') {
-            this.saveDocument();
+            console.log(response.data);
+            this.getEncodedDocument(response.data);
         }
     }
-    constructor(private zone: NgZone, public http: HttpClient) { }
+    constructor(public http: HttpClient) { }
 
-    quit() {
+    getDocument() {
         this.docEditor.downloadAs();
     }
 
-    saveDocument() {
-        const content = {
-            "c": "forcesave",
-            "key": "azerty4",
-            "userdata": "Bernard BLIER"
-        }
-
-        const optionRequete = {
-            headers: new HttpHeaders({ 
-              'Access-Control-Allow-Origin':'*',
-            }),
-            params: content
-          };
-
-        this.http.post('http://10.2.95.76:8765/coauthoring/CommandService.ashx', {}, optionRequete).pipe().subscribe();
+    getEncodedDocument(data: any) {
+        this.http.get('../../rest/onlyOffice/encodedFile', { params: { url: data } }).pipe(
+            tap((data: any) => {
+                console.log(data.encodedFile);
+            })
+        ).subscribe();
     }
 
 
@@ -83,9 +75,9 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
             documentType: 'text',
             document: {
                 fileType: 'odt',
-                key: 'azerty4',
+                key: this.generateUniqueId(),
                 title: this.onlyofficeName,
-                url: `http://cchaplin:maarch@10.2.95.76/maarch_courrier_develop/rest/resources/1660/originalContent`,
+                url: `http://cchaplin:maarch@10.2.95.76/maarch_courrier_develop/rest/onlyOffice/mergedFile?objectType=attachmentCreation&objectId=36`,
                 permissions: {
                     comment: false,
                     download: true,
@@ -96,14 +88,15 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
             },
             editorConfig: {
                 callbackUrl: 'http://cchaplin:maarch@10.2.95.76/maarch_courrier_develop/rest/test',
-                lang: 'fr-FR',
+                lang: 'fr',
+                region: 'fr-FR',
                 mode: 'edit',
                 customization: {
                     chat: false,
                     comments: false,
                     compactToolbar: false,
                     feedback: false,
-                    forcesave: true,
+                    forcesave: false,
                     goback: false,
                     hideRightMenu: true,
                     showReviewChanges: false,

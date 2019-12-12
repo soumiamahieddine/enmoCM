@@ -104,18 +104,40 @@ export class ContactAutocompleteComponent implements OnInit {
 
     initFormValue() {
         this.controlAutocomplete.value.forEach((contact: any) => {
-            this.http.get('../../rest/contacts/' + contact.id).pipe(
-                tap((data: any) => {
-                    this.valuesToDisplay[data.id] = {
-                        type: 'contact',
-                        firstname: data.firstname,
-                        lastname: data.lastname,
-                        company: data.company
-                    };
-                    this.loadingValues = false;
-                })
-            ).subscribe();
+            if (contact.type === 'contact') {
+                this.http.get('../../rest/contacts/' + contact.id).pipe(
+                    tap((data: any) => {
+                        this.valuesToDisplay[data.id] = {
+                            type: 'contact',
+                            firstname: data.firstname,
+                            lastname: data.lastname,
+                            company: data.company
+                        };
+                        
+                    })
+                ).subscribe();
+            } else if (contact.type === 'user') {
+                this.http.get('../../rest/users/' + contact.id).pipe(
+                    tap((data: any) => {
+                        this.valuesToDisplay[data.id] = {
+                            type: 'user',
+                            lastname: data.entity_label,
+                        };
+                    })
+                ).subscribe();
+            } else if (contact.type === 'entity') {
+                this.http.get('../../rest/entities/' + contact.id).pipe(
+                    tap((data: any) => {
+                        this.valuesToDisplay[data.id] = {
+                            type: 'entity',
+                            lastname: data.entity_label,
+                        };
+                    })
+                ).subscribe();
+            }
+            
         });
+        this.loadingValues = false;
     }
 
     setFormValue(item: any) {

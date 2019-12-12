@@ -94,7 +94,7 @@
                         <i class="fa" [class.fa-building]="this.valuesToDisplay[item.id].type === 'contact'"
                             [class.fa-sitemap]="this.valuesToDisplay[item.id].type ==='entity'"
                             [class.fa-user]="this.valuesToDisplay[item.id].type ==='user'"
-                            [title]="lang['contact_'+this.valuesToDisplay[item.id].type]"
+                            [title]="lang[this.valuesToDisplay[item.id].type]"
                             style="padding-right:5px;"></i>
                             <ng-container *ngIf="!empty(this.valuesToDisplay[item.id].firstname)">
                                 {{this.valuesToDisplay[item.id].firstname}}

@@ -142,8 +142,7 @@
                                         [manageDatas]="!adminMode ? field.values[1] : undefined" style="width:100%;">
                                     </plugin-autocomplete>
                                 </ng-container>-->
-                                
-                                <ng-container *ngIf="field.identifier === 'senders'">
+                                <ng-container *ngIf="['senders','recipients'].indexOf(field.identifier) > -1">
                                     <app-contact-autocomplete [control]="arrFormControl[field.identifier]" style="width:100%;">
                                     </app-contact-autocomplete>
                                 </ng-container>
