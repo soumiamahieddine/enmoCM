@@ -38,7 +38,7 @@ export class ContactsParametersAdministrationComponent implements OnInit {
     loading: boolean = false;
 
     dataSource = new MatTableDataSource(this.contactsParameters);
-    displayedColumns = ['identifier', 'mandatory', 'filling', 'displayable', 'searchable'];
+    displayedColumns = ['identifier', 'mandatory', 'filling', 'searchable', 'displayable'];
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;

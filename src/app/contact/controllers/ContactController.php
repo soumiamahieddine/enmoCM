@@ -324,7 +324,12 @@ class ContactController
         }
 
         $contactsFilling = ContactFillingModel::get();
-        $contactParameters = ContactParameterModel::get(['select' => ['*']]);
+        $contactParameters = ContactParameterModel::get([
+            'select' => ['*'],
+            'orderBy' => ['identifier=\'civility\' desc, identifier=\'firstname\' desc, identifier=\'lastname\' desc, identifier=\'company\' desc, identifier=\'department\' desc, 
+            identifier=\'function\' desc, identifier=\'address_number\' desc, identifier=\'address_street\' desc, identifier=\'address_additional1\' desc, identifier=\'address_additional2\' desc, 
+            identifier=\'address_postcode\' desc, identifier=\'address_town\' desc, identifier=\'address_country\' desc, identifier=\'email\' desc, identifier=\'phone\' desc']
+        ]);
         foreach ($contactParameters as $key => $parameter) {
             if (strpos($parameter['identifier'], 'contactCustomField_') !== false) {
                 $contactCustomId = str_replace("contactCustomField_", "", $parameter['identifier']);

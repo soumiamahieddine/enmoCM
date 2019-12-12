@@ -72,11 +72,11 @@
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.contactsFillingCriteria}}</mat-header-cell>
                                 <mat-cell *matCellDef="let element"> <mat-slide-toggle style="margin-left:11px" color="primary" title="{{lang.contactsFillingCriteria}}" (change)="addCriteria($event, element, 'filling')" [checked]="element.filling"></mat-slide-toggle> </mat-cell>
                             </ng-container>
-                        <ng-container matColumnDef="displayable">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.autocompletionSearchable}}</mat-header-cell>
-                            <mat-cell *matCellDef="let element"> <mat-slide-toggle style="margin-left:11px" color="primary" [disabled]="element.identifier == 'lastname' || element.identifier == 'company'" title="{{lang.autocompletionSearchable}}" (change)="addCriteria($event, element, 'searchable')" [checked]="element.searchable"></mat-slide-toggle> </mat-cell>
-                        </ng-container>
                         <ng-container matColumnDef="searchable">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.autocompletionSearchable}}</mat-header-cell>
+                            <mat-cell *matCellDef="let element"> <mat-slide-toggle style="margin-left:11px" color="primary" [disabled]="element.identifier == 'lastname' || element.identifier == 'company' || element.identifier == 'civility'" title="{{lang.autocompletionSearchable}}" (change)="addCriteria($event, element, 'searchable')" [checked]="element.searchable"></mat-slide-toggle> </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="displayable">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.autocompletionDisplayable}}</mat-header-cell>
                             <mat-cell *matCellDef="let element"> <mat-slide-toggle style="margin-left:11px" color="primary" [disabled]="element.identifier == 'lastname' || element.identifier == 'company'" title="{{lang.autocompletionDisplayable}}" (change)="addCriteria($event, element, 'displayable')" [checked]="element.displayable"></mat-slide-toggle> </mat-cell>
                         </ng-container>
