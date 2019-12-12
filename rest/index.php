@@ -256,11 +256,11 @@ $app->put('/indexingModels/{id}/enable', \IndexingModel\controllers\IndexingMode
 $app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
 
 //Jnlp
-$app->post('/test', \ContentManagement\controllers\JnlpController::class . ':test');
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
 $app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
 $app->post('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
 $app->get('/jnlp/lock/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':isLockFileExisting');
+$app->get('/onlyOffice/encodedFile', \ContentManagement\controllers\JnlpController::class . ':getEncodedFileFromOnlyOffice');
 
 //Links
 $app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':getByResId');

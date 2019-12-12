@@ -16,6 +16,7 @@ namespace ContentManagement\controllers;
 
 use Attachment\models\AttachmentModel;
 use Docserver\models\DocserverModel;
+use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\UrlController;
@@ -381,28 +382,19 @@ class JnlpController
         return $response->saveXML();
     }
 
-    public static function test(Request $request, Response $response)
+    public static function getEncodedFileFromOnlyOffice(Request $request, Response $response)
     {
+        $queryParams = $request->getQueryParams();
 
-        if (($body_stream = file_get_contents("php://input"))===false) {
-            echo "Bad Request";
-        }
-        
-        $data = json_decode($body_stream, true);
-        if ($data["status"] == 2 || $data["status"] == 6) {
-            $downloadUri = $data["url"];
-                
-            if (($new_data = file_get_contents($downloadUri))===false) {
-                echo "Bad Response";
-            } else {
-                $tmpPath = CoreConfigModel::getTmpPath();
-                $fileOnTmp = "tmp_file_onlyoffice_{$data["key"]}.odt";
-                file_put_contents($tmpPath.$fileOnTmp, $new_data, LOCK_EX);
-                // echo $new_data;
-                //file_put_contents($path_for_save, $new_data, LOCK_EX);
-            }
+        if (!Validator::stringType()->notEmpty()->validate($queryParams['url'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params url is empty']);
         }
 
-        return $response->withJson(['error' => 0]);
+        $fileContent = file_get_contents($queryParams['url']);
+        if ($fileContent == false) {
+            return $response->withStatus(400)->withJson(['errors' => 'No content found']);
+        }
+
+        return $response->withJson(['encodedFile' => base64_encode($fileContent)]);
     }
 }
