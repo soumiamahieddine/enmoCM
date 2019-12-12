@@ -15,6 +15,7 @@
 namespace ExternalSignatoryBook\controllers;
 
 use Attachment\models\AttachmentModel;
+use Contact\controllers\ContactController;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Entity\models\EntityModel;
@@ -76,10 +77,11 @@ class MaarchParapheurController
         $arrivedMailMainfilePath = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
 
         $mainResource = ResModel::getOnView([
-            'select' => ['process_limit_date', 'status', 'category_id', 'alt_identifier', 'subject', 'priority', 'contact_firstname', 'contact_lastname', 'contact_society', 'res_id', 'admission_date', 'creation_date', 'doc_date', 'initiator', 'typist', 'type_label', 'destination'],
+            'select' => ['process_limit_date', 'status', 'category_id', 'alt_identifier', 'subject', 'priority', 'res_id', 'admission_date', 'creation_date', 'doc_date', 'initiator', 'typist', 'type_label', 'destination'],
             'where'  => ['res_id = ?'],
             'data'   => [$aArgs['resIdMaster']]
         ]);
+        $recipients = ContactController::getFormattedContacts(['resId' => $mainResource[0]['res_id'], 'mode' => 'recipient']);
 
         if (empty($mainResource)) {
             return ['error' => 'Mail does not exist'];
@@ -130,12 +132,6 @@ class MaarchParapheurController
                     'where'   => ['difflist_type = ?', 'res_id in (?)'],
                     'data'    => ['entity_id', $tmpIds],
                     'orderBy' => ['listinstance_id']
-                ]);
-            } elseif ($unit['unit'] == 'senderRecipientInformations') {
-                $data['senderRecipient'] = ResModel::get([
-                    'select' => ['category_id', 'address_id', 'exp_user_id', 'dest_user_id', 'is_multicontacts', 'res_id'],
-                    'where'  => ['res_id in (?)'],
-                    'data'   => [$tmpIds]
                 ]);
             }
         }
@@ -246,8 +242,12 @@ class MaarchParapheurController
                     if (!empty($senderPrimaryEntity['entity_label'])) {
                         $metadata[_INITIATOR_ENTITY] = $senderPrimaryEntity['entity_label'];
                     }
-                    $contact = trim($mainResource[0]['contact_firstname'] . ' ' . $mainResource[0]['contact_lastname'] . ' ' . $mainResource[0]['contact_society']);
-                    if (!empty($contact)) {
+                    if (!empty($recipients)) {
+                        if (count($recipients) > 1) {
+                            $contact = count($recipients) . ' ' . _RECIPIENTS;
+                        } else {
+                            $contact = $contact[0];
+                        }
                         $metadata[_RECIPIENTS] = $contact;
                     }
         
@@ -281,8 +281,12 @@ class MaarchParapheurController
             if (!empty($senderPrimaryEntity['entity_label'])) {
                 $metadata[_INITIATOR_ENTITY] = $senderPrimaryEntity['entity_label'];
             }
-            $contact = trim($mainResource[0]['contact_firstname'] . ' ' . $mainResource[0]['contact_lastname'] . ' ' . $mainResource[0]['contact_society']);
-            if (!empty($contact)) {
+            if (!empty($recipients)) {
+                if (count($recipients) > 1) {
+                    $contact = count($recipients) . ' ' . _RECIPIENTS;
+                } else {
+                    $contact = $contact[0];
+                }
                 $metadata[_RECIPIENTS] = $contact;
             }
 

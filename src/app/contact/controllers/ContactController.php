@@ -696,9 +696,7 @@ class ContactController
                     $contactToDisplay = ContactController::getFormattedContactWithAddress(['contact' => $contactRaw]);
                 }
 
-                $contactToDisplay = $contactToDisplay['contact']['otherInfo'];
-
-                $contact = $contactToDisplay;
+                $contact = $contactToDisplay['contact']['otherInfo'];
             } elseif ($resourceContact['type'] == 'user') {
                 $contact = UserModel::getLabelledUserById(['id' => $resourceContact['item_id']]);
             } elseif ($resourceContact['type'] == 'entity') {
