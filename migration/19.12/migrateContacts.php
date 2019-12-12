@@ -460,7 +460,7 @@ function migrateContactParameters()
     
     foreach ($contactParameters as $value) {
         $filling = 'false';
-        if (in_array($value['oldIdentifier'], $fillingValues)) {
+        if (in_array($value['oldIdentifier'], ['lastname', 'society']) || in_array($value['oldIdentifier'], $fillingValues)) {
             $filling = 'true';
         }
         \SrcCore\models\DatabaseModel::insert([
