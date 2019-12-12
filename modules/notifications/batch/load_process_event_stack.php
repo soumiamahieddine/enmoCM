@@ -199,6 +199,8 @@ $mailerParams = $xmlconfig->MAILER;
 
 // INCLUDES
 try {
+    Bt_myInclude('vendor/autoload.php');
+
     Bt_myInclude(
         'core' . DIRECTORY_SEPARATOR . 'class'
         . DIRECTORY_SEPARATOR . 'class_functions.php'

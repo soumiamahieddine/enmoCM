@@ -177,6 +177,8 @@ $mailerParams = $xmlconfig->MAILER;
 $path_to_mailer = (string)$mailerParams->path_to_mailer;
 
 try {
+    Bt_myInclude($GLOBALS['maarchDirectory'] . 'vendor/autoload.php');
+
     Bt_myInclude(
         $GLOBALS['maarchDirectory'] . 'core' . DIRECTORY_SEPARATOR . 'class'
         . DIRECTORY_SEPARATOR . 'class_functions.php'

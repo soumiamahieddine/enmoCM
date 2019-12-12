@@ -26,7 +26,7 @@ foreach($events as $event) {
         $query = "SELECT mlb.*, notes.*, users.* "
             . "FROM " . $res_view . " mlb "
             . "JOIN notes on notes.identifier = mlb.res_id "
-            . "JOIN users on users.user_id = notes.user_id "
+            . "JOIN users on users.id = notes.user_id "
             . "WHERE notes.id = ? ";
         $arrayPDO = array($event->record_id);
         break;
@@ -38,7 +38,7 @@ foreach($events as $event) {
             . "users.* " 
             . "FROM listinstance li JOIN " . $res_view . " mlb ON mlb.res_id = li.res_id "
             . "JOIN notes on notes.identifier = li.res_id "
-            . "JOIN users on users.user_id = notes.user_id "
+            . "JOIN users on users.id = notes.user_id "
             . "WHERE li.item_id = ? "
             . "AND li.item_mode = 'dest' "
             . "AND li.item_type = 'user_id' "
@@ -56,9 +56,20 @@ foreach($events as $event) {
     
     // Lien vers la page détail
     $urlToApp = trim($maarchUrl, '/').'/apps/'.trim($maarchApps, '/').'/index.php?';
-    $note['linktodoc'] = $urlToApp . 'display=true&page=view_resource_controler&dir=indexing_searching&id=' . $note['res_id'];
-    $note['linktodetail'] = $urlToApp . 'page=details&dir=indexing_searching&id=' . $note['res_id'];
-    $note['linktoprocess'] = $urlToApp . 'page=view_baskets&module=basket&baskets=MyBasket&directLinkToAction&resid=' . $note['res_id'];
+
+    $user   = \User\models\UserModel::getByLogin(['login' => $datasources['recipient'][0]['user_id'], 'select' => ['id']]);
+    $basket = \Basket\models\BasketModel::getByBasketId(['select' => ['id'], 'basketId' => 'MyBasket']);
+    $preferenceBasket = \User\models\UserBasketPreferenceModel::get([
+        'select'  => ['group_serial_id'],
+        'where'   => ['user_serial_id = ?', 'basket_id = ?'],
+        'data'    => [$user['id'], 'MyBasket']
+    ]);
+
+    $note['linktodoc']     = $urlToApp . 'linkToDoc='.$note['res_id'];
+    $note['linktodetail']  = $urlToApp . 'linkToDetail='.$note['res_id'];
+    if (!empty($note['res_id']) && !empty($preferenceBasket[0]['group_serial_id']) && !empty($basket['id']) && !empty($user['id'])) {
+        $note['linktoprocess'] = $urlToApp . 'linkToProcess='.$note['res_id'].'&groupId='.$preferenceBasket[0]['group_serial_id'].'&basketId='.$basket['id'].'&userId='.$user['id'];
+    }
     
 	// Insertion
 	$datasources['notes'][] = $note;

@@ -373,6 +373,12 @@ if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
         ?><script>triggerAngular('#/administration')</script><?php
     } elseif (!empty($_REQUEST['scanGroupId']) && !empty($_REQUEST['tmpfilename'])) {
         ?><script>triggerAngular('#/indexing/<?php echo $_REQUEST['scanGroupId']?>?tmpfilename=<?php echo $_REQUEST['tmpfilename']?>')</script><?php
+    } elseif (!empty($_REQUEST['linkToDoc'])) {
+        ?><script>location.href="../../rest/resources/<?php echo $_REQUEST['linkToDoc']?>/content"</script><?php
+    } elseif (!empty($_REQUEST['linkToDetail'])) {
+        ?><script>triggerAngular('#/resources/<?php echo $_REQUEST['linkToDetail']?>')</script><?php
+    } elseif (!empty($_REQUEST['linkToProcess']) && !empty($_REQUEST['userId']) && !empty($_REQUEST['groupId']) && !empty($_REQUEST['basketId'])) {
+        ?><script>triggerAngular('#/process/users/<?php echo $_REQUEST['userId']?>/groups/<?php echo $_REQUEST['groupId']?>/baskets/<?php echo $_REQUEST['basketId']?>/resId/<?php echo $_REQUEST['linkToProcess']?>')</script><?php
     } elseif (empty($_REQUEST['page'])) {
         ?>
             <script>
