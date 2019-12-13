@@ -346,7 +346,7 @@ if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
     $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
     if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'])) {
         $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
-	if (!empty($passwordRules['renewal'])) {
+        if (!empty($passwordRules['renewal'])) {
             $currentDate = new \DateTime();
             $lastModificationDate = new \DateTime($user['password_modification_date']);
             $lastModificationDate->add(new DateInterval("P{$passwordRules['renewal']}D"));
@@ -374,7 +374,9 @@ if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
     } elseif (!empty($_REQUEST['scanGroupId']) && !empty($_REQUEST['tmpfilename'])) {
         ?><script>triggerAngular('#/indexing/<?php echo $_REQUEST['scanGroupId']?>?tmpfilename=<?php echo $_REQUEST['tmpfilename']?>')</script><?php
     } elseif (!empty($_REQUEST['linkToDoc'])) {
-        ?><script>location.href="../../rest/resources/<?php echo $_REQUEST['linkToDoc']?>/content"</script><?php
+        ?><script>
+    location.href = "../../rest/resources/<?php echo $_REQUEST['linkToDoc']?>/content?mode=view"
+</script><?php
     } elseif (!empty($_REQUEST['linkToDetail'])) {
         ?><script>triggerAngular('#/resources/<?php echo $_REQUEST['linkToDetail']?>')</script><?php
     } elseif (!empty($_REQUEST['linkToProcess']) && !empty($_REQUEST['userId']) && !empty($_REQUEST['groupId']) && !empty($_REQUEST['basketId'])) {
