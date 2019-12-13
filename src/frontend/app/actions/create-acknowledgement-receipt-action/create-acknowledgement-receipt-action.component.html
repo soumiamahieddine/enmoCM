@@ -61,6 +61,8 @@
         </div>
         <div class="col-md-12" *ngIf="acknowledgement.sendEmail || acknowledgement.sendPaper">
             <app-note-editor #noteEditor [resIds]="data.resIds"></app-note-editor>
+        </div><div class="col-md-12" *ngIf="!acknowledgement.sendEmail && !acknowledgement.sendPaper">
+            <div class="alert-message alert-message-danger">{{lang.acknowledgementReceiptGenerationImpossible}}</div>
         </div>
     </div>
 </div>

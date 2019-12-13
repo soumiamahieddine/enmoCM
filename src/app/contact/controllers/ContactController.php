@@ -14,7 +14,6 @@
 namespace Contact\controllers;
 
 use Contact\models\ContactCustomFieldListModel;
-use Contact\models\ContactCustomFieldModel;
 use Contact\models\ContactFillingModel;
 use Contact\models\ContactModel;
 use Contact\models\ContactParameterModel;
@@ -86,6 +85,8 @@ class ContactController
             'function'              => $body['function'] ?? null,
             'address_number'        => $body['addressNumber'] ?? null,
             'address_street'        => $body['addressStreet'] ?? null,
+            'address_additional1'   => $body['addressAdditional1'] ?? null,
+            'address_additional2'   => $body['addressAdditional2'] ?? null,
             'address_postcode'      => $body['addressPostcode'] ?? null,
             'address_town'          => $body['addressTown'] ?? null,
             'address_country'       => $body['addressCountry'] ?? null,
@@ -95,6 +96,7 @@ class ContactController
             'notes'                 => $body['notes'] ?? null,
             'creator'               => $GLOBALS['id'],
             'enabled'               => 'true',
+            'custom_fields'         => !empty($body['customFields']) ? json_encode($body['customFields']) : null,
             'external_id'           => $externalId
         ]);
 
@@ -116,8 +118,6 @@ class ContactController
             'moduleId'  => 'contact',
             'eventId'   => 'contactCreation',
         ]);
-
-        ContactController::createAdjacentData(['body' => $body, 'id' => $id]);
 
         return $response->withJson(['id' => $id]);
     }
@@ -143,6 +143,8 @@ class ContactController
             'function'              => $rawContact['function'],
             'addressNumber'         => $rawContact['address_number'],
             'addressStreet'         => $rawContact['address_street'],
+            'addressAdditional1'    => $rawContact['address_additional1'],
+            'addressAdditional2'    => $rawContact['address_additional2'],
             'addressPostcode'       => $rawContact['address_postcode'],
             'addressTown'           => $rawContact['address_town'],
             'addressCountry'        => $rawContact['address_country'],
@@ -155,6 +157,7 @@ class ContactController
             'enabled'               => $rawContact['enabled'],
             'creationDate'          => $rawContact['creation_date'],
             'modificationDate'      => $rawContact['modification_date'],
+            'customFields'          => !empty($rawContact['custom_fields']) ? json_decode($rawContact['custom_fields'], true) : null,
             'externalId'            => json_decode($rawContact['external_id'], true)
         ];
 
@@ -207,6 +210,8 @@ class ContactController
                     'function'              => $body['function'] ?? null,
                     'address_number'        => $body['addressNumber'] ?? null,
                     'address_street'        => $body['addressStreet'] ?? null,
+                    'address_additional1'   => $body['addressAdditional1'] ?? null,
+                    'address_additional2'   => $body['addressAdditional2'] ?? null,
                     'address_postcode'      => $body['addressPostcode'] ?? null,
                     'address_town'          => $body['addressTown'] ?? null,
                     'address_country'       => $body['addressCountry'] ?? null,
@@ -215,6 +220,7 @@ class ContactController
                     'communication_means'   => !empty($body['communicationMeans']) ? json_encode($body['communicationMeans']) : null,
                     'notes'                 => $body['notes'] ?? null,
                     'modification_date'     => 'CURRENT_TIMESTAMP',
+                    'custom_fields'         => !empty($body['customFields']) ? json_encode($body['customFields']) : null,
                     'external_id'           => $externalId
                 ],
             'where' => ['id = ?'],
@@ -318,7 +324,12 @@ class ContactController
         }
 
         $contactsFilling = ContactFillingModel::get();
-        $contactParameters = ContactParameterModel::get(['select' => ['*']]);
+        $contactParameters = ContactParameterModel::get([
+            'select' => ['*'],
+            'orderBy' => ['identifier=\'civility\' desc, identifier=\'firstname\' desc, identifier=\'lastname\' desc, identifier=\'company\' desc, identifier=\'department\' desc, 
+            identifier=\'function\' desc, identifier=\'address_number\' desc, identifier=\'address_street\' desc, identifier=\'address_additional1\' desc, identifier=\'address_additional2\' desc, 
+            identifier=\'address_postcode\' desc, identifier=\'address_town\' desc, identifier=\'address_country\' desc, identifier=\'email\' desc, identifier=\'phone\' desc']
+        ]);
         foreach ($contactParameters as $key => $parameter) {
             if (strpos($parameter['identifier'], 'contactCustomField_') !== false) {
                 $contactCustomId = str_replace("contactCustomField_", "", $parameter['identifier']);
@@ -353,7 +364,6 @@ class ContactController
             unset($contactParameter['label']);
             ContactParameterModel::update([
                 'set'   => [
-                    'id' => $contactParameter['id'],
                     'mandatory'   => empty($contactParameter['mandatory']) ? 'false' : 'true',
                     'filling'     => empty($contactParameter['filling']) ? 'false' : 'true',
                     'searchable'  => empty($contactParameter['searchable']) ? 'false' : 'true',
@@ -429,17 +439,14 @@ class ContactController
 
         if ($contactsFilling['enable'] && !empty($contactsParameters)) {
             $contactRaw = ContactModel::getById([
-                'select'    => ['civility', 'firstname', 'lastname', 'company', 'department', 'function', 'address_number', 'address_street', 'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country', 'email', 'phone'],
+                'select'    => ['civility', 'firstname', 'lastname', 'company', 'department', 'function', 'address_number', 'address_street', 'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country', 'email', 'phone', 'custom_fields'],
                 'id'        => $aArgs['contactId']
             ]);
-            $contactCustomRaw = ContactCustomFieldModel::getByContactId([
-                'select'    => ['value'],
-                'contactId' => $aArgs['contactId']
-            ]);
+            $customFields = json_decode($contactRaw['custom_fields'], true);
 
             $percent = 0;
             foreach ($contactsParameters as $ratingColumn) {
-                if (strpos($ratingColumn['identifier'], 'contactCustomField_') !== false && !empty($contactCustomRaw[str_replace("contactCustomField_", "", $ratingColumn['identifier'])])) {
+                if (strpos($ratingColumn['identifier'], 'contactCustomField_') !== false && !empty($customFields[str_replace("contactCustomField_", "", $ratingColumn['identifier'])])) {
                     $percent++;
                 } elseif (!empty($contactRaw[$ratingColumn['identifier']])) {
                     $percent++;
@@ -504,7 +511,9 @@ class ContactController
         $afnorAddress[4] = substr($args['address_number'].' '.$args['address_street'], 0, 38);
 
         // Ligne 5
-        $afnorAddress[5] = '';
+        if (!empty($args['address_additional2'])) {
+            $afnorAddress[5] = substr($args['address_additional2'], 0, 38);
+        }
 
         // Ligne 6
         $args['address_postcode'] = strtoupper($args['address_postcode']);
@@ -584,6 +593,25 @@ class ContactController
                     'id'        => $resourceContact['item_id']
                 ]);
 
+                $contact = [
+                    'mode'      => 'physical',
+                    'firstname' => $contactRaw['firstname'] ?? '',
+                    'lastname'  => $contactRaw['lastname'] ?? '',
+                    'email'     => $contactRaw['email'] ?? '',
+                    'phone'     => $contactRaw['phone'] ?? '',
+                    'company'   => $contactRaw['company'] ?? '',
+                    'function'  => $contactRaw['function'] ?? '',
+                    'number'    => $contactRaw['address_number'] ?? '',
+                    'street'    => $contactRaw['address_street'] ?? '',
+                    'complement'=> $contactRaw['address_additional1'] ?? '',
+                    'town'      => $contactRaw['address_town'] ?? '',
+                    'postalCode'=> $contactRaw['address_postcode'] ?? '',
+                    'country'   => $contactRaw['country'] ?? '',
+                    'otherData' => $contactRaw['notes'] ?? '',
+                    'occupancy' => $contactRaw['address_additional1'] ?? '',
+                    'department' => $contactRaw['department'] ?? ''
+                ];
+
                 $filling = ContactController::getFillingRate(['contactId' => $resourceContact['item_id']]);
 
                 $contact['filling'] = $filling['color'];
@@ -618,7 +646,6 @@ class ContactController
                     'postalCode'=> '',
                     'country'   => '',
                     'otherData' => '',
-                    'website'   => '',
                     'occupancy' => $nonPrimaryEntities,
                     'department' => $primaryEntity['entity_label']
                 ];
@@ -640,7 +667,6 @@ class ContactController
                     'postalCode'=> '',
                     'country'   => '',
                     'otherData' => '',
-                    'website'   => '',
                     'occupancy' => '',
                     'department' => ''
                 ];
@@ -680,9 +706,7 @@ class ContactController
                     $contactToDisplay = ContactController::getFormattedContactWithAddress(['contact' => $contactRaw]);
                 }
 
-                $contactToDisplay = $contactToDisplay['contact']['otherInfo'];
-
-                $contact = $contactToDisplay;
+                $contact = $contactToDisplay['contact']['otherInfo'];
             } elseif ($resourceContact['type'] == 'user') {
                 $contact = UserModel::getLabelledUserById(['id' => $resourceContact['item_id']]);
             } elseif ($resourceContact['type'] == 'entity') {
@@ -709,7 +733,7 @@ class ContactController
         } elseif (!empty($body['phone']) && !preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/", $body['phone'])) {
             return ['errors' => 'Body phone is not valid'];
         }
-
+        
         $lengthFields = [
             'civility',
             'firstname',
@@ -742,20 +766,35 @@ class ContactController
             }
         }
 
-        return true;
-    }
-
-    private static function createAdjacentData(array $args)
-    {
-        ValidatorModel::notEmpty($args, ['id', 'body']);
-        ValidatorModel::intVal($args, ['id']);
-        ValidatorModel::arrayType($args, ['body']);
-
-        $body = $args['body'];
-
-        if (!empty($body['customFields'])) {
-            foreach ($body['customFields'] as $key => $value) {
-                ContactCustomFieldModel::create(['contact_id' => $args['id'], 'custom_field_id' => $key, 'value' => json_encode($value)]);
+        $mappingFields = [
+            'civility'              => 'civility',
+            'firstname'             => 'firstname',
+            'lastname'              => 'lastname',
+            'company'               => 'company',
+            'department'            => 'department',
+            'function'              => 'function',
+            'address_number'        => 'addressNumber',
+            'address_street'        => 'addressStreet',
+            'address_additional1'   => 'addressAdditional1',
+            'address_additional2'   => 'addressAdditional2',
+            'address_postcode'      => 'addressPostcode',
+            'address_town'          => 'addressTown',
+            'address_country'       => 'addressCountry',
+            'email'                 => 'email',
+            'phone'                 => 'phone',
+            'notes'                 => 'notes'
+        ];
+        $mandatoryParameters = ContactParameterModel::get(['select' => ['identifier'], 'where' => ['mandatory = ?'], 'data' => [true]]);
+        foreach ($mandatoryParameters as $mandatoryParameter) {
+            if (strpos($mandatoryParameter['identifier'], 'contactCustomField_') !== false) {
+                $customId = explode('_', $mandatoryParameter['identifier'])[1];
+                if (empty($body['customFields'][$customId])) {
+                    return ['errors' => "Body {$body['customFields'][$customId]} is mandatory"];
+                }
+            } else {
+                if (empty($body[$mappingFields[$mandatoryParameter]])) {
+                    return ['errors' => "Body {$mappingFields[$mandatoryParameter]} is mandatory"];
+                }
             }
         }
 
@@ -857,5 +896,92 @@ class ContactController
         ];
 
         return ['contact' => $contact];
+    }
+
+    public static function getAutocompleteFormat(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
+
+        $displayableParameters = ContactParameterModel::get(['select' => ['identifier'], 'where' => ['displayable = ?'], 'data' => [true]]);
+
+        $displayableStdParameters = [];
+        $displayableCstParameters = [];
+        foreach ($displayableParameters as $displayableParameter) {
+            if (strpos($displayableParameter['identifier'], 'contactCustomField_') !== false) {
+                $displayableCstParameters[] = explode('_', $displayableParameter['identifier'])[1];
+            } else {
+                $displayableStdParameters[] = $displayableParameter['identifier'];
+            }
+        }
+
+        if (!empty($displayableCstParameters)) {
+            $displayableStdParameters[] = 'custom_fields';
+            $customFieldsLabels = ContactCustomFieldListModel::get(['select' => ['id', 'label'], 'where' => ['id in (?)'], 'data' => [$displayableCstParameters]]);
+        }
+
+        $rawContact = ContactModel::getById(['id' => $args['id'], 'select' => $displayableStdParameters]);
+        $contact = ['type' => 'contact', 'id' => $args['id'], 'lastname' => $rawContact['lastname'], 'company' => $rawContact['company']];
+
+        if (in_array('civility', $displayableStdParameters)) {
+            $contact['civility'] = !empty($rawContact['civility']) ? ContactModel::getCivilityLabel(['civilityId' => $rawContact['civility']]) : null;
+        }
+        if (in_array('firstname', $displayableStdParameters)) {
+            $contact['firstname'] = $rawContact['firstname'];
+        }
+        if (in_array('department', $displayableStdParameters)) {
+            $contact['department'] = $rawContact['department'];
+        }
+        if (in_array('function', $displayableStdParameters)) {
+            $contact['function'] = $rawContact['function'];
+        }
+        if (in_array('address_number', $displayableStdParameters)) {
+            $contact['addressNumber'] = $rawContact['address_number'];
+        }
+        if (in_array('address_street', $displayableStdParameters)) {
+            $contact['addressStreet'] = $rawContact['address_street'];
+        }
+        if (in_array('address_additional1', $displayableStdParameters)) {
+            $contact['addressAdditional1'] = $rawContact['address_additional1'];
+        }
+        if (in_array('address_additional2', $displayableStdParameters)) {
+            $contact['addressAdditional2'] = $rawContact['address_additional2'];
+        }
+        if (in_array('address_postcode', $displayableStdParameters)) {
+            $contact['addressPostcode'] = $rawContact['address_postcode'];
+        }
+        if (in_array('address_town', $displayableStdParameters)) {
+            $contact['addressTown'] = $rawContact['address_town'];
+        }
+        if (in_array('address_country', $displayableStdParameters)) {
+            $contact['addressCountry'] = $rawContact['address_country'];
+        }
+        if (in_array('email', $displayableStdParameters)) {
+            $contact['email'] = $rawContact['email'];
+        }
+        if (in_array('phone', $displayableStdParameters)) {
+            $contact['phone'] = $rawContact['phone'];
+        }
+        if (in_array('notes', $displayableStdParameters)) {
+            $contact['notes'] = $rawContact['notes'];
+        }
+
+        if (!empty($customFieldsLabels)) {
+            $contact['customFields'] = [];
+            $customFields = json_decode($rawContact['custom_fields'], true);
+            foreach ($customFieldsLabels as $customFieldsLabel) {
+                $contact['customFields'][$customFieldsLabel['id']] = [
+                    'label' => $customFieldsLabel['label'],
+                    'value' => $customFields[$customFieldsLabel['id']] ?? null
+                ];
+            }
+        }
+
+        $rate = ContactController::getFillingRate(['contactId' => $args['id']]);
+        if (!empty($rate)) {
+            $contact['fillingRate'] = $rate;
+        }
+
+        return $contact;
     }
 }

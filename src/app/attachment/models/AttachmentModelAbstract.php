@@ -59,45 +59,6 @@ abstract class AttachmentModelAbstract
         return $attachment[0];
     }
 
-    public static function getAttachmentToSend(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['ids']);
-        ValidatorModel::arrayType($aArgs, ['select', 'orderBy', 'ids']);
-
-        $aAttachments = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['max(relation) as relation', 'res_id_master', 'title', 'res_id', 'identifier', 'dest_address_id'] : $aArgs['select'],
-            'table'     => ['res_attachments'],
-            'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', 'in_send_attach = TRUE'],
-            'data'      => [$aArgs['ids'], ['OBS', 'DEL', 'TMP', 'FRZ'], 'print_folder'],
-            'groupBy'   => ['res_id_master', 'title', 'res_id', 'identifier', 'dest_address_id'],
-            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy']
-        ]);
-
-        return $aAttachments;
-    }
-
-    public static function getListByResIdMaster(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'login']);
-        ValidatorModel::intVal($aArgs, ['resId', 'limit']);
-        ValidatorModel::stringType($aArgs, ['login']);
-        ValidatorModel::arrayType($aArgs, ['excludeAttachmentTypes']);
-
-        $aAttachments = DatabaseModel::select([
-            'select'    => [
-                'res_id', 'identifier', 'title', 'creation_date', 'modification_date', 'validation_date as return_date', 'effective_date as real_return_date',
-                'relation', 'status', 'attachment_type', 'in_signature_book', 'in_send_attach'
-            ],
-            'table'     => ['res_attachments'],
-            'where'     => ['res_id_master = ?', 'res_attachments.status not in (?)', 'attachment_type not in (?)', '((res_attachments.status = ? AND typist = ?) OR res_attachments.status != ?)'],
-            'data'      => [$aArgs['resId'], ['OBS', 'DEL'], $aArgs['excludeAttachmentTypes'], 'TMP', $aArgs['login'], 'TMP'],
-            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
-            'limit'     => empty($aArgs['limit']) ? null : $aArgs['limit']
-        ]);
-
-        return $aAttachments;
-    }
-
     public static function create(array $args)
     {
         ValidatorModel::notEmpty($args, ['format', 'typist', 'creation_date', 'docserver_id', 'path', 'filename', 'fingerprint', 'filesize', 'status', 'relation']);

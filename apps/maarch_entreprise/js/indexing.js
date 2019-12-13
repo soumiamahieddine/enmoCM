@@ -74,11 +74,7 @@ function initSenderRecipientAutocomplete(inputId, mode, alternateVersion, cardId
         },
         callback: {
             onClickAfter: function (node, li, item) {
-                if (item.type == "entity") {
-                    $j("#" + inputId + "_id").val(item.serialId);
-                } else {
-                    $j("#" + inputId + "_id").val(item.id);
-                }
+                $j("#" + inputId + "_id").val(item.id);
                 $j("#" + inputId + "_type").val(item.type);
 
                 if (!alternateVersion) {

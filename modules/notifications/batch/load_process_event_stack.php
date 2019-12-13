@@ -199,6 +199,8 @@ $mailerParams = $xmlconfig->MAILER;
 
 // INCLUDES
 try {
+    Bt_myInclude('vendor/autoload.php');
+
     Bt_myInclude(
         'core' . DIRECTORY_SEPARATOR . 'class'
         . DIRECTORY_SEPARATOR . 'class_functions.php'
@@ -260,6 +262,8 @@ $events_controler         = new events_controler();
 $templates_controler      = new templates_controler();
 
 $db = new Database();
+\SrcCore\models\DatabasePDO::reset();
+new \SrcCore\models\DatabasePDO(['customId' => $_SESSION['custom_override_id']]);
 
 $databasetype = (string)$xmlconfig->CONFIG_BASE->databasetype;
 

@@ -20,6 +20,7 @@ use Action\models\ActionModel;
 use Basket\models\GroupBasketModel;
 use Basket\models\GroupBasketRedirectModel;
 use Group\controllers\PrivilegeController;
+use Resource\controllers\ResourceListController;
 use SrcCore\models\ValidatorModel;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
@@ -28,6 +29,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use User\models\UserBasketPreferenceModel;
+use User\models\UserModel;
 
 class BasketController
 {
@@ -517,11 +519,13 @@ class BasketController
 
     public function getlistEventData(Request $request, Response $response, array $args)
     {
-        $basket = BasketModel::getById(['id' => $args['id'], 'select' => ['basket_id']]);
-        $group = GroupModel::getById(['id' => $args['groupId'], 'select' => ['group_id']]);
-        if (empty($group) || empty($basket)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Group or basket does not exist']);
+        $control = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($control['errors'])) {
+            return $response->withStatus($control['code'])->withJson(['errors' => $control['errors']]);
         }
+
+        $basket = BasketModel::getById(['id' => $args['basketId'], 'select' => ['basket_id']]);
+        $group = GroupModel::getById(['id' => $args['groupId'], 'select' => ['group_id']]);
 
         $groupBasket = GroupBasketModel::get(['select' => ['list_event_data'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
 

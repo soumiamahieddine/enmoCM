@@ -14,7 +14,7 @@
 namespace Contact\controllers;
 
 use Contact\models\ContactCustomFieldListModel;
-use Contact\models\ContactCustomFieldModel;
+use Contact\models\ContactModel;
 use Contact\models\ContactParameterModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
@@ -139,7 +139,7 @@ class ContactCustomFieldController
 
         $field = ContactCustomFieldListModel::getById(['select' => ['label'], 'id' => $args['id']]);
 
-        ContactCustomFieldModel::delete(['where' => ['custom_field_id = ?'], 'data' => [$args['id']]]);
+        ContactModel::update(['postSet' => ['custom_fields' => "custom_fields - '{$args['id']}'"], 'where' => ['1 = ?'], 'data' => [1]]);
         ContactParameterModel::delete(['where' => ['identifier = ?'], 'data' => ['contactCustomField_' . $args['id']]]);
 
         ContactCustomFieldListModel::delete([

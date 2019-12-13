@@ -15,8 +15,10 @@
 namespace SrcCore\controllers;
 
 use Contact\controllers\ContactController;
+use Contact\models\ContactCustomFieldListModel;
 use Contact\models\ContactGroupModel;
 use Contact\models\ContactModel;
+use Contact\models\ContactParameterModel;
 use Entity\models\EntityModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -155,28 +157,42 @@ class AutoCompleteController
         //Contacts
         $autocompleteContacts = [];
         if (empty($queryParams['noContacts'])) {
-            $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'];
+            $searchableParameters = ContactParameterModel::get(['select' => ['identifier'], 'where' => ['searchable = ?'], 'data' => [true]]);
+
+            $fields = [];
+            $searchableCstParameters = [];
+            foreach ($searchableParameters as $searchableParameter) {
+                if (strpos($searchableParameter['identifier'], 'contactCustomField_') !== false) {
+                    $searchableCstParameters[] = explode('_', $searchableParameter['identifier'])[1];
+                } else {
+                    $fields[] = $searchableParameter['identifier'];
+                }
+            }
+
+            foreach ($searchableCstParameters as $cstParameter) {
+                $fields[] = "custom_fields->>'{$cstParameter}'";
+            }
+            $fieldsNumber = count($fields);
             $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+
             $requestData = AutoCompleteController::getDataForRequest([
                 'search'        => $queryParams['search'],
                 'fields'        => $fields,
                 'where'         => ['enabled = ?'],
                 'data'          => [true],
-                'fieldsNumber'  => 7,
+                'fieldsNumber'  => $fieldsNumber,
             ]);
 
             $contacts = ContactModel::get([
-                'select'    => ['*'],
+                'select'    => ['id'],
                 'where'     => $requestData['where'],
                 'data'      => $requestData['data'],
                 'orderBy'   => ['company', 'lastname'],
                 'limit'     => self::TINY_LIMIT
             ]);
 
-            $color = isset($queryParams['color']) && filter_var($queryParams['color'], FILTER_VALIDATE_BOOLEAN);
-
             foreach ($contacts as $contact) {
-                $autocompleteContacts[] = ContactController::getFormattedContactWithAddress(['contact' => $contact, 'color' => $color])['contact'];
+                $autocompleteContacts[] = ContactController::getAutocompleteFormat(['id' => $contact['id']]);
             }
         }
 
@@ -205,8 +221,8 @@ class AutoCompleteController
                 $autocompleteUsers[] = [
                     'type'          => 'user',
                     'id'            => $user['id'],
-                    'idToDisplay'   => "{$user['firstname']} {$user['lastname']}",
-                    'otherInfo'     => "{$user['firstname']} {$user['lastname']}"
+                    'firstname'     => $user['firstname'],
+                    'lastname'      => $user['lastname']
                 ];
             }
         }
@@ -236,8 +252,7 @@ class AutoCompleteController
                 $autocompleteEntities[] = [
                     'type'          => 'entity',
                     'id'            => $value['id'],
-                    'idToDisplay'   => $value['entity_label'],
-                    'otherInfo'     => $value['short_label']
+                    'lastname'      => $value['entity_label']
                 ];
             }
         }
@@ -267,8 +282,7 @@ class AutoCompleteController
                 $autocompleteContactsGroups[] = [
                     'type'          => 'contactGroup',
                     'id'            => $value['id'],
-                    'idToDisplay'   => $value['label'],
-                    'otherInfo'     => $value['label']
+                    'lastname'      => $value['label']
                 ];
             }
         }
@@ -813,7 +827,7 @@ class AutoCompleteController
             $fields[$key] .= "ilike translate(?, 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ', 'aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')";
         }
         $fields = implode(' OR ', $fields);
-        $fields = "($fields)";
+        $fields = "({$fields})";
 
         return $fields;
     }

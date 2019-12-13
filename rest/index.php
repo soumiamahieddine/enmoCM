@@ -25,7 +25,6 @@ if (file_exists("custom/{$customId}/src/core/lang/lang-{$language}.php")) {
 }
 require_once("src/core/lang/lang-{$language}.php");
 
-
 $app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRouteBeforeAppMiddleware' => true, 'addContentLengthHeader' => true ]]);
 
 //Authentication
@@ -34,7 +33,6 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
     $route = $request->getAttribute('route');
     $currentMethod = empty($route) ? '' : $route->getMethods()[0];
     $currentRoute = empty($route) ? '' : $route->getPattern();
-
     if (!in_array($currentMethod.$currentRoute, $routesWithoutAuthentication)) {
         $login = \SrcCore\controllers\AuthenticationController::authentication();
         if (!empty($login)) {
@@ -101,7 +99,6 @@ $app->post('/baskets/{id}/groups', \Basket\controllers\BasketController::class .
 $app->put('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController::class . ':updateGroup');
 $app->put('/baskets/{id}/groups/{groupId}/actions', \Basket\controllers\BasketController::class . ':updateGroupActions');
 $app->delete('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketController::class . ':deleteGroup');
-$app->get('/baskets/{id}/groups/{groupId}/listEventData', \Basket\controllers\BasketController::class . ':getlistEventData');
 $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getSorted');
 $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
@@ -263,6 +260,8 @@ $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':gen
 $app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
 $app->post('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
 $app->get('/jnlp/lock/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':isLockFileExisting');
+$app->get('/onlyOffice/mergedFile', \ContentManagement\controllers\JnlpController::class . ':getMergedFileForOnlyOffice');
+$app->get('/onlyOffice/encodedFile', \ContentManagement\controllers\JnlpController::class . ':getEncodedFileFromOnlyOffice');
 
 //Links
 $app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':getByResId');
@@ -349,6 +348,7 @@ $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/fil
 $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/exports', \Resource\controllers\ExportController::class . ':updateExport');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/summarySheets', \Resource\controllers\SummarySheetController::class . ':createList');
 $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}', \Resource\controllers\ResourceListController::class . ':setAction');
+$app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/listEventData', \Basket\controllers\BasketController::class . ':getlistEventData');
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplates');
 $app->get('/resourcesList/summarySheets', \Resource\controllers\SummarySheetController::class . ':createListWithAll');
 $app->post('/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
@@ -404,6 +404,7 @@ $app->get('/administration/templates/new', \Template\controllers\TemplateControl
 //Users
 $app->get('/users', \User\controllers\UserController::class . ':get');
 $app->post('/users', \User\controllers\UserController::class . ':create');
+$app->get('/users/{id}', \User\controllers\UserController::class . ':getById');
 $app->put('/users/{id}', \User\controllers\UserController::class . ':update');
 $app->delete('/users/{id}', \User\controllers\UserController::class . ':delete');
 $app->put('/users/{id}/suspend', \User\controllers\UserController::class . ':suspend');

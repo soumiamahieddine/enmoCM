@@ -5,7 +5,7 @@ import { NotificationService } from '../notification.service';
 import { HeaderService } from '../../service/header.service';
 import { AppService } from '../../service/app.service';
 import { tap, catchError, finalize, filter, map, exhaustMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog, MatSidenav } from '@angular/material';
 import { AlertComponent } from '../../plugins/modal/alert.component';
@@ -13,6 +13,7 @@ import { SortPipe } from '../../plugins/sorting.pipe';
 import { templateVisitAll } from '@angular/compiler';
 import { PluginSelectSearchComponent } from '../../plugins/select-search/select-search.component';
 import { FormControl } from '@angular/forms';
+import { EcplOnlyofficeViewerComponent } from '../../plugins/onlyoffice-api-js/onlyoffice-viewer.component';
 
 
 @Component({
@@ -53,6 +54,8 @@ export class DocumentViewerComponent implements OnInit {
 
     intervalLockFile: any;
     editInProgress: boolean = false;
+    edition: string = '';
+
 
     listTemplates: any[] = [];
 
@@ -512,21 +515,26 @@ export class DocumentViewerComponent implements OnInit {
             }),
             filter((data: string) => data === 'ok'),
             tap(() => {
-                this.triggerEvent.emit();
-                const template = this.listTemplates.filter(template => template.id === templateId)[0];
-                this.editInProgress = true;
-                const jnlp: any = {
-                    objectType: 'resourceCreation',
-                    objectId: template.id,
-                    cookie: document.cookie,
-                    data: this.resourceDatas,
-                };
-                this.http.post('../../rest/jnlp', jnlp).pipe(
-                    tap((data: any) => {
-                        window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
-                        this.checkLockFile(data.jnlpUniqueId, template.extension);
-                    })
-                ).subscribe();
+                if (this.edition === 'onlyoffice') {
+                    this.editInProgress = true;                    
+                } else {
+                    this.triggerEvent.emit();
+                    const template = this.listTemplates.filter(template => template.id === templateId)[0];
+                    this.editInProgress = true;
+                    const jnlp: any = {
+                        objectType: 'resourceCreation',
+                        objectId: template.id,
+                        cookie: document.cookie,
+                        data: this.resourceDatas,
+                    };
+                    this.http.post('../../rest/jnlp', jnlp).pipe(
+                        tap((data: any) => {
+                            window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
+                            this.checkLockFile(data.jnlpUniqueId, template.extension);
+                        })
+                    ).subscribe();
+                }
+                
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
@@ -537,6 +545,9 @@ export class DocumentViewerComponent implements OnInit {
 
     editAttachment() {
         this.editInProgress = true;
+
+        this.triggerEvent.emit('setData');
+
         const jnlp: any = {
             objectType: 'attachmentModification',
             objectId: this.resId,

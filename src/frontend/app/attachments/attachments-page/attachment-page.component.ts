@@ -97,7 +97,7 @@ export class AttachmentPageComponent implements OnInit {
                     type: new FormControl({ value: data.type, disabled: !this.editMode }, [Validators.required]),
                     validationDate: new FormControl({ value: data.validationDate !== null ? new Date(data.validationDate) : null, disabled: !this.editMode }),
                     signedResponse: new FormControl({ value: data.signedResponse, disabled: false }),
-                    encodedFile: new FormControl({ value: null, disabled: !this.editMode })
+                    encodedFile: new FormControl({ value: '_CURRENT_FILE', disabled: !this.editMode }, [Validators.required])
                 };
 
                 this.versions = data.versions;
@@ -175,6 +175,9 @@ export class AttachmentPageComponent implements OnInit {
                     attachmentValues[element] = this.attachment[element].value;
                 }
                 if (element === 'encodedFile') {
+                    if (this.attachment[element].value === '_CURRENT_FILE') {
+                        attachmentValues['encodedFile'] = null;
+                    }
                     attachmentValues['format'] = this.appAttachmentViewer.getFile().format;
                 }
             }
@@ -197,10 +200,14 @@ export class AttachmentPageComponent implements OnInit {
                 datas['attachment_' + element] = this.attachment[element].value;
             }
         });
-        datas['resId'] = this.attachment['resIdMaster'].value;
-        this.attachment.encodedFile.setValue(this.appAttachmentViewer.getFile().content);
-        this.appAttachmentViewer.setDatas(datas);
-        if (ev !== 'cleanFile') {
+        if (ev === 'setData') {
+            this.appAttachmentViewer.setDatas(datas);
+        } else if (ev === 'cleanFile') {
+            this.attachment['encodedFile'].setValue(null);
+        } else {
+            datas['resId'] = this.attachment['resIdMaster'].value;
+            this.attachment.encodedFile.setValue(this.appAttachmentViewer.getFile().content);
+            this.appAttachmentViewer.setDatas(datas);
             this.setNewVersion();
         }
     }

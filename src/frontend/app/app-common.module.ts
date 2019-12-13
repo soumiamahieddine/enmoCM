@@ -21,6 +21,7 @@ import { TimeAgoPipe }                          from '../plugins/timeAgo.pipe';
 import { TimeLimitPipe }                        from '../plugins/timeLimit.pipe';
 import { FilterListPipe }                       from '../plugins/filterList.pipe';
 import { FullDatePipe }                       from '../plugins/fullDate.pipe';
+import { EcplOnlyofficeViewerComponent }                       from '../plugins/onlyoffice-api-js/onlyoffice-viewer.component';
 
 /*FRONT IMPORTS*/
 import { AppMaterialModule }                    from './app-material.module';
@@ -58,6 +59,7 @@ import { PluginSelectSearchComponent }                        from '../plugins/s
 import { FolderInputComponent }                        from '../app/folder/indexing/folder-input.component';
 import { TagInputComponent }                        from '../app/tag/indexing/tag-input.component';
 import { DragDropDirective }                        from '../app/viewer/upload-file-dnd.directive';
+import { ContactAutocompleteComponent } from './contact/autocomplete/contact-autocomplete.component';
 
 
 import { DiffusionsListComponent }             from './diffusions/diffusions-list.component';
@@ -116,7 +118,9 @@ export class MyHammerConfig extends HammerGestureConfig {
         TagInputComponent,
         DiffusionsListComponent,
         DocumentViewerComponent,
-        DragDropDirective
+        DragDropDirective,
+        EcplOnlyofficeViewerComponent,
+        ContactAutocompleteComponent
     ],
     exports: [
         CommonModule,
@@ -155,7 +159,9 @@ export class MyHammerConfig extends HammerGestureConfig {
         TagInputComponent,
         DiffusionsListComponent,
         DocumentViewerComponent,
-        DragDropDirective
+        DragDropDirective,
+        EcplOnlyofficeViewerComponent,
+        ContactAutocompleteComponent
     ],
     providers: [
         HeaderService,

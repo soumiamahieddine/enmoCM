@@ -751,6 +751,8 @@ export const LANG_NL = {
     "putInSendAttach"                       : "Put in send attachement Maileva", //_TO_TRANSLATE
     "putInSignatureBook"                    : "Put in signature book", //_TO_TRANSLATE
     "quickSearchInfo"                       : "Target search ", //_TO_TRANSLATE
+    "inSignatureBook"                       : "In signature Book", //_TO_TRANSLATE
+    "inShipping"                            : "In shipping", //_TO_TRANSLATE
     "quickSearchTarget"                     : "subject (mail / attachment), chrono number (courrier / attachment), reference mail, notes content, barcode, attachment contact (society / lastanme / firstname)", //_TO_TRANSLATE
     "quota"                                 : "Quota",
     "quotaExceeded"                         : "Quota overschreden",
@@ -1345,5 +1347,12 @@ export const LANG_NL = {
     "autocompletionSearchable": "Recherchable dans l'autocomplétion", //_TO_TRANSLATE
     "autocompletionDisplayable": "Affichable dans l'autocompletion", //_TO_TRANSLATE
     "contactsParameters": "Paramétrage des contacts", //_TO_TRANSLATE
+    "siretGenerated": "SIRET number generated",//_TO_TRANSLATE
+    "siretGeneratedAndSynchronizationDone": "SIRET number generated and annuary synchronization done",//_TO_TRANSLATE
+    "siretGeneratedButAnnuaryUnreachable": "SIRET number generated but annuary is unreachable",//_TO_TRANSLATE
+    "entityDeletedButAnnuaryUnreachable": "Entity deleted but annuary is unreachable",//_TO_TRANSLATE
     "langISO": "nl-FR",
+    "noSelectedContact": "No associated contact", //_TO_TRANSLATE
+    "searchContact": "Search a contact", //_TO_TRANSLATE
+    "acknowledgementReceiptGenerationImpossible": "Acknowledgement receipt generation impossible : no sender(s) associated with resource(s)", //_TO_TRANSLATE
 };

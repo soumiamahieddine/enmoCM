@@ -74,7 +74,7 @@ export class IndexingFormComponent implements OnInit {
 
     availableFields: any[] = [
         {
-            identifier: 'getRecipients',
+            identifier: 'recipients',
             label: this.lang.getRecipients,
             type: 'autocomplete',
             default_value: null,
@@ -315,7 +315,7 @@ export class IndexingFormComponent implements OnInit {
 
         this.http.put(`../../rest/resources/${this.resId}?userId=${userId}&groupId=${groupId}&basketId=${basketId}`, formatdatas ).pipe(
             tap(() => {
-                this.currentResourceValues = this.getDatas(false);
+                this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false))); ;
                 this.notify.success(this.lang.dataUpdated);
             }),
             catchError((err: any) => {

@@ -1,4 +1,4 @@
-<ng-container *ngIf="editInProgress; else elseTemplate">
+<ng-container *ngIf="editInProgress && edition !== 'onlyoffice'">
     <div class="editInProgress">
         <i class="fas fa-file-word bounce"></i>
         <div>
@@ -9,7 +9,7 @@
         </div>
     </div>
 </ng-container>
-<ng-template #elseTemplate>
+<ng-container *ngIf="!editInProgress">
     <ng-container *ngIf="noFile; else elseHaveFile">
         <div class="noFile">
             <i class="far fa-times-circle"></i>
@@ -83,4 +83,12 @@
 
         </div>
     </ng-template>
-</ng-template>
+</ng-container>
+<ng-container *ngIf="editInProgress && edition === 'onlyoffice'">
+    <onlyoffice-viewer #onlyoffice style="height:100%;width:100%;"
+    [onlyofficeKey]="100" 
+    onlyofficeType="docx" 
+    onlyofficeName="Edition"
+    [editMode]="true"
+    [resId]="100"></onlyoffice-viewer>
+</ng-container>

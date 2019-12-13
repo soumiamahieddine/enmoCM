@@ -169,7 +169,7 @@ export class ProcessComponent implements OnInit {
 
             this.loadResource();
 
-            this.http.get(`../../rest/baskets/${this.currentBasketId}/groups/${this.currentGroupId}/listEventData`).pipe(
+            this.http.get(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/listEventData`).pipe(
                 tap((data: any) => {
                     if (data.listEventData !== null) {
                         this.currentTool = data.listEventData.defaultTab;
@@ -390,6 +390,9 @@ export class ProcessComponent implements OnInit {
 
     confirmModification() {
         this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+        setTimeout(() => {
+            this.loadResource();
+        }, 400);
     }
 
     refreshBadge(nbRres: any, id: string) {

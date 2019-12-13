@@ -792,18 +792,18 @@ if ($mode == 'normal') {
                 // Contacts
                 if ($tab[$i][$j][$value] == 'real_dest') {
                     $resId = $tab[$i][$j]['value'];
-                    $contactList = \Contact\controllers\ContactController::getFormattedContacts(['resId' => $resId, 'mode' => 'recipient', 'onlyContact' => true]);
+                    $recipientList = \Contact\controllers\ContactController::getFormattedContacts(['resId' => $resId, 'mode' => 'recipient', 'onlyContact' => true]);
 
-                    $formattedRecipients = implode("<br>", $contactList);
-
-                    $contactList = \Contact\controllers\ContactController::getFormattedContacts(['resId' => $resId, 'mode' => 'sender', 'onlyContact' => true]);
-
-                    $formattedSenders = implode("<br>", $contactList);
-
+                    $senderList = \Contact\controllers\ContactController::getFormattedContacts(['resId' => $resId, 'mode' => 'sender', 'onlyContact' => true]);
 
                     $tab[$i][$j]['value'] = '';
 
-                    if (!empty($formattedSenders)) {
+                    if (!empty($senderList)) {
+                        if (count($senderList) > 2) {
+                            $formattedSenders = count($senderList) . ' ' . _SENDERS;
+                        } else {
+                            $formattedSenders = implode("<br>", $senderList);
+                        }
                         $formattedSenders = '<b>'._TO_CONTACT_C.'</b>'.$formattedSenders;
                         $tab[$i][$j]['value'] .= $formattedSenders;
 
@@ -811,7 +811,12 @@ if ($mode == 'normal') {
                             $tab[$i][$j]['value'] .= "<br>";
                         }
                     }
-                    if (!empty($formattedRecipients)) {
+                    if (!empty($recipientList)) {
+                        if (count($recipientList) > 2) {
+                            $formattedRecipients = count($recipientList) . ' ' . _RECIPIENTS;
+                        } else {
+                            $formattedRecipients = implode("<br>", $recipientList);
+                        }
                         $formattedRecipients = '<b>'._FOR_CONTACT_C.'</b>'.$formattedRecipients;
                         $tab[$i][$j]['value'] .= $formattedRecipients;
                     }

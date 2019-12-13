@@ -150,7 +150,7 @@ if ($customID <> '') {
     $_SESSION['custom_override_id'] = $customID;
     $customIDPath = $customID . '_';
 }
-
+chdir($maarchDirectory);
 $maarchApps = (string) $config->MaarchApps;
 
 $GLOBALS['TmpDirectory'] = (string)$config->TmpDirectory;
@@ -177,6 +177,8 @@ $mailerParams = $xmlconfig->MAILER;
 $path_to_mailer = (string)$mailerParams->path_to_mailer;
 
 try {
+    Bt_myInclude($GLOBALS['maarchDirectory'] . 'vendor/autoload.php');
+
     Bt_myInclude(
         $GLOBALS['maarchDirectory'] . 'core' . DIRECTORY_SEPARATOR . 'class'
         . DIRECTORY_SEPARATOR . 'class_functions.php'
@@ -211,6 +213,9 @@ $coreTools->load_lang($lang, $GLOBALS['maarchDirectory'], $maarchApps);
 $GLOBALS['func'] = new functions();
 
 $GLOBALS['db'] = new Database($GLOBALS['configFile']);
+
+\SrcCore\models\DatabasePDO::reset();
+new \SrcCore\models\DatabasePDO(['customId' => $_SESSION['custom_override_id']]);
 
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR
                          . $customIDPath . $GLOBALS['batchName'] . '_error.lck';
