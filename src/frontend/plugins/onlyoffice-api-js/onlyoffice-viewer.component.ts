@@ -17,7 +17,7 @@ declare var DocsAPI: any;
 
 @Component({
     selector: 'onlyoffice-viewer',
-    template: `<button (click)="quit()">close</button><div id="placeholder"></div>`,
+    template: `<button >close</button><div id="placeholder"></div>`,
 })
 export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
     @Input() id: string;
