@@ -5,7 +5,7 @@ import { NotificationService } from '../notification.service';
 import { HeaderService } from '../../service/header.service';
 import { AppService } from '../../service/app.service';
 import { tap, catchError, finalize, filter, map, exhaustMap } from 'rxjs/operators';
-import { of, Subscription } from 'rxjs';
+import { of, Subscription, Subject } from 'rxjs';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog, MatSidenav } from '@angular/material';
 import { AlertComponent } from '../../plugins/modal/alert.component';
@@ -54,7 +54,6 @@ export class DocumentViewerComponent implements OnInit {
 
     intervalLockFile: any;
     editInProgress: boolean = false;
-    edition: string = '';
 
 
     listTemplates: any[] = [];
@@ -70,6 +69,9 @@ export class DocumentViewerComponent implements OnInit {
     @Input('attachType') attachType: string = null;
 
     @Output('triggerEvent') triggerEvent = new EventEmitter<string>();
+    
+    private eventAction = new Subject<any>();
+
 
     resourceDatas: any;
 
@@ -80,8 +82,17 @@ export class DocumentViewerComponent implements OnInit {
     };
 
     dialogRef: MatDialogRef<any>;
+    editor: any = {
+        mode : '',
+        async: true,
+        options: {  
+            docUrl : null,
+            dataToMerge: null
+        }
+    }
 
     @ViewChild('templateList', { static: true }) templateList: PluginSelectSearchComponent;
+    @ViewChild('onlyofficeViewer', { static: false }) onlyofficeViewer: EcplOnlyofficeViewerComponent;
 
     constructor(
         public http: HttpClient,
@@ -385,7 +396,16 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     getFile() {
-        return this.file;
+        if (this.editor.mode === 'onlyoffice' && this.onlyofficeViewer !== undefined) {
+            return this.onlyofficeViewer.getFile();
+        } else {
+            const objFile = JSON.parse(JSON.stringify(this.file));
+            objFile.content = objFile.contentMode === 'route' ? null : objFile.content;
+            
+            const myObservable = of(objFile);
+
+            return myObservable;
+        }
     }
 
     dndUploadFile(event: any) {
@@ -515,19 +535,32 @@ export class DocumentViewerComponent implements OnInit {
             }),
             filter((data: string) => data === 'ok'),
             tap(() => {
-                if (this.edition === 'onlyoffice') {
-                    this.editInProgress = true;                    
-                } else {
-                    this.triggerEvent.emit();
-                    const template = this.listTemplates.filter(template => template.id === templateId)[0];
+                
+                this.triggerEvent.emit();
+                const template = this.listTemplates.filter(template => template.id === templateId)[0];
+
+                if (this.editor.mode === 'onlyoffice') {
+                    
+                    this.editor.async = false;
+                    this.editor.options = {
+                        objectType : 'attachmentCreation',
+                        objectId: template.id,
+                        docUrl : `rest/onlyOffice/mergedFile`,
+                        dataToMerge : this.resourceDatas
+                    };
                     this.editInProgress = true;
-                    const jnlp: any = {
-                        objectType: 'resourceCreation',
+
+                } else {
+                    this.editor.async = true;
+                    this.editor.options = {
+                        objectType : 'attachmentCreation',
                         objectId: template.id,
                         cookie: document.cookie,
                         data: this.resourceDatas,
                     };
-                    this.http.post('../../rest/jnlp', jnlp).pipe(
+                    this.editInProgress = true;
+
+                    this.http.post('../../rest/jnlp', this.editor.options).pipe(
                         tap((data: any) => {
                             window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
                             this.checkLockFile(data.jnlpUniqueId, template.extension);
@@ -544,23 +577,36 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     editAttachment() {
-        this.editInProgress = true;
 
         this.triggerEvent.emit('setData');
 
-        const jnlp: any = {
-            objectType: 'attachmentModification',
-            objectId: this.resId,
-            cookie: document.cookie,
-            data: this.resourceDatas,
-        };
+        if (this.editor.mode === 'onlyoffice') {
+            this.editor.async = false;
+            this.editor.options = {
+                objectType : 'attachmentModification',
+                objectId: this.resId,
+                docUrl : `rest/onlyOffice/mergedFile`,
+                dataToMerge : this.resourceDatas
+            };
+            this.editInProgress = true;
 
-        this.http.post('../../rest/jnlp', jnlp).pipe(
-            tap((data: any) => {
-                window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
-                this.checkLockFile(data.jnlpUniqueId, 'odt');
-            })
-        ).subscribe();
+        } else {
+            this.editor.async = true;
+            this.editor.options = {
+                objectType: 'attachmentModification',
+                objectId: this.resId,
+                cookie: document.cookie,
+                data: this.resourceDatas,
+            };
+            this.editInProgress = true;
+
+            this.http.post('../../rest/jnlp', this.editor.options).pipe(
+                tap((data: any) => {
+                    window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
+                    this.checkLockFile(data.jnlpUniqueId, 'odt');
+                })
+            ).subscribe();
+        }
     }
 
     setDatas(resourceDatas: any) {
@@ -586,7 +632,15 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     isEditingTemplate() {
-        return this.editInProgress;
+        if (this.editor.mode === 'onlyoffice') {
+            if (this.onlyofficeViewer !== undefined) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return this.editInProgress;
+        }  
     }
 
     loadTemplatesByResId(resId: number, attachType: string) {
@@ -690,5 +744,10 @@ export class DocumentViewerComponent implements OnInit {
 
             ).subscribe();
         }
+    }
+
+    closeEditor() {
+        this.templateListForm.reset();
+        this.editInProgress = false;
     }
 }

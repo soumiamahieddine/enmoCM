@@ -257,6 +257,7 @@ $app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelCon
 
 //ContentManagement
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
+$app->post('/test', \ContentManagement\controllers\JnlpController::class . ':test');
 $app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
 $app->post('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
 $app->get('/jnlp/lock/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':isLockFileExisting');

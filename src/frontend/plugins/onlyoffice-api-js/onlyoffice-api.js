@@ -688,7 +688,7 @@ var onlyofficetesturl = '';
     };
 
     function getBasePath() {
-        return `http://10.2.95.76:8765/web-apps/apps/`;
+        return `http://192.168.1.20:8765/web-apps/apps/`;
         var scripts = document.getElementsByTagName('script'),
             match;
 
