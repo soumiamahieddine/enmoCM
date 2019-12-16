@@ -704,17 +704,17 @@ class UserControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $aArgs = [
-            'firstname' => 'Wonder',
-            'lastname'  => 'User',
-            'mail'      => 'dev@maarch.org',
-            'initials'  => 'SU'
+            'firstname'     => 'Wonder',
+            'lastname'      => 'User',
+            'mail'          => 'dev@maarch.org',
+            'initials'      => 'SU',
+            'preferences'   => ['documentEdition' => 'java']
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response     = $userController->updateProfile($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
+        $this->assertSame(204, $response->getStatusCode());
 
-        $this->assertSame('success', $responseBody->success);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -728,21 +728,22 @@ class UserControllerTest extends TestCase
         $this->assertSame('dev@maarch.org', $responseBody->mail);
         $this->assertSame('SU', $responseBody->initials);
 
+
         //  UPDATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $aArgs = [
-            'firstname' => 'Super',
-            'lastname'  => 'Admin',
-            'mail'      => 'dev@maarch.org',
-            'initials'  => 'SU'
+            'firstname'     => 'Super',
+            'lastname'      => 'ADMIN',
+            'mail'          => 'dev@maarch.org',
+            'initials'      => 'SU',
+            'preferences'   => ['documentEdition' => 'java']
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response     = $userController->updateProfile($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
+        $this->assertSame(204, $response->getStatusCode());
 
-        $this->assertSame('success', $responseBody->success);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -755,22 +756,6 @@ class UserControllerTest extends TestCase
         $this->assertSame('Admin', $responseBody->lastname);
         $this->assertSame('dev@maarch.org', $responseBody->mail);
         $this->assertSame('SU', $responseBody->initials);
-
-        //  CORRECT UPDATE
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
-        $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $aArgs = [
-            'firstname' => 'Super',
-            'lastname'  => 'ADMIN',
-            'mail'      => 'dev@maarch.org',
-            'initials'  => 'SU'
-        ];
-        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
-
-        $response     = $userController->updateProfile($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
-
-        $this->assertSame('success', $responseBody->success);
     }
 
     public function testSetRedirectedBasket()

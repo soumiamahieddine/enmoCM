@@ -215,6 +215,7 @@ CREATE TABLE users
   phone character varying(32) DEFAULT NULL::character varying,
   mail character varying(255) DEFAULT NULL::character varying,
   initials character varying(32) DEFAULT NULL::character varying,
+  preferences jsonb NOT NULL DEFAULT '{"documentEdition" : "java"}',
   status character varying(10) NOT NULL DEFAULT 'OK'::character varying,
   password_modification_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
   loginmode character varying(50) DEFAULT NULL::character varying,

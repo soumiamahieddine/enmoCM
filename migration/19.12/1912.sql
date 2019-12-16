@@ -431,6 +431,10 @@ CREATE TABLE contacts_parameters
 )
 WITH (OIDS=FALSE);
 
+/* USERS */
+ALTER TABLE users DROP COLUMN IF EXISTS preferences;
+ALTER TABLE users ADD COLUMN preferences jsonb NOT NULL DEFAULT '{"documentEdition" : "java"}';
+
 ALTER TABLE acknowledgement_receipts DROP COLUMN IF EXISTS contact_id;
 ALTER TABLE acknowledgement_receipts ADD COLUMN contact_id integer;
 ALTER TABLE contacts_groups_lists DROP COLUMN IF EXISTS contact_id;

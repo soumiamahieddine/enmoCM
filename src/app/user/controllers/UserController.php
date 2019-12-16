@@ -53,6 +53,7 @@ use User\models\UserSignatureModel;
 class UserController
 {
     const ALTERNATIVES_CONNECTIONS_METHODS = ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'];
+    const DOCUMENT_EDITION_METHODS = ['java', 'onlyOffice'];
 
     public function get(Request $request, Response $response)
     {
@@ -491,8 +492,9 @@ class UserController
 
     public function getProfile(Request $request, Response $response)
     {
-        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'external_id']]);
+        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'preferences', 'external_id']]);
         $user['external_id']        = json_decode($user['external_id'], true);
+        $user['preferences']        = json_decode($user['preferences'], true);
         $user['signatures']         = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
         $user['emailSignatures']    = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
         $user['groups']             = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
@@ -522,31 +524,37 @@ class UserController
 
     public function updateProfile(Request $request, Response $response)
     {
-        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $body = $request->getParsedBody();
 
-        $data = $request->getParams();
-
-        $check = Validator::stringType()->notEmpty()->validate($data['firstname']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
-        $check = $check && (empty($data['mail']) || filter_var($data['mail'], FILTER_VALIDATE_EMAIL));
-        $check = $check && (empty($data['phone']) || preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d/", $data['phone']));
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        if (!Validator::stringType()->notEmpty()->validate($body['firstname'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body firstname is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['lastname'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body lastname is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['mail']) || !filter_var($body['mail'], FILTER_VALIDATE_EMAIL)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body mail is empty or not a valid email']);
+        } elseif (!empty($body['phone']) && !preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d/", $body['phone'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body phone is not a valid phone number']);
+        } elseif (!Validator::arrayType()->notEmpty()->validate($body['preferences'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body preferences is empty or not an array']);
+        }
+        if (!in_array($body['preferences']['documentEdition'], UserController::DOCUMENT_EDITION_METHODS)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body preferences[documentEdition] is not allowed']);
         }
 
         UserModel::update([
             'set'   => [
-                'firstname' => $data['firstname'],
-                'lastname'  => $data['lastname'],
-                'mail'      => $data['mail'],
-                'phone'     => $data['phone'],
-                'initials'  => $data['initials']
+                'firstname'     => $body['firstname'],
+                'lastname'      => $body['lastname'],
+                'mail'          => $body['mail'],
+                'phone'         => $body['phone'],
+                'initials'      => $body['initials'],
+                'preferences'   => json_encode($body['preferences'])
             ],
             'where' => ['id = ?'],
-            'data'  => [$user['id']]
+            'data'  => [$GLOBALS['id']]
         ]);
 
-        return $response->withJson(['success' => 'success']);
+        return $response->withStatus(204);
     }
 
     public function updatePassword(Request $request, Response $response, array $aArgs)
