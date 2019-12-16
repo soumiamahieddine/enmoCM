@@ -15,7 +15,6 @@
 namespace SrcCore\controllers;
 
 use Contact\controllers\ContactController;
-use Contact\models\ContactCustomFieldListModel;
 use Contact\models\ContactGroupModel;
 use Contact\models\ContactModel;
 use Contact\models\ContactParameterModel;

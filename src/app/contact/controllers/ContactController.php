@@ -461,7 +461,7 @@ class ContactController
                 $color = '#ccffcc';
             }
 
-            return ['rate' => $percent, 'color' => $color];
+            return ['rate' => round($percent, 2), 'color' => $color];
         }
 
         return [];
@@ -614,7 +614,7 @@ class ContactController
 
                 $filling = ContactController::getFillingRate(['contactId' => $resourceContact['item_id']]);
 
-                $contact['filling'] = $filling['color'];
+                $contact['filling'] = empty($filling['color']) ? '' : $filling['color'];
             } elseif ($resourceContact['type'] == 'user') {
                 $user = UserModel::getById(['id' => $resourceContact['item_id']]);
 
