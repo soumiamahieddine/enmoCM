@@ -169,7 +169,7 @@ export class ProcessComponent implements OnInit {
 
             this.loadResource();
 
-            this.http.get(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/listEventData`).pipe(
+            this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/processingData`).pipe(
                 tap((data: any) => {
                     if (data.listEventData !== null) {
                         this.currentTool = data.listEventData.defaultTab;

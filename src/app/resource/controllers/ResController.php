@@ -17,6 +17,7 @@ namespace Resource\controllers;
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
+use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
@@ -34,11 +35,13 @@ use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
 use Group\controllers\GroupController;
 use Group\controllers\PrivilegeController;
+use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
 use IndexingModel\models\IndexingModelModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
+use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
 use Respect\Validation\Validator;
@@ -554,7 +557,7 @@ class ResController
     public function getThumbnailContent(Request $request, Response $response, array $aArgs)
     {
         if (!Validator::intVal()->validate($aArgs['resId'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+            return $response->withStatus(403)->withJson(['errors' => 'resId param is not an integer']);
         }
 
         $pathToThumbnail = 'apps/maarch_entreprise/img/noThumbnail.png';
@@ -1443,5 +1446,48 @@ class ResController
         }
 
         return $response->withJson(['resources' => $resources, 'count' => count($resources)]);
+    }
+
+    public function getProcessingData(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['groupId'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'resId param is not an integer']);
+        }
+        if (!Validator::intVal()->validate($args['userId'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'userId param is not an integer']);
+        }
+        if (!Validator::intVal()->validate($args['basketId'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'basketId param is not an integer']);
+        }
+        if (!Validator::intVal()->validate($args['resId'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'resId param is not an integer']);
+        }
+
+        $control = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($control['errors'])) {
+            return $response->withStatus($control['code'])->withJson(['errors' => $control['errors']]);
+        }
+
+        $basket = BasketModel::getById(['id' => $args['basketId'], 'select' => ['basket_id']]);
+        $group = GroupModel::getById(['id' => $args['groupId'], 'select' => ['group_id']]);
+
+        $groupBasket = GroupBasketModel::get(['select' => ['list_event_data'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
+
+        if (empty($groupBasket[0]['list_event_data'])) {
+            return $response->withJson(['listEventData' => null]);
+        }
+
+        $listEventData = json_decode($groupBasket[0]['list_event_data'], true);
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status']]);
+        if (empty($resource['status'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Resource does not exists']);
+        }
+        $status = StatusModel::getById(['id' => $resource['status'], 'select' => ['can_be_modified']]);
+        if ($status['can_be_modified'] != 'Y') {
+            $listEventData['canUpdate'] = false;
+        }
+
+        return $response->withJson(['listEventData' => $listEventData]);
     }
 }
