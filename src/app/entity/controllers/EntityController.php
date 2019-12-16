@@ -41,12 +41,12 @@ class EntityController
 
     public function getById(Request $request, Response $response, array $aArgs)
     {
-        $entity = EntityModel::getByEntityId(['entityId' => $aArgs['id']]);
+        $entity = EntityModel::getById(['id' => $aArgs['id'], 'select' => ['id', 'entity_label', 'short_label', 'entity_full_name', 'entity_type', 'entity_id', 'enabled', 'parent_entity_id']]);
         if (empty($entity)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
 
-        return $response->withJson(['entity' => $entity]);
+        return $response->withJson($entity);
     }
 
     public function getDetailledById(Request $request, Response $response, array $aArgs)

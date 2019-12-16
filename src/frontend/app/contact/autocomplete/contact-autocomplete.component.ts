@@ -121,7 +121,8 @@ export class ContactAutocompleteComponent implements OnInit {
                     tap((data: any) => {
                         this.valuesToDisplay[data.id] = {
                             type: 'user',
-                            lastname: data.entity_label,
+                            firstname: data.firstname,
+                            lastname: data.lastname,
                         };
                     })
                 ).subscribe();

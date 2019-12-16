@@ -44,18 +44,12 @@ class EntityControllerTest extends TestCase
         $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => 'TEST-ENTITY123']);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertSame('TEST-ENTITY123', $responseBody->entity->entity_id);
-        $this->assertSame('TEST-ENTITY123-LABEL', $responseBody->entity->entity_label);
-        $this->assertSame('TEST-ENTITY123-SHORTLABEL', $responseBody->entity->short_label);
-        $this->assertSame('Service', $responseBody->entity->entity_type);
-        $this->assertSame('Y', $responseBody->entity->enabled);
-        $this->assertSame('paris@isMagic.fr', $responseBody->entity->email);
-        $this->assertSame('1 rue du parc des princes', $responseBody->entity->adrs_1);
-        $this->assertSame(null, $responseBody->entity->adrs_2);
-        $this->assertSame(null, $responseBody->entity->adrs_3);
-        $this->assertSame('75016', $responseBody->entity->zipcode);
-        $this->assertSame('PARIS', $responseBody->entity->city);
-        $this->assertSame(null, $responseBody->entity->parent_entity_id);
+        $this->assertSame('TEST-ENTITY123', $responseBody->entity_id);
+        $this->assertSame('TEST-ENTITY123-LABEL', $responseBody->entity_label);
+        $this->assertSame('TEST-ENTITY123-SHORTLABEL', $responseBody->short_label);
+        $this->assertSame('Service', $responseBody->entity_type);
+        $this->assertSame('Y', $responseBody->enabled);
+        $this->assertSame(null, $responseBody->parent_entity_id);
     }
 
     public function testUpdate()
@@ -85,18 +79,12 @@ class EntityControllerTest extends TestCase
         $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => 'TEST-ENTITY123']);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertSame('TEST-ENTITY123', $responseBody->entity->entity_id);
-        $this->assertSame('TEST-ENTITY123-LABEL', $responseBody->entity->entity_label);
-        $this->assertSame('TEST-ENTITY123-SHORTLABEL-UP', $responseBody->entity->short_label);
-        $this->assertSame('Direction', $responseBody->entity->entity_type);
-        $this->assertSame('Y', $responseBody->entity->enabled);
-        $this->assertSame('paris@isMagic2.fr', $responseBody->entity->email);
-        $this->assertSame('1 rue du parc des princes', $responseBody->entity->adrs_1);
-        $this->assertSame('2 rue des princes', $responseBody->entity->adrs_2);
-        $this->assertSame(null, $responseBody->entity->adrs_3);
-        $this->assertSame('75016', $responseBody->entity->zipcode);
-        $this->assertSame('PARIS', $responseBody->entity->city);
-        $this->assertSame(null, $responseBody->entity->parent_entity_id);
+        $this->assertSame('TEST-ENTITY123', $responseBody->entity_id);
+        $this->assertSame('TEST-ENTITY123-LABEL', $responseBody->entity_label);
+        $this->assertSame('TEST-ENTITY123-SHORTLABEL-UP', $responseBody->short_label);
+        $this->assertSame('Direction', $responseBody->entity_type);
+        $this->assertSame('Y', $responseBody->enabled);
+        $this->assertSame(null, $responseBody->parent_entity_id);
     }
 
     public function testUpdateStatus()
@@ -122,8 +110,8 @@ class EntityControllerTest extends TestCase
         $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => 'TEST-ENTITY123']);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertSame('TEST-ENTITY123', $responseBody->entity->entity_id);
-        $this->assertSame('N', $responseBody->entity->enabled);
+        $this->assertSame('TEST-ENTITY123', $responseBody->entity_id);
+        $this->assertSame('N', $responseBody->enabled);
 
         //  UPDATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
@@ -144,8 +132,8 @@ class EntityControllerTest extends TestCase
         $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => 'TEST-ENTITY123']);
         $responseBody   = json_decode((string)$response->getBody());
 
-        $this->assertSame('TEST-ENTITY123', $responseBody->entity->entity_id);
-        $this->assertSame('Y', $responseBody->entity->enabled);
+        $this->assertSame('TEST-ENTITY123', $responseBody->entity_id);
+        $this->assertSame('Y', $responseBody->enabled);
     }
 
     public function testGet()
