@@ -1363,7 +1363,7 @@ export const LANG_FR = {
     "siretGenerated": "Numéro SIRET généré",
     "siretGeneratedAndSynchronizationDone": "Numéro SIRET généré et synchronisation annuaire effectuée",
     "siretGeneratedButAnnuaryUnreachable": "Numéro SIRET généré mais l'annuaire est injoignable",
-    "entityDeletedButAnnuaryUnreachable": "Entité supprimée mais l'annuaire est injoignable, l'entité est possiblement toujours présente dedans",
+    "entityDeletedButAnnuaryUnreachable": "Entité supprimée mais la synchronisation avec l'annuaire est impossible",
     "langISO": "fr-FR",
     "noSelectedContact": "Aucun contact associé",
     "searchContact": "Recherchez un contact",
