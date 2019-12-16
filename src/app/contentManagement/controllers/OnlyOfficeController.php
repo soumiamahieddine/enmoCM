@@ -54,11 +54,8 @@ class OnlyOfficeController
             $path = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $template['template_path']) . $template['template_file_name'];
 
             $dataToMerge = ['userId' => $GLOBALS['id']];
-            if (!empty($body['data'])) {
-                $decodedData = json_decode(base64_decode(urldecode($body['data'])), true);
-                if (!empty($decodedData)) {
-                    $dataToMerge = array_merge($dataToMerge, $decodedData);
-                }
+            if (!empty($body['data']) && is_array($body['data'])) {
+                $dataToMerge = array_merge($dataToMerge, $body['data']);
             }
             $mergedDocument = MergeController::mergeDocument([
                 'path' => $path,
