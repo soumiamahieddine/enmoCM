@@ -23,7 +23,8 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
         noSendAR: {},
         sendEmail: 0,
         sendPaper: 0,
-        sendList: []
+        sendList: [],
+        unavailable: ''
     };
 
     @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
@@ -33,9 +34,19 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadingInit = true;
+        this.acknowledgement.unavailable = ' ';
+
         this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/checkAcknowledgementReceipt', { resources: this.data.resIds })
             .subscribe((data: any) => {
                 this.acknowledgement = data;
+
+                data.unavailableList.forEach((value: any, index: number) => {
+                    if (index === 0) {
+                        this.acknowledgement.unavailable = value.toString();
+                    } else {
+                        this.acknowledgement.unavailable += ', ' + value.toString();
+                    }
+                });
                 this.loadingInit = false;
             }, (err) => {
                 this.notify.error(err.error.errors);

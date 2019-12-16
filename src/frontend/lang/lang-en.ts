@@ -1329,5 +1329,5 @@ export const LANG_EN = {
     "langISO": "en-US",
     "noSelectedContact": "No associated contact",
     "searchContact": "Search a contact",
-    "acknowledgementReceiptGenerationImpossible": "Acknowledgement receipt generation impossible : no sender(s) associated with resource(s)",
+    "acknowledgementReceiptGenerationImpossible": "Acknowledgement receipt generation impossible for resource(s) : ",
 };

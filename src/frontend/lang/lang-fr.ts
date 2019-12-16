@@ -1367,5 +1367,5 @@ export const LANG_FR = {
     "langISO": "fr-FR",
     "noSelectedContact": "Aucun contact associé",
     "searchContact": "Recherchez un contact",
-    "acknowledgementReceiptGenerationImpossible": "Impossible de générer un accusé de réception : aucun expéditeur(s) associé(s) avec le(s) courrier(s)",
+    "acknowledgementReceiptGenerationImpossible": "Impossible de générer un accusé de réception pour le(s) courrier(s) : ",
 };
