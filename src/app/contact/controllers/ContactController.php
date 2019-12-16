@@ -792,8 +792,8 @@ class ContactController
                     return ['errors' => "Body {$body['customFields'][$customId]} is mandatory"];
                 }
             } else {
-                if (empty($body[$mappingFields[$mandatoryParameter]])) {
-                    return ['errors' => "Body {$mappingFields[$mandatoryParameter]} is mandatory"];
+                if (empty($body[$mappingFields[$mandatoryParameter['identifier']]])) {
+                    return ['errors' => "Body {$mappingFields[$mandatoryParameter['identifier']]} is mandatory"];
                 }
             }
         }
