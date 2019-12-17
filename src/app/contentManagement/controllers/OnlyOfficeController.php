@@ -19,6 +19,7 @@ use Docserver\models\DocserverModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\UrlController;
 use SrcCore\models\CoreConfigModel;
 use Template\models\TemplateModel;
 
@@ -28,14 +29,16 @@ class OnlyOfficeController
     {
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/onlyOfficeConfig.xml']);
 
-        if (empty($loadedXml) || empty($loadedXml->enabled) || $loadedXml->enabled == 'false') {
+        if (empty($loadedXml) || empty($loadedXml->ENABLED) || $loadedXml->ENABLED == 'false') {
             return $response->withJson(['enabled' => false]);
         }
         if (empty($loadedXml->URI)) {
             return $response->withStatus(400)->withJson(['errors' => 'onlyOfficeConfig : URI is empty']);
         }
 
-        return $response->withJson(['enabled' => true, 'uri' => $loadedXml->URI]);
+        $coreUrl = str_replace('rest/', '', UrlController::getCoreUrl());
+
+        return $response->withJson(['enabled' => true, 'uri' => (string)$loadedXml->URI, 'coreUrl' => $coreUrl]);
     }
 
     public static function saveMergedFile(Request $request, Response $response)
