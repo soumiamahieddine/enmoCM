@@ -17,6 +17,7 @@ namespace User\controllers;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
+use ContentManagement\controllers\DocumentEditorController;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Email\controllers\EmailController;
@@ -53,7 +54,6 @@ use User\models\UserSignatureModel;
 class UserController
 {
     const ALTERNATIVES_CONNECTIONS_METHODS = ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'];
-    const DOCUMENT_EDITION_METHODS = ['java', 'onlyOffice'];
 
     public function get(Request $request, Response $response)
     {
@@ -537,7 +537,7 @@ class UserController
         } elseif (!Validator::arrayType()->notEmpty()->validate($body['preferences'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body preferences is empty or not an array']);
         }
-        if (!in_array($body['preferences']['documentEdition'], UserController::DOCUMENT_EDITION_METHODS)) {
+        if (!in_array($body['preferences']['documentEdition'], DocumentEditorController::DOCUMENT_EDITION_METHODS)) {
             return $response->withStatus(400)->withJson(['errors' => 'Body preferences[documentEdition] is not allowed']);
         }
 

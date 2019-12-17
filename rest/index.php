@@ -138,6 +138,7 @@ $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':gen
 $app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
 $app->post('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
 $app->get('/jnlp/lock/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':isLockFileExisting');
+$app->get('/documentEditors', \ContentManagement\controllers\DocumentEditorController::class . ':get');
 $app->get('/onlyOffice/configuration', \ContentManagement\controllers\OnlyOfficeController::class . ':getConfiguration');
 $app->post('/onlyOffice/mergedFile', \ContentManagement\controllers\OnlyOfficeController::class . ':saveMergedFile');
 $app->get('/onlyOffice/mergedFile', \ContentManagement\controllers\OnlyOfficeController::class . ':getMergedFile');

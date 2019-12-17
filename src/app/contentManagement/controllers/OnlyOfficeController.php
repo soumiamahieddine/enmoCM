@@ -27,15 +27,15 @@ class OnlyOfficeController
 {
     public static function getConfiguration(Request $request, Response $response)
     {
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/onlineEditorsConfig.xml']);
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/documentEditorsConfig.xml']);
 
-        if (empty($loadedXml) || empty($loadedXml->ONLY_OFFICE->ENABLED) || $loadedXml->ONLY_OFFICE->ENABLED == 'false' || empty($loadedXml->ONLY_OFFICE->SERVER_URI)) {
+        if (empty($loadedXml) || empty($loadedXml->onlyoffice->enabled) || $loadedXml->onlyoffice->enabled == 'false' || empty($loadedXml->onlyoffice->server_uri)) {
             return $response->withJson(['enabled' => false]);
         }
 
         $coreUrl = str_replace('rest/', '', UrlController::getCoreUrl());
 
-        return $response->withJson(['enabled' => true, 'serverUri' => (string)$loadedXml->ONLY_OFFICE->SERVER_URI, 'coreUrl' => $coreUrl]);
+        return $response->withJson(['enabled' => true, 'serverUri' => (string)$loadedXml->onlyoffice->server_uri, 'coreUrl' => $coreUrl]);
     }
 
     public static function saveMergedFile(Request $request, Response $response)
