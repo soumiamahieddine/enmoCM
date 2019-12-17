@@ -11,7 +11,7 @@ import {
 import './onlyoffice-api.js';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subject, Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, filter, exhaustMap } from 'rxjs/operators';
 
 declare var DocsAPI: any;
 
@@ -39,6 +39,9 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
 
     tmpFilename: string = '';
 
+    appUrl: string = '';
+    onlyfficeUrl: string = '';
+
     private eventAction = new Subject<any>();
 
 
@@ -50,7 +53,6 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
         // EVENT TO CONSTANTLY UPDATE CURRENT DOCUMENT
         if (response.event === 'onDownloadAs') {
             this.getEncodedDocument(response.data);
-            // EVENT TO AVOID INFINITE LOOP WITH MODIFIED EVENT + UPDATE DOC
         }
     }
     constructor(public http: HttpClient) { }
@@ -68,7 +70,6 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
     getEncodedDocument(data: any) {
         this.http.get('../../rest/onlyOffice/encodedFile', { params: { url: data } }).pipe(
             tap((data: any) => {
-                //console.log(data.encodedFile);
                 this.file.content = data.encodedFile;
                 this.isSaving = false;
                 this.triggerAfterUpdatedDoc.emit();
@@ -91,7 +92,17 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
 
     ngOnInit() {
         this.key = this.generateUniqueId();
-        this.http.post(`../../${this.params.docUrl}`, { objectId: this.params.objectId, objectType: this.params.objectType, onlyOfficeKey: this.key, data : this.params.dataToMerge }).pipe(
+        this.http.get(`../../rest/onlyOffice/configuration`,).pipe(
+            tap((data: any) => {
+                if (data.enabled) {
+                    this.onlyfficeUrl = data.serverUri;
+                    this.appUrl =  data.coreUrl;
+                } else {
+                    this.triggerCloseEditor.emit();
+                }
+            }),
+            filter((data: any) => data.enabled),
+            exhaustMap(() => this.http.post(`../../${this.params.docUrl}`, { objectId: this.params.objectId, objectType: this.params.objectType, onlyOfficeKey: this.key, data : this.params.dataToMerge })),
             tap((data: any) => {
                 this.tmpFilename = data.filename;
 
@@ -130,7 +141,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                 fileType: this.file.format,
                 key: this.key,
                 title: 'Edition',
-                url: `http://cchaplin:maarch@192.168.1.20/maarch_courrier_develop/${this.params.docUrl}?filename=${this.tmpFilename}`,
+                url: `${this.appUrl}${this.params.docUrl}?filename=${this.tmpFilename}`,
                 permissions: {
                     comment: false,
                     download: true,
@@ -140,7 +151,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                 }
             },
             editorConfig: {
-                callbackUrl: 'http://cchaplin:maarch@192.168.1.20/maarch_courrier_develop/rest/test',
+                callbackUrl: 'http://cchaplin:maarch@10.2.95.76/maarch_courrier_develop/rest/test',
                 lang: 'fr',
                 region: 'fr-FR',
                 mode: 'edit',
@@ -163,7 +174,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                },
             },
         };
-        this.docEditor = new DocsAPI.DocEditor('placeholder', this.editorConfig);
+        this.docEditor = new DocsAPI.DocEditor('placeholder', this.editorConfig, this.onlyfficeUrl);
     }
 
     isLocked() {

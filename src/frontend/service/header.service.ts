@@ -35,6 +35,7 @@ export class HeaderService {
                         lastname: data.lastname,
                         entities: data.entities,
                         groups: data.groups,
+                        preferences: data.preferences,
                         privileges: data.privileges[0] === 'ALL_PRIVILEGES' ? this.user.privileges : data.privileges
                     }
                 })

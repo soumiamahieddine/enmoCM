@@ -133,7 +133,7 @@ $app->post('/convertedFile', \Convert\controllers\ConvertPdfController::class . 
 $app->get('/convertedFile/{filename}', \Convert\controllers\ConvertPdfController::class . ':getConvertedFileByFilename');
 
 //ContentManagement
-$app->get('/test', \ContentManagement\controllers\JnlpController::class . ':test'); //TODO
+$app->post('/test', \ContentManagement\controllers\JnlpController::class . ':test'); //TODO
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
 $app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
 $app->post('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');

@@ -106,6 +106,8 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.setEditor();
+
         this.http.get('../../rest/indexing/fileInformations').pipe(
             tap((data: any) => {
                 this.allowedExtensions = data.informations.allowedFiles.map((ext: any) => {
@@ -749,5 +751,15 @@ export class DocumentViewerComponent implements OnInit {
     closeEditor() {
         this.templateListForm.reset();
         this.editInProgress = false;
+    }
+
+    setEditor() {
+        if (this.headerService.user.preferences.documentEdition === 'java') {
+            this.editor.mode = 'java';
+            this.editor.async = true; 
+        } else if (this.headerService.user.preferences.documentEdition === 'onlyoffice') {
+            this.editor.mode = 'onlyoffice';
+            this.editor.async = false;   
+        }
     }
 }
