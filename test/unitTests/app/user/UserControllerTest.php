@@ -278,7 +278,9 @@ class UserControllerTest extends TestCase
 
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => 'DGS']);
+
+        $entityInfo     = \Entity\models\EntityModel::getByEntityId(['entityId' => 'DGS', 'select' => ['id']]);
+        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => $entityInfo['id']]);
         $responseBody   = json_decode((string)$response->getBody());
         $entitySerialId = $responseBody->entity->id;
 
