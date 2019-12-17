@@ -28,7 +28,7 @@ class DocumentEditorController
 
         $allowedMethods = [];
         foreach (self::DOCUMENT_EDITION_METHODS as $method) {
-            if (!empty($loadedXml->$method->enabled) || $loadedXml->$method->enabled == 'true') {
+            if (!empty($loadedXml->$method->enabled) && $loadedXml->$method->enabled == 'true') {
                 $allowedMethods[] = $method;
             }
         }
