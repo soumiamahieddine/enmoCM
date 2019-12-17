@@ -89,7 +89,7 @@ export class DocumentViewerComponent implements OnInit {
             docUrl : null,
             dataToMerge: null
         }
-    }
+    };
 
     @ViewChild('templateList', { static: true }) templateList: PluginSelectSearchComponent;
     @ViewChild('onlyofficeViewer', { static: false }) onlyofficeViewer: EcplOnlyofficeViewerComponent;

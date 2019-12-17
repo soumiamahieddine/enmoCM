@@ -374,7 +374,7 @@ export class IndexingFormComponent implements OnInit {
     }
 
     isResourceModified() {
-        if (JSON.stringify(this.currentResourceValues) === JSON.stringify(this.getDatas(false))) {
+        if (this.loading || JSON.stringify(this.currentResourceValues) === JSON.stringify(this.getDatas(false))) {
             return false;
         } else {
             return true;
