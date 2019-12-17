@@ -43,8 +43,9 @@ class ContactController
 
         $queryparams['offset'] = (empty($queryparams['offset']) || !is_numeric($queryparams['offset']) ? 0 : (int)$queryparams['offset']);
         $queryparams['limit'] = (empty($queryparams['limit']) || !is_numeric($queryparams['limit']) ? 25 : (int)$queryparams['limit']);
+        $queryparams['orderBy'] = !in_array($queryparams['orderBy'], ['firstname', 'lastname', 'company']) ? null : [$queryparams['orderBy']];
 
-        $contacts = ContactModel::get(['select' => ['id', 'firstname', 'lastname', 'company', 'enabled', 'count(1) OVER()'], 'offset' => $queryparams['offset'], 'limit' => $queryparams['limit']]);
+        $contacts = ContactModel::get(['select' => ['id', 'firstname', 'lastname', 'company', 'enabled', 'count(1) OVER()'], 'orderBy' => $queryparams['orderBy'], 'offset' => $queryparams['offset'], 'limit' => $queryparams['limit']]);
         $count = $contacts[0]['count'] ?? 0;
 
         foreach ($contacts as $key => $contact) {
