@@ -17,6 +17,8 @@ DROP VIEW IF EXISTS view_folders;
 ALTER TABLE users DROP COLUMN IF EXISTS reset_token;
 ALTER TABLE users DROP COLUMN IF EXISTS change_password;
 ALTER TABLE users ADD COLUMN reset_token text;
+ALTER TABLE users DROP COLUMN IF EXISTS preferences;
+ALTER TABLE users ADD COLUMN preferences jsonb NOT NULL DEFAULT '{"documentEdition" : "java"}';
 
 /* FULL TEXT */
 DELETE FROM docservers where docserver_type_id = 'FULLTEXT';
@@ -430,10 +432,6 @@ CREATE TABLE contacts_parameters
     CONSTRAINT contacts_parameters_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
-
-/* USERS */
-ALTER TABLE users DROP COLUMN IF EXISTS preferences;
-ALTER TABLE users ADD COLUMN preferences jsonb NOT NULL DEFAULT '{"documentEdition" : "java"}';
 
 ALTER TABLE acknowledgement_receipts DROP COLUMN IF EXISTS contact_id;
 ALTER TABLE acknowledgement_receipts ADD COLUMN contact_id integer;

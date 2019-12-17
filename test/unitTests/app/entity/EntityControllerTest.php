@@ -38,10 +38,13 @@ class EntityControllerTest extends TestCase
 
         $this->assertInternalType('array', $responseBody->entities);
 
+        $entityInfo = \Entity\models\EntityModel::getByEntityId(['entityId' => 'TEST-ENTITY123', 'select' => ['id']]);
+        self::$id = $entityInfo['id'];
+
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => 'TEST-ENTITY123']);
+        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertSame('TEST-ENTITY123', $responseBody->entity_id);
@@ -76,7 +79,7 @@ class EntityControllerTest extends TestCase
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => 'TEST-ENTITY123']);
+        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertSame('TEST-ENTITY123', $responseBody->entity_id);
@@ -107,7 +110,7 @@ class EntityControllerTest extends TestCase
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => 'TEST-ENTITY123']);
+        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertSame('TEST-ENTITY123', $responseBody->entity_id);
@@ -129,7 +132,7 @@ class EntityControllerTest extends TestCase
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => 'TEST-ENTITY123']);
+        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertSame('TEST-ENTITY123', $responseBody->entity_id);
@@ -197,7 +200,7 @@ class EntityControllerTest extends TestCase
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => 'TEST-ENTITY123']);
+        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $responseBody   = json_decode((string)$response->getBody());
 
         $this->assertSame('Entity not found', $responseBody->errors);
