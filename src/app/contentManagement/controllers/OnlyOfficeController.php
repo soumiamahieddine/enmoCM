@@ -24,6 +24,20 @@ use Template\models\TemplateModel;
 
 class OnlyOfficeController
 {
+    public static function getConfiguration(Request $request, Response $response)
+    {
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/onlyOfficeConfig.xml']);
+
+        if (empty($loadedXml) || empty($loadedXml->enabled) || $loadedXml->enabled == 'false') {
+            return $response->withJson(['enabled' => false]);
+        }
+        if (empty($loadedXml->URI)) {
+            return $response->withStatus(400)->withJson(['errors' => 'onlyOfficeConfig : URI is empty']);
+        }
+
+        return $response->withJson(['enabled' => true, 'uri' => $loadedXml->URI]);
+    }
+
     public static function saveMergedFile(Request $request, Response $response)
     {
         $body = $request->getParsedBody();
@@ -94,6 +108,8 @@ class OnlyOfficeController
 
         if (!Validator::stringType()->notEmpty()->validate($queryParams['filename'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Query params filename is empty']);
+        } elseif (substr_count($queryParams['filename'], '\\') > 0 || substr_count($queryParams['filename'], '.') != 1) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params filename forbidden']);
         }
 
         $tmpPath = CoreConfigModel::getTmpPath();
@@ -107,6 +123,7 @@ class OnlyOfficeController
         $finfo    = new \finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->buffer($fileContent);
         $extension = pathinfo($tmpPath . $filename, PATHINFO_EXTENSION);
+        unlink($tmpPath . $filename);
 
         $response->write($fileContent);
         $response = $response->withAddedHeader('Content-Disposition', "attachment; filename=maarch.{$extension}");

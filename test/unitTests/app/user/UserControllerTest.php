@@ -753,7 +753,7 @@ class UserControllerTest extends TestCase
 
         $this->assertSame('superadmin', $responseBody->user_id);
         $this->assertSame('Super', $responseBody->firstname);
-        $this->assertSame('Admin', $responseBody->lastname);
+        $this->assertSame('ADMIN', $responseBody->lastname);
         $this->assertSame('dev@maarch.org', $responseBody->mail);
         $this->assertSame('SU', $responseBody->initials);
     }

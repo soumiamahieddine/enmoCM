@@ -29,7 +29,7 @@ $app = new \Slim\App(['settings' => ['displayErrorDetails' => true, 'determineRo
 
 //Authentication
 $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, callable $next) {
-    $routesWithoutAuthentication = ['GET/jnlp/{jnlpUniqueId}', 'POST/password', 'PUT/password', 'GET/passwordRules'];
+    $routesWithoutAuthentication = ['GET/jnlp/{jnlpUniqueId}', 'POST/password', 'PUT/password', 'GET/passwordRules', 'GET/onlyOffice/mergedFile'];
     $route = $request->getAttribute('route');
     $currentMethod = empty($route) ? '' : $route->getMethods()[0];
     $currentRoute = empty($route) ? '' : $route->getPattern();
@@ -131,6 +131,17 @@ $app->put('/contactsParameters', \Contact\controllers\ContactController::class .
 //Convert
 $app->post('/convertedFile', \Convert\controllers\ConvertPdfController::class . ':convertedFile');
 $app->get('/convertedFile/{filename}', \Convert\controllers\ConvertPdfController::class . ':getConvertedFileByFilename');
+
+//ContentManagement
+$app->get('/test', \ContentManagement\controllers\JnlpController::class . ':test'); //TODO
+$app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
+$app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
+$app->post('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
+$app->get('/jnlp/lock/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':isLockFileExisting');
+$app->get('/onlyOffice/configuration', \ContentManagement\controllers\OnlyOfficeController::class . ':getConfiguration');
+$app->post('/onlyOffice/mergedFile', \ContentManagement\controllers\OnlyOfficeController::class . ':saveMergedFile');
+$app->get('/onlyOffice/mergedFile', \ContentManagement\controllers\OnlyOfficeController::class . ':getMergedFile');
+$app->get('/onlyOffice/encodedFile', \ContentManagement\controllers\OnlyOfficeController::class . ':getEncodedFileFromUrl');
 
 //CustomFields
 $app->get('/customFields', \CustomField\controllers\CustomFieldController::class . ':get');
@@ -254,16 +265,6 @@ $app->put('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelContro
 $app->put('/indexingModels/{id}/disable', \IndexingModel\controllers\IndexingModelController::class . ':disable');
 $app->put('/indexingModels/{id}/enable', \IndexingModel\controllers\IndexingModelController::class . ':enable');
 $app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
-
-//ContentManagement
-$app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
-$app->post('/test', \ContentManagement\controllers\JnlpController::class . ':test');
-$app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
-$app->post('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
-$app->get('/jnlp/lock/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':isLockFileExisting');
-$app->post('/onlyOffice/mergedFile', \ContentManagement\controllers\OnlyOfficeController::class . ':saveMergedFile');
-$app->get('/onlyOffice/mergedFile', \ContentManagement\controllers\OnlyOfficeController::class . ':getMergedFile');
-$app->get('/onlyOffice/encodedFile', \ContentManagement\controllers\OnlyOfficeController::class . ':getEncodedFileFromUrl');
 
 //Links
 $app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':getByResId');
