@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+    <ONLY_OFFICE>
+        <ENABLED>true</ENABLED>
+        <SERVER_URI>127.0.0.1</SERVER_URI>
+    </ONLY_OFFICE>
+</ROOT>
