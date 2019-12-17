@@ -689,7 +689,6 @@ var onlyofficetesturl = '';
     };
 
     function getBasePath(config) {
-        return `http://10.2.95.76:8765/web-apps/apps/`;
         return `http://${config.onlyOfficeIp}/web-apps/apps/`;
         
         /*var scripts = document.getElementsByTagName('script'),
