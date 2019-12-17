@@ -928,6 +928,8 @@ class ContactController
         }
         if (in_array('firstname', $displayableStdParameters)) {
             $contact['firstname'] = $rawContact['firstname'];
+        } else {
+            $contact['firstname'] = '';
         }
         if (in_array('department', $displayableStdParameters)) {
             $contact['department'] = $rawContact['department'];

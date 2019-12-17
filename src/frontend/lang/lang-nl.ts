@@ -1313,6 +1313,9 @@ export const LANG_NL = {
     "chooseAllowedGroups" : "Choose allowed groups", //_TO_TRANSLATE
     "reallyWantToDeleteThisGroup"   : "Do you really want to remove this group ?", //_TO_TRANSLATE
     "contact_entity"   : "Entity", //_TO_TRANSLATE
+    "contact_contact": "Contact", //_TO_TRANSLATE
+    "contact_contactGroup": "Contacts group", //_TO_TRANSLATE
+    "contact_user": "User", //_TO_TRANSLATE
     "contact_third"   : "Contact third", //_TO_TRANSLATE
     "confidentialityAndSecurity"   : "Confidentiality and security", //_TO_TRANSLATE
     "modified"   : "Modified", //_TO_TRANSLATE

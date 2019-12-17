@@ -251,7 +251,8 @@ class AutoCompleteController
                 $autocompleteEntities[] = [
                     'type'          => 'entity',
                     'id'            => $value['id'],
-                    'lastname'      => $value['entity_label']
+                    'lastname'      => $value['entity_label'],
+                    'firstname'     => ''
                 ];
             }
         }
@@ -281,7 +282,8 @@ class AutoCompleteController
                 $autocompleteContactsGroups[] = [
                     'type'          => 'contactGroup',
                     'id'            => $value['id'],
-                    'lastname'      => $value['label']
+                    'lastname'      => $value['label'],
+                    'firstname'     => ''
                 ];
             }
         }
