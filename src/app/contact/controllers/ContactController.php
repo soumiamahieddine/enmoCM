@@ -39,7 +39,19 @@ class ContactController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        return $response->withJson(['contacts' => ContactModel::get(['select' => ['id', 'firstname', 'lastname', 'company']])]);
+        $queryparams = $request->getQueryParams();
+
+        $queryparams['offset'] = (empty($queryparams['offset']) || !is_numeric($queryparams['offset']) ? 0 : (int)$queryparams['offset']);
+        $queryparams['limit'] = (empty($queryparams['limit']) || !is_numeric($queryparams['limit']) ? 25 : (int)$queryparams['limit']);
+
+        $contacts = ContactModel::get(['select' => ['id', 'firstname', 'lastname', 'company', 'enabled', 'count(1) OVER()'], 'offset' => $queryparams['offset'], 'limit' => $queryparams['limit']]);
+        $count = $contacts[0]['count'] ?? 0;
+
+        foreach ($contacts as $key => $contact) {
+            unset($contacts[$key]['count']);
+        }
+
+        return $response->withJson(['contacts' => $contacts, 'count' => $count]);
     }
 
     public function create(Request $request, Response $response)
