@@ -1,5 +1,6 @@
 <?php
 
+use Contact\models\ContactCustomFieldListModel;
 use Docserver\models\DocserverModel;
 use Template\models\TemplateModel;
 
@@ -9,7 +10,7 @@ include_once('../../vendor/tinybutstrong/opentbs/tbs_plugin_opentbs.php');
 
 const OFFICE_EXTENSIONS = ['odt', 'ods', 'odp', 'xlsx', 'pptx', 'docx', 'odf'];
 
-const DATA_TO_REPLACE = [
+$DATA_TO_REPLACE = [
     'res_letterbox.destination' => '[destination.entity_id]',
     'res_letterbox.entity_label' => '[destination.entity_label]',
     'res_letterbox.process_notes' => '[notes]',
@@ -183,6 +184,14 @@ const DATA_TO_REPLACE = [
     'contact.email' => '[recipient.email]',
 ];
 
+$customFields = [
+    ['oldId' => 'salutation_header', 'label' => 'Formule de politesse (Début)'],
+    ['oldId' => 'salutation_footer', 'label' => 'Formule de politesse (Fin)'],
+    ['oldId' => 'website', 'label' => 'Site internet'],
+    ['oldId' => 'contact_type_label', 'label' => 'Type de contact'],
+    ['oldId' => 'contact_purpose_label', 'label' => 'Dénomination'],
+    ['oldId' => 'society_short', 'label' => 'Sigle de la structure'],
+];
 
 chdir('../..');
 
@@ -195,6 +204,16 @@ foreach ($customs as $custom) {
 
     \SrcCore\models\DatabasePDO::reset();
     new \SrcCore\models\DatabasePDO(['customId' => $custom]);
+
+    foreach ($customFields as $customField) {
+        $idNewCustomField = ContactCustomFieldListModel::get([
+            'select' => ['id'],
+            'where'  => ['label = ?'],
+            'data'   => [$customField['label']]
+        ]);
+        $idNewCustomField = array_column($idNewCustomField, 'id');
+        $DATA_TO_REPLACE["contact." . $customField['oldId']] = "[recipient.custom_{$idNewCustomField[0]}]";
+    }
 
     $migrated = 0;
 
@@ -211,7 +230,7 @@ foreach ($customs as $custom) {
             $content = $template['template_content'];
 
             $newContent = $content;
-            foreach (DATA_TO_REPLACE as $key => $value) {
+            foreach ($DATA_TO_REPLACE as $key => $value) {
                 $newContent = str_replace('[' . $key . ']', $value, $newContent);
             }
 
@@ -263,7 +282,7 @@ foreach ($customs as $custom) {
                     $tbs->PlugIn(OPENTBS_SELECT_SHEET, $i + 1);
                 }
 
-                $tbs->ReplaceFields(DATA_TO_REPLACE);
+                $tbs->ReplaceFields($DATA_TO_REPLACE);
             }
 
             if (in_array($extension, OFFICE_EXTENSIONS)) {
