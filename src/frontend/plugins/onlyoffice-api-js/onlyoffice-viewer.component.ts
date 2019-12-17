@@ -151,7 +151,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                 }
             },
             editorConfig: {
-                callbackUrl: 'http://cchaplin:maarch@10.2.95.76/maarch_courrier_develop/rest/test',
+                callbackUrl: `${this.appUrl}rest/onlyOfficeCallback`,
                 lang: 'fr',
                 region: 'fr-FR',
                 mode: 'edit',

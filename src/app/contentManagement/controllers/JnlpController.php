@@ -380,9 +380,4 @@ class JnlpController
 
         return $response->saveXML();
     }
-
-    public static function test(Request $request, Response $response)
-    {
-        return $response->withJson(['error' => 0]);
-    }
 }
