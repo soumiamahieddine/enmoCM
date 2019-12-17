@@ -1371,4 +1371,7 @@ export const LANG_FR = {
     "noSelectedContact": "Aucun contact associé",
     "searchContact": "Recherchez un contact",
     "acknowledgementReceiptGenerationImpossible": "Impossible de générer un accusé de réception pour le(s) courrier(s) : ",
+    "editorOption": "Option d'édition",
+    "editorOptionAdmin": "Gérer les paramètres d'édition",
+    "documentEditor": "Editeur de document",
 };

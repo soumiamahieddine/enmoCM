@@ -1358,4 +1358,7 @@ export const LANG_NL = {
     "noSelectedContact": "No associated contact", //_TO_TRANSLATE
     "searchContact": "Search a contact", //_TO_TRANSLATE
     "acknowledgementReceiptGenerationImpossible": "Acknowledgement receipt generation impossible for resource(s) : ", //_TO_TRANSLATE
+    "editorOption": "Editor option", //_TO_TRANSLATE
+    "editorOptionAdmin": "Manage editor option", //_TO_TRANSLATE
+    "documentEditor": "Document editor", //_TO_TRANSLATE
 };
