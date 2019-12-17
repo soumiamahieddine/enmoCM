@@ -23,6 +23,7 @@ use Entity\models\ListInstanceModel;
 use IndexingModel\models\IndexingModelModel;
 use Note\models\NoteModel;
 use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
@@ -103,6 +104,8 @@ class MergeController
         //Resource
         if (!empty($args['resId'])) {
             $resource = ResModel::getById(['select' => ['*'], 'resId' => $args['resId']]);
+            $senders = ResourceContactModel::get(['select' => ['item_id as id', 'type'], 'where' => ['res_id = ?', 'mode = ?'], 'data' => [$args['resId'], 'sender'], 'limit' => 1]);
+            $recipients = ResourceContactModel::get(['select' => ['item_id as id', 'type'], 'where' => ['res_id = ?', 'mode = ?'], 'data' => [$args['resId'], 'recipient'], 'limit' => 1]);
         } else {
             if (!empty($args['modelId'])) {
                 $indexingModel = IndexingModelModel::getById(['id' => $args['modelId'], 'select' => ['category']]);
@@ -130,6 +133,8 @@ class MergeController
                 'barcode'               => $args['barcode'] ?? null,
                 'origin'                => $args['origin'] ?? null
             ];
+            $senders = $args['senders'];
+            $recipients = $args['recipients'];
         }
         $allDates = ['doc_date', 'departure_date', 'admission_date', 'process_limit_date', 'opinion_limit_date', 'closing_date', 'creation_date'];
         foreach ($allDates as $date) {
@@ -164,39 +169,18 @@ class MergeController
             'chrono'    => '[attachment.chrono]',
             'title'     => $args['attachment_title'] ?? null
         ];
+        $attachmentRecipient = MergeController::formatPerson(['id' => $args['recipientId'], 'type' => $args['recipientType']]);
+
+        //Sender
+        $sender = MergeController::formatPerson(['id' => $senders[0]['id'], 'type' => $senders[0]['type']]);
+        //Recipient
+        $recipient = MergeController::formatPerson(['id' => $recipients[0]['id'], 'type' => $recipients[0]['type']]);
 
         //User
         $currentUser = UserModel::getById(['id' => $args['userId'], 'select' => ['firstname', 'lastname', 'phone', 'mail', 'initials']]);
         $currentUserPrimaryEntity = UserModel::getPrimaryEntityById(['id' => $args['userId'], 'select' => ['entities.*', 'users_entities.user_role as role']]);
         if (!empty($currentUserPrimaryEntity)) {
             $currentUserPrimaryEntity['path'] = EntityModel::getEntityPathByEntityId(['entityId' => $currentUserPrimaryEntity['entity_id'], 'path' => '']);
-        }
-
-        //Recipient
-        $recipient = [];
-        if (!empty($args['recipientId']) && !empty($args['recipientType'])) {
-            if ($args['recipientType'] == 'contact') {
-                $recipient = ContactModel::getById([
-                    'id' => $args['recipientId'],
-                    'select' => [
-                        'civility', 'firstname', 'lastname', 'company', 'department', 'function', 'address_number', 'address_street', 'address_town',
-                        'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country', 'phone', 'email', 'custom_fields'
-                    ]
-                ]);
-                $recipient['civility'] = ContactModel::getCivilityLabel(['civilityId' => $recipient['civility']]);
-                $postalAddress = ContactController::getContactAfnor($recipient);
-                unset($postalAddress[0]);
-                $recipient['postal_address'] = implode("\n", $postalAddress);
-                $customFields = json_decode($recipient['custom_fields'], true);
-                unset($recipient['custom_fields']);
-                foreach ($customFields as $key => $customField) {
-                    $recipient["customField_{$key}"] = is_array($customField) ?  implode("\n", $customField) : $customField;
-                }
-            } elseif ($args['recipientType'] == 'user') {
-                $recipient = UserModel::getById(['id' => $args['recipientId'], 'select' => ['firstname', 'lastname']]);
-            } elseif ($args['recipientType'] == 'entity') {
-                $recipient = EntityModel::getById(['id' => $args['recipientId'], 'select' => ['entity_label as lastname']]);
-            }
         }
 
         //Visas
@@ -299,21 +283,23 @@ class MergeController
             'time'  => date('H:i')
         ];
 
-        $dataToBeMerge['res_letterbox']     = $resource;
-        $dataToBeMerge['initiator']         = empty($initiator) ? [] : $initiator;
-        $dataToBeMerge['parentInitiator']   = empty($parentInitiator) ? [] : $parentInitiator;
-        $dataToBeMerge['destination']       = empty($destination) ? [] : $destination;
-        $dataToBeMerge['parentDestination'] = empty($parentDestination) ? [] : $parentDestination;
-        $dataToBeMerge['attachment']        = $attachment;
-        $dataToBeMerge['user']              = $currentUser;
-        $dataToBeMerge['recipient']         = $recipient;
-        $dataToBeMerge['userPrimaryEntity'] = $currentUserPrimaryEntity;
-        $dataToBeMerge['visas']             = $visas;
-        $dataToBeMerge['opinions']          = $opinions;
-        $dataToBeMerge['copies']            = $copies;
-        $dataToBeMerge['contact']           = [];
-        $dataToBeMerge['notes']             = $mergedNote;
-        $dataToBeMerge['datetime']          = $datetime;
+        $dataToBeMerge['res_letterbox']         = $resource;
+        $dataToBeMerge['initiator']             = empty($initiator) ? [] : $initiator;
+        $dataToBeMerge['parentInitiator']       = empty($parentInitiator) ? [] : $parentInitiator;
+        $dataToBeMerge['destination']           = empty($destination) ? [] : $destination;
+        $dataToBeMerge['parentDestination']     = empty($parentDestination) ? [] : $parentDestination;
+        $dataToBeMerge['attachment']            = $attachment;
+        $dataToBeMerge['attachmentRecipient']   = $attachmentRecipient;
+        $dataToBeMerge['sender']                = $sender;
+        $dataToBeMerge['recipient']             = $recipient;
+        $dataToBeMerge['user']                  = $currentUser;
+        $dataToBeMerge['userPrimaryEntity']     = $currentUserPrimaryEntity;
+        $dataToBeMerge['visas']                 = $visas;
+        $dataToBeMerge['opinions']              = $opinions;
+        $dataToBeMerge['copies']                = $copies;
+        $dataToBeMerge['contact']               = [];
+        $dataToBeMerge['notes']                 = $mergedNote;
+        $dataToBeMerge['datetime']              = $datetime;
 
         return $dataToBeMerge;
     }
@@ -357,5 +343,37 @@ class MergeController
         }
 
         return ['encodedDocument' => base64_encode($tbs->Source)];
+    }
+
+    private static function formatPerson(array $args)
+    {
+        $person = [];
+
+        if (!empty($args['id']) && !empty($args['type'])) {
+            if ($args['type'] == 'contact') {
+                $person = ContactModel::getById([
+                    'id' => $args['id'],
+                    'select' => [
+                        'civility', 'firstname', 'lastname', 'company', 'department', 'function', 'address_number', 'address_street', 'address_town',
+                        'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country', 'phone', 'email', 'custom_fields'
+                    ]
+                ]);
+                $person['civility'] = ContactModel::getCivilityLabel(['civilityId' => $person['civility']]);
+                $postalAddress = ContactController::getContactAfnor($person);
+                unset($postalAddress[0]);
+                $person['postal_address'] = implode("\n", $postalAddress);
+                $customFields = json_decode($person['custom_fields'], true);
+                unset($person['custom_fields']);
+                foreach ($customFields as $key => $customField) {
+                    $person["customField_{$key}"] = is_array($customField) ?  implode("\n", $customField) : $customField;
+                }
+            } elseif ($args['type'] == 'user') {
+                $person = UserModel::getById(['id' => $args['id'], 'select' => ['firstname', 'lastname']]);
+            } elseif ($args['type'] == 'entity') {
+                $person = EntityModel::getById(['id' => $args['id'], 'select' => ['entity_label as lastname']]);
+            }
+        }
+
+        return $person;
     }
 }
