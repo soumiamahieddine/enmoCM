@@ -93,7 +93,7 @@ export class ContactAutocompleteComponent implements OnInit {
     }
 
     getDatas(data: string) {
-        return this.http.get('../../rest/autocomplete/all', { params: { "search": data } });
+        return this.http.get('../../rest/autocomplete/correspondents', { params: { "search": data } });
     }
 
     selectOpt(ev: any) {

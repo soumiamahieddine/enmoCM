@@ -40,7 +40,7 @@ class AutocompleteControllerTest extends TestCase
         }
     }
 
-    public function testGetAll()
+    public function testGetCorrespondents()
     {
         $autocompleteController = new \SrcCore\controllers\AutoCompleteController();
 
@@ -54,7 +54,7 @@ class AutocompleteControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $autocompleteController->getAll($fullRequest, new \Slim\Http\Response());
+        $response     = $autocompleteController->getCorrespondents($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         foreach ($responseBody as $value) {

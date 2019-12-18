@@ -76,7 +76,7 @@ $app->get('/attachmentsTypes', \Attachment\controllers\AttachmentController::cla
 //AutoComplete
 $app->get('/autocomplete/users', \SrcCore\controllers\AutoCompleteController::class . ':getUsers');
 $app->get('/autocomplete/maarchParapheurUsers', \SrcCore\controllers\AutoCompleteController::class . ':getMaarchParapheurUsers');
-$app->get('/autocomplete/all', \SrcCore\controllers\AutoCompleteController::class . ':getAll');
+$app->get('/autocomplete/correspondents', \SrcCore\controllers\AutoCompleteController::class . ':getCorrespondents');
 $app->get('/autocomplete/contacts/groups', \SrcCore\controllers\AutoCompleteController::class . ':getContactsForGroups');
 $app->get('/autocomplete/users/administration', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForAdministration');
 $app->get('/autocomplete/users/visa', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForVisa');

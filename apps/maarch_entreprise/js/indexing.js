@@ -49,7 +49,7 @@ function changeCycle(path_manage_script)
 }
 
 function initSenderRecipientAutocomplete(inputId, mode, alternateVersion, cardId) {
-    var route = '../../rest/autocomplete/all';
+    var route = '../../rest/autocomplete/correspondents';
 
     $j("#" + inputId).typeahead({
         // order: "asc",

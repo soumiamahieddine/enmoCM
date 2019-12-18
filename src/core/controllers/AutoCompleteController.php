@@ -145,7 +145,7 @@ class AutoCompleteController
         }
     }
 
-    public static function getAll(Request $request, Response $response)
+    public static function getCorrespondents(Request $request, Response $response)
     {
         $queryParams = $request->getQueryParams();
 
