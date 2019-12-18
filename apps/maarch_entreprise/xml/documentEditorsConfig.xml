@@ -5,6 +5,6 @@
     </java>
     <onlyoffice>
         <enabled>true</enabled>
-        <server_uri>10.2.95.76:8765</server_uri>
+        <server_uri>onlyoffice.maarchcourrier.com</server_uri>
     </onlyoffice>
 </ROOT>
