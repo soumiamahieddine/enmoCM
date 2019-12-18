@@ -1,0 +1,9 @@
+.contact-item {
+    height: auto !important;
+}
+
+.addressLine_1 {
+    display: grid !important;
+    grid-template-columns: 150px 1fr;
+    grid-gap: 10px !important;
+}
