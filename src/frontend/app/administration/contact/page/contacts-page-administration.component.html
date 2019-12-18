@@ -20,90 +20,13 @@
         </div>
         <div class="container" [class.fullContainer]="appService.getViewMode()">
             <div class="container-content">
-                <ng-container *ngFor="let unit of contactUnit">
-                    <mat-list *ngIf="!isEmptyUnit(unit.id)">
-                        <h3 mat-subheader>{{unit.label}}</h3>
-                        <ng-container *ngFor="let field of contactForm">
-                            <mat-list-item class="contact-item" *ngIf="field.unit === unit.id">
-                                <p mat-line class="contact-content" *ngIf="field.default">
-                                    <ng-container *ngIf="field.type === 'string'">
-                                        <mat-form-field>
-                                            <input matInput [formControl]="field.control" [placeholder]="field.label">
-                                        </mat-form-field>
-                                    </ng-container>
-                                    <ng-container *ngIf="field.type === 'integer'">
-                                        <mat-form-field>
-                                            <input type="number" matInput [formControl]="field.control"
-                                                [placeholder]="field.label" min="0" step="0.1">
-                                        </mat-form-field>
-                                    </ng-container>
-                                    <ng-container *ngIf="field.type === 'select'">
-                                        <plugin-select-search [label]="field.label" [placeholderLabel]="field.label"
-                                            [datas]="field.values" (afterSelected)="launchEvent($event, field)">
-                                        </plugin-select-search>
-                                    </ng-container>
-                                    <ng-container *ngIf="field.type === 'date'">
-                                        <mat-form-field (click)="picker.open()" style="cursor:pointer;">
-                                            <mat-label *ngIf="appService.getViewMode()">{{field.label}}</mat-label>
-                                            <input [formControl]="field.control" matInput [matDatepicker]="picker"
-                                                [placeholder]="field.label" readonly style="cursor:pointer;"
-                                                (dateChange)="launchEvent($event, field)">
-                                            <mat-datepicker-toggle matSuffix [for]="picker"
-                                                *ngIf="!field.control.value">
-                                            </mat-datepicker-toggle>
-                                            <mat-datepicker [touchUi]="appService.getViewMode()" #picker>
-                                            </mat-datepicker>
-                                            <button mat-button color="warn" matSuffix mat-icon-button
-                                                *ngIf="field.control.value && !field.control.disabled"
-                                                (click)="$event.stopPropagation();field.control.reset();"
-                                                [title]="lang.eraseValue">
-                                                <mat-icon color="warn" class="fa fa-calendar-times">
-                                                </mat-icon>
-                                            </button>
-                                        </mat-form-field>
-                                    </ng-container>
-                                    <ng-container *ngIf="field.type === 'radio'">
-                                        <mat-form-field>
-                                            <input matInput style="display: none;">
-                                            <mat-radio-group class="radio-form" color="primary"
-                                                [formControl]="field.control">
-                                                <mat-radio-button *ngFor="let value of field.values" [value]="value.id">
-                                                    {{value.label}}
-                                                </mat-radio-button>
-                                            </mat-radio-group>
-                                        </mat-form-field>
-                                    </ng-container>
-                                    <ng-container *ngIf="field.type === 'checkbox'">
-                                        <div class="input-form checkbox-form">
-                                            <mat-selection-list #shoes class="div-list" [formControl]="field.control">
-                                                <mat-list-option *ngFor="let value of field.values" [value]="value.id"
-                                                    checkboxPosition="before">
-                                                    {{value.label}}
-                                                </mat-list-option>
-                                            </mat-selection-list>
-                                        </div>
-                                        <mat-chip-list class="checkbox-selected-list"
-                                            [disabled]="field.system && adminMode">
-                                            <mat-chip *ngFor="let chip of shoes.selectedOptions.selected" selected>
-                                                {{chip.value}}
-                                            </mat-chip>
-                                        </mat-chip-list>
-                                    </ng-container>
-                                </p>
-                                <button *ngIf="field.default" mat-icon-button matSuffix color="warn"
-                                    (click)="field.default = !field.default">
-                                    <mat-icon class="fa fa-trash"></mat-icon>
-                                </button>
-                            </mat-list-item>
-
-                        </ng-container>
-                    </mat-list>
-                </ng-container>
-                <button mat-button [matMenuTriggerFor]="menu">Plus d'informations</button>
+                <button mat-button [matMenuTriggerFor]="menu">Plus d'informations...</button>
                 <mat-menu #menu="matMenu">
-                    <button mat-menu-item [matMenuTriggerFor]="mainInfo" [disabled]="noField('mainInfo')">Dénomination</button>
+                    <button mat-menu-item [matMenuTriggerFor]="mainInfo"
+                        [disabled]="noField('mainInfo')">Dénomination</button>
                     <button mat-menu-item [matMenuTriggerFor]="address" [disabled]="noField('address')">Adresse</button>
-                    <button mat-menu-item [matMenuTriggerFor]="complement" [disabled]="noField('complement')">Compément</button>
+                    <button mat-menu-item [matMenuTriggerFor]="complement"
+                        [disabled]="noField('complement')">Compément</button>
                 </mat-menu>
 
                 <mat-menu #mainInfo="matMenu">
@@ -131,6 +54,105 @@
                             (click)="field.default=!field.default">{{field.label}}</button>
                     </ng-container>
                 </mat-menu>
+                <div [class.multipleUnits]="!isEmptyUnit('address') || !isEmptyUnit('complement')">
+                    <ng-container *ngFor="let unit of contactUnit">
+                        <div *ngIf="!isEmptyUnit(unit.id)">
+                            <mat-list>
+                                <h3 mat-subheader class="unitTitle">{{unit.label}}</h3>
+                                <ng-container *ngFor="let field of contactForm">
+                                    <mat-list-item class="contact-item" *ngIf="field.unit === unit.id">
+                                        <p mat-line class="contact-content" *ngIf="field.default">
+                                            <ng-container *ngIf="field.type === 'string'">
+                                                <mat-form-field>
+                                                    <input matInput [formControl]="field.control"
+                                                        [placeholder]="field.label" (blur)="checkCompany(field)">
+                                                    <mat-hint *ngIf="companyFound !== null && field.id === 'company'"
+                                                        align="end">Société <b>{{companyFound.company}}</b> trouvée ! cliquez <a
+                                                            (click)="setAddress(companyFound)"
+                                                            style="cursor: pointer;">ici</a> pour copier son
+                                                        adresse</mat-hint>
+                                                </mat-form-field>
+                                            </ng-container>
+                                            <ng-container *ngIf="field.type === 'integer'">
+                                                <mat-form-field>
+                                                    <input type="number" matInput [formControl]="field.control"
+                                                        [placeholder]="field.label" min="0" step="0.1">
+                                                </mat-form-field>
+                                            </ng-container>
+                                            <ng-container *ngIf="field.type === 'select'">
+                                                <plugin-select-search [label]="field.label"
+                                                    [placeholderLabel]="field.label" [datas]="field.values"
+                                                    (afterSelected)="launchEvent($event, field)">
+                                                </plugin-select-search>
+                                            </ng-container>
+                                            <ng-container *ngIf="field.type === 'date'">
+                                                <mat-form-field (click)="picker.open()" style="cursor:pointer;">
+                                                    <mat-label *ngIf="appService.getViewMode()">{{field.label}}
+                                                    </mat-label>
+                                                    <input [formControl]="field.control" matInput
+                                                        [matDatepicker]="picker" [placeholder]="field.label" readonly
+                                                        style="cursor:pointer;"
+                                                        (dateChange)="launchEvent($event, field)">
+                                                    <mat-datepicker-toggle matSuffix [for]="picker"
+                                                        *ngIf="!field.control.value">
+                                                    </mat-datepicker-toggle>
+                                                    <mat-datepicker [touchUi]="appService.getViewMode()" #picker>
+                                                    </mat-datepicker>
+                                                    <button mat-button color="warn" matSuffix mat-icon-button
+                                                        *ngIf="field.control.value && !field.control.disabled"
+                                                        (click)="$event.stopPropagation();field.control.reset();"
+                                                        [title]="lang.eraseValue">
+                                                        <mat-icon color="warn" class="fa fa-calendar-times">
+                                                        </mat-icon>
+                                                    </button>
+                                                </mat-form-field>
+                                            </ng-container>
+                                            <ng-container *ngIf="field.type === 'radio'">
+                                                <mat-form-field>
+                                                    <input matInput style="display: none;">
+                                                    <mat-radio-group class="radio-form" color="primary"
+                                                        [formControl]="field.control">
+                                                        <mat-radio-button *ngFor="let value of field.values"
+                                                            [value]="value.id">
+                                                            {{value.label}}
+                                                        </mat-radio-button>
+                                                    </mat-radio-group>
+                                                </mat-form-field>
+                                            </ng-container>
+                                            <ng-container *ngIf="field.type === 'checkbox'">
+                                                <div class="input-form checkbox-form">
+                                                    <mat-selection-list #shoes class="div-list"
+                                                        [formControl]="field.control">
+                                                        <mat-list-option *ngFor="let value of field.values"
+                                                            [value]="value.id" checkboxPosition="before">
+                                                            {{value.label}}
+                                                        </mat-list-option>
+                                                    </mat-selection-list>
+                                                </div>
+                                                <mat-chip-list class="checkbox-selected-list"
+                                                    [disabled]="field.system && adminMode">
+                                                    <mat-chip *ngFor="let chip of shoes.selectedOptions.selected"
+                                                        selected>
+                                                        {{chip.value}}
+                                                    </mat-chip>
+                                                </mat-chip-list>
+                                            </ng-container>
+                                        </p>
+                                        <button *ngIf="field.default && canDelete(field)" mat-icon-button matSuffix color="warn"
+                                            (click)="field.default = !field.default">
+                                            <mat-icon class="fa fa-trash"></mat-icon>
+                                        </button>
+                                    </mat-list-item>
+
+                                </ng-container>
+                            </mat-list>
+                        </div>
+                    </ng-container>
+                </div>
+                <div>
+                    <button mat-raised-button color="primary" type="button"
+                        (click)="onSubmit()">{{lang.validate}}</button>
+                </div>
 
 
                 <!--<mat-list>

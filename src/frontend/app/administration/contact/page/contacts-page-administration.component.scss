@@ -1,9 +1,19 @@
+@import '../../../../css/vars.scss';
+
 .contact-item {
     height: auto !important;
 }
 
-.addressLine_1 {
-    display: grid !important;
-    grid-template-columns: 150px 1fr;
-    grid-gap: 10px !important;
+.multipleUnits div:nth-child(1) {
+    display: inline-grid !important;
+    width: 50%;
+}
+
+.multipleUnits div:nth-child(2) {
+    display: inline-grid !important;
+    width: 50%;
+}
+
+.unitTitle {
+    color: $primary;
 }

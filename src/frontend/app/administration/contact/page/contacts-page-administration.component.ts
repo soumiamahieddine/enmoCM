@@ -10,7 +10,7 @@ import { MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
 import { ConfirmComponent } from '../../../../plugins/modal/confirm.component';
 import { FormControl } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     templateUrl: "contacts-page-administration.component.html",
@@ -27,7 +27,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
 
     creationMode: boolean = true;
 
-    contact: any = null;
+    contactId: number = null;
 
     contactUnit = [
         {
@@ -159,9 +159,12 @@ export class ContactsPageAdministrationComponent implements OnInit {
         }
     ];
 
+    companyFound:any = null;
+
     constructor(
         public http: HttpClient,
         private route: ActivatedRoute,
+        private router: Router,
         private notify: NotificationService,
         private headerService: HeaderService,
         public appService: AppService,
@@ -207,10 +210,20 @@ export class ContactsPageAdministrationComponent implements OnInit {
                 window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
                 this.creationMode = false;
-
+                this.contactForm.forEach(element => {
+                    element.default = false;
+                });
                 this.http.get("../../rest/contacts/" + params['id']).pipe(
                     tap((data) => {
-                        console.log(data);
+                        this.contactId = params['id'];
+                        let indexField = -1;
+                        Object.keys(data).forEach(element => {
+                            indexField = this.contactForm.map(field => field.id).indexOf(element);
+                            if (!this.isEmptyValue(data[element]) && indexField > -1) {
+                                this.contactForm[indexField].control.setValue(data[element]);
+                                this.contactForm[indexField].default = true;
+                            }
+                        });
                     }),
                     finalize(() => this.loading = false),
                     catchError((err: any) => {
@@ -220,6 +233,59 @@ export class ContactsPageAdministrationComponent implements OnInit {
                 ).subscribe();
             }
         });
+    }
+
+    onSubmit() {
+        if (this.contactId !== null) {
+            this.updateContact();
+        } else {
+            this.createContact();
+        }
+    }
+
+    createContact() {
+        let contact: any = {};
+        let customFiel:any = {};
+        contact['customFields'] = [];
+        const regex = /customField_[.]*/g;
+
+        this.contactForm.filter(field => field.default).forEach(element => {
+            if (element.id.match(regex) !== null) {
+                customFiel[element.id.split('_')[1]] = element.control.value;
+                contact['customFields'].push(customFiel);
+            } else {
+                contact[element.id] = element.control.value;
+            }   
+        });
+        this.http.post("../../rest/contacts", contact).pipe(
+            tap(() => {
+                this.router.navigate(["/administration/contacts"]);
+                this.notify.success(this.lang.contactAdded);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    updateContact() {
+        let contact: any = {};
+        this.contactForm.filter(field => field.default).forEach(element => {
+            contact[element.id] = element.control.value;
+        });
+        this.http.put(`../../rest/contacts/${this.contactId}`, contact).pipe(
+            tap(() => {
+                this.router.navigate(["/administration/contacts"]);
+                this.notify.success(this.lang.contactUpdated);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     isEmptyUnit(id: string) {
@@ -247,6 +313,73 @@ export class ContactsPageAdministrationComponent implements OnInit {
             return true;
         } else {
             return false;
+        }
+    }
+
+    isEmptyValue(value: string) {
+
+        if (value === null) {
+            return true;
+
+        } else if (Array.isArray(value)) {
+            if (value.length > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (String(value) !== '') {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    checkCompany(field: any) {
+        if (field.id === 'company' && (this.companyFound === null || this.companyFound.company !== field.control.value)) {
+
+            this.http.get(`../../rest/contacts?search=${field.control.value}`).pipe(
+                tap(() => this.companyFound = null),
+                filter((data:any) => data.contacts.length > 0),
+                tap((data) => {
+                    this.companyFound = data.contacts[0];
+                }),
+                finalize(() => this.loading = false),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
+    }
+
+    setAddress(contact: any) {
+        let indexField = -1;
+        Object.keys(contact).forEach(element => {
+            indexField = this.contactForm.map(field => field.id).indexOf(element);
+            if (!this.isEmptyValue(contact[element]) && indexField > -1 && ['company', 'addressNumber', 'addressStreet', 'addressAdditional2', 'addressPostcode', 'addressTown', 'addressCountry'].indexOf(element) > -1) {
+                this.contactForm[indexField].control.setValue(contact[element]);
+                this.contactForm[indexField].default = true;
+            }
+        });
+    }
+
+    canDelete(field: any) {
+        if (field.id === "company") {
+            const lastname = this.contactForm.filter(contact => contact.id === 'lastname')[0];
+            if (lastname.default && !this.isEmptyValue(lastname.control.value)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (field.id === "lastname") {
+            const company = this.contactForm.filter(contact => contact.id === 'company')[0];
+            if (company.default && !this.isEmptyValue(company.control.value)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
         }
     }
 }

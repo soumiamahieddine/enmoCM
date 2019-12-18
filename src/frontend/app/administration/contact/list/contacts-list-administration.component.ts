@@ -46,7 +46,7 @@ export class ContactsListAdministrationComponent implements OnInit {
     subMenus:any [] = [
         {
             icon: 'fa fa-code',
-            route: '/administration/contacts/customFields',
+            route: '/administration/contactsCustomFields',
             label : this.lang.customFields
         },
         {
