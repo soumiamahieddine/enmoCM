@@ -31,22 +31,31 @@ class HomeController
     {
         $regroupedBaskets = [];
 
-        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'external_id']]);
-        $homeMessage = ParameterModel::getById(['select' => ['param_value_string'], 'id'=> 'homepage_message']);
-        $homeMessage = trim($homeMessage['param_value_string']);
+        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['preferences', 'external_id']]);
 
-        $redirectedBaskets = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $user['id']]);
+        $redirectedBaskets = RedirectBasketModel::getRedirectedBasketsByUserId(['userId' => $GLOBALS['id']]);
         $groups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
+
+        $preferences = json_decode($user['preferences'], true);
+        if (!empty($preferences['homeGroups'])) {
+            $copyGroups = $groups;
+            foreach ($copyGroups as $group) {
+                $key = array_search($group['id'], $preferences['homeGroups']);
+                $groups[$key] = $group;
+            }
+            $groups = array_values($groups);
+        }
+
         foreach ($groups as $group) {
             $baskets = BasketModel::getAvailableBasketsByGroupUser([
                 'select'        => ['baskets.id', 'baskets.basket_id', 'baskets.basket_name', 'baskets.basket_desc', 'baskets.basket_clause', 'baskets.color', 'users_baskets_preferences.color as pcolor'],
-                'userSerialId'  => $user['id'],
+                'userSerialId'  => $GLOBALS['id'],
                 'groupId'       => $group['group_id'],
                 'groupSerialId' => $group['id']
             ]);
 
             foreach ($baskets as $kBasket => $basket) {
-                $baskets[$kBasket]['owner_user_id'] = $user['id'];
+                $baskets[$kBasket]['owner_user_id'] = $GLOBALS['id'];
                 if (!empty($basket['pcolor'])) {
                     $baskets[$kBasket]['color'] = $basket['pcolor'];
                 }
@@ -62,7 +71,7 @@ class HomeController
                     }
                 }
 
-                $baskets[$kBasket]['resourceNumber'] = BasketModel::getResourceNumberByClause(['userId' => $user['id'], 'clause' => $basket['basket_clause']]);
+                $baskets[$kBasket]['resourceNumber'] = BasketModel::getResourceNumberByClause(['userId' => $GLOBALS['id'], 'clause' => $basket['basket_clause']]);
 
                 unset($baskets[$kBasket]['pcolor'], $baskets[$kBasket]['basket_clause']);
             }
@@ -77,7 +86,7 @@ class HomeController
             }
         }
 
-        $assignedBaskets = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $user['id']]);
+        $assignedBaskets = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $GLOBALS['id']]);
         foreach ($assignedBaskets as $key => $assignedBasket) {
             $basket = BasketModel::getByBasketId(['select' => ['id', 'basket_clause'], 'basketId' => $assignedBasket['basket_id']]);
             $assignedBaskets[$key]['id'] = $basket['id'];
@@ -100,6 +109,9 @@ class HomeController
                 }
             }
         }
+
+        $homeMessage = ParameterModel::getById(['select' => ['param_value_string'], 'id'=> 'homepage_message']);
+        $homeMessage = trim($homeMessage['param_value_string']);
 
         return $response->withJson([
             'regroupedBaskets'              => $regroupedBaskets,

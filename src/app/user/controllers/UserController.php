@@ -540,6 +540,13 @@ class UserController
         if (!in_array($body['preferences']['documentEdition'], DocumentEditorController::DOCUMENT_EDITION_METHODS)) {
             return $response->withStatus(400)->withJson(['errors' => 'Body preferences[documentEdition] is not allowed']);
         }
+        if (!empty($body['preferences']['homeGroups'])) {
+            $groups = UserGroupModel::get(['select' => ['group_id'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
+            $groups = array_column($groups, 'group_id');
+            if (!empty(array_diff($body['preferences']['homeGroups'], $groups))) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body preferences[homeGroups] is not filled with all user\'s groups']);
+            }
+        }
 
         UserModel::update([
             'set'   => [

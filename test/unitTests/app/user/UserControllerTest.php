@@ -8,6 +8,7 @@
 */
 
 use PHPUnit\Framework\TestCase;
+use User\models\UserGroupModel;
 
 class UserControllerTest extends TestCase
 {
@@ -705,12 +706,15 @@ class UserControllerTest extends TestCase
         //  UPDATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $groups = UserGroupModel::get(['select' => ['group_id'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
+        $groups = array_column($groups, 'group_id');
+
         $aArgs = [
             'firstname'     => 'Wonder',
             'lastname'      => 'User',
             'mail'          => 'dev@maarch.org',
             'initials'      => 'SU',
-            'preferences'   => ['documentEdition' => 'java']
+            'preferences'   => ['documentEdition' => 'java', 'homeGroups' => $groups]
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -722,13 +726,15 @@ class UserControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $response     = $userController->getProfile($request, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
+        $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertSame('superadmin', $responseBody->user_id);
-        $this->assertSame('Wonder', $responseBody->firstname);
-        $this->assertSame('User', $responseBody->lastname);
-        $this->assertSame('dev@maarch.org', $responseBody->mail);
-        $this->assertSame('SU', $responseBody->initials);
+        $this->assertSame('superadmin', $responseBody['user_id']);
+        $this->assertSame('Wonder', $responseBody['firstname']);
+        $this->assertSame('User', $responseBody['lastname']);
+        $this->assertSame('dev@maarch.org', $responseBody['mail']);
+        $this->assertSame('SU', $responseBody['initials']);
+        $this->assertSame('java', $responseBody['preferences']['documentEdition']);
+        $this->assertEmpty($responseBody['preferences']['homeGroups']);
 
 
         //  UPDATE
@@ -758,6 +764,24 @@ class UserControllerTest extends TestCase
         $this->assertSame('ADMIN', $responseBody->lastname);
         $this->assertSame('dev@maarch.org', $responseBody->mail);
         $this->assertSame('SU', $responseBody->initials);
+
+        //  ERRORS
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $aArgs = [
+            'firstname'     => 'Super',
+            'lastname'      => 'ADMIN',
+            'mail'          => 'dev@maarch.org',
+            'initials'      => 'SU',
+            'preferences'   => ['homeGroups' => [999]]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
+
+        $response     = $userController->updateProfile($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(400, $response->getStatusCode());
+
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Body preferences[homeGroups] is not filled with all user\'s groups', $responseBody->errors);
     }
 
     public function testSetRedirectedBasket()
