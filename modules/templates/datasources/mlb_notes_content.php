@@ -62,7 +62,7 @@ foreach ($events as $event) {
 
     if ($event->table_name != 'notes') {
         $note = $stmt->fetch(PDO::FETCH_ASSOC);
-        $resId = $resId;
+        $resId = $note['identifier'];
     } else {
         $note = NoteModel::getById(['id' => $event->record_id]);
         $resId = $note['identifier'];
@@ -92,7 +92,7 @@ foreach ($events as $event) {
     }
 
     $resourceContacts = ResourceContactModel::get([
-        'where' => ['res_id = ?', "type = 'contact'"],
+        'where' => ['res_id = ?', "type = 'contact'", "mode = 'sender'"],
         'data'  => [$resId]
     ]);
 
