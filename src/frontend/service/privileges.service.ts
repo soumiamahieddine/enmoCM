@@ -131,10 +131,10 @@ export class PrivilegeService {
             "id": "admin_contacts",
             "label": this.lang.contacts,
             "comment": this.lang.contactsAdmin,
-            "route": "index.php?page=admin_contacts&admin=contacts",
+            "route": "/administration/contacts",
             "unit": "production",
             "style": "fa fa-book",
-            "angular" : false,
+            "angular" : true,
             "hasParams" : false
         },
         {

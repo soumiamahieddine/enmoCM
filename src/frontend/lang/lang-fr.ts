@@ -1375,4 +1375,5 @@ export const LANG_FR = {
     "editorOption": "Option d'édition",
     "editorOptionAdmin": "Gérer les paramètres d'édition",
     "documentEditor": "Editeur de document",
+    "contactsList": "Liste des contacts",
 };

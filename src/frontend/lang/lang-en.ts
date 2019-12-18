@@ -1337,4 +1337,5 @@ export const LANG_EN = {
     "editorOption": "Editor option",
     "editorOptionAdmin": "Manage editor option",
     "documentEditor": "Document editor",
+    "contactsList": "Contacts list",
 };

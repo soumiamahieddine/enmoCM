@@ -171,10 +171,8 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                 },
                 user: {
                     id: "1",
-                    name: "Bernard BLIER"
+                    name: " "
                 },
-                "plugins": {  
-               },
             },
         };
         this.docEditor = new DocsAPI.DocEditor('placeholder', this.editorConfig, this.onlyfficeUrl);

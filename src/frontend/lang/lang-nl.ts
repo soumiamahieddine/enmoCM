@@ -1362,4 +1362,5 @@ export const LANG_NL = {
     "editorOption": "Editor option", //_TO_TRANSLATE
     "editorOptionAdmin": "Manage editor option", //_TO_TRANSLATE
     "documentEditor": "Document editor", //_TO_TRANSLATE
+    "contactsList": "Contacts list", //_TO_TRANSLATE
 };
