@@ -12,6 +12,7 @@ import './onlyoffice-api.js';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subject, Observable, of } from 'rxjs';
 import { catchError, tap, filter, exhaustMap } from 'rxjs/operators';
+import { LANG } from '../../app/translate.component';
 
 declare var DocsAPI: any;
 
@@ -22,6 +23,8 @@ declare var DocsAPI: any;
   </button><div id="placeholder"></div>`,
 })
 export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
+
+    lang: any = LANG;
 
     @Input() editMode: boolean = false;
     @Input() file: any = {};
@@ -152,8 +155,8 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
             },
             editorConfig: {
                 callbackUrl: `${this.appUrl}rest/onlyOfficeCallback`,
-                lang: 'fr',
-                region: 'fr-FR',
+                lang: this.lang.language,
+                region: this.lang.langISO,
                 mode: 'edit',
                 customization: {
                     chat: false,

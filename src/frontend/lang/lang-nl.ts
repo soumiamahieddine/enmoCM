@@ -1355,6 +1355,7 @@ export const LANG_NL = {
     "siretGeneratedButAnnuaryUnreachable": "SIRET number generated but annuary is unreachable",//_TO_TRANSLATE
     "entityDeletedButAnnuaryUnreachable": "Entity deleted but annuary is unreachable",//_TO_TRANSLATE
     "langISO": "nl-FR",
+    "language": "nl",
     "noSelectedContact": "No associated contact", //_TO_TRANSLATE
     "searchContact": "Search a contact", //_TO_TRANSLATE
     "acknowledgementReceiptGenerationImpossible": "Acknowledgement receipt generation impossible for resource(s) : ", //_TO_TRANSLATE

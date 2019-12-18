@@ -1330,6 +1330,7 @@ export const LANG_EN = {
     "siretGeneratedButAnnuaryUnreachable": "SIRET number generated but annuary is unreachable",
     "entityDeletedButAnnuaryUnreachable": "Entity deleted but annuary is unreachable",
     "langISO": "en-US",
+    "language": "en",
     "noSelectedContact": "No associated contact",
     "searchContact": "Search a contact",
     "acknowledgementReceiptGenerationImpossible": "Acknowledgement receipt generation impossible for resource(s) : ",

@@ -1368,6 +1368,7 @@ export const LANG_FR = {
     "siretGeneratedButAnnuaryUnreachable": "Numéro SIRET généré mais l'annuaire est injoignable",
     "entityDeletedButAnnuaryUnreachable": "Entité supprimée mais la synchronisation avec l'annuaire est impossible",
     "langISO": "fr-FR",
+    "language": "fr",
     "noSelectedContact": "Aucun contact associé",
     "searchContact": "Recherchez un contact",
     "acknowledgementReceiptGenerationImpossible": "Impossible de générer un accusé de réception pour le(s) courrier(s) : ",
