@@ -282,7 +282,7 @@ class UserControllerTest extends TestCase
         $entityInfo     = \Entity\models\EntityModel::getByEntityId(['entityId' => 'DGS', 'select' => ['id']]);
         $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => $entityInfo['id']]);
         $responseBody   = json_decode((string)$response->getBody());
-        $entitySerialId = $responseBody->entity->id;
+        $entitySerialId = $responseBody->id;
 
         $response     = $entityController->getUsersById($request, new \Slim\Http\Response(), ['id' => $entitySerialId]);
         $responseBody = json_decode((string)$response->getBody());
@@ -833,7 +833,7 @@ class UserControllerTest extends TestCase
         $user_id = \User\models\UserModel::getByLogin(['login' => 'bbain', 'select' => ['id']]);
        
         //DELETE MANY WITH ONE ON ERROR
-         $aArgs = [
+        $aArgs = [
             'redirectedBasketIds' => [ self::$redirectId, -1 ]
         ];
 
