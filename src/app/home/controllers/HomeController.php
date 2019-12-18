@@ -41,7 +41,11 @@ class HomeController
             $copyGroups = $groups;
             foreach ($copyGroups as $group) {
                 $key = array_search($group['id'], $preferences['homeGroups']);
-                $groups[$key] = $group;
+                if ($key === false) {
+                    $groups[] = $group;
+                } else {
+                    $groups[$key] = $group;
+                }
             }
             $groups = array_values($groups);
         }

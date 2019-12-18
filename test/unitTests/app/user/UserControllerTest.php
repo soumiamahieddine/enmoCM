@@ -629,7 +629,7 @@ class UserControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $response       = $userController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
-        $responseBody   = json_decode((string)$response->getBody());
+        $this->assertSame(204, $response->getStatusCode());
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -781,7 +781,7 @@ class UserControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
 
         $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame('Body preferences[homeGroups] is not filled with all user\'s groups', $responseBody->errors);
+        $this->assertSame('Body preferences[homeGroups] is not filled with all user\'s groups', $responseBody['errors']);
     }
 
     public function testSetRedirectedBasket()

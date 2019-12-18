@@ -540,13 +540,6 @@ class UserController
         if (!in_array($body['preferences']['documentEdition'], DocumentEditorController::DOCUMENT_EDITION_METHODS)) {
             return $response->withStatus(400)->withJson(['errors' => 'Body preferences[documentEdition] is not allowed']);
         }
-        if (!empty($body['preferences']['homeGroups'])) {
-            $groups = UserGroupModel::get(['select' => ['group_id'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
-            $groups = array_column($groups, 'group_id');
-            if (!empty(array_diff($body['preferences']['homeGroups'], $groups))) {
-                return $response->withStatus(400)->withJson(['errors' => 'Body preferences[homeGroups] is not filled with all user\'s groups']);
-            }
-        }
 
         UserModel::update([
             'set'   => [
@@ -556,6 +549,39 @@ class UserController
                 'phone'         => $body['phone'],
                 'initials'      => $body['initials'],
                 'preferences'   => json_encode($body['preferences'])
+            ],
+            'where' => ['id = ?'],
+            'data'  => [$GLOBALS['id']]
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function updateCurrentUserPreferences(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['preferences']]);
+        $preferences = json_decode($user['preferences'], true);
+
+        if (!empty($body['documentEdition'])) {
+            if (!in_array($body['documentEdition'], DocumentEditorController::DOCUMENT_EDITION_METHODS)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body preferences[documentEdition] is not allowed']);
+            }
+            $preferences['documentEdition'] = $body['documentEdition'];
+        }
+        if (!empty($body['homeGroups'])) {
+            $groups = UserGroupModel::get(['select' => ['group_id'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
+            $groups = array_column($groups, 'group_id');
+            if (!empty(array_diff($body['homeGroups'], $groups))) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body homeGroups is not filled with all user\'s groups']);
+            }
+            $preferences['homeGroups'] = $body['homeGroups'];
+        }
+
+        UserModel::update([
+            'set'   => [
+                'preferences'   => json_encode($preferences)
             ],
             'where' => ['id = ?'],
             'data'  => [$GLOBALS['id']]

@@ -88,7 +88,7 @@ export class AvisWorkflowComponent implements OnInit {
     loadWorkflow(resId: number) {
         this.loading = true;
         this.avisWorkflow.items = [];
-        this.http.get("../../rest/res/" + resId + "/avisCircuit")
+        this.http.get("../../rest/resources/" + resId + "/opinionCircuit")
          .subscribe((data: any) => {
             data.forEach((element:any) => {
                 this.avisWorkflow.items.push(element);
