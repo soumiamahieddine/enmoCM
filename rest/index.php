@@ -118,6 +118,13 @@ $app->delete('/contacts/{id}', \Contact\controllers\ContactController::class . '
 $app->put('/contacts/{id}/activation', \Contact\controllers\ContactController::class . ':updateActivation');
 $app->get('/formattedContacts/{id}/types/{type}', \Contact\controllers\ContactController::class . ':getLightFormattedContact');
 
+//ContactsCustomFields
+$app->get('/contactsCustomFields', \Contact\controllers\ContactCustomFieldController::class . ':get');
+$app->post('/contactsCustomFields', \Contact\controllers\ContactCustomFieldController::class . ':create');
+$app->put('/contactsCustomFields/{id}', \Contact\controllers\ContactCustomFieldController::class . ':update');
+$app->delete('/contactsCustomFields/{id}', \Contact\controllers\ContactCustomFieldController::class . ':delete');
+
+//ContactsGroups
 $app->get('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':get');
 $app->post('/contactsGroups', \Contact\controllers\ContactGroupController::class . ':create');
 $app->get('/contactsGroups/{id}', \Contact\controllers\ContactGroupController::class . ':getById');
