@@ -26,6 +26,7 @@ use Resource\models\ResourceContactModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\AutoCompleteController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
@@ -39,13 +40,39 @@ class ContactController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $queryparams = $request->getQueryParams();
+        $queryParams = $request->getQueryParams();
 
-        $queryparams['offset'] = (empty($queryparams['offset']) || !is_numeric($queryparams['offset']) ? 0 : (int)$queryparams['offset']);
-        $queryparams['limit'] = (empty($queryparams['limit']) || !is_numeric($queryparams['limit']) ? 25 : (int)$queryparams['limit']);
-        $queryparams['orderBy'] = !in_array($queryparams['orderBy'], ['firstname', 'lastname', 'company']) ? null : [$queryparams['orderBy']];
+        $queryParams['offset'] = (empty($queryParams['offset']) || !is_numeric($queryParams['offset']) ? 0 : (int)$queryParams['offset']);
+        $queryParams['limit'] = (empty($queryParams['limit']) || !is_numeric($queryParams['limit']) ? 25 : (int)$queryParams['limit']);
+        $order = !in_array($queryParams['order'], ['asc', 'desc']) ? '' : $queryParams['order'];
+        $queryParams['orderBy'] = !in_array($queryParams['orderBy'], ['firstname', 'lastname', 'company']) ? null : ["{$queryParams['orderBy']} {$order}"];
 
-        $contacts = ContactModel::get(['select' => ['id', 'firstname', 'lastname', 'company', 'enabled', 'count(1) OVER()'], 'orderBy' => $queryparams['orderBy'], 'offset' => $queryparams['offset'], 'limit' => $queryparams['limit']]);
+        if (!empty($queryParams['search'])) {
+            $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country'];
+            $fieldsNumber = count($fields);
+            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+
+            $requestData = AutoCompleteController::getDataForRequest([
+                'search'        => $queryParams['search'],
+                'fields'        => $fields,
+                'where'         => [],
+                'data'          => [],
+                'fieldsNumber'  => $fieldsNumber,
+            ]);
+        }
+
+        $contacts = ContactModel::get([
+            'select'    => [
+                'id', 'firstname', 'lastname', 'company', 'address_number as "addressNumber"', 'address_street as "addressStreet"',
+                'address_additional1 as "addressAdditional1"', 'address_additional2 as "addressAdditional2"', 'address_postcode as "addressPostcode"',
+                'address_town as "addressTown"', 'address_country as "addressCountry"', 'enabled', 'count(1) OVER()'
+            ],
+            'where'     => $requestData['where'] ?? null,
+            'data'      => $requestData['data'] ?? null,
+            'orderBy'   => $queryParams['orderBy'],
+            'offset'    => $queryParams['offset'],
+            'limit'     => $queryParams['limit']
+        ]);
         $count = $contacts[0]['count'] ?? 0;
 
         foreach ($contacts as $key => $contact) {

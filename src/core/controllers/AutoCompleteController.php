@@ -796,28 +796,28 @@ class AutoCompleteController
         return $response->withJson($data);
     }
 
-    private static function getDataForRequest(array $aArgs)
+    public static function getDataForRequest(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['search', 'fields', 'where', 'data', 'fieldsNumber']);
-        ValidatorModel::stringType($aArgs, ['search', 'fields']);
-        ValidatorModel::arrayType($aArgs, ['where', 'data']);
-        ValidatorModel::intType($aArgs, ['fieldsNumber']);
+        ValidatorModel::notEmpty($args, ['search', 'fields', 'fieldsNumber']);
+        ValidatorModel::stringType($args, ['search', 'fields']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
+        ValidatorModel::intType($args, ['fieldsNumber']);
 
-        $searchItems = explode(' ', $aArgs['search']);
+        $searchItems = explode(' ', $args['search']);
 
         foreach ($searchItems as $item) {
             if (strlen($item) >= 2) {
-                $aArgs['where'][] = $aArgs['fields'];
-                for ($i = 0; $i < $aArgs['fieldsNumber']; $i++) {
-                    $aArgs['data'][] = "%{$item}%";
+                $args['where'][] = $args['fields'];
+                for ($i = 0; $i < $args['fieldsNumber']; $i++) {
+                    $args['data'][] = "%{$item}%";
                 }
             }
         }
 
-        return ['where' => $aArgs['where'], 'data' => $aArgs['data']];
+        return ['where' => $args['where'], 'data' => $args['data']];
     }
 
-    private static function getUnsensitiveFieldsForRequest(array $args)
+    public static function getUnsensitiveFieldsForRequest(array $args)
     {
         ValidatorModel::notEmpty($args, ['fields']);
         ValidatorModel::arrayType($args, ['fields']);
