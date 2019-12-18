@@ -201,6 +201,9 @@ class ContactController
             'externalId'            => json_decode($rawContact['external_id'], true)
         ];
 
+        $filling = ContactController::getFillingRate(['contactId' => $rawContact['id']]);
+        $contact['filling'] = empty($filling['color']) ? '' : $filling['color'];
+
         return $response->withJson($contact);
     }
 
