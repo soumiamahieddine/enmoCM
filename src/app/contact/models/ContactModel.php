@@ -78,14 +78,15 @@ class ContactModel
 
     public static function update(array $args)
     {
-        ValidatorModel::notEmpty($args, ['set', 'where', 'data']);
-        ValidatorModel::arrayType($args, ['set', 'where', 'data']);
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['set', 'postSet', 'where', 'data']);
 
         DatabaseModel::update([
-            'table' => 'contacts',
-            'set'   => $args['set'],
-            'where' => $args['where'],
-            'data'  => $args['data']
+            'table'     => 'contacts',
+            'set'       => $args['set'],
+            'postSet'   => $args['postSet'],
+            'where'     => $args['where'],
+            'data'      => $args['data']
         ]);
 
         return true;
