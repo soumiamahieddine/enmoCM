@@ -226,6 +226,7 @@ function migrateCustomField($args = [])
         if (!empty($value)) {
             $contact = \Contact\models\ContactModel::getById(['id' => $args['newContactId'], 'select' => ['custom_fields']]);
             $value = json_encode($value);
+            $value = str_replace("'", "''", $value);
             if (empty($contact['custom_fields'])) {
                 \Contact\models\ContactModel::update([
                     'postSet' => ['custom_fields' => "jsonb_set('{}', '{{$args['newCustomFields'][$key]}}', '{$value}')"],
