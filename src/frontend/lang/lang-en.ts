@@ -1338,4 +1338,6 @@ export const LANG_EN = {
     "editorOptionAdmin": "Manage editor option",
     "documentEditor": "Document editor",
     "contactsList": "Contacts list",
+    "listConfiguration": "Manage list display",
+    "noticeGroupeOrder": "Drag and drop group to set order",
 };

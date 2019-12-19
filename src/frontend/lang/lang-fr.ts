@@ -1376,4 +1376,6 @@ export const LANG_FR = {
     "editorOptionAdmin": "Gérer les paramètres d'édition",
     "documentEditor": "Editeur de document",
     "contactsList": "Liste des contacts",
+    "listConfiguration": "Paramétrer l'affichage de la liste",
+    "noticeGroupeOrder": "Glisser-déposer les groupes pour définir l'ordre",
 };

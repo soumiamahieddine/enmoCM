@@ -38,16 +38,18 @@ class HomeController
 
         $preferences = json_decode($user['preferences'], true);
         if (!empty($preferences['homeGroups'])) {
-            $copyGroups = $groups;
-            foreach ($copyGroups as $group) {
+            $orderGroups   = [];
+            $noOrderGroups = [];
+            foreach ($groups as $group) {
                 $key = array_search($group['id'], $preferences['homeGroups']);
                 if ($key === false) {
-                    $groups[] = $group;
+                    $noOrderGroups[] = $group;
                 } else {
-                    $groups[$key] = $group;
+                    $orderGroups[$key] = $group;
                 }
             }
-            $groups = array_values($groups);
+            ksort($orderGroups);
+            $groups = array_merge($orderGroups, $noOrderGroups);
         }
 
         foreach ($groups as $group) {

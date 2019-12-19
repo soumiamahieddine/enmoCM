@@ -773,7 +773,7 @@ class UserControllerTest extends TestCase
             'lastname'      => 'ADMIN',
             'mail'          => 'dev@maarch.org',
             'initials'      => 'SU',
-            'preferences'   => ['homeGroups' => [999]]
+            'preferences'   => ['documentEdition' => 'maarchOnline']
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -781,7 +781,7 @@ class UserControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
 
         $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame('Body preferences[homeGroups] is not filled with all user\'s groups', $responseBody['errors']);
+        $this->assertSame('Body preferences[documentEdition] is not allowed', $responseBody['errors']);
     }
 
     public function testSetRedirectedBasket()
