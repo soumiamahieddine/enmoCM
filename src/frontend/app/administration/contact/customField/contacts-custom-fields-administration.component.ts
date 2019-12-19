@@ -37,12 +37,12 @@ export class ContactsCustomFieldsAdministrationComponent implements OnInit {
         },
         {
             icon: 'fa fa-cog',
-            route: '/administration/contacts-parameters',
+            route: '/administration/contacts/contacts-parameters',
             label : this.lang.contactsParameters
         },
         {
             icon: 'fa fa-users',
-            route: '/administration/contacts-groups',
+            route: '/administration/contacts/contacts-groups',
             label : this.lang.contactsGroups
         },
     ];

@@ -23,7 +23,7 @@ export class ContactsParametersAdministrationComponent implements OnInit {
     subMenus:any [] = [
         {
             icon: 'fa fa-book',
-            route: '/administration/contacts/list',
+            route: '/administration/contacts',
             label : this.lang.contactsList
         },
         {
