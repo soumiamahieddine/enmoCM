@@ -1378,4 +1378,10 @@ export const LANG_FR = {
     "contactsList": "Liste des contacts",
     "listConfiguration": "Paramétrer l'affichage de la liste",
     "noticeGroupeOrder": "Glisser-déposer les groupes pour définir l'ordre",
+    "searchAddressBan": "Recherche une adresse BAN",
+    "searchAddressDb": "Rechercher dans la base d'addresse",
+    "switchManualAddress": "Basculer en adresse manuelle",
+    "targetDepartment": "Département cible",
+    "contactCreation": "Création d'un contact",
+    "contactModification": "Modification d'un contact",
 };

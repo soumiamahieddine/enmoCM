@@ -1340,4 +1340,10 @@ export const LANG_EN = {
     "contactsList": "Contacts list",
     "listConfiguration": "Manage list display",
     "noticeGroupeOrder": "Drag and drop group to set order",
+    "searchAddressBan": "Search a BAN address",
+    "searchAddressDb": "Search in address database",
+    "switchManualAddress": "Switch to manual address",
+    "targetDepartment": "Target department",
+    "contactCreation": "Contact creation",
+    "contactModification": "Contact modification",
 };

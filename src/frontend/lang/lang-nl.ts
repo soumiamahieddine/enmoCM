@@ -1365,4 +1365,10 @@ export const LANG_NL = {
     "contactsList": "Contacts list", //_TO_TRANSLATE
     "listConfiguration": "Manage list display", //_TO_TRANSLATE
     "noticeGroupeOrder": "Drag and drop group to set order", //_TO_TRANSLATE
+    "searchAddressBan": "Search a BAN address", //_TO_TRANSLATE
+    "searchAddressDb": "Search in address database", //_TO_TRANSLATE
+    "switchManualAddress": "Switch to manual address", //_TO_TRANSLATE
+    "targetDepartment": "Target department", //_TO_TRANSLATE
+    "contactCreation": "Contact creation", //_TO_TRANSLATE
+    "contactModification": "Contact modification", //_TO_TRANSLATE
 };

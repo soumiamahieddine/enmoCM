@@ -95,7 +95,7 @@ export class ContactsListAdministrationComponent implements OnInit {
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
                     this.resultsLength = data.count;
-                    this.headerService.setHeader(this.lang.administration + ' ' + this.lang.contacts, '', 'fa fa-book');
+                    this.headerService.setHeader(this.lang.administration + ' ' + this.lang.contacts, '', '');
                     return data.contacts;
                 }),
                 catchError((err: any) => {
@@ -210,8 +210,8 @@ export class ContactListHttpDao {
 
     getRepoIssues(sort: string, order: string, page: number, href: string, search: string): Observable<ContactList> {
         
-        let offset = page * 25;
-        const requestUrl = `${href}?limit=25&offset=${offset}&order=${order}&orderBy=${sort}&search=${search}`;
+        let offset = page * 10;
+        const requestUrl = `${href}?limit=10&offset=${offset}&order=${order}&orderBy=${sort}&search=${search}`;
 
         return this.http.get<ContactList>(requestUrl);
     }
