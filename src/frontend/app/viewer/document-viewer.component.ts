@@ -67,6 +67,7 @@ export class DocumentViewerComponent implements OnInit {
     @Input('title') title: string = '';
     @Input('mode') mode: string = 'mainDocument';
     @Input('attachType') attachType: string = null;
+    @Input('format') format: string = null;
 
     @Output('triggerEvent') triggerEvent = new EventEmitter<string>();
     
@@ -605,7 +606,7 @@ export class DocumentViewerComponent implements OnInit {
             this.http.post('../../rest/jnlp', this.editor.options).pipe(
                 tap((data: any) => {
                     window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
-                    this.checkLockFile(data.jnlpUniqueId, 'odt');
+                    this.checkLockFile(data.jnlpUniqueId, this.format);
                 })
             ).subscribe();
         }
