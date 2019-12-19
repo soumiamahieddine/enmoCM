@@ -253,10 +253,10 @@ class ContactControllerTest extends TestCase
         $this->assertSame('Mlle Prénom NOM TROP LOOOOOOOOOOOOONG', $name);
     }
 
-    public function testAvailableReferential()
+    public function testGetAvailableDepartments()
     {
         $contactController = new \Contact\controllers\ContactController();
-        $availableReferential = $contactController->availableReferential();
+        $availableReferential = $contactController->getAvailableDepartments();
         $this->assertInternalType('array', $availableReferential);
         $this->assertNotEmpty($availableReferential);
     }

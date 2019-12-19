@@ -601,7 +601,7 @@ class ContactController
         return substr($args['civility'].' '.$args['fullName'], 0, $args['strMaxLength']);
     }
 
-    public function availableReferential()
+    public function getAvailableDepartments()
     {
         $customId = CoreConfigModel::getCustomId();
 
