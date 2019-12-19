@@ -601,7 +601,7 @@ class ContactController
         return substr($args['civility'].' '.$args['fullName'], 0, $args['strMaxLength']);
     }
 
-    public function getAvailableDepartments()
+    public function getAvailableDepartments(Request $request, Response $response)
     {
         $customId = CoreConfigModel::getCustomId();
 
@@ -629,13 +629,13 @@ class ContactController
             }
         }
 
-        if (!empty($departments)) {
-            sort($departments, SORT_NUMERIC);
-
-            return $departments;
-        } else {
-            return false;
+        if (empty($departments)) {
+            return $response->withJson(['departments' => []]);
         }
+
+        sort($departments, SORT_NUMERIC);
+
+        return $response->withJson(['departments' => $departments]);
     }
 
     public static function getParsedContacts(array $args)
