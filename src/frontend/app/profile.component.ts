@@ -760,7 +760,6 @@ export class ProfileComponent implements OnInit {
     }
 
     updateUserPreferences() {
-        console.log('aa');
         this.http.put('../../rest/currentUser/profile/preferences', {documentEdition: this.user.preferences.documentEdition})
             .subscribe(() => {
                 this.notify.success(this.lang.modificationSaved);
