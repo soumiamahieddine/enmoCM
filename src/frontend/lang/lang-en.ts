@@ -1346,4 +1346,10 @@ export const LANG_EN = {
     "targetDepartment": "Target department",
     "contactCreation": "Contact creation",
     "contactModification": "Contact modification",
+    "contactEnabled": "Contact enabled",
+    "contactDisabled": "Contact disabled",
+    "addAll": "Add all",
+    "additionals": "Additional(s)",
+    "denomination": "Denomination",
+    "moreInfos" : "More data",
 };

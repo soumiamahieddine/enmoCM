@@ -30,17 +30,17 @@ export class ContactsPageAdministrationComponent implements OnInit {
     subMenus:any [] = [
         {
             icon: 'fa fa-code',
-            route: '/administration/contactsCustomFields',
+            route: '/administration/contacts/contactsCustomFields',
             label : this.lang.customFields
         },
         {
             icon: 'fa fa-cog',
-            route: '/administration/contacts-parameters',
+            route: '/administration/contacts/contacts-parameters',
             label : this.lang.contactsParameters
         },
         {
             icon: 'fa fa-users',
-            route: '/administration/contacts-groups',
+            route: '/administration/contacts/contacts-groups',
             label : this.lang.contactsGroups
         },
     ];
@@ -50,15 +50,15 @@ export class ContactsPageAdministrationComponent implements OnInit {
     contactUnit = [
         {
             id: 'mainInfo',
-            label: 'Denomination'
+            label: this.lang.denomination
         },
         {
             id: 'address',
-            label: 'Adresse'
+            label: this.lang.address
         },
         {
             id: 'complement',
-            label: 'Complement'
+            label: this.lang.additionals
         }
     ];
 
@@ -387,20 +387,9 @@ export class ContactsPageAdministrationComponent implements OnInit {
     }
 
     createContact() {
-        let contact: any = {};
-        contact['customFields'] = {};
-        const regex = /customField_[.]*/g;
-
-        this.contactForm.filter(field => field.default).forEach(element => {
-            if (element.id.match(regex) !== null) {
-                contact['customFields'][element.id.split('_')[1]] = element.control.value;
-            } else {
-                contact[element.id] = element.control.value;
-            }
-        });
-        this.http.post("../../rest/contacts", contact).pipe(
+        this.http.post("../../rest/contacts", this.formatContact()).pipe(
             tap(() => {
-                this.router.navigate(["/administration/contacts"]);
+                this.router.navigate(["/administration/contacts/list"]);
                 this.notify.success(this.lang.contactAdded);
             }),
             //finalize(() => this.loading = false),
@@ -412,13 +401,9 @@ export class ContactsPageAdministrationComponent implements OnInit {
     }
 
     updateContact() {
-        let contact: any = {};
-        this.contactForm.filter(field => field.default).forEach(element => {
-            contact[element.id] = element.control.value;
-        });
-        this.http.put(`../../rest/contacts/${this.contactId}`, contact).pipe(
+        this.http.put(`../../rest/contacts/${this.contactId}`, this.formatContact()).pipe(
             tap(() => {
-                this.router.navigate(["/administration/contacts"]);
+                this.router.navigate(["/administration/contacts/list"]);
                 this.notify.success(this.lang.contactUpdated);
             }),
             //finalize(() => this.loading = false),
@@ -427,6 +412,21 @@ export class ContactsPageAdministrationComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    formatContact() {
+        let contact: any = {};
+        contact['customFields'] = {};
+        const regex = /customField_[.]*/g;
+
+        this.contactForm.filter(field => field.default).forEach(element => {
+            if (element.id.match(regex) !== null) {
+                contact['customFields'][element.id.split('_')[1]] = element.control.value;
+            } else {
+                contact[element.id] = element.control.value;
+            }
+        });
+        return contact;
     }
 
     isEmptyUnit(id: string) {

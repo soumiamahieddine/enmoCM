@@ -1371,4 +1371,10 @@ export const LANG_NL = {
     "targetDepartment": "Target department", //_TO_TRANSLATE
     "contactCreation": "Contact creation", //_TO_TRANSLATE
     "contactModification": "Contact modification", //_TO_TRANSLATE
+    "contactEnabled": "Contact enabled", //_TO_TRANSLATE
+    "contactDisabled": "Contact disabled", //_TO_TRANSLATE
+    "addAll": "Add all", //_TO_TRANSLATE
+    "additionals": "Additional(s)", //_TO_TRANSLATE
+    "denomination": "Denomination", //_TO_TRANSLATE
+    "moreInfos" : "More data", //_TO_TRANSLATE
 };

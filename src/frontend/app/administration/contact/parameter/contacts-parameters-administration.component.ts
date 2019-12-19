@@ -20,6 +20,24 @@ export class ContactsParametersAdministrationComponent implements OnInit {
 
     lang: any = LANG;
 
+    subMenus:any [] = [
+        {
+            icon: 'fa fa-book',
+            route: '/administration/contacts/list',
+            label : this.lang.contactsList
+        },
+        {
+            icon: 'fa fa-users',
+            route: '/administration/contacts/contacts-groups',
+            label : this.lang.contactsGroups
+        },
+        {
+            icon: 'fa fa-code',
+            route: '/administration/contacts/contactsCustomFields',
+            label : this.lang.customFields
+        },
+    ];
+
     contactsFilling: any = {
         'enable': false,
         'first_threshold': '33',
