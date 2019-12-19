@@ -363,6 +363,12 @@ DO $$ BEGIN
         UPDATE security SET where_clause = REGEXP_REPLACE(where_clause, 'typist(\s*)=(\s*)@user', 'typist = @user_id', 'gmi');
     END IF;
 END$$;
+ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_date timestamp without time zone;
+ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_user CHARACTER VARYING (50) DEFAULT NULL::character varying;
+ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_location CHARACTER VARYING (255) DEFAULT NULL::character varying;
+ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_wkstation CHARACTER VARYING (255) DEFAULT NULL::character varying;
+ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_batch CHARACTER VARYING (50) DEFAULT NULL::character varying;
+ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_postmark CHARACTER VARYING (50) DEFAULT NULL::character varying;
 
 
 /* USERGROUP_CONTENT */
