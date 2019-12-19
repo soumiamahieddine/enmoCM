@@ -24,7 +24,6 @@ use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
 use CustomField\models\CustomFieldModel;
-use CustomField\models\ResourceCustomFieldModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Doctype\models\DoctypeModel;
@@ -41,7 +40,6 @@ use IndexingModel\models\IndexingModelFieldModel;
 use IndexingModel\models\IndexingModelModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
-use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
 use Respect\Validation\Validator;
@@ -112,7 +110,7 @@ class ResController
 
         $select = ['model_id', 'category_id', 'priority', 'subject', 'alt_identifier', 'process_limit_date', 'closing_date', 'creation_date', 'modification_date'];
         if (empty($queryParams['light'])) {
-            $select = array_merge($select, ['type_id', 'typist', 'status', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date', 'departure_date', 'barcode']);
+            $select = array_merge($select, ['type_id', 'typist', 'status', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date', 'departure_date', 'barcode', 'custom_fields']);
         }
 
         $document = ResModel::getById([
@@ -203,11 +201,7 @@ class ResController
         }
 
         if (empty($queryParams['light'])) {
-            $formattedData['customFields'] = [];
-            $customFields = ResourceCustomFieldModel::get(['select' => ['value', 'custom_field_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
-            foreach ($customFields as $customField) {
-                $formattedData['customFields'][$customField['custom_field_id']] = json_decode($customField['value'], true);
-            }
+            $formattedData['customFields'] = !empty($document['custom_fields']) ? json_decode($document['custom_fields'], true) : [];
 
             $entities = EntityModel::getWithUserEntities([
                 'select' => ['entities.id'],
@@ -824,16 +818,6 @@ class ResController
                 ]);
             }
         }
-        if (!empty($body['customFields'])) {
-            foreach ($body['customFields'] as $key => $value) {
-                $customField = CustomFieldModel::getById(['id' => $key, 'select' => ['type']]);
-                if ($customField['type'] == 'date') {
-                    $date = new \DateTime($value);
-                    $value = $date->format('Y-m-d');
-                }
-                ResourceCustomFieldModel::create(['res_id' => $args['resId'], 'custom_field_id' => $key, 'value' => json_encode($value)]);
-            }
-        }
         if (!empty($body['folders'])) {
             foreach ($body['folders'] as $folder) {
                 ResourceFolderModel::create(['res_id' => $args['resId'], 'folder_id' => $folder]);
@@ -881,17 +865,6 @@ class ResController
                     'added_by_user'     => $GLOBALS['userId'],
                     'difflist_type'     => 'entity_id'
                 ]);
-            }
-        }
-        ResourceCustomFieldModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
-        if (!empty($body['customFields'])) {
-            foreach ($body['customFields'] as $key => $value) {
-                $customField = CustomFieldModel::getById(['id' => $key, 'select' => ['type']]);
-                if ($customField['type'] == 'date') {
-                    $date = new \DateTime($value);
-                    $value = $date->format('Y-m-d');
-                }
-                ResourceCustomFieldModel::create(['res_id' => $args['resId'], 'custom_field_id' => $key, 'value' => json_encode($value)]);
             }
         }
         $entities = EntityModel::getWithUserEntities([

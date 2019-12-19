@@ -92,14 +92,15 @@ abstract class ResModelAbstract
 
     public static function update(array $args)
     {
-        ValidatorModel::notEmpty($args, ['set', 'where', 'data']);
-        ValidatorModel::arrayType($args, ['set', 'where', 'data']);
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['set', 'postSet', 'where', 'data']);
 
         DatabaseModel::update([
-            'table' => 'res_letterbox',
-            'set'   => $args['set'],
-            'where' => $args['where'],
-            'data'  => $args['data']
+            'table'     => 'res_letterbox',
+            'set'       => $args['set'],
+            'postSet'   => $args['postSet'],
+            'where'     => $args['where'],
+            'data'      => $args['data']
         ]);
 
         return true;

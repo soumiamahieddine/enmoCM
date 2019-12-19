@@ -16,7 +16,6 @@ namespace ContentManagement\controllers;
 
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
-use CustomField\models\ResourceCustomFieldModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
@@ -250,12 +249,7 @@ class MergeController
 
         //CustomFields
         if (!empty($args['resId'])) {
-            $customs = ResourceCustomFieldModel::get([
-                'select'    => ['custom_field_id, value'],
-                'where'     => ['res_id = ?'],
-                'data'      => [$args['resId']],
-                'orderBy'   => ['value']
-            ]);
+            $customs = !empty($resource['custom_fields']) ? json_decode($resource['custom_fields'], true) : [];
             foreach ($customs as $custom) {
                 $decoded = json_decode($custom['value']);
 

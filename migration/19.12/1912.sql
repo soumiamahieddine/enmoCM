@@ -369,6 +369,7 @@ ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_location CHARACTER VARYI
 ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_wkstation CHARACTER VARYING (255) DEFAULT NULL::character varying;
 ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_batch CHARACTER VARYING (50) DEFAULT NULL::character varying;
 ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_postmark CHARACTER VARYING (50) DEFAULT NULL::character varying;
+ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS custom_fields jsonb;
 
 
 /* USERGROUP_CONTENT */
