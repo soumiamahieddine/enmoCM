@@ -859,13 +859,13 @@ INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable,
 INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (4, 'company', true, false, true, true);
 INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (5, 'department', false, false, false, false);
 INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (6, 'function', false, false, false, false);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (7, 'address_number', false, false, true, true);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (8, 'address_street', false, true, true, true);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (9, 'address_additional1', false, false, false, false);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (10, 'address_additional2', false, false, false, false);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (11, 'address_postcode', false, true, true, true);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (12, 'address_town', false, true, true, true);
-INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (13, 'address_country', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (7, 'addressNumber', false, false, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (8, 'addressStreet', false, true, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (9, 'addressAdditional1', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (10, 'addressAdditional2', false, false, false, false);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (11, 'addressPostcode', false, true, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (12, 'addressTown', false, true, true, true);
+INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (13, 'addressCountry', false, false, false, false);
 INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (14, 'email', false, true, false, false);
 INSERT INTO contacts_parameters (id, identifier, mandatory, filling, searchable, displayable) VALUES (15, 'phone', false, true, false, false);
 

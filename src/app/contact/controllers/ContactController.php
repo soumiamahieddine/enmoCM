@@ -34,6 +34,43 @@ use User\models\UserModel;
 
 class ContactController
 {
+    const MAPPING_FIELDS2 = [
+        'civility'              => 'civility',
+        'firstname'             => 'firstname',
+        'lastname'              => 'lastname',
+        'company'               => 'company',
+        'department'            => 'department',
+        'function'              => 'function',
+        'address_number'        => 'addressNumber',
+        'address_street'        => 'addressStreet',
+        'address_additional1'   => 'addressAdditional1',
+        'address_additional2'   => 'addressAdditional2',
+        'address_postcode'      => 'addressPostcode',
+        'address_town'          => 'addressTown',
+        'address_country'       => 'addressCountry',
+        'email'                 => 'email',
+        'phone'                 => 'phone',
+        'notes'                 => 'notes'
+    ];
+    const MAPPING_FIELDS = [
+        'civility'              => 'civility',
+        'firstname'             => 'firstname',
+        'lastname'              => 'lastname',
+        'company'               => 'company',
+        'department'            => 'department',
+        'function'              => 'function',
+        'addressNumber'         => 'address_number',
+        'addressStreet'         => 'address_street',
+        'addressAdditional1'    => 'address_additional1',
+        'addressAdditional2'    => 'address_additional2',
+        'addressPostcode'       => 'address_postcode',
+        'addressTown'           => 'address_town',
+        'addressCountry'        => 'address_country',
+        'email'                 => 'email',
+        'phone'                 => 'phone',
+        'notes'                 => 'notes'
+    ];
+
     public function get(Request $request, Response $response)
     {
         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
@@ -482,7 +519,11 @@ class ContactController
 
         if ($contactsFilling['enable'] && !empty($contactsParameters)) {
             $contactRaw = ContactModel::getById([
-                'select'    => ['civility', 'firstname', 'lastname', 'company', 'department', 'function', 'address_number', 'address_street', 'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country', 'email', 'phone', 'custom_fields'],
+                'select'    => [
+                    'civility', 'firstname', 'lastname', 'company', 'department', 'function', 'address_number as "addressNumber"', 'address_street as "addressStreet"',
+                    'address_additional1 as "addressAdditional1"', 'address_additional2 as "addressAdditional2"', 'address_postcode as "addressPostcode"',
+                    'address_town as "addressTown"', 'address_country as "addressCountry"', 'email', 'phone', 'custom_fields'
+                ],
                 'id'        => $aArgs['contactId']
             ]);
             $customFields = json_decode($contactRaw['custom_fields'], true);
@@ -809,22 +850,6 @@ class ContactController
             }
         }
 
-        $mappingFields = [
-            'civility'              => 'civility',
-            'firstname'             => 'firstname',
-            'department'            => 'department',
-            'function'              => 'function',
-            'address_number'        => 'addressNumber',
-            'address_street'        => 'addressStreet',
-            'address_additional1'   => 'addressAdditional1',
-            'address_additional2'   => 'addressAdditional2',
-            'address_postcode'      => 'addressPostcode',
-            'address_town'          => 'addressTown',
-            'address_country'       => 'addressCountry',
-            'email'                 => 'email',
-            'phone'                 => 'phone',
-            'notes'                 => 'notes'
-        ];
         $mandatoryParameters = ContactParameterModel::get(['select' => ['identifier'], 'where' => ['mandatory = ?', 'identifier not in (?)'], 'data' => [true, ['lastname', 'company']]]);
         foreach ($mandatoryParameters as $mandatoryParameter) {
             if (strpos($mandatoryParameter['identifier'], 'contactCustomField_') !== false) {
@@ -833,8 +858,8 @@ class ContactController
                     return ['errors' => "Body {$body['customFields'][$customId]} is mandatory"];
                 }
             } else {
-                if (empty($body[$mappingFields[$mandatoryParameter['identifier']]])) {
-                    return ['errors' => "Body {$mappingFields[$mandatoryParameter['identifier']]} is mandatory"];
+                if (empty($body[$mandatoryParameter['identifier']])) {
+                    return ['errors' => "Body {$mandatoryParameter['identifier']} is mandatory"];
                 }
             }
         }
@@ -952,7 +977,7 @@ class ContactController
             if (strpos($displayableParameter['identifier'], 'contactCustomField_') !== false) {
                 $displayableCstParameters[] = explode('_', $displayableParameter['identifier'])[1];
             } else {
-                $displayableStdParameters[] = $displayableParameter['identifier'];
+                $displayableStdParameters[] = ContactController::MAPPING_FIELDS[$displayableParameter['identifier']];
             }
         }
 

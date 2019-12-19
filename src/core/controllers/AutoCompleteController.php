@@ -159,18 +159,15 @@ class AutoCompleteController
             $searchableParameters = ContactParameterModel::get(['select' => ['identifier'], 'where' => ['searchable = ?'], 'data' => [true]]);
 
             $fields = [];
-            $searchableCstParameters = [];
             foreach ($searchableParameters as $searchableParameter) {
                 if (strpos($searchableParameter['identifier'], 'contactCustomField_') !== false) {
-                    $searchableCstParameters[] = explode('_', $searchableParameter['identifier'])[1];
+                    $customFieldId = explode('_', $searchableParameter['identifier'])[1];
+                    $fields[] = "custom_fields->>'{$customFieldId}'";
                 } else {
-                    $fields[] = $searchableParameter['identifier'];
+                    $fields[] = ContactController::MAPPING_FIELDS[$searchableParameter['identifier']];
                 }
             }
 
-            foreach ($searchableCstParameters as $cstParameter) {
-                $fields[] = "custom_fields->>'{$cstParameter}'";
-            }
             $fieldsNumber = count($fields);
             $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
 
@@ -179,7 +176,7 @@ class AutoCompleteController
                 'fields'        => $fields,
                 'where'         => ['enabled = ?'],
                 'data'          => [true],
-                'fieldsNumber'  => $fieldsNumber,
+                'fieldsNumber'  => $fieldsNumber
             ]);
 
             $contacts = ContactModel::get([
