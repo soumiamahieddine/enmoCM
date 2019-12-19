@@ -812,8 +812,6 @@ class ContactController
         $mappingFields = [
             'civility'              => 'civility',
             'firstname'             => 'firstname',
-            'lastname'              => 'lastname',
-            'company'               => 'company',
             'department'            => 'department',
             'function'              => 'function',
             'address_number'        => 'addressNumber',
@@ -827,7 +825,7 @@ class ContactController
             'phone'                 => 'phone',
             'notes'                 => 'notes'
         ];
-        $mandatoryParameters = ContactParameterModel::get(['select' => ['identifier'], 'where' => ['mandatory = ?'], 'data' => [true]]);
+        $mandatoryParameters = ContactParameterModel::get(['select' => ['identifier'], 'where' => ['mandatory = ?', 'identifier not in (?)'], 'data' => [true, ['lastname', 'company']]]);
         foreach ($mandatoryParameters as $mandatoryParameter) {
             if (strpos($mandatoryParameter['identifier'], 'contactCustomField_') !== false) {
                 $customId = explode('_', $mandatoryParameter['identifier'])[1];

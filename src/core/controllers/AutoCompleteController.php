@@ -544,6 +544,30 @@ class AutoCompleteController
         return $response->withJson($data);
     }
 
+    public static function getContactsCompany(Request $request, Response $response)
+    {
+        $queryParams = $request->getQueryParams();
+
+        if (!Validator::stringType()->notEmpty()->validate($queryParams['search'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
+        }
+
+        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => ['company']]);
+        $contacts = ContactModel::get([
+            'select'    => [
+                'id', 'company', 'address_number as "addressNumber"', 'address_street as "addressStreet"',
+                'address_additional1 as "addressAdditional1"', 'address_additional2 as "addressAdditional2"', 'address_postcode as "addressPostcode"',
+                'address_town as "addressTown"', 'address_country as "addressCountry"'
+            ],
+            'where'     => ['enabled = ?', $fields],
+            'data'      => [true, $queryParams['search'] . '%'],
+            'orderBy'   => ['company', 'lastname'],
+            'limit'     => 1
+        ]);
+
+        return $response->withJson($contacts);
+    }
+
     public static function getBanAddresses(Request $request, Response $response)
     {
         $data = $request->getQueryParams();
