@@ -247,7 +247,7 @@
                     <mat-tab label="{{lang.visaWorkflow}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;" id="visaCircuitContent">
                             <div class="col-md-12">
-                                <plugin-autocomplete [labelPlaceholder]="lang.addVisaSignUser" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users/visa']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelVisa($event)"></plugin-autocomplete>
+                                <plugin-autocomplete [labelPlaceholder]="lang.addVisaSignUser" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users/circuit']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelVisa($event)"></plugin-autocomplete>
                                 <mat-list>
                                     <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.visaTemplate">
                                         <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.visaTemplate; let i = index" title="{{lang.move}}"

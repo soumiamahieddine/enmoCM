@@ -80,7 +80,7 @@ $app->get('/autocomplete/correspondents', \SrcCore\controllers\AutoCompleteContr
 $app->get('/autocomplete/contacts/groups', \SrcCore\controllers\AutoCompleteController::class . ':getContactsForGroups');
 $app->get('/autocomplete/contacts/company', \SrcCore\controllers\AutoCompleteController::class . ':getContactsCompany');
 $app->get('/autocomplete/users/administration', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForAdministration');
-$app->get('/autocomplete/users/visa', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForVisa');
+$app->get('/autocomplete/users/circuit', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForCircuit');
 $app->get('/autocomplete/entities', \SrcCore\controllers\AutoCompleteController::class . ':getEntities');
 $app->get('/autocomplete/statuses', \SrcCore\controllers\AutoCompleteController::class . ':getStatuses');
 $app->get('/autocomplete/banAddresses', \SrcCore\controllers\AutoCompleteController::class . ':getBanAddresses');
@@ -345,6 +345,7 @@ $app->get('/resources/{resId}/templates', \Template\controllers\TemplateControll
 $app->get('/resources/{resId}/listInstance', \Entity\controllers\ListInstanceController::class . ':getByResId');
 $app->get('/resources/{resId}/visaCircuit', \Entity\controllers\ListInstanceController::class . ':getVisaCircuitByResId');
 $app->get('/resources/{resId}/opinionCircuit', \Entity\controllers\ListInstanceController::class . ':getOpinionCircuitByResId');
+$app->get('/resources/{resId}/availableCircuits', \Entity\controllers\ListTemplateController::class . ':getAvailableCircuitsByResId');
 $app->get('/res/{resId}/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
