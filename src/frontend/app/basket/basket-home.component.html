@@ -3,10 +3,12 @@
         <mat-panel-title>
             <i class="fa fa-inbox panelIconMenu"></i>&nbsp;{{lang.myBaskets}}
         </mat-panel-title>
-        <div title="{{lang.listConfiguration}}" (click)="$event.stopPropagation();editGroupOrder()"><mat-icon [ngStyle]="{'color': editOrderGroups ? 'orange' : '#135F7F'}" mat-list-icon class="fa fa-cog"></mat-icon></div>
+        <div title="{{lang.listConfiguration}}" (click)="$event.stopPropagation();editGroupOrder()">
+            <mat-icon [ngStyle]="{'color': editOrderGroups ? 'orange' : '#135F7F'}" mat-list-icon class="fa fa-cog" style="height:auto;"></mat-icon>
+        </div>
     </mat-expansion-panel-header>
     <ng-container *ngIf="!loading">
-        <mat-form-field [style.display]="homeData.assignedBaskets.length > 0 || homeData.regroupedBaskets.length > 0 ? 'inline-block' : 'none'" floatLabel="never" appearance="outline" class="basketsFilter"
+        <mat-form-field [style.display]="(homeData.assignedBaskets.length > 0 || homeData.regroupedBaskets.length > 0) && !editOrderGroups ? 'inline-block' : 'none'" floatLabel="never" appearance="outline" class="basketsFilter"
             style="padding-left:20px;padding-right:20px;font-size: 11px;">
             <input matInput placeholder="{{lang.filterBy}}" #listFilter>
         </mat-form-field>
@@ -17,7 +19,7 @@
             <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="homeData.regroupedBaskets">
                 <mat-list-item disableRipple="true" *ngFor="let regroupedBasket of homeData.regroupedBaskets;let i = index" title="{{lang.move}}" dnd-sortable
                                [sortableIndex]="i" (onDropSuccess)="updateGroupsOrder()">
-                    <mat-icon color="primary" mat-list-icon class="fa fa-users" style="font-size:19px"></mat-icon>
+                    <mat-icon color="primary" mat-list-icon class="fa fa-arrows-alt" style="font-size:19px"></mat-icon>
                     <span class="basketGroupTitle">{{regroupedBasket.groupDesc}}</span>
                 </mat-list-item>
             </span>

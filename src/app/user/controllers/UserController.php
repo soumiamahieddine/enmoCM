@@ -534,11 +534,6 @@ class UserController
             return $response->withStatus(400)->withJson(['errors' => 'Body mail is empty or not a valid email']);
         } elseif (!empty($body['phone']) && !preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d/", $body['phone'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body phone is not a valid phone number']);
-        } elseif (!Validator::arrayType()->notEmpty()->validate($body['preferences'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body preferences is empty or not an array']);
-        }
-        if (!in_array($body['preferences']['documentEdition'], DocumentEditorController::DOCUMENT_EDITION_METHODS)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body preferences[documentEdition] is not allowed']);
         }
 
         UserModel::update([
@@ -547,11 +542,18 @@ class UserController
                 'lastname'      => $body['lastname'],
                 'mail'          => $body['mail'],
                 'phone'         => $body['phone'],
-                'initials'      => $body['initials'],
-                'preferences'   => json_encode($body['preferences'])
+                'initials'      => $body['initials']
             ],
             'where' => ['id = ?'],
             'data'  => [$GLOBALS['id']]
+        ]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'UP',
+            'eventId'      => 'userModification',
+            'info'         => _USER_UPDATED . " {$body['firstname']} {$body['lastname']}"
         ]);
 
         return $response->withStatus(204);
@@ -561,7 +563,7 @@ class UserController
     {
         $body = $request->getParsedBody();
 
-        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['preferences']]);
+        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['preferences', 'firstname', 'lastname']]);
         $preferences = json_decode($user['preferences'], true);
 
         if (!empty($body['documentEdition'])) {
@@ -571,11 +573,6 @@ class UserController
             $preferences['documentEdition'] = $body['documentEdition'];
         }
         if (!empty($body['homeGroups'])) {
-            $groups = UserGroupModel::get(['select' => ['group_id'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
-            $groups = array_column($groups, 'group_id');
-            if (!empty(array_diff($body['homeGroups'], $groups))) {
-                return $response->withStatus(400)->withJson(['errors' => 'Body homeGroups is not filled with all user\'s groups']);
-            }
             $preferences['homeGroups'] = $body['homeGroups'];
         }
 
@@ -585,6 +582,14 @@ class UserController
             ],
             'where' => ['id = ?'],
             'data'  => [$GLOBALS['id']]
+        ]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'UP',
+            'eventId'      => 'userModification',
+            'info'         => _USER_PREFERENCE_UPDATED . " {$user['firstname']} {$user['lastname']}"
         ]);
 
         return $response->withStatus(204);
@@ -652,7 +657,7 @@ class UserController
             }
 
             $userBasketPreference = UserBasketPreferenceModel::get([
-                'select' => ['display'], 
+                'select' => ['display'],
                 'where'  => ['basket_id =?', 'group_serial_id = ?', 'user_serial_id = ?'],
                 'data'   => [$value['basket_id'], $value['group_id'], $aArgs['id']]
             ]);

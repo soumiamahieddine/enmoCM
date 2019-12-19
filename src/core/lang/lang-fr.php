@@ -440,3 +440,5 @@ define("_NO_M2M_ANNUARY_AVAILABLE", "Aucun annuaire M2M disponible");
 define("_CANNOT_SYNCHRONIZE_M2M_ANNUARY", "Le contact ne peut pas être ajouté dans l'annuaire car un des champs suivants est manquant : Société, moyen de communication, service");
 
 define("_DATE_LOCALE", "fr_FR.utf8");
+
+define("_USER_PREFERENCE_UPDATED", "Préférences utilisateur modifiées");

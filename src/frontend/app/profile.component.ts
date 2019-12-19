@@ -757,7 +757,17 @@ export class ProfileComponent implements OnInit {
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
-        this.headerService.resfreshCurrentUser();
+    }
+
+    updateUserPreferences() {
+        console.log('aa');
+        this.http.put('../../rest/currentUser/profile/preferences', {documentEdition: this.user.preferences.documentEdition})
+            .subscribe(() => {
+                this.notify.success(this.lang.modificationSaved);
+                this.headerService.resfreshCurrentUser();
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
     }
 
     regexValidator(regex: RegExp, error: ValidationErrors): ValidatorFn {

@@ -177,7 +177,7 @@
                                     <div class="col-sm-2" style="display:flex; margin-left: 15px">
                                         <mat-form-field>
                                             <mat-select name="documentEdition" [(ngModel)]="user.preferences.documentEdition"
-                                                (selectionChange)="onSubmit();">
+                                                (selectionChange)="updateUserPreferences();">
                                                 <mat-option *ngFor='let editor of editorsList' [value]="editor">{{editor}}</mat-option>
                                             </mat-select>
                                         </mat-form-field>

@@ -8,7 +8,6 @@
 */
 
 use PHPUnit\Framework\TestCase;
-use User\models\UserGroupModel;
 
 class UserControllerTest extends TestCase
 {
@@ -706,15 +705,12 @@ class UserControllerTest extends TestCase
         //  UPDATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $groups = UserGroupModel::get(['select' => ['group_id'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
-        $groups = array_column($groups, 'group_id');
 
         $aArgs = [
             'firstname'     => 'Wonder',
             'lastname'      => 'User',
             'mail'          => 'dev@maarch.org',
-            'initials'      => 'SU',
-            'preferences'   => ['documentEdition' => 'java', 'homeGroups' => $groups]
+            'initials'      => 'SU'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -734,7 +730,6 @@ class UserControllerTest extends TestCase
         $this->assertSame('dev@maarch.org', $responseBody['mail']);
         $this->assertSame('SU', $responseBody['initials']);
         $this->assertSame('java', $responseBody['preferences']['documentEdition']);
-        $this->assertEmpty($responseBody['preferences']['homeGroups']);
 
 
         //  UPDATE
@@ -744,8 +739,7 @@ class UserControllerTest extends TestCase
             'firstname'     => 'Super',
             'lastname'      => 'ADMIN',
             'mail'          => 'dev@maarch.org',
-            'initials'      => 'SU',
-            'preferences'   => ['documentEdition' => 'java']
+            'initials'      => 'SU'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
