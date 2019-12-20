@@ -17,15 +17,12 @@ namespace Resource\controllers;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Contact\controllers\ContactController;
-use Contact\models\ContactModel;
-use CustomField\models\ResourceCustomFieldModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Folder\controllers\FolderController;
 use Folder\models\FolderModel;
 use Resource\models\ExportTemplateModel;
 use Resource\models\ResModel;
-use Resource\models\ResourceContactModel;
 use Resource\models\ResourceListModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
@@ -649,20 +646,11 @@ class ExportController
             return null;
         }
         $customFieldId = $customField[1];
-        $customValues = ResourceCustomFieldModel::get([
-            'select'    => ['value'],
-            'where'     => ['custom_field_id = ?', 'res_id = ?'],
-            'data'      => [$customFieldId, $args['resId']],
-            'orderBy'   => ['value']
-        ]);
-        $customValues = array_column($customValues, 'value');
-
-        if (empty($customValues)) {
+        $customField = ResModel::get(['select' => ["custom_fields->>'{$customFieldId}' as csfield"], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+        if (empty($customField[0]['csfield'])) {
             return null;
         }
-
-        $customValues = $customValues[0];
-        $customValues = json_decode($customValues);
+        $customValues = json_decode($customField[0]['csfield']);
 
         if (!isset($customValues)) {
             return null;
