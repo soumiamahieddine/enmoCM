@@ -1348,6 +1348,7 @@ export const LANG_EN = {
     "contactModification": "Contact modification",
     "contactEnabled": "Contact enabled",
     "contactDisabled": "Contact disabled",
+    "contactUpdated": "Contact updated",
     "addAll": "Add all",
     "additionals": "Additional(s)",
     "denomination": "Denomination",

@@ -1373,6 +1373,7 @@ export const LANG_NL = {
     "contactModification": "Contact modification", //_TO_TRANSLATE
     "contactEnabled": "Contact enabled", //_TO_TRANSLATE
     "contactDisabled": "Contact disabled", //_TO_TRANSLATE
+    "contactUpdated": "Contact updated", //_TO_TRANSLATE
     "addAll": "Add all", //_TO_TRANSLATE
     "additionals": "Additional(s)", //_TO_TRANSLATE
     "denomination": "Denomination", //_TO_TRANSLATE
