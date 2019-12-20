@@ -17,7 +17,6 @@ use Contact\models\ContactCustomFieldListModel;
 use Contact\models\ContactFillingModel;
 use Contact\models\ContactModel;
 use Contact\models\ContactParameterModel;
-use CustomField\models\CustomFieldModel;
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
@@ -66,7 +65,7 @@ class ContactController
         $queryParams['offset'] = (empty($queryParams['offset']) || !is_numeric($queryParams['offset']) ? 0 : (int)$queryParams['offset']);
         $queryParams['limit'] = (empty($queryParams['limit']) || !is_numeric($queryParams['limit']) ? 25 : (int)$queryParams['limit']);
         $order = !in_array($queryParams['order'], ['asc', 'desc']) ? '' : $queryParams['order'];
-        $queryParams['orderBy'] = !in_array($queryParams['orderBy'], ['firstname', 'lastname', 'company']) ? null : ["{$queryParams['orderBy']} {$order}"];
+        $queryParams['orderBy'] = !in_array($queryParams['orderBy'], ['firstname', 'lastname', 'company']) ? ['id'] : ["{$queryParams['orderBy']} {$order}", 'id'];
 
         if (!empty($queryParams['search'])) {
             $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country'];
