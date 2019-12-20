@@ -17,6 +17,7 @@ use Contact\models\ContactCustomFieldListModel;
 use Contact\models\ContactFillingModel;
 use Contact\models\ContactModel;
 use Contact\models\ContactParameterModel;
+use CustomField\models\CustomFieldModel;
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
@@ -133,6 +134,17 @@ class ContactController
             $externalId = json_encode($body['externalId']);
         } else {
             $externalId = '{}';
+        }
+
+        if (!empty($body['customFields'])) {
+            foreach ($body['customFields'] as $key => $value) {
+                $customField = ContactCustomFieldListModel::getById(['id' => $key, 'select' => ['type']]);
+                if ($customField['type'] == 'date') {
+                    $date = new \DateTime($value);
+                    $value = $date->format('Y-m-d');
+                    $body['customFields'][$key] = $value;
+                }
+            }
         }
 
         $id = ContactModel::create([

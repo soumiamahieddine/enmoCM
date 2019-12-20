@@ -646,11 +646,11 @@ class ExportController
             return null;
         }
         $customFieldId = $customField[1];
-        $customField = ResModel::get(['select' => ["custom_fields->>'{$customFieldId}' as csfield"], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+        $customField = ResModel::get(['select' => ["custom_fields->'{$customFieldId}' as csfield"], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
         if (empty($customField[0]['csfield'])) {
             return null;
         }
-        $customValues = json_decode($customField[0]['csfield']);
+        $customValues = json_decode($customField[0]['csfield'], true);
 
         if (!isset($customValues)) {
             return null;
