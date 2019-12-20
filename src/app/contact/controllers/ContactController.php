@@ -21,6 +21,7 @@ use CustomField\models\CustomFieldModel;
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
+use Parameter\models\ParameterModel;
 use Resource\controllers\ResController;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
@@ -647,7 +648,9 @@ class ContactController
 
         sort($departments, SORT_NUMERIC);
 
-        return $response->withJson(['departments' => $departments]);
+        $defaultDepartment = ParameterModel::getById(['id' => 'defaultDepartment', 'select' => ['param_value_int']]);
+
+        return $response->withJson(['departments' => $departments, 'default' => empty($defaultDepartment['param_value_int']) ? null : $defaultDepartment['param_value_int']]);
     }
 
     public static function getParsedContacts(array $args)
