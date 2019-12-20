@@ -35,7 +35,7 @@
                             </mat-form-field>
                             <div class="col-md-12 text-center" style="padding:10px;">
                                 <button mat-raised-button (click)="saveDiffListVisa()" [disabled]="!diffusionModelForm.form.valid || diffusionModel.diffusionList.length == 0" color="primary">{{lang.save}}</button>
-                                <button mat-raised-button color="default" (click)="loadDiffList(this.idCircuit)" [disabled]="!this.listDiffModified || creationMode">{{lang.cancel}}</button>
+                                <button mat-raised-button color="default" (click)="loadDiffList()" [disabled]="!this.listDiffModified || creationMode">{{lang.cancel}}</button>
                             </div>
                         </form>
                     </mat-tab>
@@ -51,7 +51,7 @@
                         <mat-tab label="{{lang.diffusionList}}">
                                 <div class="row" style="margin:0px;" id="visaCircuitContent">
                                     <div class="col-md-12">
-                                        <plugin-autocomplete [labelPlaceholder]="lang.addUser" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelVisa($event)"></plugin-autocomplete>
+                                        <plugin-autocomplete [labelPlaceholder]="lang.addUser" [labelList]="lang.availableUsers" [routeDatas]="diffusionModel.object_type == 'VISA_CIRCUIT' ? ['/rest/autocomplete/users/circuit'] : ['/rest/autocomplete/users/circuit?circuit=avis']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelVisa($event)"></plugin-autocomplete>
                                         <mat-list>
                                             <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="diffusionModel.diffusionList">
                                                 <mat-list-item disableRipple="true" *ngFor="let template of diffusionModel.diffusionList; let i = index" title="{{lang.move}}"
