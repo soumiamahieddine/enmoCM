@@ -8,7 +8,7 @@ import { AppService } from '../../../service/app.service';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
-import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap, catchError } from 'rxjs/operators';
+import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap, catchError, finalize } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
 import { PrivilegeService } from '../../../service/privileges.service';
 
@@ -61,7 +61,6 @@ export class ContactAutocompleteComponent implements OnInit {
     }
 
     ngOnInit() {
-        console.log(this.controlAutocomplete);
         this.controlAutocomplete.setValue(this.controlAutocomplete.value === null || this.controlAutocomplete.value === '' ? [] : this.controlAutocomplete.value);
         this.canAdd = this.privilegeService.hasCurrentUserPrivilege('manage_tags_application');
         this.initFormValue();
@@ -104,6 +103,13 @@ export class ContactAutocompleteComponent implements OnInit {
 
     initFormValue() {
         this.controlAutocomplete.value.forEach((contact: any) => {
+            this.valuesToDisplay[contact.id] = {
+                type: '',
+                firstname: '',
+                lastname: this.lang.undefined,
+                company: ''
+            };
+
             if (contact.type === 'contact') {
                 this.http.get('../../rest/contacts/' + contact.id).pipe(
                     tap((data: any) => {
@@ -114,6 +120,11 @@ export class ContactAutocompleteComponent implements OnInit {
                             company: data.company
                         };
                         
+                    }),
+                    finalize(() => this.loadingValues = false),
+                    catchError((err: any) => {
+                        this.notify.error(err.error.errors);
+                        return of(false);
                     })
                 ).subscribe();
             } else if (contact.type === 'user') {
@@ -124,6 +135,11 @@ export class ContactAutocompleteComponent implements OnInit {
                             firstname: data.firstname,
                             lastname: data.lastname,
                         };
+                    }),
+                    finalize(() => this.loadingValues = false),
+                    catchError((err: any) => {
+                        this.notify.error(err.error.errors);
+                        return of(false);
                     })
                 ).subscribe();
             } else if (contact.type === 'entity') {
@@ -133,12 +149,15 @@ export class ContactAutocompleteComponent implements OnInit {
                             type: 'entity',
                             lastname: data.entity_label,
                         };
+                    }),
+                    finalize(() => this.loadingValues = false),
+                    catchError((err: any) => {
+                        this.notify.error(err.error.errors);
+                        return of(false);
                     })
                 ).subscribe();
-            }
-            
+            }            
         });
-        this.loadingValues = false;
     }
 
     setFormValue(item: any) {
