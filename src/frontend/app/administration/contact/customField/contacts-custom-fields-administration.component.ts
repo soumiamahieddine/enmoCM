@@ -37,12 +37,12 @@ export class ContactsCustomFieldsAdministrationComponent implements OnInit {
         },
         {
             icon: 'fa fa-cog',
-            route: '/administration/contacts-parameters',
+            route: '/administration/contacts/contacts-parameters',
             label : this.lang.contactsParameters
         },
         {
             icon: 'fa fa-users',
-            route: '/administration/contacts-groups',
+            route: '/administration/contacts/contacts-groups',
             label : this.lang.contactsGroups
         },
     ];
@@ -141,7 +141,7 @@ export class ContactsCustomFieldsAdministrationComponent implements OnInit {
             }),
             exhaustMap((data) => this.http.post('../../rest/contactsCustomFields', newCustomField)),
             tap((data: any) => {
-                newCustomField.id = data.customFieldId.id
+                newCustomField.id = data.id
                 this.customFields.push(newCustomField);
                 this.notify.success(this.lang.customFieldAdded);
                 this.incrementCreation++;

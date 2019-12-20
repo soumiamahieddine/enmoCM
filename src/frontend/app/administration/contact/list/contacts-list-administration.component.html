@@ -4,22 +4,21 @@
         <header-panel [snavLeft]="snav"></header-panel>
         <menu-shortcut></menu-shortcut>
         <menu-nav></menu-nav>
-        
         <mat-nav-list>
-            <a mat-list-item *ngFor="let menu of subMenus | sortBy : 'label'" [routerLink]="menu.route">
-                <mat-icon color="primary" mat-list-icon [class]="menu.icon"></mat-icon>
+            <h3 mat-subheader>{{lang.actions}}</h3>
+            <a mat-list-item routerLink="/administration/contacts/list/new">
+                <mat-icon color="primary" mat-list-icon class="fa fa-plus"></mat-icon>
                 <p mat-line>
-                    {{menu.label}}
+                    {{lang.add}}
                 </p>
             </a>
         </mat-nav-list>
         <mat-divider></mat-divider>
         <mat-nav-list>
-            <h3 mat-subheader>{{lang.actions}}</h3>
-            <a mat-list-item routerLink="/administration/contacts/new">
-                <mat-icon color="primary" mat-list-icon class="fa fa-plus"></mat-icon>
+            <a mat-list-item *ngFor="let menu of subMenus | sortBy : 'label'" [routerLink]="menu.route">
+                <mat-icon color="primary" mat-list-icon [class]="menu.icon"></mat-icon>
                 <p mat-line>
-                    {{lang.add}}
+                    {{menu.label}}
                 </p>
             </a>
         </mat-nav-list>
@@ -46,12 +45,12 @@
                 <div class="table-head">
                     <div class="table-head-result">
                         <mat-form-field floatLabel="never" style="font-size: 13px;">
-                            <input type="text" #autoCompleteInput [placeholder]="lang.filterBy" matInput [formControl]="searchContact"
-                                (click)="$event.stopPropagation()" maxlength="128">
+                            <input type="text" #autoCompleteInput [placeholder]="lang.filterBy" matInput
+                                [formControl]="searchContact" (click)="$event.stopPropagation()" maxlength="128">
                         </mat-form-field>
                     </div>
                     <div class="table-head-tool">
-                        <mat-paginator #paginatorContactList [length]="resultsLength" [hidePageSize]="true" [pageSize]="25"
+                        <mat-paginator #paginatorContactList [length]="resultsLength" [hidePageSize]="true" [pageSize]="10"
                             class="paginatorResultList"></mat-paginator>
                     </div>
                 </div>
@@ -72,16 +71,17 @@
                         </ng-container>
                         <ng-container matColumnDef="company">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header
-                                [class.hide-for-mobile]="appService.getViewMode()">{{lang.contactsParameters_company}}</th>
+                                [class.hide-for-mobile]="appService.getViewMode()">{{lang.contactsParameters_company}}
+                            </th>
                             <td mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()">
                                 {{element.company}} </td>
                         </ng-container>
                         <ng-container matColumnDef="formatedAddress">
-                                <th mat-header-cell *matHeaderCellDef
-                                    [class.hide-for-mobile]="appService.getViewMode()">{{lang.address}}</th>
-                                <td mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()">
-                                    {{element.formatedAddress}} </td>
-                            </ng-container>
+                            <th mat-header-cell *matHeaderCellDef [class.hide-for-mobile]="appService.getViewMode()">
+                                {{lang.address}}</th>
+                            <td mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()">
+                                {{element.formatedAddress}} </td>
+                        </ng-container>
                         <ng-container matColumnDef="actions">
                             <th mat-header-cell *matHeaderCellDef>
                             </th>
@@ -102,10 +102,13 @@
                             </td>
                         </ng-container>
                         <tr mat-header-row *matHeaderRowDef="displayedColumnsContact"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumnsContact;" routerLink="/administration/contacts/{{row.id}}" class="rowData">
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsContact;"
+                            routerLink="/administration/contacts/list/{{row.id}}" class="rowData">
                         </tr>
                     </table>
-                    <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{resultsLength}} {{lang.contacts}}</div>
+                    <div class="mat-paginator"
+                        style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">
+                        {{resultsLength}} {{lang.contacts}}</div>
                 </div>
                 <div class="table-head">
                 </div>

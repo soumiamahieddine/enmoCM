@@ -46,17 +46,17 @@ export class ContactsListAdministrationComponent implements OnInit {
     subMenus:any [] = [
         {
             icon: 'fa fa-code',
-            route: '/administration/contactsCustomFields',
+            route: '/administration/contacts/contactsCustomFields',
             label : this.lang.customFields
         },
         {
             icon: 'fa fa-cog',
-            route: '/administration/contacts-parameters',
+            route: '/administration/contacts/contacts-parameters',
             label : this.lang.contactsParameters
         },
         {
             icon: 'fa fa-users',
-            route: '/administration/contacts-groups',
+            route: '/administration/contacts/contacts-groups',
             label : this.lang.contactsGroups
         },
     ];
@@ -95,7 +95,7 @@ export class ContactsListAdministrationComponent implements OnInit {
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
                     this.resultsLength = data.count;
-                    this.headerService.setHeader(this.lang.administration + ' ' + this.lang.contacts, '', 'fa fa-book');
+                    this.headerService.setHeader(this.lang.administration + ' ' + this.lang.contacts.toLowerCase(), '', '');
                     return data.contacts;
                 }),
                 catchError((err: any) => {
@@ -146,9 +146,9 @@ export class ContactsListAdministrationComponent implements OnInit {
             tap((data: any) => {
                 this.refreshDao();
                 if (!contact.enabled === true) {
-                    this.notify.success(this.lang.contactActivated);
+                    this.notify.success(this.lang.contactEnabled);
                 } else {
-                    this.notify.success(this.lang.contactSuspended);
+                    this.notify.success(this.lang.contactDisabled);
                 }
             }),
             catchError((err: any) => {
@@ -210,8 +210,8 @@ export class ContactListHttpDao {
 
     getRepoIssues(sort: string, order: string, page: number, href: string, search: string): Observable<ContactList> {
         
-        let offset = page * 25;
-        const requestUrl = `${href}?limit=25&offset=${offset}&order=${order}&orderBy=${sort}&search=${search}`;
+        let offset = page * 10;
+        const requestUrl = `${href}?limit=10&offset=${offset}&order=${order}&orderBy=${sort}&search=${search}`;
 
         return this.http.get<ContactList>(requestUrl);
     }

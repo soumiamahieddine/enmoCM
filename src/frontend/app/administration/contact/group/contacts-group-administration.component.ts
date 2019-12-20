@@ -26,6 +26,24 @@ export class ContactsGroupAdministrationComponent implements OnInit {
 
     lang: any = LANG;
 
+    subMenus:any [] = [
+        {
+            icon: 'fa fa-book',
+            route: '/administration/contacts/list',
+            label : this.lang.contactsList
+        },
+        {
+            icon: 'fa fa-cog',
+            route: '/administration/contacts/contacts-parameters',
+            label : this.lang.contactsParameters
+        },
+        {
+            icon: 'fa fa-code',
+            route: '/administration/contacts/contactsCustomFields',
+            label : this.lang.customFields
+        },
+    ];
+
     creationMode: boolean;
     contactsGroup: any = {};
     nbContact   : number;
@@ -148,7 +166,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         if (this.creationMode) {
             this.http.post('../../rest/contactsGroups', this.contactsGroup)
                 .subscribe((data: any) => {
-                    this.router.navigate(['/administration/contacts-groups/' + data.contactsGroup]);
+                    this.router.navigate(['/administration/contacts/contacts-groups/' + data.contactsGroup]);
                     this.notify.success(this.lang.contactsGroupAdded);
                 }, (err) => {
                     this.notify.error(err.error.errors);

@@ -18,6 +18,7 @@ use Entity\models\EntityModel;
 use Entity\models\ListTemplateModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -502,6 +503,41 @@ class ListTemplateController
         }
 
         return $response->withJson(['roles' => array_values($roles)]);
+    }
+
+    public function getAvailableCircuitsByResId(Request $request, Response $response, array $args)
+    {
+        $queryParams = $request->getQueryParams();
+
+        if (!Validator::stringType()->notEmpty()->validate($queryParams['circuit'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params circuit is empty']);
+        }
+
+        $circuit = $queryParams['circuit'] == 'opinion' ? 'AVIS_CIRCUIT' : 'VISA_CIRCUIT';
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['destination']]);
+
+        $where = ['object_type = ?'];
+        $data = [$circuit];
+        if (!empty($resource['destination'])) {
+            $where[] = '(object_id = ? OR object_id like ?)';
+            $data[] = $resource['destination'];
+            $data[] = "{$circuit}_%";
+            $orderBy = ["object_id='{$resource['destination']}' DESC", 'title'];
+        } else {
+            $where[] = 'object_id like ?';
+            $data[] = "{$circuit}_%";
+            $orderBy = ['title'];
+        }
+
+        $circuits = [];
+        $listTemplates = ListTemplateModel::get(['select' => ['*'], 'where' => $where, 'data' => $data, 'orderBy' => $orderBy]);
+        foreach ($listTemplates as $value) {
+            $circuits[$value['object_id']] = ['id' => $value['id'], 'title' => $value['title']];
+        }
+
+        $circuits = array_values($circuits);
+
+        return $response->withJson(['circuits' => $circuits]);
     }
 
     private static function checkItems(array $aArgs)

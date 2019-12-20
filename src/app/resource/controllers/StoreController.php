@@ -17,6 +17,7 @@ namespace Resource\controllers;
 
 use Attachment\models\AttachmentModel;
 use ContentManagement\controllers\MergeController;
+use CustomField\models\CustomFieldModel;
 use Docserver\controllers\DocserverController;
 use Entity\models\EntityModel;
 use IndexingModel\models\IndexingModelModel;
@@ -171,6 +172,17 @@ class StoreController
             $externalId = json_encode($args['externalId']);
         }
 
+        if (!empty($args['customFields'])) {
+            foreach ($args['customFields'] as $key => $value) {
+                $customField = CustomFieldModel::getById(['id' => $key, 'select' => ['type']]);
+                if ($customField['type'] == 'date') {
+                    $date = new \DateTime($value);
+                    $value = $date->format('Y-m-d');
+                    $args['customFields'][$key] = $value;
+                }
+            }
+        }
+
         $preparedData = [
             'res_id'                => $args['resId'],
             'model_id'              => $args['modelId'],
@@ -190,6 +202,7 @@ class StoreController
             'priority'              => $args['priority'] ?? null,
             'barcode'               => $args['barcode'] ?? null,
             'origin'                => $args['origin'] ?? null,
+            'custom_fields'         => !empty($args['customFields']) ? json_encode($args['customFields']) : null,
             'external_id'           => $externalId,
             'creation_date'         => 'CURRENT_TIMESTAMP'
         ];
@@ -245,6 +258,18 @@ class StoreController
             $externalId = array_merge(json_decode($resource['external_id'], true), $args['externalId']);
             $externalId = json_encode($externalId);
             $preparedData['external_id'] = $externalId;
+        }
+
+        if (!empty($args['customFields'])) {
+            foreach ($args['customFields'] as $key => $value) {
+                $customField = CustomFieldModel::getById(['id' => $key, 'select' => ['type']]);
+                if ($customField['type'] == 'date') {
+                    $date = new \DateTime($value);
+                    $value = $date->format('Y-m-d');
+                    $args['customFields'][$key] = $value;
+                }
+            }
+            $preparedData['custom_fields'] = json_encode($args['customFields']);
         }
 
         return $preparedData;

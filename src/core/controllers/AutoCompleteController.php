@@ -392,12 +392,17 @@ class AutoCompleteController
         return $response->withJson($data);
     }
 
-    public static function getUsersForVisa(Request $request, Response $response)
+    public static function getUsersForCircuit(Request $request, Response $response)
     {
-        $data = $request->getQueryParams();
-        $check = Validator::stringType()->notEmpty()->validate($data['search']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        $queryParams = $request->getQueryParams();
+
+        if (!Validator::stringType()->notEmpty()->validate($queryParams['search'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
+        }
+
+        $services = ['visa_documents', 'sign_document'];
+        if (!empty($queryParams['circuit']) && $queryParams['circuit'] == 'opinion') {
+            $services = ['avis_documents'];
         }
 
         $excludedUsers = ['superadmin'];
@@ -406,7 +411,7 @@ class AutoCompleteController
         $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
 
         $requestData = AutoCompleteController::getDataForRequest([
-            'search'        => $data['search'],
+            'search'        => $queryParams['search'],
             'fields'        => $fields,
             'where'         => [
                 'usergroups.group_id = usergroups_services.group_id',
@@ -416,7 +421,7 @@ class AutoCompleteController
                 'users.user_id not in (?)',
                 'users.status not in (?)'
             ],
-            'data'          => [['visa_documents', 'sign_document'], $excludedUsers, ['DEL', 'SPD']],
+            'data'          => [$services, $excludedUsers, ['DEL', 'SPD']],
             'fieldsNumber'  => 2,
         ]);
 

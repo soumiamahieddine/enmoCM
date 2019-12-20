@@ -152,3 +152,8 @@ html,body {
     color: red;
     font-size: 8px;
 }
+
+.mat-menu-content:not(:empty) {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}

@@ -15,5 +15,55 @@
 }
 
 .unitTitle {
+    display: flex;
     color: $primary;
+}
+
+.contact-address {
+    cursor: pointer;
+    color: #337ab7;
+
+    &:hover {
+        .contact-content {
+            text-decoration: underline;
+        }
+    }
+}
+
+.smallInput {
+    font-size: 11px;
+    padding-left: 20px;
+    padding-right: 20px;
+    .mat-button {
+        width: 30px;
+        height: 25px;
+        color: $primary;
+
+        ::ng-deep.mat-button-wrapper {
+            display: flex;
+            line-height: initial;
+            align-items: center;
+        }
+    }
+    ::ng-deep.mat-form-field-infix {
+        padding : 0px;
+        padding-bottom: 5px;
+    }
+}
+.radio-form {
+    display: flex;
+
+    .mat-radio-button {
+        flex: 1;
+    }
+}
+
+.checkbox-form {
+    overflow: auto;
+    max-height: 200px;
+}
+
+.loading {
+    display: flex;
+    height: 100%;
 }

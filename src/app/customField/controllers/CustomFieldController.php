@@ -18,10 +18,10 @@
 namespace CustomField\controllers;
 
 use CustomField\models\CustomFieldModel;
-use CustomField\models\ResourceCustomFieldModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -144,7 +144,7 @@ class CustomFieldController
         $field = CustomFieldModel::getById(['select' => ['label'], 'id' => $args['id']]);
 
         IndexingModelFieldModel::delete(['where' => ['identifier = ?'], 'data' => ['indexingCustomField_' . $args['id']]]);
-        ResourceCustomFieldModel::delete(['where' => ['custom_field_id = ?'], 'data' => [$args['id']]]);
+        ResModel::update(['postSet' => ['custom_fields' => "custom_fields - '{$args['id']}'"], 'where' => ['1 = ?'], 'data' => [1]]);
 
         CustomFieldModel::delete([
             'where' => ['id = ?'],

@@ -34,24 +34,6 @@ use User\models\UserModel;
 
 class ContactController
 {
-    const MAPPING_FIELDS2 = [
-        'civility'              => 'civility',
-        'firstname'             => 'firstname',
-        'lastname'              => 'lastname',
-        'company'               => 'company',
-        'department'            => 'department',
-        'function'              => 'function',
-        'address_number'        => 'addressNumber',
-        'address_street'        => 'addressStreet',
-        'address_additional1'   => 'addressAdditional1',
-        'address_additional2'   => 'addressAdditional2',
-        'address_postcode'      => 'addressPostcode',
-        'address_town'          => 'addressTown',
-        'address_country'       => 'addressCountry',
-        'email'                 => 'email',
-        'phone'                 => 'phone',
-        'notes'                 => 'notes'
-    ];
     const MAPPING_FIELDS = [
         'civility'              => 'civility',
         'firstname'             => 'firstname',
@@ -619,7 +601,7 @@ class ContactController
         return substr($args['civility'].' '.$args['fullName'], 0, $args['strMaxLength']);
     }
 
-    public function availableReferential()
+    public function getAvailableDepartments(Request $request, Response $response)
     {
         $customId = CoreConfigModel::getCustomId();
 
@@ -647,13 +629,13 @@ class ContactController
             }
         }
 
-        if (!empty($departments)) {
-            sort($departments, SORT_NUMERIC);
-
-            return $departments;
-        } else {
-            return false;
+        if (empty($departments)) {
+            return $response->withJson(['departments' => []]);
         }
+
+        sort($departments, SORT_NUMERIC);
+
+        return $response->withJson(['departments' => $departments]);
     }
 
     public static function getParsedContacts(array $args)

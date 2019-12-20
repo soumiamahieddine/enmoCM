@@ -71,7 +71,7 @@ foreach ($customs as $custom) {
                 $fingerprint = \Resource\controllers\StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType[0]['fingerprint_mode']]);
                 $attachmentInfo['fingerprint'] = $fingerprint;
             } else {
-                $attachmentInfo['fingerprint'] = 1;
+                $attachmentInfo['fingerprint'] = '1';
             }
         }
 
@@ -80,7 +80,7 @@ foreach ($customs as $custom) {
         if ($attachmentInfo['fingerprint'] == 1) {
             echo "Le document avec res_version_attachments.res_id = " . $oldResId
                 . " (nouveau res_id : res_attachment.res_id = " . $newResId . ") n'a pas été trouvé sur le docserver (path = '" . $pathToDocument . "')"
-                . ", le fingerprint du document est assigné à 1";
+                . ", le fingerprint du document est assigné à 1\n";
         }
 
         migrateOrigin(['oldResId' => $oldResId, 'newResId' => $newResId]);

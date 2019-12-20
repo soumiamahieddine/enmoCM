@@ -13,6 +13,9 @@ foreach ($customs as $custom) {
         continue;
     }
 
+    \SrcCore\models\DatabasePDO::reset();
+    new \SrcCore\models\DatabasePDO(['customId' => $custom]);
+
     $path = "custom/{$custom}/apps/maarch_entreprise/xml/config.xml";
     if (file_exists($path)) {
         if (!is_readable($path) || !is_writable($path)) {

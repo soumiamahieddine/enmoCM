@@ -71,6 +71,7 @@ $app->get('/attachments/{id}/content', \Attachment\controllers\AttachmentControl
 $app->get('/attachments/{id}/originalContent', \Attachment\controllers\AttachmentController::class . ':getOriginalFileContent');
 $app->get('/attachments/{id}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
 $app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\AttachmentController::class . ':setInSendAttachment');
+$app->get('/attachments/{id}/maarchParapheurWorkflow', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':getWorkflow');
 $app->get('/attachmentsTypes', \Attachment\controllers\AttachmentController::class . ':getAttachmentsTypes');
 
 //AutoComplete
@@ -80,7 +81,7 @@ $app->get('/autocomplete/correspondents', \SrcCore\controllers\AutoCompleteContr
 $app->get('/autocomplete/contacts/groups', \SrcCore\controllers\AutoCompleteController::class . ':getContactsForGroups');
 $app->get('/autocomplete/contacts/company', \SrcCore\controllers\AutoCompleteController::class . ':getContactsCompany');
 $app->get('/autocomplete/users/administration', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForAdministration');
-$app->get('/autocomplete/users/visa', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForVisa');
+$app->get('/autocomplete/users/circuit', \SrcCore\controllers\AutoCompleteController::class . ':getUsersForCircuit');
 $app->get('/autocomplete/entities', \SrcCore\controllers\AutoCompleteController::class . ':getEntities');
 $app->get('/autocomplete/statuses', \SrcCore\controllers\AutoCompleteController::class . ':getStatuses');
 $app->get('/autocomplete/banAddresses', \SrcCore\controllers\AutoCompleteController::class . ':getBanAddresses');
@@ -118,6 +119,7 @@ $app->put('/contacts/{id}', \Contact\controllers\ContactController::class . ':up
 $app->delete('/contacts/{id}', \Contact\controllers\ContactController::class . ':delete');
 $app->put('/contacts/{id}/activation', \Contact\controllers\ContactController::class . ':updateActivation');
 $app->get('/formattedContacts/{id}/types/{type}', \Contact\controllers\ContactController::class . ':getLightFormattedContact');
+$app->get('/ban/availableDepartments', \Contact\controllers\ContactController::class . ':getAvailableDepartments');
 
 //ContactsCustomFields
 $app->get('/contactsCustomFields', \Contact\controllers\ContactCustomFieldController::class . ':get');
@@ -345,6 +347,7 @@ $app->get('/resources/{resId}/templates', \Template\controllers\TemplateControll
 $app->get('/resources/{resId}/listInstance', \Entity\controllers\ListInstanceController::class . ':getByResId');
 $app->get('/resources/{resId}/visaCircuit', \Entity\controllers\ListInstanceController::class . ':getVisaCircuitByResId');
 $app->get('/resources/{resId}/opinionCircuit', \Entity\controllers\ListInstanceController::class . ':getOpinionCircuitByResId');
+$app->get('/resources/{resId}/availableCircuits', \Entity\controllers\ListTemplateController::class . ':getAvailableCircuitsByResId');
 $app->get('/res/{resId}/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
