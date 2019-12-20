@@ -165,25 +165,30 @@ export class IndexationComponent implements OnInit {
 
             formatdatas['modelId'] = this.currentIndexingModel.master !== null ? this.currentIndexingModel.master : this.currentIndexingModel.id;
             formatdatas['chrono'] = true;
-            formatdatas['encodedFile'] = this.appDocumentViewer.getFile().content;
-            formatdatas['format'] = this.appDocumentViewer.getFile().format;
 
-            if (formatdatas['encodedFile'] === null) {
-                this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.noFile, msg: this.lang.noFileMsg } });
+            this.appDocumentViewer.getFile().pipe(
+                tap((data: any) => {
+                    formatdatas['encodedFile'] = data.content;
+                    formatdatas['format'] = data.format;
 
-                this.dialogRef.afterClosed().pipe(
-                    filter((data: string) => data === 'ok'),
-                    tap(() => {
+                    if (formatdatas['encodedFile'] === null) {
+                        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.noFile, msg: this.lang.noFileMsg } });
+
+                        this.dialogRef.afterClosed().pipe(
+                            filter((data: string) => data === 'ok'),
+                            tap(() => {
+                                this.actionService.launchIndexingAction(this.selectedAction, this.headerService.user.id, this.currentGroupId, formatdatas);
+                            }),
+                            catchError((err: any) => {
+                                this.notify.handleErrors(err);
+                                return of(false);
+                            })
+                        ).subscribe();
+                    } else {
                         this.actionService.launchIndexingAction(this.selectedAction, this.headerService.user.id, this.currentGroupId, formatdatas);
-                    }),
-                    catchError((err: any) => {
-                        this.notify.handleErrors(err);
-                        return of(false);
-                    })
-                ).subscribe();
-            } else {
-                this.actionService.launchIndexingAction(this.selectedAction, this.headerService.user.id, this.currentGroupId, formatdatas);
-            }
+                    }
+                })
+            ).subscribe();
         } else {
             this.notify.error(this.lang.mustFixErrors);
         }

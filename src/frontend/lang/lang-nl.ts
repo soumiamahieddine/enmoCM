@@ -193,18 +193,18 @@ export const LANG_NL = {
     "contactGroupList"                      : "Lijst met contactgroepen",
     "contactInfo"                           : "Contactfiche",
     "contacts"                              : "Contact(s)", //_TO_TRANSLATE
-    "contactsParameters_address_additional1"    : "Toren, gebouw, pand, residentie",
-    "contactsParameters_address_country"       : "Land",
-    "contactsParameters_address_number"           : "Straatnummer",
-    "contactsParameters_address_postcode"   : "Postcode",
-    "contactsParameters_address_street"        : "Spoor",
-    "contactsParameters_address_town"          : "Gemeente",
+    "contactsParameters_addressAdditional1"    : "Toren, gebouw, pand, residentie",
+    "contactsParameters_addressCountry"       : "Land",
+    "contactsParameters_addressNumber"           : "Straatnummer",
+    "contactsParameters_addressPostcode"   : "Postcode",
+    "contactsParameters_addressStreet"        : "Spoor",
+    "contactsParameters_addressTown"          : "Gemeente",
     "contactsParameters_department"           : "Dienst",
     "contactsParameters_email"                 : "E-mail",
     "contactsParameters_firstname"             : "Voornaam",
     "contactsParameters_function"              : "Functie",
     "contactsParameters_lastname"              : "Naam",
-    "contactsParameters_address_additional2"   : "Nr. app., verdieping, trap",
+    "contactsParameters_addressAdditional2"   : "Additional Line",//_TO_TRANSLATE
     "contactsParameters_phone"                 : "Telefoon",
     "contactsParameters_company"               : "Structuur",
     "contactsParameters_civility"              : "Aanspreking",
@@ -1313,6 +1313,9 @@ export const LANG_NL = {
     "chooseAllowedGroups" : "Choose allowed groups", //_TO_TRANSLATE
     "reallyWantToDeleteThisGroup"   : "Do you really want to remove this group ?", //_TO_TRANSLATE
     "contact_entity"   : "Entity", //_TO_TRANSLATE
+    "contact_contact": "Contact", //_TO_TRANSLATE
+    "contact_contactGroup": "Contacts group", //_TO_TRANSLATE
+    "contact_user": "User", //_TO_TRANSLATE
     "contact_third"   : "Contact third", //_TO_TRANSLATE
     "confidentialityAndSecurity"   : "Confidentiality and security", //_TO_TRANSLATE
     "modified"   : "Modified", //_TO_TRANSLATE
@@ -1352,7 +1355,27 @@ export const LANG_NL = {
     "siretGeneratedButAnnuaryUnreachable": "SIRET number generated but annuary is unreachable",//_TO_TRANSLATE
     "entityDeletedButAnnuaryUnreachable": "Entity deleted but annuary is unreachable",//_TO_TRANSLATE
     "langISO": "nl-FR",
+    "language": "nl",
     "noSelectedContact": "No associated contact", //_TO_TRANSLATE
     "searchContact": "Search a contact", //_TO_TRANSLATE
-    "acknowledgementReceiptGenerationImpossible": "Acknowledgement receipt generation impossible : no sender(s) associated with resource(s)", //_TO_TRANSLATE
+    "acknowledgementReceiptGenerationImpossible": "Acknowledgement receipt generation impossible for resource(s) : ", //_TO_TRANSLATE
+    "editorOption": "Editor option", //_TO_TRANSLATE
+    "editorOptionAdmin": "Manage editor option", //_TO_TRANSLATE
+    "documentEditor": "Document editor", //_TO_TRANSLATE
+    "contactsList": "Contacts list", //_TO_TRANSLATE
+    "listConfiguration": "Manage list display", //_TO_TRANSLATE
+    "noticeGroupeOrder": "Drag and drop group to set order", //_TO_TRANSLATE
+    "searchAddressBan": "Search a BAN address", //_TO_TRANSLATE
+    "searchAddressDb": "Search in address database", //_TO_TRANSLATE
+    "switchManualAddress": "Switch to manual address", //_TO_TRANSLATE
+    "targetDepartment": "Target department", //_TO_TRANSLATE
+    "contactCreation": "Contact creation", //_TO_TRANSLATE
+    "contactModification": "Contact modification", //_TO_TRANSLATE
+    "contactEnabled": "Contact enabled", //_TO_TRANSLATE
+    "contactDisabled": "Contact disabled", //_TO_TRANSLATE
+    "contactUpdated": "Contact updated", //_TO_TRANSLATE
+    "addAll": "Add all", //_TO_TRANSLATE
+    "additionals": "Additional(s)", //_TO_TRANSLATE
+    "denomination": "Denomination", //_TO_TRANSLATE
+    "moreInfos" : "More data", //_TO_TRANSLATE
 };

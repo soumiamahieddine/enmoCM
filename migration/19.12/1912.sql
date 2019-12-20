@@ -17,6 +17,8 @@ DROP VIEW IF EXISTS view_folders;
 ALTER TABLE users DROP COLUMN IF EXISTS reset_token;
 ALTER TABLE users DROP COLUMN IF EXISTS change_password;
 ALTER TABLE users ADD COLUMN reset_token text;
+ALTER TABLE users DROP COLUMN IF EXISTS preferences;
+ALTER TABLE users ADD COLUMN preferences jsonb NOT NULL DEFAULT '{"documentEdition" : "java"}';
 
 /* FULL TEXT */
 DELETE FROM docservers where docserver_type_id = 'FULLTEXT';
@@ -361,6 +363,13 @@ DO $$ BEGIN
         UPDATE security SET where_clause = REGEXP_REPLACE(where_clause, 'typist(\s*)=(\s*)@user', 'typist = @user_id', 'gmi');
     END IF;
 END$$;
+ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_date timestamp without time zone;
+ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_user CHARACTER VARYING (50) DEFAULT NULL::character varying;
+ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_location CHARACTER VARYING (255) DEFAULT NULL::character varying;
+ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_wkstation CHARACTER VARYING (255) DEFAULT NULL::character varying;
+ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_batch CHARACTER VARYING (50) DEFAULT NULL::character varying;
+ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_postmark CHARACTER VARYING (50) DEFAULT NULL::character varying;
+ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS custom_fields jsonb;
 
 
 /* USERGROUP_CONTENT */

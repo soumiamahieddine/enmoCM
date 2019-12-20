@@ -215,6 +215,7 @@ CREATE TABLE users
   phone character varying(32) DEFAULT NULL::character varying,
   mail character varying(255) DEFAULT NULL::character varying,
   initials character varying(32) DEFAULT NULL::character varying,
+  preferences jsonb NOT NULL DEFAULT '{"documentEdition" : "java"}',
   status character varying(10) NOT NULL DEFAULT 'OK'::character varying,
   password_modification_date timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
   loginmode character varying(50) DEFAULT NULL::character varying,
@@ -992,6 +993,7 @@ CREATE TABLE res_letterbox
   flag_alarm2 char(1) default 'N'::character varying,
   address_id bigint,
   model_id integer NOT NULL,
+  custom_fields jsonb,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1414,17 +1416,6 @@ CREATE TABLE custom_fields
     values jsonb,
     CONSTRAINT custom_fields_pkey PRIMARY KEY (id),
     CONSTRAINT custom_fields_unique_key UNIQUE (label)
-)
-WITH (OIDS=FALSE);
-
-CREATE TABLE resources_custom_fields
-(
-    id serial NOT NULL,
-    res_id INTEGER NOT NULL,
-    custom_field_id INTEGER NOT NULL,
-    value jsonb NOT NULL,
-    CONSTRAINT resources_custom_fields_pkey PRIMARY KEY (id),
-    CONSTRAINT resources_custom_fields_unique_key UNIQUE (res_id, custom_field_id)
 )
 WITH (OIDS=FALSE);
 

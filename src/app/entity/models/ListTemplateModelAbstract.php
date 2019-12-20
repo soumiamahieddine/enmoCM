@@ -19,15 +19,16 @@ use SrcCore\models\DatabaseModel;
 
 abstract class ListTemplateModelAbstract
 {
-    public static function get(array $aArgs = [])
+    public static function get(array $args = [])
     {
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data']);
+        ValidatorModel::arrayType($args, ['select', 'where', 'data']);
 
         $aListTemplates = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
             'table'     => ['listmodels'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data']
+            'where'     => $args['where'],
+            'data'      => $args['data'],
+            'order_by'  => empty($args['orderBy']) ? [] : $args['orderBy']
         ]);
 
         return $aListTemplates;

@@ -49,12 +49,12 @@ function changeCycle(path_manage_script)
 }
 
 function initSenderRecipientAutocomplete(inputId, mode, alternateVersion, cardId) {
-    var route = '../../rest/autocomplete/all';
+    var route = '../../rest/autocomplete/correspondents';
 
     $j("#" + inputId).typeahead({
         // order: "asc",
-        display: "idToDisplay",
-        templateValue: "{{otherInfo}}",
+        display: ["company", "firstname", "lastname"],
+        templateValue: "{{company}} {{firstname}} {{lastname}}",
         emptyTemplate: "Aucune donnée pour <b>{{query}}</b>",
         minLength: 3,
         dynamic: true,

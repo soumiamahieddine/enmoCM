@@ -28,7 +28,7 @@
                 <span style="display: flex;flex: 1;align-items: center;" [title]="this.valuesToDisplay[item]">
                     <i class="fa fa-folder-open" style="padding-right:5px;"></i>&nbsp;{{this.valuesToDisplay[item]}}
                 </span>
-                <mat-icon matChipRemove class="fa fa-times"></mat-icon>
+                <mat-icon matChipRemove class="fa fa-times" *ngIf="!controlAutocomplete.disabled"></mat-icon>
             </mat-chip>
         </mat-chip-list>
         <div class="noResult" *ngIf="controlAutocomplete.value.length === 0">

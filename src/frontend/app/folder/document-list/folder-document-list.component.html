@@ -72,16 +72,16 @@
                             {{lang.selected}}</small>
                     </div>
                     <div class="table-head-tool">
-                        <span>
+                        <span style="float:right;height: 56px;margin-top: 5px;">
+                            <mat-paginator #paginatorResultList [length]="resultsLength" [pageSizeOptions]="[10, 25, 50, 100, 150]"
+                                class="paginatorResultList"></mat-paginator>
+                        </span>
+                        <span style="float:right;height: 56px;margin-top: 11px;">
                             <app-folder-action-list #actionsList [contextMode]="false" [currentFolderInfo]="folderInfo"
                                 [totalRes]="allResInBasket.length" [selectedRes]="selectedRes"
                                 (refreshEvent)="refreshDaoAfterAction()"
                                 (refreshPanelFolders)="panelFolder.refreshFoldersTree()">
                             </app-folder-action-list>
-                        </span>
-                        <span>
-                            <mat-paginator #paginatorResultList [length]="resultsLength" [pageSize]="25"
-                                class="paginatorResultList"></mat-paginator>
                         </span>
                     </div>
                 </div>

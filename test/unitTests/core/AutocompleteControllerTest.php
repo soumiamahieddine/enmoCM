@@ -40,7 +40,7 @@ class AutocompleteControllerTest extends TestCase
         }
     }
 
-    public function testGetAll()
+    public function testGetCorrespondents()
     {
         $autocompleteController = new \SrcCore\controllers\AutoCompleteController();
 
@@ -54,19 +54,19 @@ class AutocompleteControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $autocompleteController->getAll($fullRequest, new \Slim\Http\Response());
+        $response     = $autocompleteController->getCorrespondents($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         foreach ($responseBody as $value) {
             $this->assertInternalType('int', $value->id);
-            $this->assertInternalType('string', $value->idToDisplay);
-            $this->assertInternalType('string', $value->otherInfo);
+            // $this->assertInternalType('string', $value->idToDisplay);
+            // $this->assertInternalType('string', $value->otherInfo);
             $this->assertNotEmpty($value->type);
             $this->assertNotEmpty($value->id);
-            $this->assertNotEmpty($value->idToDisplay);
-            $this->assertNotEmpty($value->otherInfo);
+            // $this->assertNotEmpty($value->idToDisplay);
+            // $this->assertNotEmpty($value->otherInfo);
             if ($value->type == 'contact') {
-                $this->assertNotEmpty($value->rateColor);
+                $this->assertNotEmpty($value->fillingRate->color);
             }
         }
     }
@@ -128,7 +128,7 @@ class AutocompleteControllerTest extends TestCase
         }
     }
 
-    public function testGetUsersForVisa()
+    public function testGetUsersForCircuit()
     {
         $autocompleteController = new \SrcCore\controllers\AutoCompleteController();
 
@@ -141,7 +141,7 @@ class AutocompleteControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $autocompleteController->getUsersForVisa($fullRequest, new \Slim\Http\Response());
+        $response     = $autocompleteController->getUsersForCircuit($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('array', $responseBody);

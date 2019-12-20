@@ -25,9 +25,9 @@ import { NotificationsAdministrationComponent }         from './notification/not
 import { NotificationAdministrationComponent }          from './notification/notification-administration.component';
 import { HistoryAdministrationComponent }               from './history/history-administration.component';
 import { UpdateStatusAdministrationComponent }          from './updateStatus/update-status-administration.component';
-import { ContactsGroupsAdministrationComponent }        from './contact/contacts-groups-administration.component';
-import { ContactsGroupAdministrationComponent }         from './contact/contacts-group-administration.component';
-import { ContactsParametersAdministrationComponent }       from './contact/contacts-parameters-administration.component';
+import { ContactsGroupsAdministrationComponent }        from './contact/group/contacts-groups-administration.component';
+import { ContactsGroupAdministrationComponent }         from './contact/group/contacts-group-administration.component';
+import { ContactsParametersAdministrationComponent }       from './contact/parameter/contacts-parameters-administration.component';
 import { VersionsUpdateAdministrationComponent }        from './versionUpdate/versions-update-administration.component';
 import { DocserversAdministrationComponent }            from './docserver/docservers-administration.component';
 import { DocserverAdministrationComponent }             from './docserver/docserver-administration.component';
@@ -41,6 +41,10 @@ import { CustomFieldsAdministrationComponent }          from './customField/cust
 import { AppGuard }                                     from '../../service/app.guard';
 import { IndexingModelAdministrationComponent }        from './indexingModel/indexing-model-administration.component';
 import { IndexingModelsAdministrationComponent }        from './indexingModel/indexing-models-administration.component';
+import { ContactsListAdministrationComponent }        from './contact/list/contacts-list-administration.component';
+import { ContactsHomeAdministrationComponent }        from './contact/home/contacts-home-administration.component';
+import { ContactsCustomFieldsAdministrationComponent } from './contact/customField/contacts-custom-fields-administration.component';
+import { ContactsPageAdministrationComponent } from './contact/page/contacts-page-administration.component';
 
 @NgModule({
     imports: [
@@ -78,10 +82,15 @@ import { IndexingModelsAdministrationComponent }        from './indexingModel/in
             { path: 'administration/notifications/:identifier', canActivate: [AppGuard], component: NotificationAdministrationComponent },
             { path: 'administration/history', canActivate: [AppGuard], component: HistoryAdministrationComponent },
             { path: 'administration/update-status', canActivate: [AppGuard], component: UpdateStatusAdministrationComponent },
-            { path: 'administration/contacts-groups', canActivate: [AppGuard], component: ContactsGroupsAdministrationComponent },
-            { path: 'administration/contacts-groups/new', canActivate: [AppGuard], component: ContactsGroupAdministrationComponent },
-            { path: 'administration/contacts-groups/:id', canActivate: [AppGuard], component: ContactsGroupAdministrationComponent },
-            { path: 'administration/contacts-parameters', canActivate: [AppGuard], component: ContactsParametersAdministrationComponent },
+            { path: 'administration/contacts', canActivate: [AppGuard], component: ContactsListAdministrationComponent },
+            { path: 'administration/contacts/list', redirectTo: 'administration/contacts', pathMatch: 'full' },
+            { path: 'administration/contacts/list/new', canActivate: [AppGuard], component: ContactsPageAdministrationComponent },
+            { path: 'administration/contacts/list/:id', canActivate: [AppGuard], component: ContactsPageAdministrationComponent },
+            { path: 'administration/contacts/contactsCustomFields', canActivate: [AppGuard], component: ContactsCustomFieldsAdministrationComponent },
+            { path: 'administration/contacts/contacts-groups', canActivate: [AppGuard], component: ContactsGroupsAdministrationComponent },
+            { path: 'administration/contacts/contacts-groups/new', canActivate: [AppGuard], component: ContactsGroupAdministrationComponent },
+            { path: 'administration/contacts/contacts-groups/:id', canActivate: [AppGuard], component: ContactsGroupAdministrationComponent },
+            { path: 'administration/contacts/contacts-parameters', canActivate: [AppGuard], component: ContactsParametersAdministrationComponent },
             { path: 'administration/versions-update', canActivate: [AppGuard], component: VersionsUpdateAdministrationComponent },
             { path: 'administration/docservers', canActivate: [AppGuard], component: DocserversAdministrationComponent },
             { path: 'administration/docservers/new', canActivate: [AppGuard], component: DocserverAdministrationComponent },

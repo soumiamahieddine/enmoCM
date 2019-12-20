@@ -166,6 +166,7 @@ class PreProcessActionController
         }
 
         $sendList = [];
+        $unavailableList = [];
         $sendEmail = 0;
         $sendPaper = 0;
         $noSendAR = [
@@ -342,10 +343,12 @@ class PreProcessActionController
             }
             if ($email > 0 || $paper > 0) {
                 $sendList[] = $resId;
+            } else {
+                $unavailableList[] = $resource['alt_identifier'];
             }
         }
 
-        return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'sendList' => $sendList,  'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
+        return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'sendList' => $sendList,  'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated, 'unavailableList' => $unavailableList]);
     }
 
     public function checkExternalSignatoryBook(Request $request, Response $response, array $aArgs)

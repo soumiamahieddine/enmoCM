@@ -11,6 +11,13 @@
     [notes] = detail of notes added
 */
 
+use Contact\models\ContactModel;
+use Note\models\NoteModel;
+use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
+use SrcCore\models\TextFormatModel;
+use User\models\UserModel;
+
 $dbDatasource = new Database();
 
 $datasources['recipient'][0] = (array)$recipient;
@@ -52,7 +59,19 @@ foreach ($events as $event) {
     }
     
     $stmt = $dbDatasource->query($query, $arrayPDO);
-    $note = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($event->table_name != 'notes') {
+        $note = $stmt->fetch(PDO::FETCH_ASSOC);
+        $resId = $note['identifier'];
+    } else {
+        $note = NoteModel::getById(['id' => $event->record_id]);
+        $resId = $note['identifier'];
+        $resLetterbox = ResModel::getById([
+            'select' => ['*'],
+            'resId'  => $resId
+        ]);
+        $datasources['res_letterbox'][] = $resLetterbox;
+    }
     
     // Lien vers la page détail
     $urlToApp = trim($maarchUrl, '/').'/apps/'.trim($maarchApps, '/').'/index.php?';
@@ -65,14 +84,35 @@ foreach ($events as $event) {
         'data'    => [$user['id'], 'MyBasket']
     ]);
 
-    $note['linktodoc']     = $urlToApp . 'linkToDoc='.$note['res_id'];
-    $note['linktodetail']  = $urlToApp . 'linkToDetail='.$note['res_id'];
-    if (!empty($note['res_id']) && !empty($preferenceBasket[0]['group_serial_id']) && !empty($basket['id']) && !empty($user['id'])) {
-        $note['linktoprocess'] = $urlToApp . 'linkToProcess='.$note['res_id'].'&groupId='.$preferenceBasket[0]['group_serial_id'].'&basketId='.$basket['id'].'&userId='.$user['id'];
+    $note['linktodoc']     = $urlToApp . 'linkToDoc='.$resId;
+    $note['linktodetail']  = $urlToApp . 'linkToDetail='.$resId;
+
+    if (!empty($resId) && !empty($preferenceBasket[0]['group_serial_id']) && !empty($basket['id']) && !empty($user['id'])) {
+        $note['linktoprocess'] = $urlToApp . 'linkToProcess='.$resId.'&groupId='.$preferenceBasket[0]['group_serial_id'].'&basketId='.$basket['id'].'&userId='.$user['id'];
+    }
+
+    $resourceContacts = ResourceContactModel::get([
+        'where' => ['res_id = ?', "type = 'contact'", "mode = 'sender'"],
+        'data'  => [$resId]
+    ]);
+
+    if ($event->table_name == 'notes') {
+        $datasources['res_letterbox'][0]['linktodoc'] = $note['linktodoc'];
+        $datasources['res_letterbox'][0]['linktodetail'] = $note['linktodetail'];
+        $datasources['res_letterbox'][0]['linktoprocess'] = $note['linktodoc'];
+
+        $labelledUser = UserModel::getLabelledUserById(['id' => $note['user_id']]);
+        $creationDate = TextFormatModel::formatDate($note['creation_date'], 'd/m/Y');
+        $note = "{$labelledUser} : {$creationDate} : {$note['note_text']}\n";
+    }
+
+    foreach ($resourceContacts as $resourceContact) {
+        $contact = ContactModel::getById(['id' => $resourceContact['item_id'], 'select' => ['*']]);
+        $datasources['contact'][] = $contact;
     }
     
     // Insertion
-    $datasources['notes'][] = $note;
+    $datasources['notes'] = $note;
 }
 
 $datasources['images'][0]['imgdetail'] = str_replace('//', '/', $maarchUrl . '/apps/' . $maarchApps . '/img/object.gif');

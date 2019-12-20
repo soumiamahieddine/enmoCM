@@ -15,7 +15,6 @@
 namespace SrcCore\controllers;
 
 use Contact\controllers\ContactController;
-use Contact\models\ContactCustomFieldListModel;
 use Contact\models\ContactGroupModel;
 use Contact\models\ContactModel;
 use Contact\models\ContactParameterModel;
@@ -146,7 +145,7 @@ class AutoCompleteController
         }
     }
 
-    public static function getAll(Request $request, Response $response)
+    public static function getCorrespondents(Request $request, Response $response)
     {
         $queryParams = $request->getQueryParams();
 
@@ -160,18 +159,15 @@ class AutoCompleteController
             $searchableParameters = ContactParameterModel::get(['select' => ['identifier'], 'where' => ['searchable = ?'], 'data' => [true]]);
 
             $fields = [];
-            $searchableCstParameters = [];
             foreach ($searchableParameters as $searchableParameter) {
                 if (strpos($searchableParameter['identifier'], 'contactCustomField_') !== false) {
-                    $searchableCstParameters[] = explode('_', $searchableParameter['identifier'])[1];
+                    $customFieldId = explode('_', $searchableParameter['identifier'])[1];
+                    $fields[] = "custom_fields->>'{$customFieldId}'";
                 } else {
-                    $fields[] = $searchableParameter['identifier'];
+                    $fields[] = ContactController::MAPPING_FIELDS[$searchableParameter['identifier']];
                 }
             }
 
-            foreach ($searchableCstParameters as $cstParameter) {
-                $fields[] = "custom_fields->>'{$cstParameter}'";
-            }
             $fieldsNumber = count($fields);
             $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
 
@@ -180,7 +176,7 @@ class AutoCompleteController
                 'fields'        => $fields,
                 'where'         => ['enabled = ?'],
                 'data'          => [true],
-                'fieldsNumber'  => $fieldsNumber,
+                'fieldsNumber'  => $fieldsNumber
             ]);
 
             $contacts = ContactModel::get([
@@ -252,7 +248,8 @@ class AutoCompleteController
                 $autocompleteEntities[] = [
                     'type'          => 'entity',
                     'id'            => $value['id'],
-                    'lastname'      => $value['entity_label']
+                    'lastname'      => $value['entity_label'],
+                    'firstname'     => ''
                 ];
             }
         }
@@ -282,7 +279,8 @@ class AutoCompleteController
                 $autocompleteContactsGroups[] = [
                     'type'          => 'contactGroup',
                     'id'            => $value['id'],
-                    'lastname'      => $value['label']
+                    'lastname'      => $value['label'],
+                    'firstname'     => ''
                 ];
             }
         }
@@ -394,12 +392,17 @@ class AutoCompleteController
         return $response->withJson($data);
     }
 
-    public static function getUsersForVisa(Request $request, Response $response)
+    public static function getUsersForCircuit(Request $request, Response $response)
     {
-        $data = $request->getQueryParams();
-        $check = Validator::stringType()->notEmpty()->validate($data['search']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        $queryParams = $request->getQueryParams();
+
+        if (!Validator::stringType()->notEmpty()->validate($queryParams['search'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
+        }
+
+        $services = ['visa_documents', 'sign_document'];
+        if (!empty($queryParams['circuit']) && $queryParams['circuit'] == 'opinion') {
+            $services = ['avis_documents'];
         }
 
         $excludedUsers = ['superadmin'];
@@ -408,7 +411,7 @@ class AutoCompleteController
         $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
 
         $requestData = AutoCompleteController::getDataForRequest([
-            'search'        => $data['search'],
+            'search'        => $queryParams['search'],
             'fields'        => $fields,
             'where'         => [
                 'usergroups.group_id = usergroups_services.group_id',
@@ -418,7 +421,7 @@ class AutoCompleteController
                 'users.user_id not in (?)',
                 'users.status not in (?)'
             ],
-            'data'          => [['visa_documents', 'sign_document'], $excludedUsers, ['DEL', 'SPD']],
+            'data'          => [$services, $excludedUsers, ['DEL', 'SPD']],
             'fieldsNumber'  => 2,
         ]);
 
@@ -541,6 +544,30 @@ class AutoCompleteController
         }
 
         return $response->withJson($data);
+    }
+
+    public static function getContactsCompany(Request $request, Response $response)
+    {
+        $queryParams = $request->getQueryParams();
+
+        if (!Validator::stringType()->notEmpty()->validate($queryParams['search'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
+        }
+
+        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => ['company']]);
+        $contacts = ContactModel::get([
+            'select'    => [
+                'id', 'company', 'address_number as "addressNumber"', 'address_street as "addressStreet"',
+                'address_additional1 as "addressAdditional1"', 'address_additional2 as "addressAdditional2"', 'address_postcode as "addressPostcode"',
+                'address_town as "addressTown"', 'address_country as "addressCountry"'
+            ],
+            'where'     => ['enabled = ?', $fields],
+            'data'      => [true, $queryParams['search'] . '%'],
+            'orderBy'   => ['company', 'lastname'],
+            'limit'     => 1
+        ]);
+
+        return $response->withJson($contacts);
     }
 
     public static function getBanAddresses(Request $request, Response $response)
@@ -795,28 +822,28 @@ class AutoCompleteController
         return $response->withJson($data);
     }
 
-    private static function getDataForRequest(array $aArgs)
+    public static function getDataForRequest(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['search', 'fields', 'where', 'data', 'fieldsNumber']);
-        ValidatorModel::stringType($aArgs, ['search', 'fields']);
-        ValidatorModel::arrayType($aArgs, ['where', 'data']);
-        ValidatorModel::intType($aArgs, ['fieldsNumber']);
+        ValidatorModel::notEmpty($args, ['search', 'fields', 'fieldsNumber']);
+        ValidatorModel::stringType($args, ['search', 'fields']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
+        ValidatorModel::intType($args, ['fieldsNumber']);
 
-        $searchItems = explode(' ', $aArgs['search']);
+        $searchItems = explode(' ', $args['search']);
 
         foreach ($searchItems as $item) {
             if (strlen($item) >= 2) {
-                $aArgs['where'][] = $aArgs['fields'];
-                for ($i = 0; $i < $aArgs['fieldsNumber']; $i++) {
-                    $aArgs['data'][] = "%{$item}%";
+                $args['where'][] = $args['fields'];
+                for ($i = 0; $i < $args['fieldsNumber']; $i++) {
+                    $args['data'][] = "%{$item}%";
                 }
             }
         }
 
-        return ['where' => $aArgs['where'], 'data' => $aArgs['data']];
+        return ['where' => $args['where'], 'data' => $args['data']];
     }
 
-    private static function getUnsensitiveFieldsForRequest(array $args)
+    public static function getUnsensitiveFieldsForRequest(array $args)
     {
         ValidatorModel::notEmpty($args, ['fields']);
         ValidatorModel::arrayType($args, ['fields']);

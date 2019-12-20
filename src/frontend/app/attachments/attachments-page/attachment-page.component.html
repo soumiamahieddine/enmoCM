@@ -196,7 +196,7 @@
                         </ng-template>
                         <app-document-viewer #appAttachmentViewer style="height:100%;width:100%;" [editMode]="editMode"
                             [resId]="data.resId" [resIdMaster]="attachment['resIdMaster'].value" [mode]="'attachment'"
-                            [attachType]="attachment['type'].value" [infoPanel]="snavLeft"
+                            [format]="attachment['format'].value" [attachType]="attachment['type'].value" [infoPanel]="snavLeft"
                             (triggerEvent)="setDatasViewer($event)"
                             [title]="attachment.chrono.value + ' - ' + attachment.title.value">
                         </app-document-viewer>
@@ -205,7 +205,7 @@
                         *ngFor="let version of versions">
                         <ng-template matTabContent>
                             <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
-                                [resId]="version.resId" [mode]="'attachment'"
+                                [resId]="version.resId" [mode]="'attachment'" [format]="attachment['format'].value"
                                 [title]="attachment.chrono.value + ' - ' + attachment.title.value + ' (' + version.relation + ')'">
                             </app-document-viewer>
                         </ng-template>
@@ -225,7 +225,7 @@
         <button mat-raised-button color="primary" *ngIf="!newVersion" (click)="updateAttachment()"
             [disabled]="!loading && (!editMode || !attachFormGroup.valid)">{{lang.validate}}</button>
         <button mat-raised-button color="primary" *ngIf="newVersion" (click)="createNewVersion()"
-            [disabled]="!editMode || attachment['encodedFile'].value === null">{{lang.createNewVersion}}</button>
+            [disabled]="!editMode || !appAttachmentViewer.isEditingTemplate()">{{lang.createNewVersion}}</button>
         <button mat-raised-button color="warn" *ngIf=" !loading && attachment.status.value === 'SIGN'"
             (click)="deleteSignedVersion()">{{lang.deleteSignedVersion}}</button>
         <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.close}}</button>

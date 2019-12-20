@@ -31,6 +31,8 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
 
     @Input('showResetOption') showResetOption: boolean;
 
+    @Input('showLabel') showLabel: boolean = false;
+
     @Input('class') class: string = "input-form";
 
     /**

@@ -253,12 +253,18 @@ class ContactControllerTest extends TestCase
         $this->assertSame('Mlle Prénom NOM TROP LOOOOOOOOOOOOONG', $name);
     }
 
-    public function testAvailableReferential()
+    public function testGetAvailableDepartments()
     {
         $contactController = new \Contact\controllers\ContactController();
-        $availableReferential = $contactController->availableReferential();
-        $this->assertInternalType('array', $availableReferential);
-        $this->assertNotEmpty($availableReferential);
+
+        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
+        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
+        $response = $contactController->getAvailableDepartments($request, new \Slim\Http\Response());
+        $responseBody      = json_decode((string)$response->getBody(), true);
+
+        $this->assertInternalType('array', $responseBody['departments']);
+        $this->assertNotEmpty($responseBody['departments']);
     }
 
     public function testGetContactsParameters()

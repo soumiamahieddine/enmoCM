@@ -17,6 +17,7 @@ namespace User\controllers;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
+use ContentManagement\controllers\DocumentEditorController;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Email\controllers\EmailController;
@@ -491,8 +492,9 @@ class UserController
 
     public function getProfile(Request $request, Response $response)
     {
-        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'external_id']]);
+        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['id', 'user_id', 'firstname', 'lastname', 'phone', 'mail', 'initials', 'preferences', 'external_id']]);
         $user['external_id']        = json_decode($user['external_id'], true);
+        $user['preferences']        = json_decode($user['preferences'], true);
         $user['signatures']         = UserSignatureModel::getByUserSerialId(['userSerialid' => $user['id']]);
         $user['emailSignatures']    = UserModel::getEmailSignaturesById(['userId' => $user['user_id']]);
         $user['groups']             = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
@@ -522,31 +524,75 @@ class UserController
 
     public function updateProfile(Request $request, Response $response)
     {
-        $user = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $body = $request->getParsedBody();
 
-        $data = $request->getParams();
-
-        $check = Validator::stringType()->notEmpty()->validate($data['firstname']);
-        $check = $check && Validator::stringType()->notEmpty()->validate($data['lastname']);
-        $check = $check && (empty($data['mail']) || filter_var($data['mail'], FILTER_VALIDATE_EMAIL));
-        $check = $check && (empty($data['phone']) || preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d/", $data['phone']));
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        if (!Validator::stringType()->notEmpty()->validate($body['firstname'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body firstname is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['lastname'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body lastname is empty or not a string']);
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['mail']) || !filter_var($body['mail'], FILTER_VALIDATE_EMAIL)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body mail is empty or not a valid email']);
+        } elseif (!empty($body['phone']) && !preg_match("/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d/", $body['phone'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body phone is not a valid phone number']);
         }
 
         UserModel::update([
             'set'   => [
-                'firstname' => $data['firstname'],
-                'lastname'  => $data['lastname'],
-                'mail'      => $data['mail'],
-                'phone'     => $data['phone'],
-                'initials'  => $data['initials']
+                'firstname'     => $body['firstname'],
+                'lastname'      => $body['lastname'],
+                'mail'          => $body['mail'],
+                'phone'         => $body['phone'],
+                'initials'      => $body['initials']
             ],
             'where' => ['id = ?'],
-            'data'  => [$user['id']]
+            'data'  => [$GLOBALS['id']]
         ]);
 
-        return $response->withJson(['success' => 'success']);
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'UP',
+            'eventId'      => 'userModification',
+            'info'         => _USER_UPDATED . " {$body['firstname']} {$body['lastname']}"
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function updateCurrentUserPreferences(Request $request, Response $response)
+    {
+        $body = $request->getParsedBody();
+
+        $user = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['preferences', 'firstname', 'lastname']]);
+        $preferences = json_decode($user['preferences'], true);
+
+        if (!empty($body['documentEdition'])) {
+            if (!in_array($body['documentEdition'], DocumentEditorController::DOCUMENT_EDITION_METHODS)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body preferences[documentEdition] is not allowed']);
+            }
+            $preferences['documentEdition'] = $body['documentEdition'];
+        }
+        if (!empty($body['homeGroups'])) {
+            $preferences['homeGroups'] = $body['homeGroups'];
+        }
+
+        UserModel::update([
+            'set'   => [
+                'preferences'   => json_encode($preferences)
+            ],
+            'where' => ['id = ?'],
+            'data'  => [$GLOBALS['id']]
+        ]);
+
+        HistoryController::add([
+            'tableName'    => 'users',
+            'recordId'     => $GLOBALS['userId'],
+            'eventType'    => 'UP',
+            'eventId'      => 'userModification',
+            'info'         => _USER_PREFERENCE_UPDATED . " {$user['firstname']} {$user['lastname']}"
+        ]);
+
+        return $response->withStatus(204);
     }
 
     public function updatePassword(Request $request, Response $response, array $aArgs)
@@ -611,7 +657,7 @@ class UserController
             }
 
             $userBasketPreference = UserBasketPreferenceModel::get([
-                'select' => ['display'], 
+                'select' => ['display'],
                 'where'  => ['basket_id =?', 'group_serial_id = ?', 'user_serial_id = ?'],
                 'data'   => [$value['basket_id'], $value['group_id'], $aArgs['id']]
             ]);

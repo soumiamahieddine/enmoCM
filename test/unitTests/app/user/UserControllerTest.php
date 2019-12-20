@@ -278,9 +278,11 @@ class UserControllerTest extends TestCase
 
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
-        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => 'DGS']);
+
+        $entityInfo     = \Entity\models\EntityModel::getByEntityId(['entityId' => 'DGS', 'select' => ['id']]);
+        $response       = $entityController->getById($request, new \Slim\Http\Response(), ['id' => $entityInfo['id']]);
         $responseBody   = json_decode((string)$response->getBody());
-        $entitySerialId = $responseBody->entity->id;
+        $entitySerialId = $responseBody->id;
 
         $response     = $entityController->getUsersById($request, new \Slim\Http\Response(), ['id' => $entitySerialId]);
         $responseBody = json_decode((string)$response->getBody());
@@ -626,7 +628,7 @@ class UserControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $response       = $userController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
-        $responseBody   = json_decode((string)$response->getBody());
+        $this->assertSame(204, $response->getStatusCode());
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -703,46 +705,47 @@ class UserControllerTest extends TestCase
         //  UPDATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
+
         $aArgs = [
-            'firstname' => 'Wonder',
-            'lastname'  => 'User',
-            'mail'      => 'dev@maarch.org',
-            'initials'  => 'SU'
+            'firstname'     => 'Wonder',
+            'lastname'      => 'User',
+            'mail'          => 'dev@maarch.org',
+            'initials'      => 'SU'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response     = $userController->updateProfile($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
+        $this->assertSame(204, $response->getStatusCode());
 
-        $this->assertSame('success', $responseBody->success);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $response     = $userController->getProfile($request, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
+        $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertSame('superadmin', $responseBody->user_id);
-        $this->assertSame('Wonder', $responseBody->firstname);
-        $this->assertSame('User', $responseBody->lastname);
-        $this->assertSame('dev@maarch.org', $responseBody->mail);
-        $this->assertSame('SU', $responseBody->initials);
+        $this->assertSame('superadmin', $responseBody['user_id']);
+        $this->assertSame('Wonder', $responseBody['firstname']);
+        $this->assertSame('User', $responseBody['lastname']);
+        $this->assertSame('dev@maarch.org', $responseBody['mail']);
+        $this->assertSame('SU', $responseBody['initials']);
+        $this->assertSame('java', $responseBody['preferences']['documentEdition']);
+
 
         //  UPDATE
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $aArgs = [
-            'firstname' => 'Super',
-            'lastname'  => 'Admin',
-            'mail'      => 'dev@maarch.org',
-            'initials'  => 'SU'
+            'firstname'     => 'Super',
+            'lastname'      => 'ADMIN',
+            'mail'          => 'dev@maarch.org',
+            'initials'      => 'SU'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response     = $userController->updateProfile($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
+        $this->assertSame(204, $response->getStatusCode());
 
-        $this->assertSame('success', $responseBody->success);
 
         //  READ
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
@@ -752,25 +755,27 @@ class UserControllerTest extends TestCase
 
         $this->assertSame('superadmin', $responseBody->user_id);
         $this->assertSame('Super', $responseBody->firstname);
-        $this->assertSame('Admin', $responseBody->lastname);
+        $this->assertSame('ADMIN', $responseBody->lastname);
         $this->assertSame('dev@maarch.org', $responseBody->mail);
         $this->assertSame('SU', $responseBody->initials);
 
-        //  CORRECT UPDATE
+        //  ERRORS
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'PUT']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
         $aArgs = [
-            'firstname' => 'Super',
-            'lastname'  => 'ADMIN',
-            'mail'      => 'dev@maarch.org',
-            'initials'  => 'SU'
+            'firstname'     => 'Super',
+            'lastname'      => 'ADMIN',
+            'mail'          => 'dev@maarch.org',
+            'initials'      => 'SU',
+            'preferences'   => ['documentEdition' => 'maarchOnline']
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response     = $userController->updateProfile($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
+        $this->assertSame(400, $response->getStatusCode());
 
-        $this->assertSame('success', $responseBody->success);
+        $responseBody = json_decode((string)$response->getBody(), true);
+        $this->assertSame('Body preferences[documentEdition] is not allowed', $responseBody['errors']);
     }
 
     public function testSetRedirectedBasket()
@@ -846,7 +851,7 @@ class UserControllerTest extends TestCase
         $user_id = \User\models\UserModel::getByLogin(['login' => 'bbain', 'select' => ['id']]);
        
         //DELETE MANY WITH ONE ON ERROR
-         $aArgs = [
+        $aArgs = [
             'redirectedBasketIds' => [ self::$redirectId, -1 ]
         ];
 

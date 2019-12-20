@@ -127,7 +127,7 @@ export class IndexingFormComponent implements OnInit {
             label: this.lang.getSenders,
             type: 'autocomplete',
             default_value: null,
-            values: ['/rest/autocomplete/all']
+            values: ['/rest/autocomplete/correspondents']
         },
         {
             identifier: 'destination',
@@ -374,7 +374,7 @@ export class IndexingFormComponent implements OnInit {
     }
 
     isResourceModified() {
-        if (JSON.stringify(this.currentResourceValues) === JSON.stringify(this.getDatas(false))) {
+        if (this.loading || JSON.stringify(this.currentResourceValues) === JSON.stringify(this.getDatas(false))) {
             return false;
         } else {
             return true;

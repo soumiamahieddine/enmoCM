@@ -109,25 +109,25 @@ abstract class UserModelAbstract
         return $nextSequenceId;
     }
 
-    public static function update(array $aArgs)
+    public static function update(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['set', 'where', 'data']);
-        ValidatorModel::arrayType($aArgs, ['set', 'where', 'data']);
+        ValidatorModel::notEmpty($args, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($args, ['set', 'where', 'data']);
 
         DatabaseModel::update([
             'table' => 'users',
-            'set'   => $aArgs['set'],
-            'where' => $aArgs['where'],
-            'data'  => $aArgs['data']
+            'set'   => $args['set'],
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;
     }
 
-    public static function delete(array $aArgs)
+    public static function delete(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
 
         DatabaseModel::update([
             'table'     => 'users',
@@ -138,7 +138,7 @@ abstract class UserModelAbstract
                 'external_id' => 'external_id - \'maarchParapheur\''
             ],
             'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'data'      => [$args['id']]
         ]);
 
         return true;

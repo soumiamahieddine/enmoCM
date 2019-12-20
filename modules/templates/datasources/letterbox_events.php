@@ -31,8 +31,12 @@
     [res_letterbox] = record of view + link to detail/doc page
 */
 
+use Contact\controllers\ContactController;
+use Contact\models\ContactModel;
+use Resource\models\ResourceContactModel;
+
 $dbDatasource = new Database();
-$contacts = new contacts_v2();
+//$contacts = new contacts_v2();
 
 $datasources['recipient'][0] = (array) $recipient;
 
@@ -105,27 +109,20 @@ foreach ($events as $event) {
     // Insertion
     $datasources['res_letterbox'][] = $res;
 
-    //multicontact
-    // $stmt = $dbDatasource->query('SELECT * FROM contacts_res WHERE res_id = ? AND contact_id = ? ', array($res['res_id'], $res['contact_id']));
-    // $datasources['res_letterbox_contact'][] = $stmt->fetch(PDO::FETCH_ASSOC);
-    // if ($datasources['res_letterbox_contact'][0]['contact_id'] != '') {
-    //     // $datasources['contact'] = array();
-    //     $stmt = $dbDatasource->query('SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ', array($datasources['res_letterbox_contact'][0]['contact_id'], $datasources['res_letterbox_contact'][0]['address_id']));
-    //     $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
-    //     $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
-    //     $datasources['contact'][] = $myContact;
+    $resourceContacts = ResourceContactModel::get([
+        'where' => ['res_id = ?', "mode='sender'", "type='contact'"],
+        'data'  => [$res['res_id']],
+    ]);
 
-    //     // single Contact
-    // } elseif (isset($res['contact_id']) && isset($res['address_id'])) {
-    //     $stmt = $dbDatasource->query('SELECT * FROM view_contacts WHERE contact_id = ? and ca_id = ? ', array($res['contact_id'], $res['address_id']));
-    //     $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
-    //     $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
-    //     $datasources['contact'][] = $myContact;
-    // } else {
-    //     $stmt = $dbDatasource->query('SELECT * FROM view_contacts WHERE contact_id = 0');
-    //     $myContact = $stmt->fetch(PDO::FETCH_ASSOC);
-    //     $datasources['contact'][] = $myContact;
-    // }
+    foreach ($resourceContacts as $resourceContact) {
+        $contact = ContactModel::getById(['id' => $resourceContact['item_id'], 'select' => ['*']]);
+
+        $postalAddress = ContactController::getContactAfnor($contact);
+        unset($postalAddress[0]);
+        $contact['postal_address'] = implode("\n", $postalAddress);
+
+        $datasources['contact'][] = $contact;
+    }
 }
 
 $datasources['images'][0]['imgdetail'] = $maarchUrl.'/apps/'.$maarchApps.'/img/object.gif';

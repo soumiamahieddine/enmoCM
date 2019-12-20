@@ -97,7 +97,8 @@ export class AttachmentPageComponent implements OnInit {
                     type: new FormControl({ value: data.type, disabled: !this.editMode }, [Validators.required]),
                     validationDate: new FormControl({ value: data.validationDate !== null ? new Date(data.validationDate) : null, disabled: !this.editMode }),
                     signedResponse: new FormControl({ value: data.signedResponse, disabled: false }),
-                    encodedFile: new FormControl({ value: '_CURRENT_FILE', disabled: !this.editMode }, [Validators.required])
+                    encodedFile: new FormControl({ value: '_CURRENT_FILE', disabled: !this.editMode }, [Validators.required]),
+                    format: new FormControl({ value: data.format, disabled: true }, [Validators.required])
                 };
 
                 this.versions = data.versions;
@@ -114,14 +115,15 @@ export class AttachmentPageComponent implements OnInit {
         ).subscribe();
     }
 
-    onSubmit() {
-        this.getAttachmentValues();
-    }
-
     createNewVersion() {
         this.sendingData = true;
-        this.http.post(`../../rest/attachments`, this.getAttachmentValues(true)).pipe(
-            tap((data: any) => {
+        this.appAttachmentViewer.getFile().pipe(
+            tap((data) => {
+                this.attachment.encodedFile.setValue(data.content);
+                this.attachment.format.setValue(data.format);
+            }),
+            exhaustMap(() => this.http.post(`../../rest/attachments`, this.getAttachmentValues(true))),
+            tap(() => {
                 this.notify.success(this.lang.newVersionAdded);
                 this.dialogRef.close('success');
             }),
@@ -135,8 +137,13 @@ export class AttachmentPageComponent implements OnInit {
 
     updateAttachment() {
         this.sendingData = true;
-        this.http.put(`../../rest/attachments/${this.attachment.resId.value}`, this.getAttachmentValues()).pipe(
-            tap((data: any) => {
+        this.appAttachmentViewer.getFile().pipe(
+            tap((data) => {
+                this.attachment.encodedFile.setValue(data.content);
+                this.attachment.format.setValue(data.format);
+            }),
+            exhaustMap(() => this.http.put(`../../rest/attachments/${this.attachment.resId.value}`, this.getAttachmentValues())),
+            tap(() => {
                 this.notify.success(this.lang.attachmentUpdated);
                 this.dialogRef.close('success');
             }),
@@ -178,7 +185,7 @@ export class AttachmentPageComponent implements OnInit {
                     if (this.attachment[element].value === '_CURRENT_FILE') {
                         attachmentValues['encodedFile'] = null;
                     }
-                    attachmentValues['format'] = this.appAttachmentViewer.getFile().format;
+                    //attachmentValues['format'] = this.appAttachmentViewer.getFile().format;
                 }
             }
         });
@@ -206,9 +213,9 @@ export class AttachmentPageComponent implements OnInit {
             this.attachment['encodedFile'].setValue(null);
         } else {
             datas['resId'] = this.attachment['resIdMaster'].value;
-            this.attachment.encodedFile.setValue(this.appAttachmentViewer.getFile().content);
+            //this.attachment.encodedFile.setValue(this.appAttachmentViewer.getFile().content);
             this.appAttachmentViewer.setDatas(datas);
-            this.setNewVersion();
+            //this.setNewVersion();
         }
     }
 

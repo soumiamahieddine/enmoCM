@@ -1,13 +1,13 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../../translate.component';
-import { NotificationService } from '../../notification.service';
-import { HeaderService }        from '../../../service/header.service';
+import { LANG } from '../../../translate.component';
+import { NotificationService } from '../../../notification.service';
+import { HeaderService }        from '../../../../service/header.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { AppService } from '../../../service/app.service';
+import { AppService } from '../../../../service/app.service';
 
 declare function $j(selector: any): any;
 
@@ -29,6 +29,24 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
 
     loading: boolean = false;
 
+    subMenus:any [] = [
+        {
+            icon: 'fa fa-book',
+            route: '/administration/contacts',
+            label : this.lang.contactsList
+        },
+        {
+            icon: 'fa fa-cog',
+            route: '/administration/contacts/contacts-parameters',
+            label : this.lang.contactsParameters
+        },
+        {
+            icon: 'fa fa-code',
+            route: '/administration/contacts/contactsCustomFields',
+            label : this.lang.customFields
+        },
+    ];
+    
     displayedColumns = ['label', 'description', 'nbContacts', 'public', 'owner', 'actions',];
     dataSource = new MatTableDataSource(this.contactsGroups);
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;

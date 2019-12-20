@@ -446,3 +446,5 @@ define("_NO_M2M_ANNUARY_AVAILABLE", "No M2M annuary available");//TO TRANSLATE
 define("_CANNOT_SYNCHRONIZE_M2M_ANNUARY", "Contact can not be added in M2M annuary because one of these field is empty : Society, communication means, department");//TO TRANSLATE
 
 define("_DATE_LOCALE", "en_US.utf8");
+
+define("_USER_PREFERENCE_UPDATED", "User preferences updated"); //TO TRANSLATE

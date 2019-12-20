@@ -155,7 +155,7 @@ import { ContactsListModalComponent } from './contact/list/modal/contacts-list-m
         AttachmentShowModalComponent,
         MailResumeComponent,
         ContactsListComponent,
-        ContactsListModalComponent
+        ContactsListModalComponent,
     ],
     entryComponents: [
         CustomSnackbarComponent,

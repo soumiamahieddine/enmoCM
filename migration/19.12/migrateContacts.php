@@ -226,6 +226,7 @@ function migrateCustomField($args = [])
         if (!empty($value)) {
             $contact = \Contact\models\ContactModel::getById(['id' => $args['newContactId'], 'select' => ['custom_fields']]);
             $value = json_encode($value);
+            $value = str_replace("'", "''", $value);
             if (empty($contact['custom_fields'])) {
                 \Contact\models\ContactModel::update([
                     'postSet' => ['custom_fields' => "jsonb_set('{}', '{{$args['newCustomFields'][$key]}}', '{$value}')"],
@@ -445,21 +446,21 @@ function migrateContactParameters()
     $fillingValues = json_decode($fillingValues[0]['rating_columns']);
 
     $contactParameters = [
-        ['oldIdentifier' => 'title',                'identifier' => 'civility',            'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
-        ['oldIdentifier' => 'firstname',            'identifier' => 'firstname',           'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'true', 'displayable' => 'true'],
-        ['oldIdentifier' => 'lastname',             'identifier' => 'lastname',            'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'true', 'displayable' => 'true'],
-        ['oldIdentifier' => 'society',              'identifier' => 'company',             'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'true', 'displayable' => 'true'],
-        ['oldIdentifier' => 'departement',          'identifier' => 'department',          'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
-        ['oldIdentifier' => 'function',             'identifier' => 'function',            'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
-        ['oldIdentifier' => 'address_num',          'identifier' => 'address_number',      'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'true', 'displayable' => 'true'],
-        ['oldIdentifier' => 'address_street',       'identifier' => 'address_street',      'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'true', 'displayable' => 'true'],
-        ['oldIdentifier' => 'occupancy',            'identifier' => 'address_additional1', 'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
-        ['oldIdentifier' => 'address_complement',   'identifier' => 'address_additional2', 'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
-        ['oldIdentifier' => 'address_postal_code',  'identifier' => 'address_postcode',    'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
-        ['oldIdentifier' => 'address_town',         'identifier' => 'address_town',        'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'true', 'displayable' => 'true'],
-        ['oldIdentifier' => 'address_country',      'identifier' => 'address_country',     'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
-        ['oldIdentifier' => 'email',                'identifier' => 'email',               'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
-        ['oldIdentifier' => 'phone',                'identifier' => 'phone',               'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
+        ['oldIdentifier' => 'title',                'identifier' => 'civility',             'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
+        ['oldIdentifier' => 'firstname',            'identifier' => 'firstname',            'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'true', 'displayable' => 'true'],
+        ['oldIdentifier' => 'lastname',             'identifier' => 'lastname',             'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'true', 'displayable' => 'true'],
+        ['oldIdentifier' => 'society',              'identifier' => 'company',              'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'true', 'displayable' => 'true'],
+        ['oldIdentifier' => 'departement',          'identifier' => 'department',           'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
+        ['oldIdentifier' => 'function',             'identifier' => 'function',             'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
+        ['oldIdentifier' => 'address_num',          'identifier' => 'addressNumber',        'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'true', 'displayable' => 'true'],
+        ['oldIdentifier' => 'address_street',       'identifier' => 'addressStreet',        'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'true', 'displayable' => 'true'],
+        ['oldIdentifier' => 'occupancy',            'identifier' => 'addressAdditional1',   'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
+        ['oldIdentifier' => 'address_complement',   'identifier' => 'addressAdditional2',   'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
+        ['oldIdentifier' => 'address_postal_code',  'identifier' => 'addressPostcode',      'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
+        ['oldIdentifier' => 'address_town',         'identifier' => 'addressTown',          'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'true', 'displayable' => 'true'],
+        ['oldIdentifier' => 'address_country',      'identifier' => 'addressCountry',       'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
+        ['oldIdentifier' => 'email',                'identifier' => 'email',                'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
+        ['oldIdentifier' => 'phone',                'identifier' => 'phone',                'mandatory' => 'false', 'filling' => 'false', 'searchable' => 'false', 'displayable' => 'false'],
     ];
     
     foreach ($contactParameters as $value) {

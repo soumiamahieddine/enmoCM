@@ -798,8 +798,11 @@ if ($mode == 'normal') {
 
                     $tab[$i][$j]['value'] = '';
 
+                    $formattedRecipients = '';
+                    $formattedSenders = '';
+
                     if (!empty($senderList)) {
-                        if (count($senderList) > 2) {
+                        if (count($senderList) >= 2) {
                             $formattedSenders = count($senderList) . ' ' . _SENDERS;
                         } else {
                             $formattedSenders = implode("<br>", $senderList);
@@ -807,12 +810,12 @@ if ($mode == 'normal') {
                         $formattedSenders = '<b>'._TO_CONTACT_C.'</b>'.$formattedSenders;
                         $tab[$i][$j]['value'] .= $formattedSenders;
 
-                        if (!empty($formattedRecipients)) {
+                        if (!empty($recipientList)) {
                             $tab[$i][$j]['value'] .= "<br>";
                         }
                     }
                     if (!empty($recipientList)) {
-                        if (count($recipientList) > 2) {
+                        if (count($recipientList) >= 2) {
                             $formattedRecipients = count($recipientList) . ' ' . _RECIPIENTS;
                         } else {
                             $formattedRecipients = implode("<br>", $recipientList);

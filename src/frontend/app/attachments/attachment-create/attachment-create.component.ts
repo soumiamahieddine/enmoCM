@@ -2,7 +2,7 @@ import { Component, OnInit, Input, EventEmitter, Output, Inject, ViewChildren, Q
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { catchError, tap, finalize, exhaustMap, filter } from 'rxjs/operators';
-import { of, forkJoin } from 'rxjs';
+import { of, forkJoin, Subject } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatTabGroup } from '@angular/material';
 import { AppService } from '../../../service/app.service';
@@ -70,7 +70,7 @@ export class AttachmentCreateComponent implements OnInit {
                         });
                     }
                 });
-                this.attachmentsTypes = this.sortPipe.transform(this.attachmentsTypes, 'label');      
+                this.attachmentsTypes = this.sortPipe.transform(this.attachmentsTypes, 'label');
             }),
             exhaustMap(() => this.http.get(`../../rest/resources/${this.data.resIdMaster}?light=true`)),
             tap((data: any) => {
@@ -79,6 +79,7 @@ export class AttachmentCreateComponent implements OnInit {
                     contact: new FormControl({ value: '', disabled: false }),
                     type: new FormControl({ value: '', disabled: false }, [Validators.required]),
                     validationDate: new FormControl({ value: '', disabled: false }),
+                    format: new FormControl({ value: '', disabled: false }, [Validators.required]),
                     encodedFile: new FormControl({ value: '', disabled: false }, [Validators.required])
                 });
 
@@ -100,8 +101,8 @@ export class AttachmentCreateComponent implements OnInit {
                 type: element.type.value,
                 title: element.title.value,
                 validationDate: element.validationDate.value !== '' ? element.validationDate.value : null,
-                encodedFile: this.appDocumentViewer.toArray()[index].getFile().content,
-                format: this.appDocumentViewer.toArray()[index].getFile().format
+                encodedFile: element.encodedFile.value,
+                format: element.format.value
             });
         });
 
@@ -109,30 +110,37 @@ export class AttachmentCreateComponent implements OnInit {
     }
 
     onSubmit() {
-        if (this.isValid()) {
-            this.sendingData = true;
-            const attach = this.formatAttachments();
-            let arrayRoutes: any = [];
-    
-            this.attachments.forEach((element, index: number) => {
-                arrayRoutes.push(this.http.post('../../rest/attachments', attach[index]));
-            });
-    
-            forkJoin(arrayRoutes).pipe(
-                tap(() => {
-                    this.notify.success(this.lang.attachmentAdded);
-                    this.dialogRef.close('success');
-                }),
-                finalize(() => this.sendingData = false),
-                catchError((err: any) => {
-                    this.notify.handleErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-        } else {
-            this.notify.error(this.lang.mustCompleteAllAttachments);
-        }
-        
+        this.appDocumentViewer.toArray()[this.indexTab].getFile().pipe(
+            tap((data) => {
+                this.attachments[this.indexTab].encodedFile.setValue(data.content);
+                this.attachments[this.indexTab].format.setValue(data.format);
+            }),
+            tap(() => {
+                if (this.isValid()) {
+                    this.sendingData = true;
+                    const attach = this.formatAttachments();
+                    let arrayRoutes: any = [];
+                    this.attachments.forEach((element, index: number) => {
+                        arrayRoutes.push(this.http.post('../../rest/attachments', attach[index]));
+                    });
+
+                    forkJoin(arrayRoutes).pipe(
+                        tap(() => {
+                            this.notify.success(this.lang.attachmentAdded);
+                            this.dialogRef.close('success');
+                        }),
+                        finalize(() => this.sendingData = false),
+                        catchError((err: any) => {
+                            this.notify.handleErrors(err);
+                            return of(false);
+                        })
+                    ).subscribe();
+                } else {
+                    this.sendingData = false;
+                    this.notify.error(this.lang.mustCompleteAllAttachments);
+                }
+            })
+        ).subscribe();
     }
 
     isValid() {
@@ -159,7 +167,7 @@ export class AttachmentCreateComponent implements OnInit {
     isDocLoading() {
         let state = false;
         this.appDocumentViewer.toArray().forEach((app, index: number) => {
-            if (app.isEditingTemplate()) {
+            if (app.isEditingTemplate() && app.editor.async) {
                 state = true;
             }
         });
@@ -174,25 +182,33 @@ export class AttachmentCreateComponent implements OnInit {
             }
         });
         datas['resId'] = this.data.resIdMaster;
-        this.attachments[i].encodedFile.setValue(this.appDocumentViewer.toArray()[i].getFile().content);
         this.appDocumentViewer.toArray()[i].setDatas(datas);
     }
 
     newPj() {
-        this.attachments.push({
-            title: new FormControl({ value: '', disabled: false }, [Validators.required]),
-            contact: new FormControl({ value: null, disabled: false }),
-            type: new FormControl({ value: '', disabled: false }, [Validators.required]),
-            validationDate: new FormControl({ value: null, disabled: false }),
-            encodedFile: new FormControl({ value: '', disabled: false }, [Validators.required])
-        });
 
-        this.attachFormGroup.push(new FormGroup(this.attachments[this.attachments.length - 1]));
-        this.indexTab = this.attachments.length - 1;
+        this.appDocumentViewer.toArray()[this.indexTab].getFile().pipe(
+            tap((data) => {
+                this.attachments[this.indexTab].encodedFile.setValue(data.content);
+                this.attachments[this.indexTab].format.setValue(data.format);
+                this.attachments.push({
+                    title: new FormControl({ value: '', disabled: false }, [Validators.required]),
+                    contact: new FormControl({ value: null, disabled: false }),
+                    type: new FormControl({ value: '', disabled: false }, [Validators.required]),
+                    validationDate: new FormControl({ value: null, disabled: false }),
+                    encodedFile: new FormControl({ value: '', disabled: false }, [Validators.required]),
+                    format: new FormControl({ value: '', disabled: false }, [Validators.required])
+                });
+        
+                this.attachFormGroup.push(new FormGroup(this.attachments[this.attachments.length - 1]));
+                this.indexTab = this.attachments.length - 1;
+            }),
+        ).subscribe();
+    
     }
 
     removePj(i: number) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete+ ' : PJ n°'+ (i+1), msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete + ' : PJ n°' + (i + 1), msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

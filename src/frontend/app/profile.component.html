@@ -163,6 +163,30 @@
                             <mat-expansion-panel>
                                 <mat-expansion-panel-header>
                                     <mat-panel-title>
+                                        <mat-icon color="primary" class="fa fa-file-word"
+                                            style="font-size:25px;width:50px;"></mat-icon>
+                                        <span>{{lang.editorOption}}</span>
+                                    </mat-panel-title>
+                                    <mat-panel-description *ngIf="!appService.getViewMode()">
+                                        {{lang.editorOptionAdmin}}
+                                    </mat-panel-description>
+                                </mat-expansion-panel-header>
+
+                                <div style="display:flex; margin-left: 30px">
+                                    <div style="display:flex; align-items: center;">{{lang.documentEditor}}</div>
+                                    <div class="col-sm-2" style="display:flex; margin-left: 15px">
+                                        <mat-form-field>
+                                            <mat-select name="documentEdition" [(ngModel)]="user.preferences.documentEdition"
+                                                (selectionChange)="updateUserPreferences();">
+                                                <mat-option *ngFor='let editor of editorsList' [value]="editor">{{editor}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                            <mat-expansion-panel>
+                                <mat-expansion-panel-header>
+                                    <mat-panel-title>
                                         <mat-icon color="primary" class="fa fa-inbox"
                                             style="font-size:25px;width:50px;"></mat-icon>
                                         <mat-icon color="primary" class="fa fa-magic"
@@ -550,7 +574,7 @@
                                                     </mat-form-field>
                                                 </div>
                                                 <div class="col-md-6 col-xs-6">
-                                                    <mat-paginator #paginatorGroupsList [length]="100" [pageSize]="5">
+                                                    <mat-paginator #paginatorGroupsList [length]="100" [hidePageSize]="true" [pageSize]="5">
                                                     </mat-paginator>
                                                 </div>
                                             </div>
@@ -647,7 +671,7 @@
                                                         </div>
                                                         <div class="col-md-6 col-xs-6">
                                                             <mat-paginator #paginatorGroupsListAutocomplete [length]="0"
-                                                                [pageSize]="10">
+                                                                [hidePageSize]="true" [pageSize]="10">
                                                             </mat-paginator>
                                                         </div>
                                                     </div>
@@ -760,7 +784,7 @@
                                                             </div>
                                                             <div class="col-md-6 col-xs-6">
                                                                 <mat-paginator #paginatorContactsList [length]="0"
-                                                                    [pageSize]="10">
+                                                                    [hidePageSize]="true" [pageSize]="10">
                                                                 </mat-paginator>
                                                             </div>
                                                         </div>
@@ -820,7 +844,7 @@
                                     </mat-form-field>
                                 </div>
                                 <div class="col-md-6 col-xs-6">
-                                    <mat-paginator #paginatorHistory [length]="100" [pageSize]="10">
+                                    <mat-paginator #paginatorHistory [length]="100" [hidePageSize]="true" [pageSize]="10">
                                     </mat-paginator>
                                 </div>
                             </div>

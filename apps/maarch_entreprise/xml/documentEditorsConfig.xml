@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+    <java>
+        <enabled>true</enabled>
+    </java>
+    <onlyoffice>
+        <enabled>true</enabled>
+        <server_uri>onlyoffice.maarchcourrier.com</server_uri>
+    </onlyoffice>
+</ROOT>

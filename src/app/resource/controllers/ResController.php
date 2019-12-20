@@ -17,13 +17,13 @@ namespace Resource\controllers;
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
+use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
 use CustomField\models\CustomFieldModel;
-use CustomField\models\ResourceCustomFieldModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Doctype\models\DoctypeModel;
@@ -34,6 +34,7 @@ use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
 use Group\controllers\GroupController;
 use Group\controllers\PrivilegeController;
+use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
 use IndexingModel\models\IndexingModelModel;
@@ -109,7 +110,7 @@ class ResController
 
         $select = ['model_id', 'category_id', 'priority', 'subject', 'alt_identifier', 'process_limit_date', 'closing_date', 'creation_date', 'modification_date'];
         if (empty($queryParams['light'])) {
-            $select = array_merge($select, ['type_id', 'typist', 'status', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date', 'departure_date', 'barcode']);
+            $select = array_merge($select, ['type_id', 'typist', 'status', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date', 'departure_date', 'barcode', 'custom_fields']);
         }
 
         $document = ResModel::getById([
@@ -200,11 +201,7 @@ class ResController
         }
 
         if (empty($queryParams['light'])) {
-            $formattedData['customFields'] = [];
-            $customFields = ResourceCustomFieldModel::get(['select' => ['value', 'custom_field_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
-            foreach ($customFields as $customField) {
-                $formattedData['customFields'][$customField['custom_field_id']] = json_decode($customField['value'], true);
-            }
+            $formattedData['customFields'] = !empty($document['custom_fields']) ? json_decode($document['custom_fields'], true) : [];
 
             $entities = EntityModel::getWithUserEntities([
                 'select' => ['entities.id'],
@@ -554,7 +551,7 @@ class ResController
     public function getThumbnailContent(Request $request, Response $response, array $aArgs)
     {
         if (!Validator::intVal()->validate($aArgs['resId'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+            return $response->withStatus(403)->withJson(['errors' => 'resId param is not an integer']);
         }
 
         $pathToThumbnail = 'apps/maarch_entreprise/img/noThumbnail.png';
@@ -821,16 +818,6 @@ class ResController
                 ]);
             }
         }
-        if (!empty($body['customFields'])) {
-            foreach ($body['customFields'] as $key => $value) {
-                $customField = CustomFieldModel::getById(['id' => $key, 'select' => ['type']]);
-                if ($customField['type'] == 'date') {
-                    $date = new \DateTime($value);
-                    $value = $date->format('Y-m-d');
-                }
-                ResourceCustomFieldModel::create(['res_id' => $args['resId'], 'custom_field_id' => $key, 'value' => json_encode($value)]);
-            }
-        }
         if (!empty($body['folders'])) {
             foreach ($body['folders'] as $folder) {
                 ResourceFolderModel::create(['res_id' => $args['resId'], 'folder_id' => $folder]);
@@ -878,17 +865,6 @@ class ResController
                     'added_by_user'     => $GLOBALS['userId'],
                     'difflist_type'     => 'entity_id'
                 ]);
-            }
-        }
-        ResourceCustomFieldModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
-        if (!empty($body['customFields'])) {
-            foreach ($body['customFields'] as $key => $value) {
-                $customField = CustomFieldModel::getById(['id' => $key, 'select' => ['type']]);
-                if ($customField['type'] == 'date') {
-                    $date = new \DateTime($value);
-                    $value = $date->format('Y-m-d');
-                }
-                ResourceCustomFieldModel::create(['res_id' => $args['resId'], 'custom_field_id' => $key, 'value' => json_encode($value)]);
             }
         }
         $entities = EntityModel::getWithUserEntities([
@@ -1443,5 +1419,48 @@ class ResController
         }
 
         return $response->withJson(['resources' => $resources, 'count' => count($resources)]);
+    }
+
+    public function getProcessingData(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['groupId'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'resId param is not an integer']);
+        }
+        if (!Validator::intVal()->validate($args['userId'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'userId param is not an integer']);
+        }
+        if (!Validator::intVal()->validate($args['basketId'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'basketId param is not an integer']);
+        }
+        if (!Validator::intVal()->validate($args['resId'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'resId param is not an integer']);
+        }
+
+        $control = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($control['errors'])) {
+            return $response->withStatus($control['code'])->withJson(['errors' => $control['errors']]);
+        }
+
+        $basket = BasketModel::getById(['id' => $args['basketId'], 'select' => ['basket_id']]);
+        $group = GroupModel::getById(['id' => $args['groupId'], 'select' => ['group_id']]);
+
+        $groupBasket = GroupBasketModel::get(['select' => ['list_event_data'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
+
+        if (empty($groupBasket[0]['list_event_data'])) {
+            return $response->withJson(['listEventData' => null]);
+        }
+
+        $listEventData = json_decode($groupBasket[0]['list_event_data'], true);
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status']]);
+        if (empty($resource['status'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Resource does not exists']);
+        }
+        $status = StatusModel::getById(['id' => $resource['status'], 'select' => ['can_be_modified']]);
+        if ($status['can_be_modified'] != 'Y') {
+            $listEventData['canUpdate'] = false;
+        }
+
+        return $response->withJson(['listEventData' => $listEventData]);
     }
 }

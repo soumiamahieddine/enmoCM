@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../../translate.component';
-import { NotificationService } from '../../notification.service';
-import { HeaderService }        from '../../../service/header.service';
+import { LANG } from '../../../translate.component';
+import { NotificationService } from '../../../notification.service';
+import { HeaderService }        from '../../../../service/header.service';
 import { MatSidenav } from '@angular/material/sidenav';
-import { AppService } from '../../../service/app.service';
+import { AppService } from '../../../../service/app.service';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 
 declare function $j(selector: any): any;
@@ -19,6 +19,24 @@ export class ContactsParametersAdministrationComponent implements OnInit {
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
     lang: any = LANG;
+
+    subMenus:any [] = [
+        {
+            icon: 'fa fa-book',
+            route: '/administration/contacts',
+            label : this.lang.contactsList
+        },
+        {
+            icon: 'fa fa-users',
+            route: '/administration/contacts/contacts-groups',
+            label : this.lang.contactsGroups
+        },
+        {
+            icon: 'fa fa-code',
+            route: '/administration/contacts/contactsCustomFields',
+            label : this.lang.customFields
+        },
+    ];
 
     contactsFilling: any = {
         'enable': false,

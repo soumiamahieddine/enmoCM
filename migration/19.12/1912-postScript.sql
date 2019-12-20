@@ -12,6 +12,8 @@ DROP VIEW IF EXISTS view_contacts;
 DROP TABLE IF EXISTS cases;
 DROP TABLE IF EXISTS cases_res;
 
+DELETE FROM contacts_groups_lists WHERE contact_id IS NULL;
+
 DROP TABLE IF EXISTS contacts_res;
 DROP TABLE IF EXISTS contact_addresses;
 DROP TABLE IF EXISTS contact_communication;

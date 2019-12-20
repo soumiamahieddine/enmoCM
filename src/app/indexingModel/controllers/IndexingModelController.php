@@ -17,6 +17,7 @@
 
 namespace IndexingModel\controllers;
 
+use CustomField\models\CustomFieldModel;
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
@@ -30,6 +31,8 @@ use Slim\Http\Response;
 
 class IndexingModelController
 {
+    const INDEXABLE_DATES = ['documentDate', 'departureDate', 'arrivalDate', 'processLimitDate'];
+
     public function get(Request $request, Response $response)
     {
         $query = $request->getQueryParams();
@@ -176,6 +179,18 @@ class IndexingModelController
         ]);
 
         foreach ($body['fields'] as $field) {
+            if (in_array($field['identifier'], IndexingModelController::INDEXABLE_DATES) && !empty($field['default_value'])) {
+                $date = new \DateTime($field['default_value']);
+                $field['default_value'] = $date->format('Y-m-d');
+            }
+            if (strpos($field['identifier'], 'indexingCustomField_') !== false && !empty($field['default_value'])) {
+                $customFieldId = explode('_', $field['identifier'])[1];
+                $customField = CustomFieldModel::getById(['id' => $customFieldId, 'select' => ['type']]);
+                if ($customField['type'] == 'date') {
+                    $date = new \DateTime($field['default_value']);
+                    $field['default_value'] = $date->format('Y-m-d');
+                }
+            }
             IndexingModelFieldModel::create([
                 'model_id'      => $modelId,
                 'identifier'    => $field['identifier'],
@@ -288,6 +303,18 @@ class IndexingModelController
                 IndexingModelFieldModel::delete(['where' => ['model_id = ?'], 'data' => [$child['id']]]);
 
                 foreach ($fieldsToKeep as $field) {
+                    if (in_array($field['identifier'], IndexingModelController::INDEXABLE_DATES) && !empty($field['default_value'])) {
+                        $date = new \DateTime($field['default_value']);
+                        $field['default_value'] = $date->format('Y-m-d');
+                    }
+                    if (strpos($field['identifier'], 'indexingCustomField_') !== false && !empty($field['default_value'])) {
+                        $customFieldId = explode('_', $field['identifier'])[1];
+                        $customField = CustomFieldModel::getById(['id' => $customFieldId, 'select' => ['type']]);
+                        if ($customField['type'] == 'date') {
+                            $date = new \DateTime($field['default_value']);
+                            $field['default_value'] = $date->format('Y-m-d');
+                        }
+                    }
                     IndexingModelFieldModel::create([
                         'model_id'      => $child['id'],
                         'identifier'    => $field['identifier'],
@@ -311,6 +338,18 @@ class IndexingModelController
         IndexingModelFieldModel::delete(['where' => ['model_id = ?'], 'data' => [$args['id']]]);
 
         foreach ($body['fields'] as $field) {
+            if (in_array($field['identifier'], IndexingModelController::INDEXABLE_DATES) && !empty($field['default_value'])) {
+                $date = new \DateTime($field['default_value']);
+                $field['default_value'] = $date->format('Y-m-d');
+            }
+            if (strpos($field['identifier'], 'indexingCustomField_') !== false && !empty($field['default_value'])) {
+                $customFieldId = explode('_', $field['identifier'])[1];
+                $customField = CustomFieldModel::getById(['id' => $customFieldId, 'select' => ['type']]);
+                if ($customField['type'] == 'date') {
+                    $date = new \DateTime($field['default_value']);
+                    $field['default_value'] = $date->format('Y-m-d');
+                }
+            }
             IndexingModelFieldModel::create([
                 'model_id'      => $args['id'],
                 'identifier'    => $field['identifier'],

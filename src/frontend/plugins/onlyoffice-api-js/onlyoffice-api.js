@@ -187,7 +187,7 @@ var onlyofficetesturl = '';
 
     // TODO: allow several instances on one page simultaneously
 
-    DocsAPI.DocEditor = function(placeholderId, config) {
+    DocsAPI.DocEditor = function(placeholderId, config, onlyOfficeIp) {
         var _self = this,
             _config = config || {};
 
@@ -207,6 +207,7 @@ var onlyofficetesturl = '';
         _config.editorConfig.canRequestInsertImage = _config.events && !!_config.events.onRequestInsertImage;
         _config.editorConfig.canRequestMailMergeRecipients = _config.events && !!_config.events.onRequestMailMergeRecipients;
         _config.frameEditorId = placeholderId;
+        _config.onlyOfficeIp = onlyOfficeIp;
 
         var onMouseUp = function (evt) {
             _processMouse(evt);
@@ -687,9 +688,10 @@ var onlyofficetesturl = '';
         }
     };
 
-    function getBasePath() {
-        return `http://10.2.95.76:8765/web-apps/apps/`;
-        var scripts = document.getElementsByTagName('script'),
+    function getBasePath(config) {
+        return `http://${config.onlyOfficeIp}/web-apps/apps/`;
+        
+        /*var scripts = document.getElementsByTagName('script'),
             match;
 
         for (var i = scripts.length - 1; i >= 0; i--) {
@@ -699,7 +701,7 @@ var onlyofficetesturl = '';
             }
         }
 
-        return "";
+        return "";*/
     }
 
     function getExtensionPath() {
@@ -710,7 +712,7 @@ var onlyofficetesturl = '';
 
     function getAppPath(config) {
         var extensionPath = getExtensionPath(),
-            path = extensionPath ? extensionPath : getBasePath(),
+            path = extensionPath ? extensionPath : getBasePath(config),
             appMap = {
                 'text': 'documenteditor',
                 'text-pdf': 'documenteditor',

@@ -34,9 +34,9 @@ import { HistoryAdministrationComponent }               from './history/history-
 import { UpdateStatusAdministrationComponent }          from './updateStatus/update-status-administration.component';
 import { NotificationsAdministrationComponent }         from './notification/notifications-administration.component';
 import { NotificationAdministrationComponent }          from './notification/notification-administration.component';
-import { ContactsGroupsAdministrationComponent }        from './contact/contacts-groups-administration.component';
-import { ContactsGroupAdministrationComponent }         from './contact/contacts-group-administration.component';
-import { ContactsParametersAdministrationComponent }       from './contact/contacts-parameters-administration.component';
+import { ContactsGroupsAdministrationComponent }        from './contact/group/contacts-groups-administration.component';
+import { ContactsGroupAdministrationComponent }         from './contact/group/contacts-group-administration.component';
+import { ContactsParametersAdministrationComponent }       from './contact/parameter/contacts-parameters-administration.component';
 import { VersionsUpdateAdministrationComponent }        from './versionUpdate/versions-update-administration.component';
 import { DocserversAdministrationComponent }            from './docserver/docservers-administration.component';
 import { DocserverAdministrationComponent }             from './docserver/docserver-administration.component';
@@ -52,6 +52,10 @@ import { ShippingAdministrationComponent }              from './shipping/shippin
 import { CustomFieldsAdministrationComponent }              from './customField/custom-fields-administration.component';
 import { IndexingModelAdministrationComponent }              from './indexingModel/indexing-model-administration.component';
 import { IndexingModelsAdministrationComponent }              from './indexingModel/indexing-models-administration.component';
+import { ContactsListAdministrationComponent }              from './contact/list/contacts-list-administration.component';
+import { ContactsHomeAdministrationComponent }              from './contact/home/contacts-home-administration.component';
+import { ContactsCustomFieldsAdministrationComponent }              from './contact/customField/contacts-custom-fields-administration.component';
+import { ContactsPageAdministrationComponent }              from './contact/page/contacts-page-administration.component';
 
 @NgModule({
     imports:      [
@@ -113,7 +117,11 @@ import { IndexingModelsAdministrationComponent }              from './indexingMo
         AccountLinkComponent,
         CustomFieldsAdministrationComponent,
         IndexingModelAdministrationComponent,
-        IndexingModelsAdministrationComponent
+        IndexingModelsAdministrationComponent,
+        ContactsListAdministrationComponent,
+        ContactsHomeAdministrationComponent,
+        ContactsCustomFieldsAdministrationComponent,
+        ContactsPageAdministrationComponent,
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,

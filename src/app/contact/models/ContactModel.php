@@ -33,6 +33,7 @@ class ContactModel
             'where'     => empty($args['where']) ? [] : $args['where'],
             'data'      => empty($args['data']) ? [] : $args['data'],
             'order_by'  => empty($args['orderBy']) ? [] : $args['orderBy'],
+            'offset'    => empty($args['offset']) ? 0 : $args['offset'],
             'limit'     => empty($args['limit']) ? 0 : $args['limit']
         ]);
 
@@ -77,14 +78,15 @@ class ContactModel
 
     public static function update(array $args)
     {
-        ValidatorModel::notEmpty($args, ['set', 'where', 'data']);
-        ValidatorModel::arrayType($args, ['set', 'where', 'data']);
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['set', 'postSet', 'where', 'data']);
 
         DatabaseModel::update([
-            'table' => 'contacts',
-            'set'   => $args['set'],
-            'where' => $args['where'],
-            'data'  => $args['data']
+            'table'     => 'contacts',
+            'set'       => $args['set'],
+            'postSet'   => $args['postSet'],
+            'where'     => $args['where'],
+            'data'      => $args['data']
         ]);
 
         return true;

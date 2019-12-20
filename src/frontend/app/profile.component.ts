@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
 import { HeaderService }        from '../service/header.service';
-import { debounceTime, switchMap, distinctUntilChanged, filter } from 'rxjs/operators';
+import { debounceTime, switchMap, distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { MatPaginator } from '@angular/material/paginator';
@@ -84,6 +84,7 @@ export class ProfileComponent implements OnInit {
     //Redirect Baskets
     selectionBaskets = new SelectionModel<Element>(true, []);
     myBasketExpansionPanel: boolean = false;
+    editorsList: any;
     masterToggleBaskets(event: any) {
         if (event.checked) {  
             this.user.baskets.forEach((basket: any) => {
@@ -184,6 +185,13 @@ export class ProfileComponent implements OnInit {
             this.dataSourceContactsListAutocomplete.paginator = this.paginatorGroupsListAutocomplete;
             //this.dataSource.sort      = this.sortContactList;
         });
+
+        this.http.get("../../rest/documentEditors").pipe(
+            tap((data: any) => {
+                this.editorsList = data;
+            })
+        ).subscribe();
+
     }
 
     initComponents(event: any) {
@@ -746,6 +754,16 @@ export class ProfileComponent implements OnInit {
         this.http.put('../../rest/currentUser/profile', this.user)
             .subscribe(() => {
                 this.notify.success(this.lang.modificationSaved);
+            }, (err) => {
+                this.notify.error(err.error.errors);
+            });
+    }
+
+    updateUserPreferences() {
+        this.http.put('../../rest/currentUser/profile/preferences', {documentEdition: this.user.preferences.documentEdition})
+            .subscribe(() => {
+                this.notify.success(this.lang.modificationSaved);
+                this.headerService.resfreshCurrentUser();
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
