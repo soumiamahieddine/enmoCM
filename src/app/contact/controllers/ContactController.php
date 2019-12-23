@@ -503,6 +503,13 @@ class ContactController
         return $response->withJson(['contact' => $contact]);
     }
 
+    public static function getCivilities(Request $request, Response $response)
+    {
+        $civilities = ContactModel::getCivilities();
+
+        return $response->withJson(['civilities' => $civilities]);
+    }
+
     public static function getFillingRate(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['contactId']);

@@ -137,6 +137,7 @@ $app->post('/contactsGroups/{id}/contacts', \Contact\controllers\ContactGroupCon
 $app->delete('/contactsGroups/{id}/contacts/{contactId}', \Contact\controllers\ContactGroupController::class . ':deleteContact');
 $app->get('/contactsParameters', \Contact\controllers\ContactController::class . ':getContactsParameters');
 $app->put('/contactsParameters', \Contact\controllers\ContactController::class . ':updateContactsParameters');
+$app->get('/civilities', \Contact\controllers\ContactController::class . ':getCivilities');
 
 //Convert
 $app->post('/convertedFile', \Convert\controllers\ConvertPdfController::class . ':convertedFile');

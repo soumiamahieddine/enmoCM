@@ -183,7 +183,7 @@ class AutoCompleteController
                 'select'    => ['id'],
                 'where'     => $requestData['where'],
                 'data'      => $requestData['data'],
-                'orderBy'   => ['company', 'lastname'],
+                'orderBy'   => ['company', 'lastname NULLS FIRST'],
                 'limit'     => self::TINY_LIMIT
             ]);
 
