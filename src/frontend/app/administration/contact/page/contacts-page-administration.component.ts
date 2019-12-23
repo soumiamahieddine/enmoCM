@@ -363,7 +363,9 @@ export class ContactsPageAdministrationComponent implements OnInit {
     initBanSearch() {
         this.http.get("../../rest/ban/availableDepartments").pipe(
             tap((data: any) => {
-                this.addressBANCurrentDepartment = data.default !== null ? data.default : this.addressBANCurrentDepartment;
+                if (data.default !== null && data.departments.indexOf(data.default) !== - 1) {
+                    this.addressBANCurrentDepartment = data.default;
+                }
                 this.departmentList = data.departments;
             }),
             catchError((err: any) => {
