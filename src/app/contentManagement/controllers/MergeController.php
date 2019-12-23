@@ -358,8 +358,10 @@ class MergeController
                 $person['postal_address'] = implode("\n", $postalAddress);
                 $customFields = json_decode($person['custom_fields'], true);
                 unset($person['custom_fields']);
-                foreach ($customFields as $key => $customField) {
-                    $person["customField_{$key}"] = is_array($customField) ?  implode("\n", $customField) : $customField;
+                if (!empty($customFields)) {
+                    foreach ($customFields as $key => $customField) {
+                        $person["customField_{$key}"] = is_array($customField) ?  implode("\n", $customField) : $customField;
+                    }
                 }
             } elseif ($args['type'] == 'user') {
                 $person = UserModel::getById(['id' => $args['id'], 'select' => ['firstname', 'lastname']]);

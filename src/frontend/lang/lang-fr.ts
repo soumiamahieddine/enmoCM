@@ -1392,4 +1392,8 @@ export const LANG_FR = {
     "denomination": "Dénomination",
     "moreInfos" : "Plus d'informations",
     "confirmCloseEditor" : "Etes-vous sûr de fermer l'éditeur ? Toutes les modifications seront annulées",
+    "onlyNumber" : "Chiffre uniquement",
+    "found": "trouvée",
+    "here": "ici",
+    "toCopyAddress": "pour copier son adresse",
 };

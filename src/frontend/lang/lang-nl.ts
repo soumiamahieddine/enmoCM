@@ -1379,4 +1379,8 @@ export const LANG_NL = {
     "denomination": "Denomination", //_TO_TRANSLATE
     "moreInfos" : "More data", //_TO_TRANSLATE
     "confirmCloseEditor" : "Do you really want to close editor ? All modifications will be canceled", //_TO_TRANSLATE
+    "onlyNumber" : "Number only", //_TO_TRANSLATE
+    "found": "found", //_TO_TRANSLATE
+    "here": "here", //_TO_TRANSLATE
+    "toCopyAddress": "to copy the address", //_TO_TRANSLATE
 };

@@ -1354,4 +1354,8 @@ export const LANG_EN = {
     "denomination": "Denomination",
     "moreInfos" : "More data",
     "confirmCloseEditor" : "Do you really want to close editor ? All modifications will be canceled",
+    "onlyNumber" : "Number only",
+    "found": "found",
+    "here": "here",
+    "toCopyAddress": "to copy the address",
 };

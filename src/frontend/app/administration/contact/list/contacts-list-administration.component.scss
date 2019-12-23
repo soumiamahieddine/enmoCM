@@ -1,0 +1,8 @@
+@import '../../../../css/vars.scss';
+
+.paginatorResultList {
+    ::ng-deep.mat-paginator-range-label {
+        justify-content: flex-end;
+        display: flex;
+    }
+}

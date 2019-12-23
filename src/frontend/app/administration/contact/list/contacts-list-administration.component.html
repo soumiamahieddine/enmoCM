@@ -55,37 +55,37 @@
                     </div>
                 </div>
                 <div style="height:90%;overflow:auto;position:absolute;width:100%;">
-                    <table id="contact-list" #tableContactListSort="matSort" mat-table [dataSource]="data" matSort
+                    <mat-table id="contact-list" #tableContactListSort="matSort" [dataSource]="data" matSort
                         matSortActive="lastname" matSortDirection="asc" style="width:100%;">
                         <ng-container matColumnDef="firstname">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header
-                                [class.hide-for-mobile]="appService.getViewMode()">{{lang.firstname}}</th>
-                            <td mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()">
-                                {{element.firstname}} </td>
+                            <mat-header-cell *matHeaderCellDef mat-sort-header
+                                [class.hide-for-mobile]="appService.getViewMode()">{{lang.firstname}}</mat-header-cell>
+                            <mat-cell mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()">
+                                {{element.firstname}} </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="lastname">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header
-                                [class.hide-for-mobile]="appService.getViewMode()">{{lang.lastname}}</th>
-                            <td mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()">
-                                {{element.lastname}} </td>
+                            <mat-header-cell *matHeaderCellDef mat-sort-header
+                                [class.hide-for-mobile]="appService.getViewMode()">{{lang.lastname}}</mat-header-cell>
+                            <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()">
+                                {{element.lastname}} </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="company">
-                            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                            <mat-header-cell *matHeaderCellDef mat-sort-header
                                 [class.hide-for-mobile]="appService.getViewMode()">{{lang.contactsParameters_company}}
-                            </th>
-                            <td mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()">
-                                {{element.company}} </td>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()">
+                                {{element.company}} </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="formatedAddress">
-                            <th mat-header-cell *matHeaderCellDef [class.hide-for-mobile]="appService.getViewMode()">
-                                {{lang.address}}</th>
-                            <td mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()">
-                                {{element.formatedAddress}} </td>
+                            <mat-header-cell *matHeaderCellDef style="flex: 2;" [class.hide-for-mobile]="appService.getViewMode()">
+                                {{lang.address}}</mat-header-cell>
+                            <mat-cell *matCellDef="let element" style="flex: 2;" [class.hide-for-mobile]="appService.getViewMode()">
+                                {{element.formatedAddress}} </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="actions">
-                            <th mat-header-cell *matHeaderCellDef>
-                            </th>
-                            <td mat-cell *matCellDef="let element" style="text-align: right;">
+                            <mat-header-cell *matHeaderCellDef>
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element" style="justify-content: flex-end;">
                                 <button mat-icon-button color="primary" *ngIf="element.enabled" [title]="lang.suspend"
                                     (click)="$event.stopPropagation();toggleContact(element)">
                                     <mat-icon class="fa fa-pause fa-2x" aria-hidden="true"></mat-icon>
@@ -99,13 +99,13 @@
                                     (click)="$event.stopPropagation();deleteContact(element)">
                                     <mat-icon class="fa fa-trash-alt fa-2x"></mat-icon>
                                 </button>
-                            </td>
+                            </mat-cell>
                         </ng-container>
-                        <tr mat-header-row *matHeaderRowDef="displayedColumnsContact"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumnsContact;"
-                            routerLink="/administration/contacts/list/{{row.id}}" class="rowData">
-                        </tr>
-                    </table>
+                        <mat-header-row *matHeaderRowDef="displayedColumnsContact"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumnsContact;"
+                            routerLink="/administration/contacts/list/{{row.id}}" style="cursor: pointer;">
+                        </mat-row>
+                    </mat-table>
                     <div class="mat-paginator"
                         style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">
                         {{resultsLength}} {{lang.contacts}}</div>
