@@ -226,8 +226,7 @@ foreach ($customs as $custom) {
             'where'  => ['label = ?'],
             'data'   => [$customField['label']]
         ]);
-        $idNewCustomField = array_column($idNewCustomField, 'id');
-        $DATA_TO_REPLACE["contact." . $customField['oldId']] = "[recipient.custom_{$idNewCustomField[0]}]";
+        $DATA_TO_REPLACE["contact." . $customField['oldId']] = "[recipient.customField_{$idNewCustomField[0]['id']}]";
     }
 
     $migrated = 0;
