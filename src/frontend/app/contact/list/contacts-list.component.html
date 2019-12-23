@@ -7,7 +7,7 @@
     <ng-template #elseTemplate>
         <mat-card class="contact-card" *ngFor="let contact of contacts">
             <mat-card-header>
-                <div mat-card-avatar class="contact-header-image fa" [class.fa-building]="contact.mode === 'corporate'"
+                <div mat-card-avatar class="contact-header-image fa" [class.fa-address-card]="contact.mode === 'corporate'"
                     [class.fa-users]="contact.mode === 'internal'" [class.fa-user]="contact.mode ==='physical'" [class.fa-sitemap]="contact.mode ==='entity'" [class.fa-user-friends]="contact.mode ==='third'"
                     [title]="lang['contact_'+contact.mode]">
                 </div>

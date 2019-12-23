@@ -62,6 +62,8 @@ class ContactCustomFieldController
             'values'        => empty($body['values']) ? '[]' : json_encode($body['values'])
         ]);
 
+        ContactParameterModel::create(['identifier' => 'contactCustomField_' . $id]);
+
         HistoryController::add([
             'tableName' => 'contacts_custom_fields_list',
             'recordId'  => $id,

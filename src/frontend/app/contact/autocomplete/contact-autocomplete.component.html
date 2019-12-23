@@ -15,7 +15,7 @@
                     <mat-card>
                         <mat-card-header class="contact-header">
                             <div mat-card-avatar class="contact-header-image fa"
-                                [class.fa-building]="option.type === 'contact'" [class.fa-users]="option.type ==='contactGroup'"
+                                [class.fa-address-card]="option.type === 'contact'" [class.fa-users]="option.type ==='contactGroup'"
                                 [class.fa-sitemap]="option.type ==='entity'" [class.fa-user]="option.type ==='user'"
                                 [title]="lang['contact_'+option.type]">
                             </div>
@@ -92,7 +92,7 @@
                 <mat-chip *ngFor="let item of controlAutocomplete.value;let i=index" class="listAutocomplete"
                     color="default" [removable]="!controlAutocomplete.disabled" (removed)="removeItem(i)">
                     <span style="display: flex;flex: 1;align-items: center;">
-                        <i class="fa" [class.fa-building]="this.valuesToDisplay[item.id].type === 'contact'"
+                        <i class="fa" [class.fa-address-card]="this.valuesToDisplay[item.id].type === 'contact'"
                             [class.fa-sitemap]="this.valuesToDisplay[item.id].type ==='entity'"
                             [class.fa-user]="this.valuesToDisplay[item.id].type ==='user'"
                             [title]="lang[this.valuesToDisplay[item.id].type]"

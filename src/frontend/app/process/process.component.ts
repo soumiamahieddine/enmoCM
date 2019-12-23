@@ -129,7 +129,8 @@ export class ProcessComponent implements OnInit {
 
     @ViewChild('appDocumentViewer', { static: true }) appDocumentViewer: DocumentViewerComponent;
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
-    senderLightInfo: any = { 'displayName': null, 'fillingRate': null};;
+    senderLightInfo: any = { 'displayName': null, 'fillingRate': null};
+    hasContact: boolean = false;
 
     constructor(
         private route: ActivatedRoute,
@@ -240,6 +241,7 @@ export class ProcessComponent implements OnInit {
 
     loadSenders() {
         if (this.currentResourceInformations.senders.length == 1) {
+            this.hasContact = true;
             if (this.currentResourceInformations.senders[0].type == 'contact') {
                 this.http.get('../../rest/contacts/' + this.currentResourceInformations.senders[0].id).pipe(
                     tap((data: any) => {
@@ -267,8 +269,10 @@ export class ProcessComponent implements OnInit {
                 ).subscribe();
             }
         } else if (this.currentResourceInformations.senders.length > 1) {
+            this.hasContact = true;
             this.senderLightInfo = { 'displayName': this.currentResourceInformations.senders.length + ' ' + this.lang.senders, 'filling': null};
         } else {
+            this.hasContact = false;
             this.senderLightInfo = { 'displayName': this.lang.noSelectedContact, 'filling': null};
         }
     }
@@ -439,6 +443,8 @@ export class ProcessComponent implements OnInit {
     }
 
     openContact() {
-        this.dialog.open(ContactsListModalComponent, { data: { title: `${this.currentResourceInformations.chrono} - ${this.currentResourceInformations.subject}`, mode: 'senders', resId: this.currentResourceInformations.resId } });
+        if (this.hasContact) {
+            this.dialog.open(ContactsListModalComponent, { data: { title: `${this.currentResourceInformations.chrono} - ${this.currentResourceInformations.subject}`, mode: 'senders', resId: this.currentResourceInformations.resId } });
+        }
     }
 }
