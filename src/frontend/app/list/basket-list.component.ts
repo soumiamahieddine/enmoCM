@@ -484,6 +484,10 @@ export class BasketListComponent implements OnInit {
         this.dialog.open(ContactsListModalComponent, { data: { title: `${row.chrono} - ${row.subject}`, mode: mode, resId: row.resId } });
     }
 
+    viewDocument(row: any) {
+        window.open("../../rest/resources/" + row.resId + "/content?mode=view", "_blank");
+    }
+
 }
 export interface BasketList {
     displayFolderTags: boolean;
