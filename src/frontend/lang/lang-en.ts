@@ -1353,4 +1353,8 @@ export const LANG_EN = {
     "additionals": "Additional(s)",
     "denomination": "Denomination",
     "moreInfos" : "More data",
+    "onlyNumber" : "Number only",
+    "found": "found",
+    "here": "here",
+    "toCopyAddress": "to copy the address",
 };

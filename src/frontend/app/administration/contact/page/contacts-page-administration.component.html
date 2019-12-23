@@ -42,7 +42,8 @@
                     </mat-menu>
 
                     <mat-menu #mainInfo="matMenu">
-                        <button mat-menu-item (click)="toogleAllFieldsUnit('mainInfo')" style="text-align: center;">{{lang.addAll}}</button>
+                        <button mat-menu-item (click)="toogleAllFieldsUnit('mainInfo')"
+                            style="text-align: center;">{{lang.addAll}}</button>
                         <mat-divider></mat-divider>
                         <ng-container *ngFor="let field of contactForm">
                             <button mat-menu-item *ngIf="!field.default && field.unit === 'mainInfo'"
@@ -51,7 +52,8 @@
                     </mat-menu>
 
                     <mat-menu #address="matMenu">
-                        <button mat-menu-item (click)="toogleAllFieldsUnit('address')" style="text-align: center;">{{lang.addAll}}</button>
+                        <button mat-menu-item (click)="toogleAllFieldsUnit('address')"
+                            style="text-align: center;">{{lang.addAll}}</button>
                         <mat-divider></mat-divider>
                         <ng-container *ngFor="let field of contactForm">
                             <button mat-menu-item *ngIf="!field.default && field.unit === 'address'"
@@ -59,7 +61,8 @@
                         </ng-container>
                     </mat-menu>
                     <mat-menu #complement="matMenu">
-                        <button mat-menu-item (click)="toogleAllFieldsUnit('complement')" style="text-align: center;">{{lang.addAll}}</button>
+                        <button mat-menu-item (click)="toogleAllFieldsUnit('complement')"
+                            style="text-align: center;">{{lang.addAll}}</button>
                         <mat-divider></mat-divider>
                         <ng-container *ngFor="let field of contactForm">
                             <button mat-menu-item *ngIf="!field.default && field.unit === 'complement'"
@@ -85,20 +88,23 @@
                                                             [required]="field.required">
                                                         <mat-hint
                                                             *ngIf="companyFound !== null && field.id === 'company'"
-                                                            align="end">Société <b>{{companyFound.company}}</b> trouvée
+                                                            align="end">{{lang.company}} <b>{{companyFound.company}}</b>
+                                                            {{lang.found}}
                                                             !
                                                             cliquez <a (click)="setAddress(companyFound)"
-                                                                style="cursor: pointer;">ici</a> pour copier son
-                                                            adresse</mat-hint>
+                                                                style="cursor: pointer;font-weight:bold;">{{lang.here}}</a>
+                                                            {{lang.toCopyAddress}}</mat-hint>
                                                         <mat-error *ngIf="field.control.hasError('required')">
                                                             {{lang.requiredField}}</mat-error>
                                                     </mat-form-field>
                                                 </ng-container>
                                                 <ng-container *ngIf="field.type === 'integer'">
                                                     <mat-form-field>
-                                                        <input type="number" matInput [formControl]="field.control"
+                                                        <input type="text" matInput [formControl]="field.control"
                                                             [placeholder]="field.label" min="0" step="0.1"
                                                             [required]="field.required">
+                                                        <mat-error *ngIf="field.control.status!=='VALID'">
+                                                            {{lang.onlyNumber}}</mat-error>
                                                     </mat-form-field>
                                                 </ng-container>
                                                 <ng-container *ngIf="field.type === 'select'">
@@ -114,8 +120,7 @@
                                                         </mat-label>
                                                         <input [formControl]="field.control" matInput
                                                             [matDatepicker]="picker" [placeholder]="field.label"
-                                                            readonly style="cursor:pointer;"
-                                                            (dateChange)="launchEvent($event, field)">
+                                                            readonly style="cursor:pointer;">
                                                         <mat-datepicker-toggle matSuffix [for]="picker"
                                                             *ngIf="!field.control.value">
                                                         </mat-datepicker-toggle>
@@ -143,7 +148,8 @@
                                                     <mat-selection-list #shoes class="checkbox-form"
                                                         [formControl]="field.control">
                                                         <mat-list-option *ngFor="let value of field.values"
-                                                            [value]="value.id" color="primary" checkboxPosition="before">
+                                                            [value]="value.id" color="primary"
+                                                            checkboxPosition="before">
                                                             {{value.label}}
                                                         </mat-list-option>
                                                     </mat-selection-list>
@@ -154,12 +160,29 @@
                                                 <mat-icon class="fa fa-trash"></mat-icon>
                                             </button>
                                         </mat-list-item>
+                                        <ng-container
+                                            *ngIf="unit.id === 'address' && addressBANMode && ['addressAdditional1', 'addressAdditional2'].indexOf(field.id) > -1">
+                                            <mat-list-item class="contact-item">
+                                                <p mat-line class="contact-content" *ngIf="field.default">
+                                                    <mat-form-field>
+                                                        <input matInput [formControl]="field.control"
+                                                            [placeholder]="field.label" [required]="field.required">
+                                                        <mat-error *ngIf="field.control.hasError('required')">
+                                                            {{lang.requiredField}}</mat-error>
+                                                    </mat-form-field>
+                                                </p>
+                                                <button *ngIf="field.default && canDelete(field)" mat-icon-button
+                                                    matSuffix color="warn" (click)="field.default = !field.default">
+                                                    <mat-icon class="fa fa-trash"></mat-icon>
+                                                </button>
+                                            </mat-list-item>
+                                        </ng-container>
                                         <ng-container *ngIf="unit.id === 'address' && addressBANMode && i === 0">
                                             <mat-list-item>
                                                 <p mat-line class="contact-content">
                                                     <mat-form-field appearance='outline' class="smallInput">
                                                         <button mat-button matSuffix [matMenuTriggerFor]="menuDep"
-                                                            (click)="$event.stopPropagation();initBanSearch()"
+                                                            (click)="$event.stopPropagation();"
                                                             [title]="lang.targetDepartment">
                                                             {{addressBANCurrentDepartment}}&nbsp;<i
                                                                 class="fa fa-chevron-down"></i>
@@ -186,7 +209,7 @@
                                                                 </mat-option>
                                                             </ng-container>
                                                             <mat-option class="autoCompleteInfoResult smallInputInfo"
-                                                                *ngIf="addressBANResult.length === 0 && !loading"
+                                                                *ngIf="addressBANResult.length === 0 && !addressBANLoading"
                                                                 disabled [innerHTML]="addressBANInfo">
                                                             </mat-option>
                                                             <mat-option *ngIf="addressBANLoading" disabled>
@@ -220,7 +243,8 @@
                         </ng-container>
                     </div>
                     <div style="text-align:center;">
-                        <button mat-raised-button color="default" type="button" [matMenuTriggerFor]="menu">{{lang.moreInfos}}...</button>
+                        <button mat-raised-button color="default" type="button"
+                            [matMenuTriggerFor]="menu">{{lang.moreInfos}}...</button>
 
                         <button mat-raised-button color="primary" type="button"
                             (click)="onSubmit()">{{lang.validate}}</button>

@@ -1378,4 +1378,8 @@ export const LANG_NL = {
     "additionals": "Additional(s)", //_TO_TRANSLATE
     "denomination": "Denomination", //_TO_TRANSLATE
     "moreInfos" : "More data", //_TO_TRANSLATE
+    "onlyNumber" : "Number only", //_TO_TRANSLATE
+    "found": "found", //_TO_TRANSLATE
+    "here": "here", //_TO_TRANSLATE
+    "toCopyAddress": "to copy the address", //_TO_TRANSLATE
 };

@@ -1391,4 +1391,8 @@ export const LANG_FR = {
     "additionals": "Complément(s)",
     "denomination": "Dénomination",
     "moreInfos" : "Plus d'informations",
+    "onlyNumber" : "Chiffre uniqument",
+    "found": "trouvée",
+    "here": "ici",
+    "toCopyAddress": "pour copier son adresse",
 };

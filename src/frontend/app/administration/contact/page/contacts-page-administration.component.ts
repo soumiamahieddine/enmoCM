@@ -9,7 +9,7 @@ import { Observable, merge, Subject, of as observableOf, of } from 'rxjs';
 import { MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
 import { ConfirmComponent } from '../../../../plugins/modal/confirm.component';
-import { FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import { FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -228,6 +228,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
     ngOnInit(): void {
 
         this.loading = true;
+        
+        this.initBanSearch();
 
         this.route.params.subscribe((params: any) => {
             if (typeof params['id'] == "undefined") {
@@ -259,7 +261,6 @@ export class ContactsPageAdministrationComponent implements OnInit {
                 this.headerService.setHeader(this.lang.contactModification);
 
                 this.creationMode = false;
-                this.addressBANMode = false;
 
                 this.contactForm.forEach(element => {
                     element.default = false;
@@ -311,19 +312,29 @@ export class ContactsPageAdministrationComponent implements OnInit {
     }
 
     initCustomElementForm(data: any) {
+        let valArr: ValidatorFn[] = [];
+
+        let field: any = {};
+
         data.customFields.forEach((element: any) => {
-            this.contactForm.push(
-                {
-                    id: `customField_${element.id}`,
-                    unit: 'complement',
-                    label: element.label,
-                    type: element.type,
-                    control: new FormControl({ value: '', disabled: false }),
-                    required: false,
-                    default: false,
-                    values: element.values.map((val: any) => { return { id: val, label: val } })
-                }
-            );
+            valArr = [];
+
+            field = {
+                id: `customField_${element.id}`,
+                unit: 'complement',
+                label: element.label,
+                type: element.type,
+                control: new FormControl({ value: '', disabled: false }),
+                required: false,
+                default: false,
+                values: element.values.map((val: any) => { return { id: val, label: val } })
+            };
+
+            if (element.type === 'integer') {
+                valArr.push(Validators.pattern(/^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/));
+                field.control.setValidators(valArr);
+            }
+            this.contactForm.push(field);
         });
     }
 
@@ -352,6 +363,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
     initBanSearch() {
         this.http.get("../../rest/ban/availableDepartments").pipe(
             tap((data: any) => {
+                this.addressBANCurrentDepartment = data.default !== null ? data.default : this.addressBANCurrentDepartment;
                 this.departmentList = data.departments;
             }),
             catchError((err: any) => {
@@ -363,18 +375,21 @@ export class ContactsPageAdministrationComponent implements OnInit {
 
     isValidForm() {
         let state = true;
-
+ 
         this.contactForm.filter(contact => contact.default).forEach(element => {
             if (element.control.status !== 'VALID') {
                 state = false;
             }
             element.control.markAsTouched()
         });
+
         return state;
     }
 
     onSubmit() {
-        if (this.isValidForm()) {
+        if (this.addressBANMode && this.emptyAddress()) {
+            this.notify.error('Choisissez une BAN');
+        } else if (this.isValidForm()) {
             if (this.contactId !== null) {
                 this.updateContact();
             } else {
@@ -604,5 +619,27 @@ export class ContactsPageAdministrationComponent implements OnInit {
             addressCountry: this.contactForm.filter(contact => contact.id === 'addressCountry')[0].control.value
         };
         window.open(`https://www.google.com/maps/search/${contact.addressNumber}+${contact.addressStreet},+${contact.addressPostcode}+${contact.addressTown},+${contact.addressCountry}`, '_blank')
+    }
+
+    switchAddressMode() {
+        let valArr: ValidatorFn[] = [];
+        if (this.addressBANMode) {
+            
+            valArr.push(Validators.required);
+
+            this.contactForm.filter(contact => ['addressNumber', 'addressStreet', 'addressPostcode', 'addressTown', 'addressCountry'].indexOf(contact.id) > -1).forEach((element: any) => {
+                if (element.mandatory) {
+                    element.control.setValidators(valArr);
+                }
+            });
+            this.addressBANMode = !this.addressBANMode;
+        } else {
+            this.contactForm.filter(contact => ['addressNumber', 'addressStreet', 'addressPostcode', 'addressTown', 'addressCountry'].indexOf(contact.id) > -1).forEach((element: any) => {
+                if (element.mandatory) {
+                    element.control.setValidators(valArr);
+                }
+            });
+            this.addressBANMode = !this.addressBANMode;
+        }
     }
 }

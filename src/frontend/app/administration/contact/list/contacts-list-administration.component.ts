@@ -14,6 +14,7 @@ import { FormControl } from '@angular/forms';
 @Component({
     selector: 'contact-list',
     templateUrl: "contacts-list-administration.component.html",
+    styleUrls: ['contacts-list-administration.component.scss'],
     providers: [NotificationService, AppService]
 })
 export class ContactsListAdministrationComponent implements OnInit {
