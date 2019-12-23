@@ -1391,4 +1391,5 @@ export const LANG_FR = {
     "additionals": "Complément(s)",
     "denomination": "Dénomination",
     "moreInfos" : "Plus d'informations",
+    "confirmCloseEditor" : "Etes-vous sûr de fermer l'éditeur ? Toutes les modifications seront annulées",
 };

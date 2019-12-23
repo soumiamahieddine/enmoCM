@@ -13,12 +13,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subject, Observable, of } from 'rxjs';
 import { catchError, tap, filter, exhaustMap } from 'rxjs/operators';
 import { LANG } from '../../app/translate.component';
+import { ConfirmComponent } from '../modal/confirm.component';
+import { MatDialogRef, MatDialog } from '@angular/material';
 
 declare var DocsAPI: any;
 
 @Component({
     selector: 'onlyoffice-viewer',
-    template: `<button mat-mini-fab color="warn" style="position: absolute;right: 4px;top: 22px;" (click)="quit()">
+    template: `<button mat-mini-fab color="warn" style="position: absolute;right: 6px;top: 12px;" (click)="quit()">
     <mat-icon class="fa fa-times" style="height:auto;"></mat-icon>
   </button><div id="placeholder"></div>`,
 })
@@ -46,6 +48,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
     onlyfficeUrl: string = '';
 
     private eventAction = new Subject<any>();
+    dialogRef: MatDialogRef<any>;
 
 
     @HostListener('window:message', ['$event'])
@@ -58,11 +61,18 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
             this.getEncodedDocument(response.data);
         }
     }
-    constructor(public http: HttpClient) { }
+    constructor(public http: HttpClient, public dialog: MatDialog) { }
 
     quit() {
-        this.docEditor.destroyEditor();
-        this.triggerCloseEditor.emit();
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.close, msg: this.lang.confirmCloseEditor } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            tap(() => {
+                this.docEditor.destroyEditor();
+                this.triggerCloseEditor.emit();
+            })
+        ).subscribe();
     }
 
     getDocument() {

@@ -1378,4 +1378,5 @@ export const LANG_NL = {
     "additionals": "Additional(s)", //_TO_TRANSLATE
     "denomination": "Denomination", //_TO_TRANSLATE
     "moreInfos" : "More data", //_TO_TRANSLATE
+    "confirmCloseEditor" : "Do you really want to close editor ? All modifications will be canceled", //_TO_TRANSLATE
 };
