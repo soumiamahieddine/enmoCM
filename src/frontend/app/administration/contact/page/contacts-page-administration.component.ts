@@ -228,6 +228,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
     addressBANCurrentDepartment: string = '75';
     departmentList: any[] = [];
 
+    fillingParameters: any = null;
     fillingRate: any = {
         class: 'warn',
         value : 0
@@ -264,7 +265,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
                         this.initCustomElementForm(data);
                     }),
                     exhaustMap(() => this.http.get("../../rest/contactsParameters")),
-                    tap((data) => {
+                    tap((data: any) => {
+                        this.fillingParameters = data.contactsFilling;
                         this.initElemForm(data);
                         this.initAutocompleteAddressBan();
                     }),
@@ -291,7 +293,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
                         this.initCustomElementForm(data);
                     }),
                     exhaustMap(() => this.http.get("../../rest/contactsParameters")),
-                    tap((data) => {
+                    tap((data: any) => {
+                        this.fillingParameters = data.contactsFilling;
                         this.initElemForm(data);
                         this.initAutocompleteAddressBan();
                     }),
@@ -598,12 +601,17 @@ export class ContactsPageAdministrationComponent implements OnInit {
         }
     }
 
+    removeField(field: any) {
+        field.display = !field.display;
+        field.control.reset();
+        this.checkFilling();
+    }
+
     initAutocompleteAddressBan() {
         this.addressBANInfo = this.lang.autocompleteInfo;
         this.addressBANResult = [];
         this.addressBANControl.valueChanges
             .pipe(
-                //tap((value) => this.canAdd = value.length === 0 ? false : true),
                 debounceTime(300),
                 filter(value => value.length > 2),
                 distinctUntilChanged(),
@@ -700,9 +708,9 @@ export class ContactsPageAdministrationComponent implements OnInit {
 
         this.fillingRate.value = Math.round((countValNotEmpty * 100) / countFilling);
 
-        if (this.fillingRate.value <= 24) {
+        if (this.fillingRate.value <= this.fillingParameters.first_threshold) {
             this.fillingRate.class = 'warn';
-        } else if (this.fillingRate.value <= 99) {
+        } else if (this.fillingRate.value <= this.fillingParameters.second_threshold) {
             this.fillingRate.class = 'primary';
         } else {
             this.fillingRate.class = 'accent';
