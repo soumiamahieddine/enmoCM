@@ -4,9 +4,8 @@
         <mat-icon color="primary" class="fa fa-search" matPrefix style="padding-left: 20px;font-size: 15px;"></mat-icon>
         <input type="text" #autoCompleteInput [placeholder]="lang.searchContact" matInput [formControl]="myControl"
             [matAutocomplete]="auto" (click)="$event.stopPropagation()" (focus)="resetAutocomplete()" maxlength="128">
-        <button [disabled]="!canAdd" type="button" matSuffix mat-icon-button (click)="addItem()">
-            <mat-icon class="fa fa-plus" [title]="lang.add"
-                [style.visibility]="canAdd && myControl.value !== null && myControl.value.length > 0 ? 'visible' : 'hidden'">
+        <button [disabled]="!canAdd" type="button" matSuffix mat-icon-button (click)="$event.stopPropagation();openContact()">
+            <mat-icon class="fa fa-plus" [title]="lang.add">
             </mat-icon>
         </button>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOpt($event)">
