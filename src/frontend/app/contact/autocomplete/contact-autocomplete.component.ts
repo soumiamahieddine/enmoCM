@@ -11,6 +11,7 @@ import { Observable, of } from 'rxjs';
 import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap, catchError, finalize } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
 import { PrivilegeService } from '../../../service/privileges.service';
+import { ContactModalComponent } from '../../administration/contact/modal/contact-modal.component';
 
 @Component({
     selector: 'app-contact-autocomplete',
@@ -219,19 +220,14 @@ export class ContactAutocompleteComponent implements OnInit {
         }
     }
 
-    addItem() {
-        const newElem = {};
+    openContact() {
+        const dialogRef = this.dialog.open(ContactModalComponent, { width : '1200px', maxWidth : '100vw', data: { } });
 
-        newElem[this.key] = this.myControl.value;
-
-        this.http.post('../../rest/tags', { label: newElem[this.key] }).pipe(
-            tap((data: any) => {
-                for (var key in data) {
-                    newElem['id'] = data[key];
-                    this.newIds.push(data[key]);
-                }
-                this.setFormValue(newElem);
-                this.myControl.setValue('');
+        dialogRef.afterClosed().pipe(
+            //filter((data: string) => data === 'ok'),
+            tap((data) => {
+                console.log(data);
+                
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
