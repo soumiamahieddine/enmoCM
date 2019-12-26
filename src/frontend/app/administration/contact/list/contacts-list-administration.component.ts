@@ -29,7 +29,7 @@ export class ContactsListAdministrationComponent implements OnInit {
     
     data: any;
 
-    displayedColumnsContact: string[] = ['firstname', 'lastname', 'company', 'formatedAddress', 'actions'];
+    displayedColumnsContact: string[] = ['filling', 'firstname', 'lastname', 'company', 'formatedAddress', 'actions'];
 
     isLoadingResults = true;
     routeUrl: string = '../../rest/contacts';
