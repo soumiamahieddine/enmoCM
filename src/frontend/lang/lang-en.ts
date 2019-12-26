@@ -1358,4 +1358,5 @@ export const LANG_EN = {
     "found": "found",
     "here": "here",
     "toCopyAddress": "to copy the address",
+    "badFormat": "Bad format",
 };

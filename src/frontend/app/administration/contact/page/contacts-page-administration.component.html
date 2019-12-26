@@ -94,8 +94,8 @@
                                                             cliquez <a (click)="setAddress(companyFound)"
                                                                 style="cursor: pointer;font-weight:bold;">{{lang.here}}</a>
                                                             {{lang.toCopyAddress}}</mat-hint>
-                                                        <mat-error *ngIf="field.control.hasError('required')">
-                                                            {{lang.requiredField}}</mat-error>
+                                                        <mat-error *ngIf="field.control.status!=='VALID'  && field.control.touched">
+                                                            {{getErrorMsg(field.control.errors)}}</mat-error>
                                                     </mat-form-field>
                                                 </ng-container>
                                                 <ng-container *ngIf="field.type === 'integer'">
@@ -103,8 +103,8 @@
                                                         <input type="text" matInput [formControl]="field.control"
                                                             [placeholder]="field.label" min="0" step="0.1"
                                                             [required]="field.required">
-                                                        <mat-error *ngIf="field.control.status!=='VALID'">
-                                                            {{lang.onlyNumber}}</mat-error>
+                                                        <mat-error *ngIf="field.control.status!=='VALID' && field.control.touched">
+                                                            {{getErrorMsg(field.control.errors)}}</mat-error>
                                                     </mat-form-field>
                                                 </ng-container>
                                                 <ng-container *ngIf="field.type === 'select'">

@@ -1396,4 +1396,5 @@ export const LANG_FR = {
     "found": "trouvée",
     "here": "ici",
     "toCopyAddress": "pour copier son adresse",
+    "badFormat": "Format incorrect",
 };

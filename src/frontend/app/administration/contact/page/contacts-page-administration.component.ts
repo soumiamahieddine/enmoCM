@@ -297,17 +297,32 @@ export class ContactsPageAdministrationComponent implements OnInit {
     initElemForm(data: any) {
         let valArr: ValidatorFn[] = [];
 
-        valArr.push(Validators.required);
+        
 
         data.contactsParameters.forEach((element: any) => {
+            valArr = [];
+
             if ((element.mandatory || element.filling) && this.creationMode) {
                 this.contactForm.filter(contact => contact.id === element.identifier)[0].default = true;
             }
 
+            if (element.identifier === 'email') {
+                valArr.push(Validators.email);
+            }
+
+            if (element.identifier === 'phone') {
+                valArr.push(Validators.pattern(/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/));
+            }
+
             if (element.mandatory) {
                 this.contactForm.filter(contact => contact.id === element.identifier)[0].required = true;
+                valArr.push(Validators.required);
+            }
+            
+            if(this.contactForm.filter(contact => contact.id === element.identifier)[0] !== undefined) {
                 this.contactForm.filter(contact => contact.id === element.identifier)[0].control.setValidators(valArr);
             }
+            
         });
     }
 
@@ -642,6 +657,17 @@ export class ContactsPageAdministrationComponent implements OnInit {
                 }
             });
             this.addressBANMode = !this.addressBANMode;
+        }
+    }
+
+    getErrorMsg(error: any) {
+        console.log(error);
+        if (error.required !== undefined) {
+            return this.lang.requiredField;
+        } else if (error.pattern !== undefined || error.email !== undefined) {
+            return this.lang.badFormat;
+        } else {
+            return 'error';
         }
     }
 }
