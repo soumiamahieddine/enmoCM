@@ -1150,7 +1150,7 @@ abstract class lists_Abstract extends Database
 
         $href = $this->_buildMyLink($this->params['viewDocumentLink'], $resultTheLine, $listKey);
         if (!$isAttachment) {
-            $return .= '<div align="center" class="iconDoc" onmouseover="displayThumbnail(\''.$res_id.'\')"><a href="../../rest/res/'.$res_id.'/content" target="_blank" title="'
+            $return .= '<div align="center" class="iconDoc" onmouseover="displayThumbnail(\''.$res_id.'\')"><a href="../../rest/resources/'.$res_id.'/content" target="_blank" title="'
                     ._VIEW_DOC.'"><i class="tooltip fa fa-download fa-2x" title="'._VISUALIZE.'"></i><span id="thumb_'.$res_id.'" name="thumb_'.$res_id.'"></span></a></div>';
         } else {
             $return .= '<div align="right" class="iconDoc" style="" ><a href="'.$href.'" target="_blank" title="'
@@ -3253,7 +3253,7 @@ abstract class lists_Abstract extends Database
             //Show document icon
             if ($this->params['bool_showIconDocument']) {
                 $href = $this->_buildMyLink($this->params['viewDocumentLink'], $resultTheLine, $listKey);
-                $content .= '<td width="1%"><div align="center"><a href="../../rest/res/'.$resId.'/content" target="_blank" title="'
+                $content .= '<td width="1%"><div align="center"><a href="../../rest/resources/'.$resId.'/content" target="_blank" title="'
                     ._VIEW_DOC.'"><i class="fa fa-download fa-2x"></i></a></div></td>';
             }
 

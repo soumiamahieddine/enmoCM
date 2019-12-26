@@ -130,7 +130,7 @@ class BasketController
         BasketModel::update([
             'set'   => $set,
             'where' => ['basket_id = ?'],
-            'data'  => $aArgs['id']
+            'data'  => [$aArgs['id']]
         ]);
 
         HistoryController::add([
