@@ -47,7 +47,10 @@
                         <mat-divider></mat-divider>
                         <ng-container *ngFor="let field of contactForm">
                             <button mat-menu-item *ngIf="!field.display && field.unit === 'mainInfo'"
-                                (click)="field.display=!field.display">{{field.label}}</button>
+                                (click)="field.display=!field.display">
+                                <mat-icon *ngIf="field.filling" style="height: auto;padding-right: 10px;" [title]="lang.targetFillingField" class="fas fa-circle rate_{{fillingRate.class}}"></mat-icon>
+                                <span>{{field.label}}</span>
+                            </button>
                         </ng-container>
                     </mat-menu>
 
@@ -57,7 +60,10 @@
                         <mat-divider></mat-divider>
                         <ng-container *ngFor="let field of contactForm">
                             <button mat-menu-item *ngIf="!field.display && field.unit === 'address'"
-                                (click)="field.display=!field.display">{{field.label}}</button>
+                                (click)="field.display=!field.display">
+                                <mat-icon *ngIf="field.filling" style="height: auto;padding-right: 10px;" [title]="lang.targetFillingField" class="fas fa-circle rate_{{fillingRate.class}}"></mat-icon>
+                                <span>{{field.label}}</span>
+                            </button>
                         </ng-container>
                     </mat-menu>
                     <mat-menu #complement="matMenu">
@@ -66,7 +72,10 @@
                         <mat-divider></mat-divider>
                         <ng-container *ngFor="let field of contactForm">
                             <button mat-menu-item *ngIf="!field.display && field.unit === 'complement'"
-                                (click)="field.display=!field.display">{{field.label}}</button>
+                                (click)="field.display=!field.display">
+                                <mat-icon *ngIf="field.filling" style="height: auto;padding-right: 10px;" [title]="lang.targetFillingField" class="fas fa-circle rate_{{fillingRate.class}}"></mat-icon>
+                                <span>{{field.label}}</span>
+                            </button>
                         </ng-container>
                     </mat-menu>
                     <div style="padding: 10px;">
@@ -101,6 +110,7 @@
                                                             {{lang.toCopyAddress}}</mat-hint>
                                                         <mat-error *ngIf="field.control.status!=='VALID'  && field.control.touched">
                                                             {{getErrorMsg(field.control.errors)}}</mat-error>
+                                                        <mat-icon style="height: auto;" matSuffix [title]="lang.targetFillingField" class="fas fa-circle rate_{{fillingRate.class}}"></mat-icon>
                                                     </mat-form-field>
                                                 </ng-container>
                                                 <ng-container *ngIf="field.type === 'integer'">
@@ -160,7 +170,7 @@
                                                     </mat-selection-list>
                                                 </ng-container>
                                             </p>
-                                            <button *ngIf="field.display && canDelete(field)" mat-icon-button matSuffix
+                                            <button *ngIf="field.display" [disabled]="!canDelete(field)" mat-icon-button matSuffix
                                                 color="warn" (click)="field.display = !field.display">
                                                 <mat-icon class="fa fa-trash"></mat-icon>
                                             </button>
@@ -176,7 +186,7 @@
                                                             {{lang.requiredField}}</mat-error>
                                                     </mat-form-field>
                                                 </p>
-                                                <button *ngIf="field.display && canDelete(field)" mat-icon-button
+                                                <button *ngIf="field.display" [disabled]="!canDelete(field)" mat-icon-button
                                                     matSuffix color="warn" (click)="field.display = !field.display">
                                                     <mat-icon class="fa fa-trash"></mat-icon>
                                                 </button>

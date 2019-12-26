@@ -1398,4 +1398,5 @@ export const LANG_FR = {
     "toCopyAddress": "pour copier son adresse",
     "badFormat": "Format incorrect",
     "contactFilledTo": "Contact rempli à",
+    "targetFillingField": "Champ cible de complétude",
 };

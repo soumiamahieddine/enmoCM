@@ -1385,4 +1385,5 @@ export const LANG_NL = {
     "toCopyAddress": "to copy the address", //_TO_TRANSLATE
     "badFormat": "Bad format", //_TO_TRANSLATE
     "contactFilledTo": "Contact filled to", //_TO_TRANSLATE
+    "targetFillingField": "Target field for filling", //_TO_TRANSLATE
 };
