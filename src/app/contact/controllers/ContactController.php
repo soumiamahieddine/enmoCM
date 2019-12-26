@@ -97,6 +97,8 @@ class ContactController
 
         foreach ($contacts as $key => $contact) {
             unset($contacts[$key]['count']);
+            $filling = ContactController::getFillingRate(['contactId' => $contact['id']]);
+            $contacts[$key]['filling'] = $filling;
         }
 
         return $response->withJson(['contacts' => $contacts, 'count' => $count]);
