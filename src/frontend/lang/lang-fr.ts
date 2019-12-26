@@ -1397,4 +1397,5 @@ export const LANG_FR = {
     "here": "ici",
     "toCopyAddress": "pour copier son adresse",
     "badFormat": "Format incorrect",
+    "contactFilledTo": "Contact rempli à",
 };

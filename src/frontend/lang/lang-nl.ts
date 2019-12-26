@@ -1384,4 +1384,5 @@ export const LANG_NL = {
     "here": "here", //_TO_TRANSLATE
     "toCopyAddress": "to copy the address", //_TO_TRANSLATE
     "badFormat": "Bad format", //_TO_TRANSLATE
+    "contactFilledTo": "Contact filled to", //_TO_TRANSLATE
 };

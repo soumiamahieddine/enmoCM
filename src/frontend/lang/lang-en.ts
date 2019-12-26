@@ -1359,4 +1359,5 @@ export const LANG_EN = {
     "here": "here",
     "toCopyAddress": "to copy the address",
     "badFormat": "Bad format",
+    "contactFilledTo": "Contact filled to",
 };

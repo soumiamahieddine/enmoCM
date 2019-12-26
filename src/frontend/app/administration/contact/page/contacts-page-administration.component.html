@@ -46,8 +46,8 @@
                             style="text-align: center;">{{lang.addAll}}</button>
                         <mat-divider></mat-divider>
                         <ng-container *ngFor="let field of contactForm">
-                            <button mat-menu-item *ngIf="!field.default && field.unit === 'mainInfo'"
-                                (click)="field.default=!field.default">{{field.label}}</button>
+                            <button mat-menu-item *ngIf="!field.display && field.unit === 'mainInfo'"
+                                (click)="field.display=!field.display">{{field.label}}</button>
                         </ng-container>
                     </mat-menu>
 
@@ -56,8 +56,8 @@
                             style="text-align: center;">{{lang.addAll}}</button>
                         <mat-divider></mat-divider>
                         <ng-container *ngFor="let field of contactForm">
-                            <button mat-menu-item *ngIf="!field.default && field.unit === 'address'"
-                                (click)="field.default=!field.default">{{field.label}}</button>
+                            <button mat-menu-item *ngIf="!field.display && field.unit === 'address'"
+                                (click)="field.display=!field.display">{{field.label}}</button>
                         </ng-container>
                     </mat-menu>
                     <mat-menu #complement="matMenu">
@@ -65,10 +65,15 @@
                             style="text-align: center;">{{lang.addAll}}</button>
                         <mat-divider></mat-divider>
                         <ng-container *ngFor="let field of contactForm">
-                            <button mat-menu-item *ngIf="!field.default && field.unit === 'complement'"
-                                (click)="field.default=!field.default">{{field.label}}</button>
+                            <button mat-menu-item *ngIf="!field.display && field.unit === 'complement'"
+                                (click)="field.display=!field.display">{{field.label}}</button>
                         </ng-container>
                     </mat-menu>
+                    <div style="padding: 10px;">
+                        <div class="rate_{{fillingRate.class}}" >{{lang.contactFilledTo}} <b>{{fillingRate.value}} %</b></div>
+                        <mat-progress-bar mode="determinate" class="fillingBar" [color]="fillingRate.class" [value]="fillingRate.value"></mat-progress-bar>
+                        
+                    </div>
                     <div [class.multipleUnits]="!isEmptyUnit('address') || !isEmptyUnit('complement')">
                         <ng-container *ngFor="let unit of contactUnit">
                             <div *ngIf="!isEmptyUnit(unit.id)">
@@ -80,15 +85,15 @@
                                     <ng-container *ngFor="let field of contactForm;let i=index">
                                         <mat-list-item class="contact-item"
                                             *ngIf="(field.unit === unit.id && unit.id !== 'address') || (field.unit === unit.id && unit.id === 'address' && !addressBANMode)">
-                                            <p mat-line class="contact-content" *ngIf="field.default">
+                                            <p mat-line class="contact-content" *ngIf="field.display">
                                                 <ng-container *ngIf="field.type === 'string'">
                                                     <mat-form-field>
                                                         <input matInput [formControl]="field.control"
-                                                            [placeholder]="field.label" (blur)="checkCompany(field)"
+                                                            [placeholder]="field.label" (blur)="checkCompany(field);checkFilling();"
                                                             [required]="field.required">
                                                         <mat-hint
                                                             *ngIf="companyFound !== null && field.id === 'company'"
-                                                            align="end">{{lang.company}} <b>{{companyFound.company}}</b>
+                                                            align="end">{{lang.contactsParameters_company}} <b>{{companyFound.company}}</b>
                                                             {{lang.found}}
                                                             !
                                                             cliquez <a (click)="setAddress(companyFound)"
@@ -155,15 +160,15 @@
                                                     </mat-selection-list>
                                                 </ng-container>
                                             </p>
-                                            <button *ngIf="field.default && canDelete(field)" mat-icon-button matSuffix
-                                                color="warn" (click)="field.default = !field.default">
+                                            <button *ngIf="field.display && canDelete(field)" mat-icon-button matSuffix
+                                                color="warn" (click)="field.display = !field.display">
                                                 <mat-icon class="fa fa-trash"></mat-icon>
                                             </button>
                                         </mat-list-item>
                                         <ng-container
                                             *ngIf="unit.id === 'address' && addressBANMode && ['addressAdditional1', 'addressAdditional2'].indexOf(field.id) > -1">
                                             <mat-list-item class="contact-item">
-                                                <p mat-line class="contact-content" *ngIf="field.default">
+                                                <p mat-line class="contact-content" *ngIf="field.display">
                                                     <mat-form-field>
                                                         <input matInput [formControl]="field.control"
                                                             [placeholder]="field.label" [required]="field.required">
@@ -171,8 +176,8 @@
                                                             {{lang.requiredField}}</mat-error>
                                                     </mat-form-field>
                                                 </p>
-                                                <button *ngIf="field.default && canDelete(field)" mat-icon-button
-                                                    matSuffix color="warn" (click)="field.default = !field.default">
+                                                <button *ngIf="field.display && canDelete(field)" mat-icon-button
+                                                    matSuffix color="warn" (click)="field.display = !field.display">
                                                     <mat-icon class="fa fa-trash"></mat-icon>
                                                 </button>
                                             </mat-list-item>

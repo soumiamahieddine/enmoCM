@@ -7,9 +7,9 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../../service/app.service';
 import { Observable, merge, Subject, of as observableOf, of } from 'rxjs';
 import { MatPaginator, MatSort, MatDialog } from '@angular/material';
-import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
+import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize, count } from 'rxjs/operators';
 import { ConfirmComponent } from '../../../../plugins/modal/confirm.component';
-import { FormControl, Validators, ValidatorFn } from '@angular/forms';
+import { FormControl, Validators, ValidatorFn, FormGroup, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -70,7 +70,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
             type: 'string',
             control: new FormControl(),
             required: false,
-            default: true,
+            display: true,
+            filling: false,
             values: []
         },
         {
@@ -80,7 +81,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
             type: 'string',
             control: new FormControl(),
             required: false,
-            default: false,
+            display: false,
+            filling: false,
             values: []
         },
         {
@@ -90,7 +92,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
             type: 'string',
             control: new FormControl(),
             required: false,
-            default: false,
+            display: false,
+            filling: false,
             values: []
         },
         {
@@ -100,7 +103,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
             type: 'string',
             control: new FormControl(),
             required: false,
-            default: false,
+            display: false,
+            filling: false,
             values: []
         },
         {
@@ -110,7 +114,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
             type: 'string',
             control: new FormControl(),
             required: false,
-            default: false,
+            display: false,
+            filling: false,
             values: []
         },
         {
@@ -120,7 +125,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
             type: 'string',
             control: new FormControl(),
             required: false,
-            default: true,
+            display: true,
+            filling: false,
             values: []
         },
         {
@@ -130,7 +136,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
             type: 'string',
             control: new FormControl(),
             required: false,
-            default: true,
+            display: true,
+            filling: false,
             values: []
         },
         {
@@ -140,7 +147,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
             type: 'string',
             control: new FormControl(),
             required: false,
-            default: false,
+            display: false,
+            filling: false,
             values: []
         },
         {
@@ -150,7 +158,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
             type: 'string',
             control: new FormControl(),
             required: false,
-            default: false,
+            display: false,
+            filling: false,
             values: []
         },
         {
@@ -160,7 +169,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
             type: 'string',
             control: new FormControl(),
             required: false,
-            default: false,
+            display: false,
+            filling: false,
             values: []
         },
         {
@@ -170,7 +180,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
             type: 'string',
             control: new FormControl(),
             required: false,
-            default: false,
+            display: false,
+            filling: false,
             values: []
         },
         {
@@ -180,7 +191,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
             type: 'string',
             control: new FormControl(),
             required: false,
-            default: false,
+            display: false,
+            filling: false,
             values: []
         },
         {
@@ -190,7 +202,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
             type: 'string',
             control: new FormControl(),
             required: false,
-            default: false,
+            display: false,
+            filling: false,
             values: []
         },
         {
@@ -200,7 +213,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
             type: 'string',
             control: new FormControl(),
             required: false,
-            default: false,
+            display: false,
+            filling: false,
             values: []
         }
     ];
@@ -214,6 +228,11 @@ export class ContactsPageAdministrationComponent implements OnInit {
     addressBANCurrentDepartment: string = '75';
     departmentList: any[] = [];
 
+    fillingRate: any = {
+        class: 'warn',
+        value : 0
+    }
+
     companyFound: any = null;
 
     constructor(
@@ -223,7 +242,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
         private notify: NotificationService,
         private headerService: HeaderService,
         public appService: AppService,
-        public dialog: MatDialog) { }
+        public dialog: MatDialog,
+        private formBuilder: FormBuilder) { }
 
     ngOnInit(): void {
 
@@ -263,7 +283,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
                 this.creationMode = false;
 
                 this.contactForm.forEach(element => {
-                    element.default = false;
+                    element.display = false;
                 });
 
                 this.http.get("../../rest/contactsCustomFields").pipe(
@@ -297,20 +317,20 @@ export class ContactsPageAdministrationComponent implements OnInit {
     initElemForm(data: any) {
         let valArr: ValidatorFn[] = [];
 
-        
-
         data.contactsParameters.forEach((element: any) => {
             valArr = [];
 
             if ((element.mandatory || element.filling) && this.creationMode) {
-                this.contactForm.filter(contact => contact.id === element.identifier)[0].default = true;
+                this.contactForm.filter(contact => contact.id === element.identifier)[0].display = true;
+            }
+
+            if (element.filling) {
+                this.contactForm.filter(contact => contact.id === element.identifier)[0].filling = true;
             }
 
             if (element.identifier === 'email') {
                 valArr.push(Validators.email);
-            }
-
-            if (element.identifier === 'phone') {
+            } else if (element.identifier === 'phone') {
                 valArr.push(Validators.pattern(/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/));
             }
 
@@ -341,7 +361,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
                 type: element.type,
                 control: new FormControl({ value: '', disabled: false }),
                 required: false,
-                default: false,
+                display: false,
                 values: element.values.map((val: any) => { return { id: val, label: val } })
             };
 
@@ -359,9 +379,10 @@ export class ContactsPageAdministrationComponent implements OnInit {
             indexField = this.contactForm.map(field => field.id).indexOf(element);
             if (!this.isEmptyValue(data[element]) && indexField > -1) {
                 this.contactForm[indexField].control.setValue(data[element]);
-                this.contactForm[indexField].default = true;
+                this.contactForm[indexField].display = true;
             }
         });
+        this.checkFilling();
     }
 
     setContactCustomData(data: any) {
@@ -370,15 +391,16 @@ export class ContactsPageAdministrationComponent implements OnInit {
             indexField = this.contactForm.map(field => field.id).indexOf('customField_' + element);
             if (!this.isEmptyValue(data[element]) && indexField > -1) {
                 this.contactForm[indexField].control.setValue(data.customFields[element]);
-                this.contactForm[indexField].default = true;
+                this.contactForm[indexField].display = true;
             }
         });
+        this.checkFilling();
     }
 
     initBanSearch() {
         this.http.get("../../rest/ban/availableDepartments").pipe(
             tap((data: any) => {
-                if (data.default !== null && data.departments.indexOf(data.default) !== - 1) {
+                if (data.display !== null && data.departments.indexOf(data.display) !== - 1) {
                     this.addressBANCurrentDepartment = data.default;
                 }
                 this.departmentList = data.departments;
@@ -393,7 +415,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
     isValidForm() {
         let state = true;
  
-        this.contactForm.filter(contact => contact.default).forEach(element => {
+        this.contactForm.filter(contact => contact.display).forEach(element => {
             if (element.control.status !== 'VALID') {
                 state = false;
             }
@@ -404,6 +426,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
+        this.checkFilling();
         if (this.addressBANMode && this.emptyAddress()) {
             this.notify.error('Choisissez une BAN');
         } else if (this.isValidForm()) {
@@ -451,7 +474,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
         contact['customFields'] = {};
         const regex = /customField_[.]*/g;
 
-        this.contactForm.filter(field => field.default).forEach(element => {
+        this.contactForm.filter(field => field.display).forEach(element => {
             if (element.id.match(regex) !== null) {
                 contact['customFields'][element.id.split('_')[1]] = element.control.value;
             } else {
@@ -462,7 +485,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
     }
 
     isEmptyUnit(id: string) {
-        if (this.contactForm.filter(field => field.default && field.unit === id).length === 0) {
+        if (this.contactForm.filter(field => field.display && field.unit === id).length === 0) {
             return true;
         } else {
             return false;
@@ -477,12 +500,12 @@ export class ContactsPageAdministrationComponent implements OnInit {
 
     toogleAllFieldsUnit(idUnit: string) {
         this.contactForm.filter(field => field.unit === idUnit).forEach((element: any) => {
-            element.default = true;
+            element.display = true;
         });
     }
 
     noField(id: string) {
-        if (this.contactForm.filter(field => !field.default && field.unit === id).length === 0) {
+        if (this.contactForm.filter(field => !field.display && field.unit === id).length === 0) {
             return true;
         } else {
             return false;
@@ -531,9 +554,10 @@ export class ContactsPageAdministrationComponent implements OnInit {
             indexField = this.contactForm.map(field => field.id).indexOf(element);
             if (!this.isEmptyValue(contact[element]) && indexField > -1 && ['company', 'addressNumber', 'addressStreet', 'addressAdditional2', 'addressPostcode', 'addressTown', 'addressCountry'].indexOf(element) > -1) {
                 this.contactForm[indexField].control.setValue(contact[element]);
-                this.contactForm[indexField].default = true;
+                this.contactForm[indexField].display = true;
             }
         });
+        this.checkFilling();
 
         this.addressBANMode = disableBan ? false : true;
     }
@@ -541,7 +565,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
     canDelete(field: any) {
         if (field.id === "company") {
             const lastname = this.contactForm.filter(contact => contact.id === 'lastname')[0];
-            if (lastname.default && !this.isEmptyValue(lastname.control.value)) {
+            if (lastname.display && !this.isEmptyValue(lastname.control.value)) {
                 let valArr: ValidatorFn[] = [];
                 field.control.setValidators(valArr);
                 field.required = false;
@@ -555,7 +579,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
             }
         } else if (field.id === "lastname") {
             const company = this.contactForm.filter(contact => contact.id === 'company')[0];
-            if (company.default && !this.isEmptyValue(company.control.value)) {
+            if (company.display && !this.isEmptyValue(company.control.value)) {
                 let valArr: ValidatorFn[] = [];
                 field.control.setValidators(valArr);
                 field.required = false;
@@ -661,13 +685,27 @@ export class ContactsPageAdministrationComponent implements OnInit {
     }
 
     getErrorMsg(error: any) {
-        console.log(error);
         if (error.required !== undefined) {
             return this.lang.requiredField;
         } else if (error.pattern !== undefined || error.email !== undefined) {
             return this.lang.badFormat;
         } else {
-            return 'error';
+            return 'unknow validator';
         }
+    }
+
+    checkFilling() {
+        const countFilling = this.contactForm.filter(contact => contact.filling).length;
+        const countValNotEmpty = this.contactForm.filter(contact => !this.isEmptyValue(contact.control.value) && contact.filling).length;
+
+        this.fillingRate.value = Math.round((countValNotEmpty * 100) / countFilling);
+
+        if (this.fillingRate.value <= 24) {
+            this.fillingRate.class = 'warn';
+        } else if (this.fillingRate.value <= 99) {
+            this.fillingRate.class = 'primary';
+        } else {
+            this.fillingRate.class = 'accent';
+        }        
     }
 }
