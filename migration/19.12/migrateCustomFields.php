@@ -88,22 +88,22 @@ foreach ($customs as $custom) {
                 }
 
                 $column = (string)$value->column;
+                $csColumn = "custom_fields->>''{$fieldId}''";
+                \Basket\models\BasketModel::update(['postSet' => ['basket_clause' => "REPLACE(basket_clause, '{$column}', '{$csColumn}')"], 'where' => ['1 = ?'], 'data' => [1]]);
+                \Basket\models\BasketModel::update(['postSet' => ['basket_clause' => "REPLACE(basket_clause, 'doc_{$column}', '{$csColumn}')"], 'where' => ['1 = ?'], 'data' => [1]]);
                 $resources = \Resource\models\ResModel::get([
                     'select'    => ['res_id', $column],
                     'where'     => [$column . ' is not null'],
                 ]);
 
                 foreach ($resources as $resource) {
-                    $valueColumn = $resource[$column];
+                    $valueColumn = json_encode($resource[$column]);
                     $resId = $resource['res_id'];
 
-                    \SrcCore\models\DatabaseModel::insert([
-                        'table'         => 'resources_custom_fields',
-                        'columnsValues' => [
-                            'res_id'            => $resId,
-                            'custom_field_id'   => $fieldId,
-                            'value'             => json_encode($valueColumn)
-                        ]
+                    \Resource\models\ResModel::update([
+                        'postSet'   => ['custom_fields' => "jsonb_set(custom_fields, '{{$fieldId}}', '{$valueColumn}')"],
+                        'where'     => ['res_id = ?'],
+                        'data'      => [$resId]
                     ]);
                 }
 

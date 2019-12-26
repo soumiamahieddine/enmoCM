@@ -659,6 +659,7 @@ DO $$ BEGIN
     UPDATE res_letterbox SET custom_fields = json_build_object('1', 'Courrier avec AR') FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id = 'registered_mail';
   END IF;
 END$$;
+UPDATE baskets set basket_clause = replace(basket_clause, 'nature_id' , 'custom_fields->>''1''');
 
 TRUNCATE TABLE indexing_models;
 INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (1, 'incoming', 'Courrier arrivée', TRUE, 23, FALSE);
