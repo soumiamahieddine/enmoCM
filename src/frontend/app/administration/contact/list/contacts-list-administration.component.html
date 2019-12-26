@@ -58,9 +58,11 @@
                     <mat-table id="contact-list" #tableContactListSort="matSort" [dataSource]="data" matSort
                         matSortActive="lastname" matSortDirection="asc" style="width:100%;">
                         <ng-container matColumnDef="filling">
-                            <mat-header-cell *matHeaderCellDef style="flex: initial;width: 50px;" mat-sort-header
-                                [class.hide-for-mobile]="appService.getViewMode()"></mat-header-cell>
-                            <mat-cell mat-cell *matCellDef="let element" style="flex: initial;width: 50px;" [class.hide-for-mobile]="appService.getViewMode()">
+                            <mat-header-cell *matHeaderCellDef style="flex: initial;width: 60px;" mat-sort-header
+                                [class.hide-for-mobile]="appService.getViewMode()">
+                                <i class="far fa-circle" [title]="lang.contactsFillingRate" [style.color]="'#666'"></i>
+                            </mat-header-cell>
+                            <mat-cell mat-cell *matCellDef="let element" style="flex: initial;width: 60px;" [class.hide-for-mobile]="appService.getViewMode()">
                                 <i class="fas fa-circle" [title]="lang.contactFilledTo + ' ' + element.filling.rate + '%'" [style.color]="element.filling.color"></i>
                             </mat-cell>
                         </ng-container>
