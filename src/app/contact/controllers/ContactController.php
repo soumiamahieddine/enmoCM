@@ -65,7 +65,7 @@ class ContactController
         $queryParams['offset'] = (empty($queryParams['offset']) || !is_numeric($queryParams['offset']) ? 0 : (int)$queryParams['offset']);
         $queryParams['limit'] = (empty($queryParams['limit']) || !is_numeric($queryParams['limit']) ? 25 : (int)$queryParams['limit']);
         $order = !in_array($queryParams['order'], ['asc', 'desc']) ? '' : $queryParams['order'];
-        $queryParams['orderBy'] = !in_array($queryParams['orderBy'], ['firstname', 'lastname', 'company']) ? ['id'] : ["{$queryParams['orderBy']} {$order}", 'id'];
+        $orderBy = !in_array($queryParams['orderBy'], ['firstname', 'lastname', 'company']) ? ['id'] : ["{$queryParams['orderBy']} {$order}", 'id'];
 
         if (!empty($queryParams['search'])) {
             $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country'];
@@ -89,7 +89,7 @@ class ContactController
             ],
             'where'     => $requestData['where'] ?? null,
             'data'      => $requestData['data'] ?? null,
-            'orderBy'   => $queryParams['orderBy'],
+            'orderBy'   => $orderBy,
             'offset'    => $queryParams['offset'],
             'limit'     => $queryParams['limit']
         ]);
@@ -99,6 +99,14 @@ class ContactController
             unset($contacts[$key]['count']);
             $filling = ContactController::getFillingRate(['contactId' => $contact['id']]);
             $contacts[$key]['filling'] = $filling;
+        }
+        if ($queryParams['orderBy'] == 'filling') {
+            usort($contacts, function($a, $b) {
+                return $a['filling']['rate'] <=> $b['filling']['rate'];
+            });
+            if ($queryParams['order'] == 'desc') {
+                $contacts = array_reverse($contacts);
+            }
         }
 
         return $response->withJson(['contacts' => $contacts, 'count' => $count]);
