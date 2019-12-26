@@ -169,6 +169,7 @@ export class ContactsListAdministrationComponent implements OnInit {
                 tap((value) => {
                     if (value.length === 0) {
                         this.search = '';
+                        this.paginator.pageIndex = 0;
                         this.refreshDao();
                     }   
                 }),
@@ -177,6 +178,7 @@ export class ContactsListAdministrationComponent implements OnInit {
                 distinctUntilChanged(),
                 tap((data) => {
                     this.search = data;
+                    this.paginator.pageIndex = 0;
                     this.refreshDao();
                 }),
             ).subscribe();
