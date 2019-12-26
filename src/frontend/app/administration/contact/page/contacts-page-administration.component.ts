@@ -412,7 +412,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
     initBanSearch() {
         this.http.get("../../rest/ban/availableDepartments").pipe(
             tap((data: any) => {
-                if (data.display !== null && data.departments.indexOf(data.display) !== - 1) {
+                if (data.default !== null && data.departments.indexOf(data.default.toString()) !== - 1) {
                     this.addressBANCurrentDepartment = data.default;
                 }
                 this.departmentList = data.departments;
