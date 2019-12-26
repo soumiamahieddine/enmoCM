@@ -5,7 +5,7 @@
         <menu-shortcut></menu-shortcut>
         <menu-nav></menu-nav>
         <mat-nav-list>
-            <a mat-list-item *ngFor="let menu of subMenus | sortBy : 'label'" [routerLink]="menu.route">
+            <a mat-list-item *ngFor="let menu of subMenus" [class.active]="menu.current" [routerLink]="menu.route">
                 <mat-icon color="primary" mat-list-icon [class]="menu.icon"></mat-icon>
                 <p mat-line>
                     {{menu.label}}

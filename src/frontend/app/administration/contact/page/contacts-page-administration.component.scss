@@ -1,5 +1,10 @@
 @import '../../../../css/vars.scss';
 
+.active, .active:hover , .active:active, .active:focus {
+    background-color: $secondary;
+    color: white;
+}
+
 .contact-item {
     height: auto !important;
 }
