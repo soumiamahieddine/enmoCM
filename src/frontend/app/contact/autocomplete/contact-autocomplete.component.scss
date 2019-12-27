@@ -21,7 +21,20 @@
 }
 
 .listAutocomplete {
+    cursor: pointer;
     height: auto;
+}
+
+.locked {
+    cursor: default;
+
+    &:active {
+        box-shadow: none;
+    }
+
+    &:hover::after, &:focus::after {
+        opacity: 0;
+    }
 }
 
 .itemChip {

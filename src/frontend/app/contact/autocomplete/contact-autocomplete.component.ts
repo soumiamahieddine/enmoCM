@@ -33,6 +33,7 @@ export class ContactAutocompleteComponent implements OnInit {
     key: string = 'id';
 
     canAdd: boolean = false;
+    canUpdate: boolean = false;
 
     listInfo: string;
     myControl = new FormControl();
@@ -63,7 +64,8 @@ export class ContactAutocompleteComponent implements OnInit {
 
     ngOnInit() {
         this.controlAutocomplete.setValue(this.controlAutocomplete.value === null || this.controlAutocomplete.value === '' ? [] : this.controlAutocomplete.value);
-        this.canAdd = this.privilegeService.hasCurrentUserPrivilege('manage_tags_application');
+        this.canAdd = this.privilegeService.hasCurrentUserPrivilege('create_contacts');
+        this.canUpdate = this.privilegeService.hasCurrentUserPrivilege('update_contacts');
         this.initFormValue();
         this.initAutocompleteRoute();
     }
@@ -120,7 +122,7 @@ export class ContactAutocompleteComponent implements OnInit {
                             lastname: data.lastname,
                             company: data.company
                         };
-                        
+
                     }),
                     finalize(() => this.loadingValues = false),
                     catchError((err: any) => {
@@ -157,7 +159,7 @@ export class ContactAutocompleteComponent implements OnInit {
                         return of(false);
                     })
                 ).subscribe();
-            }            
+            }
         });
     }
 
@@ -220,20 +222,34 @@ export class ContactAutocompleteComponent implements OnInit {
         }
     }
 
-    openContact() {
-        const dialogRef = this.dialog.open(ContactModalComponent, { width : '1200px', maxWidth : '100vw', data: { } });
+    openContact(contact: any = null) {
+        if ((this.canAdd && contact === null) || this.canOpenContact(contact)) {
+            const dialogRef = this.dialog.open(ContactModalComponent, { width: '1200px', maxWidth: '100vw', data: { editMode: this.canUpdate, contactId: contact !== null ? contact.id : null } });
 
-        dialogRef.afterClosed().pipe(
-            //filter((data: string) => data === 'ok'),
-            tap((data) => {
-                console.log(data);
-                
-            }),
-            catchError((err: any) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+            dialogRef.afterClosed().pipe(
+                filter((data: number) => data !== undefined),
+                tap((contactId: number) => {
+                    const contact = {
+                        type: 'contact',
+                        id: contactId
+                    };
+                    this.setFormValue(contact);
+                    this.initFormValue();
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
+    }
+
+    canOpenContact(contact: any) {
+        if (this.canUpdate && contact.type === 'contact') {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     empty(value: any) {

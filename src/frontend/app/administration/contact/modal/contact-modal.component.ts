@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ContactModalComponent {
     lang: any = LANG;
+    creationMode: boolean = true;
 
     constructor(
         public http: HttpClient,
@@ -16,5 +17,7 @@ export class ContactModalComponent {
         public dialogRef: MatDialogRef<ContactModalComponent>) {
     }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        this.creationMode = this.data.contactId !== null ? false : true;
+    }
 }
