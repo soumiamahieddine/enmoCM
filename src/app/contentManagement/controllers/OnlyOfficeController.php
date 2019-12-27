@@ -151,7 +151,9 @@ class OnlyOfficeController
             return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice is not enabled']);
         }
 
-        if (strpos($queryParams['url'], (string)$loadedXml->onlyoffice->server_uri .'/cache/files/') !== 0) {
+        $checkUrl = str_replace('http://', '', $queryParams['url']);
+        $checkUrl = str_replace('https://', '', $checkUrl);
+        if (strpos($checkUrl, (string)$loadedXml->onlyoffice->server_uri .'/cache/files/') !== 0) {
             return $response->withStatus(400)->withJson(['errors' => 'Query params url is not allowed']);
         }
 
