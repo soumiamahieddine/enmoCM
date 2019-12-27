@@ -141,10 +141,6 @@
                                             [class.undefined]="row.subject == lang.undefined"
                                             title="{{row.subject}}" (click)="launch(defaultAction,row);">{{row.subject | shorten: 150: '...'}}</span>
                                         <span class="main-info-action">
-                                            <button mat-icon-button title="{{lang.viewResource}}" (click)="$event.stopPropagation();viewDocument(row)"
-                                                (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();">
-                                                <mat-icon  fontSet="fas" fontIcon="fa-eye fa-2x"></mat-icon>
-                                            </button>
                                             <button mat-icon-button title="{{lang.notes}}"
                                                 (click)="$event.stopPropagation();togglePanel('note',row)"
                                                 [class.noData]="row.countNotes == 0">
@@ -162,6 +158,10 @@
                                             <button mat-icon-button title="{{lang.diffusionList}}"
                                                 (click)="$event.stopPropagation();togglePanel('diffusion',row)">
                                                 <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x" [color]="snav2.opened && row.checked && currentMode == 'diffusion' ? 'primary' : ''"></mat-icon>
+                                            </button>
+                                            <button mat-icon-button title="{{lang.viewResource}}" (click)="$event.stopPropagation();viewDocument(row)"
+                                                (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();">
+                                                <mat-icon  fontSet="fas" fontIcon="fa-eye fa-2x"></mat-icon>
                                             </button>
                                             <button mat-icon-button title="{{lang.linkDetails}}"
                                                 (click)="$event.stopPropagation();goToDetail(row);">
