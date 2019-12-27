@@ -8,7 +8,7 @@ import { AppService } from '../../../service/app.service';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
-import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap, catchError, finalize } from 'rxjs/operators';
+import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap, catchError, finalize, map } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
 import { PrivilegeService } from '../../../service/privileges.service';
 import { ContactModalComponent } from '../../administration/contact/modal/contact-modal.component';
@@ -164,18 +164,49 @@ export class ContactAutocompleteComponent implements OnInit {
     }
 
     setFormValue(item: any) {
-        if (this.controlAutocomplete.value.map((contact: any) => contact.id).indexOf(item['id']) === -1) {
+        if (item.type === 'contactGroup') {
+            this.http.get('../../rest/contactsGroups/' + item.id).pipe(
+                map((data: any) => {
+                    const contacts = data.contactsGroup.contacts.map((contact: any) => {
+                        return {
+                            id: contact.id,
+                            type: contact.type,
+                            lastname: contact.contact
+                        }
+                    });
+                    return contacts;
+                }),
+                tap((contacts: any) => {
+                    contacts.forEach((contact: any) => {
+                        this.setContact(contact);
+                    });
+                }),
+                finalize(() => this.loadingValues = false),
+                catchError((err: any) => {
+                    console.log(err);
+                    this.notify.error(err.error.errors);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.setContact(item);
+        }
+        
+    }
+
+    setContact(contact: any) {
+        if (this.controlAutocomplete.value.map((contact: any) => contact.id).indexOf(contact['id']) === -1) {
             let arrvalue = [];
             if (this.controlAutocomplete.value !== null) {
                 arrvalue = this.controlAutocomplete.value;
             }
             arrvalue.push(
                 {
-                    type: item['type'],
-                    id: item['id']
+                    type: contact['type'],
+                    id: contact['id']
 
                 });
-            this.valuesToDisplay[item['id']] = item;
+            this.valuesToDisplay[contact['id']] = contact;
             this.controlAutocomplete.setValue(arrvalue);
             this.loadingValues = false;
         }
