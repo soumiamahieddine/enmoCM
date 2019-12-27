@@ -240,7 +240,10 @@ export class ProcessComponent implements OnInit {
     }
 
     loadSenders() {
-        if (this.currentResourceInformations.senders.length == 1) {
+        if (typeof this.currentResourceInformations.senders === "undefined" || this.currentResourceInformations.senders.length == 0) {
+            this.hasContact = false;
+            this.senderLightInfo = { 'displayName': this.lang.noSelectedContact, 'filling': null};
+        } else if (this.currentResourceInformations.senders.length == 1) {
             this.hasContact = true;
             if (this.currentResourceInformations.senders[0].type == 'contact') {
                 this.http.get('../../rest/contacts/' + this.currentResourceInformations.senders[0].id).pipe(
@@ -271,9 +274,6 @@ export class ProcessComponent implements OnInit {
         } else if (this.currentResourceInformations.senders.length > 1) {
             this.hasContact = true;
             this.senderLightInfo = { 'displayName': this.currentResourceInformations.senders.length + ' ' + this.lang.senders, 'filling': null};
-        } else {
-            this.hasContact = false;
-            this.senderLightInfo = { 'displayName': this.lang.noSelectedContact, 'filling': null};
         }
     }
 
