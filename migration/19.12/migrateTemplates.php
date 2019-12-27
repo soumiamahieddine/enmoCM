@@ -11,9 +11,12 @@ include_once('../../vendor/tinybutstrong/opentbs/tbs_plugin_opentbs.php');
 const OFFICE_EXTENSIONS = ['odt', 'ods', 'odp', 'xlsx', 'pptx', 'docx', 'odf'];
 
 $DATA_TO_REPLACE = [
-    'res_letterbox.destination'   => '[destination.entity_id]',
-    'res_letterbox.entity_label'  => '[destination.entity_label]',
-    'res_letterbox.process_notes' => '[notes]',
+    'res_letterbox.destination'         => '[destination.entity_id]',
+    'res_letterbox.entity_label'        => '[destination.entity_label]',
+    'res_letterbox.process_notes'       => '[notes]',
+    'res_letterbox.contact_firstname'   => '[sender.firstname]',
+    'res_letterbox.contact_lastname'    => '[sender.lastname]',
+    'res_letterbox.contact_society'     => '[sender.company]',
 
     'res_letterbox.nature_id'                     => '[res_letterbox.custom_1]',
 
