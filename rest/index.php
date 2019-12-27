@@ -120,6 +120,7 @@ $app->delete('/contacts/{id}', \Contact\controllers\ContactController::class . '
 $app->put('/contacts/{id}/activation', \Contact\controllers\ContactController::class . ':updateActivation');
 $app->get('/formattedContacts/{id}/types/{type}', \Contact\controllers\ContactController::class . ':getLightFormattedContact');
 $app->get('/ban/availableDepartments', \Contact\controllers\ContactController::class . ':getAvailableDepartments');
+$app->post('/contacts/formatV1', \Contact\controllers\ContactController::class . ':getFormattedContactsForSearchV1');
 
 //ContactsCustomFields
 $app->get('/contactsCustomFields', \Contact\controllers\ContactCustomFieldController::class . ':get');

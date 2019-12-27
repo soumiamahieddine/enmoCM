@@ -803,7 +803,11 @@ if ($mode == 'normal') {
 
                     if (!empty($senderList)) {
                         if (count($senderList) >= 2) {
-                            $formattedSenders = count($senderList) . ' ' . _SENDERS;
+                            $formattedSenders = count($senderList) . ' ' . _SENDERS
+                                    . '  <i class="fa fa-book fa-2x" style="cursor: pointer;" title="'
+                                    . _VIEW_CONTACTS.'"onclick="'
+                                    . "loadContactsList(".$resId.", 'sender');"
+                                    . '"></i>';
                         } else {
                             $formattedSenders = implode("<br>", $senderList);
                         }
@@ -816,7 +820,11 @@ if ($mode == 'normal') {
                     }
                     if (!empty($recipientList)) {
                         if (count($recipientList) >= 2) {
-                            $formattedRecipients = count($recipientList) . ' ' . _RECIPIENTS;
+                            $formattedRecipients = count($recipientList) . ' ' . _RECIPIENTS
+                                    . '  <i class="fa fa-book fa-2x" style="cursor: pointer;" title="'
+                                    . _VIEW_CONTACTS.'"onclick="'
+                                    . "loadContactsList(".$resId.", 'recipient');"
+                                    . '"></i>';;
                         } else {
                             $formattedRecipients = implode("<br>", $recipientList);
                         }
