@@ -304,6 +304,9 @@ export class DiffusionsListComponent implements OnInit {
 
     deleteItem(roleId: string, index: number) {
         this.diffList[roleId].items.splice(index, 1);
+        if (this.diffFormControl !== undefined) {
+            this.setFormValues();
+        }
     }
 
     getCurrentListinstance() {
