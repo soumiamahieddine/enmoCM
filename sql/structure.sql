@@ -991,7 +991,6 @@ CREATE TABLE res_letterbox
   alarm2_date timestamp without time zone,
   flag_alarm1 char(1) default 'N'::character varying,
   flag_alarm2 char(1) default 'N'::character varying,
-  address_id bigint,
   model_id integer NOT NULL,
   custom_fields jsonb,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
