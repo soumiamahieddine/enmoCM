@@ -57,7 +57,8 @@ export class SummarySheetComponent implements OnInit {
                 this.lang.category_id,
                 this.lang.status,
                 this.lang.priority,
-                this.lang.processLimitDate
+                this.lang.processLimitDate,
+                this.lang.customFieldsAdmin
             ],
             enabled: true
         },

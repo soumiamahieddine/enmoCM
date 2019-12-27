@@ -1363,4 +1363,5 @@ export const LANG_EN = {
     "badFormat": "Bad format",
     "contactFilledTo": "Contact filled to",
     "targetFillingField": "Target field for filling",
+    "arGenWithModelMessage" : "The summary sheets with the fields defined in the resource's indexing model.",
 };

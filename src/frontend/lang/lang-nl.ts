@@ -1388,4 +1388,5 @@ export const LANG_NL = {
     "badFormat": "Bad format", //_TO_TRANSLATE
     "contactFilledTo": "Contact filled to", //_TO_TRANSLATE
     "targetFillingField": "Target field for filling", //_TO_TRANSLATE
+    "arGenWithModelMessage" : "The summary sheets with the fields defined in the resource's indexing model.", //_TO_TRANSLATE
 };
