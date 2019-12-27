@@ -45,7 +45,7 @@ class OnlyOfficeController
 
         if (!Validator::stringType()->notEmpty()->validate($body['onlyOfficeKey'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Query params onlyOfficeKey is empty']);
-        } elseif (!preg_match('/[^a-z0-9]/i', $body['onlyOfficeKey'])) {
+        } elseif (!preg_match('/[A-Za-z0-9]/i', $body['onlyOfficeKey'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Query params onlyOfficeKey is forbidden']);
         }
 
