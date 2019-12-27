@@ -198,7 +198,7 @@ export class ContactAutocompleteComponent implements OnInit {
         } else {
             this.setContact(item);
         }
-        
+
     }
 
     setContact(contact: any) {
@@ -261,35 +261,23 @@ export class ContactAutocompleteComponent implements OnInit {
     }
 
     openContact(contact: any = null) {
-        if ((this.canAdd && contact === null) || this.canOpenContact(contact)) {
-            const dialogRef = this.dialog.open(ContactModalComponent, { width: '1200px', maxWidth: '100vw', data: { editMode: this.canUpdate, contactId: contact !== null ? contact.id : null } });
+        const dialogRef = this.dialog.open(ContactModalComponent, { maxWidth: '100vw', panelClass: 'contact-modal-container', data: { editMode: this.canUpdate, contactId: contact !== null ? contact.id : null, contactType: contact !== null ? contact.type : null } });
 
-            dialogRef.afterClosed().pipe(
-                filter((data: number) => data !== undefined),
-                tap((contactId: number) => {
-                    const contact = {
-                        type: 'contact',
-                        id: contactId
-                    };
-                    this.setFormValue(contact);
-                    this.initFormValue();
-                }),
-                catchError((err: any) => {
-                    this.notify.handleErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-        } else {
-            this.dialog.open(ContactModalComponent, { width: '1200px', maxWidth: '100vw', data: { editMode: this.canUpdate, contactId: contact !== null ? contact.id : null } });
-        }
-    }
-
-    canOpenContact(contact: any) {
-        if (this.canUpdate && contact.type === 'contact') {
-            return true;
-        } else {
-            return false;
-        }
+        dialogRef.afterClosed().pipe(
+            filter((data: number) => data !== undefined),
+            tap((contactId: number) => {
+                const contact = {
+                    type: 'contact',
+                    id: contactId
+                };
+                this.setFormValue(contact);
+                this.initFormValue();
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     empty(value: any) {
