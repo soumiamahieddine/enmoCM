@@ -882,9 +882,9 @@ class AttachmentController
                 return ['errors' => 'Body recipientType is empty or not in [user, contact]'];
             }
             if ($body['recipientType'] == 'user') {
-                $recipient = UserModel::getById(['id' => $body['destUserId'], 'select' => [1], 'noDeleted' => true]);
+                $recipient = UserModel::getById(['id' => $body['recipientId'], 'select' => [1], 'noDeleted' => true]);
             } elseif ($body['recipientType'] == 'contact') {
-                $recipient = ContactModel::getById(['id' => $body['contactId'], 'select' => [1]]);
+                $recipient = ContactModel::getById(['id' => $body['recipientId'], 'select' => [1]]);
             }
             if (empty($recipient)) {
                 return ['errors' => 'Body recipientId does not exist'];

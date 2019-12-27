@@ -290,11 +290,12 @@ class ActionMethodController
 
             $processingUserInfo = MaarchParapheurController::getUserById(['config' => $config, 'id' => $args['data']['processingUser']]);
             $sendedInfo = MaarchParapheurController::sendDatas([
-                'config'           => $config,
-                'resIdMaster'      => $args['resId'],
-                'processingUser'   => $args['data']['processingUser'],
-                'objectSent'       => 'mail',
-                'userId'           => $GLOBALS['userId']
+                'config'            => $config,
+                'resIdMaster'       => $args['resId'],
+                'processingUser'    => $args['data']['processingUser'],
+                'objectSent'        => 'mail',
+                'userId'            => $GLOBALS['userId'],
+                'note'              => $args['note'] ?? null
             ]);
             if (!empty($sendedInfo['error'])) {
                 return ['errors' => [$sendedInfo['error']]];
