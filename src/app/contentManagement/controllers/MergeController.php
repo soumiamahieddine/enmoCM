@@ -58,19 +58,28 @@ class MergeController
             $args['path'] = null;
         }
 
+        $dataToBeMerge = MergeController::getDataForMerge($args['data']);
+
         if (!empty($args['path'])) {
             if ($extension == 'odt') {
                 $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
     //            $tbs->LoadTemplate("{$args['path']}#content.xml;styles.xml", OPENTBS_ALREADY_UTF8);
             } elseif ($extension == 'docx') {
                 $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
-    //            $tbs->LoadTemplate("{$args['path']}#word/header1.xml;word/footer1.xml", OPENTBS_ALREADY_UTF8);
+                $templates = ['word/header1.xml', 'word/header2.xml', 'word/header3.xml', 'word/footer1.xml', 'word/footer2.xml', 'word/footer3.xml'];
+                foreach ($templates as $template) {
+                    if ($tbs->Plugin(OPENTBS_FILEEXISTS, $template)) {
+                        $tbs->LoadTemplate("#{$template}", OPENTBS_ALREADY_UTF8);
+                        foreach ($dataToBeMerge as $key => $value) {
+                            $tbs->MergeField($key, $value);
+                        }
+                    }
+                }
+                $tbs->PlugIn(OPENTBS_SELECT_MAIN);
             } else {
                 $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
             }
         }
-
-        $dataToBeMerge = MergeController::getDataForMerge($args['data']);
 
         $pages = 1;
         if ($extension == 'xlsx') {
