@@ -1375,6 +1375,8 @@ export const LANG_FR = {
     "editorOption": "Option d'édition",
     "editorOptionAdmin": "Gérer les paramètres d'édition",
     "documentEditor": "Editeur de document",
+    "documentEditor_java": "Ouvre votre éditeur de document par défaut dans une nouvelle fenêtre",
+    "documentEditor_onlyoffice": "Ouvre la suite OnlyOffice directement dans l'application Maarch Courrier",
     "contactsList": "Liste des contacts",
     "listConfiguration": "Paramétrer l'affichage de la liste",
     "noticeGroupeOrder": "Glisser-déposer les groupes pour définir l'ordre",

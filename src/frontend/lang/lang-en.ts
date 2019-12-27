@@ -1337,6 +1337,8 @@ export const LANG_EN = {
     "editorOption": "Editor option",
     "editorOptionAdmin": "Manage editor option",
     "documentEditor": "Document editor",
+    "documentEditor_java": "Open your defaut document editor in a new windows",
+    "documentEditor_onlyoffice": "Open OnlyOffice inside Maarch Courrier application",
     "contactsList": "Contacts list",
     "listConfiguration": "Manage list display",
     "noticeGroupeOrder": "Drag and drop group to set order",
