@@ -78,6 +78,11 @@ export class AttachmentPageComponent implements OnInit {
                     this.editMode = true;
                 }
 
+                const contact: any = [{
+                    id: data.recipientId,
+                    type: data.recipientType
+                }];
+
                 this.attachment = {
                     typist: new FormControl({ value: data.typist, disabled: true }, [Validators.required]),
                     typistLabel: new FormControl({ value: data.typistLabel, disabled: true }, [Validators.required]),
@@ -93,7 +98,7 @@ export class AttachmentPageComponent implements OnInit {
                     status: new FormControl({ value: data.status, disabled: true }, [Validators.required]),
                     relation: new FormControl({ value: data.relation, disabled: true }, [Validators.required]),
                     title: new FormControl({ value: data.title, disabled: !this.editMode }, [Validators.required]),
-                    contact: new FormControl({ value: null, disabled: !this.editMode }),
+                    recipient: new FormControl({ value: contact, disabled: !this.editMode }),
                     type: new FormControl({ value: data.type, disabled: !this.editMode }, [Validators.required]),
                     validationDate: new FormControl({ value: data.validationDate !== null ? new Date(data.validationDate) : null, disabled: !this.editMode }),
                     signedResponse: new FormControl({ value: data.signedResponse, disabled: false }),
@@ -135,7 +140,7 @@ export class AttachmentPageComponent implements OnInit {
         ).subscribe();
     }
 
-    updateAttachment() {
+    updateAttachment() {       
         this.sendingData = true;
         this.appAttachmentViewer.getFile().pipe(
             tap((data) => {
@@ -178,6 +183,9 @@ export class AttachmentPageComponent implements OnInit {
                     let month = this.attachment[element].value.getMonth() + 1;
                     let year = this.attachment[element].value.getFullYear();
                     attachmentValues[element] = ('00' + day).slice(-2) + '-' + ('00' + month).slice(-2) + '-' + year + ' 23:59:59';
+                } else if(element === 'recipient') {
+                    attachmentValues['recipientId'] = this.attachment[element].value.length > 0 ? this.attachment[element].value[0].id : null;
+                    attachmentValues['recipientType'] = this.attachment[element].value.length > 0 ? this.attachment[element].value[0].type : null;
                 } else {
                     attachmentValues[element] = this.attachment[element].value;
                 }

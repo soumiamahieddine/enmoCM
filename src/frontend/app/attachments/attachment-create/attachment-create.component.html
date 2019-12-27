@@ -50,9 +50,8 @@
                             </div>
                         </div>
                         <div class="attachment-form-item">
-                            <mat-form-field class="input-form">
-                                <input matInput placeholder="{{lang.contact}}">
-                            </mat-form-field>
+                            <app-contact-autocomplete [control]="attachment['recipient']" style="width:100%;" [singleMode]="true">
+                            </app-contact-autocomplete>
                             <div class="fieldState">
                                 <i class="fas fa-asterisk noMandatory"></i>
                             </div>

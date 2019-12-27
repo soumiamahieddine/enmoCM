@@ -1389,4 +1389,5 @@ export const LANG_NL = {
     "contactFilledTo": "Contact filled to", //_TO_TRANSLATE
     "targetFillingField": "Target field for filling", //_TO_TRANSLATE
     "arGenWithModelMessage" : "The summary sheets with the fields defined in the resource's indexing model.", //_TO_TRANSLATE
+    "createContact": "Create a contact", //_TO_TRANSLATE
 };

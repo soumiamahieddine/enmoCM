@@ -53,7 +53,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
 
     @HostListener('window:message', ['$event'])
     onMessage(e: any) {
-        console.log(e);
+        //console.log(e);
         const response = JSON.parse(e.data);
 
         // EVENT TO CONSTANTLY UPDATE CURRENT DOCUMENT

@@ -48,6 +48,9 @@ export class ContactAutocompleteComponent implements OnInit {
      */
     @Input('control') controlAutocomplete: FormControl;
 
+    @Input('singleMode') singleMode: boolean = false;
+
+
     @ViewChild('autoCompleteInput', { static: true }) autoCompleteInput: ElementRef;
 
     constructor(
@@ -81,6 +84,10 @@ export class ContactAutocompleteComponent implements OnInit {
                 distinctUntilChanged(),
                 tap(() => this.loading = true),
                 switchMap((data: any) => this.getDatas(data)),
+                map((data: any) => {
+                    data = data.filter((contact: any) => !this.singleMode || (contact.type !== 'contactGroup' && this.singleMode));
+                    return data;
+                }),
                 tap((data: any) => {
                     if (data.length === 0) {
                         this.listInfo = this.lang.noAvailableValue;
@@ -272,6 +279,8 @@ export class ContactAutocompleteComponent implements OnInit {
                     return of(false);
                 })
             ).subscribe();
+        } else {
+            this.dialog.open(ContactModalComponent, { width: '1200px', maxWidth: '100vw', data: { editMode: this.canUpdate, contactId: contact !== null ? contact.id : null } });
         }
     }
 

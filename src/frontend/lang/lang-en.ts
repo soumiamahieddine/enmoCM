@@ -1364,4 +1364,5 @@ export const LANG_EN = {
     "contactFilledTo": "Contact filled to",
     "targetFillingField": "Target field for filling",
     "arGenWithModelMessage" : "The summary sheets with the fields defined in the resource's indexing model.",
+    "createContact": "Create a contact",
 };
