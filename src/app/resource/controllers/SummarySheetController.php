@@ -145,19 +145,18 @@ class SummarySheetController
                 'orderBy' => [$order]
             ]);
 
-//            $pdf = new Fpdi('P', 'pt');
-//            $pdf->setPrintHeader(false);
-
             $resourcesIds = array_column($resources, 'res_id');
 
             // Data for resources
             $data = SummarySheetController::prepareData(['units' => $units, 'resourcesIds' => $resourcesIds]);
 
             foreach ($resources as $resource) {
-                SummarySheetController::createSummarySheet($pdf, ['resource'         => $resource, 'units' => $units,
-                                                                  'login'            => $GLOBALS['userId'],
-                                                                  'data'             => $data,
-                                                                  'fieldsIdentifier' => $fieldsIdentifier]);
+                SummarySheetController::createSummarySheet($pdf, [
+                    'resource'         => $resource, 'units' => $units,
+                    'login'            => $GLOBALS['userId'],
+                    'data'             => $data,
+                    'fieldsIdentifier' => $fieldsIdentifier
+                ]);
             }
         }
 
@@ -226,6 +225,14 @@ class SummarySheetController
         ]);
         $allResourcesInBasket = array_column($rawResourcesInBasket, 'res_id');
 
+        $resourcesByModelIds = DatabaseModel::select([
+            'select'  => ["string_agg(cast(res_id as text), ',') as res_ids", 'model_id'],
+            'table'   => ['res_letterbox'],
+            'where'   => ['res_id in (?)'],
+            'data'    => [$allResourcesInBasket],
+            'groupBy' => ['model_id']
+        ]);
+
         $order = 'CASE res_view_letterbox.res_id ';
         foreach ($resourcesData as $key => $resId) {
             if (!in_array($resId, $allResourcesInBasket)) {
@@ -252,23 +259,57 @@ class SummarySheetController
             'destination'
         ];
 
-        $resources = ResModel::getOnView([
-            'select'    => $select,
-            'where'     => ['res_view_letterbox.res_id in (?)'],
-            'data'      => [$resourcesData],
-            'orderBy'   => [$order]
-        ]);
+        $possibleFields = [
+            'documentDate'     => 'doc_date',
+            'arrivalDate'      => 'admission_date',
+            'initiator'        => 'initiator',
+            'priority'         => 'priority',
+            'processLimitDate' => 'process_limit_date',
+            'destination'      => 'destination'
+        ];
+
 
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
 
-        $resourcesIds = array_column($resources, 'res_id');
+        foreach ($resourcesByModelIds as $resourcesByModelId) {
+            $resourcesIdsByModel = $resourcesByModelId['res_ids'];
+            $resourcesIdsByModel = explode(',', $resourcesIdsByModel);
 
-        // Data for resources
-        $data = SummarySheetController::prepareData(['units' => $units, 'resourcesIds' => $resourcesIds]);
+            $indexingFields = IndexingModelFieldModel::get([
+                'select' => ['identifier', 'unit'],
+                'where'  => ['model_id = ?'],
+                'data'   => [$resourcesByModelId['model_id']]
+            ]);
+            $fieldsIdentifier = array_column($indexingFields, 'identifier');
 
-        foreach ($resources as $resource) {
-            SummarySheetController::createSummarySheet($pdf, ['resource' => $resource, 'units' => $units, 'login' => $GLOBALS['userId'], 'data' => $data]);
+            foreach ($possibleFields as $key => $possibleField) {
+                if (!in_array($key, $fieldsIdentifier)) {
+                    unset($select[$possibleField]);
+                }
+            }
+
+            $resources = ResModel::getOnView([
+                'select'  => $select,
+                'where'   => ['res_view_letterbox.res_id in (?)'],
+                'data'    => [$resourcesIdsByModel],
+                'orderBy' => [$order]
+            ]);
+
+            $resourcesIds = array_column($resources, 'res_id');
+
+            // Data for resources
+            $data = SummarySheetController::prepareData(['units' => $units, 'resourcesIds' => $resourcesIds]);
+
+            foreach ($resources as $resource) {
+                SummarySheetController::createSummarySheet($pdf, [
+                    'resource'         => $resource,
+                    'units'            => $units,
+                    'login'            => $GLOBALS['userId'],
+                    'data'             => $data,
+                    'fieldsIdentifier' => $fieldsIdentifier
+                ]);
+            }
         }
 
         $fileContent = $pdf->Output('', 'S');
