@@ -481,18 +481,35 @@ class SummarySheetController
                 }
 
             } elseif ($unit['unit'] == 'senderRecipientInformations') {
-                $senders = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
-                $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
-
-                if (!empty($senders) && count($senders) > 2) {
-                    $nbSenders = count($senders);
-                    $senders = [];
-                    $senders[0] = $nbSenders . ' ' . _CONTACTS;
+                $senders = null;
+                if (in_array('senders', $fieldsIdentifier)) {
+                    $senders = ContactController::getFormattedContacts([
+                        'resId' => $resource['res_id'],
+                        'mode'  => 'sender'
+                    ]);
+                    if (!empty($senders) && count($senders) > 2) {
+                        $nbSenders = count($senders);
+                        $senders = [];
+                        $senders[0] = $nbSenders . ' ' . _CONTACTS;
+                    }
                 }
-                if (!empty($recipients) && count($recipients) > 2) {
-                    $nbRecipients = count($recipients);
-                    $recipients = [];
-                    $recipients[0] = $nbRecipients . ' ' . _CONTACTS;
+
+                $recipients = null;
+                if (in_array('recipients', $fieldsIdentifier)) {
+                    $recipients = ContactController::getFormattedContacts([
+                        'resId' => $resource['res_id'],
+                        'mode'  => 'recipient'
+                    ]);
+                    if (!empty($recipients) && count($recipients) > 2) {
+                        $nbRecipients = count($recipients);
+                        $recipients = [];
+                        $recipients[0] = $nbRecipients . ' ' . _CONTACTS;
+                    }
+                }
+
+                // If senders and recipients are both null, they are not part of the model so we continue to the next unit
+                if ($senders === null && $recipients === null) {
+                    continue;
                 }
 
                 $pdf->SetY($pdf->GetY() + 40);
@@ -504,30 +521,60 @@ class SummarySheetController
                 $pdf->SetY($pdf->GetY() + 2);
 
                 $pdf->SetFont('', '', 10);
-                $pdf->Cell($widthMultiCell, 15, _SENDERS, 1, 0, 'C', false);
-                $pdf->Cell($widthCell, 15, '', 0, 0, 'C', false);
-                $pdf->Cell($widthMultiCell, 15, _RECIPIENTS, 1, 1, 'C', false);
-                if (empty($senders) && empty($recipients)) {
-                    $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, 0, '', '', true, 0, true);
-                    $pdf->MultiCell($widthCell, 40, '', 0, 'L', false, 0, '', '', true, 0, true);
-                    $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, 1, '', '', true, 0, true);
-                } else {
-                    for ($i = 0; !empty($senders[$i]) || !empty($recipients[$i]); $i++) {
-                        if ($i == 0 && empty($senders[$i])) {
-                            $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, 0, '', '', true, 0, true);
-                        } else {
-                            $pdf->MultiCell($widthMultiCell, 40, empty($senders[$i]) ? '' : $senders[$i], empty($senders[$i]) ? 0 : 1, 'L', false, 0, '', '', true, 0, true);
-                        }
 
-                        $pdf->MultiCell($widthCell, 40, '', 0, 'L', false, 0, '', '', true, 0, true);
-
-                        if ($i == 0 && empty($recipients[$i])) {
-                            $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, 1, '', '', true, 0, true);
-                        } else {
-                            $pdf->MultiCell($widthMultiCell, 40, empty($recipients[$i]) ? '' : $recipients[$i], empty($recipients[$i]) ? 0 : 1, 'L', false, 1, '', '', true, 0, true);
+                $correspondents = [];
+                if ($senders !== null && $recipients !== null) {
+                    if (empty($senders[0]) && empty($recipients[0])) {
+                        $correspondents = [null, null];
+                    } else {
+                        for ($i = 0; !empty($senders[$i]) || !empty($recipients[$i]); $i++) {
+                            $correspondents[] = $senders[$i] ?? null;
+                            $correspondents[] = $recipients[$i] ?? null;
                         }
                     }
+
+                    $pdf->Cell($widthMultiCell, 15, _SENDERS, 1, 0, 'C', false);
+                    $pdf->Cell($widthCell, 15, '', 0, 0, 'C', false);
+                    $pdf->Cell($widthMultiCell, 15, _RECIPIENTS, 1, 1, 'C', false);
+                } else if ($senders !== null && $recipients === null) {
+                    $correspondents = $senders;
+
+                    $pdf->Cell($widthMultiCell, 15, _SENDERS, 1, 1, 'C', false);
+                } else if ($senders === null && $recipients !== null) {
+                    $correspondents = $recipients;
+
+                    $pdf->Cell($widthMultiCell, 15, _RECIPIENTS, 1, 1, 'C', false);
                 }
+
+                // allow to skip an element in the senders or recipients column if we already printed UNDEFINED once
+                $columnUndefined = [false, false];
+                $nextLine = 1;
+                foreach ($correspondents as $correspondent) {
+                    // if senders and recipients are not null, nextLine alternate between 0 and 1, otherwise its always 1
+                    if ($senders !== null && $recipients !== null) {
+                        $nextLine = ($nextLine + 1) % 2;
+
+                        if ($columnUndefined[$nextLine]) {
+                            $pdf->MultiCell($widthMultiCell, 40, '', 0, 'L', false, 0, '', '', true, 0, true);
+                            $pdf->MultiCell($widthCell, 40, '', 0, 'L', false, $nextLine, '', '', true, 0, true);
+                            continue;
+                        }
+                    } else {
+                        $nextLine = 1;
+                    }
+
+                    if (empty($correspondent)) {
+                        $columnUndefined[$nextLine] = true;
+                        $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, $nextLine, '', '', true, 0, true);
+                    } else {
+                        $pdf->MultiCell($widthMultiCell, 40, empty($correspondent) ? '' : $correspondent, empty($correspondent) ? 0 : 1, 'L', false, $nextLine, '', '', true, 0, true);
+                    }
+
+                    if ($nextLine == 0) {
+                        $pdf->MultiCell($widthCell, 40, '', 0, 'L', false, 0, '', '', true, 0, true);
+                    }
+                }
+
             } elseif ($unit['unit'] == 'diffusionList') {
                 $assignee    = '';
                 $destination = '';
