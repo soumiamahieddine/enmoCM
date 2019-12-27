@@ -157,4 +157,18 @@ abstract class ContactGroupModelAbstract
 
         return true;
     }
+
+    public static function deleteByContactId(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['contactId']);
+        ValidatorModel::intVal($aArgs, ['contactId']);
+
+        DatabaseModel::delete([
+            'table' => 'contacts_groups_lists',
+            'where' => ['contact_id = ?'],
+            'data'  => [$aArgs['contactId']]
+        ]);
+
+        return true;
+    }
 }

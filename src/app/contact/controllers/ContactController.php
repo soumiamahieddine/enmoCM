@@ -15,6 +15,7 @@ namespace Contact\controllers;
 
 use Contact\models\ContactCustomFieldListModel;
 use Contact\models\ContactFillingModel;
+use Contact\models\ContactGroupModel;
 use Contact\models\ContactModel;
 use Contact\models\ContactParameterModel;
 use Entity\models\EntityModel;
@@ -378,6 +379,8 @@ class ContactController
             'where' => ['id = ?'],
             'data'  => [$args['id']]
         ]);
+
+        ContactGroupModel::deleteByContactId(['contactId' => $args['id']]);
 
         $historyInfoContact = '';
         if (!empty($contact[0]['firstname']) || !empty($contact[0]['lastname'])) {
