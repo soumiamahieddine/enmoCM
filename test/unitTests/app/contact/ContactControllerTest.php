@@ -22,7 +22,7 @@ class ContactControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $args = [
-            'civility'          => 'Sir',
+            'civility'          => 'title1',
             'firstname'         => 'Hal',
             'lastname'          => 'Jordan',
             'company'           => 'Green Lantern Corps',
@@ -82,7 +82,7 @@ class ContactControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $args = [
-            'civility'          => 'Sir',
+            'civility'          => 'title1',
             'firstname'         => 'Hal',
             'department'        => 'Sector 2814',
             'function'          => 'member',
@@ -113,7 +113,7 @@ class ContactControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $args = [
-            'civility'          => 'Sir',
+            'civility'          => 'title1',
             'lastname'          => 'Sinestro',
             'company'           => 'Yellow Lantern Corps',
             'department'        => 'Sector 2813',
@@ -168,7 +168,7 @@ class ContactControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $args = [
-            'civility'          => 'Sir',
+            'civility'          => 'title1',
             'firstname'         => 'Hal',
             'department'        => 'Sector 2814',
             'function'          => 'member',

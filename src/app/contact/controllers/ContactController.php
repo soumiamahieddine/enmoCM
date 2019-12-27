@@ -216,7 +216,7 @@ class ContactController
 
         $contact = [
             'id'                    => $rawContact['id'],
-            'civility'              => !empty($rawContact['civility']) ? ContactModel::getCivilityLabel(['civilityId' => $rawContact['civility']]) : null,
+            'civility'              => $rawContact['civility'],
             'firstname'             => $rawContact['firstname'],
             'lastname'              => $rawContact['lastname'],
             'company'               => $rawContact['company'],
