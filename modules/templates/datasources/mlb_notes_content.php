@@ -93,8 +93,10 @@ foreach ($events as $event) {
 
     $resourceContacts = ResourceContactModel::get([
         'where' => ['res_id = ?', "type = 'contact'", "mode = 'sender'"],
-        'data'  => [$resId]
+        'data'  => [$resId],
+        'limit' => 1
     ]);
+    $resourceContacts = $resourceContacts[0];
 
     if ($event->table_name == 'notes') {
         $datasources['res_letterbox'][0]['linktodoc'] = $note['linktodoc'];
@@ -103,11 +105,11 @@ foreach ($events as $event) {
 
         $labelledUser = UserModel::getLabelledUserById(['id' => $note['user_id']]);
         $creationDate = TextFormatModel::formatDate($note['creation_date'], 'd/m/Y');
-        $note = "{$labelledUser} : {$creationDate} : {$note['note_text']}\n";
+        $note = "{$labelledUser}  {$creationDate} : {$note['note_text']}\n";
     }
 
-    foreach ($resourceContacts as $resourceContact) {
-        $contact = ContactModel::getById(['id' => $resourceContact['item_id'], 'select' => ['*']]);
+    if (!empty($resourceContacts)) {
+        $contact = ContactModel::getById(['id' => $resourceContacts['item_id'], 'select' => ['*']]);
         $datasources['contact'][] = $contact;
     }
     
