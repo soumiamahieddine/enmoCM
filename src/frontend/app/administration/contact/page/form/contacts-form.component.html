@@ -81,7 +81,7 @@
                                             {{lang.toCopyAddress}}</mat-hint>
                                         <mat-error *ngIf="field.control.status!=='VALID'  && field.control.touched">
                                             {{getErrorMsg(field.control.errors)}}</mat-error>
-                                        <mat-icon style="height: auto;" matSuffix [title]="lang.targetFillingField"
+                                        <mat-icon style="height: auto;" *ngIf="field.filling" matSuffix [title]="lang.targetFillingField"
                                             class="fas fa-circle rate_{{fillingRate.class}}"></mat-icon>
                                     </mat-form-field>
                                 </ng-container>
