@@ -98,8 +98,8 @@ foreach ($customs as $custom) {
 
                 foreach ($resources as $resource) {
                     $valueColumn = json_encode($resource[$column]);
+                    $valueColumn = str_replace("'", "''", $valueColumn);
                     $resId = $resource['res_id'];
-
                     \Resource\models\ResModel::update([
                         'postSet'   => ['custom_fields' => "jsonb_set(custom_fields, '{{$fieldId}}', '{$valueColumn}')"],
                         'where'     => ['res_id = ?'],
