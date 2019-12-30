@@ -450,3 +450,5 @@ define("_CANNOT_SYNCHRONIZE_M2M_ANNUARY", "Contact can not be added in M2M annua
 define("_DATE_LOCALE", "en_US.utf8");
 
 define("_USER_PREFERENCE_UPDATED", "User preferences updated"); //TO TRANSLATE
+
+define("_NO_SENDERS", "No sender(s) linked to resource"); //TO TRANSLATE

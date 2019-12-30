@@ -1333,7 +1333,6 @@ export const LANG_EN = {
     "language": "en",
     "noSelectedContact": "No associated contact",
     "searchContact": "Search a contact",
-    "acknowledgementReceiptGenerationImpossible": "Acknowledgement receipt generation impossible for resource(s) : ",
     "editorOption": "Editor option",
     "editorOptionAdmin": "Manage editor option",
     "documentEditor": "Document editor",
