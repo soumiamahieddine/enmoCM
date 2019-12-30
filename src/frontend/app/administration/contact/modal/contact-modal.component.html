@@ -12,7 +12,7 @@
         <app-contacts-list *ngIf="mode === 'read'" [contact]="contact"></app-contacts-list>
     </mat-dialog-content>
     <div mat-dialog-actions class="actions" *ngIf="canUpdate && mode === 'read'">
-        <button mat-raised-button mat-button color="primary"
+        <button mat-raised-button *ngIf="contact.type === 'contact'" color="primary"
             (click)="mode = mode === 'read' ? 'update' : 'read'">{{lang.update}}</button>
     </div>
 </div>

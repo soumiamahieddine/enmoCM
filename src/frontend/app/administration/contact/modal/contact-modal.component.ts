@@ -31,6 +31,7 @@ export class ContactModalComponent {
             this.creationMode = false;
         } else {
             this.creationMode = true;
+            this.mode = 'update';
         }
         this.canUpdate = this.privilegeService.hasCurrentUserPrivilege('update_contacts');
     }

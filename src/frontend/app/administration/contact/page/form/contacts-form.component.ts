@@ -239,15 +239,16 @@ export class ContactsFormComponent implements OnInit {
 
             this.creationMode = true;
 
-            this.http.get("../../rest/contactsCustomFields").pipe(
-                tap((data: any) => {
-                    this.initCustomElementForm(data);
-                }),
-                exhaustMap(() => this.http.get("../../rest/contactsParameters")),
+            this.http.get("../../rest/contactsParameters").pipe(
                 tap((data: any) => {
                     this.fillingParameters = data.contactsFilling;
                     this.initElemForm(data);
+                }),
+                exhaustMap(() => this.http.get("../../rest/contactsCustomFields")),
+                tap((data: any) => {
+                    this.initCustomElementForm(data);
                     this.initAutocompleteAddressBan();
+                    
                 }),
                 finalize(() => this.loading = false),
                 catchError((err: any) => {
@@ -262,14 +263,15 @@ export class ContactsFormComponent implements OnInit {
                 element.display = false;
             });
 
-            this.http.get("../../rest/contactsCustomFields").pipe(
-                tap((data: any) => {
-                    this.initCustomElementForm(data);
-                }),
-                exhaustMap(() => this.http.get("../../rest/contactsParameters")),
+            this.http.get("../../rest/contactsParameters").pipe(
                 tap((data: any) => {
                     this.fillingParameters = data.contactsFilling;
                     this.initElemForm(data);
+                    
+                }),
+                exhaustMap(() => this.http.get("../../rest/contactsCustomFields")),
+                tap((data: any) => {
+                    this.initCustomElementForm(data);
                     this.initAutocompleteAddressBan();
                 }),
                 exhaustMap(() => this.http.get("../../rest/contacts/" + this.contactId)),
@@ -293,31 +295,49 @@ export class ContactsFormComponent implements OnInit {
         let valArr: ValidatorFn[] = [];
 
         data.contactsParameters.forEach((element: any) => {
+            let targetField: any = this.contactForm.filter(contact => contact.id === element.identifier)[0];
+
             valArr = [];
 
-            if ((element.mandatory || element.filling) && this.creationMode) {
-                this.contactForm.filter(contact => contact.id === element.identifier)[0].display = true;
-            }
+            if (targetField === undefined && element.identifier.split('_')[1] !== undefined) {
+                let field: any = {};
 
-            if (element.filling) {
-                this.contactForm.filter(contact => contact.id === element.identifier)[0].filling = true;
-            }
+                field = {
+                    id: `customField_${element.identifier.split('_')[1]}`,
+                    unit: 'complement',
+                    label: null,
+                    type: null,
+                    control: new FormControl(),
+                    required: false,
+                    display: false,
+                    values: []
+                };
+                this.contactForm.push(field);
 
-            if (element.identifier === 'email') {
-                valArr.push(Validators.email);
-            } else if (element.identifier === 'phone') {
-                valArr.push(Validators.pattern(/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/));
+                targetField = this.contactForm.filter(contact => contact.id === field.id)[0];
             }
+            if (targetField !== undefined) {
+                if ((element.mandatory || element.filling) && this.creationMode) {
+                    targetField.display = true;
+                }
 
-            if (element.mandatory) {
-                this.contactForm.filter(contact => contact.id === element.identifier)[0].required = true;
-                valArr.push(Validators.required);
+                if (element.filling) {
+                    targetField.filling = true;
+                }
+
+                if (element.identifier === 'email') {
+                    valArr.push(Validators.email);
+                } else if (element.identifier === 'phone') {
+                    valArr.push(Validators.pattern(/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/));
+                }
+
+                if (element.mandatory) {
+                    targetField.required = true;
+                    valArr.push(Validators.required);
+                }
+
+                targetField.control.setValidators(valArr);
             }
-
-            if (this.contactForm.filter(contact => contact.id === element.identifier)[0] !== undefined) {
-                this.contactForm.filter(contact => contact.id === element.identifier)[0].control.setValidators(valArr);
-            }
-
         });
     }
 
@@ -328,23 +348,17 @@ export class ContactsFormComponent implements OnInit {
 
         data.customFields.forEach((element: any) => {
             valArr = [];
+            field = this.contactForm.filter(contact => contact.id === 'customField_' + element.id)[0];
 
-            field = {
-                id: `customField_${element.id}`,
-                unit: 'complement',
-                label: element.label,
-                type: element.type,
-                control: new FormControl({ value: '', disabled: false }),
-                required: false,
-                display: false,
-                values: element.values.map((val: any) => { return { id: val, label: val } })
-            };
+            if (field !== undefined) {       
+                field.label = element.label;
+                field.type = element.type;
 
-            if (element.type === 'integer') {
-                valArr.push(Validators.pattern(/^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/));
-                field.control.setValidators(valArr);
+                if (element.type === 'integer') {
+                    valArr.push(Validators.pattern(/^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/));
+                    field.control.setValidators(valArr);
+                }
             }
-            this.contactForm.push(field);
         });
     }
 
@@ -418,7 +432,7 @@ export class ContactsFormComponent implements OnInit {
 
     createContact() {
         this.http.post("../../rest/contacts", this.formatContact()).pipe(
-            tap((data:any) => {
+            tap((data: any) => {
                 this.onSubmitEvent.emit(data.id);
                 this.notify.success(this.lang.contactAdded);
             }),
