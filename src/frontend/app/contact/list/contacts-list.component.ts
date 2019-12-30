@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { tap, finalize, catchError } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 
 @Component({
     selector: 'app-contacts-list',
@@ -49,7 +49,7 @@ export class ContactsListComponent implements OnInit {
             this.loadContactsOfResource(this.resId, this.mode);
         } else if (this.contact !== null) {
             this.loadContact(this.contact.id, this.contact.type);
-        }  
+        }
     }
 
     loadContactsOfResource(resId: number, mode: string) {
@@ -73,6 +73,8 @@ export class ContactsListComponent implements OnInit {
                 tap((contact: any) => {
                     this.contacts[0] = {
                         ...contact,
+                        civilityShortLabel: '',
+                        civilityLabel: '',
                         type: 'contact'
                     };
                 }),
@@ -87,6 +89,8 @@ export class ContactsListComponent implements OnInit {
                 tap((data: any) => {
                     this.contacts[0] = {
                         type: 'user',
+                        civilityShortLabel: '',
+                        civilityLabel: '',
                         firstname: data.firstname,
                         lastname: data.lastname,
                     };
@@ -102,6 +106,8 @@ export class ContactsListComponent implements OnInit {
                 tap((data: any) => {
                     this.contacts[0] = {
                         type: 'entity',
+                        civilityShortLabel: '',
+                        civilityLabel: '',
                         lastname: data.short_label,
                     };
                 }),
@@ -115,7 +121,7 @@ export class ContactsListComponent implements OnInit {
     }
 
     goTo(contact: any) {
-        window.open(`https://www.google.com/maps/search/${contact.addressNumber}+${contact.addressStreet},+${contact.addressPostcode}+${contact.addressTown},+${contact.addressCountry}`,'_blank')
+        window.open(`https://www.google.com/maps/search/${contact.addressNumber}+${contact.addressStreet},+${contact.addressPostcode}+${contact.addressTown},+${contact.addressCountry}`, '_blank')
     }
 
     empty(value: any) {

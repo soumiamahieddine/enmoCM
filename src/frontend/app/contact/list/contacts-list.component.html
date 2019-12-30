@@ -11,8 +11,10 @@
                     [class.fa-sitemap]="contact.type ==='entity'" [class.fa-user]="contact.type ==='user'"
                     [title]="lang['contact_'+contact.type]">
                 </div>
-                <mat-card-title *ngIf="!empty(contact.firstname) || !empty(contact.lastname)" [title]="contact.firstname + ' ' + contact.lastname">{{contact.firstname}}
-                    {{contact.lastname}}</mat-card-title>
+                <mat-card-title *ngIf="!empty(contact.firstname) || !empty(contact.lastname)" [title]="contact.civilityLabel + ' ' + contact.firstname + ' ' + contact.lastname">
+                    <sup *ngIf="!empty(contact.civility)">{{contact.civilityShortLabel}}&nbsp;</sup>{{contact.firstname}}
+                    {{contact.lastname}}
+                </mat-card-title>
                 <mat-card-title *ngIf="empty(contact.firstname) && empty(contact.lastname)" [title]="contact.company">{{contact.company}}</mat-card-title>
                 <mat-card-subtitle [title]="contact.function" *ngIf="!empty(contact.function)">
                     {{contact.function}}&nbsp;

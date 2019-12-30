@@ -58,6 +58,17 @@ export class ContactsFormComponent implements OnInit {
             values: []
         },
         {
+            id: 'civility',
+            unit: 'mainInfo',
+            label: this.lang.contactsParameters_civility,
+            type: 'select',
+            control: new FormControl(),
+            required: false,
+            display: false,
+            filling: false,
+            values: []
+        },
+        {
             id: 'firstname',
             unit: 'mainInfo',
             label: this.lang.contactsParameters_firstname,
@@ -244,6 +255,10 @@ export class ContactsFormComponent implements OnInit {
                     this.fillingParameters = data.contactsFilling;
                     this.initElemForm(data);
                 }),
+                exhaustMap(() => this.http.get("../../rest/civilities")),
+                tap((data: any) => {
+                    this.initCivilities(data.civilities);
+                }),
                 exhaustMap(() => this.http.get("../../rest/contactsCustomFields")),
                 tap((data: any) => {
                     this.initCustomElementForm(data);
@@ -268,6 +283,10 @@ export class ContactsFormComponent implements OnInit {
                     this.fillingParameters = data.contactsFilling;
                     this.initElemForm(data);
                     
+                }),
+                exhaustMap(() => this.http.get("../../rest/civilities")),
+                tap((data: any) => {
+                    this.initCivilities(data.civilities);
                 }),
                 exhaustMap(() => this.http.get("../../rest/contactsCustomFields")),
                 tap((data: any) => {
@@ -317,7 +336,7 @@ export class ContactsFormComponent implements OnInit {
                 targetField = this.contactForm.filter(contact => contact.id === field.id)[0];
             }
             if (targetField !== undefined) {
-                if ((element.mandatory || element.filling) && this.creationMode) {
+                if ((element.filling && this.creationMode) || element.mandatory) {
                     targetField.display = true;
                 }
 
@@ -339,6 +358,19 @@ export class ContactsFormComponent implements OnInit {
                 targetField.control.setValidators(valArr);
             }
         });
+    }
+
+    initCivilities(civilities: any) {
+        let formatedCivilities: any[] = [];
+
+        Object.keys(civilities).forEach(element => {
+            formatedCivilities.push({
+                id: element,
+                label: civilities[element].label
+            })
+        });
+
+        this.contactForm.filter(contact => contact.id === 'civility')[0].values = formatedCivilities;
     }
 
     initCustomElementForm(data: any) {

@@ -18,7 +18,8 @@
                                 [class.fa-sitemap]="option.type ==='entity'" [class.fa-user]="option.type ==='user'"
                                 [title]="lang['contact_'+option.type]">
                             </div>
-                            <mat-card-title *ngIf="!empty(option.firstname) || !empty(option.lastname)" [title]="option.firstname + ' ' + option.lastname">{{option.firstname}}
+                            <mat-card-title *ngIf="!empty(option.firstname) || !empty(option.lastname)" [title]="option.civilityLabel + ' ' + option.firstname + ' ' + option.lastname">
+                                <sup *ngIf="!empty(option.civility)">{{option.civilityShortLabel}}&nbsp;</sup>{{option.firstname}}
                                 {{option.lastname}}</mat-card-title>
                             <mat-card-title *ngIf="empty(option.firstname) && empty(option.lastname)" [title]="option.company">{{option.company}}</mat-card-title>
                             <mat-card-subtitle [title]="option.function" *ngIf="!empty(option.function)">
