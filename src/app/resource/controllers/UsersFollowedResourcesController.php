@@ -23,20 +23,14 @@ class UsersFollowedResourcesController
 {
     public function follow(Request $request, Response $response, array $args)
     {
-        UsersFollowedResourcesModel::create([
-            'userId' => $GLOBALS['id'],
-            'resId' => $args['resId']
-        ]);
+        UsersFollowedResourcesController::followResource($args);
 
         return $response->withStatus(204);
     }
 
     public function unFollow(Request $request, Response $response, array $args)
     {
-        UsersFollowedResourcesModel::delete([
-            'userId' => $GLOBALS['id'],
-            'resId' => $args['resId']
-        ]);
+        UsersFollowedResourcesController::unFollowResource($args);
 
         return $response->withStatus(204);
     }
@@ -49,5 +43,43 @@ class UsersFollowedResourcesController
         ]);
 
         return $response->withJson($followed);
+    }
+
+    public static function followResource(array $args)
+    {
+        $following = UsersFollowedResourcesModel::get([
+            'where' => ['user_id = ?', 'res_id = ?'],
+            'data' => [$GLOBALS['id'], $args['resId']]
+        ]);
+
+        if (!empty($following)) {
+            return true;
+        }
+
+        UsersFollowedResourcesModel::create([
+            'userId' => $GLOBALS['id'],
+            'resId' => $args['resId']
+        ]);
+
+        return true;
+    }
+
+    public static function unFollowResource(array $args)
+    {
+        $following = UsersFollowedResourcesModel::get([
+            'where' => ['user_id = ?', 'res_id = ?'],
+            'data' => [$GLOBALS['id'], $args['resId']]
+        ]);
+
+        if (empty($following)) {
+            return true;
+        }
+
+        UsersFollowedResourcesModel::delete([
+            'userId' => $GLOBALS['id'],
+            'resId' => $args['resId']
+        ]);
+
+        return true;
     }
 }

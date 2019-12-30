@@ -307,6 +307,12 @@ export class IndexingFormComponent implements OnInit {
                 default_value: this.indexingFormId
             });
         }
+
+        arrIndexingModels.push({
+            identifier: 'followed',
+            default_value: this.arrFormControl['mail­tracking'].value
+        });
+
         return arrIndexingModels;
     }
 
@@ -575,6 +581,7 @@ export class IndexingFormComponent implements OnInit {
                         }
                     });
                 });
+                this.arrFormControl['mail­tracking'].setValue(data.followed);
             }),
             tap(() => {
                 this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));

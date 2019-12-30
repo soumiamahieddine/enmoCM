@@ -78,6 +78,10 @@ class ResController
 
         ResController::createAdjacentData(['body' => $body, 'resId' => $resId]);
 
+        if (!empty($body['followed'])) {
+            UsersFollowedResourcesController::followResource(['userId' => $GLOBALS['id'], 'resId' => $resId]);
+        }
+
         if (!empty($body['encodedFile'])) {
             ConvertPdfController::convert([
                 'resId'     => $resId,
@@ -225,8 +229,8 @@ class ResController
         $formattedData['attachments'] = $attachments[0]['count'];
 
         $followed = UsersFollowedResourcesModel::get([
-            'userId' => $GLOBALS['id'],
-            'resId' => $args['resId']
+            'where' => ['user_id = ?', 'res_id = ?'],
+            'data' => [$GLOBALS['id'], $args['resId']]
         ]);
         $formattedData['followed'] = !empty($followed);
 
@@ -248,6 +252,14 @@ class ResController
         if ($isProcessing) {
             unset($body['destination']);
             unset($body['diffusionList']);
+        }
+
+        if (isset($body['followed'])) {
+            if ($body['followed']) {
+                UsersFollowedResourcesController::followResource(['userId' => $GLOBALS['id'], 'resId' => $args['resId']]);
+            } else {
+                UsersFollowedResourcesController::unFollowResource(['userId' => $GLOBALS['id'], 'resId' => $args['resId']]);
+            }
         }
 
         $control = ResController::controlUpdateResource(['body' => $body, 'resId' => $args['resId'], 'isProcessing' => $isProcessing]);
