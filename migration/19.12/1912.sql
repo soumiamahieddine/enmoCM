@@ -661,6 +661,17 @@ DO $$ BEGIN
 END$$;
 UPDATE baskets set basket_clause = replace(basket_clause, 'nature_id' , 'custom_fields->>''1''');
 
+/* users followed resources */
+DROP TABLE IF EXISTS users_followed_resources;
+CREATE TABLE users_followed_resources
+(
+    id serial NOT NULL,
+    res_id int NOT NULL,
+    user_id int NOT NULL,
+    CONSTRAINT users_followed_resources_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
 TRUNCATE TABLE indexing_models;
 INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (1, 'incoming', 'Courrier arrivée', TRUE, 23, FALSE);
 INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (2, 'outgoing', 'Courrier départ', FALSE, 23, FALSE);

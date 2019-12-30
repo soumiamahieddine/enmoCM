@@ -1454,3 +1454,13 @@ CREATE TABLE contacts_custom_fields_list
     CONSTRAINT contacts_custom_fields_list_unique_key UNIQUE (label)
 )
 WITH (OIDS=FALSE);
+
+/* users followed resources */
+CREATE TABLE users_followed_resources
+(
+    id serial NOT NULL,
+    res_id int NOT NULL,
+    user_id int NOT NULL,
+    CONSTRAINT users_followed_resources_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
