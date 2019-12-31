@@ -195,7 +195,7 @@ export class AttachmentCreateComponent implements OnInit {
                 this.attachments[this.indexTab].format.setValue(data.format);
                 this.attachments.push({
                     title: new FormControl({ value: '', disabled: false }, [Validators.required]),
-                    recipientId: new FormControl({ value: null, disabled: false }),
+                    recipient: new FormControl({ value: null, disabled: false }),
                     type: new FormControl({ value: '', disabled: false }, [Validators.required]),
                     validationDate: new FormControl({ value: null, disabled: false }),
                     encodedFile: new FormControl({ value: '', disabled: false }, [Validators.required]),
