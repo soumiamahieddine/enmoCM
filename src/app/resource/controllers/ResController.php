@@ -254,14 +254,6 @@ class ResController
             unset($body['diffusionList']);
         }
 
-        if (isset($body['followed'])) {
-            if ($body['followed']) {
-                UsersFollowedResourcesController::followResource(['userId' => $GLOBALS['id'], 'resId' => $args['resId']]);
-            } else {
-                UsersFollowedResourcesController::unFollowResource(['userId' => $GLOBALS['id'], 'resId' => $args['resId']]);
-            }
-        }
-
         $control = ResController::controlUpdateResource(['body' => $body, 'resId' => $args['resId'], 'isProcessing' => $isProcessing]);
         if (!empty($control['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);

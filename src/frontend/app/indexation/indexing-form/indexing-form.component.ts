@@ -307,12 +307,14 @@ export class IndexingFormComponent implements OnInit {
                 identifier: 'modelId',
                 default_value: this.indexingFormId
             });
-        }
 
-        arrIndexingModels.push({
-            identifier: 'followed',
-            default_value: this.arrFormControl['mail­tracking'].value
-        });
+            if (this.mode === 'indexation') {
+                arrIndexingModels.push({
+                    identifier: 'followed',
+                    default_value: this.arrFormControl['mail­tracking'].value
+                });
+            }
+        }
 
         return arrIndexingModels;
     }
@@ -874,6 +876,26 @@ export class IndexingFormComponent implements OnInit {
 
     toggleMailTracking() {
         this.arrFormControl['mail­tracking'].setValue(!this.arrFormControl['mail­tracking'].value);
+
+        if (this.mode !== 'indexation') {
+            if (this.arrFormControl['mail­tracking'].value) {
+
+                this.http.put(`../../rest/resources/${this.resId}/follow`, {}).pipe(
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else {
+
+                this.http.delete(`../../rest/resources/${this.resId}/unfollow`, {}).pipe(
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            }
+        }
     }
 
     changeCategory(categoryId: string) {
