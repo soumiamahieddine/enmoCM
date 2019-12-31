@@ -11,7 +11,6 @@ import { SortPipe } from '../../../plugins/sorting.pipe';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormControl, Validators, FormGroup, ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
 import { DiffusionsListComponent } from '../../diffusions/diffusions-list.component';
-import { stringify } from '@angular/compiler/src/util';
 
 @Component({
     selector: 'app-indexing-form',
@@ -32,6 +31,8 @@ export class IndexingFormComponent implements OnInit {
     @Input('admin') adminMode: boolean;
     @Input('canEdit') canEdit: boolean = true;
     @Input('mode') mode: string = 'indexation';
+
+    @Input('hideDiffusionList') hideDiffusionList: boolean = false;
 
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
 

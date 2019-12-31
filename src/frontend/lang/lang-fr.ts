@@ -1402,4 +1402,6 @@ export const LANG_FR = {
     "targetFillingField": "Champ cible de complétude",
     "arGenWithModelMessage" : "Les fiches de liaisons seront générées avec les champs définis dans le model d'enregistrement du courrier.",
     "createContact": "Créer un contact",
+    "diffusionListUpdated": "Liste de diffusion mise à jour",
+    "saveModifications": "Sauvegarder les modifications",
 };

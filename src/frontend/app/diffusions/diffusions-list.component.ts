@@ -30,6 +30,7 @@ export class DiffusionsListComponent implements OnInit {
     userDestList: any[] = [];
 
     diffList: any = null;
+    diffListClone: any = null;
 
     /**
      * Ressource identifier to load listinstance (Incompatible with templateId)
@@ -204,7 +205,10 @@ export class DiffusionsListComponent implements OnInit {
                     this.setFormValues();
                 }
             }),
-            finalize(() => this.loading = false),
+            finalize(() => {
+                this.diffListClone = JSON.parse(JSON.stringify(this.getCurrentListinstance()));
+                this.loading = false;
+            }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
@@ -276,7 +280,33 @@ export class DiffusionsListComponent implements OnInit {
                     this.setFormValues();
                 }
             }),
-            finalize(() => this.loading = false),
+            finalize(() => {
+                this.diffListClone = JSON.parse(JSON.stringify(this.getCurrentListinstance()));
+                this.loading = false;
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    saveListinstance() {
+        const listInstance: any[] = [
+            {
+                resId: this.resId,
+                listInstances: this.getCurrentListinstance()
+            }
+        ]
+        this.http.put('../../rest/listinstances', listInstance).pipe(
+            tap((data: any) => {
+                if (data && data.errors != null) {
+                    this.notify.error(data.errors);
+                } else {
+                    this.diffListClone = JSON.parse(JSON.stringify(this.getCurrentListinstance()));
+                    this.notify.success(this.lang.diffusionListUpdated);
+                }
+            }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
                 return of(false);
@@ -503,6 +533,14 @@ export class DiffusionsListComponent implements OnInit {
 
     canUpdateRoles() {
         if (this.availableRoles.filter((role: any) => role.canUpdate === true).length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    isModified() {
+        if (JSON.stringify(this.diffListClone) !== JSON.stringify(this.getCurrentListinstance())) {
             return true;
         } else {
             return false;

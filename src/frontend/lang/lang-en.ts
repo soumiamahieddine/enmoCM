@@ -1364,4 +1364,6 @@ export const LANG_EN = {
     "targetFillingField": "Target field for filling",
     "arGenWithModelMessage" : "The summary sheets with the fields defined in the resource's indexing model.",
     "createContact": "Create a contact",
+    "diffusionListUpdated": "Diffusion list updated",
+    "saveModifications": "Save modifications",
 };

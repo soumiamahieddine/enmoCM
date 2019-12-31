@@ -18,6 +18,7 @@ import { DocumentViewerComponent } from '../viewer/document-viewer.component';
 import { IndexingFormComponent } from '../indexation/indexing-form/indexing-form.component';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { ContactsListModalComponent } from '../contact/list/modal/contacts-list-modal.component';
+import { DiffusionsListComponent } from '../diffusions/diffusions-list.component';
 
 
 @Component({
@@ -86,6 +87,7 @@ export class ProcessComponent implements OnInit {
             id: 'diffusionList',
             icon: 'fas fa-share-alt',
             label: this.lang.diffusionList,
+            editMode: false,
             count: 0
         },
         {
@@ -129,7 +131,8 @@ export class ProcessComponent implements OnInit {
 
     @ViewChild('appDocumentViewer', { static: true }) appDocumentViewer: DocumentViewerComponent;
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
-    senderLightInfo: any = { 'displayName': null, 'fillingRate': null};
+    @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
+    senderLightInfo: any = { 'displayName': null, 'fillingRate': null };
     hasContact: boolean = false;
 
     constructor(
@@ -242,38 +245,38 @@ export class ProcessComponent implements OnInit {
     loadSenders() {
         if (typeof this.currentResourceInformations.senders === "undefined" || this.currentResourceInformations.senders.length == 0) {
             this.hasContact = false;
-            this.senderLightInfo = { 'displayName': this.lang.noSelectedContact, 'filling': null};
+            this.senderLightInfo = { 'displayName': this.lang.noSelectedContact, 'filling': null };
         } else if (this.currentResourceInformations.senders.length == 1) {
             this.hasContact = true;
             if (this.currentResourceInformations.senders[0].type == 'contact') {
                 this.http.get('../../rest/contacts/' + this.currentResourceInformations.senders[0].id).pipe(
                     tap((data: any) => {
                         if (data.firstname == '' && data.lastname == '') {
-                            this.senderLightInfo = { 'displayName': data.company, 'filling': data.filling};
+                            this.senderLightInfo = { 'displayName': data.company, 'filling': data.filling };
                         } else {
                             if (data.company != '') {
                                 var companyInfo = ' (' + data.company + ')';
                             }
-                            this.senderLightInfo = { 'displayName': data.firstname + ' ' + data.lastname + companyInfo, 'filling': data.filling};
+                            this.senderLightInfo = { 'displayName': data.firstname + ' ' + data.lastname + companyInfo, 'filling': data.filling };
                         }
                     })
                 ).subscribe();
             } else if (this.currentResourceInformations.senders[0].type == 'entity') {
                 this.http.get('../../rest/entities/' + this.currentResourceInformations.senders[0].id).pipe(
                     tap((data: any) => {
-                        this.senderLightInfo = { 'displayName': data.entity_label, 'filling': null};
+                        this.senderLightInfo = { 'displayName': data.entity_label, 'filling': null };
                     })
                 ).subscribe();
             } else if (this.currentResourceInformations.senders[0].type == 'user') {
                 this.http.get('../../rest/users/' + this.currentResourceInformations.senders[0].id).pipe(
                     tap((data: any) => {
-                        this.senderLightInfo = { 'displayName': data.firstname + ' ' + data.lastname, 'filling': null};
+                        this.senderLightInfo = { 'displayName': data.firstname + ' ' + data.lastname, 'filling': null };
                     })
                 ).subscribe();
             }
         } else if (this.currentResourceInformations.senders.length > 1) {
             this.hasContact = true;
-            this.senderLightInfo = { 'displayName': this.currentResourceInformations.senders.length + ' ' + this.lang.senders, 'filling': null};
+            this.senderLightInfo = { 'displayName': this.currentResourceInformations.senders.length + ' ' + this.lang.senders, 'filling': null };
         }
     }
 
@@ -307,20 +310,17 @@ export class ProcessComponent implements OnInit {
     }
 
     onSubmit() {
-        if (this.currentTool === 'info' && this.indexingForm.isResourceModified()) {
+        if (this.isToolModified()) {
             const dialogRef = this.openConfirmModification();
             dialogRef.afterClosed().pipe(
                 tap((data: string) => {
                     if (data !== 'ok') {
-                        this.currentTool = '';
-                        setTimeout(() => {
-                            this.currentTool = 'info';
-                        }, 0);
+                        this.refreshTool();
                     }
                 }),
                 filter((data: string) => data === 'ok'),
                 tap(() => {
-                    this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+                    this.saveTool();
                 }),
                 finalize(() => this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false)),
                 catchError((err: any) => {
@@ -331,8 +331,6 @@ export class ProcessComponent implements OnInit {
         } else {
             this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false);
         }
-
-
     }
 
     showActionInCurrentCategory(action: any) {
@@ -445,6 +443,36 @@ export class ProcessComponent implements OnInit {
     openContact() {
         if (this.hasContact) {
             this.dialog.open(ContactsListModalComponent, { data: { title: `${this.currentResourceInformations.chrono} - ${this.currentResourceInformations.subject}`, mode: 'senders', resId: this.currentResourceInformations.resId } });
+        }
+    }
+
+    saveListinstance() {
+        this.appDiffusionsList.saveListinstance();
+    }
+
+    isToolModified() {
+        if (this.currentTool === 'info' && this.indexingForm.isResourceModified()) {
+            return true;
+        } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList.isModified()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    refreshTool() {
+        const tmpTool = this.currentTool;
+        this.currentTool = '';
+        setTimeout(() => {
+            this.currentTool = tmpTool;
+        }, 0);
+    }
+
+    saveTool() {
+        if (this.currentTool === 'info') {
+            this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+        } else if (this.currentTool === 'diffusionList') {
+            this.appDiffusionsList.saveListinstance();
         }
     }
 }
