@@ -7,6 +7,7 @@ chdir('../..');
 $customs =  scandir('custom');
 
 foreach ($customs as $custom) {
+    $debut = microtime(true);
     if ($custom == 'custom.xml' || $custom == '.' || $custom == '..') {
         continue;
     }
@@ -184,11 +185,15 @@ foreach ($customs as $custom) {
         'data'  => ['contact_v3']
     ]);
 
+    $fin = microtime(true);
+    $delai = $fin - $debut;
+    echo "Le temps écoulé est de ".$delai." millisecondes.\n";
     printf("Migration Contacts (CUSTOM {$custom}) : " . $migrated . " Contact(s) trouvée(s) et migrée(s).\n");
 }
 
 function addCustomFields($args = [])
 {
+    \SrcCore\models\DatabaseModel::beginTransaction();
     $fillingValues = \SrcCore\models\DatabaseModel::select([
         'select' => ['rating_columns'],
         'table'  => ['contacts_filling']
@@ -228,12 +233,13 @@ function addCustomFields($args = [])
             'values'   => $aValues
         ]);
     }
-    
+    \SrcCore\models\DatabaseModel::commitTransaction();
     return $customFields;
 }
 
 function migrateCustomField($args = [])
 {
+    \SrcCore\models\DatabaseModel::beginTransaction();
     foreach ($args['contactCustomInfo'] as $key => $value) {
         if (!empty($value)) {
             $contact = \Contact\models\ContactModel::getById(['id' => $args['newContactId'], 'select' => ['custom_fields']]);
@@ -254,6 +260,7 @@ function migrateCustomField($args = [])
             }
         }
     }
+    \SrcCore\models\DatabaseModel::commitTransaction();
 }
 
 function migrateAcknowledgementReceipt($args = [])
@@ -278,6 +285,7 @@ function migrateContactGroupsLists($args = [])
 
 function migrateContactRes($args = [])
 {
+    \SrcCore\models\DatabaseModel::beginTransaction();
     $contactRes = \SrcCore\models\DatabaseModel::select([
         'select' => ['res_id'],
         'table'  => ['contacts_res'],
@@ -308,7 +316,7 @@ function migrateContactRes($args = [])
 
         $countContactRes++;
 
-        if ($countContactRes % 100 == 0) {
+        if ($countContactRes % 50 == 0) {
             \SrcCore\models\DatabaseModel::insertMultiple([
                 'table'     => 'resource_contacts',
                 'columns'   => ['res_id', 'item_id', 'type', 'mode'],
@@ -325,6 +333,7 @@ function migrateContactRes($args = [])
             'values'    => $aValues
         ]);
     }
+    \SrcCore\models\DatabaseModel::commitTransaction();
 }
 
 function migrateResourceContacts($args = [])
@@ -349,6 +358,7 @@ function migrateResAttachments($args = [])
 
 function migrateResletterbox($args = [])
 {
+    \SrcCore\models\DatabaseModel::beginTransaction();
     $resInfo = \SrcCore\models\DatabaseModel::select([
         'select' => ['res_id', 'category_id'],
         'table'  => ['res_letterbox'],
@@ -372,7 +382,7 @@ function migrateResletterbox($args = [])
 
         $countContactLetterbox++;
 
-        if ($countContactLetterbox % 100 == 0) {
+        if ($countContactLetterbox % 50 == 0) {
             \SrcCore\models\DatabaseModel::insertMultiple([
                 'table'     => 'resource_contacts',
                 'columns'   => ['res_id', 'item_id', 'type', 'mode'],
@@ -389,10 +399,12 @@ function migrateResletterbox($args = [])
             'values'    => $aValues
         ]);
     }
+    \SrcCore\models\DatabaseModel::commitTransaction();
 }
 
 function migrateContactRes_Users()
 {
+    \SrcCore\models\DatabaseModel::beginTransaction();
     $userContactRes = \SrcCore\models\DatabaseModel::select([
         'select' => ['res_id', 'contact_id'],
         'table'  => ['contacts_res'],
@@ -430,7 +442,7 @@ function migrateContactRes_Users()
 
         $countContactUser++;
 
-        if ($countContactUser % 100 == 0) {
+        if ($countContactUser % 50 == 0) {
             \SrcCore\models\DatabaseModel::insertMultiple([
                 'table'     => 'resource_contacts',
                 'columns'   => ['res_id', 'item_id', 'type', 'mode'],
@@ -447,10 +459,12 @@ function migrateContactRes_Users()
             'values'    => $aValues
         ]);
     }
+    \SrcCore\models\DatabaseModel::commitTransaction();
 }
 
 function migrateResletterbox_Users()
 {
+    \SrcCore\models\DatabaseModel::beginTransaction();
     $userContact = \SrcCore\models\DatabaseModel::select([
         'select' => ['res_id', 'exp_user_id', 'dest_user_id'],
         'table'  => ['res_letterbox'],
@@ -483,7 +497,7 @@ function migrateResletterbox_Users()
 
         $countContactUser++;
 
-        if ($countContactUser % 100 == 0) {
+        if ($countContactUser % 50 == 0) {
             \SrcCore\models\DatabaseModel::insertMultiple([
                 'table'     => 'resource_contacts',
                 'columns'   => ['res_id', 'item_id', 'type', 'mode'],
@@ -500,10 +514,12 @@ function migrateResletterbox_Users()
             'values'    => $aValues
         ]);
     }
+    \SrcCore\models\DatabaseModel::commitTransaction();
 }
 
 function migrateResattachments_Users()
 {
+    \SrcCore\models\DatabaseModel::beginTransaction();
     $attachments = \SrcCore\models\DatabaseModel::select([
         'select' => ['dest_user', 'res_id'],
         'table'  => ['res_attachments'],
@@ -526,10 +542,12 @@ function migrateResattachments_Users()
             'data'  => [$value['res_id']],
         ]);
     }
+    \SrcCore\models\DatabaseModel::commitTransaction();
 }
 
 function migrateContactParameters()
 {
+    \SrcCore\models\DatabaseModel::beginTransaction();
     $fillingValues = \SrcCore\models\DatabaseModel::select([
         'select' => ['rating_columns'],
         'table'  => ['contacts_filling']
@@ -571,7 +589,7 @@ function migrateContactParameters()
 
         $countParameters++;
 
-        if ($countParameters % 100 == 0) {
+        if ($countParameters % 50 == 0) {
             \SrcCore\models\DatabaseModel::insertMultiple([
                 'table'     => 'contacts_parameters',
                 'columns'   => ['identifier', 'mandatory', 'filling', 'searchable', 'displayable'],
@@ -588,10 +606,12 @@ function migrateContactParameters()
             'values'    => $aValues
         ]);
     }
+    \SrcCore\models\DatabaseModel::commitTransaction();
 }
 
 function migrateContactPrivileges()
 {
+    \SrcCore\models\DatabaseModel::beginTransaction();
     $usergroupServices = \SrcCore\models\DatabaseModel::select([
         'select' => ['group_id'],
         'table'  => ['usergroups_services'],
@@ -649,4 +669,5 @@ function migrateContactPrivileges()
         'where' => ['service_id in (?)'],
         'data'  => [['my_contacts_menu', 'my_contacts']]
     ]);
+    \SrcCore\models\DatabaseModel::commitTransaction();
 }
