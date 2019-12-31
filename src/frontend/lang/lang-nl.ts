@@ -605,7 +605,9 @@ export const LANG_NL = {
     "noAttachmentClickToAddOne"             : "No attachments available<br/><sub>Click on <i class=\"fa fa-paperclip fa-lg\" ></i><i class=\"fa fa-plus\"></i> to add one.</sub>", //_TO_TRANSLATE
     "noAttachmentConversion"                : "No PDF conversion for this attachment TRANSLATE",
     "noAttachmentInSignatoryBook"           : "No attachment in signature book", //_TO_TRANSLATE
-    "noAttachmentToSend"                    : "No attachment to send _TO_TRANSLATE",
+    "noSignableAttachmentInSignatoryBook"   : "No signable attachment in signature book", //_TO_TRANSLATE
+    "noAttachmentToSend"                    : "No attachment to send", //_TO_TRANSLATE
+    "noDocumentToSend"                      : "No document to send", //_TO_TRANSLATE
     "noAvailableBasket"                     : "Geen bakje beschikbaar",
     "noDataAvailable"                       : "_TO_TRANSLATE",
     "noDatasource"                          : "Geen gegevensbron",

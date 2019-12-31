@@ -170,7 +170,9 @@ class MaarchParapheurController
             $arrivedMailMainfilePath = $concatFilename;
         }
 
-        $encodedMainZipFile = MaarchParapheurController::createZip(['filepath' => $arrivedMailMainfilePath, 'filename' => 'courrier_arrivee.pdf']);
+        if (!empty($arrivedMailMainfilePath)) {
+            $encodedMainZipFile = MaarchParapheurController::createZip(['filepath' => $arrivedMailMainfilePath, 'filename' => 'courrier_arrivee.pdf']);
+        }
 
         if (empty($mainResource[0]['process_limit_date'])) {
             $processLimitDate = date('Y-m-d H:i:s', strtotime(date("Y-m-d H:i:s"). ' + 14 days'));
@@ -251,7 +253,7 @@ class MaarchParapheurController
                     $encodedZipDocument = MaarchParapheurController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename']]);
         
                     $attachmentsData = [];
-                    if ($mainResource[0]['category_id'] != 'outgoing') {
+                    if ($mainResource[0]['category_id'] != 'outgoing' && !empty($encodedMainZipFile)) {
                         $attachmentsData = [[
                             'encodedDocument' => $encodedMainZipFile,
                             'title'           => $mainResource[0]['subject'],
