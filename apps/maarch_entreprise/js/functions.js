@@ -2888,3 +2888,24 @@ function setSendAttachment(id) {
         }
     });
 }
+
+function loadContactsList(id, mode) {
+    new Effect.toggle('contactsList_' + mode + '_' + id, 'appear', {
+        delay: 0.2
+    });
+
+    var path_manage_script = '../../rest/contacts/formatV1';
+
+
+    new Ajax.Request(path_manage_script, {
+        method: 'post',
+        parameters: {
+            resId: id,
+            mode: mode
+        },
+        onSuccess: function (answer) {
+            eval("response = " + answer.responseText);
+            $('divContactsList_' + mode + '_' + id).innerHTML = response.toShow;
+        }
+    });
+}

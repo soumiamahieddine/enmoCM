@@ -60,7 +60,8 @@ class CoreController
         }
         unset($aInit['scriptsInjected']);
 
-        for ($i = 0; $i < count($scriptsToInject); $i++) {
+        $nbScriptsToInject = count($scriptsToInject);
+        for ($i = 0; $i < $nbScriptsToInject; $i++) {
             foreach ($scriptsToInject as $value) {
                 if ($i == 0 && strstr($value, 'scripts.') !== false) {
                     $aInit['scriptsToinject'][] = $value;

@@ -17,6 +17,7 @@
 }
 
 .contact-card {
+    min-width: 350px;
     width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -32,8 +33,12 @@
 
 .mat-card-header {
     background: #F9F9F9;
-    padding-top: 16px;
-    padding-left: 16px;
+    padding: 10px;
+    padding-bottom: 5px;
+}
+
+.mat-card-title {
+    padding-right: 15px;
 }
 
 

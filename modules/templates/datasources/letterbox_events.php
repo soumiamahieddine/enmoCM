@@ -112,10 +112,12 @@ foreach ($events as $event) {
     $resourceContacts = ResourceContactModel::get([
         'where' => ['res_id = ?', "mode='sender'", "type='contact'"],
         'data'  => [$res['res_id']],
+        'limit' => 1
     ]);
+    $resourceContacts = $resourceContacts[0];
 
-    foreach ($resourceContacts as $resourceContact) {
-        $contact = ContactModel::getById(['id' => $resourceContact['item_id'], 'select' => ['*']]);
+    if (!empty($resourceContacts)) {
+        $contact = ContactModel::getById(['id' => $resourceContacts['item_id'], 'select' => ['*']]);
 
         $postalAddress = ContactController::getContactAfnor($contact);
         unset($postalAddress[0]);

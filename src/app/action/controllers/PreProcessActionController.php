@@ -166,7 +166,6 @@ class PreProcessActionController
         }
 
         $sendList = [];
-        $unavailableList = [];
         $sendEmail = 0;
         $sendPaper = 0;
         $noSendAR = [
@@ -344,11 +343,12 @@ class PreProcessActionController
             if ($email > 0 || $paper > 0) {
                 $sendList[] = $resId;
             } else {
-                $unavailableList[] = $resource['alt_identifier'];
+                $noSendAR['number'] += 1;
+                $noSendAR['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'info' => _NO_SENDERS ];
             }
         }
 
-        return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'sendList' => $sendList,  'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated, 'unavailableList' => $unavailableList]);
+        return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'sendList' => $sendList,  'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
     }
 
     public function checkExternalSignatoryBook(Request $request, Response $response, array $aArgs)
@@ -419,9 +419,10 @@ class PreProcessActionController
                         'select'   => ['destination'],
                         'resId'    => $data['resources'][0]
                     ]);
-                    $destination = EntityModel::getByEntityId(['entityId' => $resDestination['destination'], 'select' => ['id']]);
-
-                    $additionalsInfos['destinationId'] = $destination['id'];
+                    if (!empty($resDestination['destination'])) {
+                        $destination = EntityModel::getByEntityId(['entityId' => $resDestination['destination'], 'select' => ['id']]);
+                        $additionalsInfos['destinationId'] = $destination['id'];
+                    }
                 } else {
                     $additionalsInfos['destinationId'] = '';
                 }
@@ -442,10 +443,13 @@ class PreProcessActionController
                         'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
                         'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
                     ]);
+
+                    $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
                     
                     if (empty($attachments)) {
                         $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
                     } else {
+                        $hasSignableAttachment = false;
                         foreach ($attachments as $value) {
                             $resIdAttachment  = $value['res_id'];
                             $collId = 'attachments_coll';
@@ -465,8 +469,15 @@ class PreProcessActionController
                                 $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resIdAttachment, 'reason' => 'fileDoesNotExists'];
                                 break;
                             }
+                            if ($attachmentTypes[$value['attachment_type']]['sign']) {
+                                $hasSignableAttachment = true;
+                            }
                         }
-                        $additionalsInfos['attachments'][] = ['res_id' => $resId];
+                        if (!$hasSignableAttachment) {
+                            $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noSignableAttachmentInSignatoryBook'];
+                        } else {
+                            $additionalsInfos['attachments'][] = ['res_id' => $resId];
+                        }
                     }
                 }
             } elseif ($signatureBookEnabled == 'xParaph') {
@@ -592,11 +603,15 @@ class PreProcessActionController
             }
 
             foreach ($data['resources'] as $resId) {
-                $noAttachmentsResource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier']]);
+                $noAttachmentsResource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'filename']]);
                 if (empty($noAttachmentsResource['alt_identifier'])) {
                     $noAttachmentsResource['alt_identifier'] = _UNDEFINED;
                 }
 
+                if (empty($noAttachmentsResource['filename'])) {
+                    $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noDocument'];
+                    continue;
+                }
                 $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => 'letterbox_coll']);
                 if (empty($adrMainInfo['docserver_id'])) {
                     $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noMailConversion'];

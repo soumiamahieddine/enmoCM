@@ -80,21 +80,32 @@
                 <app-notes-list *ngIf="currentTool === 'notes' && !loading" #appNotesList [editMode]="true"
                     [resId]="currentResourceInformations.resId">
                 </app-notes-list>
-                <app-diffusions-list *ngIf="currentTool === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="false"
-                    [resId]="currentResourceInformations.resId" [expanded]="true">
+                <app-diffusions-list *ngIf="currentTool === 'diffusionList' && !loading" #appDiffusionsList
+                    [adminMode]="false" [resId]="currentResourceInformations.resId" [expanded]="true">
                 </app-diffusions-list>
                 <app-visa-workflow *ngIf="currentTool === 'visa' && !loading" #appVisaWorkflow
                     [resId]="currentResourceInformations.resId"></app-visa-workflow>
                 <app-avis-workflow *ngIf="currentTool === 'avis' && !loading" #appAvisWorkflow
                     [resId]="currentResourceInformations.resId"></app-avis-workflow>
                 <app-attachments-list *ngIf="currentTool === 'attachments' && !loading" #appAttachmentsList
-                    [resId]="currentResourceInformations.resId" [target]="'process'" (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
+                    [resId]="currentResourceInformations.resId" [target]="'process'"
+                    (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
                 </app-attachments-list>
                 <app-indexing-form *ngIf="currentTool === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
-                    [resId]="currentResourceInformations.resId" [indexingFormId]="currentResourceInformations.modelId" [mode]="'process'" [canEdit]="canEditData"></app-indexing-form>
-                    <button mat-raised-button *ngIf="indexingForm !== undefined && currentTool === 'info'" [disabled]="!indexingForm.isResourceModified()" (click)="confirmModification()" color="primary" [title]="lang.openInExternalModal" style="position:absolute;top:0px;">
-                        {{lang.save}}
+                    [resId]="currentResourceInformations.resId" [indexingFormId]="currentResourceInformations.modelId"
+                    [mode]="'process'" [canEdit]="canEditData" [hideDiffusionList]="true"></app-indexing-form>
+                <div style="position: sticky;bottom: 0px;text-align:right;">
+                    <button mat-fab *ngIf="indexingForm !== undefined && indexingForm.isResourceModified() && currentTool === 'info'"
+                        (click)="confirmModification()" color="accent"
+                        [title]="lang.saveModifications">
+                        <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
                     </button>
+                    <button mat-fab [title]="lang.saveModifications" *ngIf="appDiffusionsList !== undefined && appDiffusionsList.isModified() && currentTool === 'diffusionList'"
+                        (click)="saveListinstance()" color="accent">
+                        <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
+                    </button>
+                </div>
+                
             </ng-container>
             <ng-template #elseTemplate>
                 <div class="openedModal">
@@ -173,8 +184,9 @@
                             </div>
                             <div class="content-item" (click)="openContact()" style="cursor:pointer">
                                 <div>{{lang.senders}} :</div>
-                                <div class="content-item-value">{{senderLightInfo.displayName}} <i *ngIf="this.senderLightInfo.filling" class="fas fa-circle"
-                                        style="font-size: 8px" [style.color] = "this.senderLightInfo.filling"></i></div>
+                                <div class="content-item-value">{{senderLightInfo.displayName}} <i
+                                        *ngIf="this.senderLightInfo.filling" class="fas fa-circle"
+                                        style="font-size: 8px" [style.color]="this.senderLightInfo.filling"></i></div>
                             </div>
                             <div class="content-item"
                                 *ngIf="this.currentResourceInformations.processLimitDate !== undefined">
@@ -182,7 +194,8 @@
                                     *ngIf="this.currentResourceInformations.closingDate !== null; else elseLimitDate">
                                     <div style="font-weight: bold;"
                                         [title]="this.currentResourceInformations.closingDate | fullDate">
-                                        {{this.lang.closed}} {{this.currentResourceInformations.closingDate | timeAgo : 'full'}}&nbsp;&nbsp;<i
+                                        {{this.lang.closed}}
+                                        {{this.currentResourceInformations.closingDate | timeAgo : 'full'}}&nbsp;&nbsp;<i
                                             class="fa fa-lock"></i></div>
                                 </ng-container>
                                 <ng-template #elseLimitDate>
@@ -206,7 +219,8 @@
         <div class="document-container" [class.fullContainer]="appService.getViewMode()">
             <div class="content">
                 <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
-                    [resId]="currentResourceInformations.resId" [title]="currentResourceInformations.chrono + ' - ' + currentResourceInformations.subject">
+                    [resId]="currentResourceInformations.resId"
+                    [title]="currentResourceInformations.chrono + ' - ' + currentResourceInformations.subject">
                 </app-document-viewer>
             </div>
         </div>
@@ -228,23 +242,35 @@
         </button>
     </div>
     <div class="modal-module-content">
-            <button mat-raised-button *ngIf="indexingForm !== undefined && currentTool === 'info'" [disabled]="!indexingForm.isResourceModified()" (click)="confirmModification()" color="primary" [title]="lang.openInExternalModal">
-                    {{lang.save}}
-                </button>
         <app-notes-list *ngIf="modal.id === 'notes' && !loading" #appNotesList [editMode]="true"
             [resId]="currentResourceInformations.resId">
         </app-notes-list>
         <app-diffusions-list *ngIf="modal.id === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="false"
             [resId]="currentResourceInformations.resId" [expanded]="true">
         </app-diffusions-list>
-        <app-visa-workflow *ngIf="modal.id === 'visa' && !loading" #appVisaWorkflow [resId]="currentResourceInformations.resId">
+        <app-visa-workflow *ngIf="modal.id === 'visa' && !loading" #appVisaWorkflow
+            [resId]="currentResourceInformations.resId">
         </app-visa-workflow>
-        <app-avis-workflow *ngIf="modal.id === 'avis' && !loading" #appAvisWorkflow [resId]="currentResourceInformations.resId">
+        <app-avis-workflow *ngIf="modal.id === 'avis' && !loading" #appAvisWorkflow
+            [resId]="currentResourceInformations.resId">
         </app-avis-workflow>
         <app-attachments-list *ngIf="modal.id === 'attachments'  && !loading" #appAttachmentsList
             [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
         </app-attachments-list>
-        <app-indexing-form *ngIf="modal.id === 'info' && !loading" #indexingForm [groupId]="currentGroupId" [indexingFormId]="currentResourceInformations.modelId" [resId]="currentResourceInformations.resId" [mode]="'process'" [canEdit]="canEditData">
+        <app-indexing-form *ngIf="modal.id === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
+            [indexingFormId]="currentResourceInformations.modelId" [resId]="currentResourceInformations.resId"
+            [mode]="'process'" [canEdit]="canEditData" [hideDiffusionList]="true">
         </app-indexing-form>
+        <div style="position: sticky;bottom: 0px;text-align:right;padding:15px;">
+            <button mat-fab *ngIf="indexingForm !== undefined && indexingForm.isResourceModified() && modal.id === 'info'"
+                (click)="confirmModification()" color="accent"
+                [title]="lang.saveModifications">
+                <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
+            </button>
+            <button mat-fab [title]="lang.saveModifications" *ngIf="appDiffusionsList !== undefined && appDiffusionsList.isModified() && modal.id === 'diffusionList'"
+                (click)="saveListinstance()" color="accent">
+                <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
+            </button>
+        </div>
     </div>
 </div>

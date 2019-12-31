@@ -101,25 +101,17 @@ abstract class BasketModelAbstract
         return true;
     }
 
-    public static function update(array $aArgs)
+    public static function update(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'basket_name', 'basket_desc', 'clause', 'isVisible', 'flagNotif']);
-        ValidatorModel::stringType($aArgs, ['id', 'basket_name', 'color', 'basket_desc', 'clause', 'isVisible', 'flagNotif', 'basket_res_order']);
-        
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['set', 'postSet', 'where', 'data']);
+
         DatabaseModel::update([
             'table'     => 'baskets',
-            'set'       => [
-                'basket_name'       => $aArgs['basket_name'],
-                'basket_desc'       => $aArgs['basket_desc'],
-                'basket_clause'     => $aArgs['clause'],
-                'basket_res_order'  => empty($aArgs['basket_res_order']) ? 'res_id DESC' : $aArgs['basket_res_order'],
-                'is_visible'        => $aArgs['isVisible'],
-                'flag_notif'        => $aArgs['flagNotif'],
-                'color'             => $aArgs['color'],
-                'coll_id'           => 'letterbox_coll',
-            ],
-            'where'     => ['basket_id = ?'],
-            'data'      => [$aArgs['id']]
+            'set'       => $args['set'],
+            'postSet'   => $args['postSet'],
+            'where'     => $args['where'],
+            'data'      => $args['data']
         ]);
 
         return true;

@@ -991,7 +991,6 @@ CREATE TABLE res_letterbox
   alarm2_date timestamp without time zone,
   flag_alarm1 char(1) default 'N'::character varying,
   flag_alarm2 char(1) default 'N'::character varying,
-  address_id bigint,
   model_id integer NOT NULL,
   custom_fields jsonb,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
@@ -1453,5 +1452,15 @@ CREATE TABLE contacts_custom_fields_list
     values jsonb,
     CONSTRAINT contacts_custom_fields_list_pkey PRIMARY KEY (id),
     CONSTRAINT contacts_custom_fields_list_unique_key UNIQUE (label)
+)
+WITH (OIDS=FALSE);
+
+/* users followed resources */
+CREATE TABLE users_followed_resources
+(
+    id serial NOT NULL,
+    res_id int NOT NULL,
+    user_id int NOT NULL,
+    CONSTRAINT users_followed_resources_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);

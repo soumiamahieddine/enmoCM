@@ -31,9 +31,7 @@
 
 require_once('core/class/class_request.php');
 require_once('core/class/class_security.php');
-require_once('apps/' . $_SESSION['config']['app_id']
-    . '/class/class_indexing_searching_app.php'
-);
+require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_indexing_searching_app.php');
 require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php');
 $core_tools = new core_tools();
 $core_tools->test_user();
@@ -87,10 +85,11 @@ $json_txt = '{';
 )
 **/
 //$func->show_array($_REQUEST['meta']);exit;
-if (count($_REQUEST['meta']) > 0) {
+$nbMeta = count($_REQUEST['meta']);
+if ($nbMeta > 0) {
     //Verif for parms sended by url
     if ($_GET['meta']) {
-        for ($m=0; $m<count($_REQUEST['meta']);$m++) {
+        for ($m=0; $m < $nbMeta; $m++) {
             if (strstr($_REQUEST['meta'][$m], '||') == true) {
                 $_REQUEST['meta'][$m] = str_replace('||', '#', $_REQUEST['meta'][$m]);
             }
@@ -98,7 +97,7 @@ if (count($_REQUEST['meta']) > 0) {
     }
     $opt_indexes = array();
     $_SESSION['meta_search'] = $_REQUEST['meta'];
-    for ($i=0;$i<count($_REQUEST['meta']);$i++) {
+    for ($i=0; $i < $nbMeta; $i++) {
         $tab = explode('#', $_REQUEST['meta'][$i]);
         if ($tab[0] == 'welcome') {
             $tab[0] = 'multifield';
@@ -108,7 +107,8 @@ if (count($_REQUEST['meta']) > 0) {
         $json_txt .= "'".$tab[0]."' : { 'type' : '".$tab[2]."', 'fields' : {";
         $tab_id_fields = explode(',', $tab[1]);
         //$func->show_array($tab_id_fields);
-        for ($j=0; $j<count($tab_id_fields);$j++) {
+        $nbFields = count($tab_id_fields);
+        for ($j=0; $j < $nbFields; $j++) {
             // ENTITIES
             if ($tab_id_fields[$j] == 'services_chosen' && isset($_REQUEST['services_chosen'])) {
                 $json_txt .= " 'services_chosen' : [";
@@ -709,34 +709,34 @@ where lower(translate(folders.label , 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓ�
             elseif ($tab_id_fields[$j] == 'baskets_clause' && !empty($_REQUEST['baskets_clause'])) {
                 //$func->show_array($_REQUEST);exit;
                 switch ($_REQUEST['baskets_clause']) {
-                case 'false':
-                    $baskets_clause = "false";
-                    $json_txt .= "'baskets_clause' : ['false'],";
-                    break;
+                    case 'false':
+                        $baskets_clause = "false";
+                        $json_txt .= "'baskets_clause' : ['false'],";
+                        break;
+                        
+                    case 'true':
+                        for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
+                            if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id) {
+                                if (isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
+                                    $_SESSION['searching']['comp_query'] .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
+                                }
+                            }
+                        }
+                        $_SESSION['searching']['comp_query'] = preg_replace('/^ or/', '', $_SESSION['searching']['comp_query']);
+                        $baskets_clause = ($_REQUEST['baskets_clause']);
+                        $json_txt .= " 'baskets_clause' : ['true'],";
+                        break;
                     
-                case 'true':
-                    for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                        if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id) {
-                            if (isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
-                                $_SESSION['searching']['comp_query'] .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
+                    default:
+                        $json_txt .= " 'baskets_clause' : ['".addslashes(trim($_REQUEST['baskets_clause']))."'],";
+                        for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
+                            if ($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']) {
+                                if (isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
+                                    $where_request .= ' (' . $_SESSION['user']['baskets'][$ind_bask]['clause'] . ') and ' ;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    $_SESSION['searching']['comp_query'] = preg_replace('/^ or/', '', $_SESSION['searching']['comp_query']);
-                    $baskets_clause = ($_REQUEST['baskets_clause']);
-                    $json_txt .= " 'baskets_clause' : ['true'],";
-                    break;
-                
-                default:
-                    $json_txt .= " 'baskets_clause' : ['".addslashes(trim($_REQUEST['baskets_clause']))."'],";
-                    for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                        if ($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']) {
-                            if (isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
-                                $where_request .= ' (' . $_SESSION['user']['baskets'][$ind_bask]['clause'] . ') and ' ;
-                                break;
-                            }
-                        }
-                    }
                 }
             } elseif (preg_match('/^indexingCustomField_/', $tab_id_fields[$j]) && !empty($_REQUEST[$tab_id_fields[$j]])) {  // opt indexes check
                 $customFieldId = str_replace("indexingCustomField_", "", $tab_id_fields[$j]);
@@ -747,26 +747,25 @@ where lower(translate(folders.label , 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓ�
                 $customField   = \CustomField\models\CustomFieldModel::getById(['id' => $customFieldId]);
                 $json_txt     .= " '".$tab_id_fields[$j]."' : ['".addslashes(trim($_REQUEST[$tab_id_fields[$j]]))."'],";
                 if (in_array($customField['type'], ['select', 'radio', 'checkbox'])) {
-                    $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and value @> :valueCustom_".$customFieldId.")) and ";
-                    $arrayPDO       = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
+                    $where_request .= " (custom_fields->'".$customFieldId."' @> :valueCustom_".$customFieldId.") and ";
+                    $arrayPDO       = array_merge($arrayPDO, array(":valueCustom_".$customFieldId => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
                 } elseif ($customField['type'] == 'date') {
                     if (strpos($tab_id_fields[$j], '_from') !== false) {
-                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId."_".$j." and (value::text::timestamp) >= (:valueCustom_".$customFieldId."_".$j."::timestamp))) and ";
-                        $arrayPDO = array_merge($arrayPDO, array(":customFieldId_".$customFieldId."_".$j => $customFieldId, ":valueCustom_".$customFieldId."_".$j => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
+                        $where_request .= " ((custom_fields->>'".$customFieldId."')::timestamp >= :valueCustom_".$customFieldId."_".$j."::timestamp) and ";
                     } elseif (strpos($tab_id_fields[$j], '_to') !== false) {
-                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId."_".$j." and (value::text::timestamp) <= (:valueCustom_".$customFieldId."_".$j."::timestamp))) and ";
-                        $arrayPDO = array_merge($arrayPDO, array(":customFieldId_".$customFieldId."_".$j => $customFieldId, ":valueCustom_".$customFieldId."_".$j => '"'.$_REQUEST[$tab_id_fields[$j]].' 23:59:59"'));
+                        $where_request .= " ((custom_fields->>'".$customFieldId."')::timestamp <= :valueCustom_".$customFieldId."_".$j."::timestamp) and ";
                     }
+                    $arrayPDO = array_merge($arrayPDO, array(":valueCustom_".$customFieldId."_".$j => $_REQUEST[$tab_id_fields[$j]]));
                 } elseif ($customField['type'] == 'string') {
-                    $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId." and (value::text) ilike (:valueCustom_".$customFieldId."))) and ";
-                    $arrayPDO       = array_merge($arrayPDO, array(":customFieldId_".$customFieldId => $customFieldId, ":valueCustom_".$customFieldId => '%'.$_REQUEST[$tab_id_fields[$j]].'%'));
+                    $where_request .= " (custom_fields->>'".$customFieldId."' ilike (:valueCustom_".$customFieldId.")) and ";
+                    $arrayPDO       = array_merge($arrayPDO, array(":valueCustom_".$customFieldId => '%'.$_REQUEST[$tab_id_fields[$j]].'%'));
                 } elseif ($customField['type'] == 'integer') {
                     if (strpos($tab_id_fields[$j], '_min') !== false) {
-                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId."_".$j." and value >= :valueCustom_".$customFieldId."_".$j.")) and ";
+                        $where_request .= " (custom_fields->'".$customFieldId."' >= :valueCustom_".$customFieldId."_".$j.") and ";
                     } elseif (strpos($tab_id_fields[$j], '_max') !== false) {
-                        $where_request .= " (res_id in (select res_id from resources_custom_fields where custom_field_id = :customFieldId_".$customFieldId."_".$j." and value <= :valueCustom_".$customFieldId."_".$j.")) and ";
+                        $where_request .= " (custom_fields->'".$customFieldId."' <= :valueCustom_".$customFieldId."_".$j.") and ";
                     }
-                    $arrayPDO = array_merge($arrayPDO, array(":customFieldId_".$customFieldId."_".$j => $customFieldId, ":valueCustom_".$customFieldId."_".$j => '"'.$_REQUEST[$tab_id_fields[$j]].'"'));
+                    $arrayPDO = array_merge($arrayPDO, array(":valueCustom_".$customFieldId."_".$j => $_REQUEST[$tab_id_fields[$j]]));
                 }
             }
         }

@@ -14,6 +14,7 @@ import { FormControl } from '@angular/forms';
 @Component({
     selector: 'contact-list',
     templateUrl: "contacts-list-administration.component.html",
+    styleUrls: ['contacts-list-administration.component.scss'],
     providers: [NotificationService, AppService]
 })
 export class ContactsListAdministrationComponent implements OnInit {
@@ -28,7 +29,7 @@ export class ContactsListAdministrationComponent implements OnInit {
     
     data: any;
 
-    displayedColumnsContact: string[] = ['firstname', 'lastname', 'company', 'formatedAddress', 'actions'];
+    displayedColumnsContact: string[] = ['filling', 'firstname', 'lastname', 'company', 'formatedAddress', 'actions'];
 
     isLoadingResults = true;
     routeUrl: string = '../../rest/contacts';
@@ -45,19 +46,28 @@ export class ContactsListAdministrationComponent implements OnInit {
 
     subMenus:any [] = [
         {
+            icon: 'fa fa-book',
+            route: '/administration/contacts/list',
+            label : this.lang.contactsList,
+            current: true
+        },
+        {
             icon: 'fa fa-code',
             route: '/administration/contacts/contactsCustomFields',
-            label : this.lang.customFields
+            label : this.lang.customFields,
+            current: false
         },
         {
             icon: 'fa fa-cog',
             route: '/administration/contacts/contacts-parameters',
-            label : this.lang.contactsParameters
+            label : this.lang.contactsParameters,
+            current: false
         },
         {
             icon: 'fa fa-users',
             route: '/administration/contacts/contacts-groups',
-            label : this.lang.contactsGroups
+            label : this.lang.contactsGroups,
+            current: false
         },
     ];
     
@@ -168,6 +178,7 @@ export class ContactsListAdministrationComponent implements OnInit {
                 tap((value) => {
                     if (value.length === 0) {
                         this.search = '';
+                        this.paginator.pageIndex = 0;
                         this.refreshDao();
                     }   
                 }),
@@ -176,6 +187,7 @@ export class ContactsListAdministrationComponent implements OnInit {
                 distinctUntilChanged(),
                 tap((data) => {
                     this.search = data;
+                    this.paginator.pageIndex = 0;
                     this.refreshDao();
                 }),
             ).subscribe();

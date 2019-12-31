@@ -82,6 +82,7 @@ import { PrivilegeService } from '../service/privileges.service';
 import { ActionsService } from './actions/actions.service';
 import { ContactsListComponent } from './contact/list/contacts-list.component';
 import { ContactsListModalComponent } from './contact/list/modal/contacts-list-modal.component';
+import { ContactModalComponent } from './administration/contact/modal/contact-modal.component';
 
 
 @NgModule({
@@ -156,6 +157,7 @@ import { ContactsListModalComponent } from './contact/list/modal/contacts-list-m
         MailResumeComponent,
         ContactsListComponent,
         ContactsListModalComponent,
+        ContactModalComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,
@@ -184,7 +186,8 @@ import { ContactsListModalComponent } from './contact/list/modal/contacts-list-m
         AttachmentPageComponent,
         AttachmentCreateComponent,
         AttachmentShowModalComponent,
-        ContactsListModalComponent
+        ContactsListModalComponent,
+        ContactModalComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, NotificationService, PrivilegeService ],
     bootstrap: [ AppComponent ]

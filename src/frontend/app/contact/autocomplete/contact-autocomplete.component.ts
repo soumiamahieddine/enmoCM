@@ -8,9 +8,10 @@ import { AppService } from '../../../service/app.service';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
-import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap, catchError, finalize } from 'rxjs/operators';
+import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap, catchError, finalize, map } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
 import { PrivilegeService } from '../../../service/privileges.service';
+import { ContactModalComponent } from '../../administration/contact/modal/contact-modal.component';
 
 @Component({
     selector: 'app-contact-autocomplete',
@@ -32,6 +33,7 @@ export class ContactAutocompleteComponent implements OnInit {
     key: string = 'id';
 
     canAdd: boolean = false;
+    canUpdate: boolean = false;
 
     listInfo: string;
     myControl = new FormControl();
@@ -45,6 +47,9 @@ export class ContactAutocompleteComponent implements OnInit {
      * FormControl used when autocomplete is used in form and must be catched in a form control.
      */
     @Input('control') controlAutocomplete: FormControl;
+
+    @Input('singleMode') singleMode: boolean = false;
+
 
     @ViewChild('autoCompleteInput', { static: true }) autoCompleteInput: ElementRef;
 
@@ -62,7 +67,8 @@ export class ContactAutocompleteComponent implements OnInit {
 
     ngOnInit() {
         this.controlAutocomplete.setValue(this.controlAutocomplete.value === null || this.controlAutocomplete.value === '' ? [] : this.controlAutocomplete.value);
-        this.canAdd = this.privilegeService.hasCurrentUserPrivilege('manage_tags_application');
+        this.canAdd = this.privilegeService.hasCurrentUserPrivilege('create_contacts');
+        this.canUpdate = this.privilegeService.hasCurrentUserPrivilege('update_contacts');
         this.initFormValue();
         this.initAutocompleteRoute();
     }
@@ -78,6 +84,10 @@ export class ContactAutocompleteComponent implements OnInit {
                 distinctUntilChanged(),
                 tap(() => this.loading = true),
                 switchMap((data: any) => this.getDatas(data)),
+                map((data: any) => {
+                    data = data.filter((contact: any) => !this.singleMode || (contact.type !== 'contactGroup' && this.singleMode));
+                    return data;
+                }),
                 tap((data: any) => {
                     if (data.length === 0) {
                         this.listInfo = this.lang.noAvailableValue;
@@ -119,7 +129,7 @@ export class ContactAutocompleteComponent implements OnInit {
                             lastname: data.lastname,
                             company: data.company
                         };
-                        
+
                     }),
                     finalize(() => this.loadingValues = false),
                     catchError((err: any) => {
@@ -156,23 +166,54 @@ export class ContactAutocompleteComponent implements OnInit {
                         return of(false);
                     })
                 ).subscribe();
-            }            
+            }
         });
     }
 
     setFormValue(item: any) {
-        if (this.controlAutocomplete.value.map((contact: any) => contact.id).indexOf(item['id']) === -1) {
+        if (item.type === 'contactGroup') {
+            this.http.get('../../rest/contactsGroups/' + item.id).pipe(
+                map((data: any) => {
+                    const contacts = data.contactsGroup.contacts.map((contact: any) => {
+                        return {
+                            id: contact.id,
+                            type: contact.type,
+                            lastname: contact.contact
+                        }
+                    });
+                    return contacts;
+                }),
+                tap((contacts: any) => {
+                    contacts.forEach((contact: any) => {
+                        this.setContact(contact);
+                    });
+                }),
+                finalize(() => this.loadingValues = false),
+                catchError((err: any) => {
+                    console.log(err);
+                    this.notify.error(err.error.errors);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.setContact(item);
+        }
+
+    }
+
+    setContact(contact: any) {
+        if (this.controlAutocomplete.value.map((contact: any) => contact.id).indexOf(contact['id']) === -1) {
             let arrvalue = [];
             if (this.controlAutocomplete.value !== null) {
                 arrvalue = this.controlAutocomplete.value;
             }
             arrvalue.push(
                 {
-                    type: item['type'],
-                    id: item['id']
+                    type: contact['type'],
+                    id: contact['id']
 
                 });
-            this.valuesToDisplay[item['id']] = item;
+            this.valuesToDisplay[contact['id']] = contact;
             this.controlAutocomplete.setValue(arrvalue);
             this.loadingValues = false;
         }
@@ -219,19 +260,18 @@ export class ContactAutocompleteComponent implements OnInit {
         }
     }
 
-    addItem() {
-        const newElem = {};
+    openContact(contact: any = null) {
+        const dialogRef = this.dialog.open(ContactModalComponent, { maxWidth: '100vw', panelClass: 'contact-modal-container', data: { editMode: this.canUpdate, contactId: contact !== null ? contact.id : null, contactType: contact !== null ? contact.type : null } });
 
-        newElem[this.key] = this.myControl.value;
-
-        this.http.post('../../rest/tags', { label: newElem[this.key] }).pipe(
-            tap((data: any) => {
-                for (var key in data) {
-                    newElem['id'] = data[key];
-                    this.newIds.push(data[key]);
-                }
-                this.setFormValue(newElem);
-                this.myControl.setValue('');
+        dialogRef.afterClosed().pipe(
+            filter((data: number) => data !== undefined),
+            tap((contactId: number) => {
+                const contact = {
+                    type: 'contact',
+                    id: contactId
+                };
+                this.setFormValue(contact);
+                this.initFormValue();
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);

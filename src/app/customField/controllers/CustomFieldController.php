@@ -100,7 +100,7 @@ class CustomFieldController
             return $response->withStatus(400)->withJson(['errors' => 'Some values have the same name']);
         }
 
-        $field = CustomFieldModel::getById(['select' => [1], 'id' => $args['id']]);
+        $field = CustomFieldModel::getById(['select' => ['type', 'values'], 'id' => $args['id']]);
         if (empty($field)) {
             return $response->withStatus(400)->withJson(['errors' => 'Custom field not found']);
         }
@@ -108,6 +108,24 @@ class CustomFieldController
         $fields = CustomFieldModel::get(['select' => [1], 'where' => ['label = ?', 'id != ?'], 'data' => [$body['label'], $args['id']]]);
         if (!empty($fields)) {
             return $response->withStatus(400)->withJson(['errors' => 'Custom field with this label already exists']);
+        }
+
+        if (in_array($field['type'], ['select', 'checkbox', 'radio'])) {
+            $values = json_decode($field['values'], true);
+            foreach ($values as $key => $value) {
+                if (!empty($body['values'][$key]) && $body['values'][$key] != $value) {
+                    ResModel::update([
+                        'postSet'   => ['custom_fields' => "jsonb_insert(custom_fields, '{{$args['id']}, 0}', '\"{$body['values'][$key]}\"')"],
+                        'where'     => ["custom_fields->'{$args['id']}' @> ?"],
+                        'data'      => ["\"{$value}\""]
+                    ]);
+                    ResModel::update([
+                        'postSet'   => ['custom_fields' => "jsonb_set(custom_fields, '{{$args['id']}}', (custom_fields->'{$args['id']}') - '{$value}')"],
+                        'where'     => ['1 = ?'],
+                        'data'      => [1]
+                    ]);
+                }
+            }
         }
 
         CustomFieldModel::update([

@@ -765,9 +765,7 @@ class UserControllerTest extends TestCase
         $aArgs = [
             'firstname'     => 'Super',
             'lastname'      => 'ADMIN',
-            'mail'          => 'dev@maarch.org',
-            'initials'      => 'SU',
-            'preferences'   => ['documentEdition' => 'maarchOnline']
+            'initials'      => 'SU'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -775,7 +773,7 @@ class UserControllerTest extends TestCase
         $this->assertSame(400, $response->getStatusCode());
 
         $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame('Body preferences[documentEdition] is not allowed', $responseBody['errors']);
+        $this->assertSame('Body mail is empty or not a valid email', $responseBody['errors']);
     }
 
     public function testSetRedirectedBasket()

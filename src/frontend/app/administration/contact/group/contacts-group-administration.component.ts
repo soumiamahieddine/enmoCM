@@ -17,6 +17,9 @@ declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "contacts-group-administration.component.html",
+    styleUrls: [
+        'contacts-group-administration.component.scss'
+    ],
     providers: [NotificationService, AppService]
 })
 export class ContactsGroupAdministrationComponent implements OnInit {
@@ -30,17 +33,26 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         {
             icon: 'fa fa-book',
             route: '/administration/contacts/list',
-            label : this.lang.contactsList
-        },
-        {
-            icon: 'fa fa-cog',
-            route: '/administration/contacts/contacts-parameters',
-            label : this.lang.contactsParameters
+            label : this.lang.contactsList,
+            current: false
         },
         {
             icon: 'fa fa-code',
             route: '/administration/contacts/contactsCustomFields',
-            label : this.lang.customFields
+            label : this.lang.customFields,
+            current: false
+        },
+        {
+            icon: 'fa fa-cog',
+            route: '/administration/contacts/contacts-parameters',
+            label : this.lang.contactsParameters,
+            current: false
+        },
+        {
+            icon: 'fa fa-users',
+            route: '/administration/contacts/contacts-groups',
+            label : this.lang.contactsGroups,
+            current: false
         },
     ];
 

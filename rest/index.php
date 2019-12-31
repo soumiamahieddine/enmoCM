@@ -120,6 +120,7 @@ $app->delete('/contacts/{id}', \Contact\controllers\ContactController::class . '
 $app->put('/contacts/{id}/activation', \Contact\controllers\ContactController::class . ':updateActivation');
 $app->get('/formattedContacts/{id}/types/{type}', \Contact\controllers\ContactController::class . ':getLightFormattedContact');
 $app->get('/ban/availableDepartments', \Contact\controllers\ContactController::class . ':getAvailableDepartments');
+$app->post('/contacts/formatV1', \Contact\controllers\ContactController::class . ':getFormattedContactsForSearchV1');
 
 //ContactsCustomFields
 $app->get('/contactsCustomFields', \Contact\controllers\ContactCustomFieldController::class . ':get');
@@ -137,6 +138,7 @@ $app->post('/contactsGroups/{id}/contacts', \Contact\controllers\ContactGroupCon
 $app->delete('/contactsGroups/{id}/contacts/{contactId}', \Contact\controllers\ContactGroupController::class . ':deleteContact');
 $app->get('/contactsParameters', \Contact\controllers\ContactController::class . ':getContactsParameters');
 $app->put('/contactsParameters', \Contact\controllers\ContactController::class . ':updateContactsParameters');
+$app->get('/civilities', \Contact\controllers\ContactController::class . ':getCivilities');
 
 //Convert
 $app->post('/convertedFile', \Convert\controllers\ConvertPdfController::class . ':convertedFile');
@@ -356,6 +358,9 @@ $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':u
 $app->get('/categories', \Resource\controllers\ResController::class . ':getCategories');
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 $app->get('/resources/{resId}/users/{userId}/groups/{groupId}/baskets/{basketId}/processingData', \Resource\controllers\ResController::class . ':getProcessingData');
+$app->put('/resources/{resId}/follow', \Resource\controllers\UsersFollowedResourcesController::class . ':follow');
+$app->delete('/resources/{resId}/unfollow', \Resource\controllers\UsersFollowedResourcesController::class . ':unFollow');
+$app->get('/followedResources', \Resource\controllers\UsersFollowedResourcesController::class . ':getFollowedResources');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');

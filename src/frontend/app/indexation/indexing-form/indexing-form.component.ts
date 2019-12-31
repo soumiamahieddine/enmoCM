@@ -11,7 +11,6 @@ import { SortPipe } from '../../../plugins/sorting.pipe';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormControl, Validators, FormGroup, ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
 import { DiffusionsListComponent } from '../../diffusions/diffusions-list.component';
-import { stringify } from '@angular/compiler/src/util';
 
 @Component({
     selector: 'app-indexing-form',
@@ -32,6 +31,8 @@ export class IndexingFormComponent implements OnInit {
     @Input('admin') adminMode: boolean;
     @Input('canEdit') canEdit: boolean = true;
     @Input('mode') mode: string = 'indexation';
+
+    @Input('hideDiffusionList') hideDiffusionList: boolean = false;
 
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
 
@@ -306,7 +307,15 @@ export class IndexingFormComponent implements OnInit {
                 identifier: 'modelId',
                 default_value: this.indexingFormId
             });
+
+            if (this.mode === 'indexation') {
+                arrIndexingModels.push({
+                    identifier: 'followed',
+                    default_value: this.arrFormControl['mail­tracking'].value
+                });
+            }
         }
+
         return arrIndexingModels;
     }
 
@@ -575,6 +584,7 @@ export class IndexingFormComponent implements OnInit {
                         }
                     });
                 });
+                this.arrFormControl['mail­tracking'].setValue(data.followed);
             }),
             tap(() => {
                 this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));
@@ -866,6 +876,26 @@ export class IndexingFormComponent implements OnInit {
 
     toggleMailTracking() {
         this.arrFormControl['mail­tracking'].setValue(!this.arrFormControl['mail­tracking'].value);
+
+        if (this.mode !== 'indexation') {
+            if (this.arrFormControl['mail­tracking'].value) {
+
+                this.http.put(`../../rest/resources/${this.resId}/follow`, {}).pipe(
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else {
+
+                this.http.delete(`../../rest/resources/${this.resId}/unfollow`, {}).pipe(
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            }
+        }
     }
 
     changeCategory(categoryId: string) {

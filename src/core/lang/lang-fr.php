@@ -332,7 +332,9 @@ define('_SUMMARY_SHEET', 'Fiche de liaison');
 define('_UNDEFINED', 'Non défini');
 define('_CATEGORY', 'Catégorie');
 define('_SENDERS', 'Expéditeur(s)');
+define('_SENDER', 'Expéditeur');
 define('_RECIPIENTS', 'Destinataire(s)');
+define('_RECIPIENT', 'Destinataire');
 define('_CHRONO_NUMBER', 'Numéro chrono');
 define('_INITIATOR_ENTITY', 'Entité initiatrice');
 define('_DESTINATION_ENTITY', 'Entité traitante');
@@ -442,3 +444,5 @@ define("_CANNOT_SYNCHRONIZE_M2M_ANNUARY", "Le contact ne peut pas être ajouté 
 define("_DATE_LOCALE", "fr_FR.utf8");
 
 define("_USER_PREFERENCE_UPDATED", "Préférences utilisateur modifiées");
+
+define("_NO_SENDERS", "Aucun expéditeur(s) lié au courrier");

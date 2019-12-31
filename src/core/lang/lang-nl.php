@@ -332,7 +332,9 @@ define('_SUMMARY_SHEET', 'Summary sheet_TO_TRANSLATE');
 define('_UNDEFINED', 'Undefined_TO_TRANSLATE');
 define('_CATEGORY', 'Category_TO_TRANSLATE');
 define('_SENDERS', 'Sender(s)_TO_TRANSLATE');
+define('_SENDER', 'Sender_TO_TRANSLATE');
 define('_RECIPIENTS', 'Recipient(s)_TO_TRANSLATE');
+define('_RECIPIENT', 'Recipient_TO_TRANSLATE');
 define('_CHRONO_NUMBER', 'Chrono number_TO_TRANSLATE');
 define('_INITIATOR_ENTITY', 'Initiator entity_TO_TRANSLATE');
 define('_DESTINATION_ENTITY', 'Destination entity_TO_TRANSLATE');
@@ -448,3 +450,5 @@ define("_CANNOT_SYNCHRONIZE_M2M_ANNUARY", "Contact can not be added in M2M annua
 define("_DATE_LOCALE", "en_US.utf8");
 
 define("_USER_PREFERENCE_UPDATED", "User preferences updated"); //TO TRANSLATE
+
+define("_NO_SENDERS", "No sender(s) linked to resource"); //TO TRANSLATE

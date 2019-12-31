@@ -17,6 +17,7 @@ namespace Entity\controllers;
 use Entity\models\ListInstanceHistoryDetailModel;
 use Entity\models\ListInstanceHistoryModel;
 use Entity\models\ListInstanceModel;
+use Group\controllers\PrivilegeController;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Respect\Validation\Validator;
@@ -156,10 +157,21 @@ class ListInstanceController
                 }
 
                 if ($instance['item_type'] == 'user_id') {
-                    $user = UserModel::getByLogin(['login' => $instance['item_id']]);
+                    $user = UserModel::getByLogin(['login' => $instance['item_id'], 'select' => ['id']]);
                     if (empty($user)) {
                         DatabaseModel::rollbackTransaction();
                         return ['errors' => 'User not found', 'code' => 400];
+                    }
+                    if ($ListInstanceByRes['listInstances'][0]['difflist_type'] == 'VISA_CIRCUIT') {
+                        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'visa_documents', 'userId' => $user['id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $user['id']])) {
+                            DatabaseModel::rollbackTransaction();
+                            return ['errors' => 'User has not enough privileges', 'code' => 400];
+                        }
+                    } elseif ($ListInstanceByRes['listInstances'][0]['difflist_type'] == 'AVIS_CIRCUIT') {
+                        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'avis_documents', 'userId' => $user['id']])) {
+                            DatabaseModel::rollbackTransaction();
+                            return ['errors' => 'User has not enough privileges', 'code' => 400];
+                        }
                     }
                 } elseif ($instance['item_type'] == 'entity_id') {
                     $entity = EntityModel::getByEntityId(['entityId' => $instance['item_id']]);
@@ -167,6 +179,9 @@ class ListInstanceController
                         DatabaseModel::rollbackTransaction();
                         return ['errors' => 'Entity not found or not active', 'code' => 400];
                     }
+                } else {
+                    DatabaseModel::rollbackTransaction();
+                    return ['errors' => 'item_type does not exist', 'code' => 400];
                 }
 
                 ListInstanceModel::create([

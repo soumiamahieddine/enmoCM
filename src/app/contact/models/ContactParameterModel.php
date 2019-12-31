@@ -59,9 +59,6 @@ class ContactParameterModel
 
     public static function create(array $args)
     {
-        ValidatorModel::notEmpty($args, ['creator']);
-        ValidatorModel::intVal($args, ['creator']);
-
         $nextSequenceId = DatabaseModel::getNextSequenceValue(['sequenceId' => 'contacts_parameters_id_seq']);
         $args['id'] = $nextSequenceId;
 

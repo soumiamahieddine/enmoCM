@@ -76,7 +76,7 @@ export class AttachmentCreateComponent implements OnInit {
             tap((data: any) => {
                 this.attachments.push({
                     title: new FormControl({ value: data.subject, disabled: false }, [Validators.required]),
-                    contact: new FormControl({ value: '', disabled: false }),
+                    recipient: new FormControl({ value: '', disabled: false }),
                     type: new FormControl({ value: '', disabled: false }, [Validators.required]),
                     validationDate: new FormControl({ value: '', disabled: false }),
                     format: new FormControl({ value: '', disabled: false }, [Validators.required]),
@@ -100,6 +100,8 @@ export class AttachmentCreateComponent implements OnInit {
                 resIdMaster: this.data.resIdMaster,
                 type: element.type.value,
                 title: element.title.value,
+                recipientId: element.recipient.value.length > 0 ? element.recipient.value[0].id : null,
+                recipientType: element.recipient.value.length > 0 ? element.recipient.value[0].type : null,
                 validationDate: element.validationDate.value !== '' ? element.validationDate.value : null,
                 encodedFile: element.encodedFile.value,
                 format: element.format.value
@@ -193,7 +195,7 @@ export class AttachmentCreateComponent implements OnInit {
                 this.attachments[this.indexTab].format.setValue(data.format);
                 this.attachments.push({
                     title: new FormControl({ value: '', disabled: false }, [Validators.required]),
-                    contact: new FormControl({ value: null, disabled: false }),
+                    recipient: new FormControl({ value: null, disabled: false }),
                     type: new FormControl({ value: '', disabled: false }, [Validators.required]),
                     validationDate: new FormControl({ value: null, disabled: false }),
                     encodedFile: new FormControl({ value: '', disabled: false }, [Validators.required]),

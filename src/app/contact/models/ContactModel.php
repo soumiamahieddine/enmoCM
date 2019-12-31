@@ -190,10 +190,12 @@ class ContactModel
             $result = $loadedXml->xpath('/ROOT/titles');
             foreach ($result as $title) {
                 foreach ($title as $value) {
-                    $civilities[(string) $value->id] = [
-                        'label'         => (string)$value->label,
-                        'abbreviation'  => (string)$value->abbreviation,
-                    ];
+                    if (!empty((string) $value->id)) {
+                        $civilities[(string) $value->id] = [
+                            'label'         => (string)$value->label,
+                            'abbreviation'  => (string)$value->abbreviation,
+                        ];
+                    }
                 }
             }
         }

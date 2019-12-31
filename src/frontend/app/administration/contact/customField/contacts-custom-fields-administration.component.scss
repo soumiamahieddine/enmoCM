@@ -1,10 +1,14 @@
 @import '../../../../css/vars.scss';
 
+.active, .active:hover , .active:active, .active:focus {
+    background-color: $secondary;
+    color: white;
+}
+
 .mat-divider {
     padding-top: 10px;
     padding-bottom: 10px;
 }
-
 
 .customFielsdPanel {
     padding-left: 0px;

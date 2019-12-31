@@ -67,26 +67,27 @@ class MaarchParapheurController
     {
         $attachmentToFreeze = [];
 
-        $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resIdMaster'], 'collId' => 'letterbox_coll']);
-        if (empty($adrMainInfo['docserver_id'])) {
-            return ['error' => 'Document ' . $aArgs['resIdMaster'] . ' is not converted in pdf'];
-        }
-        $docserverMainInfo = DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
-        if (empty($docserverMainInfo['path_template'])) {
-            return ['error' => 'Docserver does not exist ' . $adrMainInfo['docserver_id']];
-        }
-        $arrivedMailMainfilePath = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
-
         $mainResource = ResModel::getOnView([
-            'select' => ['process_limit_date', 'status', 'category_id', 'alt_identifier', 'subject', 'priority', 'res_id', 'admission_date', 'creation_date', 'doc_date', 'initiator', 'typist', 'type_label', 'destination'],
+            'select' => ['process_limit_date', 'status', 'category_id', 'alt_identifier', 'subject', 'priority', 'res_id', 'admission_date', 'creation_date', 'doc_date', 'initiator', 'typist', 'type_label', 'destination', 'filename'],
             'where'  => ['res_id = ?'],
             'data'   => [$aArgs['resIdMaster']]
         ]);
-        $recipients = ContactController::getFormattedContacts(['resId' => $mainResource[0]['res_id'], 'mode' => 'recipient']);
-
         if (empty($mainResource)) {
             return ['error' => 'Mail does not exist'];
         }
+        if (!empty($mainResource[0]['filename'])) {
+            $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resIdMaster'], 'collId' => 'letterbox_coll']);
+            if (empty($adrMainInfo['docserver_id'])) {
+                return ['error' => 'Document ' . $aArgs['resIdMaster'] . ' is not converted in pdf'];
+            }
+            $docserverMainInfo = DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
+            if (empty($docserverMainInfo['path_template'])) {
+                return ['error' => 'Docserver does not exist ' . $adrMainInfo['docserver_id']];
+            }
+            $arrivedMailMainfilePath = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
+        }
+        $recipients = ContactController::getFormattedContacts(['resId' => $mainResource[0]['res_id'], 'mode' => 'recipient']);
+
 
         $units = [];
         $units[] = ['unit' => 'primaryInformations'];
@@ -149,7 +150,11 @@ class MaarchParapheurController
         $concatPdf->setPrintHeader(false);
 
         if ($aArgs['objectSent'] == 'mail') {
-            foreach ([$filename, $arrivedMailMainfilePath] as $file) {
+            $filesToConcat = [$filename];
+            if (!empty($arrivedMailMainfilePath)) {
+                $filesToConcat[] = $arrivedMailMainfilePath;
+            }
+            foreach ($filesToConcat as $file) {
                 $pageCount = $concatPdf->setSourceFile($file);
                 for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
                     $pageId = $concatPdf->ImportPage($pageNo);
@@ -165,7 +170,9 @@ class MaarchParapheurController
             $arrivedMailMainfilePath = $concatFilename;
         }
 
-        $encodedMainZipFile = MaarchParapheurController::createZip(['filepath' => $arrivedMailMainfilePath, 'filename' => 'courrier_arrivee.pdf']);
+        if (!empty($arrivedMailMainfilePath)) {
+            $encodedMainZipFile = MaarchParapheurController::createZip(['filepath' => $arrivedMailMainfilePath, 'filename' => 'courrier_arrivee.pdf']);
+        }
 
         if (empty($mainResource[0]['process_limit_date'])) {
             $processLimitDate = date('Y-m-d H:i:s', strtotime(date("Y-m-d H:i:s"). ' + 14 days'));
@@ -205,6 +212,30 @@ class MaarchParapheurController
             if (empty($attachments)) {
                 return ['error' => 'No attachment to send'];
             } else {
+                $nonSignableAttachments = [];
+                $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
+                foreach ($attachments as $key => $value) {
+                    if (!$attachmentTypes[$value['attachment_type']]['sign']) {
+                        $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $value['res_id'], 'collId' => 'attachments_coll']);
+                        if (empty($adrInfo['docserver_id'])) {
+                            return ['error' => 'Attachment ' . $value['res_id'] . ' is not converted in pdf'];
+                        }
+                        $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
+                        if (empty($docserverInfo['path_template'])) {
+                            return ['error' => 'Docserver does not exist ' . $adrInfo['docserver_id']];
+                        }
+                        $filePath = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
+            
+                        $encodedZipDocument = MaarchParapheurController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename']]);
+
+                        $nonSignableAttachments[] = [
+                            'encodedDocument' => $encodedZipDocument,
+                            'title'           => $value['title'],
+                            'reference'       => $value['identifier']
+                        ];
+                        unset($attachments[$key]);
+                    }
+                }
                 foreach ($attachments as $value) {
                     $resId  = $value['res_id'];
                     $collId = 'attachments_coll';
@@ -222,7 +253,7 @@ class MaarchParapheurController
                     $encodedZipDocument = MaarchParapheurController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename']]);
         
                     $attachmentsData = [];
-                    if ($mainResource[0]['category_id'] != 'outgoing') {
+                    if ($mainResource[0]['category_id'] != 'outgoing' && !empty($encodedMainZipFile)) {
                         $attachmentsData = [[
                             'encodedDocument' => $encodedMainZipFile,
                             'title'           => $mainResource[0]['subject'],
@@ -235,6 +266,8 @@ class MaarchParapheurController
                         'title'           => "summarySheet.pdf",
                         'reference'       => ""
                     ];
+
+                    $attachmentsData = array_merge($nonSignableAttachments, $attachmentsData);
     
                     $metadata = [];
                     if (!empty($priority['label'])) {
@@ -251,17 +284,22 @@ class MaarchParapheurController
                         }
                         $metadata[_RECIPIENTS] = $contact;
                     }
-        
+
                     $bodyData = [
-                        'title'           => $value['title'],
-                        'reference'       => $value['identifier'],
-                        'encodedDocument' => $encodedZipDocument,
-                        'sender'          => trim($sender['firstname'] . ' ' .$sender['lastname']),
-                        'deadline'        => $processLimitDate,
-                        'attachments'     => $attachmentsData,
-                        'workflow'        => $workflow,
-                        'metadata'        => $metadata
+                        'title'             => $value['title'],
+                        'reference'         => $value['identifier'],
+                        'encodedDocument'   => $encodedZipDocument,
+                        'sender'            => trim($sender['firstname'] . ' ' .$sender['lastname']),
+                        'deadline'          => $processLimitDate,
+                        'attachments'       => $attachmentsData,
+                        'workflow'          => $workflow,
+                        'metadata'          => $metadata
                     ];
+                    if (!empty($aArgs['note'])) {
+                        $noteCreationDate = new \DateTime();
+                        $noteCreationDate = $noteCreationDate->format('Y-m-d');
+                        $bodyData['notes'] = ['creator' => trim($sender['firstname'] . ' ' .$sender['lastname']), 'creationDate' => $noteCreationDate, 'value' => $aArgs['note']];
+                    }
         
                     $response = CurlModel::exec([
                         'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',
@@ -301,6 +339,11 @@ class MaarchParapheurController
                 'workflow'         => $workflow,
                 'metadata'         => $metadata
             ];
+            if (!empty($aArgs['note'])) {
+                $noteCreationDate = new \DateTime();
+                $noteCreationDate = $noteCreationDate->format('Y-m-d');
+                $bodyData['notes'] = ['creator' => trim($sender['firstname'] . ' ' .$sender['lastname']), 'creationDate' => $noteCreationDate, 'value' => $aArgs['note']];
+            }
 
             $response = CurlModel::exec([
                 'url'      => rtrim($aArgs['config']['data']['url'], '/') . '/rest/documents',

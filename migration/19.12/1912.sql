@@ -156,19 +156,6 @@ CREATE TABLE custom_fields
 )
 WITH (OIDS=FALSE);
 
-DROP TABLE IF EXISTS resources_custom_fields;
-CREATE TABLE resources_custom_fields
-(
-    id serial NOT NULL,
-    res_id INTEGER NOT NULL,
-    custom_field_id INTEGER NOT NULL,
-    value jsonb NOT NULL,
-    CONSTRAINT resources_custom_fields_pkey PRIMARY KEY (id),
-    CONSTRAINT resources_custom_fields_unique_key UNIQUE (res_id, custom_field_id)
-)
-WITH (OIDS=FALSE);
-
-
 /* CONTACTS CUSTOM FIELDS */
 DROP TABLE IF EXISTS contacts_custom_fields_list;
 CREATE TABLE contacts_custom_fields_list
@@ -665,19 +652,25 @@ SELECT setval('custom_fields_id_seq', (select max(id)+1 from custom_fields), fal
 
 DO $$ BEGIN
   IF (SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'mlb_coll_ext')) THEN
-    TRUNCATE TABLE resources_custom_fields;
-    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-    SELECT res_id, 1, '"Courrier simple"' FROM mlb_coll_ext WHERE nature_id = 'simple_mail';
-    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-    SELECT res_id, 1, '"Courriel"' FROM mlb_coll_ext WHERE nature_id = 'email';
-    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-    SELECT res_id, 1, '"Autre"' FROM mlb_coll_ext WHERE nature_id IN ('fax', 'other', 'courier');
-    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-    SELECT res_id, 1, '"Courrier suivi"' FROM mlb_coll_ext WHERE nature_id IN ('chronopost', 'fedex');
-    INSERT INTO resources_custom_fields (res_id, custom_field_id, value)  
-    SELECT res_id, 1, '"Courrier avec AR"' FROM mlb_coll_ext WHERE nature_id = 'registered_mail';
+    UPDATE res_letterbox SET custom_fields = json_build_object('1', 'Courrier simple') FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id = 'simple_mail';
+    UPDATE res_letterbox SET custom_fields = json_build_object('1', 'Courriel') FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id = 'email';
+    UPDATE res_letterbox SET custom_fields = json_build_object('1', 'Autre') FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id in ('fax', 'other', 'courier');
+    UPDATE res_letterbox SET custom_fields = json_build_object('1', 'Courrier suivi') FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id in ('chronopost', 'fedex');
+    UPDATE res_letterbox SET custom_fields = json_build_object('1', 'Courrier avec AR') FROM mlb_coll_ext WHERE res_letterbox.res_id = mlb_coll_ext.res_id AND mlb_coll_ext.nature_id = 'registered_mail';
   END IF;
 END$$;
+UPDATE baskets set basket_clause = replace(basket_clause, 'nature_id' , 'custom_fields->>''1''');
+
+/* users followed resources */
+DROP TABLE IF EXISTS users_followed_resources;
+CREATE TABLE users_followed_resources
+(
+    id serial NOT NULL,
+    res_id int NOT NULL,
+    user_id int NOT NULL,
+    CONSTRAINT users_followed_resources_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
 
 TRUNCATE TABLE indexing_models;
 INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (1, 'incoming', 'Courrier arrivée', TRUE, 23, FALSE);

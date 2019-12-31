@@ -332,7 +332,9 @@ define('_SUMMARY_SHEET', 'Summary sheet');
 define('_UNDEFINED', 'Undefined');
 define('_CATEGORY', 'Category');
 define('_SENDERS', 'Sender(s)');
+define('_SENDER', 'Sender');
 define('_RECIPIENTS', 'Recipient(s)');
+define('_RECIPIENT', 'Recipient');
 define('_CHRONO_NUMBER', 'Chrono number');
 define('_INITIATOR_ENTITY', 'Initiator entity');
 define('_DESTINATION_ENTITY', 'Destination entity');
@@ -443,3 +445,5 @@ define("_CANNOT_SYNCHRONIZE_M2M_ANNUARY", "Contact can not be added in M2M annua
 define("_DATE_LOCALE", "en_US.utf8");
 
 define("_USER_PREFERENCE_UPDATED", "User preferences updated");
+
+define("_NO_SENDERS", "No sender(s) linked to resource");

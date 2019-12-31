@@ -16,9 +16,11 @@ namespace Resource\controllers;
 
 use Basket\models\BasketModel;
 use Contact\controllers\ContactController;
+use CustomField\models\CustomFieldModel;
 use Endroid\QrCode\QrCode;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
+use IndexingModel\models\IndexingModelFieldModel;
 use Note\models\NoteEntityModel;
 use Note\models\NoteModel;
 use Parameter\models\ParameterModel;
@@ -30,6 +32,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
@@ -64,10 +67,7 @@ class SummarySheetController
             'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
             'data'      => [$bodyData['resources']]
         ]);
-        $allResourcesInBasket = [];
-        foreach ($rawResourcesInBasket as $resource) {
-            $allResourcesInBasket[] = $resource['res_id'];
-        }
+        $allResourcesInBasket = array_column($rawResourcesInBasket, 'res_id');
 
         $order = 'CASE res_view_letterbox.res_id ';
         foreach ($bodyData['resources'] as $key => $resId) {
@@ -78,38 +78,86 @@ class SummarySheetController
         }
         $order .= 'END';
 
-        $select = ['res_id', 'subject', 'alt_identifier'];
-        foreach ($units as $unit) {
-            $unit = (array)$unit;
-            if ($unit['unit'] == 'primaryInformations') {
-                $informations = ['admission_date', 'creation_date', 'doc_date', 'type_label', 'initiator', 'typist'];
-                $select = array_merge($select, $informations);
-            } elseif ($unit['unit'] == 'secondaryInformations') {
-                $informations = ['category_id', 'priority', 'process_limit_date', 'status'];
-                $select = array_merge($select, $informations);
-            } elseif ($unit['unit'] == 'diffusionList') {
-                $informations = ['destination'];
-                $select = array_merge($select, $informations);
-            }
-        }
-
-        $resources = ResModel::getOnView([
-            'select'    => $select,
-            'where'     => ['res_view_letterbox.res_id in (?)'],
-            'data'      => [$bodyData['resources']],
-            'orderBy'   => [$order]
+        $resourcesByModelIds = DatabaseModel::select([
+            'select'  => ["string_agg(cast(res_id as text), ',') as res_ids", 'model_id'],
+            'table'   => ['res_letterbox'],
+            'where'   => ['res_id in (?)'],
+            'data'    => [$bodyData['resources']],
+            'groupBy' => ['model_id']
         ]);
 
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
 
-        $resourcesIds = array_column($resources, 'res_id');
+        foreach ($resourcesByModelIds as $resourcesByModelId) {
+            $resourcesIdsByModel = $resourcesByModelId['res_ids'];
+            $resourcesIdsByModel = explode(',', $resourcesIdsByModel);
 
-        // Data for resources
-        $data = SummarySheetController::prepareData(['units' => $units, 'resourcesIds' => $resourcesIds]);
+            $indexingFields   = IndexingModelFieldModel::get([
+                'select' => ['identifier', 'unit'],
+                'where'  => ['model_id = ?'],
+                'data'   => [$resourcesByModelId['model_id']]
+            ]);
+            $fieldsIdentifier = array_column($indexingFields, 'identifier');
 
-        foreach ($resources as $resource) {
-            SummarySheetController::createSummarySheet($pdf, ['resource' => $resource, 'units' => $units, 'login' => $GLOBALS['userId'], 'data' => $data]);
+            $select = ['res_id', 'subject', 'alt_identifier'];
+            foreach ($units as $unit) {
+                $unit = (array)$unit;
+                if ($unit['unit'] == 'primaryInformations') {
+                    $information = [
+                        'documentDate' => 'doc_date',
+                        'arrivalDate'  => 'admission_date',
+                        'initiator'    => 'initiator'
+                    ];
+                    $select[]    = 'type_label';
+                    $select[]    = 'creation_date';
+                    $select[]    = 'typist';
+
+                    foreach ($information as $key => $item) {
+                        if (in_array($key, $fieldsIdentifier)) {
+                            $select[] = $item;
+                        }
+                    }
+                } elseif ($unit['unit'] == 'secondaryInformations') {
+                    $information = [
+                        'priority'         => 'priority',
+                        'processLimitDate' => 'process_limit_date',
+                    ];
+                    $select[] = 'category_id';
+                    $select[] = 'status';
+
+                    foreach ($information as $key => $item) {
+                        if (in_array($key, $fieldsIdentifier)) {
+                            $select[] = $item;
+                        }
+                    }
+                } elseif ($unit['unit'] == 'diffusionList') {
+                    if (in_array('destination', $fieldsIdentifier)) {
+                        $select[] = 'destination';
+                    }
+                }
+            }
+
+            $resources = ResModel::getOnView([
+                'select'  => $select,
+                'where'   => ['res_view_letterbox.res_id in (?)'],
+                'data'    => [$resourcesIdsByModel],
+                'orderBy' => [$order]
+            ]);
+
+            $resourcesIds = array_column($resources, 'res_id');
+
+            // Data for resources
+            $data = SummarySheetController::prepareData(['units' => $units, 'resourcesIds' => $resourcesIds]);
+
+            foreach ($resources as $resource) {
+                SummarySheetController::createSummarySheet($pdf, [
+                    'resource'         => $resource, 'units' => $units,
+                    'login'            => $GLOBALS['userId'],
+                    'data'             => $data,
+                    'fieldsIdentifier' => $fieldsIdentifier
+                ]);
+            }
         }
 
         $fileContent = $pdf->Output('', 'S');
@@ -177,6 +225,14 @@ class SummarySheetController
         ]);
         $allResourcesInBasket = array_column($rawResourcesInBasket, 'res_id');
 
+        $resourcesByModelIds = DatabaseModel::select([
+            'select'  => ["string_agg(cast(res_id as text), ',') as res_ids", 'model_id'],
+            'table'   => ['res_letterbox'],
+            'where'   => ['res_id in (?)'],
+            'data'    => [$allResourcesInBasket],
+            'groupBy' => ['model_id']
+        ]);
+
         $order = 'CASE res_view_letterbox.res_id ';
         foreach ($resourcesData as $key => $resId) {
             if (!in_array($resId, $allResourcesInBasket)) {
@@ -203,23 +259,57 @@ class SummarySheetController
             'destination'
         ];
 
-        $resources = ResModel::getOnView([
-            'select'    => $select,
-            'where'     => ['res_view_letterbox.res_id in (?)'],
-            'data'      => [$resourcesData],
-            'orderBy'   => [$order]
-        ]);
+        $possibleFields = [
+            'documentDate'     => 'doc_date',
+            'arrivalDate'      => 'admission_date',
+            'initiator'        => 'initiator',
+            'priority'         => 'priority',
+            'processLimitDate' => 'process_limit_date',
+            'destination'      => 'destination'
+        ];
+
 
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
 
-        $resourcesIds = array_column($resources, 'res_id');
+        foreach ($resourcesByModelIds as $resourcesByModelId) {
+            $resourcesIdsByModel = $resourcesByModelId['res_ids'];
+            $resourcesIdsByModel = explode(',', $resourcesIdsByModel);
 
-        // Data for resources
-        $data = SummarySheetController::prepareData(['units' => $units, 'resourcesIds' => $resourcesIds]);
+            $indexingFields = IndexingModelFieldModel::get([
+                'select' => ['identifier', 'unit'],
+                'where'  => ['model_id = ?'],
+                'data'   => [$resourcesByModelId['model_id']]
+            ]);
+            $fieldsIdentifier = array_column($indexingFields, 'identifier');
 
-        foreach ($resources as $resource) {
-            SummarySheetController::createSummarySheet($pdf, ['resource' => $resource, 'units' => $units, 'login' => $GLOBALS['userId'], 'data' => $data]);
+            foreach ($possibleFields as $key => $possibleField) {
+                if (!in_array($key, $fieldsIdentifier)) {
+                    unset($select[$possibleField]);
+                }
+            }
+
+            $resources = ResModel::getOnView([
+                'select'  => $select,
+                'where'   => ['res_view_letterbox.res_id in (?)'],
+                'data'    => [$resourcesIdsByModel],
+                'orderBy' => [$order]
+            ]);
+
+            $resourcesIds = array_column($resources, 'res_id');
+
+            // Data for resources
+            $data = SummarySheetController::prepareData(['units' => $units, 'resourcesIds' => $resourcesIds]);
+
+            foreach ($resources as $resource) {
+                SummarySheetController::createSummarySheet($pdf, [
+                    'resource'         => $resource,
+                    'units'            => $units,
+                    'login'            => $GLOBALS['userId'],
+                    'data'             => $data,
+                    'fieldsIdentifier' => $fieldsIdentifier
+                ]);
+            }
         }
 
         $fileContent = $pdf->Output('', 'S');
@@ -235,11 +325,13 @@ class SummarySheetController
     public static function createSummarySheet(Fpdi $pdf, array $args)
     {
         ValidatorModel::notEmpty($args, ['resource', 'login']);
-        ValidatorModel::arrayType($args, ['resource', 'units', 'data']);
+        ValidatorModel::arrayType($args, ['resource', 'units', 'data', 'fieldsIdentifier']);
         ValidatorModel::stringType($args, ['login']);
 
-        $resource = $args['resource'];
-        $units    = $args['units'];
+        $resource         = $args['resource'];
+        $units            = $args['units'];
+        $fieldsIdentifier = $args['fieldsIdentifier'];
+
 
         $pdf->AddPage();
         $dimensions     = $pdf->getPageDimensions();
@@ -259,7 +351,7 @@ class SummarySheetController
 
         $pdf->SetFont('', 'B', 12);
         $pdf->Cell(0, 20, _SUMMARY_SHEET, 0, 2, 'C', false);
-        
+
         $pdf->SetFont('', '', 8);
         $pdf->Cell(0, 1, $resource['alt_identifier'], 0, 2, 'C', false);
 
@@ -284,17 +376,26 @@ class SummarySheetController
         }
         foreach ($units as $key => $unit) {
             if ($unit['unit'] == 'primaryInformations') {
-                $nature        = '<i>'._UNDEFINED.'</i>';
-                $admissionDate = TextFormatModel::formatDate($resource['admission_date'], 'd-m-Y');
-                $admissionDate = empty($admissionDate) ? '<i>'._UNDEFINED.'</i>' : "<b>{$admissionDate}</b>";
+                $admissionDate = null;
+                if (in_array('arrivalDate', $fieldsIdentifier)) {
+                    $admissionDate = TextFormatModel::formatDate($resource['admission_date'], 'd-m-Y');
+                    $admissionDate = empty($admissionDate) ? '<i>' . _UNDEFINED . '</i>' : "<b>{$admissionDate}</b>";
+                }
+
                 $creationdate  = TextFormatModel::formatDate($resource['creation_date'], 'd-m-Y');
                 $creationdate  = empty($creationdate) ? '<i>'._UNDEFINED.'</i>' : "<b>{$creationdate}</b>";
-                $docDate       = TextFormatModel::formatDate($resource['doc_date'], 'd-m-Y');
-                $docDate       = empty($docDate) ? '<i>'._UNDEFINED.'</i>' : "<b>{$docDate}</b>";
+
+                $docDate = null;
+                if (in_array('documentDate', $fieldsIdentifier)) {
+                    $docDate = TextFormatModel::formatDate($resource['doc_date'], 'd-m-Y');
+                    $docDate = empty($docDate) ? '<i>' . _UNDEFINED . '</i>' : "<b>{$docDate}</b>";
+                }
+
                 if (!empty($resource['initiator'])) {
                     $initiator = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['short_label']]);
                 }
                 $initiatorEntity = empty($initiator) ? '' : "({$initiator['short_label']})";
+
                 $typist          = UserModel::getLabelledUserById(['id' => $resource['typist']]);
                 $doctype         = empty($resource['type_label']) ? '<i>'._UNDEFINED.'</i>' : "<b>{$resource['type_label']}</b>";
 
@@ -309,27 +410,79 @@ class SummarySheetController
                 }
 
                 $pdf->SetFont('', '', 10);
-                $pdf->MultiCell($widthMultiCell, 15, _DOC_DATE . " : {$docDate}", 0, 'L', false, 0, '', '', true, 0, true);
+
+                $pdf->MultiCell($widthMultiCell, 15, _TYPIST . " : <b>{$typist} {$initiatorEntity}</b>", 0, 'L', false, 0, '', '', true, 0, true);
+                if (isset($docDate)) {
+                    $pdf->Cell($widthCell, 15, '', 0, 0, 'L', false);
+                    $pdf->MultiCell($widthMultiCell, 15, _DOC_DATE . " : {$docDate}", 0, 'L', false, 1, '', '', true, 0, true);
+                } else {
+                    $pdf->Cell($widthCell, 15, '', 0, 1, 'L', false);
+                }
+
+                $pdf->MultiCell($widthMultiCell, 15, _CREATED . " : {$creationdate}", 0, 'L', false, 0, '', '', true, 0, true);
+
+                if (isset($admissionDate)) {
+                    $pdf->Cell($widthCell, 15, '', 0, 0, 'L', false);
+                    $pdf->MultiCell($widthMultiCell, 15, _ADMISSION_DATE . " : {$admissionDate}", 0, 'L', false, 1, '', '', true, 0, true);
+                } else {
+                    $pdf->Cell($widthCell, 15, '', 0, 1, 'L', false);
+                }
+
+                $pdf->MultiCell($widthMultiCell * 2, 15, _DOCTYPE . " : {$doctype}", 0, 'L', false, 0, '', '', true, 0, true);
                 $pdf->Cell($widthCell, 15, '', 0, 0, 'L', false);
-                $pdf->MultiCell($widthMultiCell, 15, _ADMISSION_DATE . " : {$admissionDate}", 0, 'L', false, 1, '', '', true, 0, true);
-                $pdf->MultiCell($widthMultiCell, 15, _NATURE . " : {$nature}", 0, 'L', false, 0, '', '', true, 0, true);
-                $pdf->Cell($widthCell, 15, '', 0, 0, 'L', false);
-                $pdf->MultiCell($widthMultiCell, 15, _CREATED . " : {$creationdate}", 0, 'L', false, 1, '', '', true, 0, true);
-                $pdf->MultiCell($widthMultiCell, 15, _DOCTYPE . " : {$doctype}", 0, 'L', false, 0, '', '', true, 0, true);
-                $pdf->Cell($widthCell, 15, '', 0, 0, 'L', false);
-                $pdf->MultiCell($widthMultiCell, 15, _TYPIST . " : <b>{$typist} {$initiatorEntity}</b>", 0, 'L', false, 1, '', '', true, 0, true);
             } elseif ($unit['unit'] == 'secondaryInformations') {
                 $category = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
                 $category = empty($category) ? '<i>'._UNDEFINED.'</i>' : "<b>{$category}</b>";
-                $status   = StatusModel::getById(['id' => $resource['status'], 'select' => ['label_status']]);
-                $status   = empty($status['label_status']) ? '<i>'._UNDEFINED.'</i>' : "<b>{$status['label_status']}</b>";
-                $priority = '';
-                if (!empty($resource['priority'])) {
-                    $priority = PriorityModel::getById(['id' => $resource['priority'], 'select' => ['label']]);
+
+                $status = StatusModel::getById(['id' => $resource['status'], 'select' => ['label_status']]);
+                $status = empty($status['label_status']) ? '<i>' . _UNDEFINED . '</i>' : "<b>{$status['label_status']}</b>";
+
+                $priority = null;
+                if (in_array('priority', $fieldsIdentifier)) {
+                    $priority = '';
+                    if (!empty($resource['priority'])) {
+                        $priority = PriorityModel::getById(['id' => $resource['priority'], 'select' => ['label']]);
+                    }
+                    $priority = empty($priority['label']) ? '<i>' . _UNDEFINED . '</i>' : "<b>{$priority['label']}</b>";
                 }
-                $priority = empty($priority['label']) ? '<i>'._UNDEFINED.'</i>' : "<b>{$priority['label']}</b>";
-                $processLimitDate = TextFormatModel::formatDate($resource['process_limit_date'], 'd-m-Y');
-                $processLimitDate = empty($processLimitDate) ? '<i>'._UNDEFINED.'</i>' : "<b>{$processLimitDate}</b>";
+
+                $processLimitDate = null;
+                if (in_array('processLimitDate', $fieldsIdentifier)) {
+                    $processLimitDate = TextFormatModel::formatDate($resource['process_limit_date'], 'd-m-Y');
+                    $processLimitDate = empty($processLimitDate) ? '<i>' . _UNDEFINED . '</i>' : "<b>{$processLimitDate}</b>";
+                }
+
+                // Custom fields
+                $customFieldsValues = ResModel::get([
+                    'select' => ['custom_fields'],
+                    'where' => ['res_id = ?'],
+                    'data' => [$resource['res_id']]
+                ]);
+                // Get all the ids of the custom fields in the model
+                $customFieldsIds = [];
+                foreach ($fieldsIdentifier as $item) {
+                    if (strpos($item, 'indexingCustomField_') !== false) {
+                        $customFieldsIds[] = explode('_', $item)[1];
+                    }
+                }
+
+                if (!empty($customFieldsIds)) {
+                    // get the label of the custom fields
+                    $customFields = CustomFieldModel::get([
+                        'select' => ['id', 'label'],
+                        'where'  => ['id in (?)'],
+                        'data'   => [$customFieldsIds]
+                    ]);
+
+                    $tmp = [];
+                    foreach ($customFields as $customField) {
+                        $tmp[$customField['id']] = $customField['label'];
+                    }
+                    $customFields = $tmp;
+
+                    $customFieldsValues = $customFieldsValues[0]['custom_fields'] ?? null;
+                    $customFieldsValues = json_decode($customFieldsValues, true);
+                }
 
                 $pdf->SetY($pdf->GetY() + 40);
                 if (($pdf->GetY() + 57) > $bottomHeight) {
@@ -341,22 +494,63 @@ class SummarySheetController
 
                 $pdf->SetFont('', '', 10);
                 $pdf->MultiCell($widthNotes, 30, _CATEGORY . " : {$category}", 1, 'L', false, 0, '', '', true, 0, true);
-                $pdf->MultiCell($widthNotes, 30, _STATUS . " : {$status}", 1, 'L', false, 1, '', '', true, 0, true);
-                $pdf->MultiCell($widthNotes, 30, _PRIORITY . " : {$priority}", 1, 'L', false, 0, '', '', true, 0, true);
-                $pdf->MultiCell($widthNotes, 30, _PROCESS_LIMIT_DATE . " : {$processLimitDate}", 1, 'L', false, 1, '', '', true, 0, true);
-            } elseif ($unit['unit'] == 'senderRecipientInformations') {
-                $senders = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'sender']);
-                $recipients = ContactController::getFormattedContacts(['resId' => $resource['res_id'], 'mode' => 'recipient']);
 
-                if (!empty($senders) && count($senders) > 2) {
-                    $nbSenders = count($senders);
-                    $senders = [];
-                    $senders[0] = $nbSenders . ' ' . _CONTACTS;
+                $pdf->MultiCell($widthNotes, 30, _STATUS . " : {$status}", 1, 'L', false, 1, '', '', true, 0, true);
+
+                $nextLine = 1;
+                if (isset($priority)) {
+                    $nextLine = isset($processLimitDate) || !empty($customFieldsIds) ? 0 : 1;
+                    $pdf->MultiCell($widthNotes, 30, _PRIORITY . " : {$priority}", 1, 'L', false, $nextLine, '', '', true, 0, true);
                 }
-                if (!empty($recipients) && count($recipients) > 2) {
-                    $nbRecipients = count($recipients);
-                    $recipients = [];
-                    $recipients[0] = $nbRecipients . ' ' . _CONTACTS;
+                if (isset($processLimitDate)) {
+                    $nextLine = !empty($customFieldsIds) && $nextLine == 0 ? 1 : 0;
+                    $pdf->MultiCell($widthNotes, 30, _PROCESS_LIMIT_DATE . " : {$processLimitDate}", $nextLine, 'L', false, 1, '', '', true, 0, true);
+                }
+
+                if (!empty($customFieldsIds)) {
+                    foreach ($customFieldsIds as $customFieldsId) {
+                        $label = $customFields[$customFieldsId];
+                        if (is_array($customFieldsValues[$customFieldsId])) {
+                            $value = !empty($customFieldsValues[$customFieldsId]) ? implode(',', $customFieldsValues[$customFieldsId]) : _UNDEFINED;
+                        } else {
+                            $value = $customFieldsValues[$customFieldsId] ?? _UNDEFINED;
+                        }
+
+                        $nextLine = ($nextLine + 1) % 2;
+                        $pdf->MultiCell($widthNotes, 30, $label . " : {$value}", 1, 'L', false, $nextLine, '', '', true, 0, true);
+                    }
+                }
+
+            } elseif ($unit['unit'] == 'senderRecipientInformations') {
+                $senders = null;
+                if (in_array('senders', $fieldsIdentifier)) {
+                    $senders = ContactController::getFormattedContacts([
+                        'resId' => $resource['res_id'],
+                        'mode'  => 'sender'
+                    ]);
+                    if (!empty($senders) && count($senders) > 2) {
+                        $nbSenders = count($senders);
+                        $senders = [];
+                        $senders[0] = $nbSenders . ' ' . _CONTACTS;
+                    }
+                }
+
+                $recipients = null;
+                if (in_array('recipients', $fieldsIdentifier)) {
+                    $recipients = ContactController::getFormattedContacts([
+                        'resId' => $resource['res_id'],
+                        'mode'  => 'recipient'
+                    ]);
+                    if (!empty($recipients) && count($recipients) > 2) {
+                        $nbRecipients = count($recipients);
+                        $recipients = [];
+                        $recipients[0] = $nbRecipients . ' ' . _CONTACTS;
+                    }
+                }
+
+                // If senders and recipients are both null, they are not part of the model so we continue to the next unit
+                if ($senders === null && $recipients === null) {
+                    continue;
                 }
 
                 $pdf->SetY($pdf->GetY() + 40);
@@ -368,30 +562,60 @@ class SummarySheetController
                 $pdf->SetY($pdf->GetY() + 2);
 
                 $pdf->SetFont('', '', 10);
-                $pdf->Cell($widthMultiCell, 15, _SENDERS, 1, 0, 'C', false);
-                $pdf->Cell($widthCell, 15, '', 0, 0, 'C', false);
-                $pdf->Cell($widthMultiCell, 15, _RECIPIENTS, 1, 1, 'C', false);
-                if (empty($senders) && empty($recipients)) {
-                    $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, 0, '', '', true, 0, true);
-                    $pdf->MultiCell($widthCell, 40, '', 0, 'L', false, 0, '', '', true, 0, true);
-                    $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, 1, '', '', true, 0, true);
-                } else {
-                    for ($i = 0; !empty($senders[$i]) || !empty($recipients[$i]); $i++) {
-                        if ($i == 0 && empty($senders[$i])) {
-                            $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, 0, '', '', true, 0, true);
-                        } else {
-                            $pdf->MultiCell($widthMultiCell, 40, empty($senders[$i]) ? '' : $senders[$i], empty($senders[$i]) ? 0 : 1, 'L', false, 0, '', '', true, 0, true);
-                        }
 
-                        $pdf->MultiCell($widthCell, 40, '', 0, 'L', false, 0, '', '', true, 0, true);
-
-                        if ($i == 0 && empty($recipients[$i])) {
-                            $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, 1, '', '', true, 0, true);
-                        } else {
-                            $pdf->MultiCell($widthMultiCell, 40, empty($recipients[$i]) ? '' : $recipients[$i], empty($recipients[$i]) ? 0 : 1, 'L', false, 1, '', '', true, 0, true);
+                $correspondents = [];
+                if ($senders !== null && $recipients !== null) {
+                    if (empty($senders[0]) && empty($recipients[0])) {
+                        $correspondents = [null, null];
+                    } else {
+                        for ($i = 0; !empty($senders[$i]) || !empty($recipients[$i]); $i++) {
+                            $correspondents[] = $senders[$i] ?? null;
+                            $correspondents[] = $recipients[$i] ?? null;
                         }
                     }
+
+                    $pdf->Cell($widthMultiCell, 15, _SENDERS, 1, 0, 'C', false);
+                    $pdf->Cell($widthCell, 15, '', 0, 0, 'C', false);
+                    $pdf->Cell($widthMultiCell, 15, _RECIPIENTS, 1, 1, 'C', false);
+                } else if ($senders !== null && $recipients === null) {
+                    $correspondents = $senders;
+
+                    $pdf->Cell($widthMultiCell, 15, _SENDERS, 1, 1, 'C', false);
+                } else if ($senders === null && $recipients !== null) {
+                    $correspondents = $recipients;
+
+                    $pdf->Cell($widthMultiCell, 15, _RECIPIENTS, 1, 1, 'C', false);
                 }
+
+                // allow to skip an element in the senders or recipients column if we already printed UNDEFINED once
+                $columnUndefined = [false, false];
+                $nextLine = 1;
+                foreach ($correspondents as $correspondent) {
+                    // if senders and recipients are not null, nextLine alternate between 0 and 1, otherwise its always 1
+                    if ($senders !== null && $recipients !== null) {
+                        $nextLine = ($nextLine + 1) % 2;
+
+                        if ($columnUndefined[$nextLine]) {
+                            $pdf->MultiCell($widthMultiCell, 40, '', 0, 'L', false, 0, '', '', true, 0, true);
+                            $pdf->MultiCell($widthCell, 40, '', 0, 'L', false, $nextLine, '', '', true, 0, true);
+                            continue;
+                        }
+                    } else {
+                        $nextLine = 1;
+                    }
+
+                    if (empty($correspondent)) {
+                        $columnUndefined[$nextLine] = true;
+                        $pdf->MultiCell($widthMultiCell, 40, _UNDEFINED, 1, 'L', false, $nextLine, '', '', true, 0, true);
+                    } else {
+                        $pdf->MultiCell($widthMultiCell, 40, empty($correspondent) ? '' : $correspondent, empty($correspondent) ? 0 : 1, 'L', false, $nextLine, '', '', true, 0, true);
+                    }
+
+                    if ($nextLine == 0) {
+                        $pdf->MultiCell($widthCell, 40, '', 0, 'L', false, 0, '', '', true, 0, true);
+                    }
+                }
+
             } elseif ($unit['unit'] == 'diffusionList') {
                 $assignee    = '';
                 $destination = '';

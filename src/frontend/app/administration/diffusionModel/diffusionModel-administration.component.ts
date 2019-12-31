@@ -157,6 +157,7 @@ export class DiffusionModelAdministrationComponent implements OnInit {
                 location.href = "index.php";
             });
     }
+
     saveDiffListVisa() {
         this.listDiffModified = false;
         var newDiffList = {

@@ -605,7 +605,9 @@ export const LANG_NL = {
     "noAttachmentClickToAddOne"             : "No attachments available<br/><sub>Click on <i class=\"fa fa-paperclip fa-lg\" ></i><i class=\"fa fa-plus\"></i> to add one.</sub>", //_TO_TRANSLATE
     "noAttachmentConversion"                : "No PDF conversion for this attachment TRANSLATE",
     "noAttachmentInSignatoryBook"           : "No attachment in signature book", //_TO_TRANSLATE
-    "noAttachmentToSend"                    : "No attachment to send _TO_TRANSLATE",
+    "noSignableAttachmentInSignatoryBook"   : "No signable attachment in signature book", //_TO_TRANSLATE
+    "noAttachmentToSend"                    : "No attachment to send", //_TO_TRANSLATE
+    "noDocumentToSend"                      : "No document to send", //_TO_TRANSLATE
     "noAvailableBasket"                     : "Geen bakje beschikbaar",
     "noDataAvailable"                       : "_TO_TRANSLATE",
     "noDatasource"                          : "Geen gegevensbron",
@@ -1358,10 +1360,11 @@ export const LANG_NL = {
     "language": "nl",
     "noSelectedContact": "No associated contact", //_TO_TRANSLATE
     "searchContact": "Search a contact", //_TO_TRANSLATE
-    "acknowledgementReceiptGenerationImpossible": "Acknowledgement receipt generation impossible for resource(s) : ", //_TO_TRANSLATE
     "editorOption": "Editor option", //_TO_TRANSLATE
     "editorOptionAdmin": "Manage editor option", //_TO_TRANSLATE
     "documentEditor": "Document editor", //_TO_TRANSLATE
+    "documentEditor_java": "Open your defaut document editor in a new windows", //_TO_TRANSLATE
+    "documentEditor_onlyoffice": "Open OnlyOffice inside Maarch Courrier application", //_TO_TRANSLATE
     "contactsList": "Contacts list", //_TO_TRANSLATE
     "listConfiguration": "Manage list display", //_TO_TRANSLATE
     "noticeGroupeOrder": "Drag and drop group to set order", //_TO_TRANSLATE
@@ -1378,4 +1381,16 @@ export const LANG_NL = {
     "additionals": "Additional(s)", //_TO_TRANSLATE
     "denomination": "Denomination", //_TO_TRANSLATE
     "moreInfos" : "More data", //_TO_TRANSLATE
+    "confirmCloseEditor" : "Do you really want to close editor ? All modifications will be canceled", //_TO_TRANSLATE
+    "onlyNumber" : "Number only", //_TO_TRANSLATE
+    "found": "found", //_TO_TRANSLATE
+    "here": "here", //_TO_TRANSLATE
+    "toCopyAddress": "to copy the address", //_TO_TRANSLATE
+    "badFormat": "Bad format", //_TO_TRANSLATE
+    "contactFilledTo": "Contact filled to", //_TO_TRANSLATE
+    "targetFillingField": "Target field for filling", //_TO_TRANSLATE
+    "arGenWithModelMessage" : "The summary sheets with the fields defined in the resource's indexing model.", //_TO_TRANSLATE
+    "createContact": "Create a contact", //_TO_TRANSLATE
+    "diffusionListUpdated": "Diffusion list updated", //_TO_TRANSLATE
+    "saveModifications": "Save modifications", //_TO_TRANSLATE
 };

@@ -117,10 +117,22 @@ class BasketController
             return $response->withStatus(400)->withJson(['errors' => _INVALID_CLAUSE]);
         }
 
-        $data['isVisible'] = empty($data['isSearchBasket']) ? 'Y' : 'N';
-        $data['flagNotif'] = empty($data['flagNotif']) ? 'N' : 'Y';
-        $data['id'] = $aArgs['id'];
-        BasketModel::update($data);
+        $set = [
+            'basket_name'       => $data['basket_name'],
+            'basket_desc'       => $data['basket_desc'],
+            'basket_clause'     => $data['clause'],
+            'basket_res_order'  => empty($data['basket_res_order']) ? 'res_id DESC' : $data['basket_res_order'],
+            'is_visible'        => empty($data['isSearchBasket']) ? 'Y' : 'N',
+            'flag_notif'        => empty($data['flagNotif']) ? 'N' : 'Y',
+            'color'             => $data['color']
+        ];
+
+        BasketModel::update([
+            'set'   => $set,
+            'where' => ['basket_id = ?'],
+            'data'  => [$aArgs['id']]
+        ]);
+
         HistoryController::add([
             'tableName' => 'baskets',
             'recordId'  => $aArgs['id'],

@@ -16,6 +16,7 @@ namespace ContentManagement\controllers;
 
 use Attachment\models\AttachmentModel;
 use Docserver\models\DocserverModel;
+use Resource\controllers\ResController;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\UrlController;
@@ -254,12 +255,18 @@ class JnlpController
                 file_put_contents($tmpPath . $newFileOnTmp, base64_decode($mergedDocument['encodedDocument']));
                 $pathToCopy = $tmpPath . $newFileOnTmp;
             } elseif ($queryParams['objectType'] == 'attachmentModification') {
-                $attachment = AttachmentModel::getById(['id' => $queryParams['objectId'], 'select' => ['docserver_id', 'path', 'filename']]);
+                $attachment = AttachmentModel::getById(['id' => $queryParams['objectId'], 'select' => ['docserver_id', 'path', 'filename', 'res_id_master']]);
                 if (empty($attachment)) {
                     $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => "Attachment does not exist"]]);
                     $response->write($xmlResponse);
                     return $response->withHeader('Content-Type', 'application/xml');
                 }
+                if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
+                    $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => "Attachment out of perimeter"]]);
+                    $response->write($xmlResponse);
+                    return $response->withHeader('Content-Type', 'application/xml');
+                }
+
                 $docserver  = DocserverModel::getByDocserverId(['docserverId' => $attachment['docserver_id'], 'select' => ['path_template']]);
 
                 $pathToCopy = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachment['path']) . $attachment['filename'];

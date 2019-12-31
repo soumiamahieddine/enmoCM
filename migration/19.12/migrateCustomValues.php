@@ -47,7 +47,10 @@ foreach ($customs as $custom) {
                 'type'      => $migration['customType'],
                 'values'    => '[]'
             ]);
-    
+
+            $csColumn = "custom_fields->>''{$fieldId}''";
+            \Basket\models\BasketModel::update(['postSet' => ['basket_clause' => "REPLACE(basket_clause, '{$migration['id']}', '{$csColumn}')"], 'where' => ['1 = ?'], 'data' => [1]]);
+
             foreach ($migration['modelId'] as $modelId) {
                 $indexingModels = \IndexingModel\models\IndexingModelModel::get([
                     'select'=> [1],
@@ -68,13 +71,13 @@ foreach ($customs as $custom) {
             $aValues = [];
             foreach ($columnValues as $columnValue) {
                 $aValues[] = [$columnValue['res_id'], $fieldId, json_encode($columnValue[$migration['id']])];
+                $valueColumn = json_encode($columnValue[$migration['id']]);
+                \Resource\models\ResModel::update([
+                    'postSet'   => ['custom_fields' => "jsonb_set(custom_fields, '{{$fieldId}}', '{$valueColumn}')"],
+                    'where'     => ['res_id = ?'],
+                    'data'      => [$columnValue['res_id']]
+                ]);
             }
-
-            \SrcCore\models\DatabaseModel::insertMultiple([
-                'table'     => 'resources_custom_fields',
-                'columns'   => ['res_id', 'custom_field_id', 'value'],
-                'values'    => $aValues
-            ]);
 
             $migrated[] = $migration['id'];
         }

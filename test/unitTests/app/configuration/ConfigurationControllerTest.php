@@ -120,7 +120,8 @@ class ConfigurationControllerTest extends TestCase
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'type'       => 'sendmail'
+            'type' => 'sendmail',
+            'from' => 'notifications@maarch.org'
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -141,9 +142,10 @@ class ConfigurationControllerTest extends TestCase
 
         $jsonTest = json_encode(
             [
-                'type'       => 'sendmail',
+                'type'                  => 'sendmail',
+                'from'                  => 'notifications@maarch.org',
                 'passwordAlreadyExists' => false,
-                'charset'   => 'utf-8'
+                'charset'               => 'utf-8'
             ]
         );
 

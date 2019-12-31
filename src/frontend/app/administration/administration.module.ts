@@ -2,10 +2,6 @@ import { NgModule }                             from '@angular/core';
 
 import { SharedModule }                         from '../app-common.module';
 
-//import { MenuComponent }                        from '../menu/menu.component';
-//import { MenuNavComponent }                     from '../menu/menu-nav.component';
-//import { MenuTopComponent }                     from '../menu/menu-top.component';
-
 import { AdministrationRoutingModule }          from './administration-routing.module';
 
 import { AdministrationComponent }                      from './home/administration.component';
@@ -63,9 +59,6 @@ import { ContactsPageAdministrationComponent }              from './contact/page
         AdministrationRoutingModule
     ],
     declarations: [
-        //MenuComponent,
-        //MenuNavComponent,
-        //MenuTopComponent,
         AdministrationComponent,
         UsersAdministrationComponent,
         UserAdministrationComponent,

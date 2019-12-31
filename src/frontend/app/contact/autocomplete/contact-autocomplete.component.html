@@ -1,12 +1,11 @@
 <form>
     <input type="hidden" [formControl]="controlAutocomplete">
-    <mat-form-field floatLabel="never" class="input-form" *ngIf="!controlAutocomplete.disabled">
+    <mat-form-field floatLabel="never" class="input-form" *ngIf="(!controlAutocomplete.disabled && !singleMode) || (singleMode && controlAutocomplete.value.length === 0)">
         <mat-icon color="primary" class="fa fa-search" matPrefix style="padding-left: 20px;font-size: 15px;"></mat-icon>
         <input type="text" #autoCompleteInput [placeholder]="lang.searchContact" matInput [formControl]="myControl"
             [matAutocomplete]="auto" (click)="$event.stopPropagation()" (focus)="resetAutocomplete()" maxlength="128">
-        <button [disabled]="!canAdd" type="button" matSuffix mat-icon-button (click)="addItem()">
-            <mat-icon class="fa fa-plus" [title]="lang.add"
-                [style.visibility]="canAdd && myControl.value !== null && myControl.value.length > 0 ? 'visible' : 'hidden'">
+        <button [disabled]="!canAdd" type="button" matSuffix mat-icon-button (click)="$event.stopPropagation();openContact()">
+            <mat-icon class="fa fa-plus" [title]="lang.createContact">
             </mat-icon>
         </button>
         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectOpt($event)">
@@ -15,11 +14,12 @@
                     <mat-card>
                         <mat-card-header class="contact-header">
                             <div mat-card-avatar class="contact-header-image fa"
-                                [class.fa-building]="option.type === 'contact'" [class.fa-users]="option.type ==='contactGroup'"
+                                [class.fa-address-card]="option.type === 'contact'" [class.fa-users]="option.type ==='contactGroup'"
                                 [class.fa-sitemap]="option.type ==='entity'" [class.fa-user]="option.type ==='user'"
                                 [title]="lang['contact_'+option.type]">
                             </div>
-                            <mat-card-title *ngIf="!empty(option.firstname) || !empty(option.lastname)" [title]="option.firstname + ' ' + option.lastname">{{option.firstname}}
+                            <mat-card-title *ngIf="!empty(option.firstname) || !empty(option.lastname)" [title]="option.civilityLabel + ' ' + option.firstname + ' ' + option.lastname">
+                                <sup *ngIf="!empty(option.civility)">{{option.civilityShortLabel}}&nbsp;</sup>{{option.firstname}}
                                 {{option.lastname}}</mat-card-title>
                             <mat-card-title *ngIf="empty(option.firstname) && empty(option.lastname)" [title]="option.company">{{option.company}}</mat-card-title>
                             <mat-card-subtitle [title]="option.function" *ngIf="!empty(option.function)">
@@ -43,8 +43,8 @@
                                         [title]="lang.contactsParameters_department"></mat-icon>
                                     <p mat-line class="contact-content" [title]="option.department">
                                         {{option.department}} </p>
-                                    <p mat-line class="contact-content" *ngIf="!empty(option.occupancy)"
-                                        [title]="option.occupancy"> ({{option.occupancy}}) </p>
+                                    <p mat-line class="contact-content" *ngIf="!empty(option.addressAdditional1)"
+                                        [title]="option.addressAdditional1"> ({{option.addressAdditional1}}) </p>
                                 </mat-list-item>
                                 <mat-list-item class="contact-item" *ngIf="!empty(option.email)">
                                     <mat-icon mat-list-icon class="contact-group far fa-envelope" [title]="lang.email">
@@ -58,23 +58,23 @@
                                     <p mat-line class="contact-content" [title]="option.phone"> {{option.phone}} </p>
                                 </mat-list-item>
                                 <mat-list-item class="contact-address" [title]="lang.address"
-                                    *ngIf="!empty(option.number) || !empty(option.street) || !empty(option.complement) || !empty(option.postalCode) || !empty(option.town) || !empty(option.country)">
+                                    *ngIf="!empty(option.addressNumber) || !empty(option.addressStreet) || !empty(option.addressAdditional2) || !empty(option.addressPostcode) || !empty(option.addressTown) || !empty(option.addressCountry)">
                                     <mat-icon mat-list-icon class="contact-group fas fa-map-marker-alt"></mat-icon>
                                     <p mat-line class="contact-content"
-                                        *ngIf="!empty(option.number) || !empty(option.street)" [title]="option.street">
-                                        {{option.number}} {{option.street}} </p>
-                                    <p mat-line class="contact-content" *ngIf="!empty(option.complement)"
-                                        [title]="option.complement"> ({{option.complement}}) </p>
+                                        *ngIf="!empty(option.addressNumber) || !empty(option.addressStreet)" [title]="option.addressStreet">
+                                        {{option.addressNumber}} {{option.addressStreet}} </p>
+                                    <p mat-line class="contact-content" *ngIf="!empty(option.addressAdditional2)"
+                                        [title]="option.addressAdditional2"> ({{option.addressAdditional2}}) </p>
                                     <p mat-line class="contact-content"
-                                        *ngIf="!empty(option.postalCode) || !empty(option.town)"
-                                        [title]="option.postalCode + ' ' + option.town"> {{option.postalCode}}
-                                        {{option.town}} </p>
-                                    <p mat-line class="contact-content" *ngIf="!empty(option.country)"
-                                        [title]="option.country"> {{option.country}} </p>
+                                        *ngIf="!empty(option.addressPostcode) || !empty(option.addressTown)"
+                                        [title]="option.addressPostcode + ' ' + option.addressTown"> {{option.addressPostcode}}
+                                        {{option.addressTown}} </p>
+                                    <p mat-line class="contact-content" *ngIf="!empty(option.addressCountry)"
+                                        [title]="option.addressCountry"> {{option.addressCountry}} </p>
                                 </mat-list-item>
                             </mat-list>
                         </mat-card-content>
-                    </mat-card>
+                    </mat-card >
                 </mat-option>
             </ng-container>
             <mat-option class="autoCompleteInfoResult smallInputInfo" *ngIf="options.length === 0 && !loading" disabled
@@ -90,9 +90,9 @@
             color="default">
             <ng-container *ngIf="!loadingValues">
                 <mat-chip *ngFor="let item of controlAutocomplete.value;let i=index" class="listAutocomplete"
-                    color="default" [removable]="!controlAutocomplete.disabled" (removed)="removeItem(i)">
+                    color="default" [removable]="!controlAutocomplete.disabled" (removed)="removeItem(i)" (click)="openContact(item)">
                     <span style="display: flex;flex: 1;align-items: center;">
-                        <i class="fa" [class.fa-building]="this.valuesToDisplay[item.id].type === 'contact'"
+                        <i class="fa" [class.fa-address-card]="this.valuesToDisplay[item.id].type === 'contact'"
                             [class.fa-sitemap]="this.valuesToDisplay[item.id].type ==='entity'"
                             [class.fa-user]="this.valuesToDisplay[item.id].type ==='user'"
                             [title]="lang[this.valuesToDisplay[item.id].type]"

@@ -42,6 +42,7 @@ use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
+use Resource\models\UsersFollowedResourcesModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
@@ -76,6 +77,10 @@ class ResController
         }
 
         ResController::createAdjacentData(['body' => $body, 'resId' => $resId]);
+
+        if (!empty($body['followed'])) {
+            UsersFollowedResourcesController::followResource(['userId' => $GLOBALS['id'], 'resId' => $resId]);
+        }
 
         if (!empty($body['encodedFile'])) {
             ConvertPdfController::convert([
@@ -222,6 +227,12 @@ class ResController
 
         $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
         $formattedData['attachments'] = $attachments[0]['count'];
+
+        $followed = UsersFollowedResourcesModel::get([
+            'where' => ['user_id = ?', 'res_id = ?'],
+            'data' => [$GLOBALS['id'], $args['resId']]
+        ]);
+        $formattedData['followed'] = !empty($followed);
 
         return $response->withJson($formattedData);
     }
@@ -726,6 +737,16 @@ class ResController
         if ($user['user_id'] == 'superadmin') {
             return true;
         }
+
+        $followed = UsersFollowedResourcesModel::get([
+           'where' => ['user_id = ?', 'res_id in (?)'],
+           'data' => [$args['userId'], $resources]
+        ]);
+
+        if (!empty($followed)) {
+            return true;
+        }
+
         $groups = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
         $groupsClause = '';
         foreach ($groups as $key => $group) {

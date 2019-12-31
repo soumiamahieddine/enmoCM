@@ -1,0 +1,13 @@
+@import '../../../../css/vars.scss';
+
+.active, .active:hover , .active:active, .active:focus {
+    background-color: $secondary;
+    color: white;
+}
+
+.paginatorResultList {
+    ::ng-deep.mat-paginator-range-label {
+        justify-content: flex-end;
+        display: flex;
+    }
+}

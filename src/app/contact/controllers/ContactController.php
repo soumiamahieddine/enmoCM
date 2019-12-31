@@ -15,12 +15,13 @@ namespace Contact\controllers;
 
 use Contact\models\ContactCustomFieldListModel;
 use Contact\models\ContactFillingModel;
+use Contact\models\ContactGroupModel;
 use Contact\models\ContactModel;
 use Contact\models\ContactParameterModel;
-use CustomField\models\CustomFieldModel;
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
+use Parameter\models\ParameterModel;
 use Resource\controllers\ResController;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
@@ -65,7 +66,7 @@ class ContactController
         $queryParams['offset'] = (empty($queryParams['offset']) || !is_numeric($queryParams['offset']) ? 0 : (int)$queryParams['offset']);
         $queryParams['limit'] = (empty($queryParams['limit']) || !is_numeric($queryParams['limit']) ? 25 : (int)$queryParams['limit']);
         $order = !in_array($queryParams['order'], ['asc', 'desc']) ? '' : $queryParams['order'];
-        $queryParams['orderBy'] = !in_array($queryParams['orderBy'], ['firstname', 'lastname', 'company']) ? null : ["{$queryParams['orderBy']} {$order}"];
+        $orderBy = !in_array($queryParams['orderBy'], ['firstname', 'lastname', 'company']) ? ['id'] : ["{$queryParams['orderBy']} {$order}", 'id'];
 
         if (!empty($queryParams['search'])) {
             $fields = ['firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country'];
@@ -89,7 +90,7 @@ class ContactController
             ],
             'where'     => $requestData['where'] ?? null,
             'data'      => $requestData['data'] ?? null,
-            'orderBy'   => $queryParams['orderBy'],
+            'orderBy'   => $orderBy,
             'offset'    => $queryParams['offset'],
             'limit'     => $queryParams['limit']
         ]);
@@ -97,6 +98,16 @@ class ContactController
 
         foreach ($contacts as $key => $contact) {
             unset($contacts[$key]['count']);
+            $filling = ContactController::getFillingRate(['contactId' => $contact['id']]);
+            $contacts[$key]['filling'] = $filling;
+        }
+        if ($queryParams['orderBy'] == 'filling') {
+            usort($contacts, function($a, $b) {
+                return $a['filling']['rate'] <=> $b['filling']['rate'];
+            });
+            if ($queryParams['order'] == 'desc') {
+                $contacts = array_reverse($contacts);
+            }
         }
 
         return $response->withJson(['contacts' => $contacts, 'count' => $count]);
@@ -369,6 +380,8 @@ class ContactController
             'data'  => [$args['id']]
         ]);
 
+        ContactGroupModel::deleteByContactId(['contactId' => $args['id']]);
+
         $historyInfoContact = '';
         if (!empty($contact[0]['firstname']) || !empty($contact[0]['lastname'])) {
             $historyInfoContact .= $contact[0]['firstname'] . ' ' . $contact[0]['lastname'];
@@ -501,6 +514,86 @@ class ContactController
         }
 
         return $response->withJson(['contact' => $contact]);
+    }
+
+    public static function getCivilities(Request $request, Response $response)
+    {
+        $civilities = ContactModel::getCivilities();
+
+        return $response->withJson(['civilities' => $civilities]);
+    }
+
+    public static function getFormattedContactsForSearchV1(Request $request, Response $response)
+    {
+        $data = $request->getParsedBody();
+
+        $return = '';
+
+        if (!isset($data['resId']) && !isset($data['mode'])) {
+            $status = 1;
+            $return .= '<td colspan="6" style="background-color: red;">';
+            $return .= '<p style="padding: 10px; color: black;">';
+            $return .= 'Erreur lors du chargement des contacts';
+            $return .= '</p>';
+            $return .= '</td>';
+
+            return $response->withJson(['status' => $status, 'toShow' => $return]);
+        }
+
+        $status = 0;
+        $return .= '<td>';
+        $return .= '<div align="center">';
+        $return .= '<table width="100%">';
+
+        $resourceContacts = ResourceContactModel::get([
+            'where' => ['res_id = ?', 'mode = ?'],
+            'data'  => [$data['resId'], $data['mode']]
+        ]);
+
+        $mode = '';
+        if ($data['mode'] == 'sender') {
+            $mode = _SENDER;
+        } else if ($data['mode'] == 'recipient') {
+            $mode = _RECIPIENT;
+        }
+
+        foreach ($resourceContacts as $resourceContact) {
+            $return .= '<tr>';
+            $return .= '<td style="background: transparent; border: 0px dashed rgb(200, 200, 200);">';
+
+            $return .= '<div style="text-align: left; background-color: rgb(230, 230, 230); padding: 3px; margin-left: 20px; margin-top: -6px;">';
+
+            if ($resourceContact['type'] == 'contact') {
+                $contactRaw = ContactModel::getById([
+                    'select' => ['*'],
+                    'id'     => $resourceContact['item_id']
+                ]);
+
+                $contactToDisplay = ContactController::getFormattedContactWithAddress(['contact' => $contactRaw]);
+
+                $return .= '<span style="font-size:10px;color:#135F7F;">' . $mode . '</span> - ';
+                $return .= $contactToDisplay['contact']['otherInfo'];
+            } elseif ($resourceContact['type'] == 'user') {
+                $return .= '<span style="font-size:10px;color:#135F7F;">' . $mode . ' (interne)</span> - ';
+                $return .= UserModel::getLabelledUserById(['id' => $resourceContact['item_id']]);
+            } elseif ($resourceContact['type'] == 'entity') {
+                $return .= '<span style="font-size:10px;color:#135F7F;">' . $mode . ' (interne)</span> - ';
+                $entity = EntityModel::getById(['id' => $resourceContact['item_id'], 'select' => ['entity_label']]);
+                $return .= $entity['entity_label'];
+            }
+
+            $return .= '</div>';
+
+            $return .= '</td>';
+            $return .= '</tr>';
+        }
+
+        $return .= '</table>';
+        $return .= '<br />';
+        $return .= '</div>';
+        $return .= '</td>';
+
+        return $response->withJson(['status' => $status, 'toShow' => $return]);
     }
 
     public static function getFillingRate(array $aArgs)
@@ -647,7 +740,9 @@ class ContactController
 
         sort($departments, SORT_NUMERIC);
 
-        return $response->withJson(['departments' => $departments]);
+        $defaultDepartment = ParameterModel::getById(['id' => 'defaultDepartment', 'select' => ['param_value_int']]);
+
+        return $response->withJson(['departments' => $departments, 'default' => empty($defaultDepartment['param_value_int']) ? null : $defaultDepartment['param_value_int']]);
     }
 
     public static function getParsedContacts(array $args)

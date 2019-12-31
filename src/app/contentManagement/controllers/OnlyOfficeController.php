@@ -16,6 +16,7 @@ namespace ContentManagement\controllers;
 
 use Attachment\models\AttachmentModel;
 use Docserver\models\DocserverModel;
+use Resource\controllers\ResController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -44,6 +45,8 @@ class OnlyOfficeController
 
         if (!Validator::stringType()->notEmpty()->validate($body['onlyOfficeKey'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Query params onlyOfficeKey is empty']);
+        } elseif (!preg_match('/[A-Za-z0-9]/i', $body['onlyOfficeKey'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params onlyOfficeKey is forbidden']);
         }
 
         if ($body['objectType'] == 'templateCreation') {
@@ -77,10 +80,14 @@ class OnlyOfficeController
             ]);
             $fileContent = base64_decode($mergedDocument['encodedDocument']);
         } elseif ($body['objectType'] == 'attachmentModification') {
-            $attachment = AttachmentModel::getById(['id' => $body['objectId'], 'select' => ['docserver_id', 'path', 'filename']]);
+            $attachment = AttachmentModel::getById(['id' => $body['objectId'], 'select' => ['docserver_id', 'path', 'filename', 'res_id_master']]);
             if (empty($attachment)) {
                 return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
             }
+            if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Attachment out of perimeter']);
+            }
+
             $docserver  = DocserverModel::getByDocserverId(['docserverId' => $attachment['docserver_id'], 'select' => ['path_template']]);
 
             $path = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachment['path']) . $attachment['filename'];
@@ -139,7 +146,14 @@ class OnlyOfficeController
             return $response->withStatus(400)->withJson(['errors' => 'Query params url is empty']);
         }
 
-        if (strpos($queryParams['url'], '/cache/files/') == false) {
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/documentEditorsConfig.xml']);
+        if (empty($loadedXml) || empty($loadedXml->onlyoffice->enabled) || $loadedXml->onlyoffice->enabled == 'false' || empty($loadedXml->onlyoffice->server_uri)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice is not enabled']);
+        }
+
+        $checkUrl = str_replace('http://', '', $queryParams['url']);
+        $checkUrl = str_replace('https://', '', $checkUrl);
+        if (strpos($checkUrl, (string)$loadedXml->onlyoffice->server_uri .'/cache/files/') !== 0) {
             return $response->withStatus(400)->withJson(['errors' => 'Query params url is not allowed']);
         }
 

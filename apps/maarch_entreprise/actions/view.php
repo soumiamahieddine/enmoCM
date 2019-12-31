@@ -37,7 +37,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
     $frm_str .= '<div>';
     $frm_str .= '	<center><input name="close" style="padding:5px;font-weight:600;" id="close" type="button" value="'._CLOSE.'" class="button" onClick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();window.location.reload();"/></center>';
     $frm_str .= '    </br>';
-    $frm_str .= '	<iframe src="../../rest/res/'.$res_id.'/content" name="viewframe" id="viewframe"  scrolling="auto" frameborder="0" ></iframe>';
+    $frm_str .= '	<iframe src="../../rest/resources/'.$res_id.'/content" name="viewframe" id="viewframe"  scrolling="auto" frameborder="0" ></iframe>';
     $frm_str .= '</div>';
     $frm_str .= '<script type="text/javascript">resize_frame_view("modal_'.$id_action.'", "viewframe", true, true);window.scrollTo(0,0);</script>';
     return addslashes($frm_str);

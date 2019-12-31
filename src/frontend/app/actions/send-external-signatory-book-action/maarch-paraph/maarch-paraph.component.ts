@@ -33,7 +33,7 @@ export class MaarchParaphComponent implements OnInit {
     constructor(public http: HttpClient, private notify: NotificationService) { }
 
     ngOnInit(): void {
-        if (this.additionalsInfos.destinationId !== '') {
+        if (typeof this.additionalsInfos.destinationId !== "undefined" && this.additionalsInfos.destinationId !== '') {
             setTimeout(() => {
                 this.appVisaWorkflow.loadListModel(this.additionalsInfos.destinationId);  
             }, 0);

@@ -11,9 +11,12 @@ include_once('../../vendor/tinybutstrong/opentbs/tbs_plugin_opentbs.php');
 const OFFICE_EXTENSIONS = ['odt', 'ods', 'odp', 'xlsx', 'pptx', 'docx', 'odf'];
 
 $DATA_TO_REPLACE = [
-    'res_letterbox.destination'   => '[destination.entity_id]',
-    'res_letterbox.entity_label'  => '[destination.entity_label]',
-    'res_letterbox.process_notes' => '[notes]',
+    'res_letterbox.destination'         => '[destination.entity_id]',
+    'res_letterbox.entity_label'        => '[destination.entity_label]',
+    'res_letterbox.process_notes'       => '[notes]',
+    'res_letterbox.contact_firstname'   => '[sender.firstname]',
+    'res_letterbox.contact_lastname'    => '[sender.lastname]',
+    'res_letterbox.contact_society'     => '[sender.company]',
 
     'res_letterbox.nature_id'                     => '[res_letterbox.custom_1]',
 
@@ -162,26 +165,26 @@ $DATA_TO_REPLACE = [
     'contact.website'                   => '',
     'contact.salutation_header'         => '',
     'contact.salutation_footer'         => '',
-    'contact.society'                   => '[recipient.company]',
-    'contact.departement'               => '[recipient.department]',
-    'contact.title'                     => '[recipient.civility]',
-    'contact.contact_title'             => '[recipient.civility]',
-    'contact.contact_lastname'          => '[recipient.lastname]',
-    'contact.contact_firstname'         => '[recipient.firstname]',
-    'contact.lastname'                  => '[recipient.lastname]',
-    'contact.firstname'                 => '[recipient.firstname]',
-    'contact.function'                  => '[recipient.function]',
-    'contact.postal_address;strconv=no' => '[recipient.postal_address;strconv=no]',
-    'contact.postal_address'            => '[recipient.postal_address]',
-    'contact.address_num'               => '[recipient.address_number]',
-    'contact.address_street'            => '[recipient.address_street]',
-    'contact.occupancy'                 => '[recipient.address_additional1]',
-    'contact.address_complement'        => '[recipient.address_additional2]',
-    'contact.address_town'              => '[recipient.address_town]',
-    'contact.address_postal_code'       => '[recipient.address_postcode]',
-    'contact.address_country'           => '[recipient.address_country]',
-    'contact.phone'                     => '[recipient.phone]',
-    'contact.email'                     => '[recipient.email]',
+    'contact.society'                   => '[attachmentRecipient.company]',
+    'contact.departement'               => '[attachmentRecipient.department]',
+    'contact.title'                     => '[attachmentRecipient.civility]',
+    'contact.contact_title'             => '[attachmentRecipient.civility]',
+    'contact.contact_lastname'          => '[attachmentRecipient.lastname]',
+    'contact.contact_firstname'         => '[attachmentRecipient.firstname]',
+    'contact.lastname'                  => '[attachmentRecipient.lastname]',
+    'contact.firstname'                 => '[attachmentRecipient.firstname]',
+    'contact.function'                  => '[attachmentRecipient.function]',
+    'contact.postal_address;strconv=no' => '[attachmentRecipient.postal_address;strconv=no]',
+    'contact.postal_address'            => '[attachmentRecipient.postal_address]',
+    'contact.address_num'               => '[attachmentRecipient.address_number]',
+    'contact.address_street'            => '[attachmentRecipient.address_street]',
+    'contact.occupancy'                 => '[attachmentRecipient.address_additional1]',
+    'contact.address_complement'        => '[attachmentRecipient.address_additional2]',
+    'contact.address_town'              => '[attachmentRecipient.address_town]',
+    'contact.address_postal_code'       => '[attachmentRecipient.address_postcode]',
+    'contact.address_country'           => '[attachmentRecipient.address_country]',
+    'contact.phone'                     => '[attachmentRecipient.phone]',
+    'contact.email'                     => '[attachmentRecipient.email]',
 
     'notes.identifier'                       => '[res_letterbox.res_id]',
     'notes.subject'                          => '[res_letterbox.subject]',
@@ -226,8 +229,7 @@ foreach ($customs as $custom) {
             'where'  => ['label = ?'],
             'data'   => [$customField['label']]
         ]);
-        $idNewCustomField = array_column($idNewCustomField, 'id');
-        $DATA_TO_REPLACE["contact." . $customField['oldId']] = "[recipient.custom_{$idNewCustomField[0]}]";
+        $DATA_TO_REPLACE["contact." . $customField['oldId']] = "[recipient.customField_{$idNewCustomField[0]['id']}]";
     }
 
     $migrated = 0;
