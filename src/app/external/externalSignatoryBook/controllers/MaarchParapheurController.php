@@ -210,6 +210,30 @@ class MaarchParapheurController
             if (empty($attachments)) {
                 return ['error' => 'No attachment to send'];
             } else {
+                $nonSignableAttachments = [];
+                $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
+                foreach ($attachments as $key => $value) {
+                    if (!$attachmentTypes[$value['attachment_type']]['sign']) {
+                        $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $value['res_id'], 'collId' => 'attachments_coll']);
+                        if (empty($adrInfo['docserver_id'])) {
+                            return ['error' => 'Attachment ' . $value['res_id'] . ' is not converted in pdf'];
+                        }
+                        $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
+                        if (empty($docserverInfo['path_template'])) {
+                            return ['error' => 'Docserver does not exist ' . $adrInfo['docserver_id']];
+                        }
+                        $filePath = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
+            
+                        $encodedZipDocument = MaarchParapheurController::createZip(['filepath' => $filePath, 'filename' => $adrInfo['filename']]);
+
+                        $nonSignableAttachments[] = [
+                            'encodedDocument' => $encodedZipDocument,
+                            'title'           => $value['title'],
+                            'reference'       => $value['identifier']
+                        ];
+                        unset($attachments[$key]);
+                    }
+                }
                 foreach ($attachments as $value) {
                     $resId  = $value['res_id'];
                     $collId = 'attachments_coll';
@@ -240,6 +264,8 @@ class MaarchParapheurController
                         'title'           => "summarySheet.pdf",
                         'reference'       => ""
                     ];
+
+                    $attachmentsData = array_merge($nonSignableAttachments, $attachmentsData);
     
                     $metadata = [];
                     if (!empty($priority['label'])) {
