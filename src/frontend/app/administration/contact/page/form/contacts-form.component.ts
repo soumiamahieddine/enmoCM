@@ -382,10 +382,10 @@ export class ContactsFormComponent implements OnInit {
             valArr = [];
             field = this.contactForm.filter(contact => contact.id === 'customField_' + element.id)[0];
 
-            if (field !== undefined) {       
+            if (field !== undefined) {    
                 field.label = element.label;
                 field.type = element.type;
-
+                field.values = element.values.map((value: any) => {return {id: value, label: value}});
                 if (element.type === 'integer') {
                     valArr.push(Validators.pattern(/^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/));
                     field.control.setValidators(valArr);
