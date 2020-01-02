@@ -215,9 +215,16 @@ class ContactController
             return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
         }
 
+        $civilities = ContactModel::getCivilities();
+        $xmlCivility = $civilities[$rawContact['civility']];
+        $civility = [
+            'id'           => $rawContact['civility'],
+            'label'        => $xmlCivility['label'],
+            'abbreviation' => $xmlCivility['abbreviation']
+        ];
         $contact = [
             'id'                    => $rawContact['id'],
-            'civility'              => $rawContact['civility'],
+            'civility'              => $civility,
             'firstname'             => $rawContact['firstname'],
             'lastname'              => $rawContact['lastname'],
             'company'               => $rawContact['company'],
@@ -1079,7 +1086,14 @@ class ContactController
         $contact = ['type' => 'contact', 'id' => $args['id'], 'lastname' => $rawContact['lastname'], 'company' => $rawContact['company']];
 
         if (in_array('civility', $displayableStdParameters)) {
-            $contact['civility'] = !empty($rawContact['civility']) ? ContactModel::getCivilityLabel(['civilityId' => $rawContact['civility']]) : null;
+            $civilities = ContactModel::getCivilities();
+            $xmlCivility   = $civilities[$rawContact['civility']];
+            $civility = [
+                'id'           => $rawContact['civility'],
+                'label'        => $xmlCivility['label'],
+                'abbreviation' => $xmlCivility['abbreviation']
+            ];
+            $contact['civility'] = $civility;
         }
         if (in_array('firstname', $displayableStdParameters)) {
             $contact['firstname'] = $rawContact['firstname'];
