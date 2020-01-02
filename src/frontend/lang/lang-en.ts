@@ -1368,4 +1368,5 @@ export const LANG_EN = {
     "createContact": "Create a contact",
     "diffusionListUpdated": "Diffusion list updated",
     "saveModifications": "Save modifications",
+    "notSavedBecauseInvalid": "Configuration not updated because some datas are invalid",
 };

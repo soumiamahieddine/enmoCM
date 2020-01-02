@@ -1393,4 +1393,5 @@ export const LANG_NL = {
     "createContact": "Create a contact", //_TO_TRANSLATE
     "diffusionListUpdated": "Diffusion list updated", //_TO_TRANSLATE
     "saveModifications": "Save modifications", //_TO_TRANSLATE
+    "notSavedBecauseInvalid": "Configuration not updated because some datas are invalid", //_TO_TRANSLATE
 };
