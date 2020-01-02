@@ -55,17 +55,25 @@
                         <p mat-line class="contact-content" *ngIf="!empty(contact.addressCountry)"> {{contact.addressCountry}} </p>
                     </mat-list-item>
                 </mat-list>
-                <mat-expansion-panel *ngIf="!empty(contact.website) || !empty(contact.otherData)">
+                <mat-expansion-panel *ngIf="!emptyOtherInfo(contact)">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             {{lang.othersInfos}}
                         </mat-panel-title>
                     </mat-expansion-panel-header>
                     <mat-list>
-                        <mat-list-item class="contact-item" *ngIf="!empty(contact.otherData)" [title]="lang.others">
-                            <mat-icon mat-list-icon class="contact-group far fa-question-circle"></mat-icon>
-                            <p mat-line class="contact-content"> {{contact.otherData}} </p>
+                        <mat-list-item class="contact-item" *ngIf="!empty(contact.communicationMeans)" [title]="lang.communicationMean">
+                            <mat-icon mat-list-icon class="contact-group fas fa-hashtag"></mat-icon>
+                            <p mat-line class="contact-content"> {{contact.communicationMeans}} </p>
                         </mat-list-item>
+                        <ng-container *ngFor="let keyVal of contact.customFields | keyvalue" >
+                            <mat-list-item class="contact-item" *ngIf="keyVal.value.value !== null">
+                                <mat-icon mat-list-icon class="contact-group fas fa-hashtag"
+                                    [title]="keyVal.value.label">
+                                </mat-icon>
+                                <p mat-line class="contact-content" [title]="keyVal.value.value"> {{keyVal.value.value}} </p>
+                            </mat-list-item>
+                        </ng-container>
                     </mat-list>
                 </mat-expansion-panel>
             </mat-card-content>

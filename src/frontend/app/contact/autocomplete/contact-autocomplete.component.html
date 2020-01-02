@@ -76,6 +76,14 @@
                                     <p mat-line class="contact-content" *ngIf="!empty(option.addressCountry)"
                                         [title]="option.addressCountry"> {{option.addressCountry}} </p>
                                 </mat-list-item>
+                                <ng-container *ngFor="let keyVal of option.customFields | keyvalue" >
+                                    <mat-list-item class="contact-item" *ngIf="keyVal.value.value !== null">
+                                        <mat-icon mat-list-icon class="contact-group fas fa-hashtag"
+                                            [title]="keyVal.value.label">
+                                        </mat-icon>
+                                        <p mat-line class="contact-content" [title]="keyVal.value.value"> {{keyVal.value.value}} </p>
+                                    </mat-list-item>
+                                </ng-container>
                             </mat-list>
                         </mat-card-content>
                     </mat-card>

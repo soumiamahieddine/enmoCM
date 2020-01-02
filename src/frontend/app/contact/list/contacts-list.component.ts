@@ -131,4 +131,12 @@ export class ContactsListComponent implements OnInit {
             return true;
         }
     }
+
+    emptyOtherInfo(contact: any) {
+        if (!this.empty(contact.communicationMeans) || contact.customFields !== null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

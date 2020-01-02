@@ -23,7 +23,7 @@ export class ContactsFormComponent implements OnInit {
 
     @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
-    
+
 
     lang: any = LANG;
     loading: boolean = false;
@@ -428,7 +428,7 @@ export class ContactsFormComponent implements OnInit {
         let indexField = -1;
         Object.keys(data.customFields).forEach(element => {
             indexField = this.contactForm.map(field => field.id).indexOf('customField_' + element);
-            if (!this.isEmptyValue(data[element]) && indexField > -1) {
+            if (!this.isEmptyValue(data.customFields[element]) && indexField > -1) {
                 this.contactForm[indexField].control.setValue(data.customFields[element]);
                 this.contactForm[indexField].display = true;
             }
@@ -570,8 +570,7 @@ export class ContactsFormComponent implements OnInit {
     }
 
     checkCompany(field: any) {
-        console.log(field.control.value);
-        
+
         if (field.id === 'company' && field.control.value !== '' && (this.companyFound === null || this.companyFound.company !== field.control.value)) {
 
             this.http.get(`../../rest/autocomplete/contacts/company?search=${field.control.value}`).pipe(
