@@ -63,7 +63,7 @@
                                 <i class="far fa-circle" [title]="lang.contactsFillingRate" [style.color]="'#666'"></i>
                             </mat-header-cell>
                             <mat-cell mat-cell *matCellDef="let element" style="flex: initial;width: 60px;" [class.hide-for-mobile]="appService.getViewMode()">
-                                <i class="fas fa-circle" [title]="lang.contactFilledTo + ' ' + element.filling.rate + '%'" [style.color]="element.filling.color"></i>
+                                <i class="fas fa-circle threshold_{{element.filling.thresholdLevel}}" [title]="lang.contactFilledTo + ' ' + element.filling.rate + '%'"></i>
                             </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="firstname">
