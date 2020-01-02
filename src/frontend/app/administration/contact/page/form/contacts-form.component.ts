@@ -5,10 +5,10 @@ import { NotificationService } from '../../../../notification.service';
 import { HeaderService } from '../../../../../service/header.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../../../service/app.service';
-import { Observable, merge, Subject, of as observableOf, of } from 'rxjs';
-import { MatPaginator, MatSort, MatDialog } from '@angular/material';
-import { startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize, count } from 'rxjs/operators';
-import { FormControl, Validators, ValidatorFn, FormGroup, FormBuilder } from '@angular/forms';
+import { Observable, of as observableOf, of } from 'rxjs';
+import { MatDialog } from '@angular/material';
+import { switchMap, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
+import { FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 declare var angularGlobals: any;
@@ -570,7 +570,9 @@ export class ContactsFormComponent implements OnInit {
     }
 
     checkCompany(field: any) {
-        if (field.id === 'company' && (this.companyFound === null || this.companyFound.company !== field.control.value)) {
+        console.log(field.control.value);
+        
+        if (field.id === 'company' && field.control.value !== '' && (this.companyFound === null || this.companyFound.company !== field.control.value)) {
 
             this.http.get(`../../rest/autocomplete/contacts/company?search=${field.control.value}`).pipe(
                 tap(() => this.companyFound = null),
@@ -584,6 +586,8 @@ export class ContactsFormComponent implements OnInit {
                     return of(false);
                 })
             ).subscribe();
+        } else if (field.id === 'company' && field.control.value === '') {
+            this.companyFound = null;
         }
     }
 
