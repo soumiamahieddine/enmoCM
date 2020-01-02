@@ -67,6 +67,7 @@ foreach ($customs as $custom) {
 
     $firstMan = \User\models\UserModel::get(['select' => ['id'], 'orderBy' => ['id'], 'limit' => 1, 'where' => ['status = ?'], 'data' => ['OK']]);
 
+    $debutMigrateInProgress = microtime(true);
     foreach ($contactsInfo as $contactInfo) {
         $oldContactId = $contactInfo['contact_id'];
         $oldAddressId = $contactInfo['ca_id'];
@@ -169,15 +170,24 @@ foreach ($customs as $custom) {
         $migrated++;
 
         if ($migrated % 5000 == 0) {
+            $finMigrateInProgress = microtime(true);
+            $delaiInProgress = $finMigrateInProgress - $debutMigrateInProgress;
+            echo "Migration En cours : ".$delaiInProgress." secondes.\n"; 
+            $debutMigrateInProgress = microtime(true);
             printf($migrated . " contact(s) migré(s) - En cours...\n");
         }
     }
 
+    $debutEndMigrate = microtime(true);
     migrateContactRes_Users();
     migrateResletterbox_Users();
     migrateResattachments_Users();
     migrateContactParameters();
     migrateContactPrivileges();
+    $finEndMigrate = microtime(true);
+    $delaiEndMigrate = $finEndMigrate - $debutEndMigrate;
+    echo "Migration du bas : ".$delaiEndMigrate." secondes.\n";
+
     \SrcCore\models\DatabaseModel::update([
         'set'   => ['type' => 'contact'],
         'table' => 'resource_contacts',
@@ -187,7 +197,7 @@ foreach ($customs as $custom) {
 
     $fin = microtime(true);
     $delai = $fin - $debut;
-    echo "Le temps écoulé est de ".$delai." millisecondes.\n";
+    echo "Le temps écoulé est de ".$delai." secondes.\n";
     printf("Migration Contacts (CUSTOM {$custom}) : " . $migrated . " Contact(s) trouvée(s) et migrée(s).\n");
 }
 
