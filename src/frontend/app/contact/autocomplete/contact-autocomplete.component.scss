@@ -96,6 +96,10 @@
 
 .contact-item {
     height: 20px !important;
+
+    ::ng-deep.mat-list-text {
+        padding-left: 0px !important;
+    }
 }
 
 .mat-card-title {
@@ -142,7 +146,11 @@
     height: auto !important;
     padding-top: 5px;
     padding-bottom: 5px;
-
+    
+    ::ng-deep.mat-list-text {
+        padding-left: 0px !important;
+    }
+    
     ::ng-deep.mat-list-item-content {
         padding-top: 0px !important;
         padding-bottom: 0px !important;
