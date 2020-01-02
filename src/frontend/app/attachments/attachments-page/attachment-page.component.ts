@@ -75,7 +75,7 @@ export class AttachmentPageComponent implements OnInit {
                 //this.attachment = data;
                 let contact: any = null;
 
-                if ((this.privilegeService.hasCurrentUserPrivilege('manage_attachments') || this.headerService.user.id === data.typist) && data.status !== 'SIGN') {
+                if ((this.privilegeService.hasCurrentUserPrivilege('manage_attachments') || this.headerService.user.id === data.typist) && data.status !== 'SIGN' && data.status !== 'FRZ') {
                     this.editMode = true;
                 }
 

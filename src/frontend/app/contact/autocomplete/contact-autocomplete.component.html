@@ -1,7 +1,7 @@
 <form>
     <input type="hidden" [formControl]="controlAutocomplete">
     <mat-form-field floatLabel="never" class="input-form"
-        *ngIf="(!controlAutocomplete.disabled && !singleMode) || (singleMode && controlAutocomplete.value.length === 0)">
+        *ngIf="(!controlAutocomplete.disabled && !singleMode) || (singleMode && controlAutocomplete.value.length === 0 && !controlAutocomplete.disabled)">
         <mat-icon color="primary" class="fa fa-search" matPrefix style="padding-left: 20px;font-size: 15px;"></mat-icon>
         <input type="text" #autoCompleteInput [placeholder]="lang.searchContact" matInput [formControl]="myControl"
             [matAutocomplete]="auto" (click)="$event.stopPropagation();noResultFound = null;" maxlength="128">
