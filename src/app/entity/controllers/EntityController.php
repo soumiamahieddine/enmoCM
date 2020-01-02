@@ -17,6 +17,7 @@ namespace Entity\controllers;
 use Basket\models\GroupBasketRedirectModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
+use Entity\models\ListTemplateItemModel;
 use Entity\models\ListTemplateModel;
 use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
@@ -89,58 +90,58 @@ class EntityController
                 $entity['roles'][$key]['id'] = 'cc';
             }
         }
-        //Diffusion list
+
+        //List Templates
         $listTemplates = ListTemplateModel::get([
-            'select'    => ['id', 'object_type', 'item_id', 'item_type', 'item_mode', 'title', 'description', 'sequence'],
-            'where'     => ['object_id = ?'],
-            'data'      => [$aArgs['id']]
+            'select'    => ['id', 'title', 'description', 'type'],
+            'where'     => ['entity_id = ?'],
+            'data'      => [$entity['id']]
         ]);
 
         $entity['listTemplate'] = [];
         foreach ($rolesForService as $role) {
             $role == 'copy' ? $entity['listTemplate']['cc'] = [] : $entity['listTemplate'][$role] = [];
         }
-        $entity['visaTemplate'] = [];
+        $entity['visaCircuit'] = [];
+        $entity['opinionCircuit'] = [];
         foreach ($listTemplates as $listTemplate) {
-            if ($listTemplate['object_type'] == 'entity_id' && !empty($listTemplate['item_id'])) {
-                $entity['listTemplate']['id'] = $listTemplate['id'];
-                if ($listTemplate['item_type'] == 'user_id') {
-                    $statusUser = UserModel::getByLogin(['select' => ['status', 'firstname', 'lastname'], 'login' => $listTemplate['item_id']]);
-                    if ($statusUser['status'] != 'DEL') {
-                        $entity['listTemplate'][$listTemplate['item_mode']][] = [
-                            'item_type'             => $listTemplate['item_type'],
-                            'item_id'               => $listTemplate['item_id'],
-                            'sequence'              => $listTemplate['sequence'],
-                            'title'                 => $listTemplate['title'],
-                            'description'           => $listTemplate['description'],
-                            'labelToDisplay'        => $statusUser['firstname']. ' ' .$statusUser['lastname'],
-                            'descriptionToDisplay'  => UserModel::getPrimaryEntityByUserId(['userId' => $listTemplate['item_id']])['entity_label']
+            $listTemplateItems = ListTemplateItemModel::get(['select' => ['*'], 'where' => ['list_template_id = ?'], 'data' => [$listTemplate['id']]]);
+
+            if ($listTemplate['type'] == 'diffusionList') {
+                $entity['listTemplate'] = $listTemplate;
+                $entity['listTemplate']['items'] = [];
+                foreach ($listTemplateItems as $listTemplateItem) {
+                    if ($listTemplateItem['item_type'] == 'user') {
+                        $entity['listTemplate']['items'][$listTemplateItem['item_mode']][] = [
+                            'id'                    => $listTemplateItem['item_id'],
+                            'type'                  => $listTemplateItem['item_type'],
+                            'sequence'              => $listTemplateItem['sequence'],
+                            'labelToDisplay'        => UserModel::getLabelledUserById(['id' => $listTemplateItem['item_id']]),
+                            'descriptionToDisplay'  => UserModel::getPrimaryEntityById(['id' => $listTemplateItem['item_id'], 'select' => ['entities.entity_label']])['entity_label']
+                        ];
+                    } elseif ($listTemplateItem['item_type'] == 'entity') {
+                        $entity['listTemplate']['items'][$listTemplateItem['item_mode']][] = [
+                            'id'                    => $listTemplateItem['item_id'],
+                            'type'                  => $listTemplateItem['item_type'],
+                            'sequence'              => $listTemplateItem['sequence'],
+                            'labelToDisplay'        => EntityModel::getById(['id' => $listTemplateItem['item_id'], 'select' => ['entity_label']])['entity_label'],
+                            'descriptionToDisplay'  => ''
                         ];
                     }
-                } elseif ($listTemplate['item_type'] == 'entity_id') {
-                    $entity['listTemplate'][$listTemplate['item_mode']][] = [
-                        'item_type'             => $listTemplate['item_type'],
-                        'item_id'               => $listTemplate['item_id'],
-                        'sequence'              => $listTemplate['sequence'],
-                        'title'                 => $listTemplate['title'],
-                        'description'           => $listTemplate['description'],
-                        'labelToDisplay'        => EntityModel::getByEntityId(['entityId' => $listTemplate['item_id'], 'select' => ['entity_label']])['entity_label'],
-                        'descriptionToDisplay'  => ''
+                }
+            } else {
+                $entity[$listTemplate['type']] = $listTemplate;
+                $entity[$listTemplate['type']]['items'] = [];
+                foreach ($listTemplateItems as $listTemplateItem) {
+                    $entity[$listTemplate['type']]['items'][] = [
+                        'id'                    => $listTemplateItem['item_id'],
+                        'type'                  => $listTemplateItem['item_type'],
+                        'mode'                  => $listTemplateItem['item_mode'],
+                        'sequence'              => $listTemplateItem['sequence'],
+                        'idToDisplay'           => UserModel::getLabelledUserById(['id' => $listTemplateItem['item_id']]),
+                        'descriptionToDisplay'  => UserModel::getPrimaryEntityById(['id' => $listTemplateItem['item_id'], 'select' => ['entities.entity_label']])['entity_label']
                     ];
                 }
-            }
-            if ($listTemplate['object_type'] == 'VISA_CIRCUIT' && !empty($listTemplate['item_id'])) {
-                $entity['visaTemplate'][] = [
-                    'id'                    => $listTemplate['id'],
-                    'item_type'             => $listTemplate['item_type'],
-                    'item_id'               => $listTemplate['item_id'],
-                    'item_mode'             => $listTemplate['item_mode'],
-                    'sequence'              => $listTemplate['sequence'],
-                    'title'                 => $listTemplate['title'],
-                    'description'           => $listTemplate['description'],
-                    'idToDisplay'           => UserModel::getLabelledUserById(['login' => $listTemplate['item_id']]),
-                    'descriptionToDisplay'  => UserModel::getPrimaryEntityByUserId(['userId' => $listTemplate['item_id']])['entity_label']
-                ];
             }
         }
 

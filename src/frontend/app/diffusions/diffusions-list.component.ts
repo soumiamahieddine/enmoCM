@@ -134,7 +134,7 @@ export class DiffusionsListComponent implements OnInit {
             arrayRoutes.push(this.http.get('../../rest/roles?context=' + this.target));
         }
 
-        arrayRoutes.push(this.http.get('../../rest/listTemplates/entities/' + entityId));
+        arrayRoutes.push(this.http.get('../../rest/listTemplates/entities/' + entityId + '?type=diffusionList'));
 
         if (this.resId !== null) {
             arrayRoutes.push(this.http.get('../../rest/resources/' + this.resId + '/listInstance'));
@@ -177,13 +177,15 @@ export class DiffusionsListComponent implements OnInit {
                 }
             }),
             tap((data: any) => {
-                data.listTemplate.forEach((element: any) => {
-                    if (element.item_mode == 'cc') {
-                        this.diffList['copy'].items.push(element);
-                    } else if (element.object_type != 'VISA_CIRCUIT') {
-                        this.diffList[element.item_mode].items.push(element);
-                    }
-                });
+                if (data.listTemplates[0]) {
+                    data.listTemplates[0].items.forEach((element: any) => {
+                        if (element.item_mode == 'cc') {
+                            this.diffList['copy'].items.push(element);
+                        } else {
+                            this.diffList[element.item_mode].items.push(element);
+                        }
+                    });
+                }
             }),
             tap((data: any) => {
                 if (data.listInstance !== undefined) {
@@ -297,7 +299,7 @@ export class DiffusionsListComponent implements OnInit {
                 resId: this.resId,
                 listInstances: this.getCurrentListinstance()
             }
-        ]
+        ];
         this.http.put('../../rest/listinstances', listInstance).pipe(
             tap((data: any) => {
                 if (data && data.errors != null) {

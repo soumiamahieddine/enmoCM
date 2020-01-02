@@ -1416,11 +1416,6 @@ abstract class entity_Abstract extends functions
                     $element_found = true;
                     $nb_listinstances = $stmt->rowCount();
                 }
-                $stmt = $db->query("select object_id from ".$_SESSION['tablename']['ent_listmodels']." where object_id = ?",array($s_id));
-                if($stmt->rowCount() > 0)
-                {
-                    $nb_listmodels = $stmt->rowCount();
-                }
             }
         }
         if($element_found)
@@ -1452,7 +1447,6 @@ abstract class entity_Abstract extends functions
                     {
                         echo "<br> - ".$nb_redirect_baskets." "._BASKET_REDIRECTIONS_OCCURS_LINKED_TO;
                         echo "<br> - ".$nb_listinstances." "._LISTISTANCES_OCCURS_LINKED_TO;
-                        echo "<br> - ".$nb_listmodels." "._LISTMODELS_OCCURS_LINKED_TO;
                     }
                     if($admin->is_module_loaded('templates'))
                     {

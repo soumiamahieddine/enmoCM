@@ -1127,34 +1127,7 @@ class list_show_Abstract extends functions
                                         $path_ban = preg_replace('/(&(?!amp;))/', '&amp;', $path_ban);
                                         $item_mode = null;
                                         if ($_REQUEST['page'] == 'users_management_controler') {
-                                            //var_dump($result[$theline][0][$key]);
-                                            $db = new Database();
-                                            $stmt = $db->query("select item_id, item_mode, entity_id, entity_label from  listmodels, entities where item_id = ? and item_mode = 'dest' and listmodels.object_id = entities.entity_id", array($result[$theline][0][$key]));
-                                            $entity_label = array();
-                                            while ($res = $stmt->fetchObject()) {
-                                                $item_mode = null;
-                                                $item_mode = $res->item_mode;
-                                                $entity_label[] = addslashes($res->entity_label);
-                                            }
-                                            if ($item_mode == 'dest') {
-                                                ?>
-                                        <a href="<?php echo $path_ban.$param_comp; ?>" class="actionList" onclick="alert('<?php echo _THE_USER_JS.$admin_id._PLEASE_CHECK_LISTDIFF;
-                                                if (count($entity_label) == 1) {
-                                                    echo $entity_label[0];
-                                                } else {
-                                                    for ($i = 0; $i < count($entity_label); ++$i) {
-                                                        echo $entity_label[$i];
-                                                        if ($i < count($entity_label) - 1) {
-                                                            echo _AND;
-                                                        }
-                                                    }
-                                                }
-
-                                                echo ' .'; ?>');"><i class="fa fa-pause fa-2x" title="<?php echo _SUSPEND; ?>"></i></a>
-
-
-                                        <?php
-                                            } else {
+                                        } else {
                                                 ?>
                                         <a href="<?php echo $path_ban.$param_comp; ?>" class="actionList" onclick="return(confirm('<?php echo _REALLY_SUSPEND.' ';
                                                 if (isset($page_name) && $page_name == 'users') {

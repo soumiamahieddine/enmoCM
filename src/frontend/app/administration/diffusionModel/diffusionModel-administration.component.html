@@ -15,16 +15,12 @@
                     <mat-tab label="{{lang.informations}}">
                         <form class="form-horizontal" #diffusionModelForm="ngForm">
                             <mat-form-field *ngIf="creationMode">
-                                <mat-select id="object_type" name="object_type" placeholder="{{lang.diffusionType}}" [(ngModel)]="diffusionModel.object_type" [disabled]="!creationMode">
+                                <mat-select id="type" name="type" placeholder="{{lang.diffusionType}}" [(ngModel)]="diffusionModel.type" [disabled]="!creationMode">
                                     <mat-option *ngFor="let itemType of this.itemTypeList" [value]="itemType.id">
                                         {{ itemType.label }}
                                     </mat-option>
                                 </mat-select>
                             </mat-form-field>                                   
-                            <mat-form-field *ngIf="!creationMode">
-                                <input matInput  name="object_id" placeholder="{{lang.id}}" title="{{lang.id}}" [(ngModel)]="diffusionModel.object_id"
-                                    disabled maxlength="50" required>
-                            </mat-form-field>
                             <mat-form-field>
                                 <input matInput name="title" title="{{lang.label}}" placeholder="{{lang.label}}" [(ngModel)]="diffusionModel.title" maxlength="255"
                                     required>
@@ -34,7 +30,7 @@
                                     matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="5" maxlength="255"></textarea>
                             </mat-form-field>
                             <div class="col-md-12 text-center" style="padding:10px;">
-                                <button mat-raised-button (click)="saveDiffListVisa()" [disabled]="!diffusionModelForm.form.valid || diffusionModel.diffusionList.length == 0" color="primary">{{lang.save}}</button>
+                                <button mat-raised-button (click)="saveDiffListVisa()" [disabled]="!diffusionModelForm.form.valid || diffusionModel.items.length == 0" color="primary">{{lang.save}}</button>
                                 <button mat-raised-button color="default" (click)="loadDiffList()" [disabled]="!this.listDiffModified || creationMode">{{lang.cancel}}</button>
                             </div>
                         </form>
@@ -51,10 +47,10 @@
                         <mat-tab label="{{lang.diffusionList}}">
                                 <div class="row" style="margin:0px;" id="visaCircuitContent">
                                     <div class="col-md-12">
-                                        <plugin-autocomplete [labelPlaceholder]="lang.addUser" [labelList]="lang.availableUsers" [routeDatas]="diffusionModel.object_type == 'VISA_CIRCUIT' ? ['/rest/autocomplete/users/circuit'] : ['/rest/autocomplete/users/circuit?circuit=avis']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelVisa($event)"></plugin-autocomplete>
+                                        <plugin-autocomplete [labelPlaceholder]="lang.addUser" [labelList]="lang.availableUsers" [routeDatas]="diffusionModel.type == 'visaCircuit' ? ['/rest/autocomplete/users/circuit'] : ['/rest/autocomplete/users/circuit?circuit=avis']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelVisa($event)"></plugin-autocomplete>
                                         <mat-list>
-                                            <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="diffusionModel.diffusionList">
-                                                <mat-list-item disableRipple="true" *ngFor="let template of diffusionModel.diffusionList; let i = index" title="{{lang.move}}"
+                                            <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="diffusionModel.items">
+                                                <mat-list-item disableRipple="true" *ngFor="let template of diffusionModel.items; let i = index" title="{{lang.move}}"
                                                     dnd-sortable [sortableIndex]="i" (onDropSuccess)="updateDiffListVisa(template)">
                                                     <mat-icon color="primary" [class]="template.item_mode == 'sign' ? 'fa fa-certificate' : 'fa fa-user'" mat-list-icon></mat-icon>
                                                     <p mat-line>{{template.idToDisplay}}

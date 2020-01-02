@@ -218,12 +218,12 @@
                                 <mat-list *ngIf="currentEntity.entity_id">
                                     <span *ngFor="let role of listTemplateRoles; let i = index">
                                         <h3 *ngIf="role.available" mat-subheader style="font-weight:bold;" color="primary">{{role.label}}</h3>
-                                        <span *ngIf="role.available" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.listTemplate[role.id]">
+                                        <span *ngIf="role.available && currentEntity.listTemplate.items" dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.listTemplate.items[role.id]">
                                             <div style="min-height:30px;">
-                                                <mat-list-item class="roleDiffList" disableRipple="true" *ngFor="let template of currentEntity.listTemplate[role.id]; let i = index"
+                                                <mat-list-item class="roleDiffList" disableRipple="true" *ngFor="let template of currentEntity.listTemplate.items[role.id]; let i = index"
                                                     dnd-sortable (onDropSuccess)="updateDiffList(template,role.id)" [sortableIndex]="i"
-                                                    [dragEnabled]="role.id != 'dest' && template.item_type != 'entity_id'">
-                                                    <mat-icon color="primary" mat-list-icon [class]="template.item_type == 'entity_id' ? 'fa fa-sitemap' : 'fa fa-user'" [title]="role.id != 'dest' && template.item_type != 'entity_id' ? lang.move : lang.noMove"></mat-icon>
+                                                    [dragEnabled]="role.id != 'dest' && template.type != 'entity'">
+                                                    <mat-icon color="primary" mat-list-icon [class]="template.type == 'entity' ? 'fa fa-sitemap' : 'fa fa-user'" [title]="role.id != 'dest' && template.type != 'entity' ? lang.move : lang.noMove"></mat-icon>
                                                     <p mat-line>{{template.labelToDisplay}}
                                                         <small style="opacity:0.5;">{{template.descriptionToDisplay}}</small>
                                                     </p>
@@ -238,7 +238,7 @@
                             </div>
                             <div class="form-group" *ngIf="currentEntity.entity_id">
                                 <div class="col-md-12 text-center" style="padding:10px;">
-                                    <button mat-raised-button color="primary" (click)="saveDiffList()" [disabled]="!this.listDiffModified || (currentEntity.listTemplate.dest.length == 0 && currentEntity.listTemplate.cc.length > 0)">{{lang.save}}</button>
+                                    <button mat-raised-button color="primary" (click)="saveDiffList()" [disabled]="!this.listDiffModified || (currentEntity.listTemplate.items.dest.length == 0 && currentEntity.listTemplate.items.cc.length > 0)">{{lang.save}}</button>
                                     <button mat-raised-button color="default" (click)="loadEntity(this.currentEntity.entity_id)" [disabled]="!this.listDiffModified">{{lang.cancel}}</button>
                                 </div>
                             </div>
@@ -247,12 +247,12 @@
                     <mat-tab label="{{lang.visaWorkflow}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;" id="visaCircuitContent">
                             <div class="col-md-12">
-                                <plugin-autocomplete [labelPlaceholder]="lang.addVisaSignUser" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users/circuit']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelVisa($event)"></plugin-autocomplete>
-                                <mat-list>
-                                    <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.visaTemplate">
-                                        <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.visaTemplate; let i = index" title="{{lang.move}}"
+                                <plugin-autocomplete [labelPlaceholder]="lang.addVisaSignUser" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users/circuit?circuit=visa']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelVisa($event)"></plugin-autocomplete>
+                                <mat-list *ngIf="currentEntity.visaCircuit">
+                                    <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.visaCircuit.items">
+                                        <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.visaCircuit.items; let i = index" title="{{lang.move}}"
                                             dnd-sortable [sortableIndex]="i" (onDropSuccess)="updateDiffListVisa(template)">
-                                            <mat-icon color="primary" [class]="template.item_mode == 'visa' ? 'fa fa-user' : 'fa fa-certificate'" mat-list-icon></mat-icon>
+                                            <mat-icon color="primary" [class]="template.mode == 'visa' ? 'fa fa-user' : 'fa fa-certificate'" mat-list-icon></mat-icon>
                                             <p mat-line>{{template.idToDisplay}}
                                                 <small style="opacity:0.5;">{{template.descriptionToDisplay}}</small>
                                             </p>
@@ -265,8 +265,35 @@
                             </div>
                             <div class="form-group" *ngIf="currentEntity.entity_id">
                                 <div class="col-md-12 text-center" style="padding:10px;">
-                                    <button mat-raised-button color="primary" (click)="saveDiffListVisa()" [disabled]="!this.listDiffModified || (currentEntity.listTemplate.dest.length == 0 && currentEntity.listTemplate.cc.length > 0)">{{lang.save}}</button>
-                                    <button mat-raised-button color="default" (click)="loadEntity(this.currentEntity.entity_id)" [disabled]="!this.listDiffModified">{{lang.cancel}}</button>
+                                    <button mat-raised-button color="primary" (click)="saveDiffListVisa()" [disabled]="!this.visaCircuitModified">{{lang.save}}</button>
+                                    <button mat-raised-button color="default" (click)="loadEntity(this.currentEntity.entity_id)" [disabled]="!this.visaCircuitModified">{{lang.cancel}}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="{{lang.avis}}" *ngIf="!creationMode">
+                        <div class="row" style="margin:0px;" id="opinionCircuitContent">
+                            <div class="col-md-12">
+                                <plugin-autocomplete [labelPlaceholder]="lang.addVisaSignUser" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users/circuit?circuit=opinion']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelOpinion($event)"></plugin-autocomplete>
+                                <mat-list *ngIf="currentEntity.opinionCircuit">
+                                    <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.opinionCircuit.items">
+                                        <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.opinionCircuit.items; let i = index" title="{{lang.move}}"
+                                            dnd-sortable [sortableIndex]="i">
+                                            <mat-icon color="primary" [class]="'fa fa-user'" mat-list-icon></mat-icon>
+                                            <p mat-line>{{template.idToDisplay}}
+                                                <small style="opacity:0.5;">{{template.descriptionToDisplay}}</small>
+                                            </p>
+                                            <button matTooltip="{{lang.delete}}" mat-icon-button color="warn" (click)="removeDiffListOpinion(template,i)">
+                                                <mat-icon class="fa fa-times"></mat-icon>
+                                            </button>
+                                        </mat-list-item>
+                                    </span>
+                                </mat-list>
+                            </div>
+                            <div class="form-group" *ngIf="currentEntity.entity_id">
+                                <div class="col-md-12 text-center" style="padding:10px;">
+                                    <button mat-raised-button color="primary" (click)="saveDiffListOpinion()" [disabled]="!this.opinionCircuitModified">{{lang.save}}</button>
+                                    <button mat-raised-button color="default" (click)="loadEntity(this.currentEntity.entity_id)" [disabled]="!this.opinionCircuitModified">{{lang.cancel}}</button>
                                 </div>
                             </div>
                         </div>

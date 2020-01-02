@@ -23,6 +23,7 @@ use Docserver\models\DocserverModel;
 use Email\controllers\EmailController;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
+use Entity\models\ListTemplateItemModel;
 use Entity\models\ListTemplateModel;
 use Firebase\JWT\JWT;
 use Group\controllers\PrivilegeController;
@@ -322,14 +323,18 @@ class UserController
         }
 
         $listTemplateEntities = [];
-        $listTemplates = ListTemplateModel::get([
-            'select'    => ['object_id', 'title'],
-            'where'     => ['item_id = ?', 'object_type = ?', 'item_mode = ?', 'item_type = ?'],
-            'data'      => [$user['user_id'], 'entity_id', 'dest', 'user_id']
+        $listTemplates = ListTemplateModel::getWithItems([
+            'select'    => ['entity_id', 'title'],
+            'where'     => ['item_id = ?', 'type = ?', 'item_mode = ?', 'item_type = ?', 'entity_id is not null'],
+            'data'      => [$aArgs['id'], 'diffusionList', 'dest', 'user']
         ]);
         $allEntities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
+        if (!empty($allEntities)) {
+            $allEntities = EntityModel::get(['select' => ['id'], 'where' => ['entity_id in (?)'], 'data' => [$allEntities]]);
+            $allEntities = array_column($allEntities, 'id');
+        }
         foreach ($listTemplates as $listTemplate) {
-            if (!in_array($listTemplate['object_id'], $allEntities)) {
+            if (!in_array($listTemplate['entity_id'], $allEntities)) {
                 $isListTemplateDeletable = false;
             }
             $listTemplateEntities[] = $listTemplate['object_id'];
@@ -383,10 +388,10 @@ class UserController
             return $response->withStatus(403)->withJson(['errors' => 'User is still present in listInstances']);
         }
 
-        $listTemplates = ListTemplateModel::get([
+        $listTemplates = ListTemplateModel::getWithItems([
             'select'    => [1],
-            'where'     => ['item_id = ?', 'object_type = ?', 'item_type = ?', 'item_mode = ?'],
-            'data'      => [$user['user_id'], 'entity_id', 'user_id', 'dest']
+            'where'     => ['item_id = ?', 'type = ?', 'item_mode = ?', 'item_type = ?', 'entity_id is not null'],
+            'data'      => [$aArgs['id'], 'diffusionList', 'dest', 'user']
         ]);
         if (!empty($listTemplates)) {
             return $response->withStatus(403)->withJson(['errors' => 'User is still present in listTemplates']);
@@ -395,10 +400,6 @@ class UserController
         ListInstanceModel::delete([
             'where' => ['item_id = ?', 'difflist_type = ?', 'item_type = ?', 'item_mode != ?'],
             'data'  => [$user['user_id'], 'entity_id', 'user_id', 'dest']
-        ]);
-        ListTemplateModel::delete([
-            'where' => ['item_id = ?', 'object_type = ?', 'item_type = ?'],
-            'data'  => [$user['user_id'], 'entity_id', 'user_id']
         ]);
         RedirectBasketModel::delete([
             'where' => ['owner_user_id = ? OR actual_user_id = ?'],
@@ -438,10 +439,10 @@ class UserController
             return $response->withStatus(403)->withJson(['errors' => 'User is still present in listInstances']);
         }
 
-        $listTemplates = ListTemplateModel::get([
+        $listTemplates = ListTemplateModel::getWithItems([
             'select'    => [1],
-            'where'     => ['item_id = ?', 'object_type = ?', 'item_type = ?', 'item_mode = ?'],
-            'data'      => [$user['user_id'], 'entity_id', 'user_id', 'dest']
+            'where'     => ['item_id = ?', 'type = ?', 'item_mode = ?', 'item_type = ?', 'entity_id is not null'],
+            'data'      => [$aArgs['id'], 'diffusionList', 'dest', 'user']
         ]);
         if (!empty($listTemplates)) {
             return $response->withStatus(403)->withJson(['errors' => 'User is still present in listTemplates']);
@@ -451,10 +452,11 @@ class UserController
             'where' => ['item_id = ?', 'difflist_type = ?', 'item_type = ?', 'item_mode != ?'],
             'data'  => [$user['user_id'], 'entity_id', 'user_id', 'dest']
         ]);
-        ListTemplateModel::delete([
-            'where' => ['item_id = ?', 'object_type = ?', 'item_type = ?'],
-            'data'  => [$user['user_id'], 'entity_id', 'user_id']
+        ListTemplateItemModel::delete([
+            'where' => ['item_id = ?', 'item_type = ?'],
+            'data'  => [$aArgs['id'], 'user']
         ]);
+        ListTemplateModel::deleteNoItemsOnes();
         RedirectBasketModel::delete([
             'where' => ['owner_user_id = ? OR actual_user_id = ?'],
             'data'  => [$aArgs['id'], $aArgs['id']]
@@ -1381,21 +1383,21 @@ class UserController
         ]);
     }
 
-    public function isEntityDeletable(Request $request, Response $response, array $aArgs)
+    public function isEntityDeletable(Request $request, Response $response, array $args)
     {
-        $error = $this->hasUsersRights(['id' => $aArgs['id']]);
+        $error = $this->hasUsersRights(['id' => $args['id']]);
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
-        if (empty(entitymodel::getByEntityId(['entityId' => $aArgs['entityId']]))) {
-            return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
+        $entity = EntityModel::getByEntityId(['entityId' => $args['entityId'], 'select' => ['id']]);
+        if (empty($entity)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Entity does not exist']);
         }
 
-        $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id']]);
+        $user = UserModel::getById(['id' => $args['id'], 'select' => ['user_id']]);
+        $listInstances = ListInstanceModel::getWithConfidentiality(['select' => [1], 'entityId' => $args['entityId'], 'userId' => $user['user_id']]);
 
-        $listInstances = ListInstanceModel::getWithConfidentiality(['select' => [1], 'entityId' => $aArgs['entityId'], 'userId' => $user['user_id']]);
-
-        $listTemplates = ListTemplateModel::get(['select' => [1], 'where' => ['object_id = ?', 'item_type = ?', 'item_id = ?'], 'data' => [$aArgs['entityId'], 'user_id', $user['user_id']]]);
+        $listTemplates = ListTemplateModel::getWithItems(['select' => [1], 'where' => ['entity_id = ?', 'item_type = ?', 'item_id = ?'], 'data' => [$entity['id'], 'user', $args['id']]]);
 
         return $response->withJson(['hasConfidentialityInstances' => !empty($listInstances), 'hasListTemplates' => !empty($listTemplates)]);
     }

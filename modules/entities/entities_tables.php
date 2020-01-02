@@ -35,9 +35,6 @@ if (! defined('ENT_ENTITIES')) {
 if (! defined('ENT_USERS_ENTITIES')) {
     define('ENT_USERS_ENTITIES', 'users_entities');
 }
-if (! defined('ENT_LISTMODELS')) {
-    define('ENT_LISTMODELS', 'listmodels');
-}
 if (! defined('ENT_LISTINSTANCE')) {
     define('ENT_LISTINSTANCE', 'listinstance');
 }

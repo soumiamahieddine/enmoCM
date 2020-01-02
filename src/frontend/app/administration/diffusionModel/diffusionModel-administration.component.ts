@@ -55,9 +55,9 @@ export class DiffusionModelAdministrationComponent implements OnInit {
                 
                 this.creationMode = true;
                 this.loading = false;
-                this.itemTypeList =[{"id":"VISA_CIRCUIT", "label": this.lang.visaWorkflow},{"id":"AVIS_CIRCUIT", "label": this.lang.avis}]
-                this.diffusionModel.object_type = 'VISA_CIRCUIT';
-                this.diffusionModel.diffusionList = [];
+                this.itemTypeList =[{"id":"visaCircuit", "label": this.lang.visaWorkflow},{"id":"opinionCircuit", "label": this.lang.avis}];
+                this.diffusionModel.type = 'opinionCircuit';
+                this.diffusionModel.items = [];
             } else {
                 window['MainHeaderComponent'].setSnav(this.sidenavLeft);
                 window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
@@ -67,9 +67,7 @@ export class DiffusionModelAdministrationComponent implements OnInit {
                 .subscribe((data: any) => {
                         this.diffusionModel = data['listTemplate'];
                         this.headerService.setHeader(this.lang.diffusionModelModification, this.diffusionModel.title);
-                        if (this.diffusionModel.diffusionList[0]) {
-                            this.idCircuit = this.diffusionModel.diffusionList[0].id;
-                        }
+                        this.idCircuit = params['id'];
                         this.loading = false;
 
                     }, () => {
@@ -84,7 +82,7 @@ export class DiffusionModelAdministrationComponent implements OnInit {
         var item_mode = '';
         var item_mode2 = '';
 
-        if (this.diffusionModel.object_type == 'AVIS_CIRCUIT') {
+        if (this.diffusionModel.type == 'opinionCircuit') {
             item_mode = 'avis';
             item_mode2 = 'avis';
         } else {
@@ -92,32 +90,31 @@ export class DiffusionModelAdministrationComponent implements OnInit {
             item_mode2 = 'visa';
         }
         var newElemListModel = {
-            "id": '',
-            "item_type": 'user_id',
-            "item_mode": item_mode,
-            "item_id": element.id,
-            "sequence": this.diffusionModel.diffusionList.length,
+            "type": 'user',
+            "mode": item_mode,
+            "id": element.id,
+            "sequence": this.diffusionModel.items.length,
             "idToDisplay": element.idToDisplay,
             "descriptionToDisplay": element.descriptionToDisplay
         };
 
-        this.diffusionModel.diffusionList.push(newElemListModel);
-        if (this.diffusionModel.diffusionList.length > 1) {
-            this.diffusionModel.diffusionList[this.diffusionModel.diffusionList.length-2].item_mode = item_mode2;
+        this.diffusionModel.items.push(newElemListModel);
+        if (this.diffusionModel.items.length > 1) {
+            this.diffusionModel.items[this.diffusionModel.items.length-2].item_mode = item_mode2;
         }
     }
 
     updateDiffListVisa(template: any): any {
         this.listDiffModified = true;
-        this.diffusionModel.diffusionList.forEach((listModel: any, i: number) => {
+        this.diffusionModel.items.forEach((listModel: any, i: number) => {
             listModel.sequence = i;
-            if (this.diffusionModel.object_type == 'AVIS_CIRCUIT') {
-                listModel.item_mode = "avis";
+            if (this.diffusionModel.type == 'opinionCircuit') {
+                listModel.mode = "avis";
             } else {
-                if (i == (this.diffusionModel.diffusionList.length - 1)) {
-                    listModel.item_mode = "sign";
+                if (i == (this.diffusionModel.items.length - 1)) {
+                    listModel.mode = "sign";
                 } else {
-                    listModel.item_mode = "visa";
+                    listModel.mode = "visa";
                 }
             }
         });
@@ -125,18 +122,18 @@ export class DiffusionModelAdministrationComponent implements OnInit {
 
     removeDiffListVisa(template: any, i: number): any {
         this.listDiffModified = true;
-        this.diffusionModel.diffusionList.splice(i, 1);
+        this.diffusionModel.items.splice(i, 1);
 
-        if (this.diffusionModel.diffusionList.length > 0) {
-            this.diffusionModel.diffusionList.forEach((listModel: any, i: number) => {
+        if (this.diffusionModel.items.length > 0) {
+            this.diffusionModel.items.forEach((listModel: any, i: number) => {
                 listModel.sequence = i;
-                if (this.diffusionModel.object_type == 'AVIS_CIRCUIT') {
-                    listModel.item_mode = "avis";
+                if (this.diffusionModel.type == 'opinionCircuit') {
+                    listModel.mode = "avis";
                 } else {
-                    if (i == (this.diffusionModel.diffusionList.length - 1)) {
-                        listModel.item_mode = "sign";
+                    if (i == (this.diffusionModel.items.length - 1)) {
+                        listModel.mode = "sign";
                     } else {
-                        listModel.item_mode = "visa";
+                        listModel.mode = "visa";
                     }
                 }
             });
@@ -147,9 +144,6 @@ export class DiffusionModelAdministrationComponent implements OnInit {
         this.http.get("../../rest/listTemplates/" + this.idCircuit)
             .subscribe((data: any) => {
                 this.diffusionModel = data['listTemplate'];
-                if (this.diffusionModel.diffusionList[0]) {
-                    this.idCircuit = this.diffusionModel.diffusionList[0].id;
-                }
                 this.loading = false;
                 this.listDiffModified = false;
 
@@ -161,33 +155,30 @@ export class DiffusionModelAdministrationComponent implements OnInit {
     saveDiffListVisa() {
         this.listDiffModified = false;
         var newDiffList = {
-            "object_id": this.diffusionModel.object_id,
-            "object_type": this.diffusionModel.object_type,
+            "type": this.diffusionModel.type,
             "title": this.diffusionModel.title,
             "description": this.diffusionModel.description,
             "items": Array()
         };
         if (this.idCircuit == null) {
-            this.diffusionModel.diffusionList.forEach((listModel: any, i: number) => {
+            this.diffusionModel.items.forEach((listModel: any, i: number) => {
                 listModel.sequence = i;
-                if (this.diffusionModel.object_type == 'AVIS_CIRCUIT') {
-                    listModel.item_mode = "avis";
+                if (this.diffusionModel.type == 'opinionCircuit') {
+                    listModel.mode = "avis";
                 } else {
-                    if (i == (this.diffusionModel.diffusionList.length - 1)) {
-                        listModel.item_mode = "sign";
+                    if (i == (this.diffusionModel.items.length - 1)) {
+                        listModel.mode = "sign";
                     } else {
-                        listModel.item_mode = "visa";
+                        listModel.mode = "visa";
                     }
                 }
                 newDiffList.items.push({
                     "id": listModel.id,
-                    "item_id": listModel.item_id,
-                    "item_type": "user_id",
-                    "item_mode": listModel.item_mode,
+                    "type": "user",
+                    "mode": listModel.mode,
                     "sequence": listModel.sequence
                 });
             });
-            newDiffList.object_id = newDiffList.object_type + '_' + (Math.random()+ +new Date).toString(36).replace('.','').toUpperCase();
             this.http.post("../../rest/listTemplates", newDiffList)
                 .subscribe((data: any) => {
                     this.idCircuit = data.id;
@@ -196,30 +187,28 @@ export class DiffusionModelAdministrationComponent implements OnInit {
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
-        } else if (this.diffusionModel.diffusionList.length > 0) {
-            this.diffusionModel.diffusionList.forEach((listModel: any, i: number) => {
+        } else if (this.diffusionModel.items.length > 0) {
+            this.diffusionModel.items.forEach((listModel: any, i: number) => {
                 listModel.sequence = i;
                 
-                if (this.diffusionModel.object_type == 'AVIS_CIRCUIT') {
-                    listModel.item_mode = "avis";
+                if (this.diffusionModel.type == 'opinionCircuit') {
+                    listModel.mode = "avis";
                 } else {
-                    if (i == (this.diffusionModel.diffusionList.length - 1)) {
-                        listModel.item_mode = "sign";
+                    if (i == (this.diffusionModel.items.length - 1)) {
+                        listModel.mode = "sign";
                     } else {
-                        listModel.item_mode = "visa";
+                        listModel.mode = "visa";
                     }
                 }
                 newDiffList.items.push({
                     "id": listModel.id,
-                    "item_id": listModel.item_id,
-                    "item_type": "user_id",
-                    "item_mode": listModel.item_mode,
+                    "type": "user",
+                    "mode": listModel.mode,
                     "sequence": listModel.sequence
                 });
             });
             this.http.put("../../rest/listTemplates/" + this.idCircuit, newDiffList)
-                .subscribe((data: any) => {
-                    this.idCircuit = data.id;
+                .subscribe(() => {
                     this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);

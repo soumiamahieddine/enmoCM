@@ -951,7 +951,7 @@ class ContactController
             if (strpos($mandatoryParameter['identifier'], 'contactCustomField_') !== false) {
                 $customId = explode('_', $mandatoryParameter['identifier'])[1];
                 if (empty($body['customFields'][$customId])) {
-                    return ['errors' => "Body {$body['customFields'][$customId]} is mandatory"];
+                    return ['errors' => "Body customFields[{$customId}] is mandatory"];
                 }
             } else {
                 if (empty($body[$mandatoryParameter['identifier']])) {

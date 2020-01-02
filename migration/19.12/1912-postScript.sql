@@ -56,6 +56,8 @@ ALTER TABLE priorities DROP COLUMN IF EXISTS default_priority;
 
 DROP TABLE IF EXISTS doctypes_indexes;
 
+DROP TABLE IF EXISTS listmodels;
+
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_t1;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_t2;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_t3;

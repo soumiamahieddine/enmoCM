@@ -12,14 +12,6 @@
       <parameter name="module" value="avis"/>
       <parameter name="page" value="resetAvisWF"/> 
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="load_listmodel_Avis" >
-        <parameter name="page" value="load_listmodel_Avis"/>
-        <parameter name="module" value="Avis"/>
-    </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="load_listmodel_Avis" >
-        <parameter name="page" value="load_listmodel_Avis"/>
-        <parameter name="module" value="Avis"/>
-    </requestDefinition>
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="getAvisModelByTitle" >
       <parameter name="display" value="true"/>
       <parameter name="module" value="avis"/>

@@ -94,36 +94,6 @@ function change_entity(
     }
 }
 
-// Load list of listmodels to fill select list (index, validate)
-// >>> type of list (entity_id, type_id, custom list type)
-// >>> type of element to fill (select or list)
-// >>> id of element to fill
-function select_listmodels(
-	objectType, 
-	returnElementType, 
-	returnElementId
-) {
-        console.log('appel select_listmodels');
-
-	new Ajax.Request(
-		'index.php?display=true&module=entities&page=select_listmodels',
-        {
-            method:'post',
-            parameters: { 
-				objectType : objectType,
-				returnElementType : returnElementType
-            },
-            onSuccess: function(answer)
-				{
-					var returnElement = $(returnElementId);
-					if(returnElement != null && returnElement.nodeName.toUpperCase() == returnElementType.toUpperCase()) {
-						returnElement.innerHTML += answer.responseText;
-					}
-				}
-        }
-	);
-}
-
 // Load listmodel to session[origin]
 // >>> type of list (entity_id, type_id, custom list type)
 // >>> id of list (entity_id, type_id, custom id)

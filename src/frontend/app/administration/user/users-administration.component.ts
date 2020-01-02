@@ -121,7 +121,7 @@ export class UsersAdministrationComponent implements OnInit {
                 if (response && response.hasOwnProperty('errors')) {
                     this.notify.error(response.errors);
                 } else {
-                    user.isDeletable = response.isDeletable
+                    user.isDeletable = response.isDeletable;
 
                     if (response.isDeletable) {
                         this.config = {
@@ -173,122 +173,109 @@ export class UsersAdministrationComponent implements OnInit {
                             if (user.inDiffListDest && user.isResDestUser) { //user is inDiffListDest and isResDestUser
 
                                 //update listModels
-                                this.http.put('../../rest/listTemplates/entityDest/itemId/' + user.user_id, user)
-                                    .subscribe((data: any) => {
-                                        if (data.errors) {
-                                            this.notify.error(data.errors);
-                                        } else {
+                                this.http.put('../../rest/listTemplates/entityDest/itemId/' + user.id, user)
+                                    .subscribe(() => {
+                                        this.http.put('../../rest/listinstances', user.redirectListInstances)
+                                            .subscribe((data: any) => {
+                                                if (data != null && data.errors) {
+                                                    this.notify.error(data.errors);
+                                                } else {
 
-                                            //update listInstances
-                                            this.http.put('../../rest/listinstances', user.redirectListInstances)
-                                                .subscribe((data: any) => {
-                                                    if (data != null && data.errors) {
-                                                        this.notify.error(data.errors);
-                                                    } else {
-
-                                                        //delete user
-                                                        if (user.mode == 'delete') {
-                                                            this.http.delete('../../rest/users/' + user.id)
-                                                                .subscribe(() => {
-                                                                    for (let i in this.data) {
-                                                                        if (this.data[i].id == user.id) {
-                                                                            this.data.splice(Number(i), 1);
-                                                                        }
+                                                    //delete user
+                                                    if (user.mode == 'delete') {
+                                                        this.http.delete('../../rest/users/' + user.id)
+                                                            .subscribe(() => {
+                                                                for (let i in this.data) {
+                                                                    if (this.data[i].id == user.id) {
+                                                                        this.data.splice(Number(i), 1);
                                                                     }
-                                                                    this.dataSource = new MatTableDataSource(this.data);
-                                                                    this.dataSource.paginator = this.paginator;
-                                                                    this.dataSource.sort = this.sort;
+                                                                }
+                                                                this.dataSource = new MatTableDataSource(this.data);
+                                                                this.dataSource.paginator = this.paginator;
+                                                                this.dataSource.sort = this.sort;
 
-                                                                    if (this.quota.userQuota && user.status != 'SPD') {
-                                                                        this.quota.actives--;
-                                                                    } else if (this.quota.userQuota && user.status == 'SPD') {
-                                                                        this.quota.inactives--;
-                                                                    }
+                                                                if (this.quota.userQuota && user.status != 'SPD') {
+                                                                    this.quota.actives--;
+                                                                } else if (this.quota.userQuota && user.status == 'SPD') {
+                                                                    this.quota.inactives--;
+                                                                }
 
-                                                                    this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
+                                                                this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
 
-                                                                    //end delete user
-                                                                }, (err) => {
-                                                                    this.notify.error(err.error.errors);
-                                                                });
-                                                            //suspend user
-                                                        } else if (user.mode == 'suspend') {
-                                                            this.http.put('../../rest/users/' + user.id + '/suspend', user)
-                                                                .subscribe(() => {
-                                                                    user.status = 'SPD';
-                                                                    this.notify.success(this.lang.userSuspended);
-                                                                    if (this.quota.userQuota) {
-                                                                        this.quota.inactives++;
-                                                                        this.quota.actives--;
-                                                                    }
+                                                                //end delete user
+                                                            }, (err) => {
+                                                                this.notify.error(err.error.errors);
+                                                            });
+                                                        //suspend user
+                                                    } else if (user.mode == 'suspend') {
+                                                        this.http.put('../../rest/users/' + user.id + '/suspend', user)
+                                                            .subscribe(() => {
+                                                                user.status = 'SPD';
+                                                                this.notify.success(this.lang.userSuspended);
+                                                                if (this.quota.userQuota) {
+                                                                    this.quota.inactives++;
+                                                                    this.quota.actives--;
+                                                                }
 
-                                                                }, (err) => {
-                                                                    user.status = 'OK';
-                                                                    this.notify.error(err.error.errors);
-                                                                });
-                                                        }
+                                                            }, (err) => {
+                                                                user.status = 'OK';
+                                                                this.notify.error(err.error.errors);
+                                                            });
                                                     }
-                                                    //end update listInstances
-                                                }, (err) => {
-                                                    this.notify.error(err.error.errors);
-                                                });
-                                        }
-                                        //end update listModels
+                                                }
+                                                //end update listInstances
+                                            }, (err) => {
+                                                this.notify.error(err.error.errors);
+                                            });
                                     }, (err) => {
                                         this.notify.error(err.error.errors);
                                     });
 
                             } else if (user.inDiffListDest && !user.isResDestUser) { //user is inDiffListDest
                                 //update listModels
-                                this.http.put('../../rest/listTemplates/entityDest/itemId/' + user.user_id, user)
-                                    .subscribe((data: any) => {
-                                        if (data.errors) {
-                                            this.notify.error(data.errors);
-                                        } else {
-
-                                            //delete user
-                                            if (user.mode == 'delete') {
-                                                this.http.delete('../../rest/users/' + user.id)
-                                                    .subscribe(() => {
-                                                        for (let i in this.data) {
-                                                            if (this.data[i].id == user.id) {
-                                                                this.data.splice(Number(i), 1);
-                                                            }
+                                this.http.put('../../rest/listTemplates/entityDest/itemId/' + user.id, user)
+                                    .subscribe(() => {
+                                        //delete user
+                                        if (user.mode == 'delete') {
+                                            this.http.delete('../../rest/users/' + user.id)
+                                                .subscribe(() => {
+                                                    for (let i in this.data) {
+                                                        if (this.data[i].id == user.id) {
+                                                            this.data.splice(Number(i), 1);
                                                         }
-                                                        this.dataSource = new MatTableDataSource(this.data);
-                                                        this.dataSource.paginator = this.paginator;
-                                                        this.dataSource.sort = this.sort;
+                                                    }
+                                                    this.dataSource = new MatTableDataSource(this.data);
+                                                    this.dataSource.paginator = this.paginator;
+                                                    this.dataSource.sort = this.sort;
 
-                                                        if (this.quota.userQuota && user.status == 'OK') {
-                                                            this.quota.actives--;
-                                                        } else if (this.quota.userQuota && user.status == 'SPD') {
-                                                            this.quota.inactives--;
-                                                        }
+                                                    if (this.quota.userQuota && user.status == 'OK') {
+                                                        this.quota.actives--;
+                                                    } else if (this.quota.userQuota && user.status == 'SPD') {
+                                                        this.quota.inactives--;
+                                                    }
 
-                                                        this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
+                                                    this.notify.success(this.lang.userDeleted + ' « ' + user.user_id + ' »');
 
-                                                        //end delete user
-                                                    }, (err) => {
-                                                        this.notify.error(err.error.errors);
-                                                    });
-                                                //suspend user
-                                            } else if (user.mode == 'suspend') {
-                                                this.http.put('../../rest/users/' + user.id + '/suspend', user)
-                                                    .subscribe(() => {
-                                                        user.status = 'SPD';
-                                                        this.notify.success(this.lang.userSuspended);
-                                                        if (this.quota.userQuota) {
-                                                            this.quota.inactives++;
-                                                            this.quota.actives--;
-                                                        }
+                                                    //end delete user
+                                                }, (err) => {
+                                                    this.notify.error(err.error.errors);
+                                                });
+                                            //suspend user
+                                        } else if (user.mode == 'suspend') {
+                                            this.http.put('../../rest/users/' + user.id + '/suspend', user)
+                                                .subscribe(() => {
+                                                    user.status = 'SPD';
+                                                    this.notify.success(this.lang.userSuspended);
+                                                    if (this.quota.userQuota) {
+                                                        this.quota.inactives++;
+                                                        this.quota.actives--;
+                                                    }
 
-                                                    }, (err) => {
-                                                        user.status = 'OK';
-                                                        this.notify.error(err.error.errors);
-                                                    });
-                                            }
+                                                }, (err) => {
+                                                    user.status = 'OK';
+                                                    this.notify.error(err.error.errors);
+                                                });
                                         }
-                                        //end update listModels
                                     }, (err) => {
                                         this.notify.error(err.error.errors);
                                     });

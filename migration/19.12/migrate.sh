@@ -10,6 +10,7 @@ php ./migrateFolders.php
 php ./migrateFullText.php
 php ./migrateRedirectKeywords.php
 php ./migrateIndexing.php
+php ./migrateListTemplates.php
 php ./migrateServicesEntities.php
 php ./migrateMenuEntities.php
 php ./removeProcessModes.php

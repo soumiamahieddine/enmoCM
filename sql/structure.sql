@@ -427,22 +427,6 @@ CREATE TABLE listinstance
 )
 WITH (OIDS=FALSE);
 
-CREATE TABLE listmodels
-(
-  id serial NOT NULL,
-  object_id character varying(50) NOT NULL,
-  object_type character varying(255) NOT NULL,
-  "sequence" bigint NOT NULL,
-  item_id character varying(128) NOT NULL,
-  item_type character varying(255) NOT NULL,
-  item_mode character varying(50) NOT NULL,
-  title character varying(255),
-  description character varying(255),
-  process_comment character varying(255),
-  visible character varying(1) NOT NULL DEFAULT 'Y'::bpchar
-)
-WITH (OIDS=FALSE);
-
 CREATE TABLE difflist_types 
 (
   difflist_type_id character varying(50) NOT NULL,
@@ -1452,6 +1436,29 @@ CREATE TABLE contacts_custom_fields_list
     values jsonb,
     CONSTRAINT contacts_custom_fields_list_pkey PRIMARY KEY (id),
     CONSTRAINT contacts_custom_fields_list_unique_key UNIQUE (label)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE list_templates
+(
+    id SERIAL NOT NULL,
+    title text NOT NULL,
+    description text,
+    type CHARACTER VARYING(32) NOT NULL,
+    entity_id INTEGER,
+    CONSTRAINT list_templates_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE list_templates_items
+(
+    id SERIAL NOT NULL,
+    list_template_id INTEGER NOT NULL,
+    item_id INTEGER NOT NULL,
+    item_type CHARACTER VARYING(32) NOT NULL,
+    item_mode CHARACTER VARYING(64) NOT NULL,
+    sequence INTEGER NOT NULL,
+    CONSTRAINT list_templates_items_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 

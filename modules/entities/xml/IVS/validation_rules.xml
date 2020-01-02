@@ -11,11 +11,6 @@
 		<parameter name="module" type="identifier" />
 		<parameter name="entities" type="ajax_ids" />
     </validationRule>
-    <validationRule name="select_listmodels" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="objectType" type="string" />
-		<parameter name="returnElementType" type="string" />
-    </validationRule>
     <validationRule name="save_list_diff" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="mode" type="entities_table_list" />
@@ -85,44 +80,6 @@
 		<parameter name="difflist_type_roles" type="string" />
 		<parameter name="allow_entities" type="string" />
 		<parameter name="mode" type="mode" />
-    </validationRule>
-    <validationRule name="admin_listmodels" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-    </validationRule>
-    <validationRule name="admin_listmodel" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="id" type="string" />
-		<parameter name="mode" type="mode" />
-    </validationRule>
-    <validationRule name="admin_listmodel_setObjectId" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="objectId" type="string" />
-		<parameter name="objectType" type="string" />
-		<parameter name="mode" type="mode" />
-    </validationRule>
-    <validationRule name="admin_listmodel_validateHeader" extends="standardForm" mode="error">
-		<parameter name="description" type="string" />
-		<parameter name="objectId" type="string" />
-		<parameter name="objectType" type="string" />
-		<parameter name="title" type="string" />
-    </validationRule>
-    <validationRule name="admin_listmodel_save" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="objectId" type="string" />
-		<parameter name="objectType" type="string" />
-		<parameter name="description" type="string" />
-		<parameter name="title" type="string" />
-    </validationRule>
-    <validationRule name="admin_listmodel_setObjectType" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="objectType" type="identifier" />
-    </validationRule>
-    <validationRule name="load_listmodel" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="objectType" type="string" />
-		<parameter name="objectId" type="string" />
-		<parameter name="category" type="string" />
-		<parameter name="origin" type="identifier" />
     </validationRule>
     <validationRule name="check_user_entities" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
