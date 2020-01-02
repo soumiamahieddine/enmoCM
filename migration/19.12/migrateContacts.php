@@ -69,6 +69,7 @@ foreach ($customs as $custom) {
 
     $debutMigrateInProgress = microtime(true);
     foreach ($contactsInfo as $contactInfo) {
+        echo "--------------- NEW CONTACT -----------------"; 
         $oldContactId = $contactInfo['contact_id'];
         $oldAddressId = $contactInfo['ca_id'];
         unset($contactInfo['contact_id']);
@@ -159,13 +160,47 @@ foreach ($customs as $custom) {
         unset($contactInfo['society_short']);
         $id = \Contact\models\ContactModel::create($contactInfo);
 
+        $debutAllMigration = microtime(true);
         migrateCustomField(['newContactId' => $id, 'contactCustomInfo' => $contactCustomInfo, 'newCustomFields' => $newCustomFields]);
+        $finAllMigration = microtime(true);
+        $delaiAllMigration = $finAllMigration - $debutAllMigration;
+        echo "migrateCustomField : ".$delaiAllMigration." secondes.\n"; 
+
+        $debutAllMigration = microtime(true);
         migrateAcknowledgementReceipt(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
+        $finAllMigration = microtime(true);
+        $delaiAllMigration = $finAllMigration - $debutAllMigration;
+        echo "migrateAcknowledgementReceipt : ".$delaiAllMigration." secondes.\n"; 
+
+        $debutAllMigration = microtime(true);
         migrateContactGroupsLists(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
+        $finAllMigration = microtime(true);
+        $delaiAllMigration = $finAllMigration - $debutAllMigration;
+        echo "migrateContactGroupsLists : ".$delaiAllMigration." secondes.\n"; 
+
+        $debutAllMigration = microtime(true);
         migrateContactRes(['oldAddressId' => $oldAddressId, 'oldContactId' => $oldContactId, 'newContactId' => $id]);
+        $finAllMigration = microtime(true);
+        $delaiAllMigration = $finAllMigration - $debutAllMigration;
+        echo "migrateContactRes : ".$delaiAllMigration." secondes.\n"; 
+
+        $debutAllMigration = microtime(true);
         migrateResourceContacts(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
+        $finAllMigration = microtime(true);
+        $delaiAllMigration = $finAllMigration - $debutAllMigration;
+        echo "migrateResourceContacts : ".$delaiAllMigration." secondes.\n"; 
+
+        $debutAllMigration = microtime(true);
         migrateResAttachments(['oldAddressId' => $oldAddressId, 'oldContactId' => $oldContactId, 'newContactId' => $id]);
+        $finAllMigration = microtime(true);
+        $delaiAllMigration = $finAllMigration - $debutAllMigration;
+        echo "migrateResAttachments : ".$delaiAllMigration." secondes.\n"; 
+
+        $debutAllMigration = microtime(true);
         migrateResletterbox(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
+        $finAllMigration = microtime(true);
+        $delaiAllMigration = $finAllMigration - $debutAllMigration;
+        echo "migrateResletterbox : ".$delaiAllMigration." secondes.\n"; 
 
         $migrated++;
 
@@ -250,9 +285,9 @@ function addCustomFields($args = [])
 function migrateCustomField($args = [])
 {
     \SrcCore\models\DatabaseModel::beginTransaction();
+    $contact = \Contact\models\ContactModel::getById(['id' => $args['newContactId'], 'select' => ['custom_fields']]);
     foreach ($args['contactCustomInfo'] as $key => $value) {
         if (!empty($value)) {
-            $contact = \Contact\models\ContactModel::getById(['id' => $args['newContactId'], 'select' => ['custom_fields']]);
             $value = json_encode($value);
             $value = str_replace("'", "''", $value);
             if (empty($contact['custom_fields'])) {
