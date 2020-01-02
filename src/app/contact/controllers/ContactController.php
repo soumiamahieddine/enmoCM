@@ -244,7 +244,7 @@ class ContactController
         ];
 
         $filling = ContactController::getFillingRate(['contactId' => $rawContact['id']]);
-        $contact['filling'] = empty($filling['color']) ? '' : $filling['color'];
+        $contact['thresholdLevel'] = empty($filling['thresholdLevel']) ? '' : $filling['thresholdLevel'];
 
         return $response->withJson($contact);
     }
@@ -625,14 +625,14 @@ class ContactController
             }
             $percent = $percent * 100 / count($contactsParameters);
             if ($percent <= $contactsFilling['first_threshold']) {
-                $color = '#ff9e9e';
+                $thresholdLevel = 'first';
             } elseif ($percent <= $contactsFilling['second_threshold']) {
-                $color = '#f6cd81';
+                $thresholdLevel = 'second';
             } else {
-                $color = '#ccffcc';
+                $thresholdLevel = 'third';
             }
 
-            return ['rate' => round($percent, 2), 'color' => $color];
+            return ['rate' => round($percent, 2), 'thresholdLevel' => $thresholdLevel];
         }
 
         return [];
@@ -787,7 +787,7 @@ class ContactController
 
                 $filling = ContactController::getFillingRate(['contactId' => $resourceContact['item_id']]);
 
-                $contact['filling'] = empty($filling['color']) ? '' : $filling['color'];
+                $contact['thresholdLevel'] = empty($filling['thresholdLevel']) ? '' : $filling['thresholdLevel'];
             } elseif ($resourceContact['type'] == 'user') {
                 $user = UserModel::getById(['id' => $resourceContact['item_id']]);
 
@@ -1000,7 +1000,7 @@ class ContactController
         if (!empty($args['color'])) {
             $rate = ContactController::getFillingRate(['contactId' => $args['contact']['id']]);
         }
-        $rateColor = empty($rate['color']) ? '' : $rate['color'];
+        $thresholdLevel = empty($rate['thresholdLevel']) ? '' : $rate['thresholdLevel'];
 
         $address = '';
 
@@ -1047,7 +1047,7 @@ class ContactController
             'address'       => $address,
             'idToDisplay'   => "{$contactToDisplay}<br/>{$address}",
             'otherInfo'     => $otherInfo,
-            'rateColor'     => $rateColor
+            'thresholdLevel' => $thresholdLevel
         ];
 
         return ['contact' => $contact];
