@@ -73,15 +73,19 @@ export class AttachmentPageComponent implements OnInit {
             exhaustMap(() => this.http.get("../../rest/attachments/" + this.data.resId)),
             tap((data: any) => {
                 //this.attachment = data;
+                let contact: any = null;
 
                 if ((this.privilegeService.hasCurrentUserPrivilege('manage_attachments') || this.headerService.user.id === data.typist) && data.status !== 'SIGN') {
                     this.editMode = true;
                 }
 
-                const contact: any = [{
-                    id: data.recipientId,
-                    type: data.recipientType
-                }];
+                if (data.recipientId !== null) {
+                    contact = [{
+                        id: data.recipientId,
+                        type: data.recipientType
+                    }];
+                }
+                
 
                 this.attachment = {
                     typist: new FormControl({ value: data.typist, disabled: true }, [Validators.required]),
