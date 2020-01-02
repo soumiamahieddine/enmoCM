@@ -1356,7 +1356,7 @@ export const LANG_EN = {
     "additionals": "Additional(s)",
     "denomination": "Denomination",
     "moreInfos" : "More data",
-    "confirmCloseEditor" : "Do you really want to close editor ? All modifications will be canceled",
+    "confirmCloseEditor" : "Do you really want to close the editor ? All modifications will be canceled",
     "onlyNumber" : "Number only",
     "found": "found",
     "here": "here",
