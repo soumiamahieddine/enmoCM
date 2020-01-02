@@ -58,9 +58,9 @@ export class ContactsParametersAdministrationComponent implements OnInit {
 
     arrRatingColumns: String[] = [];
     fillingColor = {
-        'first_threshold': '#ff9e9e',
-        'second_threshold': '#f6cd81',
-        'third_threshold': '#ccffcc',
+        'first_threshold': '#E81C2B',
+        'second_threshold': '#F4891E',
+        'third_threshold': '#0AA34F',
     };
 
     loading: boolean = false;

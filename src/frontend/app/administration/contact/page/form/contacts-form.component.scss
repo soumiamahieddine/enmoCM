@@ -77,36 +77,36 @@
 .rate_primary {
     font-size: 10px;
     text-align: right;
-    color: orange;
+    color: #E81C2B;
 }
 
 .rate_warn {
     font-size: 10px;
     text-align: right;
-    color: red;
+    color: #F4891E;
 }
 
 .rate_accent {
     font-size: 10px;
     text-align: right;
-    color: green;
+    color: #0AA34F;
 }
 
 .fillingBar.mat-warn {
     ::ng-deep.mat-progress-bar-fill::after {
-        background-color: red;
+        background-color: #E81C2B;
     }
 }
 
 .fillingBar.mat-primary {
     ::ng-deep.mat-progress-bar-fill::after {
-        background-color: orange;
+        background-color: #F4891E;
     }
 }
 
 .fillingBar.mat-accent {
     ::ng-deep.mat-progress-bar-fill::after {
-        background-color: green;
+        background-color: #0AA34F;
     }
 }
 
