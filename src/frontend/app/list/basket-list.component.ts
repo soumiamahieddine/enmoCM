@@ -300,7 +300,7 @@ export class BasketListComponent implements OnInit {
             Object.keys(element).forEach((key) => {
                 if (key == 'statusImage' && element[key] == null) {
                     element[key] = 'fa-question undefined';
-                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'folders'].indexOf(key) === -1) {
+                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'folders', 'hasDocument'].indexOf(key) === -1) {
                     element[key] = this.lang.undefined;
                 }
             });
