@@ -7,7 +7,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../../../service/app.service';
 import { Observable, of as observableOf, of } from 'rxjs';
 import { MatDialog } from '@angular/material';
-import { switchMap, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
+import { switchMap, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize, map } from 'rxjs/operators';
 import { FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -311,6 +311,10 @@ export class ContactsFormComponent implements OnInit {
                     this.initAutocompleteAddressBan();
                 }),
                 exhaustMap(() => this.http.get("../../rest/contacts/" + this.contactId)),
+                map((data: any) => {
+                    data.civility = data.civility.id !== undefined ? data.civility.id : null;
+                    return data;
+                }),
                 tap((data) => {
                     this.setContactData(data);
                 }),

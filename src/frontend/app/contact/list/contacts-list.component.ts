@@ -73,8 +73,6 @@ export class ContactsListComponent implements OnInit {
                 tap((contact: any) => {
                     this.contacts[0] = {
                         ...contact,
-                        civilityShortLabel: '',
-                        civilityLabel: '',
                         type: 'contact'
                     };
                 }),
@@ -89,6 +87,10 @@ export class ContactsListComponent implements OnInit {
                 tap((data: any) => {
                     this.contacts[0] = {
                         type: 'user',
+                        civility: {
+                            label:'',
+                            abbreviation:''
+                        },
                         civilityShortLabel: '',
                         civilityLabel: '',
                         firstname: data.firstname,
@@ -106,8 +108,10 @@ export class ContactsListComponent implements OnInit {
                 tap((data: any) => {
                     this.contacts[0] = {
                         type: 'entity',
-                        civilityShortLabel: '',
-                        civilityLabel: '',
+                        civility: {
+                            label:'',
+                            abbreviation:''
+                        },
                         lastname: data.short_label,
                     };
                 }),
@@ -133,7 +137,7 @@ export class ContactsListComponent implements OnInit {
     }
 
     emptyOtherInfo(contact: any) {
-        if (!this.empty(contact.communicationMeans) || contact.customFields !== null) {
+        if (!this.empty(contact.communicationMeans) || !this.empty(contact.customFields)) {
             return false;
         } else {
             return true;

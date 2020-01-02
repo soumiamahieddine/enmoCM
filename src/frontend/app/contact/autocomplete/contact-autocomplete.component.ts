@@ -92,6 +92,12 @@ export class ContactAutocompleteComponent implements OnInit {
                 switchMap((data: any) => this.getDatas(data)),
                 map((data: any) => {
                     data = data.filter((contact: any) => !this.singleMode || (contact.type !== 'contactGroup' && this.singleMode));
+                    data = data.map((contact: any) => {
+                        return {
+                            ...contact,
+                            civility: contact.civility !== undefined ? contact.civility : {label:'',abbreviation:''},
+                        }
+                    })
                     return data;
                 }),
                 tap((data: any) => {
