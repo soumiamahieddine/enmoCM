@@ -11,6 +11,8 @@ import { startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounc
 import { FormControl, Validators, ValidatorFn, FormGroup, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+declare var angularGlobals: any;
+
 @Component({
     selector: 'app-contact-form',
     templateUrl: "contacts-form.component.html",
@@ -21,6 +23,7 @@ export class ContactsFormComponent implements OnInit {
 
     @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
+    
 
     lang: any = LANG;
     loading: boolean = false;
@@ -29,6 +32,8 @@ export class ContactsFormComponent implements OnInit {
     @Input() contactId: number = null;
 
     @Output() onSubmitEvent = new EventEmitter<number>();
+
+    maarch2GecUrl: string = `https://docs.maarch.org/gitbook/html/MaarchCourrier/${angularGlobals.applicationVersion.split('.')[0] + '.' + angularGlobals.applicationVersion.split('.')[1]}/guat/guat_exploitation/maarch2gec.html`;
 
     contactUnit = [
         {
@@ -210,6 +215,18 @@ export class ContactsFormComponent implements OnInit {
             display: false,
             filling: false,
             values: []
+        },
+        {
+            id: 'communicationMeans',
+            unit: 'complement',
+            label: this.lang.communicationMean,
+            desc: `${this.lang.communicationMeanDesc} (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
+            type: 'string',
+            control: new FormControl(),
+            required: false,
+            display: false,
+            filling: false,
+            values: []
         }
     ];
 
@@ -263,7 +280,7 @@ export class ContactsFormComponent implements OnInit {
                 tap((data: any) => {
                     this.initCustomElementForm(data);
                     this.initAutocompleteAddressBan();
-                    
+
                 }),
                 finalize(() => this.loading = false),
                 catchError((err: any) => {
@@ -282,7 +299,7 @@ export class ContactsFormComponent implements OnInit {
                 tap((data: any) => {
                     this.fillingParameters = data.contactsFilling;
                     this.initElemForm(data);
-                    
+
                 }),
                 exhaustMap(() => this.http.get("../../rest/civilities")),
                 tap((data: any) => {
@@ -336,6 +353,7 @@ export class ContactsFormComponent implements OnInit {
                 targetField = this.contactForm.filter(contact => contact.id === field.id)[0];
             }
             if (targetField !== undefined) {
+
                 if ((element.filling && this.creationMode) || element.mandatory) {
                     targetField.display = true;
                 }
@@ -382,10 +400,10 @@ export class ContactsFormComponent implements OnInit {
             valArr = [];
             field = this.contactForm.filter(contact => contact.id === 'customField_' + element.id)[0];
 
-            if (field !== undefined) {    
+            if (field !== undefined) {
                 field.label = element.label;
                 field.type = element.type;
-                field.values = element.values.map((value: any) => {return {id: value, label: value}});
+                field.values = element.values.map((value: any) => { return { id: value, label: value } });
                 if (element.type === 'integer') {
                     valArr.push(Validators.pattern(/^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/));
                     field.control.setValidators(valArr);
@@ -535,7 +553,7 @@ export class ContactsFormComponent implements OnInit {
 
     isEmptyValue(value: string) {
 
-        if (value === null) {
+        if (value === null || value === undefined) {
             return true;
 
         } else if (Array.isArray(value)) {
