@@ -445,4 +445,4 @@ define("_DATE_LOCALE", "fr_FR.utf8");
 
 define("_USER_PREFERENCE_UPDATED", "Préférences utilisateur modifiées");
 
-define("_NO_SENDERS", "Aucun expéditeur(s) lié au courrier");
+define("_NO_SENDERS", "Aucun expéditeur lié au courrier");

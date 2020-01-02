@@ -42,7 +42,7 @@ abstract class ResModelAbstract
     public static function get(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['select']);
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy', 'groupBy']);
         ValidatorModel::intType($aArgs, ['limit']);
 
         $aResources = DatabaseModel::select([
@@ -51,7 +51,8 @@ abstract class ResModelAbstract
             'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
             'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
-            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
+            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit'],
+            'groupBy'   => empty($aArgs['groupBy']) ? [] : $aArgs['groupBy'],
         ]);
 
         return $aResources;
