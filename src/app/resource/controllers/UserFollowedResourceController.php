@@ -18,11 +18,11 @@ namespace Resource\controllers;
 use Attachment\models\AttachmentModel;
 use Group\controllers\PrivilegeController;
 use Resource\models\ResourceListModel;
-use Resource\models\UsersFollowedResourcesModel;
+use Resource\models\UserFollowedResourceModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class UsersFollowedResourcesController
+class UserFollowedResourceController
 {
     public function follow(Request $request, Response $response, array $args)
     {
@@ -30,7 +30,19 @@ class UsersFollowedResourcesController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        UsersFollowedResourcesController::followResource($args);
+        $following = UserFollowedResourceModel::get([
+            'where' => ['user_id = ?', 'res_id = ?'],
+            'data' => [$GLOBALS['id'], $args['resId']]
+        ]);
+
+        if (!empty($following)) {
+            return $response->withStatus(204);
+        }
+
+        UserFollowedResourceModel::create([
+            'userId' => $GLOBALS['id'],
+            'resId' => $args['resId']
+        ]);
 
         return $response->withStatus(204);
     }
@@ -41,7 +53,7 @@ class UsersFollowedResourcesController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $following = UsersFollowedResourcesModel::get([
+        $following = UserFollowedResourceModel::get([
             'where' => ['user_id = ?', 'res_id = ?'],
             'data' => [$GLOBALS['id'], $args['resId']]
         ]);
@@ -50,7 +62,7 @@ class UsersFollowedResourcesController
             return $response->withStatus(204);
         }
 
-        UsersFollowedResourcesModel::delete([
+        UserFollowedResourceModel::delete([
             'userId' => $GLOBALS['id'],
             'resId' => $args['resId']
         ]);
@@ -60,7 +72,7 @@ class UsersFollowedResourcesController
 
     public function getFollowedResources(Request $request, Response $response)
     {
-        $followedResources = UsersFollowedResourcesModel::get(['select' => ['res_id'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
+        $followedResources = UserFollowedResourceModel::get(['select' => ['res_id'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
         $followedResources = array_column($followedResources, 'res_id');
 
         $formattedResources = [];
@@ -139,24 +151,5 @@ class UsersFollowedResourcesController
         }
 
         return $response->withJson(['resources' => $formattedResources, 'countResources' => $count, 'allResources' => $allResources]);
-    }
-
-    public static function followResource(array $args)
-    {
-        $following = UsersFollowedResourcesModel::get([
-            'where' => ['user_id = ?', 'res_id = ?'],
-            'data' => [$GLOBALS['id'], $args['resId']]
-        ]);
-
-        if (!empty($following)) {
-            return true;
-        }
-
-        UsersFollowedResourcesModel::create([
-            'userId' => $GLOBALS['id'],
-            'resId' => $args['resId']
-        ]);
-
-        return true;
     }
 }

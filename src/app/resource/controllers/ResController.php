@@ -42,7 +42,7 @@ use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
-use Resource\models\UsersFollowedResourcesModel;
+use Resource\models\UserFollowedResourceModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
@@ -79,7 +79,10 @@ class ResController
         ResController::createAdjacentData(['body' => $body, 'resId' => $resId]);
 
         if (!empty($body['followed'])) {
-            UsersFollowedResourcesController::followResource(['userId' => $GLOBALS['id'], 'resId' => $resId]);
+            UserFollowedResourceModel::create([
+                'userId' => $GLOBALS['id'],
+                'resId' => $resId
+            ]);
         }
 
         if (!empty($body['encodedFile'])) {
@@ -228,7 +231,7 @@ class ResController
         $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
         $formattedData['attachments'] = $attachments[0]['count'];
 
-        $followed = UsersFollowedResourcesModel::get([
+        $followed = UserFollowedResourceModel::get([
             'where' => ['user_id = ?', 'res_id = ?'],
             'data' => [$GLOBALS['id'], $args['resId']]
         ]);
@@ -738,7 +741,7 @@ class ResController
             return true;
         }
 
-        $followed = UsersFollowedResourcesModel::get([
+        $followed = UserFollowedResourceModel::get([
            'where' => ['user_id = ?', 'res_id in (?)'],
            'data' => [$args['userId'], $resources]
         ]);

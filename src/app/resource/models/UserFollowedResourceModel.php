@@ -17,7 +17,7 @@ namespace Resource\models;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
-class UsersFollowedResourcesModel
+class UserFollowedResourceModel
 {
     public static function get(array $args = [])
     {

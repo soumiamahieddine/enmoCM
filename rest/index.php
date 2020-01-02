@@ -358,9 +358,9 @@ $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':u
 $app->get('/categories', \Resource\controllers\ResController::class . ':getCategories');
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 $app->get('/resources/{resId}/users/{userId}/groups/{groupId}/baskets/{basketId}/processingData', \Resource\controllers\ResController::class . ':getProcessingData');
-$app->put('/resources/{resId}/follow', \Resource\controllers\UsersFollowedResourcesController::class . ':follow');
-$app->delete('/resources/{resId}/unfollow', \Resource\controllers\UsersFollowedResourcesController::class . ':unFollow');
-$app->get('/followedResources', \Resource\controllers\UsersFollowedResourcesController::class . ':getFollowedResources');
+$app->post('/resources/{resId}/follow', \Resource\controllers\UserFollowedResourceController::class . ':follow');
+$app->delete('/resources/{resId}/unfollow', \Resource\controllers\UserFollowedResourceController::class . ':unFollow');
+$app->get('/followedResources', \Resource\controllers\UserFollowedResourceController::class . ':getFollowedResources');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
