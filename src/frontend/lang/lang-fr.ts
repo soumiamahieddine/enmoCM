@@ -1412,4 +1412,5 @@ export const LANG_FR = {
     "communicationMeanDesc": "Lie un contact à une autre instance de maarch",
     "see": "voir",
     "notSavedBecauseInvalid": "La configuration n'a pas été mise à jour car des données sont invalides",
+    "deleteAll": "Tout supprimer",
 };

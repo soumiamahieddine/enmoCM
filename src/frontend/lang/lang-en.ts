@@ -1368,5 +1368,9 @@ export const LANG_EN = {
     "createContact": "Create a contact",
     "diffusionListUpdated": "Diffusion list updated",
     "saveModifications": "Save modifications",
+    "communicationMean": "Communication mean",
+    "communicationMeanDesc": "Link a contact with another Maarch instance",
+    "see": "see",
     "notSavedBecauseInvalid": "Configuration not updated because some datas are invalid",
+    "deleteAll": "Delete all",
 };

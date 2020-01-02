@@ -35,6 +35,8 @@ export class ContactAutocompleteComponent implements OnInit {
     canAdd: boolean = false;
     canUpdate: boolean = false;
 
+    noResultFound: boolean = null;
+
     listInfo: string;
     myControl = new FormControl();
     filteredOptions: Observable<string[]>;
@@ -78,10 +80,14 @@ export class ContactAutocompleteComponent implements OnInit {
         this.options = [];
         this.myControl.valueChanges
             .pipe(
-                //tap((value) => this.canAdd = value.length === 0 ? false : true),
+                tap(() => {
+                    this.noResultFound = null;
+                    this.options = [];
+                    this.listInfo = this.lang.autocompleteInfo;
+                }),
                 debounceTime(300),
                 filter(value => value.length > 2),
-                distinctUntilChanged(),
+                //distinctUntilChanged(),
                 tap(() => this.loading = true),
                 switchMap((data: any) => this.getDatas(data)),
                 map((data: any) => {
@@ -90,8 +96,10 @@ export class ContactAutocompleteComponent implements OnInit {
                 }),
                 tap((data: any) => {
                     if (data.length === 0) {
+                        this.noResultFound = true;
                         this.listInfo = this.lang.noAvailableValue;
                     } else {
+                        this.noResultFound = false;
                         this.listInfo = '';
                     }
                     this.options = data;
@@ -222,6 +230,7 @@ export class ContactAutocompleteComponent implements OnInit {
     resetAutocomplete() {
         this.options = [];
         this.listInfo = this.lang.autocompleteInfo;
+        this.myControl.setValue('');
     }
 
     private _filter(value: string): string[] {
@@ -286,5 +295,10 @@ export class ContactAutocompleteComponent implements OnInit {
         } else {
             return true;
         }
+    }
+
+    resetAll() {
+        this.controlAutocomplete.setValue([]);
+        this.valuesToDisplay = {};
     }
 }
