@@ -215,16 +215,9 @@ class ContactController
             return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
         }
 
-        $civilities = ContactModel::getCivilities();
-        $xmlCivility = $civilities[$rawContact['civility']];
-        $civility = [
-            'id'           => $rawContact['civility'],
-            'label'        => $xmlCivility['label'],
-            'abbreviation' => $xmlCivility['abbreviation']
-        ];
         $contact = [
             'id'                    => $rawContact['id'],
-            'civility'              => $civility,
+            'civility'              => null,
             'firstname'             => $rawContact['firstname'],
             'lastname'              => $rawContact['lastname'],
             'company'               => $rawContact['company'],
@@ -250,8 +243,17 @@ class ContactController
             'externalId'            => json_decode($rawContact['external_id'], true)
         ];
 
+        if (!empty($rawContact['civility'])) {
+            $civilities = ContactModel::getCivilities();
+            $contact['civility'] = [
+                'id'           => $rawContact['civility'],
+                'label'        => $civilities[$rawContact['civility']]['label'],
+                'abbreviation' => $civilities[$rawContact['civility']]['abbreviation']
+            ];
+        }
+
         $filling = ContactController::getFillingRate(['contactId' => $rawContact['id']]);
-        $contact['thresholdLevel'] = empty($filling['thresholdLevel']) ? '' : $filling['thresholdLevel'];
+        $contact['fillingRate'] = empty($filling) ? null : $filling;
 
         return $response->withJson($contact);
     }
@@ -1118,14 +1120,16 @@ class ContactController
         $contact = ['type' => 'contact', 'id' => $args['id'], 'lastname' => $rawContact['lastname'], 'company' => $rawContact['company']];
 
         if (in_array('civility', $displayableStdParameters)) {
-            $civilities = ContactModel::getCivilities();
-            $xmlCivility   = $civilities[$rawContact['civility']];
-            $civility = [
-                'id'           => $rawContact['civility'],
-                'label'        => $xmlCivility['label'],
-                'abbreviation' => $xmlCivility['abbreviation']
-            ];
-            $contact['civility'] = $civility;
+            $contact['civility'] = null;
+
+            if (!empty($rawContact['civility'])) {
+                $civilities = ContactModel::getCivilities();
+                $contact['civility'] = [
+                    'id'           => $rawContact['civility'],
+                    'label'        => $civilities[$rawContact['civility']]['label'],
+                    'abbreviation' => $civilities[$rawContact['civility']]['abbreviation']
+                ];
+            }
         }
         if (in_array('firstname', $displayableStdParameters)) {
             $contact['firstname'] = $rawContact['firstname'];
@@ -1177,10 +1181,8 @@ class ContactController
             }
         }
 
-        $rate = ContactController::getFillingRate(['contactId' => $args['id']]);
-        if (!empty($rate)) {
-            $contact['fillingRate'] = $rate;
-        }
+        $fillingRate = ContactController::getFillingRate(['contactId' => $args['id']]);
+        $contact['fillingRate'] = empty($fillingRate) ? null : $fillingRate;
 
         return $contact;
     }
