@@ -160,51 +160,37 @@ foreach ($customs as $custom) {
         unset($contactInfo['society_short']);
         $id = \Contact\models\ContactModel::create($contactInfo);
 
-        $debutAllMigration = microtime(true);
         migrateCustomField(['newContactId' => $id, 'contactCustomInfo' => $contactCustomInfo, 'newCustomFields' => $newCustomFields]);
-        $finAllMigration = microtime(true);
-        $delaiAllMigration = $finAllMigration - $debutAllMigration;
-        echo "migrateCustomField : ".$delaiAllMigration." secondes.\n";
-
-        $debutAllMigration = microtime(true);
-        migrateAcknowledgementReceipt(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
-        $finAllMigration = microtime(true);
-        $delaiAllMigration = $finAllMigration - $debutAllMigration;
-        echo "migrateAcknowledgementReceipt : ".$delaiAllMigration." secondes.\n";
-
-        $debutAllMigration = microtime(true);
-        migrateContactGroupsLists(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
-        $finAllMigration = microtime(true);
-        $delaiAllMigration = $finAllMigration - $debutAllMigration;
-        echo "migrateContactGroupsLists : ".$delaiAllMigration." secondes.\n";
-
-        $debutAllMigration = microtime(true);
+        \SrcCore\models\DatabaseModel::update([
+            'set'   => ['contact_id' => $id],
+            'table' => 'acknowledgement_receipts',
+            'where' => ['contact_address_id = ?'],
+            'data'  => [$oldAddressId]
+        ]);
+        \SrcCore\models\DatabaseModel::update([
+            'set'   => ['contact_id' => $id],
+            'table' => 'contacts_groups_lists',
+            'where' => ['contact_addresses_id = ?'],
+            'data'  => [$oldAddressId]
+        ]);
         migrateContactRes(['oldAddressId' => $oldAddressId, 'oldContactId' => $oldContactId, 'newContactId' => $id]);
-        $finAllMigration = microtime(true);
-        $delaiAllMigration = $finAllMigration - $debutAllMigration;
-        echo "migrateContactRes : ".$delaiAllMigration." secondes.\n";
-
-        $debutAllMigration = microtime(true);
-        migrateResourceContacts(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
-        $finAllMigration = microtime(true);
-        $delaiAllMigration = $finAllMigration - $debutAllMigration;
-        echo "migrateResourceContacts : ".$delaiAllMigration." secondes.\n";
-
-        $debutAllMigration = microtime(true);
-        migrateResAttachments(['oldAddressId' => $oldAddressId, 'oldContactId' => $oldContactId, 'newContactId' => $id]);
-        $finAllMigration = microtime(true);
-        $delaiAllMigration = $finAllMigration - $debutAllMigration;
-        echo "migrateResAttachments : ".$delaiAllMigration." secondes.\n";
-
-        $debutAllMigration = microtime(true);
+        \SrcCore\models\DatabaseModel::update([
+            'set'   => ['item_id' => $id, 'type' => 'contact_v3'],
+            'table' => 'resource_contacts',
+            'where' => ['item_id = ?', 'type = ?'],
+            'data'  => [$oldAddressId, 'contact']
+        ]);
+        \SrcCore\models\DatabaseModel::update([
+            'set'   => ['recipient_id' => $id, 'recipient_type' => 'contact'],
+            'table' => 'res_attachments',
+            'where' => ['dest_contact_id = ?', 'dest_address_id = ?'],
+            'data'  => [$oldContactId, $oldAddressId],
+        ]);
         migrateResletterbox(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
-        $finAllMigration = microtime(true);
-        $delaiAllMigration = $finAllMigration - $debutAllMigration;
-        echo "migrateResletterbox : ".$delaiAllMigration." secondes.\n";
 
         $migrated++;
 
-        if ($migrated % 5000 == 0) {
+        if ($migrated % 10000 == 0) {
             $finMigrateInProgress = microtime(true);
             $delaiInProgress = $finMigrateInProgress - $debutMigrateInProgress;
             echo "Migration En cours : ".$delaiInProgress." secondes.\n";
@@ -214,9 +200,9 @@ foreach ($customs as $custom) {
     }
 
     $debutEndMigrate = microtime(true);
-    migrateContactRes_Users();
-    migrateResletterbox_Users();
-    migrateResattachments_Users();
+    migrateContactRes_Users(['firstManId' => $firstMan[0]['id']]);
+    migrateResletterbox_Users(['firstManId' => $firstMan[0]['id']]);
+    migrateResattachments_Users(['firstManId' => $firstMan[0]['id']]);
     migrateContactParameters();
     migrateContactPrivileges();
     $finEndMigrate = microtime(true);
@@ -299,26 +285,6 @@ function migrateCustomField($args = [])
     \SrcCore\models\DatabaseModel::commitTransaction();
 }
 
-function migrateAcknowledgementReceipt($args = [])
-{
-    \SrcCore\models\DatabaseModel::update([
-        'set'   => ['contact_id' => $args['newContactId']],
-        'table' => 'acknowledgement_receipts',
-        'where' => ['contact_address_id = ?'],
-        'data'  => [$args['oldAddressId']]
-    ]);
-}
-
-function migrateContactGroupsLists($args = [])
-{
-    \SrcCore\models\DatabaseModel::update([
-        'set'   => ['contact_id' => $args['newContactId']],
-        'table' => 'contacts_groups_lists',
-        'where' => ['contact_addresses_id = ?'],
-        'data'  => [$args['oldAddressId']]
-    ]);
-}
-
 function migrateContactRes($args = [])
 {
     \SrcCore\models\DatabaseModel::beginTransaction();
@@ -343,53 +309,24 @@ function migrateContactRes($args = [])
             $mode = 'recipient';
         }
 
-        $aValues[] = [
+        $aValues[] = implode("\t", [
             $value['res_id'],
             $args['newContactId'],
             'contact_v3',
             $mode
-        ];
-
-        $countContactRes++;
-
-        if ($countContactRes % 50 == 0) {
-            \SrcCore\models\DatabaseModel::insertMultiple([
-                'table'     => 'resource_contacts',
-                'columns'   => ['res_id', 'item_id', 'type', 'mode'],
-                'values'    => $aValues
-            ]);
-            $aValues = [];
-        }
+        ]) . "\n";
     }
 
     if (!empty($aValues)) {
-        \SrcCore\models\DatabaseModel::insertMultiple([
+        \SrcCore\models\DatabaseModel::pgsqlCopyFromArray([
             'table'     => 'resource_contacts',
-            'columns'   => ['res_id', 'item_id', 'type', 'mode'],
-            'values'    => $aValues
+            'rows'      => $aValues,
+            'delimiter' => "\t",
+            'nullAs'    => "\\\\N",
+            'fields'    => 'res_id, item_id, type, mode'
         ]);
     }
     \SrcCore\models\DatabaseModel::commitTransaction();
-}
-
-function migrateResourceContacts($args = [])
-{
-    \SrcCore\models\DatabaseModel::update([
-        'set'   => ['item_id' => $args['newContactId'], 'type' => 'contact_v3'],
-        'table' => 'resource_contacts',
-        'where' => ['item_id = ?', 'type = ?'],
-        'data'  => [$args['oldAddressId'], 'contact']
-    ]);
-}
-
-function migrateResAttachments($args = [])
-{
-    \SrcCore\models\DatabaseModel::update([
-        'set'   => ['recipient_id' => $args['newContactId'], 'recipient_type' => 'contact'],
-        'table' => 'res_attachments',
-        'where' => ['dest_contact_id = ?', 'dest_address_id = ?'],
-        'data'  => [$args['oldContactId'], $args['oldAddressId']],
-    ]);
 }
 
 function migrateResletterbox($args = [])
@@ -415,19 +352,6 @@ function migrateResletterbox($args = [])
             'contact_v3',
             $mode
         ]) . "\n";
-
-        $countContactLetterbox++;
-
-        if ($countContactLetterbox % 200 == 0) {
-            \SrcCore\models\DatabaseModel::pgsqlCopyFromArray([
-                'table'     => 'resource_contacts',
-                'rows'      => $aValues,
-                'delimiter' => "\t",
-                'nullAs'    => "\\\\N",
-                'fields'    => 'res_id, item_id, type, mode'
-            ]);
-            $aValues = [];
-        }
     }
 
     if (!empty($aValues)) {
@@ -442,7 +366,7 @@ function migrateResletterbox($args = [])
     \SrcCore\models\DatabaseModel::commitTransaction();
 }
 
-function migrateContactRes_Users()
+function migrateContactRes_Users($args = [])
 {
     \SrcCore\models\DatabaseModel::beginTransaction();
     $userContactRes = \SrcCore\models\DatabaseModel::select([
@@ -451,7 +375,6 @@ function migrateContactRes_Users()
         'where'  => ['address_id = 0']
     ]);
 
-    $firstMan = \User\models\UserModel::get(['select' => ['id'], 'orderBy' => ['id'], 'limit' => 1, 'where' => ['status = ?'], 'data' => ['OK']]);
     $aValues = [];
     foreach ($userContactRes as $value) {
         $resInfo = \SrcCore\models\DatabaseModel::select([
@@ -463,7 +386,7 @@ function migrateContactRes_Users()
 
         $user = \User\models\UserModel::getByLogin(['login' => $value['contact_id'], 'select' => ['id']]);
         if (empty($user)) {
-            $user = $firstMan[0]['id'];
+            $user = $args['firstManId'];
         } else {
             $user = $user['id'];
         }
@@ -473,36 +396,27 @@ function migrateContactRes_Users()
             $mode = 'recipient';
         }
 
-        $aValues[] = [
+        $aValues[] = implode("\t", [
             $value['res_id'],
             $user,
             'user',
             $mode
-        ];
-
-        $countContactUser++;
-
-        if ($countContactUser % 50 == 0) {
-            \SrcCore\models\DatabaseModel::insertMultiple([
-                'table'     => 'resource_contacts',
-                'columns'   => ['res_id', 'item_id', 'type', 'mode'],
-                'values'    => $aValues
-            ]);
-            $aValues = [];
-        }
+        ]) . "\n";
     }
 
     if (!empty($aValues)) {
-        \SrcCore\models\DatabaseModel::insertMultiple([
+        \SrcCore\models\DatabaseModel::pgsqlCopyFromArray([
             'table'     => 'resource_contacts',
-            'columns'   => ['res_id', 'item_id', 'type', 'mode'],
-            'values'    => $aValues
+            'rows'      => $aValues,
+            'delimiter' => "\t",
+            'nullAs'    => "\\\\N",
+            'fields'    => 'res_id, item_id, type, mode'
         ]);
     }
     \SrcCore\models\DatabaseModel::commitTransaction();
 }
 
-function migrateResletterbox_Users()
+function migrateResletterbox_Users($args = [])
 {
     \SrcCore\models\DatabaseModel::beginTransaction();
     $userContact = \SrcCore\models\DatabaseModel::select([
@@ -511,7 +425,6 @@ function migrateResletterbox_Users()
         'where'  => ['(exp_user_id != \'\' and exp_user_id is not null) or (dest_user_id != \'\' and dest_user_id is not null)']
     ]);
 
-    $firstMan = \User\models\UserModel::get(['select' => ['id'], 'orderBy' => ['id'], 'limit' => 1, 'where' => ['status = ?'], 'data' => ['OK']]);
     $aValues = [];
     foreach ($userContact as $value) {
         if (!empty($value['exp_user_id'])) {
@@ -523,41 +436,32 @@ function migrateResletterbox_Users()
         }
         $user = \User\models\UserModel::getByLogin(['login' => $login, 'select' => ['id']]);
         if (empty($user)) {
-            $user = $firstMan[0]['id'];
+            $user = $args['firstManId'];
         } else {
             $user = $user['id'];
         }
 
-        $aValues[] = [
+        $aValues[] = implode("\t", [
             $value['res_id'],
             $user,
             'user',
             $mode
-        ];
-
-        $countContactUser++;
-
-        if ($countContactUser % 50 == 0) {
-            \SrcCore\models\DatabaseModel::insertMultiple([
-                'table'     => 'resource_contacts',
-                'columns'   => ['res_id', 'item_id', 'type', 'mode'],
-                'values'    => $aValues
-            ]);
-            $aValues = [];
-        }
+        ]) . "\n";
     }
 
     if (!empty($aValues)) {
-        \SrcCore\models\DatabaseModel::insertMultiple([
+        \SrcCore\models\DatabaseModel::pgsqlCopyFromArray([
             'table'     => 'resource_contacts',
-            'columns'   => ['res_id', 'item_id', 'type', 'mode'],
-            'values'    => $aValues
+            'rows'      => $aValues,
+            'delimiter' => "\t",
+            'nullAs'    => "\\\\N",
+            'fields'    => 'res_id, item_id, type, mode'
         ]);
     }
     \SrcCore\models\DatabaseModel::commitTransaction();
 }
 
-function migrateResattachments_Users()
+function migrateResattachments_Users($args = [])
 {
     \SrcCore\models\DatabaseModel::beginTransaction();
     $attachments = \SrcCore\models\DatabaseModel::select([
@@ -566,11 +470,10 @@ function migrateResattachments_Users()
         'where'  => ['dest_user != \'\' and dest_user is not null']
     ]);
 
-    $firstMan = \User\models\UserModel::get(['select' => ['id'], 'orderBy' => ['id'], 'limit' => 1, 'where' => ['status = ?'], 'data' => ['OK']]);
     foreach ($attachments as $value) {
         $user = \User\models\UserModel::getByLogin(['login' => $value['dest_user'], 'select' => ['id']]);
         if (empty($user)) {
-            $user = $firstMan[0]['id'];
+            $user = $args['firstManId'];
         } else {
             $user = $user['id'];
         }
@@ -626,26 +529,14 @@ function migrateContactParameters()
             $value['searchable'],
             $value['displayable']
         ];
-
-        $countParameters++;
-
-        if ($countParameters % 50 == 0) {
-            \SrcCore\models\DatabaseModel::insertMultiple([
-                'table'     => 'contacts_parameters',
-                'columns'   => ['identifier', 'mandatory', 'filling', 'searchable', 'displayable'],
-                'values'    => $aValues
-            ]);
-            $aValues = [];
-        }
     }
 
-    if (!empty($aValues)) {
-        \SrcCore\models\DatabaseModel::insertMultiple([
-            'table'     => 'contacts_parameters',
-            'columns'   => ['identifier', 'mandatory', 'filling', 'searchable', 'displayable'],
-            'values'    => $aValues
-        ]);
-    }
+    \SrcCore\models\DatabaseModel::insertMultiple([
+        'table'     => 'contacts_parameters',
+        'columns'   => ['identifier', 'mandatory', 'filling', 'searchable', 'displayable'],
+        'values'    => $aValues
+    ]);
+    
     \SrcCore\models\DatabaseModel::commitTransaction();
 }
 
