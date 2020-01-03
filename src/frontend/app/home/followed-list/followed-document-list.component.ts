@@ -131,15 +131,11 @@ export class FollowedDocumentListComponent implements OnInit {
             this.http.get('../../rest/followedResources')
                 .subscribe((data: any) => {
                     this.headerService.setHeader(this.lang.followedMail, '', 'fas fa-star');
-                    setTimeout(() => {
-                        this.basketHome.togglePanel(false);
-                    }, 200);
-
                 });
             this.basketUrl = '../../rest/followedResources';
             this.filtersListService.filterMode = false;
             this.selectedRes = [];
-            this.sidenavRight.close();
+
             window['MainHeaderComponent'].setSnav(this.sidenavLeft);
             window['MainHeaderComponent'].setSnavRight(null);
 

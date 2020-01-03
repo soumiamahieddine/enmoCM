@@ -22,7 +22,7 @@ export class MenuShortcutComponent implements OnInit {
     speedDialFabButtons: any = [];
     speedDialFabColumnDirection = 'column';
     shortcuts: any;
-
+    nbResourcesFollowed: any;
 
     constructor(
         public http: HttpClient,
@@ -41,6 +41,11 @@ export class MenuShortcutComponent implements OnInit {
 
     loadShortcuts() {
         this.shortcuts = this.privilegeService.getCurrentUserShortcuts();
+
+        this.http.get("../../rest/followedResources/count")
+            .subscribe((data: any) => {
+                this.nbResourcesFollowed = data.nbResourcesFollowed;
+            });
     }
 
     onSpeedDialFabClicked(group: any, shortcut: any) {

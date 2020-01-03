@@ -1,13 +1,14 @@
 <mat-nav-list style="position:relative;">
 </mat-nav-list>
 <mat-nav-list>
-    <h3 mat-subheader>{{lang.shortcut}}</h3>
     <div class="button-row" style="padding-left: 10px;padding-right: 10px;display: flex;width: 300px;margin-top: -10px;margin-bottom: 10px;">
         <ng-container *ngFor="let shortcut of shortcuts">
             <span style="flex:1;text-align: left;padding: 5px;" *ngIf="(shortcut.id == 'indexing' && shortcut.groups.length<=1) || (shortcut.id != 'indexing')">
                 <button style="z-index: 9999;" color="default" mat-fab (click)="gotToMenu(shortcut);" matTooltip="{{shortcut.label}}"
                     matTooltipPosition="above">
-                    <mat-icon class="fa {{shortcut.style}}" style="height:auto;font-size:22px;"></mat-icon>
+                    <mat-icon class="fa {{shortcut.style}}" style="height:auto;font-size:22px;"
+                              matBadge="{{this.nbResourcesFollowed}}" matBadgeHidden="{{shortcut.id != 'followed'}}"
+                    ></mat-icon>
                 </button>
             </span>
             <span style="flex:1;text-align: left;padding: 5px;position: relative;" *ngIf="shortcut.id=='indexing' && shortcut.groups.length>1">
