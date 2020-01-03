@@ -1,0 +1,30 @@
+<button *ngIf="!contextMode" mat-stroked-button [matMenuTriggerFor]="menu">{{lang.actionsAlt}}<mat-icon matSuffix
+        class="fa fa-caret-down"></mat-icon>
+</button>
+<span *ngIf="contextMode" [matMenuTriggerFor]="menu" #menu2 style="position: absolute;"
+    [style.left]="contextMenuPosition.x" [style.top]="contextMenuPosition.y"></span>
+
+<mat-menu #menu="matMenu" [class]="'actionListMenu'">
+    <div *ngIf="contextMode && this.selectedRes.length == 1"
+        style="text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;">
+        {{this.contextMenuTitle}}
+    </div>
+    <button *ngIf="selectedRes.length == 1" mat-menu-item [matMenuTriggerFor]="baskets" (menuOpened)="getBaskets()">
+        <span>Accéder à la bannette...</span>
+    </button>
+    <mat-menu #baskets="matMenu" [class]="'folderListMenu'">
+        <ng-container *ngFor="let group of basketList.groups | sortBy : 'groupName'">
+            <div class="basketGroupName">{{group.groupName}}</div>
+            <ng-container *ngFor="let basket of basketList.list | sortBy : 'basketName'">
+                <button mat-menu-item *ngIf="basket.groupId === group.groupId" class="labelBasket" (click)="goTo(basket)"
+                    title="{{basket.basketName}}">{{basket.basketName}}
+                </button>
+            </ng-container>
+        </ng-container>
+    </mat-menu>
+    <mat-divider></mat-divider>
+    <button mat-menu-item class="folderAction" (click)="unFollow()" [disabled]="selectedRes.length === 0">
+        <mat-icon class="far fa-star fa-2x"></mat-icon>
+        <span>{{lang.untrackThisMail}}</span>
+    </button>
+</mat-menu>

@@ -16,11 +16,15 @@ namespace Resource\controllers;
 
 
 use Attachment\models\AttachmentModel;
+use Basket\models\BasketModel;
 use Group\controllers\PrivilegeController;
+use Resource\models\ResModel;
 use Resource\models\ResourceListModel;
 use Resource\models\UserFollowedResourceModel;
+use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\PreparedClauseController;
 
 class UserFollowedResourceController
 {
@@ -47,25 +51,30 @@ class UserFollowedResourceController
         return $response->withStatus(204);
     }
 
-    public function unFollow(Request $request, Response $response, array $args)
+    public function unFollow(Request $request, Response $response)
     {
-        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])){
+        $body = $request->getParsedBody();
+
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])){
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $following = UserFollowedResourceModel::get([
-            'where' => ['user_id = ?', 'res_id = ?'],
-            'data' => [$GLOBALS['id'], $args['resId']]
-        ]);
+        foreach ($body['resources'] as $resId) {
+            $following = UserFollowedResourceModel::get([
+                'where' => ['user_id = ?', 'res_id = ?'],
+                'data' => [$GLOBALS['id'], $resId]
+            ]);
 
-        if (empty($following)) {
-            return $response->withStatus(204);
+            if (empty($following)) {
+                continue;
+            }
+
+            UserFollowedResourceModel::delete([
+                'userId' => $GLOBALS['id'],
+                'resId' => $resId
+            ]);
         }
 
-        UserFollowedResourceModel::delete([
-            'userId' => $GLOBALS['id'],
-            'resId' => $args['resId']
-        ]);
 
         return $response->withStatus(204);
     }
@@ -151,5 +160,62 @@ class UserFollowedResourceController
         }
 
         return $response->withJson(['resources' => $formattedResources, 'countResources' => $count, 'allResources' => $allResources]);
+    }
+
+    public function getBasketsFromFolder(Request $request, Response $response, array $args)
+    {
+        if (!Validator::numeric()->notEmpty()->validate($args['resId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
+        }
+
+        $followedResource = UserFollowedResourceModel::get(['select' => [1], 'where' => ['user_id = ?', 'res_id = ?'], 'data' => [$GLOBALS['id'], $args['resId']]]);
+        if (empty($followedResource)) {
+            return $response->withStatus(403)->withJson(['errors' => 'Resource out of perimeter']);
+        }
+
+        $baskets = BasketModel::getWithPreferences([
+            'select'    => ['baskets.id', 'baskets.basket_name', 'baskets.basket_clause', 'users_baskets_preferences.group_serial_id', 'usergroups.group_desc'],
+            'where'     => ['users_baskets_preferences.user_serial_id = ?'],
+            'data'      => [$GLOBALS['id']]
+        ]);
+        $groupsBaskets = [];
+        $inCheckedBaskets = [];
+        $outCheckedBaskets = [];
+        foreach ($baskets as $basket) {
+            if (in_array($basket['id'], $outCheckedBaskets)) {
+                continue;
+            } else {
+                if (!in_array($basket['id'], $inCheckedBaskets)) {
+                    $preparedClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $GLOBALS['userId']]);
+                    $resource = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', "({$preparedClause})"], 'data' => [$args['resId']]]);
+                    if (empty($resource)) {
+                        $outCheckedBaskets[] = $basket['id'];
+                        continue;
+                    }
+                }
+                $inCheckedBaskets[] = $basket['id'];
+                $groupsBaskets[] = ['groupId' => $basket['group_serial_id'], 'groupName' => $basket['group_desc'], 'basketId' => $basket['id'], 'basketName' => $basket['basket_name']];
+            }
+        }
+
+        return $response->withJson(['groupsBaskets' => $groupsBaskets]);
+    }
+
+    public function getFilters(Request $request, Response $response, array $args)
+    {
+        $followedResources = UserFollowedResourceModel::get(['select' => ['res_id'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
+        $followedResources = array_column($followedResources, 'res_id');
+
+        if (empty($followedResources)) {
+            return $response->withJson(['entities' => [], 'priorities' => [], 'categories' => [], 'statuses' => [], 'entitiesChildren' => []]);
+        }
+
+        $where = ['(res_id in (?))'];
+        $queryData = [$followedResources];
+        $queryParams = $request->getQueryParams();
+
+        $filters = ResourceListController::getFormattedFilters(['where' => $where, 'queryData' => $queryData, 'queryParams' => $queryParams]);
+
+        return $response->withJson($filters);
     }
 }

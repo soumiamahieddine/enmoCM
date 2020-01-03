@@ -1373,4 +1373,6 @@ export const LANG_EN = {
     "see": "see",
     "notSavedBecauseInvalid": "Configuration not updated because some datas are invalid",
     "deleteAll": "Delete all",
+    "followedMail": "Followed mail(s)",
+    "stopFollowingAlert": "Do you want to stop following these mails ?"
 };

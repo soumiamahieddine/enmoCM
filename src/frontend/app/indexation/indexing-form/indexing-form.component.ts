@@ -879,16 +879,14 @@ export class IndexingFormComponent implements OnInit {
 
         if (this.mode !== 'indexation') {
             if (this.arrFormControl['mail­tracking'].value) {
-
-                this.http.put(`../../rest/resources/${this.resId}/follow`, {}).pipe(
+                this.http.post(`../../rest/resources/${this.resId}/follow`, {}).pipe(
                     catchError((err: any) => {
                         this.notify.handleErrors(err);
                         return of(false);
                     })
                 ).subscribe();
             } else {
-
-                this.http.delete(`../../rest/resources/${this.resId}/unfollow`, {}).pipe(
+                this.http.request('DELETE', '../../rest/resources/unfollow' , { body: { resources: [this.resId] } }).pipe(
                     catchError((err: any) => {
                         this.notify.handleErrors(err);
                         return of(false);
