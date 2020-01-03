@@ -69,7 +69,6 @@ foreach ($customs as $custom) {
 
     $debutMigrateInProgress = microtime(true);
     foreach ($contactsInfo as $contactInfo) {
-        echo "--------------- NEW CONTACT -----------------\n";
         $oldContactId = $contactInfo['contact_id'];
         $oldAddressId = $contactInfo['ca_id'];
         unset($contactInfo['contact_id']);
