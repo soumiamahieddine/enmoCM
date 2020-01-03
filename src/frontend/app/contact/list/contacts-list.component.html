@@ -19,9 +19,10 @@
                 <mat-card-subtitle [title]="contact.function" *ngIf="!empty(contact.function)">
                     {{contact.function}}&nbsp;
                 </mat-card-subtitle>
-                <i class="contact-filling fa fa-circle threshold_{{contact.thresholdLevel}}"
-                                *ngIf="contact.type === 'contact' && !empty(contact.thresholdLevel)"
-                                [title]="lang.contactsFillingRate"></i>
+                <i class="contact-filling fa fa-circle"
+                    *ngIf="contact.type === 'contact' && !empty(contact.fillingRate)"
+                    [style.color]="contact.fillingRate.color"
+                    [title]="lang.contactsFillingRate"></i>
             </mat-card-header>
             <mat-card-content>
                 <mat-list>

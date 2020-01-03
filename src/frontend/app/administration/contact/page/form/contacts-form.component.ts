@@ -5,11 +5,12 @@ import { NotificationService } from '../../../../notification.service';
 import { HeaderService } from '../../../../../service/header.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../../../service/app.service';
-import { Observable, of as observableOf, of } from 'rxjs';
+import { Observable, of as observableOf, of, empty } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { switchMap, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize, map } from 'rxjs/operators';
 import { FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ContactService } from '../../../../../service/contact.service';
 
 declare var angularGlobals: any;
 
@@ -17,7 +18,7 @@ declare var angularGlobals: any;
     selector: 'app-contact-form',
     templateUrl: "contacts-form.component.html",
     styleUrls: ['contacts-form.component.scss'],
-    providers: [NotificationService, AppService]
+    providers: [NotificationService, AppService, ContactService]
 })
 export class ContactsFormComponent implements OnInit {
 
@@ -227,6 +228,18 @@ export class ContactsFormComponent implements OnInit {
             display: false,
             filling: false,
             values: []
+        },
+        {
+            id: 'externalId_maarch2maarch',
+            unit: 'complement',
+            label: this.lang.siretCode,
+            desc: `Doit correspondre au numéro SIRET d'une entité dans l'instance destinatrice (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
+            type: 'string',
+            control: new FormControl(),
+            required: false,
+            display: false,
+            filling: false,
+            values: []
         }
     ];
 
@@ -242,6 +255,7 @@ export class ContactsFormComponent implements OnInit {
     fillingParameters: any = null;
     fillingRate: any = {
         class: 'warn',
+        color: this.contactService.getFillingColor('first'),
         value: 0
     }
 
@@ -254,7 +268,8 @@ export class ContactsFormComponent implements OnInit {
         private notify: NotificationService,
         private headerService: HeaderService,
         public appService: AppService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private contactService: ContactService,
     ) { }
 
     ngOnInit(): void {
@@ -312,11 +327,13 @@ export class ContactsFormComponent implements OnInit {
                 }),
                 exhaustMap(() => this.http.get("../../rest/contacts/" + this.contactId)),
                 map((data: any) => {
-                    data.civility = data.civility.id !== undefined ? data.civility.id : null;
+                    //data.civility = this.contactService.formatCivilityObject(data.civility);
+                    data.fillingRate = this.contactService.formatFillingObject(data.fillingRate);
                     return data;
                 }),
                 tap((data) => {
                     this.setContactData(data);
+                    this.setContactDataExternal(data);
                 }),
                 filter((data: any) => data.customFields !== null),
                 tap((data: any) => {
@@ -418,14 +435,59 @@ export class ContactsFormComponent implements OnInit {
 
     setContactData(data: any) {
         let indexField = -1;
+
         Object.keys(data).forEach(element => {
             indexField = this.contactForm.map(field => field.id).indexOf(element);
+
             if (!this.isEmptyValue(data[element]) && indexField > -1) {
-                this.contactForm[indexField].control.setValue(data[element]);
+                if (element == 'civility') {
+                    this.contactForm[indexField].control.setValue(data[element].id);
+                } else {
+                    this.contactForm[indexField].control.setValue(data[element]);
+                }
+
+                if (element == 'company' && this.isEmptyValue(this.contactForm.filter(contact => contact.id === 'lastname')[0].control.value)) {
+                    this.contactForm.filter(contact => contact.id === 'lastname')[0].display = false;
+                } else if (element == 'lastname' && this.isEmptyValue(this.contactForm.filter(contact => contact.id === 'company')[0].control.value)) {
+                    this.contactForm.filter(contact => contact.id === 'company')[0].display = false;
+                }
+                
                 this.contactForm[indexField].display = true;
             }
         });
+
+        if (this.isEmptyValue(this.contactForm.filter(contact => contact.id === 'company')[0].control.value) && !this.isEmptyValue(this.contactForm.filter(contact => contact.id === 'lastname')[0].control.value)) {
+            this.contactForm.filter(contact => contact.id === 'company')[0].display = false;
+        }
+
         this.checkFilling();
+    }
+
+    setContactDataExternal(data: any) {
+
+        if (data.externalId !== undefined) {
+            Object.keys(data.externalId).forEach(id => {
+               
+                if (!this.isEmptyValue(data.externalId[id])) {
+                    if (id === 'maarch2maarch') {
+                        this.contactForm.filter(contact => contact.id === 'externalId_maarch2maarch')[0].control.setValue(data.externalId[id]);
+                        this.contactForm.filter(contact => contact.id === 'externalId_maarch2maarch')[0].display = true;
+                    } else {
+                        this.contactForm.push({
+                            id: `externalId_${id}`,
+                            unit: 'complement',
+                            label: id,
+                            type: 'string',
+                            control: new FormControl({ value: data.externalId[id], disabled: true }),
+                            required: false,
+                            display: true,
+                            filling: false,
+                            values: []
+                        });
+                    }
+                }
+            });
+        }        
     }
 
     setContactCustomData(data: any) {
@@ -515,11 +577,15 @@ export class ContactsFormComponent implements OnInit {
     formatContact() {
         let contact: any = {};
         contact['customFields'] = {};
+        contact['externalId'] = {};
         const regex = /customField_[.]*/g;
+        const regex2 = /externalId_[.]*/g;
 
         this.contactForm.filter(field => field.display).forEach(element => {
             if (element.id.match(regex) !== null) {
                 contact['customFields'][element.id.split('_')[1]] = element.control.value;
+            } else if (element.id.match(regex2) !== null) {
+                contact['externalId'][element.id.split('_')[1]] = element.control.value;
             } else {
                 contact[element.id] = element.control.value;
             }
@@ -576,7 +642,6 @@ export class ContactsFormComponent implements OnInit {
     checkCompany(field: any) {
 
         if (field.id === 'company' && field.control.value !== '' && (this.companyFound === null || this.companyFound.company !== field.control.value)) {
-
             this.http.get(`../../rest/autocomplete/contacts/company?search=${field.control.value}`).pipe(
                 tap(() => this.companyFound = null),
                 filter((data: any) => data.length > 0),
@@ -637,7 +702,7 @@ export class ContactsFormComponent implements OnInit {
                 field.required = true;
                 return false;
             }
-        } else if (field.required) {
+        } else if (field.required || field.control.disabled) {
             return false;
         } else {
             return true;
@@ -752,10 +817,13 @@ export class ContactsFormComponent implements OnInit {
         this.fillingRate.value = Math.round((countValNotEmpty * 100) / countFilling);
 
         if (this.fillingRate.value <= this.fillingParameters.first_threshold) {
+            this.fillingRate.color = this.contactService.getFillingColor('first');
             this.fillingRate.class = 'warn';
         } else if (this.fillingRate.value <= this.fillingParameters.second_threshold) {
+            this.fillingRate.color = this.contactService.getFillingColor('second');
             this.fillingRate.class = 'primary';
         } else {
+            this.fillingRate.color = this.contactService.getFillingColor('third');
             this.fillingRate.class = 'accent';
         }
     }

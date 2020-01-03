@@ -18,17 +18,16 @@
                             </div>
                             <mat-card-title *ngIf="!empty(option.firstname) || !empty(option.lastname)"
                                 [title]="option.civility.label + ' ' + option.firstname + ' ' + option.lastname">
-                                <sup style="color: #666;"
-                                    *ngIf="!empty(option.civility)">{{option.civility.abbreviation}}&nbsp;</sup>{{option.firstname}}
+                                <sup style="color: #666;" *ngIf="!empty(option.civility.abbreviation)">{{option.civility.abbreviation}}&nbsp;</sup>{{option.firstname}}
                                 {{option.lastname}}</mat-card-title>
                             <mat-card-title *ngIf="empty(option.firstname) && empty(option.lastname)"
                                 [title]="option.company">{{option.company}}</mat-card-title>
                             <mat-card-subtitle [title]="option.function" *ngIf="!empty(option.function)">
                                 {{option.function}}&nbsp;
                             </mat-card-subtitle>
-                            <i class="contact-filling fa fa-circle threshold_{{option.fillingRate.thresholdLevel}}"
-                                *ngIf="option.type === 'contact' && option.fillingRate !== undefined"
-                                [title]="lang.contactsFillingRate + ' : ' + option.fillingRate.rate + '%'"></i>
+                            <i class="contact-filling fa fa-circle"
+                                *ngIf="option.type === 'contact' && !empty(option.fillingRate.rate)"
+                                [title]="lang.contactsFillingRate + ' : ' + option.fillingRate.rate + '%'" [style.color]="option.fillingRate.color"></i>
                         </mat-card-header>
                         <mat-card-content>
                             <mat-list>
@@ -75,13 +74,13 @@
                                     <p mat-line class="contact-content" *ngIf="!empty(option.addressCountry)"
                                         [title]="option.addressCountry"> {{option.addressCountry}} </p>
                                 </mat-list-item>
-                                <ng-container *ngFor="let keyVal of option.customFields | keyvalue">
-                                    <mat-list-item class="contact-item" *ngIf="keyVal.value.value !== null">
+                                <ng-container *ngFor="let customField of option.customFields">
+                                    <mat-list-item class="contact-item" *ngIf="customField.value !== null">
                                         <mat-icon mat-list-icon class="contact-group fas fa-hashtag"
-                                            [title]="keyVal.value.label">
+                                            [title]="customField.label">
                                         </mat-icon>
-                                        <p mat-line class="contact-content" [title]="keyVal.value.value">
-                                            {{keyVal.value.value}} </p>
+                                        <p mat-line class="contact-content" [title]="customField.value">
+                                            {{customField.value}} </p>
                                     </mat-list-item>
                                 </ng-container>
                             </mat-list>

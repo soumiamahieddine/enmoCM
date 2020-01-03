@@ -20,6 +20,9 @@ import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { ContactsListModalComponent } from '../contact/list/modal/contacts-list-modal.component';
 import { DiffusionsListComponent } from '../diffusions/diffusions-list.component';
 
+import { ContactService } from '../../service/contact.service';
+
+
 
 @Component({
     templateUrl: "process.component.html",
@@ -27,7 +30,7 @@ import { DiffusionsListComponent } from '../diffusions/diffusions-list.component
         'process.component.scss',
         '../indexation/indexing-form/indexing-form.component.scss'
     ],
-    providers: [NotificationService, AppService, ActionsService],
+    providers: [NotificationService, AppService, ActionsService, ContactService],
 })
 export class ProcessComponent implements OnInit {
 
@@ -147,6 +150,7 @@ export class ProcessComponent implements OnInit {
         public viewContainerRef: ViewContainerRef,
         public appService: AppService,
         public actionService: ActionsService,
+        private contactService: ContactService,
         private router: Router
     ) {
         // Event after process action 
@@ -243,21 +247,26 @@ export class ProcessComponent implements OnInit {
     }
 
     loadSenders() {
-        if (typeof this.currentResourceInformations.senders === "undefined" || this.currentResourceInformations.senders.length == 0) {
+        if (this.currentResourceInformations.senders === undefined || this.currentResourceInformations.senders.length === 0) {
             this.hasContact = false;
             this.senderLightInfo = { 'displayName': this.lang.noSelectedContact, 'filling': null };
         } else if (this.currentResourceInformations.senders.length == 1) {
             this.hasContact = true;
-            if (this.currentResourceInformations.senders[0].type == 'contact') {
+            if (this.currentResourceInformations.senders[0].type === 'contact') {
                 this.http.get('../../rest/contacts/' + this.currentResourceInformations.senders[0].id).pipe(
                     tap((data: any) => {
-                        if (data.firstname == '' && data.lastname == '') {
+                        const arrInfo = [];
+
+                        if (data.firstname === '' && data.lastname === '') {
                             this.senderLightInfo = { 'displayName': data.company, 'filling': data.filling };
                         } else {
-                            if (data.company != '') {
-                                var companyInfo = ' (' + data.company + ')';
+                            arrInfo.push(data.firstname);
+                            arrInfo.push(data.lastname);
+                            if (data.company !== '') {
+                                arrInfo.push('('+data.company+')');
                             }
-                            this.senderLightInfo = { 'displayName': data.firstname + ' ' + data.lastname + companyInfo, 'filling': data.filling };
+                            
+                            this.senderLightInfo = { 'displayName': arrInfo.filter(info => info !== '').join(' '), 'filling': this.contactService.getFillingColor(data.thresholdLevel) };
                         }
                     })
                 ).subscribe();
