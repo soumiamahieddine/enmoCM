@@ -78,7 +78,7 @@ class ContactController
                 'fields'        => $fields,
                 'where'         => [],
                 'data'          => [],
-                'fieldsNumber'  => $fieldsNumber,
+                'fieldsNumber'  => $fieldsNumber
             ]);
         }
 
@@ -1112,7 +1112,6 @@ class ContactController
 
         if (!empty($displayableCstParameters)) {
             $displayableStdParameters[] = 'custom_fields';
-            $customFieldsLabels = ContactCustomFieldListModel::get(['select' => ['id', 'label'], 'where' => ['id in (?)'], 'data' => [$displayableCstParameters]]);
         }
 
         $rawContact = ContactModel::getById(['id' => $args['id'], 'select' => $displayableStdParameters]);
@@ -1170,14 +1169,11 @@ class ContactController
             $contact['notes'] = $rawContact['notes'];
         }
 
-        if (!empty($customFieldsLabels)) {
+        if (!empty($displayableCstParameters)) {
             $contact['customFields'] = [];
             $customFields = json_decode($rawContact['custom_fields'], true);
-            foreach ($customFieldsLabels as $customFieldsLabel) {
-                $contact['customFields'][$customFieldsLabel['id']] = [
-                    'label' => $customFieldsLabel['label'],
-                    'value' => $customFields[$customFieldsLabel['id']] ?? null
-                ];
+            foreach ($displayableCstParameters as $value) {
+                $contact['customFields'][$value] = $customFields[$value] ?? null;
             }
         }
 
