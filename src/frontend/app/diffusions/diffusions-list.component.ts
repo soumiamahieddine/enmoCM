@@ -179,6 +179,7 @@ export class DiffusionsListComponent implements OnInit {
             tap((data: any) => {
                 if (data.listTemplates[0]) {
                     data.listTemplates[0].items.forEach((element: any) => {
+                        element.difflist_type = 'entity_id';
                         if (element.item_mode == 'cc') {
                             this.diffList['copy'].items.push(element);
                         } else {
