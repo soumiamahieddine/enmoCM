@@ -813,7 +813,7 @@ class ContactController
 
                 $filling = ContactController::getFillingRate(['contactId' => $resourceContact['item_id']]);
 
-                $contact['thresholdLevel'] = empty($filling['thresholdLevel']) ? '' : $filling['thresholdLevel'];
+                $contact['fillingRate'] = $filling;
             } elseif ($resourceContact['type'] == 'user') {
                 $user = UserModel::getById(['id' => $resourceContact['item_id']]);
 

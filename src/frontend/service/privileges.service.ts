@@ -133,7 +133,7 @@ export class PrivilegeService {
             "comment": this.lang.contactsAdmin,
             "route": "/administration/contacts",
             "unit": "production",
-            "style": "fa fa-book",
+            "style": "fa fa-address-book",
             "angular" : true,
             "hasParams" : false
         },
