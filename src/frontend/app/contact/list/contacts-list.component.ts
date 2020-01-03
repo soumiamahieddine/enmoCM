@@ -97,7 +97,7 @@ export class ContactsListComponent implements OnInit {
                         ...contact,
                         civility: this.contactService.formatCivilityObject(contact.civility),
                         fillingRate: this.contactService.formatFillingObject(contact.fillingRate),
-                        customFields: contact.customFields !== undefined ? this.formatCustomField(contact.customFields) : [],
+                        customFields: !this.empty(contact.customFields) ? this.formatCustomField(contact.customFields) : [],
                         type: 'contact'
                     };
                 }),
