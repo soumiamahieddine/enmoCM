@@ -69,7 +69,7 @@ foreach ($customs as $custom) {
 
     $debutMigrateInProgress = microtime(true);
     foreach ($contactsInfo as $contactInfo) {
-        echo "--------------- NEW CONTACT -----------------"; 
+        echo "--------------- NEW CONTACT -----------------\n";
         $oldContactId = $contactInfo['contact_id'];
         $oldAddressId = $contactInfo['ca_id'];
         unset($contactInfo['contact_id']);
@@ -164,50 +164,50 @@ foreach ($customs as $custom) {
         migrateCustomField(['newContactId' => $id, 'contactCustomInfo' => $contactCustomInfo, 'newCustomFields' => $newCustomFields]);
         $finAllMigration = microtime(true);
         $delaiAllMigration = $finAllMigration - $debutAllMigration;
-        echo "migrateCustomField : ".$delaiAllMigration." secondes.\n"; 
+        echo "migrateCustomField : ".$delaiAllMigration." secondes.\n";
 
         $debutAllMigration = microtime(true);
         migrateAcknowledgementReceipt(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
         $finAllMigration = microtime(true);
         $delaiAllMigration = $finAllMigration - $debutAllMigration;
-        echo "migrateAcknowledgementReceipt : ".$delaiAllMigration." secondes.\n"; 
+        echo "migrateAcknowledgementReceipt : ".$delaiAllMigration." secondes.\n";
 
         $debutAllMigration = microtime(true);
         migrateContactGroupsLists(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
         $finAllMigration = microtime(true);
         $delaiAllMigration = $finAllMigration - $debutAllMigration;
-        echo "migrateContactGroupsLists : ".$delaiAllMigration." secondes.\n"; 
+        echo "migrateContactGroupsLists : ".$delaiAllMigration." secondes.\n";
 
         $debutAllMigration = microtime(true);
         migrateContactRes(['oldAddressId' => $oldAddressId, 'oldContactId' => $oldContactId, 'newContactId' => $id]);
         $finAllMigration = microtime(true);
         $delaiAllMigration = $finAllMigration - $debutAllMigration;
-        echo "migrateContactRes : ".$delaiAllMigration." secondes.\n"; 
+        echo "migrateContactRes : ".$delaiAllMigration." secondes.\n";
 
         $debutAllMigration = microtime(true);
         migrateResourceContacts(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
         $finAllMigration = microtime(true);
         $delaiAllMigration = $finAllMigration - $debutAllMigration;
-        echo "migrateResourceContacts : ".$delaiAllMigration." secondes.\n"; 
+        echo "migrateResourceContacts : ".$delaiAllMigration." secondes.\n";
 
         $debutAllMigration = microtime(true);
         migrateResAttachments(['oldAddressId' => $oldAddressId, 'oldContactId' => $oldContactId, 'newContactId' => $id]);
         $finAllMigration = microtime(true);
         $delaiAllMigration = $finAllMigration - $debutAllMigration;
-        echo "migrateResAttachments : ".$delaiAllMigration." secondes.\n"; 
+        echo "migrateResAttachments : ".$delaiAllMigration." secondes.\n";
 
         $debutAllMigration = microtime(true);
         migrateResletterbox(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
         $finAllMigration = microtime(true);
         $delaiAllMigration = $finAllMigration - $debutAllMigration;
-        echo "migrateResletterbox : ".$delaiAllMigration." secondes.\n"; 
+        echo "migrateResletterbox : ".$delaiAllMigration." secondes.\n";
 
         $migrated++;
 
         if ($migrated % 5000 == 0) {
             $finMigrateInProgress = microtime(true);
             $delaiInProgress = $finMigrateInProgress - $debutMigrateInProgress;
-            echo "Migration En cours : ".$delaiInProgress." secondes.\n"; 
+            echo "Migration En cours : ".$delaiInProgress." secondes.\n";
             $debutMigrateInProgress = microtime(true);
             printf($migrated . " contact(s) migré(s) - En cours...\n");
         }
@@ -285,24 +285,15 @@ function addCustomFields($args = [])
 function migrateCustomField($args = [])
 {
     \SrcCore\models\DatabaseModel::beginTransaction();
-    $contact = \Contact\models\ContactModel::getById(['id' => $args['newContactId'], 'select' => ['custom_fields']]);
     foreach ($args['contactCustomInfo'] as $key => $value) {
         if (!empty($value)) {
             $value = json_encode($value);
             $value = str_replace("'", "''", $value);
-            if (empty($contact['custom_fields'])) {
-                \Contact\models\ContactModel::update([
-                    'postSet' => ['custom_fields' => "jsonb_set('{}', '{{$args['newCustomFields'][$key]}}', '{$value}')"],
-                    'where' => ['id = ?'],
-                    'data' => [$args['newContactId']]
-                ]);
-            } else {
-                \Contact\models\ContactModel::update([
-                    'postSet' => ['custom_fields' => "jsonb_set(custom_fields, '{{$args['newCustomFields'][$key]}}', '{$value}')"],
-                    'where' => ['id = ?'],
-                    'data' => [$args['newContactId']]
-                ]);
-            }
+            \Contact\models\ContactModel::update([
+                'postSet' => ['custom_fields' => "jsonb_set('{}', '{{$args['newCustomFields'][$key]}}', '{$value}')"],
+                'where' => ['id = ?'],
+                'data' => [$args['newContactId']]
+            ]);
         }
     }
     \SrcCore\models\DatabaseModel::commitTransaction();
@@ -418,30 +409,34 @@ function migrateResletterbox($args = [])
             $mode = 'recipient';
         }
 
-        $aValues[] = [
+        $aValues[] = implode("\t", [
             $value['res_id'],
             $args['newContactId'],
             'contact_v3',
             $mode
-        ];
+        ]) . "\n";
 
         $countContactLetterbox++;
 
-        if ($countContactLetterbox % 50 == 0) {
-            \SrcCore\models\DatabaseModel::insertMultiple([
+        if ($countContactLetterbox % 200 == 0) {
+            \SrcCore\models\DatabaseModel::pgsqlCopyFromArray([
                 'table'     => 'resource_contacts',
-                'columns'   => ['res_id', 'item_id', 'type', 'mode'],
-                'values'    => $aValues
+                'rows'      => $aValues,
+                'delimiter' => "\t",
+                'nullAs'    => "\\\\N",
+                'fields'    => 'res_id, item_id, type, mode'
             ]);
             $aValues = [];
         }
     }
 
     if (!empty($aValues)) {
-        \SrcCore\models\DatabaseModel::insertMultiple([
+        \SrcCore\models\DatabaseModel::pgsqlCopyFromArray([
             'table'     => 'resource_contacts',
-            'columns'   => ['res_id', 'item_id', 'type', 'mode'],
-            'values'    => $aValues
+            'rows'      => $aValues,
+            'delimiter' => "\t",
+            'nullAs'    => "\\\\N",
+            'fields'    => 'res_id, item_id, type, mode'
         ]);
     }
     \SrcCore\models\DatabaseModel::commitTransaction();
