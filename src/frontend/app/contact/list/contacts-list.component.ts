@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { tap, finalize, catchError } from 'rxjs/operators';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { ContactService } from '../../../service/contact.service';
 
 @Component({
@@ -46,25 +46,31 @@ export class ContactsListComponent implements OnInit {
         private contactService: ContactService,
     ) { }
 
-    ngOnInit(): void {
-        this.loading = false;
-        this.http.get("../../rest/contactsCustomFields").pipe(
-            tap((data: any) => {
-                this.customFields = data.customFields.map((custom: any) => {
-                    return {
-                        id: custom.id,
-                        label: custom.label
-                    }
-                });
-            }),
-            tap(() => {
-                if (this.resId !== null) {
-                    this.loadContactsOfResource(this.resId, this.mode);
-                } else if (this.contact !== null) {
-                    this.loadContact(this.contact.id, this.contact.type);
-                }
-            })
-        ).subscribe();
+    async ngOnInit(): Promise<void> {
+
+        await this.getCustomFields();
+
+        if (this.resId !== null) {
+            this.loadContactsOfResource(this.resId, this.mode);
+        } else if (this.contact !== null) {
+            this.loadContact(this.contact.id, this.contact.type);
+        }
+    }
+
+    getCustomFields() {
+        return new Promise((resolve, reject) => {
+            this.http.get("../../rest/contactsCustomFields").pipe(
+                tap((data: any) => {
+                    this.customFields = data.customFields.map((custom: any) => {
+                        return {
+                            id: custom.id,
+                            label: custom.label
+                        }
+                    });
+                    resolve(true);
+                })
+            ).subscribe();
+        });
     }
 
     loadContactsOfResource(resId: number, mode: string) {
@@ -149,9 +155,6 @@ export class ContactsListComponent implements OnInit {
         let arrCustomFields: any[] = [];
 
         Object.keys(data).forEach(element => {
-            console.log(element);
-            console.log(this.customFields);
-
             arrCustomFields.push({
                 label: this.customFields.filter(custom => custom.id == element)[0].label,
                 value: data[element]
@@ -174,7 +177,8 @@ export class ContactsListComponent implements OnInit {
     }
 
     emptyOtherInfo(contact: any) {
-        if (!this.empty(contact.communicationMeans) || !this.empty(contact.customFields)) {
+
+        if (contact.type === 'contact' && (!this.empty(contact.communicationMeans) || !this.empty(contact.customFields))) {
             return false;
         } else {
             return true;

@@ -185,7 +185,7 @@ export class IndexingFormComponent implements OnInit {
 
     }
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         this.adminMode === undefined ? this.adminMode = false : this.adminMode = true;
 
         this.availableFieldsClone = JSON.parse(JSON.stringify(this.availableFields));
@@ -195,6 +195,31 @@ export class IndexingFormComponent implements OnInit {
         });
 
         if (this.indexingFormId <= 0 || this.indexingFormId === undefined) {
+
+            await this.initFields();
+            await this.initCustomFields();
+
+            this.initElemForm();
+        } else {
+            this.loadForm(this.indexingFormId);
+        }
+    }
+
+    initFields() {
+        return new Promise((resolve, reject) => {
+            this.fieldCategories.forEach(element => {
+                this['indexingModels_' + element] = this.indexingModelsCore.filter((x: any, i: any, a: any) => x.unit === element);
+                this['indexingModels_' + element].forEach((field: any) => {
+                    this.initValidator(field);
+                });
+            });
+            resolve(true);
+        });
+    }
+
+    initCustomFields() {
+        return new Promise((resolve, reject) => {
+
             this.http.get("../../rest/customFields").pipe(
                 tap((data: any) => {
                     this.availableCustomFields = data.customFields.map((info: any) => {
@@ -209,22 +234,15 @@ export class IndexingFormComponent implements OnInit {
                         }) : info.values;
                         return info;
                     });
-                    this.fieldCategories.forEach(element => {
-                        this['indexingModels_' + element] = this.indexingModelsCore.filter((x: any, i: any, a: any) => x.unit === element);
-                        this['indexingModels_' + element].forEach((field: any) => {
-                            this.initValidator(field);
-                        });
-                    });
-                    this.initElemForm();
+                    this.availableCustomFieldsClone = JSON.parse(JSON.stringify(this.availableCustomFields));
+                    resolve(true);
                 }),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
                 })
             ).subscribe();
-        } else {
-            this.loadForm(this.indexingFormId);
-        }
+        });
     }
 
     drop(event: CdkDragDrop<string[]>) {
@@ -271,7 +289,7 @@ export class IndexingFormComponent implements OnInit {
         arrIndexingModels.forEach(element => {
 
             if (element.type === 'date' && this.arrFormControl[element.identifier].value !== null) {
-                
+
                 if (element.today === true) {
                     if (!this.adminMode) {
                         const now = new Date();
@@ -288,7 +306,7 @@ export class IndexingFormComponent implements OnInit {
                     } else {
                         element.default_value = ('00' + day).slice(-2) + '-' + ('00' + month).slice(-2) + '-' + year;
                     }
-                }   
+                }
             } else {
                 element.default_value = this.arrFormControl[element.identifier].value === '' ? null : this.arrFormControl[element.identifier].value;
             }
@@ -322,9 +340,9 @@ export class IndexingFormComponent implements OnInit {
     saveData(userId: number, groupId: number, basketId: number) {
         const formatdatas = this.formatDatas(this.getDatas());
 
-        this.http.put(`../../rest/resources/${this.resId}?userId=${userId}&groupId=${groupId}&basketId=${basketId}`, formatdatas ).pipe(
+        this.http.put(`../../rest/resources/${this.resId}?userId=${userId}&groupId=${groupId}&basketId=${basketId}`, formatdatas).pipe(
             tap(() => {
-                this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false))); ;
+                this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));;
                 this.notify.success(this.lang.dataUpdated);
             }),
             catchError((err: any) => {
@@ -402,311 +420,300 @@ export class IndexingFormComponent implements OnInit {
         });
     }
 
-    initElemForm() {
-        this.loading = true;
-
-        const myObservable = of(42);
-
-        myObservable.pipe(
-            exhaustMap(() => this.initializeRoutes()),
-            tap((data) => {
-                if (!this.adminMode) {
-                    this.arrFormControl['mail­tracking'].setValue(false);
-                }
-                this.currentPriorityColor = '';
-
-                this.fieldCategories.forEach(element => {
-                    this['indexingModels_' + element].forEach((elem: any) => {
-                        if (elem.identifier === 'documentDate') {
-                            elem.startDate = '';
-                            elem.endDate = '_TODAY';
-
-                            this.fieldCategories.forEach(element => {
-                                if (this['indexingModels_' + element].filter((field: any) => field.identifier === 'departureDate').length > 0) {
-                                    elem.endDate = 'departureDate';
-                                }
-                            });
-
-                        } else if (elem.identifier === 'destination') {
-                            if (this.adminMode) {
-                                let title = '';
-                                elem.values = data.entities.map((entity: any) => {
-                                    title = entity.entity_label;
-
-                                    for (let index = 0; index < entity.level; index++) {
-                                        entity.entity_label = '&nbsp;&nbsp;&nbsp;&nbsp;' + entity.entity_label;
-                                    }
-                                    return {
-                                        id: entity.id,
-                                        title: title,
-                                        label: entity.entity_label,
-                                        disabled: false
-                                    }
-                                });
-
-                            } else {
-                                let title = '';
-
-                                let defaultVal = data.entities.filter((entity: any) => entity.enabled === true && entity.id === elem.default_value);
-                                elem.default_value = defaultVal.length > 0 ? defaultVal[0].id : null;
-                                this.arrFormControl[elem.identifier].setValue(defaultVal.length > 0 ? defaultVal[0].id : '');
-                                elem.values = data.entities.map((entity: any) => {
-                                    title = entity.entity_label;
-
-                                    for (let index = 0; index < entity.level; index++) {
-                                        entity.entity_label = '&nbsp;&nbsp;&nbsp;&nbsp;' + entity.entity_label;
-                                    }
-                                    return {
-                                        id: entity.id,
-                                        title: title,
-                                        label: entity.entity_label,
-                                        disabled: !entity.enabled
-                                    }
-                                });
-                                elem.event = 'loadDiffusionList';
-                                if (elem.default_value !== null && !this.adminMode) {
-                                    this.loadDiffusionList(elem, elem.default_value);
-                                }
-                                elem.allowedEntities = elem.values.filter((val: any) => val.disabled === false).map((entities: any) => entities.id);
-                            }
-                        } else if (elem.identifier === 'arrivalDate') {
-                            elem.startDate = 'documentDate';
-                            elem.endDate = '_TODAY';
-
-                        } else if (elem.identifier === 'initiator' && !this.adminMode) {
-                            elem.values = this.headerService.user.entities.map((entity: any) => {
-                                return {
-                                    id: entity.id,
-                                    label: entity.entity_label
-                                }
-                            });
-
-                        } else if (elem.identifier === 'processLimitDate') {
-                            elem.startDate = '_TODAY';
-                            elem.endDate = '';
-                            elem.event = 'setPriorityColorByLimitDate';
-
-                        } else if (elem.identifier === 'departureDate') {
-                            elem.startDate = 'documentDate';
-                            elem.endDate = '';
-
-                        } else if (elem.identifier === 'folders') {
-                            elem.values = null;
-
-                        } else if (elem.identifier === 'category_id') {
-                            elem.values = data.categories;
-
-                        } else if (elem.identifier === 'priority') {
-                            elem.values = data.priorities;
-                            elem.event = 'calcLimitDateByPriority';
-                            if (elem.default_value !== null) {
-                                this.calcLimitDateByPriority(elem, elem.default_value);
-                            }
-                        } else if (elem.identifier === 'doctype') {
-                            let title = '';
-                            let arrValues: any[] = [];
-                            data.structure.forEach((doctype: any) => {
-                                if (doctype['doctypes_second_level_id'] === undefined) {
-                                    arrValues.push({
-                                        id: doctype.doctypes_first_level_id,
-                                        label: doctype.doctypes_first_level_label,
-                                        title: doctype.doctypes_first_level_label,
-                                        disabled: true,
-                                        isTitle: true,
-                                        color: doctype.css_style
-                                    });
-                                } else if (doctype['description'] === undefined) {
-                                    arrValues.push({
-                                        id: doctype.doctypes_second_level_id,
-                                        label: '&nbsp;&nbsp;&nbsp;&nbsp;' + doctype.doctypes_second_level_label,
-                                        title: doctype.doctypes_second_level_label,
-                                        disabled: true,
-                                        isTitle: true,
-                                        color: doctype.css_style
-                                    });
-
-                                    arrValues = arrValues.concat(data.structure.filter((info: any) => info.doctypes_second_level_id === doctype.doctypes_second_level_id && info.description !== undefined).map((info: any) => {
-                                        return {
-                                            id: info.type_id,
-                                            label: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + info.description,
-                                            title: info.description,
-                                            disabled: false,
-                                            isTitle: false,
-                                        }
-                                    }));
-                                }
-                            });
-                            elem.values = arrValues;
-                            elem.event = 'calcLimitDate';
-                            if (elem.default_value !== null && !this.adminMode) {
-                                this.calcLimitDate(elem, elem.default_value);
-                            }
-
-                        }
-                    });
-                });
-            }),
-            filter(() => this.resId !== null),
-            exhaustMap(() => this.http.get(`../../rest/resources/${this.resId}`)),
-            tap((data: any) => {
-                this.fieldCategories.forEach(element => {
-                    this['indexingModels_' + element].forEach((elem: any) => {
-                        const customId: any = Object.keys(data.customFields).filter(index => index === elem.identifier.split('indexingCustomField_')[1])[0];
-                        
-                        if (Object.keys(data).indexOf(elem.identifier) > -1 || customId !== undefined) {
-                            let fieldValue: any = '';
-                            
-                            if (customId !== undefined) {
-                                fieldValue = data.customFields[customId]; 
-                            } else {
-                                fieldValue = data[elem.identifier];  
-                            }
-                                                       
-                            if (elem.type === 'date') {
-                                fieldValue = new Date(fieldValue);
-                            }
-                            
-                            if (elem.identifier === 'priority') {
-                                this.setPriorityColor(null, fieldValue);
-                            }
-
-                            if (elem.identifier === 'destination') {
-                                if (this.mode === 'process') {
-                                    this.arrFormControl[elem.identifier].disable();
-                                }
-                                this.arrFormControl['diffusionList'].disable();
-                            }
-                            
-                            this.arrFormControl[elem.identifier].setValue(fieldValue);
-                        }
-                        if (!this.canEdit) {
-                            this.arrFormControl[elem.identifier].disable();
-                        }
-                    });
-                });
-                this.arrFormControl['mail­tracking'].setValue(data.followed);
-            }),
-            tap(() => {
-                this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));
-            }),
-            finalize(() => this.loading = false)
-        ).subscribe();
-    }
-
-    initializeRoutes() {
-        let arrayRoutes: any = [];
-        let mergedRoutesDatas: any = {};
+    setDocumentDateField(elem: any) {
+        elem.startDate = '';
+        elem.endDate = '_TODAY';
 
         this.fieldCategories.forEach(element => {
-            this['indexingModels_' + element].forEach((elem: any) => {
-                if (elem.identifier === 'destination') {
-                    if (this.adminMode || this.mode !== 'indexation') {
-                        arrayRoutes.push(this.http.get('../../rest/indexingModels/entities'));
-
-                    } else {
-                        arrayRoutes.push(this.http.get('../../rest/indexing/groups/' + this.groupId + '/entities'));
-                    }
-                } else if (elem.identifier === 'category_id') {
-                    arrayRoutes.push(this.http.get('../../rest/categories'));
-
-                } else if (elem.identifier === 'priority') {
-                    arrayRoutes.push(this.http.get('../../rest/priorities'));
-
-                } else if (elem.identifier === 'doctype') {
-                    arrayRoutes.push(this.http.get('../../rest/doctypes'));
-                }
-            });
+            if (this['indexingModels_' + element].filter((field: any) => field.identifier === 'departureDate').length > 0) {
+                elem.endDate = 'departureDate';
+            }
         });
-        return forkJoin(arrayRoutes).pipe(
-            map(data => {
-                let objectId = '';
-                let index = '';
-                for (var key in data) {
-
-                    index = key;
-
-                    objectId = Object.keys(data[key])[0];
-
-                    mergedRoutesDatas[Object.keys(data[key])[0]] = data[index][objectId]
-                }
-                return mergedRoutesDatas;
-            })
-        )
     }
 
+    setDestinationField(elem: any) {
+        let route = this.adminMode || this.mode !== 'indexation' ? `../../rest/indexingModels/entities` : `../../rest/indexing/groups/${this.groupId}/entities`;
 
+        return new Promise((resolve, reject) => {
+            this.http.get(route).pipe(
+                tap((data: any) => {
+                    if (this.adminMode) {
+                        let title = '';
+                        elem.values = data.entities.map((entity: any) => {
+                            title = entity.entity_label;
+
+                            for (let index = 0; index < entity.level; index++) {
+                                entity.entity_label = '&nbsp;&nbsp;&nbsp;&nbsp;' + entity.entity_label;
+                            }
+                            return {
+                                id: entity.id,
+                                title: title,
+                                label: entity.entity_label,
+                                disabled: false
+                            }
+                        });
+
+                    } else {
+                        let title = '';
+
+                        let defaultVal = data.entities.filter((entity: any) => entity.enabled === true && entity.id === elem.default_value);
+                        elem.default_value = defaultVal.length > 0 ? defaultVal[0].id : null;
+                        this.arrFormControl[elem.identifier].setValue(defaultVal.length > 0 ? defaultVal[0].id : '');
+                        elem.values = data.entities.map((entity: any) => {
+                            title = entity.entity_label;
+
+                            for (let index = 0; index < entity.level; index++) {
+                                entity.entity_label = '&nbsp;&nbsp;&nbsp;&nbsp;' + entity.entity_label;
+                            }
+                            return {
+                                id: entity.id,
+                                title: title,
+                                label: entity.entity_label,
+                                disabled: !entity.enabled
+                            }
+                        });
+                        elem.event = 'loadDiffusionList';
+                        if (elem.default_value !== null && !this.adminMode) {
+                            this.loadDiffusionList(elem, elem.default_value);
+                        }
+                        elem.allowedEntities = elem.values.filter((val: any) => val.disabled === false).map((entities: any) => entities.id);
+                    }
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+
+    }
+
+    setInitiatorField(elem: any) {
+        elem.values = this.headerService.user.entities.map((entity: any) => {
+            return {
+                id: entity.id,
+                label: entity.entity_label
+            }
+        });
+    }
+
+    setCategoryField(elem: any) {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/categories`).pipe(
+                tap((data: any) => {
+                    elem.values = data.categories;
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
+    setPriorityField(elem: any) {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/priorities`).pipe(
+                tap((data: any) => {
+                    elem.values = data.priorities;
+                    elem.event = 'calcLimitDateByPriority';
+                    if (elem.default_value !== null) {
+                        this.calcLimitDateByPriority(elem, elem.default_value);
+                    }
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
+    setDoctypeField(elem: any) {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/doctypes`).pipe(
+                tap((data: any) => {
+                    let title = '';
+                    let arrValues: any[] = [];
+                    data.structure.forEach((doctype: any) => {
+                        if (doctype['doctypes_second_level_id'] === undefined) {
+                            arrValues.push({
+                                id: doctype.doctypes_first_level_id,
+                                label: doctype.doctypes_first_level_label,
+                                title: doctype.doctypes_first_level_label,
+                                disabled: true,
+                                isTitle: true,
+                                color: doctype.css_style
+                            });
+                        } else if (doctype['description'] === undefined) {
+                            arrValues.push({
+                                id: doctype.doctypes_second_level_id,
+                                label: '&nbsp;&nbsp;&nbsp;&nbsp;' + doctype.doctypes_second_level_label,
+                                title: doctype.doctypes_second_level_label,
+                                disabled: true,
+                                isTitle: true,
+                                color: doctype.css_style
+                            });
+
+                            arrValues = arrValues.concat(data.structure.filter((info: any) => info.doctypes_second_level_id === doctype.doctypes_second_level_id && info.description !== undefined).map((info: any) => {
+                                return {
+                                    id: info.type_id,
+                                    label: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + info.description,
+                                    title: info.description,
+                                    disabled: false,
+                                    isTitle: false,
+                                }
+                            }));
+                        }
+                    });
+                    elem.values = arrValues;
+                    elem.event = 'calcLimitDate';
+                    if (elem.default_value !== null && !this.adminMode) {
+                        this.calcLimitDate(elem, elem.default_value);
+                    }
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
+    async initElemForm() {
+        this.loading = true;
+
+        if (!this.adminMode) {
+            this.arrFormControl['mail­tracking'].setValue(false);
+        }
+        this.currentPriorityColor = '';
+
+
+        await Promise.all(this.fieldCategories.map(async (element) => {
+            await Promise.all(this['indexingModels_' + element].map(async (elem: any) => {
+                if (elem.identifier === 'documentDate') {
+                    this.setDocumentDateField(elem);
+
+                } else if (elem.identifier === 'destination') {
+                    await this.setDestinationField(elem);
+
+                } else if (elem.identifier === 'arrivalDate') {
+                    elem.startDate = 'documentDate';
+                    elem.endDate = '_TODAY';
+
+                } else if (elem.identifier === 'initiator' && !this.adminMode) {
+                    this.setInitiatorField(elem);
+
+                } else if (elem.identifier === 'processLimitDate') {
+                    elem.startDate = '_TODAY';
+                    elem.endDate = '';
+                    elem.event = 'setPriorityColorByLimitDate';
+
+                } else if (elem.identifier === 'departureDate') {
+                    elem.startDate = 'documentDate';
+                    elem.endDate = '';
+
+                } else if (elem.identifier === 'folders') {
+                    elem.values = null;
+
+                } else if (elem.identifier === 'category_id') {
+                    await this.setCategoryField(elem);
+
+                } else if (elem.identifier === 'priority') {
+                    await this.setPriorityField(elem);
+
+                } else if (elem.identifier === 'doctype') {
+                    await this.setDoctypeField(elem);
+                }
+            }));
+        }));
+
+        if (this.resId !== null) {
+            await this.setResource();
+        }
+
+        this.loading = false;
+    }
+
+    setResource() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/resources/${this.resId}`).pipe(
+                tap((data: any) => {
+                    this.fieldCategories.forEach(element => {
+                        this['indexingModels_' + element].forEach((elem: any) => {
+                            const customId: any = Object.keys(data.customFields).filter(index => index === elem.identifier.split('indexingCustomField_')[1])[0];
+
+                            if (Object.keys(data).indexOf(elem.identifier) > -1 || customId !== undefined) {
+                                let fieldValue: any = '';
+
+                                if (customId !== undefined) {
+                                    fieldValue = data.customFields[customId];
+                                } else {
+                                    fieldValue = data[elem.identifier];
+                                }
+
+                                if (elem.type === 'date') {
+                                    fieldValue = new Date(fieldValue);
+                                }
+
+                                if (elem.identifier === 'priority') {
+                                    this.setPriorityColor(null, fieldValue);
+                                }
+
+                                if (elem.identifier === 'destination') {
+                                    if (this.mode === 'process') {
+                                        this.arrFormControl[elem.identifier].disable();
+                                    }
+                                    this.arrFormControl['diffusionList'].disable();
+                                }
+
+                                this.arrFormControl[elem.identifier].setValue(fieldValue);
+                            }
+                            if (!this.canEdit) {
+                                this.arrFormControl[elem.identifier].disable();
+                            }
+                        });
+                    });
+                    this.arrFormControl['mail­tracking'].setValue(data.followed);
+                }),
+                tap(() => {
+                    this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
 
     createForm() {
         this.indexingFormGroup = new FormGroup(this.arrFormControl);
     }
 
-    loadForm(indexModelId: number) {
-        this.indexingFormId = indexModelId;
+    async resetForm() {
         Object.keys(this.arrFormControl).forEach(element => {
             delete this.arrFormControl[element];
         });
 
+        this.availableFields = JSON.parse(JSON.stringify(this.availableFieldsClone));
+        this.fieldCategories.forEach(category => {
+            this['indexingModels_' + category] = [];
+        });
+
+        if (this.availableCustomFieldsClone === null) {
+            await this.initCustomFields();
+        } else {
+            this.availableCustomFields = JSON.parse(JSON.stringify(this.availableCustomFieldsClone));
+        }
+    }
+
+    async loadForm(indexModelId: number) {
         this.loading = true;
 
-        this.availableFields = JSON.parse(JSON.stringify(this.availableFieldsClone));
+        this.indexingFormId = indexModelId;
+
+        await this.resetForm();
 
         if (!this.adminMode) {
             this.arrFormControl['mail­tracking'] = new FormControl({ value: '', disabled: this.adminMode ? true : false });
         }
 
-        this.fieldCategories.forEach(category => {
-            this['indexingModels_' + category] = [];
-        });
-
-
-        let arrayRoutes: any = [];
-        let mergedRoutesDatas: any = {};
-
-
-        if (this.availableCustomFieldsClone === null) {
-            arrayRoutes.push(this.http.get("../../rest/customFields"));
-        } else {
-            this.availableCustomFields = JSON.parse(JSON.stringify(this.availableCustomFieldsClone));
-        }
-
-        arrayRoutes.push(this.http.get(`../../rest/indexingModels/${indexModelId}`));
-
-        forkJoin(arrayRoutes).pipe(
-            map(data => {
-                let objectId = '';
-                let index = '';
-                for (var key in data) {
-                    index = key;
-                    objectId = Object.keys(data[key])[0];
-                    mergedRoutesDatas[Object.keys(data[key])[0]] = data[index][objectId]
-                }
-                return mergedRoutesDatas;
-            }),
-            tap((data: any) => {
-                if (data.customFields !== undefined) {
-                    this.availableCustomFields = data.customFields.map((info: any) => {
-                        info.identifier = 'indexingCustomField_' + info.id;
-                        info.system = false;
-                        info.default_value = null;
-                        info.values = info.values.length > 0 ? info.values.map((custVal: any) => {
-                            return {
-                                id: custVal,
-                                label: custVal
-                            }
-                        }) : info.values;
-                        return info;
-                    });
-                    this.availableCustomFieldsClone = JSON.parse(JSON.stringify(this.availableCustomFields));
-                }
+        this.http.get(`../../rest/indexingModels/${indexModelId}`).pipe(
+            tap(async (data: any) => {
                 this.currentCategory = data.indexingModel.category;
                 let fieldExist: boolean;
                 if (data.indexingModel.fields.length === 0) {
-                    this.fieldCategories.forEach(element => {
-                        this['indexingModels_' + element] = this.indexingModelsCore.filter((x: any, i: any, a: any) => x.unit === element);
-                        this.indexingModelsCore.forEach(field => {
-                            this.initValidator(field);
-                        });
-                    });
+                    this.initFields();
                     this.notify.error(this.lang.noFieldInModelMsg);
                 } else {
                     data.indexingModel.fields.forEach((field: any) => {
@@ -759,7 +766,7 @@ export class IndexingFormComponent implements OnInit {
                     });
                 }
 
-                this.initElemForm();
+                await this.initElemForm();
                 this.createForm();
 
             }),
@@ -886,7 +893,7 @@ export class IndexingFormComponent implements OnInit {
                     })
                 ).subscribe();
             } else {
-                this.http.request('DELETE', '../../rest/resources/unfollow' , { body: { resources: [this.resId] } }).pipe(
+                this.http.request('DELETE', '../../rest/resources/unfollow', { body: { resources: [this.resId] } }).pipe(
                     catchError((err: any) => {
                         this.notify.handleErrors(err);
                         return of(false);
