@@ -179,8 +179,13 @@ export class AttachmentCreateComponent implements OnInit {
     setDatasViewer(i: number) {
         let datas: any = {};
         Object.keys(this.attachments[i]).forEach(element => {
-            if (['title', 'validationDate'].indexOf(element) > -1) {
-                datas['attachment_' + element] = this.attachments[i][element].value;
+            if (['title', 'validationDate', 'recipient'].indexOf(element) > -1) {
+                if (element === 'recipient') {
+                    datas['recipientId'] = this.attachments[i][element].value[0].id
+                    datas['recipientType'] = this.attachments[i][element].value[0].type
+                } else {
+                    datas['attachment_' + element] = this.attachments[i][element].value;
+                }
             }
         });
         datas['resId'] = this.data.resIdMaster;
