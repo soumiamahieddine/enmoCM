@@ -22,6 +22,7 @@ import { FollowedActionListComponent } from '../followed-action-list/followed-ac
 import { FiltersListService } from '../../../service/filtersList.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import {MenuShortcutComponent} from "../../menu/menu-shortcut.component";
+import { FoldersService } from '../../folder/folders.service';
 
 
 declare function $j(selector: any): any;
@@ -115,7 +116,8 @@ export class FollowedDocumentListComponent implements OnInit {
         private notify: NotificationService,
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
-        public appService: AppService) {
+        public appService: AppService,
+        private foldersService: FoldersService) {
 
         $j("link[href='merged_css.php']").remove();
     }
@@ -265,7 +267,7 @@ export class FollowedDocumentListComponent implements OnInit {
             Object.keys(element).forEach((key) => {
                 if (key == 'statusImage' && element[key] == null) {
                     element[key] = 'fa-question undefined';
-                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display'].indexOf(key) === -1) {
+                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'mailTracking'].indexOf(key) === -1) {
                     element[key] = this.lang.undefined;
                 }
             });
@@ -326,7 +328,23 @@ export class FollowedDocumentListComponent implements OnInit {
     }
 
     listTodrag() {
-    //     return this.foldersService.getDragIds();
+        return this.foldersService.getDragIds();
+    }
+
+    unfollowMail(row: any) {
+        this.http.request('DELETE', '../../rest/resources/unfollow', { body: { resources: [row.resId] } }).pipe(
+            tap(() => {
+                this.menuShortcut.nbResourcesFollowed--;
+                this.initResultList();
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+        
+        row.mailTracking = !row.mailTracking;
+        
     }
 }
 export interface BasketList {

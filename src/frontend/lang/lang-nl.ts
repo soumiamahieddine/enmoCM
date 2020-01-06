@@ -1400,4 +1400,5 @@ export const LANG_NL = {
     "deleteAll": "Delete all", //_TO_TRANSLATE
     "followedMail": "Followed mail(s)", //_TO_TRANSLATE
     "stopFollowingAlert": "Do you want to stop following these mails ?", //_TO_TRANSLATE
+    "searchTrackedMail": "Search in tracked mails", //_TO_TRANSLATE
 };

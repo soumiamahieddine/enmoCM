@@ -14,7 +14,6 @@
 
 namespace Resource\controllers;
 
-
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Group\controllers\PrivilegeController;
@@ -32,7 +31,7 @@ class UserFollowedResourceController
     {
         $body = $request->getParsedBody();
 
-        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])){
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -59,7 +58,7 @@ class UserFollowedResourceController
     {
         $body = $request->getParsedBody();
 
-        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])){
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -112,9 +111,7 @@ class UserFollowedResourceController
 
             $resIds = ResourceListController::getIdsWithOffsetAndLimit(['resources' => $rawResources, 'offset' => $queryParams['offset'], 'limit' => $queryParams['limit']]);
 
-            foreach ($rawResources as $resource) {
-                $allResources[] = $resource['res_id'];
-            }
+            $allResources = array_column($rawResources, 'res_id');
 
             $formattedResources = [];
             if (!empty($resIds)) {
