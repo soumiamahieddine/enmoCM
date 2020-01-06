@@ -129,6 +129,8 @@ export class ProcessComponent implements OnInit {
 
     canEditData: boolean = false;
 
+    autoAction: boolean = false;
+
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
@@ -261,15 +263,15 @@ export class ProcessComponent implements OnInit {
                         const arrInfo = [];
 
                         if (this.empty(data.firstname) && this.empty(data.lastname)) {
-                            this.senderLightInfo = { 'displayName': data.company, 'filling': data.filling };
+                            this.senderLightInfo = { 'displayName': data.company, 'filling': this.contactService.getFillingColor(data.fillingRate.thresholdLevel) };
                         } else {
                             arrInfo.push(data.firstname);
                             arrInfo.push(data.lastname);
                             if (!this.empty(data.company)) {
-                                arrInfo.push('('+data.company+')');
+                                arrInfo.push('(' + data.company + ')');
                             }
-                            
-                            this.senderLightInfo = { 'displayName': arrInfo.filter(info => info !== '').join(' '), 'filling': this.contactService.getFillingColor(data.thresholdLevel) };
+
+                            this.senderLightInfo = { 'displayName': arrInfo.filter(info => info !== '').join(' '), 'filling': this.contactService.getFillingColor(data.fillingRate.thresholdLevel) };
                         }
                     })
                 ).subscribe();
@@ -322,26 +324,46 @@ export class ProcessComponent implements OnInit {
     }
 
     onSubmit() {
-        if (this.isToolModified()) {
-            const dialogRef = this.openConfirmModification();
-            dialogRef.afterClosed().pipe(
-                tap((data: string) => {
-                    if (data !== 'ok') {
-                        this.refreshTool();
-                    }
-                }),
-                filter((data: string) => data === 'ok'),
-                tap(() => {
-                    this.saveTool();
-                }),
-                finalize(() => this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false)),
-                catchError((err: any) => {
-                    this.notify.handleErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
+        if (this.currentTool === 'info' || this.isModalOpen('info')) {
+            this.processAction();
         } else {
-            this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false);
+            this.autoAction = true;
+            this.currentTool = 'info';
+        }
+    }
+
+    triggerProcessAction() {
+        if (this.autoAction) {
+            this.processAction();
+            this.autoAction = !this.autoAction;
+        }
+    }
+
+    processAction() {
+        if (this.indexingForm.isValidForm()) {
+            if (this.isToolModified()) {
+                const dialogRef = this.openConfirmModification();
+                dialogRef.afterClosed().pipe(
+                    tap((data: string) => {
+                        if (data !== 'ok') {
+                            this.refreshTool();
+                        }
+                    }),
+                    filter((data: string) => data === 'ok'),
+                    tap(() => {
+                        this.saveTool();
+                    }),
+                    finalize(() => this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false)),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else {
+                this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false);
+            }
+        } else {
+            this.notify.error(this.lang.mustFixErrors);
         }
     }
 
@@ -400,8 +422,8 @@ export class ProcessComponent implements OnInit {
         }
     }
 
-    isModalOpen() {
-        return this.modalModule.map(module => module.id).indexOf(this.currentTool) > -1;
+    isModalOpen(tool = this.currentTool) {
+        return this.modalModule.map(module => module.id).indexOf(tool) > -1;
     }
 
     ngOnDestroy() {

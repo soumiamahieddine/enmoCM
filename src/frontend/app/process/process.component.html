@@ -86,7 +86,7 @@
                 </app-attachments-list>
                 <app-indexing-form *ngIf="currentTool === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
                     [resId]="currentResourceInformations.resId" [indexingFormId]="currentResourceInformations.modelId"
-                    [mode]="'process'" [canEdit]="canEditData" [hideDiffusionList]="true"></app-indexing-form>
+                    [mode]="'process'" [canEdit]="canEditData" [hideDiffusionList]="true" (loadingFormEndEvent)="triggerProcessAction()"></app-indexing-form>
                 <div style="position: sticky;bottom: 0px;text-align:right;">
                     <button mat-fab *ngIf="indexingForm !== undefined && indexingForm.isResourceModified() && currentTool === 'info'"
                         (click)="confirmModification()" color="accent"
@@ -256,7 +256,7 @@
         </app-attachments-list>
         <app-indexing-form *ngIf="modal.id === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
             [indexingFormId]="currentResourceInformations.modelId" [resId]="currentResourceInformations.resId"
-            [mode]="'process'" [canEdit]="canEditData" [hideDiffusionList]="true">
+            [mode]="'process'" [canEdit]="canEditData" [hideDiffusionList]="true" (loadingFormEndEvent)="triggerProcessAction()">
         </app-indexing-form>
         <div style="position: sticky;bottom: 0px;text-align:right;padding:15px;">
             <button mat-fab *ngIf="indexingForm !== undefined && indexingForm.isResourceModified() && modal.id === 'info'"

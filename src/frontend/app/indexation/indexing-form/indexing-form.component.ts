@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
@@ -6,7 +6,7 @@ import { HeaderService } from '../../../service/header.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AppService } from '../../../service/app.service';
 import { tap, catchError, finalize, exhaustMap, map, filter } from 'rxjs/operators';
-import { of, forkJoin } from 'rxjs';
+import { of, forkJoin, Subject, Observable } from 'rxjs';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormControl, Validators, FormGroup, ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
@@ -33,6 +33,8 @@ export class IndexingFormComponent implements OnInit {
     @Input('mode') mode: string = 'indexation';
 
     @Input('hideDiffusionList') hideDiffusionList: boolean = false;
+
+    @Output() loadingFormEndEvent = new EventEmitter<string>();
 
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
 
@@ -338,18 +340,24 @@ export class IndexingFormComponent implements OnInit {
     }
 
     saveData(userId: number, groupId: number, basketId: number) {
-        const formatdatas = this.formatDatas(this.getDatas());
+        if (this.isValidForm()) {
+            const formatdatas = this.formatDatas(this.getDatas());
 
-        this.http.put(`../../rest/resources/${this.resId}?userId=${userId}&groupId=${groupId}&basketId=${basketId}`, formatdatas).pipe(
-            tap(() => {
-                this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));;
-                this.notify.success(this.lang.dataUpdated);
-            }),
-            catchError((err: any) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+            this.http.put(`../../rest/resources/${this.resId}?userId=${userId}&groupId=${groupId}&basketId=${basketId}`, formatdatas).pipe(
+                tap(() => {
+                    this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));;
+                    this.notify.success(this.lang.dataUpdated);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+            return true;
+        } else {
+            this.notify.error(this.lang.mustFixErrors);
+            return false;
+        }
     }
 
     formatDatas(datas: any) {
@@ -678,6 +686,7 @@ export class IndexingFormComponent implements OnInit {
 
     createForm() {
         this.indexingFormGroup = new FormGroup(this.arrFormControl);
+        this.loadingFormEndEvent.emit();
     }
 
     async resetForm() {
