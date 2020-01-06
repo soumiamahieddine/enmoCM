@@ -886,7 +886,7 @@ export class IndexingFormComponent implements OnInit {
 
         if (this.mode !== 'indexation') {
             if (this.arrFormControl['mail­tracking'].value) {
-                this.http.post(`../../rest/resources/${this.resId}/follow`, {}).pipe(
+                this.http.post('../../rest/resources/follow', {resources: [this.resId]}).pipe(
                     catchError((err: any) => {
                         this.notify.handleErrors(err);
                         return of(false);

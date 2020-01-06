@@ -28,25 +28,29 @@ use SrcCore\controllers\PreparedClauseController;
 
 class UserFollowedResourceController
 {
-    public function follow(Request $request, Response $response, array $args)
+    public function follow(Request $request, Response $response)
     {
-        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])){
+        $body = $request->getParsedBody();
+
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])){
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $following = UserFollowedResourceModel::get([
-            'where' => ['user_id = ?', 'res_id = ?'],
-            'data' => [$GLOBALS['id'], $args['resId']]
-        ]);
+        foreach ($body['resources'] as $resId) {
+            $following = UserFollowedResourceModel::get([
+                'where' => ['user_id = ?', 'res_id = ?'],
+                'data'  => [$GLOBALS['id'], $resId]
+            ]);
 
-        if (!empty($following)) {
-            return $response->withStatus(204);
+            if (!empty($following)) {
+                continue;
+            }
+
+            UserFollowedResourceModel::create([
+                'userId' => $GLOBALS['id'],
+                'resId'  => $resId
+            ]);
         }
-
-        UserFollowedResourceModel::create([
-            'userId' => $GLOBALS['id'],
-            'resId' => $args['resId']
-        ]);
 
         return $response->withStatus(204);
     }

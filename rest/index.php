@@ -358,7 +358,7 @@ $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':u
 $app->get('/categories', \Resource\controllers\ResController::class . ':getCategories');
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 $app->get('/resources/{resId}/users/{userId}/groups/{groupId}/baskets/{basketId}/processingData', \Resource\controllers\ResController::class . ':getProcessingData');
-$app->post('/resources/{resId}/follow', \Resource\controllers\UserFollowedResourceController::class . ':follow');
+$app->post('/resources/follow', \Resource\controllers\UserFollowedResourceController::class . ':follow');
 $app->delete('/resources/unfollow', \Resource\controllers\UserFollowedResourceController::class . ':unFollow');
 $app->get('/followedResources', \Resource\controllers\UserFollowedResourceController::class . ':getFollowedResources');
 $app->get('/followedResources/{resId}/baskets', \Resource\controllers\UserFollowedResourceController::class . ':getBasketsFromFolder');
