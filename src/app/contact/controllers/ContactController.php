@@ -232,7 +232,7 @@ class ContactController
             'addressCountry'        => $rawContact['address_country'],
             'email'                 => $rawContact['email'],
             'phone'                 => $rawContact['phone'],
-            'communicationMeans'    => !empty($rawContact['communication_means']) ? json_decode($rawContact['communication_means']) : null,
+            'communicationMeans'    => null,
             'notes'                 => $rawContact['notes'],
             'creator'               => $rawContact['creator'],
             'creatorLabel'          => UserModel::getLabelledUserById(['id' => $rawContact['creator']]),
@@ -250,6 +250,10 @@ class ContactController
                 'label'        => $civilities[$rawContact['civility']]['label'],
                 'abbreviation' => $civilities[$rawContact['civility']]['abbreviation']
             ];
+        }
+        if (!empty($rawContact['communication_means'])) {
+            $communicationMeans = json_decode($rawContact['communication_means'], true);
+            $contact['communicationMeans'] = $communicationMeans['url'] ?? $communicationMeans['email'];
         }
 
         $filling = ContactController::getFillingRate(['contactId' => $rawContact['id']]);
