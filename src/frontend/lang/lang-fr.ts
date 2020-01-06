@@ -1415,5 +1415,9 @@ export const LANG_FR = {
     "deleteAll": "Tout supprimer",
     "followedMail": "Courrier(s) suivi(s)",
     "stopFollowingAlert": "Voulez-vous arrêter de suivre ce(s) courrier(s) ?",
-    "searchTrackedMail": "Rechercher dans les courriers suivis"
+    "searchTrackedMail": "Rechercher dans les courriers suivis",
+    "checkOnlyofficeServer": "Communication avec le serveur Onlyoffice",
+    "closeEditor" : "Fermer l'éditeur",
+    "errorOnlyoffice1" : "Impossible de lancer onlyoffice, vous utilisez une adresse locale",
+    "errorOnlyoffice2" : "Impossible de lancer onlyoffice. Veuillez vérifier la disponibilité du serveur",
 };

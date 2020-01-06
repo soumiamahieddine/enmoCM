@@ -173,10 +173,11 @@ class OnlyOfficeController
         }
 
         $uri = (string)$loadedXml->onlyoffice->server_uri;
+        $uri = str_replace(':', ' ', $uri);
 
-        $exec = shell_exec("ping -c 1 -w 5 {$uri}");
+        $exec = shell_exec("nc -vz -w 5 {$uri}  2>&1");
 
-        $isAvailable = strpos($exec, '1 packets transmitted, 1 received') !== false;
+        $isAvailable = strpos($exec, 'succeeded!') !== false;
 
         return $response->withJson(['isAvailable' => $isAvailable]);
     }

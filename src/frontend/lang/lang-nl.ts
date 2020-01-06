@@ -1401,4 +1401,6 @@ export const LANG_NL = {
     "followedMail": "Followed mail(s)", //_TO_TRANSLATE
     "stopFollowingAlert": "Do you want to stop following these mails ?", //_TO_TRANSLATE
     "searchTrackedMail": "Search in tracked mails", //_TO_TRANSLATE
+    "checkOnlyofficeServer": "Establish contact with the Onlyoffice server", //_TO_TRANSLATE
+    "closeEditor" : "Close the editor", //_TO_TRANSLATE
 };
