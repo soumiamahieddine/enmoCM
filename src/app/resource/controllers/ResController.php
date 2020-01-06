@@ -42,7 +42,7 @@ use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
-use Resource\models\UsersFollowedResourcesModel;
+use Resource\models\UserFollowedResourceModel;
 use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
@@ -79,7 +79,10 @@ class ResController
         ResController::createAdjacentData(['body' => $body, 'resId' => $resId]);
 
         if (!empty($body['followed'])) {
-            UsersFollowedResourcesController::followResource(['userId' => $GLOBALS['id'], 'resId' => $resId]);
+            UserFollowedResourceModel::create([
+                'userId' => $GLOBALS['id'],
+                'resId' => $resId
+            ]);
         }
 
         if (!empty($body['encodedFile'])) {
@@ -228,7 +231,7 @@ class ResController
         $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
         $formattedData['attachments'] = $attachments[0]['count'];
 
-        $followed = UsersFollowedResourcesModel::get([
+        $followed = UserFollowedResourceModel::get([
             'where' => ['user_id = ?', 'res_id = ?'],
             'data' => [$GLOBALS['id'], $args['resId']]
         ]);
@@ -738,7 +741,7 @@ class ResController
             return true;
         }
 
-        $followed = UsersFollowedResourcesModel::get([
+        $followed = UserFollowedResourceModel::get([
            'where' => ['user_id = ?', 'res_id in (?)'],
            'data' => [$args['userId'], $resources]
         ]);
@@ -825,6 +828,14 @@ class ResController
 
         if (!empty($body['diffusionList'])) {
             foreach ($body['diffusionList'] as $diffusion) {
+                if ($diffusion['type'] == 'user') {
+                    $item = UserModel::getById(['id' => $diffusion['id'], 'select' => ['user_id']]);
+                    $diffusion['id'] = $item['user_id'];
+                } else {
+                    $item = EntityModel::getById(['id' => $diffusion['id'], 'select' => ['entity_id']]);
+                    $diffusion['id'] = $item['entity_id'];
+                }
+
                 if ($diffusion['mode'] == 'dest') {
                     ResModel::update(['set' => ['dest_user' => $diffusion['id']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
                 }
@@ -871,23 +882,6 @@ class ResController
 
         $body = $args['body'];
 
-        if (!empty($body['diffusionList'])) {
-            ListInstanceModel::delete(['where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$args['resId'], 'entity_id']]);
-            foreach ($body['diffusionList'] as $diffusion) {
-                if ($diffusion['mode'] == 'dest') {
-                    ResModel::update(['set' => ['dest_user' => $diffusion['id']], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
-                }
-                ListInstanceModel::create([
-                    'res_id'            => $args['resId'],
-                    'sequence'          => 0,
-                    'item_id'           => $diffusion['id'],
-                    'item_type'         => $diffusion['type'] == 'user' ? 'user_id' : 'entity_id',
-                    'item_mode'         => $diffusion['mode'],
-                    'added_by_user'     => $GLOBALS['userId'],
-                    'difflist_type'     => 'entity_id'
-                ]);
-            }
-        }
         $entities = EntityModel::getWithUserEntities([
             'select' => ['entities.id'],
             'where'  => ['user_id = ?'],
@@ -1171,15 +1165,12 @@ class ResController
                     $destFound = true;
                 }
                 if ($diffusion['type'] == 'user' || $diffusion['mode'] == 'dest') {
-                    $user = UserModel::getByLogin(['login' => $diffusion['id'], 'select' => [1]]);
-                    if (empty($user)) {
-                        return ['errors' => "Body diffusionList[{$key}] id does not exist"];
-                    }
+                    $item = UserModel::getById(['id' => $diffusion['id'], 'select' => [1]]);
                 } else {
-                    $entity = EntityModel::getByEntityId(['entityId' => $diffusion['id'], 'select' => [1]]);
-                    if (empty($entity)) {
-                        return ['errors' => "Body diffusionList[{$key}] id does not exist"];
-                    }
+                    $item = EntityModel::getById(['id' => $diffusion['id'], 'select' => [1]]);
+                }
+                if (empty($item)) {
+                    return ['errors' => "Body diffusionList[{$key}] id does not exist"];
                 }
             }
             if (!$destFound) {

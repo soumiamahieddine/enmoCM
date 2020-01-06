@@ -3,13 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { tap, finalize, catchError } from 'rxjs/operators';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
+import { ContactService } from '../../../service/contact.service';
 
 @Component({
     selector: 'app-contacts-list',
     templateUrl: 'contacts-list.component.html',
     styleUrls: ['contacts-list.component.scss'],
-    providers: [NotificationService]
+    providers: [NotificationService, ContactService]
 })
 export class ContactsListComponent implements OnInit {
 
@@ -18,6 +19,8 @@ export class ContactsListComponent implements OnInit {
     loading: boolean = true;
 
     contacts: any = [];
+
+    customFields: any[] = [];
 
     /**
      * Ressource identifier to load contact List
@@ -40,10 +43,12 @@ export class ContactsListComponent implements OnInit {
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
+        private contactService: ContactService,
     ) { }
 
-    ngOnInit(): void {
-        this.loading = false;
+    async ngOnInit(): Promise<void> {
+
+        await this.getCustomFields();
 
         if (this.resId !== null) {
             this.loadContactsOfResource(this.resId, this.mode);
@@ -52,10 +57,33 @@ export class ContactsListComponent implements OnInit {
         }
     }
 
+    getCustomFields() {
+        return new Promise((resolve, reject) => {
+            this.http.get("../../rest/contactsCustomFields").pipe(
+                tap((data: any) => {
+                    this.customFields = data.customFields.map((custom: any) => {
+                        return {
+                            id: custom.id,
+                            label: custom.label
+                        }
+                    });
+                    resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
     loadContactsOfResource(resId: number, mode: string) {
         this.http.get(`../../rest/resources/${resId}/contacts?type=${mode}`).pipe(
             tap((data: any) => {
-                this.contacts = data.contacts;
+                this.contacts = data.contacts.map((contact: any) => {
+                    return {
+                        ...contact,
+                        civility: this.contactService.formatCivilityObject(contact.civility),
+                        fillingRate: this.contactService.formatFillingObject(contact.fillingRate),
+                        customFields: !this.empty(contact.customFields) ? this.formatCustomField(contact.customFields) : [],
+                    }
+                });
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -73,8 +101,9 @@ export class ContactsListComponent implements OnInit {
                 tap((contact: any) => {
                     this.contacts[0] = {
                         ...contact,
-                        civilityShortLabel: '',
-                        civilityLabel: '',
+                        civility: this.contactService.formatCivilityObject(contact.civility),
+                        fillingRate: this.contactService.formatFillingObject(contact.fillingRate),
+                        customFields: !this.empty(contact.customFields) ? this.formatCustomField(contact.customFields) : [],
                         type: 'contact'
                     };
                 }),
@@ -89,8 +118,9 @@ export class ContactsListComponent implements OnInit {
                 tap((data: any) => {
                     this.contacts[0] = {
                         type: 'user',
-                        civilityShortLabel: '',
-                        civilityLabel: '',
+                        civility: this.contactService.formatCivilityObject(null),
+                        fillingRate: this.contactService.formatFillingObject(null),
+                        customFields: [],
                         firstname: data.firstname,
                         lastname: data.lastname,
                     };
@@ -106,8 +136,9 @@ export class ContactsListComponent implements OnInit {
                 tap((data: any) => {
                     this.contacts[0] = {
                         type: 'entity',
-                        civilityShortLabel: '',
-                        civilityLabel: '',
+                        civility: this.contactService.formatCivilityObject(null),
+                        fillingRate: this.contactService.formatFillingObject(null),
+                        customFields: [],
                         lastname: data.short_label,
                     };
                 }),
@@ -120,12 +151,34 @@ export class ContactsListComponent implements OnInit {
         }
     }
 
+    formatCustomField(data: any) {
+        let arrCustomFields: any[] = [];
+
+        Object.keys(data).forEach(element => {
+            arrCustomFields.push({
+                label: this.customFields.filter(custom => custom.id == element)[0].label,
+                value: data[element]
+            });
+        });
+
+        return arrCustomFields;
+    }
+
     goTo(contact: any) {
         window.open(`https://www.google.com/maps/search/${contact.addressNumber}+${contact.addressStreet},+${contact.addressPostcode}+${contact.addressTown},+${contact.addressCountry}`, '_blank')
     }
 
     empty(value: any) {
         if (value !== null && value !== '' && value !== undefined) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    emptyOtherInfo(contact: any) {
+
+        if (contact.type === 'contact' && (!this.empty(contact.communicationMeans) || !this.empty(contact.customFields))) {
             return false;
         } else {
             return true;

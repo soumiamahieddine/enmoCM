@@ -32,6 +32,9 @@ import { FolderMenuComponent }                 from './folder/folder-menu/folder
 import { FolderUpdateComponent }                 from './folder/folder-update/folder-update.component';
 import { FolderActionListComponent }                 from './folder/folder-action-list/folder-action-list.component';
 
+import { FollowedDocumentListComponent }                 from './home/followed-list/followed-document-list.component';
+import { FollowedActionListComponent }                 from './home/followed-action-list/followed-action-list.component';
+
 /*ACTIONS PAGES */
 import { ConfirmActionComponent }               from './actions/confirm-action/confirm-action.component';
 import { DisabledBasketPersistenceActionComponent } from './actions/disabled-basket-persistence-action/disabled-basket-persistence-action.component';
@@ -157,7 +160,9 @@ import { ContactModalComponent } from './administration/contact/modal/contact-mo
         MailResumeComponent,
         ContactsListComponent,
         ContactsListModalComponent,
-        ContactModalComponent
+        ContactModalComponent,
+        FollowedDocumentListComponent,
+        FollowedActionListComponent
     ],
     entryComponents: [
         CustomSnackbarComponent,

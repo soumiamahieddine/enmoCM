@@ -2,7 +2,7 @@
     <mat-spinner style="margin:auto;"></mat-spinner>
 </div>
 <ng-container *ngIf="!loading">
-    <div *ngIf="!adminMode"
+    <div *ngIf="!adminMode && mode == 'indexation'"
         style="display: flex;align-items: center;justify-content: flex-end;margin-top: 10px;margin-bottom: -20px;">
         <button mat-button class="categoryLabel" (click)="toggleMailTracking()"
             [title]="arrFormControl['mail­tracking'].value ? lang.untrackThisMail : lang.trackThisMail">

@@ -1,0 +1,176 @@
+<mat-sidenav-container class="maarch-container">
+    <mat-sidenav #snavLeft class="panel-left" #snav [mode]="appService.getViewMode() ? 'over' : 'side'"
+        [fixedInViewport]="appService.getViewMode()" [opened]="appService.getViewMode() ? false : true"
+        autoFocus="false" style="overflow-x:hidden;" [ngStyle]="{'width': appService.getViewMode() ? '80%' : '350px'}">
+        <header-panel [snavLeft]="snav"></header-panel>
+        <menu-shortcut #menuShortcut></menu-shortcut>
+        <menu-nav></menu-nav>
+        <basket-home #basketHome [snavL]="snav"></basket-home>
+        <mat-divider></mat-divider>
+        <panel-folder #panelFolder *ngIf="folderInfo.id !== '' && folderInfo.id !== undefined"
+            [selectedId]="folderInfo.id" [showTree]="false"></panel-folder>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <mat-card id="viewThumbnail" style="display:none;position: fixed;z-index: 2;margin-left: 1px;">
+            <img style="max-height: 100vh;" src="{{thumbnailUrl}}" />
+        </mat-card>
+        <div class="bg-head">
+            <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
+                <div class="bg-head-title-label">
+                    <header-left [snavLeft]="snav"></header-left>
+                </div>
+                <div class="bg-head-title-tool">
+                    <header-right></header-right>
+                </div>
+            </div>
+            <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()">
+                <app-filters-tool style="flex:1;overflow-x: auto;overflow-y: hidden;" #filtersTool
+                    [listProperties]="this.listProperties" [snavR]="snav2" [totalRes]="allResInBasket.length"
+                    [selectedRes]="selectedRes" [routeDatas]="'/rest/followedResources/filters'"
+                    (toggleAllRes)="toggleAllRes($event)" (refreshEventAfterAction)="refreshDaoAfterAction()"
+                    (refreshEvent)="refreshDao()" [title]="lang.searchMailInFolder">
+                </app-filters-tool>
+            </div>
+        </div>
+        <div class="container" [class.fullContainer]="appService.getViewMode()">
+            <div class="container-content">
+                <div class="example-loading-shade" *ngIf="isLoadingResults">
+                    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+                </div>
+                <div class="table-head">
+                    <div class="table-head-result">
+                        <mat-checkbox color="primary"
+                            [checked]="selectedRes.length == allResInBasket.length && selectedRes.length > 0"
+                            [indeterminate]="selectedRes.length > 0 && selectedRes.length < allResInBasket.length"
+                            style="margin: 10px;padding-right: 10px;" title="{{lang.selectAllResInBasket}}"
+                            (change)="toggleAllRes($event)"></mat-checkbox>&nbsp;{{resultsLength}}
+                        {{lang.records | ucfirst}}&nbsp;<small *ngIf="selectedRes.length > 0">- {{selectedRes.length}}
+                            {{lang.selected}}</small>
+                    </div>
+                    <div class="table-head-tool">
+                        <span style="float:right;height: 56px;margin-top: 5px;">
+                            <mat-paginator #paginatorResultList [length]="resultsLength" [pageSizeOptions]="[10, 25, 50, 100, 150]"
+                                class="paginatorResultList"></mat-paginator>
+                        </span>
+                        <span style="float:right;height: 56px;margin-top: 11px;">
+                            <app-followed-action-list #actionsList [contextMode]="false" [currentFolderInfo]="folderInfo"
+                                [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [menuShortcut]="menuShortcut"
+                                (refreshEvent)="refreshDaoAfterAction()">
+                            </app-followed-action-list>
+                        </span>
+                    </div>
+                </div>
+                <div style="height:90%;overflow:auto;position:absolute;width:100%;">
+                    <table #tableBasketListSort="matSort" cdkDropList id="folder-list"
+                        [cdkDropListConnectedTo]="listTodrag()" [cdkDropListData]="data"
+                        [cdkDropListDisabled]="dragInit || appService.getViewMode()" mat-table [dataSource]="data"
+                        matSort matSortActive="resId" matSortDisableClear matSortDirection="asc" style="width:100%;">
+
+                        <ng-container matColumnDef="resId">
+                            <td mat-cell *matCellDef="let row"
+                                style="padding:0;border-top: solid 1px rgba(0, 0, 0, 0.12);"
+                                [class.selected-data]="row.checked">
+                                <div class="main-info">
+                                    <span style="width:50px;">
+                                        <mat-checkbox color="primary" [checked]="row.checked"
+                                            (change)="toggleRes($event,row)" (click)="$event.stopPropagation();">
+                                        </mat-checkbox>
+                                    </span>
+                                    <span *ngIf="!appService.getViewMode()" style="cursor:pointer;"
+                                        class="main-info-status">
+                                        <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}"
+                                            [ngStyle]="{'color': row.priorityColor}" color="primary"
+                                            class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x">
+                                        </mat-icon>
+                                        <span *ngIf="row.confidentiality === 'Y'"
+                                            class="watermark">{{lang.confidential}}</span>
+                                        <mat-icon *ngIf="row.isLocked === true"
+                                            title="{{lang.warnLockResInProgress}} : {{row.locker}}" style="color: red;"
+                                            class="fa fa-lock fa-2x">
+                                        </mat-icon>
+                                    </span>
+                                    <span *ngIf="!appService.getViewMode()" class="main-info-data"
+                                        style="width:200px;text-align:center;cursor:pointer;">
+                                        <ng-container
+                                            *ngIf="row.chrono == lang.undefined && row.barcode != lang.undefined">
+                                            <span style="color: rgba(0,0,0,0.4);font-size: 90%;">
+                                                <i title="{{lang.barcode}}" class="fas fa-barcode"></i>
+                                                {{row.barcode}}</span>
+                                        </ng-container>
+                                        <ng-container *ngIf="row.barcode == lang.undefined">
+                                            {{row.chrono}}
+                                        </ng-container>
+                                    </span>
+                                    <span class="main-info-data" style="font-weight:bold;flex:1;cursor:pointer;"
+                                        [class.undefined]="row.subject == lang.undefined"
+                                        title="{{row.subject}}">{{row.subject | shorten: 150: '...'}}</span>
+                                    <span class="main-info-action">
+                                        <button mat-icon-button title="{{lang.notes}}"
+                                            (click)="$event.stopPropagation();togglePanel('note',row)"
+                                            [class.noData]="row.countNotes == 0">
+                                            <mat-icon matBadgeHidden="{{row.countNotes == 0}}" fontSet="fas"
+                                                matBadge="{{row.countNotes}}" fontIcon="fa-comments fa-2x"
+                                                [color]="snav2.opened && row.checked && currentMode == 'note' ? 'primary' : ''">
+                                            </mat-icon>
+                                        </button>
+                                        <button mat-icon-button title="{{lang.attachments}}"
+                                            (click)="$event.stopPropagation();togglePanel('attachment',row)"
+                                            [class.noData]="row.countAttachments == 0">
+                                            <mat-icon matBadgeHidden="{{row.countAttachments == 0}}" fontSet="fas"
+                                                matBadge="{{row.countAttachments}}" fontIcon="fa-paperclip fa-2x"
+                                                [color]="snav2.opened && row.checked && currentMode == 'attachment' ? 'primary' : ''">
+                                            </mat-icon>
+                                        </button>
+                                        <button mat-icon-button title="{{lang.diffusionList}}"
+                                            (click)="$event.stopPropagation();togglePanel('diffusion',row)">
+                                            <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x"
+                                                [color]="snav2.opened && row.checked && currentMode == 'diffusion' ? 'primary' : ''">
+                                            </mat-icon>
+                                        </button>
+                                        <button mat-icon-button title="{{lang.linkDetails}}"
+                                            (click)="$event.stopPropagation();goToDetail(row);"
+                                            (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();">
+                                            <mat-icon fontSet="fas" fontIcon="fa-info-circle fa-2x"></mat-icon>
+                                        </button>
+                                    </span>
+                                </div>
+                            </td>
+                        </ng-container>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumnsBasket;"
+                            (contextmenu)="open($event,row);" (click)="open($event,row);" class="rowData"
+                            style="cursor: pointer;" [class.locked]="row.isLocked == true" cdkDrag
+                            (cdkDragStarted)="selectSpecificRes(row);" [cdkDragData]="row">
+                            <div class="example-custom-placeholder" *cdkDragPlaceholder></div>
+                            <div class="dragPreview" *cdkDragPreview><i class="fas fa-envelope-open-text fa-2x"></i>
+                                <br />
+                                {{lang.classifyInFolder}} :
+                                <b>{{row.chrono}}</b>
+                            </div>
+                        </tr>
+                    </table>
+                </div>
+                <div class="table-head">
+                </div>
+            </div>
+        </div>
+    </mat-sidenav-content>
+    <mat-sidenav #snav2 [fixedInViewport]="appService.getViewMode()" position='end'
+        [opened]="appService.getViewMode() ? false : false" [mode]="appService.getViewMode() ? 'over' : 'side'"
+        class="panel-right" style="overflow-x:hidden;" [class.docView]="innerHtml"
+        [ngStyle]="{'width': appService.getViewMode() ? '80%' : '30%'}" autoFocus="false">
+        <div *ngIf="innerHtml" [matTooltip]="currentChrono" [innerHTML]="innerHtml"
+            style="height: 100%;overflow: hidden;"></div>
+
+        <div style="display:flex;">
+            <button mat-icon-button (click)="snav2.close()" style="font-size: 20px;color:#666;">
+                <mat-icon class="fa fa-arrow-right"></mat-icon>
+            </button>
+        </div>
+        <app-panel-list #appPanelList (refreshBadgeNotes)="refreshBadgeNotes($event)"></app-panel-list>
+        <mat-divider></mat-divider>
+    </mat-sidenav>
+</mat-sidenav-container>
+<app-followed-action-list #actionsListContext [contextMode]="true" [currentFolderInfo]="folderInfo"
+    [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" (refreshEvent)="refreshDaoAfterAction()"
+    [menuShortcut]="menuShortcut">
+</app-followed-action-list>

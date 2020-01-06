@@ -164,4 +164,20 @@ class OnlyOfficeController
 
         return $response->withJson(['encodedFile' => base64_encode($fileContent)]);
     }
+
+    public static function isAvailable(Request $request, Response $response)
+    {
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/documentEditorsConfig.xml']);
+        if (empty($loadedXml) || empty($loadedXml->onlyoffice->enabled) || $loadedXml->onlyoffice->enabled == 'false' || empty($loadedXml->onlyoffice->server_uri)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice is not enabled']);
+        }
+
+        $uri = (string)$loadedXml->onlyoffice->server_uri;
+
+        $exec = shell_exec("ping -c 1 -w 5 {$uri}");
+
+        $isAvailable = strpos($exec, '1 packets transmitted, 1 received') !== false;
+
+        return $response->withJson(['isAvailable' => $isAvailable]);
+    }
 }

@@ -553,6 +553,32 @@ UPDATE listmodels SET title = object_id WHERE title IS NULL;
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)AND', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)and', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
 
+/* ListTemplates */
+DROP TABLE IF EXISTS list_templates;
+CREATE TABLE list_templates
+(
+    id SERIAL NOT NULL,
+    title text NOT NULL,
+    description text,
+    type CHARACTER VARYING(32) NOT NULL,
+    entity_id INTEGER,
+    CONSTRAINT list_templates_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+DROP TABLE IF EXISTS list_templates_items;
+CREATE TABLE list_templates_items
+(
+    id SERIAL NOT NULL,
+    list_template_id INTEGER NOT NULL,
+    item_id INTEGER NOT NULL,
+    item_type CHARACTER VARYING(32) NOT NULL,
+    item_mode CHARACTER VARYING(64) NOT NULL,
+    sequence INTEGER NOT NULL,
+    CONSTRAINT list_templates_items_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
 
 /* REFACTORING MODIFICATION */
 ALTER TABLE notif_email_stack ALTER COLUMN attachments TYPE text;

@@ -79,15 +79,9 @@ abstract class avis_controler_Abstract
             $str .= '$j("#avisUserList").chosen({width: "250px", disable_search_threshold: 10});';
             $str .= '</script>';
 
-            include_once 'modules/entities/class/class_manage_listdiff.php';
-            $diff_list = new diffusion_list();
-            $listModels = $diff_list->select_listmodels($typeList);
 
             $str .= ' <select data-placeholder="'._ADD_AVIS_MODEL.'" name="modelList" id="modelList" onchange="loadAvisModelUsers();">';
             $str .= '<option value=""></option>';
-            foreach ($listModels as $lm) {
-                $str .= '<option value="'.$lm['object_id'].'">'.$lm['title'].'</option>';
-            }
             $str .= '</select>';
 
             $str .= '<script>';
@@ -253,15 +247,6 @@ abstract class avis_controler_Abstract
 
     public function saveModelWorkflow($id_list, $workflow, $typeList, $title)
     {
-        require_once 'modules/entities/class/class_manage_listdiff.php';
-        $diff_list = new diffusion_list();
-
-        $diff_list->save_listmodel(
-                $workflow,
-            $typeList,
-            $id_list,
-            $title
-        );
     }
 
     public function saveWorkflow($res_id, $coll_id, $workflow, $typeList)

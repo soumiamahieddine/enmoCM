@@ -38,7 +38,10 @@ export class EntitiesAdministrationComponent implements OnInit {
     newEntity                       : boolean   = false;
     creationMode                    : boolean   = false;
     listDiffModified                : boolean   = false;
-    idCircuitVisa                   : number;
+    visaCircuitModified             : boolean   = false;
+    opinionCircuitModified          : boolean   = false;
+    idVisaCircuit                   : number;
+    idOpinionCircuit                : number;
     config                          : any       = {};
 
     dataSourceUsers             = new MatTableDataSource(this.currentEntity.users);
@@ -191,13 +194,20 @@ export class EntitiesAdministrationComponent implements OnInit {
 
     loadEntity(entity_id: any) {
         this.listDiffModified = false;
+        this.visaCircuitModified = false;
+        this.opinionCircuitModified = false;
         this.http.get("../../rest/entities/" + entity_id + '/details')
             .subscribe((data: any) => {
                 this.currentEntity = data['entity'];
-                if (this.currentEntity.visaTemplate[0]) {
-                    this.idCircuitVisa = this.currentEntity.visaTemplate[0].id;
+                if (this.currentEntity.visaCircuit) {
+                    this.idVisaCircuit = this.currentEntity.visaCircuit.id;
                 } else {
-                    this.idCircuitVisa = null;
+                    this.idVisaCircuit = null;
+                }
+                if (this.currentEntity.opinionCircuit) {
+                    this.idOpinionCircuit = this.currentEntity.opinionCircuit.id;
+                } else {
+                    this.idOpinionCircuit = null;
                 }
                 this.dataSourceUsers = new MatTableDataSource(this.currentEntity.users);
                 this.dataSourceUsers.paginator = this.paginatorUsers;
@@ -207,6 +217,14 @@ export class EntitiesAdministrationComponent implements OnInit {
                 this.dataSourceTemplates.paginator = this.paginatorTemplates;
                 this.dataSourceTemplates.sort = this.sortTemplates;
 
+                if (!this.currentEntity.listTemplate.items) {
+                    this.currentEntity.listTemplate.items = [];
+                }
+                this.listTemplateRoles.forEach((role: any) => {
+                    if (role.available && !this.currentEntity.listTemplate.items[role.id]) {
+                        this.currentEntity.listTemplate.items[role.id] = [];
+                    }
+                });
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
@@ -217,11 +235,15 @@ export class EntitiesAdministrationComponent implements OnInit {
         var inListModel = false;
         var newElemListModel: any = {};
 
+        if (!this.currentEntity.listTemplate.items) {
+            this.currentEntity.listTemplate.items = [];
+        }
+
         this.listTemplateRoles.forEach((role: any) => {
             if (role.available == true) {
-                if (this.currentEntity.listTemplate[role.id]) {
-                    this.currentEntity.listTemplate[role.id].forEach((listModel: any) => {
-                        if (listModel.item_id == element.id) {
+                if (this.currentEntity.listTemplate.items[role.id]) {
+                    this.currentEntity.listTemplate.items[role.id].forEach((listModel: any) => {
+                        if (listModel.id == element.id) {
                             inListModel = true;
                         }
                     });
@@ -229,54 +251,70 @@ export class EntitiesAdministrationComponent implements OnInit {
             }
         });
         if (!inListModel) {
-            if (this.currentEntity.listTemplate.dest.length == 0 && element.type == 'user') {
+            if (!this.currentEntity.listTemplate.items.dest) {
+                this.currentEntity.listTemplate.items.dest = [];
+            }
+            if (this.currentEntity.listTemplate.items.dest.length == 0 && element.type == 'user') {
                 newElemListModel = {
-                    "item_type": "user_id",
-                    "item_id": element.id,
+                    "id": element.serialId,
+                    "type": "user",
+                    "mode": "dest",
                     "labelToDisplay": element.idToDisplay,
-                    "descriptionToDisplay": element.otherInfo,
-                    "item_mode": "dest",
-                    "sequence": 0
+                    "descriptionToDisplay": element.otherInfo
                 };
-                this.currentEntity.listTemplate.dest.unshift(newElemListModel);
+                this.currentEntity.listTemplate.items.dest.unshift(newElemListModel);
 
             } else {
-                var itemType = '';
-                if (element.type == 'user') {
-                    itemType = 'user_id';
-                } else {
-                    itemType = 'entity_id';
+                if (!this.currentEntity.listTemplate.items.cc) {
+                    this.currentEntity.listTemplate.items.cc = [];
                 }
+                const itemType = element.type == 'user' ? 'user' : 'entity';
 
                 newElemListModel = {
-                    "item_type": itemType,
-                    "item_id": element.id,
+                    "id": element.serialId,
+                    "type": itemType,
+                    "mode": "cc",
                     "labelToDisplay": element.idToDisplay,
-                    "descriptionToDisplay": element.otherInfo,
-                    "item_mode": "cc",
-                    "sequence": 0
+                    "descriptionToDisplay": element.otherInfo
                 };
-                this.currentEntity.listTemplate.cc.unshift(newElemListModel);
+                this.currentEntity.listTemplate.items.cc.unshift(newElemListModel);
             }
         }
     }
 
     addElemListModelVisa(element: any) {
-        this.listDiffModified = true;
+        this.visaCircuitModified = true;
         let newElemListModel = {
-            "id": '',
-            "item_type": 'user_id',
-            "item_mode": "sign",
-            "item_id": element.id,
-            "sequence": this.currentEntity.visaTemplate.length,
+            "id": element.id,
+            "type": 'user',
+            "mode": "sign",
             "idToDisplay": element.idToDisplay,
             "descriptionToDisplay": element.otherInfo
         };
 
-        this.currentEntity.visaTemplate.push(newElemListModel);
-        if (this.currentEntity.visaTemplate.length > 1) {
-            this.currentEntity.visaTemplate[this.currentEntity.visaTemplate.length-2].item_mode = 'visa';
+        if (!this.currentEntity.visaCircuit.items) {
+            this.currentEntity.visaCircuit.items = [];
         }
+        this.currentEntity.visaCircuit.items.push(newElemListModel);
+        if (this.currentEntity.visaCircuit.items.length > 1) {
+            this.currentEntity.visaCircuit.items[this.currentEntity.visaCircuit.items.length-2].mode = 'visa';
+        }
+    }
+
+    addElemListModelOpinion(element: any) {
+        this.opinionCircuitModified = true;
+        let newElemListModel = {
+            "id": element.id,
+            "type": 'user',
+            "mode": "avis",
+            "idToDisplay": element.idToDisplay,
+            "descriptionToDisplay": element.otherInfo
+        };
+
+        if (!this.currentEntity.opinionCircuit.items) {
+            this.currentEntity.opinionCircuit.items = [];
+        }
+        this.currentEntity.opinionCircuit.items.push(newElemListModel);
     }
 
     saveEntity() {
@@ -375,10 +413,10 @@ export class EntitiesAdministrationComponent implements OnInit {
                         });
                     }
 
-                    if (this.idCircuitVisa) {
-                        this.http.delete("../../rest/listTemplates/" + this.idCircuitVisa)
+                    if (this.idVisaCircuit) {
+                        this.http.delete("../../rest/listTemplates/" + this.idVisaCircuit)
                             .subscribe(() => {
-                                this.idCircuitVisa = null;
+                                this.idVisaCircuit = null;
                             }, (err) => {
                                 this.notify.error(err.error.errors);
                             });
@@ -421,10 +459,10 @@ export class EntitiesAdministrationComponent implements OnInit {
                     });
                 }
 
-                if (this.idCircuitVisa) {
-                    this.http.delete("../../rest/listTemplates/" + this.idCircuitVisa)
+                if (this.idVisaCircuit) {
+                    this.http.delete("../../rest/listTemplates/" + this.idVisaCircuit)
                         .subscribe(() => {
-                            this.idCircuitVisa = null;
+                            this.idVisaCircuit = null;
                         }, (err) => {
                             this.notify.error(err.error.errors);
                         });
@@ -484,35 +522,34 @@ export class EntitiesAdministrationComponent implements OnInit {
 
     updateDiffList(template: any, role: any): any {
         this.listDiffModified = true;
-        if (role == 'dest' && this.currentEntity.listTemplate.dest.length > 0) {
-            this.currentEntity.listTemplate.dest.forEach((listModel: any) => {
-                if (listModel.item_id != template.item_id) {
-                    this.currentEntity.listTemplate.cc.push(listModel);
+        if (role == 'dest' && this.currentEntity.listTemplate.items.dest.length > 0) {
+            this.currentEntity.listTemplate.items.dest.forEach((listModel: any) => {
+                if (listModel.id != template.id) {
+                    this.currentEntity.listTemplate.items.cc.push(listModel);
                 }
             });
-            this.currentEntity.listTemplate.dest = [template];
+            this.currentEntity.listTemplate.items.dest = [template];
         }
     }
 
     saveDiffList() {
         this.listDiffModified = false;
         var newDiffList = {
-            "object_id": this.currentEntity.entity_id,
-            "object_type": "entity_id",
             "title": this.currentEntity.entity_id,
             "description": this.currentEntity.entity_id,
+            "type": "diffusionList",
+            "entityId": this.currentEntity.id,
             "items": Array()
         };
 
         this.listTemplateRoles.forEach((role: any) => {
             if (role.available == true) {
-                if (this.currentEntity.listTemplate[role.id]) {
-                    this.currentEntity.listTemplate[role.id].forEach((listModel: any) => {
+                if (this.currentEntity.listTemplate.items[role.id]) {
+                    this.currentEntity.listTemplate.items[role.id].forEach((listModel: any) => {
                         newDiffList.items.push({
-                            "item_id": listModel.item_id,
-                            "item_type": listModel.item_type,
-                            "item_mode": role.id,
-                            "sequence": listModel.sequence
+                            "id": listModel.id,
+                            "type": listModel.type,
+                            "mode": role.id
                         })
                     });
                 }
@@ -535,8 +572,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                 });
         } else if (this.currentEntity.listTemplate.id) {
             this.http.put("../../rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
-                .subscribe((data: any) => {
-                    this.currentEntity.listTemplate.id = data.id;
+                .subscribe(() => {
                     this.http.get("../../rest/listTemplates/types/entity_id/roles")
                         .subscribe((data: any) => {
                             this.listTemplateRoles = data['roles'];
@@ -565,76 +601,63 @@ export class EntitiesAdministrationComponent implements OnInit {
     }
 
     updateDiffListVisa(template: any): any {
-        this.listDiffModified = true;
-        this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
+        this.visaCircuitModified = true;
+        this.currentEntity.visaCircuit.items.forEach((listModel: any, i: number) => {
             listModel.sequence = i;
-            if (i == (this.currentEntity.visaTemplate.length - 1)) {
-                listModel.item_mode = "sign";
+            if (i == (this.currentEntity.visaCircuit.items.length - 1)) {
+                listModel.mode = "sign";
             } else {
-                listModel.item_mode = "visa";
+                listModel.mode = "visa";
             }
         });
     }
 
     saveDiffListVisa() {
-        this.listDiffModified = false;
-        var newDiffList = {
-            "object_id": this.currentEntity.entity_id,
-            "object_type": "VISA_CIRCUIT",
+        this.visaCircuitModified = false;
+        const newDiffList = {
             "title": this.currentEntity.entity_id,
             "description": this.currentEntity.entity_id,
+            "type": "visaCircuit",
+            "entityId": this.currentEntity.id,
             "items": Array()
         };
-        if (this.idCircuitVisa == null) {
-            this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
+        if (this.idVisaCircuit == null) {
+            this.currentEntity.visaCircuit.items.forEach((listModel: any, i: number) => {
                 listModel.sequence = i;
-                if (i == (this.currentEntity.visaTemplate.length - 1)) {
-                    listModel.item_mode = "sign";
+                if (i == (this.currentEntity.visaCircuit.items.length - 1)) {
+                    listModel.mode = "sign";
                 } else {
-                    listModel.item_mode = "visa";
+                    listModel.mode = "visa";
                 }
-                newDiffList.items.push({
-                    "id": listModel.id,
-                    "item_id": listModel.item_id,
-                    "item_type": "user_id",
-                    "item_mode": listModel.item_mode,
-                    "sequence": listModel.sequence
-                });
+                newDiffList.items.push(listModel);
             });
             this.http.post("../../rest/listTemplates", newDiffList)
                 .subscribe((data: any) => {
-                    this.idCircuitVisa = data.id;
+                    this.idVisaCircuit = data.id;
                     this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
-        } else if (this.currentEntity.visaTemplate.length > 0) {
-            this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
+        } else if (this.currentEntity.visaCircuit.items.length > 0) {
+            this.currentEntity.visaCircuit.items.forEach((listModel: any, i: number) => {
                 listModel.sequence = i;
-                if (i == (this.currentEntity.visaTemplate.length - 1)) {
-                    listModel.item_mode = "sign";
+                if (i == (this.currentEntity.visaCircuit.items.length - 1)) {
+                    listModel.mode = "sign";
                 } else {
-                    listModel.item_mode = "visa";
+                    listModel.mode = "visa";
                 }
-                newDiffList.items.push({
-                    "id": listModel.id,
-                    "item_id": listModel.item_id,
-                    "item_type": "user_id",
-                    "item_mode": listModel.item_mode,
-                    "sequence": listModel.sequence
-                });
+                newDiffList.items.push(listModel);
             });
-            this.http.put("../../rest/listTemplates/" + this.idCircuitVisa, newDiffList)
-                .subscribe((data: any) => {
-                    this.idCircuitVisa = data.id;
+            this.http.put("../../rest/listTemplates/" + this.idVisaCircuit, newDiffList)
+                .subscribe(() => {
                     this.notify.success(this.lang.diffusionModelUpdated);
                 }, (err) => {
                     this.notify.error(err.error.errors);
                 });
         } else {
-            this.http.delete("../../rest/listTemplates/" + this.idCircuitVisa)
+            this.http.delete("../../rest/listTemplates/" + this.idVisaCircuit)
             .subscribe(() => {
-                this.idCircuitVisa = null;
+                this.idVisaCircuit = null;
                 this.notify.success(this.lang.diffusionModelDeleted);
             }, (err) => {
                 this.notify.error(err.error.errors);
@@ -642,25 +665,67 @@ export class EntitiesAdministrationComponent implements OnInit {
         }
     }
 
+    saveDiffListOpinion() {
+        this.opinionCircuitModified = false;
+        const newDiffList = {
+            "title": this.currentEntity.entity_id,
+            "description": this.currentEntity.entity_id,
+            "type": "opinionCircuit",
+            "entityId": this.currentEntity.id,
+            "items": Array()
+        };
+        if (this.idOpinionCircuit == null) {
+            newDiffList.items = this.currentEntity.opinionCircuit.items;
+            this.http.post("../../rest/listTemplates", newDiffList)
+                .subscribe((data: any) => {
+                    this.idOpinionCircuit = data.id;
+                    this.notify.success(this.lang.diffusionModelUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        } else if (this.currentEntity.opinionCircuit.items.length > 0) {
+            newDiffList.items = this.currentEntity.opinionCircuit.items;
+            this.http.put("../../rest/listTemplates/" + this.idOpinionCircuit, newDiffList)
+                .subscribe(() => {
+                    this.notify.success(this.lang.diffusionModelUpdated);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        } else {
+            this.http.delete("../../rest/listTemplates/" + this.idOpinionCircuit)
+                .subscribe(() => {
+                    this.idOpinionCircuit = null;
+                    this.notify.success(this.lang.diffusionModelDeleted);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
+        }
+    }
+
     removeDiffList(i: number, role: string): any {
         this.listDiffModified = true;
-        this.currentEntity.listTemplate[role].splice(i, 1);
+        this.currentEntity.listTemplate.items[role].splice(i, 1);
     }
 
     removeDiffListVisa(template: any, i: number): any {
-        this.listDiffModified = true;
-        this.currentEntity.visaTemplate.splice(i, 1);
+        this.visaCircuitModified = true;
+        this.currentEntity.visaCircuit.items.splice(i, 1);
 
-        if (this.currentEntity.visaTemplate.length > 0) {
-            this.currentEntity.visaTemplate.forEach((listModel: any, i: number) => {
+        if (this.currentEntity.visaCircuit.items.length > 0) {
+            this.currentEntity.visaCircuit.items.forEach((listModel: any, i: number) => {
                 listModel.sequence = i;
-                if (i == (this.currentEntity.visaTemplate.length - 1)) {
-                    listModel.item_mode = "sign";
+                if (i == (this.currentEntity.visaCircuit.items.length - 1)) {
+                    listModel.mode = "sign";
                 } else {
-                    listModel.item_mode = "visa";
+                    listModel.mode = "visa";
                 }
             });
         }
+    }
+
+    removeDiffListOpinion(template: any, i: number): any {
+        this.opinionCircuitModified = true;
+        this.currentEntity.opinionCircuit.items.splice(i, 1);
     }
 
     toggleRole(role: any) {
@@ -674,7 +739,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                         .subscribe(() => {
                             role.usedIn = [];
                             if (this.currentEntity.listTemplate) {
-                                this.currentEntity.listTemplate[role.id] = [];
+                                this.currentEntity.listTemplate.items[role.id] = [];
                             }
                             this.notify.success(this.lang.listTemplatesRolesUpdated);
                         }, (err) => {
@@ -687,7 +752,7 @@ export class EntitiesAdministrationComponent implements OnInit {
             this.http.put("../../rest/listTemplates/types/entity_id/roles", { "roles": this.listTemplateRoles })
                 .subscribe(() => {
                     if (this.currentEntity.listTemplate) {
-                        this.currentEntity.listTemplate[role.id] = [];
+                        this.currentEntity.listTemplate.items[role.id] = [];
                         this.http.get("../../rest/listTemplates/types/entity_id/roles")
                             .subscribe((data: any) => {
                                 this.listTemplateRoles = data['roles'];

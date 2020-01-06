@@ -32,7 +32,6 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
-use SrcCore\models\DatabaseModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
@@ -69,7 +68,8 @@ class SummarySheetController
         ]);
         $allResourcesInBasket = array_column($rawResourcesInBasket, 'res_id');
 
-        $order = 'CASE res_view_letterbox.res_id ';
+//        $order = 'CASE res_view_letterbox.res_id ';
+        $order = '';
         foreach ($bodyData['resources'] as $key => $resId) {
             if (!in_array($resId, $allResourcesInBasket)) {
                 return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
@@ -78,9 +78,9 @@ class SummarySheetController
         }
         $order .= 'END';
 
-        $resourcesByModelIds = DatabaseModel::select([
-            'select'  => ["string_agg(cast(res_id as text), ',') as res_ids", 'model_id'],
-            'table'   => ['res_letterbox'],
+        $orderTable = 'CASE res_id ' . $order;
+        $resourcesByModelIds = ResModel::get([
+            'select'  => ["string_agg(cast(res_id as text), ',' order by {$orderTable}) as res_ids", 'model_id'],
             'where'   => ['res_id in (?)'],
             'data'    => [$bodyData['resources']],
             'groupBy' => ['model_id']
@@ -88,6 +88,8 @@ class SummarySheetController
 
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
+
+        $order = 'CASE res_view_letterbox.res_id ' . $order;
 
         foreach ($resourcesByModelIds as $resourcesByModelId) {
             $resourcesIdsByModel = $resourcesByModelId['res_ids'];
@@ -225,11 +227,10 @@ class SummarySheetController
         ]);
         $allResourcesInBasket = array_column($rawResourcesInBasket, 'res_id');
 
-        $resourcesByModelIds = DatabaseModel::select([
+        $resourcesByModelIds = ResModel::get([
             'select'  => ["string_agg(cast(res_id as text), ',') as res_ids", 'model_id'],
-            'table'   => ['res_letterbox'],
             'where'   => ['res_id in (?)'],
-            'data'    => [$allResourcesInBasket],
+            'data'    => [$bodyData['resources']],
             'groupBy' => ['model_id']
         ]);
 
@@ -355,9 +356,11 @@ class SummarySheetController
         $pdf->SetFont('', '', 8);
         $pdf->Cell(0, 1, $resource['alt_identifier'], 0, 2, 'C', false);
 
+        $subject = str_replace("\n", ' ', $resource['subject']);
+
         $pdf->SetY($pdf->GetY() + 15);
         $pdf->SetFont('', 'B', 16);
-        $pdf->MultiCell(0, 1, $resource['subject'], 1, 'C', false);
+        $pdf->MultiCell(0, 1, $subject, 1, 'C', false);
 
         foreach ($units as $key => $unit) {
             $units[$key] = (array)$unit;
@@ -411,7 +414,8 @@ class SummarySheetController
 
                 $pdf->SetFont('', '', 10);
 
-                $pdf->MultiCell($widthMultiCell, 15, _TYPIST . " : <b>{$typist} {$initiatorEntity}</b>", 0, 'L', false, 0, '', '', true, 0, true);
+                $pdf->MultiCell($widthMultiCell, 15, _CREATED . " : {$creationdate}", 0, 'L', false, 0, '', '', true, 0, true);
+
                 if (isset($docDate)) {
                     $pdf->Cell($widthCell, 15, '', 0, 0, 'L', false);
                     $pdf->MultiCell($widthMultiCell, 15, _DOC_DATE . " : {$docDate}", 0, 'L', false, 1, '', '', true, 0, true);
@@ -419,14 +423,11 @@ class SummarySheetController
                     $pdf->Cell($widthCell, 15, '', 0, 1, 'L', false);
                 }
 
-                $pdf->MultiCell($widthMultiCell, 15, _CREATED . " : {$creationdate}", 0, 'L', false, 0, '', '', true, 0, true);
-
                 if (isset($admissionDate)) {
-                    $pdf->Cell($widthCell, 15, '', 0, 0, 'L', false);
                     $pdf->MultiCell($widthMultiCell, 15, _ADMISSION_DATE . " : {$admissionDate}", 0, 'L', false, 1, '', '', true, 0, true);
-                } else {
-                    $pdf->Cell($widthCell, 15, '', 0, 1, 'L', false);
                 }
+
+                $pdf->MultiCell($widthMultiCell * 2, 15, _TYPIST . " : <b>{$typist} {$initiatorEntity}</b>", 0, 'L', false, 1, '', '', true, 0, true);
 
                 $pdf->MultiCell($widthMultiCell * 2, 15, _DOCTYPE . " : {$doctype}", 0, 'L', false, 0, '', '', true, 0, true);
                 $pdf->Cell($widthCell, 15, '', 0, 0, 'L', false);
@@ -511,9 +512,9 @@ class SummarySheetController
                     foreach ($customFieldsIds as $customFieldsId) {
                         $label = $customFields[$customFieldsId];
                         if (is_array($customFieldsValues[$customFieldsId])) {
-                            $value = !empty($customFieldsValues[$customFieldsId]) ? implode(',', $customFieldsValues[$customFieldsId]) : _UNDEFINED;
+                            $value = !empty($customFieldsValues[$customFieldsId]) ? '<b>' . implode(',', $customFieldsValues[$customFieldsId]) . '</b>' : '<i>' . _UNDEFINED . '</i>';
                         } else {
-                            $value = $customFieldsValues[$customFieldsId] ?? _UNDEFINED;
+                            $value = $customFieldsValues[$customFieldsId] ? '<b>' . $customFieldsValues[$customFieldsId] . '</b>' : '<i>' . _UNDEFINED . '</i>';
                         }
 
                         $nextLine = ($nextLine + 1) % 2;

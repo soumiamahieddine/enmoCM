@@ -488,112 +488,98 @@ INSERT INTO usergroup_content (user_id, group_id, role) VALUES (21, 5, '');
 DELETE FROM usergroup_content WHERE user_id = 22;
 INSERT INTO usergroup_content (user_id, group_id, role) VALUES (22, 10, '');
 
--- Create ENTITIES and LISTMODELS
+-- Create ENTITIES and LIST TEMPLATES
 TRUNCATE TABLE entities;
 ALTER SEQUENCE entities_id_seq RESTART WITH 1;
-TRUNCATE TABLE listmodels;
-DELETE FROM entities WHERE entity_id = 'VILLE';
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('VILLE', 'Ville de Maarch-les-bains', 'Ville de Maarch-les-bains', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', '', 'Direction');
-DELETE FROM listmodels WHERE object_id = 'VILLE' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('VILLE', 'entity_id', 0, 'ppetit', 'user_id', 'dest', 'Ville de Maarch-les-bains','Ville de Maarch-les-bains', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'CAB';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (1, 'Ville de Maarch-les-bains', 'Ville de Maarch-les-bains', 'diffusionList', 1);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (1, 10, 'user', 'dest', 0);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('CAB', 'Cabinet du Maire', 'Cabinet du Maire', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'VILLE', 'Direction');
-DELETE FROM listmodels WHERE object_id = 'CAB' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('CAB', 'entity_id', 0, 'eerina', 'user_id', 'dest', 'Cabinet du Maire','Cabinet du Maire', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'CAB', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'Cabinet du Maire','Cabinet du Maire', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'CAB', 'entity_id', 0, 'ppetit', 'user_id', 'cc', 'Cabinet du Maire','Cabinet du Maire', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'DGS';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (2, 'Cabinet du Maire', 'Cabinet du Maire', 'diffusionList', 2);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (2, 7, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (2, 12, 'entity', 'cc', 1);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (2, 10, 'user', 'cc', 2);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DGS', 'Direction Générale des Services', 'Direction Générale des Services', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'VILLE', 'Direction');
-DELETE FROM listmodels WHERE object_id = 'DGS' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('DGS', 'entity_id', 0, 'rrenaud', 'user_id', 'dest', 'Direction Générale des Services','Direction Générale des Services', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'DGA';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (3, 'Direction Générale des Services', 'Direction Générale des Services', 'diffusionList', 3);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (3, 1, 'user', 'dest', 0);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DGA', 'Direction Générale Adjointe', 'Direction Générale Adjointe', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGS', 'Bureau');
-DELETE FROM listmodels WHERE object_id = 'DGA' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('DGA', 'entity_id', 0, 'mmanfred', 'user_id', 'dest', 'Direction Générale Adjointe','Direction Générale Adjointe', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'DGA', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'Direction Générale Adjointe','Direction Générale Adjointe', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'DGA', 'entity_id', 0, 'kkaar', 'user_id', 'cc', 'Direction Générale Adjointe','Direction Générale Adjointe', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'PCU';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (4, 'Direction Générale Adjointe', 'Direction Générale Adjointe', 'diffusionList', 4);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (4, 8, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (4, 12, 'entity', 'cc', 1);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (4, 17, 'user', 'cc', 2);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PCU', 'Pôle Culturel', 'Pôle Culturel', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGA', 'Service');
-DELETE FROM listmodels WHERE object_id = 'PCU' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('PCU', 'entity_id', 0, 'bboule', 'user_id', 'dest', 'Pôle Culturel','Pôle Culturel', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'PCU', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'Pôle Culturel','Pôle Culturel', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'PJS';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (5, 'Pôle Culturel', 'Pôle Culturel', 'diffusionList', 5);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (5, 9, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (5, 12, 'entity', 'cc', 1);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PJS', 'Pôle Jeunesse et Sport', 'Pôle Jeunesse et Sport', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGA', 'Service');
-DELETE FROM listmodels WHERE object_id = 'PJS' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('PJS', 'entity_id', 0, 'bbain', 'user_id', 'dest', 'Pôle Jeunesse et Sport','Pôle Jeunesse et Sport', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'PJS', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'Pôle Jeunesse et Sport','Pôle Jeunesse et Sport', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'PE';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (6, 'Pôle Jeunesse et Sport', 'Pôle Jeunesse et Sport', 'diffusionList', 6);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (6, 19, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (6, 12, 'entity', 'cc', 1);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PE', 'Petite enfance', 'Petite enfance', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'PJS', 'Service');
-DELETE FROM listmodels WHERE object_id = 'PE' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('PE', 'entity_id', 0, 'ssaporta', 'user_id', 'dest', 'Petite enfance','Petite enfance', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'PE', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'Petite enfance','Petite enfance', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'SP';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (7, 'Petite enfance', 'Petite enfance', 'diffusionList', 7);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (7, 15, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (7, 12, 'entity', 'cc', 1);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('SP', 'Sport', 'Sport', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'PJS', 'Service');
-DELETE FROM listmodels WHERE object_id = 'SP' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('SP', 'entity_id', 0, 'ttong', 'user_id', 'dest', 'Sport','Sport', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'SP', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'Sport','Sport', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'PSO';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (8, 'Sport', 'Sport', 'diffusionList', 8);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (8, 13, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (8, 12, 'entity', 'cc', 1);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PSO', 'Pôle Social', 'Pôle Social', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGA', 'Service');
-DELETE FROM listmodels WHERE object_id = 'PSO' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('PSO', 'entity_id', 0, 'nnataly', 'user_id', 'dest', 'Pôle Social','Pôle Social', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'PSO', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'Pôle Social','Pôle Social', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'PSO', 'VISA_CIRCUIT',0, 'mmanfred', 'user_id', 'visa', 'PSO','PSO', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'PSO', 'VISA_CIRCUIT',1, 'ppetit', 'user_id', 'visa', 'PSO','PSO', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'PTE';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (9, 'Pôle Social', 'Pôle Social', 'diffusionList', 9);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (9, 4, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (9, 12, 'entity', 'cc', 1);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PTE', 'Pôle Technique', 'Pôle Technique', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGA', 'Service');
-DELETE FROM listmodels WHERE object_id = 'PTE' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('PTE', 'entity_id', 0, 'ccharles', 'user_id', 'dest', 'Pôle Technique','Pôle Technique', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'PTE', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'Pôle Technique','Pôle Technique', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'PTE', 'VISA_CIRCUIT',0, 'mmanfred', 'user_id', 'visa', 'PTE','PTE', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'PTE', 'VISA_CIRCUIT',1, 'ppetit', 'user_id', 'visa', 'PTE','PTE', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'DRH';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (10, 'Pôle Technique', 'Pôle Technique', 'diffusionList', 10);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (10, 16, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (10, 12, 'entity', 'cc', 1);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DRH', 'Direction des Ressources Humaines', 'Direction des Ressources Humaines', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGS', 'Service');
-DELETE FROM listmodels WHERE object_id = 'DRH' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('DRH', 'entity_id', 0, 'ppruvost', 'user_id', 'dest', 'Direction des Ressources Humaines','Direction des Ressources Humaines', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'DRH', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'Direction des Ressources Humaines','Direction des Ressources Humaines', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'DSG';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (11, 'Direction des Ressources Humaines', 'Direction des Ressources Humaines', 'diffusionList', 11);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (11, 12, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (11, 12, 'entity', 'cc', 1);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DSG', 'Secrétariat Général', 'Secrétariat Général', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGS', 'Direction');
-DELETE FROM listmodels WHERE object_id = 'DSG' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('DSG', 'entity_id', 0, 'ddaull', 'user_id', 'dest', 'Secrétariat Général','Secrétariat Général', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'COU';
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('COU', 'Service Courrier', 'Service Courrier', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DSG', 'Service');
-DELETE FROM listmodels WHERE object_id = 'COU' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('COU', 'entity_id', 0, 'bblier', 'user_id', 'dest', 'Service Courrier','Service Courrier', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'COU', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'Service Courrier','Service Courrier', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'COR';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (13, 'Service Courrier', 'Service Courrier', 'diffusionList', 13);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (13, 21, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (13, 12, 'entity', 'cc', 1);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('COR', 'Correspondants Archive', 'Correspondants Archive', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'COU', 'Service');
-DELETE FROM listmodels WHERE object_id = 'COR' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('COR', 'entity_id', 0, 'ggrand', 'user_id', 'dest', 'Correspondants Archive','Correspondants Archive', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'PSF';
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PSF', 'Pôle des Services Fonctionnels', 'Services Fonctionnels', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DSG', 'Service');
-DELETE FROM listmodels WHERE object_id = 'PSF' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('PSF', 'entity_id', 0, 'aackermann', 'user_id', 'dest', 'Services Fonctionnels','Services Fonctionnels', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'PSF', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'Services Fonctionnels','Services Fonctionnels', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'DSI';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (15, 'Pôle des Services Fonctionnels', 'Pôle des Services Fonctionnels', 'diffusionList', 15);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (15, 11, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (15, 12, 'entity', 'cc', 1);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DSI', 'Direction des Systèmes d''Information', 'Direction des Systèmes d''Information', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGS', 'Service');
-DELETE FROM listmodels WHERE object_id = 'DSI' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('DSI', 'entity_id', 0, 'ssissoko', 'user_id', 'dest', 'Direction des Systèmes d''Information','Direction des Systèmes d''Information', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'DSI', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'Direction des Systèmes d''Information','Direction des Systèmes d''Information', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'DSI', 'entity_id', 0, 'ccordy', 'user_id', 'cc', 'Direction des Systèmes d''Information','Direction des Systèmes d''Information', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'FIN';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (16, 'Direction des Systèmes d''Information', 'Direction des Systèmes d''Information', 'diffusionList', 16);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (16, 3, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (16, 12, 'entity', 'cc', 1);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (16, 2, 'user', 'cc', 2);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('FIN', 'Direction des Finances', 'Direction des Finances', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGS', 'Service');
-DELETE FROM listmodels WHERE object_id = 'FIN' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('FIN', 'entity_id', 0, 'sstar', 'user_id', 'dest', 'Direction des Finances','Direction des Finances', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'FIN', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'Direction des Finances','Direction des Finances', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'FIN', 'entity_id', 0, 'jjane', 'user_id', 'cc', 'Direction des Finances','Direction des Finances', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'PJU';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (17, 'Direction des Finances', 'Direction des Finances', 'diffusionList', 17);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (17, 14, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (17, 12, 'entity', 'cc', 1);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (17, 6, 'user', 'cc', 2);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PJU', 'Pôle Juridique', 'Pôle Juridique', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'FIN', 'Service');
-DELETE FROM listmodels WHERE object_id = 'PJU' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('PJU', 'entity_id', 0, 'jjonasz', 'user_id', 'dest', 'Pôle Juridique','Pôle Juridique', '', 'Y');
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ( 'PJU', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'Pôle Juridique','Pôle Juridique', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'ELUS';
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (18, 'Pôle Juridique', 'Pôle Juridique', 'diffusionList', 18);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (18, 20, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (18, 12, 'entity', 'cc', 1);
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('ELUS', 'Ensemble des élus', 'ELUS:Ensemble des élus', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'VILLE', 'Direction');
-DELETE FROM listmodels WHERE object_id = 'ELUS' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('ELUS', 'entity_id', 0, 'ddur', 'user_id', 'dest', 'ELUS:Ensemble des élus','ELUS:Ensemble des élus', '', 'Y');
-DELETE FROM entities WHERE entity_id = 'CCAS';
+
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('CCAS', 'Centre Communal d''Action Sociale', 'Centre Communal d''Action Sociale', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', '', 'Direction');
-DELETE FROM listmodels WHERE object_id = 'CCAS' AND object_type = 'entity_id';
-INSERT INTO listmodels (object_id, object_type, "sequence", item_id, item_type, item_mode, title, description, process_comment, visible) VALUES ('CCAS', 'entity_id', 0, 'jjane', 'user_id', 'dest', 'Centre Communal d''Action Sociale','Centre Communal d''Action Sociale', '', 'Y');
 
 -- Create BASKETS
 TRUNCATE TABLE baskets;
@@ -842,12 +828,12 @@ INSERT INTO contacts VALUES (1, 'title1', 'Jean-Louis', 'ERCOLANI', 'MAARCH', ''
 INSERT INTO contacts VALUES (2, 'title1', 'Karim', 'SY', 'MAARCH', '', 'Administrateur', '', 'Sacré Coeur 3', '', 'Villa 9653 4ème phase', '', 'DAKAR', 'SENEGAL', 'info@maarch.org', '', NULL, 'Editeur du logiciel libre Maarch', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
 INSERT INTO contacts VALUES (3, 'title1', 'Laurent', 'GIOVANNONI', 'MAARCH', '', 'Directeur Général Adjoint', '11', 'Boulevard du Sud-Est', NULL, '', '99000', 'MAARCH LES BAINS', 'FRANCE', 'info@maarch.org', '', NULL, 'Editeur du logiciel libre Maarch', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
 INSERT INTO contacts VALUES (4, 'title1', 'Nicolas', 'MARTIN', 'Préfecture de Maarch Les Bains', '', '', '13', 'RUE LA PREFECTURE', NULL, '', '', 'MAARCH LES BAINS', '', '', '', '{"url": "https://cchaplin:maarch@demo.maarchcourrier.com"}', 'Préfecture de Maarch Les Bains', 21, '2018-04-18 12:43:54.97424', '2018-04-18 16:28:38.498185', true, '{"m2m": "org_987654321_DGS_SF"}');
-INSERT INTO contacts VALUES (5, 'title1', 'Brigitte', 'BERGER', 'ACME', '', 'Directrice Générale', '25', 'PLACE DES MIMOSAS', NULL, '', '99000', 'MAARCH LES BAINS', 'FRANCE', 'info@maarch.org', '', NULL, 'Archivage et Conservation des Mémoires Electroniques', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
+INSERT INTO contacts VALUES (5, 'title2', 'Brigitte', 'BERGER', 'ACME', '', 'Directrice Générale', '25', 'PLACE DES MIMOSAS', NULL, '', '99000', 'MAARCH LES BAINS', 'FRANCE', 'info@maarch.org', '', NULL, 'Archivage et Conservation des Mémoires Electroniques', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
 INSERT INTO contacts VALUES (6, 'title1', 'Bernard', 'PASCONTENT', '', '', '', '25', 'route de Pampelone', NULL, '', '99000', 'MAARCH-LES-BAINS', '', 'bernard.pascontent@gmail.com', '06 08 09 07 55', NULL, '', 21, '2019-03-20 13:59:09.23436', NULL, true, '{}');
 INSERT INTO contacts VALUES (7, 'title1', 'Jacques', 'DUPONT', '', '', '', '1', 'rue du Peuplier', NULL, '', '92000', 'NANTERRE', '', '', '', NULL, '', 21, '2019-03-20 13:59:09.23436', NULL, true, '{}');
 INSERT INTO contacts VALUES (8, 'title1', 'Pierre', 'BRUNEL', '', '', '', '5', 'allée des Pommiers', NULL, '', '99000', 'MAARCH-LES-BAINS', '', 'info@maarch.org', '06 08 09 07 55', NULL, '', 21, '2019-03-20 13:59:09.23436', NULL, true, '{}');
 INSERT INTO contacts VALUES (9, 'title1', 'Eric', 'MACKIN', '', '', '', '13', 'rue du Square Carré', NULL, '', '99000', 'MAARCH-LES-BAINS', '', '', '06 11 12 13 14', NULL, '', 21, '2019-03-20 13:59:09.23436', NULL, true, '{}');
-INSERT INTO contacts VALUES (10, 'title1', 'Carole', 'COTIN', 'MAARCH', '', 'Directrice Administrative et Qualité', '11', 'Boulevard du Sud-Est', NULL, '', '99000', 'MAARCH LES BAINS', 'FRANCE', 'info@maarch.org', '', NULL, 'Editeur du logiciel libre Maarch', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
+INSERT INTO contacts VALUES (10, 'title2', 'Carole', 'COTIN', 'MAARCH', '', 'Directrice Administrative et Qualité', '11', 'Boulevard du Sud-Est', NULL, '', '99000', 'MAARCH LES BAINS', 'FRANCE', 'info@maarch.org', '', NULL, 'Editeur du logiciel libre Maarch', 21, '2015-04-24 12:43:54.97424', '2016-07-25 16:28:38.498185', true, '{}');
 INSERT INTO contacts VALUES (11, 'title1', 'Martin Donald', 'PELLE', '', '', '', '17', 'rue de la Demande', NULL, '', '99000', 'MAARCH-LES-BAINS', '', 'info@maarch.org', '01 23 24 21 22', NULL, '', 21, '2019-03-20 13:59:09.23436', NULL, true, '{}');
 
 select setval('contacts_id_seq', (select max(id)+1 from contacts), false);
@@ -960,11 +946,11 @@ INSERT INTO parameters (id, param_value_string, param_value_int, param_value_dat
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('folder_id_increment', '', 200, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('work_batch_autoimport_id', NULL, 1, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('postindexing_workbatch', NULL, 1, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '19.12', NULL, NULL);
+INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '20.03', NULL, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('user_quota', '', 0, NULL);
 INSERT INTO parameters (id, description, param_value_string, param_value_int, param_value_date) VALUES ('defaultDepartment', 'Département par défaut sélectionné dans le formulaire des adresses', NULL, 75, NULL);
-INSERT INTO parameters (id, description, param_value_string) VALUES ('homepage_message', 'Texte apparaissant dans la bannière sur la page d''accueil, mettre un espace pour supprimer la bannière.', '<p>D&eacute;couvrez <strong>Maarch Courrier 19.12</strong> avec <a title="notre guide de visite" href="https://docs.maarch.org/gitbook/html/MaarchCourrier/19.04/guu/home.html" target="_blank"><span style="color:#f99830;"><strong>notre guide de visite en ligne</strong></span></a>.</p>');
-INSERT INTO parameters (id, description, param_value_string) VALUES ('loginpage_message', 'Texte apparaissant sur la page de login.', '<h3><span style="color:#24b0ed"><strong>Découvrez votre application via</strong></span> <a title="le guide de visite" href="https://docs.maarch.org/gitbook/html/MaarchCourrier/19.04/guu/home.html" target="_blank"><span style="color:#f99830;"><strong>le guide de visite en ligne</strong></span></a></h3>');
+INSERT INTO parameters (id, description, param_value_string) VALUES ('homepage_message', 'Texte apparaissant dans la bannière sur la page d''accueil, mettre un espace pour supprimer la bannière.', '<p>D&eacute;couvrez <strong>Maarch Courrier 20.03</strong> avec <a title="notre guide de visite" href="https://docs.maarch.org/gitbook/html/MaarchCourrier/20.03/guu/home.html" target="_blank"><span style="color:#f99830;"><strong>notre guide de visite en ligne</strong></span></a>.</p>');
+INSERT INTO parameters (id, description, param_value_string) VALUES ('loginpage_message', 'Texte apparaissant sur la page de login.', '<h3><span style="color:#24b0ed"><strong>Découvrez votre application via</strong></span> <a title="le guide de visite" href="https://docs.maarch.org/gitbook/html/MaarchCourrier/20.03/guu/home.html" target="_blank"><span style="color:#f99830;"><strong>le guide de visite en ligne</strong></span></a></h3>');
 INSERT INTO parameters (id, description, param_value_string) VALUES ('thumbnailsSize', 'Résolution des imagettes', '750x900');
 INSERT INTO parameters (id, description, param_value_int) VALUES ('keepDestForRedirection', 'Si activé (1), met le destinataire en copie de la liste de diffusion lors d''une action de redirection', 0);
 INSERT INTO parameters (id, description, param_value_int) VALUES ('QrCodePrefix', 'Si activé (1), ajoute "Maarch_" dans le contenu des QrCode générés. (Utilisable avec MaarchCapture >= 1.4)', 0);
@@ -990,7 +976,7 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_pag
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (4,  '', 'Enregistrer les modifications', '_NOSTATUS_', 'N', 'confirm_status', 'N', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (5,  '', 'Remettre en traitement', 'COU', 'N', 'confirm_status', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (6,  '', 'Supprimer le courrier', 'DEL', 'N', 'confirm_status', 'Y', 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (18, 'indexing', 'Qualifier le courrier', '_NOSTATUS', 'N', 'confirm_status', 'Y', 'confirmAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (18, 'redirect', 'Qualifier le courrier', 'NEW', 'N', 'redirect', 'Y', 'redirectAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (19, '', 'Traiter courrier', 'COU', 'N', 'confirm_status', 'N', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (20, '', 'Cloturer', 'END', 'N', 'close_mail', 'Y', 'closeMailAction');
 INSERT INTO actions (id, label_action, id_status, is_system, history, component) VALUES (21, 'Enregistrer le courrier', 'INIT', 'N', 'Y', 'confirmAction');
@@ -1165,6 +1151,7 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 --GROUPBASKET_REDIRECT
 ------------
 TRUNCATE TABLE groupbasket_redirect;
+INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('COURRIER', 'QualificationBasket', 18, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('AGENT', 'MyBasket', 1, '', 'MY_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('AGENT', 'MyBasket', 1, '', 'ENTITIES_BELOW', 'ENTITY');
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES ('AGENT', 'MyBasket', 1, '', 'ENTITIES_JUST_UP', 'ENTITY');

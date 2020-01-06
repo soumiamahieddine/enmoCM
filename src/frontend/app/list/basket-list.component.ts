@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef, ApplicationRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
-import { merge, Observable, of as observableOf, Subject, Subscription } from 'rxjs';
+import { merge, Observable, of as observableOf, Subject, Subscription, of } from 'rxjs';
 import { NotificationService } from '../notification.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -300,7 +300,7 @@ export class BasketListComponent implements OnInit {
             Object.keys(element).forEach((key) => {
                 if (key == 'statusImage' && element[key] == null) {
                     element[key] = 'fa-question undefined';
-                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'folders'].indexOf(key) === -1) {
+                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'folders', 'hasDocument'].indexOf(key) === -1) {
                     element[key] = this.lang.undefined;
                 }
             });
@@ -488,7 +488,26 @@ export class BasketListComponent implements OnInit {
         window.open("../../rest/resources/" + row.resId + "/content?mode=view", "_blank");
     }
 
+    toggleMailTracking(row: any) {
+        if (!row.mailTracking) {
+            this.http.post('../../rest/resources/follow', {resources: [row.resId]}).pipe(
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.http.request('DELETE', '../../rest/resources/unfollow', { body: { resources: [row.resId] } }).pipe(
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
+        row.mailTracking = !row.mailTracking;
+    }
 }
+
 export interface BasketList {
     displayFolderTags: boolean;
     resources: any[];

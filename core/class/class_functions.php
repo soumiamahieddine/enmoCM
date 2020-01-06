@@ -707,7 +707,8 @@ class functions
     public function return_bytes($val)
     {
         $val = trim($val);
-        $last = strtolower($val{strlen($val)-1});
+        $strlen = strlen($val)-1;
+        $last = strtolower($val.$strlen);
         switch($last) {
             // 'G' modifier available since PHP 5.1.0
             case 'g':

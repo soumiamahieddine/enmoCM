@@ -110,7 +110,7 @@ class CustomFieldController
             return $response->withStatus(400)->withJson(['errors' => 'Custom field with this label already exists']);
         }
 
-        if (in_array($field['type'], ['select', 'checkbox', 'radio'])) {
+        if (in_array($field['type'], ['checkbox'])) {
             $values = json_decode($field['values'], true);
             foreach ($values as $key => $value) {
                 if (!empty($body['values'][$key]) && $body['values'][$key] != $value) {
@@ -121,6 +121,17 @@ class CustomFieldController
                     ]);
                     ResModel::update([
                         'postSet'   => ['custom_fields' => "jsonb_set(custom_fields, '{{$args['id']}}', (custom_fields->'{$args['id']}') - '{$value}')"],
+                        'where'     => ['1 = ?'],
+                        'data'      => [1]
+                    ]);
+                }
+            }
+        } elseif (in_array($field['type'], ['select', 'radio'])) {
+            $values = json_decode($field['values'], true);
+            foreach ($values as $key => $value) {
+                if (!empty($body['values'][$key]) && $body['values'][$key] != $value) {
+                    ResModel::update([
+                        'postSet'   => ['custom_fields' => "jsonb_set(custom_fields, '{{$args['id']}}', '\"{$body['values'][$key]}\"')"],
                         'where'     => ['1 = ?'],
                         'data'      => [1]
                     ]);

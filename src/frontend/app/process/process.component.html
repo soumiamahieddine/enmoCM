@@ -25,13 +25,6 @@
             <ng-container *ngIf="currentTool === 'dashboard'">
                 <div
                     style="display: flex;align-items: center;justify-content: flex-end;margin-top: 10px;margin-bottom: -20px;">
-                    <button mat-button class="categoryLabel" (click)="toggleMailTracking()"
-                        [title]="currentResourceInformations.mailtracking ? lang.untrackThisMail : lang.trackThisMail">
-                        {{currentResourceInformations.mailtracking ? lang.untrackThisMail : lang.trackThisMail}}
-                        <mat-icon color="primary"
-                            class="{{currentResourceInformations.mailtracking ? 'fas':'far'}} fa-star"
-                            style="font-size: 20px;"></mat-icon>
-                    </button>
                 </div>
                 <div class="banner" [style.borderColor]="currentPriorityColor">
                     <div class="title" (click)="currentTool = 'history'">
@@ -172,6 +165,10 @@
                             <div class="title-divider"></div>
                         </div>
                         <div class="content">
+                            <button mat-button class="categoryLabel" (click)="toggleFollow()">
+                                <mat-icon color="primary" class="{{this.resourceFollowed ? 'fas':'far'}} fa-star"
+                                          style="font-size: 20px;"></mat-icon>
+                            </button>
                             <div class="content-item" *ngIf="this.currentResourceInformations.priority !== undefined">
                                 <b><i class="fas fa-flag" [style.color]="this.currentResourceInformations.priorityColor"
                                         style="font-size: 25px;padding-right: 20px;"></i>

@@ -40,9 +40,6 @@ require_once 'modules'.DIRECTORY_SEPARATOR.'visa'.DIRECTORY_SEPARATOR
         }
     }
 
-    // Fill session with listmodel
-    $_SESSION[$origin]['diff_list'] = $diffList->get_listmodel($objectType, $objectId);
-    $_SESSION[$origin]['diff_list']['difflist_type'] = $_SESSION[$origin]['diff_list']['object_type'];
     $roles = $diffList->list_difflist_roles();
     $circuit = $_SESSION[$origin]['diff_list'];
     if (!isset($circuit['visa']['users']) && !isset($circuit['sign']['users'])) {

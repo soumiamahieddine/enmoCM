@@ -5,6 +5,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
+import { NgForm } from '@angular/forms';
 
 declare function $j(selector: any): any;
 
@@ -17,6 +18,7 @@ export class SendmailAdministrationComponent implements OnInit {
 
     @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
+    @ViewChild('sendmailForm', { static: false }) public sendmailFormCpt: NgForm;
 
     lang: any = LANG;
     loading: boolean = false;
@@ -112,13 +114,17 @@ export class SendmailAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
-        this.http.put('../../rest/configurations/admin_email_server', this.sendmail)
-            .subscribe((data: any) => {
-                this.sendmailClone = JSON.parse(JSON.stringify(this.sendmail));
-                this.notify.success(this.lang.configurationUpdated);
-            }, (err) => {
-                this.notify.handleErrors(err);
-            });
+        if (this.sendmailFormCpt.invalid) {
+            this.notify.handleErrors({'error': {'errors': this.lang.notSavedBecauseInvalid}});
+        } else {
+            this.http.put('../../rest/configurations/admin_email_server', this.sendmail)
+                .subscribe((data: any) => {
+                    this.sendmailClone = JSON.parse(JSON.stringify(this.sendmail));
+                    this.notify.success(this.lang.configurationUpdated);
+                }, (err) => {
+                    this.notify.handleErrors(err);
+                });
+        }
     }
 
     checkModif() {

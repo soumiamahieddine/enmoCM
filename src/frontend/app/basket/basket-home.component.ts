@@ -19,6 +19,7 @@ export class BasketHomeComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = true;
+    hoverEditGroupOrder: boolean = false;
 
     homeData: any = null;
     @Input('currentBasketInfo') currentBasketInfo: any = {

@@ -40,6 +40,7 @@
             <file>test/unitTests/app/folder/FolderControllerTest.php</file>
             <file>test/unitTests/app/configuration/ConfigurationControllerTest.php</file>
             <file>test/unitTests/app/tag/TagControllerTest.php</file>
+            <file>test/unitTests/app/tag/UserFollowedResourceControllerTest.php</file>
             <!-- The last one should be history -->
             <file>test/unitTests/app/history/HistoryControllerTest.php</file>
         </testsuite>

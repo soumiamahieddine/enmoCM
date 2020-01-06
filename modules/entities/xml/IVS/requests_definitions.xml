@@ -14,11 +14,6 @@
 		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="select_listmodels" >
-		<parameter name="page" value="select_listmodels"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="save_list_diff" >
 		<parameter name="page" value="save_list_diff"/>
 		<parameter name="display" value="true"/>
@@ -84,47 +79,6 @@
     </requestDefinition>
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="admin_difflist_type_validate" >
 		<parameter name="page" value="admin_difflist_type_validate"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="admin_listmodels" >
-		<parameter name="page" value="admin_listmodels"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="admin_listmodel" >
-		<parameter name="page" value="admin_listmodel"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_listmodel" >
-		<parameter name="page" value="admin_listmodel"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_listmodel_setObjectId">
-		<parameter name="page" value="admin_listmodel_setObjectId"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_listmodel_validateHeader">
-		<parameter name="page" value="admin_listmodel_validateHeader"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_listmodel_save">
-		<parameter name="page" value="admin_listmodel_save"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="admin_listmodel_save">
-		<parameter name="page" value="admin_listmodel_save"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="admin_listmodel_setObjectType">
-		<parameter name="page" value="admin_listmodel_setObjectType"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="admin_listmodel_setObjectType">
-		<parameter name="page" value="admin_listmodel_setObjectType"/>
-		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="check_user_entities">

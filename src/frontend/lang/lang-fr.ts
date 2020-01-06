@@ -1,3 +1,5 @@
+declare var angularGlobals: any;
+
 export const LANG_FR = {
     "actives"                               : "Actif(s)",
     "ARsimple"                              : "AR simple",
@@ -1394,16 +1396,23 @@ export const LANG_FR = {
     "additionals": "Complément(s)",
     "denomination": "Dénomination",
     "moreInfos" : "Plus d'informations",
-    "confirmCloseEditor" : "Etes-vous sûr de fermer l'éditeur ? Toutes les modifications seront annulées",
+    "confirmCloseEditor" : "Etes-vous sûr de vouloir fermer l'éditeur ? Toutes les modifications seront annulées",
     "onlyNumber" : "Chiffre uniquement",
     "found": "trouvée",
     "here": "ici",
     "toCopyAddress": "pour copier son adresse",
     "badFormat": "Format incorrect",
-    "contactFilledTo": "Contact rempli à",
+    "contactFilledTo": "Complétude à",
     "targetFillingField": "Champ cible de complétude",
     "arGenWithModelMessage" : "Les fiches de liaisons seront générées avec les champs définis dans le model d'enregistrement du courrier.",
     "createContact": "Créer un contact",
     "diffusionListUpdated": "Liste de diffusion mise à jour",
     "saveModifications": "Sauvegarder les modifications",
+    "communicationMean": "Moyen de communication",
+    "communicationMeanDesc": "Lie un contact à une autre instance de maarch",
+    "see": "voir",
+    "notSavedBecauseInvalid": "La configuration n'a pas été mise à jour car des données sont invalides",
+    "deleteAll": "Tout supprimer",
+    "followedMail": "Courrier(s) suivi(s)",
+    "stopFollowingAlert": "Voulez-vous arrêter de suivre ce(s) courrier(s) ?"
 };

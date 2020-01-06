@@ -118,6 +118,11 @@
                                                 (change)="toggleRes($event,row)" (click)="$event.stopPropagation();">
                                             </mat-checkbox>
                                         </span>
+                                        <span style="width:30px;">
+                                            <mat-icon [title]="row.mailTracking === true ? lang.untrackThisMail : lang.trackThisMail" color="primary" style="cursor: pointer;"
+                                                [ngClass]="[row.mailTracking === true ? 'fas fa-star' : 'far fa-star']" (click)="$event.stopPropagation();toggleMailTracking(row)">
+                                            </mat-icon>
+                                        </span>
                                         <span *ngIf="!appService.getViewMode()" style="cursor:pointer;" class="main-info-status" (click)="launch(defaultAction,row);">
                                             <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}" [ngStyle]="{'color': row.priorityColor}" color="primary"
                                                 class="{{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}} {{row.statusImage}} {{row.statusImage.charAt(0)}}{{row.statusImage.charAt(1)}}-2x">
@@ -160,7 +165,8 @@
                                                 <mat-icon fontSet="fas" fontIcon="fa-sitemap fa-2x" [color]="snav2.opened && row.checked && currentMode == 'diffusion' ? 'primary' : ''"></mat-icon>
                                             </button>
                                             <button mat-icon-button title="{{lang.viewResource}}" (click)="$event.stopPropagation();viewDocument(row)"
-                                                (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();">
+                                                (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();"
+                                                [disabled]="!row.hasDocument">
                                                 <mat-icon  fontSet="fas" fontIcon="fa-eye fa-2x"></mat-icon>
                                             </button>
                                             <button mat-icon-button title="{{lang.linkDetails}}"

@@ -149,15 +149,6 @@ abstract class visa_Abstract extends Database
 
     public function saveModelWorkflow($id_list, $workflow, $typeList, $title)
     {
-        require_once 'modules/entities/class/class_manage_listdiff.php';
-        $diff_list = new diffusion_list();
-
-        $diff_list->save_listmodel(
-            $workflow,
-            $typeList,
-            $id_list,
-            $title
-        );
     }
 
     protected function getWorkflowsNumberByTitle($title)
@@ -402,15 +393,8 @@ abstract class visa_Abstract extends Database
             $str .= ' $j("#visaUserList").chosen({width: "250px", disable_search_threshold: 10});';
             $str .= '</script>';
 
-            require_once 'modules/entities/class/class_manage_listdiff.php';
-            $diff_list = new diffusion_list();
-            $listModels = $diff_list->select_listmodels($typeList);
-
             $str .= ' <select data-placeholder="'._ADD_VISA_MODEL.'" name="modelList" id="modelList" onchange="loadVisaModelUsers();">';
             $str .= '<option value=""></option>';
-            foreach ($listModels as $lm) {
-                $str .= '<option value="'.$lm['object_id'].'">'.$lm['title'].'</option>';
-            }
             $str .= '</select>';
 
             $str .= '<script>';

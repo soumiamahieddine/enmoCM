@@ -56,7 +56,7 @@ class ContactControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody(), true);
 
         $this->assertSame(self::$id, $responseBody['id']);
-        $this->assertSame($args['civility'], $responseBody['civility']);
+        $this->assertSame($args['civility'], $responseBody['civility']['id']);
         $this->assertSame($args['firstname'], $responseBody['firstname']);
         $this->assertSame($args['lastname'], $responseBody['lastname']);
         $this->assertSame($args['company'], $responseBody['company']);
@@ -142,7 +142,7 @@ class ContactControllerTest extends TestCase
         $responseBody = json_decode((string)$response->getBody(), true);
 
         $this->assertSame(self::$id, $responseBody['id']);
-        $this->assertSame($args['civility'], $responseBody['civility']);
+        $this->assertSame($args['civility'], $responseBody['civility']['id']);
         $this->assertNull($responseBody['firstname']);
         $this->assertSame($args['lastname'], $responseBody['lastname']);
         $this->assertSame($args['company'], $responseBody['company']);

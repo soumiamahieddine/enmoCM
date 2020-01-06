@@ -156,8 +156,14 @@ class ListInstanceController
                     }
                 }
 
-                if ($instance['item_type'] == 'user_id') {
-                    $user = UserModel::getByLogin(['login' => $instance['item_id'], 'select' => ['id']]);
+                if (in_array($instance['item_type'], ['user_id', 'user'])) {
+                    if ($instance['item_type'] == 'user_id') {
+                        $user = UserModel::getByLogin(['login' => $instance['item_id'], 'select' => ['id']]);
+                    } else {
+                        $user = UserModel::getById(['id' => $instance['item_id'], 'select' => ['id', 'user_id']]);
+                        $instance['item_id'] = $user['user_id'] ?? null;
+                        $instance['item_type'] = 'user_id';
+                    }
                     if (empty($user)) {
                         DatabaseModel::rollbackTransaction();
                         return ['errors' => 'User not found', 'code' => 400];
@@ -173,9 +179,16 @@ class ListInstanceController
                             return ['errors' => 'User has not enough privileges', 'code' => 400];
                         }
                     }
-                } elseif ($instance['item_type'] == 'entity_id') {
-                    $entity = EntityModel::getByEntityId(['entityId' => $instance['item_id']]);
-                    if (empty($entity) || $entity['enabled'] != "Y") {
+                } elseif (in_array($instance['item_type'], ['entity_id', 'entity'])) {
+                    if ($instance['item_type'] == 'entity_id') {
+                        $entity = EntityModel::getByEntityId(['entityId' => $instance['item_id'], 'select' => ['enabled']]);
+                    } else {
+                        $entity = EntityModel::getById(['id' => $instance['item_id'], 'select' => ['enabled', 'entity_id']]);
+                        $instance['item_id'] = $entity['entity_id'] ?? null;
+                        $instance['item_type'] = 'entity_id';
+                    }
+
+                    if (empty($entity) || $entity['enabled'] != 'Y') {
                         DatabaseModel::rollbackTransaction();
                         return ['errors' => 'Entity not found or not active', 'code' => 400];
                     }
@@ -192,8 +205,8 @@ class ListInstanceController
                     'item_mode'         => $instance['item_mode'],
                     'added_by_user'     => $currentUser['user_id'],
                     'difflist_type'     => $instance['difflist_type'],
-                    'process_date'      => $instance['process_date'],
-                    'process_comment'   => $instance['process_comment'],
+                    'process_date'      => $instance['process_date'] ?? null,
+                    'process_comment'   => $instance['process_comment'] ?? null,
                     'viewed'            => empty($instance['viewed']) ? 0 : $instance['viewed']
                 ]);
 
@@ -233,8 +246,8 @@ class ListInstanceController
                     'item_mode'                 => $listInstance['item_mode'],
                     'added_by_user'             => $listInstance['added_by_user'],
                     'difflist_type'             => $listInstance['difflist_type'],
-                    'process_date'              => $listInstance['process_date'],
-                    'process_comment'           => $listInstance['process_comment']
+                    'process_date'              => $listInstance['process_date'] ?? null,
+                    'process_comment'           => $listInstance['process_comment'] ?? null
                 ]);
             }
         }

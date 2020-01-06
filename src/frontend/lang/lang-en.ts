@@ -1356,7 +1356,7 @@ export const LANG_EN = {
     "additionals": "Additional(s)",
     "denomination": "Denomination",
     "moreInfos" : "More data",
-    "confirmCloseEditor" : "Do you really want to close editor ? All modifications will be canceled",
+    "confirmCloseEditor" : "Do you really want to close the editor ? All modifications will be canceled",
     "onlyNumber" : "Number only",
     "found": "found",
     "here": "here",
@@ -1368,4 +1368,11 @@ export const LANG_EN = {
     "createContact": "Create a contact",
     "diffusionListUpdated": "Diffusion list updated",
     "saveModifications": "Save modifications",
+    "communicationMean": "Communication mean",
+    "communicationMeanDesc": "Link a contact with another Maarch instance",
+    "see": "see",
+    "notSavedBecauseInvalid": "Configuration not updated because some datas are invalid",
+    "deleteAll": "Delete all",
+    "followedMail": "Followed mail(s)",
+    "stopFollowingAlert": "Do you want to stop following these mails ?"
 };

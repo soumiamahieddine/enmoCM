@@ -21,6 +21,23 @@ DROP TABLE IF EXISTS contact_purposes;
 DROP TABLE IF EXISTS contact_types;
 DROP TABLE IF EXISTS contacts_v2;
 
+UPDATE CONTACTS SET civility = null WHERE civility = '';
+UPDATE CONTACTS SET firstname = null WHERE firstname = '';
+UPDATE CONTACTS SET lastname = null WHERE lastname = '';
+UPDATE CONTACTS SET company = null WHERE company = '';
+UPDATE CONTACTS SET department = null WHERE department = '';
+UPDATE CONTACTS SET function = null WHERE function = '';
+UPDATE CONTACTS SET address_number = null WHERE address_number = '';
+UPDATE CONTACTS SET address_street = null WHERE address_street = '';
+UPDATE CONTACTS SET address_additional1 = null WHERE address_additional1 = '';
+UPDATE CONTACTS SET address_additional2 = null WHERE address_additional2 = '';
+UPDATE CONTACTS SET address_postcode = null WHERE address_postcode = '';
+UPDATE CONTACTS SET address_town = null WHERE address_town = '';
+UPDATE CONTACTS SET address_country = null WHERE address_country = '';
+UPDATE CONTACTS SET email = null WHERE email = '';
+UPDATE CONTACTS SET phone = null WHERE phone = '';
+UPDATE CONTACTS SET notes = null WHERE notes = '';
+
 ALTER TABLE acknowledgement_receipts ALTER COLUMN contact_id set not null;
 ALTER TABLE acknowledgement_receipts DROP COLUMN IF EXISTS contact_address_id;
 ALTER TABLE contacts_groups_lists ALTER COLUMN contact_id set not null;
@@ -55,6 +72,8 @@ ALTER TABLE shippings DROP COLUMN IF EXISTS is_version;
 ALTER TABLE priorities DROP COLUMN IF EXISTS default_priority;
 
 DROP TABLE IF EXISTS doctypes_indexes;
+
+DROP TABLE IF EXISTS listmodels;
 
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_t1;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_t2;

@@ -16,6 +16,7 @@ import { IndexationComponent }              from './indexation/indexation.compon
 import { ForgotPasswordComponent }          from './login/forgotPassword/forgotPassword.component';
 import { UpdatePasswordComponent }          from './login/updatePassword/updatePassword.component';
 import { ProcessComponent } from './process/process.component';
+import {FollowedDocumentListComponent} from "./home/followed-list/followed-document-list.component";
 
 @NgModule({
     imports: [
@@ -34,6 +35,7 @@ import { ProcessComponent } from './process/process.component';
             { path: 'indexing/:groupId', canActivate: [AppGuard],component: IndexationComponent },
             { path: 'forgot-password', component: ForgotPasswordComponent },
             { path: 'update-password', component: UpdatePasswordComponent },
+            { path: 'followed', canActivate: [AppGuard], component: FollowedDocumentListComponent },
             { path: '**',  redirectTo: 'home', pathMatch: 'full' },
         ], { useHash: true }),
     ],

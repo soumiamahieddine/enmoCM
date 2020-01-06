@@ -65,8 +65,6 @@ abstract class entities_Abstract extends functions
                 (string) $tablename->ent_entities;
             $_SESSION['tablename']['ent_users_entities'] =
                 (string) $tablename->ent_users_entities;
-            $_SESSION['tablename']['ent_listmodels'] =
-                (string) $tablename->ent_listmodels;
             $_SESSION['tablename']['ent_listinstance'] =
                    (string) $tablename->ent_listinstance;
             $_SESSION['tablename']['ent_groupbasket_redirect'] =

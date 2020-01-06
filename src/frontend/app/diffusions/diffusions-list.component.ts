@@ -1,14 +1,13 @@
-import { Component, Input, OnInit, Renderer2, Output, EventEmitter } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { LANG } from '../translate.component';
-import { NotificationService } from '../notification.service';
-import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
-import { FormControl } from '@angular/forms';
-import { tap, exhaustMap, finalize, map, catchError } from 'rxjs/operators';
-import { of, forkJoin } from 'rxjs';
-import { filter } from 'minimatch';
-import { AlertComponent } from '../../plugins/modal/alert.component';
-import { MatDialog } from '@angular/material';
+import {Component, EventEmitter, Input, OnInit, Output, Renderer2} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {LANG} from '../translate.component';
+import {NotificationService} from '../notification.service';
+import {CdkDragDrop, transferArrayItem} from '@angular/cdk/drag-drop';
+import {FormControl} from '@angular/forms';
+import {catchError, finalize, map, tap} from 'rxjs/operators';
+import {forkJoin, of} from 'rxjs';
+import {AlertComponent} from '../../plugins/modal/alert.component';
+import {MatDialog} from '@angular/material';
 
 declare function $j(selector: any): any;
 
@@ -134,7 +133,7 @@ export class DiffusionsListComponent implements OnInit {
             arrayRoutes.push(this.http.get('../../rest/roles?context=' + this.target));
         }
 
-        arrayRoutes.push(this.http.get('../../rest/listTemplates/entities/' + entityId));
+        arrayRoutes.push(this.http.get('../../rest/listTemplates/entities/' + entityId + '?type=diffusionList'));
 
         if (this.resId !== null) {
             arrayRoutes.push(this.http.get('../../rest/resources/' + this.resId + '/listInstance'));
@@ -177,13 +176,16 @@ export class DiffusionsListComponent implements OnInit {
                 }
             }),
             tap((data: any) => {
-                data.listTemplate.forEach((element: any) => {
-                    if (element.item_mode == 'cc') {
-                        this.diffList['copy'].items.push(element);
-                    } else if (element.object_type != 'VISA_CIRCUIT') {
-                        this.diffList[element.item_mode].items.push(element);
-                    }
-                });
+                if (data.listTemplates[0]) {
+                    data.listTemplates[0].items.forEach((element: any) => {
+                        element.difflist_type = 'entity_id';
+                        if (element.item_mode == 'cc') {
+                            this.diffList['copy'].items.push(element);
+                        } else {
+                            this.diffList[element.item_mode].items.push(element);
+                        }
+                    });
+                }
             }),
             tap((data: any) => {
                 if (data.listInstance !== undefined) {
@@ -297,7 +299,7 @@ export class DiffusionsListComponent implements OnInit {
                 resId: this.resId,
                 listInstances: this.getCurrentListinstance()
             }
-        ]
+        ];
         this.http.put('../../rest/listinstances', listInstance).pipe(
             tap((data: any) => {
                 if (data && data.errors != null) {
@@ -373,7 +375,7 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     changeDest(user: any) {
-        const newDest = {
+        this.diffList['dest'].items[0] = {
             difflist_type: "entity_id",
             item_type: "user_id",
             item_id: user.user_id,
@@ -381,7 +383,6 @@ export class DiffusionsListComponent implements OnInit {
             descriptionToDisplay: user.descriptionToDisplay,
             item_mode: "dest"
         };
-        this.diffList['dest'].items[0] = newDest;
     }
 
     getDestUser() {
@@ -396,16 +397,16 @@ export class DiffusionsListComponent implements OnInit {
         if (this.diffList["copy"].items.map((e: any) => { return e.item_id; }).indexOf(element.id) == -1) {
             let itemType = '';
             if (element.type == 'user') {
-                itemType = 'user_id';
+                itemType = 'user';
             } else {
-                itemType = 'entity_id';
+                itemType = 'entity';
             }
 
             const newElemListModel = {
                 userId: element.serialId,
                 difflist_type: "entity_id",
                 item_type: itemType,
-                item_id: element.id,
+                item_id: element.serialId,
                 labelToDisplay: element.idToDisplay,
                 descriptionToDisplay: element.descriptionToDisplay,
                 item_mode: "copy"
@@ -453,7 +454,7 @@ export class DiffusionsListComponent implements OnInit {
     switchUserWithOldDest(user: any, oldRole: any) {
         this.http.get("../../rest/users/" + user.userId + "/entities").pipe(
             map((data: any) => {
-                data.entities = data.entities.map((entity: any) => entity.id)
+                data.entities = data.entities.map((entity: any) => entity.id);
                 return data;
             }),
             tap((data: any) => {
@@ -500,7 +501,7 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     changeUserRole(user: any, oldRole: any, newRole: any) {
-        let indexFound = -1;
+        let indexFound: number;
 
         indexFound = this.diffList[oldRole.id].items.map((item: any) => item.id).indexOf(user.id);
 
@@ -522,7 +523,7 @@ export class DiffusionsListComponent implements OnInit {
                     return {
                         id: item.item_id,
                         mode: role,
-                        type: item.item_type === 'user_id' ? 'user' : 'entity'
+                        type: item.item_type === 'user' ? 'user' : 'entity'
                     }
                 })
             );
@@ -532,18 +533,10 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     canUpdateRoles() {
-        if (this.availableRoles.filter((role: any) => role.canUpdate === true).length > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.availableRoles.filter((role: any) => role.canUpdate === true).length > 0;
     }
 
     isModified() {
-        if (JSON.stringify(this.diffListClone) !== JSON.stringify(this.getCurrentListinstance())) {
-            return true;
-        } else {
-            return false;
-        }
+        return JSON.stringify(this.diffListClone) !== JSON.stringify(this.getCurrentListinstance());
     }
 }

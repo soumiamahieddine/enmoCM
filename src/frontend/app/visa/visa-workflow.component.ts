@@ -48,17 +48,15 @@ export class VisaWorkflowComponent implements OnInit {
 
         this.visaWorkflow.items = [];
 
-        let route = this.linkedToMaarchParapheur === true ? `../../rest/listTemplates/entities/${entityId}/maarchParapheur` : `../../rest/listTemplates/entities/${entityId}`;
+        let route = this.linkedToMaarchParapheur === true ? `../../rest/listTemplates/entities/${entityId}?type=visaCircuit&maarchParapheur=true` : `../../rest/listTemplates/entities/${entityId}?type=visaCircuit`;
         
         this.http.get(route)
             .subscribe((data: any) => {
-                data.listTemplate.forEach((element: any) => {
-                    if (element.object_type === 'VISA_CIRCUIT') {
-                        element.requested_signature = (element.item_mode === 'visa' ? false : true);
-                        this.visaWorkflow.items.push(element);
-                    }
-                });
+                if (data.listTemplates[0]) {
+                    this.visaWorkflow.items = data.listTemplates[0].items;
+                }
                 this.visaWorkflow.items.forEach((element: any) => {
+                    element.requested_signature = element.item_mode !== 'visa';
                     if (element.externalId.maarchParapheur !== undefined) {
                         this.http.get("../../rest/maarchParapheur/user/" + element.externalId.maarchParapheur + "/picture")
                             .subscribe((data: any) => {
@@ -119,7 +117,7 @@ export class VisaWorkflowComponent implements OnInit {
             'labelToDisplay': userRest.idToDisplay,
             'requested_signature': false,
             'picture': ''
-        }
+        };
         this.visaWorkflow.items.push(user);
         this.http.get("../../rest/maarchParapheur/user/" + user.externalId.maarchParapheur + "/picture")
             .subscribe((data: any) => {

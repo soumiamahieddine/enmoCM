@@ -11,7 +11,7 @@
 
 .mat-chip.mat-standard-chip {
     color: white;
-    background-color: lighten($primary,10%);
+    background-color: lighten($primary, 10%);
 }
 
 .noResult {
@@ -40,7 +40,7 @@
 }
 
 .mat-card:hover {
-    box-shadow: inset 0px 0px 5px 0px rgba(0,0,0,0.12);
+    box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, 0.12);
 }
 
 .itemList {
@@ -96,6 +96,10 @@
 
 .contact-item {
     height: 20px !important;
+
+    ::ng-deep.mat-list-text {
+        padding-left: 0px !important;
+    }
 }
 
 .mat-card-title {
@@ -128,6 +132,7 @@
     padding: 0px !important;
     margin: 0;
 }
+
 .mat-list-item-content {
     padding: 0px;
 }
@@ -141,6 +146,11 @@
     height: auto !important;
     padding-top: 5px;
     padding-bottom: 5px;
+    
+    ::ng-deep.mat-list-text {
+        padding-left: 0px !important;
+    }
+    
     ::ng-deep.mat-list-item-content {
         padding-top: 0px !important;
         padding-bottom: 0px !important;
@@ -151,5 +161,17 @@
     position: absolute;
     right: 8px;
     border-radius: 10px;
-    box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.75);
+}
+
+.create-contact {
+    text-align: center;
+    display: flex;
+    height: auto;
+    position: sticky;
+    bottom: 0px;
+    width: 95px;
+    padding: 0px;
+    background: white;
+    box-shadow: 1px 0px 2px 0px rgba(0,0,0,0.12);
 }

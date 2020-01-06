@@ -426,7 +426,7 @@ class AutoCompleteController
         ]);
 
         $users = DatabaseModel::select([
-            'select'    => ['DISTINCT users.user_id', 'users.firstname', 'users.lastname'],
+            'select'    => ['DISTINCT users.id', 'users.firstname', 'users.lastname'],
             'table'     => ['users, usergroup_content, usergroups, usergroups_services'],
             'where'     => $requestData['where'],
             'data'      => $requestData['data'],
@@ -438,7 +438,7 @@ class AutoCompleteController
         foreach ($users as $value) {
             $data[] = [
                 'type'          => 'user',
-                'id'            => $value['user_id'],
+                'id'            => $value['id'],
                 'idToDisplay'   => "{$value['firstname']} {$value['lastname']}",
                 'otherInfo'     => ''
             ];

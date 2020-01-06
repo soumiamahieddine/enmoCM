@@ -31,6 +31,7 @@ use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceListModel;
+use Resource\models\UserFollowedResourceModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -74,10 +75,14 @@ class ResourceListController
 
         $resIds = ResourceListController::getIdsWithOffsetAndLimit(['resources' => $rawResources, 'offset' => $data['offset'], 'limit' => $data['limit']]);
 
-        $allResources = [];
-        foreach ($rawResources as $resource) {
-            $allResources[] = $resource['res_id'];
-        }
+        $followedDocuments = UserFollowedResourceModel::get([
+	    'select' => ['res_id'],
+            'where'  => ['user_id = ?'],
+            'data'   => [$GLOBALS['id']],
+        ]);
+
+        $trackedMails = array_column($followedDocuments, 'res_id');
+        $allResources = array_column($rawResources, 'res_id');
 
         $formattedResources = [];
         $defaultAction = [];
@@ -101,7 +106,8 @@ class ResourceListController
             $select = [
                 'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'res_letterbox.alt_identifier',
                 'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"', 'priorities.color AS "priorities.color"',
-                'res_letterbox.closing_date', 'res_letterbox.locker_user_id', 'res_letterbox.locker_time', 'res_letterbox.confidentiality'
+                'res_letterbox.closing_date', 'res_letterbox.locker_user_id', 'res_letterbox.locker_time', 'res_letterbox.confidentiality',
+                'res_letterbox.filename as res_filename'
             ];
             $tableFunction = ['status', 'priorities'];
             $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.priority = priorities.id'];
@@ -145,7 +151,8 @@ class ResourceListController
                 'userId'        => $GLOBALS['id'],
                 'attachments'   => $attachments,
                 'checkLocked'   => true,
-                'listDisplay'   => $listDisplay
+                'listDisplay'   => $listDisplay,
+                'trackedMails'  => $trackedMails
             ]);
 
             $defaultAction['component'] = $groupBasket[0]['list_event'];
@@ -772,6 +779,8 @@ class ResourceListController
             $formattedResources[$key]['priorityColor']      = $resource['priorities.color'];
             $formattedResources[$key]['closing_date']       = $resource['closing_date'];
             $formattedResources[$key]['countAttachments']   = 0;
+            $formattedResources[$key]['hasDocument']        = $resource['res_filename'] != null;
+            $formattedResources[$key]['mailTracking']       = in_array($resource['res_id'], $args['trackedMails']);
             foreach ($attachments as $attachment) {
                 if ($attachment['res_id_master'] == $resource['res_id']) {
                     $formattedResources[$key]['countAttachments'] = $attachment['count'];

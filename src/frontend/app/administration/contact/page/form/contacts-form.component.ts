@@ -5,22 +5,26 @@ import { NotificationService } from '../../../../notification.service';
 import { HeaderService } from '../../../../../service/header.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../../../service/app.service';
-import { Observable, merge, Subject, of as observableOf, of } from 'rxjs';
-import { MatPaginator, MatSort, MatDialog } from '@angular/material';
-import { startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize, count } from 'rxjs/operators';
-import { FormControl, Validators, ValidatorFn, FormGroup, FormBuilder } from '@angular/forms';
+import { Observable, of as observableOf, of, empty } from 'rxjs';
+import { MatDialog } from '@angular/material';
+import { switchMap, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize, map } from 'rxjs/operators';
+import { FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ContactService } from '../../../../../service/contact.service';
+
+declare var angularGlobals: any;
 
 @Component({
     selector: 'app-contact-form',
     templateUrl: "contacts-form.component.html",
     styleUrls: ['contacts-form.component.scss'],
-    providers: [NotificationService, AppService]
+    providers: [NotificationService, AppService, ContactService]
 })
 export class ContactsFormComponent implements OnInit {
 
     @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
+
 
     lang: any = LANG;
     loading: boolean = false;
@@ -29,6 +33,8 @@ export class ContactsFormComponent implements OnInit {
     @Input() contactId: number = null;
 
     @Output() onSubmitEvent = new EventEmitter<number>();
+
+    maarch2GecUrl: string = `https://docs.maarch.org/gitbook/html/MaarchCourrier/${angularGlobals.applicationVersion.split('.')[0] + '.' + angularGlobals.applicationVersion.split('.')[1]}/guat/guat_exploitation/maarch2gec.html`;
 
     contactUnit = [
         {
@@ -210,6 +216,30 @@ export class ContactsFormComponent implements OnInit {
             display: false,
             filling: false,
             values: []
+        },
+        {
+            id: 'communicationMeans',
+            unit: 'complement',
+            label: this.lang.communicationMean,
+            desc: `${this.lang.communicationMeanDesc} (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
+            type: 'string',
+            control: new FormControl(),
+            required: false,
+            display: false,
+            filling: false,
+            values: []
+        },
+        {
+            id: 'externalId_maarch2maarch',
+            unit: 'complement',
+            label: this.lang.siretCode,
+            desc: `Doit correspondre au numéro SIRET d'une entité dans l'instance destinatrice (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
+            type: 'string',
+            control: new FormControl(),
+            required: false,
+            display: false,
+            filling: false,
+            values: []
         }
     ];
 
@@ -225,6 +255,7 @@ export class ContactsFormComponent implements OnInit {
     fillingParameters: any = null;
     fillingRate: any = {
         class: 'warn',
+        color: this.contactService.getFillingColor('first'),
         value: 0
     }
 
@@ -237,7 +268,8 @@ export class ContactsFormComponent implements OnInit {
         private notify: NotificationService,
         private headerService: HeaderService,
         public appService: AppService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        private contactService: ContactService,
     ) { }
 
     ngOnInit(): void {
@@ -263,7 +295,7 @@ export class ContactsFormComponent implements OnInit {
                 tap((data: any) => {
                     this.initCustomElementForm(data);
                     this.initAutocompleteAddressBan();
-                    
+
                 }),
                 finalize(() => this.loading = false),
                 catchError((err: any) => {
@@ -282,7 +314,7 @@ export class ContactsFormComponent implements OnInit {
                 tap((data: any) => {
                     this.fillingParameters = data.contactsFilling;
                     this.initElemForm(data);
-                    
+
                 }),
                 exhaustMap(() => this.http.get("../../rest/civilities")),
                 tap((data: any) => {
@@ -294,8 +326,14 @@ export class ContactsFormComponent implements OnInit {
                     this.initAutocompleteAddressBan();
                 }),
                 exhaustMap(() => this.http.get("../../rest/contacts/" + this.contactId)),
+                map((data: any) => {
+                    //data.civility = this.contactService.formatCivilityObject(data.civility);
+                    data.fillingRate = this.contactService.formatFillingObject(data.fillingRate);
+                    return data;
+                }),
                 tap((data) => {
                     this.setContactData(data);
+                    this.setContactDataExternal(data);
                 }),
                 filter((data: any) => data.customFields !== null),
                 tap((data: any) => {
@@ -336,6 +374,7 @@ export class ContactsFormComponent implements OnInit {
                 targetField = this.contactForm.filter(contact => contact.id === field.id)[0];
             }
             if (targetField !== undefined) {
+
                 if ((element.filling && this.creationMode) || element.mandatory) {
                     targetField.display = true;
                 }
@@ -382,10 +421,10 @@ export class ContactsFormComponent implements OnInit {
             valArr = [];
             field = this.contactForm.filter(contact => contact.id === 'customField_' + element.id)[0];
 
-            if (field !== undefined) {    
+            if (field !== undefined) {
                 field.label = element.label;
                 field.type = element.type;
-                field.values = element.values.map((value: any) => {return {id: value, label: value}});
+                field.values = element.values.map((value: any) => { return { id: value, label: value } });
                 if (element.type === 'integer') {
                     valArr.push(Validators.pattern(/^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/));
                     field.control.setValidators(valArr);
@@ -396,21 +435,66 @@ export class ContactsFormComponent implements OnInit {
 
     setContactData(data: any) {
         let indexField = -1;
+
         Object.keys(data).forEach(element => {
             indexField = this.contactForm.map(field => field.id).indexOf(element);
+
             if (!this.isEmptyValue(data[element]) && indexField > -1) {
-                this.contactForm[indexField].control.setValue(data[element]);
+                if (element == 'civility') {
+                    this.contactForm[indexField].control.setValue(data[element].id);
+                } else {
+                    this.contactForm[indexField].control.setValue(data[element]);
+                }
+
+                if (element == 'company' && this.isEmptyValue(this.contactForm.filter(contact => contact.id === 'lastname')[0].control.value)) {
+                    this.contactForm.filter(contact => contact.id === 'lastname')[0].display = false;
+                } else if (element == 'lastname' && this.isEmptyValue(this.contactForm.filter(contact => contact.id === 'company')[0].control.value)) {
+                    this.contactForm.filter(contact => contact.id === 'company')[0].display = false;
+                }
+                
                 this.contactForm[indexField].display = true;
             }
         });
+
+        if (this.isEmptyValue(this.contactForm.filter(contact => contact.id === 'company')[0].control.value) && !this.isEmptyValue(this.contactForm.filter(contact => contact.id === 'lastname')[0].control.value)) {
+            this.contactForm.filter(contact => contact.id === 'company')[0].display = false;
+        }
+
         this.checkFilling();
+    }
+
+    setContactDataExternal(data: any) {
+
+        if (data.externalId !== undefined) {
+            Object.keys(data.externalId).forEach(id => {
+               
+                if (!this.isEmptyValue(data.externalId[id])) {
+                    if (id === 'maarch2maarch') {
+                        this.contactForm.filter(contact => contact.id === 'externalId_maarch2maarch')[0].control.setValue(data.externalId[id]);
+                        this.contactForm.filter(contact => contact.id === 'externalId_maarch2maarch')[0].display = true;
+                    } else {
+                        this.contactForm.push({
+                            id: `externalId_${id}`,
+                            unit: 'complement',
+                            label: id,
+                            type: 'string',
+                            control: new FormControl({ value: data.externalId[id], disabled: true }),
+                            required: false,
+                            display: true,
+                            filling: false,
+                            values: []
+                        });
+                    }
+                }
+            });
+        }        
     }
 
     setContactCustomData(data: any) {
         let indexField = -1;
         Object.keys(data.customFields).forEach(element => {
             indexField = this.contactForm.map(field => field.id).indexOf('customField_' + element);
-            if (!this.isEmptyValue(data[element]) && indexField > -1) {
+            if (!this.isEmptyValue(data.customFields[element]) && indexField > -1) {
                 this.contactForm[indexField].control.setValue(data.customFields[element]);
                 this.contactForm[indexField].display = true;
             }
@@ -493,11 +577,15 @@ export class ContactsFormComponent implements OnInit {
     formatContact() {
         let contact: any = {};
         contact['customFields'] = {};
+        contact['externalId'] = {};
         const regex = /customField_[.]*/g;
+        const regex2 = /externalId_[.]*/g;
 
         this.contactForm.filter(field => field.display).forEach(element => {
             if (element.id.match(regex) !== null) {
                 contact['customFields'][element.id.split('_')[1]] = element.control.value;
+            } else if (element.id.match(regex2) !== null) {
+                contact['externalId'][element.id.split('_')[1]] = element.control.value;
             } else {
                 contact[element.id] = element.control.value;
             }
@@ -535,7 +623,7 @@ export class ContactsFormComponent implements OnInit {
 
     isEmptyValue(value: string) {
 
-        if (value === null) {
+        if (value === null || value === undefined) {
             return true;
 
         } else if (Array.isArray(value)) {
@@ -552,8 +640,8 @@ export class ContactsFormComponent implements OnInit {
     }
 
     checkCompany(field: any) {
-        if (field.id === 'company' && (this.companyFound === null || this.companyFound.company !== field.control.value)) {
 
+        if (field.id === 'company' && field.control.value !== '' && (this.companyFound === null || this.companyFound.company !== field.control.value)) {
             this.http.get(`../../rest/autocomplete/contacts/company?search=${field.control.value}`).pipe(
                 tap(() => this.companyFound = null),
                 filter((data: any) => data.length > 0),
@@ -566,6 +654,8 @@ export class ContactsFormComponent implements OnInit {
                     return of(false);
                 })
             ).subscribe();
+        } else if (field.id === 'company' && field.control.value === '') {
+            this.companyFound = null;
         }
     }
 
@@ -612,7 +702,7 @@ export class ContactsFormComponent implements OnInit {
                 field.required = true;
                 return false;
             }
-        } else if (field.required) {
+        } else if (field.required || field.control.disabled) {
             return false;
         } else {
             return true;
@@ -727,10 +817,13 @@ export class ContactsFormComponent implements OnInit {
         this.fillingRate.value = Math.round((countValNotEmpty * 100) / countFilling);
 
         if (this.fillingRate.value <= this.fillingParameters.first_threshold) {
+            this.fillingRate.color = this.contactService.getFillingColor('first');
             this.fillingRate.class = 'warn';
         } else if (this.fillingRate.value <= this.fillingParameters.second_threshold) {
+            this.fillingRate.color = this.contactService.getFillingColor('second');
             this.fillingRate.class = 'primary';
         } else {
+            this.fillingRate.color = this.contactService.getFillingColor('third');
             this.fillingRate.class = 'accent';
         }
     }

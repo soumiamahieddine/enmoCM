@@ -12,6 +12,7 @@ import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap,
 import { LatinisePipe } from 'ngx-pipes';
 import { PrivilegeService } from '../../../service/privileges.service';
 import { ContactModalComponent } from '../../administration/contact/modal/contact-modal.component';
+import { ContactService } from '../../../service/contact.service';
 
 @Component({
     selector: 'app-contact-autocomplete',
@@ -20,7 +21,7 @@ import { ContactModalComponent } from '../../administration/contact/modal/contac
         'contact-autocomplete.component.scss',
         '../../indexation/indexing-form/indexing-form.component.scss'
     ],
-    providers: [NotificationService, AppService, SortPipe]
+    providers: [NotificationService, AppService, SortPipe, ContactService]
 })
 
 export class ContactAutocompleteComponent implements OnInit {
@@ -35,6 +36,8 @@ export class ContactAutocompleteComponent implements OnInit {
     canAdd: boolean = false;
     canUpdate: boolean = false;
 
+    noResultFound: boolean = null;
+
     listInfo: string;
     myControl = new FormControl();
     filteredOptions: Observable<string[]>;
@@ -42,6 +45,7 @@ export class ContactAutocompleteComponent implements OnInit {
     valuesToDisplay: any = {};
     dialogRef: MatDialogRef<any>;
     newIds: number[] = [];
+    customFields: any[] = [];
 
     /**
      * FormControl used when autocomplete is used in form and must be catched in a form control.
@@ -60,7 +64,8 @@ export class ContactAutocompleteComponent implements OnInit {
         private headerService: HeaderService,
         public appService: AppService,
         private latinisePipe: LatinisePipe,
-        private privilegeService: PrivilegeService
+        private privilegeService: PrivilegeService,
+        private contactService: ContactService,
     ) {
 
     }
@@ -69,6 +74,7 @@ export class ContactAutocompleteComponent implements OnInit {
         this.controlAutocomplete.setValue(this.controlAutocomplete.value === null || this.controlAutocomplete.value === '' ? [] : this.controlAutocomplete.value);
         this.canAdd = this.privilegeService.hasCurrentUserPrivilege('create_contacts');
         this.canUpdate = this.privilegeService.hasCurrentUserPrivilege('update_contacts');
+        this.getCustomFields();
         this.initFormValue();
         this.initAutocompleteRoute();
     }
@@ -78,20 +84,35 @@ export class ContactAutocompleteComponent implements OnInit {
         this.options = [];
         this.myControl.valueChanges
             .pipe(
-                //tap((value) => this.canAdd = value.length === 0 ? false : true),
+                tap(() => {
+                    this.noResultFound = null;
+                    this.options = [];
+                    this.listInfo = this.lang.autocompleteInfo;
+                }),
                 debounceTime(300),
                 filter(value => value.length > 2),
-                distinctUntilChanged(),
+                //distinctUntilChanged(),
                 tap(() => this.loading = true),
                 switchMap((data: any) => this.getDatas(data)),
                 map((data: any) => {
                     data = data.filter((contact: any) => !this.singleMode || (contact.type !== 'contactGroup' && this.singleMode));
+                      
+                    data = data.map((contact: any) => {
+                        return {
+                            ...contact,
+                            civility: this.contactService.formatCivilityObject(contact.civility),
+                            fillingRate: this.contactService.formatFillingObject(contact.fillingRate),
+                            customFields: contact.customFields !== undefined ? this.formatCustomField(contact.customFields) : [],
+                        }
+                    });
                     return data;
                 }),
                 tap((data: any) => {
                     if (data.length === 0) {
+                        this.noResultFound = true;
                         this.listInfo = this.lang.noAvailableValue;
                     } else {
+                        this.noResultFound = false;
                         this.listInfo = '';
                     }
                     this.options = data;
@@ -99,6 +120,32 @@ export class ContactAutocompleteComponent implements OnInit {
                     this.loading = false;
                 })
             ).subscribe();
+    }
+
+    getCustomFields() {
+        this.http.get("../../rest/contactsCustomFields").pipe(
+            tap((data: any) => {
+                this.customFields = data.customFields.map((custom: any) => {
+                    return {
+                        id: custom.id,
+                        label: custom.label
+                    }
+                })
+            })
+        ).subscribe();
+    }
+
+    formatCustomField(data: any) {
+        let arrCustomFields: any[] = [];
+
+        Object.keys(data).forEach(element => {
+            arrCustomFields.push({
+                label: this.customFields.filter(custom => custom.id == element)[0].label,
+                value: data[element]
+            });
+        });
+
+        return arrCustomFields;
     }
 
     getDatas(data: string) {
@@ -222,6 +269,7 @@ export class ContactAutocompleteComponent implements OnInit {
     resetAutocomplete() {
         this.options = [];
         this.listInfo = this.lang.autocompleteInfo;
+        this.myControl.setValue('');
     }
 
     private _filter(value: string): string[] {
@@ -286,5 +334,10 @@ export class ContactAutocompleteComponent implements OnInit {
         } else {
             return true;
         }
+    }
+
+    resetAll() {
+        this.controlAutocomplete.setValue([]);
+        this.valuesToDisplay = {};
     }
 }

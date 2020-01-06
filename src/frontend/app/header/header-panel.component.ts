@@ -19,7 +19,7 @@ export class HeaderPanelComponent implements OnInit {
     config      : any       = {};
 
 
-    @Input('navButton') navButton: any = null;
+    @Input('navButton') navButton: any = {icon: 'fa fa-home', route : '/home'};
     @Input('snavLeft') snavLeft: MatSidenav;
     
     constructor(

@@ -446,4 +446,4 @@ define("_DATE_LOCALE", "en_US.utf8");
 
 define("_USER_PREFERENCE_UPDATED", "User preferences updated");
 
-define("_NO_SENDERS", "No sender(s) linked to resource");
+define("_NO_SENDERS", "No sender linked to resource");

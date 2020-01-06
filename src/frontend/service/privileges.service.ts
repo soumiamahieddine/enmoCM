@@ -133,7 +133,7 @@ export class PrivilegeService {
             "comment": this.lang.contactsAdmin,
             "route": "/administration/contacts",
             "unit": "production",
-            "style": "fa fa-book",
+            "style": "fa fa-address-book",
             "angular" : true,
             "hasParams" : false
         },
@@ -588,11 +588,11 @@ export class PrivilegeService {
     getCurrentUserShortcuts(): Array<menu> {
         let shortcuts: any[] = [
             {
-                "id": "home",
-                "label": this.lang.home,
-                "comment": this.lang.home,
-                "route": "/home",
-                "style": "fa fa-home",
+                "id": "followed",
+                "label": this.lang.followedMail,
+                "comment": this.lang.followedMail,
+                "route": "/followed",
+                "style": "fas fa-star",
                 "unit": "application",
                 "angular": true,
                 "shortcut" : true
