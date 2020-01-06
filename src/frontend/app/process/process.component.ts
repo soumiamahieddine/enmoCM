@@ -257,12 +257,12 @@ export class ProcessComponent implements OnInit {
                     tap((data: any) => {
                         const arrInfo = [];
 
-                        if (data.firstname === '' && data.lastname === '') {
+                        if (this.empty(data.firstname) && this.empty(data.lastname)) {
                             this.senderLightInfo = { 'displayName': data.company, 'filling': data.filling };
                         } else {
                             arrInfo.push(data.firstname);
                             arrInfo.push(data.lastname);
-                            if (data.company !== '') {
+                            if (!this.empty(data.company)) {
                                 arrInfo.push('('+data.company+')');
                             }
                             
@@ -482,6 +482,24 @@ export class ProcessComponent implements OnInit {
             this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
         } else if (this.currentTool === 'diffusionList') {
             this.appDiffusionsList.saveListinstance();
+        }
+    }
+
+    empty(value: string) {
+
+        if (value === null || value === undefined) {
+            return true;
+
+        } else if (Array.isArray(value)) {
+            if (value.length > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (String(value) !== '') {
+            return false;
+        } else {
+            return true;
         }
     }
 }
