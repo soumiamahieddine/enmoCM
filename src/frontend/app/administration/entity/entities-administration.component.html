@@ -274,7 +274,7 @@
                     <mat-tab label="{{lang.avis}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;" id="opinionCircuitContent">
                             <div class="col-md-12">
-                                <plugin-autocomplete [labelPlaceholder]="lang.addVisaSignUser" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users/circuit?circuit=opinion']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelOpinion($event)"></plugin-autocomplete>
+                                <plugin-autocomplete [labelPlaceholder]="lang.addUser" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users/circuit?circuit=opinion']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelOpinion($event)"></plugin-autocomplete>
                                 <mat-list *ngIf="currentEntity.opinionCircuit">
                                     <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.opinionCircuit.items">
                                         <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.opinionCircuit.items; let i = index" title="{{lang.move}}"

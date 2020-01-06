@@ -52,13 +52,6 @@ foreach ($customs as $custom) {
         } else {
             $title = $value['object_id'];
         }
-        if (!empty($value['title'])) {
-            $title = $value['title'];
-        } elseif (!empty($value['description'])) {
-            $title = $value['description'];
-        } else {
-            $title = $value['object_id'];
-        }
 
         $listTemplateId = \Entity\models\ListTemplateModel::create([
             'title'         => $title,
