@@ -113,12 +113,12 @@
                                         </span>
                                     </div>
                                     <div class="main-info">
-                                        <span style="width:50px;">
+                                        <span style="width:50px;height: 16px;">
                                             <mat-checkbox color="primary" [checked]="row.checked"
                                                 (change)="toggleRes($event,row)" (click)="$event.stopPropagation();">
                                             </mat-checkbox>
                                         </span>
-                                        <button mat-button (click)="$event.stopPropagation();toggleMailTracking(row)" style="margin-left: -25px; color: #F99830"
+                                        <button mat-icon-button (click)="$event.stopPropagation();toggleMailTracking(row)" style="margin-left: -25px; color: #F99830"
                                             [title]="row.mailTracking === true ? lang.untrackThisMail : lang.trackThisMail">
                                             <mat-icon [ngClass]="[row.mailTracking === true ? 'fas fa-star' : 'far fa-star']"></mat-icon>
                                         </button>
