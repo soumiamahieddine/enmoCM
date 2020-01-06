@@ -11,6 +11,7 @@ import { RouterModule }                         from '@angular/router';
 import { DragDropModule }                         from '@angular/cdk/drag-drop';
 
 /*PLUGINS IMPORTS*/
+import { CustomSnackbarComponent, NotificationService }              from './notification.service';
 import { SortPipe }                             from '../plugins/sorting.pipe';
 import { PdfViewerModule }                      from 'ng2-pdf-viewer';
 //import { SimplePdfViewerModule }                from 'simple-pdf-viewer';
@@ -122,7 +123,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         DragDropDirective,
         EcplOnlyofficeViewerComponent,
         ContactAutocompleteComponent,
-        ContactsFormComponent
+        ContactsFormComponent,
+        CustomSnackbarComponent
     ],
     exports: [
         CommonModule,
@@ -170,12 +172,14 @@ export class MyHammerConfig extends HammerGestureConfig {
         HeaderService,
         LatinisePipe,
         CookieService,
+        NotificationService,
         {
             provide: HAMMER_GESTURE_CONFIG,
             useClass: MyHammerConfig
         }
     ],
     entryComponents: [
+        CustomSnackbarComponent,
         IndexingGroupModalComponent,
         AlertComponent,
         ConfirmComponent

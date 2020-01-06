@@ -11,22 +11,23 @@ import {
 import './onlyoffice-api.js';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Subject, Observable, of } from 'rxjs';
-import { catchError, tap, filter, exhaustMap } from 'rxjs/operators';
+import { catchError, tap, filter, exhaustMap, first, finalize } from 'rxjs/operators';
 import { LANG } from '../../app/translate.component';
 import { ConfirmComponent } from '../modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material';
+import { NotificationService } from '../../app/notification.service';
 
 declare var DocsAPI: any;
 
 @Component({
     selector: 'onlyoffice-viewer',
-    template: `<button mat-mini-fab color="warn" style="position: absolute;right: 6px;top: 12px;" (click)="quit()">
-    <mat-icon class="fa fa-times" style="height:auto;"></mat-icon>
-  </button><div id="placeholder"></div>`,
+    template: `<div *ngIf="loading" style="display:block;padding: 10px;">{{lang.checkOnlyofficeServer}}...</div><button mat-mini-fab color="warn" [title]="lang.closeEditor" style="position: absolute;right: 6px;top: 12px;" (click)="quit()"><mat-icon class="fa fa-times" style="height:auto;"></mat-icon></button><div id="placeholder"></div>`
 })
 export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
 
     lang: any = LANG;
+
+    loading: boolean = true;
 
     @Input() editMode: boolean = false;
     @Input() file: any = {};
@@ -61,7 +62,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
             this.getEncodedDocument(response.data);
         }
     }
-    constructor(public http: HttpClient, public dialog: MatDialog) { }
+    constructor(public http: HttpClient, public dialog: MatDialog, private notify: NotificationService) { }
 
     quit() {
         this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.close, msg: this.lang.confirmCloseEditor } });
@@ -103,34 +104,90 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
     }
 
 
-    ngOnInit() {
+    async ngOnInit() {
         this.key = this.generateUniqueId();
-        this.http.get(`../../rest/onlyOffice/configuration`,).pipe(
-            tap((data: any) => {
-                if (data.enabled) {
-                    this.onlyfficeUrl = data.serverUri;
-                    this.appUrl =  data.coreUrl;
-                } else {
+
+        await this.getServerConfiguration();
+
+        await this.checkServerStatus();
+
+        await this.getMergedFileTemplate();
+
+        this.initOfficeEditor();
+
+        this.loading = false;
+    }
+
+    getServerConfiguration() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/onlyOffice/configuration`).pipe(
+                tap((data: any) => {
+                    if (data.enabled) {
+                        this.onlyfficeUrl = data.serverUri;
+                        this.appUrl = data.coreUrl;
+                        resolve(true);
+                    } else {
+                        this.triggerCloseEditor.emit();
+                    }
+                }),
+                catchError((err) => {
+                    this.notify.handleErrors(err);
                     this.triggerCloseEditor.emit();
-                }
-            }),
-            filter((data: any) => data.enabled),
-            exhaustMap(() => this.http.post(`../../${this.params.docUrl}`, { objectId: this.params.objectId, objectType: this.params.objectType, onlyOfficeKey: this.key, data : this.params.dataToMerge })),
-            tap((data: any) => {
-                this.tmpFilename = data.filename;
+                    return of(false);
+                }),
+            ).subscribe();
+        }); 
+    }
 
-                this.file = {
-                    name: this.key,
-                    format: data.filename.split('.').pop(),
-                    type: null,
-                    contentMode: 'base64',
-                    content: null,
-                    src: null
-                };
 
-                this.initOfficeEditor();
-            })
-        ).subscribe();
+    checkServerStatus() {
+        return new Promise((resolve, reject) => {
+            const regex = /127\.0\.0\.1/g;
+            const regex2 = /localhost/g;
+            if (this.appUrl.match(regex) !== null || this.appUrl.match(regex2) !== null) {
+                this.notify.error(`${this.lang.errorOnlyoffice1}`);
+                this.triggerCloseEditor.emit();
+            } else {
+                this.http.get(`../../rest/onlyOffice/available`).pipe(
+                    tap((data: any) => {
+                        if (data.isAvailable) {
+                            resolve(true);
+                        } else {
+                            this.notify.error(`${this.lang.errorOnlyoffice2} ${this.onlyfficeUrl}`);
+                            this.triggerCloseEditor.emit();
+                        }
+                    }),
+                    catchError((err) => {
+                        return of(false);
+                    }),
+                ).subscribe();
+            }
+        });
+    }
+
+    getMergedFileTemplate() {
+        return new Promise((resolve, reject) => {
+            this.http.post(`../../${this.params.docUrl}`, { objectId: this.params.objectId, objectType: this.params.objectType, onlyOfficeKey: this.key, data: this.params.dataToMerge }).pipe(
+                tap((data: any) => {
+                    this.tmpFilename = data.filename;
+    
+                    this.file = {
+                        name: this.key,
+                        format: data.filename.split('.').pop(),
+                        type: null,
+                        contentMode: 'base64',
+                        content: null,
+                        src: null
+                    };
+                    resolve(true);
+                }),
+                catchError((err) => {
+                    this.notify.handleErrors(err);
+                    this.triggerCloseEditor.emit();
+                    return of(false);
+                }),
+            ).subscribe();
+        });
     }
 
     generateUniqueId(length: number = 5) {

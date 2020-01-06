@@ -2,7 +2,6 @@ import { NgModule }                             from '@angular/core';
 
 import { SharedModule }                         from './app-common.module';
 
-import { CustomSnackbarComponent, NotificationService }              from './notification.service';
 import { ConfirmModalComponent }                from './confirmModal.component';
 import { FiltersListService }                   from '../service/filtersList.service';
 
@@ -106,7 +105,6 @@ import { ContactModalComponent } from './administration/contact/modal/contact-mo
         SignatureBookComponent,
         SafeUrlPipe,
         SaveNumericPackageComponent,
-        CustomSnackbarComponent,
         ConfirmModalComponent,
         InfoChangePasswordModalComponent,
         ActivateUserComponent,
@@ -162,10 +160,9 @@ import { ContactModalComponent } from './administration/contact/modal/contact-mo
         ContactsListModalComponent,
         ContactModalComponent,
         FollowedDocumentListComponent,
-        FollowedActionListComponent
+        FollowedActionListComponent,
     ],
     entryComponents: [
-        CustomSnackbarComponent,
         ConfirmModalComponent,
         InfoChangePasswordModalComponent,
         AttachmentsListComponent,
@@ -194,7 +191,7 @@ import { ContactModalComponent } from './administration/contact/modal/contact-mo
         ContactsListModalComponent,
         ContactModalComponent
     ],
-    providers: [ FiltersListService, FoldersService, ActionsService, NotificationService, PrivilegeService ],
+    providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule { }

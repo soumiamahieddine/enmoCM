@@ -1374,5 +1374,9 @@ export const LANG_EN = {
     "notSavedBecauseInvalid": "Configuration not updated because some data are invalid",
     "deleteAll": "Delete all",
     "followedMail": "Followed mail(s)",
-    "stopFollowingAlert": "Do you want to stop following these mails ?"
+    "stopFollowingAlert": "Do you want to stop following these mails ?",
+    "checkOnlyofficeServer": "Establish contact with the Onlyoffice server",
+    "closeEditor" : "Close the editor",
+    "errorOnlyoffice1" : "Cannot launch onlyoffice, a local address is used",
+    "errorOnlyoffice2" : "Cannot launch onlyoffice. Check if the only office server is available",
 };
