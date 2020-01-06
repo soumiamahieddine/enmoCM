@@ -1396,7 +1396,7 @@ export const LANG_NL = {
     "communicationMean": "Communication mean", //_TO_TRANSLATE
     "communicationMeanDesc": "Link a contact with another Maarch instance", //_TO_TRANSLATE
     "see": "see", //_TO_TRANSLATE
-    "notSavedBecauseInvalid": "Configuration not updated because some datas are invalid", //_TO_TRANSLATE
+    "notSavedBecauseInvalid": "Configuration not updated because some data are invalid", //_TO_TRANSLATE
     "deleteAll": "Delete all", //_TO_TRANSLATE
     "followedMail": "Followed mail(s)", //_TO_TRANSLATE
     "stopFollowingAlert": "Do you want to stop following these mails ?", //_TO_TRANSLATE
