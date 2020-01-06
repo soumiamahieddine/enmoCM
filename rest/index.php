@@ -362,7 +362,7 @@ $app->get('/resources/{resId}/users/{userId}/groups/{groupId}/baskets/{basketId}
 $app->post('/resources/follow', \Resource\controllers\UserFollowedResourceController::class . ':follow');
 $app->delete('/resources/unfollow', \Resource\controllers\UserFollowedResourceController::class . ':unFollow');
 $app->get('/followedResources', \Resource\controllers\UserFollowedResourceController::class . ':getFollowedResources');
-$app->get('/followedResources/{resId}/baskets', \Resource\controllers\UserFollowedResourceController::class . ':getBasketsFromFolder');
+$app->get('/followedResources/{resId}/baskets', \Resource\controllers\UserFollowedResourceController::class . ':getBaskets');
 $app->get('/followedResources/filters', \Resource\controllers\UserFollowedResourceController::class . ':getFilters');
 $app->get('/followedResources/count', \Resource\controllers\UserFollowedResourceController::class . ':getNumberOfFollowedResources');
 

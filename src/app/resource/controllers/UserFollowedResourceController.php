@@ -156,7 +156,8 @@ class UserFollowedResourceController
                     'resources'     => $resources,
                     'userId'        => $GLOBALS['id'],
                     'attachments'   => $attachments,
-                    'checkLocked'   => false
+                    'checkLocked'   => false,
+                    'trackedMails'  => $followedResources,
                 ]);
             }
 
@@ -166,7 +167,7 @@ class UserFollowedResourceController
         return $response->withJson(['resources' => $formattedResources, 'countResources' => $count, 'allResources' => $allResources]);
     }
 
-    public function getBasketsFromFolder(Request $request, Response $response, array $args)
+    public function getBaskets(Request $request, Response $response, array $args)
     {
         if (!Validator::numeric()->notEmpty()->validate($args['resId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
