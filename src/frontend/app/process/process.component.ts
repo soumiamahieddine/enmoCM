@@ -230,6 +230,7 @@ export class ProcessComponent implements OnInit {
         this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}?light=true`).pipe(
             tap((data: any) => {
                 this.currentResourceInformations = data;
+                this.resourceFollowed = data.followed;
                 this.loadBadges();
                 this.loadSenders();
                 this.headerService.setHeader(this.lang.eventProcessDoc, this.lang[this.currentResourceInformations.categoryId]);
