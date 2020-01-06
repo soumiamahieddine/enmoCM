@@ -21,6 +21,7 @@ import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { FollowedActionListComponent } from '../followed-action-list/followed-action-list.component';
 import { FiltersListService } from '../../../service/filtersList.service';
 import { trigger, transition, style, animate } from '@angular/animations';
+import {MenuShortcutComponent} from "../../menu/menu-shortcut.component";
 
 
 declare function $j(selector: any): any;
@@ -100,6 +101,8 @@ export class FollowedDocumentListComponent implements OnInit {
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild('tableBasketListSort', { static: true }) sort: MatSort;
     @ViewChild('basketHome', { static: true }) basketHome: BasketHomeComponent;
+
+    @ViewChild('menuShortcut', { static: true }) menuShortcut: MenuShortcutComponent;
 
     constructor(
         private router: Router,
@@ -309,7 +312,6 @@ export class FollowedDocumentListComponent implements OnInit {
     }
 
     open({ x, y }: MouseEvent, row: any) {
-        console.log('opening menu...');
         let thisSelect = { checked: true };
         let thisDeselect = { checked: false };
         if (row.checked === false) {

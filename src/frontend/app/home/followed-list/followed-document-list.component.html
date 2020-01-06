@@ -3,7 +3,7 @@
         [fixedInViewport]="appService.getViewMode()" [opened]="appService.getViewMode() ? false : true"
         autoFocus="false" style="overflow-x:hidden;" [ngStyle]="{'width': appService.getViewMode() ? '80%' : '350px'}">
         <header-panel [snavLeft]="snav"></header-panel>
-        <menu-shortcut></menu-shortcut>
+        <menu-shortcut #menuShortcut></menu-shortcut>
         <menu-nav></menu-nav>
         <basket-home #basketHome [snavL]="snav"></basket-home>
         <mat-divider></mat-divider>
@@ -54,7 +54,7 @@
                         </span>
                         <span style="float:right;height: 56px;margin-top: 11px;">
                             <app-followed-action-list #actionsList [contextMode]="false" [currentFolderInfo]="folderInfo"
-                                [totalRes]="allResInBasket.length" [selectedRes]="selectedRes"
+                                [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [menuShortcut]="menuShortcut"
                                 (refreshEvent)="refreshDaoAfterAction()">
                             </app-followed-action-list>
                         </span>
@@ -171,5 +171,6 @@
     </mat-sidenav>
 </mat-sidenav-container>
 <app-followed-action-list #actionsListContext [contextMode]="true" [currentFolderInfo]="folderInfo"
-    [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" (refreshEvent)="refreshDaoAfterAction()">
+    [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" (refreshEvent)="refreshDaoAfterAction()"
+    [menuShortcut]="menuShortcut">
 </app-followed-action-list>

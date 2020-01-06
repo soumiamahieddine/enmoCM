@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { filter, exhaustMap, tap, map } from 'rxjs/operators';
 import { HeaderService } from '../../../service/header.service';
+import {MenuShortcutComponent} from "../../menu/menu-shortcut.component";
 
 @Component({
     selector: 'app-followed-action-list',
@@ -43,24 +44,24 @@ export class FollowedActionListComponent implements OnInit {
     @Input('contextMode') contextMode: boolean;
     @Input('currentFolderInfo') currentFolderInfo: any;
 
+    @Input('menuShortcut') menuShortcut: MenuShortcutComponent;
+
     @Output('refreshEvent') refreshEvent = new EventEmitter<string>();
     @Output('refreshPanelFolders') refreshPanelFolders = new EventEmitter<string>();
 
     constructor(
-        public http: HttpClient, 
-        private notify: NotificationService, 
-        public dialog: MatDialog, 
+        public http: HttpClient,
+        private notify: NotificationService,
+        public dialog: MatDialog,
         private router: Router,
         private headerService: HeaderService,
         ) { }
 
     dialogRef: MatDialogRef<any>;
-    
+
     ngOnInit(): void { }
 
     open(x: number, y: number, row: any) {
-
-        console.log('menu opened');
         // Adjust the menu anchor position
         this.contextMenuPosition.x = x + 'px';
         this.contextMenuPosition.y = y + 'px';
@@ -93,6 +94,7 @@ export class FollowedActionListComponent implements OnInit {
                 this.notify.success(this.lang.removedFromFolder);
                 this.refreshFolders();
                 this.refreshDaoAfterAction();
+                this.menuShortcut.loadShortcuts();
             })
         ).subscribe();
     }
