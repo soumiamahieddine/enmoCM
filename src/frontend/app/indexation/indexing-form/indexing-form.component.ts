@@ -883,24 +883,6 @@ export class IndexingFormComponent implements OnInit {
 
     toggleMailTracking() {
         this.arrFormControl['mail­tracking'].setValue(!this.arrFormControl['mail­tracking'].value);
-
-        if (this.mode !== 'indexation') {
-            if (this.arrFormControl['mail­tracking'].value) {
-                this.http.post('../../rest/resources/follow', {resources: [this.resId]}).pipe(
-                    catchError((err: any) => {
-                        this.notify.handleErrors(err);
-                        return of(false);
-                    })
-                ).subscribe();
-            } else {
-                this.http.request('DELETE', '../../rest/resources/unfollow', { body: { resources: [this.resId] } }).pipe(
-                    catchError((err: any) => {
-                        this.notify.handleErrors(err);
-                        return of(false);
-                    })
-                ).subscribe();
-            }
-        }
     }
 
     changeCategory(categoryId: string) {

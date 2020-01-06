@@ -138,6 +138,8 @@ export class ProcessComponent implements OnInit {
     senderLightInfo: any = { 'displayName': null, 'fillingRate': null };
     hasContact: boolean = false;
 
+    resourceFollowed: boolean = false;
+
     constructor(
         private route: ActivatedRoute,
         private _activatedRoute: ActivatedRoute,
@@ -500,6 +502,26 @@ export class ProcessComponent implements OnInit {
             return false;
         } else {
             return true;
+        }
+    }
+
+    toggleFollow() {
+        this.resourceFollowed = !this.resourceFollowed;
+
+        if (this.resourceFollowed) {
+            this.http.post('../../rest/resources/follow', {resources: [this.currentResourceInformations.resId]}).pipe(
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.http.request('DELETE', '../../rest/resources/unfollow', {body: {resources: [this.currentResourceInformations.resId]}}).pipe(
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
         }
     }
 }
