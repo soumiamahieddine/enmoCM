@@ -145,9 +145,6 @@ $app->post('/convertedFile', \Convert\controllers\ConvertPdfController::class . 
 $app->get('/convertedFile/{filename}', \Convert\controllers\ConvertPdfController::class . ':getConvertedFileByFilename');
 
 //ContentManagement
-$app->post('/onlyOfficeCallback', function (\Slim\Http\Request $request, \Slim\Http\Response $response) {
-    return $response->withJson(['error' => 0]);
-});
 $app->post('/jnlp', \ContentManagement\controllers\JnlpController::class . ':generateJnlp');
 $app->get('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':renderJnlp');
 $app->post('/jnlp/{jnlpUniqueId}', \ContentManagement\controllers\JnlpController::class . ':processJnlp');
@@ -157,6 +154,10 @@ $app->get('/onlyOffice/configuration', \ContentManagement\controllers\OnlyOffice
 $app->post('/onlyOffice/mergedFile', \ContentManagement\controllers\OnlyOfficeController::class . ':saveMergedFile');
 $app->get('/onlyOffice/mergedFile', \ContentManagement\controllers\OnlyOfficeController::class . ':getMergedFile');
 $app->get('/onlyOffice/encodedFile', \ContentManagement\controllers\OnlyOfficeController::class . ':getEncodedFileFromUrl');
+$app->get('/onlyOffice/available', \ContentManagement\controllers\OnlyOfficeController::class . ':isAvailable');
+$app->post('/onlyOfficeCallback', function (\Slim\Http\Request $request, \Slim\Http\Response $response) {
+    return $response->withJson(['error' => 0]);
+});
 
 //CustomFields
 $app->get('/customFields', \CustomField\controllers\CustomFieldController::class . ':get');
