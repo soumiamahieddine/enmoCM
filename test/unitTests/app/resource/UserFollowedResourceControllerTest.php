@@ -8,6 +8,7 @@
 */
 
 use PHPUnit\Framework\TestCase;
+use Resource\models\UserFollowedResourceModel;
 
 class UserFollowedResourceControllerTest extends TestCase
 {
@@ -82,7 +83,13 @@ class UserFollowedResourceControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $usersFollowedResourcesController->unFollow($request, new \Slim\Http\Response(), ['resId' => self::$id]);
+        $args = [
+            'resources' => [self::$id]
+        ];
+
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+
+        $response     = $usersFollowedResourcesController->unFollow($fullRequest, new \Slim\Http\Response());
 
         $this->assertSame(204, $response->getStatusCode());
 
@@ -90,7 +97,7 @@ class UserFollowedResourceControllerTest extends TestCase
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
 
-        $response     = $usersFollowedResourcesController->unFollow($request, new \Slim\Http\Response(), ['resId' => self::$id]);
+        $response     = $usersFollowedResourcesController->unFollow($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(403, $response->getStatusCode());
@@ -112,7 +119,12 @@ class UserFollowedResourceControllerTest extends TestCase
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $usersFollowedResourcesController->follow($request, new \Slim\Http\Response(), ['resId' => self::$id]);
+        $args = [
+            'resources' => [self::$id]
+        ];
+        $fullRequest = \httpRequestCustom::addContentInBody($args, $request);
+
+        $response     = $usersFollowedResourcesController->follow($fullRequest, new \Slim\Http\Response());
 
         $this->assertSame(204, $response->getStatusCode());
 
@@ -120,7 +132,7 @@ class UserFollowedResourceControllerTest extends TestCase
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
 
-        $response     = $usersFollowedResourcesController->follow($request, new \Slim\Http\Response(), ['resId' => self::$id]);
+        $response     = $usersFollowedResourcesController->follow($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertSame(403, $response->getStatusCode());
@@ -137,13 +149,13 @@ class UserFollowedResourceControllerTest extends TestCase
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
 
-        $resListController = new \Resource\controllers\UserFollowedResourceController();
+        $userFollowedResourceController = new \Resource\controllers\UserFollowedResourceController();
 
         //  GET
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $resListController->getFollowedResources($request, new \Slim\Http\Response());
+        $response     = $userFollowedResourceController->getFollowedResources($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('int', $responseBody->countResources);
@@ -161,13 +173,13 @@ class UserFollowedResourceControllerTest extends TestCase
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $GLOBALS['id'] = $userInfo['id'];
 
-        $resListController = new \Resource\controllers\UserFollowedResourceController();
+        $userFollowedResourceController = new \Resource\controllers\UserFollowedResourceController();
 
         //  GET
         $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'GET']);
         $request        = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $resListController->getFollowedResources($request, new \Slim\Http\Response());
+        $response     = $userFollowedResourceController->getFollowedResources($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('int', $responseBody->countResources);
@@ -180,8 +192,21 @@ class UserFollowedResourceControllerTest extends TestCase
 
     public function testDelete()
     {
+        $GLOBALS['userId'] = 'aackermann';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
+
         //  DELETE
         \Resource\models\ResModel::delete(['resId' => self::$id]);
+
+        UserFollowedResourceModel::delete([
+            'userId' => $GLOBALS['id'],
+            'resId' => self::$id
+        ]);
+
+        $GLOBALS['userId'] = 'superadmin';
+        $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+        $GLOBALS['id'] = $userInfo['id'];
 
         //  READ
         $res = \Resource\models\ResModel::getById(['resId' => self::$id, 'select' => ['*']]);
