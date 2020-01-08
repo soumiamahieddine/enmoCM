@@ -97,9 +97,9 @@
                                     </mat-form-field>
                                 </ng-container>
                                 <ng-container *ngIf="field.type === 'select'">
-                                    <plugin-select-search [label]="field.label" [showLabel]="true"
-                                        [formControlSelect]="field.control" [placeholderLabel]="field.label"
-                                        [datas]="field.values" [class]="''">
+                                    <plugin-select-search [label]="field.label" [required]="field.required" [showLabel]="true"
+                                        [formControlSelect]="field.control" [placeholderLabel]="field.label" [hideErrorDesc]="false"
+                                        [datas]="field.values" [class]="''" [suffixIcon]="{class:'fa-circle', color:fillingRate.color, title: lang.targetFillingField}">
                                     </plugin-select-search>
                                 </ng-container>
                                 <ng-container *ngIf="field.type === 'date'">

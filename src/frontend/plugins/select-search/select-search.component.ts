@@ -33,6 +33,15 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
 
     @Input('showLabel') showLabel: boolean = false;
 
+    @Input('required') required: boolean = false;
+
+    @Input('hideErrorDesc') hideErrorDesc: boolean = true;
+
+    /**
+     * ex : {class:'fa-circle', color:'#fffff', title: 'foo'}
+     */
+    @Input('suffixIcon') suffixIcon: any = null;
+
     @Input('class') class: string = "input-form";
 
     /**
@@ -306,6 +315,16 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
     launchEvent(ev: any) {
         if (this.afterSelected !== undefined) {
             this.afterSelected.emit(ev.value);
+        }
+    }
+
+    getErrorMsg(error: any) {
+        if (error.required !== undefined) {
+            return this.lang.requiredField;
+        } else if (error.pattern !== undefined || error.email !== undefined) {
+            return this.lang.badFormat;
+        } else {
+            return 'unknow validator';
         }
     }
 }
