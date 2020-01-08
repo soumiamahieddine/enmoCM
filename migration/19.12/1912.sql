@@ -562,6 +562,7 @@ CREATE TABLE list_templates
     description text,
     type CHARACTER VARYING(32) NOT NULL,
     entity_id INTEGER,
+    owner INTEGER DEFAULT NULL,
     CONSTRAINT list_templates_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
