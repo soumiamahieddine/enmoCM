@@ -175,7 +175,7 @@ class OnlyOfficeController
         $uri = (string)$loadedXml->onlyoffice->server_uri;
         $uri = str_replace(':', ' ', $uri);
 
-        $exec = shell_exec("nc -vz -w 5 {$uri}  2>&1");
+        $exec = shell_exec("nc -vz -w 5 {$uri} 2>&1");
 
         $isAvailable = strpos($exec, 'succeeded!') !== false;
 
