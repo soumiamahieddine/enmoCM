@@ -33,10 +33,20 @@ class ListTemplateController
 {
     public function get(Request $request, Response $response)
     {
+        $queryParams = $request->getQueryParams();
+
+        if (empty($queryParams['admin'])) {
+            $where = ['owner is null or owner = ?'];
+            $data = [$GLOBALS['id']];
+        } else {
+            $where = ['owner is null'];
+            $data = [];
+        }
+
         $listTemplates = ListTemplateModel::get([
             'select' => ['id', 'type', 'entity_id as "entityId"', 'title', 'description', 'owner'],
-            'where'  => ['owner is null or owner = ?'],
-            'data'   => [$GLOBALS['id']]
+            'where'  => $where,
+            'data'   => $data
         ]);
 
         for ($i = 0; $i < count($listTemplates); $i++) {

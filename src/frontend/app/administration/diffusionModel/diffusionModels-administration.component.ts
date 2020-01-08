@@ -59,7 +59,7 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get("../../rest/listTemplates")
+        this.http.get("../../rest/listTemplates?admin=true")
             .subscribe((data: any) => {
                 data['listTemplates'].forEach((template: any) => {
                     if ((template.type.indexOf('visaCircuit') != -1 || template.type.indexOf('opinionCircuit') != -1) && template.entityId == null) {
