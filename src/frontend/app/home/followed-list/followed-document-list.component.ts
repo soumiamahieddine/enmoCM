@@ -334,19 +334,16 @@ export class FollowedDocumentListComponent implements OnInit {
     }
 
     unfollowMail(row: any) {
-        this.http.request('DELETE', '../../rest/resources/unfollow', { body: { resources: [row.resId] } }).pipe(
-            tap(() => {
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.stopFollowingAlert } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.request('DELETE', '../../rest/resources/unfollow' , { body: { resources: [row.resId] } })),
+            tap((data: any) => {
                 this.menuShortcut.nbResourcesFollowed--;
                 this.initResultList();
-            }),
-            catchError((err: any) => {
-                this.notify.handleErrors(err);
-                return of(false);
             })
         ).subscribe();
-        
-        row.mailTracking = !row.mailTracking;
-        
     }
 
     viewDocument(row: any) {
