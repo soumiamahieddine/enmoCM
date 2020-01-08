@@ -33,16 +33,29 @@ class ListTemplateController
 {
     public function get(Request $request, Response $response)
     {
-        $listTemplates = ListTemplateModel::get(['select' => ['id', 'type', 'entity_id as "entityId"', 'title', 'description']]);
+        $listTemplates = ListTemplateModel::get([
+            'select' => ['id', 'type', 'entity_id as "entityId"', 'title', 'description', 'owner'],
+            'where'  => ['owner is null or owner = ?'],
+            'data'   => [$GLOBALS['id']]
+        ]);
+
+        for ($i = 0; $i < count($listTemplates); $i++) {
+            $listTemplates[$i]['isPrivate'] = $listTemplates[$i]['owner'] != null;
+            unset($listTemplates[$i]['owner']);
+        }
 
         return $response->withJson(['listTemplates' => $listTemplates]);
     }
 
     public function getById(Request $request, Response $response, array $args)
     {
-        $listTemplate = ListTemplateModel::getById(['id' => $args['id'], 'select' => ['title', 'description', 'type', 'entity_id']]);
+        $listTemplate = ListTemplateModel::getById(['id' => $args['id'], 'select' => ['title', 'description', 'type', 'entity_id', 'owner']]);
         if (empty($listTemplate)) {
             return $response->withStatus(400)->withJson(['errors' => 'List template not found']);
+        }
+
+        if (!empty($listTemplate['owner']) && $listTemplate['owner'] != $GLOBALS['id']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Cannot access private model']);
         }
 
         $listTemplateItems = ListTemplateItemModel::get(['select' => ['*'], 'where' => ['list_template_id = ?'], 'data' => [$args['id']]]);
