@@ -1404,4 +1404,5 @@ export const LANG_NL = {
     "checkOnlyofficeServer": "Establish contact with the Onlyoffice server", //_TO_TRANSLATE
     "closeEditor" : "Close the editor", //_TO_TRANSLATE
     "externalVisaWorkflow" : "Visa workflow Maarch Parapheur", //_TO_TRANSLATE
+    "IdMaarch2Gec" : "MAARCH2GEC identifier", //_TO_TRANSLATE
 };

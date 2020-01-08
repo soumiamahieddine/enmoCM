@@ -180,7 +180,7 @@ export class AttachmentCreateComponent implements OnInit {
         let datas: any = {};
         Object.keys(this.attachments[i]).forEach(element => {
             if (['title', 'validationDate', 'recipient'].indexOf(element) > -1) {
-                if (element === 'recipient') {
+                if (element === 'recipient' && this.attachments[i][element].value.length > 0) {
                     datas['recipientId'] = this.attachments[i][element].value[0].id
                     datas['recipientType'] = this.attachments[i][element].value[0].type
                 } else {
