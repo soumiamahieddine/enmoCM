@@ -19,7 +19,7 @@ export class HeaderPanelComponent implements OnInit {
     config      : any       = {};
 
 
-    @Input('navButton') navButton: any = {icon: 'fa fa-home', route : '/home'};
+    @Input('navButton') navButton: any = null;
     @Input('snavLeft') snavLeft: MatSidenav;
     
     constructor(
@@ -30,7 +30,11 @@ export class HeaderPanelComponent implements OnInit {
 
     ngOnInit(): void { }
 
-    gotTo() {
+    goTo() {
         this.router.navigate([this.navButton.route]);
+    }
+
+    goToHome() {
+        this.router.navigate(['#']);
     }
 }

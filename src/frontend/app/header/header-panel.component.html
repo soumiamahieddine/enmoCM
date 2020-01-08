@@ -1,14 +1,14 @@
 <div class="panelHeader">
     <div *ngIf="navButton !== null" class="panelHeader-backHome">
-        <button mat-button style="padding-top: 5px;padding-bottom: 5px;" (click)="gotTo()">
+        <button mat-button style="padding-top: 5px;padding-bottom: 5px;" (click)="goTo()">
             <i class="{{navButton.icon}}" style="height: auto"></i>&nbsp;
             <span>{{navButton.label}}</span>
         </button>   
     </div>
     <div class="panelHeader-logo" [class.text-center]="navButton !== null">
-        <a href="#" title="{{lang.home}}" style="margin-right: 30px;">
+        <button mat-button style="margin-right: 30px;" (click)="goToHome()" title="{{lang.home}}">
             <mat-icon class="maarchLogo" svgIcon="maarchLogoFull"></mat-icon>
-        </a>
+        </button>
     </div>
     <div class="panelHeader-button">
         <button mat-icon-button (click)="snavLeft.close()">
