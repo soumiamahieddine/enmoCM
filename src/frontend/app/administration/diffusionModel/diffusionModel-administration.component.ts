@@ -158,7 +158,8 @@ export class DiffusionModelAdministrationComponent implements OnInit {
             "type": this.diffusionModel.type,
             "title": this.diffusionModel.title,
             "description": this.diffusionModel.description,
-            "items": Array()
+            "items": Array(),
+            "admin": true
         };
         if (this.idCircuit == null) {
             this.diffusionModel.items.forEach((listModel: any, i: number) => {

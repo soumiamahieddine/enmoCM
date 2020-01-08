@@ -107,7 +107,7 @@ class ListTemplateController
     {
         $body = $request->getParsedBody();
 
-        if (empty($body['private'])) {
+        if (!empty($body['admin'])) {
             if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId'      => $GLOBALS['id']]) && !empty($body['entityId'])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
