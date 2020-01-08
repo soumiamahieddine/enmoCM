@@ -252,16 +252,23 @@ class ListTemplateController
 
     public function delete(Request $request, Response $response, array $args)
     {
-        $listTemplate = ListTemplateModel::getById(['id' => $args['id'], 'select' => ['entity_id', 'type', 'title']]);
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']]) && !empty($listTemplate['entityId'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
+        $listTemplate = ListTemplateModel::getById(['id' => $args['id'], 'select' => ['entity_id', 'type', 'title', 'owner']]);
 
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId' => $GLOBALS['id']]) && empty($listTemplate['entityId'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
         if (empty($listTemplate)) {
             return $response->withStatus(400)->withJson(['errors' => 'List template not found']);
+        }
+        if (empty($listTemplate['owner']) && $listTemplate['type'] != 'visaCircuit' ) {
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId'      => $GLOBALS['id']]) && !empty($listTemplate['entityId'])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId'      => $GLOBALS['id']]) && empty($listTemplate['entityId'])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+        } else {
+            if ($listTemplate['owner'] != $GLOBALS['id']) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
         }
 
         if (!empty($listTemplate['entityId'])) {
