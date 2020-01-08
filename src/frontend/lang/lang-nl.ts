@@ -1403,4 +1403,5 @@ export const LANG_NL = {
     "searchTrackedMail": "Search in tracked mails", //_TO_TRANSLATE
     "checkOnlyofficeServer": "Establish contact with the Onlyoffice server", //_TO_TRANSLATE
     "closeEditor" : "Close the editor", //_TO_TRANSLATE
+    "externalVisaWorkflow" : "Visa workflow Maarch Parapheur", //_TO_TRANSLATE
 };

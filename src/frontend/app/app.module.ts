@@ -85,6 +85,7 @@ import { ActionsService } from './actions/actions.service';
 import { ContactsListComponent } from './contact/list/contacts-list.component';
 import { ContactsListModalComponent } from './contact/list/modal/contacts-list-modal.component';
 import { ContactModalComponent } from './administration/contact/modal/contact-modal.component';
+import { VisaWorkflowModalComponent } from './visa/modal/visa-workflow-modal.component';
 
 
 @NgModule({
@@ -161,6 +162,7 @@ import { ContactModalComponent } from './administration/contact/modal/contact-mo
         ContactModalComponent,
         FollowedDocumentListComponent,
         FollowedActionListComponent,
+        VisaWorkflowModalComponent
     ],
     entryComponents: [
         ConfirmModalComponent,
@@ -189,7 +191,8 @@ import { ContactModalComponent } from './administration/contact/modal/contact-mo
         AttachmentCreateComponent,
         AttachmentShowModalComponent,
         ContactsListModalComponent,
-        ContactModalComponent
+        ContactModalComponent,
+        VisaWorkflowModalComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],
     bootstrap: [ AppComponent ]

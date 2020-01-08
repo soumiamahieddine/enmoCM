@@ -3,14 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { FunctionsService } from '../../service/functions.service';
 
 declare function $j(selector: any): any;
 
 @Component({
     selector: 'app-visa-workflow',
     templateUrl: 'visa-workflow.component.html',
-    styleUrls: ['visa-workflow.component.scss'],
-    providers: [NotificationService]
+    styleUrls: ['visa-workflow.component.scss']
 })
 export class VisaWorkflowComponent implements OnInit {
 
@@ -28,7 +28,7 @@ export class VisaWorkflowComponent implements OnInit {
 
     @Input('linkedToMaarchParapheur') linkedToMaarchParapheur: boolean;
 
-    constructor(public http: HttpClient, private notify: NotificationService) { }
+    constructor(public http: HttpClient, private notify: NotificationService, private functions: FunctionsService) { }
 
     ngOnInit(): void { 
         this.linkedToMaarchParapheur = this.linkedToMaarchParapheur === undefined ? false: this.linkedToMaarchParapheur;
@@ -77,6 +77,33 @@ export class VisaWorkflowComponent implements OnInit {
             .subscribe((data: any) => {
                 data.forEach((element: any) => {
                     this.visaWorkflow.items.push(element);
+                });
+                this.loading = false;
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+            });
+    }
+
+    loadWorkflowMaarchParapheur(attachmentId: number) {
+        this.loading = true;
+        this.visaWorkflow.items = [];
+        this.http.get(`../../rest/attachments/${attachmentId}/maarchParapheurWorkflow`)
+            .subscribe((data: any) => {
+                data.workflow.forEach((element: any) => {
+                    const user = {
+                        'id': element.userId,
+                        'labelToDisplay': element.userDisplay,
+                        'requested_signature': element.mode === 'visa' ? false : true,
+                        'process_date': this.functions.formatFrenchDateToTechnicalDate(element.processDate),
+                        'picture': ''
+                    }                    
+                    this.visaWorkflow.items.push(user);
+                    this.http.get("../../rest/maarchParapheur/user/" + element.userId + "/picture")
+                        .subscribe((data: any) => {
+                            this.visaWorkflow.items.filter((item: any) => item.id === element.userId)[0].picture = data.picture;
+                        }, (err: any) => {
+                            this.notify.handleErrors(err);
+                        });
                 });
                 this.loading = false;
             }, (err: any) => {

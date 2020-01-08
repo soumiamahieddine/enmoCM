@@ -1420,4 +1420,5 @@ export const LANG_FR = {
     "closeEditor" : "Fermer l'éditeur",
     "errorOnlyoffice1" : "Impossible de lancer onlyoffice, vous utilisez une adresse locale",
     "errorOnlyoffice2" : "Impossible de lancer onlyoffice. Veuillez vérifier la disponibilité du serveur",
+    "externalVisaWorkflow" : "Circuit de visa Maarch parapheur",  
 };

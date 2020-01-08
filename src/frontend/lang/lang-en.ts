@@ -1380,4 +1380,5 @@ export const LANG_EN = {
     "closeEditor" : "Close the editor",
     "errorOnlyoffice1" : "Cannot launch onlyoffice, a local address is used",
     "errorOnlyoffice2" : "Cannot launch onlyoffice. Check if the only office server is available",
+    "externalVisaWorkflow" : "Visa workflow Maarch Parapheur",
 };
