@@ -24,6 +24,13 @@ class DocumentEditorController
 
     public static function get(Request $request, Response $response)
     {
+        $allowedMethods = DocumentEditorController::getAllowedMethods();
+
+        return $response->withJson($allowedMethods);
+    }
+
+    public static function getAllowedMethods()
+    {
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/documentEditorsConfig.xml']);
 
         $allowedMethods = [];
@@ -33,6 +40,6 @@ class DocumentEditorController
             }
         }
 
-        return $response->withJson($allowedMethods);
+        return $allowedMethods;
     }
 }
