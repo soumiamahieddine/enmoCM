@@ -126,6 +126,10 @@ class ListTemplateController
                 && !PrivilegeController::hasPrivilege(['privilegeId' => 'config_visa_workflow', 'userId' => $GLOBALS['id']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
+            if ($body['type'] == 'opinionCircuit'
+                && !PrivilegeController::hasPrivilege(['privilegeId' => 'config_avis_workflow', 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
             $owner = $GLOBALS['id'];
         }
 
@@ -257,7 +261,7 @@ class ListTemplateController
         if (empty($listTemplate)) {
             return $response->withStatus(400)->withJson(['errors' => 'List template not found']);
         }
-        if (empty($listTemplate['owner']) && $listTemplate['type'] != 'visaCircuit' ) {
+        if (empty($listTemplate['owner']) && ($listTemplate['type'] != 'visaCircuit' || $listTemplate['type'] != 'opinionCircuit') ) {
             if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId'      => $GLOBALS['id']]) && !empty($listTemplate['entityId'])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
