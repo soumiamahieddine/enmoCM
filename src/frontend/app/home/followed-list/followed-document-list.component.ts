@@ -251,9 +251,11 @@ export class FollowedDocumentListComponent implements OnInit {
     }
 
     viewThumbnail(row: any) {
-        this.thumbnailUrl = '../../rest/resources/' + row.resId + '/thumbnail';
-        $j('#viewThumbnail').show();
-        $j('#listContent').css({ "overflow": "hidden" });
+        if (row.hasDocument) {
+            this.thumbnailUrl = '../../rest/resources/' + row.resId + '/thumbnail';
+            $j('#viewThumbnail').show();
+            $j('#listContent').css({"overflow": "hidden"});
+        }
     }
 
     closeThumbnail() {
@@ -267,7 +269,7 @@ export class FollowedDocumentListComponent implements OnInit {
             Object.keys(element).forEach((key) => {
                 if (key == 'statusImage' && element[key] == null) {
                     element[key] = 'fa-question undefined';
-                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'mailTracking'].indexOf(key) === -1) {
+                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'mailTracking', 'hasDocument'].indexOf(key) === -1) {
                     element[key] = this.lang.undefined;
                 }
             });
@@ -345,6 +347,10 @@ export class FollowedDocumentListComponent implements OnInit {
         
         row.mailTracking = !row.mailTracking;
         
+    }
+
+    viewDocument(row: any) {
+        window.open("../../rest/resources/" + row.resId + "/content?mode=view", "_blank");
     }
 }
 export interface BasketList {
