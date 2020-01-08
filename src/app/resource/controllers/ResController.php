@@ -674,6 +674,68 @@ class ResController
         return $response->withJson(['isAllowed' => true]);
     }
 
+    public function linkResources(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Resource out of perimeter']);
+        }
+
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['linkedResources'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Body linkedResources is empty or not an array']);
+        }
+
+        if (!ResController::hasRightByResId(['resId' => $body['linkedResources'], 'userId' => $GLOBALS['id']])) {
+            return ['errors' => 'Body linkedResources out of perimeter'];
+        }
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['linked_resources']]);
+        $linkedResources = json_decode($resource['linked_resources'], true);
+        $linkedResources = array_merge($linkedResources, $body['linkedResources']);
+        $linkedResources = array_unique($linkedResources);
+        foreach ($linkedResources as $key => $value) {
+            $linkedResources[$key] = (string)$value;
+        }
+
+        ResModel::update([
+            'set'       => ['linked_resources' => json_encode($linkedResources)],
+            'where'     => ['res_id = ?'],
+            'data'      => [$args['resId']]
+        ]);
+        ResModel::update([
+            'postSet'   => ['linked_resources' => "jsonb_insert(linked_resources, '{0}', '\"{$args['resId']}\"')"],
+            'where'     => ['res_id in (?)', "(linked_resources @> ?) = false"],
+            'data'      => [$body['linkedResources'], "\"{$args['resId']}\""]
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public function unlinkResources(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Resource out of perimeter']);
+        }
+
+        if (!Validator::intVal()->validate($args['id']) || !ResController::hasRightByResId(['resId' => [$args['id']], 'userId' => $GLOBALS['id']])) {
+            return ['errors' => 'Resource to unlink out of perimeter'];
+        }
+
+        ResModel::update([
+            'postSet'   => ['linked_resources' => "linked_resources - '{$args['id']}'"],
+            'where'     => ['res_id = ?'],
+            'data'      => [$args['resId']]
+        ]);
+        ResModel::update([
+            'postSet'   => ['linked_resources' => "linked_resources - '{$args['resId']}'"],
+            'where'     => ['res_id = ?'],
+            'data'      => [$args['id']]
+        ]);
+
+        return $response->withStatus(204);
+    }
+
     public static function getEncodedDocument(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
@@ -992,6 +1054,12 @@ class ResController
             $status = StatusModel::getById(['id' => $body['status'], 'select' => [1]]);
             if (empty($status)) {
                 return ['errors' => 'Body status does not exist'];
+            }
+        }
+
+        if (!empty($body['linkedResources'])) {
+            if (!ResController::hasRightByResId(['resId' => [$body['linkedResources']], 'userId' => $GLOBALS['id']])) {
+                return ['errors' => 'Body linkedResources out of perimeter'];
             }
         }
 
