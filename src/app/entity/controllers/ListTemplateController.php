@@ -97,12 +97,26 @@ class ListTemplateController
     {
         $body = $request->getParsedBody();
 
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']]) && !empty($body['entityId'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
+        if (empty($body['private'])) {
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId'      => $GLOBALS['id']]) && !empty($body['entityId'])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
 
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId' => $GLOBALS['id']]) && empty($body['entityId'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId'      => $GLOBALS['id']]) && empty($body['entityId'])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+
+            $owner = null;
+        } else {
+            if (!empty($body['entityId'])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+
+            if ($body['type'] == 'visaCircuit'
+                && !PrivilegeController::hasPrivilege(['privilegeId' => 'config_visa_workflow', 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+            $owner = $GLOBALS['id'];
         }
 
         $allowedTypes = ['diffusionList', 'visaCircuit', 'opinionCircuit'];
@@ -135,7 +149,8 @@ class ListTemplateController
             'title'         => $body['title'] ?? $body['description'],
             'description'   => $body['description'] ?? null,
             'type'          => $body['type'],
-            'entity_id'     => $body['entityId'] ?? null
+            'entity_id'     => $body['entityId'] ?? null,
+            'owner'         => $owner
         ]);
 
         foreach ($body['items'] as $key => $item) {

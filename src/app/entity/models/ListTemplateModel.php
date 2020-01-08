@@ -65,11 +65,12 @@ class ListTemplateModel
         DatabaseModel::insert([
             'table'         => 'list_templates',
             'columnsValues' => [
-                'id'            => $nextSequenceId,
-                'title'         => $args['title'],
-                'description'   => $args['description'] ?? null,
-                'type'          => $args['type'],
-                'entity_id'     => $args['entity_id'] ?? null
+                'id'          => $nextSequenceId,
+                'title'       => $args['title'],
+                'description' => $args['description'] ?? null,
+                'type'        => $args['type'],
+                'entity_id'   => $args['entity_id'] ?? null,
+                'owner'       => $args['owner']
             ]
         ]);
 
