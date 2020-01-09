@@ -351,6 +351,7 @@ $app->get('/resources/{resId}/listInstance', \Entity\controllers\ListInstanceCon
 $app->get('/resources/{resId}/visaCircuit', \Entity\controllers\ListInstanceController::class . ':getVisaCircuitByResId');
 $app->get('/resources/{resId}/opinionCircuit', \Entity\controllers\ListInstanceController::class . ':getOpinionCircuitByResId');
 $app->get('/resources/{resId}/availableCircuits', \Entity\controllers\ListTemplateController::class . ':getAvailableCircuitsByResId');
+$app->get('/resources/{resId}/linkedResources', \Resource\controllers\ResController::class . ':getLinkedResources');
 $app->post('/resources/{resId}/linkedResources', \Resource\controllers\ResController::class . ':linkResources');
 $app->delete('/resources/{resId}/linkedResources/{id}', \Resource\controllers\ResController::class . ':unlinkResources');
 $app->get('/res/{resId}/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');

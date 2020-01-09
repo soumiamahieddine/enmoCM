@@ -60,8 +60,8 @@ class UserFollowedResourceModel
         DatabaseModel::insert([
             'table'     => 'users_followed_resources',
             'columnsValues' => [
-                'res_id'  => $args['resId'],
-                'user_id'  => $args['userId'],
+                'res_id'    => $args['resId'],
+                'user_id'   => $args['userId'],
             ]
         ]);
 

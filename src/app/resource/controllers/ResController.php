@@ -80,8 +80,8 @@ class ResController
 
         if (!empty($body['followed'])) {
             UserFollowedResourceModel::create([
-                'userId' => $GLOBALS['id'],
-                'resId' => $resId
+                'userId'    => $GLOBALS['id'],
+                'resId'     => $resId
             ]);
         }
 
@@ -116,7 +116,7 @@ class ResController
 
         $queryParams = $request->getQueryParams();
 
-        $select = ['model_id', 'category_id', 'priority', 'subject', 'alt_identifier', 'process_limit_date', 'closing_date', 'creation_date', 'modification_date'];
+        $select = ['model_id', 'category_id', 'priority', 'subject', 'alt_identifier', 'process_limit_date', 'closing_date', 'creation_date', 'modification_date', 'linked_resources'];
         if (empty($queryParams['light'])) {
             $select = array_merge($select, ['type_id', 'typist', 'status', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date', 'departure_date', 'barcode', 'custom_fields']);
         }
@@ -226,16 +226,19 @@ class ResController
 
             $tags = TagResModel::get(['select' => ['tag_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             $formattedData['tags'] = array_column($tags, 'tag_id');
+        } else {
+            $linkedResources = json_decode($document['linked_resources'], true);
+            $formattedData['linkedResources'] = count($linkedResources);
+
+            $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
+            $formattedData['attachments'] = $attachments[0]['count'];
+
+            $followed = UserFollowedResourceModel::get([
+                'where' => ['user_id = ?', 'res_id = ?'],
+                'data'  => [$GLOBALS['id'], $args['resId']]
+            ]);
+            $formattedData['followed'] = !empty($followed);
         }
-
-        $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
-        $formattedData['attachments'] = $attachments[0]['count'];
-
-        $followed = UserFollowedResourceModel::get([
-            'where' => ['user_id = ?', 'res_id = ?'],
-            'data' => [$GLOBALS['id'], $args['resId']]
-        ]);
-        $formattedData['followed'] = !empty($followed);
 
         return $response->withJson($formattedData);
     }
@@ -672,6 +675,49 @@ class ResController
         }
 
         return $response->withJson(['isAllowed' => true]);
+    }
+
+    public function getLinkedResources(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Resource out of perimeter']);
+        }
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['linked_resources']]);
+        $linkedResourcesIds = json_decode($resource['linked_resources'], true);
+
+        $linkedResources = [];
+        if (!empty($linkedResourcesIds)) {
+            $linkedResources = ResModel::get([
+                'select'    => ['res_id as "resId"', 'subject', 'doc_date as "documentDate"', 'status', 'dest_user as "destUser"', 'destination', 'alt_identifier as chrono', 'category_id as "categoryId"'],
+                'where'     => ['res_id in (?)'],
+                'data'      => [$linkedResourcesIds]
+            ]);
+
+            foreach ($linkedResources as $key => $value) {
+                if (!empty($value['status'])) {
+                    $status = StatusModel::getById(['id' => $value['status'], 'select' => ['label_status', 'img_filename']]);
+                    $linkedResources[$key]['statusLabel'] = $status['label_status'];
+                    $linkedResources[$key]['statusImage'] = $status['img_filename'];
+                }
+
+                $contacts = ResourceContactModel::get([
+                    'select'    => ['item_id as id', 'type', 'mode'],
+                    'where'     => ['res_id = ?'],
+                    'data'      => [$value['resId']]
+                ]);
+
+                $linkedResources[$key]['senders'] = [];
+                $linkedResources[$key]['recipients'] = [];
+                foreach ($contacts as $contact) {
+                    $linkedResources[$key]["{$contact['mode']}s"][] = $contact;
+                }
+
+                $linkedResources[$key]['visaCircuit'] = ListInstanceModel::get(['select' => ['item_id', 'item_mode'], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$value['resId'], 'VISA_CIRCUIT']]);
+            }
+        }
+
+        return $response->withJson(['linkedResources' => $linkedResources]);
     }
 
     public function linkResources(Request $request, Response $response, array $args)
