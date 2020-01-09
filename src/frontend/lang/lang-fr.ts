@@ -1398,7 +1398,7 @@ export const LANG_FR = {
     "moreInfos" : "Plus d'informations",
     "confirmCloseEditor" : "Etes-vous sûr de vouloir fermer l'éditeur ? Toutes les modifications seront annulées",
     "onlyNumber" : "Chiffre uniquement",
-    "found": "trouvée",
+    "found": "trouvé",
     "here": "ici",
     "toCopyAddress": "pour copier son adresse",
     "badFormat": "Format incorrect",
