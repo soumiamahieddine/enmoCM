@@ -33,7 +33,7 @@
                     <mat-icon fontSet="fas" fontIcon="fa-ellipsis-v"></mat-icon>
                 </button>
                 <mat-menu #menuPjAction="matMenu">
-                    <button mat-menu-item (click)="setInSignatureBook(attachment)">
+                    <button mat-menu-item [disabled]="attachment.status === 'FRZ'" (click)="setInSignatureBook(attachment)">
                         <mat-checkbox color="primary" [(ngModel)]="attachment.inSignatureBook"></mat-checkbox>
                         {{lang.putInSignatureBook}}
                     </button>
@@ -43,6 +43,12 @@
                         </mat-checkbox>
                         {{lang.putInSendAttach}}
                     </button>
+                    <ng-container *ngIf="maarchParapheurEnabled && attachment.status === 'FRZ'">
+                        <mat-divider></mat-divider>
+                        <button mat-menu-item (click)="openMaarchParapheurWorkflow(attachment)">
+                            {{lang.externalVisaWorkflow}}
+                        </button>
+                    </ng-container>
                 </mat-menu>
             </div>
 

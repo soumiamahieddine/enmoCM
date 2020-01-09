@@ -361,10 +361,10 @@ class MergeController
                         'address_additional1', 'address_additional2', 'address_postcode', 'address_town', 'address_country', 'phone', 'email', 'custom_fields'
                     ]
                 ]);
-                $person['civility'] = ContactModel::getCivilityLabel(['civilityId' => $person['civility']]);
                 $postalAddress = ContactController::getContactAfnor($person);
                 unset($postalAddress[0]);
                 $person['postal_address'] = implode("\n", $postalAddress);
+                $person['civility'] = ContactModel::getCivilityLabel(['civilityId' => $person['civility']]);
                 $customFields = json_decode($person['custom_fields'], true);
                 unset($person['custom_fields']);
                 if (!empty($customFields)) {

@@ -27,6 +27,7 @@ use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
 use Resource\models\ResModel;
 use Resource\models\ResourceListModel;
+use Resource\models\UserFollowedResourceModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -337,7 +338,8 @@ class FolderController
         return $response->withStatus(204);
     }
 
-    public function folderSharing($args = []) {
+    public function folderSharing($args = [])
+    {
         $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $args['folderId'], 'edition' => true]);
         if (empty($folder[0])) {
             return false;
@@ -462,7 +464,8 @@ class FolderController
         return true;
     }
 
-    public static function areChildrenInPerimeter(array $aArgs = []) {
+    public static function areChildrenInPerimeter(array $aArgs = [])
+    {
         $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['folderId'], 'edition' => true]);
         if (empty($folder[0])) {
             return false;
@@ -524,9 +527,7 @@ class FolderController
 
             $resIds = ResourceListController::getIdsWithOffsetAndLimit(['resources' => $rawResources, 'offset' => $queryParams['offset'], 'limit' => $queryParams['limit']]);
 
-            foreach ($rawResources as $resource) {
-                $allResources[] = $resource['res_id'];
-            }
+            $allResources = array_column($rawResources, 'res_id');
 
             $formattedResources = [];
             if (!empty($resIds)) {
@@ -544,7 +545,8 @@ class FolderController
 
                 $select = [
                     'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'res_letterbox.alt_identifier',
-                    'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"', 'priorities.color AS "priorities.color"'
+                    'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"', 'priorities.color AS "priorities.color"',
+                    'res_letterbox.filename as res_filename'
                 ];
                 $tableFunction = ['status', 'priorities'];
                 $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.priority = priorities.id'];
@@ -564,11 +566,15 @@ class FolderController
                     'orderBy'   => [$order]
                 ]);
 
+                $followedResources = UserFollowedResourceModel::get(['select' => ['res_id'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
+                $followedResources = array_column($followedResources, 'res_id');
+
                 $formattedResources = ResourceListController::getFormattedResources([
                     'resources'     => $resources,
                     'userId'        => $GLOBALS['id'],
                     'attachments'   => $attachments,
-                    'checkLocked'   => false
+                    'checkLocked'   => false,
+                    'trackedMails'  => $followedResources,
                 ]);
             }
 

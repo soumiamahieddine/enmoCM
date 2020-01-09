@@ -1371,8 +1371,15 @@ export const LANG_EN = {
     "communicationMean": "Communication mean",
     "communicationMeanDesc": "Link a contact with another Maarch instance",
     "see": "see",
-    "notSavedBecauseInvalid": "Configuration not updated because some datas are invalid",
+    "notSavedBecauseInvalid": "Configuration not updated because some data are invalid",
     "deleteAll": "Delete all",
     "followedMail": "Followed mail(s)",
-    "stopFollowingAlert": "Do you want to stop following these mails ?"
+    "stopFollowingAlert": "Do you want to stop following these mails ?",
+    "searchTrackedMail": "Search in tracked mails",
+    "checkOnlyofficeServer": "Establish contact with the Onlyoffice server",
+    "closeEditor" : "Close the editor",
+    "errorOnlyoffice1" : "Cannot launch onlyoffice, a local address is used",
+    "errorOnlyoffice2" : "Cannot launch onlyoffice. Check if the only office server is available",
+    "externalVisaWorkflow" : "Visa workflow Maarch Parapheur",
+    "IdMaarch2Gec" : "MAARCH2GEC identifier",
 };

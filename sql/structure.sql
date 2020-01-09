@@ -977,6 +977,7 @@ CREATE TABLE res_letterbox
   flag_alarm2 char(1) default 'N'::character varying,
   model_id integer NOT NULL,
   custom_fields jsonb,
+  linked_resources jsonb NOT NULL DEFAULT '[]',
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1446,6 +1447,7 @@ CREATE TABLE list_templates
     description text,
     type CHARACTER VARYING(32) NOT NULL,
     entity_id INTEGER,
+    owner INTEGER DEFAULT NULL,
     CONSTRAINT list_templates_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);

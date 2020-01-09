@@ -396,34 +396,33 @@ class AutoCompleteController
     {
         $queryParams = $request->getQueryParams();
 
-        if (!Validator::stringType()->notEmpty()->validate($queryParams['search'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
-        }
-
         $services = ['visa_documents', 'sign_document'];
         if (!empty($queryParams['circuit']) && $queryParams['circuit'] == 'opinion') {
             $services = ['avis_documents'];
         }
 
-        $excludedUsers = ['superadmin'];
+        $requestData['where'] = [
+            'usergroups.group_id = usergroups_services.group_id',
+            'usergroups.id = usergroup_content.group_id',
+            'usergroup_content.user_id = users.id',
+            'usergroups_services.service_id in (?)',
+            'users.user_id not in (?)',
+            'users.status not in (?)'
+        ];
+        $requestData['data'] = [$services, ['superadmin'], ['DEL', 'SPD']];
 
-        $fields = ['users.firstname', 'users.lastname'];
-        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+        if (!empty($queryParams['search'])) {
+            $fields = ['users.firstname', 'users.lastname'];
+            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
 
-        $requestData = AutoCompleteController::getDataForRequest([
-            'search'        => $queryParams['search'],
-            'fields'        => $fields,
-            'where'         => [
-                'usergroups.group_id = usergroups_services.group_id',
-                'usergroups.id = usergroup_content.group_id',
-                'usergroup_content.user_id = users.id',
-                'usergroups_services.service_id in (?)',
-                'users.user_id not in (?)',
-                'users.status not in (?)'
-            ],
-            'data'          => [$services, $excludedUsers, ['DEL', 'SPD']],
-            'fieldsNumber'  => 2,
-        ]);
+            $requestData = AutoCompleteController::getDataForRequest([
+                'search'        => $queryParams['search'],
+                'fields'        => $fields,
+                'where'         => $requestData['where'],
+                'data'          => $requestData['data'],
+                'fieldsNumber'  => 2,
+            ]);
+        }
 
         $users = DatabaseModel::select([
             'select'    => ['DISTINCT users.id', 'users.firstname', 'users.lastname'],
@@ -821,6 +820,78 @@ class AutoCompleteController
 
         return $response->withJson($data);
     }
+
+//    public static function getResources(Request $request, Response $response)
+//    {
+//        $queryparams = $request->getQueryParams();
+//
+//        if (!Validator::stringType()->notEmpty()->validate($queryparams['search'])) {
+//            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
+//        }
+//
+//        $autocompleteUsers = [];
+//        if (empty($queryParams['noUsers'])) {
+//            $fields = ['subject', 'alt_identifier'];
+//            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+//            $requestData = AutoCompleteController::getDataForRequest([
+//                'search'        => $queryParams['search'],
+//                'fields'        => $fields,
+//                'where'         => ['status not in (?)', 'user_id not in (?)'],
+//                'data'          => [['DEL', 'SPD'], ['superadmin']],
+//                'fieldsNumber'  => 2,
+//            ]);
+//
+//            $users = UserModel::get([
+//                'select'    => ['id', 'firstname', 'lastname'],
+//                'where'     => $requestData['where'],
+//                'data'      => $requestData['data'],
+//                'orderBy'   => ['lastname'],
+//                'limit'     => self::TINY_LIMIT
+//            ]);
+//
+//            foreach ($users as $user) {
+//                $autocompleteUsers[] = [
+//                    'type'          => 'user',
+//                    'id'            => $user['id'],
+//                    'firstname'     => $user['firstname'],
+//                    'lastname'      => $user['lastname']
+//                ];
+//            }
+//        }
+//
+//        //Entities
+//        $autocompleteEntities = [];
+//        if (empty($queryParams['noEntities'])) {
+//            $fields = ['entity_label'];
+//            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+//            $requestData = AutoCompleteController::getDataForRequest([
+//                'search'        => $queryParams['search'],
+//                'fields'        => $fields,
+//                'where'         => ['enabled = ?'],
+//                'data'          => ['Y'],
+//                'fieldsNumber'  => 1,
+//            ]);
+//
+//            $entities = EntityModel::get([
+//                'select'    => ['id', 'entity_id', 'entity_label', 'short_label'],
+//                'where'     => $requestData['where'],
+//                'data'      => $requestData['data'],
+//                'orderBy'   => ['entity_label'],
+//                'limit'     => self::TINY_LIMIT
+//            ]);
+//
+//            foreach ($entities as $value) {
+//                $autocompleteEntities[] = [
+//                    'type'          => 'entity',
+//                    'id'            => $value['id'],
+//                    'lastname'      => $value['entity_label'],
+//                    'firstname'     => ''
+//                ];
+//            }
+//        }
+//
+//        return $response->withJson($data);
+//    }
 
     public static function getDataForRequest(array $args)
     {

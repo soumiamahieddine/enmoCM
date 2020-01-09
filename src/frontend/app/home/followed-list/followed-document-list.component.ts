@@ -22,6 +22,7 @@ import { FollowedActionListComponent } from '../followed-action-list/followed-ac
 import { FiltersListService } from '../../../service/filtersList.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import {MenuShortcutComponent} from "../../menu/menu-shortcut.component";
+import { FoldersService } from '../../folder/folders.service';
 
 
 declare function $j(selector: any): any;
@@ -115,7 +116,8 @@ export class FollowedDocumentListComponent implements OnInit {
         private notify: NotificationService,
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
-        public appService: AppService) {
+        public appService: AppService,
+        private foldersService: FoldersService) {
 
         $j("link[href='merged_css.php']").remove();
     }
@@ -249,9 +251,11 @@ export class FollowedDocumentListComponent implements OnInit {
     }
 
     viewThumbnail(row: any) {
-        this.thumbnailUrl = '../../rest/resources/' + row.resId + '/thumbnail';
-        $j('#viewThumbnail').show();
-        $j('#listContent').css({ "overflow": "hidden" });
+        if (row.hasDocument) {
+            this.thumbnailUrl = '../../rest/resources/' + row.resId + '/thumbnail';
+            $j('#viewThumbnail').show();
+            $j('#listContent').css({"overflow": "hidden"});
+        }
     }
 
     closeThumbnail() {
@@ -265,7 +269,7 @@ export class FollowedDocumentListComponent implements OnInit {
             Object.keys(element).forEach((key) => {
                 if (key == 'statusImage' && element[key] == null) {
                     element[key] = 'fa-question undefined';
-                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display'].indexOf(key) === -1) {
+                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'mailTracking', 'hasDocument'].indexOf(key) === -1) {
                     element[key] = this.lang.undefined;
                 }
             });
@@ -326,7 +330,24 @@ export class FollowedDocumentListComponent implements OnInit {
     }
 
     listTodrag() {
-    //     return this.foldersService.getDragIds();
+        return this.foldersService.getDragIds();
+    }
+
+    unfollowMail(row: any) {
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.stopFollowingAlert } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.request('DELETE', '../../rest/resources/unfollow' , { body: { resources: [row.resId] } })),
+            tap((data: any) => {
+                this.menuShortcut.nbResourcesFollowed--;
+                this.initResultList();
+            })
+        ).subscribe();
+    }
+
+    viewDocument(row: any) {
+        window.open("../../rest/resources/" + row.resId + "/content?mode=view", "_blank");
     }
 }
 export interface BasketList {

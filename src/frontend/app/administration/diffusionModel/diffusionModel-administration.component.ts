@@ -179,7 +179,7 @@ export class DiffusionModelAdministrationComponent implements OnInit {
                     "sequence": listModel.sequence
                 });
             });
-            this.http.post("../../rest/listTemplates", newDiffList)
+            this.http.post("../../rest/listTemplates?admin=true", newDiffList)
                 .subscribe((data: any) => {
                     this.idCircuit = data.id;
                     this.router.navigate(["/administration/diffusionModels"]);

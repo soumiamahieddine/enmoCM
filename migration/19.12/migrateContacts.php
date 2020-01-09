@@ -12,6 +12,34 @@ foreach ($customs as $custom) {
         continue;
     }
 
+    if (file_exists("custom/{$custom}/apps/maarch_entreprise/xml/config.xml")) {
+        $path = "custom/{$custom}/apps/maarch_entreprise/xml/config.xml";
+    } else {
+        $path = 'apps/maarch_entreprise/xml/config.xml';
+    }
+
+    if (file_exists($path)) {
+        $loadedXml = simplexml_load_file($path);
+        if ($loadedXml) {
+            $server     = (string)$loadedXml->CONFIG->databaseserver;
+            $port       = (string)$loadedXml->CONFIG->databaseserverport;
+            $name       = (string)$loadedXml->CONFIG->databasename;
+            $user       = (string)$loadedXml->CONFIG->databaseuser;
+            $password   = (string)$loadedXml->CONFIG->databasepassword;
+        }
+
+        $databaseConnection = pg_connect(
+            'host=' . $server .
+            ' user=' . $user .
+            ' password=' . $password .
+            ' dbname=' . $name .
+            ' port=' . $port
+        );
+    } else {
+        echo "No config file found ";
+        continue;
+    }
+
     \SrcCore\models\DatabasePDO::reset();
     new \SrcCore\models\DatabasePDO(['customId' => $custom]);
 
@@ -29,6 +57,7 @@ foreach ($customs as $custom) {
         'where' => ['id > 0']
     ]);
 
+    $aValues = [];
     $migrated = 0;
     $contactsInfo = \SrcCore\models\DatabaseModel::select([
         'select' => ['contact_id', 'society', 'contact_firstname', 'contact_lastname', 'contact_title', 'contact_function', 'contact_other_data',
@@ -172,7 +201,7 @@ foreach ($customs as $custom) {
             'where' => ['contact_addresses_id = ?'],
             'data'  => [$oldAddressId]
         ]);
-        migrateContactRes(['oldAddressId' => $oldAddressId, 'oldContactId' => $oldContactId, 'newContactId' => $id]);
+        $currentValuesContactRes = migrateContactRes(['oldAddressId' => $oldAddressId, 'oldContactId' => $oldContactId, 'newContactId' => $id]);
         \SrcCore\models\DatabaseModel::update([
             'set'   => ['item_id' => $id, 'type' => 'contact_v3'],
             'table' => 'resource_contacts',
@@ -185,22 +214,34 @@ foreach ($customs as $custom) {
             'where' => ['dest_contact_id = ?', 'dest_address_id = ?'],
             'data'  => [$oldContactId, $oldAddressId],
         ]);
-        migrateResletterbox(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
+        $currentValuesResletterbox = migrateResletterbox(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
+        $aValues = array_merge($aValues, $currentValuesContactRes, $currentValuesResletterbox);
 
         $migrated++;
 
-        if ($migrated % 10000 == 0) {
+        if ($migrated % 5000 == 0) {
+            pg_copy_from($databaseConnection, 'resource_contacts (res_id, item_id, type, mode)', $aValues, "\t", "\\\\N");
             $finMigrateInProgress = microtime(true);
             $delaiInProgress = $finMigrateInProgress - $debutMigrateInProgress;
             echo "Migration En cours : ".$delaiInProgress." secondes.\n";
             $debutMigrateInProgress = microtime(true);
             printf($migrated . " contact(s) migré(s) - En cours...\n");
+            $aValues = [];
         }
     }
 
+    if (!empty($aValues)) {
+        pg_copy_from($databaseConnection, 'resource_contacts (res_id, item_id, type, mode)', $aValues, "\t", "\\\\N");
+        $finMigrateInProgress = microtime(true);
+        $delaiInProgress = $finMigrateInProgress - $debutMigrateInProgress;
+        echo "Dernière Migration En cours : ".$delaiInProgress." secondes.\n";
+        $debutMigrateInProgress = microtime(true);
+        printf($migrated . " contact(s) migré(s) - Fin...\n");
+    }
+
     $debutEndMigrate = microtime(true);
-    migrateContactRes_Users(['firstManId' => $firstMan[0]['id']]);
-    migrateResletterbox_Users(['firstManId' => $firstMan[0]['id']]);
+    migrateContactRes_Users(['firstManId' => $firstMan[0]['id'], 'databaseConnection' => $databaseConnection]);
+    migrateResletterbox_Users(['firstManId' => $firstMan[0]['id'], 'databaseConnection' => $databaseConnection]);
     migrateResattachments_Users(['firstManId' => $firstMan[0]['id']]);
     migrateContactParameters();
     migrateContactPrivileges();
@@ -286,7 +327,6 @@ function migrateCustomField($args = [])
 
 function migrateContactRes($args = [])
 {
-    \SrcCore\models\DatabaseModel::beginTransaction();
     $contactRes = \SrcCore\models\DatabaseModel::select([
         'select' => ['res_id'],
         'table'  => ['contacts_res'],
@@ -316,21 +356,11 @@ function migrateContactRes($args = [])
         ]) . "\n";
     }
 
-    if (!empty($aValues)) {
-        \SrcCore\models\DatabaseModel::pgsqlCopyFromArray([
-            'table'     => 'resource_contacts',
-            'rows'      => $aValues,
-            'delimiter' => "\t",
-            'nullAs'    => "\\\\N",
-            'fields'    => 'res_id, item_id, type, mode'
-        ]);
-    }
-    \SrcCore\models\DatabaseModel::commitTransaction();
+    return $aValues;
 }
 
 function migrateResletterbox($args = [])
 {
-    \SrcCore\models\DatabaseModel::beginTransaction();
     $resInfo = \SrcCore\models\DatabaseModel::select([
         'select' => ['res_id', 'category_id'],
         'table'  => ['res_letterbox'],
@@ -353,16 +383,7 @@ function migrateResletterbox($args = [])
         ]) . "\n";
     }
 
-    if (!empty($aValues)) {
-        \SrcCore\models\DatabaseModel::pgsqlCopyFromArray([
-            'table'     => 'resource_contacts',
-            'rows'      => $aValues,
-            'delimiter' => "\t",
-            'nullAs'    => "\\\\N",
-            'fields'    => 'res_id, item_id, type, mode'
-        ]);
-    }
-    \SrcCore\models\DatabaseModel::commitTransaction();
+    return $aValues; 
 }
 
 function migrateContactRes_Users($args = [])
@@ -404,13 +425,7 @@ function migrateContactRes_Users($args = [])
     }
 
     if (!empty($aValues)) {
-        \SrcCore\models\DatabaseModel::pgsqlCopyFromArray([
-            'table'     => 'resource_contacts',
-            'rows'      => $aValues,
-            'delimiter' => "\t",
-            'nullAs'    => "\\\\N",
-            'fields'    => 'res_id, item_id, type, mode'
-        ]);
+        pg_copy_from($args['databaseConnection'], 'resource_contacts (res_id, item_id, type, mode)', $aValues, "\t", "\\\\N");
     }
     \SrcCore\models\DatabaseModel::commitTransaction();
 }
@@ -449,13 +464,7 @@ function migrateResletterbox_Users($args = [])
     }
 
     if (!empty($aValues)) {
-        \SrcCore\models\DatabaseModel::pgsqlCopyFromArray([
-            'table'     => 'resource_contacts',
-            'rows'      => $aValues,
-            'delimiter' => "\t",
-            'nullAs'    => "\\\\N",
-            'fields'    => 'res_id, item_id, type, mode'
-        ]);
+        pg_copy_from($args['databaseConnection'], 'resource_contacts (res_id, item_id, type, mode)', $aValues, "\t", "\\\\N");
     }
     \SrcCore\models\DatabaseModel::commitTransaction();
 }

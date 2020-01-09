@@ -8,8 +8,7 @@
         <mat-list-item *ngFor="let diffusion of visaWorkflow.items;let i=index" cdkDrag class="columns workflow"
             [cdkDragDisabled]="!adminMode" [class.notDraggable]="!adminMode"
             [class.notEditable]="!adminMode" [class.processed]="diffusion.process_date != null">
-            <mat-icon *ngIf="!adminMode" mat-list-icon class="fa fa-user fa-2x" color="primary"></mat-icon>
-            <mat-icon *ngIf="adminMode" class="avatar" mat-list-icon color="primary"
+            <mat-icon [ngClass]="{'fa fa-user fa-2x': diffusion.picture === null,'avatar': diffusion.picture !== null}" mat-list-icon color="primary"
                     [style.background-image]="'url('+diffusion.picture+')'"></mat-icon>
             <ng-container *ngIf="!adminMode">
                 <mat-icon mat-list-icon class="fa fa-hourglass fa-2x"

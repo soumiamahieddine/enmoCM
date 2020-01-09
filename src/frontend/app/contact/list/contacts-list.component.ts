@@ -169,7 +169,16 @@ export class ContactsListComponent implements OnInit {
     }
 
     empty(value: any) {
-        if (value !== null && value !== '' && value !== undefined) {
+        if (value === null || value === undefined) {
+            return true;
+
+        } else if (Array.isArray(value)) {
+            if (value.length > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } else if (String(value) !== '') {
             return false;
         } else {
             return true;

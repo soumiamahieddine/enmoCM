@@ -11,6 +11,7 @@ import { AttachmentCreateComponent } from './attachment-create/attachment-create
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { PrivilegeService } from '../../service/privileges.service';
 import { HeaderService } from '../../service/header.service';
+import { VisaWorkflowModalComponent } from '../visa/modal/visa-workflow-modal.component';
 
 @Component({
     selector: 'app-attachments-list',
@@ -43,6 +44,7 @@ export class AttachmentsListComponent implements OnInit {
     loading: boolean = true;
     pos = 0;
     mailevaEnabled: boolean = false;
+    maarchParapheurEnabled: boolean = false;
 
     hideMainInfo: boolean = false;
 
@@ -64,6 +66,7 @@ export class AttachmentsListComponent implements OnInit {
         private privilegeService: PrivilegeService) { }
 
     ngOnInit(): void {
+        this.checkMaarchParapheurEnabled();
         if (this.resId !== null) {
             this.http.get(`../../rest/resources/${this.resId}/attachments`).pipe(
                 tap((data: any) => {
@@ -87,6 +90,17 @@ export class AttachmentsListComponent implements OnInit {
                 })
             ).subscribe();
         }
+    }
+
+    checkMaarchParapheurEnabled() {
+        this.http.get("../../rest/externalSignatureBooks/enabled")
+            .subscribe((data: any) => {
+                if (data.enabledSignatureBook === 'maarchParapheur') {
+                    this.maarchParapheurEnabled = true;
+                }
+            }, (err: any) => {
+                this.notify.error(err.error.errors);
+            });
     }
 
     loadAttachments(resId: number) {
@@ -199,5 +213,9 @@ export class AttachmentsListComponent implements OnInit {
 
     filterType(ev: any) {
         this.currentFilter = ev.value;
+    }
+
+    openMaarchParapheurWorkflow(attachment: any) {
+        this.dialog.open(VisaWorkflowModalComponent, {data: {attachment : attachment}});
     }
 }

@@ -9,7 +9,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
 
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { startWith, switchMap, map, catchError, takeUntil } from 'rxjs/operators';
+import { startWith, switchMap, map, catchError, takeUntil, tap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
@@ -24,6 +24,7 @@ import { PanelFolderComponent } from '../folder/panel/panel-folder.component';
 import { FoldersService } from '../folder/folders.service';
 import { ActionsService } from '../actions/actions.service';
 import { ContactsListModalComponent } from '../contact/list/modal/contacts-list-modal.component';
+import { MenuShortcutComponent } from '../menu/menu-shortcut.component';
 
 
 declare function $j(selector: any): any;
@@ -99,6 +100,7 @@ export class BasketListComponent implements OnInit {
     @ViewChild('filtersTool', { static: true }) filtersTool: FiltersToolComponent;
     @ViewChild('appPanelList', { static: true }) appPanelList: PanelListComponent;
     @ViewChild('basketHome', { static: true }) basketHome: BasketHomeComponent;
+    @ViewChild('menuShortcut', { static: true }) menuShortcut: MenuShortcutComponent;
     @ViewChild('panelFolder', { static: true }) panelFolder: PanelFolderComponent;
 
     currentSelectedChrono: string = '';
@@ -283,9 +285,11 @@ export class BasketListComponent implements OnInit {
     }
 
     viewThumbnail(row: any) {
-        this.thumbnailUrl = '../../rest/resources/' + row.resId + '/thumbnail';
-        $j('#viewThumbnail').show();
-        $j('#listContent').css({ "overflow": "hidden" });
+        if (row.hasDocument) {
+            this.thumbnailUrl = '../../rest/resources/' + row.resId + '/thumbnail';
+            $j('#viewThumbnail').show();
+            $j('#listContent').css({"overflow": "hidden"});
+        }
     }
 
     closeThumbnail() {
@@ -300,7 +304,7 @@ export class BasketListComponent implements OnInit {
             Object.keys(element).forEach((key) => {
                 if (key == 'statusImage' && element[key] == null) {
                     element[key] = 'fa-question undefined';
-                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'folders', 'hasDocument'].indexOf(key) === -1) {
+                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'folders', 'hasDocument', 'mailTracking'].indexOf(key) === -1) {
                     element[key] = this.lang.undefined;
                 }
             });
@@ -491,6 +495,7 @@ export class BasketListComponent implements OnInit {
     toggleMailTracking(row: any) {
         if (!row.mailTracking) {
             this.http.post('../../rest/resources/follow', {resources: [row.resId]}).pipe(
+                tap(() => this.menuShortcut.nbResourcesFollowed++),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
@@ -498,6 +503,7 @@ export class BasketListComponent implements OnInit {
             ).subscribe();
         } else {
             this.http.request('DELETE', '../../rest/resources/unfollow', { body: { resources: [row.resId] } }).pipe(
+                tap(() => this.menuShortcut.nbResourcesFollowed--),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);

@@ -14,7 +14,6 @@
 
 namespace Resource\controllers;
 
-
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Group\controllers\PrivilegeController;
@@ -32,7 +31,7 @@ class UserFollowedResourceController
     {
         $body = $request->getParsedBody();
 
-        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])){
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -59,7 +58,7 @@ class UserFollowedResourceController
     {
         $body = $request->getParsedBody();
 
-        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])){
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -112,9 +111,7 @@ class UserFollowedResourceController
 
             $resIds = ResourceListController::getIdsWithOffsetAndLimit(['resources' => $rawResources, 'offset' => $queryParams['offset'], 'limit' => $queryParams['limit']]);
 
-            foreach ($rawResources as $resource) {
-                $allResources[] = $resource['res_id'];
-            }
+            $allResources = array_column($rawResources, 'res_id');
 
             $formattedResources = [];
             if (!empty($resIds)) {
@@ -132,7 +129,8 @@ class UserFollowedResourceController
 
                 $select = [
                     'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'res_letterbox.alt_identifier',
-                    'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"', 'priorities.color AS "priorities.color"'
+                    'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"', 'priorities.color AS "priorities.color"',
+                    'res_letterbox.filename as res_filename'
                 ];
                 $tableFunction = ['status', 'priorities'];
                 $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.priority = priorities.id'];
@@ -156,7 +154,8 @@ class UserFollowedResourceController
                     'resources'     => $resources,
                     'userId'        => $GLOBALS['id'],
                     'attachments'   => $attachments,
-                    'checkLocked'   => false
+                    'checkLocked'   => false,
+                    'trackedMails'  => $followedResources,
                 ]);
             }
 
@@ -166,7 +165,7 @@ class UserFollowedResourceController
         return $response->withJson(['resources' => $formattedResources, 'countResources' => $count, 'allResources' => $allResources]);
     }
 
-    public function getBasketsFromFolder(Request $request, Response $response, array $args)
+    public function getBaskets(Request $request, Response $response, array $args)
     {
         if (!Validator::numeric()->notEmpty()->validate($args['resId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);

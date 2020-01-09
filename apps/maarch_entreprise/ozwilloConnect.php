@@ -32,11 +32,14 @@ if (empty($user)) {
     if (empty($ozwilloConfig['entityId'])) {
         $ozwilloConfig['entityId'] = 'VILLE';
     }
+    $group = \Group\models\GroupModel::getByGroupId(['groupId' => $ozwilloConfig['groupId'], 'select' => ['id']]);
     $firstname = empty($profile->given_name) ? 'utilisateur' : $profile->given_name;
     $lastname = empty($profile->family_name) ? 'utilisateur' : $profile->family_name;
-    \User\models\UserModel::create(['user' => ['userId' => $idToken->sub, 'firstname' => $firstname, 'lastname' => $lastname]]);
+    $preferences = ['documentEdition' => 'java'];
+
+    \User\models\UserModel::create(['user' => ['userId' => $idToken->sub, 'firstname' => $firstname, 'lastname' => $lastname, 'preferences' => json_encode($preferences)]]);
     $user = \User\models\UserModel::getByLogin(['login' => $idToken->sub]);
-    \User\models\UserModel::addGroup(['id' => $user['id'], 'groupId' => $ozwilloConfig['groupId']]);
+    \User\models\UserGroupModel::create(['user_id' => $user['id'], 'group_id' => $group['id']]);
     \User\models\UserEntityModel::addUserEntity(['id' => $user['id'], 'entityId' => $ozwilloConfig['entityId'], 'primaryEntity' => 'Y']);
 }
 

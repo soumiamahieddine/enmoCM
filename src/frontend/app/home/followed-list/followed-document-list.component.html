@@ -28,7 +28,7 @@
                     [listProperties]="this.listProperties" [snavR]="snav2" [totalRes]="allResInBasket.length"
                     [selectedRes]="selectedRes" [routeDatas]="'/rest/followedResources/filters'"
                     (toggleAllRes)="toggleAllRes($event)" (refreshEventAfterAction)="refreshDaoAfterAction()"
-                    (refreshEvent)="refreshDao()" [title]="lang.searchMailInFolder">
+                    (refreshEvent)="refreshDao()" [title]="lang.searchTrackedMail">
                 </app-filters-tool>
             </div>
         </div>
@@ -76,6 +76,10 @@
                                             (change)="toggleRes($event,row)" (click)="$event.stopPropagation();">
                                         </mat-checkbox>
                                     </span>
+                                    <button mat-icon-button (click)="$event.stopPropagation();unfollowMail(row)" style="margin-left: -25px; color: #F99830"
+                                        title="{{lang.untrackThisMail}}">
+                                        <mat-icon class="fas fa-star" style="margin-bottom: 5px;"></mat-icon>
+                                    </button>
                                     <span *ngIf="!appService.getViewMode()" style="cursor:pointer;"
                                         class="main-info-status">
                                         <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}"
@@ -127,9 +131,13 @@
                                                 [color]="snav2.opened && row.checked && currentMode == 'diffusion' ? 'primary' : ''">
                                             </mat-icon>
                                         </button>
+                                        <button mat-icon-button title="{{lang.viewResource}}" (click)="$event.stopPropagation();viewDocument(row)"
+                                            (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();"
+                                            [disabled]="!row.hasDocument">
+                                            <mat-icon  fontSet="fas" fontIcon="fa-eye fa-2x"></mat-icon>
+                                        </button>
                                         <button mat-icon-button title="{{lang.linkDetails}}"
-                                            (click)="$event.stopPropagation();goToDetail(row);"
-                                            (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();">
+                                                (click)="$event.stopPropagation();goToDetail(row);">
                                             <mat-icon fontSet="fas" fontIcon="fa-info-circle fa-2x"></mat-icon>
                                         </button>
                                     </span>

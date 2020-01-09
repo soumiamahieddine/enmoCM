@@ -564,9 +564,9 @@ class functions
         } else if($databasetype  == "ORACLE") {
             $string = str_replace("'", "''", $string);
             $string = str_replace("\\", "", $string);
-        } else if(($databasetype  == "MYSQL")  && !get_magic_quotes_runtime()) {
+        } else if(($databasetype  == "MYSQL")) {
             $string = addslashes($string);
-        } else if(($databasetype  == "POSTGRESQL")  && !get_magic_quotes_runtime()) {
+        } else if(($databasetype  == "POSTGRESQL")) {
             $string = str_replace("&#039;", "'", $string);
             $string = pg_escape_string($string);
         }

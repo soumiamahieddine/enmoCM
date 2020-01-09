@@ -23,6 +23,7 @@ import { FolderActionListComponent } from '../folder-action-list/folder-action-l
 import { FiltersListService } from '../../../service/filtersList.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { FoldersService } from '../folders.service';
+import { MenuShortcutComponent } from '../../menu/menu-shortcut.component';
 
 
 declare function $j(selector: any): any;
@@ -98,6 +99,7 @@ export class FolderDocumentListComponent implements OnInit {
 
     @ViewChild('actionsListContext', { static: true }) actionsList: FolderActionListComponent;
     @ViewChild('appPanelList', { static: true }) appPanelList: PanelListComponent;
+    @ViewChild('menuShortcut', { static: true }) menuShortcut: MenuShortcutComponent;
 
     currentSelectedChrono: string = '';
 
@@ -290,9 +292,11 @@ export class FolderDocumentListComponent implements OnInit {
     }
 
     viewThumbnail(row: any) {
-        this.thumbnailUrl = '../../rest/resources/' + row.resId + '/thumbnail';
-        $j('#viewThumbnail').show();
-        $j('#listContent').css({ "overflow": "hidden" });
+        if (row.hasDocument) {
+            this.thumbnailUrl = '../../rest/resources/' + row.resId + '/thumbnail';
+            $j('#viewThumbnail').show();
+            $j('#listContent').css({"overflow": "hidden"});
+        }
     }
 
     closeThumbnail() {
@@ -306,7 +310,7 @@ export class FolderDocumentListComponent implements OnInit {
             Object.keys(element).forEach((key) => {
                 if (key == 'statusImage' && element[key] == null) {
                     element[key] = 'fa-question undefined';
-                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display'].indexOf(key) === -1) {
+                } else if ((element[key] == null || element[key] == '') && ['closingDate', 'countAttachments', 'countNotes', 'display', 'mailTracking', 'hasDocument'].indexOf(key) === -1) {
                     element[key] = this.lang.undefined;
                 }
             });
@@ -369,6 +373,31 @@ export class FolderDocumentListComponent implements OnInit {
 
     listTodrag() {
         return this.foldersService.getDragIds();
+    }
+
+    toggleMailTracking(row: any) {
+        if (!row.mailTracking) {
+            this.http.post('../../rest/resources/follow', {resources: [row.resId]}).pipe(
+                tap(() => this.menuShortcut.nbResourcesFollowed++),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.http.request('DELETE', '../../rest/resources/unfollow', { body: { resources: [row.resId] } }).pipe(
+                tap(() => this.menuShortcut.nbResourcesFollowed--),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
+        row.mailTracking = !row.mailTracking;
+    }
+
+    viewDocument(row: any) {
+        window.open("../../rest/resources/" + row.resId + "/content?mode=view", "_blank");
     }
 }
 export interface BasketList {

@@ -205,6 +205,13 @@ class UserController
             $data['loginmode'] = 'standard';
         }
 
+        $preferences = ['documentEdition' => 'java'];
+        $allowedMethods = DocumentEditorController::getAllowedMethods();
+        if (in_array('onlyoffice', $allowedMethods)) {
+            $preferences = ['documentEdition' => 'onlyoffice'];
+        }
+        $data['preferences'] = json_encode($preferences);
+
         $id = UserModel::create(['user' => $data]);
 
         $userQuota = ParameterModel::getById(['id' => 'user_quota', 'select' => ['param_value_int']]);

@@ -3,7 +3,7 @@
         [fixedInViewport]="appService.getViewMode()" [opened]="appService.getViewMode() ? false : true"
         autoFocus="false" style="overflow-x:hidden;" [ngStyle]="{'width': appService.getViewMode() ? '80%' : '350px'}">
         <header-panel [snavLeft]="snav"></header-panel>
-        <menu-shortcut></menu-shortcut>
+        <menu-shortcut #menuShortcut></menu-shortcut>
         <menu-nav></menu-nav>
         <basket-home #basketHome [snavL]="snav"></basket-home>
         <mat-divider></mat-divider>
@@ -101,6 +101,10 @@
                                             (change)="toggleRes($event,row)" (click)="$event.stopPropagation();">
                                         </mat-checkbox>
                                     </span>
+                                    <button mat-icon-button (click)="$event.stopPropagation();toggleMailTracking(row)" style="margin-left: -25px; color: #F99830"
+                                        [title]="row.mailTracking === true ? lang.untrackThisMail : lang.trackThisMail">
+                                        <mat-icon [ngClass]="[row.mailTracking === true ? 'fas fa-star' : 'far fa-star']" style="margin-bottom: 5px;"></mat-icon>
+                                    </button>
                                     <span *ngIf="!appService.getViewMode()" style="cursor:pointer;"
                                         class="main-info-status">
                                         <mat-icon *ngIf="row.isLocked !== true" title="{{row.statusLabel}}"
@@ -152,11 +156,15 @@
                                                 [color]="snav2.opened && row.checked && currentMode == 'diffusion' ? 'primary' : ''">
                                             </mat-icon>
                                         </button>
-                                        <button mat-icon-button title="{{lang.linkDetails}}"
-                                            (click)="$event.stopPropagation();goToDetail(row);"
-                                            (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();">
-                                            <mat-icon fontSet="fas" fontIcon="fa-info-circle fa-2x"></mat-icon>
-                                        </button>
+                                        <button mat-icon-button title="{{lang.viewResource}}" (click)="$event.stopPropagation();viewDocument(row)"
+                                                (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();"
+                                                [disabled]="!row.hasDocument">
+                                                <mat-icon  fontSet="fas" fontIcon="fa-eye fa-2x"></mat-icon>
+                                            </button>
+                                            <button mat-icon-button title="{{lang.linkDetails}}"
+                                                    (click)="$event.stopPropagation();goToDetail(row);">
+                                                <mat-icon fontSet="fas" fontIcon="fa-info-circle fa-2x"></mat-icon>
+                                            </button>
                                     </span>
                                 </div>
                             </td>

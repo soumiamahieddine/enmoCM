@@ -419,9 +419,9 @@ class ContactController
 
     public function getContactsParameters(Request $request, Response $response)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
+        /*if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_contacts', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
+        }*/
 
         $contactsFilling = ContactFillingModel::get();
         $contactParameters = ContactParameterModel::get([

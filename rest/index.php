@@ -351,6 +351,9 @@ $app->get('/resources/{resId}/listInstance', \Entity\controllers\ListInstanceCon
 $app->get('/resources/{resId}/visaCircuit', \Entity\controllers\ListInstanceController::class . ':getVisaCircuitByResId');
 $app->get('/resources/{resId}/opinionCircuit', \Entity\controllers\ListInstanceController::class . ':getOpinionCircuitByResId');
 $app->get('/resources/{resId}/availableCircuits', \Entity\controllers\ListTemplateController::class . ':getAvailableCircuitsByResId');
+$app->get('/resources/{resId}/linkedResources', \Resource\controllers\ResController::class . ':getLinkedResources');
+$app->post('/resources/{resId}/linkedResources', \Resource\controllers\ResController::class . ':linkResources');
+$app->delete('/resources/{resId}/linkedResources/{id}', \Resource\controllers\ResController::class . ':unlinkResources');
 $app->get('/res/{resId}/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
@@ -362,7 +365,7 @@ $app->get('/resources/{resId}/users/{userId}/groups/{groupId}/baskets/{basketId}
 $app->post('/resources/follow', \Resource\controllers\UserFollowedResourceController::class . ':follow');
 $app->delete('/resources/unfollow', \Resource\controllers\UserFollowedResourceController::class . ':unFollow');
 $app->get('/followedResources', \Resource\controllers\UserFollowedResourceController::class . ':getFollowedResources');
-$app->get('/followedResources/{resId}/baskets', \Resource\controllers\UserFollowedResourceController::class . ':getBasketsFromFolder');
+$app->get('/followedResources/{resId}/baskets', \Resource\controllers\UserFollowedResourceController::class . ':getBaskets');
 $app->get('/followedResources/filters', \Resource\controllers\UserFollowedResourceController::class . ':getFilters');
 $app->get('/followedResources/count', \Resource\controllers\UserFollowedResourceController::class . ':getNumberOfFollowedResources');
 
@@ -493,8 +496,10 @@ $app->post('/saveNumericPackage', \Sendmail\Controllers\ReceiveMessageExchangeCo
 $app->post('/saveMessageExchangeReturn', \Sendmail\Controllers\ReceiveMessageExchangeController::class . ':saveMessageExchangeReturn');
 $app->post('/saveMessageExchangeReview', \Sendmail\Controllers\MessageExchangeReviewController::class . ':saveMessageExchangeReview');
 
+//ExternalSignatoryBooks
 $app->get('/maarchParapheur/user/{id}/picture', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':getUserPicture');
-
+$app->get('/externalSignatureBooks/enabled', \ExternalSignatoryBook\controllers\ExternalSignatureBookController::class . ':getEnabledSignatureBook');
 $app->get('/externalSummary/{resId}', \ExternalSummary\controllers\SummaryController::class . ':getByResId');
+
 
 $app->run();

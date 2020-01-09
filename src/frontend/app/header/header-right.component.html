@@ -41,7 +41,7 @@
             style="margin-top:-8px;background-image: url('static.php?filename=login-banner.jpg');background-size:cover;border-bottom: solid 1px white;"></canvas>
         <i title="{{lang.myProfileAccess}}" routerLink="/profile"
             style="cursor:pointer;z-index:1;color:white;position: absolute;left: 85px;top: 17px;background-image: url('static.php?filename=logo_only.svg');width: 70px;height: 70px;background-size: cover;background-position: top center;border-radius: 50%;border: solid white;background-color:white;"></i>
-        <div class="content" style="padding-top:10px;color:white;max-height:250px;overflow-y:auto;overflow-x:hidden;">
+        <div class="content" style="padding-top:20px;color:white;max-height:250px;overflow-y:auto;overflow-x:hidden;">
             <p routerLink="/profile" class="text-center" style="cursor:pointer;">{{headerService.user.firstname}}
                 {{headerService.user.lastname | uppercase}}</p>
             <mat-list>
@@ -57,7 +57,7 @@
                 </mat-list-item>
             </mat-list>
         </div>
-        <div style="display:flex;padding: 5px 5px 0 5px;">
+        <div style="display:flex;padding: 5px;">
             <div style="text-align:left;flex:1">
                 <a routerLink="/profile" style="color: white;padding-left: 10px;">
                     <span class="badge" style="background:white;" color="primary">{{lang.myProfile}}</span>

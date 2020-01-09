@@ -2,7 +2,6 @@ import { NgModule }                             from '@angular/core';
 
 import { SharedModule }                         from './app-common.module';
 
-import { CustomSnackbarComponent, NotificationService }              from './notification.service';
 import { ConfirmModalComponent }                from './confirmModal.component';
 import { FiltersListService }                   from '../service/filtersList.service';
 
@@ -86,6 +85,7 @@ import { ActionsService } from './actions/actions.service';
 import { ContactsListComponent } from './contact/list/contacts-list.component';
 import { ContactsListModalComponent } from './contact/list/modal/contacts-list-modal.component';
 import { ContactModalComponent } from './administration/contact/modal/contact-modal.component';
+import { VisaWorkflowModalComponent } from './visa/modal/visa-workflow-modal.component';
 
 
 @NgModule({
@@ -106,7 +106,6 @@ import { ContactModalComponent } from './administration/contact/modal/contact-mo
         SignatureBookComponent,
         SafeUrlPipe,
         SaveNumericPackageComponent,
-        CustomSnackbarComponent,
         ConfirmModalComponent,
         InfoChangePasswordModalComponent,
         ActivateUserComponent,
@@ -162,10 +161,10 @@ import { ContactModalComponent } from './administration/contact/modal/contact-mo
         ContactsListModalComponent,
         ContactModalComponent,
         FollowedDocumentListComponent,
-        FollowedActionListComponent
+        FollowedActionListComponent,
+        VisaWorkflowModalComponent
     ],
     entryComponents: [
-        CustomSnackbarComponent,
         ConfirmModalComponent,
         InfoChangePasswordModalComponent,
         AttachmentsListComponent,
@@ -192,9 +191,10 @@ import { ContactModalComponent } from './administration/contact/modal/contact-mo
         AttachmentCreateComponent,
         AttachmentShowModalComponent,
         ContactsListModalComponent,
-        ContactModalComponent
+        ContactModalComponent,
+        VisaWorkflowModalComponent
     ],
-    providers: [ FiltersListService, FoldersService, ActionsService, NotificationService, PrivilegeService ],
+    providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule { }

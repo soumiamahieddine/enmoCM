@@ -33,16 +33,39 @@ class ListTemplateController
 {
     public function get(Request $request, Response $response)
     {
-        $listTemplates = ListTemplateModel::get(['select' => ['id', 'type', 'entity_id as "entityId"', 'title', 'description']]);
+        $queryParams = $request->getQueryParams();
+
+        if (empty($queryParams['admin'])) {
+            $where = ['owner is null or owner = ?'];
+            $data = [$GLOBALS['id']];
+        } else {
+            $where = ['owner is null'];
+            $data = [];
+        }
+
+        $listTemplates = ListTemplateModel::get([
+            'select' => ['id', 'type', 'entity_id as "entityId"', 'title', 'description', 'owner'],
+            'where'  => $where,
+            'data'   => $data
+        ]);
+
+        for ($i = 0; $i < count($listTemplates); $i++) {
+            $listTemplates[$i]['isPrivate'] = $listTemplates[$i]['owner'] != null;
+            unset($listTemplates[$i]['owner']);
+        }
 
         return $response->withJson(['listTemplates' => $listTemplates]);
     }
 
     public function getById(Request $request, Response $response, array $args)
     {
-        $listTemplate = ListTemplateModel::getById(['id' => $args['id'], 'select' => ['title', 'description', 'type', 'entity_id']]);
+        $listTemplate = ListTemplateModel::getById(['id' => $args['id'], 'select' => ['title', 'description', 'type', 'entity_id', 'owner']]);
         if (empty($listTemplate)) {
             return $response->withStatus(400)->withJson(['errors' => 'List template not found']);
+        }
+
+        if (!empty($listTemplate['owner']) && $listTemplate['owner'] != $GLOBALS['id']) {
+            return $response->withStatus(403)->withJson(['errors' => 'Cannot access private model']);
         }
 
         $listTemplateItems = ListTemplateItemModel::get(['select' => ['*'], 'where' => ['list_template_id = ?'], 'data' => [$args['id']]]);
@@ -57,7 +80,7 @@ class ListTemplateController
         }
 
         $roles = EntityModel::getRoles();
-        $difflistType = $listTemplate['type'] == 'diffusionList' ? 'entity_id' : $listTemplate['type'] == 'visaCircuit' ? 'VISA_CIRCUIT' : 'AVIS_CIRCUIT';
+        $difflistType = $listTemplate['type'] == 'diffusionList' ? 'entity_id' : ($listTemplate['type'] == 'visaCircuit' ? 'VISA_CIRCUIT' : 'AVIS_CIRCUIT');
         $listTemplateTypes = ListTemplateModel::getTypes(['select' => ['difflist_type_roles'], 'where' => ['difflist_type_id = ?'], 'data' => [$difflistType]]);
         $rolesForService = empty($listTemplateTypes[0]['difflist_type_roles']) ? [] : explode(' ', $listTemplateTypes[0]['difflist_type_roles']);
         foreach ($roles as $key => $role) {
@@ -84,12 +107,32 @@ class ListTemplateController
     {
         $body = $request->getParsedBody();
 
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']]) && !empty($body['entityId'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
+        $queryParams = $request->getQueryParams();
 
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId' => $GLOBALS['id']]) && empty($body['entityId'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        if (!empty($queryParams['admin'])) {
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId'      => $GLOBALS['id']]) && !empty($body['entityId'])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId'      => $GLOBALS['id']]) && empty($body['entityId'])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+
+            $owner = null;
+        } else {
+            if (!empty($body['entityId']) || $body['type'] == 'diffusionList') {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+
+            if ($body['type'] == 'visaCircuit'
+                && !PrivilegeController::hasPrivilege(['privilegeId' => 'config_visa_workflow', 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+            if ($body['type'] == 'opinionCircuit'
+                && !PrivilegeController::hasPrivilege(['privilegeId' => 'config_avis_workflow', 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+            $owner = $GLOBALS['id'];
         }
 
         $allowedTypes = ['diffusionList', 'visaCircuit', 'opinionCircuit'];
@@ -122,7 +165,8 @@ class ListTemplateController
             'title'         => $body['title'] ?? $body['description'],
             'description'   => $body['description'] ?? null,
             'type'          => $body['type'],
-            'entity_id'     => $body['entityId'] ?? null
+            'entity_id'     => $body['entityId'] ?? null,
+            'owner'         => $owner
         ]);
 
         foreach ($body['items'] as $key => $item) {
@@ -214,16 +258,23 @@ class ListTemplateController
 
     public function delete(Request $request, Response $response, array $args)
     {
-        $listTemplate = ListTemplateModel::getById(['id' => $args['id'], 'select' => ['entity_id', 'type', 'title']]);
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']]) && !empty($listTemplate['entityId'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
+        $listTemplate = ListTemplateModel::getById(['id' => $args['id'], 'select' => ['entity_id', 'type', 'title', 'owner']]);
 
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId' => $GLOBALS['id']]) && empty($listTemplate['entityId'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
         if (empty($listTemplate)) {
             return $response->withStatus(400)->withJson(['errors' => 'List template not found']);
+        }
+        if (empty($listTemplate['owner']) && ($listTemplate['type'] != 'visaCircuit' || $listTemplate['type'] != 'opinionCircuit') ) {
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId'      => $GLOBALS['id']]) && !empty($listTemplate['entityId'])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId'      => $GLOBALS['id']]) && empty($listTemplate['entityId'])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+        } else {
+            if ($listTemplate['owner'] != $GLOBALS['id']) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
         }
 
         if (!empty($listTemplate['entityId'])) {

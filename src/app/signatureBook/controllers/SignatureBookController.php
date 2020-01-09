@@ -187,7 +187,6 @@ class SignatureBookController
                 continue;
             }
 
-            $realId = 0;
             $realId = $value['res_id'];
 
             $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $realId, 'collId' => 'attachments_coll']);

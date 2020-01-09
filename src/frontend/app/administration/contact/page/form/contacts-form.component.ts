@@ -232,7 +232,7 @@ export class ContactsFormComponent implements OnInit {
         {
             id: 'externalId_maarch2maarch',
             unit: 'complement',
-            label: this.lang.siretCode,
+            label: this.lang.IdMaarch2Gec,
             desc: `Doit correspondre au numéro SIRET d'une entité dans l'instance destinatrice (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
             type: 'string',
             control: new FormControl(),

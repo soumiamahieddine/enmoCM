@@ -86,19 +86,21 @@
                 </app-attachments-list>
                 <app-indexing-form *ngIf="currentTool === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
                     [resId]="currentResourceInformations.resId" [indexingFormId]="currentResourceInformations.modelId"
-                    [mode]="'process'" [canEdit]="canEditData" [hideDiffusionList]="true"></app-indexing-form>
+                    [mode]="'process'" [canEdit]="canEditData" [hideDiffusionList]="true"
+                    (loadingFormEndEvent)="triggerProcessAction()"></app-indexing-form>
                 <div style="position: sticky;bottom: 0px;text-align:right;">
-                    <button mat-fab *ngIf="indexingForm !== undefined && indexingForm.isResourceModified() && currentTool === 'info'"
-                        (click)="confirmModification()" color="accent"
-                        [title]="lang.saveModifications">
+                    <button mat-fab
+                        *ngIf="indexingForm !== undefined && indexingForm.isResourceModified() && currentTool === 'info'"
+                        (click)="confirmModification()" color="accent" [title]="lang.saveModifications">
                         <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
                     </button>
-                    <button mat-fab [title]="lang.saveModifications" *ngIf="appDiffusionsList !== undefined && appDiffusionsList.isModified() && currentTool === 'diffusionList'"
+                    <button mat-fab [title]="lang.saveModifications"
+                        *ngIf="appDiffusionsList !== undefined && appDiffusionsList.isModified() && currentTool === 'diffusionList'"
                         (click)="saveListinstance()" color="accent">
                         <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
                     </button>
                 </div>
-                
+
             </ng-container>
             <ng-template #elseTemplate>
                 <div class="openedModal">
@@ -165,9 +167,11 @@
                             <div class="title-divider"></div>
                         </div>
                         <div class="content">
-                            <button mat-button class="categoryLabel" (click)="toggleFollow()">
-                                <mat-icon color="primary" class="{{this.resourceFollowed ? 'fas':'far'}} fa-star"
-                                          style="font-size: 20px;"></mat-icon>
+                            <button mat-icon-button
+                                [title]="this.resourceFollowed ? lang.untrackThisMail:lang.trackThisMail"
+                                class="categoryLabel" (click)="toggleFollow()">
+                                <mat-icon class="followIcon {{this.resourceFollowed ? 'fas':'far'}} fa-star"
+                                    style="font-size: 20px;"></mat-icon>
                             </button>
                             <div class="content-item" *ngIf="this.currentResourceInformations.priority !== undefined">
                                 <b><i class="fas fa-flag" [style.color]="this.currentResourceInformations.priorityColor"
@@ -256,15 +260,17 @@
         </app-attachments-list>
         <app-indexing-form *ngIf="modal.id === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
             [indexingFormId]="currentResourceInformations.modelId" [resId]="currentResourceInformations.resId"
-            [mode]="'process'" [canEdit]="canEditData" [hideDiffusionList]="true">
+            [mode]="'process'" [canEdit]="canEditData" [hideDiffusionList]="true"
+            (loadingFormEndEvent)="triggerProcessAction()">
         </app-indexing-form>
         <div style="position: sticky;bottom: 0px;text-align:right;padding:15px;">
-            <button mat-fab *ngIf="indexingForm !== undefined && indexingForm.isResourceModified() && modal.id === 'info'"
-                (click)="confirmModification()" color="accent"
-                [title]="lang.saveModifications">
+            <button mat-fab
+                *ngIf="indexingForm !== undefined && indexingForm.isResourceModified() && modal.id === 'info'"
+                (click)="confirmModification()" color="accent" [title]="lang.saveModifications">
                 <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
             </button>
-            <button mat-fab [title]="lang.saveModifications" *ngIf="appDiffusionsList !== undefined && appDiffusionsList.isModified() && modal.id === 'diffusionList'"
+            <button mat-fab [title]="lang.saveModifications"
+                *ngIf="appDiffusionsList !== undefined && appDiffusionsList.isModified() && modal.id === 'diffusionList'"
                 (click)="saveListinstance()" color="accent">
                 <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
             </button>
