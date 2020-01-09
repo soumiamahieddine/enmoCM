@@ -357,7 +357,9 @@ ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_wkstation CHARACTER VARY
 ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_batch CHARACTER VARYING (50) DEFAULT NULL::character varying;
 ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS scan_postmark CHARACTER VARYING (50) DEFAULT NULL::character varying;
 ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS custom_fields jsonb;
-ALTER TABLE res_letterbox ADD COLUMN IF NOT EXISTS linked_resources jsonb NOT NULL DEFAULT '[]';
+
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS linked_resources;
+ALTER TABLE res_letterbox ADD COLUMN linked_resources jsonb NOT NULL DEFAULT '[]';
 
 
 /* USERGROUP_CONTENT */
