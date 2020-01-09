@@ -158,8 +158,7 @@ export class DiffusionModelAdministrationComponent implements OnInit {
             "type": this.diffusionModel.type,
             "title": this.diffusionModel.title,
             "description": this.diffusionModel.description,
-            "items": Array(),
-            "admin": true
+            "items": Array()
         };
         if (this.idCircuit == null) {
             this.diffusionModel.items.forEach((listModel: any, i: number) => {
@@ -180,7 +179,7 @@ export class DiffusionModelAdministrationComponent implements OnInit {
                     "sequence": listModel.sequence
                 });
             });
-            this.http.post("../../rest/listTemplates", newDiffList)
+            this.http.post("../../rest/listTemplates?admin=true", newDiffList)
                 .subscribe((data: any) => {
                     this.idCircuit = data.id;
                     this.router.navigate(["/administration/diffusionModels"]);

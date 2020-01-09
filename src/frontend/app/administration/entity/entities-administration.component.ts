@@ -584,7 +584,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         } else {
-            this.http.post("../../rest/listTemplates", newDiffList)
+            this.http.post("../../rest/listTemplates?admin=true", newDiffList)
                 .subscribe((data: any) => {
                     this.currentEntity.listTemplate.id = data.id;
                     this.http.get("../../rest/listTemplates/types/entity_id/roles")

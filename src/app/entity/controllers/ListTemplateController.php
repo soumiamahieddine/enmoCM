@@ -107,7 +107,9 @@ class ListTemplateController
     {
         $body = $request->getParsedBody();
 
-        if (!empty($body['admin'])) {
+        $queryParams = $request->getQueryParams();
+
+        if (!empty($queryParams['admin'])) {
             if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId'      => $GLOBALS['id']]) && !empty($body['entityId'])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
@@ -118,7 +120,7 @@ class ListTemplateController
 
             $owner = null;
         } else {
-            if (!empty($body['entityId'])) {
+            if (!empty($body['entityId']) || $body['type'] == 'diffusionList') {
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
 
