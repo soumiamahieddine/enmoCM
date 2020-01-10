@@ -23,3 +23,4 @@ php ./migrateCustomValues.php
 php ./migrateVersionAttachments.php
 php ./migrateContacts.php
 php ./migrateTemplates.php
+php ./migrateLinkedResources.php
