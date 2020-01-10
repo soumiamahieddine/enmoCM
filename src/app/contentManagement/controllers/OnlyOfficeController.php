@@ -36,7 +36,15 @@ class OnlyOfficeController
 
         $coreUrl = str_replace('rest/', '', UrlController::getCoreUrl());
 
-        return $response->withJson(['enabled' => true, 'serverUri' => (string)$loadedXml->onlyoffice->server_uri, 'coreUrl' => $coreUrl]);
+        $configurations = [
+            'enabled'       => true,
+            'serverUri'     => (string)$loadedXml->onlyoffice->server_uri,
+            'serverPort'    => (int)$loadedXml->onlyoffice->server_port,
+            'serverSsl'     => filter_var((string)$loadedXml->onlyoffice->server_ssl, FILTER_VALIDATE_BOOLEAN),
+            'coreUrl'       => $coreUrl
+        ];
+
+        return $response->withJson($configurations);
     }
 
     public static function saveMergedFile(Request $request, Response $response)
@@ -168,14 +176,18 @@ class OnlyOfficeController
     public static function isAvailable(Request $request, Response $response)
     {
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/documentEditorsConfig.xml']);
-        if (empty($loadedXml) || empty($loadedXml->onlyoffice->enabled) || $loadedXml->onlyoffice->enabled == 'false' || empty($loadedXml->onlyoffice->server_uri)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice is not enabled']);
+        if (empty($loadedXml) || empty($loadedXml->onlyoffice->enabled) || $loadedXml->onlyoffice->enabled == 'false') {
+            return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice is not enabled', 'lang' => '']);
+        } elseif (empty($loadedXml->onlyoffice->server_uri)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice server_uri is empty', 'lang' => '']);
+        } elseif (empty($loadedXml->onlyoffice->server_port)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice server_port is empty', 'lang' => '']);
         }
 
         $uri = (string)$loadedXml->onlyoffice->server_uri;
-        $uri = str_replace(':', ' ', $uri);
+        $port = (string)$loadedXml->onlyoffice->server_port;
 
-        $exec = shell_exec("nc -vz -w 5 {$uri} 2>&1");
+        $exec = shell_exec("nc -vz -w 5 {$uri} {$port} 2>&1");
 
         $isAvailable = strpos($exec, 'succeeded!') !== false;
 

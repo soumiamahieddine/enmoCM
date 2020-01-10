@@ -6,5 +6,7 @@
     <onlyoffice>
         <enabled>true</enabled>
         <server_uri>onlyoffice.maarchcourrier.com</server_uri>
+        <server_port>80</server_port>
+        <server_ssl>false</server_ssl>
     </onlyoffice>
 </ROOT>

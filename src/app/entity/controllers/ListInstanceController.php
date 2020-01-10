@@ -64,8 +64,9 @@ class ListInstanceController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $listInstances = ListInstanceModel::getVisaCircuitByResId(['select' => ['listinstance_id', 'sequence', 'item_id', 'item_type', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment', 'signatory', 'requested_signature'], 'id' => $aArgs['resId']]);
+        $listInstances = ListInstanceModel::getVisaCircuitByResId(['select' => ['listinstance_id', 'sequence', 'item_id', 'item_type', 'users.id', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment', 'signatory', 'requested_signature'], 'id' => $aArgs['resId']]);
         foreach ($listInstances as $key => $value) {
+            $listInstances[$key]['item_id'] = $listInstances[$key]['id'];
             $listInstances[$key]['labelToDisplay'] = $listInstances[$key]['item_firstname'].' '.$listInstances[$key]['item_lastname'];
         }
 
@@ -78,8 +79,9 @@ class ListInstanceController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $listInstances = ListInstanceModel::getAvisCircuitByResId(['select' => ['listinstance_id', 'sequence', 'item_id', 'item_type', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment'], 'id' => $aArgs['resId']]);
+        $listInstances = ListInstanceModel::getAvisCircuitByResId(['select' => ['listinstance_id', 'sequence', 'item_id', 'item_type', 'users.id', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment'], 'id' => $aArgs['resId']]);
         foreach ($listInstances as $key => $value) {
+            $listInstances[$key]['item_id'] = $listInstances[$key]['id'];
             $listInstances[$key]['labelToDisplay'] = $listInstances[$key]['item_firstname'].' '.$listInstances[$key]['item_lastname'];
         }
 
@@ -153,6 +155,9 @@ class ListInstanceController
             foreach ($ListInstanceByRes['listInstances'] as $instance) {
                 $listControl = ['item_id', 'item_type', 'item_mode', 'difflist_type'];
                 foreach ($listControl as $itemControl) {
+                    if ($itemControl == 'item_mode' && $ListInstanceByRes['listInstances'][0]['difflist_type'] != 'entity_id') {
+                        continue;
+                    }
                     if (empty($instance[$itemControl])) {
                         return ['errors' => "ListInstance {$itemControl} is not set or empty", 'code' => 400];
                     }
@@ -175,11 +180,13 @@ class ListInstanceController
                             DatabaseModel::rollbackTransaction();
                             return ['errors' => 'User has not enough privileges', 'code' => 400];
                         }
+                        $instance['item_mode'] = $instance['requested_signature'] ? 'sign' : 'visa';
                     } elseif ($ListInstanceByRes['listInstances'][0]['difflist_type'] == 'AVIS_CIRCUIT') {
                         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'avis_documents', 'userId' => $user['id']])) {
                             DatabaseModel::rollbackTransaction();
                             return ['errors' => 'User has not enough privileges', 'code' => 400];
                         }
+                        $instance['item_mode'] = 'avis';
                     }
                 } elseif (in_array($instance['item_type'], ['entity_id', 'entity'])) {
                     if ($instance['item_type'] == 'entity_id') {
