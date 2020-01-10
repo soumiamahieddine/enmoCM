@@ -96,6 +96,14 @@ foreach ($customs as $custom) {
 
     $firstMan = \User\models\UserModel::get(['select' => ['id'], 'orderBy' => ['id'], 'limit' => 1, 'where' => ['status = ?'], 'data' => ['OK']]);
 
+    $table = "contacts (id, civility, firstname, lastname, company, department, function, address_number, address_street,"
+        . "address_additional1, address_additional2, address_postcode, address_town, address_country, email, phone,"
+        . "communication_means, notes, creator, creation_date, modification_date, enabled, external_id)";
+
+    $contactInfoSeparator = "\t";
+
+    $id = 1;
+    $contacts = [];
     $debutMigrateInProgress = microtime(true);
     foreach ($contactsInfo as $contactInfo) {
         $oldContactId = $contactInfo['contact_id'];
@@ -186,58 +194,198 @@ foreach ($customs as $custom) {
         unset($contactInfo['contact_type_label']);
         unset($contactInfo['contact_purpose_label']);
         unset($contactInfo['society_short']);
-        $id = \Contact\models\ContactModel::create($contactInfo);
+
+        $contactInfo['id'] = $id;
+
+        foreach ($contactInfo as $key => $item) {
+            $contactInfo[$key] = (str_replace("\t", " ", $contactInfo[$key]));
+            $contactInfo[$key] = $contactInfo[$key] ?? "NULL";
+            if (empty($contactInfo[$key])) {
+                $contactInfo[$key] = "NULL";
+            }
+        }
+
+        $contact = $id . $contactInfoSeparator
+            . $contactInfo['civility'] . $contactInfoSeparator
+            . $contactInfo['firstname'] . $contactInfoSeparator
+            . $contactInfo['lastname'] . $contactInfoSeparator
+            . $contactInfo['company'] . $contactInfoSeparator
+            . $contactInfo['departement'] . $contactInfoSeparator
+            . $contactInfo['function'] . $contactInfoSeparator
+            . $contactInfo['address_number'] . $contactInfoSeparator
+            . $contactInfo['address_street'] . $contactInfoSeparator
+            . $contactInfo['address_additional1'] . $contactInfoSeparator
+            . $contactInfo['address_additional2'] . $contactInfoSeparator
+            . $contactInfo['address_postcode'] . $contactInfoSeparator
+            . $contactInfo['address_town'] . $contactInfoSeparator
+            . $contactInfo['address_country'] . $contactInfoSeparator
+            . $contactInfo['email'] . $contactInfoSeparator
+            . $contactInfo['phone'] . $contactInfoSeparator
+            . $contactInfo['communication_means'] . $contactInfoSeparator
+            . $contactInfo['notes'] . $contactInfoSeparator
+            . $contactInfo['creator'] . $contactInfoSeparator
+            . $contactInfo['creation_date'] . $contactInfoSeparator
+            . $contactInfo['modification_date'] . $contactInfoSeparator
+            . $contactInfo['enabled'] . $contactInfoSeparator
+            . $contactInfo['external_id'];
+
+        if (strpos($contact, "\r")) {
+            $contact = str_replace("\r", " ", $contact);
+            $contact = str_replace("\n", " ", $contact);
+        }
+
+        $contacts[] = $contact;
+
+        $ids[$id] = ['oldAddressId' => $oldAddressId, 'oldContactId' => $oldContactId];
 
         migrateCustomField(['newContactId' => $id, 'contactCustomInfo' => $contactCustomInfo, 'newCustomFields' => $newCustomFields]);
-        \SrcCore\models\DatabaseModel::update([
-            'set'   => ['contact_id' => $id],
-            'table' => 'acknowledgement_receipts',
-            'where' => ['contact_address_id = ?'],
-            'data'  => [$oldAddressId]
-        ]);
-        \SrcCore\models\DatabaseModel::update([
-            'set'   => ['contact_id' => $id],
-            'table' => 'contacts_groups_lists',
-            'where' => ['contact_addresses_id = ?'],
-            'data'  => [$oldAddressId]
-        ]);
+
         $currentValuesContactRes = migrateContactRes(['oldAddressId' => $oldAddressId, 'oldContactId' => $oldContactId, 'newContactId' => $id]);
-        \SrcCore\models\DatabaseModel::update([
-            'set'   => ['item_id' => $id, 'type' => 'contact_v3'],
-            'table' => 'resource_contacts',
-            'where' => ['item_id = ?', 'type = ?'],
-            'data'  => [$oldAddressId, 'contact']
-        ]);
-        \SrcCore\models\DatabaseModel::update([
-            'set'   => ['recipient_id' => $id, 'recipient_type' => 'contact'],
-            'table' => 'res_attachments',
-            'where' => ['dest_contact_id = ?', 'dest_address_id = ?'],
-            'data'  => [$oldContactId, $oldAddressId],
-        ]);
-        $currentValuesResletterbox = migrateResletterbox(['oldAddressId' => $oldAddressId, 'newContactId' => $id]);
-        $aValues = array_merge($aValues, $currentValuesContactRes, $currentValuesResletterbox);
+
+        $aValues = array_merge($aValues, $currentValuesContactRes);
 
         $migrated++;
 
         if ($migrated % 5000 == 0) {
-            pg_copy_from($databaseConnection, 'resource_contacts (res_id, item_id, type, mode)', $aValues, "\t", "\\\\N");
+            $finMigrateInProgress = microtime(true);
+            $delaiInProgress = $finMigrateInProgress - $debutMigrateInProgress;
+            echo "Migration En cours : ".$delaiInProgress." secondes.\n";
+            $debutMigrateInProgress = microtime(true);
+            printf($migrated . " contact(s) migré(s) - En cours...\n");
+        }
+
+        if ($migrated % 50000 == 0) {
+            echo "Migration de 50000 contacts...\n";
+
+            $beforeCopyContacts = microtime(true);
+            pg_copy_from($databaseConnection, $table, $contacts, $contactInfoSeparator, "NULL");
+            $afterCopyContacts = microtime(true);
+            $copyTimeContacts = $afterCopyContacts - $beforeCopyContacts;
+            echo "Temps copy contacts = $copyTimeContacts\n";
+
+            pg_copy_from($databaseConnection, 'resource_contacts (res_id, item_id, type, mode)', $aValues, "\t", 	"\\\\N");
             $finMigrateInProgress = microtime(true);
             $delaiInProgress = $finMigrateInProgress - $debutMigrateInProgress;
             echo "Migration En cours : ".$delaiInProgress." secondes.\n";
             $debutMigrateInProgress = microtime(true);
             printf($migrated . " contact(s) migré(s) - En cours...\n");
             $aValues = [];
+
+            $contacts = [];
         }
+
+        $id++;
     }
 
     if (!empty($aValues)) {
+        $beforeCopy = microtime(true);
         pg_copy_from($databaseConnection, 'resource_contacts (res_id, item_id, type, mode)', $aValues, "\t", "\\\\N");
-        $finMigrateInProgress = microtime(true);
-        $delaiInProgress = $finMigrateInProgress - $debutMigrateInProgress;
-        echo "Dernière Migration En cours : ".$delaiInProgress." secondes.\n";
-        $debutMigrateInProgress = microtime(true);
-        printf($migrated . " contact(s) migré(s) - Fin...\n");
+        $afterCopy = microtime(true);
+        $copyTime = $afterCopy - $beforeCopy;
+        echo "Temps copy resource contacts = $copyTime secondes\n";
     }
+
+    if (!empty($contacts)) {
+        $beforeCopyContacts = microtime(true);
+        pg_copy_from($databaseConnection, $table, $contacts, $contactInfoSeparator, "NULL");
+        $afterCopyContacts = microtime(true);
+        $copyTimeContacts = $afterCopyContacts - $beforeCopyContacts;
+        echo "Temps copy contacts = $copyTimeContacts\n";
+    }
+
+
+
+    $beforeUpdates = microtime(true);
+    $valuesOldAddress = '';
+    $firstDone = false;
+    foreach ($ids as $newId => $value) {
+        $oldAddressId = $value['oldAddressId'];
+        if ($firstDone) {
+            $valuesOldAddress .= ', ';
+        }
+        $valuesOldAddress .= "( $newId , $oldAddressId)";
+        if (!$firstDone) {
+            $firstDone = true;
+        }
+    }
+
+    // Migrate addresses in res_letterbox
+    $query = "insert into resource_contacts (res_id, item_id, type, mode)
+    select res_id, tmp.new_id, 'contact_v3' as type,
+       case
+           when category_id = 'outgoing' then 'recipient'
+           else 'sender'
+       end as mode
+    from res_letterbox,
+         (values 
+             $valuesOldAddress
+         ) as tmp(new_id, old_address_id)
+    where tmp.old_address_id = res_letterbox.address_id";
+    pg_query($databaseConnection, $query);
+
+
+    // Acknowledgement Receipts
+    $query = "update acknowledgement_receipts as ar set
+            contact_id = tmp.old_address_id
+        from (values
+               $valuesOldAddress 
+            ) as tmp(new_id, old_address_id) 
+        where ar.contact_address_id = tmp.old_address_id";
+    pg_query($databaseConnection, $query);
+
+
+    // Group list
+    $query = "update contacts_groups_lists as cgl set
+            contact_id = tmp.old_address_id
+        from (values
+               $valuesOldAddress
+            ) as tmp(new_id, old_address_id) 
+        where cgl.contact_addresses_id = tmp.old_address_id";
+
+    pg_query($databaseConnection, $query);
+
+
+    // Resources contacts
+    $query = "update resource_contacts as rc set
+        item_id = tmp.old_address_id, type = 'contact_v3'
+    from (values
+           $valuesOldAddress
+        ) as tmp(new_id, old_address_id) 
+    where rc.item_id = tmp.old_address_id and type = 'contact'";
+    pg_query($databaseConnection, $query);
+
+    $valuesOld= '';
+    $firstDone = false;
+    foreach ($ids as $newId => $value) {
+        $oldAddressId = $value['oldAddressId'];
+        $oldContactId = $value['oldContactId'];
+        if ($firstDone) {
+            $valuesOld .= ', ';
+        }
+        $valuesOld .= "( $newId , $oldAddressId, $oldContactId)";
+        if (!$firstDone) {
+            $firstDone = true;
+        }
+    }
+
+    // Res attach
+    $query = "update res_attachments as ra set
+        recipient_id = tmp.old_address_id, recipient_type = 'contact_v3'
+    from (values
+           $valuesOld
+        ) as tmp(new_id, old_address_id, old_contact_id) 
+    where ra.dest_contact_id = tmp.old_contact_id and ra.dest_address_id = tmp.old_address_id";
+    pg_query($databaseConnection, $query);
+
+    $afterUpdates = microtime(true);
+    $updatesTime = $afterUpdates - $beforeUpdates;
+    echo "Temps updates = $updatesTime secondes\n";
+
+    $finMigrateInProgress = microtime(true);
+    $delaiInProgress = $finMigrateInProgress - $debutMigrateInProgress;
+    echo "Dernière Migration En cours : ".$delaiInProgress." secondes.\n";
+    $debutMigrateInProgress = microtime(true);
+    printf($migrated . " contact(s) migré(s) - Fin...\n");
 
     $debutEndMigrate = microtime(true);
     migrateContactRes_Users(['firstManId' => $firstMan[0]['id'], 'databaseConnection' => $databaseConnection]);
@@ -357,33 +505,6 @@ function migrateContactRes($args = [])
     }
 
     return $aValues;
-}
-
-function migrateResletterbox($args = [])
-{
-    $resInfo = \SrcCore\models\DatabaseModel::select([
-        'select' => ['res_id', 'category_id'],
-        'table'  => ['res_letterbox'],
-        'where'  => ['address_id = ?'],
-        'data'   => [$args['oldAddressId']],
-    ]);
-
-    $aValues = [];
-    foreach ($resInfo as $value) {
-        $mode = 'sender';
-        if ($value['category_id'] == 'outgoing') {
-            $mode = 'recipient';
-        }
-
-        $aValues[] = implode("\t", [
-            $value['res_id'],
-            $args['newContactId'],
-            'contact_v3',
-            $mode
-        ]) . "\n";
-    }
-
-    return $aValues; 
 }
 
 function migrateContactRes_Users($args = [])
