@@ -33,26 +33,10 @@ class ListTemplateController
 {
     public function get(Request $request, Response $response)
     {
-        $queryParams = $request->getQueryParams();
-
-        if (empty($queryParams['admin'])) {
-            $where = ['owner is null or owner = ?'];
-            $data = [$GLOBALS['id']];
-        } else {
-            $where = ['owner is null'];
-            $data = [];
-        }
-
         $listTemplates = ListTemplateModel::get([
-            'select' => ['id', 'type', 'entity_id as "entityId"', 'title', 'description', 'owner'],
-            'where'  => $where,
-            'data'   => $data
+            'select' => ['id', 'type', 'entity_id as "entityId"', 'title', 'description'],
+            'where'  => ['owner is null']
         ]);
-
-        foreach ($listTemplates as $key => $listTemplate) {
-            $listTemplates[$key]['isPrivate'] = $listTemplates[$key]['owner'] != null;
-            unset($listTemplates[$key]['owner']);
-        }
 
         return $response->withJson(['listTemplates' => $listTemplates]);
     }
@@ -619,8 +603,8 @@ class ListTemplateController
         $circuit = $queryParams['circuit'] == 'opinion' ? 'opinionCircuit' : 'visaCircuit';
         $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['destination']]);
 
-        $where = ['type = ?'];
-        $data = [$circuit];
+        $where = ['type = ?', 'owner is null or owner = ?'];
+        $data = [$circuit, $GLOBALS['id']];
         if (!empty($resource['destination'])) {
             $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['id']]);
             $where[] = '(entity_id is null OR entity_id = ?)';
@@ -631,7 +615,12 @@ class ListTemplateController
             $orderBy = ['title'];
         }
 
-        $circuits = ListTemplateModel::get(['select' => ['*'], 'where' => $where, 'data' => $data, 'orderBy' => $orderBy]);
+        $circuits = ListTemplateModel::get([
+            'select'  => ['id', 'type', 'entity_id as "entityId"', 'title', 'description', "case when owner is null then false else true end as private"],
+            'where'   => $where,
+            'data'    => $data,
+            'orderBy' => $orderBy
+        ]);
 
         return $response->withJson(['circuits' => $circuits]);
     }
