@@ -55,7 +55,7 @@
                 <mat-menu #menuOptions="matMenu" [class]="'optionsListMenu'">
                     <button mat-menu-item *ngIf="file.contentView !== undefined" (click)="openPdfInTab()">
                         <mat-icon color="primary" class="fas fa-external-link-alt"></mat-icon>
-                        <span>Ouvrir dans un nouvel onglet</span>
+                        <span>{{lang.openInExternalModal}}</span>
                     </button>
                     <button mat-menu-item *ngIf="editMode" (click)="docToUpload.click()">
                         <mat-icon color="primary" class="fa fa-file-upload"></mat-icon>

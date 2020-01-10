@@ -716,7 +716,13 @@ export class DocumentViewerComponent implements OnInit {
                         arrTypes = this.sortPipe.transform(arrTypes, 'label');
                     });
                 }),
-                exhaustMap(() => this.http.get('../../rest/currentUser/templates?target=attachments&type=office')),
+                exhaustMap(() => {
+                    if (this.mode == 'mainDocument') {
+                        return this.http.get('../../rest/currentUser/templates?target=indexingFile');
+                    } else {
+                        return this.http.get('../../rest/currentUser/templates?target=attachments&type=office');
+                    }
+                }),
                 tap((data: any) => {
                     this.listTemplates = data.templates;
 

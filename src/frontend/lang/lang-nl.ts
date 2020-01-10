@@ -1405,4 +1405,5 @@ export const LANG_NL = {
     "closeEditor" : "Close the editor", //_TO_TRANSLATE
     "externalVisaWorkflow" : "Visa workflow Maarch Parapheur", //_TO_TRANSLATE
     "IdMaarch2Gec" : "MAARCH2GEC identifier", //_TO_TRANSLATE
+    "indexingFile" : "Indexation", //_TO_TRANSLATE
 };

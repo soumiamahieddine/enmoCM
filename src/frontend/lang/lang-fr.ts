@@ -1422,4 +1422,5 @@ export const LANG_FR = {
     "errorOnlyoffice2" : "Impossible de lancer onlyoffice. Veuillez vérifier la disponibilité du serveur",
     "externalVisaWorkflow" : "Circuit de visa Maarch parapheur",
     "IdMaarch2Gec" : "Identifiant MAARCH2GEC",
+    "indexingFile" : "Indexation",
 };

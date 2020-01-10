@@ -1382,4 +1382,5 @@ export const LANG_EN = {
     "errorOnlyoffice2" : "Cannot launch onlyoffice. Check if the only office server is available",
     "externalVisaWorkflow" : "Visa workflow Maarch Parapheur",
     "IdMaarch2Gec" : "MAARCH2GEC identifier",
+    "indexingFile" : "Indexation",
 };
