@@ -49,9 +49,9 @@ class ListTemplateController
             'data'   => $data
         ]);
 
-        for ($i = 0; $i < count($listTemplates); $i++) {
-            $listTemplates[$i]['isPrivate'] = $listTemplates[$i]['owner'] != null;
-            unset($listTemplates[$i]['owner']);
+        foreach ($listTemplates as $key => $listTemplate) {
+            $listTemplates[$key]['isPrivate'] = $listTemplates[$key]['owner'] != null;
+            unset($listTemplates[$key]['owner']);
         }
 
         return $response->withJson(['listTemplates' => $listTemplates]);
@@ -263,12 +263,12 @@ class ListTemplateController
         if (empty($listTemplate)) {
             return $response->withStatus(400)->withJson(['errors' => 'List template not found']);
         }
-        if (empty($listTemplate['owner']) && ($listTemplate['type'] != 'visaCircuit' || $listTemplate['type'] != 'opinionCircuit') ) {
-            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId'      => $GLOBALS['id']]) && !empty($listTemplate['entityId'])) {
+        if (empty($listTemplate['owner'])) {
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']]) && !empty($listTemplate['entityId'])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
 
-            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId'      => $GLOBALS['id']]) && empty($listTemplate['entityId'])) {
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId' => $GLOBALS['id']]) && empty($listTemplate['entityId'])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
         } else {
