@@ -4,7 +4,7 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FunctionsService } from '../../service/functions.service';
-import { tap, exhaustMap, map, startWith, catchError, finalize, filter } from 'rxjs/operators';
+import { tap, exhaustMap, map, startWith, catchError, finalize, filter, debounceTime, switchMap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { LatinisePipe } from 'ngx-pipes';
 import { Observable, of } from 'rxjs';
@@ -72,7 +72,7 @@ export class VisaWorkflowComponent implements OnInit {
             if (this.functions.empty(this.visaWorkflow.items[event.currentIndex].process_date)) {
                 moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
             } else {
-                this.notify.error(`${this.lang.moveVisaUserErr1} <b>${this.visaWorkflow.items[event.previousIndex].item_firstname} ${this.visaWorkflow.items[event.previousIndex].item_lastname}</b> ${this.lang.moveVisaUserErr2}.`);
+                this.notify.error(`${this.lang.moveVisaUserErr1} <b>${this.visaWorkflow.items[event.previousIndex].labelToDisplay}</b> ${this.lang.moveVisaUserErr2}.`);
             }
         }
     }
@@ -87,17 +87,18 @@ export class VisaWorkflowComponent implements OnInit {
         this.http.get(route)
             .subscribe((data: any) => {
                 if (data.listTemplates[0]) {
-                    this.visaWorkflow.items = data.listTemplates[0].items;
+                    this.visaWorkflow.items = data.listTemplates[0].items.map((item: any) => {
+                        return {
+                            ...item,
+                            item_entity: item.descriptionToDisplay,
+                            requested_signature: item.item_mode !== 'visa'
+                        }
+                    });
+                    this.loading = false;
                 }
-                this.visaWorkflow.items.forEach((element: any) => {
-                    element.requested_signature = element.item_mode !== 'visa';
-                    if (element.externalId.maarchParapheur !== undefined) {
-                        this.http.get("../../rest/maarchParapheur/user/" + element.externalId.maarchParapheur + "/picture")
-                            .subscribe((data: any) => {
-                                element.picture = data.picture;
-                            }, (err: any) => {
-                                this.notify.handleErrors(err);
-                            });
+                this.visaWorkflow.items.forEach((element: any, key: number) => {
+                    if (!this.functions.empty(element['externalId'])) {
+                        this.getMaarchParapheurUserAvatar(element.externalId.maarchParapheur, key);
                     }
                 });
             });
@@ -173,14 +174,16 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     async initFilterVisaModelList() {
-        if (this.visaModelListNotLoaded) {
-            await this.loadVisaSignUsersList();
-
-            await this.loadVisaModelListByResource();
+        if (!this.linkedToMaarchParapheur) {
+            if (this.visaModelListNotLoaded) {
+                await this.loadVisaSignUsersList();
     
-            this.searchVisaSignUser.reset();
-            
-            this.visaModelListNotLoaded = false;
+                await this.loadVisaModelListByResource();
+    
+                this.searchVisaSignUser.reset();
+    
+                this.visaModelListNotLoaded = false;
+            }
         }
     }
 
@@ -274,14 +277,7 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     checkExternalSignatoryBook() {
-        let usersMissing: string[] = [];
-        this.visaWorkflow.items.forEach((element: any) => {
-            if (Object.keys(element.externalId).indexOf('maarchParapheur') === -1) {
-                usersMissing.push(element.labelToDisplay);
-            }
-        });
-
-        return usersMissing;
+        return this.visaWorkflow.items.filter((item: any) => this.functions.empty(item.externalId)).map((item: any) => item.labelToDisplay);
     }
 
     saveVisaWorkflow() {
@@ -301,8 +297,22 @@ export class VisaWorkflowComponent implements OnInit {
         }
     }
 
-    addItemToWorkflow(item: any) {
-        if (item.type === 'user') {
+    addItemToWorkflow(item: any, maarchParapheurMode = false) {
+        if (maarchParapheurMode) {
+            this.visaWorkflow.items.push({
+                item_id: item.id,
+                item_type: 'user',
+                item_entity: item.email,
+                labelToDisplay: item.idToDisplay,
+                externalId: item.externalId,
+                difflist_type: 'VISA_CIRCUIT',
+                signatory: false,
+                requested_signature: false
+            });
+            if (this.linkedToMaarchParapheur) {
+                this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
+            }
+        } else if (item.type === 'user') {
             this.visaWorkflow.items.push({
                 item_id: 0,
                 item_type: 'user',
@@ -315,7 +325,7 @@ export class VisaWorkflowComponent implements OnInit {
             });
 
             if (this.linkedToMaarchParapheur) {
-                this.getMaarchParapheurUserAvatar(item.externalId);
+                this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
             }
             this.searchVisaSignUser.reset();
         } else if (item.type === 'entity') {
@@ -388,21 +398,15 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     addItem(userRest: any) {
-        const user = {
-            'externalId': userRest.externalId,
-            'labelToDisplay': userRest.idToDisplay,
-            'requested_signature': false,
-            'picture': ''
-        };
-        this.visaWorkflow.items.push(user);
+        
 
     }
 
-    getMaarchParapheurUserAvatar(externalId: string) {
+    getMaarchParapheurUserAvatar(externalId: string, key: number) {
         if (!this.functions.empty(externalId)) {
             this.http.get("../../rest/maarchParapheur/user/" + externalId + "/picture")
                 .subscribe((data: any) => {
-                    this.visaWorkflow.items[this.visaWorkflow.items.length - 1].picture = data.picture;
+                    this.visaWorkflow.items[key].picture = data.picture;
                 }, (err: any) => {
                     this.notify.handleErrors(err);
                 });

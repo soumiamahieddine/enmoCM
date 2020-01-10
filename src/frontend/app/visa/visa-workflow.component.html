@@ -1,6 +1,6 @@
 
 <mat-list *ngIf="!loading">
-    <mat-form-field appearance="outline" *ngIf="adminMode">
+    <mat-form-field appearance="outline" *ngIf="adminMode && !linkedToMaarchParapheur">
         <input type="text" matInput placeholder="Ajouter des personnes" id="searchVisaSignUserInput"
             [formControl]="searchVisaSignUser" [matAutocomplete]="autoGroup">
         <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="addItemToWorkflow($event.option.value)" (opened)="initFilterVisaModelList()">
@@ -29,7 +29,7 @@
                     </div>
                 </mat-option>
             </mat-optgroup>
-            <mat-optgroup [label]="'Viseurs / Signataire'" *ngIf="(filteredSignVisaUsers | async)?.length > 0"
+            <mat-optgroup [label]="lang.visaUser + ' / ' + lang.signUser" *ngIf="(filteredSignVisaUsers | async)?.length > 0"
                 class="visaSignList">
                 <mat-option *ngFor="let user of filteredSignVisaUsers | async | sortBy : 'label'" [value]="user">
                     {{user.label}} <small>({{user.entity}})</small>
@@ -41,10 +41,10 @@
             <mat-icon class="fa fa-plus"></mat-icon>
         </button>
     </mat-form-field>
-    <!--<plugin-autocomplete *ngIf="adminMode" [labelPlaceholder]="lang.addPerson"
+    <plugin-autocomplete *ngIf="linkedToMaarchParapheur && adminMode" [labelPlaceholder]="lang.addPerson"
         [routeDatas]="['/rest/autocomplete/maarchParapheurUsers']" [targetSearchKey]="'idToDisplay'"
-        [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addItem($event)" appearance="outline">
-    </plugin-autocomplete>-->
+        [subInfoKey]="'email'" (triggerEvent)="addItemToWorkflow($event, true)" appearance="outline">
+    </plugin-autocomplete>
     <div cdkDropList #dataAvailableList="cdkDropList" [cdkDropListData]="visaWorkflow.items" class="cdk-list"
         (cdkDropListDropped)="drop($event)" [cdkDropListDisabled]="!adminMode">
         <div class="emptyContent" *ngIf="visaWorkflow.items.length === 0">
