@@ -438,11 +438,12 @@ class AutoCompleteController
 
         $data = [];
         foreach ($users as $value) {
+            $entity = UserModel::getPrimaryEntityById(['id' => $value['id'], 'select' => ['entities.short_label']]);
             $data[] = [
                 'type'          => 'user',
                 'id'            => $value['id'],
                 'idToDisplay'   => "{$value['firstname']} {$value['lastname']}",
-                'otherInfo'     => ''
+                'otherInfo'     => $entity['short_label']
             ];
         }
 
