@@ -1,9 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FunctionsService } from '../../service/functions.service';
+import { tap, exhaustMap, map, startWith, catchError, finalize, filter } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
+import { LatinisePipe } from 'ngx-pipes';
+import { Observable, of } from 'rxjs';
+import { MatDialog } from '@angular/material';
+import { AddVisaModelModalComponent } from './addVisaModel/add-visa-model-modal.component';
+import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 
 declare function $j(selector: any): any;
 
@@ -19,27 +26,54 @@ export class VisaWorkflowComponent implements OnInit {
         roles: ['sign', 'visa'],
         items: []
     };
+    visaWorkflowClone: any = null;
+    visaTemplates: any = {
+        private: [],
+        public: []
+    };
+
+    signVisaUsers: any = [];
+    filteredSignVisaUsers: Observable<string[]>;
+    filteredPublicModels: Observable<string[]>;
+    filteredPrivateModels: Observable<string[]>;
+
     loading: boolean = false;
+    visaModelListNotLoaded: boolean = true;
     data: any;
 
     @Input('injectDatas') injectDatas: any;
     @Input('adminMode') adminMode: boolean;
     @Input('resId') resId: number = null;
 
-    @Input('linkedToMaarchParapheur') linkedToMaarchParapheur: boolean;
+    @Input('linkedToMaarchParapheur') linkedToMaarchParapheur: boolean = false;
 
-    constructor(public http: HttpClient, private notify: NotificationService, private functions: FunctionsService) { }
+    @ViewChild('searchVisaSignUserInput', { static: true }) searchVisaSignUserInput: ElementRef;
 
-    ngOnInit(): void { 
-        this.linkedToMaarchParapheur = this.linkedToMaarchParapheur === undefined ? false: this.linkedToMaarchParapheur;
+    searchVisaSignUser = new FormControl();
+
+    constructor(
+        public http: HttpClient,
+        private notify: NotificationService,
+        public functions: FunctionsService,
+        private latinisePipe: LatinisePipe,
+        public dialog: MatDialog
+    ) { }
+
+    ngOnInit(): void {
         if (this.resId !== null) {
+            //this.initFilterVisaModelList();
+            //this.loadVisaModelListByResource();
             this.loadWorkflow(this.resId);
         }
     }
 
     drop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
-            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+            if (this.functions.empty(this.visaWorkflow.items[event.currentIndex].process_date)) {
+                moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+            } else {
+                this.notify.error(`${this.lang.moveVisaUserErr1} <b>${this.visaWorkflow.items[event.previousIndex].item_firstname} ${this.visaWorkflow.items[event.previousIndex].item_lastname}</b> ${this.lang.moveVisaUserErr2}.`);
+            }
         }
     }
 
@@ -49,7 +83,7 @@ export class VisaWorkflowComponent implements OnInit {
         this.visaWorkflow.items = [];
 
         let route = this.linkedToMaarchParapheur === true ? `../../rest/listTemplates/entities/${entityId}?type=visaCircuit&maarchParapheur=true` : `../../rest/listTemplates/entities/${entityId}?type=visaCircuit`;
-        
+
         this.http.get(route)
             .subscribe((data: any) => {
                 if (data.listTemplates[0]) {
@@ -66,8 +100,115 @@ export class VisaWorkflowComponent implements OnInit {
                             });
                     }
                 });
-                this.loading = false;
             });
+    }
+
+    loadVisaSignUsersList() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/autocomplete/users/circuit`).pipe(
+                map((data: any) => {
+                    data = data.map((user: any) => {
+                        return {
+                            id: user.id,
+                            title: `${user.idToDisplay} (${user.otherInfo})`,
+                            label: user.idToDisplay,
+                            entity: user.otherInfo,
+                            type: 'user'
+                        }
+                    });
+                    return data;
+                }),
+                tap((data) => {
+                    this.signVisaUsers = data;
+                    this.filteredSignVisaUsers = this.searchVisaSignUser.valueChanges
+                        .pipe(
+                            startWith(''),
+                            map(value => this._filter(value))
+                        );
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    loadVisaModelListByResource() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/resources/${this.resId}/availableCircuits?circuit=visa`).pipe(
+                tap((data: any) => {
+                    this.visaTemplates.public = data.circuits.filter((item: any) => !item.private).map((item: any) => {
+                        return {
+                            id: item.id,
+                            title: item.title,
+                            label: item.title,
+                            type: 'entity'
+                        }
+                    });
+
+                    this.visaTemplates.private = data.circuits.filter((item: any) => item.private).map((item: any) => {
+                        return {
+                            id: item.id,
+                            title: item.title,
+                            label: item.title,
+                            type: 'entity'
+                        }
+                    });
+                    this.filteredPublicModels = this.searchVisaSignUser.valueChanges
+                        .pipe(
+                            startWith(''),
+                            map(value => this._filterPublicModel(value))
+                        );
+                    this.filteredPrivateModels = this.searchVisaSignUser.valueChanges
+                        .pipe(
+                            startWith(''),
+                            map(value => this._filterPrivateModel(value))
+                        );
+                    resolve(true);
+                }),
+            ).subscribe();
+        });
+    }
+
+    async initFilterVisaModelList() {
+        if (this.visaModelListNotLoaded) {
+            await this.loadVisaSignUsersList();
+
+            await this.loadVisaModelListByResource();
+    
+            this.searchVisaSignUser.reset();
+            
+            this.visaModelListNotLoaded = false;
+        }
+    }
+
+    private _filter(value: string): string[] {
+        if (typeof value === 'string') {
+            const filterValue = this.latinisePipe.transform(value.toLowerCase());
+            return this.signVisaUsers.filter((option: any) => this.latinisePipe.transform(option['title'].toLowerCase()).includes(filterValue));
+        } else {
+            return this.signVisaUsers;
+        }
+    }
+
+    private _filterPrivateModel(value: string): string[] {
+        if (typeof value === 'string') {
+            const filterValue = this.latinisePipe.transform(value.toLowerCase());
+            return this.visaTemplates.private.filter((option: any) => this.latinisePipe.transform(option['title'].toLowerCase()).includes(filterValue));
+        } else {
+            return this.visaTemplates.private;
+        }
+    }
+
+    private _filterPublicModel(value: string): string[] {
+        if (typeof value === 'string') {
+            const filterValue = this.latinisePipe.transform(value.toLowerCase());
+            return this.visaTemplates.public.filter((option: any) => this.latinisePipe.transform(option['title'].toLowerCase()).includes(filterValue));
+        } else {
+            return this.visaTemplates.public;
+        }
     }
 
     loadWorkflow(resId: number) {
@@ -76,8 +217,13 @@ export class VisaWorkflowComponent implements OnInit {
         this.http.get("../../rest/resources/" + resId + "/visaCircuit")
             .subscribe((data: any) => {
                 data.forEach((element: any) => {
-                    this.visaWorkflow.items.push(element);
+                    this.visaWorkflow.items.push(
+                        {
+                            ...element,
+                            difflist_type: 'VISA_CIRCUIT'
+                        });
                 });
+                this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items))
                 this.loading = false;
             }, (err: any) => {
                 this.notify.handleErrors(err);
@@ -96,7 +242,7 @@ export class VisaWorkflowComponent implements OnInit {
                         'requested_signature': element.mode === 'visa' ? false : true,
                         'process_date': this.functions.formatFrenchDateToTechnicalDate(element.processDate),
                         'picture': ''
-                    }                    
+                    }
                     this.visaWorkflow.items.push(user);
                     this.http.get("../../rest/maarchParapheur/user/" + element.userId + "/picture")
                         .subscribe((data: any) => {
@@ -138,6 +284,109 @@ export class VisaWorkflowComponent implements OnInit {
         return usersMissing;
     }
 
+    saveVisaWorkflow() {
+        if (this.isValidWorkflow()) {
+            this.http.put(`../../rest/listinstances`, [{ resId: this.resId, listInstances: this.visaWorkflow.items }]).pipe(
+                tap((data: any) => {
+                    this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items));
+                    this.notify.success(this.lang.visaWorkflowUpdated);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.notify.error(this.lang.signUserRequired);
+        }
+    }
+
+    addItemToWorkflow(item: any) {
+        if (item.type === 'user') {
+            this.visaWorkflow.items.push({
+                item_id: 0,
+                item_type: 'user',
+                item_entity: item.entity,
+                labelToDisplay: item.label,
+                externalId: !this.functions.empty(item.externalId) ? item.externalId : null,
+                difflist_type: 'VISA_CIRCUIT',
+                signatory: false,
+                requested_signature: false
+            });
+
+            if (this.linkedToMaarchParapheur) {
+                this.getMaarchParapheurUserAvatar(item.externalId);
+            }
+            this.searchVisaSignUser.reset();
+        } else if (item.type === 'entity') {
+            this.http.get(`../../rest/listTemplates/${item.id}`).pipe(
+                tap((data: any) => {
+                    this.visaWorkflow.items = this.visaWorkflow.items.concat(
+                        data.listTemplate.items.map((itemTemplate: any) => {
+                            return {
+                                item_id: itemTemplate.item_id,
+                                item_type: 'user',
+                                labelToDisplay: itemTemplate.idToDisplay,
+                                item_entity: itemTemplate.descriptionToDisplay,
+                                difflist_type: 'VISA_CIRCUIT',
+                                signatory: false,
+                                requested_signature: false
+                            }
+                        })
+                    );
+                    this.searchVisaSignUser.reset();
+                })
+            ).subscribe();
+        }
+    }
+
+    isValidWorkflow() {
+        if (this.visaWorkflow.items.filter((item: any) => item.requested_signature).length > 0 || this.visaWorkflow.items.length === 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    openPromptSaveModel() {
+        const dialogRef = this.dialog.open(AddVisaModelModalComponent, { data: { visaWorkflow: this.visaWorkflow.items } });
+
+        dialogRef.afterClosed().pipe(
+            filter((data: string) => !this.functions.empty(data)),
+
+            tap((data: any) => {
+                this.visaTemplates.private.push({
+                    id: data.id,
+                    title: data.title,
+                    label: data.title,
+                    type: 'entity'
+                });
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    deletePrivateModel(model: any) {
+        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+
+        dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.delete(`../../rest/listTemplates/${model.id}`)),
+            tap(() => {
+                this.visaTemplates.private = this.visaTemplates.private.filter((template: any) => template.id !== model.id);
+                this.searchVisaSignUser.reset();
+                this.notify.success(this.lang.modelDeleted);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
     addItem(userRest: any) {
         const user = {
             'externalId': userRest.externalId,
@@ -146,11 +395,25 @@ export class VisaWorkflowComponent implements OnInit {
             'picture': ''
         };
         this.visaWorkflow.items.push(user);
-        this.http.get("../../rest/maarchParapheur/user/" + user.externalId.maarchParapheur + "/picture")
-            .subscribe((data: any) => {
-                this.visaWorkflow.items[this.visaWorkflow.items.length - 1].picture = data.picture;
-            }, (err: any) => {
-                this.notify.handleErrors(err);
-            });
+
+    }
+
+    getMaarchParapheurUserAvatar(externalId: string) {
+        if (!this.functions.empty(externalId)) {
+            this.http.get("../../rest/maarchParapheur/user/" + externalId + "/picture")
+                .subscribe((data: any) => {
+                    this.visaWorkflow.items[this.visaWorkflow.items.length - 1].picture = data.picture;
+                }, (err: any) => {
+                    this.notify.handleErrors(err);
+                });
+        }
+    }
+
+    isModified() {
+        if (this.loading || JSON.stringify(this.visaWorkflow.items) === JSON.stringify(this.visaWorkflowClone)) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

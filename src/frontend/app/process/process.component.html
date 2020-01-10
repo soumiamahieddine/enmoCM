@@ -77,7 +77,7 @@
                     [adminMode]="false" [resId]="currentResourceInformations.resId" [expanded]="true">
                 </app-diffusions-list>
                 <app-visa-workflow *ngIf="currentTool === 'visa' && !loading" #appVisaWorkflow
-                    [resId]="currentResourceInformations.resId"></app-visa-workflow>
+                    [resId]="currentResourceInformations.resId" [adminMode]="privilegeService.hasCurrentUserPrivilege('config_visa_workflow')"></app-visa-workflow>
                 <app-avis-workflow *ngIf="currentTool === 'avis' && !loading" #appAvisWorkflow
                     [resId]="currentResourceInformations.resId"></app-avis-workflow>
                 <app-attachments-list *ngIf="currentTool === 'attachments' && !loading" #appAttachmentsList
@@ -97,6 +97,11 @@
                     <button mat-fab [title]="lang.saveModifications"
                         *ngIf="appDiffusionsList !== undefined && appDiffusionsList.isModified() && currentTool === 'diffusionList'"
                         (click)="saveListinstance()" color="accent">
+                        <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
+                    </button>
+                    <button mat-fab [title]="lang.saveModifications"
+                        *ngIf="appVisaWorkflow !== undefined && appVisaWorkflow.isModified() && currentTool === 'visa'"
+                        (click)="saveVisaWorkflow()" color="accent">
                         <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
                     </button>
                 </div>
@@ -249,8 +254,8 @@
         <app-diffusions-list *ngIf="modal.id === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="false"
             [resId]="currentResourceInformations.resId" [expanded]="true">
         </app-diffusions-list>
-        <app-visa-workflow *ngIf="modal.id === 'visa' && !loading" #appVisaWorkflow
-            [resId]="currentResourceInformations.resId">
+        <app-visa-workflow *ngIf="modal.id === 'visa' && !loading" [adminMode]="privilegeService.hasCurrentUserPrivilege('config_visa_workflow')" #appVisaWorkflow
+            [resId]="currentResourceInformations.resId" >
         </app-visa-workflow>
         <app-avis-workflow *ngIf="modal.id === 'avis' && !loading" #appAvisWorkflow
             [resId]="currentResourceInformations.resId">
@@ -272,6 +277,11 @@
             <button mat-fab [title]="lang.saveModifications"
                 *ngIf="appDiffusionsList !== undefined && appDiffusionsList.isModified() && modal.id === 'diffusionList'"
                 (click)="saveListinstance()" color="accent">
+                <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
+            </button>
+            <button mat-fab [title]="lang.saveModifications"
+                *ngIf="appVisaWorkflow !== undefined && appVisaWorkflow.isModified() && modal.id === 'visa'"
+                (click)="saveVisaWorkflow()" color="accent">
                 <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
             </button>
         </div>

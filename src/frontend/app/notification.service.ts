@@ -22,6 +22,7 @@ export class NotificationService {
         this.snackBar.openFromComponent(CustomSnackbarComponent, {
             duration: 2000,
             panelClass: 'success-snackbar',
+            verticalPosition : 'top',
             data: { message: message, icon: 'info-circle' }
         });
     }
@@ -30,6 +31,7 @@ export class NotificationService {
         this.snackBar.openFromComponent(CustomSnackbarComponent, {
             duration: 4000,
             panelClass: 'error-snackbar',
+            verticalPosition : 'top',
             data: { url: url, message: message, icon: 'exclamation-triangle' }
         });
     }
@@ -51,7 +53,7 @@ export class NotificationService {
                     }
                 } else if (err.error.exception !== undefined) {
                     this.error(err.error.exception[0].message, err.url);
-                } else if(err.error.error !== undefined){
+                } else if (err.error.error !== undefined) {
                     this.error(err.error.error.message, err.url);
                 } else {
                     this.error(`${err.status} : ${err.statusText}`, err.url);
@@ -59,6 +61,23 @@ export class NotificationService {
             } else {
                 this.error(err);
             }
+        }
+    }
+
+    handleSoftErrors(err: any) {
+        console.log(err);
+        if (err.error !== undefined) {
+            if (err.error.errors !== undefined) {
+                this.error(err.error.errors, err.url);
+            } else if (err.error.exception !== undefined) {
+                this.error(err.error.exception[0].message, err.url);
+            } else if (err.error.error !== undefined) {
+                this.error(err.error.error.message, err.url);
+            } else {
+                this.error(`${err.status} : ${err.statusText}`, err.url);
+            }
+        } else {
+            this.error(err);
         }
     }
 }

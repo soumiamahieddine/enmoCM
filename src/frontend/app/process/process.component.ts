@@ -21,6 +21,8 @@ import { ContactsListModalComponent } from '../contact/list/modal/contacts-list-
 import { DiffusionsListComponent } from '../diffusions/diffusions-list.component';
 
 import { ContactService } from '../../service/contact.service';
+import { VisaWorkflowComponent } from '../visa/visa-workflow.component';
+import { PrivilegeService } from '../../service/privileges.service';
 
 
 
@@ -137,6 +139,7 @@ export class ProcessComponent implements OnInit {
     @ViewChild('appDocumentViewer', { static: true }) appDocumentViewer: DocumentViewerComponent;
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
+    @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
     senderLightInfo: any = { 'displayName': null, 'fillingRate': null };
     hasContact: boolean = false;
 
@@ -155,7 +158,8 @@ export class ProcessComponent implements OnInit {
         public appService: AppService,
         public actionService: ActionsService,
         private contactService: ContactService,
-        private router: Router
+        private router: Router,
+        public privilegeService: PrivilegeService
     ) {
         // Event after process action 
         this.subscription = this.actionService.catchAction().subscribe(message => {
@@ -432,7 +436,8 @@ export class ProcessComponent implements OnInit {
     }
 
     changeTab(tabId: string) {
-        if (this.currentTool === 'info' && this.indexingForm.isResourceModified() && !this.isModalOpen()) {
+
+        if (this.isToolModified() && !this.isModalOpen()) {
             const dialogRef = this.openConfirmModification();
 
             dialogRef.afterClosed().pipe(
@@ -443,7 +448,7 @@ export class ProcessComponent implements OnInit {
                 }),
                 filter((data: string) => data === 'ok'),
                 tap(() => {
-                    this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+                    this.saveTool();
                     setTimeout(() => {
                         this.loadResource();
                     }, 400);
@@ -484,10 +489,16 @@ export class ProcessComponent implements OnInit {
         this.appDiffusionsList.saveListinstance();
     }
 
+    saveVisaWorkflow() {
+        this.appVisaWorkflow.saveVisaWorkflow();
+    }
+
     isToolModified() {
         if (this.currentTool === 'info' && this.indexingForm.isResourceModified()) {
             return true;
         } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList.isModified()) {
+            return true;
+        } else if (this.currentTool === 'visa' && this.appVisaWorkflow.isModified()) {
             return true;
         } else {
             return false;
@@ -507,6 +518,8 @@ export class ProcessComponent implements OnInit {
             this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
         } else if (this.currentTool === 'diffusionList') {
             this.appDiffusionsList.saveListinstance();
+        } else if (this.currentTool === 'visa') {
+            this.appVisaWorkflow.saveVisaWorkflow();
         }
     }
 

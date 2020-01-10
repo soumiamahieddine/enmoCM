@@ -1406,4 +1406,14 @@ export const LANG_NL = {
     "externalVisaWorkflow" : "Visa workflow Maarch Parapheur", //_TO_TRANSLATE
     "IdMaarch2Gec" : "MAARCH2GEC identifier", //_TO_TRANSLATE
     "indexingFile" : "Indexation", //_TO_TRANSLATE
+    "signUserRequired" : "A signatory is required", //_TO_TRANSLATE
+    "signedUserDate" : "Signed", //_TO_TRANSLATE
+    "approvedUserDate" : "Approuved", //_TO_TRANSLATE
+    "modelDeleted" : "Model deleted", //_TO_TRANSLATE
+    "modelSaved" : "Modèle saved", //_TO_TRANSLATE
+    "visaWorkflowUpdated" : "Visa workflow updated", //_TO_TRANSLATE
+    "publicModel" : "Public model", //_TO_TRANSLATE
+    "privateModel" : "Private model", //_TO_TRANSLATE
+    "moveVisaUserErr1" : "You cannot move", //_TO_TRANSLATE
+    "moveVisaUserErr2" : "with users who have already approved / signed", //_TO_TRANSLATE
 };

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { LANG } from '../app/translate.component';
-import { empty } from 'rxjs';
 
 @Injectable()
 export class FunctionsService {
@@ -10,7 +9,7 @@ export class FunctionsService {
     constructor() { }
 
     empty(value: string) {
-        if (value === null) {
+        if (value === null || value === undefined) {
             return true;
 
         } else if (Array.isArray(value)) {
