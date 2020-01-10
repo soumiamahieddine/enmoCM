@@ -48,6 +48,11 @@ class ListTemplateControllerTest extends TestCase
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
+        $aArgs = [
+            'admin'  => true
+        ];
+        $fullRequest = $fullRequest->withQueryParams($aArgs);
+
         $response     = $listTemplateController->create($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
