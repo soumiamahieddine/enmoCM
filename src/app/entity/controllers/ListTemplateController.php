@@ -379,7 +379,7 @@ class ListTemplateController
 
         $queryParams = $request->getQueryParams();
 
-        $listTemplates = ListTemplateModel::get(['select' => ['*'], 'where' => ['object_id = ?'], 'data' => [$entity['entity_id']]]);
+        $listTemplates = ListTemplateModel::get(['select' => ['*'], 'where' => ['entity_id = ?'], 'data' => [$args['entityId']]]);
 
         foreach ($listTemplates as $key => $value) {
             if ($value['item_type'] == 'entity_id') {
