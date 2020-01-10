@@ -733,7 +733,7 @@ class ResController
         }
 
         if (!ResController::hasRightByResId(['resId' => $body['linkedResources'], 'userId' => $GLOBALS['id']])) {
-            return ['errors' => 'Body linkedResources out of perimeter'];
+            return $response->withStatus(403)->withJson(['errors' => 'Body linkedResources out of perimeter']);
         }
 
         $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['linked_resources']]);
@@ -765,7 +765,7 @@ class ResController
         }
 
         if (!Validator::intVal()->validate($args['id']) || !ResController::hasRightByResId(['resId' => [$args['id']], 'userId' => $GLOBALS['id']])) {
-            return ['errors' => 'Resource to unlink out of perimeter'];
+            return $response->withStatus(403)->withJson(['errors' => 'Resource to unlink out of perimeter']);
         }
 
         ResModel::update([

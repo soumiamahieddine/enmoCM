@@ -110,11 +110,11 @@ class ListTemplateController
         $queryParams = $request->getQueryParams();
 
         if (!empty($queryParams['admin'])) {
-            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId'      => $GLOBALS['id']]) && !empty($body['entityId'])) {
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']]) && !empty($body['entityId'])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
 
-            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId'      => $GLOBALS['id']]) && empty($body['entityId'])) {
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId' => $GLOBALS['id']]) && empty($body['entityId'])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
             }
 

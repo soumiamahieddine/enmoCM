@@ -14,11 +14,14 @@
 
 namespace SrcCore\controllers;
 
+use Basket\models\BasketModel;
+use Basket\models\RedirectBasketModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactGroupModel;
 use Contact\models\ContactModel;
 use Contact\models\ContactParameterModel;
 use Entity\models\EntityModel;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -748,7 +751,6 @@ class AutoCompleteController
         }
     }
 
-
     public static function getFolders(Request $request, Response $response)
     {
         $data = $request->getQueryParams();
@@ -821,77 +823,94 @@ class AutoCompleteController
         return $response->withJson($data);
     }
 
-//    public static function getResources(Request $request, Response $response)
-//    {
-//        $queryparams = $request->getQueryParams();
-//
-//        if (!Validator::stringType()->notEmpty()->validate($queryparams['search'])) {
-//            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
-//        }
-//
-//        $autocompleteUsers = [];
-//        if (empty($queryParams['noUsers'])) {
-//            $fields = ['subject', 'alt_identifier'];
-//            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
-//            $requestData = AutoCompleteController::getDataForRequest([
-//                'search'        => $queryParams['search'],
-//                'fields'        => $fields,
-//                'where'         => ['status not in (?)', 'user_id not in (?)'],
-//                'data'          => [['DEL', 'SPD'], ['superadmin']],
-//                'fieldsNumber'  => 2,
-//            ]);
-//
-//            $users = UserModel::get([
-//                'select'    => ['id', 'firstname', 'lastname'],
-//                'where'     => $requestData['where'],
-//                'data'      => $requestData['data'],
-//                'orderBy'   => ['lastname'],
-//                'limit'     => self::TINY_LIMIT
-//            ]);
-//
-//            foreach ($users as $user) {
-//                $autocompleteUsers[] = [
-//                    'type'          => 'user',
-//                    'id'            => $user['id'],
-//                    'firstname'     => $user['firstname'],
-//                    'lastname'      => $user['lastname']
-//                ];
-//            }
-//        }
-//
-//        //Entities
-//        $autocompleteEntities = [];
-//        if (empty($queryParams['noEntities'])) {
-//            $fields = ['entity_label'];
-//            $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
-//            $requestData = AutoCompleteController::getDataForRequest([
-//                'search'        => $queryParams['search'],
-//                'fields'        => $fields,
-//                'where'         => ['enabled = ?'],
-//                'data'          => ['Y'],
-//                'fieldsNumber'  => 1,
-//            ]);
-//
-//            $entities = EntityModel::get([
-//                'select'    => ['id', 'entity_id', 'entity_label', 'short_label'],
-//                'where'     => $requestData['where'],
-//                'data'      => $requestData['data'],
-//                'orderBy'   => ['entity_label'],
-//                'limit'     => self::TINY_LIMIT
-//            ]);
-//
-//            foreach ($entities as $value) {
-//                $autocompleteEntities[] = [
-//                    'type'          => 'entity',
-//                    'id'            => $value['id'],
-//                    'lastname'      => $value['entity_label'],
-//                    'firstname'     => ''
-//                ];
-//            }
-//        }
-//
-//        return $response->withJson($data);
-//    }
+    public static function getResources(Request $request, Response $response)
+    {
+        $queryParams = $request->getQueryParams();
+
+        if (!Validator::stringType()->notEmpty()->validate($queryParams['search'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
+        }
+
+        $whereClause = '(res_id in (select res_id from users_followed_resources where user_id = ?))';
+        $dataClause = [$GLOBALS['id']];
+
+        $groups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
+        $groupsClause = '';
+        foreach ($groups as $key => $group) {
+            if (!empty($group['where_clause'])) {
+                $groupClause = PreparedClauseController::getPreparedClause(['clause' => $group['where_clause'], 'login' => $GLOBALS['userId']]);
+                if ($key > 0) {
+                    $groupsClause .= ' or ';
+                }
+                $groupsClause .= "({$groupClause})";
+            }
+        }
+        if (!empty($groupsClause)) {
+            $whereClause .= " OR ({$groupsClause})";
+        }
+
+        $baskets = BasketModel::getBasketsByLogin(['login' => $GLOBALS['userId']]);
+        $basketsClause = '';
+        foreach ($baskets as $basket) {
+            if (!empty($basket['basket_clause'])) {
+                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $GLOBALS['userId']]);
+                if (!empty($basketsClause)) {
+                    $basketsClause .= ' or ';
+                }
+                $basketsClause .= "({$basketClause})";
+            }
+        }
+        $assignedBaskets = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $GLOBALS['id']]);
+        foreach ($assignedBaskets as $basket) {
+            if (!empty($basket['basket_clause'])) {
+                $basketOwner = UserModel::getById(['id' => $basket['owner_user_id'], 'select' => ['user_id']]);
+                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $basketOwner['user_id']]);
+                if (!empty($basketsClause)) {
+                    $basketsClause .= ' or ';
+                }
+                $basketsClause .= "({$basketClause})";
+            }
+        }
+        if (!empty($basketsClause)) {
+            $whereClause .= " OR ({$basketsClause})";
+        }
+
+        $entities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
+        $entities = array_column($entities, 'id');
+
+        $foldersClause = 'res_id in (select res_id from folders LEFT JOIN entities_folders ON folders.id = entities_folders.folder_id LEFT JOIN resources_folders ON folders.id = resources_folders.folder_id ';
+        $foldersClause .= 'WHERE entities_folders.entity_id in (?) OR folders.user_id = ?)';
+        $whereClause .= " OR ({$foldersClause})";
+
+        $dataClause[] = $entities;
+        $dataClause[] = $GLOBALS['id'];
+
+//        $whereClause = str_replace(
+//            ['res_id', 'custom_fields', 'external_id', 'creation_date', 'modification_date'],
+//            ['res_view_letterbox.res_id', 'res_view_letterbox.custom_fields', 'res_view_letterbox.external_id', 'res_view_letterbox.creation_date', 'res_view_letterbox.modification_date'],
+//            $whereClause
+//        );
+
+        $fields = ['subject', 'alt_identifier'];
+        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+        $requestData = AutoCompleteController::getDataForRequest([
+            'search'        => $queryParams['search'],
+            'fields'        => $fields,
+            'where'         => ["({$whereClause})"],
+            'data'          => $dataClause,
+            'fieldsNumber'  => 2,
+        ]);
+
+        $resources = ResModel::getOnView([
+            'select'    => ['res_view_letterbox.res_id', 'alt_identifier', 'subject'],
+            'where'     => $requestData['where'],
+            'data'      => $requestData['data'],
+            'orderBy'   => ['creation_date'],
+            'limit'     => self::TINY_LIMIT
+        ]);
+
+        return $response->withJson($resources);
+    }
 
     public static function getDataForRequest(array $args)
     {
