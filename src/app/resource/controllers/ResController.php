@@ -841,7 +841,6 @@ class ResController
         ValidatorModel::arrayType($args, ['resId']);
 
         $resources = array_unique($args['resId']);
-        $resourcesNumber = count($resources);
 
         $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
 
@@ -849,14 +848,14 @@ class ResController
             return true;
         }
 
-        $followed = UserFollowedResourceModel::get([
-           'where' => ['user_id = ?', 'res_id in (?)'],
-           'data' => [$args['userId'], $resources]
-        ]);
+        $whereClause = '(res_id in (select res_id from users_followed_resources where user_id = ?))';
 
-        if (!empty($followed)) {
-            return true;
-        }
+        $entities = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
+        $entities = array_column($entities, 'id');
+
+        $foldersClause = 'res_id in (select res_id from folders LEFT JOIN entities_folders ON folders.id = entities_folders.folder_id LEFT JOIN resources_folders ON folders.id = resources_folders.folder_id ';
+        $foldersClause .= 'WHERE entities_folders.entity_id in (?) OR folders.user_id = ?)';
+        $whereClause .= " OR ({$foldersClause})";
 
         $groups = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
         $groupsClause = '';
@@ -869,12 +868,8 @@ class ResController
                 $groupsClause .= "({$groupClause})";
             }
         }
-
         if (!empty($groupsClause)) {
-            $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id in (?)', "({$groupsClause})"], 'data' => [$resources]]);
-            if (!empty($res) && count($res) == $resourcesNumber) {
-                return true;
-            }
+            $whereClause .= " OR ({$groupsClause})";
         }
 
         $baskets = BasketModel::getBasketsByLogin(['login' => $user['user_id']]);
@@ -899,28 +894,17 @@ class ResController
                 $basketsClause .= "({$basketClause})";
             }
         }
-
         if (!empty($basketsClause)) {
-            try {
-                $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id in (?)', "({$basketsClause})"], 'data' => [$resources]]);
-                if (!empty($res) && count($res) == $resourcesNumber) {
-                    return true;
-                }
-            } catch (\Exception $e) {
-                return false;
-            }
+            $whereClause .= " OR ({$basketsClause})";
         }
 
-        $entities = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
-        $entities = array_column($entities, 'id');
-
-        $foldersWithResources = FolderModel::getWithEntitiesAndResources([
-            'select'    => ['DISTINCT(resources_folders.res_id)'],
-            'where'     => ['resources_folders.res_id in (?)', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
-            'data'      => [$resources, $entities, $args['userId']]
-        ]);
-        if (!empty($foldersWithResources) && count($foldersWithResources) == $resourcesNumber) {
-            return true;
+        try {
+            $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id in (?)', "({$whereClause})"], 'data' => [$resources, $args['userId'], $entities, $args['userId']]]);
+            if (!empty($res) && count($res) == count($resources)) {
+                return true;
+            }
+        } catch (\Exception $e) {
+            return false;
         }
 
         return false;
