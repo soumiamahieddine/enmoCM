@@ -118,7 +118,8 @@
                                                 (change)="toggleRes($event,row)" (click)="$event.stopPropagation();">
                                             </mat-checkbox>
                                         </span>
-                                        <button mat-icon-button (click)="$event.stopPropagation();toggleMailTracking(row)" style="margin-left: -25px; color: #F99830"
+                                        <button mat-icon-button (click)="$event.stopPropagation();toggleMailTracking(row)" style="margin-left: -25px;"
+                                            class="followIcon"
                                             [title]="row.mailTracking === true ? lang.untrackThisMail : lang.trackThisMail">
                                             <mat-icon [ngClass]="[row.mailTracking === true ? 'fas fa-star' : 'far fa-star']"></mat-icon>
                                         </button>
