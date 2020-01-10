@@ -1392,5 +1392,9 @@ export const LANG_EN = {
     "publicModel" : "Public model",
     "privateModel" : "Private model",
     "moveVisaUserErr1" : "You cannot move", 
-    "moveVisaUserErr2" : "with users who have already approved / signed", 
+    "moveVisaUserErr2" : "with users who have already approved / signed",
+    "moveAvisUserErr1" : "You cannot move", 
+    "moveAvisUserErr2" : "with users who have already given an opinion", 
+    "avisWorkflowUpdated" : "Opinion workflow updated",
+    "avisSent" : "Opinion given",
 };

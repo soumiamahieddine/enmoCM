@@ -1420,7 +1420,7 @@ export const LANG_FR = {
     "closeEditor" : "Fermer l'éditeur",
     "errorOnlyoffice1" : "Impossible de lancer onlyoffice, vous utilisez une adresse locale",
     "errorOnlyoffice2" : "Impossible de lancer onlyoffice. Veuillez vérifier la disponibilité du serveur",
-    "externalVisaWorkflow" : "Circuit de visa Maarch parapheur",
+    "externalVisaWorkflow" : "Circuit de visa Maarch Parapheur",
     "IdMaarch2Gec" : "Identifiant MAARCH2GEC",
     "indexingFile" : "Indexation",
     "signUserRequired" : "Un signataire mininum est requis",
@@ -1433,4 +1433,8 @@ export const LANG_FR = {
     "privateModel" : "Modèle privé", 
     "moveVisaUserErr1" : "Vous ne pouvez pas déplacer", 
     "moveVisaUserErr2" : "avec des personnes ayant déja visé / signé", 
+    "moveAvisUserErr1" : "Vous ne pouvez pas déplacer", 
+    "moveAvisUserErr2" : "avec des personnes ayant déja donné un avis", 
+    "avisWorkflowUpdated" : "Circuit d'avis modifié",
+    "avisSent" : "Avis donné",
 };

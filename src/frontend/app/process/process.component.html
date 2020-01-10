@@ -79,7 +79,7 @@
                 <app-visa-workflow *ngIf="currentTool === 'visa' && !loading" #appVisaWorkflow
                     [resId]="currentResourceInformations.resId" [adminMode]="privilegeService.hasCurrentUserPrivilege('config_visa_workflow')"></app-visa-workflow>
                 <app-avis-workflow *ngIf="currentTool === 'avis' && !loading" #appAvisWorkflow
-                    [resId]="currentResourceInformations.resId"></app-avis-workflow>
+                    [resId]="currentResourceInformations.resId" [adminMode]="privilegeService.hasCurrentUserPrivilege('config_avis_workflow')"></app-avis-workflow>
                 <app-attachments-list *ngIf="currentTool === 'attachments' && !loading" #appAttachmentsList
                     [resId]="currentResourceInformations.resId" [target]="'process'"
                     (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
@@ -89,19 +89,9 @@
                     [mode]="'process'" [canEdit]="canEditData" [hideDiffusionList]="true"
                     (loadingFormEndEvent)="triggerProcessAction()"></app-indexing-form>
                 <div style="position: sticky;bottom: 0px;text-align:right;">
-                    <button mat-fab
-                        *ngIf="indexingForm !== undefined && indexingForm.isResourceModified() && currentTool === 'info'"
-                        (click)="confirmModification()" color="accent" [title]="lang.saveModifications">
-                        <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
-                    </button>
                     <button mat-fab [title]="lang.saveModifications"
-                        *ngIf="appDiffusionsList !== undefined && appDiffusionsList.isModified() && currentTool === 'diffusionList'"
-                        (click)="saveListinstance()" color="accent">
-                        <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
-                    </button>
-                    <button mat-fab [title]="lang.saveModifications"
-                        *ngIf="appVisaWorkflow !== undefined && appVisaWorkflow.isModified() && currentTool === 'visa'"
-                        (click)="saveVisaWorkflow()" color="accent">
+                        *ngIf="isToolModified()"
+                        (click)="saveTool()" color="accent">
                         <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
                     </button>
                 </div>
@@ -258,7 +248,7 @@
             [resId]="currentResourceInformations.resId" >
         </app-visa-workflow>
         <app-avis-workflow *ngIf="modal.id === 'avis' && !loading" #appAvisWorkflow
-            [resId]="currentResourceInformations.resId">
+            [resId]="currentResourceInformations.resId" [adminMode]="privilegeService.hasCurrentUserPrivilege('config_avis_workflow')">
         </app-avis-workflow>
         <app-attachments-list *ngIf="modal.id === 'attachments'  && !loading" #appAttachmentsList
             [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="refreshBadge($event,'attachments')">

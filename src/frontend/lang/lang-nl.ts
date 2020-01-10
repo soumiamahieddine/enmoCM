@@ -1416,4 +1416,8 @@ export const LANG_NL = {
     "privateModel" : "Private model", //_TO_TRANSLATE
     "moveVisaUserErr1" : "You cannot move", //_TO_TRANSLATE
     "moveVisaUserErr2" : "with users who have already approved / signed", //_TO_TRANSLATE
+    "moveAvisUserErr1" : "You cannot move", //_TO_TRANSLATE
+    "moveAvisUserErr2" : "with users who have already given an opinion", //_TO_TRANSLATE
+    "avisWorkflowUpdated" : "Opinion workflow updated", //_TO_TRANSLATE
+    "avisSent" : "Opinion given", //_TO_TRANSLATE
 };

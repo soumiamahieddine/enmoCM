@@ -23,6 +23,7 @@ import { DiffusionsListComponent } from '../diffusions/diffusions-list.component
 import { ContactService } from '../../service/contact.service';
 import { VisaWorkflowComponent } from '../visa/visa-workflow.component';
 import { PrivilegeService } from '../../service/privileges.service';
+import { AvisWorkflowComponent } from '../avis/avis-workflow.component';
 
 
 
@@ -140,6 +141,7 @@ export class ProcessComponent implements OnInit {
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
     @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
+    @ViewChild('appAvisWorkflow', { static: false }) appAvisWorkflow: AvisWorkflowComponent;
     senderLightInfo: any = { 'displayName': null, 'fillingRate': null };
     hasContact: boolean = false;
 
@@ -494,11 +496,13 @@ export class ProcessComponent implements OnInit {
     }
 
     isToolModified() {
-        if (this.currentTool === 'info' && this.indexingForm.isResourceModified()) {
+        if (this.currentTool === 'info' && this.indexingForm !== undefined && this.indexingForm.isResourceModified()) {
             return true;
-        } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList.isModified()) {
+        } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList !== undefined && this.appDiffusionsList.isModified()) {
             return true;
-        } else if (this.currentTool === 'visa' && this.appVisaWorkflow.isModified()) {
+        } else if (this.currentTool === 'visa' && this.appVisaWorkflow !== undefined && this.appVisaWorkflow.isModified()) {
+            return true;
+        } else if (this.currentTool === 'avis' && this.appAvisWorkflow !== undefined && this.appAvisWorkflow.isModified()) {
             return true;
         } else {
             return false;
@@ -514,12 +518,14 @@ export class ProcessComponent implements OnInit {
     }
 
     saveTool() {
-        if (this.currentTool === 'info') {
+        if (this.currentTool === 'info' && this.indexingForm !== undefined) {
             this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
-        } else if (this.currentTool === 'diffusionList') {
+        } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList !== undefined) {
             this.appDiffusionsList.saveListinstance();
-        } else if (this.currentTool === 'visa') {
+        } else if (this.currentTool === 'visa' && this.appVisaWorkflow !== undefined) {
             this.appVisaWorkflow.saveVisaWorkflow();
+        } else if (this.currentTool === 'avis' && this.appAvisWorkflow !== undefined) {
+            this.appAvisWorkflow.saveAvisWorkflow();
         }
     }
 

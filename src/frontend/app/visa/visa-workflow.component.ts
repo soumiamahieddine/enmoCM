@@ -397,11 +397,6 @@ export class VisaWorkflowComponent implements OnInit {
         ).subscribe();
     }
 
-    addItem(userRest: any) {
-        
-
-    }
-
     getMaarchParapheurUserAvatar(externalId: string, key: number) {
         if (!this.functions.empty(externalId)) {
             this.http.get("../../rest/maarchParapheur/user/" + externalId + "/picture")

@@ -124,7 +124,7 @@ class ListTemplateController
         $check = $check && Validator::arrayType()->notEmpty()->validate($body['items']);
         $check = $check && (Validator::stringType()->notEmpty()->validate($body['title']) || Validator::stringType()->notEmpty()->validate($body['description']));
         if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+            return $response->withStatus(400)->withJson(['errors' => 'Bad allowed types']);
         }
 
         if (!empty($body['entityId'])) {
@@ -603,7 +603,7 @@ class ListTemplateController
         $circuit = $queryParams['circuit'] == 'opinion' ? 'opinionCircuit' : 'visaCircuit';
         $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['destination']]);
 
-        $where = ['type = ?', 'owner is null or owner = ?'];
+        $where = ['type = ?', '(owner is null or owner = ?)'];
         $data = [$circuit, $GLOBALS['id']];
         if (!empty($resource['destination'])) {
             $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['id']]);
