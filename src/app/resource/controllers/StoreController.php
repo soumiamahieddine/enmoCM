@@ -203,7 +203,7 @@ class StoreController
             'barcode'               => $args['barcode'] ?? null,
             'origin'                => $args['origin'] ?? null,
             'custom_fields'         => !empty($args['customFields']) ? json_encode($args['customFields']) : null,
-            'linked_resources'      => !empty($args['linkedResources']) ? json_encode($args['linkedResources']) : null,
+            'linked_resources'      => !empty($args['linkedResources']) ? json_encode($args['linkedResources']) : '[]',
             'external_id'           => $externalId,
             'creation_date'         => 'CURRENT_TIMESTAMP'
         ];

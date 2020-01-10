@@ -176,7 +176,7 @@ class EntityControllerTest extends TestCase
         $this->assertSame('PARIS', $responseBody->entity->city);
         $this->assertSame(null, $responseBody->entity->parent_entity_id);
         $this->assertInternalType('array', (array) $responseBody->entity->listTemplate);
-        $this->assertInternalType('array', $responseBody->entity->visaTemplate);
+        $this->assertInternalType('array', $responseBody->entity->visaCircuit);
         $this->assertSame(false, $responseBody->entity->hasChildren);
         $this->assertSame(0, $responseBody->entity->documents);
         $this->assertInternalType('array', $responseBody->entity->users);

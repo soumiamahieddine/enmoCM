@@ -338,10 +338,7 @@ abstract class EntityModelAbstract
 
         if ($aArgs['userId'] == 'superadmin') {
             $rawEntitiesAllowed = EntityModel::get(['select' => ['entity_id'], 'where' => ['enabled = ?'], 'data' => ['Y'], 'orderBy' => ['entity_label']]);
-            $entitiesAllowed = [];
-            foreach ($rawEntitiesAllowed as $value) {
-                $entitiesAllowed[] = $value['entity_id'];
-            }
+            $entitiesAllowed = array_column($rawEntitiesAllowed, 'entity_id');
         } else {
             $entitiesAllowed = EntityModel::getAllEntitiesByUserId(['userId' => $aArgs['userId']]);
         }
