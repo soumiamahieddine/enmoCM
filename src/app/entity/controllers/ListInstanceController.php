@@ -138,14 +138,16 @@ class ListInstanceController
                 'data'  => [$ListInstanceByRes['resId'], $ListInstanceByRes['listInstances'][0]['difflist_type']]
             ]);
 
-            $recipientFound = false;
-            foreach ($ListInstanceByRes['listInstances'] as $instance) {
-                if ($instance['item_mode'] == 'dest') {
-                    $recipientFound = true;
+            if ($ListInstanceByRes['listInstances'][0]['difflist_type'] == 'entity_id') {
+                $recipientFound = false;
+                foreach ($ListInstanceByRes['listInstances'] as $instance) {
+                    if ($instance['item_mode'] == 'dest') {
+                        $recipientFound = true;
+                    }
                 }
-            }
-            if (!$recipientFound) {
-                return ['errors' => 'Dest is missing', 'code' => 403];
+                if (!$recipientFound) {
+                    return ['errors' => 'Dest is missing', 'code' => 403];
+                }
             }
 
             foreach ($ListInstanceByRes['listInstances'] as $instance) {
