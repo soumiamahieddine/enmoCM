@@ -580,7 +580,7 @@ INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mod
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('ELUS', 'Ensemble des élus', 'ELUS:Ensemble des élus', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'VILLE', 'Direction');
 
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('CCAS', 'Centre Communal d''Action Sociale', 'Centre Communal d''Action Sociale', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', '', 'Direction');
-ALTER SEQUENCE list_templates_id_seq RESTART WITH 19;
+SELECT setval('list_templates_id_seq', (SELECT max(id)+1 FROM list_templates), false);
 
 -- Create BASKETS
 TRUNCATE TABLE baskets;
