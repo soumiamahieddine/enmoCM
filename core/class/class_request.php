@@ -137,8 +137,15 @@ where
         where users_entities.user_id = :user_id_folders
     )";
 
-                            $where_string = ''.$where_string." and ( ".$_SESSION['user']['security'][$coll]['DOC']['where']." or res_id in (".$whereFolders.")) ";
-                            $parameters = array_merge($parameters, array(":user_id_folders" => $_SESSION['user']['UserId']));
+                            $whereFollowed = "select res_id from users_followed_resources where user_id = :user_id_followed";
+
+                            $user = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+
+                            $where_string = ''.$where_string." and ( ".$_SESSION['user']['security'][$coll]['DOC']['where']." or res_id in (".$whereFolders.") or res_id in (".$whereFollowed.")) ";
+                            $parameters = array_merge($parameters, [
+                                "user_id_folders"  => $_SESSION['user']['UserId'],
+                                "user_id_followed" => $user['id']
+                            ]);
 
                         }
                         break;
