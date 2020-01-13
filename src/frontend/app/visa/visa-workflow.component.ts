@@ -324,8 +324,10 @@ export class VisaWorkflowComponent implements OnInit {
                 this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
             }
         } else if (item.type === 'user') {
+            
+            
             this.visaWorkflow.items.push({
-                item_id: 0,
+                item_id: item.id,
                 item_type: 'user',
                 item_entity: item.entity,
                 labelToDisplay: item.label,

@@ -103,13 +103,13 @@ export class ProcessComponent implements OnInit {
             count: 0
         },
         {
-            id: 'visa',
+            id: 'visaCircuit',
             icon: 'fas fa-list-ol',
             label: this.lang.visaWorkflow,
             count: 0
         },
         {
-            id: 'avis',
+            id: 'opinionCircuit',
             icon: 'fas fa-comment-alt',
             label: this.lang.avis,
             count: 0
@@ -254,7 +254,7 @@ export class ProcessComponent implements OnInit {
     loadBadges() {
         this.processTool.forEach(element => {
             element.count = this.currentResourceInformations[element.id] !== undefined ? this.currentResourceInformations[element.id] : 0;
-        });
+        }); 
     }
 
     loadSenders() {
@@ -500,9 +500,9 @@ export class ProcessComponent implements OnInit {
             return true;
         } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList !== undefined && this.appDiffusionsList.isModified()) {
             return true;
-        } else if (this.currentTool === 'visa' && this.appVisaWorkflow !== undefined && this.appVisaWorkflow.isModified()) {
+        } else if (this.currentTool === 'visaCircuit' && this.appVisaWorkflow !== undefined && this.appVisaWorkflow.isModified()) {
             return true;
-        } else if (this.currentTool === 'avis' && this.appAvisWorkflow !== undefined && this.appAvisWorkflow.isModified()) {
+        } else if (this.currentTool === 'opinionCircuit' && this.appAvisWorkflow !== undefined && this.appAvisWorkflow.isModified()) {
             return true;
         } else {
             return false;
@@ -522,9 +522,9 @@ export class ProcessComponent implements OnInit {
             this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
         } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList !== undefined) {
             this.appDiffusionsList.saveListinstance();
-        } else if (this.currentTool === 'visa' && this.appVisaWorkflow !== undefined) {
+        } else if (this.currentTool === 'visaCircuit' && this.appVisaWorkflow !== undefined) {
             this.appVisaWorkflow.saveVisaWorkflow();
-        } else if (this.currentTool === 'avis' && this.appAvisWorkflow !== undefined) {
+        } else if (this.currentTool === 'opinionCircuit' && this.appAvisWorkflow !== undefined) {
             this.appAvisWorkflow.saveAvisWorkflow();
         }
     }
