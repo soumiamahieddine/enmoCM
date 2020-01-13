@@ -3,25 +3,27 @@ import {
     OnInit,
     AfterViewInit,
     Input,
-    NgZone,
     EventEmitter,
     Output,
-    HostListener
+    HostListener,
+    ViewChild
 } from '@angular/core';
 import './onlyoffice-api.js';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Subject, Observable, of } from 'rxjs';
-import { catchError, tap, filter, exhaustMap, first, finalize } from 'rxjs/operators';
+import { catchError, tap, filter } from 'rxjs/operators';
 import { LANG } from '../../app/translate.component';
 import { ConfirmComponent } from '../modal/confirm.component';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { MatDialogRef, MatDialog, MatSidenav } from '@angular/material';
 import { NotificationService } from '../../app/notification.service';
 
 declare var DocsAPI: any;
+declare function $j(selector: any): any;
 
 @Component({
     selector: 'onlyoffice-viewer',
-    template: `<div *ngIf="loading" style="display:block;padding: 10px;">{{lang.checkOnlyofficeServer}}...</div><button mat-mini-fab color="warn" [title]="lang.closeEditor" style="position: absolute;right: 6px;top: 12px;" (click)="quit()"><mat-icon class="fa fa-times" style="height:auto;"></mat-icon></button><div id="placeholder"></div>`
+    templateUrl: 'onlyoffice-viewer.component.html',
+    styleUrls: ['onlyoffice-viewer.component.scss'],
 })
 export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
 
@@ -33,6 +35,8 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
     @Input() file: any = {};
     @Input() params: any = {};
 
+    @Input() sidenavLeft: MatSidenav = null;
+
     @Output() triggerAfterUpdatedDoc = new EventEmitter<string>();
     @Output() triggerCloseEditor = new EventEmitter<string>();
 
@@ -42,6 +46,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
     documentLoaded: boolean = false;
     canUpdateDocument: boolean = false;
     isSaving: boolean = false;
+    fullscreenMode: boolean = false;
 
     tmpFilename: string = '';
 
@@ -62,6 +67,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
             this.getEncodedDocument(response.data);
         }
     }
+
     constructor(public http: HttpClient, public dialog: MatDialog, private notify: NotificationService) { }
 
     quit() {
@@ -123,8 +129,8 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
             this.http.get(`../../rest/onlyOffice/configuration`).pipe(
                 tap((data: any) => {
                     if (data.enabled) {
-                        const protocol = data.serverSsl ? 'https://': 'http://';
-                        const port = data.serverPort ? `:${data.serverPort}`: ':80';
+                        const protocol = data.serverSsl ? 'https://' : 'http://';
+                        const port = data.serverPort ? `:${data.serverPort}` : ':80';
                         this.onlyfficeUrl = `${protocol}${data.serverUri}${port}`;
                         this.appUrl = data.coreUrl;
                         resolve(true);
@@ -138,7 +144,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                     return of(false);
                 }),
             ).subscribe();
-        }); 
+        });
     }
 
 
@@ -174,7 +180,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
             this.http.post(`../../${this.params.docUrl}`, { objectId: this.params.objectId, objectType: this.params.objectType, onlyOfficeKey: this.key, data: this.params.dataToMerge }).pipe(
                 tap((data: any) => {
                     this.tmpFilename = data.filename;
-    
+
                     this.file = {
                         name: this.key,
                         format: data.filename.split('.').pop(),
@@ -265,5 +271,23 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
 
     ngOnDestroy() {
         this.eventAction.complete();
+    }
+
+    openFullscreen() {
+        $j("iframe[name='frameEditor']").css("top", "0px");
+        $j("iframe[name='frameEditor']").css("left", "0px");
+
+        if (!this.fullscreenMode) {
+            if (this.sidenavLeft !== null) {
+                this.sidenavLeft.close();
+            }
+            $j("iframe[name='frameEditor']").css("position", "fixed");
+        } else {
+            if (this.sidenavLeft !== null) {
+                this.sidenavLeft.open();
+            }
+            $j("iframe[name='frameEditor']").css("position", "initial");
+        }
+        this.fullscreenMode = !this.fullscreenMode;
     }
 }

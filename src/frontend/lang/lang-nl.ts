@@ -1425,4 +1425,6 @@ export const LANG_NL = {
     "moveAvisUserErr2" : "with users who have already given an opinion", //_TO_TRANSLATE
     "avisWorkflowUpdated" : "Opinion workflow updated", //_TO_TRANSLATE
     "avisSent" : "Opinion given", //_TO_TRANSLATE
+    "openFullscreen" : "Enable fullscreen", //_TO_TRANSLATE
+    "closeFullscreen" : "Disable fullscreen", //_TO_TRANSLATE
 };

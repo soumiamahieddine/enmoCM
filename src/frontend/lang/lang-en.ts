@@ -1400,4 +1400,6 @@ export const LANG_EN = {
     "moveAvisUserErr2" : "with users who have already given an opinion", 
     "avisWorkflowUpdated" : "Opinion workflow updated",
     "avisSent" : "Opinion given",
+    "openFullscreen" : "Enable fullscreen",
+    "closeFullscreen" : "Disable fullscreen",
 };

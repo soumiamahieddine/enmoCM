@@ -69,8 +69,10 @@ export class DocumentViewerComponent implements OnInit {
     @Input('attachType') attachType: string = null;
     @Input('format') format: string = null;
 
+    @Input() sidenavLeft: MatSidenav = null;
+
     @Output('triggerEvent') triggerEvent = new EventEmitter<string>();
-    
+
     private eventAction = new Subject<any>();
 
 

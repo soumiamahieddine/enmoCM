@@ -119,7 +119,7 @@
         </div>
         <div class="document-container" [class.fullContainer]="appService.getViewMode()">
             <div class="content">
-                <app-document-viewer #appDocumentViewer [editMode]="true" [tmpFilename]="tmpFilename" (triggerEvent)="refreshDatas()"
+                <app-document-viewer #appDocumentViewer [editMode]="true" [tmpFilename]="tmpFilename" (triggerEvent)="refreshDatas()" [sidenavLeft]="sidenavLeft"
                     style="height:100%;width:100%;">
                 </app-document-viewer>
             </div>

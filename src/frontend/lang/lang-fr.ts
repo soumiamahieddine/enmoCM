@@ -1440,4 +1440,6 @@ export const LANG_FR = {
     "moveAvisUserErr2" : "avec des personnes ayant déja donné un avis", 
     "avisWorkflowUpdated" : "Circuit d'avis modifié",
     "avisSent" : "Avis donné",
+    "openFullscreen" : "Activer le mode plein écran",
+    "closeFullscreen" : "Désactiver le mode plein écran",
 };
