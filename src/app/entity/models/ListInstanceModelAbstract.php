@@ -19,23 +19,23 @@ use SrcCore\models\DatabaseModel;
 
 abstract class ListInstanceModelAbstract
 {
-    public static function get(array $aArgs)
+    public static function get(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['select']);
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy', 'groupBy']);
-        ValidatorModel::intType($aArgs, ['limit']);
+        ValidatorModel::notEmpty($args, ['select']);
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy', 'groupBy']);
+        ValidatorModel::intType($args, ['limit']);
 
-        $aListInstances = DatabaseModel::select([
-            'select'    => $aArgs['select'],
+        $listInstances = DatabaseModel::select([
+            'select'    => $args['select'],
             'table'     => ['listinstance'],
-            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
-            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
-            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
-            'groupBy'   => empty($aArgs['groupBy']) ? [] : $aArgs['groupBy'],
-            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
+            'where'     => empty($args['where']) ? [] : $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data'],
+            'order_by'  => empty($args['orderBy']) ? [] : $args['orderBy'],
+            'groupBy'   => empty($args['groupBy']) ? [] : $args['groupBy'],
+            'limit'     => empty($args['limit']) ? 0 : $args['limit']
         ]);
 
-        return $aListInstances;
+        return $listInstances;
     }
 
     public static function getById(array $aArgs)
@@ -76,7 +76,8 @@ abstract class ListInstanceModelAbstract
                 'viewed'                    => $args['viewed'],
                 'difflist_type'             => $args['difflist_type'],
                 'process_date'              => $args['process_date'],
-                'process_comment'           => $args['process_comment']
+                'process_comment'           => $args['process_comment'],
+                'requested_signature'       => empty($args['requested_signature']) ? 'false' : 'true'
             ]
         ]);
 

@@ -233,9 +233,19 @@ class ResController
             $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
             $formattedData['attachments'] = $attachments[0]['count'];
 
+            $formattedData['diffusionList'] = 0;
+            $formattedData['visaCircuit'] = 0;
+            $formattedData['opinionCircuit'] = 0;
+            $listInstanceItems = ListInstanceModel::get(['select' => ['count(1)', 'difflist_type'], 'where' => ['res_id = ?'], 'data' => [$args['resId']], 'groupBy' => ['difflist_type']]);
+            foreach ($listInstanceItems as $item) {
+                $type = $item['difflist_type'] == 'entity_id' ? 'diffusionList' : ($item['difflist_type'] == 'visaCircuit' ? 'visaCircuitItems' : 'opinionCircuit');
+                $formattedData[$type] = $item['count'];
+            }
+
             $followed = UserFollowedResourceModel::get([
-                'where' => ['user_id = ?', 'res_id = ?'],
-                'data'  => [$GLOBALS['id'], $args['resId']]
+                'select'    => [1],
+                'where'     => ['user_id = ?', 'res_id = ?'],
+                'data'      => [$GLOBALS['id'], $args['resId']]
             ]);
             $formattedData['followed'] = !empty($followed);
         }

@@ -67,6 +67,7 @@ class ListInstanceController
         $listInstances = ListInstanceModel::getVisaCircuitByResId(['select' => ['listinstance_id', 'sequence', 'item_id', 'item_type', 'users.id', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment', 'signatory', 'requested_signature'], 'id' => $aArgs['resId']]);
         foreach ($listInstances as $key => $value) {
             $listInstances[$key]['item_id'] = $listInstances[$key]['id'];
+            $listInstances[$key]['item_type'] = 'user';
             $listInstances[$key]['labelToDisplay'] = $listInstances[$key]['item_firstname'].' '.$listInstances[$key]['item_lastname'];
         }
 
@@ -82,6 +83,7 @@ class ListInstanceController
         $listInstances = ListInstanceModel::getAvisCircuitByResId(['select' => ['listinstance_id', 'sequence', 'item_id', 'item_type', 'users.id', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment'], 'id' => $aArgs['resId']]);
         foreach ($listInstances as $key => $value) {
             $listInstances[$key]['item_id'] = $listInstances[$key]['id'];
+            $listInstances[$key]['item_type'] = 'user';
             $listInstances[$key]['labelToDisplay'] = $listInstances[$key]['item_firstname'].' '.$listInstances[$key]['item_lastname'];
         }
 
@@ -95,9 +97,7 @@ class ListInstanceController
             return $response->withStatus(400)->withJson(['errors' => 'Body is not set or not an array']);
         }
 
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-
-        $controller = ListInstanceController::updateListInstance(['data' => $body, 'userId' => $currentUser['id']]);
+        $controller = ListInstanceController::updateListInstance(['data' => $body, 'userId' => $GLOBALS['id']]);
         if (!empty($controller['errors'])) {
             return $response->withStatus($controller['code'])->withJson(['errors' => $controller['errors']]);
         }
@@ -152,7 +152,7 @@ class ListInstanceController
                 }
             }
 
-            foreach ($ListInstanceByRes['listInstances'] as $instance) {
+            foreach ($ListInstanceByRes['listInstances'] as $key => $instance) {
                 $listControl = ['item_id', 'item_type', 'item_mode', 'difflist_type'];
                 foreach ($listControl as $itemControl) {
                     if ($itemControl == 'item_mode' && $ListInstanceByRes['listInstances'][0]['difflist_type'] != 'entity_id') {
@@ -207,16 +207,17 @@ class ListInstanceController
                 }
 
                 ListInstanceModel::create([
-                    'res_id'            => $ListInstanceByRes['resId'],
-                    'sequence'          => 0,
-                    'item_id'           => $instance['item_id'],
-                    'item_type'         => $instance['item_type'],
-                    'item_mode'         => $instance['item_mode'],
-                    'added_by_user'     => $currentUser['user_id'],
-                    'difflist_type'     => $instance['difflist_type'],
-                    'process_date'      => $instance['process_date'] ?? null,
-                    'process_comment'   => $instance['process_comment'] ?? null,
-                    'viewed'            => empty($instance['viewed']) ? 0 : $instance['viewed']
+                    'res_id'                => $ListInstanceByRes['resId'],
+                    'sequence'              => $key,
+                    'item_id'               => $instance['item_id'],
+                    'item_type'             => $instance['item_type'],
+                    'item_mode'             => $instance['item_mode'],
+                    'added_by_user'         => $currentUser['user_id'],
+                    'difflist_type'         => $instance['difflist_type'],
+                    'process_date'          => $instance['process_date'] ?? null,
+                    'process_comment'       => $instance['process_comment'] ?? null,
+                    'requested_signature'   => $instance['requested_signature'] ?? false,
+                    'viewed'                => empty($instance['viewed']) ? 0 : $instance['viewed']
                 ]);
 
                 if ($instance['item_mode'] == 'dest') {
@@ -264,5 +265,30 @@ class ListInstanceController
         DatabaseModel::commitTransaction();
 
         return ['success' => 'success'];
+    }
+
+    public function deleteCircuit(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Resource out of perimeter']);
+        } elseif (!Validator::stringType()->validate($args['type']) || !in_array($args['type'], ['visaCircuit', 'opinionCircuit'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Query params type is empty or not valid']);
+        } elseif ($args['type'] == 'visaCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'config_visa_workflow', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        } elseif ($args['type'] == 'opinionCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'config_avis_workflow', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $mappingTypes = [
+            'visaCircuit'       => 'VISA_CIRCUIT',
+            'opinionCircuit'    => 'AVIS_CIRCUIT',
+        ];
+
+        ListInstanceModel::delete([
+            'where' => ['res_id = ?', 'difflist_type = ?'],
+            'data'  => [$args['resId'], $mappingTypes[$args['type']]]
+        ]);
+
+        return $response->withStatus(204);
     }
 }
