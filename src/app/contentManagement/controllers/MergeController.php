@@ -259,13 +259,11 @@ class MergeController
         //CustomFields
         if (!empty($args['resId'])) {
             $customs = !empty($resource['custom_fields']) ? json_decode($resource['custom_fields'], true) : [];
-            foreach ($customs as $custom) {
-                $decoded = json_decode($custom['value']);
-
-                if (is_array($decoded)) {
-                    $resource['customField_' . $custom['custom_field_id']] = implode("\n", $decoded);
+            foreach ($customs as $customId => $custom) {
+                if (is_array($custom)) {
+                    $resource['customField_' . $customId] = implode("\n", $custom);
                 } else {
-                    $resource['customField_' . $custom['custom_field_id']] = $decoded;
+                    $resource['customField_' . $customId] = $custom;
                 }
             }
         } else {
