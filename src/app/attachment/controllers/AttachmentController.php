@@ -57,11 +57,6 @@ class AttachmentController
             'collId'    => 'attachments_coll'
         ]);
 
-        $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
-        if ($attachmentsTypes[$body['type']]['sign']) {
-            AttachmentModel::setInSignatureBook(['id' => $id, 'inSignatureBook' => true]);
-        }
-
         $customId = CoreConfigModel::getCustomId();
         $customId = empty($customId) ? 'null' : $customId;
         exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$id} --collId attachments_coll --userId {$GLOBALS['id']} > /dev/null &");

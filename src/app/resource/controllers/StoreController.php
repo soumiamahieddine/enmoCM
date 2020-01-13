@@ -309,7 +309,7 @@ class StoreController
             'recipient_type'        => $args['recipientType'] ?? null,
             'validation_date'       => $args['validationDate'] ?? null,
             'effective_date'        => $args['effectiveDate'] ?? null,
-            'in_signature_book'     => empty($args['inSignatureBook']) ? 'false' : 'true',
+            'in_signature_book'     => $attachmentsTypes[$args['type']]['sign'] == true || !empty($args['inSignatureBook']) ? 'true' : 'false',
             'external_id'           => $externalId,
             'creation_date'         => 'CURRENT_TIMESTAMP'
         ];
