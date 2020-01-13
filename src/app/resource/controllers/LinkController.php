@@ -92,7 +92,7 @@ class LinkController
         } elseif (!ResController::hasRightByResId(['resId' => $body['linkedResources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Body linkedResources out of perimeter']);
         } elseif (in_array($args['resId'], $body['linkedResources'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Body linkedResources contains resource']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body linkedResources contains resource']);
         }
 
         $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['linked_resources']]);

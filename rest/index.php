@@ -282,9 +282,6 @@ $app->put('/indexingModels/{id}/disable', \IndexingModel\controllers\IndexingMod
 $app->put('/indexingModels/{id}/enable', \IndexingModel\controllers\IndexingModelController::class . ':enable');
 $app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
 
-//Links
-$app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':getByResId');
-
 //Listinstance
 $app->get('/listinstance/{id}', \Entity\controllers\ListInstanceController::class . ':getById');
 $app->put('/listinstances', \Entity\controllers\ListInstanceController::class . ':update');
