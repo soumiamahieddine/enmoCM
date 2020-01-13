@@ -28,6 +28,7 @@
             "Report\\"                  : "src/app/report/",
             "Resource\\"                : "src/app/resource/",
             "SignatureBook\\"           : "src/app/signatureBook/",
+            "Search\\"                  : "src/app/search/",
             "Shipping\\"                : "src/app/shipping/",
             "Status\\"                  : "src/app/status/",
             "Tag\\"                     : "src/app/tag/",

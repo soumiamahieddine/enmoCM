@@ -89,7 +89,6 @@ $app->get('/autocomplete/folders', \SrcCore\controllers\AutoCompleteController::
 $app->get('/autocomplete/tags', \SrcCore\controllers\AutoCompleteController::class . ':getTags');
 $app->get('/autocomplete/ouM2MAnnuary', \SrcCore\controllers\AutoCompleteController::class . ':getOuM2MAnnuary');
 $app->get('/autocomplete/businessIdM2MAnnuary', \SrcCore\controllers\AutoCompleteController::class . ':getBusinessIdM2MAnnuary');
-$app->get('/autocomplete/resources', \SrcCore\controllers\AutoCompleteController::class . ':getResources');
 
 //Baskets
 $app->get('/baskets', \Basket\controllers\BasketController::class . ':get');
@@ -388,6 +387,9 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/ch
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkExternalNoteBook', \Action\controllers\PreProcessActionController::class . ':checkExternalNoteBook');
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/getRedirect', \Action\controllers\PreProcessActionController::class . ':getRedirectInformations');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkShippings', \Action\controllers\PreProcessActionController::class . ':checkShippings');
+
+//Search
+$app->get('/search', \Search\controllers\SearchController::class . ':get');
 
 //shipping
 $app->get('/administration/shippings', \Shipping\controllers\ShippingTemplateController::class . ':get');
