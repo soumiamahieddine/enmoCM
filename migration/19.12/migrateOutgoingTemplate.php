@@ -364,5 +364,39 @@ foreach ($customs as $custom) {
         }
     }
 
+    $path = "custom/{$custom}/apps/maarch_entreprise/xml/entreprise.xml";
+    if (file_exists($path)) {
+        if (!is_readable($path) || !is_writable($path)) {
+            printf("The file $path it is not readable or not writable.\n");
+            continue;
+        }
+        $loadedXml = simplexml_load_file($path);
+        
+        if ($loadedXml) {
+            for ($i=count($loadedXml->attachment_types->type); $i >= 0; $i--) {
+                if (in_array($loadedXml->attachment_types->type[$i]->id, ['outgoing_mail', 'outgoing_mail_signed'])) {
+                    unset($loadedXml->attachment_types->type[$i]);
+                }
+            }
+
+            $res = formatXml($loadedXml);
+            $fp = fopen($path, "w+");
+            if ($fp) {
+                fwrite($fp, $res);
+            }
+            $migrated++;
+        }
+    }
+
     printf("Migration de Modèles de document départ spontannée (CUSTOM {$custom}) : " . $migrated . " Modèle(s) migré(s), $nonMigrated non migré(s).\n");
+}
+
+function formatXml($simpleXMLElement)
+{
+    $xmlDocument = new DOMDocument('1.0');
+    $xmlDocument->preserveWhiteSpace = false;
+    $xmlDocument->formatOutput = true;
+    $xmlDocument->loadXML($simpleXMLElement->asXML());
+
+    return $xmlDocument->saveXML();
 }
