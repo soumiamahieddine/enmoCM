@@ -35,6 +35,7 @@ use Parameter\models\ParameterModel;
 use Resource\controllers\ResController;
 use Resource\controllers\StoreController;
 use Resource\models\ResModel;
+use Resource\models\UserFollowedResourceModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -515,6 +516,8 @@ class UserController
         $user['passwordRules']      = PasswordModel::getEnabledRules();
         $user['canModifyPassword']  = true;
         $user['privileges']         = PrivilegeController::getPrivilegesByUser(['userId' => $user['id']]);
+        $userFollowed = UserFollowedResourceModel::get(['select' => ['count(1) as nb'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
+        $user['nbFollowedResources'] = $userFollowed[0]['nb'];
 
         $loggingMethod = CoreConfigModel::getLoggingMethod();
         if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS)) {

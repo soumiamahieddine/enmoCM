@@ -365,7 +365,6 @@ $app->delete('/resources/unfollow', \Resource\controllers\UserFollowedResourceCo
 $app->get('/followedResources', \Resource\controllers\UserFollowedResourceController::class . ':getFollowedResources');
 $app->get('/followedResources/{resId}/baskets', \Resource\controllers\UserFollowedResourceController::class . ':getBaskets');
 $app->get('/followedResources/filters', \Resource\controllers\UserFollowedResourceController::class . ':getFilters');
-$app->get('/followedResources/count', \Resource\controllers\UserFollowedResourceController::class . ':getNumberOfFollowedResources');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');

@@ -5,6 +5,7 @@ import { LANG } from '../translate.component';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { AppService } from '../../service/app.service';
 import { PrivilegeService } from '../../service/privileges.service';
+import { HeaderService } from '../../service/header.service';
 
 declare function $j(selector: any): any;
 
@@ -22,17 +23,16 @@ export class MenuShortcutComponent implements OnInit {
     speedDialFabButtons: any = [];
     speedDialFabColumnDirection = 'column';
     shortcuts: any;
-    nbResourcesFollowed: any;
 
     constructor(
         public http: HttpClient,
         private _router: Router,
         public dialog: MatDialog,
         public appService: AppService,
-        public privilegeService: PrivilegeService
+        public privilegeService: PrivilegeService,
+        private headerService: HeaderService,
     ) {
         this.router = _router;
-        /**/
     }
 
     ngOnInit(): void {
@@ -41,11 +41,6 @@ export class MenuShortcutComponent implements OnInit {
 
     loadShortcuts() {
         this.shortcuts = this.privilegeService.getCurrentUserShortcuts();
-
-        this.http.get("../../rest/followedResources/count")
-            .subscribe((data: any) => {
-                this.nbResourcesFollowed = data.nbResourcesFollowed;
-            });
     }
 
     onSpeedDialFabClicked(group: any, shortcut: any) {

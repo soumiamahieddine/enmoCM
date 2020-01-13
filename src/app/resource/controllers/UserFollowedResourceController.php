@@ -221,11 +221,4 @@ class UserFollowedResourceController
 
         return $response->withJson($filters);
     }
-
-    public static function getNumberOfFollowedResources(Request $request, Response $response)
-    {
-        $followedResources = UserFollowedResourceModel::get(['select' => ['res_id'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
-
-        return $response->withJson(['nbResourcesFollowed' => count($followedResources)]);
-    }
 }

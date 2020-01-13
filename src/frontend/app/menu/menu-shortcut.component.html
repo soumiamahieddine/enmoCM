@@ -7,7 +7,7 @@
                 <button style="z-index: 9999;" color="default" mat-fab (click)="gotToMenu(shortcut);" matTooltip="{{shortcut.label}}"
                     matTooltipPosition="above">
                     <mat-icon class="fa {{shortcut.style}}" style="height:auto;font-size:22px;"
-                              matBadge="{{this.nbResourcesFollowed}}" matBadgeHidden="{{shortcut.id != 'followed'}}"
+                              matBadge="{{headerService.nbResourcesFollowed}}" matBadgeHidden="{{shortcut.id != 'followed'}}"
                     ></mat-icon>
                 </button>
             </span>

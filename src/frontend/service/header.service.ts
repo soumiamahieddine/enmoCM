@@ -11,6 +11,7 @@ export class HeaderService {
     subHeaderMessage: string = "";
     user: any = { firstname: "", lastname: "", groups : [], privileges : [] };
     lang: any = LANG;
+    nbResourcesFollowed: number = 0;
 
     constructor(public http: HttpClient) { }
 
@@ -50,5 +51,13 @@ export class HeaderService {
         this.headerMessage = maintTitle;
         this.subHeaderMessage = subTitle;
         this.headerMessageIcon = icon;
+    }
+
+    removeFollowedDocument() {
+        this.nbResourcesFollowed--;
+    }
+
+    addFollowedDocument() {
+        this.nbResourcesFollowed++;
     }
 }
