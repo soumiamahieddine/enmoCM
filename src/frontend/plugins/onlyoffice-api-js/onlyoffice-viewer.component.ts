@@ -123,7 +123,9 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
             this.http.get(`../../rest/onlyOffice/configuration`).pipe(
                 tap((data: any) => {
                     if (data.enabled) {
-                        this.onlyfficeUrl = data.serverUri;
+                        const protocol = data.serverSsl ? 'https://': 'http://';
+                        const port = data.serverPort ? `:${data.serverPort}`: ':80';
+                        this.onlyfficeUrl = `${protocol}${data.serverUri}${port}`;
                         this.appUrl = data.coreUrl;
                         resolve(true);
                     } else {
@@ -158,6 +160,8 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                         }
                     }),
                     catchError((err) => {
+                        this.notify.error(`${this.lang[err.error.lang]}`);
+                        this.triggerCloseEditor.emit();
                         return of(false);
                     }),
                 ).subscribe();

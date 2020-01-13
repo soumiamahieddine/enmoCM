@@ -689,7 +689,7 @@ var onlyofficetesturl = '';
     };
 
     function getBasePath(config) {
-        return `http://${config.onlyOfficeIp}/web-apps/apps/`;
+        return `${config.onlyOfficeIp}/web-apps/apps/`;
         
         /*var scripts = document.getElementsByTagName('script'),
             match;

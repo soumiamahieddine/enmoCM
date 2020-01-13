@@ -177,11 +177,11 @@ class OnlyOfficeController
     {
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/documentEditorsConfig.xml']);
         if (empty($loadedXml) || empty($loadedXml->onlyoffice->enabled) || $loadedXml->onlyoffice->enabled == 'false') {
-            return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice is not enabled', 'lang' => '']);
+            return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice is not enabled', 'lang' => 'onlyOfficeNotEnabled']);
         } elseif (empty($loadedXml->onlyoffice->server_uri)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice server_uri is empty', 'lang' => '']);
+            return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice server_uri is empty', 'lang' => 'uriIsEmpty']);
         } elseif (empty($loadedXml->onlyoffice->server_port)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice server_port is empty', 'lang' => '']);
+            return $response->withStatus(400)->withJson(['errors' => 'Onlyoffice server_port is empty', 'lang' => 'portIsEmpty']);
         }
 
         $uri = (string)$loadedXml->onlyoffice->server_uri;

@@ -1403,6 +1403,11 @@ export const LANG_NL = {
     "searchTrackedMail": "Search in tracked mails", //_TO_TRANSLATE
     "checkOnlyofficeServer": "Establish contact with the Onlyoffice server", //_TO_TRANSLATE
     "closeEditor" : "Close the editor", //_TO_TRANSLATE
+    "errorOnlyoffice1" : "Cannot launch onlyoffice, a local address is used", //_TO_TRANSLATE
+    "errorOnlyoffice2" : "Cannot launch onlyoffice. Check if the only office server is available", //_TO_TRANSLATE
+    "onlyOfficeNotEnabled" : "The onlyoffice server is not enabled", //_TO_TRANSLATE
+    "uriIsEmpty" : "URI of onlyoffice server is empty in documentEditorsConfig.xml", //_TO_TRANSLATE
+    "portIsEmpty" : "Port of onlyoffice server is empty in documentEditorsConfig.xml", //_TO_TRANSLATE
     "externalVisaWorkflow" : "Visa workflow Maarch Parapheur", //_TO_TRANSLATE
     "IdMaarch2Gec" : "MAARCH2GEC identifier", //_TO_TRANSLATE
     "indexingFile" : "Indexation", //_TO_TRANSLATE
