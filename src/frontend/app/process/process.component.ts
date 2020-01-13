@@ -527,6 +527,7 @@ export class ProcessComponent implements OnInit {
         } else if (this.currentTool === 'opinionCircuit' && this.appAvisWorkflow !== undefined) {
             this.appAvisWorkflow.saveAvisWorkflow();
         }
+        this.loadResource();
     }
 
     empty(value: string) {
