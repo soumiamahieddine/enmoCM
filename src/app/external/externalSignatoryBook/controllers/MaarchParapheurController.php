@@ -310,6 +310,10 @@ class MaarchParapheurController
                         'method'   => 'POST',
                         'bodyData' => $bodyData
                     ]);
+
+                    if (!empty($response['errors'])) {
+                        return ['error' => 'Error during processing in MaarchParapheur : ' . $response['errors']];
+                    }
         
                     $attachmentToFreeze[$collId][$resId] = $response['id'];
                 }
