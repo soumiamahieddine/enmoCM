@@ -11,6 +11,7 @@ import { SortPipe } from '../../../plugins/sorting.pipe';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormControl, Validators, FormGroup, ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
 import { DiffusionsListComponent } from '../../diffusions/diffusions-list.component';
+import { FunctionsService } from '../../../service/functions.service';
 
 @Component({
     selector: 'app-indexing-form',
@@ -183,6 +184,7 @@ export class IndexingFormComponent implements OnInit {
         public dialog: MatDialog,
         private headerService: HeaderService,
         public appService: AppService,
+        public functions: FunctionsService
     ) {
 
     }
@@ -289,24 +291,19 @@ export class IndexingFormComponent implements OnInit {
             arrIndexingModels = arrIndexingModels.concat(this['indexingModels_' + category]);
         });
         arrIndexingModels.forEach(element => {
-
-            if (element.type === 'date' && this.arrFormControl[element.identifier].value !== null) {
-
+            if (element.type === 'date' && !this.functions.empty(this.arrFormControl[element.identifier].value)) {
                 if (element.today === true) {
                     if (!this.adminMode) {
                         const now = new Date();
-                        element.default_value = ('00' + now.getDate()).slice(-2) + '-' + ('00' + (now.getMonth() + 1)).slice(-2) + '-' + now.getFullYear();
+                        element.default_value = this.functions.formatDateObjectToFrenchDateString(now, false);
                     } else {
                         element.default_value = '_TODAY';
                     }
-                } else {
-                    let day = this.arrFormControl[element.identifier].value.getDate();
-                    let month = this.arrFormControl[element.identifier].value.getMonth() + 1;
-                    let year = this.arrFormControl[element.identifier].value.getFullYear();
+                } else {        
                     if (element.identifier === 'processLimitDate') {
-                        element.default_value = ('00' + day).slice(-2) + '-' + ('00' + month).slice(-2) + '-' + year + ' 23:59:59';
+                        element.default_value = this.functions.formatDateObjectToFrenchDateString(this.arrFormControl[element.identifier].value, true);
                     } else {
-                        element.default_value = ('00' + day).slice(-2) + '-' + ('00' + month).slice(-2) + '-' + year;
+                        element.default_value = this.functions.formatDateObjectToFrenchDateString(this.arrFormControl[element.identifier].value, false);
                     }
                 }
             } else {
@@ -634,9 +631,13 @@ export class IndexingFormComponent implements OnInit {
     setResource() {
         return new Promise((resolve, reject) => {
             this.http.get(`../../rest/resources/${this.resId}`).pipe(
-                tap((data: any) => {
-                    this.fieldCategories.forEach(element => {
-                        this['indexingModels_' + element].forEach((elem: any) => {
+                tap(async (data: any) => {
+                    await Promise.all(this.fieldCategories.map(async (element: any) => {
+
+                    //this.fieldCategories.forEach(async element => {
+                        await Promise.all(this['indexingModels_' + element].map(async (elem: any) => {
+
+                        //this['indexingModels_' + element].forEach((elem: any) => {
                             const customId: any = Object.keys(data.customFields).filter(index => index === elem.identifier.split('indexingCustomField_')[1])[0];
 
                             if (Object.keys(data).indexOf(elem.identifier) > -1 || customId !== undefined) {
@@ -648,37 +649,48 @@ export class IndexingFormComponent implements OnInit {
                                     fieldValue = data[elem.identifier];
                                 }
 
-                                if (elem.type === 'date') {
+                                if (elem.type === 'date' && !this.functions.empty(fieldValue)) {
                                     fieldValue = new Date(fieldValue);
                                 }
 
                                 if (elem.identifier === 'priority') {
                                     this.setPriorityColor(null, fieldValue);
-                                }
-
-                                if (elem.identifier === 'destination') {
+                                } else if (elem.identifier === 'destination') {
                                     if (this.mode === 'process') {
                                         this.arrFormControl[elem.identifier].disable();
                                     }
                                     this.arrFormControl['diffusionList'].disable();
+                                } else if (elem.identifier === 'initiator' && elem.values.filter((val: any) => val.id === fieldValue).length === 0) {
+                                    await this.getCurrentInitiator(elem, fieldValue);
                                 }
-
                                 this.arrFormControl[elem.identifier].setValue(fieldValue);
                             }
                             if (!this.canEdit) {
                                 this.arrFormControl[elem.identifier].disable();
                             }
-                        });
-                    });
+                        }));
+                    }));
                     this.arrFormControl['mail­tracking'].setValue(data.followed);
-                }),
-                tap(() => {
                     this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));
                     resolve(true);
                 }),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    getCurrentInitiator(field: any, initiatorId: number) {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/entities/${initiatorId}`).pipe(
+                tap((data: any) => {                    
+                    field.values.unshift({
+                        id: data.id,
+                        label: data.entity_label
+                    });
+                    resolve(true);              
                 })
             ).subscribe();
         });
@@ -792,6 +804,8 @@ export class IndexingFormComponent implements OnInit {
 
         if (field.type === 'integer') {
             valArr.push(this.regexValidator(new RegExp('[+-]?([0-9]*[.])?[0-9]+'), { 'floatNumber': '' }));
+        } else if (field.type === 'date' && !this.functions.empty(field.default_value)) {
+            this.arrFormControl[field.identifier].setValue(new Date(field.default_value));
         }
 
         if (field.mandatory && !this.adminMode) {
