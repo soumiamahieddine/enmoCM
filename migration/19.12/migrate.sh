@@ -22,5 +22,7 @@ php ./removeNatureFromPrint.php
 php ./migrateCustomValues.php
 php ./migrateVersionAttachments.php
 php ./migrateContacts.php
+# migrateOutgoingTemplate always before migrateTemplates
+php ./migrateOutgoingTemplate.php
 php ./migrateTemplates.php
 php ./migrateLinkedResources.php

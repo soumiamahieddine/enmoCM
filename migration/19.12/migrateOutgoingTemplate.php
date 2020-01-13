@@ -1,7 +1,9 @@
 <?php
 
 use Contact\models\ContactCustomFieldListModel;
+use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
+use SrcCore\models\DatabaseModel;
 use Template\models\TemplateModel;
 
 require '../../vendor/autoload.php';
@@ -14,9 +16,9 @@ $DATA_TO_REPLACE = [
     'res_letterbox.destination'         => '[destination.entity_id]',
     'res_letterbox.entity_label'        => '[destination.entity_label]',
     'res_letterbox.process_notes'       => '[notes]',
-    'res_letterbox.contact_firstname'   => '[sender.firstname]',
-    'res_letterbox.contact_lastname'    => '[sender.lastname]',
-    'res_letterbox.contact_society'     => '[sender.company]',
+    'res_letterbox.contact_firstname'   => '[recipient.firstname]',
+    'res_letterbox.contact_lastname'    => '[recipient.lastname]',
+    'res_letterbox.contact_society'     => '[recipient.company]',
 
     'res_letterbox.nature_id'                     => '[res_letterbox.custom_1]',
 
@@ -38,7 +40,7 @@ $DATA_TO_REPLACE = [
     'res_letterbox.initiator_archival_agreement'  => '[initiator.archival_agreement]',
     'res_letterbox.initiator_business_id'         => '[initiator.business_id]',
 
-    'attachments.chrono' => '[attachment.chrono]',
+    'attachments.chrono' => '[res_letterbox.alt_identifier]',
 
     'visa.firstnameSign' => '',
     'visa.lastnameSign'  => '[visas]',
@@ -165,26 +167,26 @@ $DATA_TO_REPLACE = [
     'contact.website'                   => '',
     'contact.salutation_header'         => '',
     'contact.salutation_footer'         => '',
-    'contact.society'                   => '[attachmentRecipient.company]',
-    'contact.departement'               => '[attachmentRecipient.department]',
-    'contact.title'                     => '[attachmentRecipient.civility]',
-    'contact.contact_title'             => '[attachmentRecipient.civility]',
-    'contact.contact_lastname'          => '[attachmentRecipient.lastname]',
-    'contact.contact_firstname'         => '[attachmentRecipient.firstname]',
-    'contact.lastname'                  => '[attachmentRecipient.lastname]',
-    'contact.firstname'                 => '[attachmentRecipient.firstname]',
-    'contact.function'                  => '[attachmentRecipient.function]',
-    'contact.postal_address;strconv=no' => '[attachmentRecipient.postal_address;strconv=no]',
-    'contact.postal_address'            => '[attachmentRecipient.postal_address]',
-    'contact.address_num'               => '[attachmentRecipient.address_number]',
-    'contact.address_street'            => '[attachmentRecipient.address_street]',
-    'contact.occupancy'                 => '[attachmentRecipient.address_additional1]',
-    'contact.address_complement'        => '[attachmentRecipient.address_additional2]',
-    'contact.address_town'              => '[attachmentRecipient.address_town]',
-    'contact.address_postal_code'       => '[attachmentRecipient.address_postcode]',
-    'contact.address_country'           => '[attachmentRecipient.address_country]',
-    'contact.phone'                     => '[attachmentRecipient.phone]',
-    'contact.email'                     => '[attachmentRecipient.email]',
+    'contact.society'                   => '[recipient.company]',
+    'contact.departement'               => '[recipient.department]',
+    'contact.title'                     => '[recipient.civility]',
+    'contact.contact_title'             => '[recipient.civility]',
+    'contact.contact_lastname'          => '[recipient.lastname]',
+    'contact.contact_firstname'         => '[recipient.firstname]',
+    'contact.lastname'                  => '[recipient.lastname]',
+    'contact.firstname'                 => '[recipient.firstname]',
+    'contact.function'                  => '[recipient.function]',
+    'contact.postal_address;strconv=no' => '[recipient.postal_address;strconv=no]',
+    'contact.postal_address'            => '[recipient.postal_address]',
+    'contact.address_num'               => '[recipient.address_number]',
+    'contact.address_street'            => '[recipient.address_street]',
+    'contact.occupancy'                 => '[recipient.address_additional1]',
+    'contact.address_complement'        => '[recipient.address_additional2]',
+    'contact.address_town'              => '[recipient.address_town]',
+    'contact.address_postal_code'       => '[recipient.address_postcode]',
+    'contact.address_country'           => '[recipient.address_country]',
+    'contact.phone'                     => '[recipient.phone]',
+    'contact.email'                     => '[recipient.email]',
 
     'notes.identifier'                       => '[res_letterbox.res_id]',
     'notes.subject'                          => '[res_letterbox.subject]',
@@ -223,6 +225,74 @@ foreach ($customs as $custom) {
     \SrcCore\models\DatabasePDO::reset();
     new \SrcCore\models\DatabasePDO(['customId' => $custom]);
 
+    $docserver     = DocserverModel::getByDocserverId(['docserverId' => 'TEMPLATES']);
+    $templatesPath = $docserver['path_template'];
+
+    // BEGIN Change attachment all in outgoingMail
+
+    $templatesAllAttachmentTypes = TemplateModel::get([
+        'where' => ['template_target = ?', 'template_attachment_type = ?'],
+        'data'  => ['attachments', 'all']
+    ]);
+
+    foreach ($templatesAllAttachmentTypes as $template) {
+        $path = str_replace('#', '/', $template['template_path']);
+
+        $pathToDocument = $templatesPath . $path . $template['template_file_name'];
+
+        $pathInfo = pathinfo($pathToDocument);
+        $extension = $pathInfo['extension'];
+
+        if (!in_array($extension, OFFICE_EXTENSIONS)) {
+            $nonMigrated++;
+            continue;
+        }
+
+        if (!is_writable($pathToDocument) || !is_readable($pathToDocument)) {
+            $nonMigrated++;
+            continue;
+        }
+
+        $encodedFile = base64_encode(file_get_contents($pathToDocument));
+
+        $storeResult = DocserverController::storeResourceOnDocServer([
+            'collId'            => 'templates',
+            'docserverTypeId'   => 'TEMPLATES',
+            'encodedResource'   => $encodedFile,
+            'format'            => $pathInfo['extension']
+        ]);
+
+        $template['template_path']      = $storeResult['destination_dir'];
+        $template['template_file_name'] = $storeResult['file_destination_name'];
+
+        DatabaseModel::insert([
+            'table'         => 'templates',
+            'columnsValues' => [
+                'template_label'            => $template['template_label'] . ' (départ)',
+                'template_comment'          => $template['template_comment'],
+                'template_content'          => $template['template_content'],
+                'template_type'             => $template['template_type'],
+                'template_style'            => $template['template_style'],
+                'template_datasource'       => $template['template_datasource'],
+                'template_target'           => 'indexingFile',
+                'template_attachment_type'  => 'all',
+                'template_path'             => $template['template_path'],
+                'template_file_name'        => $template['template_file_name'],
+            ]
+        ]);
+    }
+
+    // END
+
+    TemplateModel::update([
+        'set'   => [
+            'template_target'          => 'indexingFile',
+            'template_attachment_type' => 'all'
+        ],
+        'where' => ['template_target = ?', 'template_attachment_type = ?'],
+        'data'  => ['attachments', 'outgoing_mail']
+    ]);
+
     foreach ($customFields as $customField) {
         $idNewCustomField = ContactCustomFieldListModel::get([
             'select' => ['id'],
@@ -232,93 +302,67 @@ foreach ($customs as $custom) {
         $DATA_TO_REPLACE["contact." . $customField['oldId']] = "[recipient.customField_{$idNewCustomField[0]['id']}]";
     }
 
-    $migrated = 0;
-
-    $nonMigrated = 0;
-
-    $docserver = DocserverModel::getByDocserverId(['docserverId' => 'TEMPLATES']);
-
-    $templatesPath = $docserver['path_template'];
-
-    $templates = TemplateModel::get(['where' => ['template_target != ?'], 'data' => ['indexingFile']]);
+    $migrated      = 0;
+    $nonMigrated   = 0;
+    $templates     = TemplateModel::get([
+        'where' => ['template_target = ?', 'template_attachment_type = ?'],
+        'data'  => ['indexingFile', 'all']
+    ]);
 
     foreach ($templates as $template) {
-        if ($template['template_type'] == 'HTML' || $template['template_type'] == 'TXT' || $template['template_type'] == 'OFFICE_HTML') {
-            $content = $template['template_content'];
+        $path = str_replace('#', '/', $template['template_path']);
 
-            $newContent = $content;
-            foreach ($DATA_TO_REPLACE as $key => $value) {
-                $newContent = str_replace('[' . $key . ']', $value, $newContent);
-            }
+        $pathToDocument = $templatesPath . $path . $template['template_file_name'];
 
-            if ($content != $newContent) {
-                TemplateModel::update([
-                    'set'   => [
-                        'template_content' => $newContent
-                    ],
-                    'where' => ['template_id = ?'],
-                    'data'  => [$template['template_id']]
-                ]);
-                $migrated++;
-            } else {
-                $nonMigrated++;
-            }
+        $pathInfo = pathinfo($pathToDocument);
+        $extension = $pathInfo['extension'];
+
+        if (!in_array($extension, OFFICE_EXTENSIONS)) {
+            $nonMigrated++;
+            continue;
         }
-        if ($template['template_type'] == 'OFFICE' || $template['template_type'] == 'OFFICE_HTML') {
-            $path = str_replace('#', '/', $template['template_path']);
 
-            $pathToDocument = $templatesPath . $path . $template['template_file_name'];
+        if (!is_writable($pathToDocument) || !is_readable($pathToDocument)) {
+            $nonMigrated++;
+            continue;
+        }
 
-            $pathInfo = pathinfo($pathToDocument);
-            $extension = $pathInfo['extension'];
+        $tbs = new clsTinyButStrong();
+        $tbs->NoErr = true;
+        $tbs->Protect = false;
+        $tbs->PlugIn(TBS_INSTALL, OPENTBS_PLUGIN);
 
-            if (!in_array($extension, OFFICE_EXTENSIONS)) {
-                $nonMigrated++;
-                continue;
-            }
+        $tbs->LoadTemplate($pathToDocument, OPENTBS_ALREADY_UTF8);
 
-            if (!is_writable($pathToDocument) || !is_readable($pathToDocument)) {
-                $nonMigrated++;
-                continue;
-            }
+        $pages = 1;
+        if ($extension == 'xlsx') {
+            $pages = $tbs->PlugIn(OPENTBS_COUNT_SHEETS);
+        }
 
-            $tbs = new clsTinyButStrong();
-            $tbs->NoErr = true;
-            $tbs->Protect = false;
-            $tbs->PlugIn(TBS_INSTALL, OPENTBS_PLUGIN);
-
-            $tbs->LoadTemplate($pathToDocument, OPENTBS_ALREADY_UTF8);
-
-            $pages = 1;
+        for ($i = 0; $i < $pages; ++$i) {
             if ($extension == 'xlsx') {
-                $pages = $tbs->PlugIn(OPENTBS_COUNT_SHEETS);
+                $tbs->PlugIn(OPENTBS_SELECT_SHEET, $i + 1);
             }
 
-            for ($i = 0; $i < $pages; ++$i) {
-                if ($extension == 'xlsx') {
-                    $tbs->PlugIn(OPENTBS_SELECT_SHEET, $i + 1);
-                }
+            $tbs->ReplaceFields($DATA_TO_REPLACE);
+        }
 
-                $tbs->ReplaceFields($DATA_TO_REPLACE);
-            }
+        if (in_array($extension, OFFICE_EXTENSIONS)) {
+            $tbs->Show(OPENTBS_STRING);
+        } else {
+            $tbs->Show(TBS_NOTHING);
+        }
 
-            if (in_array($extension, OFFICE_EXTENSIONS)) {
-                $tbs->Show(OPENTBS_STRING);
-            } else {
-                $tbs->Show(TBS_NOTHING);
-            }
+        $content = base64_encode($tbs->Source);
 
-            $content = base64_encode($tbs->Source);
-
-            $result = file_put_contents($pathToDocument, base64_decode($content));
-            if ($result !== false) {
-                $migrated++;
-            } else {
-                echo "Erreur lors de la migration du modèle : $pathToDocument\n";
-                $nonMigrated++;
-            }
+        $result = file_put_contents($pathToDocument, base64_decode($content));
+        if ($result !== false) {
+            $migrated++;
+        } else {
+            echo "Erreur lors de la migration du modèle : $pathToDocument\n";
+            $nonMigrated++;
         }
     }
 
-    printf("Migration de Modèles de documents (CUSTOM {$custom}) : " . $migrated . " Modèle(s) migré(s), $nonMigrated non migré(s).\n");
+    printf("Migration de Modèles de document départ spontannée (CUSTOM {$custom}) : " . $migrated . " Modèle(s) migré(s), $nonMigrated non migré(s).\n");
 }
