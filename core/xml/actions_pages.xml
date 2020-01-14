@@ -307,7 +307,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_REDIRECT_WORKFLOW_ENTITY</LABEL>
         <NAME>redirect_visa_entity</NAME>
         <DESC>_REDIRECT_WORKFLOW_ENTITY_DESC</DESC>
-        <component>v1Action</component>
+        <component>redirectInitiatorEntityAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

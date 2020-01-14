@@ -18,7 +18,9 @@ use Action\models\BasketPersistenceModel;
 use Action\models\ResMarkAsReadModel;
 use Attachment\models\AttachmentModel;
 use Entity\controllers\ListInstanceController;
+use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
+use Entity\models\ListTemplateModel;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use History\controllers\HistoryController;
 use MessageExchange\controllers\MessageExchangeReviewController;
@@ -51,6 +53,7 @@ class ActionMethodController
         'sendShippingAction'                    => 'createMailevaShippings',
         'sendSignatureBookAction'               => 'sendSignatureBook',
         'rejectVisaBackToPrevious'              => 'rejectVisaBackToPrevious',
+        'redirectInitiatorEntityAction'         => 'redirectInitiatorEntityAction',
         'noConfirmAction'                       => null
     ];
 
@@ -267,6 +270,54 @@ class ActionMethodController
         $controller = ListInstanceController::updateListInstance(['data' => [['resId' => $args['resId'], 'listInstances' => $listInstances]], 'userId' => $GLOBALS['id']]);
         if (!empty($controller['errors'])) {
             return ['errors' => [$controller['errors']]];
+        }
+
+        return true;
+    }
+
+    public static function redirectInitiatorEntityAction(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::arrayType($args, ['data']);
+
+        $resource = ResModel::getById(['select' => ['initiator'], 'resId' => $args['resId']]);
+        if (!empty($resource)) {
+            $entityInfo = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['id']]);
+            if (!empty($entityInfo)) {
+                $destUser = ListTemplateModel::getWithItems(['data' => ['entity_id = ?', 'item_mode = ?', 'type = ?'], 'data' => [$entityInfo['id'], 'dest', 'diffusionList']]);
+                if (!empty($destUser)) {
+                    $listInstances = ListInstanceModel::get(['select' => ['*'], 'where' => ['res_id = ?', 'difflist_type = ?', 'item_mode = ?'], 'data' => [$args['resId'], 'entity_id', 'dest']]);
+                    if (!empty($listInstances)) {
+                        ListInstanceModel::create([
+                            'res_id'              => $listInstances[0]['res_id'],
+                            'sequence'            => $listInstances[0]['sequence'],
+                            'item_id'             => $listInstances[0]['item_id'],
+                            'item_type'           => $listInstances[0]['item_type'],
+                            'item_mode'           => 'cc',
+                            'added_by_user'       => $listInstances[0]['added_by_user'],
+                            'viewed'              => $listInstances[0]['viewed'],
+                            'difflist_type'       => $listInstances[0]['difflist_type'],
+                            'process_date'        => $listInstances[0]['process_date'],
+                            'process_comment'     => $listInstances[0]['process_comment'],
+                            'requested_signature' => $listInstances[0]['requested_signature']
+                        ]);
+                    }
+                    $userInfo = UserModel::getById(['select' => ['user_id'], 'id' => $destUser[0]['item_id']]);
+                    ListInstanceModel::update([
+                        'set' => [
+                            'item_id' => $userInfo['user_id']
+                        ],
+                        'where' => ['listinstance_id = ?'],
+                        'data' => [$listInstances[0]['listinstance_id']]
+                    ]);
+                    ResModel::update([
+                        'set'   => ['destination' => $resource['initiator']], 
+                        'where' => ['res_id = ?'],
+                        'data'  => [$args['resId']]
+                    ]);
+                }
+            }
         }
 
         return true;

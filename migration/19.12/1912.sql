@@ -87,6 +87,7 @@ UPDATE actions SET component = 'confirmAction', action_page = 'confirm_status' W
 DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
 
 UPDATE actions SET component = 'rejectVisaBackToPrevious' WHERE action_page = 'rejection_visa_previous';
+UPDATE actions SET component = 'redirectInitiatorEntityAction' WHERE action_page = 'redirect_visa_entity';
 
 
 /* FOLDERS */

@@ -798,6 +798,43 @@ class PreProcessActionController
         ]);
     }
 
+    public function checkInitiatorEntity(Request $request, Response $response, array $args)
+    {
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $data = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+        }
+
+        $withEntity = [];
+        $withoutEntity = [];
+
+        $resources = ResModel::get([
+            'select' => ['initiator', 'res_id'],
+            'where'  => ['res_id in (?)'],
+            'data'   => [$data['resources']]
+        ]);
+
+        $resourcesInfo = array_column($resources, 'initiator', 'res_id');
+
+        foreach ($data['resources'] as $valueResId) {
+            if (!empty($resourcesInfo[$valueResId])) {
+                $withEntity[] = $valueResId;
+            } else {
+                $withoutEntity[] = $valueResId;
+            }
+        }
+
+        return $response->withJson(['withEntity' => $withEntity, 'withoutEntity' => $withoutEntity]);
+    }
+
     public function checkSignatureBook(Request $request, Response $response, array $args)
     {
         $body = $request->getParsedBody();
