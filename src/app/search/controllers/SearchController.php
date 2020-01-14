@@ -14,14 +14,18 @@
 
 namespace Search\controllers;
 
+use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\RedirectBasketModel;
+use Priority\models\PriorityModel;
 use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\AutoCompleteController;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\DatabaseModel;
+use Status\models\StatusModel;
 use User\models\UserModel;
 
 class SearchController
@@ -134,13 +138,73 @@ class SearchController
         }
 
         $resources = ResModel::getOnView([
-            'select'    => ['res_id as "resId"', 'alt_identifier as "chrono"', 'subject'],
+            'select'    => [
+                'res_id as "resId"', 'alt_identifier as "chrono"', 'subject', 'barcode', 'filename', 'creation_date as "creationDate"',
+                'type_id as "type"', 'priority', 'status', 'dest_user as "destUser"'
+            ],
             'where'     => $searchWhere,
             'data'      => $searchData,
-            'orderBy'   => ['creation_date'],
+            'orderBy'   => ['creation_date  DESC'],
             'limit'     => $limit,
             'offset'    => $offset
         ]);
+
+        if (empty($resources)) {
+            return $response->withJson([]);
+        }
+
+        $resourcesIds = array_column($resources, 'resId');
+        $attachments = AttachmentModel::get(['select' => ['count(1)', 'res_id_master'], 'where' => ['res_id_master in (?)', 'status not in (?)'], 'data' => [$resourcesIds, ['DEL']], 'groupBy' => ['res_id_master']]);
+
+        $prioritiesIds = array_column($resources, 'priority');
+        $priorities = PriorityModel::get(['select' => ['id', 'color'], 'where' => ['id in (?)'], 'data' => [$prioritiesIds]]);
+
+        $statusesIds = array_column($resources, 'status');
+        $statuses = StatusModel::get(['select' => ['id', 'label_status', 'img_filename'], 'where' => ['id in (?)'], 'data' => [$statusesIds]]);
+
+        $correspondents = ResourceContactModel::get([
+            'select'    => ['item_id as id', 'type', 'mode', 'res_id'],
+            'where'     => ['res_id in (?)'],
+            'data'      => [$resourcesIds]
+        ]);
+
+        foreach ($resources as $key => $resource) {
+            if (!empty($resource['priority'])) {
+                foreach ($priorities as $priority) {
+                    if ($priority['id'] == $resource['priority']) {
+                        $resources[$key]['priorityColor'] = $priority['color'];
+                    }
+                }
+            }
+            if (!empty($resource['status'])) {
+                foreach ($statuses as $status) {
+                    if ($status['id'] == $resource['status']) {
+                        $resources[$key]['statusLabel'] = $status['label_status'];
+                        $resources[$key]['statusImage'] = $status['img_filename'];
+                    }
+                }
+            }
+            if (!empty($resource['dest_user'])) {
+                $resources[$key]['destUserLabel'] = UserModel::getLabelledUserById(['login' => $resource['destUser']]);
+            }
+            $resources[$key]['hasDocument'] = !empty($resource['filename']);
+
+            $resources[$key]['senders'] = [];
+            $resources[$key]['recipients'] = [];
+            foreach ($correspondents as $correspondent) {
+                if ($correspondent['res_id'] == $resource['resId']) {
+                    unset($correspondent['res_id']);
+                    $resources[$key]["{$correspondent['mode']}s"] = $correspondent;
+                }
+            }
+
+            $resources[$key]['attachments'] = 0;
+            foreach ($attachments as $attachment) {
+                if ($attachment['res_id_master'] == $resource['resId']) {
+                    $resources[$key]['attachments'] = $attachment['count'];
+                }
+            }
+        }
 
         return $response->withJson($resources);
     }

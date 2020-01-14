@@ -13,12 +13,14 @@ import { of } from 'rxjs';
 export class AddVisaModelModalComponent {
     lang: any = LANG;
 
+    loading: boolean = false;
+
     template: any = {
         id: 0,
         type: 'visaCircuit',
         title: '',
         items : []
-    }
+    };
 
     constructor(
         public http: HttpClient, 

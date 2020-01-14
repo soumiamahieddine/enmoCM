@@ -13,12 +13,14 @@ import { of } from 'rxjs';
 export class AddAvisModelModalComponent {
     lang: any = LANG;
 
+    loading:boolean = false;
+
     template: any = {
         id: 0,
         type: 'opinionCircuit',
         title: '',
         items : []
-    }
+    };
 
     constructor(
         public http: HttpClient, 
