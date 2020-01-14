@@ -289,38 +289,35 @@ class ActionMethodController
         if (!empty($resource)) {
             $entityInfo = EntityModel::getByEntityId(['entityId' => $resource['initiator'], 'select' => ['id']]);
             if (!empty($entityInfo)) {
-                $destUser = ListTemplateModel::getWithItems(['data' => ['entity_id = ?', 'item_mode = ?', 'type = ?'], 'data' => [$entityInfo['id'], 'dest', 'diffusionList']]);
+                $destUser = ListTemplateModel::getWithItems(['where' => ['entity_id = ?', 'item_mode = ?', 'type = ?'], 'data' => [$entityInfo['id'], 'dest', 'diffusionList']]);
                 if (!empty($destUser)) {
-                    $listInstances = ListInstanceModel::get(['select' => ['*'], 'where' => ['res_id = ?', 'difflist_type = ?', 'item_mode = ?'], 'data' => [$args['resId'], 'entity_id', 'dest']]);
-                    if (!empty($listInstances)) {
-                        ListInstanceModel::create([
-                            'res_id'              => $listInstances[0]['res_id'],
-                            'sequence'            => $listInstances[0]['sequence'],
-                            'item_id'             => $listInstances[0]['item_id'],
-                            'item_type'           => $listInstances[0]['item_type'],
-                            'item_mode'           => 'cc',
-                            'added_by_user'       => $listInstances[0]['added_by_user'],
-                            'viewed'              => $listInstances[0]['viewed'],
-                            'difflist_type'       => $listInstances[0]['difflist_type'],
-                            'process_date'        => $listInstances[0]['process_date'],
-                            'process_comment'     => $listInstances[0]['process_comment'],
-                            'requested_signature' => $listInstances[0]['requested_signature']
-                        ]);
-                    }
-                    $userInfo = UserModel::getById(['select' => ['user_id'], 'id' => $destUser[0]['item_id']]);
                     ListInstanceModel::update([
                         'set' => [
-                            'item_id' => $userInfo['user_id']
+                            'item_mode' => 'cc'
                         ],
-                        'where' => ['listinstance_id = ?'],
-                        'data' => [$listInstances[0]['listinstance_id']]
+                        'where' => ['item_mode = ?', 'res_id = ?'],
+                        'data' => ['dest', $args['resId']]
                     ]);
-                    ResModel::update([
-                        'set'   => ['destination' => $resource['initiator']],
-                        'where' => ['res_id = ?'],
-                        'data'  => [$args['resId']]
+                    $userInfo = UserModel::getById(['select' => ['user_id'], 'id' => $destUser[0]['item_id']]);
+                    ListInstanceModel::create([
+                        'res_id'              => $args['resId'],
+                        'sequence'            => 0,
+                        'item_id'             => $userInfo['user_id'],
+                        'item_type'           => 'user_id',
+                        'item_mode'           => 'dest',
+                        'added_by_user'       => $GLOBALS['userId'],
+                        'viewed'              => 0,
+                        'difflist_type'       => 'entity_id'
                     ]);
+                    $destUser = $userInfo['user_id'];
+                } else {
+                    $destUser = '';
                 }
+                ResModel::update([
+                    'set'   => ['destination' => $resource['initiator'], 'dest_user' => $destUser],
+                    'where' => ['res_id = ?'],
+                    'data'  => [$args['resId']]
+                ]);
             }
         }
 

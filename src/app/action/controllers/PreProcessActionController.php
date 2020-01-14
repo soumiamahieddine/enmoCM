@@ -818,18 +818,19 @@ class PreProcessActionController
         $withoutEntity = [];
 
         $resources = ResModel::get([
-            'select' => ['initiator', 'res_id'],
+            'select' => ['initiator', 'res_id', 'alt_identifier'],
             'where'  => ['res_id in (?)'],
             'data'   => [$data['resources']]
         ]);
 
-        $resourcesInfo = array_column($resources, 'initiator', 'res_id');
+        $resourcesInfoInitiator = array_column($resources, 'initiator', 'res_id');
+        $resourcesInfoChrono = array_column($resources, 'alt_identifier', 'res_id');
 
         foreach ($data['resources'] as $valueResId) {
-            if (!empty($resourcesInfo[$valueResId])) {
+            if (!empty($resourcesInfoInitiator[$valueResId])) {
                 $withEntity[] = $valueResId;
             } else {
-                $withoutEntity[] = $valueResId;
+                $withoutEntity[] = $resourcesInfoChrono[$valueResId] ?? _UNDEFINED;
             }
         }
 

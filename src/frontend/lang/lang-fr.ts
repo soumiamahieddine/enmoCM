@@ -1444,4 +1444,6 @@ export const LANG_FR = {
     "avisSent" : "Avis donné",
     "openFullscreen" : "Activer le mode plein écran",
     "closeFullscreen" : "Désactiver le mode plein écran",
+    "hasNoEntity": "Les courriers suivants n'ont pas d'entité initiatrice",
+    "destUserSetToDefault": "Le destinataire sera celui de la liste de diffusion de l'entité initiatrice",
 };

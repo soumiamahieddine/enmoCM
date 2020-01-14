@@ -52,6 +52,7 @@ import { ProcessActionComponent }               from './actions/process-action/p
 import { ViewDocActionComponent }               from './actions/view-doc-action/view-doc-action.component';
 import { RedirectActionComponent }               from './actions/redirect-action/redirect-action.component';
 import { SendShippingActionComponent }               from './actions/send-shipping-action/send-shipping-action.component';
+import { redirectInitiatorEntityActionComponent } from './actions/redirect-initiator-entity-action/redirect-initiator-entity-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -139,6 +140,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         ViewDocActionComponent,
         RedirectActionComponent,
         SendShippingActionComponent,
+        redirectInitiatorEntityActionComponent,
         ActionsListComponent,
         PrintSeparatorComponent,
         FolderPinnedComponent,
@@ -188,6 +190,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         ProcessActionComponent,
         RedirectActionComponent,
         SendShippingActionComponent,
+        redirectInitiatorEntityActionComponent,
         ViewDocActionComponent,
         FolderUpdateComponent,
         AddPrivateIndexingModelModalComponent,

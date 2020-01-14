@@ -1404,4 +1404,6 @@ export const LANG_EN = {
     "avisSent" : "Opinion given",
     "openFullscreen" : "Enable fullscreen",
     "closeFullscreen" : "Disable fullscreen",
+    "hasNoEntity": "Those mails do not have initiator entity",
+    "destUserSetToDefault": "Assignee will be the assignee of the initiator entity template list",
 };

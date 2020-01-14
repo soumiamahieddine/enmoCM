@@ -19,6 +19,7 @@ import { SendExternalSignatoryBookActionComponent } from './send-external-signat
 import { SendExternalNoteBookActionComponent } from './send-external-note-book-action/send-external-note-book-action.component';
 import { RedirectActionComponent } from './redirect-action/redirect-action.component';
 import { SendShippingActionComponent } from './send-shipping-action/send-shipping-action.component';
+import { redirectInitiatorEntityActionComponent } from './redirect-initiator-entity-action/redirect-initiator-entity-action.component';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -278,6 +279,28 @@ export class ActionsService {
 
     closeAndIndexAction(options: any = null) {
         const dialogRef = this.dialog.open(CloseAndIndexActionComponent, {
+            disableClose: true,
+            width: '500px',
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    redirectInitiatorEntityAction(options: any = null) {
+        const dialogRef = this.dialog.open(redirectInitiatorEntityActionComponent, {
             disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()
