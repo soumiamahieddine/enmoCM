@@ -53,6 +53,7 @@ import { ViewDocActionComponent }               from './actions/view-doc-action/
 import { RedirectActionComponent }               from './actions/redirect-action/redirect-action.component';
 import { SendShippingActionComponent }               from './actions/send-shipping-action/send-shipping-action.component';
 import { redirectInitiatorEntityActionComponent } from './actions/redirect-initiator-entity-action/redirect-initiator-entity-action.component';
+import { SendSignatureBookActionComponent }               from './actions/send-signature-book-action/send-signature-book-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -141,6 +142,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         RedirectActionComponent,
         SendShippingActionComponent,
         redirectInitiatorEntityActionComponent,
+        SendSignatureBookActionComponent,
         ActionsListComponent,
         PrintSeparatorComponent,
         FolderPinnedComponent,
@@ -191,6 +193,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         RedirectActionComponent,
         SendShippingActionComponent,
         redirectInitiatorEntityActionComponent,
+        SendSignatureBookActionComponent,
         ViewDocActionComponent,
         FolderUpdateComponent,
         AddPrivateIndexingModelModalComponent,

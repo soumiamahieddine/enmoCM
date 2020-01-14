@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>{{data.action.label}}</h1>
+<div mat-dialog-content>
+    <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
+        <mat-spinner style="margin:auto;"></mat-spinner>
+    </div>
+    <mat-sidenav-container autosize style="height:100%;">
+        <mat-sidenav-content style="background: white;padding:10px;">
+            <div>
+                {{lang.makeActionOn}}
+                <b *ngIf="data.resIds.length === 0" color="primary" class="highlight">{{lang.currentIndexingMail}}</b>
+                <b *ngIf="data.resIds.length == 1" color="primary" class="highlight">{{data.resource.chrono}}</b>
+                <b *ngIf="data.resIds.length > 1" color="primary" class="highlight">{{data.resIds.length}}
+                    {{lang.elements}}</b> ?
+            </div>
+            <div *ngIf="resourcesError.length > 0" class="alert-message alert-message-danger mailList" role="alert">
+                <p>
+                    {{lang.canNotMakeAction}} :
+                </p>
+                <ul>
+                    <li *ngFor="let ressource of resourcesError">
+                        <b>{{ressource.alt_identifier}}</b> : {{lang[ressource.reason]}}
+                    </li>
+                </ul>
+            </div>
+            <app-visa-workflow *ngIf="data.resIds.length == 1 || (!noResourceToProcess && data.resIds.length > 1)" [adminMode]="true" #appVisaWorkflow [resId]="data.resIds[0]">
+            </app-visa-workflow>
+            <div style="padding-top: 10px;">
+                <app-note-editor #noteEditor [resIds]="data.resIds"></app-note-editor>
+            </div>
+        </mat-sidenav-content>
+        <mat-sidenav position='end' *ngIf="data.resIds.length === 1" opened mode="side" style="overflow-x:hidden;"
+            autoFocus="false" [ngStyle]="{'width': '400px'}">
+            <app-attachments-list [resId]="data.resIds[0]" (afterActionAttachment)="checkSignatureBook()"></app-attachments-list>
+        </mat-sidenav>
+    </mat-sidenav-container>
+</div>
+<div mat-dialog-actions class="actions">
+    <button mat-raised-button mat-button color="primary" [disabled]="loading || !isValidAction()"
+        (click)="onSubmit()">{{lang.validate}}</button>
+    <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
+</div>

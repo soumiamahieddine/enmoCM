@@ -308,6 +308,7 @@ export class VisaWorkflowComponent implements OnInit {
                 ).subscribe();
             } else {
                 this.notify.error(this.lang.signUserRequired);
+                resolve(false);
             }
         });        
     }

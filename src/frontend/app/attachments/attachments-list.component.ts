@@ -58,6 +58,8 @@ export class AttachmentsListComponent implements OnInit {
     @Input('target') target: string = 'panel';
     @Output('reloadBadgeAttachments') reloadBadgeAttachments = new EventEmitter<string>();
 
+    @Output() afterActionAttachment = new EventEmitter<string>();
+
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
@@ -135,6 +137,7 @@ export class AttachmentsListComponent implements OnInit {
         this.http.put("../../rest/attachments/" + attachment.resId + "/inSignatureBook", {})
             .subscribe(() => {
                 attachment.inSignatureBook = !attachment.inSignatureBook;
+                this.afterActionAttachment.emit('setInSignatureBook');
                 this.notify.success(this.lang.actionDone);
             }, (err: any) => {
                 this.notify.error(err.error.errors);
@@ -145,6 +148,7 @@ export class AttachmentsListComponent implements OnInit {
         this.http.put("../../rest/attachments/" + attachment.resId + "/inSendAttachment", {})
             .subscribe(() => {
                 attachment.inSendAttach = !attachment.inSendAttach;
+                this.afterActionAttachment.emit('setInSendAttachment');
                 this.notify.success(this.lang.actionDone);
             }, (err: any) => {
                 this.notify.error(err.error.errors);
