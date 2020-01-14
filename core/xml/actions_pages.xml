@@ -268,7 +268,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_INTERRUPT_WORKFLOW</LABEL>
         <NAME>interrupt_visa</NAME>
         <DESC>_INTERRUPT_WORKFLOW_DESC</DESC>
-        <component>v1Action</component>
+        <component>interruptVisaAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

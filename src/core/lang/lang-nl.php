@@ -452,3 +452,6 @@ define("_DATE_LOCALE", "en_US.utf8");
 define("_USER_PREFERENCE_UPDATED", "User preferences updated"); //TO TRANSLATE
 
 define("_NO_SENDERS", "No sender linked to resource"); //TO TRANSLATE
+
+define("_INTERRUPTED_WORKFLOW", "Interrupted workflow"); //TO TRANSLATE
+define("_HAS_INTERRUPTED_WORKFLOW", "Has interrupted the workflow "); //TO TRANSLATE

@@ -56,6 +56,7 @@ class ActionMethodController
         'redirectInitiatorEntityAction'         => 'redirectInitiatorEntityAction',
         'rejectVisaBackToPreviousAction'        => 'rejectVisaBackToPrevious',
         'rejectVisaBackToRedactorAction'        => 'rejectVisaBackToRedactor',
+        'interruptVisaAction'                   => 'interruptVisa',
         'noConfirmAction'                       => null
     ];
 
@@ -405,7 +406,7 @@ class ActionMethodController
             'select'   => ['listinstance_id'],
             'where'    => ['res_id = ?', 'difflist_type = ?', 'process_date is not null'],
             'data'     => [$args['resId'], 'VISA_CIRCUIT'],
-            'order_by' => ['listinstance_id desc'],
+            'orderBy' => ['listinstance_id desc'],
             'limit'    => 1
         ]);
 
@@ -432,6 +433,46 @@ class ActionMethodController
         ListInstanceModel::update([
             'set'   => ['process_date' => null],
             'where' => ['res_id = ?', 'difflist_type = ?'],
+            'data'  => [$args['resId'], 'VISA_CIRCUIT']
+        ]);
+
+        return true;
+    }
+
+    public static function interruptVisa(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+
+        $listInstances = ListInstanceModel::get([
+            'select'   => ['listinstance_id'],
+            'where'    => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
+            'data'     => [$args['resId'], 'VISA_CIRCUIT'],
+            'orderBy' => ['listinstance_id'],
+            'limit'    => 1
+        ]);
+
+        if (!empty($listInstances)) {
+            $listInstances = $listInstances[0];
+
+            ListInstanceModel::update([
+                'set'   => [
+                    'process_date' => 'CURRENT_TIMESTAMP',
+                    'process_comment' => _HAS_INTERRUPTED_WORKFLOW
+                ],
+                'where' => ['listinstance_id = ?'],
+                'data'  => [$listInstances['listinstance_id']]
+            ]);
+        }
+
+
+        ListInstanceModel::update([
+            'set'   => [
+                'process_date' => 'CURRENT_TIMESTAMP',
+                'process_comment' => _INTERRUPTED_WORKFLOW
+            ],
+            'where' => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
             'data'  => [$args['resId'], 'VISA_CIRCUIT']
         ]);
 
