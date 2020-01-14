@@ -517,15 +517,15 @@ export class ProcessComponent implements OnInit {
         }, 0);
     }
 
-    saveTool() {
+    async saveTool() {
         if (this.currentTool === 'info' && this.indexingForm !== undefined) {
-            this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+            await this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
         } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList !== undefined) {
-            this.appDiffusionsList.saveListinstance();
+            await this.appDiffusionsList.saveListinstance();
         } else if (this.currentTool === 'visaCircuit' && this.appVisaWorkflow !== undefined) {
-            this.appVisaWorkflow.saveVisaWorkflow();
+            await this.appVisaWorkflow.saveVisaWorkflow();
         } else if (this.currentTool === 'opinionCircuit' && this.appAvisWorkflow !== undefined) {
-            this.appAvisWorkflow.saveAvisWorkflow();
+            await this.appAvisWorkflow.saveAvisWorkflow();
         }
         this.loadResource();
     }

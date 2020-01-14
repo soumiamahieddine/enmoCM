@@ -281,31 +281,35 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     saveVisaWorkflow() {
-        if (this.visaWorkflow.items.length === 0) {
-            this.http.delete(`../../rest/resources/${this.resId}/circuits/visaCircuit`).pipe(
-                tap(() => {
-                    this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items));
-                    this.notify.success(this.lang.visaWorkflowDeleted);
-                }),
-                catchError((err: any) => {
-                    this.notify.handleSoftErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-        } else if (this.isValidWorkflow()) {
-            this.http.put(`../../rest/listinstances`, [{ resId: this.resId, listInstances: this.visaWorkflow.items }]).pipe(
-                tap((data: any) => {
-                    this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items));
-                    this.notify.success(this.lang.visaWorkflowUpdated);
-                }),
-                catchError((err: any) => {
-                    this.notify.handleSoftErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-        } else {
-            this.notify.error(this.lang.signUserRequired);
-        }
+        return new Promise((resolve, reject) => {
+            if (this.visaWorkflow.items.length === 0) {
+                this.http.delete(`../../rest/resources/${this.resId}/circuits/visaCircuit`).pipe(
+                    tap(() => {
+                        this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items));
+                        this.notify.success(this.lang.visaWorkflowDeleted);
+                        resolve(true);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleSoftErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else if (this.isValidWorkflow()) {
+                this.http.put(`../../rest/listinstances`, [{ resId: this.resId, listInstances: this.visaWorkflow.items }]).pipe(
+                    tap((data: any) => {
+                        this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items));
+                        this.notify.success(this.lang.visaWorkflowUpdated);
+                        resolve(true);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleSoftErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else {
+                this.notify.error(this.lang.signUserRequired);
+            }
+        });        
     }
 
     addItemToWorkflow(item: any, maarchParapheurMode = false) {

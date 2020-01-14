@@ -299,7 +299,7 @@ export class IndexingFormComponent implements OnInit {
                     } else {
                         element.default_value = '_TODAY';
                     }
-                } else {        
+                } else {
                     if (element.identifier === 'processLimitDate') {
                         element.default_value = this.functions.formatDateObjectToFrenchDateString(this.arrFormControl[element.identifier].value, true);
                     } else {
@@ -337,24 +337,28 @@ export class IndexingFormComponent implements OnInit {
     }
 
     saveData(userId: number, groupId: number, basketId: number) {
-        if (this.isValidForm()) {
-            const formatdatas = this.formatDatas(this.getDatas());
+        return new Promise((resolve, reject) => {
+            if (this.isValidForm()) {
+                const formatdatas = this.formatDatas(this.getDatas());
 
-            this.http.put(`../../rest/resources/${this.resId}?userId=${userId}&groupId=${groupId}&basketId=${basketId}`, formatdatas).pipe(
-                tap(() => {
-                    this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));;
-                    this.notify.success(this.lang.dataUpdated);
-                }),
-                catchError((err: any) => {
-                    this.notify.handleErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-            return true;
-        } else {
-            this.notify.error(this.lang.mustFixErrors);
-            return false;
-        }
+                this.http.put(`../../rest/resources/${this.resId}?userId=${userId}&groupId=${groupId}&basketId=${basketId}`, formatdatas).pipe(
+                    tap(() => {
+                        this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));;
+                        this.notify.success(this.lang.dataUpdated);
+                        resolve(true);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+                return true;
+            } else {
+                this.notify.error(this.lang.mustFixErrors);
+                return false;
+            }
+        });
+
     }
 
     formatDatas(datas: any) {
@@ -634,10 +638,10 @@ export class IndexingFormComponent implements OnInit {
                 tap(async (data: any) => {
                     await Promise.all(this.fieldCategories.map(async (element: any) => {
 
-                    //this.fieldCategories.forEach(async element => {
+                        //this.fieldCategories.forEach(async element => {
                         await Promise.all(this['indexingModels_' + element].map(async (elem: any) => {
 
-                        //this['indexingModels_' + element].forEach((elem: any) => {
+                            //this['indexingModels_' + element].forEach((elem: any) => {
                             const customId: any = Object.keys(data.customFields).filter(index => index === elem.identifier.split('indexingCustomField_')[1])[0];
 
                             if (Object.keys(data).indexOf(elem.identifier) > -1 || customId !== undefined) {
@@ -685,12 +689,12 @@ export class IndexingFormComponent implements OnInit {
     getCurrentInitiator(field: any, initiatorId: number) {
         return new Promise((resolve, reject) => {
             this.http.get(`../../rest/entities/${initiatorId}`).pipe(
-                tap((data: any) => {                    
+                tap((data: any) => {
                     field.values.unshift({
                         id: data.id,
                         label: data.entity_label
                     });
-                    resolve(true);              
+                    resolve(true);
                 })
             ).subscribe();
         });

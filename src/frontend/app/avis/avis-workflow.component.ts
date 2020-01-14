@@ -236,30 +236,33 @@ export class AvisWorkflowComponent implements OnInit {
     }
 
     saveAvisWorkflow() {
-        if (this.avisWorkflow.items.length === 0) {
-            this.http.delete(`../../rest/resources/${this.resId}/circuits/opinionCircuit`).pipe(
-                tap(() => {
-                    this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items));
-                    this.notify.success(this.lang.avisWorkflowDeleted);
-                }),
-                catchError((err: any) => {
-                    this.notify.handleSoftErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-        } else {
-            this.http.put(`../../rest/listinstances`, [{ resId: this.resId, listInstances: this.avisWorkflow.items }]).pipe(
-                tap((data: any) => {
-                    this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items));
-                    this.notify.success(this.lang.avisWorkflowUpdated);
-                }),
-                catchError((err: any) => {
-                    this.notify.handleSoftErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-        }
-        
+        return new Promise((resolve, reject) => {
+            if (this.avisWorkflow.items.length === 0) {
+                this.http.delete(`../../rest/resources/${this.resId}/circuits/opinionCircuit`).pipe(
+                    tap(() => {
+                        this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items));
+                        this.notify.success(this.lang.avisWorkflowDeleted);
+                        resolve(true);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleSoftErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else {
+                this.http.put(`../../rest/listinstances`, [{ resId: this.resId, listInstances: this.avisWorkflow.items }]).pipe(
+                    tap((data: any) => {
+                        this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items));
+                        this.notify.success(this.lang.avisWorkflowUpdated);
+                        resolve(true);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleSoftErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            }
+        });
     }
 
     addItemToWorkflow(item: any) {

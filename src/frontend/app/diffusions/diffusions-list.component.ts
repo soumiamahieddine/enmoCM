@@ -294,26 +294,29 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     saveListinstance() {
-        const listInstance: any[] = [
-            {
-                resId: this.resId,
-                listInstances: this.getCurrentListinstance()
-            }
-        ];
-        this.http.put('../../rest/listinstances', listInstance).pipe(
-            tap((data: any) => {
-                if (data && data.errors != null) {
-                    this.notify.error(data.errors);
-                } else {
-                    this.diffListClone = JSON.parse(JSON.stringify(this.getCurrentListinstance()));
-                    this.notify.success(this.lang.diffusionListUpdated);
+        return new Promise((resolve, reject) => {
+            const listInstance: any[] = [
+                {
+                    resId: this.resId,
+                    listInstances: this.getCurrentListinstance()
                 }
-            }),
-            catchError((err: any) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+            ];
+            this.http.put('../../rest/listinstances', listInstance).pipe(
+                tap((data: any) => {
+                    if (data && data.errors != null) {
+                        this.notify.error(data.errors);
+                    } else {
+                        this.diffListClone = JSON.parse(JSON.stringify(this.getCurrentListinstance()));
+                        this.notify.success(this.lang.diffusionListUpdated);
+                        resolve(true);
+                    }
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });        
     }
 
     initRoles() {
