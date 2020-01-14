@@ -83,14 +83,14 @@ where group_id in (
 );
 
 -- /!\ Do not move : update actions AFTER all updates on groupbasket
-UPDATE actions SET component = 'confirmAction', action_page = 'confirm_status' WHERE action_page in ('validate_mail', 'process', 'visa_mail');
-DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
+DELETE FROM actions WHERE component = 'viewDoc' OR action_page in ('view', 'validate_mail', 'process', 'visa_mail');
 
 UPDATE actions SET component = 'rejectVisaBackToPrevious' WHERE action_page = 'rejection_visa_previous';
 UPDATE actions SET component = 'redirectInitiatorEntityAction' WHERE action_page = 'redirect_visa_entity';
 UPDATE actions SET component = 'rejectVisaBackToPreviousAction' WHERE action_page = 'rejection_visa_previous';
 UPDATE actions SET component = 'rejectVisaBackToRedactorAction' WHERE action_page = 'rejection_visa_redactor';
 UPDATE actions SET component = 'interruptVisaAction' WHERE action_page = 'interrupt_visa';
+UPDATE actions SET component = 'sendSignatureBookAction' WHERE action_page = 'send_to_visa';
 
 
 /* FOLDERS */
