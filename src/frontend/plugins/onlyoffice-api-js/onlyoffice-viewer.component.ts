@@ -77,9 +77,18 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
             filter((data: string) => data === 'ok'),
             tap(() => {
                 this.docEditor.destroyEditor();
-                this.triggerCloseEditor.emit();
+                this.closeEditor()
             })
         ).subscribe();
+    }
+
+    closeEditor() {
+        if (this.sidenavLeft !== null) {
+            this.sidenavLeft.open();
+        }
+        $j("iframe[name='frameEditor']").css("position", "initial");
+        this.fullscreenMode = false;
+        this.triggerAfterUpdatedDoc.emit();
     }
 
     getDocument() {
@@ -135,12 +144,12 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                         this.appUrl = data.coreUrl;
                         resolve(true);
                     } else {
-                        this.triggerCloseEditor.emit();
+                        this.closeEditor()
                     }
                 }),
                 catchError((err) => {
                     this.notify.handleErrors(err);
-                    this.triggerCloseEditor.emit();
+                    this.closeEditor()
                     return of(false);
                 }),
             ).subscribe();
@@ -154,7 +163,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
             const regex2 = /localhost/g;
             if (this.appUrl.match(regex) !== null || this.appUrl.match(regex2) !== null) {
                 this.notify.error(`${this.lang.errorOnlyoffice1}`);
-                this.triggerCloseEditor.emit();
+                this.closeEditor()
             } else {
                 this.http.get(`../../rest/onlyOffice/available`).pipe(
                     tap((data: any) => {
@@ -162,12 +171,12 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                             resolve(true);
                         } else {
                             this.notify.error(`${this.lang.errorOnlyoffice2} ${this.onlyfficeUrl}`);
-                            this.triggerCloseEditor.emit();
+                            this.closeEditor()
                         }
                     }),
                     catchError((err) => {
                         this.notify.error(`${this.lang[err.error.lang]}`);
-                        this.triggerCloseEditor.emit();
+                        this.closeEditor()
                         return of(false);
                     }),
                 ).subscribe();
@@ -193,7 +202,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                 }),
                 catchError((err) => {
                     this.notify.handleErrors(err);
-                    this.triggerCloseEditor.emit();
+                    this.closeEditor()
                     return of(false);
                 }),
             ).subscribe();
