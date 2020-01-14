@@ -566,4 +566,16 @@ export class ActionsService {
     signatureBookAction(options: any = null) {
         this.router.navigate([`/signatureBook/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/resources/${this.currentResIds}`]);
     }
+
+    rejectVisaBackToPreviousAction(options: any = null) {
+        this.confirmAction(options);
+    }
+
+    rejectVisaBackToRedactorAction(options: any = null) {
+        this.confirmAction(options);
+    }
+
+    interruptVisaAction(options: any = null) {
+        this.confirmAction(options);
+    }
 }

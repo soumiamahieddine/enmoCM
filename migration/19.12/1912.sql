@@ -85,7 +85,7 @@ where group_id in (
 -- /!\ Do not move : update actions AFTER all updates on groupbasket
 DELETE FROM actions WHERE component = 'viewDoc' OR action_page in ('view', 'validate_mail', 'process', 'visa_mail');
 
-UPDATE actions SET component = 'rejectVisaBackToPrevious' WHERE action_page = 'rejection_visa_previous';
+UPDATE actions SET component = 'rejectVisaBackToPreviousAction' WHERE action_page = 'rejection_visa_previous';
 UPDATE actions SET component = 'redirectInitiatorEntityAction' WHERE action_page = 'redirect_visa_entity';
 UPDATE actions SET component = 'rejectVisaBackToPreviousAction' WHERE action_page = 'rejection_visa_previous';
 UPDATE actions SET component = 'rejectVisaBackToRedactorAction' WHERE action_page = 'rejection_visa_redactor';
