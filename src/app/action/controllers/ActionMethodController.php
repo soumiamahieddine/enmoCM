@@ -16,6 +16,7 @@ use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Action\models\ActionModel;
 use Action\models\BasketPersistenceModel;
 use Action\models\ResMarkAsReadModel;
+use Attachment\models\AttachmentModel;
 use Entity\controllers\ListInstanceController;
 use Entity\models\ListInstanceModel;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
@@ -48,6 +49,7 @@ class ActionMethodController
         'createAcknowledgementReceiptsAction'   => 'createAcknowledgementReceipts',
         'updateAcknowledgementSendDateAction'   => 'updateAcknowledgementSendDateAction',
         'sendShippingAction'                    => 'createMailevaShippings',
+        'sendSignatureBookAction'               => 'sendSignatureBook',
         'noConfirmAction'                       => null
     ];
 
@@ -253,8 +255,6 @@ class ActionMethodController
         ValidatorModel::intVal($args, ['resId']);
         ValidatorModel::arrayType($args, ['data']);
 
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-
         $listInstances = [];
         if (!empty($args['data']['onlyRedirectDest'])) {
             if (count($args['data']['listInstances']) == 1) {
@@ -263,9 +263,34 @@ class ActionMethodController
         }
 
         $listInstances = array_merge($listInstances, $args['data']['listInstances']);
-        $controller = ListInstanceController::updateListInstance(['data' => [['resId' => $args['resId'], 'listInstances' => $listInstances]], 'userId' => $currentUser['id']]);
+        $controller = ListInstanceController::updateListInstance(['data' => [['resId' => $args['resId'], 'listInstances' => $listInstances]], 'userId' => $GLOBALS['id']]);
         if (!empty($controller['errors'])) {
             return ['errors' => [$controller['errors']]];
+        }
+
+        return true;
+    }
+
+    public function sendSignatureBook(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $signableAttachmentsTypes = [];
+        $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
+        foreach ($attachmentsTypes as $key => $type) {
+            if ($type['sign']) {
+                $signableAttachmentsTypes[] = $key;
+            }
+        }
+
+        $attachments = AttachmentModel::get([
+            'select'    => [1],
+            'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
+            'data'      => [$args['resId'], $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
+        ]);
+        if (empty($attachments)) {
+            return ['errors' => ['No available attachments']];
         }
 
         return true;

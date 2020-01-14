@@ -834,8 +834,7 @@ class PreProcessActionController
             $attachments = AttachmentModel::get([
                 'select'    => [1],
                 'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
-                'data'      => [$resId, $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']],
-                'groupBy'   => ['res_id_master']
+                'data'      => [$resId, $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
             ]);
 
             if (empty($attachments)) {
