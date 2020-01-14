@@ -372,17 +372,17 @@ export class SignatureBookComponent implements OnInit {
     }
 
     refreshNotes() {
-        this.http.get(this.coreUrl + 'rest/res/' + this.resId + '/notes/count')
-            .subscribe((data : any) => {
-                this.signatureBook.nbNotes = data;
-            });
+        // this.http.get(this.coreUrl + 'rest/res/' + this.resId + '/notes/count')
+        //     .subscribe((data : any) => {
+        //         this.signatureBook.nbNotes = data;
+        //     });
     }
 
     refreshLinks() {
-        this.http.get(this.coreUrl + 'rest/links/resId/' + this.resId)
-            .subscribe((data : any) => {
-                this.signatureBook.nbLinks = data.length;
-            });
+        // this.http.get(this.coreUrl + 'rest/links/resId/' + this.resId)
+        //     .subscribe((data : any) => {
+        //         this.signatureBook.nbLinks = data.length;
+        //     });
     }
 
     signFile(attachment: any, signature: any) {

@@ -27,6 +27,7 @@ use CustomField\models\CustomFieldModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Doctype\models\DoctypeModel;
+use Email\models\EmailModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Folder\controllers\FolderController;
@@ -116,7 +117,7 @@ class ResController
 
         $queryParams = $request->getQueryParams();
 
-        $select = ['model_id', 'category_id', 'priority', 'subject', 'alt_identifier', 'process_limit_date', 'closing_date', 'creation_date', 'modification_date', 'linked_resources'];
+        $select = ['model_id', 'category_id', 'priority', 'subject', 'alt_identifier', 'process_limit_date', 'closing_date', 'creation_date', 'modification_date'];
         if (empty($queryParams['light'])) {
             $select = array_merge($select, ['type_id', 'typist', 'status', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date', 'departure_date', 'barcode', 'custom_fields']);
         }
@@ -227,21 +228,6 @@ class ResController
             $tags = TagResModel::get(['select' => ['tag_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             $formattedData['tags'] = array_column($tags, 'tag_id');
         } else {
-            $linkedResources = json_decode($document['linked_resources'], true);
-            $formattedData['linkedResources'] = count($linkedResources);
-
-            $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
-            $formattedData['attachments'] = $attachments[0]['count'];
-
-            $formattedData['diffusionList'] = 0;
-            $formattedData['visaCircuit'] = 0;
-            $formattedData['opinionCircuit'] = 0;
-            $listInstanceItems = ListInstanceModel::get(['select' => ['count(1)', 'difflist_type'], 'where' => ['res_id = ?'], 'data' => [$args['resId']], 'groupBy' => ['difflist_type']]);
-            foreach ($listInstanceItems as $item) {
-                $type = $item['difflist_type'] == 'entity_id' ? 'diffusionList' : ($item['difflist_type'] == 'VISA_CIRCUIT' ? 'visaCircuit' : 'opinionCircuit');
-                $formattedData[$type] = $item['count'];
-            }
-
             $followed = UserFollowedResourceModel::get([
                 'select'    => [1],
                 'where'     => ['user_id = ?', 'res_id = ?'],
@@ -628,6 +614,57 @@ class ResController
         return $response->withHeader('Content-Type', $mimeType);
     }
 
+    public function getItems(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $document = ResModel::getById([
+            'select'    => ['linked_resources'],
+            'resId'     => $args['resId']
+        ]);
+        if (empty($document)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
+        }
+
+        $linkedResources = json_decode($document['linked_resources'], true);
+        $formattedData['linkedResources'] = count($linkedResources);
+
+        $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
+        $formattedData['attachments'] = $attachments[0]['count'];
+
+        $formattedData['diffusionList'] = 0;
+        $formattedData['visaCircuit'] = 0;
+        $formattedData['opinionCircuit'] = 0;
+        $listInstanceItems = ListInstanceModel::get(['select' => ['count(1)', 'difflist_type'], 'where' => ['res_id = ?'], 'data' => [$args['resId']], 'groupBy' => ['difflist_type']]);
+        foreach ($listInstanceItems as $item) {
+            $type = $item['difflist_type'] == 'entity_id' ? 'diffusionList' : ($item['difflist_type'] == 'VISA_CIRCUIT' ? 'visaCircuit' : 'opinionCircuit');
+            $formattedData[$type] = $item['count'];
+        }
+
+        $formattedData['notes'] = NoteModel::countByResId(['resId' => $args['resId'], 'userId' => $GLOBALS['id'], 'login' => $GLOBALS['userId']]);
+
+        $emails = EmailModel::get(['select' => ['count(1)'], 'where' => ["document->>'id' = ?"], 'data' => [$args['resId']]]);
+        $formattedData['emails'] = $emails[0]['count'];
+
+        return $response->withJson($formattedData);
+    }
+
+    public function getCategories(Request $request, Response $response)
+    {
+        return $response->withJson(['categories' => ResModel::getCategories()]);
+    }
+
+    public function isAllowedForCurrentUser(Request $request, Response $response, array $aArgs)
+    {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withJson(['isAllowed' => false]);
+        }
+
+        return $response->withJson(['isAllowed' => true]);
+    }
+
     public function updateExternalInfos(Request $request, Response $response)
     {
         //TODO Revoir cette fonction
@@ -666,25 +703,6 @@ class ResController
         }
 
         return $response->withJson(['success' => 'success']);
-    }
-
-    public function getNotesCountForCurrentUserById(Request $request, Response $response, array $aArgs)
-    {
-        return $response->withJson(NoteModel::countByResId(['resId' => $aArgs['resId'], 'userId' => $GLOBALS['id'], 'login' => $GLOBALS['userId']]));
-    }
-
-    public function getCategories(Request $request, Response $response)
-    {
-        return $response->withJson(['categories' => ResModel::getCategories()]);
-    }
-
-    public function isAllowedForCurrentUser(Request $request, Response $response, array $aArgs)
-    {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
-            return $response->withJson(['isAllowed' => false]);
-        }
-
-        return $response->withJson(['isAllowed' => true]);
     }
 
     public static function getEncodedDocument(array $aArgs)

@@ -339,6 +339,7 @@ $app->get('/resources/{resId}/content', \Resource\controllers\ResController::cla
 $app->get('/resources/{resId}/originalContent', \Resource\controllers\ResController::class . ':getOriginalFileContent');
 $app->get('/resources/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
 $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
+$app->get('/resources/{resId}/items', \Resource\controllers\ResController::class . ':getItems');
 $app->get('/resources/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getByResId');
 $app->get('/resources/{resId}/contacts', \Contact\controllers\ContactController::class . ':getByResId');
 $app->get('/resources/{resId}/emails', \Email\controllers\EmailController::class . ':getByResId');
@@ -352,19 +353,14 @@ $app->delete('/resources/{resId}/circuits/{type}', \Entity\controllers\ListInsta
 $app->get('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':getLinkedResources');
 $app->post('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':linkResources');
 $app->delete('/resources/{resId}/linkedResources/{id}', \Resource\controllers\LinkController::class . ':unlinkResources');
+
 $app->get('/res/{resId}/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
-$app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
 $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':updateExternalInfos');
 $app->get('/categories', \Resource\controllers\ResController::class . ':getCategories');
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 $app->get('/resources/{resId}/users/{userId}/groups/{groupId}/baskets/{basketId}/processingData', \Resource\controllers\ResController::class . ':getProcessingData');
-$app->post('/resources/follow', \Resource\controllers\UserFollowedResourceController::class . ':follow');
-$app->delete('/resources/unfollow', \Resource\controllers\UserFollowedResourceController::class . ':unFollow');
-$app->get('/followedResources', \Resource\controllers\UserFollowedResourceController::class . ':getFollowedResources');
-$app->get('/followedResources/{resId}/baskets', \Resource\controllers\UserFollowedResourceController::class . ':getBaskets');
-$app->get('/followedResources/filters', \Resource\controllers\UserFollowedResourceController::class . ':getFilters');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
@@ -467,6 +463,13 @@ $app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':upd
 $app->put('/users/{id}/accountActivationNotification', \User\controllers\UserController::class . ':sendAccountActivationNotification');
 $app->post('/password', \User\controllers\UserController::class . ':forgotPassword');
 $app->put('/password', \User\controllers\UserController::class . ':passwordInitialization');
+
+//UserFollowedResources
+$app->post('/resources/follow', \Resource\controllers\UserFollowedResourceController::class . ':follow');
+$app->delete('/resources/unfollow', \Resource\controllers\UserFollowedResourceController::class . ':unFollow');
+$app->get('/followedResources', \Resource\controllers\UserFollowedResourceController::class . ':getFollowedResources');
+$app->get('/followedResources/{resId}/baskets', \Resource\controllers\UserFollowedResourceController::class . ':getBaskets');
+$app->get('/followedResources/filters', \Resource\controllers\UserFollowedResourceController::class . ':getFilters');
 
 //VersionsUpdate
 $app->get('/versionsUpdate', \VersionUpdate\controllers\VersionUpdateController::class . ':get');
