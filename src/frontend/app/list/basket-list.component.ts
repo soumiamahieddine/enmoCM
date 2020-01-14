@@ -491,10 +491,9 @@ export class BasketListComponent implements OnInit {
     }
 
     toggleMailTracking(row: any) {
-        console.log(this.headerService.nbResourcesFollowed);
         if (!row.mailTracking) {
             this.http.post('../../rest/resources/follow', {resources: [row.resId]}).pipe(
-                tap(() => this.headerService.addFollowedDocument()),
+                tap(() => this.headerService.nbResourcesFollowed++),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
@@ -502,7 +501,7 @@ export class BasketListComponent implements OnInit {
             ).subscribe();
         } else {
             this.http.request('DELETE', '../../rest/resources/unfollow', { body: { resources: [row.resId] } }).pipe(
-                tap(() => this.headerService.removeFollowedDocument()),
+                tap(() => this.headerService.nbResourcesFollowed--),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
@@ -510,7 +509,6 @@ export class BasketListComponent implements OnInit {
             ).subscribe();
         }
         row.mailTracking = !row.mailTracking;
-        console.log(this.headerService.nbResourcesFollowed);
     }
 }
 

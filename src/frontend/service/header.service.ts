@@ -52,12 +52,4 @@ export class HeaderService {
         this.subHeaderMessage = subTitle;
         this.headerMessageIcon = icon;
     }
-
-    removeFollowedDocument() {
-        this.nbResourcesFollowed--;
-    }
-
-    addFollowedDocument() {
-        this.nbResourcesFollowed++;
-    }
 }

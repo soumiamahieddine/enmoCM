@@ -340,7 +340,7 @@ export class FollowedDocumentListComponent implements OnInit {
             filter((data: string) => data === 'ok'),
             exhaustMap(() => this.http.request('DELETE', '../../rest/resources/unfollow' , { body: { resources: [row.resId] } })),
             tap((data: any) => {
-                this.headerService.removeFollowedDocument();
+                this.headerService.nbResourcesFollowed--;
                 this.initResultList();
             })
         ).subscribe();

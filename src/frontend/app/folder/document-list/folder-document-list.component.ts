@@ -376,7 +376,7 @@ export class FolderDocumentListComponent implements OnInit {
     toggleMailTracking(row: any) {
         if (!row.mailTracking) {
             this.http.post('../../rest/resources/follow', {resources: [row.resId]}).pipe(
-                tap(() => this.headerService.addFollowedDocument()),
+                tap(() => this.headerService.nbResourcesFollowed++),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
@@ -384,7 +384,7 @@ export class FolderDocumentListComponent implements OnInit {
             ).subscribe();
         } else {
             this.http.request('DELETE', '../../rest/resources/unfollow', { body: { resources: [row.resId] } }).pipe(
-                tap(() => this.headerService.removeFollowedDocument()),
+                tap(() => this.headerService.nbResourcesFollowed--),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
