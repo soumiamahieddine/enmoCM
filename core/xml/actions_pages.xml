@@ -281,7 +281,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_REJECTION_WORKFLOW_REDACTOR</LABEL>
         <NAME>rejection_visa_redactor</NAME>
         <DESC>_REJECTION_WORKFLOW_REDACTOR_DESC</DESC>
-        <component>v1Action</component>
+        <component>rejectVisaBackToRedactorAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -294,7 +294,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_REJECTION_WORKFLOW_PREVIOUS</LABEL>
         <NAME>rejection_visa_previous</NAME>
         <DESC>_REJECTION_WORKFLOW_PREVIOUS_DESC</DESC>
-        <component>v1Action</component>
+        <component>rejectVisaBackToPreviousAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

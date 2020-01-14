@@ -54,6 +54,8 @@ class ActionMethodController
         'sendSignatureBookAction'               => 'sendSignatureBook',
         'rejectVisaBackToPrevious'              => 'rejectVisaBackToPrevious',
         'redirectInitiatorEntityAction'         => 'redirectInitiatorEntityAction',
+        'rejectVisaBackToPreviousAction'        => 'rejectVisaBackToPrevious',
+        'rejectVisaBackToRedactorAction'        => 'rejectVisaBackToRedactor',
         'noConfirmAction'                       => null
     ];
 
@@ -312,7 +314,7 @@ class ActionMethodController
                         'data' => [$listInstances[0]['listinstance_id']]
                     ]);
                     ResModel::update([
-                        'set'   => ['destination' => $resource['initiator']], 
+                        'set'   => ['destination' => $resource['initiator']],
                         'where' => ['res_id = ?'],
                         'data'  => [$args['resId']]
                     ]);
@@ -417,6 +419,20 @@ class ActionMethodController
             'set'   => ['process_date' => null],
             'where' => ['listinstance_id = ?'],
             'data'  => [$listInstances['listinstance_id']]
+        ]);
+
+        return true;
+    }
+
+    public static function rejectVisaBackToRedactor(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        ListInstanceModel::update([
+            'set'   => ['process_date' => null],
+            'where' => ['res_id = ?', 'difflist_type = ?'],
+            'data'  => [$args['resId'], 'VISA_CIRCUIT']
         ]);
 
         return true;
