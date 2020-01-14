@@ -255,7 +255,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_PROCEED_WORKFLOW</LABEL>
         <NAME>visa_workflow</NAME>
         <DESC>_PROCEED_WORKFLOW_DESC</DESC>
-        <component>v1Action</component>
+        <component>continueCircuitAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

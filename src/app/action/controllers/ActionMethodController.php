@@ -52,6 +52,7 @@ class ActionMethodController
         'updateAcknowledgementSendDateAction'   => 'updateAcknowledgementSendDateAction',
         'sendShippingAction'                    => 'createMailevaShippings',
         'sendSignatureBookAction'               => 'sendSignatureBook',
+        'continueCircuitAction'                 => 'continueCircuit',
         'rejectVisaBackToPrevious'              => 'rejectVisaBackToPrevious',
         'redirectInitiatorEntityAction'         => 'redirectInitiatorEntityAction',
         'rejectVisaBackToPreviousAction'        => 'rejectVisaBackToPrevious',
@@ -351,6 +352,34 @@ class ActionMethodController
         return true;
     }
 
+    public function continueCircuit(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $listInstance = ListInstanceModel::get([
+            'select'    => ['listinstance_id'],
+            'where'     => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
+            'data'      => [$args['resId'], 'VISA_CIRCUIT'],
+            'orderBy'   => ['listinstance_id'],
+            'limit'     => 1
+        ]);
+
+        if (empty($listInstance[0])) {
+            return ['errors' => ['No available circuit']];
+        }
+
+        ListInstanceModel::update([
+            'set'   => [
+                'process_date' => 'CURRENT_TIMESTAMP'
+            ],
+            'where' => ['listinstance_id = ?'],
+            'data'  => [$listInstance[0]['listinstance_id']]
+        ]);
+
+        return true;
+    }
+
     public static function sendExternalNoteBookAction(array $args)
     {
         ValidatorModel::notEmpty($args, ['resId']);
@@ -403,11 +432,11 @@ class ActionMethodController
         ValidatorModel::intVal($args, ['resId']);
 
         $listInstances = ListInstanceModel::get([
-            'select'   => ['listinstance_id'],
-            'where'    => ['res_id = ?', 'difflist_type = ?', 'process_date is not null'],
-            'data'     => [$args['resId'], 'VISA_CIRCUIT'],
-            'orderBy' => ['listinstance_id desc'],
-            'limit'    => 1
+            'select'    => ['listinstance_id'],
+            'where'     => ['res_id = ?', 'difflist_type = ?', 'process_date is not null'],
+            'data'      => [$args['resId'], 'VISA_CIRCUIT'],
+            'orderBy'   => ['listinstance_id desc'],
+            'limit'     => 1
         ]);
 
         if (empty($listInstances)) {
@@ -465,7 +494,6 @@ class ActionMethodController
                 'data'  => [$listInstances['listinstance_id']]
             ]);
         }
-
 
         ListInstanceModel::update([
             'set'   => [
