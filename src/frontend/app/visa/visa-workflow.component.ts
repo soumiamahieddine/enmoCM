@@ -215,6 +215,29 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     loadWorkflow(resId: number) {
+        this.resId = resId;
+        this.loading = true;
+        this.visaWorkflow.items = [];
+        return new Promise((resolve, reject) => {
+            this.http.get("../../rest/resources/" + resId + "/visaCircuit")
+            .subscribe((data: any) => {
+                data.forEach((element: any) => {
+                    this.visaWorkflow.items.push(
+                        {
+                            ...element,
+                            difflist_type: 'VISA_CIRCUIT'
+                        });
+                });
+                this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items))
+                this.loading = false;
+                resolve(true);
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+            });
+        });  
+    }
+
+    loadDefaultWorkflow(resId: number) {
         this.loading = true;
         this.visaWorkflow.items = [];
         this.http.get("../../rest/resources/" + resId + "/visaCircuit")
@@ -280,10 +303,10 @@ export class VisaWorkflowComponent implements OnInit {
         return this.visaWorkflow.items.filter((item: any) => this.functions.empty(item.externalId)).map((item: any) => item.labelToDisplay);
     }
 
-    saveVisaWorkflow() {
+    saveVisaWorkflow(resIds: number[] = [this.resId]) {
         return new Promise((resolve, reject) => {
             if (this.visaWorkflow.items.length === 0) {
-                this.http.delete(`../../rest/resources/${this.resId}/circuits/visaCircuit`).pipe(
+                this.http.delete(`../../rest/resources/${resIds[0]}/circuits/visaCircuit`).pipe(
                     tap(() => {
                         this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items));
                         this.notify.success(this.lang.visaWorkflowDeleted);
@@ -295,7 +318,13 @@ export class VisaWorkflowComponent implements OnInit {
                     })
                 ).subscribe();
             } else if (this.isValidWorkflow()) {
-                this.http.put(`../../rest/listinstances`, [{ resId: this.resId, listInstances: this.visaWorkflow.items }]).pipe(
+                const arrVisa = resIds.map(resId => {
+                    return {
+                        resId : resId,
+                        listInstances : this.visaWorkflow.items
+                    }
+                });
+                this.http.put(`../../rest/listinstances`, arrVisa).pipe(
                     tap((data: any) => {
                         this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items));
                         this.notify.success(this.lang.visaWorkflowUpdated);
@@ -370,6 +399,14 @@ export class VisaWorkflowComponent implements OnInit {
 
     isValidWorkflow() {
         if (this.visaWorkflow.items.filter((item: any) => item.requested_signature).length > 0 || this.visaWorkflow.items.length === 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    emptyWorkflow() {
+        if (this.visaWorkflow.items.length === 0) {
             return true;
         } else {
             return false;

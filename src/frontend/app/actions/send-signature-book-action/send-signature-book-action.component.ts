@@ -20,7 +20,7 @@ export class SendSignatureBookActionComponent implements OnInit {
 
     resourcesError: any[] = [];
 
-    noResourceToProcess: boolean = false;
+    noResourceToProcess: boolean = null;
 
     @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
     @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
@@ -36,6 +36,10 @@ export class SendSignatureBookActionComponent implements OnInit {
         this.loading = true;
         await this.checkSignatureBook();
         this.loading = false;
+        await this.appVisaWorkflow.loadWorkflow(this.data.resIds[0]);
+        if (this.appVisaWorkflow.emptyWorkflow()) {
+            this.appVisaWorkflow.loadDefaultWorkflow(this.data.resIds[0]);
+        }
     }
 
     checkSignatureBook() {
@@ -60,10 +64,12 @@ export class SendSignatureBookActionComponent implements OnInit {
         if ( this.data.resIds.length === 0) {
             // this.indexDocumentAndExecuteAction();
         } else {
-            const res = await this.appVisaWorkflow.saveVisaWorkflow();
+            const realResSelected: number[] = this.data.resIds.filter((resId: any) => this.resourcesError.map(resErr => resErr.res_id).indexOf(resId) === -1);
+        
+            const res = await this.appVisaWorkflow.saveVisaWorkflow(realResSelected);
 
             if (res) {
-                this.executeAction();
+                this.executeAction(realResSelected);
             }
         }
         this.loading = false;
@@ -87,12 +93,8 @@ export class SendSignatureBookActionComponent implements OnInit {
         ).subscribe()
     } */
 
-    executeAction() {
-        let realResSelected: string[];
-        let datas: any;
+    executeAction(realResSelected: number[]) {
 
-        realResSelected = this.data.resIds.filter((resId: any) => this.resourcesError.map(resErr => resErr.res_id).indexOf(resId) === -1);
-        
         this.http.put(this.data.processActionRoute, {resources : realResSelected, note : this.noteEditor.getNoteContent()}).pipe(
             tap((data: any) => {
                 if (!data) {
@@ -111,7 +113,7 @@ export class SendSignatureBookActionComponent implements OnInit {
     }
 
     isValidAction() {
-        if (!this.noResourceToProcess) {
+        if (!this.noResourceToProcess && !this.appVisaWorkflow.emptyWorkflow()) {
             return true;
         } else {
             return false;

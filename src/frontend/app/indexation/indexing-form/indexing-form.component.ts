@@ -654,12 +654,10 @@ export class IndexingFormComponent implements OnInit {
                                     fieldValue = data[elem.identifier];
                                 }
 
-                                if (elem.type === 'date' && !this.functions.empty(fieldValue)) {
-                                    fieldValue = new Date(fieldValue);
-                                }
-
                                 if (elem.identifier === 'priority') {
                                     this.setPriorityColor(null, fieldValue);
+                                } else if (elem.identifier === 'processLimitDate' && !this.functions.empty(fieldValue)) {
+                                    elem.startDate = '';
                                 } else if (elem.identifier === 'destination') {
                                     if (this.mode === 'process') {
                                         this.arrFormControl[elem.identifier].disable();
@@ -667,6 +665,10 @@ export class IndexingFormComponent implements OnInit {
                                     this.arrFormControl['diffusionList'].disable();
                                 } else if (elem.identifier === 'initiator' && elem.values.filter((val: any) => val.id === fieldValue).length === 0 && !this.functions.empty(fieldValue)) {
                                     await this.getCurrentInitiator(elem, fieldValue);
+                                }
+
+                                if (elem.type === 'date' && !this.functions.empty(fieldValue)) {
+                                    fieldValue = new Date(fieldValue);
                                 }
                                 this.arrFormControl[elem.identifier].setValue(fieldValue);
                             }

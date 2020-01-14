@@ -22,15 +22,15 @@
                     </li>
                 </ul>
             </div>
-            <app-visa-workflow *ngIf="data.resIds.length == 1 || (!noResourceToProcess && data.resIds.length > 1)" [adminMode]="true" #appVisaWorkflow [resId]="data.resIds[0]">
+            <app-visa-workflow *ngIf="data.resIds.length == 1 || (!noResourceToProcess && data.resIds.length > 1)" [adminMode]="true" #appVisaWorkflow>
             </app-visa-workflow>
             <div style="padding-top: 10px;">
                 <app-note-editor #noteEditor [resIds]="data.resIds"></app-note-editor>
             </div>
         </mat-sidenav-content>
-        <mat-sidenav position='end' *ngIf="data.resIds.length === 1" opened mode="side" style="overflow-x:hidden;"
+        <mat-sidenav position='end' [opened]="data.resIds.length === 1 && noResourceToProcess" mode="side" style="overflow-x:hidden;"
             autoFocus="false" [ngStyle]="{'width': '400px'}">
-            <app-attachments-list [resId]="data.resIds[0]" (afterActionAttachment)="checkSignatureBook()"></app-attachments-list>
+            <app-attachments-list *ngIf="data.resIds.length === 1 && noResourceToProcess" [resId]="data.resIds[0]" (afterActionAttachment)="checkSignatureBook()"></app-attachments-list>
         </mat-sidenav>
     </mat-sidenav-container>
 </div>
