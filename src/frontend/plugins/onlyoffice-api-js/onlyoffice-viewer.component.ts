@@ -84,7 +84,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
 
     getDocument() {
         this.isSaving = true;
-        this.docEditor.downloadAs();
+        this.docEditor.downloadAs(this.file.format);
     }
 
     getEncodedDocument(data: any) {
