@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
@@ -13,6 +13,7 @@ import { LatinisePipe } from 'ngx-pipes';
 import { PrivilegeService } from '../../../service/privileges.service';
 import { ContactModalComponent } from '../../administration/contact/modal/contact-modal.component';
 import { ContactService } from '../../../service/contact.service';
+import { DocumentViewerComponent } from '../../viewer/document-viewer.component';
 
 @Component({
     selector: 'app-contact-autocomplete',
@@ -47,6 +48,7 @@ export class ContactAutocompleteComponent implements OnInit {
     newIds: number[] = [];
     customFields: any[] = [];
 
+
     /**
      * FormControl used when autocomplete is used in form and must be catched in a form control.
      */
@@ -54,6 +56,8 @@ export class ContactAutocompleteComponent implements OnInit {
 
     @Input('singleMode') singleMode: boolean = false;
 
+
+    @Output('retrieveDocumentEvent') retrieveDocumentEvent = new EventEmitter<string>();
 
     @ViewChild('autoCompleteInput', { static: true }) autoCompleteInput: ElementRef;
 
@@ -309,7 +313,9 @@ export class ContactAutocompleteComponent implements OnInit {
     }
 
     openContact(contact: any = null) {
-        const dialogRef = this.dialog.open(ContactModalComponent, { maxWidth: '100vw', panelClass: 'contact-modal-container', data: { editMode: this.canUpdate, contactId: contact !== null ? contact.id : null, contactType: contact !== null ? contact.type : null } });
+        this.retrieveDocumentEvent.emit();
+
+        const dialogRef = this.dialog.open(ContactModalComponent, { maxWidth: '100vw', panelClass: 'contact-modal-container', disableClose: true, data: { editMode: this.canUpdate, contactId: contact !== null ? contact.id : null, contactType: contact !== null ? contact.type : null } });
 
         dialogRef.afterClosed().pipe(
             filter((data: number) => data !== undefined),

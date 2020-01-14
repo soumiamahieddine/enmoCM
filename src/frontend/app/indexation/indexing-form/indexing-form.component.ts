@@ -35,6 +35,7 @@ export class IndexingFormComponent implements OnInit {
 
     @Input('hideDiffusionList') hideDiffusionList: boolean = false;
 
+    @Output() retrieveDocumentEvent = new EventEmitter<string>();
     @Output() loadingFormEndEvent = new EventEmitter<string>();
 
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;

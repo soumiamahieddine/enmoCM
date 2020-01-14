@@ -12,6 +12,7 @@ export class HeaderService {
     user: any = { firstname: "", lastname: "", groups : [], privileges : [] };
     lang: any = LANG;
     nbResourcesFollowed: number = 0;
+    base64: string = null;
 
     constructor(public http: HttpClient) { }
 
@@ -45,6 +46,14 @@ export class HeaderService {
 
     setUser(user: any) {
         this.user = user;
+    }
+
+    getLastLoadedFile() {
+        return this.base64;
+    }
+
+    setLoadedFile(base64: string) {
+        this.base64 = base64;
     }
 
     setHeader(maintTitle: string, subTitle: any = '', icon = '') {
