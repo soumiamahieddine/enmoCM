@@ -328,19 +328,6 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
-	<ACTIONPAGE>
-        <ID>send_signed_docs</ID>
-        <LABEL>_SEND_SIGNED_DOCS</LABEL>
-        <NAME>send_signed_docs</NAME>
-        <DESC>_SEND_SIGNED_DOCS_DESC</DESC>
-        <component>v1Action</component>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>visa</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
     <ACTIONPAGE>
         <ID>send_docs_to_recommendation</ID>
         <LABEL>_SEND_DOCS_TO_RECOMMENDATION</LABEL>

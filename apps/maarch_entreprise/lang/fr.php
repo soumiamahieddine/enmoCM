@@ -4043,12 +4043,6 @@ if (!defined('_VISA_MAIL')) {
 if (!defined('_VISA_MAIL_DESC')) {
     define('_VISA_MAIL_DESC', 'Ouvre la page du parapheur afin de pouvoir viser / signer le document.');
 }
-if (!defined('_SEND_SIGNED_DOCS')) {
-    define('_SEND_SIGNED_DOCS', 'Transmettre réponses signées');
-}
-if (!defined('_SEND_SIGNED_DOCS_DESC')) {
-    define('_SEND_SIGNED_DOCS_DESC', 'Vérifie si les projets de réponse ont été signés.');
-}
 if (!defined('_PREPARE_VISA')) {
     define('_PREPARE_VISA', 'Préparer le circuit de visa');
 }

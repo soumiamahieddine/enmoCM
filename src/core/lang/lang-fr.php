@@ -244,8 +244,6 @@ define('_CLOSE_MAIL_AND_INDEX', 'Clôturer un courrier et lancer l\'indexation')
 define('_CLOSE_MAIL_AND_INDEX_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier ET ouvre la page d\'indexation afin d\'enregistrer un nouveau courrier.');
 define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe');
 define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier avec présence OBLIGATOIRE de pièce(s) jointe(s) / annotation(s).');
-define('_SEND_SIGNED_DOCS', 'Transmettre réponses signées');
-define('_SEND_SIGNED_DOCS_DESC', 'Vérifie si les projets de réponse ont été signés.');
 define('_SEND_TO_VISA', 'Envoyer pour visa');
 define('_SEND_TO_VISA_DESC', 'Contrôle si un circuit de visa est configuré ET si un ou plusieurs projets de réponses sont associés au courrier.');
 define('_REJECTION_WORKFLOW_PREVIOUS', 'Refuser le visa - retour au précédent viseur');

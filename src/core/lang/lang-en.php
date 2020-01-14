@@ -244,8 +244,6 @@ define('_CLOSE_MAIL_AND_INDEX', 'Close a mail and launch the indexation');
 define('_CLOSE_MAIL_AND_INDEX_DESC', 'Allows you to update the closing date of a mail AND opens the indexing page to save a new mail.');
 define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Closing with attachment');
 define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', 'Allows you to update the closing date of a mail with MANDATORY presence of attachment (s) / note (s).');
-define('_SEND_SIGNED_DOCS', 'Pass signed responses');
-define('_SEND_SIGNED_DOCS_DESC', 'Check if response project are signed.');
 define('_SEND_TO_VISA', 'send for visa');
 define('_SEND_TO_VISA_DESC', 'Check if visa circuit is setup AND if one or several responses project are linked to mail.');
 define('_REJECTION_WORKFLOW_PREVIOUS', 'Visa rejection - back to the previous author');

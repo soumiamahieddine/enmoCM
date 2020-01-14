@@ -243,8 +243,6 @@ define('_CLOSE_MAIL_AND_INDEX', 'Een brief afsluiten en de indexering starten');
 define('_CLOSE_MAIL_AND_INDEX_DESC', 'Om de afsluitingsdatum van een brief bij te werken EN de indexeringspagina te openen om een nieuw brief te bewaren.');
 define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Een brief met een bijlage afsluiten');
 define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', 'Om de afsluitingsdatum van een brief bij te werken met VERPLICHTE aanwezigheid van bijlage(n) / opmerking(en).');
-define('_SEND_SIGNED_DOCS', 'Ondertekende antwoorden doorsturen');
-define('_SEND_SIGNED_DOCS_DESC', 'Controleert of de antwoordprojecten ondertekend werden.');
 define('_SEND_TO_VISA', 'Versturen voor goedkeuring');
 define('_SEND_TO_VISA_DESC', 'Controleert of er een goedkeuringscircuit is geconfigureerd EN of er één of meerdere antwoordprojecten aan het brief gekoppeld zijn.');
 define('_REJECTION_WORKFLOW_PREVIOUS', 'De goedkeuring weigeren - terug naar de vorige goedkeurder');

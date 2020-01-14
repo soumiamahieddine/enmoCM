@@ -3980,9 +3980,6 @@ if (!defined('_REJECTION_WORKFLOW_PREVIOUS')) {
 if (!defined('_VISA_MAIL')) {
     define('_VISA_MAIL', 'Aim the mail');
 }
-if (!defined('_SEND_SIGNED_DOCS')) {
-    define('_SEND_SIGNED_DOCS', 'Pass signed responses');
-}
 if (!defined('_PREPARE_VISA')) {
     define('_PREPARE_VISA', 'Prepare the visa flow');
 }
