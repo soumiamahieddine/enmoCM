@@ -86,6 +86,8 @@ where group_id in (
 UPDATE actions SET component = 'confirmAction', action_page = 'confirm_status' WHERE action_page in ('validate_mail', 'process', 'visa_mail');
 DELETE FROM actions WHERE action_page = 'view' OR component = 'viewDoc';
 
+UPDATE actions SET component = 'rejectVisaBackToPrevious' WHERE action_page = 'rejection_visa_previous';
+
 
 /* FOLDERS */
 DO $$ BEGIN

@@ -50,6 +50,7 @@ class ActionMethodController
         'updateAcknowledgementSendDateAction'   => 'updateAcknowledgementSendDateAction',
         'sendShippingAction'                    => 'createMailevaShippings',
         'sendSignatureBookAction'               => 'sendSignatureBook',
+        'rejectVisaBackToPrevious'              => 'rejectVisaBackToPrevious',
         'noConfirmAction'                       => null
     ];
 
@@ -340,5 +341,33 @@ class ActionMethodController
         }
 
         return ['history' => $historyInfo];
+    }
+
+    public static function rejectVisaBackToPrevious(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $listInstances = ListInstanceModel::get([
+            'select'   => ['listinstance_id'],
+            'where'    => ['res_id = ?', 'difflist_type = ?', 'process_date is not null'],
+            'data'     => [$args['resId'], 'VISA_CIRCUIT'],
+            'order_by' => ['listinstance_id desc'],
+            'limit'    => 1
+        ]);
+
+        if (empty($listInstances)) {
+            return false;
+        }
+
+        $listInstances = $listInstances[0];
+
+        ListInstanceModel::update([
+            'set'   => ['process_date' => null],
+            'where' => ['listinstance_id = ?'],
+            'data'  => [$listInstances['listinstance_id']]
+        ]);
+
+        return true;
     }
 }
