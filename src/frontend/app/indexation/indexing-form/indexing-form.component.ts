@@ -664,7 +664,7 @@ export class IndexingFormComponent implements OnInit {
                                         this.arrFormControl[elem.identifier].disable();
                                     }
                                     this.arrFormControl['diffusionList'].disable();
-                                } else if (elem.identifier === 'initiator' && elem.values.filter((val: any) => val.id === fieldValue).length === 0) {
+                                } else if (elem.identifier === 'initiator' && elem.values.filter((val: any) => val.id === fieldValue).length === 0 && !this.functions.empty(fieldValue)) {
                                     await this.getCurrentInitiator(elem, fieldValue);
                                 }
                                 this.arrFormControl[elem.identifier].setValue(fieldValue);
