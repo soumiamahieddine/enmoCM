@@ -798,6 +798,56 @@ class PreProcessActionController
         ]);
     }
 
+    public function checkSignatureBook(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $signableAttachmentsTypes = [];
+        $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
+        foreach ($attachmentsTypes as $key => $type) {
+            if ($type['sign']) {
+                $signableAttachmentsTypes[] = $key;
+            }
+        }
+
+        $resourcesInformations = [];
+        foreach ($body['resources'] as $resId) {
+            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier']]);
+            if (empty($resource['alt_identifier'])) {
+                $resource['alt_identifier'] = _UNDEFINED;
+            }
+
+            $attachments = AttachmentModel::get([
+                'select'    => [1],
+                'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
+                'data'      => [$resId, $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']],
+                'groupBy'   => ['res_id_master']
+            ]);
+
+            if (empty($attachments)) {
+                $resourcesInformations['noAttachment'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
+            } else {
+                $resourcesInformations['attachments'][] = ['res_id' => $resId];
+            }
+        }
+
+        return $response->withJson(['resourcesInformations' => $resourcesInformations]);
+    }
+
     public function isDestinationChanging(Request $request, Response $response, array $args)
     {
         if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {

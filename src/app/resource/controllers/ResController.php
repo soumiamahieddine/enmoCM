@@ -238,7 +238,7 @@ class ResController
             $formattedData['opinionCircuit'] = 0;
             $listInstanceItems = ListInstanceModel::get(['select' => ['count(1)', 'difflist_type'], 'where' => ['res_id = ?'], 'data' => [$args['resId']], 'groupBy' => ['difflist_type']]);
             foreach ($listInstanceItems as $item) {
-                $type = $item['difflist_type'] == 'entity_id' ? 'diffusionList' : ($item['difflist_type'] == 'visaCircuit' ? 'visaCircuitItems' : 'opinionCircuit');
+                $type = $item['difflist_type'] == 'entity_id' ? 'diffusionList' : ($item['difflist_type'] == 'VISA_CIRCUIT' ? 'visaCircuit' : 'opinionCircuit');
                 $formattedData[$type] = $item['count'];
             }
 
