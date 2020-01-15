@@ -1433,7 +1433,7 @@ export const LANG_FR = {
     "modelSaved" : "Modèle sauvegardé",
     "visaWorkflowUpdated" : "Circuit de visa modifié",
     "visaWorkflowDeleted" : "Circuit de visa supprimé",
-    "publicModel" : "Modèle publique",
+    "publicModel" : "Modèle public",
     "privateModel" : "Modèle privé", 
     "moveVisaUserErr1" : "Vous ne pouvez pas déplacer", 
     "moveVisaUserErr2" : "avec des personnes ayant déja visé / signé", 
