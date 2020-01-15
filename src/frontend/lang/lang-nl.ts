@@ -1435,5 +1435,8 @@ export const LANG_NL = {
     "interruptVisaWorkflow": "The following users will not be able to target mail", //_TO_TRANSLATE
     "rejectVisaBack": "Document will be send to the previous user", //_TO_TRANSLATE
     "sendToDocTo": "You will send this document to", //_TO_TRANSLATE
-    "endWorkflow": "You will end this workflow", //_TO_TRANSLATE
+    "endWorkflow": "You will end the workflow", //_TO_TRANSLATE
+    "endedCircuit": "Workflow ended", //_TO_TRANSLATE
+    "userHasntSigned": "The assignee hasn't signed any document",  //_TO_TRANSLATE
+    "noCircuitAvailable": "No workflow defined", //_TO_TRANSLATE
 };

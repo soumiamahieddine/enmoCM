@@ -178,8 +178,10 @@ export class VisaWorkflowComponent implements OnInit {
             if (this.visaModelListNotLoaded) {
                 await this.loadVisaSignUsersList();
 
-                await this.loadVisaModelListByResource();
-
+                if (this.resId) {
+                    await this.loadVisaModelListByResource();
+                }
+                
                 this.searchVisaSignUser.reset();
 
                 this.visaModelListNotLoaded = false;
@@ -240,8 +242,9 @@ export class VisaWorkflowComponent implements OnInit {
     loadDefaultWorkflow(resId: number) {
         this.loading = true;
         this.visaWorkflow.items = [];
-        this.http.get("../../rest/resources/" + resId + "/defaultCircuit?circuit=visaCircuit")
-            .subscribe((data: any) => {
+        this.http.get("../../rest/resources/" + resId + "/defaultCircuit?circuit=visaCircuit").pipe(
+            filter((data: any) => !this.functions.empty(data.circuit)),
+            tap((data: any) => {
                 data.circuit.items.forEach((element: any) => {
                     this.visaWorkflow.items.push(
                         {
@@ -250,10 +253,13 @@ export class VisaWorkflowComponent implements OnInit {
                         });
                 });
                 this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items))
-                this.loading = false;
-            }, (err: any) => {
-                this.notify.handleErrors(err);
-            });
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     loadWorkflowMaarchParapheur(attachmentId: number) {

@@ -37,6 +37,8 @@ export class SendSignatureBookActionComponent implements OnInit {
             this.loading = true;
             await this.checkSignatureBook();
             this.loading = false;
+        }
+        if (this.data.resIds.length === 1) {
             await this.appVisaWorkflow.loadWorkflow(this.data.resIds[0]);
             if (this.appVisaWorkflow.emptyWorkflow()) {
                 this.appVisaWorkflow.loadDefaultWorkflow(this.data.resIds[0]);
@@ -119,7 +121,7 @@ export class SendSignatureBookActionComponent implements OnInit {
     }
 
     isValidAction() {
-        if (!this.noResourceToProcess && !this.appVisaWorkflow.emptyWorkflow()) {
+        if (!this.noResourceToProcess && this.appVisaWorkflow !== undefined && !this.appVisaWorkflow.emptyWorkflow()) {
             return true;
         } else {
             return false;

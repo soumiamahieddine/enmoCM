@@ -1451,4 +1451,7 @@ export const LANG_FR = {
     "rejectVisaBack": "Le courrier sera envoyé à la dernière personne ayant visé",
     "sendToDocTo": "Vous allez transmettre ce document à",
     "endWorkflow": "Vous allez terminer le circuit",
+    "endedCircuit": "Circuit terminé",
+    "userHasntSigned": "Le signataire n'a pas signé de document",
+    "noCircuitAvailable": "Aucun circuit défini",
 };
