@@ -52,7 +52,7 @@ class ActionMethodController
         'updateAcknowledgementSendDateAction'   => 'updateAcknowledgementSendDateAction',
         'sendShippingAction'                    => 'createMailevaShippings',
         'sendSignatureBookAction'               => 'sendSignatureBook',
-        'continueCircuitAction'                 => 'continueCircuit',
+        'continueVisaCircuitAction'             => 'continueVisaCircuit',
         'rejectVisaBackToPrevious'              => 'rejectVisaBackToPrevious',
         'redirectInitiatorEntityAction'         => 'redirectInitiatorEntityAction',
         'rejectVisaBackToPreviousAction'        => 'rejectVisaBackToPrevious',
@@ -354,7 +354,7 @@ class ActionMethodController
         return true;
     }
 
-    public function continueCircuit(array $args)
+    public function continueVisaCircuit(array $args)
     {
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);

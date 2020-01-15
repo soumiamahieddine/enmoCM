@@ -886,7 +886,7 @@ class PreProcessActionController
         return $response->withJson(['resourcesInformations' => $resourcesInformations]);
     }
 
-    public function checkContinueCircuit(Request $request, Response $response, array $args)
+    public function checkContinueVisaCircuit(Request $request, Response $response, array $args)
     {
         $body = $request->getParsedBody();
 
