@@ -201,6 +201,7 @@ export class AvisWorkflowComponent implements OnInit {
     }
 
     loadWorkflow(resId: number) {
+        this.resId = resId;
         this.loading = true;
         this.avisWorkflow.items = [];
         this.http.get("../../rest/resources/" + resId + "/opinionCircuit")
@@ -250,7 +251,7 @@ export class AvisWorkflowComponent implements OnInit {
                     })
                 ).subscribe();
             } else {     
-                this.http.put(`../../rest/listinstances`, {resources: [{ resId: this.resId, listInstances: this.avisWorkflow.items }]} ).pipe(
+                this.http.put(`../../rest/circuits/opinionCircuit`, {resources: [{ resId: this.resId, listInstances: this.avisWorkflow.items }]} ).pipe(
                     tap((data: any) => {
                         this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items));
                         this.notify.success(this.lang.avisWorkflowUpdated);
