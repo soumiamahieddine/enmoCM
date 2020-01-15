@@ -285,6 +285,7 @@ $app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelCon
 //Listinstance
 $app->get('/listinstance/{id}', \Entity\controllers\ListInstanceController::class . ':getById');
 $app->put('/listinstances', \Entity\controllers\ListInstanceController::class . ':update');
+$app->put('/circuits/{type}', \Entity\controllers\ListInstanceController::class . ':updateCircuits');
 
 //ListTemplates
 $app->get('/listTemplates', \Entity\controllers\ListTemplateController::class . ':get');

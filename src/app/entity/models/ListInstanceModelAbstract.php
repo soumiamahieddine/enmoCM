@@ -73,7 +73,7 @@ abstract class ListInstanceModelAbstract
                 'item_type'                 => $args['item_type'],
                 'item_mode'                 => $args['item_mode'],
                 'added_by_user'             => $args['added_by_user'],
-                'viewed'                    => $args['viewed'],
+                'viewed'                    => $args['viewed'] ?? 0,
                 'difflist_type'             => $args['difflist_type'],
                 'process_date'              => $args['process_date'],
                 'process_comment'           => $args['process_comment'],

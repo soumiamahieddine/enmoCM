@@ -653,7 +653,7 @@ class ListTemplateController
 
         $listTemplateItems = ListTemplateItemModel::get(['select' => ['*'], 'where' => ['list_template_id = ?'], 'data' => [$circuit['id']]]);
         foreach ($listTemplateItems as $key => $value) {
-            $listTemplateItems[$key]['idToDisplay'] = UserModel::getLabelledUserById(['id' => $value['item_id']]);
+            $listTemplateItems[$key]['labelToDisplay'] = UserModel::getLabelledUserById(['id' => $value['item_id']]);
             $listTemplateItems[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityById(['id' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
         }
         $circuit['items'] = $listTemplateItems;

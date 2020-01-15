@@ -31,6 +31,11 @@ use Resource\models\ResModel;
 
 class ListInstanceController
 {
+    const MAPPING_TYPES = [
+            'visaCircuit'       => 'VISA_CIRCUIT',
+            'opinionCircuit'    => 'AVIS_CIRCUIT'
+    ];
+
     public function getById(Request $request, Response $response, array $aArgs)
     {
         $listinstance = ListInstanceModel::getById(['id' => $aArgs['id']]);
@@ -133,31 +138,26 @@ class ListInstanceController
             $listInstances = ListInstanceModel::get([
                 'select'    => ['*'],
                 'where'     => ['res_id = ?', 'difflist_type = ?'],
-                'data'      => [$ListInstanceByRes['resId'], $ListInstanceByRes['listInstances'][0]['difflist_type']]
+                'data'      => [$ListInstanceByRes['resId'], 'entity_id']
             ]);
             ListInstanceModel::delete([
                 'where' => ['res_id = ?', 'difflist_type = ?'],
-                'data'  => [$ListInstanceByRes['resId'], $ListInstanceByRes['listInstances'][0]['difflist_type']]
+                'data'  => [$ListInstanceByRes['resId'], 'entity_id']
             ]);
 
-            if ($ListInstanceByRes['listInstances'][0]['difflist_type'] == 'entity_id') {
-                $recipientFound = false;
-                foreach ($ListInstanceByRes['listInstances'] as $instance) {
-                    if ($instance['item_mode'] == 'dest') {
-                        $recipientFound = true;
-                    }
+            $recipientFound = false;
+            foreach ($ListInstanceByRes['listInstances'] as $instance) {
+                if ($instance['item_mode'] == 'dest') {
+                    $recipientFound = true;
                 }
-                if (!$recipientFound) {
-                    return ['errors' => 'Dest is missing', 'code' => 403];
-                }
+            }
+            if (!$recipientFound) {
+                return ['errors' => 'Dest is missing', 'code' => 403];
             }
 
             foreach ($ListInstanceByRes['listInstances'] as $key => $instance) {
-                $listControl = ['item_id', 'item_type', 'item_mode', 'difflist_type'];
+                $listControl = ['item_id', 'item_type', 'item_mode'];
                 foreach ($listControl as $itemControl) {
-                    if ($itemControl == 'item_mode' && $ListInstanceByRes['listInstances'][0]['difflist_type'] != 'entity_id') {
-                        continue;
-                    }
                     if (empty($instance[$itemControl])) {
                         return ['errors' => "ListInstance {$itemControl} is not set or empty", 'code' => 400];
                     }
@@ -174,19 +174,6 @@ class ListInstanceController
                     if (empty($user)) {
                         DatabaseModel::rollbackTransaction();
                         return ['errors' => 'User not found', 'code' => 400];
-                    }
-                    if ($ListInstanceByRes['listInstances'][0]['difflist_type'] == 'VISA_CIRCUIT') {
-                        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'visa_documents', 'userId' => $user['id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $user['id']])) {
-                            DatabaseModel::rollbackTransaction();
-                            return ['errors' => 'User has not enough privileges', 'code' => 400];
-                        }
-                        $instance['item_mode'] = $instance['requested_signature'] ? 'sign' : 'visa';
-                    } elseif ($ListInstanceByRes['listInstances'][0]['difflist_type'] == 'AVIS_CIRCUIT') {
-                        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'avis_documents', 'userId' => $user['id']])) {
-                            DatabaseModel::rollbackTransaction();
-                            return ['errors' => 'User has not enough privileges', 'code' => 400];
-                        }
-                        $instance['item_mode'] = 'avis';
                     }
                 } elseif (in_array($instance['item_type'], ['entity_id', 'entity'])) {
                     if ($instance['item_type'] == 'entity_id') {
@@ -213,10 +200,10 @@ class ListInstanceController
                     'item_type'             => $instance['item_type'],
                     'item_mode'             => $instance['item_mode'],
                     'added_by_user'         => $currentUser['user_id'],
-                    'difflist_type'         => $instance['difflist_type'],
-                    'process_date'          => $instance['process_date'] ?? null,
-                    'process_comment'       => $instance['process_comment'] ?? null,
-                    'requested_signature'   => $instance['requested_signature'] ?? false,
+                    'difflist_type'         => 'entity_id',
+                    'process_date'          => null,
+                    'process_comment'       => null,
+                    'requested_signature'   => false,
                     'viewed'                => empty($instance['viewed']) ? 0 : $instance['viewed']
                 ]);
 
@@ -255,9 +242,9 @@ class ListInstanceController
                     'item_type'                 => $listInstance['item_type'],
                     'item_mode'                 => $listInstance['item_mode'],
                     'added_by_user'             => $listInstance['added_by_user'],
-                    'difflist_type'             => $listInstance['difflist_type'],
-                    'process_date'              => $listInstance['process_date'] ?? null,
-                    'process_comment'           => $listInstance['process_comment'] ?? null
+                    'difflist_type'             => 'entity_id',
+                    'process_date'              => null,
+                    'process_comment'           => null
                 ]);
             }
         }
@@ -267,26 +254,130 @@ class ListInstanceController
         return ['success' => 'success'];
     }
 
+    public function updateCircuits(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+        if (!Validator::arrayType()->notEmpty()->validate($body)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body is not set or not an array']);
+        } elseif (!Validator::stringType()->validate($args['type']) || !in_array($args['type'], ['visaCircuit', 'opinionCircuit'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route params type is empty or not valid']);
+        }
+
+        DatabaseModel::beginTransaction();
+
+        foreach ($body['resources'] as $resourceKey => $resource) {
+            if (empty($resource['resId'])) {
+                DatabaseModel::rollbackTransaction();
+                return $response->withStatus(400)->withJson(['errors' => "Body resources[{$resourceKey}] resId is empty"]);
+            } elseif (!Validator::intVal()->validate($resource['resId']) || !ResController::hasRightByResId(['resId' => [$resource['resId']], 'userId' => $GLOBALS['id']])) {
+                DatabaseModel::rollbackTransaction();
+                return $response->withStatus(403)->withJson(['errors' => 'Resource out of perimeter']);
+            } elseif (!Validator::arrayType()->notEmpty()->validate($resource['listInstances'])) {
+                DatabaseModel::rollbackTransaction();
+                return $response->withStatus(400)->withJson(['errors' => "Body resources[{$resourceKey}] listInstances is empty"]);
+            }
+
+            $listInstances = ListInstanceModel::get([
+                'select'    => ['*'],
+                'where'     => ['res_id = ?', 'difflist_type = ?'],
+                'data'      => [$resource['resId'], self::MAPPING_TYPES[$args['type']]]
+            ]);
+            ListInstanceModel::delete([
+                'where' => ['res_id = ?', 'difflist_type = ?'],
+                'data'  => [$resource['resId'], self::MAPPING_TYPES[$args['type']]]
+            ]);
+
+            foreach ($listInstances as $listInstanceKey => $listInstance) {
+                if (empty($listInstance['process_date'])) {
+                    unset($listInstances[$listInstanceKey]);
+                }
+            }
+            $listInstances =  array_values($listInstances);
+
+            foreach ($resource['listInstances'] as $key => $listInstance) {
+                if (!empty($listInstance['process_date'])) {
+                    continue;
+                } elseif (empty($listInstance['item_id'])) {
+                    DatabaseModel::rollbackTransaction();
+                    return $response->withStatus(400)->withJson(['errors' => "Body resources[{$resourceKey}] listInstances[{$key}] item_id is empty"]);
+                }
+
+                if ($listInstance['item_type'] == 'user_id') {
+                    $user = UserModel::getByLogin(['login' => $listInstance['item_id'], 'select' => ['id'], 'noDeleted' => true]);
+                } else {
+                    $user = UserModel::getById(['id' => $listInstance['item_id'], 'select' => ['id', 'user_id'], 'noDeleted' => true]);
+                    $listInstance['item_id'] = $user['user_id'] ?? null;
+                    $listInstance['item_type'] = 'user_id';
+                }
+                if (empty($user)) {
+                    DatabaseModel::rollbackTransaction();
+                    return $response->withStatus(400)->withJson(['errors' => "Body resources[{$resourceKey}] listInstances[{$key}] item_id does not exist"]);
+                }
+                if ($args['type'] == 'visaCircuit') {
+                    if (!PrivilegeController::hasPrivilege(['privilegeId' => 'visa_documents', 'userId' => $user['id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $user['id']])) {
+                        DatabaseModel::rollbackTransaction();
+                        return $response->withStatus(400)->withJson(['errors' => "Body resources[{$resourceKey}] listInstances[{$key}] item_id has not enough privileges"]);
+                    }
+                    $listInstance['item_mode'] = $listInstance['requested_signature'] ? 'sign' : 'visa';
+                } else {
+                    if (!PrivilegeController::hasPrivilege(['privilegeId' => 'avis_documents', 'userId' => $user['id']])) {
+                        DatabaseModel::rollbackTransaction();
+                        return $response->withStatus(400)->withJson(['errors' => "Body resources[{$resourceKey}] listInstances[{$key}] item_id has not enough privileges"]);
+                    }
+                    $listInstance['item_mode'] = 'avis';
+                }
+
+                $listInstances[] = [
+                    'item_id'               => $listInstance['item_id'],
+                    'item_type'             => $listInstance['item_type'],
+                    'item_mode'             => $listInstance['item_mode'],
+                    'process_date'          => null,
+                    'process_comment'       => $listInstance['process_comment'] ?? null,
+                    'requested_signature'   => $listInstance['requested_signature'] ?? false
+                ];
+            }
+
+            foreach ($listInstances as $key => $listInstance) {
+                ListInstanceModel::create([
+                    'res_id'                => $resource['resId'],
+                    'sequence'              => $key,
+                    'item_id'               => $listInstance['item_id'],
+                    'item_type'             => $listInstance['item_type'],
+                    'item_mode'             => $listInstance['item_mode'],
+                    'added_by_user'         => $GLOBALS['userId'],
+                    'difflist_type'         => $args['type'] == 'visaCircuit' ? 'VISA_CIRCUIT' : 'AVIS_CIRCUIT',
+                    'process_date'          => $listInstance['process_date'],
+                    'process_comment'       => $listInstance['process_comment'],
+                    'requested_signature'   => $listInstance['requested_signature']
+                ]);
+            }
+        }
+
+        DatabaseModel::commitTransaction();
+
+        return $response->withStatus(204);
+    }
+
     public function deleteCircuit(Request $request, Response $response, array $args)
     {
         if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Resource out of perimeter']);
         } elseif (!Validator::stringType()->validate($args['type']) || !in_array($args['type'], ['visaCircuit', 'opinionCircuit'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Query params type is empty or not valid']);
+            return $response->withStatus(400)->withJson(['errors' => 'Route params type is empty or not valid']);
         } elseif ($args['type'] == 'visaCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'config_visa_workflow', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         } elseif ($args['type'] == 'opinionCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'config_avis_workflow', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $mappingTypes = [
-            'visaCircuit'       => 'VISA_CIRCUIT',
-            'opinionCircuit'    => 'AVIS_CIRCUIT',
-        ];
+        $circuit = ListInstanceModel::get(['select' => [1], 'where' => ['res_id = ?', 'difflist_type = ?', 'process_date is not null'], 'data' => [$args['resId'], self::MAPPING_TYPES[$args['type']]]]);
+        if (!empty($circuit)) {
+            return $response->withStatus(403)->withJson(['errors' => 'Circuit has already begun']);
+        }
 
         ListInstanceModel::delete([
             'where' => ['res_id = ?', 'difflist_type = ?'],
-            'data'  => [$args['resId'], $mappingTypes[$args['type']]]
+            'data'  => [$args['resId'], self::MAPPING_TYPES[$args['type']]]
         ]);
 
         return $response->withStatus(204);
