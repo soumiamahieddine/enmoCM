@@ -623,6 +623,44 @@ class ListTemplateController
         return $response->withJson(['circuits' => $circuits]);
     }
 
+    public function getDefaultCircuitByResId(Request $request, Response $response, array $args)
+    {
+        $queryParams = $request->getQueryParams();
+
+        if (!Validator::stringType()->notEmpty()->validate($queryParams['circuit'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params circuit is empty']);
+        }
+
+        $circuit = $queryParams['circuit'] == 'opinion' ? 'opinionCircuit' : 'visaCircuit';
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['destination']]);
+
+        if (empty($resource['destination'])) {
+            return $response->withJson(['circuit' => []]);
+        }
+
+        $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['id']]);
+
+        $circuit = ListTemplateModel::get([
+            'select'  => ['id', 'type', 'entity_id as "entityId"', 'title', 'description'],
+            'where'   => ['type = ?', 'entity_id = ?'],
+            'data'    => [$circuit, $entity['id']]
+        ]);
+
+        if (empty($circuit[0])) {
+            return $response->withJson(['circuit' => []]);
+        }
+        $circuit = $circuit[0];
+
+        $listTemplateItems = ListTemplateItemModel::get(['select' => ['*'], 'where' => ['list_template_id = ?'], 'data' => [$circuit['id']]]);
+        foreach ($listTemplateItems as $key => $value) {
+            $listTemplateItems[$key]['idToDisplay'] = UserModel::getLabelledUserById(['id' => $value['item_id']]);
+            $listTemplateItems[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityById(['id' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
+        }
+        $circuit['items'] = $listTemplateItems;
+
+        return $response->withJson(['circuit' => $circuit]);
+    }
+
     private static function controlItems(array $args)
     {
         ValidatorModel::notEmpty($args, ['items']);
