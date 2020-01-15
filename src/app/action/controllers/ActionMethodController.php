@@ -329,6 +329,11 @@ class ActionMethodController
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
+        $circuit = ListInstanceModel::get(['select' => [1], 'where' => ['res_id = ?', 'difflist_type = ?', 'process_date is null'], 'data' => [$args['resId'], 'VISA_CIRCUIT']]);
+        if (empty($circuit)) {
+            return ['errors' => ['No available circuit']];
+        }
+
         $signableAttachmentsTypes = [];
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
         foreach ($attachmentsTypes as $key => $type) {
