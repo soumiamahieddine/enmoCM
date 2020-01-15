@@ -996,25 +996,6 @@ CREATE TABLE adr_letterbox
 )
 WITH (OIDS=FALSE);
 
-CREATE SEQUENCE res_linked_mlb_seq
-  INCREMENT 1
-  MINVALUE 1
-  MAXVALUE 9223372036854775807
-  START 171
-  CACHE 1;
-
-CREATE TABLE res_linked
-(
-  id bigint NOT NULL DEFAULT nextval('res_linked_mlb_seq'::regclass),
-  res_parent bigint NOT NULL,
-  res_child bigint NOT NULL,
-  coll_id character varying(50) NOT NULL,
-  CONSTRAINT res_linked_primary PRIMARY KEY (id)
-)
-WITH (
-  OIDS=FALSE
-);
-
 CREATE TABLE doctypes_indexes
 (
   type_id bigint NOT NULL,
