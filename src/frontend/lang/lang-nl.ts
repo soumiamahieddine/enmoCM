@@ -1415,7 +1415,7 @@ export const LANG_NL = {
     "signedUserDate" : "Signed", //_TO_TRANSLATE
     "approvedUserDate" : "Approuved", //_TO_TRANSLATE
     "modelDeleted" : "Model deleted", //_TO_TRANSLATE
-    "modelSaved" : "Modèle saved", //_TO_TRANSLATE
+    "modelSaved" : "Model saved", //_TO_TRANSLATE
     "visaWorkflowUpdated" : "Visa workflow updated", //_TO_TRANSLATE
     "visaWorkflowDeleted" : "Visa workflow deleted", //_TO_TRANSLATE
     "publicModel" : "Public model", //_TO_TRANSLATE

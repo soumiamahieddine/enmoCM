@@ -1390,7 +1390,7 @@ export const LANG_EN = {
     "signedUserDate" : "Signed",
     "approvedUserDate" : "Approuved",
     "modelDeleted" : "Model deleted",
-    "modelSaved" : "Modèle saved",
+    "modelSaved" : "Model saved",
     "visaWorkflowUpdated" : "Visa workflow updated",
     "visaWorkflowDeleted" : "Visa workflow deleted",
     "publicModel" : "Public model",
