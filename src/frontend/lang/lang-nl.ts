@@ -1431,4 +1431,7 @@ export const LANG_NL = {
     "closeFullscreen" : "Disable fullscreen", //_TO_TRANSLATE
     "hasNoEntity": "Those mails do not have initiator entity", //_TO_TRANSLATE
     "destUserSetToDefault": "Assignee will be the assignee of the initiator entity template list", //_TO_TRANSLATE
+    "resetVisaWorkflow": "Processing date will be reset", //_TO_TRANSLATE
+    "interruptVisaWorkflow": "The following users will not be able to target mail", //_TO_TRANSLATE
+    "rejectVisaBack": "Document will be send to the previous user", //_TO_TRANSLATE
 };

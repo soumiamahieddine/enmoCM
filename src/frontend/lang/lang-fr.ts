@@ -1446,4 +1446,7 @@ export const LANG_FR = {
     "closeFullscreen" : "Désactiver le mode plein écran",
     "hasNoEntity": "Les courriers suivants n'ont pas d'entité initiatrice",
     "destUserSetToDefault": "Le destinataire sera celui de la liste de diffusion de l'entité initiatrice",
+    "resetVisaWorkflow": "Les dates de visa et signature seront réinitialisées",
+    "interruptVisaWorkflow": "Les utilisateurs suivants ne pourront pas viser le courrier",
+    "rejectVisaBack": "Le courrier sera envoyé à la dernière personne ayant visé",
 };

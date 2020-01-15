@@ -7,6 +7,9 @@ import { NotificationService } from '../notification.service';
 import { ConfirmActionComponent } from './confirm-action/confirm-action.component';
 import { MatDialog } from '@angular/material';
 import { CloseMailActionComponent } from './close-mail-action/close-mail-action.component';
+import { RejectVisaBackToPrevousActionComponent } from './reject-visa-back-to-previous-action/reject-visa-back-to-previous-action.component';
+import { RejectVisaActionComponent } from './reject-visa-action/reject-visa-action.component';
+import { InterruptVisaActionComponent } from './interrupt-visa-action/interrupt-visa-action.component';
 import { CloseAndIndexActionComponent } from './close-and-index-action/close-and-index-action.component';
 import { UpdateAcknowledgementSendDateActionComponent } from './update-acknowledgement-send-date-action/update-acknowledgement-send-date-action.component';
 import { CreateAcknowledgementReceiptActionComponent } from './create-acknowledgement-receipt-action/create-acknowledgement-receipt-action.component';
@@ -614,14 +617,68 @@ export class ActionsService {
     }
 
     rejectVisaBackToPreviousAction(options: any = null) {
-        this.confirmAction(options);
+        const dialogRef = this.dialog.open(RejectVisaBackToPrevousActionComponent, {
+            disableClose: true,
+            width: '500px',
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     rejectVisaBackToRedactorAction(options: any = null) {
-        this.confirmAction(options);
+        const dialogRef = this.dialog.open(RejectVisaActionComponent, {
+            disableClose: true,
+            width: '500px',
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     interruptVisaAction(options: any = null) {
-        this.confirmAction(options);
+        const dialogRef = this.dialog.open(InterruptVisaActionComponent, {
+            disableClose: true,
+            width: '500px',
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 }
