@@ -635,7 +635,7 @@ class ListTemplateController
         $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['destination']]);
 
         if (empty($resource['destination'])) {
-            return $response->withJson(['circuit' => []]);
+            return $response->withJson(['circuit' => null]);
         }
 
         $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['id']]);
@@ -647,7 +647,7 @@ class ListTemplateController
         ]);
 
         if (empty($circuit[0])) {
-            return $response->withJson(['circuit' => []]);
+            return $response->withJson(['circuit' => null]);
         }
         $circuit = $circuit[0];
 
