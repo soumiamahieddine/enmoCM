@@ -58,6 +58,7 @@ class ActionMethodController
         'rejectVisaBackToPreviousAction'        => 'rejectVisaBackToPrevious',
         'rejectVisaBackToRedactorAction'        => 'rejectVisaBackToRedactor',
         'interruptVisaAction'                   => 'interruptVisa',
+        'sendToAvisAction'                      => 'sendToAvis',
         'noConfirmAction'                       => null
     ];
 
@@ -505,6 +506,24 @@ class ActionMethodController
             'where' => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
             'data'  => [$args['resId'], 'VISA_CIRCUIT']
         ]);
+
+        return true;
+    }
+
+    public static function sendToAvis(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $listinstances = ListInstanceModel::get([
+            'select' => [1],
+            'where' => ['res_id = ?', 'difflist_type = ?'],
+            'data' => [$args['resId'], 'AVIS_CIRCUIT']
+        ]);
+
+        if (empty($listinstances)) {
+            return ['errors' => ['No available opinion workflow']];
+        }
 
         return true;
     }
