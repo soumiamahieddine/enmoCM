@@ -121,7 +121,7 @@ export class SendSignatureBookActionComponent implements OnInit {
     }
 
     isValidAction() {
-        if (!this.noResourceToProcess && this.appVisaWorkflow !== undefined && !this.appVisaWorkflow.emptyWorkflow()) {
+        if (!this.noResourceToProcess && this.appVisaWorkflow !== undefined && !this.appVisaWorkflow.emptyWorkflow() && !this.appVisaWorkflow.workflowEnd()) {
             return true;
         } else {
             return false;

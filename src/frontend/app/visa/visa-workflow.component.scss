@@ -81,7 +81,11 @@
 }
 
 .processed {
-    background: rgba(0, 128, 0, 0.11) !important;
+    background: rgba($accent, 0.11) !important;
+}
+
+.interrupt {
+    background: rgba($warn, 0.11) !important;
 }
 
 .workflow {
@@ -139,4 +143,8 @@
 
 .valid {
     color: $accent;
+}
+
+.invalid {
+    color: $warn;
 }

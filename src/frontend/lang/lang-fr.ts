@@ -1455,4 +1455,5 @@ export const LANG_FR = {
     "endedCircuit": "Circuit terminé",
     "userHasntSigned": "Le signataire n'a pas signé de document",
     "noCircuitAvailable": "Aucun circuit défini",
+    "interrupted": "Interrompu",
 };

@@ -1414,4 +1414,5 @@ export const LANG_EN = {
     "endedCircuit": "Workflow ended",
     "userHasntSigned": "The assignee hasn't signed any document",
     "noCircuitAvailable": "No workflow defined",
+    "interrupted": "Interrupted",
 };

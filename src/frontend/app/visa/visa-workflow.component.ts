@@ -446,6 +446,14 @@ export class VisaWorkflowComponent implements OnInit {
         }
     }
 
+    workflowEnd() {
+        if (this.visaWorkflow.items.filter((item: any) => !this.functions.empty(item.process_date)).length === this.visaWorkflow.items.length) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     openPromptSaveModel() {
         const dialogRef = this.dialog.open(AddVisaModelModalComponent, { data: { visaWorkflow: this.visaWorkflow.items } });
 
