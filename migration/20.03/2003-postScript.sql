@@ -75,6 +75,8 @@ DROP TABLE IF EXISTS doctypes_indexes;
 
 DROP TABLE IF EXISTS listmodels;
 
+DROP TABLE IF EXISTS res_linked;
+
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_t1;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_t2;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_t3;

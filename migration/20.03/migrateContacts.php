@@ -229,10 +229,8 @@ foreach ($customs as $custom) {
             . $contactInfo['enabled'] . $contactInfoSeparator
             . $contactInfo['external_id'];
 
-        if (strpos($contact, "\r")) {
-            $contact = str_replace("\r", " ", $contact);
-            $contact = str_replace("\n", " ", $contact);
-        }
+        $contact = str_replace("\r", " ", $contact);
+        $contact = str_replace("\n", " ", $contact);
 
         $contacts[] = $contact;
 
