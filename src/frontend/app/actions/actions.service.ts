@@ -25,6 +25,7 @@ import { SendShippingActionComponent } from './send-shipping-action/send-shippin
 import { redirectInitiatorEntityActionComponent } from './redirect-initiator-entity-action/redirect-initiator-entity-action.component';
 import { Router } from '@angular/router';
 import { SendSignatureBookActionComponent } from './send-signature-book-action/send-signature-book-action.component';
+import { ContinueVisaCircuitActionComponent } from './continue-visa-circuit-action/continue-visa-circuit-action.component';
 
 @Injectable()
 export class ActionsService {
@@ -553,6 +554,29 @@ export class ActionsService {
 
     sendSignatureBookAction(options: any = null) {
         const dialogRef = this.dialog.open(SendSignatureBookActionComponent, {
+            autoFocus: false,
+            disableClose: true,
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    continueVisaCircuitAction(options: any = null) {
+        const dialogRef = this.dialog.open(ContinueVisaCircuitActionComponent, {
+            autoFocus: false,
             disableClose: true,
             data: this.setDatasActionToSend()
         });

@@ -249,8 +249,8 @@ export class AvisWorkflowComponent implements OnInit {
                         return of(false);
                     })
                 ).subscribe();
-            } else {
-                this.http.put(`../../rest/listinstances`, [{ resId: this.resId, listInstances: this.avisWorkflow.items }]).pipe(
+            } else {     
+                this.http.put(`../../rest/listinstances`, {resources: [{ resId: this.resId, listInstances: this.avisWorkflow.items }]} ).pipe(
                     tap((data: any) => {
                         this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items));
                         this.notify.success(this.lang.avisWorkflowUpdated);

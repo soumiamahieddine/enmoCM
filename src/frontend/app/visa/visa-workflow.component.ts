@@ -177,11 +177,11 @@ export class VisaWorkflowComponent implements OnInit {
         if (!this.linkedToMaarchParapheur) {
             if (this.visaModelListNotLoaded) {
                 await this.loadVisaSignUsersList();
-    
+
                 await this.loadVisaModelListByResource();
-    
+
                 this.searchVisaSignUser.reset();
-    
+
                 this.visaModelListNotLoaded = false;
             }
         }
@@ -220,29 +220,29 @@ export class VisaWorkflowComponent implements OnInit {
         this.visaWorkflow.items = [];
         return new Promise((resolve, reject) => {
             this.http.get("../../rest/resources/" + resId + "/visaCircuit")
-            .subscribe((data: any) => {
-                data.forEach((element: any) => {
-                    this.visaWorkflow.items.push(
-                        {
-                            ...element,
-                            difflist_type: 'VISA_CIRCUIT'
-                        });
+                .subscribe((data: any) => {
+                    data.forEach((element: any) => {
+                        this.visaWorkflow.items.push(
+                            {
+                                ...element,
+                                difflist_type: 'VISA_CIRCUIT'
+                            });
+                    });
+                    this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items))
+                    this.loading = false;
+                    resolve(true);
+                }, (err: any) => {
+                    this.notify.handleErrors(err);
                 });
-                this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items))
-                this.loading = false;
-                resolve(true);
-            }, (err: any) => {
-                this.notify.handleErrors(err);
-            });
-        });  
+        });
     }
 
     loadDefaultWorkflow(resId: number) {
         this.loading = true;
         this.visaWorkflow.items = [];
-        this.http.get("../../rest/resources/" + resId + "/visaCircuit")
+        this.http.get("../../rest/resources/" + resId + "/defaultCircuit?circuit=visaCircuit")
             .subscribe((data: any) => {
-                data.forEach((element: any) => {
+                data.circuit.items.forEach((element: any) => {
                     this.visaWorkflow.items.push(
                         {
                             ...element,
@@ -299,6 +299,26 @@ export class VisaWorkflowComponent implements OnInit {
         return this.visaWorkflow.items;
     }
 
+    getCurrentVisaUser() {
+
+        const index = this.visaWorkflow.items.map((item: any) => item.listinstance_id).indexOf(this.getLastVisaUser().listinstance_id);
+
+        return !this.functions.empty(this.visaWorkflow.items[index + 1]) ? this.visaWorkflow.items[index + 1] : '';
+    }
+
+    getNextVisaUser() {
+
+        const index = this.visaWorkflow.items.map((item: any) => item.listinstance_id).indexOf(this.getLastVisaUser().listinstance_id);
+
+        return !this.functions.empty(this.visaWorkflow.items[index + 2]) ? this.visaWorkflow.items[index + 2] : '';
+    }
+
+    getLastVisaUser() {
+        let arrOnlyProcess = this.visaWorkflow.items.filter((item: any) => !this.functions.empty(item.process_date));
+
+        return !this.functions.empty(arrOnlyProcess[arrOnlyProcess.length - 1]) ? arrOnlyProcess[arrOnlyProcess.length - 1] : '';
+    }
+
     checkExternalSignatoryBook() {
         return this.visaWorkflow.items.filter((item: any) => this.functions.empty(item.externalId)).map((item: any) => item.labelToDisplay);
     }
@@ -320,11 +340,11 @@ export class VisaWorkflowComponent implements OnInit {
             } else if (this.isValidWorkflow()) {
                 const arrVisa = resIds.map(resId => {
                     return {
-                        resId : resId,
-                        listInstances : this.visaWorkflow.items
+                        resId: resId,
+                        listInstances: this.visaWorkflow.items
                     }
                 });
-                this.http.put(`../../rest/listinstances`, arrVisa).pipe(
+                this.http.put(`../../rest/circuits/visaCircuit`, { resources: arrVisa }).pipe(
                     tap((data: any) => {
                         this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items));
                         this.notify.success(this.lang.visaWorkflowUpdated);
@@ -339,7 +359,7 @@ export class VisaWorkflowComponent implements OnInit {
                 this.notify.error(this.lang.signUserRequired);
                 resolve(false);
             }
-        });        
+        });
     }
 
     addItemToWorkflow(item: any, maarchParapheurMode = false) {
@@ -358,8 +378,8 @@ export class VisaWorkflowComponent implements OnInit {
                 this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
             }
         } else if (item.type === 'user') {
-            
-            
+
+
             this.visaWorkflow.items.push({
                 item_id: item.id,
                 item_type: 'user',
@@ -387,7 +407,7 @@ export class VisaWorkflowComponent implements OnInit {
                                 item_entity: itemTemplate.descriptionToDisplay,
                                 difflist_type: 'VISA_CIRCUIT',
                                 signatory: false,
-                                requested_signature: false
+                                requested_signature: itemTemplate.item_mode === 'sign' ? true : false
                             }
                         })
                     );

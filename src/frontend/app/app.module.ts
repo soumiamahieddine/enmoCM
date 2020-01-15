@@ -57,6 +57,7 @@ import { RedirectActionComponent }               from './actions/redirect-action
 import { SendShippingActionComponent }               from './actions/send-shipping-action/send-shipping-action.component';
 import { redirectInitiatorEntityActionComponent } from './actions/redirect-initiator-entity-action/redirect-initiator-entity-action.component';
 import { SendSignatureBookActionComponent }               from './actions/send-signature-book-action/send-signature-book-action.component';
+import { ContinueVisaCircuitActionComponent }               from './actions/continue-visa-circuit-action/continue-visa-circuit-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -149,6 +150,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         SendShippingActionComponent,
         redirectInitiatorEntityActionComponent,
         SendSignatureBookActionComponent,
+        ContinueVisaCircuitActionComponent,
         ActionsListComponent,
         PrintSeparatorComponent,
         FolderPinnedComponent,
@@ -198,6 +200,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         UpdateDepartureDateActionComponent,
         SendExternalSignatoryBookActionComponent,
         SendExternalNoteBookActionComponent,
+        ContinueVisaCircuitActionComponent,
         ProcessActionComponent,
         RedirectActionComponent,
         SendShippingActionComponent,
