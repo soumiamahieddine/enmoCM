@@ -91,7 +91,7 @@ UPDATE actions SET component = 'rejectVisaBackToPreviousAction' WHERE action_pag
 UPDATE actions SET component = 'rejectVisaBackToRedactorAction' WHERE action_page = 'rejection_visa_redactor';
 UPDATE actions SET component = 'interruptVisaAction' WHERE action_page = 'interrupt_visa';
 UPDATE actions SET component = 'sendSignatureBookAction' WHERE action_page IN ('send_to_visa', 'send_signed_docs');
-UPDATE actions SET component = 'continueCircuitAction' WHERE action_page = 'visa_workflow';
+UPDATE actions SET component = 'continueVisaCircuitAction' WHERE action_page = 'visa_workflow';
 
 /* FOLDERS */
 DO $$ BEGIN
@@ -558,7 +558,16 @@ FROM usergroups_services WHERE group_id IN (
 );
 
 
-UPDATE listmodels SET title = object_id WHERE title IS NULL;
+
+DO $$ 
+  BEGIN
+    IF EXISTS 
+      (select 1 from information_schema.tables where table_name = 'listmodels') 
+    THEN 
+      UPDATE listmodels SET title = object_id WHERE title IS NULL;
+    END IF;
+  END
+$$ ;
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)AND', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)and', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
 
