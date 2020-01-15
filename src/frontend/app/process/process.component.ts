@@ -187,7 +187,7 @@ export class ProcessComponent implements OnInit {
             };
 
             this.lockResource();
-
+            this.loadBadges();
             this.loadResource();
 
             this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/processingData`).pipe(
@@ -239,7 +239,6 @@ export class ProcessComponent implements OnInit {
             tap((data: any) => {
                 this.currentResourceInformations = data;
                 this.resourceFollowed = data.followed;
-                this.loadBadges();
                 this.loadSenders();
                 this.headerService.setHeader(this.lang.eventProcessDoc, this.lang[this.currentResourceInformations.categoryId]);
             }),
@@ -252,9 +251,17 @@ export class ProcessComponent implements OnInit {
     }
 
     loadBadges() {
-        this.processTool.forEach(element => {
-            element.count = this.currentResourceInformations[element.id] !== undefined ? this.currentResourceInformations[element.id] : 0;
-        }); 
+        this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/items`).pipe(
+            tap((data: any) => {
+                this.processTool.forEach(element => {
+                    element.count = data[element.id] !== undefined ? data[element.id] : 0;
+                }); 
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     loadSenders() {
@@ -520,14 +527,17 @@ export class ProcessComponent implements OnInit {
     async saveTool() {
         if (this.currentTool === 'info' && this.indexingForm !== undefined) {
             await this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+            this.loadResource();
         } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList !== undefined) {
             await this.appDiffusionsList.saveListinstance();
+            this.loadBadges();
         } else if (this.currentTool === 'visaCircuit' && this.appVisaWorkflow !== undefined) {
             await this.appVisaWorkflow.saveVisaWorkflow();
+            this.loadBadges();
         } else if (this.currentTool === 'opinionCircuit' && this.appAvisWorkflow !== undefined) {
             await this.appAvisWorkflow.saveAvisWorkflow();
+            this.loadBadges();
         }
-        this.loadResource();
     }
 
     empty(value: string) {

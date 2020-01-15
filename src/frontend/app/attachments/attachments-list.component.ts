@@ -190,6 +190,7 @@ export class AttachmentsListComponent implements OnInit {
             filter((data: string) => data === 'success'),
             tap(() => {
                 this.loadAttachments(this.resId);
+                this.afterActionAttachment.emit('setInSendAttachment');
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
@@ -206,6 +207,7 @@ export class AttachmentsListComponent implements OnInit {
             exhaustMap(() => this.http.delete(`../../rest/attachments/${attachment.resId}`)),
             tap(() => {
                 this.loadAttachments(this.resId);
+                this.afterActionAttachment.emit('setInSendAttachment');
                 this.notify.success(this.lang.attachmentDeleted);
             }),
             catchError((err: any) => {
