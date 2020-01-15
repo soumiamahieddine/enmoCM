@@ -1425,7 +1425,7 @@ export const LANG_FR = {
     "portIsEmpty" : "Le port du serveur onlyoffice n'est pas renseigné dans documentEditorsConfig.xml",
     "externalVisaWorkflow" : "Circuit de visa Maarch Parapheur",
     "IdMaarch2Gec" : "Identifiant MAARCH2GEC",
-    "indexingFile" : "Indexation",
+    "indexingFile" : "Enregistrement de courrier",
     "signUserRequired" : "Un signataire mininum est requis",
     "signedUserDate" : "Signé",
     "approvedUserDate" : "Visé",
