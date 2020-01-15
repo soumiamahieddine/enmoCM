@@ -34,7 +34,6 @@ class SearchController
     {
         $queryParams = $request->getQueryParams();
 
-
         $entities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $entities = array_column($entities, 'id');
         $entities = empty($entities) ? [0] : $entities;

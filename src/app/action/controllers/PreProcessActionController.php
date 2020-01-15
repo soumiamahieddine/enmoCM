@@ -921,7 +921,12 @@ class PreProcessActionController
 
             $isSignatory = ListInstanceModel::get(['select' => ['signatory', 'requested_signature'], 'where' => ['res_id = ?', 'difflist_type = ?', 'process_date is null'], 'data' => [$resId, 'VISA_CIRCUIT'], 'orderBy' => ['listinstance_id'], 'limit' => 1]);
             if (empty($isSignatory[0])) {
-                $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noCircuitAvailable'];
+                $hasCircuit = ListInstanceModel::get(['select' => [1], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$resId, 'VISA_CIRCUIT']]);
+                if (!empty($hasCircuit)) {
+                    $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'endedCircuit'];
+                } else {
+                    $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noCircuitAvailable'];
+                }
             } elseif ($isSignatory[0]['requested_signature'] && !$isSignatory[0]['signatory']) {
                 $resourcesInformations['warning'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'userHasntSigned'];
             } else {
