@@ -35,7 +35,7 @@ class SearchController
         $queryParams = $request->getQueryParams();
 
 
-        $entities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
+        $entities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
         $entities = array_column($entities, 'id');
         $entities = empty($entities) ? [0] : $entities;
 
@@ -45,7 +45,7 @@ class SearchController
         $whereClause = "(res_id in (select res_id from users_followed_resources where user_id = ?)) OR ({$foldersClause})";
         $dataClause = [$GLOBALS['id'], $entities, $GLOBALS['id']];
 
-        $groups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId']]);
+        $groups = UserModel::getGroupsByLogin(['login' => $GLOBALS['userId'], 'select' => ['where_clause']]);
         $groupsClause = '';
         foreach ($groups as $key => $group) {
             if (!empty($group['where_clause'])) {

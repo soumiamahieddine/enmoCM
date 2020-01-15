@@ -773,14 +773,14 @@ class ResController
 
         $whereClause = '(res_id in (select res_id from users_followed_resources where user_id = ?))';
 
-        $entities = UserModel::getEntitiesByLogin(['login' => $user['user_id']]);
+        $entities = UserModel::getEntitiesByLogin(['login' => $user['user_id'], 'select' => ['id']]);
         $entities = array_column($entities, 'id');
 
         $foldersClause = 'res_id in (select res_id from folders LEFT JOIN entities_folders ON folders.id = entities_folders.folder_id LEFT JOIN resources_folders ON folders.id = resources_folders.folder_id ';
         $foldersClause .= 'WHERE entities_folders.entity_id in (?) OR folders.user_id = ?)';
         $whereClause .= " OR ({$foldersClause})";
 
-        $groups = UserModel::getGroupsByLogin(['login' => $user['user_id']]);
+        $groups = UserModel::getGroupsByLogin(['login' => $user['user_id'], 'select' => ['where_clause']]);
         $groupsClause = '';
         foreach ($groups as $key => $group) {
             if (!empty($group['where_clause'])) {
