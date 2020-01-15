@@ -1434,6 +1434,7 @@ export const LANG_NL = {
     "resetVisaWorkflow": "Processing date will be reset", //_TO_TRANSLATE
     "interruptVisaWorkflow": "The following users will not be able to target mail", //_TO_TRANSLATE
     "rejectVisaBack": "Document will be send to the previous user", //_TO_TRANSLATE
+    "rejectVisaBackUser": "Document will be send back to", //_TO_TRANSLATE
     "sendToDocTo": "You will send this document to", //_TO_TRANSLATE
     "endWorkflow": "You will end the workflow", //_TO_TRANSLATE
     "endedCircuit": "Workflow ended", //_TO_TRANSLATE

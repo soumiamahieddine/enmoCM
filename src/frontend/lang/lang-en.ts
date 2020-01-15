@@ -1408,6 +1408,7 @@ export const LANG_EN = {
     "destUserSetToDefault": "Assignee will be the assignee of the initiator entity template list",
     "interruptVisaWorkflow": "The following users will not be able to target mail",
     "rejectVisaBack": "Document will be send to the previous user",
+    "rejectVisaBackUser": "Document will be send back to",
     "sendToDocTo": "You will send this document to",
     "endWorkflow": "You will end the workflow",
     "endedCircuit": "Workflow ended",

@@ -1449,6 +1449,7 @@ export const LANG_FR = {
     "resetVisaWorkflow": "Les dates de visa et signature seront réinitialisées",
     "interruptVisaWorkflow": "Les utilisateurs suivants ne pourront pas viser le courrier",
     "rejectVisaBack": "Le courrier sera envoyé à la dernière personne ayant visé",
+    "rejectVisaBackUser": "Le courrier retournera à",
     "sendToDocTo": "Vous allez transmettre ce document à",
     "endWorkflow": "Vous allez terminer le circuit",
     "endedCircuit": "Circuit terminé",
