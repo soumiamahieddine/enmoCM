@@ -56,7 +56,7 @@ class ActionMethodController
         'rejectVisaBackToPrevious'              => 'rejectVisaBackToPrevious',
         'redirectInitiatorEntityAction'         => 'redirectInitiatorEntityAction',
         'rejectVisaBackToPreviousAction'        => 'rejectVisaBackToPrevious',
-        'rejectVisaBackToRedactorAction'        => 'rejectVisaBackToRedactor',
+        'resetVisaAction'                       => 'resetVisa',
         'interruptVisaAction'                   => 'interruptVisa',
         'sendToAvisAction'                      => 'sendToAvis',
         'continueOpinionCircuitAction'          => 'continueOpinionCircuit',
@@ -458,7 +458,7 @@ class ActionMethodController
         return true;
     }
 
-    public static function rejectVisaBackToRedactor(array $args)
+    public static function resetVisa(array $args)
     {
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);

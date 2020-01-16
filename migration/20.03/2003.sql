@@ -88,7 +88,7 @@ DELETE FROM actions WHERE component = 'viewDoc' OR action_page in ('view', 'vali
 UPDATE actions SET component = 'rejectVisaBackToPreviousAction' WHERE action_page = 'rejection_visa_previous';
 UPDATE actions SET component = 'redirectInitiatorEntityAction' WHERE action_page = 'redirect_visa_entity';
 UPDATE actions SET component = 'rejectVisaBackToPreviousAction' WHERE action_page = 'rejection_visa_previous';
-UPDATE actions SET component = 'rejectVisaBackToRedactorAction' WHERE action_page = 'rejection_visa_redactor';
+UPDATE actions SET component = 'resetVisaAction' WHERE action_page = 'rejection_visa_redactor';
 UPDATE actions SET component = 'interruptVisaAction' WHERE action_page = 'interrupt_visa';
 UPDATE actions SET component = 'sendSignatureBookAction' WHERE action_page IN ('send_to_visa', 'send_signed_docs');
 UPDATE actions SET component = 'continueVisaCircuitAction' WHERE action_page = 'visa_workflow';

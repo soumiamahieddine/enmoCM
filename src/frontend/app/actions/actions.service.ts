@@ -8,7 +8,7 @@ import { ConfirmActionComponent } from './confirm-action/confirm-action.componen
 import { MatDialog } from '@angular/material';
 import { CloseMailActionComponent } from './close-mail-action/close-mail-action.component';
 import { RejectVisaBackToPrevousActionComponent } from './reject-visa-back-to-previous-action/reject-visa-back-to-previous-action.component';
-import { RejectVisaActionComponent } from './reject-visa-action/reject-visa-action.component';
+import { ResetVisaActionComponent } from './reset-visa-action/reset-visa-action.component';
 import { InterruptVisaActionComponent } from './interrupt-visa-action/interrupt-visa-action.component';
 import { CloseAndIndexActionComponent } from './close-and-index-action/close-and-index-action.component';
 import { UpdateAcknowledgementSendDateActionComponent } from './update-acknowledgement-send-date-action/update-acknowledgement-send-date-action.component';
@@ -662,8 +662,8 @@ export class ActionsService {
         ).subscribe();
     }
 
-    rejectVisaBackToRedactorAction(options: any = null) {
-        const dialogRef = this.dialog.open(RejectVisaActionComponent, {
+    resetVisaAction(options: any = null) {
+        const dialogRef = this.dialog.open(ResetVisaActionComponent, {
             disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()

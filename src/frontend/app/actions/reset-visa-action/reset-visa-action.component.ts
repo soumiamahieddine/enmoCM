@@ -6,23 +6,24 @@ import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
 import { tap, finalize, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { VisaWorkflowComponent } from '../../visa/visa-workflow.component';
 
 @Component({
-    templateUrl: "reject-visa-action.component.html",
-    styleUrls: ['reject-visa-action.component.scss'],
-    providers: [NotificationService],
+    templateUrl: "reset-visa-action.component.html",
+    styleUrls: ['reset-visa-action.component.scss'],
 })
-export class RejectVisaActionComponent implements OnInit {
+export class ResetVisaActionComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = false;
 
     @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
+    @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
 
     constructor(
         public http: HttpClient, 
         private notify: NotificationService, 
-        public dialogRef: MatDialogRef<RejectVisaActionComponent>,
+        public dialogRef: MatDialogRef<ResetVisaActionComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) { }
 

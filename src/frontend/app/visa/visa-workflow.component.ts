@@ -336,6 +336,10 @@ export class VisaWorkflowComponent implements OnInit {
         return (index + 1);
     }
 
+    getFirstVisaUser() {
+        return !this.functions.empty(this.visaWorkflow.items[0]) ? this.visaWorkflow.items[0] : '';
+    }
+
     getCurrentVisaUser() {
 
         const index = this.visaWorkflow.items.map((item: any) => item.listinstance_id).indexOf(this.getLastVisaUser().listinstance_id);
