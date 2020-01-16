@@ -7,9 +7,9 @@ import { NotificationService } from '../notification.service';
 import { ConfirmActionComponent } from './confirm-action/confirm-action.component';
 import { MatDialog } from '@angular/material';
 import { CloseMailActionComponent } from './close-mail-action/close-mail-action.component';
-import { RejectVisaBackToPrevousActionComponent } from './reject-visa-back-to-previous-action/reject-visa-back-to-previous-action.component';
-import { ResetVisaActionComponent } from './reset-visa-action/reset-visa-action.component';
-import { InterruptVisaActionComponent } from './interrupt-visa-action/interrupt-visa-action.component';
+import { RejectVisaBackToPrevousActionComponent } from './visa-reject-back-to-previous-action/reject-visa-back-to-previous-action.component';
+import { ResetVisaActionComponent } from './visa-reset-action/reset-visa-action.component';
+import { InterruptVisaActionComponent } from './visa-interrupt-action/interrupt-visa-action.component';
 import { CloseAndIndexActionComponent } from './close-and-index-action/close-and-index-action.component';
 import { UpdateAcknowledgementSendDateActionComponent } from './update-acknowledgement-send-date-action/update-acknowledgement-send-date-action.component';
 import { CreateAcknowledgementReceiptActionComponent } from './create-acknowledgement-receipt-action/create-acknowledgement-receipt-action.component';
@@ -24,8 +24,8 @@ import { RedirectActionComponent } from './redirect-action/redirect-action.compo
 import { SendShippingActionComponent } from './send-shipping-action/send-shipping-action.component';
 import { redirectInitiatorEntityActionComponent } from './redirect-initiator-entity-action/redirect-initiator-entity-action.component';
 import { Router } from '@angular/router';
-import { SendSignatureBookActionComponent } from './send-signature-book-action/send-signature-book-action.component';
-import { ContinueVisaCircuitActionComponent } from './continue-visa-circuit-action/continue-visa-circuit-action.component';
+import { SendSignatureBookActionComponent } from './visa-send-signature-book-action/send-signature-book-action.component';
+import { ContinueVisaCircuitActionComponent } from './visa-continue-circuit-action/continue-visa-circuit-action.component';
 
 @Injectable()
 export class ActionsService {
