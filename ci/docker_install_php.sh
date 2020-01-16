@@ -6,7 +6,6 @@
 set -xe
 
 apt-get install -y libpq-dev libxml2-dev libxslt1-dev libpng-dev \
-&& docker-php-ext-configure pdo_pgsql --with-pdo-pgsql \
 && docker-php-ext-install pdo_pgsql \
 && docker-php-ext-install xsl \
 && pecl install xdebug-2.7.0RC2 \
