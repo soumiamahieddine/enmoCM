@@ -1,5 +1,5 @@
 services:
-  - postgres:10.1
+  - postgres:11
 
 variables:
   POSTGRES_DB: "MaarchCourrier"
