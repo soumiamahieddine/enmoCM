@@ -1459,4 +1459,5 @@ export const LANG_FR = {
     "userHasntSigned": "Le signataire n'a pas signé de document",
     "noCircuitAvailable": "Aucun circuit défini",
     "interrupted": "Interrompu",
+    "addOpinionReason": "Veuillez renseigner le motif de l'avis",
 };

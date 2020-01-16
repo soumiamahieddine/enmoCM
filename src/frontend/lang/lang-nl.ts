@@ -1444,4 +1444,5 @@ export const LANG_NL = {
     "userHasntSigned": "The assignee hasn't signed any document",  //_TO_TRANSLATE
     "noCircuitAvailable": "No workflow defined", //_TO_TRANSLATE
     "interrupted": "Interrupted", //_TO_TRANSLATE
+    "addOpinionReason": "Please fill the opinion reason", //_TO_TRANSLATE
 };

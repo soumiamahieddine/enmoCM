@@ -22,11 +22,23 @@
                     </li>
                 </ul>
             </div>
-            <app-avis-workflow *ngIf="data.resIds.length == 1 || (!noResourceToProcess && data.resIds.length > 1)" [adminMode]="true" #appAvisWorkflow>
+            <mat-form-field (click)="picker.open()" appearance="outline" style="cursor:pointer;margin-top: 10px;">
+                <mat-label>Date limite de l'avis</mat-label>
+                <input matInput [(ngModel)]="opinionLimitDate" [matDatepicker]="picker" [placeholder]="lang.chooseDate"
+                    [min]="today" readonly style="cursor:pointer;" required>
+                <mat-datepicker-toggle matSuffix [for]="picker" *ngIf="!opinionLimitDate">
+                </mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <button mat-button color="warn" matSuffix mat-icon-button *ngIf="opinionLimitDate"
+                    (click)="$event.stopPropagation();opinionLimitDate = null;" [title]="lang.eraseValue">
+                    <mat-icon color="warn" class="fa fa-calendar-times">
+                    </mat-icon>
+                </button>
+            </mat-form-field>
+            <app-note-editor #noteEditor [title]="lang.addOpinionReason" [resIds]="data.resIds"></app-note-editor>
+            <app-avis-workflow *ngIf="data.resIds.length == 1 || (!noResourceToProcess && data.resIds.length > 1)"
+                [adminMode]="true" #appAvisWorkflow>
             </app-avis-workflow>
-            <div style="padding-top: 10px;">
-                <app-note-editor #noteEditor [resIds]="data.resIds"></app-note-editor>
-            </div>
         </mat-sidenav-content>
     </mat-sidenav-container>
 </div>

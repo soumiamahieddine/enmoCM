@@ -1419,4 +1419,5 @@ export const LANG_EN = {
     "userHasntSigned": "The assignee hasn't signed any document",
     "noCircuitAvailable": "No workflow defined",
     "interrupted": "Interrupted",
+    "addOpinionReason": "Please fill the opinion reason",
 };

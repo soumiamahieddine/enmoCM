@@ -18,6 +18,7 @@ export class NoteEditorComponent implements AfterViewInit {
 
     content: string = '';
 
+    @Input('title') title: string = this.lang.addNote;
     @Input('resIds') resIds: any[];
     @Input('addMode') addMode: boolean;
     @Output('refreshNotes') refreshNotes = new EventEmitter<string>();

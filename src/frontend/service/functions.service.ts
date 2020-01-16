@@ -8,7 +8,7 @@ export class FunctionsService {
 
     constructor() { }
 
-    empty(value: string) {
+    empty(value: any) {
         if (value === null || value === undefined) {
             return true;
 
@@ -40,14 +40,17 @@ export class FunctionsService {
     }
 
     formatDateObjectToFrenchDateString(date: Date, limitMode: boolean = false) {
-        
-        let day = date.getDate();
-        let month = date.getMonth() + 1;
-        let year = date.getFullYear();
-        let limit = '';
-        if (limitMode) {
-            limit = ' 23:59:59';
+        if (date !== null) {
+            let day = date.getDate();
+            let month = date.getMonth() + 1;
+            let year = date.getFullYear();
+            let limit = '';
+            if (limitMode) {
+                limit = ' 23:59:59';
+            }
+            return `${('00' + day).slice(-2)}-${('00' + month).slice(-2)}-${year}${limit}`;
+        } else {
+            return date;
         }
-        return `${('00' + day).slice(-2)}-${('00' + month).slice(-2)}-${year}${limit}`;
     }
 }

@@ -22,6 +22,10 @@ export class SendAvisWorkflowComponent implements OnInit {
 
     noResourceToProcess: boolean = null;
 
+    opinionLimitDate: Date = null;
+
+    today: Date = new Date();
+
     @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
     @ViewChild('appAvisWorkflow', { static: false }) appAvisWorkflow: AvisWorkflowComponent;
 
@@ -32,7 +36,7 @@ export class SendAvisWorkflowComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any,
         public functions: FunctionsService) { }
 
-    async ngOnInit(): Promise<void> {        
+    async ngOnInit(): Promise<void> {
         if (this.data.resIds.length > 0) {
             this.loading = true;
             await this.checkAvisWorkflow();
@@ -103,8 +107,8 @@ export class SendAvisWorkflowComponent implements OnInit {
     }
 
     executeAction(realResSelected: number[]) {
-
-        this.http.put(this.data.processActionRoute, { resources: realResSelected, note: this.noteEditor.getNoteContent() }).pipe(
+        const noteContent: string = `[POUR AVIS] ${this.noteEditor.getNoteContent()}`;
+        this.http.put(this.data.processActionRoute, { resources: realResSelected, note: noteContent, data: { opinionLimitDate: this.functions.formatDateObjectToFrenchDateString(this.opinionLimitDate, true) } }).pipe(
             tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close('success');
@@ -122,7 +126,7 @@ export class SendAvisWorkflowComponent implements OnInit {
     }
 
     isValidAction() {
-        if (!this.noResourceToProcess && this.appAvisWorkflow !== undefined && !this.appAvisWorkflow.emptyWorkflow() && !this.appAvisWorkflow.workflowEnd()) {
+        if (!this.noResourceToProcess && this.appAvisWorkflow !== undefined && !this.appAvisWorkflow.emptyWorkflow() && !this.appAvisWorkflow.workflowEnd() && !this.functions.empty(this.noteEditor.getNoteContent()) && !this.functions.empty(this.functions.formatDateObjectToFrenchDateString(this.opinionLimitDate))) {
             return true;
         } else {
             return false;
