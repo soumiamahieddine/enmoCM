@@ -95,6 +95,7 @@ UPDATE actions SET component = 'continueVisaCircuitAction' WHERE action_page = '
 UPDATE actions SET component = 'closeMailWithAttachmentsOrNotesAction' WHERE action_page = 'close_mail_with_attachment';
 UPDATE actions SET component = 'sendToOpinionCircuitAction' WHERE action_page = 'send_to_avis';
 UPDATE actions SET component = 'continueOpinionCircuitAction' WHERE action_page = 'avis_workflow';
+UPDATE actions SET component = 'giveOpinionParallelAction' WHERE action_page = 'avis_workflow_simple';
 
 DELETE FROM actions_groupbaskets WHERE id_action IN (SELECT id FROM actions WHERE action_page = 'put_in_copy');
 DELETE FROM actions_categories WHERE action_id IN (SELECT id FROM actions WHERE action_page = 'put_in_copy');

@@ -61,6 +61,7 @@ class ActionMethodController
         'interruptVisaAction'                   => 'interruptVisa',
         'sendToOpinionCircuitAction'            => 'sendToOpinionCircuit',
         'continueOpinionCircuitAction'          => 'continueOpinionCircuit',
+        'giveOpinionParallelAction'             => 'giveOpinionParallel',
         'noConfirmAction'                       => null
     ];
 
@@ -599,5 +600,33 @@ class ActionMethodController
             return true;
         }
         return ['history' => $message];
+    }
+
+    public static function giveOpinionParallel(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $currentStep = ListInstanceModel::get([
+            'select'  => ['listinstance_id', 'item_id'],
+            'where'   => ['res_id = ?', 'difflist_type = ?', 'item_id = ?', 'item_mode in (?)'],
+            'data'    => [$args['resId'], 'entity_id', $GLOBALS['userId'], ['avis', 'avis_copy', 'avis_info']],
+            'limit'   => 1
+        ]);
+
+        if (empty($currentStep)) {
+            return ['errors' => ['No workflow available']];
+        }
+        $currentStep = $currentStep[0];
+
+        ListInstanceModel::update([
+            'set'   => [
+                'process_date' => 'CURRENT_TIMESTAMP'
+            ],
+            'where' => ['listinstance_id = ?'],
+            'data'  => [$currentStep['listinstance_id']]
+        ]);
+
+        return true;
     }
 }
