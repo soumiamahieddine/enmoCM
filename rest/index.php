@@ -282,10 +282,9 @@ $app->put('/indexingModels/{id}/disable', \IndexingModel\controllers\IndexingMod
 $app->put('/indexingModels/{id}/enable', \IndexingModel\controllers\IndexingModelController::class . ':enable');
 $app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
 
-//Listinstance
+//ListInstances
 $app->get('/listinstance/{id}', \Entity\controllers\ListInstanceController::class . ':getById');
 $app->put('/listinstances', \Entity\controllers\ListInstanceController::class . ':update');
-$app->put('/circuits/{type}', \Entity\controllers\ListInstanceController::class . ':updateCircuits');
 
 //ListTemplates
 $app->get('/listTemplates', \Entity\controllers\ListTemplateController::class . ':get');
@@ -299,6 +298,10 @@ $app->put('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListT
 $app->get('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':getTypeRoles');
 $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':updateTypeRoles');
 $app->get('/roles', \Entity\controllers\ListTemplateController::class . ':getRoles');
+
+//Circuits
+$app->get('/availableCircuits', \Entity\controllers\ListTemplateController::class . ':getAvailableCircuits');
+$app->put('/circuits/{type}', \Entity\controllers\ListInstanceController::class . ':updateCircuits');
 
 //Notes
 $app->post('/notes', \Note\controllers\NoteController::class . ':create');
@@ -349,7 +352,6 @@ $app->get('/resources/{resId}/templates', \Template\controllers\TemplateControll
 $app->get('/resources/{resId}/listInstance', \Entity\controllers\ListInstanceController::class . ':getByResId');
 $app->get('/resources/{resId}/visaCircuit', \Entity\controllers\ListInstanceController::class . ':getVisaCircuitByResId');
 $app->get('/resources/{resId}/opinionCircuit', \Entity\controllers\ListInstanceController::class . ':getOpinionCircuitByResId');
-$app->get('/resources/{resId}/availableCircuits', \Entity\controllers\ListTemplateController::class . ':getAvailableCircuitsByResId');
 $app->get('/resources/{resId}/defaultCircuit', \Entity\controllers\ListTemplateController::class . ':getDefaultCircuitByResId');
 $app->delete('/resources/{resId}/circuits/{type}', \Entity\controllers\ListInstanceController::class . ':deleteCircuit');
 $app->get('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':getLinkedResources');
