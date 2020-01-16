@@ -1436,4 +1436,6 @@ export const LANG_NL = {
     "rejectVisaBack": "Document will be send to the previous user", //_TO_TRANSLATE
     "sendToDocTo": "You will send this document to", //_TO_TRANSLATE
     "endWorkflow": "You will end this workflow", //_TO_TRANSLATE
+    "hasNoAttachmentsNotes": "The following letters have no annotation or attachments", //_TO_TRANSLATE
+    "closeMailAddNoteMandatory": "Some letters have neither annotation nor attachments. Please enter an annotation below, or add an attachment to the letters.", //_TO_TRANSLATE
 };

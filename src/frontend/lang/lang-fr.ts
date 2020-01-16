@@ -1451,4 +1451,6 @@ export const LANG_FR = {
     "rejectVisaBack": "Le courrier sera envoyé à la dernière personne ayant visé",
     "sendToDocTo": "Vous allez transmettre ce document à",
     "endWorkflow": "Vous allez terminer le circuit",
+    "hasNoAttachmentsNotes": "Les courriers suivants n'ont ni annotation, ni pièces jointes",
+    "closeMailAddNoteMandatory": "Certains courriers n'ont ni annotation, ni pièces jointes. Merci de saisir une annotation ci-dessous, ou ajoutez une pièce jointe aux courriers.",
 };

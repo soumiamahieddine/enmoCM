@@ -40,6 +40,7 @@ class ActionMethodController
     const COMPONENTS_ACTIONS = [
         'confirmAction'                         => null,
         'closeMailAction'                       => 'closeMailAction',
+        'closeMailWithAttachmentsOrNotesAction' => 'closeMailWithAttachmentsOrNotesAction',
         'redirectAction'                        => 'redirect',
         'closeAndIndexAction'                   => 'closeAndIndexAction',
         'updateDepartureDateAction'             => 'updateDepartureDateAction',
@@ -167,6 +168,29 @@ class ActionMethodController
                 ]);
             }
         }
+
+        return true;
+    }
+
+    public static function closeMailWithAttachmentsOrNotesAction(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::stringType($aArgs, ['note']);
+
+        $attachments = AttachmentModel::get([
+            'select' => [1],
+            'where'  => ['res_id_master = ?', 'status != ?'],
+            'data'   => [$aArgs['resId'], 'DEL'],
+        ]);
+
+        $notes = NoteModel::getByUserIdForResource(['select' => ['user_id', 'id'], 'resId' => $aArgs['resId'], 'userId' => $GLOBALS['id']]);
+
+        if (empty($attachments) && empty($notes) && empty($aArgs['note'])) {
+            return ['errors' => ['No attachments or notes']];
+        }
+
+        ResModel::update(['set' => ['closing_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?', 'closing_date is null'], 'data' => [$aArgs['resId']]]);
 
         return true;
     }

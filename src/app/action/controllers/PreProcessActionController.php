@@ -25,6 +25,7 @@ use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use Group\models\GroupModel;
+use Note\models\NoteModel;
 use Parameter\models\ParameterModel;
 use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
@@ -835,6 +836,53 @@ class PreProcessActionController
         }
 
         return $response->withJson(['withEntity' => $withEntity, 'withoutEntity' => $withoutEntity]);
+    }
+
+    public function checkAttachmentsAndNotes(Request $request, Response $response, array $args)
+    {
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $data = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+        }
+
+        $hasAttachmentsNotes = [];
+        $noAttachmentsNotes = [];
+
+        $attachments = AttachmentModel::get([
+            'select' => ['count(1) as nb', 'res_id_master'],
+            'where'  => ['res_id_master in (?)', 'status != ?'],
+            'data'   => [$data['resources'], 'DEL'],
+            'groupBy' => ['res_id_master']
+        ]);
+
+        $resources = ResModel::get([
+            'select' => ['res_id', 'alt_identifier'],
+            'where'  => ['res_id in (?)', 'status != ?'],
+            'data'   => [$data['resources'], 'DEL']
+        ]);
+
+        $nbAttachments = array_column($attachments, 'nb', 'res_id_master');
+        $resources = array_column($resources, 'alt_identifier', 'res_id');
+
+        foreach ($data['resources'] as $resId) {
+            $notes = NoteModel::getByUserIdForResource(['select' => ['user_id', 'id'], 'resId' => $resId, 'userId' => $GLOBALS['id']]);
+
+            if (empty($notes) && empty($nbAttachments[$resId])) {
+                $noAttachmentsNotes[] = $resources[$resId] ?? _UNDEFINED;
+            } else {
+                $hasAttachmentsNotes[] = $resId;
+            }
+        }
+
+        return $response->withJson(['hasAttachmentsNotes' => $hasAttachmentsNotes, 'noAttachmentsNotes' => $noAttachmentsNotes]);
     }
 
     public function checkSignatureBook(Request $request, Response $response, array $args)

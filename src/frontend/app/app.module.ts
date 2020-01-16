@@ -56,6 +56,7 @@ import { ViewDocActionComponent }               from './actions/view-doc-action/
 import { RedirectActionComponent }               from './actions/redirect-action/redirect-action.component';
 import { SendShippingActionComponent }               from './actions/send-shipping-action/send-shipping-action.component';
 import { redirectInitiatorEntityActionComponent } from './actions/redirect-initiator-entity-action/redirect-initiator-entity-action.component';
+import { closeMailWithAttachmentsOrNotesActionComponent } from './actions/close-mail-with-attachments-or-notes-action/close-mail-with-attachments-or-notes-action.component';
 import { SendSignatureBookActionComponent }               from './actions/send-signature-book-action/send-signature-book-action.component';
 import { ContinueVisaCircuitActionComponent }               from './actions/continue-visa-circuit-action/continue-visa-circuit-action.component';
 
@@ -149,6 +150,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         RedirectActionComponent,
         SendShippingActionComponent,
         redirectInitiatorEntityActionComponent,
+        closeMailWithAttachmentsOrNotesActionComponent,
         SendSignatureBookActionComponent,
         ContinueVisaCircuitActionComponent,
         ActionsListComponent,
@@ -205,6 +207,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         RedirectActionComponent,
         SendShippingActionComponent,
         redirectInitiatorEntityActionComponent,
+        closeMailWithAttachmentsOrNotesActionComponent,
         SendSignatureBookActionComponent,
         ViewDocActionComponent,
         FolderUpdateComponent,

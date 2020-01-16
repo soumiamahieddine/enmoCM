@@ -1409,4 +1409,6 @@ export const LANG_EN = {
     "interruptVisaWorkflow": "The following users will not be able to target mail",
     "rejectVisaBack": "Document will be send to the previous user",
     "sendToDocTo": "You will send this document to",
+    "hasNoAttachmentsNotes": "The following letters have no annotation or attachments",
+    "closeMailAddNoteMandatory": "Some letters have neither annotation nor attachments. Please enter an annotation below, or add an attachment to the letters.",
 };

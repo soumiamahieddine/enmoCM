@@ -23,6 +23,7 @@ import { SendExternalNoteBookActionComponent } from './send-external-note-book-a
 import { RedirectActionComponent } from './redirect-action/redirect-action.component';
 import { SendShippingActionComponent } from './send-shipping-action/send-shipping-action.component';
 import { redirectInitiatorEntityActionComponent } from './redirect-initiator-entity-action/redirect-initiator-entity-action.component';
+import { closeMailWithAttachmentsOrNotesActionComponent } from './close-mail-with-attachments-or-notes-action/close-mail-with-attachments-or-notes-action.component';
 import { Router } from '@angular/router';
 import { SendSignatureBookActionComponent } from './send-signature-book-action/send-signature-book-action.component';
 import { ContinueVisaCircuitActionComponent } from './continue-visa-circuit-action/continue-visa-circuit-action.component';
@@ -306,6 +307,28 @@ export class ActionsService {
 
     redirectInitiatorEntityAction(options: any = null) {
         const dialogRef = this.dialog.open(redirectInitiatorEntityActionComponent, {
+            disableClose: true,
+            width: '500px',
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    closeMailWithAttachmentsOrNotesAction(options: any = null) {
+        const dialogRef = this.dialog.open(closeMailWithAttachmentsOrNotesActionComponent, {
             disableClose: true,
             width: '500px',
             data: this.setDatasActionToSend()

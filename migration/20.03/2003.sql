@@ -93,6 +93,7 @@ UPDATE actions SET component = 'interruptVisaAction' WHERE action_page = 'interr
 UPDATE actions SET component = 'sendSignatureBookAction' WHERE action_page IN ('send_to_visa', 'send_signed_docs');
 UPDATE actions SET component = 'continueVisaCircuitAction' WHERE action_page = 'visa_workflow';
 UPDATE actions SET component = 'sendToAvisAction' WHERE action_page = 'send_to_avis';
+UPDATE actions SET component = 'closeMailWithAttachmentsOrNotesAction' WHERE action_page = 'close_mail_with_attachment';
 
 /* FOLDERS */
 DO $$ BEGIN
