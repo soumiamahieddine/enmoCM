@@ -551,6 +551,16 @@ class ActionMethodController
             return ['errors' => ['No available opinion workflow']];
         }
 
+        if (empty($args['data']['opinionLimitDate'])) {
+            return ["errors" => ["Opinion limit date is missing"]];
+        }
+
+        ResModel::update([
+            'set'   => ['opinion_limit_date' => $args['data']['opinionLimitDate']],
+            'where' => ['res_id = ?', 'difflist_type = ?'],
+            'data'  => [$args['resId'], 'AVIS_CIRCUIT']
+        ]);
+
         return true;
     }
 
