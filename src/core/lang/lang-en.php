@@ -221,8 +221,6 @@ define("_PRIVATE_TAGS_DESC", "User will only see Tag restricted to user's direct
 // ACTIONS
 define('_REDIRECTION', 'Redirection');
 define('_REDIRECTION_DESC', 'Opens a modal to choose a new user processing OR to redefine the processing service with a new mailing list.');
-define('_PUT_IN_COPY', 'Add on copy');
-define('_PUT_IN_COPY_DESC', 'Opens a modal ONLY to add or delete COPY people from the mailing list.');
 define('_SIMPLE_CONFIRM', 'Simple confirmation');
 define('_SIMPLE_CONFIRM_DESC', "Simply open a modal of confirmation of the action to be performed.");
 define('_NO_CONFIRM', 'No confirmation');

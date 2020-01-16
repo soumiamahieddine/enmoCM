@@ -24,19 +24,6 @@ An action page is described in a ACTIONPAGE tag :
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>put_in_copy</ID>
-        <LABEL>_PUT_IN_COPY</LABEL>
-        <NAME>put_in_copy</NAME>
-        <DESC>_PUT_IN_COPY_DESC</DESC>
-        <component>v1Action</component>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>entities</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
         <ID>confirm_status</ID>
         <LABEL>_SIMPLE_CONFIRM</LABEL>
         <NAME>confirm_status</NAME>

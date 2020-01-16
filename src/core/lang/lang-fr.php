@@ -221,8 +221,6 @@ define("_PRIVATE_TAGS_DESC", "L'utilisateur ne verra que les Mots-clé qui ont �
 // ACTIONS
 define('_REDIRECTION', 'Rediriger');
 define('_REDIRECTION_DESC', 'Ouvre une modal permettant de choisir un nouvel utilisateur traitant OU de redéfinir le service traitant avec une nouvelle liste de diffusion.');
-define('_PUT_IN_COPY', 'Ajouter en copie');
-define('_PUT_IN_COPY_DESC', "Ouvre une modal permettant UNIQUEMENT d'ajouter ou de supprimer des personnes en COPIE de la liste de diffusion.");
 define('_SIMPLE_CONFIRM', 'Confirmation simple');
 define('_SIMPLE_CONFIRM_DESC', "Ouvre simplement une modal de confirmation de l'action à effectuer.");
 define('_NO_CONFIRM', 'Sans confirmation');

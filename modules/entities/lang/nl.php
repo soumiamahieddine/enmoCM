@@ -240,9 +240,6 @@ if (!defined('_UPDATE_LIST_DIFF')) {
 if (!defined('_DIFF_LIST_COPY')) {
     define('_DIFF_LIST_COPY', 'Verdelingslijst');
 }
-if (!defined('_NO_COPY')) {
-    define('_NO_COPY', 'Geen kopieën');
-}
 if (!defined('_DIFF_LIST')) {
     define('_DIFF_LIST', 'Verdelingslijst');
 }
@@ -362,12 +359,6 @@ if (!defined('_ENTITY_LATE_MAIL')) {
 }
 if (!defined('_ENTITY_LATE_MAIL_DESC')) {
     define('_ENTITY_LATE_MAIL_DESC', 'Om het aantal brieven weer te geven dat niet afgesloten werd en waarvan de verwerkingsdeadline overschreden werd.');
-}
-if (!defined('_ADD_COPY_FOR_DOC')) {
-    define('_ADD_COPY_FOR_DOC', 'In kopie toevoegen voor het brief');
-}
-if (!defined('_VALIDATE_PUT_IN_COPY')) {
-    define('_VALIDATE_PUT_IN_COPY', 'De toevoeging in kopie valideren');
 }
 if (!defined('_ALL_LIST')) {
     define('_ALL_LIST', 'De volledige lijst weergeven');

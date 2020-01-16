@@ -96,6 +96,10 @@ UPDATE actions SET component = 'closeMailWithAttachmentsOrNotesAction' WHERE act
 UPDATE actions SET component = 'sendToOpinionCircuitAction' WHERE action_page = 'send_to_avis';
 UPDATE actions SET component = 'continueOpinionCircuitAction' WHERE action_page = 'avis_workflow';
 
+DELETE FROM actions_groupbaskets WHERE id_action IN (SELECT id FROM actions WHERE action_page = 'put_in_copy');
+DELETE FROM actions_categories WHERE action_id IN (SELECT id FROM actions WHERE action_page = 'put_in_copy');
+DELETE FROM actions WHERE action_page = 'put_in_copy';
+
 /* FOLDERS */
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'folders') AND attname = 'folders_system_id') THEN

@@ -221,8 +221,6 @@ define('_PRIVATE_TAGS_DESC', 'De gebruiker zal enkel de sleutelwoorden zien die 
 // ACTIONS
 define('_REDIRECTION', 'Doorsturen');
 define('_REDIRECTION_DESC', 'Opent een modaliteit waarmee een nieuwe verwerkende gebruiker gekozen kan worden OF die de verwerkende dienst met een nieuwe distributielijst opnieuw kan instellen.');
-define('_PUT_IN_COPY', 'In kopie toevoegen');
-define('_PUT_IN_COPY_DESC', 'Opent een modaliteit die ENKEL toelaat personen in KOPIE aan de verdelingslijst toe te voegen of ervan te verwijderen.');
 define('_SIMPLE_CONFIRM', 'Eenvoudige bevestiging');
 define('_SIMPLE_CONFIRM_DESC', 'Opent eenvoudigweg een bevestigingsmodaliteit van de uit te voeren actie.');
 define('_NO_CONFIRM', 'No confirmation'); //_TO_TRANSLATE

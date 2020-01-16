@@ -1119,8 +1119,6 @@ if (!defined('_EXPORT_LIST')) {
 }
 if (!defined('_ADD_LINKS')) { define('_ADD_LINKS', 'Verbindingen toevoegen');}
 if (!defined('_DEL_LINK')) { define('_DEL_LINK', 'De verbinding verwijderen');}
-if (!defined('_PUT_IN_COPY')) { define('_PUT_IN_COPY', 'In kopie toevoegen');}
-if (!defined('_PUT_IN_COPY_DESC')) { define('_PUT_IN_COPY_DESC', 'Opent een modaliteit die ENKEL toelaat personen in KOPIE aan de verdelingslijst toe te voegen of ervan te verwijderen.');}
 if (!defined('_POWERED_BY')) { define('_POWERED_BY', 'Powered by Maarch&trade;.');}
 if (!defined('_LINK_TO_DOC')) { define('_LINK_TO_DOC', 'Verbinden met een brief');}
 if (!defined('_LINK_REFERENCE')) { define('_LINK_REFERENCE', 'Om te verbinden moet u een bestaand brief kiezen');}

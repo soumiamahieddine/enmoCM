@@ -3456,12 +3456,6 @@ if (!defined('_ADD_LINKS')) {
 if (!defined('_DEL_LINK')) {
     define('_DEL_LINK', 'Supprimer la liaison');
 }
-if (!defined('_PUT_IN_COPY')) {
-    define('_PUT_IN_COPY', 'Ajouter en copie');
-}
-if (!defined('_PUT_IN_COPY_DESC')) {
-    define('_PUT_IN_COPY_DESC', "Ouvre une modal permettant UNIQUEMENT d'ajouter ou de supprimer des personne en COPIE de la liste de diffusion.");
-}
 if (!defined('_LINK_TO_DOC')) {
     define('_LINK_TO_DOC', 'Lier à un courrier');
 }
