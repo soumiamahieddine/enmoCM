@@ -95,6 +95,22 @@ class ListInstanceController
         return $response->withJson($listInstances);
     }
 
+    public function getParallelOpinionByResId(Request $request, Response $response, array $aArgs)
+    {
+        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $listInstances = ListInstanceModel::getParallelOpinionByResId(['select' => ['listinstance_id', 'sequence', 'item_id', 'item_type', 'users.id', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment'], 'id' => $aArgs['resId']]);
+        foreach ($listInstances as $key => $value) {
+            $listInstances[$key]['item_id'] = $listInstances[$key]['id'];
+            $listInstances[$key]['item_type'] = 'user';
+            $listInstances[$key]['labelToDisplay'] = $listInstances[$key]['item_firstname'].' '.$listInstances[$key]['item_lastname'];
+        }
+
+        return $response->withJson($listInstances);
+    }
+
     public function update(Request $request, Response $response)
     {
         $body = $request->getParsedBody();

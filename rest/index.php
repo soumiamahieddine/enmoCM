@@ -352,6 +352,7 @@ $app->get('/resources/{resId}/templates', \Template\controllers\TemplateControll
 $app->get('/resources/{resId}/listInstance', \Entity\controllers\ListInstanceController::class . ':getByResId');
 $app->get('/resources/{resId}/visaCircuit', \Entity\controllers\ListInstanceController::class . ':getVisaCircuitByResId');
 $app->get('/resources/{resId}/opinionCircuit', \Entity\controllers\ListInstanceController::class . ':getOpinionCircuitByResId');
+$app->get('/resources/{resId}/parallelOpinion', \Entity\controllers\ListInstanceController::class . ':getParallelOpinionByResId');
 $app->get('/resources/{resId}/defaultCircuit', \Entity\controllers\ListTemplateController::class . ':getDefaultCircuitByResId');
 $app->delete('/resources/{resId}/circuits/{type}', \Entity\controllers\ListInstanceController::class . ':deleteCircuit');
 $app->get('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':getLinkedResources');

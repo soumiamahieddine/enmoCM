@@ -296,7 +296,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_SEND_DOCS_TO_RECOMMENDATION</LABEL>
         <NAME>send_docs_to_recommendation</NAME>
         <DESC>_SEND_DOCS_TO_RECOMMENDATION_DESC</DESC>
-        <component>v1Action</component>
+        <component>sendToParallelOpinion</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

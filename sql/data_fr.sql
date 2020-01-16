@@ -984,7 +984,7 @@ INSERT INTO actions (id, label_action, id_status, is_system, history, component)
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (22, '', 'Attribuer au service', 'NEW', 'N', 'confirm_status', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (23, 'indexing', 'Attribuer au(x) service(s)', 'NEW', 'N', 'confirm_status', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (24, 'indexing', 'Remettre en validation', 'VAL', 'N', 'confirm_status', 'Y', 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (36, '', 'Envoyer pour avis', 'EAVIS', 'N', 'send_docs_to_recommendation', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (36, '', 'Envoyer pour avis', 'EAVIS', 'N', 'send_docs_to_recommendation', 'Y', 'sendToParallelOpinion');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (37, '', 'Donner un avis', '_NOSTATUS_', 'N', 'avis_workflow_simple', 'Y', 'giveOpinionParallelAction');
 -- INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (100, '', 'Voir le document', '', 'N', 'view', 'N', 'viewDoc');
 --INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (101, '', 'Envoyer pour visa', 'VIS', 'N', 'confirm_status', 'Y', 'confirmAction');
@@ -997,8 +997,8 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_pag
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (407, '', 'Renvoyer pour traitement', 'COU', 'N', 'confirm_status', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (408, '', 'Refuser le visa et remonter le circuit', '_NOSTATUS_', 'N',  'rejection_visa_previous', 'N', 'rejectVisaBackToPreviousAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (410, '', 'Transmettre la réponse signée', 'EENV', 'N', 'interrupt_visa', 'Y', 'interruptVisaAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (414, '', 'Envoyer au parapheur', '_NOSTATUS_', 'N', 'send_to_visa', 'Y', 'v1Action');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (416, '', 'Valider et poursuivre le circuit', '_NOSTATUS_', 'N', 'visa_workflow', 'Y', 'v1Action');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (414, '', 'Envoyer au parapheur', '_NOSTATUS_', 'N', 'send_to_visa', 'Y', 'sendSignatureBookAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (416, '', 'Valider et poursuivre le circuit', '_NOSTATUS_', 'N', 'visa_workflow', 'Y', 'continueVisaCircuitAction');
 --INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (417, '', 'Envoyer l''AR', 'SVX', 'N', 'send_to_contact_with_mandatory_attachment', 'Y', 'v1Action');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (420, '', 'Classer sans suite', 'SSUITE', 'N', 'confirm_status', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (421, '', 'Retourner au Service Courrier', 'RET', 'N', 'confirm_status', 'Y', 'confirmAction');
