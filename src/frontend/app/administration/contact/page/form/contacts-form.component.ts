@@ -588,7 +588,7 @@ export class ContactsFormComponent implements OnInit {
         const regex2 = /externalId_[.]*/g;
 
         this.contactForm.filter(field => field.display).forEach(element => {
-            if (element.type === 'date') {
+            if (element.type === 'date' && !this.functions.empty(element.control.value)) {
                 const date = new Date(element.control.value);
                 element.control.value = this.functions.formatDateObjectToFrenchDateString(date);
             }
