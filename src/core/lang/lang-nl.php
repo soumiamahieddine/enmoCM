@@ -247,8 +247,8 @@ define('_SEND_TO_VISA', 'Versturen voor goedkeuring');
 define('_SEND_TO_VISA_DESC', 'Controleert of er een goedkeuringscircuit is geconfigureerd EN of er één of meerdere antwoordprojecten aan het brief gekoppeld zijn.');
 define('_REJECTION_WORKFLOW_PREVIOUS', 'De goedkeuring weigeren - terug naar de vorige goedkeurder');
 define('_REJECTION_WORKFLOW_PREVIOUS_DESC', 'Reset de datum van de vorige goedkeurder die in het goedkeuringscircuit van het brief aanwezig is (\process_date\ van de tabel listinstance).');
-define('_REJECTION_WORKFLOW_REDACTOR', 'Goedkeuring weigeren - terug naar opsteller');
-define('_REJECTION_WORKFLOW_REDACTOR_DESC', 'Reset de datum van alle huidige goedkeurders die in het goedkeuringscircuit van het brief aanwezig zijn (\process_date\ van de tabel listinstance).');
+define('_RESET_VISA_WORKFLOW', 'Goedkeuring weigeren - terug naar opsteller');
+define('_RESET_VISA_WORKFLOW_DESC', 'Reset de datum van alle huidige goedkeurders die in het goedkeuringscircuit van het brief aanwezig zijn (\process_date\ van de tabel listinstance).');
 define('_REDIRECT_WORKFLOW_ENTITY', 'Doorsturen naar de initiatiefnemende eenheid');
 define('_REDIRECT_WORKFLOW_ENTITY_DESC', 'Stuurt het brief terug naar de initiatiefnemende eenheid.');
 define('_INTERRUPT_WORKFLOW', 'Het goedkeuringscircuit onderbreken');
@@ -453,3 +453,6 @@ define("_NO_SENDERS", "No sender linked to resource"); //TO TRANSLATE
 
 define("_INTERRUPTED_WORKFLOW", "Interrupted workflow"); //TO TRANSLATE
 define("_HAS_INTERRUPTED_WORKFLOW", "Has interrupted the workflow "); //TO TRANSLATE
+
+define('_AVIS_SENT', 'Gegeven bericht');
+define('_BY', 'door');

@@ -45,11 +45,13 @@ class LinkControllerTest extends TestCase
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
         $response     = $resController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(200, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody());
         self::$firstResourceId = $responseBody->resId;
         $this->assertInternalType('int', self::$firstResourceId);
 
         $response     = $resController->create($fullRequest, new \Slim\Http\Response());
+        $this->assertSame(200, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody());
         self::$secondResourceId = $responseBody->resId;
         $this->assertInternalType('int', self::$secondResourceId);

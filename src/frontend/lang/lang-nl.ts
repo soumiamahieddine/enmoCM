@@ -1431,11 +1431,18 @@ export const LANG_NL = {
     "closeFullscreen" : "Disable fullscreen", //_TO_TRANSLATE
     "hasNoEntity": "Those mails do not have initiator entity", //_TO_TRANSLATE
     "destUserSetToDefault": "Assignee will be the assignee of the initiator entity template list", //_TO_TRANSLATE
-    "resetVisaWorkflow": "Processing date will be reset", //_TO_TRANSLATE
+    "resetVisaWorkflow": "The workflow will be <b>reseted</b>, this document will send back to first assignee", //_TO_TRANSLATE
+    "resetVisaWorkflowUser": "The workflow will be <b>reseted</b>, this document will send back to", //_TO_TRANSLATE
     "interruptVisaWorkflow": "The following users will not be able to target mail", //_TO_TRANSLATE
     "rejectVisaBack": "Document will be send to the previous user", //_TO_TRANSLATE
+    "rejectVisaBackUser": "Document will be send back to", //_TO_TRANSLATE
     "sendToDocTo": "You will send this document to", //_TO_TRANSLATE
     "endWorkflow": "You will end this workflow", //_TO_TRANSLATE
     "hasNoAttachmentsNotes": "The following letters have no annotation or attachments", //_TO_TRANSLATE
     "closeMailAddNoteMandatory": "Some letters have neither annotation nor attachments. Please enter an annotation below, or add an attachment to the letters.", //_TO_TRANSLATE
+    "endWorkflow": "You will end the workflow", //_TO_TRANSLATE
+    "endedCircuit": "Workflow ended", //_TO_TRANSLATE
+    "userHasntSigned": "The assignee hasn't signed any document",  //_TO_TRANSLATE
+    "noCircuitAvailable": "No workflow defined", //_TO_TRANSLATE
+    "interrupted": "Interrupted", //_TO_TRANSLATE
 };

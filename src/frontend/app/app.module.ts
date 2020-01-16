@@ -40,9 +40,9 @@ import { DisabledBasketPersistenceActionComponent } from './actions/disabled-bas
 import { EnabledBasketPersistenceActionComponent } from './actions/enabled-basket-persistence-action/enabled-basket-persistence-action.component';
 import { ResMarkAsReadActionComponent } from './actions/res-mark-as-read-action/res-mark-as-read-action.component';
 import { CloseMailActionComponent }             from './actions/close-mail-action/close-mail-action.component';
-import { RejectVisaBackToPrevousActionComponent } from './actions/reject-visa-back-to-previous-action/reject-visa-back-to-previous-action.component';
-import { RejectVisaActionComponent } from './actions/reject-visa-action/reject-visa-action.component';
-import { InterruptVisaActionComponent } from './actions/interrupt-visa-action/interrupt-visa-action.component';
+import { RejectVisaBackToPrevousActionComponent } from './actions/visa-reject-back-to-previous-action/reject-visa-back-to-previous-action.component';
+import { ResetVisaActionComponent } from './actions/visa-reset-action/reset-visa-action.component';
+import { InterruptVisaActionComponent } from './actions/visa-interrupt-action/interrupt-visa-action.component';
 import { UpdateAcknowledgementSendDateActionComponent }             from './actions/update-acknowledgement-send-date-action/update-acknowledgement-send-date-action.component';
 import { CreateAcknowledgementReceiptActionComponent }             from './actions/create-acknowledgement-receipt-action/create-acknowledgement-receipt-action.component';
 import { CloseAndIndexActionComponent }             from './actions/close-and-index-action/close-and-index-action.component';
@@ -59,6 +59,8 @@ import { redirectInitiatorEntityActionComponent } from './actions/redirect-initi
 import { closeMailWithAttachmentsOrNotesActionComponent } from './actions/close-mail-with-attachments-or-notes-action/close-mail-with-attachments-or-notes-action.component';
 import { SendSignatureBookActionComponent }               from './actions/send-signature-book-action/send-signature-book-action.component';
 import { ContinueVisaCircuitActionComponent }               from './actions/continue-visa-circuit-action/continue-visa-circuit-action.component';
+import { SendSignatureBookActionComponent }               from './actions/visa-send-signature-book-action/send-signature-book-action.component';
+import { ContinueVisaCircuitActionComponent }               from './actions/visa-continue-circuit-action/continue-visa-circuit-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -138,7 +140,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         CreateAcknowledgementReceiptActionComponent,
         CloseMailActionComponent,
         RejectVisaBackToPrevousActionComponent,
-        RejectVisaActionComponent,
+        ResetVisaActionComponent,
         InterruptVisaActionComponent,
         UpdateDepartureDateActionComponent,
         SendExternalSignatoryBookActionComponent,
@@ -197,7 +199,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         CreateAcknowledgementReceiptActionComponent,
         CloseMailActionComponent,
         RejectVisaBackToPrevousActionComponent,
-        RejectVisaActionComponent,
+        ResetVisaActionComponent,
         InterruptVisaActionComponent,
         UpdateDepartureDateActionComponent,
         SendExternalSignatoryBookActionComponent,

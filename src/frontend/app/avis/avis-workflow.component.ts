@@ -45,9 +45,9 @@ export class AvisWorkflowComponent implements OnInit {
     @Input('adminMode') adminMode: boolean;
     @Input('resId') resId: number = null;
 
-    @ViewChild('searchAvisSignUserInput', { static: true }) searchAvisSignUserInput: ElementRef;
+    @ViewChild('searchAvisUserInput', { static: true }) searchAvisUserInput: ElementRef;
 
-    searchAvisSignUser = new FormControl();
+    searchAvisUser = new FormControl();
 
     constructor(
         public http: HttpClient,
@@ -92,7 +92,7 @@ export class AvisWorkflowComponent implements OnInit {
             });
     }
 
-    loadAvisSignUsersList() {
+    loadAvisUsersList() {
         return new Promise((resolve, reject) => {
             this.http.get(`../../rest/autocomplete/users/circuit`).pipe(
                 map((data: any) => {
@@ -109,7 +109,7 @@ export class AvisWorkflowComponent implements OnInit {
                 }),
                 tap((data) => {
                     this.signAvisUsers = data;
-                    this.filteredSignAvisUsers = this.searchAvisSignUser.valueChanges
+                    this.filteredSignAvisUsers = this.searchAvisUser.valueChanges
                         .pipe(
                             startWith(''),
                             map(value => this._filter(value))
@@ -124,18 +124,20 @@ export class AvisWorkflowComponent implements OnInit {
         });
     }
 
-    loadAvisModelListByResource() {
+    async loadAvisModelList() {
+        await this.loadDefaultModel();
+
         return new Promise((resolve, reject) => {
-            this.http.get(`../../rest/resources/${this.resId}/availableCircuits?circuit=opinion`).pipe(
+            this.http.get(`../../rest/availableCircuits?circuit=opinion`).pipe(
                 tap((data: any) => {
-                    this.avisTemplates.public = data.circuits.filter((item: any) => !item.private).map((item: any) => {
+                    this.avisTemplates.public = this.avisTemplates.public.concat(data.circuits.filter((item: any) => !item.private).map((item: any) => {
                         return {
                             id: item.id,
                             title: item.title,
                             label: item.title,
                             type: 'entity'
                         }
-                    });
+                    }));
 
                     this.avisTemplates.private = data.circuits.filter((item: any) => item.private).map((item: any) => {
                         return {
@@ -145,29 +147,54 @@ export class AvisWorkflowComponent implements OnInit {
                             type: 'entity'
                         }
                     });
-                    this.filteredPublicModels = this.searchAvisSignUser.valueChanges
+                    this.filteredPublicModels = this.searchAvisUser.valueChanges
                         .pipe(
                             startWith(''),
                             map(value => this._filterPublicModel(value))
                         );
-                    this.filteredPrivateModels = this.searchAvisSignUser.valueChanges
+                    this.filteredPrivateModels = this.searchAvisUser.valueChanges
                         .pipe(
                             startWith(''),
                             map(value => this._filterPrivateModel(value))
                         );
                     resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
+    loadDefaultModel() {
+        this.avisTemplates.public = [];
+
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/resources/${this.resId}/defaultCircuit?circuit=opinion`).pipe(
+                filter((data: any) => !this.functions.empty(data.circuit)),
+                tap((data: any) => {
+                    if (!this.functions.empty(data.circuit)) {
+                        this.avisTemplates.public.push({
+                            id: data.circuit.id,
+                            title: data.circuit.title,
+                            label: data.circuit.title,
+                            type: 'entity'
+                        });
+                    }
                 }),
+                finalize(() => resolve(true)),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
             ).subscribe();
         });
     }
 
     async initFilterAvisModelList() {
         if (this.avisModelListNotLoaded) {
-            await this.loadAvisSignUsersList();
+            await this.loadAvisUsersList();
 
-            await this.loadAvisModelListByResource();
+            await this.loadAvisModelList();
 
-            this.searchAvisSignUser.reset();
+            this.searchAvisUser.reset();
 
             this.avisModelListNotLoaded = false;
         }
@@ -278,7 +305,7 @@ export class AvisWorkflowComponent implements OnInit {
                 signatory: false,
                 requested_signature: false
             });
-            this.searchAvisSignUser.reset();
+            this.searchAvisUser.reset();
         } else if (item.type === 'entity') {
             this.http.get(`../../rest/listTemplates/${item.id}`).pipe(
                 tap((data: any) => {
@@ -295,7 +322,7 @@ export class AvisWorkflowComponent implements OnInit {
                             }
                         })
                     );
-                    this.searchAvisSignUser.reset();
+                    this.searchAvisUser.reset();
                 })
             ).subscribe();
         }
@@ -314,6 +341,7 @@ export class AvisWorkflowComponent implements OnInit {
                     label: data.title,
                     type: 'entity'
                 });
+                this.searchAvisUser.reset();
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
@@ -330,7 +358,7 @@ export class AvisWorkflowComponent implements OnInit {
             exhaustMap(() => this.http.delete(`../../rest/listTemplates/${model.id}`)),
             tap(() => {
                 this.avisTemplates.private = this.avisTemplates.private.filter((template: any) => template.id !== model.id);
-                this.searchAvisSignUser.reset();
+                this.searchAvisUser.reset();
                 this.notify.success(this.lang.modelDeleted);
             }),
             catchError((err: any) => {

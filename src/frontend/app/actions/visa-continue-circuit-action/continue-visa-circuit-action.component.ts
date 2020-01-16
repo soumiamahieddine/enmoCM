@@ -19,7 +19,7 @@ export class ContinueVisaCircuitActionComponent implements OnInit {
     loading: boolean = false;
 
     resourcesWarnings: any[] = [];
-    resourcesError: any[] = [];
+    resourcesErrors: any[] = [];
 
     noResourceToProcess: boolean = null;
 
@@ -40,13 +40,20 @@ export class ContinueVisaCircuitActionComponent implements OnInit {
     }
 
     checkSignatureBook() {
-        this.resourcesError = [];
+        this.resourcesErrors = [];
         this.resourcesWarnings = [];
 
         return new Promise((resolve, reject) => {
             this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkContinueVisaCircuit', { resources: this.data.resIds })
             .subscribe((data: any) => {
-                console.log(data);
+                if (!this.functions.empty(data.resourcesInformations.warning)) {
+                    this.resourcesWarnings = data.resourcesInformations.warning;
+                }
+
+                if(!this.functions.empty(data.resourcesInformations.error)) {
+                    this.resourcesErrors = data.resourcesInformations.error;
+                    this.noResourceToProcess = this.resourcesErrors.length === this.data.resIds.length;
+                }
                 resolve(true);
             }, (err: any) => {
                 this.notify.handleSoftErrors(err);
@@ -55,7 +62,7 @@ export class ContinueVisaCircuitActionComponent implements OnInit {
     }
 
     async onSubmit() {
-        const realResSelected: number[] = this.data.resIds.filter((resId: any) => this.resourcesError.map(resErr => resErr.res_id).indexOf(resId) === -1);
+        const realResSelected: number[] = this.data.resIds.filter((resId: any) => this.resourcesErrors.map(resErr => resErr.res_id).indexOf(resId) === -1);
         this.executeAction(realResSelected);
     }
 
@@ -79,6 +86,10 @@ export class ContinueVisaCircuitActionComponent implements OnInit {
     }
 
     isValidAction() {
-        return true;
+        if (!this.noResourceToProcess) {
+            return true;
+        } else {
+            return false; 
+        }
     }
 }

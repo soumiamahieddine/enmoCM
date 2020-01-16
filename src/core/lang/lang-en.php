@@ -248,8 +248,8 @@ define('_SEND_TO_VISA', 'send for visa');
 define('_SEND_TO_VISA_DESC', 'Check if visa circuit is setup AND if one or several responses project are linked to mail.');
 define('_REJECTION_WORKFLOW_PREVIOUS', 'Visa rejection - back to the previous author');
 define('_REJECTION_WORKFLOW_PREVIOUS_DESC', 'Reset visa date of previous supervisor in visa circuit of mail (\'process_date\' of listinstance table).');
-define('_REJECTION_WORKFLOW_REDACTOR', 'Visa rejection - back to the author');
-define('_REJECTION_WORKFLOW_REDACTOR_DESC', 'Reset visa date of all supervisor in visa circuit of mail (\'process_date\' of listinstance table).');
+define('_RESET_VISA_WORKFLOW', 'Reset visa workflow');
+define('_RESET_VISA_WORKFLOW_DESC', 'Reset visa date of all supervisor in visa circuit of mail (\'process_date\' of listinstance table).');
 define('_REDIRECT_WORKFLOW_ENTITY', 'Back to the initiator entity');
 define('_REDIRECT_WORKFLOW_ENTITY_DESC', 'Back the mail to the initiator entity.');
 define('_INTERRUPT_WORKFLOW', 'Break the visa flow');
@@ -448,3 +448,6 @@ define("_NO_SENDERS", "No sender linked to resource");
 
 define("_INTERRUPTED_WORKFLOW", "Interrupted workflow");
 define("_HAS_INTERRUPTED_WORKFLOW", "Has interrupted the workflow ");
+
+define("_AVIS_SENT", "Notice given");
+define("_BY", "by");

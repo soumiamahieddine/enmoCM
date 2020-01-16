@@ -278,10 +278,10 @@ An action page is described in a ACTIONPAGE tag :
     </ACTIONPAGE>
     <ACTIONPAGE>
         <ID>rejection_visa_redactor</ID>
-        <LABEL>_REJECTION_WORKFLOW_REDACTOR</LABEL>
+        <LABEL>_RESET_VISA_WORKFLOW</LABEL>
         <NAME>rejection_visa_redactor</NAME>
-        <DESC>_REJECTION_WORKFLOW_REDACTOR_DESC</DESC>
-        <component>rejectVisaBackToRedactorAction</component>
+        <DESC>_RESET_VISA_WORKFLOW_DESC</DESC>
+        <component>resetVisaAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -372,7 +372,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_PROCEED_WORKFLOW_AVIS</LABEL>
         <NAME>avis_workflow</NAME>
         <DESC>_PROCEED_WORKFLOW_AVIS_DESC</DESC>
-        <component>v1Action</component>
+        <component>continueOpinionCircuitAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

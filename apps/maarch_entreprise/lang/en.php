@@ -3971,8 +3971,8 @@ if (!defined('_PROCEED_WORKFLOW')) {
 if (!defined('_INTERRUPT_WORKFLOW')) {
     define('_INTERRUPT_WORKFLOW', 'Break the visa flow');
 }
-if (!defined('_REJECTION_WORKFLOW_REDACTOR')) {
-    define('_REJECTION_WORKFLOW_REDACTOR', 'Visa rejection - back to the author');
+if (!defined('_RESET_VISA_WORKFLOW')) {
+    define('_RESET_VISA_WORKFLOW', 'Reset visa workflow');
 }
 if (!defined('_REJECTION_WORKFLOW_PREVIOUS')) {
     define('_REJECTION_WORKFLOW_PREVIOUS', 'Visa rejection - back to the previous author');

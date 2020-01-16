@@ -31,6 +31,7 @@
             <file>test/unitTests/app/resource/ResourceListControllerTest.php</file>
             <file>test/unitTests/app/resource/ExportControllerTest.php</file>
             <file>test/unitTests/app/resource/LinkControllerTest.php</file>
+            <file>test/unitTests/app/resource/ListInstanceControllerTest.php</file>
             <file>test/unitTests/app/resource/SummarySheetControllerTest.php</file>
             <file>test/unitTests/app/status/StatusControllerTest.php</file>
             <file>test/unitTests/app/shipping/ShippingControllerTest.php</file>

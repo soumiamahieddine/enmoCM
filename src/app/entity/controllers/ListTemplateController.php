@@ -590,7 +590,7 @@ class ListTemplateController
         return $response->withJson(['roles' => array_values($roles)]);
     }
 
-    public function getAvailableCircuitsByResId(Request $request, Response $response, array $args)
+    public function getAvailableCircuits(Request $request, Response $response)
     {
         $queryParams = $request->getQueryParams();
 
@@ -599,25 +599,12 @@ class ListTemplateController
         }
 
         $circuit = $queryParams['circuit'] == 'opinion' ? 'opinionCircuit' : 'visaCircuit';
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['destination']]);
-
-        $where = ['type = ?', '(owner is null or owner = ?)'];
-        $data = [$circuit, $GLOBALS['id']];
-        if (!empty($resource['destination'])) {
-            $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['id']]);
-            $where[] = '(entity_id is null OR entity_id = ?)';
-            $data[] = $entity['id'];
-            $orderBy = ["entity_id='{$entity['id']}' DESC", 'title'];
-        } else {
-            $where[] = 'entity_id is null';
-            $orderBy = ['title'];
-        }
 
         $circuits = ListTemplateModel::get([
             'select'  => ['id', 'type', 'entity_id as "entityId"', 'title', 'description', "case when owner is null then false else true end as private"],
-            'where'   => $where,
-            'data'    => $data,
-            'orderBy' => $orderBy
+            'where'   => ['type = ?', 'entity_id is null', '(owner is null or owner = ?)'],
+            'data'    => [$circuit, $GLOBALS['id']],
+            'orderBy' => ['title']
         ]);
 
         return $response->withJson(['circuits' => $circuits]);
@@ -635,7 +622,7 @@ class ListTemplateController
         $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['destination']]);
 
         if (empty($resource['destination'])) {
-            return $response->withJson(['circuit' => []]);
+            return $response->withJson(['circuit' => null]);
         }
 
         $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['id']]);
@@ -647,7 +634,7 @@ class ListTemplateController
         ]);
 
         if (empty($circuit[0])) {
-            return $response->withJson(['circuit' => []]);
+            return $response->withJson(['circuit' => null]);
         }
         $circuit = $circuit[0];
 

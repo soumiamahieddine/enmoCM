@@ -1286,8 +1286,8 @@ if (!defined('_PROCEED_WORKFLOW')) { define('_PROCEED_WORKFLOW', 'Het goedkeurin
 if (!defined('_PROCEED_WORKFLOW_DESC')) { define('_PROCEED_WORKFLOW_DESC', 'Werkt de datum bij van de huidige goedkeurder / ondertekenaar die in het goedkeuringscircuit van het brief aanwezig is (process_date van de tabel listinstance).');}
 if (!defined('_INTERRUPT_WORKFLOW')) { define('_INTERRUPT_WORKFLOW', 'Het goedkeuringscircuit onderbreken');}
 if (!defined('_INTERRUPT_WORKFLOW_DESC')) { define('_INTERRUPT_WORKFLOW_DESC', 'Werkt de datum bij van de huidige goedkeurder / ondertekenaar en van alle volgende goedkeurders die in het goedkeuringscircuit van het brief aanwezig zijn (process_date van de tabel listinstance). Voegt eveneens een onderbrekingsbericht op de huidige goedkeurder in (process_comment van de tabel listinstance).');}
-if (!defined('_REJECTION_WORKFLOW_REDACTOR')) { define('_REJECTION_WORKFLOW_REDACTOR', 'Goedkeuring weigeren -  terug naar opsteller');}
-if (!defined('_REJECTION_WORKFLOW_REDACTOR_DESC')) { define('_REJECTION_WORKFLOW_REDACTOR_DESC', 'Reset de datum van alle huidige goedkeurders die in het goedkeuringscircuit van het brief aanwezig zijn (process_date van de tabel listinstance).');}
+if (!defined('_RESET_VISA_WORKFLOW')) { define('_RESET_VISA_WORKFLOW', 'Goedkeuring weigeren -  terug naar opsteller');}
+if (!defined('_RESET_VISA_WORKFLOW_DESC')) { define('_RESET_VISA_WORKFLOW_DESC', 'Reset de datum van alle huidige goedkeurders die in het goedkeuringscircuit van het brief aanwezig zijn (process_date van de tabel listinstance).');}
 if (!defined('_REJECTION_WORKFLOW_PREVIOUS')) { define('_REJECTION_WORKFLOW_PREVIOUS', 'De goedkeuring weigeren - terug naar de vorige goedkeurder');}
 if (!defined('_REJECTION_WORKFLOW_PREVIOUS_DESC')) { define('_REJECTION_WORKFLOW_PREVIOUS_DESC', 'Reset de datum van de vorige goedkeurder die in het goedkeuringscircuit van het brief aanwezig is (process_date van de tabel listinstance).');}
 if (!defined('_VISA_MAIL')) { define('_VISA_MAIL', 'De e-mail goedkeuren');}
