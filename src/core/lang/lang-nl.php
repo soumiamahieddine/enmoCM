@@ -234,8 +234,6 @@ define('_SET_PERSISTENT_MODE_OFF', 'De persistentie uitschakelen');
 define('_SET_PERSISTENT_MODE_OFF_DESC', 'Reset het weergavegedrag van het brief in het bakje. Verwijdert het gegeven in de tabel \basket_persistent_mode\.');
 define('_MARK_AS_READ', 'Markeren als gelezen');
 define('_MARK_AS_READ_DESC', 'Markeert het brief als \gelezen\ in het bakje. Voegt het gegeven van de \res_mark_as_read\ in de tabel in (nuttig indien gebruikt in de bakjes clauses)');
-define('_SEND_FILE_WS', 'Het document via Web Service verzenden');
-define('_SEND_DATA_WS', 'Gegevens via Web Service verzenden');
 define('_SEND_TO_EXTERNAL_SB', 'Gegevens naar een extern vloeiboek verzenden');
 define('_CLOSE_MAIL_AND_INDEX', 'Een brief afsluiten en de indexering starten');
 define('_CLOSE_MAIL_AND_INDEX_DESC', 'Om de afsluitingsdatum van een brief bij te werken EN de indexeringspagina te openen om een nieuw brief te bewaren.');

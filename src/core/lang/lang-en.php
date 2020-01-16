@@ -234,8 +234,6 @@ define('_SET_PERSISTENT_MODE_OFF', 'Deactivate the persistence');
 define('_SET_PERSISTENT_MODE_OFF_DESC', 'Resets the viewing behavior of the mail in the basket. Remove data from the \'basket_persistent_mode\' table.');
 define('_MARK_AS_READ', 'Marked as read');
 define('_MARK_AS_READ_DESC', 'Mark the mail as \'read\' in the basket. Insert the data in the \'res_mark_as_read\' table (useful if used in the basket clauses).');
-define('_SEND_FILE_WS', 'Send file via Web Service');
-define('_SEND_DATA_WS', 'Send data via Web Service');
 define('_SEND_TO_EXTERNAL_SB', 'Send data to external signature book');
 define('_SEND_TO_EXTERNAL_NOTEBOOK', 'Send data to external note book');
 define('_CLOSE_MAIL_AND_INDEX', 'Close a mail and launch the indexation');

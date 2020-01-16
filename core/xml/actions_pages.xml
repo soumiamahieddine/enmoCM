@@ -125,30 +125,6 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>sendFileWS</ID>
-        <LABEL>_SEND_FILE_WS</LABEL>
-        <NAME>sendFileWS</NAME>
-        <component>v1Action</component>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>sendDataWS</ID>
-        <LABEL>_SEND_DATA_WS</LABEL>
-        <NAME>sendDataWS</NAME>
-        <component>v1Action</component>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
         <ID>sendToExternalSignatureBook</ID>
         <LABEL>_SEND_TO_EXTERNAL_SB</LABEL>
         <NAME>sendToExternalSignatureBook</NAME>

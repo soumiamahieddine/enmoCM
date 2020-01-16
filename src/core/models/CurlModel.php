@@ -268,7 +268,7 @@ class CurlModel
     public static function execSimple(array $args)
     {
         ValidatorModel::notEmpty($args, ['url', 'method']);
-        ValidatorModel::stringType($args, ['url', 'method', 'user', 'password']);
+        ValidatorModel::stringType($args, ['url', 'method']);
         ValidatorModel::arrayType($args, ['headers', 'queryParams', 'basicAuth', 'bearerAuth']);
 
         $opts = [CURLOPT_RETURNTRANSFER => true, CURLOPT_HEADER => true, CURLOPT_SSL_VERIFYPEER => false];
@@ -331,15 +331,17 @@ class CurlModel
         $headers = explode("\r\n", $headers);
         $response = substr($rawResponse, $headerSize);
 
-        LogsController::add([
-            'isTech'    => true,
-            'moduleId'  => 'curl',
-            'level'     => 'DEBUG',
-            'tableName' => 'curl',
-            'recordId'  => 'execSimple',
-            'eventType' => "Url : {$args['url']} HttpCode : {$code} Errors : {$errors}",
-            'eventId'   => "Response : {$response}"
-        ]);
+        if (empty($args['noLogs'])) {
+            LogsController::add([
+                'isTech'    => true,
+                'moduleId'  => 'curl',
+                'level'     => 'DEBUG',
+                'tableName' => 'curl',
+                'recordId'  => 'execSimple',
+                'eventType' => "Url : {$args['url']} HttpCode : {$code} Errors : {$errors}",
+                'eventId'   => "Response : {$response}"
+            ]);
+        }
 
         return ['code' => $code, 'headers' => $headers, 'response' => json_decode($response, true), 'errors' => $errors];
     }

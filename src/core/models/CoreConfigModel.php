@@ -250,17 +250,17 @@ class CoreConfigModel
         return $ozwilloConfig;
     }
 
-    public static function getXmlLoaded(array $aArgs)
+    public static function getXmlLoaded(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['path']);
-        ValidatorModel::stringType($aArgs, ['path']);
+        ValidatorModel::notEmpty($args, ['path']);
+        ValidatorModel::stringType($args, ['path']);
 
         $customId = CoreConfigModel::getCustomId();
 
-        if (file_exists("custom/{$customId}/{$aArgs['path']}")) {
-            $path = "custom/{$customId}/{$aArgs['path']}";
+        if (file_exists("custom/{$customId}/{$args['path']}")) {
+            $path = "custom/{$customId}/{$args['path']}";
         } else {
-            $path = $aArgs['path'];
+            $path = $args['path'];
         }
 
         $xmlfile = null;

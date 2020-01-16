@@ -1502,12 +1502,6 @@ if (!defined('_FOUND_INVOICES')) {
 if (!defined('_SIMPLE_CONFIRM')) {
     define('_SIMPLE_CONFIRM', 'Confirmation simple');
 }
-if (!defined('_SEND_FILE_WS')) {
-    define('_SEND_FILE_WS', 'Envoyer le document via Web Service');
-}
-if (!defined('_SEND_DATA_WS')) {
-    define('_SEND_DATA_WS', 'Envoyer des données via Web Service');
-}
 if (!defined('_SIMPLE_CONFIRM_DESC')) {
     define('_SIMPLE_CONFIRM_DESC', "Ouvre simplement une modal de confirmation de l'action à effetuer.");
 }

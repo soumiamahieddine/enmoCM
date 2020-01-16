@@ -234,8 +234,6 @@ define('_SET_PERSISTENT_MODE_OFF', 'Désactiver la persistance');
 define('_SET_PERSISTENT_MODE_OFF_DESC', 'Réinitialise le comportement de visualisation du courrier dans la bannette. Supprime la donnée dans la table \'basket_persistent_mode\'.');
 define('_MARK_AS_READ', 'Marquer comme lu');
 define('_MARK_AS_READ_DESC', 'Marque le courrier comme \'lu\' dans la bannette. Insère la donnée dans la table \'res_mark_as_read\' (utile si utilisée dans les clauses de bannettes).');
-define('_SEND_FILE_WS', 'Envoyer le document via Web Service');
-define('_SEND_DATA_WS', 'Envoyer des données via Web Service');
 define('_SEND_TO_EXTERNAL_SB', 'Envoyer des données vers un parapheur externe');
 define('_SEND_TO_EXTERNAL_NOTEBOOK', 'Envoyer des courriers à annoter vers Maarch Parapheur');
 define('_CLOSE_MAIL_AND_INDEX', 'Clôturer un courrier et lancer l\'indexation');

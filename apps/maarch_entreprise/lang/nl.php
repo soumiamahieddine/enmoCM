@@ -474,8 +474,6 @@ if (!defined('_CHOOSE_ONE_OBJECT')) { define('_CHOOSE_ONE_OBJECT', 'Kies minsten
 if (!defined('_CLICK_LINE_TO_CHECK_INVOICE')) { define('_CLICK_LINE_TO_CHECK_INVOICE', 'Klik op een lijn om een factuur te controleren');}
 if (!defined('_FOUND_INVOICES')) { define('_FOUND_INVOICES', 'Factu(u)r(en) gevonden');}
 if (!defined('_SIMPLE_CONFIRM')) { define('_SIMPLE_CONFIRM', 'Eenvoudige bevestiging');}
-if (!defined('_SEND_FILE_WS')) { define('_SEND_FILE_WS', 'Het document via Web Service verzenden');}
-if (!defined('_SEND_DATA_WS')) { define('_SEND_DATA_WS', 'Gegevens via Web Service verzenden');}
 if (!defined('_SIMPLE_CONFIRM_DESC')) { define('_SIMPLE_CONFIRM_DESC', 'Opent eenvoudigweg een bevestigingsmodaliteit van de uit te voeren actie.');}
 if (!defined('_CHECK_INVOICE')) { define('_CHECK_INVOICE', 'Factuur controleren');}
 if (!defined('_REDIRECT_TO')) { define('_REDIRECT_TO', 'Doorsturen naar');}
