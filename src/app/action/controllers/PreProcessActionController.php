@@ -985,6 +985,53 @@ class PreProcessActionController
         return $response->withJson(['resourcesInformations' => $resourcesInformations]);
     }
 
+    public function checkContinueOpinionCircuit(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resourcesInformation = [];
+        foreach ($body['resources'] as $resId) {
+            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier']]);
+            if (empty($resource['alt_identifier'])) {
+                $resource['alt_identifier'] = _UNDEFINED;
+            }
+
+            $isSignatory = ListInstanceModel::get([
+                'select'  => [1],
+                'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
+                'data'    => [$resId, 'AVIS_CIRCUIT'],
+                'orderBy' => ['listinstance_id'],
+                'limit'   => 1
+            ]);
+            if (empty($isSignatory[0])) {
+                $hasCircuit = ListInstanceModel::get(['select' => [1], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$resId, 'AVIS_CIRCUIT']]);
+                if (!empty($hasCircuit)) {
+                    $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'endedCircuit'];
+                } else {
+                    $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noCircuitAvailable'];
+                }
+            } else {
+                $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId];
+            }
+        }
+
+        return $response->withJson(['resourcesInformations' => $resourcesInformation]);
+    }
+
     public function isDestinationChanging(Request $request, Response $response, array $args)
     {
         if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {

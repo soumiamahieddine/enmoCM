@@ -388,6 +388,7 @@ $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/act
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkShippings', \Action\controllers\PreProcessActionController::class . ':checkShippings');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkSignatureBook', \Action\controllers\PreProcessActionController::class . ':checkSignatureBook');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkContinueVisaCircuit', \Action\controllers\PreProcessActionController::class . ':checkContinueVisaCircuit');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkContinueOpinionCircuit', \Action\controllers\PreProcessActionController::class . ':checkContinueOpinionCircuit');
 
 //Search
 $app->get('/search', \Search\controllers\SearchController::class . ':get');
