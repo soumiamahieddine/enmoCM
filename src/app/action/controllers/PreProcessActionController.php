@@ -985,6 +985,53 @@ class PreProcessActionController
         return $response->withJson(['resourcesInformations' => $resourcesInformations]);
     }
 
+    public function checkOpinionInfo(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resources = ResModel::get(['select' => ['opinion_limit_date', 'alt_identifier', 'res_id'], 'where' => ['res_id in (?)'], 'data' => [$body['resources']]]);
+
+        $noOpinionLimitDate     = [];
+        $noNote                 = [];
+        $validatedResourcesInfo = [];
+        $validatedResources     = [];
+        foreach ($resources as $resource) {
+            if (empty($resource['opinion_limit_date'])) {
+                $noOpinionLimitDate[] = $resources['alt_identifier'] ?? _UNDEFINED;
+            } else {
+                $note = NoteModel::getById([
+                    'select'   => ['note_text', 'user_id', 'creation_date'],
+                    'where'    => ['identifier in (?)', 'note_text like (?)'],
+                    'data'     => [$resource['res_id'], '['._AVIS_USER.']%'],
+                    'order_by' => ['creation_date desc'],
+                    'limit' => 1
+                ]);
+                if (empty($note)) {
+                    $noNote[] = $resources['alt_identifier'] ?? _UNDEFINED;
+                } else {
+                    $validatedResourcesInfo[] = ['opinionLimitDate' => $resource['opinion_limit_date'], 'note' => $note];
+                    $validatedResources[]     = $resources['res_id'];
+                }
+            }
+        }
+
+        return $response->withJson(['noOpinionLimitDate' => $noOpinionLimitDate, 'noNote' => $noNote, 'validatedResourcesInfo' => $validatedResourcesInfo, 'validatedResources' => $validatedResources]);
+    }
+
     public function checkContinueOpinionCircuit(Request $request, Response $response, array $args)
     {
         $body = $request->getParsedBody();
