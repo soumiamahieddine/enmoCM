@@ -11,6 +11,7 @@ import { switchMap, catchError, filter, exhaustMap, tap, debounceTime, distinctU
 import { FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContactService } from '../../../../../service/contact.service';
+import { FunctionsService } from '../../../../../service/functions.service';
 
 declare var angularGlobals: any;
 
@@ -270,6 +271,7 @@ export class ContactsFormComponent implements OnInit {
         public appService: AppService,
         public dialog: MatDialog,
         private contactService: ContactService,
+        public functions: FunctionsService
     ) { }
 
     ngOnInit(): void {
@@ -495,6 +497,10 @@ export class ContactsFormComponent implements OnInit {
         Object.keys(data.customFields).forEach(element => {
             indexField = this.contactForm.map(field => field.id).indexOf('customField_' + element);
             if (!this.isEmptyValue(data.customFields[element]) && indexField > -1) {
+                if (this.contactForm[indexField].type === 'date') {
+                    const date = new Date(this.functions.formatFrenchDateToTechnicalDate(data.customFields[element]));
+                    data.customFields[element] = date;
+                }
                 this.contactForm[indexField].control.setValue(data.customFields[element]);
                 this.contactForm[indexField].display = true;
             }
@@ -582,6 +588,10 @@ export class ContactsFormComponent implements OnInit {
         const regex2 = /externalId_[.]*/g;
 
         this.contactForm.filter(field => field.display).forEach(element => {
+            if (element.type === 'date') {
+                const date = new Date(element.control.value);
+                element.control.value = this.functions.formatDateObjectToFrenchDateString(date);
+            }
             if (element.id.match(regex) !== null) {
                 contact['customFields'][element.id.split('_')[1]] = element.control.value;
             } else if (element.id.match(regex2) !== null) {
