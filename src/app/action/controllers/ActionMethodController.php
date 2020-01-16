@@ -606,7 +606,7 @@ class ActionMethodController
             ]);
 
             foreach ($ListInstanceByRes['listInstances'] as $instance) {
-                if (!in_array($instance['item_mode'], ['avis', 'avis_copy', 'avis_info']) {
+                if (!in_array($instance['item_mode'], ['avis', 'avis_copy', 'avis_info'])) {
                     return ['errors' => ['item_mode is different from avis, avis_copy or avis_info']];
                 }
             }
