@@ -59,7 +59,7 @@ class ActionMethodController
         'rejectVisaBackToPreviousAction'        => 'rejectVisaBackToPrevious',
         'resetVisaAction'                       => 'resetVisa',
         'interruptVisaAction'                   => 'interruptVisa',
-        'sendToAvisAction'                      => 'sendToAvis',
+        'sendToOpinionCircuitAction'            => 'sendToOpinionCircuit',
         'continueOpinionCircuitAction'          => 'continueOpinionCircuit',
         'noConfirmAction'                       => null
     ];
@@ -535,7 +535,7 @@ class ActionMethodController
         return true;
     }
 
-    public static function sendToAvis(array $args)
+    public static function sendToOpinionCircuit(array $args)
     {
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);

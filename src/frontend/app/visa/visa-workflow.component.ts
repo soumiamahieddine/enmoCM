@@ -136,7 +136,9 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     async loadVisaModelList() {
-        await this.loadDefaultModel();
+        if (this.resId !== null) {
+            await this.loadDefaultModel();
+        }
 
         return new Promise((resolve, reject) => {
             this.http.get(`../../rest/availableCircuits?circuit=visa`).pipe(

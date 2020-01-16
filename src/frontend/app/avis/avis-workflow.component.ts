@@ -125,7 +125,9 @@ export class AvisWorkflowComponent implements OnInit {
     }
 
     async loadAvisModelList() {
-        await this.loadDefaultModel();
+        if (this.resId !== null) {
+            await this.loadDefaultModel();
+        }
 
         return new Promise((resolve, reject) => {
             this.http.get(`../../rest/availableCircuits?circuit=opinion`).pipe(
@@ -231,7 +233,8 @@ export class AvisWorkflowComponent implements OnInit {
         this.resId = resId;
         this.loading = true;
         this.avisWorkflow.items = [];
-        this.http.get("../../rest/resources/" + resId + "/opinionCircuit")
+        return new Promise((resolve, reject) => {
+            this.http.get("../../rest/resources/" + resId + "/opinionCircuit")
             .subscribe((data: any) => {
                 data.forEach((element: any) => {
                     this.avisWorkflow.items.push(
@@ -242,9 +245,35 @@ export class AvisWorkflowComponent implements OnInit {
                 });
                 this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items))
                 this.loading = false;
+                resolve(true);
             }, (err: any) => {
                 this.notify.handleErrors(err);
             });
+        });
+        
+    }
+
+    loadDefaultWorkflow(resId: number) {
+        this.loading = true;
+        this.avisWorkflow.items = [];
+        this.http.get("../../rest/resources/" + resId + "/defaultCircuit?circuit=opinion").pipe(
+            filter((data: any) => !this.functions.empty(data.circuit)),
+            tap((data: any) => {
+                data.circuit.items.forEach((element: any) => {
+                    this.avisWorkflow.items.push(
+                        {
+                            ...element,
+                            difflist_type: 'AVIS_CIRCUIT'
+                        });
+                });
+                this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items))
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     deleteItem(index: number) {
@@ -263,10 +292,10 @@ export class AvisWorkflowComponent implements OnInit {
         return this.avisWorkflow.items;
     }
 
-    saveAvisWorkflow() {
+    saveAvisWorkflow(resIds: number[] = [this.resId]) {
         return new Promise((resolve, reject) => {
             if (this.avisWorkflow.items.length === 0) {
-                this.http.delete(`../../rest/resources/${this.resId}/circuits/opinionCircuit`).pipe(
+                this.http.delete(`../../rest/resources/${resIds[0]}/circuits/opinionCircuit`).pipe(
                     tap(() => {
                         this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items));
                         this.notify.success(this.lang.avisWorkflowDeleted);
@@ -278,7 +307,13 @@ export class AvisWorkflowComponent implements OnInit {
                     })
                 ).subscribe();
             } else {     
-                this.http.put(`../../rest/circuits/opinionCircuit`, {resources: [{ resId: this.resId, listInstances: this.avisWorkflow.items }]} ).pipe(
+                const arrAvis = resIds.map(resId => {
+                    return {
+                        resId: resId,
+                        listInstances: this.avisWorkflow.items
+                    }
+                });
+                this.http.put(`../../rest/circuits/opinionCircuit`, { resources: arrAvis }).pipe(
                     tap((data: any) => {
                         this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items));
                         this.notify.success(this.lang.avisWorkflowUpdated);
@@ -325,6 +360,22 @@ export class AvisWorkflowComponent implements OnInit {
                     this.searchAvisUser.reset();
                 })
             ).subscribe();
+        }
+    }
+
+    emptyWorkflow() {
+        if (this.avisWorkflow.items.length === 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    workflowEnd() {
+        if (this.avisWorkflow.items.filter((item: any) => !this.functions.empty(item.process_date)).length === this.avisWorkflow.items.length) {
+            return true;
+        } else {
+            return false;
         }
     }
 

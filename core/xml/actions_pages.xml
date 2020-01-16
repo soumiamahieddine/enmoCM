@@ -359,7 +359,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_SEND_TO_AVIS_WF</LABEL>
         <NAME>send_to_avis</NAME>
         <DESC>_SEND_TO_AVIS_WF_DESC</DESC>
-        <component>sendToAvisAction</component>
+        <component>sendToOpinionCircuitAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

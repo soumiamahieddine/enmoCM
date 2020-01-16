@@ -61,6 +61,7 @@ import { SendSignatureBookActionComponent }               from './actions/send-s
 import { ContinueVisaCircuitActionComponent }               from './actions/continue-visa-circuit-action/continue-visa-circuit-action.component';
 import { SendSignatureBookActionComponent }               from './actions/visa-send-signature-book-action/send-signature-book-action.component';
 import { ContinueVisaCircuitActionComponent }               from './actions/visa-continue-circuit-action/continue-visa-circuit-action.component';
+import { SendAvisWorkflowComponent }               from './actions/avis-workflow-send-action/send-avis-workflow-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -155,6 +156,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         closeMailWithAttachmentsOrNotesActionComponent,
         SendSignatureBookActionComponent,
         ContinueVisaCircuitActionComponent,
+        SendAvisWorkflowComponent,
         ActionsListComponent,
         PrintSeparatorComponent,
         FolderPinnedComponent,
@@ -201,6 +203,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         RejectVisaBackToPrevousActionComponent,
         ResetVisaActionComponent,
         InterruptVisaActionComponent,
+        SendAvisWorkflowComponent,
         UpdateDepartureDateActionComponent,
         SendExternalSignatoryBookActionComponent,
         SendExternalNoteBookActionComponent,
