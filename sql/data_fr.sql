@@ -816,7 +816,7 @@ DELETE FROM users WHERE user_id='superadmin';
 INSERT INTO users (user_id, password, firstname, lastname, phone, mail, status, loginmode, preferences) VALUES ('superadmin', '$2y$10$Vq244c5s2zmldjblmMXEN./Q2qZrqtGVgrbz/l1WfsUJbLco4E.e.', 'Super', 'ADMIN', '0147245159', 'support@maarch.fr', 'OK', 'standard', '{"documentEdition" : "onlyoffice"}');
 --MAARCH2GEC USER
 DELETE FROM users WHERE user_id = 'cchaplin';
-INSERT INTO users (user_id, password, firstname, lastname, mail, status, loginmode, preferences) VALUES ('cchaplin', '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', 'Charlie', 'CHAPLIN', 'support@maarch.fr', 'OK', 'restMode');
+INSERT INTO users (user_id, password, firstname, lastname, mail, status, loginmode, preferences) VALUES ('cchaplin', '$2y$10$C.QSslBKD3yNMfRPuZfcaubFwPKiCkqqOUyAdOr5FSGKPaePwuEjG', 'Charlie', 'CHAPLIN', 'support@maarch.fr', 'OK', 'restMode', '{"documentEdition" : "onlyoffice"}');
 DELETE FROM usergroup_content WHERE user_id = 24;
 INSERT INTO usergroup_content (user_id, group_id, role) VALUES (24, 11, '');
 INSERT INTO usergroup_content (user_id, group_id, role) VALUES (24, 13, '');
