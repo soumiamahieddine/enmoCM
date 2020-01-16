@@ -576,83 +576,13 @@ class ActionMethodController
     public static function sendToParallelOpinion(array $args)
     {
 
-        $currentUser = UserModel::getById(['select' => ['user_id'], 'id' => $args['userId']]);
-
-        DatabaseModel::beginTransaction();
-
-        foreach ($args['data'] as $ListInstanceByRes) {
-            if (empty($ListInstanceByRes['resId'])) {
-                DatabaseModel::rollbackTransaction();
-                return ['errors' => ['resId is empty']];
-            }
-
-            if (!Validator::intVal()->validate($ListInstanceByRes['resId']) || !ResController::hasRightByResId(['resId' => [$ListInstanceByRes['resId']], 'userId' => $GLOBALS['id']])) {
-                DatabaseModel::rollbackTransaction();
-                return ['errors' => ['Document out of perimeter']];
-            }
-
-            if (empty($ListInstanceByRes['listInstances'])) {
-                return ['errors' => ['listInstances is empty']];
-            }
-
-            $listInstances = ListInstanceModel::get([
-                'select'    => ['*'],
-                'where'     => ['res_id = ?', 'difflist_type = ?', 'item_mode in (?)'],
-                'data'      => [$ListInstanceByRes['resId'], 'entity_id', ['avis', 'avis_copy', 'avis_info']]
-            ]);
-            ListInstanceModel::delete([
-                'where' => ['res_id = ?', 'difflist_type = ?', 'item_mode in (?)'],
-                'data'  => [$ListInstanceByRes['resId'], 'entity_id', ['avis', 'avis_copy', 'avis_info']]
-            ]);
-
-            foreach ($ListInstanceByRes['listInstances'] as $instance) {
-                if (!in_array($instance['item_mode'], ['avis', 'avis_copy', 'avis_info'])) {
-                    return ['errors' => ['item_mode is different from avis, avis_copy or avis_info']];
-                }
-            }
-
-            foreach ($ListInstanceByRes['listInstances'] as $key => $instance) {
-                $listControl = ['item_id', 'item_type', 'item_mode'];
-                foreach ($listControl as $itemControl) {
-                    if (empty($instance[$itemControl])) {
-                        return ['errors' => ["ListInstance {$itemControl} is not set or empty"]];
-                    }
-                }
-
-                if (in_array($instance['item_type'], ['user_id', 'user'])) {
-                    if ($instance['item_type'] == 'user_id') {
-                        $user = UserModel::getByLogin(['login' => $instance['item_id'], 'select' => ['id']]);
-                    } else {
-                        $user = UserModel::getById(['id' => $instance['item_id'], 'select' => ['id', 'user_id']]);
-                        $instance['item_id'] = $user['user_id'] ?? null;
-                        $instance['item_type'] = 'user_id';
-                    }
-                    if (empty($user)) {
-                        DatabaseModel::rollbackTransaction();
-                        return ['errors' => ['User not found']];
-                    }
-                } else {
-                    DatabaseModel::rollbackTransaction();
-                    return ['errors' => ['item_type does not exist']];
-                }
-
-                ListInstanceModel::create([
-                    'res_id'                => $ListInstanceByRes['resId'],
-                    'sequence'              => $key,
-                    'item_id'               => $instance['item_id'],
-                    'item_type'             => $instance['item_type'],
-                    'item_mode'             => $instance['item_mode'],
-                    'added_by_user'         => $currentUser['user_id'],
-                    'difflist_type'         => 'entity_id',
-                    'process_date'          => null,
-                    'process_comment'       => null,
-                    'requested_signature'   => false,
-                    'viewed'                => empty($instance['viewed']) ? 0 : $instance['viewed']
-                ]);
-            }
+        if (empty($args['resId'])) {
+            return ['errors' => ['resId is empty']];
         }
 
-        DatabaseModel::commitTransaction();
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return ['errors' => ['Document out of perimeter']];
+        }
 
         if (empty($args['data']['opinionLimitDate'])) {
             return ["errors" => ["Opinion limit date is missing"]];
@@ -663,6 +593,64 @@ class ActionMethodController
         if ($opinionLimitDate < $today) {
             return ['errors' => "Opinion limit date is not a valid date"];
         }
+
+        if (empty($args['data']['opinionCircuit'])) {
+            return ['errors' => "opinionCircuit is empty"];
+        }
+
+        foreach ($args['data']['opinionCircuit'] as $instance) {
+            if (!in_array($instance['item_mode'], ['avis', 'avis_copy', 'avis_info'])) {
+                return ['errors' => ['item_mode is different from avis, avis_copy or avis_info']];
+            }
+
+            $listControl = ['item_id', 'item_type'];
+            foreach ($listControl as $itemControl) {
+                if (empty($instance[$itemControl])) {
+                    return ['errors' => ["ListInstance {$itemControl} is not set or empty"]];
+                }
+            }
+        }
+
+        $currentUser = UserModel::getById(['select' => ['user_id'], 'id' => $args['userId']]);
+
+        DatabaseModel::beginTransaction();
+
+        ListInstanceModel::delete([
+            'where' => ['res_id = ?', 'difflist_type = ?', 'item_mode in (?)'],
+            'data'  => [$args['resId'], 'entity_id', ['avis', 'avis_copy', 'avis_info']]
+        ]);
+
+        foreach ($args['data']['opinionCircuit'] as $key => $instance) {
+            if (in_array($instance['item_type'], ['user_id', 'user'])) {
+                $user = UserModel::getById(['id' => $instance['item_id'], 'select' => ['id', 'user_id']]);
+                $instance['item_id'] = $user['user_id'] ?? null;
+                $instance['item_type'] = 'user_id';
+                
+                if (empty($user)) {
+                    DatabaseModel::rollbackTransaction();
+                    return ['errors' => ['User not found']];
+                }
+            } else {
+                DatabaseModel::rollbackTransaction();
+                return ['errors' => ['item_type does not exist']];
+            }
+
+            ListInstanceModel::create([
+                'res_id'                => $args['resId'],
+                'sequence'              => $key,
+                'item_id'               => $instance['item_id'],
+                'item_type'             => $instance['item_type'],
+                'item_mode'             => $instance['item_mode'],
+                'added_by_user'         => $currentUser['user_id'],
+                'difflist_type'         => 'entity_id',
+                'process_date'          => null,
+                'process_comment'       => null,
+                'requested_signature'   => false,
+                'viewed'                => empty($instance['viewed']) ? 0 : $instance['viewed']
+            ]);
+        }
+
+        DatabaseModel::commitTransaction();
 
         ResModel::update([
             'set'   => ['opinion_limit_date' => $args['data']['opinionLimitDate']],
