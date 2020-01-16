@@ -62,7 +62,6 @@ export class VisaWorkflowComponent implements OnInit {
     ngOnInit(): void {
         if (this.resId !== null) {
             //this.initFilterVisaModelList();
-            //this.loadVisaModelListByResource();
             this.loadWorkflow(this.resId);
         }
     }
@@ -136,18 +135,20 @@ export class VisaWorkflowComponent implements OnInit {
         });
     }
 
-    loadVisaModelListByResource() {
+    async loadVisaModelList() {
+        await this.loadDefaultModel();
+
         return new Promise((resolve, reject) => {
-            this.http.get(`../../rest/resources/${this.resId}/availableCircuits?circuit=visa`).pipe(
+            this.http.get(`../../rest/availableCircuits?circuit=visa`).pipe(
                 tap((data: any) => {
-                    this.visaTemplates.public = data.circuits.filter((item: any) => !item.private).map((item: any) => {
+                    this.visaTemplates.public = this.visaTemplates.public.concat(data.circuits.filter((item: any) => !item.private).map((item: any) => {
                         return {
                             id: item.id,
                             title: item.title,
                             label: item.title,
                             type: 'entity'
                         }
-                    });
+                    }));
 
                     this.visaTemplates.private = data.circuits.filter((item: any) => item.private).map((item: any) => {
                         return {
@@ -168,7 +169,32 @@ export class VisaWorkflowComponent implements OnInit {
                             map(value => this._filterPrivateModel(value))
                         );
                     resolve(true);
+                })
+            ).subscribe();
+        });
+    }
+
+    loadDefaultModel() {
+        this.visaTemplates.public = [];
+
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/resources/${this.resId}/defaultCircuit?circuit=visa`).pipe(
+                filter((data: any) => !this.functions.empty(data.circuit)),
+                tap((data: any) => {
+                    if (!this.functions.empty(data.circuit)) {
+                        this.visaTemplates.public.push({
+                            id: data.circuit.id,
+                            title: data.circuit.title,
+                            label: data.circuit.title,
+                            type: 'entity'
+                        });
+                    }
                 }),
+                finalize(() => resolve(true)),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
             ).subscribe();
         });
     }
@@ -178,9 +204,7 @@ export class VisaWorkflowComponent implements OnInit {
             if (this.visaModelListNotLoaded) {
                 await this.loadVisaSignUsersList();
 
-                if (this.resId) {
-                    await this.loadVisaModelListByResource();
-                }
+                await this.loadVisaModelList();
                 
                 this.searchVisaSignUser.reset();
 
@@ -467,6 +491,7 @@ export class VisaWorkflowComponent implements OnInit {
                     label: data.title,
                     type: 'entity'
                 });
+                this.searchVisaSignUser.reset();
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);

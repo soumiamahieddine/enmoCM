@@ -1,8 +1,8 @@
 
 <mat-list *ngIf="!loading">
     <mat-form-field appearance="outline" *ngIf="adminMode && !linkedToMaarchParapheur">
-        <input type="text" matInput placeholder="Ajouter des personnes" id="searchAvisSignUserInput"
-            [formControl]="searchAvisSignUser" [matAutocomplete]="autoGroup">
+        <input type="text" matInput placeholder="Ajouter des personnes" id="searchAvisUserInput"
+            [formControl]="searchAvisUser" [matAutocomplete]="autoGroup">
         <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="addItemToWorkflow($event.option.value)" (opened)="initFilterAvisModelList()">
             <mat-option disabled *ngIf="avisModelListNotLoaded">
                 <div style="display: flex;justify-content: center;">
