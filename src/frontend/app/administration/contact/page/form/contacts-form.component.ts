@@ -375,11 +375,11 @@ export class ContactsFormComponent implements OnInit {
             }
             if (targetField !== undefined) {
 
-                if ((element.filling && this.creationMode) || element.mandatory) {
+                if ((element.filling && this.fillingParameters.enable && this.creationMode) || element.mandatory) {
                     targetField.display = true;
                 }
 
-                if (element.filling) {
+                if (element.filling && this.fillingParameters.enable) {
                     targetField.filling = true;
                 }
 

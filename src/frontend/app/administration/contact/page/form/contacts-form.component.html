@@ -50,7 +50,7 @@
             </button>
         </ng-container>
     </mat-menu>
-    <div style="padding: 10px;">
+    <div style="padding: 10px;" *ngIf="this.fillingParameters.enable">
         <div class="rate" [style.color]="fillingRate.color">{{lang.contactFilledTo}} <b>{{fillingRate.value}} %</b></div>
         <mat-progress-bar mode="determinate" class="fillingBar" [color]="fillingRate.class" [value]="fillingRate.value">
         </mat-progress-bar>
@@ -99,7 +99,7 @@
                                 <ng-container *ngIf="field.type === 'select'">
                                     <plugin-select-search [label]="field.label" [required]="field.required" [showLabel]="true"
                                         [formControlSelect]="field.control" [placeholderLabel]="field.label" [hideErrorDesc]="false"
-                                        [datas]="field.values" [class]="''" [suffixIcon]="{class:'fa-circle', color:fillingRate.color, title: lang.targetFillingField}">
+                                        [datas]="field.values" [class]="''" [suffixIcon]="field.filling ? {class:'fa-circle', color:fillingRate.color, title: lang.targetFillingField} : null">
                                     </plugin-select-search>
                                 </ng-container>
                                 <ng-container *ngIf="field.type === 'date'">

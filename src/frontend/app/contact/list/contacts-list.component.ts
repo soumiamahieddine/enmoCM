@@ -10,7 +10,7 @@ import { ContactService } from '../../../service/contact.service';
     selector: 'app-contacts-list',
     templateUrl: 'contacts-list.component.html',
     styleUrls: ['contacts-list.component.scss'],
-    providers: [NotificationService, ContactService]
+    providers: [ContactService]
 })
 export class ContactsListComponent implements OnInit {
 
