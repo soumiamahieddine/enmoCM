@@ -292,6 +292,37 @@ export class AvisWorkflowComponent implements OnInit {
         return this.avisWorkflow.items;
     }
 
+    getCurrentAvisUserIndex() {
+
+        const index = this.avisWorkflow.items.map((item: any) => item.listinstance_id).indexOf(this.getLastAvisUser().listinstance_id);
+
+        return (index + 1);
+    }
+
+    getFirstAvisUser() {
+        return !this.functions.empty(this.avisWorkflow.items[0]) ? this.avisWorkflow.items[0] : '';
+    }
+
+    getCurrentAvisUser() {
+
+        const index = this.avisWorkflow.items.map((item: any) => item.listinstance_id).indexOf(this.getLastAvisUser().listinstance_id);
+
+        return !this.functions.empty(this.avisWorkflow.items[index + 1]) ? this.avisWorkflow.items[index + 1] : '';
+    }
+
+    getNextAvisUser() {
+
+        const index = this.avisWorkflow.items.map((item: any) => item.listinstance_id).indexOf(this.getLastAvisUser().listinstance_id);
+
+        return !this.functions.empty(this.avisWorkflow.items[index + 2]) ? this.avisWorkflow.items[index + 2] : '';
+    }
+
+    getLastAvisUser() {
+        let arrOnlyProcess = this.avisWorkflow.items.filter((item: any) => !this.functions.empty(item.process_date));
+
+        return !this.functions.empty(arrOnlyProcess[arrOnlyProcess.length - 1]) ? arrOnlyProcess[arrOnlyProcess.length - 1] : '';
+    }
+
     saveAvisWorkflow(resIds: number[] = [this.resId]) {
         return new Promise((resolve, reject) => {
             if (this.avisWorkflow.items.length === 0) {

@@ -28,6 +28,7 @@ import { Router } from '@angular/router';
 import { SendSignatureBookActionComponent } from './visa-send-signature-book-action/send-signature-book-action.component';
 import { ContinueVisaCircuitActionComponent } from './visa-continue-circuit-action/continue-visa-circuit-action.component';
 import { SendAvisWorkflowComponent } from './avis-workflow-send-action/send-avis-workflow-action.component';
+import { ContinueAvisCircuitActionComponent } from './avis-continue-circuit-action/continue-avis-circuit-action.component';
 
 @Injectable()
 export class ActionsService {
@@ -751,4 +752,28 @@ export class ActionsService {
             })
         ).subscribe();
     }
+
+    continueOpinionCircuitAction(options: any = null) {
+        const dialogRef = this.dialog.open(ContinueAvisCircuitActionComponent, {
+            autoFocus: false,
+            disableClose: true,
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    
 }

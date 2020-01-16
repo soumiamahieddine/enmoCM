@@ -1440,7 +1440,6 @@ export const LANG_NL = {
     "endWorkflow": "You will end this workflow", //_TO_TRANSLATE
     "hasNoAttachmentsNotes": "The following letters have no annotation or attachments", //_TO_TRANSLATE
     "closeMailAddNoteMandatory": "Some letters have neither annotation nor attachments. Please enter an annotation below, or add an attachment to the letters.", //_TO_TRANSLATE
-    "endWorkflow": "You will end the workflow", //_TO_TRANSLATE
     "endedCircuit": "Workflow ended", //_TO_TRANSLATE
     "userHasntSigned": "The assignee hasn't signed any document",  //_TO_TRANSLATE
     "noCircuitAvailable": "No workflow defined", //_TO_TRANSLATE

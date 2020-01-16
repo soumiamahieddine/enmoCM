@@ -57,10 +57,9 @@ import { RedirectActionComponent }               from './actions/redirect-action
 import { SendShippingActionComponent }               from './actions/send-shipping-action/send-shipping-action.component';
 import { redirectInitiatorEntityActionComponent } from './actions/redirect-initiator-entity-action/redirect-initiator-entity-action.component';
 import { closeMailWithAttachmentsOrNotesActionComponent } from './actions/close-mail-with-attachments-or-notes-action/close-mail-with-attachments-or-notes-action.component';
-import { SendSignatureBookActionComponent }               from './actions/send-signature-book-action/send-signature-book-action.component';
-import { ContinueVisaCircuitActionComponent }               from './actions/continue-visa-circuit-action/continue-visa-circuit-action.component';
 import { SendSignatureBookActionComponent }               from './actions/visa-send-signature-book-action/send-signature-book-action.component';
 import { ContinueVisaCircuitActionComponent }               from './actions/visa-continue-circuit-action/continue-visa-circuit-action.component';
+import { ContinueAvisCircuitActionComponent }               from './actions/avis-continue-circuit-action/continue-avis-circuit-action.component';
 import { SendAvisWorkflowComponent }               from './actions/avis-workflow-send-action/send-avis-workflow-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
@@ -156,6 +155,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         closeMailWithAttachmentsOrNotesActionComponent,
         SendSignatureBookActionComponent,
         ContinueVisaCircuitActionComponent,
+        ContinueAvisCircuitActionComponent,
         SendAvisWorkflowComponent,
         ActionsListComponent,
         PrintSeparatorComponent,
@@ -208,6 +208,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         SendExternalSignatoryBookActionComponent,
         SendExternalNoteBookActionComponent,
         ContinueVisaCircuitActionComponent,
+        ContinueAvisCircuitActionComponent,
         ProcessActionComponent,
         RedirectActionComponent,
         SendShippingActionComponent,

@@ -50,6 +50,8 @@
             [cdkDragDisabled]="!adminMode || !functions.empty(diffusion.process_date)"
             [class.notDraggable]="!adminMode || !functions.empty(diffusion.process_date)"
             [class.notEditable]="!adminMode" [class.processed]="diffusion.process_date != null">
+            <mat-icon *ngIf="getCurrentAvisUserIndex() === i && !adminMode" class="fa fa-chevron-right fa-2x" mat-list-icon color="accent">
+            </mat-icon>
             <mat-icon
                 [ngClass]="{'fa fa-user fa-2x': functions.empty(diffusion.picture),'avatar': !functions.empty(diffusion.picture)}"
                 mat-list-icon color="primary"
