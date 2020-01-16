@@ -447,3 +447,6 @@ define("_NO_SENDERS", "Aucun expéditeur lié au courrier");
 
 define("_INTERRUPTED_WORKFLOW", "Circuit Interrompu");
 define("_HAS_INTERRUPTED_WORKFLOW", "A terminé le circuit");
+
+define("_AVIS_SENT", "Avis donné");
+define("_BY", "par");

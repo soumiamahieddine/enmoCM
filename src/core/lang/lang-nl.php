@@ -453,3 +453,6 @@ define("_NO_SENDERS", "No sender linked to resource"); //TO TRANSLATE
 
 define("_INTERRUPTED_WORKFLOW", "Interrupted workflow"); //TO TRANSLATE
 define("_HAS_INTERRUPTED_WORKFLOW", "Has interrupted the workflow "); //TO TRANSLATE
+
+define('_AVIS_SENT', 'Gegeven bericht');
+define('_BY', 'door');

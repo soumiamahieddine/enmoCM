@@ -448,3 +448,6 @@ define("_NO_SENDERS", "No sender linked to resource");
 
 define("_INTERRUPTED_WORKFLOW", "Interrupted workflow");
 define("_HAS_INTERRUPTED_WORKFLOW", "Has interrupted the workflow ");
+
+define("_AVIS_SENT", "Notice given");
+define("_BY", "by");

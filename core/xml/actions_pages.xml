@@ -372,7 +372,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_PROCEED_WORKFLOW_AVIS</LABEL>
         <NAME>avis_workflow</NAME>
         <DESC>_PROCEED_WORKFLOW_AVIS_DESC</DESC>
-        <component>v1Action</component>
+        <component>continueOpinionCircuitAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

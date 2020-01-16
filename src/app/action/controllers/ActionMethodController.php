@@ -59,6 +59,7 @@ class ActionMethodController
         'rejectVisaBackToRedactorAction'        => 'rejectVisaBackToRedactor',
         'interruptVisaAction'                   => 'interruptVisa',
         'sendToAvisAction'                      => 'sendToAvis',
+        'continueOpinionCircuitAction'          => 'continueOpinionCircuit',
         'noConfirmAction'                       => null
     ];
 
@@ -517,8 +518,8 @@ class ActionMethodController
 
         $listinstances = ListInstanceModel::get([
             'select' => [1],
-            'where' => ['res_id = ?', 'difflist_type = ?'],
-            'data' => [$args['resId'], 'AVIS_CIRCUIT']
+            'where'  => ['res_id = ?', 'difflist_type = ?'],
+            'data'   => [$args['resId'], 'AVIS_CIRCUIT']
         ]);
 
         if (empty($listinstances)) {
@@ -526,5 +527,53 @@ class ActionMethodController
         }
 
         return true;
+    }
+
+    public static function continueOpinionCircuit(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $currentStep = ListInstanceModel::get([
+            'select'  => ['listinstance_id', 'item_id'],
+            'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
+            'data'    => [$args['resId'], 'AVIS_CIRCUIT'],
+            'orderBy' => ['listinstance_id'],
+            'limit'   => 1
+        ]);
+
+        if (empty($currentStep) || empty($currentStep[0])) {
+            return ['errors' => ['No workflow or workflow finished']];
+        }
+        $currentStep = $currentStep[0];
+
+        $message = null;
+        if ($currentStep['item_id'] != $GLOBALS['userId']) {
+            $currentUser = UserModel::getById(['select' => ['firstname', 'lastname'], 'id' => $GLOBALS['id']]);
+            $stepUser = UserModel::get([
+                'select' => ['firstname', 'lastname'],
+                'where' => ['user_id = ?'],
+                'data' => [$currentStep['item_id']]
+            ]);
+            $stepUser = $stepUser[0];
+
+            $message = ' ' . _AVIS_SENT . " " . _BY ." "
+                . $currentUser['firstname'] . ' ' . $currentUser['lastname']
+                . " " . _INSTEAD_OF . " "
+                . $stepUser['firstname'] . ' ' . $stepUser['lastname'];
+        }
+
+        ListInstanceModel::update([
+            'set'   => [
+                'process_date' => 'CURRENT_TIMESTAMP'
+            ],
+            'where' => ['listinstance_id = ?'],
+            'data'  => [$currentStep['listinstance_id']]
+        ]);
+
+        if ($message == null) {
+            return true;
+        }
+        return ['history' => $message];
     }
 }
