@@ -1062,16 +1062,21 @@ class PreProcessActionController
             }
 
             if (empty($resource['opinion_limit_date'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'No opinion limit date for resource ' . $resource['alt_identifier']]);
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noOpinionLimiteDate'];
+                continue;
             }
 
             $opinionNote = NoteModel::get([
-                'where'  => ['identifier = ?', "note_text like '[" . _TO_AVIS . "]%'"],
-                'data'   => [$resId]
+                'select'    => ['user_id', 'note_text'],
+                'where'     => ['identifier = ?', "note_text like '[" . _TO_AVIS . "]%'"],
+                'data'      => [$resId],
+                'order_by'  => ['creation_date desc'],
+                'limit'     => 1
             ]);
 
             if (empty($opinionNote)) {
-                return $response->withStatus(400)->withJson(['errors' => 'No opinion note for resource ' . $resource['alt_identifier']]);
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noOpinionNote'];
+                continue;
             }
 
             $isInCircuit = ListInstanceModel::get([
@@ -1082,7 +1087,8 @@ class PreProcessActionController
             if (empty($isInCircuit)) {
                 $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'userNotInDiffusionList'];
             } else {
-                $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId];
+                $userInfo = UserModel::getLabelledUserById(['id' => $opinionNote[0]['user_id']]);
+                $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'avisUserAsk' => $userInfo, 'note' => $opinionNote[0]['note_text']];
             }
         }
 
