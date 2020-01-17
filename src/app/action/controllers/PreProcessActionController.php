@@ -1030,9 +1030,9 @@ class PreProcessActionController
                 continue;
             }
 
-            $note = str_replace('['._AVIS_USER.']', '', $opinionNote[0]['note_text']);
+            $note = str_replace('['._TO_AVIS.']', '', $opinionNote[0]['note_text']);
             $userInfo = UserModel::getLabelledUserById(['id' => $opinionNote[0]['user_id']]);
-            $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resource['res_id'], 'avisUserAsk' => $userInfo, 'note' => $note];
+            $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resource['res_id'], 'avisUserAsk' => $userInfo, 'note' => $note, 'opinionLimitDate' => $resource['opinion_limit_date']];
         }
 
         return $response->withJson(['resourcesInformations' => $resourcesInformation]);
