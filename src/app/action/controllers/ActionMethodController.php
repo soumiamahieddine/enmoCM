@@ -611,8 +611,6 @@ class ActionMethodController
             }
         }
 
-        $currentUser = UserModel::getById(['select' => ['user_id'], 'id' => $args['userId']]);
-
         DatabaseModel::beginTransaction();
 
         ListInstanceModel::delete([
@@ -641,7 +639,7 @@ class ActionMethodController
                 'item_id'               => $instance['item_id'],
                 'item_type'             => $instance['item_type'],
                 'item_mode'             => $instance['item_mode'],
-                'added_by_user'         => $currentUser['user_id'],
+                'added_by_user'         => $GLOBALS['userId'],
                 'difflist_type'         => 'entity_id',
                 'process_date'          => null,
                 'process_comment'       => null,
