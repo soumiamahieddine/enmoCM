@@ -1469,6 +1469,10 @@ export const LANG_FR = {
     "avisUserAsk": "pour avis",
     "avisUserState": "avis",
     "userNotInDiffusionList": "Vous n'êtes pas dans la liste de diffusion des avis",
-    "noOpinionLimiteDate": "La date limite de l'avis n'est pas défini",
+    "noOpinionLimitDate": "La date limite de l'avis n'est pas défini",
     "noOpinionNote": "Aucun motif défini",
+    "opinionLimitDateOutdated": "La date limit de l'avis est dépassée",
+    "validateBy": "Validé par",
+    "validateAvisParallel": "Vous allez valider des demandes d'avis",
+    "validateAvisParallelSingle": "Vous allez valider la demande d'avis de",
 };

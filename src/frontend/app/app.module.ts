@@ -63,6 +63,7 @@ import { ContinueAvisCircuitActionComponent }               from './actions/avis
 import { SendAvisWorkflowComponent }               from './actions/avis-workflow-send-action/send-avis-workflow-action.component';
 import { SendAvisParallelComponent }               from './actions/avis-parallel-send-action/send-avis-parallel-action.component';
 import { GiveAvisParallelActionComponent }               from './actions/avis-give-parallel-action/give-avis-parallel-action.component';
+import { ValidateAvisParallelComponent }               from './actions/avis-parallel-validate-action/validate-avis-parallel-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -161,6 +162,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         SendAvisWorkflowComponent,
         SendAvisParallelComponent,
         GiveAvisParallelActionComponent,
+        ValidateAvisParallelComponent,
         ActionsListComponent,
         PrintSeparatorComponent,
         FolderPinnedComponent,
@@ -215,6 +217,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         ContinueVisaCircuitActionComponent,
         ContinueAvisCircuitActionComponent,
         GiveAvisParallelActionComponent,
+        ValidateAvisParallelComponent,
         ProcessActionComponent,
         RedirectActionComponent,
         SendShippingActionComponent,

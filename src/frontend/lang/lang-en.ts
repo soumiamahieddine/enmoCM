@@ -1429,6 +1429,10 @@ export const LANG_EN = {
     "avisUserAsk": "for opinion",
     "avisUserState": "opinion",
     "userNotInDiffusionList": "You are not in opinion diffusion list",
-    "noOpinionLimiteDate": "The opinion limit date is not defined",
+    "noOpinionLimitDate": "The opinion limit date is not defined",
     "noOpinionNote": "The reason is not defined",
+    "opinionLimitDateOutdated": "The opinion limit date is outdated",
+    "validateBy": "Validate by",
+    "validateAvisParallel": "Your are validating an opinion request",
+    "validateAvisParallelSingle": "Your are validating an opinion request of",
 };

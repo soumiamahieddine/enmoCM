@@ -1454,6 +1454,10 @@ export const LANG_NL = {
     "avisUserAsk": "for opinion", //_TO_TRANSLATE
     "avisUserState": "opinion", //_TO_TRANSLATE
     "userNotInDiffusionList": "You are not in opinion diffusion list", //_TO_TRANSLATE
-    "noOpinionLimiteDate": "The opinion limit date is not defined", //_TO_TRANSLATE
+    "noOpinionLimitDate": "The opinion limit date is not defined", //_TO_TRANSLATE
     "noOpinionNote": "The reason is not defined", //_TO_TRANSLATE
+    "opinionLimitDateOutdated": "The opinion limit date is outdated", //_TO_TRANSLATE
+    "validateBy": "Validate by", //_TO_TRANSLATE
+    "validateAvisParallel": "Your are validating an opinion request", //_TO_TRANSLATE
+    "validateAvisParallelSingle": "Your are validating an opinion request of", //_TO_TRANSLATE
 };

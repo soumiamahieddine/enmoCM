@@ -66,7 +66,7 @@ class ActionMethodController
         'sendToOpinionCircuitAction'            => 'sendToOpinionCircuit',
         'continueOpinionCircuitAction'          => 'continueOpinionCircuit',
         'giveOpinionParallelAction'             => 'giveOpinionParallel',
-        'validateRecommendationAction'             => 'validateRecommendation',
+        'validateParallelOpinionDiffusionAction' => 'validateParallelOpinionDiffusion',
         'noConfirmAction'                       => null
     ];
 
@@ -736,7 +736,7 @@ class ActionMethodController
         return true;
     }
 
-    public static function validateRecommendation(array $args)
+    public static function validateParallelOpinionDiffusion(array $args)
     {
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);

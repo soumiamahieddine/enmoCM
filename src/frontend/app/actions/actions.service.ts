@@ -31,6 +31,7 @@ import { SendAvisWorkflowComponent } from './avis-workflow-send-action/send-avis
 import { ContinueAvisCircuitActionComponent } from './avis-continue-circuit-action/continue-avis-circuit-action.component';
 import { SendAvisParallelComponent } from './avis-parallel-send-action/send-avis-parallel-action.component';
 import { GiveAvisParallelActionComponent } from './avis-give-parallel-action/give-avis-parallel-action.component';
+import { ValidateAvisParallelComponent } from './avis-parallel-validate-action/validate-avis-parallel-action.component';
 
 @Injectable()
 export class ActionsService {
@@ -801,6 +802,28 @@ export class ActionsService {
 
     giveOpinionParallelAction(options: any = null) {
         const dialogRef = this.dialog.open(GiveAvisParallelActionComponent, {
+            autoFocus: false,
+            disableClose: true,
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    validateParallelOpinionDiffusionAction(options: any = null) {
+        const dialogRef = this.dialog.open(ValidateAvisParallelComponent, {
             autoFocus: false,
             disableClose: true,
             data: this.setDatasActionToSend()
