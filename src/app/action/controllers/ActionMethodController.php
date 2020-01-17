@@ -27,6 +27,7 @@ use MessageExchange\controllers\MessageExchangeReviewController;
 use Note\models\NoteModel;
 use Resource\controllers\ResController;
 use Resource\models\ResModel;
+use Respect\Validation\Validator;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
 use SrcCore\models\DatabaseModel;
@@ -575,7 +576,6 @@ class ActionMethodController
 
     public static function sendToParallelOpinion(array $args)
     {
-
         if (empty($args['resId'])) {
             return ['errors' => ['resId is empty']];
         }
