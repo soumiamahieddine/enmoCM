@@ -1393,6 +1393,8 @@ export const LANG_EN = {
     "modelSaved" : "Model saved",
     "visaWorkflowUpdated" : "Visa workflow updated",
     "visaWorkflowDeleted" : "Visa workflow deleted",
+    "visaWorkflowInterrupted" : "Interrupted workflow",
+    "hasInterruptedWorkflow" : "Has interrupted the workflow",
     "publicModel" : "Public model",
     "privateModel" : "Private model",
     "moveVisaUserErr1" : "You cannot move", 

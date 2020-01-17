@@ -1446,4 +1446,6 @@ export const LANG_NL = {
     "interrupted": "Interrupted", //_TO_TRANSLATE
     "addOpinionReason": "Please fill the opinion reason", //_TO_TRANSLATE
     "opinionLimitDate": "Opinion limit date", //_TO_TRANSLATE
+    "visaWorkflowInterrupted" : "Interrupted workflow",//_TO_TRANSLATE
+    "hasInterruptedWorkflow" : "Has interrupted the workflow",//_TO_TRANSLATE
 };
