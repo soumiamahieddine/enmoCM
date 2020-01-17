@@ -113,6 +113,12 @@ class ListInstanceController
 
     public function update(Request $request, Response $response)
     {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'update_diffusion_details', 'userId' => $GLOBALS['id']])
+            && !PrivilegeController::hasPrivilege(['privilegeId' => 'update_diffusion_except_recipient_details', 'userId' => $GLOBALS['id']])
+            && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         $body = $request->getParsedBody();
         if (!Validator::arrayType()->notEmpty()->validate($body)) {
             return $response->withStatus(400)->withJson(['errors' => 'Body is not set or not an array']);
