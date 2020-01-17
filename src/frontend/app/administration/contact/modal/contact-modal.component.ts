@@ -38,6 +38,12 @@ export class ContactModalComponent {
         } else {
             this.creationMode = true;
             this.mode = 'update';
+            if (this.headerService.getLastLoadedFile() !== null) {
+                this.drawer.toggle();
+                setTimeout(() => {
+                    this.loadedDocument = true;
+                }, 200);
+            }
         }
         this.canUpdate = this.privilegeService.hasCurrentUserPrivilege('update_contacts');
     }
