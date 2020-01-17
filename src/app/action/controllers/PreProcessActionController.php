@@ -1020,7 +1020,7 @@ class PreProcessActionController
             $opinionNote = NoteModel::get([
                 'select'    => ['note_text', 'user_id', 'creation_date'],
                 'where'     => ['identifier in (?)', 'note_text like (?)'],
-                'data'      => [$resource['res_id'], '['._AVIS_USER.']%'],
+                'data'      => [$resource['res_id'], '['._TO_AVIS.']%'],
                 'order_by'  => ['creation_date desc'],
                 'limit'     => 1
             ]);
@@ -1078,8 +1078,8 @@ class PreProcessActionController
 
             $opinionNote = NoteModel::get([
                 'select'    => ['user_id', 'note_text'],
-                'where'     => ['identifier = ?', "note_text like '[" . _TO_AVIS . "]%'"],
-                'data'      => [$resId],
+                'where'     => ['identifier = ?', "note_text like ?"],
+                'data'      => [$resId, '['._TO_AVIS.']%'],
                 'order_by'  => ['creation_date desc'],
                 'limit'     => 1
             ]);
@@ -1206,7 +1206,7 @@ class PreProcessActionController
             }
 
             $opinionNote = NoteModel::get([
-                'where'  => ['identifier = ?', "note_text like '[" . _TO_AVIS . "]%'"],
+                'where'  => ['identifier = ?', "note_text ilike '[" . _TO_AVIS . "]%'"],
                 'data'   => [$resId]
             ]);
 
