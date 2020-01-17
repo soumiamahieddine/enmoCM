@@ -1052,9 +1052,23 @@ class PreProcessActionController
 
         $resourcesInformation = [];
         foreach ($body['resources'] as $resId) {
-            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier']]);
+            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'opinion_limit_date']]);
+
             if (empty($resource['alt_identifier'])) {
                 $resource['alt_identifier'] = _UNDEFINED;
+            }
+
+            if (empty($resource['opinion_limit_date'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'No opinion limit date for resource ' . $resource['alt_identifier']]);
+            }
+
+            $opinionNote = NoteModel::get([
+                'where'  => ['identifier = ?', "note_text like '[" . _TO_AVIS . "]%'"],
+                'data'   => [$resId]
+            ]);
+
+            if (empty($opinionNote)) {
+                return $response->withStatus(400)->withJson(['errors' => 'No opinion note for resource ' . $resource['alt_identifier']]);
             }
 
             $isSignatory = ListInstanceModel::get([
