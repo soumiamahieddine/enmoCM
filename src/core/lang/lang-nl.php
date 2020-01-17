@@ -453,3 +453,4 @@ define("_HAS_INTERRUPTED_WORKFLOW", "Has interrupted the workflow "); //TO TRANS
 define('_AVIS_SENT', 'Gegeven bericht');
 define('_BY', 'door');
 define('_TO_AVIS', 'VOOR BERICHT');
+define('_VALIDATE_BY', 'Gevalideerd door');

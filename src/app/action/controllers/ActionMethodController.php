@@ -763,18 +763,86 @@ class ActionMethodController
         }
         $latestNote = $latestNote[0];
 
-        $newNote = $args['data']['note'];
+        if (!empty($args['data']['note'])) {
+            $newNote = $args['data']['note'];
 
-        NoteModel::delete([
-            'where' => ['id = ?'],
-            'data' => [$latestNote['id']]
-        ]);
+            NoteModel::delete([
+                'where' => ['id = ?'],
+                'data'  => [$latestNote['id']]
+            ]);
 
-        NoteModel::create([
-            'resId'     => $args['resId'],
-            'user_id'   => $GLOBALS['id'],
-            'note_text' => $newNote
-        ]);
+            NoteModel::create([
+                'resId'     => $args['resId'],
+                'user_id'   => $GLOBALS['id'],
+                'note_text' => $newNote
+            ]);
+        } else {
+            $user = UserModel::getById(['select' => ['firstname', 'lastname'], 'id' => $GLOBALS['id']]);
+            $newNote = $latestNote['note_text'] . '← ' . _VALIDATE_BY . ' ' . $user['firstname'] . ' ' . $user['lastname'];
+
+            NoteModel::update([
+                'set'   => [
+                    'note_text'     => $newNote,
+                    'creation_date' => 'CURRENT_TIMESTAMP'
+                ],
+                'where' => ['id = ?'],
+                'data'  => [$latestNote['id']]
+            ]);
+        }
+
+        if (!empty($args['data']['opinionWorkflow'])) {
+            foreach ($args['data']['opinionWorkflow'] as $instance) {
+                if (!in_array($instance['item_mode'], ['avis', 'avis_copy', 'avis_info'])) {
+                    return ['errors' => ['item_mode is different from avis, avis_copy or avis_info']];
+                }
+
+                $listControl = ['item_id', 'item_type'];
+                foreach ($listControl as $itemControl) {
+                    if (empty($instance[$itemControl])) {
+                        return ['errors' => ["ListInstance {$itemControl} is not set or empty"]];
+                    }
+                }
+            }
+
+            DatabaseModel::beginTransaction();
+
+            ListInstanceModel::delete([
+                'where' => ['res_id = ?', 'difflist_type = ?', 'item_mode in (?)'],
+                'data'  => [$args['resId'], 'entity_id', ['avis', 'avis_copy', 'avis_info']]
+            ]);
+
+            foreach ($args['data']['opinionWorkflow'] as $key => $instance) {
+                if (in_array($instance['item_type'], ['user_id', 'user'])) {
+                    $user = UserModel::getById(['id' => $instance['item_id'], 'select' => ['id', 'user_id']]);
+                    $instance['item_id'] = $user['user_id'] ?? null;
+                    $instance['item_type'] = 'user_id';
+
+                    if (empty($user)) {
+                        DatabaseModel::rollbackTransaction();
+                        return ['errors' => ['User not found']];
+                    }
+                } else {
+                    DatabaseModel::rollbackTransaction();
+                    return ['errors' => ['item_type does not exist']];
+                }
+
+                ListInstanceModel::create([
+                    'res_id'              => $args['resId'],
+                    'sequence'            => $key,
+                    'item_id'             => $instance['item_id'],
+                    'item_type'           => $instance['item_type'],
+                    'item_mode'           => $instance['item_mode'],
+                    'added_by_user'       => $GLOBALS['userId'],
+                    'difflist_type'       => 'entity_id',
+                    'process_date'        => null,
+                    'process_comment'     => null,
+                    'requested_signature' => false,
+                    'viewed'              => empty($instance['viewed']) ? 0 : $instance['viewed']
+                ]);
+            }
+
+            DatabaseModel::commitTransaction();
+        }
 
         ResModel::update([
             'set'   => ['opinion_limit_date' => $args['data']['opinionLimitDate']],

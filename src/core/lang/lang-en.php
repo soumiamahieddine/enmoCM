@@ -448,3 +448,4 @@ define("_HAS_INTERRUPTED_WORKFLOW", "Has interrupted the workflow");
 define("_AVIS_SENT", "Notice given");
 define("_BY", "by");
 define("_TO_AVIS", "For recommendation");
+define("_VALIDATE_BY", "Validate by");

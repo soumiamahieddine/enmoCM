@@ -447,3 +447,4 @@ define("_HAS_INTERRUPTED_WORKFLOW", "A terminé le circuit");
 define("_AVIS_SENT", "Avis donné");
 define("_BY", "par");
 define("_TO_AVIS", "POUR AVIS");
+define("_VALIDATE_BY", "Validé par");
