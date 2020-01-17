@@ -985,7 +985,7 @@ class PreProcessActionController
         return $response->withJson(['resourcesInformations' => $resourcesInformations]);
     }
 
-    public function checkOpinionInfo(Request $request, Response $response, array $args)
+    public function checkValidateParallelOpinion(Request $request, Response $response, array $args)
     {
         $body = $request->getParsedBody();
 
@@ -1031,6 +1031,62 @@ class PreProcessActionController
         }
 
         return $response->withJson(['noOpinionLimitDate' => $noOpinionLimitDate, 'noNote' => $noNote, 'validatedResourcesInfo' => $validatedResourcesInfo, 'validatedResources' => $validatedResources]);
+    }
+
+    public function checkGiveParallelOpinion(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $currentUser = UserModel::getById(['select' => ['user_id'], 'id' => $GLOBALS['id']]);
+
+        $resourcesInformation = [];
+        foreach ($body['resources'] as $resId) {
+            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'opinion_limit_date']]);
+
+            if (empty($resource['alt_identifier'])) {
+                $resource['alt_identifier'] = _UNDEFINED;
+            }
+
+            if (empty($resource['opinion_limit_date'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'No opinion limit date for resource ' . $resource['alt_identifier']]);
+            }
+
+            $opinionNote = NoteModel::get([
+                'where'  => ['identifier = ?', "note_text like '[" . _TO_AVIS . "]%'"],
+                'data'   => [$resId]
+            ]);
+
+            if (empty($opinionNote)) {
+                return $response->withStatus(400)->withJson(['errors' => 'No opinion note for resource ' . $resource['alt_identifier']]);
+            }
+
+            $isInCircuit = ListInstanceModel::get([
+                'select'  => [1],
+                'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is null', 'item_id = ?', 'item_mode = ?'],
+                'data'    => [$resId, 'entity_id', $currentUser['user_id'], 'avis']
+            ]);
+            if (empty($isInCircuit)) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'userNotInDiffusionList'];
+            } else {
+                $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId];
+            }
+        }
+
+        return $response->withJson(['resourcesInformations' => $resourcesInformation]);
     }
 
     public function checkContinueOpinionCircuit(Request $request, Response $response, array $args)
