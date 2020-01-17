@@ -104,6 +104,7 @@ foreach ($customs as $custom) {
 
     $id = 1;
     $contacts = [];
+    $customInfos = [];
     $debutMigrateInProgress = microtime(true);
     foreach ($contactsInfo as $contactInfo) {
         $oldContactId = $contactInfo['contact_id'];
@@ -236,7 +237,7 @@ foreach ($customs as $custom) {
 
         $ids[$id] = ['oldAddressId' => $oldAddressId, 'oldContactId' => $oldContactId];
 
-        migrateCustomField(['newContactId' => $id, 'contactCustomInfo' => $contactCustomInfo, 'newCustomFields' => $newCustomFields]);
+        $customInfos[$id] = $contactCustomInfo;
 
         $currentValuesContactRes = migrateContactRes(['oldAddressId' => $oldAddressId, 'oldContactId' => $oldContactId, 'newContactId' => $id]);
 
@@ -260,6 +261,15 @@ foreach ($customs as $custom) {
             $afterCopyContacts = microtime(true);
             $copyTimeContacts = $afterCopyContacts - $beforeCopyContacts;
             echo "Temps copy contacts = $copyTimeContacts\n";
+
+            $beforeCustomFields = microtime(true);
+            foreach ($customInfos as $newId => $customInfo) {
+                migrateCustomField(['newContactId' => $newId, 'contactCustomInfo' => $customInfo, 'newCustomFields' => $newCustomFields]);
+            }
+            $customInfos = [];
+            $afterCustomFields = microtime(true);
+            $timeCustoms = $afterCustomFields - $beforeCustomFields;
+            echo "Temps migrate custom fields = $timeCustoms\n";
 
             pg_copy_from($databaseConnection, 'resource_contacts (res_id, item_id, type, mode)', $aValues, "\t", 	"\\\\N");
             $finMigrateInProgress = microtime(true);
@@ -291,7 +301,17 @@ foreach ($customs as $custom) {
         echo "Temps copy contacts = $copyTimeContacts\n";
     }
 
-
+    if (!empty($customInfos)) {
+        $beforeCustomFields = microtime(true);
+        foreach ($customInfos as $newId => $customInfo) {
+            migrateCustomField(['newContactId'    => $newId, 'contactCustomInfo' => $customInfo,
+                                'newCustomFields' => $newCustomFields]);
+        }
+        $customInfos = [];
+        $afterCustomFields = microtime(true);
+        $timeCustoms = $afterCustomFields - $beforeCustomFields;
+        echo "Temps migrate custom fields = $timeCustoms\n";
+    }
 
     $beforeUpdates = microtime(true);
     $valuesOldAddress = '';
@@ -399,6 +419,13 @@ foreach ($customs as $custom) {
         'set'   => ['type' => 'contact'],
         'table' => 'resource_contacts',
         'where' => ['type = ?'],
+        'data'  => ['contact_v3']
+    ]);
+
+    \SrcCore\models\DatabaseModel::update([
+        'set'   => ['recipient_type' => 'contact'],
+        'table' => 'res_attachments',
+        'where' => ['recipient_type = ?'],
         'data'  => ['contact_v3']
     ]);
 
