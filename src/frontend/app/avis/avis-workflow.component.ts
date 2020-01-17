@@ -32,6 +32,8 @@ export class AvisWorkflowComponent implements OnInit {
         public: []
     };
 
+    availableRoles: any[] = [];
+
     signAvisUsers: any = [];
     filteredSignAvisUsers: Observable<string[]>;
     filteredPublicModels: Observable<string[]>;
@@ -44,6 +46,8 @@ export class AvisWorkflowComponent implements OnInit {
     @Input('injectDatas') injectDatas: any;
     @Input('adminMode') adminMode: boolean;
     @Input('resId') resId: number = null;
+
+    @Input('mode') mode: 'parallel' | 'circuit' = 'circuit';
 
     @ViewChild('searchAvisUserInput', { static: true }) searchAvisUserInput: ElementRef;
 
@@ -58,6 +62,10 @@ export class AvisWorkflowComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        if (this.mode === 'parallel') {
+            this.loadAvisRoles();
+        }
+
         if (this.resId !== null) {
             this.loadWorkflow(this.resId);
         }
@@ -71,6 +79,30 @@ export class AvisWorkflowComponent implements OnInit {
                 this.notify.error(`${this.lang.moveAvisUserErr1} <b>${this.avisWorkflow.items[event.previousIndex].labelToDisplay}</b> ${this.lang.moveAvisUserErr2}.`);
             }
         }
+    }
+
+    loadAvisRoles() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/roles`).pipe(
+                tap((data:any) => {
+                    this.availableRoles = data.roles.filter((role: any) => ['avis', 'avis_copy', 'avis_info'].indexOf(role.id) > -1).map((role: any) => {
+                        return {
+                            id: role.id,
+                            label: role.label
+                        }
+                    });
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    getRoleLabel(id: string) {
+        return this.availableRoles.filter(role => role.id === id) [0].label;
     }
 
     loadListModel(entityId: number) {
@@ -240,7 +272,7 @@ export class AvisWorkflowComponent implements OnInit {
                     this.avisWorkflow.items.push(
                         {
                             ...element,
-                            difflist_type: 'AVIS_CIRCUIT'
+                            difflist_type: this.mode === 'circuit' ? 'AVIS_CIRCUIT' : 'entity_id'
                         });
                 });
                 this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items))
@@ -263,7 +295,7 @@ export class AvisWorkflowComponent implements OnInit {
                     this.avisWorkflow.items.push(
                         {
                             ...element,
-                            difflist_type: 'AVIS_CIRCUIT'
+                            difflist_type: this.mode === 'circuit' ? 'AVIS_CIRCUIT' : 'entity_id'
                         });
                 });
                 this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items))
@@ -284,8 +316,8 @@ export class AvisWorkflowComponent implements OnInit {
         return this.avisWorkflow.items.length;
     }
 
-    changeRole(i: number) {
-        this.avisWorkflow.items[i].requested_signature = !this.avisWorkflow.items[i].requested_signature;
+    changeRole(role: any, i : number) {
+        this.avisWorkflow.items[i].item_mode = role.id;
     }
 
     getWorkflow() {
@@ -365,11 +397,10 @@ export class AvisWorkflowComponent implements OnInit {
                 item_id: item.id,
                 item_type: 'user',
                 item_entity: item.entity,
+                item_mode: 'avis',
                 labelToDisplay: item.label,
                 externalId: !this.functions.empty(item.externalId) ? item.externalId : null,
-                difflist_type: 'AVIS_CIRCUIT',
-                signatory: false,
-                requested_signature: false
+                difflist_type: this.mode === 'circuit' ? 'AVIS_CIRCUIT' : 'entity_id'
             });
             this.searchAvisUser.reset();
         } else if (item.type === 'entity') {
@@ -382,9 +413,8 @@ export class AvisWorkflowComponent implements OnInit {
                                 item_type: 'user',
                                 labelToDisplay: itemTemplate.idToDisplay,
                                 item_entity: itemTemplate.descriptionToDisplay,
-                                difflist_type: 'AVIS_CIRCUIT',
-                                signatory: false,
-                                requested_signature: false
+                                item_mode: 'avis',
+                                difflist_type: this.mode === 'circuit' ? 'AVIS_CIRCUIT' : 'entity_id'
                             }
                         })
                     );

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -10,10 +10,10 @@ import { FunctionsService } from '../../../service/functions.service';
 import { AvisWorkflowComponent } from '../../avis/avis-workflow.component';
 
 @Component({
-    templateUrl: "send-avis-workflow-action.component.html",
-    styleUrls: ['send-avis-workflow-action.component.scss'],
+    templateUrl: "send-avis-parallel-action.component.html",
+    styleUrls: ['send-avis-parallel-action.component.scss'],
 })
-export class SendAvisWorkflowComponent implements AfterViewInit {
+export class SendAvisParallelComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = false;
@@ -26,23 +26,41 @@ export class SendAvisWorkflowComponent implements AfterViewInit {
 
     today: Date = new Date();
 
+    availableRoles: any[] = [];
+
     @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
     @ViewChild('appAvisWorkflow', { static: false }) appAvisWorkflow: AvisWorkflowComponent;
 
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
-        public dialogRef: MatDialogRef<SendAvisWorkflowComponent>,
+        public dialogRef: MatDialogRef<SendAvisParallelComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public functions: FunctionsService) { }
 
-    async ngAfterViewInit(): Promise<void> {
-        if (this.data.resIds.length === 1) {
-            await this.appAvisWorkflow.loadWorkflow(this.data.resIds[0]);
-            if (this.appAvisWorkflow.emptyWorkflow()) {
-                this.appAvisWorkflow.loadDefaultWorkflow(this.data.resIds[0]);
-            }
+    async ngOnInit(): Promise<void> {
+        if (this.data.resIds.length > 0) {
+            this.loading = true;
+            await this.checkAvisParallel();
+            this.loading = false;
         }
+    }
+
+    checkAvisParallel() {
+        this.resourcesError = [];
+
+        return new Promise((resolve, reject) => {
+            this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkOpinionInfo', { resources: this.data.resIds })
+                .subscribe((data: any) => {
+                    if (!this.functions.empty(data.resourcesInformations.noAttachment)) {
+                        this.resourcesError = data.resourcesInformations.noAttachment;
+                    }
+                    this.noResourceToProcess = this.data.resIds.length === this.resourcesError.length;
+                    resolve(true);
+                }, (err: any) => {
+                    this.notify.handleSoftErrors(err);
+                });
+        });
     }
 
     async onSubmit() {
@@ -85,7 +103,7 @@ export class SendAvisWorkflowComponent implements AfterViewInit {
 
     executeAction(realResSelected: number[]) {
         const noteContent: string = `[POUR AVIS] ${this.noteEditor.getNoteContent()}`;
-        this.http.put(this.data.processActionRoute, { resources: realResSelected, note: noteContent, data: { opinionLimitDate: this.functions.formatDateObjectToFrenchDateString(this.opinionLimitDate, true) } }).pipe(
+        this.http.put(this.data.processActionRoute, { resources: realResSelected, note: noteContent, data: { opinionLimitDate: this.functions.formatDateObjectToFrenchDateString(this.opinionLimitDate, true), opinionCircuit : this.appAvisWorkflow.getWorkflow() } }).pipe(
             tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close('success');

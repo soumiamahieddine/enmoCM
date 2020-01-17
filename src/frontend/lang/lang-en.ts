@@ -1420,4 +1420,5 @@ export const LANG_EN = {
     "noCircuitAvailable": "No workflow defined",
     "interrupted": "Interrupted",
     "addOpinionReason": "Please fill the opinion reason",
+    "opinionLimitDate": "Opinion limit date",
 };

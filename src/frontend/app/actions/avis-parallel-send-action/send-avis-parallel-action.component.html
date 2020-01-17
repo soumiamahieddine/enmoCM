@@ -37,7 +37,7 @@
             </mat-form-field>
             <app-note-editor #noteEditor [title]="lang.addOpinionReason" [resIds]="data.resIds"></app-note-editor>
             <app-avis-workflow *ngIf="data.resIds.length == 1 || (!noResourceToProcess && data.resIds.length > 1)"
-                [adminMode]="true" #appAvisWorkflow>
+                [adminMode]="true" [mode]="'parallel'" #appAvisWorkflow>
             </app-avis-workflow>
         </mat-sidenav-content>
     </mat-sidenav-container>

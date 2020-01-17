@@ -1445,4 +1445,5 @@ export const LANG_NL = {
     "noCircuitAvailable": "No workflow defined", //_TO_TRANSLATE
     "interrupted": "Interrupted", //_TO_TRANSLATE
     "addOpinionReason": "Please fill the opinion reason", //_TO_TRANSLATE
+    "opinionLimitDate": "Opinion limit date", //_TO_TRANSLATE
 };

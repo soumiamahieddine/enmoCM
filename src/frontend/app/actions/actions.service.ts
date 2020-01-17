@@ -29,6 +29,7 @@ import { SendSignatureBookActionComponent } from './visa-send-signature-book-act
 import { ContinueVisaCircuitActionComponent } from './visa-continue-circuit-action/continue-visa-circuit-action.component';
 import { SendAvisWorkflowComponent } from './avis-workflow-send-action/send-avis-workflow-action.component';
 import { ContinueAvisCircuitActionComponent } from './avis-continue-circuit-action/continue-avis-circuit-action.component';
+import { SendAvisParallelComponent } from './avis-parallel-send-action/send-avis-parallel-action.component';
 
 @Injectable()
 export class ActionsService {
@@ -733,6 +734,28 @@ export class ActionsService {
 
     sendToOpinionCircuitAction(options: any = null) {
         const dialogRef = this.dialog.open(SendAvisWorkflowComponent, {
+            autoFocus: false,
+            disableClose: true,
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    sendToParallelOpinion(options: any = null) {
+        const dialogRef = this.dialog.open(SendAvisParallelComponent, {
             autoFocus: false,
             disableClose: true,
             data: this.setDatasActionToSend()

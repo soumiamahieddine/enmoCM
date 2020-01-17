@@ -1460,4 +1460,5 @@ export const LANG_FR = {
     "noCircuitAvailable": "Aucun circuit défini",
     "interrupted": "Interrompu",
     "addOpinionReason": "Veuillez renseigner le motif de l'avis",
+    "opinionLimitDate": "Date limite de l'avis",
 };

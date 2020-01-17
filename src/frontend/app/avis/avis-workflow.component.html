@@ -1,9 +1,9 @@
-
 <mat-list *ngIf="!loading">
     <mat-form-field appearance="outline" *ngIf="adminMode && !linkedToMaarchParapheur">
         <input type="text" matInput placeholder="Ajouter des personnes" id="searchAvisUserInput"
             [formControl]="searchAvisUser" [matAutocomplete]="autoGroup">
-        <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="addItemToWorkflow($event.option.value)" (opened)="initFilterAvisModelList()">
+        <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="addItemToWorkflow($event.option.value)"
+            (opened)="initFilterAvisModelList()">
             <mat-option disabled *ngIf="avisModelListNotLoaded">
                 <div style="display: flex;justify-content: center;">
                     <mat-spinner diameter="35"></mat-spinner>
@@ -50,7 +50,8 @@
             [cdkDragDisabled]="!adminMode || !functions.empty(diffusion.process_date)"
             [class.notDraggable]="!adminMode || !functions.empty(diffusion.process_date)"
             [class.notEditable]="!adminMode" [class.processed]="diffusion.process_date != null">
-            <mat-icon *ngIf="getCurrentAvisUserIndex() === i && !adminMode" class="fa fa-chevron-right fa-2x" mat-list-icon color="accent">
+            <mat-icon *ngIf="getCurrentAvisUserIndex() === i && !adminMode" class="fa fa-chevron-right fa-2x"
+                mat-list-icon color="accent">
             </mat-icon>
             <mat-icon
                 [ngClass]="{'fa fa-user fa-2x': functions.empty(diffusion.picture),'avatar': !functions.empty(diffusion.picture)}"
@@ -58,8 +59,8 @@
                 [style.background-image]="!functions.empty(diffusion.picture) ? 'url('+diffusion.picture+')' : ''">
             </mat-icon>
             <ng-container *ngIf="!adminMode || diffusion.process_date != null">
-                <mat-icon mat-list-icon class="fa-2x far"
-                [class.fa-hourglass]="diffusion.process_date == null" [class.fa-thumbs-up]="diffusion.process_date != null" [class.valid]="diffusion.process_date != null"
+                <mat-icon mat-list-icon class="fa-2x far" [class.fa-hourglass]="diffusion.process_date == null"
+                    [class.fa-thumbs-up]="diffusion.process_date != null" [class.valid]="diffusion.process_date != null"
                     style="opacity:0.5;"></mat-icon>
             </ng-container>
             <div mat-line class="workflowLine">
@@ -71,9 +72,15 @@
                         {{diffusion.item_entity}}
                     </div>
                     <div *ngIf="diffusion.process_date != null" class="workflowLineProcessDate"
-                        title='{{diffusion.process_date | fullDate}}'
-                        color="accent">{{lang.avisSent}} {{diffusion.process_date
+                        title='{{diffusion.process_date | fullDate}}' color="accent">{{lang.avisSent}} {{diffusion.process_date
                                                 | timeAgo : 'full'}}</div>
+                </div>
+                <div *ngIf="mode === 'parallel'">
+                    <button class="currentRoleButton" color="primary"
+                        [disabled]="!adminMode || !functions.empty(diffusion.process_date)" mat-raised-button [matMenuTriggerFor]="menu" [title]="getRoleLabel(diffusion.item_mode)">{{getRoleLabel(diffusion.item_mode)}}</button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item *ngFor="let role of availableRoles" (click)="changeRole(role, i)">{{role.label}}</button>
+                    </mat-menu>
                 </div>
             </div>
             <button mat-icon-button *ngIf="adminMode && functions.empty(diffusion.process_date)"
