@@ -1013,17 +1013,18 @@ class PreProcessActionController
             if (empty($resource['opinion_limit_date'])) {
                 $noOpinionLimitDate[] = $resource['alt_identifier'] ?? _UNDEFINED;
             } else {
-                $note = NoteModel::getById([
-                    'select'   => ['note_text', 'user_id', 'creation_date'],
-                    'where'    => ['identifier in (?)', 'note_text like (?)'],
-                    'data'     => [$resource['res_id'], '['._AVIS_USER.']%'],
-                    'order_by' => ['creation_date desc'],
-                    'limit' => 1
+                $note = NoteModel::get([
+                    'select'    => ['note_text', 'user_id', 'creation_date'],
+                    'where'     => ['identifier in (?)', 'note_text like (?)'],
+                    'data'      => [$resource['res_id'], '['._AVIS_USER.']%'],
+                    'order_by'  => ['creation_date desc'],
+                    'limit'     => 1
                 ]);
-                if (empty($note)) {
+                if (empty($note[0])) {
                     $noNote[] = $resources['alt_identifier'] ?? _UNDEFINED;
                 } else {
-                    $validatedResourcesInfo[] = ['opinionLimitDate' => $resource['opinion_limit_date'], 'note' => $note];
+                    $note[0]['userLabel'] = UserModel::getLabelledUserById(['id' => $note[0]['user_id']]);
+                    $validatedResourcesInfo[] = ['opinionLimitDate' => $resource['opinion_limit_date'], 'note' => $note[0]];
                     $validatedResources[]     = $resources['res_id'];
                 }
             }

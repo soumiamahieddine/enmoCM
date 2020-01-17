@@ -441,7 +441,7 @@ define("_USER_PREFERENCE_UPDATED", "Préférences utilisateur modifiées");
 
 define("_NO_SENDERS", "Aucun expéditeur lié au courrier");
 
-define("_INTERRUPTED_WORKFLOW", "Circuit Interrompu");
+define("_INTERRUPTED_WORKFLOW", "Circuit interrompu");
 define("_HAS_INTERRUPTED_WORKFLOW", "A terminé le circuit");
 
 define("_AVIS_SENT", "Avis donné");
