@@ -309,7 +309,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_VALIDATE_RECOMMENDATION</LABEL>
         <NAME>validate_recommendation</NAME>
         <DESC>_VALIDATE_RECOMMENDATION_DESC</DESC>
-        <component>v1Action</component>
+        <component>validateRecommendationAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

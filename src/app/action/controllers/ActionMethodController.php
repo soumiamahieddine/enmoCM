@@ -66,6 +66,7 @@ class ActionMethodController
         'sendToOpinionCircuitAction'            => 'sendToOpinionCircuit',
         'continueOpinionCircuitAction'          => 'continueOpinionCircuit',
         'giveOpinionParallelAction'             => 'giveOpinionParallel',
+        'validateRecommendationAction'             => 'validateRecommendation',
         'noConfirmAction'                       => null
     ];
 
@@ -562,7 +563,7 @@ class ActionMethodController
         $opinionLimitDate = new \DateTime($args['data']['opinionLimitDate']);
         $today = new \DateTime('today');
         if ($opinionLimitDate < $today) {
-            return ['errors' => "Opinion limit date is not a valid date"];
+            return ['errors' => ["Opinion limit date is not a valid date"]];
         }
 
         ResModel::update([
@@ -591,7 +592,7 @@ class ActionMethodController
         $opinionLimitDate = new \DateTime($args['data']['opinionLimitDate']);
         $today = new \DateTime('today');
         if ($opinionLimitDate < $today) {
-            return ['errors' => "Opinion limit date is not a valid date"];
+            return ['errors' => ["Opinion limit date is not a valid date"]];
         }
 
         if (empty($args['data']['opinionCircuit'])) {
@@ -730,6 +731,55 @@ class ActionMethodController
             ],
             'where' => ['listinstance_id = ?'],
             'data'  => [$currentStep['listinstance_id']]
+        ]);
+
+        return true;
+    }
+
+    public static function validateRecommendation(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        if (empty($args['data']['opinionLimitDate'])) {
+            return ["errors" => ["Opinion limit date is missing"]];
+        }
+
+        $opinionLimitDate = new \DateTime($args['data']['opinionLimitDate']);
+        $today = new \DateTime('today');
+        if ($opinionLimitDate < $today) {
+            return ['errors' => ["Opinion limit date is not a valid date"]];
+        }
+
+        $latestNote = NoteModel::get([
+            'where'  => ['identifier = ?', "note_text like '[" . _TO_AVIS . "]%'"],
+            'data'   => [$args['resId']],
+            'oderBy' => ['creation_date desc'],
+            'limit'  => 1
+        ]);
+
+        if (empty($latestNote)) {
+            return ["errors" => ["No note for opinion available"]];
+        }
+        $latestNote = $latestNote[0];
+
+        $newNote = $args['data']['note'];
+
+        NoteModel::delete([
+            'where' => ['id = ?'],
+            'data' => [$latestNote['id']]
+        ]);
+
+        NoteModel::create([
+            'resId'     => $args['resId'],
+            'user_id'   => $GLOBALS['id'],
+            'note_text' => $newNote
+        ]);
+
+        ResModel::update([
+            'set'   => ['opinion_limit_date' => $args['data']['opinionLimitDate']],
+            'where' => ['res_id = ?'],
+            'data'  => [$args['resId']]
         ]);
 
         return true;
