@@ -84,7 +84,7 @@ export class SendAvisWorkflowComponent implements AfterViewInit {
     }
 
     executeAction(realResSelected: number[]) {
-        const noteContent: string = `[POUR AVIS] ${this.noteEditor.getNoteContent()}`;
+        const noteContent: string = `[${this.lang.avisUserAsk.toUpperCase()}] ${this.noteEditor.getNoteContent()}`;
         this.http.put(this.data.processActionRoute, { resources: realResSelected, note: noteContent, data: { opinionLimitDate: this.functions.formatDateObjectToFrenchDateString(this.opinionLimitDate, true) } }).pipe(
             tap((data: any) => {
                 if (!data) {

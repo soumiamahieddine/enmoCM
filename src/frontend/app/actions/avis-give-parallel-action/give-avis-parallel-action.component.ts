@@ -7,13 +7,12 @@ import { NoteEditorComponent } from '../../notes/note-editor.component';
 import { tap, finalize, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { FunctionsService } from '../../../service/functions.service';
-import { AvisWorkflowComponent } from '../../avis/avis-workflow.component';
 
 @Component({
-    templateUrl: "continue-avis-circuit-action.component.html",
-    styleUrls: ['continue-avis-circuit-action.component.scss'],
+    templateUrl: "give-avis-parallel-action.component.html",
+    styleUrls: ['give-avis-parallel-action.component.scss'],
 })
-export class ContinueAvisCircuitActionComponent implements OnInit {
+export class GiveAvisParallelActionComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = false;
@@ -21,30 +20,30 @@ export class ContinueAvisCircuitActionComponent implements OnInit {
     resourcesWarnings: any[] = [];
     resourcesErrors: any[] = [];
 
+    noResourceToProcess: boolean = null;
+
     ownerOpinion: string = '';
     opinionContent: string = '';
 
-    noResourceToProcess: boolean = null;
-
     @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
-    @ViewChild('appAvisWorkflow', { static: false }) appAvisWorkflow: AvisWorkflowComponent;
 
     constructor(
-        public http: HttpClient, 
-        private notify: NotificationService, 
-        public dialogRef: MatDialogRef<ContinueAvisCircuitActionComponent>, 
+        public http: HttpClient,
+        private notify: NotificationService,
+        public dialogRef: MatDialogRef<GiveAvisParallelActionComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public functions: FunctionsService) { }
 
     ngOnInit() {
-        this.checkAvisCircuit();
+        this.checkAvisParallel();
     }
 
-    checkAvisCircuit() {
+    checkAvisParallel() {
         this.loading = true;
         this.resourcesErrors = [];
         this.resourcesWarnings = [];
-        this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkContinueOpinionCircuit', { resources: this.data.resIds }).pipe(
+
+        this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkGiveParallelOpinion', { resources: this.data.resIds }).pipe(
             tap((data: any) => {
                 if (!this.functions.empty(data.resourcesInformations.warning)) {
                     this.resourcesWarnings = data.resourcesInformations.warning;
@@ -75,8 +74,8 @@ export class ContinueAvisCircuitActionComponent implements OnInit {
     }
 
     executeAction(realResSelected: number[]) {
-        const noteContent: string = `[avis] ${this.noteEditor.getNoteContent()}`;
-        this.http.put(this.data.processActionRoute, {resources : realResSelected, note : noteContent}).pipe(
+        const noteContent: string = `[${this.lang.avisUserState}] ${this.noteEditor.getNoteContent()}`;
+        this.http.put(this.data.processActionRoute, { resources: realResSelected, note: noteContent }).pipe(
             tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close('success');
@@ -97,7 +96,7 @@ export class ContinueAvisCircuitActionComponent implements OnInit {
         if (!this.noResourceToProcess && !this.functions.empty(this.noteEditor.getNoteContent())) {
             return true;
         } else {
-            return false; 
+            return false;
         }
     }
 }

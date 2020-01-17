@@ -1423,4 +1423,12 @@ export const LANG_EN = {
     "interrupted": "Interrupted",
     "addOpinionReason": "Please fill the opinion reason",
     "opinionLimitDate": "Opinion limit date",
+    "addOpinion": "Give your opinion",
+    "askOpinion": "Several users ask your opinion",
+    "askOpinionUser": "ask your opinion",
+    "avisUserAsk": "for opinion",
+    "avisUserState": "opinion",
+    "userNotInDiffusionList": "You are not in opinion diffusion list",
+    "noOpinionLimiteDate": "The opinion limit date is not defined",
+    "noOpinionNote": "The reason is not defined",
 };

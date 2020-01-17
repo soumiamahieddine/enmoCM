@@ -17,15 +17,10 @@
                 role="alert" style="margin-top: 30px;"
                 [innerHTML]="'<b>' + ownerOpinion + '</b> '+ lang.askOpinionUser + ' :<br/><br/>' + opinionContent">
             </div>
-            <div class="alert-message alert-message-info"
-                *ngIf="data.resIds.length == 1 && appAvisWorkflow !== undefined && appAvisWorkflow.getNextAvisUser() !== ''"
-                role="alert" style="margin-top: 30px;"
-                [innerHTML]="lang.sendToDocTo + ' <b>' + appAvisWorkflow.getNextAvisUser().labelToDisplay + '</b>'">
-            </div>
 
             <div class="alert-message alert-message-info"
-                *ngIf="data.resIds.length == 1 && appAvisWorkflow !== undefined && appAvisWorkflow.getNextAvisUser() === '' && !noResourceToProcess"
-                role="alert" style="margin-top: 30px;" [innerHTML]="lang.endWorkflow"></div>
+                *ngIf="data.resIds.length > 1 && !noResourceToProcess"
+                role="alert" style="margin-top: 30px;" [innerHTML]="lang.askOpinion"></div>
 
             <div *ngIf="resourcesErrors.length > 0" class="alert-message alert-message-danger mailList" role="alert">
                 <p>
@@ -45,9 +40,6 @@
                 </ul>
             </div>
             <app-note-editor #noteEditor [title]="lang.addOpinion" [resIds]="data.resIds"></app-note-editor>
-            <app-avis-workflow *ngIf="data.resIds.length == 1" [adminMode]="false" [resId]="data.resIds[0]"
-                #appAvisWorkflow>
-            </app-avis-workflow>
         </mat-sidenav-content>
     </mat-sidenav-container>
 </div>

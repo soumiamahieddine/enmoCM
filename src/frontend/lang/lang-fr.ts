@@ -1463,4 +1463,12 @@ export const LANG_FR = {
     "interrupted": "Interrompu",
     "addOpinionReason": "Veuillez renseigner le motif de l'avis",
     "opinionLimitDate": "Date limite de l'avis",
+    "addOpinion": "Donner votre avis",
+    "askOpinion": "Des personnes vous demande votre avis",
+    "askOpinionUser": "vous demande votre avis",
+    "avisUserAsk": "pour avis",
+    "avisUserState": "avis",
+    "userNotInDiffusionList": "Vous n'êtes pas dans la liste de diffusion des avis",
+    "noOpinionLimiteDate": "La date limite de l'avis n'est pas défini",
+    "noOpinionNote": "Aucun motif défini",
 };

@@ -1448,4 +1448,12 @@ export const LANG_NL = {
     "opinionLimitDate": "Opinion limit date", //_TO_TRANSLATE
     "visaWorkflowInterrupted" : "Interrupted workflow",//_TO_TRANSLATE
     "hasInterruptedWorkflow" : "Has interrupted the workflow",//_TO_TRANSLATE
+    "addOpinion": "Give your opinion", //_TO_TRANSLATE
+    "askOpinion": "Several users ask your opinion", //_TO_TRANSLATE
+    "askOpinionUser": "ask your opinion", //_TO_TRANSLATE
+    "avisUserAsk": "for opinion", //_TO_TRANSLATE
+    "avisUserState": "opinion", //_TO_TRANSLATE
+    "userNotInDiffusionList": "You are not in opinion diffusion list", //_TO_TRANSLATE
+    "noOpinionLimiteDate": "The opinion limit date is not defined", //_TO_TRANSLATE
+    "noOpinionNote": "The reason is not defined", //_TO_TRANSLATE
 };

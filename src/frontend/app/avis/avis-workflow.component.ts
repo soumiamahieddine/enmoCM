@@ -62,12 +62,16 @@ export class AvisWorkflowComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        if (this.mode === 'parallel') {
+        if (this.mode === 'parallel' && this.adminMode) {
             this.loadAvisRoles();
         }
 
         if (this.resId !== null) {
-            this.loadWorkflow(this.resId);
+            if (this.mode === 'circuit') {
+                this.loadWorkflow(this.resId);
+            } else {
+                this.loadParallelWorkflow(this.resId);
+            }
         }
     }
 
