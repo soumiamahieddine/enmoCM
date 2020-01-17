@@ -2,7 +2,7 @@
 <ROOT>
     <user>superadmin</user>
     <password>maarch</password>
-    <uri>http://www.google.com</uri>
+    <uri></uri>
     <triggerStatuses>
         <sendFile>OZWILLOSF</sendFile>
         <sendData>OZWILLOSD</sendData>
