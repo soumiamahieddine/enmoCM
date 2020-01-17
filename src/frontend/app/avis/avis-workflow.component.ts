@@ -285,6 +285,30 @@ export class AvisWorkflowComponent implements OnInit {
         
     }
 
+    loadParallelWorkflow(resId: number) {
+        this.resId = resId;
+        this.loading = true;
+        this.avisWorkflow.items = [];
+        return new Promise((resolve, reject) => {
+            this.http.get("../../rest/resources/" + resId + "/parallelOpinion")
+            .subscribe((data: any) => {
+                data.forEach((element: any) => {
+                    this.avisWorkflow.items.push(
+                        {
+                            ...element,
+                            difflist_type: 'entity_id'
+                        });
+                });
+                this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items))
+                this.loading = false;
+                resolve(true);
+            }, (err: any) => {
+                this.notify.handleErrors(err);
+            });
+        });
+        
+    }
+
     loadDefaultWorkflow(resId: number) {
         this.loading = true;
         this.avisWorkflow.items = [];

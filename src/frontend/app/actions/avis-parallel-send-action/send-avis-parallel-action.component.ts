@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, AfterViewInit } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -13,7 +13,7 @@ import { AvisWorkflowComponent } from '../../avis/avis-workflow.component';
     templateUrl: "send-avis-parallel-action.component.html",
     styleUrls: ['send-avis-parallel-action.component.scss'],
 })
-export class SendAvisParallelComponent implements OnInit {
+export class SendAvisParallelComponent implements AfterViewInit {
 
     lang: any = LANG;
     loading: boolean = false;
@@ -38,29 +38,13 @@ export class SendAvisParallelComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any,
         public functions: FunctionsService) { }
 
-    async ngOnInit(): Promise<void> {
-        if (this.data.resIds.length > 0) {
-            this.loading = true;
-            await this.checkAvisParallel();
-            this.loading = false;
+    async ngAfterViewInit(): Promise<void> {
+        if (this.data.resIds.length === 1) {
+            await this.appAvisWorkflow.loadParallelWorkflow(this.data.resIds[0]);
+            if (this.appAvisWorkflow.emptyWorkflow()) {
+                this.appAvisWorkflow.loadDefaultWorkflow(this.data.resIds[0]);
+            }
         }
-    }
-
-    checkAvisParallel() {
-        this.resourcesError = [];
-
-        return new Promise((resolve, reject) => {
-            this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkOpinionInfo', { resources: this.data.resIds })
-                .subscribe((data: any) => {
-                    if (!this.functions.empty(data.resourcesInformations.noAttachment)) {
-                        this.resourcesError = data.resourcesInformations.noAttachment;
-                    }
-                    this.noResourceToProcess = this.data.resIds.length === this.resourcesError.length;
-                    resolve(true);
-                }, (err: any) => {
-                    this.notify.handleSoftErrors(err);
-                });
-        });
     }
 
     async onSubmit() {
