@@ -388,7 +388,7 @@ export class ContactsFormComponent implements OnInit {
                 if (element.identifier === 'email') {
                     valArr.push(Validators.email);
                 } else if (element.identifier === 'phone') {
-                    valArr.push(Validators.pattern(/\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/));
+                    valArr.push(Validators.pattern(/^\+?((|\ |\.|\(|\)|\-)?(\d)*)*\d$/));
                 }
 
                 if (element.mandatory) {
