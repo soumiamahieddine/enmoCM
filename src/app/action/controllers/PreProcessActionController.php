@@ -1003,34 +1003,39 @@ class PreProcessActionController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $resources = ResModel::get(['select' => ['opinion_limit_date', 'alt_identifier', 'res_id'], 'where' => ['res_id in (?)'], 'data' => [$body['resources']]]);
+        $resourcesInformation = [];
 
-        $noOpinionLimitDate     = [];
-        $noNote                 = [];
-        $validatedResourcesInfo = [];
-        $validatedResources     = [];
+        $resources = ResModel::get(['select' => ['opinion_limit_date', 'alt_identifier', 'res_id'], 'where' => ['res_id in (?)'], 'data' => [$body['resources']]]);
         foreach ($resources as $resource) {
             if (empty($resource['opinion_limit_date'])) {
-                $noOpinionLimitDate[] = $resource['alt_identifier'] ?? _UNDEFINED;
-            } else {
-                $note = NoteModel::get([
-                    'select'    => ['note_text', 'user_id', 'creation_date'],
-                    'where'     => ['identifier in (?)', 'note_text like (?)'],
-                    'data'      => [$resource['res_id'], '['._AVIS_USER.']%'],
-                    'order_by'  => ['creation_date desc'],
-                    'limit'     => 1
-                ]);
-                if (empty($note[0])) {
-                    $noNote[] = $resources['alt_identifier'] ?? _UNDEFINED;
-                } else {
-                    $note[0]['userLabel'] = UserModel::getLabelledUserById(['id' => $note[0]['user_id']]);
-                    $validatedResourcesInfo[] = ['opinionLimitDate' => $resource['opinion_limit_date'], 'note' => $note[0]];
-                    $validatedResources[]     = $resources['res_id'];
-                }
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resource['res_id'], 'reason' => 'noOpinionLimitDate'];
+                continue;
             }
+            $opinionLimitDate = new \DateTime($resource['opinion_limit_date']);
+            $today = new \DateTime('today');
+            if ($opinionLimitDate < $today) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resource['res_id'], 'reason' => 'opinionLimitDateOutdated'];
+            }
+
+            $opinionNote = NoteModel::get([
+                'select'    => ['note_text', 'user_id', 'creation_date'],
+                'where'     => ['identifier in (?)', 'note_text like (?)'],
+                'data'      => [$resource['res_id'], '['._AVIS_USER.']%'],
+                'order_by'  => ['creation_date desc'],
+                'limit'     => 1
+            ]);
+
+            if (empty($opinionNote)) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resource['res_id'], 'reason' => 'noOpinionNote'];
+                continue;
+            }
+
+            $note = str_replace('['._AVIS_USER.']', '', $opinionNote[0]['note_text']);
+            $userInfo = UserModel::getLabelledUserById(['id' => $opinionNote[0]['user_id']]);
+            $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resource['res_id'], 'avisUserAsk' => $userInfo, 'note' => $note];
         }
 
-        return $response->withJson(['noOpinionLimitDate' => $noOpinionLimitDate, 'noNote' => $noNote, 'validatedResourcesInfo' => $validatedResourcesInfo, 'validatedResources' => $validatedResources]);
+        return $response->withJson(['resourcesInformations' => $resourcesInformation]);
     }
 
     public function checkGiveParallelOpinion(Request $request, Response $response, array $args)
@@ -1062,8 +1067,13 @@ class PreProcessActionController
             }
 
             if (empty($resource['opinion_limit_date'])) {
-                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noOpinionLimiteDate'];
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noOpinionLimitDate'];
                 continue;
+            }
+            $opinionLimitDate = new \DateTime($resource['opinion_limit_date']);
+            $today = new \DateTime('today');
+            if ($opinionLimitDate < $today) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'opinionLimitDateOutdated'];
             }
 
             $opinionNote = NoteModel::get([
@@ -1122,8 +1132,13 @@ class PreProcessActionController
             }
 
             if (empty($resource['opinion_limit_date'])) {
-                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noOpinionLimiteDate'];
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noOpinionLimitDate'];
                 continue;
+            }
+            $opinionLimitDate = new \DateTime($resource['opinion_limit_date']);
+            $today = new \DateTime('today');
+            if ($opinionLimitDate < $today) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'opinionLimitDateOutdated'];
             }
 
             $opinionNote = NoteModel::get([
