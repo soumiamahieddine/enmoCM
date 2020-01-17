@@ -631,7 +631,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                 }
                 newDiffList.items.push(listModel);
             });
-            this.http.post("../../rest/listTemplates", newDiffList)
+            this.http.post("../../rest/listTemplates?admin=true", newDiffList)
                 .subscribe((data: any) => {
                     this.idVisaCircuit = data.id;
                     this.notify.success(this.lang.diffusionModelUpdated);
@@ -676,7 +676,7 @@ export class EntitiesAdministrationComponent implements OnInit {
         };
         if (this.idOpinionCircuit == null) {
             newDiffList.items = this.currentEntity.opinionCircuit.items;
-            this.http.post("../../rest/listTemplates", newDiffList)
+            this.http.post("../../rest/listTemplates?admin=true", newDiffList)
                 .subscribe((data: any) => {
                     this.idOpinionCircuit = data.id;
                     this.notify.success(this.lang.diffusionModelUpdated);
