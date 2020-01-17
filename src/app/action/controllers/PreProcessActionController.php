@@ -1122,26 +1122,29 @@ class PreProcessActionController
             }
 
             if (empty($resource['opinion_limit_date'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'No opinion limit date for resource ' . $resource['alt_identifier']]);
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noOpinionLimiteDate'];
+                continue;
             }
 
             $opinionNote = NoteModel::get([
-                'where'  => ['identifier = ?', "note_text like '[" . _TO_AVIS . "]%'"],
-                'data'   => [$resId]
+                'select'    => ['note_text', 'user_id'],
+                'where'     => ['identifier = ?', "note_text like '[" . _TO_AVIS . "]%'"],
+                'data'      => [$resId]
             ]);
 
             if (empty($opinionNote)) {
-                return $response->withStatus(400)->withJson(['errors' => 'No opinion note for resource ' . $resource['alt_identifier']]);
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noOpinionNote'];
+                continue;
             }
 
-            $isSignatory = ListInstanceModel::get([
+            $isInCircuit = ListInstanceModel::get([
                 'select'  => [1],
                 'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
                 'data'    => [$resId, 'AVIS_CIRCUIT'],
                 'orderBy' => ['listinstance_id'],
                 'limit'   => 1
             ]);
-            if (empty($isSignatory[0])) {
+            if (empty($isInCircuit[0])) {
                 $hasCircuit = ListInstanceModel::get(['select' => [1], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$resId, 'AVIS_CIRCUIT']]);
                 if (!empty($hasCircuit)) {
                     $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'endedCircuit'];
@@ -1149,7 +1152,8 @@ class PreProcessActionController
                     $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noCircuitAvailable'];
                 }
             } else {
-                $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId];
+                $userInfo = UserModel::getLabelledUserById(['id' => $opinionNote[0]['user_id']]);
+                $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'avisUserAsk' => $userInfo, 'note' => $opinionNote[0]['note_text']];
             }
         }
 
