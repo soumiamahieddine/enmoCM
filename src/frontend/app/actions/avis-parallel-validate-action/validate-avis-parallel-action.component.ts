@@ -33,7 +33,7 @@ export class ValidateAvisParallelComponent implements AfterViewInit {
 
     availableRoles: any[] = [];
 
-    @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
+    @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
     @ViewChild('appAvisWorkflow', { static: false }) appAvisWorkflow: AvisWorkflowComponent;
 
     constructor(
@@ -111,7 +111,7 @@ export class ValidateAvisParallelComponent implements AfterViewInit {
         ).subscribe();
     }
 
-    isValidAction() {
+    isValidAction() {     
         if (this.data.resIds.length === 1) {
             if (!this.noResourceToProcess && this.noteEditor !== undefined && this.appAvisWorkflow !== undefined && !this.appAvisWorkflow.emptyWorkflow() && !this.appAvisWorkflow.workflowEnd() && !this.functions.empty(this.noteEditor.getNoteContent()) && !this.functions.empty(this.functions.formatDateObjectToFrenchDateString(this.opinionLimitDate))) {
                 return true;
@@ -125,6 +125,5 @@ export class ValidateAvisParallelComponent implements AfterViewInit {
                 return false;
             }
         }
-        
     }
 }
