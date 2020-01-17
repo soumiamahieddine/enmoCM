@@ -1011,7 +1011,7 @@ class PreProcessActionController
         $validatedResources     = [];
         foreach ($resources as $resource) {
             if (empty($resource['opinion_limit_date'])) {
-                $noOpinionLimitDate[] = $resources['alt_identifier'] ?? _UNDEFINED;
+                $noOpinionLimitDate[] = $resource['alt_identifier'] ?? _UNDEFINED;
             } else {
                 $note = NoteModel::getById([
                     'select'   => ['note_text', 'user_id', 'creation_date'],
