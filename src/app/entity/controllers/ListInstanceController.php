@@ -101,7 +101,7 @@ class ListInstanceController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $listInstances = ListInstanceModel::getParallelOpinionByResId(['select' => ['listinstance_id', 'sequence', 'item_id', 'item_type', 'users.id', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment'], 'id' => $aArgs['resId']]);
+        $listInstances = ListInstanceModel::getParallelOpinionByResId(['select' => ['listinstance_id', 'sequence', 'item_mode', 'item_id', 'item_type', 'users.id', 'firstname as item_firstname', 'lastname as item_lastname', 'entity_label as item_entity', 'viewed', 'process_date', 'process_comment'], 'id' => $aArgs['resId']]);
         foreach ($listInstances as $key => $value) {
             $listInstances[$key]['item_id'] = $listInstances[$key]['id'];
             $listInstances[$key]['item_type'] = 'user';
