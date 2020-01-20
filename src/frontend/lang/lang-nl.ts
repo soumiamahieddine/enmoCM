@@ -1403,6 +1403,61 @@ export const LANG_NL = {
     "searchTrackedMail": "Search in tracked mails", //_TO_TRANSLATE
     "checkOnlyofficeServer": "Establish contact with the Onlyoffice server", //_TO_TRANSLATE
     "closeEditor" : "Close the editor", //_TO_TRANSLATE
+    "errorOnlyoffice1" : "Cannot launch onlyoffice, a local address is used", //_TO_TRANSLATE
+    "errorOnlyoffice2" : "Cannot launch onlyoffice. Check if the only office server is available", //_TO_TRANSLATE
+    "onlyOfficeNotEnabled" : "The onlyoffice server is not enabled", //_TO_TRANSLATE
+    "uriIsEmpty" : "URI of onlyoffice server is empty in documentEditorsConfig.xml", //_TO_TRANSLATE
+    "portIsEmpty" : "Port of onlyoffice server is empty in documentEditorsConfig.xml", //_TO_TRANSLATE
     "externalVisaWorkflow" : "Visa workflow Maarch Parapheur", //_TO_TRANSLATE
     "IdMaarch2Gec" : "MAARCH2GEC identifier", //_TO_TRANSLATE
+    "indexingFile" : "Indexation", //_TO_TRANSLATE
+    "signUserRequired" : "A signatory is required", //_TO_TRANSLATE
+    "signedUserDate" : "Signed", //_TO_TRANSLATE
+    "approvedUserDate" : "Approuved", //_TO_TRANSLATE
+    "modelDeleted" : "Model deleted", //_TO_TRANSLATE
+    "modelSaved" : "Model saved", //_TO_TRANSLATE
+    "visaWorkflowUpdated" : "Visa workflow updated", //_TO_TRANSLATE
+    "visaWorkflowDeleted" : "Visa workflow deleted", //_TO_TRANSLATE
+    "publicModel" : "Public model", //_TO_TRANSLATE
+    "privateModel" : "Private model", //_TO_TRANSLATE
+    "moveVisaUserErr1" : "You cannot move", //_TO_TRANSLATE
+    "moveVisaUserErr2" : "with users who have already approved / signed", //_TO_TRANSLATE
+    "moveAvisUserErr1" : "You cannot move", //_TO_TRANSLATE
+    "moveAvisUserErr2" : "with users who have already given an opinion", //_TO_TRANSLATE
+    "avisWorkflowUpdated" : "Opinion workflow updated", //_TO_TRANSLATE
+    "avisWorkflowDeleted" : "Opinion workflow deleted", //_TO_TRANSLATE
+    "avisSent" : "Opinion given", //_TO_TRANSLATE
+    "openFullscreen" : "Enable fullscreen", //_TO_TRANSLATE
+    "closeFullscreen" : "Disable fullscreen", //_TO_TRANSLATE
+    "hasNoEntity": "Those mails do not have initiator entity", //_TO_TRANSLATE
+    "destUserSetToDefault": "Assignee will be the assignee of the initiator entity template list", //_TO_TRANSLATE
+    "resetVisaWorkflow": "The workflow will be <b>reset</b>, this circuit will be reset to first assignee", //_TO_TRANSLATE
+    "resetVisaWorkflowUser": "The workflow will be <b>reset</b>, this circuit will be reset to", //_TO_TRANSLATE
+    "interruptVisaWorkflow": "The following users will not be able to target mail", //_TO_TRANSLATE
+    "rejectVisaBack": "Document will be send to the previous user", //_TO_TRANSLATE
+    "rejectVisaBackUser": "Document will be send back to", //_TO_TRANSLATE
+    "sendToDocTo": "You will send this document to", //_TO_TRANSLATE
+    "endWorkflow": "You will end this workflow", //_TO_TRANSLATE
+    "hasNoAttachmentsNotes": "The following letters have no annotation or attachments", //_TO_TRANSLATE
+    "closeMailAddNoteMandatory": "Some letters have neither annotation nor attachments. Please enter an annotation below, or add an attachment to the letters.", //_TO_TRANSLATE
+    "endedCircuit": "Workflow ended", //_TO_TRANSLATE
+    "userHasntSigned": "The assignee hasn't signed any document",  //_TO_TRANSLATE
+    "noCircuitAvailable": "No workflow defined", //_TO_TRANSLATE
+    "interrupted": "Interrupted", //_TO_TRANSLATE
+    "addOpinionReason": "Please fill the opinion reason", //_TO_TRANSLATE
+    "opinionLimitDate": "Opinion limit date", //_TO_TRANSLATE
+    "visaWorkflowInterrupted" : "Interrupted workflow",//_TO_TRANSLATE
+    "hasInterruptedWorkflow" : "Has interrupted the workflow",//_TO_TRANSLATE
+    "addOpinion": "Give your opinion", //_TO_TRANSLATE
+    "askOpinion": "Several users ask your opinion", //_TO_TRANSLATE
+    "askOpinionUser": "ask your opinion", //_TO_TRANSLATE
+    "avisUserAsk": "for opinion", //_TO_TRANSLATE
+    "avisUserState": "opinion", //_TO_TRANSLATE
+    "userNotInDiffusionList": "You are not in opinion diffusion list", //_TO_TRANSLATE
+    "noOpinionLimitDate": "The opinion limit date is not defined", //_TO_TRANSLATE
+    "noOpinionNote": "The reason is not defined", //_TO_TRANSLATE
+    "opinionLimitDateOutdated": "The opinion limit date is outdated", //_TO_TRANSLATE
+    "validateBy": "Validate by", //_TO_TRANSLATE
+    "validateAvisParallel": "Your are validating an opinion request", //_TO_TRANSLATE
+    "validateAvisParallelSingle": "Your are validating an opinion request of", //_TO_TRANSLATE
 };

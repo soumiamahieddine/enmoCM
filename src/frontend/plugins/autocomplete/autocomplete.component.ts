@@ -148,7 +148,7 @@ export class PluginAutocomplete implements OnInit {
             .pipe(
                 debounceTime(300),
                 filter(value => value.length > 2),
-                distinctUntilChanged(),
+                //distinctUntilChanged(),
                 tap(() => this.loading = true),
                 switchMap((data: any) => this.getDatas(data)),
                 tap((data: any) => {

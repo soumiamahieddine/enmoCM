@@ -250,11 +250,12 @@ $app->delete('/groups/{id}/privileges/{privilegeId}', \Group\controllers\Privile
 $app->put('/groups/{id}/privileges/{privilegeId}/parameters', \Group\controllers\PrivilegeController::class . ':updateParameters');
 $app->get('/groups/{id}/privileges/{privilegeId}/parameters', \Group\controllers\PrivilegeController::class . ':getParameters');
 
-//Histories
-$app->get('/histories', \History\controllers\HistoryController::class . ':get');
-$app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
-$app->get('/histories/resources/{resId}', \History\controllers\HistoryController::class . ':getByResourceId');
-$app->get('/histories/resources/{resId}/workflow', \History\controllers\HistoryController::class . ':getWorkflowByResourceId');
+//History
+$app->get('/history', \History\controllers\HistoryController::class . ':get');
+$app->get('/history/availableEventTypes', \History\controllers\HistoryController::class . ':getAvailableEventTypes');
+$app->get('/history/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
+$app->get('/history/resources/{resId}', \History\controllers\HistoryController::class . ':getByResourceId');
+$app->get('/history/resources/{resId}/workflow', \History\controllers\HistoryController::class . ':getWorkflowByResourceId');
 
 //Header
 $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');
@@ -282,10 +283,7 @@ $app->put('/indexingModels/{id}/disable', \IndexingModel\controllers\IndexingMod
 $app->put('/indexingModels/{id}/enable', \IndexingModel\controllers\IndexingModelController::class . ':enable');
 $app->delete('/indexingModels/{id}', \IndexingModel\controllers\IndexingModelController::class . ':delete');
 
-//Links
-$app->get('/links/resId/{resId}', \Link\controllers\LinkController::class . ':getByResId');
-
-//Listinstance
+//ListInstances
 $app->get('/listinstance/{id}', \Entity\controllers\ListInstanceController::class . ':getById');
 $app->put('/listinstances', \Entity\controllers\ListInstanceController::class . ':update');
 
@@ -301,6 +299,10 @@ $app->put('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListT
 $app->get('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':getTypeRoles');
 $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':updateTypeRoles');
 $app->get('/roles', \Entity\controllers\ListTemplateController::class . ':getRoles');
+
+//Circuits
+$app->get('/availableCircuits', \Entity\controllers\ListTemplateController::class . ':getAvailableCircuits');
+$app->put('/circuits/{type}', \Entity\controllers\ListInstanceController::class . ':updateCircuits');
 
 //Notes
 $app->post('/notes', \Note\controllers\NoteController::class . ':create');
@@ -342,6 +344,7 @@ $app->get('/resources/{resId}/content', \Resource\controllers\ResController::cla
 $app->get('/resources/{resId}/originalContent', \Resource\controllers\ResController::class . ':getOriginalFileContent');
 $app->get('/resources/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
 $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
+$app->get('/resources/{resId}/items', \Resource\controllers\ResController::class . ':getItems');
 $app->get('/resources/{resId}/attachments', \Attachment\controllers\AttachmentController::class . ':getByResId');
 $app->get('/resources/{resId}/contacts', \Contact\controllers\ContactController::class . ':getByResId');
 $app->get('/resources/{resId}/emails', \Email\controllers\EmailController::class . ':getByResId');
@@ -350,24 +353,20 @@ $app->get('/resources/{resId}/templates', \Template\controllers\TemplateControll
 $app->get('/resources/{resId}/listInstance', \Entity\controllers\ListInstanceController::class . ':getByResId');
 $app->get('/resources/{resId}/visaCircuit', \Entity\controllers\ListInstanceController::class . ':getVisaCircuitByResId');
 $app->get('/resources/{resId}/opinionCircuit', \Entity\controllers\ListInstanceController::class . ':getOpinionCircuitByResId');
-$app->get('/resources/{resId}/availableCircuits', \Entity\controllers\ListTemplateController::class . ':getAvailableCircuitsByResId');
-$app->get('/resources/{resId}/linkedResources', \Resource\controllers\ResController::class . ':getLinkedResources');
-$app->post('/resources/{resId}/linkedResources', \Resource\controllers\ResController::class . ':linkResources');
-$app->delete('/resources/{resId}/linkedResources/{id}', \Resource\controllers\ResController::class . ':unlinkResources');
+$app->get('/resources/{resId}/parallelOpinion', \Entity\controllers\ListInstanceController::class . ':getParallelOpinionByResId');
+$app->get('/resources/{resId}/defaultCircuit', \Entity\controllers\ListTemplateController::class . ':getDefaultCircuitByResId');
+$app->delete('/resources/{resId}/circuits/{type}', \Entity\controllers\ListInstanceController::class . ':deleteCircuit');
+$app->get('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':getLinkedResources');
+$app->post('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':linkResources');
+$app->delete('/resources/{resId}/linkedResources/{id}', \Resource\controllers\LinkController::class . ':unlinkResources');
+
 $app->get('/res/{resId}/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
-$app->get('/res/{resId}/notes/count', \Resource\controllers\ResController::class . ':getNotesCountForCurrentUserById');
 $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':updateExternalInfos');
 $app->get('/categories', \Resource\controllers\ResController::class . ':getCategories');
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 $app->get('/resources/{resId}/users/{userId}/groups/{groupId}/baskets/{basketId}/processingData', \Resource\controllers\ResController::class . ':getProcessingData');
-$app->post('/resources/follow', \Resource\controllers\UserFollowedResourceController::class . ':follow');
-$app->delete('/resources/unfollow', \Resource\controllers\UserFollowedResourceController::class . ':unFollow');
-$app->get('/followedResources', \Resource\controllers\UserFollowedResourceController::class . ':getFollowedResources');
-$app->get('/followedResources/{resId}/baskets', \Resource\controllers\UserFollowedResourceController::class . ':getBaskets');
-$app->get('/followedResources/filters', \Resource\controllers\UserFollowedResourceController::class . ':getFilters');
-$app->get('/followedResources/count', \Resource\controllers\UserFollowedResourceController::class . ':getNumberOfFollowedResources');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
@@ -385,8 +384,18 @@ $app->post('/acknowledgementReceipt', \AcknowledgementReceipt\controllers\Acknow
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \Action\controllers\PreProcessActionController::class . ':checkAcknowledgementReceipt');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkExternalSignatoryBook', \Action\controllers\PreProcessActionController::class . ':checkExternalSignatoryBook');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkExternalNoteBook', \Action\controllers\PreProcessActionController::class . ':checkExternalNoteBook');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkInitiatorEntity', \Action\controllers\PreProcessActionController::class . ':checkInitiatorEntity');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAttachmentsAndNotes', \Action\controllers\PreProcessActionController::class . ':checkAttachmentsAndNotes');
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/getRedirect', \Action\controllers\PreProcessActionController::class . ':getRedirectInformations');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkShippings', \Action\controllers\PreProcessActionController::class . ':checkShippings');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkSignatureBook', \Action\controllers\PreProcessActionController::class . ':checkSignatureBook');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkContinueVisaCircuit', \Action\controllers\PreProcessActionController::class . ':checkContinueVisaCircuit');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkValidateParallelOpinion', \Action\controllers\PreProcessActionController::class . ':checkValidateParallelOpinion');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkContinueOpinionCircuit', \Action\controllers\PreProcessActionController::class . ':checkContinueOpinionCircuit');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkGiveParallelOpinion', \Action\controllers\PreProcessActionController::class . ':checkGiveParallelOpinion');
+
+//Search
+$app->get('/search', \Search\controllers\SearchController::class . ':get');
 
 //shipping
 $app->get('/administration/shippings', \Shipping\controllers\ShippingTemplateController::class . ':get');
@@ -466,6 +475,13 @@ $app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':upd
 $app->put('/users/{id}/accountActivationNotification', \User\controllers\UserController::class . ':sendAccountActivationNotification');
 $app->post('/password', \User\controllers\UserController::class . ':forgotPassword');
 $app->put('/password', \User\controllers\UserController::class . ':passwordInitialization');
+
+//UserFollowedResources
+$app->post('/resources/follow', \Resource\controllers\UserFollowedResourceController::class . ':follow');
+$app->delete('/resources/unfollow', \Resource\controllers\UserFollowedResourceController::class . ':unFollow');
+$app->get('/followedResources', \Resource\controllers\UserFollowedResourceController::class . ':getFollowedResources');
+$app->get('/followedResources/{resId}/baskets', \Resource\controllers\UserFollowedResourceController::class . ':getBaskets');
+$app->get('/followedResources/filters', \Resource\controllers\UserFollowedResourceController::class . ':getFilters');
 
 //VersionsUpdate
 $app->get('/versionsUpdate', \VersionUpdate\controllers\VersionUpdateController::class . ':get');

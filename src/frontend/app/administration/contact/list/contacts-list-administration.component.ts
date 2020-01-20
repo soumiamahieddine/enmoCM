@@ -10,12 +10,13 @@ import { MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ConfirmComponent } from '../../../../plugins/modal/confirm.component';
 import { FormControl } from '@angular/forms';
+import { FunctionsService } from '../../../../service/functions.service';
 
 @Component({
     selector: 'contact-list',
     templateUrl: "contacts-list-administration.component.html",
     styleUrls: ['contacts-list-administration.component.scss'],
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class ContactsListAdministrationComponent implements OnInit {
 
@@ -76,7 +77,8 @@ export class ContactsListAdministrationComponent implements OnInit {
         private notify: NotificationService, 
         private headerService: HeaderService,
         public appService: AppService,
-        public dialog: MatDialog) { }
+        public dialog: MatDialog,
+        public functions: FunctionsService) { }
 
     ngOnInit(): void {
         this.loading = true;
@@ -127,6 +129,11 @@ export class ContactsListAdministrationComponent implements OnInit {
             element.formatedAddress = tmpFormatedAddress.filter(address => !this.isEmptyValue(address)).join(' ');
         });
 
+        if (!this.functions.empty(data.contacts[0].filling)) {
+            this.displayedColumnsContact = ['filling', 'firstname', 'lastname', 'company', 'formatedAddress', 'actions'];
+        } else {
+            this.displayedColumnsContact = ['firstname', 'lastname', 'company', 'formatedAddress', 'actions'];
+        }
         return data;
     }
 

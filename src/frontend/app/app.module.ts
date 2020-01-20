@@ -40,6 +40,9 @@ import { DisabledBasketPersistenceActionComponent } from './actions/disabled-bas
 import { EnabledBasketPersistenceActionComponent } from './actions/enabled-basket-persistence-action/enabled-basket-persistence-action.component';
 import { ResMarkAsReadActionComponent } from './actions/res-mark-as-read-action/res-mark-as-read-action.component';
 import { CloseMailActionComponent }             from './actions/close-mail-action/close-mail-action.component';
+import { RejectVisaBackToPrevousActionComponent } from './actions/visa-reject-back-to-previous-action/reject-visa-back-to-previous-action.component';
+import { ResetVisaActionComponent } from './actions/visa-reset-action/reset-visa-action.component';
+import { InterruptVisaActionComponent } from './actions/visa-interrupt-action/interrupt-visa-action.component';
 import { UpdateAcknowledgementSendDateActionComponent }             from './actions/update-acknowledgement-send-date-action/update-acknowledgement-send-date-action.component';
 import { CreateAcknowledgementReceiptActionComponent }             from './actions/create-acknowledgement-receipt-action/create-acknowledgement-receipt-action.component';
 import { CloseAndIndexActionComponent }             from './actions/close-and-index-action/close-and-index-action.component';
@@ -52,6 +55,15 @@ import { ProcessActionComponent }               from './actions/process-action/p
 import { ViewDocActionComponent }               from './actions/view-doc-action/view-doc-action.component';
 import { RedirectActionComponent }               from './actions/redirect-action/redirect-action.component';
 import { SendShippingActionComponent }               from './actions/send-shipping-action/send-shipping-action.component';
+import { redirectInitiatorEntityActionComponent } from './actions/redirect-initiator-entity-action/redirect-initiator-entity-action.component';
+import { closeMailWithAttachmentsOrNotesActionComponent } from './actions/close-mail-with-attachments-or-notes-action/close-mail-with-attachments-or-notes-action.component';
+import { SendSignatureBookActionComponent }               from './actions/visa-send-signature-book-action/send-signature-book-action.component';
+import { ContinueVisaCircuitActionComponent }               from './actions/visa-continue-circuit-action/continue-visa-circuit-action.component';
+import { ContinueAvisCircuitActionComponent }               from './actions/avis-continue-circuit-action/continue-avis-circuit-action.component';
+import { SendAvisWorkflowComponent }               from './actions/avis-workflow-send-action/send-avis-workflow-action.component';
+import { SendAvisParallelComponent }               from './actions/avis-parallel-send-action/send-avis-parallel-action.component';
+import { GiveAvisParallelActionComponent }               from './actions/avis-give-parallel-action/give-avis-parallel-action.component';
+import { ValidateAvisParallelComponent }               from './actions/avis-parallel-validate-action/validate-avis-parallel-action.component';
 
 import { FiltersListComponent }                 from './list/filters/filters-list.component';
 import { FiltersToolComponent }                 from './list/filters/filters-tool.component';
@@ -86,6 +98,8 @@ import { ContactsListComponent } from './contact/list/contacts-list.component';
 import { ContactsListModalComponent } from './contact/list/modal/contacts-list-modal.component';
 import { ContactModalComponent } from './administration/contact/modal/contact-modal.component';
 import { VisaWorkflowModalComponent } from './visa/modal/visa-workflow-modal.component';
+import { AddVisaModelModalComponent } from './visa/addVisaModel/add-visa-model-modal.component';
+import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-modal.component';
 
 
 @NgModule({
@@ -128,6 +142,9 @@ import { VisaWorkflowModalComponent } from './visa/modal/visa-workflow-modal.com
         UpdateAcknowledgementSendDateActionComponent,
         CreateAcknowledgementReceiptActionComponent,
         CloseMailActionComponent,
+        RejectVisaBackToPrevousActionComponent,
+        ResetVisaActionComponent,
+        InterruptVisaActionComponent,
         UpdateDepartureDateActionComponent,
         SendExternalSignatoryBookActionComponent,
         SendExternalNoteBookActionComponent,
@@ -137,6 +154,15 @@ import { VisaWorkflowModalComponent } from './visa/modal/visa-workflow-modal.com
         ViewDocActionComponent,
         RedirectActionComponent,
         SendShippingActionComponent,
+        redirectInitiatorEntityActionComponent,
+        closeMailWithAttachmentsOrNotesActionComponent,
+        SendSignatureBookActionComponent,
+        ContinueVisaCircuitActionComponent,
+        ContinueAvisCircuitActionComponent,
+        SendAvisWorkflowComponent,
+        SendAvisParallelComponent,
+        GiveAvisParallelActionComponent,
+        ValidateAvisParallelComponent,
         ActionsListComponent,
         PrintSeparatorComponent,
         FolderPinnedComponent,
@@ -162,7 +188,9 @@ import { VisaWorkflowModalComponent } from './visa/modal/visa-workflow-modal.com
         ContactModalComponent,
         FollowedDocumentListComponent,
         FollowedActionListComponent,
-        VisaWorkflowModalComponent
+        VisaWorkflowModalComponent,
+        AddVisaModelModalComponent,
+        AddAvisModelModalComponent
     ],
     entryComponents: [
         ConfirmModalComponent,
@@ -178,12 +206,24 @@ import { VisaWorkflowModalComponent } from './visa/modal/visa-workflow-modal.com
         UpdateAcknowledgementSendDateActionComponent,
         CreateAcknowledgementReceiptActionComponent,
         CloseMailActionComponent,
+        RejectVisaBackToPrevousActionComponent,
+        ResetVisaActionComponent,
+        InterruptVisaActionComponent,
+        SendAvisWorkflowComponent,
+        SendAvisParallelComponent,
         UpdateDepartureDateActionComponent,
         SendExternalSignatoryBookActionComponent,
         SendExternalNoteBookActionComponent,
+        ContinueVisaCircuitActionComponent,
+        ContinueAvisCircuitActionComponent,
+        GiveAvisParallelActionComponent,
+        ValidateAvisParallelComponent,
         ProcessActionComponent,
         RedirectActionComponent,
         SendShippingActionComponent,
+        redirectInitiatorEntityActionComponent,
+        closeMailWithAttachmentsOrNotesActionComponent,
+        SendSignatureBookActionComponent,
         ViewDocActionComponent,
         FolderUpdateComponent,
         AddPrivateIndexingModelModalComponent,
@@ -192,7 +232,9 @@ import { VisaWorkflowModalComponent } from './visa/modal/visa-workflow-modal.com
         AttachmentShowModalComponent,
         ContactsListModalComponent,
         ContactModalComponent,
-        VisaWorkflowModalComponent
+        VisaWorkflowModalComponent,
+        AddVisaModelModalComponent,
+        AddAvisModelModalComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],
     bootstrap: [ AppComponent ]

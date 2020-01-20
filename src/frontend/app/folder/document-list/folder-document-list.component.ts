@@ -23,7 +23,6 @@ import { FolderActionListComponent } from '../folder-action-list/folder-action-l
 import { FiltersListService } from '../../../service/filtersList.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { FoldersService } from '../folders.service';
-import { MenuShortcutComponent } from '../../menu/menu-shortcut.component';
 
 
 declare function $j(selector: any): any;
@@ -99,7 +98,6 @@ export class FolderDocumentListComponent implements OnInit {
 
     @ViewChild('actionsListContext', { static: true }) actionsList: FolderActionListComponent;
     @ViewChild('appPanelList', { static: true }) appPanelList: PanelListComponent;
-    @ViewChild('menuShortcut', { static: true }) menuShortcut: MenuShortcutComponent;
 
     currentSelectedChrono: string = '';
 
@@ -378,7 +376,7 @@ export class FolderDocumentListComponent implements OnInit {
     toggleMailTracking(row: any) {
         if (!row.mailTracking) {
             this.http.post('../../rest/resources/follow', {resources: [row.resId]}).pipe(
-                tap(() => this.menuShortcut.nbResourcesFollowed++),
+                tap(() => this.headerService.nbResourcesFollowed++),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
@@ -386,7 +384,7 @@ export class FolderDocumentListComponent implements OnInit {
             ).subscribe();
         } else {
             this.http.request('DELETE', '../../rest/resources/unfollow', { body: { resources: [row.resId] } }).pipe(
-                tap(() => this.menuShortcut.nbResourcesFollowed--),
+                tap(() => this.headerService.nbResourcesFollowed--),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);

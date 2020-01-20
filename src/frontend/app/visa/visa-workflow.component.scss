@@ -1,12 +1,30 @@
+@import '../../css/vars.scss';
+
+.mat-form-field-appearance-outline {
+    font-size: 11px;
+}
+
+.visaSignList {
+    ::ng-deep.mat-optgroup-label {
+        color: $primary;
+        position: sticky;
+        top: 0px;
+        background: white !important;
+        z-index: 1;
+    }
+}
+
 .cdk-drag-preview {
     box-sizing: border-box;
     border-radius: 4px;
     box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
         0 8px 10px 1px rgba(0, 0, 0, 0.14),
         0 3px 14px 2px rgba(0, 0, 0, 0.12);
-    background: white;
+    background: white !important;
     padding: 10px;
-    .mat-icon, .mat-icon-button {
+
+    .mat-icon,
+    .mat-icon-button {
         display: none;
     }
 }
@@ -39,7 +57,7 @@
     cursor: initial;
 }
 
-.currentContextButton{
+.currentContextButton {
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 13px;
@@ -47,7 +65,7 @@
     text-align: left;
 }
 
-.currentRoleButton{
+.currentRoleButton {
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 13px;
@@ -63,13 +81,19 @@
 }
 
 .processed {
-    background: rgba(0, 128, 0, 0.11);
+    background: rgba($accent, 0.11) !important;
+}
+
+.interrupt {
+    background: rgba($warn, 0.11) !important;
 }
 
 .workflow {
-    height: auto !important;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    height: 55px;
+    margin-bottom: 10px;
+    background: rgba(216,216,216,0.1);
+    border-radius: 10px;
+    font-size: 13px;
 }
 
 .workflowLine {
@@ -77,7 +101,7 @@
     align-items: center;
 
     &Container {
-        flex:1;
+        flex: 1;
         overflow: hidden;
         text-overflow: ellipsis;
     }
@@ -89,16 +113,22 @@
 
     &SubLabel {
         font-size: 80%;
-        opacity:0.5;
+        opacity: 0.5;
         flex: 1;
         text-overflow: ellipsis;
-        overflow: hidden; 
+        overflow: hidden;
     }
 
     &ProcessDate {
         flex: 1;
         text-align: left;
-        font-size: 90%;
+        font-size: 80%;
+    }
+
+    .mat-raised-button[disabled] {
+        background: none;
+        color: $primary !important;
+        opacity: 1;
     }
 }
 
@@ -109,4 +139,12 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.valid {
+    color: $accent;
+}
+
+.invalid {
+    color: $warn;
 }

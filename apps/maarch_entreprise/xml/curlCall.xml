@@ -5,20 +5,6 @@
     <apiKey></apiKey>
     <appName></appName>
     <call>
-        <id>sendFile</id>
-        <url></url>
-        <method>POST</method>
-    </call>
-    <call>
-        <id>sendData</id>
-        <url></url>
-        <method>PUT</method>
-        <rawData>
-            <key>publikId</key>
-            <value>custom_t1</value>
-        </rawData>
-    </call>
-    <call>
         <id>sendResourceToExternalApplication</id>
         <enabled>false</enabled>
         <url></url>

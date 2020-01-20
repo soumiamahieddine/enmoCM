@@ -203,7 +203,7 @@ class StoreController
             'barcode'               => $args['barcode'] ?? null,
             'origin'                => $args['origin'] ?? null,
             'custom_fields'         => !empty($args['customFields']) ? json_encode($args['customFields']) : null,
-            'linked_resources'      => !empty($args['linkedResources']) ? json_encode($args['linkedResources']) : null,
+            'linked_resources'      => !empty($args['linkedResources']) ? json_encode($args['linkedResources']) : '[]',
             'external_id'           => $externalId,
             'creation_date'         => 'CURRENT_TIMESTAMP'
         ];
@@ -309,7 +309,7 @@ class StoreController
             'recipient_type'        => $args['recipientType'] ?? null,
             'validation_date'       => $args['validationDate'] ?? null,
             'effective_date'        => $args['effectiveDate'] ?? null,
-            'in_signature_book'     => empty($args['inSignatureBook']) ? 'false' : 'true',
+            'in_signature_book'     => $attachmentsTypes[$args['type']]['sign'] == true || !empty($args['inSignatureBook']) ? 'true' : 'false',
             'external_id'           => $externalId,
             'creation_date'         => 'CURRENT_TIMESTAMP'
         ];

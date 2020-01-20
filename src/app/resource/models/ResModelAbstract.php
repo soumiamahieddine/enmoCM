@@ -35,7 +35,7 @@ abstract class ResModelAbstract
             'offset'    => empty($aArgs['offset']) ? 0 : $aArgs['offset'],
             'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
-        
+
         return $aResources;
     }
 

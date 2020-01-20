@@ -47,7 +47,7 @@ class DatabasePDO
                 $customId = CoreConfigModel::getCustomId();
             }
 
-            if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
+            if (!empty($customId) && file_exists("custom/{$customId}/apps/maarch_entreprise/xml/config.xml")) {
                 $path = "custom/{$customId}/apps/maarch_entreprise/xml/config.xml";
             } else {
                 $path = 'apps/maarch_entreprise/xml/config.xml';

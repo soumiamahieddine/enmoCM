@@ -318,9 +318,9 @@ class EntityController
             }
         }
 
-        $children = EntityModel::get(['select' => [1], 'where' => ['parent_entity_id = ?'], 'data' => [$aArgs['id']]]);
+        $children  = EntityModel::get(['select' => [1], 'where' => ['parent_entity_id = ?'], 'data' => [$aArgs['id']]]);
         $documents = ResModel::get(['select' => [1], 'where' => ['destination = ?'], 'data' => [$aArgs['id']]]);
-        $users = EntityModel::getUsersById(['select' => [1], 'id' => $aArgs['id']]);
+        $users     = EntityModel::getUsersById(['select' => [1], 'id' => $aArgs['id']]);
         $templates = TemplateAssociationModel::get(['select' => [1], 'where' => ['value_field = ?'], 'data' => [$aArgs['id']]]);
         $instances = ListInstanceModel::get(['select' => [1], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$aArgs['id'], 'entity_id']]);
         $redirects = GroupBasketRedirectModel::get(['select' => [1], 'where' => ['entity_id = ?'], 'data' => [$aArgs['id']]]);
@@ -339,7 +339,17 @@ class EntityController
             $entities['deleted'] = $control['deleted'];
         }
 
-        ListTemplateModel::delete(['where' => ['object_id = ?'], 'data' => [$aArgs['id']]]);
+        $templateLists = ListTemplateModel::get(['select' => ['id'], 'where' => ['entity_id = ?'], 'data' => [$entity['id']]]);
+        if (!empty($templateLists)) {
+            foreach ($templateLists as $templateList) {
+                ListTemplateModel::delete([
+                    'where' => ['id = ?'],
+                    'data'  => [$templateList['id']]
+                ]);
+                ListTemplateItemModel::delete(['where' => ['list_template_id = ?'], 'data' => [$templateList['id']]]);
+            }
+        }
+
         GroupModel::update([
             'postSet'   => ['indexation_parameters' => "jsonb_set(indexation_parameters, '{entities}', (indexation_parameters->'entities') - '{$entity['id']}')"],
             'where'     => ['1=1']
@@ -426,7 +436,16 @@ class EntityController
         //ListInstances
         ListInstanceModel::update(['set' => ['item_id' => $aArgs['newEntityId']], 'where' => ['item_id = ?', 'item_type = ?'], 'data' => [$aArgs['id'], 'entity_id']]);
         //ListTemplates
-        ListTemplateModel::delete(['where' => ['object_id = ?'], 'data' => [$aArgs['id']]]);
+        $templateLists = ListTemplateModel::get(['select' => ['id'], 'where' => ['entity_id = ?'], 'data' => [$dyingEntity['id']]]);
+        if (!empty($templateLists)) {
+            foreach ($templateLists as $templateList) {
+                ListTemplateModel::delete([
+                    'where' => ['id = ?'],
+                    'data'  => [$templateList['id']]
+                ]);
+                ListTemplateItemModel::delete(['where' => ['list_template_id = ?'], 'data' => [$templateList['id']]]);
+            }
+        }
         //Templates
         TemplateAssociationModel::update(['set' => ['value_field' => $aArgs['newEntityId']], 'where' => ['value_field = ?'], 'data' => [$aArgs['id']]]);
         //GroupIndexing

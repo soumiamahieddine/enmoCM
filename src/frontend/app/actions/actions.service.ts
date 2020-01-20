@@ -7,6 +7,9 @@ import { NotificationService } from '../notification.service';
 import { ConfirmActionComponent } from './confirm-action/confirm-action.component';
 import { MatDialog } from '@angular/material';
 import { CloseMailActionComponent } from './close-mail-action/close-mail-action.component';
+import { RejectVisaBackToPrevousActionComponent } from './visa-reject-back-to-previous-action/reject-visa-back-to-previous-action.component';
+import { ResetVisaActionComponent } from './visa-reset-action/reset-visa-action.component';
+import { InterruptVisaActionComponent } from './visa-interrupt-action/interrupt-visa-action.component';
 import { CloseAndIndexActionComponent } from './close-and-index-action/close-and-index-action.component';
 import { UpdateAcknowledgementSendDateActionComponent } from './update-acknowledgement-send-date-action/update-acknowledgement-send-date-action.component';
 import { CreateAcknowledgementReceiptActionComponent } from './create-acknowledgement-receipt-action/create-acknowledgement-receipt-action.component';
@@ -19,7 +22,16 @@ import { SendExternalSignatoryBookActionComponent } from './send-external-signat
 import { SendExternalNoteBookActionComponent } from './send-external-note-book-action/send-external-note-book-action.component';
 import { RedirectActionComponent } from './redirect-action/redirect-action.component';
 import { SendShippingActionComponent } from './send-shipping-action/send-shipping-action.component';
+import { redirectInitiatorEntityActionComponent } from './redirect-initiator-entity-action/redirect-initiator-entity-action.component';
+import { closeMailWithAttachmentsOrNotesActionComponent } from './close-mail-with-attachments-or-notes-action/close-mail-with-attachments-or-notes-action.component';
 import { Router } from '@angular/router';
+import { SendSignatureBookActionComponent } from './visa-send-signature-book-action/send-signature-book-action.component';
+import { ContinueVisaCircuitActionComponent } from './visa-continue-circuit-action/continue-visa-circuit-action.component';
+import { SendAvisWorkflowComponent } from './avis-workflow-send-action/send-avis-workflow-action.component';
+import { ContinueAvisCircuitActionComponent } from './avis-continue-circuit-action/continue-avis-circuit-action.component';
+import { SendAvisParallelComponent } from './avis-parallel-send-action/send-avis-parallel-action.component';
+import { GiveAvisParallelActionComponent } from './avis-give-parallel-action/give-avis-parallel-action.component';
+import { ValidateAvisParallelComponent } from './avis-parallel-validate-action/validate-avis-parallel-action.component';
 
 @Injectable()
 export class ActionsService {
@@ -298,6 +310,50 @@ export class ActionsService {
         ).subscribe();
     }
 
+    redirectInitiatorEntityAction(options: any = null) {
+        const dialogRef = this.dialog.open(redirectInitiatorEntityActionComponent, {
+            disableClose: true,
+            width: '500px',
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    closeMailWithAttachmentsOrNotesAction(options: any = null) {
+        const dialogRef = this.dialog.open(closeMailWithAttachmentsOrNotesActionComponent, {
+            disableClose: true,
+            width: '500px',
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
     updateAcknowledgementSendDateAction(options: any = null) {
         const dialogRef = this.dialog.open(UpdateAcknowledgementSendDateActionComponent, {
             disableClose: true,
@@ -524,6 +580,51 @@ export class ActionsService {
         ).subscribe();
     }
 
+    sendSignatureBookAction(options: any = null) {
+        const dialogRef = this.dialog.open(SendSignatureBookActionComponent, {
+            autoFocus: false,
+            disableClose: true,
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    continueVisaCircuitAction(options: any = null) {
+        const dialogRef = this.dialog.open(ContinueVisaCircuitActionComponent, {
+            autoFocus: false,
+            disableClose: true,
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+
     noConfirmAction(options: any = null) {
         let dataActionToSend = this.setDatasActionToSend();
         if ( dataActionToSend.resIds.length === 0) {
@@ -566,4 +667,182 @@ export class ActionsService {
     signatureBookAction(options: any = null) {
         this.router.navigate([`/signatureBook/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/resources/${this.currentResIds}`]);
     }
+
+    rejectVisaBackToPreviousAction(options: any = null) {
+        const dialogRef = this.dialog.open(RejectVisaBackToPrevousActionComponent, {
+            disableClose: true,
+            width: '500px',
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    resetVisaAction(options: any = null) {
+        const dialogRef = this.dialog.open(ResetVisaActionComponent, {
+            disableClose: true,
+            width: '500px',
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    interruptVisaAction(options: any = null) {
+        const dialogRef = this.dialog.open(InterruptVisaActionComponent, {
+            disableClose: true,
+            width: '500px',
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    sendToOpinionCircuitAction(options: any = null) {
+        const dialogRef = this.dialog.open(SendAvisWorkflowComponent, {
+            autoFocus: false,
+            disableClose: true,
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    sendToParallelOpinion(options: any = null) {
+        const dialogRef = this.dialog.open(SendAvisParallelComponent, {
+            autoFocus: false,
+            disableClose: true,
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    continueOpinionCircuitAction(options: any = null) {
+        const dialogRef = this.dialog.open(ContinueAvisCircuitActionComponent, {
+            autoFocus: false,
+            disableClose: true,
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    giveOpinionParallelAction(options: any = null) {
+        const dialogRef = this.dialog.open(GiveAvisParallelActionComponent, {
+            autoFocus: false,
+            disableClose: true,
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    validateParallelOpinionDiffusionAction(options: any = null) {
+        const dialogRef = this.dialog.open(ValidateAvisParallelComponent, {
+            autoFocus: false,
+            disableClose: true,
+            data: this.setDatasActionToSend()
+        });
+        dialogRef.afterClosed().pipe(
+            tap((data: any) => {
+                this.unlockResourceAfterActionModal(data);
+            }),
+            filter((data: string) => data === 'success'),
+            tap((result: any) => {
+                this.endAction(result);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    
 }

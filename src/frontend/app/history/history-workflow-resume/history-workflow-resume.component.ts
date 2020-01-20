@@ -40,7 +40,7 @@ export class HistoryWorkflowResumeComponent implements OnInit {
 
     loadHistory(resId: number) {
         this.loading = true;
-        this.http.get(`../../rest/histories/resources/${resId}/workflow?limit=3`).pipe(
+        this.http.get(`../../rest/history/resources/${resId}/workflow?limit=3`).pipe(
             tap((data: any) => {
                 this.histories = data.history;
             }),

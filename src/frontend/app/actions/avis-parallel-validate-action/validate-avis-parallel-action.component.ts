@@ -1,0 +1,129 @@
+import { Component, OnInit, Inject, ViewChild, AfterViewInit } from '@angular/core';
+import { LANG } from '../../translate.component';
+import { NotificationService } from '../../notification.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { HttpClient } from '@angular/common/http';
+import { NoteEditorComponent } from '../../notes/note-editor.component';
+import { tap, finalize, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { FunctionsService } from '../../../service/functions.service';
+import { AvisWorkflowComponent } from '../../avis/avis-workflow.component';
+import { HeaderService } from '../../../service/header.service';
+
+@Component({
+    templateUrl: "validate-avis-parallel-action.component.html",
+    styleUrls: ['validate-avis-parallel-action.component.scss'],
+})
+export class ValidateAvisParallelComponent implements AfterViewInit {
+
+    lang: any = LANG;
+    loading: boolean = false;
+
+    resourcesWarnings: any[] = [];
+    resourcesErrors: any[] = [];
+
+    ownerOpinion: string = '';
+    opinionContent: string = '';
+
+    noResourceToProcess: boolean = null;
+
+    opinionLimitDate: Date = null;
+
+    today: Date = new Date();
+
+    availableRoles: any[] = [];
+
+    @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
+    @ViewChild('appAvisWorkflow', { static: false }) appAvisWorkflow: AvisWorkflowComponent;
+
+    constructor(
+        public http: HttpClient,
+        private notify: NotificationService,
+        public dialogRef: MatDialogRef<ValidateAvisParallelComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        public functions: FunctionsService,
+        private headerService: HeaderService) { }
+
+    ngOnInit() {
+        this.checkAvisCircuit();
+    }
+
+    checkAvisCircuit() {
+        this.loading = true;
+        this.resourcesErrors = [];
+        this.resourcesWarnings = [];
+        this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkValidateParallelOpinion', { resources: this.data.resIds }).pipe(
+            tap((data: any) => {
+                if (!this.functions.empty(data.resourcesInformations.warning)) {
+                    this.resourcesWarnings = data.resourcesInformations.warning;
+                }
+
+                if (!this.functions.empty(data.resourcesInformations.error)) {
+                    this.resourcesErrors = data.resourcesInformations.error;
+                    this.noResourceToProcess = this.resourcesErrors.length === this.data.resIds.length;
+                }
+
+                if (!this.noResourceToProcess) {
+                    this.ownerOpinion = data.resourcesInformations.success[0].avisUserAsk;
+                    this.opinionContent = data.resourcesInformations.success[0].note;
+                    this.opinionLimitDate = new Date(data.resourcesInformations.success[0].opinionLimitDate)
+                }
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                this.dialogRef.close();
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    async ngAfterViewInit(): Promise<void> {
+        if (this.data.resIds.length === 1) {
+            await this.appAvisWorkflow.loadParallelWorkflow(this.data.resIds[0]);
+        }
+    }
+
+    async onSubmit() {
+
+        const realResSelected: number[] = this.data.resIds.filter((resId: any) => this.resourcesErrors.map(resErr => resErr.res_id).indexOf(resId) === -1);
+
+        this.executeAction(realResSelected);
+
+    }
+
+    executeAction(realResSelected: number[]) {
+        const noteContent: string = `[${this.lang.avisUserAsk.toUpperCase()}] ${this.noteEditor.getNoteContent()} ← ${this.lang.validateBy} ${this.headerService.user.firstname} ${this.headerService.user.lastname}`;
+        this.http.put(this.data.processActionRoute, { resources: realResSelected, data: { note: noteContent, opinionLimitDate: this.functions.formatDateObjectToFrenchDateString(this.opinionLimitDate, true), opinionCircuit: this.appAvisWorkflow.getWorkflow() } }).pipe(
+            tap((data: any) => {
+                if (!data) {
+                    this.dialogRef.close('success');
+                }
+                if (data && data.errors != null) {
+                    this.notify.error(data.errors);
+                }
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    isValidAction() {     
+        if (this.data.resIds.length === 1) {
+            if (!this.noResourceToProcess && this.noteEditor !== undefined && this.appAvisWorkflow !== undefined && !this.appAvisWorkflow.emptyWorkflow() && !this.appAvisWorkflow.workflowEnd() && !this.functions.empty(this.noteEditor.getNoteContent()) && !this.functions.empty(this.functions.formatDateObjectToFrenchDateString(this.opinionLimitDate))) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if (!this.noResourceToProcess) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+}

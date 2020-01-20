@@ -1491,12 +1491,6 @@ if (!defined('_FOUND_INVOICES')) {
 if (!defined('_SIMPLE_CONFIRM')) {
     define('_SIMPLE_CONFIRM', 'Simple confirmation');
 }
-if (!defined('_SEND_FILE_WS')) {
-    define('_SEND_FILE_WS', 'Send file via Web Service');
-}
-if (!defined('_SEND_DATA_WS')) {
-    define('_SEND_DATA_WS', 'Send data via Web Service');
-}
 if (!defined('_CHECK_INVOICE')) {
     define('_CHECK_INVOICE', 'Check bill');
 }
@@ -3426,9 +3420,6 @@ if (!defined('_EXPORT_LIST')) {
 if (!defined('_ADD_LINKS')) {
     define('_ADD_LINKS', 'Add connection');
 }
-if (!defined('_PUT_IN_COPY')) {
-    define('_PUT_IN_COPY', 'Add on copy');
-}
 if (!defined('_LINK_TO_DOC')) {
     define('_LINK_TO_DOC', 'link to a mail');
 }
@@ -3971,17 +3962,14 @@ if (!defined('_PROCEED_WORKFLOW')) {
 if (!defined('_INTERRUPT_WORKFLOW')) {
     define('_INTERRUPT_WORKFLOW', 'Break the visa flow');
 }
-if (!defined('_REJECTION_WORKFLOW_REDACTOR')) {
-    define('_REJECTION_WORKFLOW_REDACTOR', 'Visa rejection - back to the author');
+if (!defined('_RESET_VISA_WORKFLOW')) {
+    define('_RESET_VISA_WORKFLOW', 'Reset visa workflow');
 }
 if (!defined('_REJECTION_WORKFLOW_PREVIOUS')) {
     define('_REJECTION_WORKFLOW_PREVIOUS', 'Visa rejection - back to the previous author');
 }
 if (!defined('_VISA_MAIL')) {
     define('_VISA_MAIL', 'Aim the mail');
-}
-if (!defined('_SEND_SIGNED_DOCS')) {
-    define('_SEND_SIGNED_DOCS', 'Pass signed responses');
 }
 if (!defined('_PREPARE_VISA')) {
     define('_PREPARE_VISA', 'Prepare the visa flow');

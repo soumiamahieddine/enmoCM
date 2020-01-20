@@ -63,6 +63,7 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
             'SignatureBook\\' => 14,
             'Shipping\\' => 9,
             'Sendmail\\' => 9,
+            'Search\\' => 7,
         ),
         'R' => 
         array (
@@ -242,6 +243,10 @@ class ComposerStaticInitf21aebccfa6df888200dcb099aa69fbd
         'Sendmail\\' => 
         array (
             0 => __DIR__ . '/../..' . '/modules/sendmail',
+        ),
+        'Search\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/app/search',
         ),
         'Respect\\Validation\\' => 
         array (

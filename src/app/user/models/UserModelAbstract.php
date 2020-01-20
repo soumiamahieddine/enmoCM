@@ -157,10 +157,15 @@ abstract class UserModelAbstract
             return $users[$args['login']];
         }
 
+        $where = ['user_id = ?'];
+        if (!empty($args['noDeleted'])) {
+            $where[] = "status != 'DEL'";
+        }
+
         $user = DatabaseModel::select([
             'select'    => empty($args['select']) ? ['*'] : $args['select'],
             'table'     => ['users'],
-            'where'     => ['user_id = ?'],
+            'where'     => $where,
             'data'      => [$args['login']]
         ]);
 

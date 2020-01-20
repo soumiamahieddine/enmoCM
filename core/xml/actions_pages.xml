@@ -24,19 +24,6 @@ An action page is described in a ACTIONPAGE tag :
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>put_in_copy</ID>
-        <LABEL>_PUT_IN_COPY</LABEL>
-        <NAME>put_in_copy</NAME>
-        <DESC>_PUT_IN_COPY_DESC</DESC>
-        <component>v1Action</component>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>entities</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
         <ID>confirm_status</ID>
         <LABEL>_SIMPLE_CONFIRM</LABEL>
         <NAME>confirm_status</NAME>
@@ -138,30 +125,6 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>sendFileWS</ID>
-        <LABEL>_SEND_FILE_WS</LABEL>
-        <NAME>sendFileWS</NAME>
-        <component>v1Action</component>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>sendDataWS</ID>
-        <LABEL>_SEND_DATA_WS</LABEL>
-        <NAME>sendDataWS</NAME>
-        <component>v1Action</component>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
         <ID>sendToExternalSignatureBook</ID>
         <LABEL>_SEND_TO_EXTERNAL_SB</LABEL>
         <NAME>sendToExternalSignatureBook</NAME>
@@ -203,7 +166,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_CLOSE_MAIL_WITH_ATTACHMENT</LABEL>
         <NAME>close_mail_with_attachment</NAME>
         <DESC>_CLOSE_MAIL_WITH_ATTACHMENT_DESC</DESC>
-        <component>v1Action</component>
+        <component>closeMailWithAttachmentsOrNotesAction</component>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -238,24 +201,11 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
 	<ACTIONPAGE>
-        <ID>visa_mail</ID>
-        <LABEL>_VISA_MAIL</LABEL>
-        <NAME>visa_mail</NAME>
-        <DESC>_VISA_MAIL_DESC</DESC>
-        <component>signatureBookAction</component>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>visa</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-	<ACTIONPAGE>
         <ID>visa_workflow</ID>
         <LABEL>_PROCEED_WORKFLOW</LABEL>
         <NAME>visa_workflow</NAME>
         <DESC>_PROCEED_WORKFLOW_DESC</DESC>
-        <component>v1Action</component>
+        <component>continueVisaCircuitAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -268,7 +218,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_INTERRUPT_WORKFLOW</LABEL>
         <NAME>interrupt_visa</NAME>
         <DESC>_INTERRUPT_WORKFLOW_DESC</DESC>
-        <component>v1Action</component>
+        <component>interruptVisaAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -278,10 +228,10 @@ An action page is described in a ACTIONPAGE tag :
     </ACTIONPAGE>
     <ACTIONPAGE>
         <ID>rejection_visa_redactor</ID>
-        <LABEL>_REJECTION_WORKFLOW_REDACTOR</LABEL>
+        <LABEL>_RESET_VISA_WORKFLOW</LABEL>
         <NAME>rejection_visa_redactor</NAME>
-        <DESC>_REJECTION_WORKFLOW_REDACTOR_DESC</DESC>
-        <component>v1Action</component>
+        <DESC>_RESET_VISA_WORKFLOW_DESC</DESC>
+        <component>resetVisaAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -294,7 +244,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_REJECTION_WORKFLOW_PREVIOUS</LABEL>
         <NAME>rejection_visa_previous</NAME>
         <DESC>_REJECTION_WORKFLOW_PREVIOUS_DESC</DESC>
-        <component>v1Action</component>
+        <component>rejectVisaBackToPreviousAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -307,7 +257,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_REDIRECT_WORKFLOW_ENTITY</LABEL>
         <NAME>redirect_visa_entity</NAME>
         <DESC>_REDIRECT_WORKFLOW_ENTITY_DESC</DESC>
-        <component>v1Action</component>
+        <component>redirectInitiatorEntityAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -320,20 +270,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_SEND_TO_VISA</LABEL>
         <NAME>send_to_visa</NAME>
         <DESC>_SEND_TO_VISA_DESC</DESC>
-        <component>v1Action</component>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>visa</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-	<ACTIONPAGE>
-        <ID>send_signed_docs</ID>
-        <LABEL>_SEND_SIGNED_DOCS</LABEL>
-        <NAME>send_signed_docs</NAME>
-        <DESC>_SEND_SIGNED_DOCS_DESC</DESC>
-        <component>v1Action</component>
+        <component>sendSignatureBookAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>visa</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -346,7 +283,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_SEND_DOCS_TO_RECOMMENDATION</LABEL>
         <NAME>send_docs_to_recommendation</NAME>
         <DESC>_SEND_DOCS_TO_RECOMMENDATION_DESC</DESC>
-        <component>v1Action</component>
+        <component>sendToParallelOpinion</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -359,7 +296,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_VALIDATE_RECOMMENDATION</LABEL>
         <NAME>validate_recommendation</NAME>
         <DESC>_VALIDATE_RECOMMENDATION_DESC</DESC>
-        <component>v1Action</component>
+        <component>validateParallelOpinionDiffusionAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -372,7 +309,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_SEND_TO_AVIS_WF</LABEL>
         <NAME>send_to_avis</NAME>
         <DESC>_SEND_TO_AVIS_WF_DESC</DESC>
-        <component>v1Action</component>
+        <component>sendToOpinionCircuitAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -385,7 +322,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_PROCEED_WORKFLOW_AVIS</LABEL>
         <NAME>avis_workflow</NAME>
         <DESC>_PROCEED_WORKFLOW_AVIS_DESC</DESC>
-        <component>v1Action</component>
+        <component>continueOpinionCircuitAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
@@ -398,7 +335,7 @@ An action page is described in a ACTIONPAGE tag :
         <LABEL>_PROCEED_WORKFLOW_AVIS_SIMPLE</LABEL>
         <NAME>avis_simple</NAME>
         <DESC>_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC</DESC>
-        <component>v1Action</component>
+        <component>giveOpinionParallelAction</component>
         <ORIGIN>module</ORIGIN>
         <MODULE>avis</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>

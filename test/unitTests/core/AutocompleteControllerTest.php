@@ -66,7 +66,8 @@ class AutocompleteControllerTest extends TestCase
             // $this->assertNotEmpty($value->idToDisplay);
             // $this->assertNotEmpty($value->otherInfo);
             if ($value->type == 'contact') {
-                $this->assertNotEmpty($value->fillingRate->color);
+                $this->assertNotEmpty($value->fillingRate->rate);
+                $this->assertNotEmpty($value->fillingRate->thresholdLevel);
             }
         }
     }
@@ -149,7 +150,7 @@ class AutocompleteControllerTest extends TestCase
 
         foreach ($responseBody as $value) {
             $this->assertSame('user', $value->type);
-            $this->assertInternalType('string', $value->id);
+            $this->assertInternalType('integer', $value->id);
             $this->assertNotEmpty($value->id);
             $this->assertInternalType('string', $value->idToDisplay);
             $this->assertNotEmpty($value->idToDisplay);

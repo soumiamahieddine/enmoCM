@@ -1460,7 +1460,7 @@ if (!defined('_ADD_ATTACHMENT_OR_NOTE')) {
     define('_ADD_ATTACHMENT_OR_NOTE', 'Ajoutez une pièce jointe ou une annotation pour ce(s) courrier(s)');
 }
 if (!defined('_CLOSE_MAIL_WITH_ATTACHMENT')) {
-    define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe');
+    define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe ou annotation');
 }
 // if (!defined('_CLOSE_MAIL_WITH_ATTACHMENT_DESC')) {
 //     define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', "Permet de mettre à jour la date de clôture d'un courrier ('closing_date' de la table res_letterbox) avec présence OBLIGATOIRE de pièce(s) jointe(s) / annotation(s).");
@@ -1501,12 +1501,6 @@ if (!defined('_FOUND_INVOICES')) {
 }
 if (!defined('_SIMPLE_CONFIRM')) {
     define('_SIMPLE_CONFIRM', 'Confirmation simple');
-}
-if (!defined('_SEND_FILE_WS')) {
-    define('_SEND_FILE_WS', 'Envoyer le document via Web Service');
-}
-if (!defined('_SEND_DATA_WS')) {
-    define('_SEND_DATA_WS', 'Envoyer des données via Web Service');
 }
 if (!defined('_SIMPLE_CONFIRM_DESC')) {
     define('_SIMPLE_CONFIRM_DESC', "Ouvre simplement une modal de confirmation de l'action à effetuer.");
@@ -3456,12 +3450,6 @@ if (!defined('_ADD_LINKS')) {
 if (!defined('_DEL_LINK')) {
     define('_DEL_LINK', 'Supprimer la liaison');
 }
-if (!defined('_PUT_IN_COPY')) {
-    define('_PUT_IN_COPY', 'Ajouter en copie');
-}
-if (!defined('_PUT_IN_COPY_DESC')) {
-    define('_PUT_IN_COPY_DESC', "Ouvre une modal permettant UNIQUEMENT d'ajouter ou de supprimer des personne en COPIE de la liste de diffusion.");
-}
 if (!defined('_LINK_TO_DOC')) {
     define('_LINK_TO_DOC', 'Lier à un courrier');
 }
@@ -4019,11 +4007,11 @@ if (!defined('_INTERRUPT_WORKFLOW')) {
 if (!defined('_INTERRUPT_WORKFLOW_DESC')) {
     define('_INTERRUPT_WORKFLOW_DESC', "Met à jour la date du visa de l'actuel viseur / signataire et de tous les viseurs suivant présents dans le circuit de visa du courrier ('process_date' de la table listinstance). Insère également un message d'interruption sur le viseur actuel ('process_comment' de la table listinstance).");
 }
-if (!defined('_REJECTION_WORKFLOW_REDACTOR')) {
-    define('_REJECTION_WORKFLOW_REDACTOR', 'Refuser le visa - retour rédacteur');
+if (!defined('_RESET_VISA_WORKFLOW')) {
+    define('_RESET_VISA_WORKFLOW', 'Réinitialiser le circuit de visa');
 }
-if (!defined('_REJECTION_WORKFLOW_REDACTOR_DESC')) {
-    define('_REJECTION_WORKFLOW_REDACTOR_DESC', "Réinitialise la date de visa de tous les viseurs présents dans le circuit de visa du courrier ('process_date' de la table listinstance).");
+if (!defined('_RESET_VISA_WORKFLOW_DESC')) {
+    define('_RESET_VISA_WORKFLOW_DESC', "Réinitialise la date de visa de tous les viseurs présents dans le circuit de visa du courrier ('process_date' de la table listinstance).");
 }
 if (!defined('_REJECTION_WORKFLOW_PREVIOUS')) {
     define('_REJECTION_WORKFLOW_PREVIOUS', 'Refuser le visa - retour au précédent viseur');
@@ -4039,15 +4027,6 @@ if (!defined('_REDIRECT_WORKFLOW_ENTITY_DESC')) {
 }
 if (!defined('_VISA_MAIL')) {
     define('_VISA_MAIL', 'Viser le courrier');
-}
-if (!defined('_VISA_MAIL_DESC')) {
-    define('_VISA_MAIL_DESC', 'Ouvre la page du parapheur afin de pouvoir viser / signer le document.');
-}
-if (!defined('_SEND_SIGNED_DOCS')) {
-    define('_SEND_SIGNED_DOCS', 'Transmettre réponses signées');
-}
-if (!defined('_SEND_SIGNED_DOCS_DESC')) {
-    define('_SEND_SIGNED_DOCS_DESC', 'Vérifie si les projets de réponse ont été signés.');
 }
 if (!defined('_PREPARE_VISA')) {
     define('_PREPARE_VISA', 'Préparer le circuit de visa');

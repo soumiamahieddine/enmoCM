@@ -12,6 +12,7 @@ require_once 'vendor/autoload.php';
 $userId = 'superadmin';
 $userInfo = \User\models\UserModel::getByLogin(['login' => $userId, 'select' => ['id']]);
 $id = $userInfo['id'];
+$_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
 date_default_timezone_set(\SrcCore\models\CoreConfigModel::getTimezone());
 

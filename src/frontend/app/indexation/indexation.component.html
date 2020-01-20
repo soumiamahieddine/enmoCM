@@ -57,7 +57,7 @@
             </div>
             <div class="indexing-form-container">
                 <app-indexing-form *ngIf="currentIndexingModel.id !== undefined" #indexingForm
-                    [groupId]="currentGroupId" [indexingFormId]="currentIndexingModel.id"></app-indexing-form>
+                    [groupId]="currentGroupId" [indexingFormId]="currentIndexingModel.id" (retrieveDocumentEvent)="appDocumentViewer.saveDocService()"></app-indexing-form>
             </div>
             <div class="actions-indexing-form">
                 <ng-container
@@ -119,7 +119,7 @@
         </div>
         <div class="document-container" [class.fullContainer]="appService.getViewMode()">
             <div class="content">
-                <app-document-viewer #appDocumentViewer [editMode]="true" [tmpFilename]="tmpFilename" (triggerEvent)="refreshDatas()"
+                <app-document-viewer #appDocumentViewer [editMode]="true" [tmpFilename]="tmpFilename" (triggerEvent)="refreshDatas()" [sidenavLeft]="sidenavLeft"
                     style="height:100%;width:100%;">
                 </app-document-viewer>
             </div>

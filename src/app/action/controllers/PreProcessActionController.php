@@ -22,8 +22,10 @@ use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
+use Entity\models\ListInstanceModel;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use Group\models\GroupModel;
+use Note\models\NoteModel;
 use Parameter\models\ParameterModel;
 use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
@@ -796,6 +798,442 @@ class PreProcessActionController
             'resources'         => $resources,
             'canNotSend'        => $canNotSend
         ]);
+    }
+
+    public function checkInitiatorEntity(Request $request, Response $response, array $args)
+    {
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $data = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+        }
+
+        $withEntity = [];
+        $withoutEntity = [];
+
+        $resources = ResModel::get([
+            'select' => ['initiator', 'res_id', 'alt_identifier'],
+            'where'  => ['res_id in (?)'],
+            'data'   => [$data['resources']]
+        ]);
+
+        $resourcesInfoInitiator = array_column($resources, 'initiator', 'res_id');
+        $resourcesInfoChrono = array_column($resources, 'alt_identifier', 'res_id');
+
+        foreach ($data['resources'] as $valueResId) {
+            if (!empty($resourcesInfoInitiator[$valueResId])) {
+                $withEntity[] = $valueResId;
+            } else {
+                $withoutEntity[] = $resourcesInfoChrono[$valueResId] ?? _UNDEFINED;
+            }
+        }
+
+        return $response->withJson(['withEntity' => $withEntity, 'withoutEntity' => $withoutEntity]);
+    }
+
+    public function checkAttachmentsAndNotes(Request $request, Response $response, array $args)
+    {
+        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $currentUser['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $data = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
+        }
+
+        $hasAttachmentsNotes = [];
+        $noAttachmentsNotes = [];
+
+        $attachments = AttachmentModel::get([
+            'select' => ['count(1) as nb', 'res_id_master'],
+            'where'  => ['res_id_master in (?)', 'status != ?'],
+            'data'   => [$data['resources'], 'DEL'],
+            'groupBy' => ['res_id_master']
+        ]);
+
+        $resources = ResModel::get([
+            'select' => ['res_id', 'alt_identifier'],
+            'where'  => ['res_id in (?)', 'status != ?'],
+            'data'   => [$data['resources'], 'DEL']
+        ]);
+
+        $nbAttachments = array_column($attachments, 'nb', 'res_id_master');
+        $resources = array_column($resources, 'alt_identifier', 'res_id');
+
+        foreach ($data['resources'] as $resId) {
+            $notes = NoteModel::getByUserIdForResource(['select' => ['user_id', 'id'], 'resId' => $resId, 'userId' => $GLOBALS['id']]);
+
+            if (empty($notes) && empty($nbAttachments[$resId])) {
+                $noAttachmentsNotes[] = $resources[$resId] ?? _UNDEFINED;
+            } else {
+                $hasAttachmentsNotes[] = $resId;
+            }
+        }
+
+        return $response->withJson(['hasAttachmentsNotes' => $hasAttachmentsNotes, 'noAttachmentsNotes' => $noAttachmentsNotes]);
+    }
+
+    public function checkSignatureBook(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $signableAttachmentsTypes = [];
+        $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
+        foreach ($attachmentsTypes as $key => $type) {
+            if ($type['sign']) {
+                $signableAttachmentsTypes[] = $key;
+            }
+        }
+
+        $resourcesInformations = [];
+        foreach ($body['resources'] as $resId) {
+            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier']]);
+            if (empty($resource['alt_identifier'])) {
+                $resource['alt_identifier'] = _UNDEFINED;
+            }
+
+            $attachments = AttachmentModel::get([
+                'select'    => [1],
+                'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
+                'data'      => [$resId, $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
+            ]);
+
+            if (empty($attachments)) {
+                $resourcesInformations['noAttachment'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
+            } else {
+                $resourcesInformations['attachments'][] = ['res_id' => $resId];
+            }
+        }
+
+        return $response->withJson(['resourcesInformations' => $resourcesInformations]);
+    }
+
+    public function checkContinueVisaCircuit(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $signableAttachmentsTypes = [];
+        $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
+        foreach ($attachmentsTypes as $key => $type) {
+            if ($type['sign']) {
+                $signableAttachmentsTypes[] = $key;
+            }
+        }
+
+        $resourcesInformations = [];
+        foreach ($body['resources'] as $resId) {
+            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier']]);
+            if (empty($resource['alt_identifier'])) {
+                $resource['alt_identifier'] = _UNDEFINED;
+            }
+
+            $isSignatory = ListInstanceModel::get(['select' => ['signatory', 'requested_signature'], 'where' => ['res_id = ?', 'difflist_type = ?', 'process_date is null'], 'data' => [$resId, 'VISA_CIRCUIT'], 'orderBy' => ['listinstance_id'], 'limit' => 1]);
+            if (empty($isSignatory[0])) {
+                $hasCircuit = ListInstanceModel::get(['select' => [1], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$resId, 'VISA_CIRCUIT']]);
+                if (!empty($hasCircuit)) {
+                    $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'endedCircuit'];
+                } else {
+                    $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noCircuitAvailable'];
+                }
+            } elseif ($isSignatory[0]['requested_signature'] && !$isSignatory[0]['signatory']) {
+                $resourcesInformations['warning'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'userHasntSigned'];
+            } else {
+                $resourcesInformations['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId];
+            }
+        }
+
+        return $response->withJson(['resourcesInformations' => $resourcesInformations]);
+    }
+
+    public function checkValidateParallelOpinion(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resourcesInformation = [];
+
+        $resources = ResModel::get(['select' => ['opinion_limit_date', 'alt_identifier', 'res_id'], 'where' => ['res_id in (?)'], 'data' => [$body['resources']]]);
+        foreach ($resources as $resource) {
+            if (empty($resource['opinion_limit_date'])) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resource['res_id'], 'reason' => 'noOpinionLimitDate'];
+                continue;
+            }
+            $opinionLimitDate = new \DateTime($resource['opinion_limit_date']);
+            $today = new \DateTime('today');
+            if ($opinionLimitDate < $today) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resource['res_id'], 'reason' => 'opinionLimitDateOutdated'];
+            }
+
+            $opinionNote = NoteModel::get([
+                'select'    => ['note_text', 'user_id', 'creation_date'],
+                'where'     => ['identifier in (?)', 'note_text like (?)'],
+                'data'      => [$resource['res_id'], '['._TO_AVIS.']%'],
+                'order_by'  => ['creation_date desc'],
+                'limit'     => 1
+            ]);
+
+            if (empty($opinionNote)) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resource['res_id'], 'reason' => 'noOpinionNote'];
+                continue;
+            }
+
+            $note = str_replace('['._TO_AVIS.'] ', '', $opinionNote[0]['note_text']);
+            $userInfo = UserModel::getLabelledUserById(['id' => $opinionNote[0]['user_id']]);
+            $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resource['res_id'], 'avisUserAsk' => $userInfo, 'note' => $note, 'opinionLimitDate' => $resource['opinion_limit_date']];
+        }
+
+        return $response->withJson(['resourcesInformations' => $resourcesInformation]);
+    }
+
+    public function checkGiveParallelOpinion(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $currentUser = UserModel::getById(['select' => ['user_id'], 'id' => $GLOBALS['id']]);
+
+        $resourcesInformation = [];
+        foreach ($body['resources'] as $resId) {
+            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'opinion_limit_date']]);
+
+            if (empty($resource['alt_identifier'])) {
+                $resource['alt_identifier'] = _UNDEFINED;
+            }
+
+            if (empty($resource['opinion_limit_date'])) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noOpinionLimitDate'];
+                continue;
+            }
+            $opinionLimitDate = new \DateTime($resource['opinion_limit_date']);
+            $today = new \DateTime('today');
+            if ($opinionLimitDate < $today) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'opinionLimitDateOutdated'];
+            }
+
+            $opinionNote = NoteModel::get([
+                'select'    => ['user_id', 'note_text'],
+                'where'     => ['identifier = ?', "note_text like ?"],
+                'data'      => [$resId, '['._TO_AVIS.']%'],
+                'order_by'  => ['creation_date desc'],
+                'limit'     => 1
+            ]);
+
+            if (empty($opinionNote)) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noOpinionNote'];
+                continue;
+            }
+
+            $isInCircuit = ListInstanceModel::get([
+                'select'  => [1],
+                'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is null', 'item_id = ?', 'item_mode = ?'],
+                'data'    => [$resId, 'entity_id', $currentUser['user_id'], 'avis']
+            ]);
+            if (empty($isInCircuit)) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'userNotInDiffusionList'];
+            } else {
+                $userInfo = UserModel::getLabelledUserById(['id' => $opinionNote[0]['user_id']]);
+                $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'avisUserAsk' => $userInfo, 'note' => $opinionNote[0]['note_text']];
+            }
+        }
+
+        return $response->withJson(['resourcesInformations' => $resourcesInformation]);
+    }
+
+    public function checkContinueOpinionCircuit(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resourcesInformation = [];
+        foreach ($body['resources'] as $resId) {
+            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'opinion_limit_date']]);
+
+            if (empty($resource['alt_identifier'])) {
+                $resource['alt_identifier'] = _UNDEFINED;
+            }
+
+            if (empty($resource['opinion_limit_date'])) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noOpinionLimitDate'];
+                continue;
+            }
+            $opinionLimitDate = new \DateTime($resource['opinion_limit_date']);
+            $today = new \DateTime('today');
+            if ($opinionLimitDate < $today) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'opinionLimitDateOutdated'];
+            }
+
+            $opinionNote = NoteModel::get([
+                'select'    => ['note_text', 'user_id'],
+                'where'     => ['identifier = ?', "note_text like '[" . _TO_AVIS . "]%'"],
+                'data'      => [$resId]
+            ]);
+
+            if (empty($opinionNote)) {
+                $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noOpinionNote'];
+                continue;
+            }
+
+            $isInCircuit = ListInstanceModel::get([
+                'select'  => [1],
+                'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
+                'data'    => [$resId, 'AVIS_CIRCUIT'],
+                'orderBy' => ['listinstance_id'],
+                'limit'   => 1
+            ]);
+            if (empty($isInCircuit[0])) {
+                $hasCircuit = ListInstanceModel::get(['select' => [1], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$resId, 'AVIS_CIRCUIT']]);
+                if (!empty($hasCircuit)) {
+                    $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'endedCircuit'];
+                } else {
+                    $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noCircuitAvailable'];
+                }
+            } else {
+                $userInfo = UserModel::getLabelledUserById(['id' => $opinionNote[0]['user_id']]);
+                $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'avisUserAsk' => $userInfo, 'note' => $opinionNote[0]['note_text']];
+            }
+        }
+
+        return $response->withJson(['resourcesInformations' => $resourcesInformation]);
+    }
+
+    public function checkValidateRecommendation(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resourcesInformation = [];
+        foreach ($body['resources'] as $resId) {
+            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'opinion_limit_date']]);
+
+            if (empty($resource['alt_identifier'])) {
+                $resource['alt_identifier'] = _UNDEFINED;
+            }
+
+            if (empty($resource['opinion_limit_date'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'No opinion limit date for resource ' . $resource['alt_identifier']]);
+            }
+
+            $opinionNote = NoteModel::get([
+                'where'  => ['identifier = ?', "note_text ilike '[" . _TO_AVIS . "]%'"],
+                'data'   => [$resId]
+            ]);
+
+            if (empty($opinionNote)) {
+                return $response->withStatus(400)->withJson(['errors' => 'No opinion note for resource ' . $resource['alt_identifier']]);
+            }
+
+            $isSignatory = ListInstanceModel::get([
+                'select'  => [1],
+                'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
+                'data'    => [$resId, 'entity_id'],
+                'orderBy' => ['listinstance_id'],
+                'limit'   => 1
+            ]);
+            if (empty($isSignatory[0])) {
+                $hasCircuit = ListInstanceModel::get(['select' => [1], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$resId, 'entity_id']]);
+                if (!empty($hasCircuit)) {
+                    $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'endedCircuit'];
+                } else {
+                    $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noCircuitAvailable'];
+                }
+            } else {
+                $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId];
+            }
+        }
+
+        return $response->withJson(['resourcesInformations' => $resourcesInformation]);
     }
 
     public function isDestinationChanging(Request $request, Response $response, array $args)

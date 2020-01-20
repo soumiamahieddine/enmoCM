@@ -4,16 +4,16 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { HeaderService } from '../../service/header.service';
 import { AppService } from '../../service/app.service';
-import { tap, catchError, finalize, filter, map, exhaustMap } from 'rxjs/operators';
-import { of, Subscription, Subject } from 'rxjs';
+import { tap, catchError, filter, map, exhaustMap } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog, MatSidenav } from '@angular/material';
 import { AlertComponent } from '../../plugins/modal/alert.component';
 import { SortPipe } from '../../plugins/sorting.pipe';
-import { templateVisitAll } from '@angular/compiler';
 import { PluginSelectSearchComponent } from '../../plugins/select-search/select-search.component';
 import { FormControl } from '@angular/forms';
 import { EcplOnlyofficeViewerComponent } from '../../plugins/onlyoffice-api-js/onlyoffice-viewer.component';
+import { FunctionsService } from '../../service/functions.service';
 
 
 @Component({
@@ -23,7 +23,7 @@ import { EcplOnlyofficeViewerComponent } from '../../plugins/onlyoffice-api-js/o
         'document-viewer.component.scss',
         '../indexation/indexing-form/indexing-form.component.scss',
     ],
-    providers: [NotificationService, AppService, SortPipe]
+    providers: [AppService, SortPipe]
 })
 
 export class DocumentViewerComponent implements OnInit {
@@ -60,6 +60,7 @@ export class DocumentViewerComponent implements OnInit {
 
     templateListForm = new FormControl();
 
+    @Input('base64') base64: any = null;
     @Input('resId') resId: number = null;
     @Input('resIdMaster') resIdMaster: number = null;
     @Input('infoPanel') infoPanel: MatSidenav = null;
@@ -69,8 +70,10 @@ export class DocumentViewerComponent implements OnInit {
     @Input('attachType') attachType: string = null;
     @Input('format') format: string = null;
 
+    @Input() sidenavLeft: MatSidenav = null;
+
     @Output('triggerEvent') triggerEvent = new EventEmitter<string>();
-    
+
     private eventAction = new Subject<any>();
 
 
@@ -84,10 +87,10 @@ export class DocumentViewerComponent implements OnInit {
 
     dialogRef: MatDialogRef<any>;
     editor: any = {
-        mode : '',
+        mode: '',
         async: true,
-        options: {  
-            docUrl : null,
+        options: {
+            docUrl: null,
             dataToMerge: null
         }
     };
@@ -101,7 +104,8 @@ export class DocumentViewerComponent implements OnInit {
         private headerService: HeaderService,
         public appService: AppService,
         private dialog: MatDialog,
-        private sortPipe: SortPipe
+        private sortPipe: SortPipe,
+        public functions: FunctionsService
     ) {
         (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
     }
@@ -143,7 +147,9 @@ export class DocumentViewerComponent implements OnInit {
             })
         ).subscribe();
 
-        if (this.tmpFilename != '' && this.tmpFilename !== undefined) {
+        if (this.base64 !== null) {
+            this.loadFileFromBase64();
+        } else if (this.tmpFilename != '' && this.tmpFilename !== undefined) {
             this.http.get('../../rest/convertedFile/' + this.tmpFilename).pipe(
                 tap((data: any) => {
                     this.file = {
@@ -163,6 +169,19 @@ export class DocumentViewerComponent implements OnInit {
                 })
             ).subscribe();
         }
+    }
+
+    loadFileFromBase64() {
+        this.loading = true;
+        this.file = {
+            name: 'maarch',
+            format: null,
+            type: null,
+            contentMode: 'base64',
+            content: this.base64,
+            src: this.base64ToArrayBuffer(this.base64)
+        };
+        this.loading = false;
     }
 
     loadTmpFile(filenameOnTmp: string) {
@@ -398,17 +417,38 @@ export class DocumentViewerComponent implements OnInit {
 
     }
 
+    async saveDocService() {
+        const data: any = await this.getFilePdf();
+        
+        this.headerService.setLoadedFile(data);     
+    }
+
     getFile() {
         if (this.editor.mode === 'onlyoffice' && this.onlyofficeViewer !== undefined) {
             return this.onlyofficeViewer.getFile();
         } else {
             const objFile = JSON.parse(JSON.stringify(this.file));
             objFile.content = objFile.contentMode === 'route' ? null : objFile.content;
-            
+
             const myObservable = of(objFile);
 
             return myObservable;
         }
+    }
+
+    getFilePdf() {
+        return new Promise((resolve, reject) => {
+            if (!this.functions.empty(this.file.src)) {
+                resolve(this.getBase64Document(this.file.src));
+            } else {
+                this.getFile().pipe(
+                    exhaustMap((data: any) => this.http.post(`../../rest/convertedFile`, {name:`${data.name}.${data.format}`, base64:`${data.content}`})),
+                    tap((data: any) => {
+                        resolve(data.encodedResource);
+                    })
+                ).subscribe();
+            }
+        });
     }
 
     dndUploadFile(event: any) {
@@ -538,25 +578,25 @@ export class DocumentViewerComponent implements OnInit {
             }),
             filter((data: string) => data === 'ok'),
             tap(() => {
-                
+
                 this.triggerEvent.emit();
                 const template = this.listTemplates.filter(template => template.id === templateId)[0];
 
                 if (this.editor.mode === 'onlyoffice') {
-                    
+
                     this.editor.async = false;
                     this.editor.options = {
-                        objectType : 'attachmentCreation',
+                        objectType: 'attachmentCreation',
                         objectId: template.id,
-                        docUrl : `rest/onlyOffice/mergedFile`,
-                        dataToMerge : this.resourceDatas
+                        docUrl: `rest/onlyOffice/mergedFile`,
+                        dataToMerge: this.resourceDatas
                     };
                     this.editInProgress = true;
 
                 } else {
                     this.editor.async = true;
                     this.editor.options = {
-                        objectType : 'attachmentCreation',
+                        objectType: 'attachmentCreation',
                         objectId: template.id,
                         cookie: document.cookie,
                         data: this.resourceDatas,
@@ -570,7 +610,7 @@ export class DocumentViewerComponent implements OnInit {
                         })
                     ).subscribe();
                 }
-                
+
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
@@ -586,10 +626,10 @@ export class DocumentViewerComponent implements OnInit {
         if (this.editor.mode === 'onlyoffice') {
             this.editor.async = false;
             this.editor.options = {
-                objectType : 'attachmentModification',
+                objectType: 'attachmentModification',
                 objectId: this.resId,
-                docUrl : `rest/onlyOffice/mergedFile`,
-                dataToMerge : this.resourceDatas
+                docUrl: `rest/onlyOffice/mergedFile`,
+                dataToMerge: this.resourceDatas
             };
             this.editInProgress = true;
 
@@ -643,7 +683,7 @@ export class DocumentViewerComponent implements OnInit {
             }
         } else {
             return this.editInProgress;
-        }  
+        }
     }
 
     loadTemplatesByResId(resId: number, attachType: string) {
@@ -716,7 +756,13 @@ export class DocumentViewerComponent implements OnInit {
                         arrTypes = this.sortPipe.transform(arrTypes, 'label');
                     });
                 }),
-                exhaustMap(() => this.http.get('../../rest/currentUser/templates?target=attachments&type=office')),
+                exhaustMap(() => {
+                    if (this.mode == 'mainDocument') {
+                        return this.http.get('../../rest/currentUser/templates?target=indexingFile');
+                    } else {
+                        return this.http.get('../../rest/currentUser/templates?target=attachments&type=office');
+                    }
+                }),
                 tap((data: any) => {
                     this.listTemplates = data.templates;
 
@@ -757,10 +803,10 @@ export class DocumentViewerComponent implements OnInit {
     setEditor() {
         if (this.headerService.user.preferences.documentEdition === 'java') {
             this.editor.mode = 'java';
-            this.editor.async = true; 
+            this.editor.async = true;
         } else if (this.headerService.user.preferences.documentEdition === 'onlyoffice') {
             this.editor.mode = 'onlyoffice';
-            this.editor.async = false;   
+            this.editor.async = false;
         }
     }
 }

@@ -50,7 +50,7 @@
                             </div>
                         </div>
                         <div class="attachment-form-item">
-                            <app-contact-autocomplete [control]="attachment['recipient']" style="width:100%;" [singleMode]="true">
+                            <app-contact-autocomplete [control]="attachment['recipient']" style="width:100%;" [singleMode]="true" (retrieveDocumentEvent)="appDocumentViewer.saveDocService()">
                             </app-contact-autocomplete>
                             <div class="fieldState">
                                 <i class="fas fa-asterisk noMandatory"></i>

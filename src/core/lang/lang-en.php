@@ -221,8 +221,6 @@ define("_PRIVATE_TAGS_DESC", "User will only see Tag restricted to user's direct
 // ACTIONS
 define('_REDIRECTION', 'Redirection');
 define('_REDIRECTION_DESC', 'Opens a modal to choose a new user processing OR to redefine the processing service with a new mailing list.');
-define('_PUT_IN_COPY', 'Add on copy');
-define('_PUT_IN_COPY_DESC', 'Opens a modal ONLY to add or delete COPY people from the mailing list.');
 define('_SIMPLE_CONFIRM', 'Simple confirmation');
 define('_SIMPLE_CONFIRM_DESC', "Simply open a modal of confirmation of the action to be performed.");
 define('_NO_CONFIRM', 'No confirmation');
@@ -236,22 +234,18 @@ define('_SET_PERSISTENT_MODE_OFF', 'Deactivate the persistence');
 define('_SET_PERSISTENT_MODE_OFF_DESC', 'Resets the viewing behavior of the mail in the basket. Remove data from the \'basket_persistent_mode\' table.');
 define('_MARK_AS_READ', 'Marked as read');
 define('_MARK_AS_READ_DESC', 'Mark the mail as \'read\' in the basket. Insert the data in the \'res_mark_as_read\' table (useful if used in the basket clauses).');
-define('_SEND_FILE_WS', 'Send file via Web Service');
-define('_SEND_DATA_WS', 'Send data via Web Service');
 define('_SEND_TO_EXTERNAL_SB', 'Send data to external signature book');
 define('_SEND_TO_EXTERNAL_NOTEBOOK', 'Send data to external note book');
 define('_CLOSE_MAIL_AND_INDEX', 'Close a mail and launch the indexation');
 define('_CLOSE_MAIL_AND_INDEX_DESC', 'Allows you to update the closing date of a mail AND opens the indexing page to save a new mail.');
 define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Closing with attachment');
 define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', 'Allows you to update the closing date of a mail with MANDATORY presence of attachment (s) / note (s).');
-define('_SEND_SIGNED_DOCS', 'Pass signed responses');
-define('_SEND_SIGNED_DOCS_DESC', 'Check if response project are signed.');
 define('_SEND_TO_VISA', 'send for visa');
 define('_SEND_TO_VISA_DESC', 'Check if visa circuit is setup AND if one or several responses project are linked to mail.');
 define('_REJECTION_WORKFLOW_PREVIOUS', 'Visa rejection - back to the previous author');
 define('_REJECTION_WORKFLOW_PREVIOUS_DESC', 'Reset visa date of previous supervisor in visa circuit of mail (\'process_date\' of listinstance table).');
-define('_REJECTION_WORKFLOW_REDACTOR', 'Visa rejection - back to the author');
-define('_REJECTION_WORKFLOW_REDACTOR_DESC', 'Reset visa date of all supervisor in visa circuit of mail (\'process_date\' of listinstance table).');
+define('_RESET_VISA_WORKFLOW', 'Reset visa workflow');
+define('_RESET_VISA_WORKFLOW_DESC', 'Reset visa date of all supervisor in visa circuit of mail (\'process_date\' of listinstance table).');
 define('_REDIRECT_WORKFLOW_ENTITY', 'Back to the initiator entity');
 define('_REDIRECT_WORKFLOW_ENTITY_DESC', 'Back the mail to the initiator entity.');
 define('_INTERRUPT_WORKFLOW', 'Break the visa flow');
@@ -259,7 +253,6 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Update visa date of current supervisor / sig
 define('_PROCEED_WORKFLOW', 'continue the visa flow');
 define('_PROCEED_WORKFLOW_DESC', 'Update visa date of current supervisor / signatory in visa circuit of mail (\'process_date\' of listinstance table).');
 define('_VISA_MAIL', 'Aim the mail');
-define('_VISA_MAIL_DESC', 'Open signatory book to visa / sign the document.');
 define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Send to the contact with a mandatory attachment');
 define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', 'Open sendmail modal with email of contact linked to document in recipient, attachment is MANDATORY.');
 define('_SEND_ATTACHMENTS_TO_CONTACT', 'Send to the contact');
@@ -447,3 +440,11 @@ define("_DATE_LOCALE", "en_US.utf8");
 define("_USER_PREFERENCE_UPDATED", "User preferences updated");
 
 define("_NO_SENDERS", "No sender linked to resource");
+
+define("_INTERRUPTED_WORKFLOW", "Interrupted workflow");
+define("_HAS_INTERRUPTED_WORKFLOW", "Has interrupted the workflow");
+
+define("_AVIS_SENT", "Notice given");
+define("_BY", "by");
+define("_TO_AVIS", "For recommendation");
+define("_VALIDATE_BY", "Validate by");

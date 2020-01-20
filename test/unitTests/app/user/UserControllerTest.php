@@ -729,7 +729,7 @@ class UserControllerTest extends TestCase
         $this->assertSame('User', $responseBody['lastname']);
         $this->assertSame('dev@maarch.org', $responseBody['mail']);
         $this->assertSame('SU', $responseBody['initials']);
-        $this->assertSame('java', $responseBody['preferences']['documentEdition']);
+        $this->assertSame('onlyoffice', $responseBody['preferences']['documentEdition']);
 
 
         //  UPDATE

@@ -51,8 +51,8 @@ class NoteController
         foreach ($notes as $key => $note) {
             $user = UserModel::getById(['select' => ['firstname', 'lastname', 'user_id'], 'id' => $note['user_id']]);
             $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $user['user_id']]);
-            $notes[$key]['firstname'] = $user['firstname'];
-            $notes[$key]['lastname'] = $user['lastname'];
+            $notes[$key]['firstname']    = $user['firstname'];
+            $notes[$key]['lastname']     = $user['lastname'];
             $notes[$key]['entity_label'] = $primaryEntity['entity_label'];
 
             $notes[$key]['value'] = $note['note_text'];

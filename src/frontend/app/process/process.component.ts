@@ -21,6 +21,9 @@ import { ContactsListModalComponent } from '../contact/list/modal/contacts-list-
 import { DiffusionsListComponent } from '../diffusions/diffusions-list.component';
 
 import { ContactService } from '../../service/contact.service';
+import { VisaWorkflowComponent } from '../visa/visa-workflow.component';
+import { PrivilegeService } from '../../service/privileges.service';
+import { AvisWorkflowComponent } from '../avis/avis-workflow.component';
 
 
 
@@ -100,13 +103,13 @@ export class ProcessComponent implements OnInit {
             count: 0
         },
         {
-            id: 'visa',
+            id: 'visaCircuit',
             icon: 'fas fa-list-ol',
             label: this.lang.visaWorkflow,
             count: 0
         },
         {
-            id: 'avis',
+            id: 'opinionCircuit',
             icon: 'fas fa-comment-alt',
             label: this.lang.avis,
             count: 0
@@ -137,6 +140,8 @@ export class ProcessComponent implements OnInit {
     @ViewChild('appDocumentViewer', { static: true }) appDocumentViewer: DocumentViewerComponent;
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
+    @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
+    @ViewChild('appAvisWorkflow', { static: false }) appAvisWorkflow: AvisWorkflowComponent;
     senderLightInfo: any = { 'displayName': null, 'fillingRate': null };
     hasContact: boolean = false;
 
@@ -155,7 +160,8 @@ export class ProcessComponent implements OnInit {
         public appService: AppService,
         public actionService: ActionsService,
         private contactService: ContactService,
-        private router: Router
+        private router: Router,
+        public privilegeService: PrivilegeService
     ) {
         // Event after process action 
         this.subscription = this.actionService.catchAction().subscribe(message => {
@@ -181,7 +187,7 @@ export class ProcessComponent implements OnInit {
             };
 
             this.lockResource();
-
+            this.loadBadges();
             this.loadResource();
 
             this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/processingData`).pipe(
@@ -233,7 +239,6 @@ export class ProcessComponent implements OnInit {
             tap((data: any) => {
                 this.currentResourceInformations = data;
                 this.resourceFollowed = data.followed;
-                this.loadBadges();
                 this.loadSenders();
                 this.headerService.setHeader(this.lang.eventProcessDoc, this.lang[this.currentResourceInformations.categoryId]);
             }),
@@ -246,9 +251,17 @@ export class ProcessComponent implements OnInit {
     }
 
     loadBadges() {
-        this.processTool.forEach(element => {
-            element.count = this.currentResourceInformations[element.id] !== undefined ? this.currentResourceInformations[element.id] : 0;
-        });
+        this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/items`).pipe(
+            tap((data: any) => {
+                this.processTool.forEach(element => {
+                    element.count = data[element.id] !== undefined ? data[element.id] : 0;
+                }); 
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     loadSenders() {
@@ -432,7 +445,8 @@ export class ProcessComponent implements OnInit {
     }
 
     changeTab(tabId: string) {
-        if (this.currentTool === 'info' && this.indexingForm.isResourceModified() && !this.isModalOpen()) {
+
+        if (this.isToolModified() && !this.isModalOpen()) {
             const dialogRef = this.openConfirmModification();
 
             dialogRef.afterClosed().pipe(
@@ -443,7 +457,7 @@ export class ProcessComponent implements OnInit {
                 }),
                 filter((data: string) => data === 'ok'),
                 tap(() => {
-                    this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+                    this.saveTool();
                     setTimeout(() => {
                         this.loadResource();
                     }, 400);
@@ -484,10 +498,18 @@ export class ProcessComponent implements OnInit {
         this.appDiffusionsList.saveListinstance();
     }
 
+    saveVisaWorkflow() {
+        this.appVisaWorkflow.saveVisaWorkflow();
+    }
+
     isToolModified() {
-        if (this.currentTool === 'info' && this.indexingForm.isResourceModified()) {
+        if (this.currentTool === 'info' && this.indexingForm !== undefined && this.indexingForm.isResourceModified()) {
             return true;
-        } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList.isModified()) {
+        } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList !== undefined && this.appDiffusionsList.isModified()) {
+            return true;
+        } else if (this.currentTool === 'visaCircuit' && this.appVisaWorkflow !== undefined && this.appVisaWorkflow.isModified()) {
+            return true;
+        } else if (this.currentTool === 'opinionCircuit' && this.appAvisWorkflow !== undefined && this.appAvisWorkflow.isModified()) {
             return true;
         } else {
             return false;
@@ -502,11 +524,19 @@ export class ProcessComponent implements OnInit {
         }, 0);
     }
 
-    saveTool() {
-        if (this.currentTool === 'info') {
-            this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
-        } else if (this.currentTool === 'diffusionList') {
-            this.appDiffusionsList.saveListinstance();
+    async saveTool() {
+        if (this.currentTool === 'info' && this.indexingForm !== undefined) {
+            await this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+            this.loadResource();
+        } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList !== undefined) {
+            await this.appDiffusionsList.saveListinstance();
+            this.loadBadges();
+        } else if (this.currentTool === 'visaCircuit' && this.appVisaWorkflow !== undefined) {
+            await this.appVisaWorkflow.saveVisaWorkflow();
+            this.loadBadges();
+        } else if (this.currentTool === 'opinionCircuit' && this.appAvisWorkflow !== undefined) {
+            await this.appAvisWorkflow.saveAvisWorkflow();
+            this.loadBadges();
         }
     }
 

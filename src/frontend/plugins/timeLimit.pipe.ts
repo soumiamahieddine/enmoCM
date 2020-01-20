@@ -35,6 +35,7 @@ export class TimeLimitPipe implements PipeTransform, OnDestroy {
 		month[10] = this.lang.novemberShort;
 		month[11] = this.lang.decemberShort;
 		let seconds = Math.round(Math.abs((now.getTime() - d.getTime())/1000));
+		let curentDayNumber = ('0' + now.getDate()).slice(-2);
 		let timeToUpdate = (Number.isNaN(seconds)) ? 1000 : this.getSecondsUntilUpdate(seconds) *1000;
 		this.timer = this.ngZone.runOutsideAngular(() => {
 			if (typeof window !== 'undefined') {
@@ -54,10 +55,12 @@ export class TimeLimitPipe implements PipeTransform, OnDestroy {
 		} else if(now > d) {
 			
 			if (args === 'badge') {
-				if (hours <= 24) {
+				if (hours <= 24 && dayNumber === curentDayNumber) {
+					return this.getFormatedDate('', '<b>' + this.lang.outdated + ' ' + this.lang.fromRange.toLowerCase() + ' ' + hours + ' ' + this.lang.hours +' !</b>', 'warn', args);
+				} else if (hours <= 24) {
 					return this.getFormatedDate('', '<b>' + this.lang.outdated + ' ' + this.lang.fromRange.toLowerCase() + ' ' + hours + ' ' + this.lang.hours +' !</b>', 'warn', args);
 				} else {
-					return this.getFormatedDate('', '<b>' + this.lang.outdated + ' ' + this.lang.fromRange.toLowerCase() + ' ' + (days-1) + ' '+ this.lang.dayS +' !</b>', 'warn', args);
+					return this.getFormatedDate('', '<b>' + this.lang.outdated + ' ' + this.lang.fromRange.toLowerCase() + ' ' + (days) + ' '+ this.lang.dayS +' !</b>', 'warn', args);
 				}
 			} else {
 				return this.getFormatedDate('', '<b>' + this.lang.outdated + ' !</b>', 'warn', args);

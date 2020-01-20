@@ -35,6 +35,7 @@ use Parameter\models\ParameterModel;
 use Resource\controllers\ResController;
 use Resource\controllers\StoreController;
 use Resource\models\ResModel;
+use Resource\models\UserFollowedResourceModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -515,6 +516,8 @@ class UserController
         $user['passwordRules']      = PasswordModel::getEnabledRules();
         $user['canModifyPassword']  = true;
         $user['privileges']         = PrivilegeController::getPrivilegesByUser(['userId' => $user['id']]);
+        $userFollowed = UserFollowedResourceModel::get(['select' => ['count(1) as nb'], 'where' => ['user_id = ?'], 'data' => [$GLOBALS['id']]]);
+        $user['nbFollowedResources'] = $userFollowed[0]['nb'];
 
         $loggingMethod = CoreConfigModel::getLoggingMethod();
         if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS)) {
@@ -1274,7 +1277,7 @@ class UserController
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
-        if (empty(entitymodel::getByEntityId(['entityId' => $aArgs['entityId']]))) {
+        if (empty(EntityModel::getByEntityId(['entityId' => $aArgs['entityId']]))) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
 
@@ -1290,7 +1293,8 @@ class UserController
         if (!empty($error['error'])) {
             return $response->withStatus($error['status'])->withJson(['errors' => $error['error']]);
         }
-        if (empty(entitymodel::getByEntityId(['entityId' => $aArgs['entityId']]))) {
+        $entityInfo = EntityModel::getByEntityId(['entityId' => $aArgs['entityId'], 'select' => ['id']]);
+        if (empty($entityInfo)) {
             return $response->withStatus(400)->withJson(['errors' => 'Entity not found']);
         }
 
@@ -1298,12 +1302,15 @@ class UserController
 
         $data = $request->getParams();
         if (!empty($data['mode'])) {
+            $templateLists = ListTemplateModel::get(['select' => ['id'], 'where' => ['entity_id = ?'], 'data' => [$entityInfo['id']]]);
+            if (!empty($templateLists)) {
+                foreach ($templateLists as $templateList) {
+                    ListTemplateItemModel::delete(['where' => ['list_template_id = ?'], 'data' => [$templateList['id']]]);
+                }
+            }
+
             if ($data['mode'] == 'reaffect') {
-                ListTemplateModel::update([
-                    'set'   => ['item_id' => $data['newUser']],
-                    'where' => ['object_id = ?', 'item_id = ?'],
-                    'data'  => [$aArgs['entityId'], $user['user_id']]
-                ]);
+
                 $listInstances = ListInstanceModel::getWithConfidentiality(['select' => ['listinstance.res_id'], 'entityId' => $aArgs['entityId'], 'userId' => $user['user_id']]);
                 $resIdsToReplace = [];
                 foreach ($listInstances as $listInstance) {
@@ -1317,11 +1324,6 @@ class UserController
                     ]);
                 }
             } else {
-                ListTemplateModel::delete([
-                    'where' => ['object_id = ?', 'item_id = ?', 'item_mode != ?'],
-                    'data'  => [$aArgs['entityId'], $user['user_id'], 'dest']
-                ]);
-
                 $ressources = ResModel::getOnView([
                     'select'    => ['res_id'],
                     'where'     => ['confidentiality = ?', 'destination = ?', 'closing_date is null'],

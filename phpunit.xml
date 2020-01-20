@@ -30,6 +30,8 @@
             <file>test/unitTests/app/resource/ResControllerTest.php</file>
             <file>test/unitTests/app/resource/ResourceListControllerTest.php</file>
             <file>test/unitTests/app/resource/ExportControllerTest.php</file>
+            <file>test/unitTests/app/resource/LinkControllerTest.php</file>
+            <file>test/unitTests/app/resource/ListInstanceControllerTest.php</file>
             <file>test/unitTests/app/resource/SummarySheetControllerTest.php</file>
             <file>test/unitTests/app/status/StatusControllerTest.php</file>
             <file>test/unitTests/app/shipping/ShippingControllerTest.php</file>
@@ -54,6 +56,6 @@
     <logging>
         <log type="coverage-clover" target="test/unitTests/build/tests-clover.xml"/>
         <log type="junit"           target="test/unitTests/build/tests-phpunit.xml"/>
-        <log type="coverage-html"   target="test/unitTests/build" lowUpperBound="35" highLowerBound="70"/>
+        <!-- <log type="coverage-html"   target="test/unitTests/build" lowUpperBound="35" highLowerBound="70"/> -->
     </logging>
 </phpunit>

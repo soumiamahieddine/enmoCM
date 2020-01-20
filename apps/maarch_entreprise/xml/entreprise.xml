@@ -20,11 +20,6 @@
             <label>_SIGNED_RESPONSE</label>
             <process_mode/>
         </type>
-        <type show="true" with_chrono="true" icon="DS" sign="true" select_in_reconciliation="true">
-            <id>outgoing_mail_signed</id>
-            <label>_OUTGOING_MAIL_SIGNED</label>
-            <process_mode/>
-        </type>
         <type show="true" with_chrono="false" icon="PJ" sign="false" select_in_reconciliation="true">
             <id>simple_attachment</id>
             <label>_A_PJ</label>
@@ -43,11 +38,6 @@
 	    <type show="false" with_chrono="true" icon="FC" sign="false">
             <id>routing</id>
             <label>_ROUTING</label>
-            <process_mode/>
-        </type>
-		<type show="true" with_chrono="true" icon="DS" sign="true">
-            <id>outgoing_mail</id>
-            <label>_OUTGOING_MAIL</label>
             <process_mode/>
         </type>
 	    <type show="false" with_chrono="false" icon="" sign="false">

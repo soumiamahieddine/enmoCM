@@ -221,8 +221,6 @@ define("_PRIVATE_TAGS_DESC", "L'utilisateur ne verra que les Mots-clé qui ont �
 // ACTIONS
 define('_REDIRECTION', 'Rediriger');
 define('_REDIRECTION_DESC', 'Ouvre une modal permettant de choisir un nouvel utilisateur traitant OU de redéfinir le service traitant avec une nouvelle liste de diffusion.');
-define('_PUT_IN_COPY', 'Ajouter en copie');
-define('_PUT_IN_COPY_DESC', "Ouvre une modal permettant UNIQUEMENT d'ajouter ou de supprimer des personnes en COPIE de la liste de diffusion.");
 define('_SIMPLE_CONFIRM', 'Confirmation simple');
 define('_SIMPLE_CONFIRM_DESC', "Ouvre simplement une modal de confirmation de l'action à effectuer.");
 define('_NO_CONFIRM', 'Sans confirmation');
@@ -236,22 +234,18 @@ define('_SET_PERSISTENT_MODE_OFF', 'Désactiver la persistance');
 define('_SET_PERSISTENT_MODE_OFF_DESC', 'Réinitialise le comportement de visualisation du courrier dans la bannette. Supprime la donnée dans la table \'basket_persistent_mode\'.');
 define('_MARK_AS_READ', 'Marquer comme lu');
 define('_MARK_AS_READ_DESC', 'Marque le courrier comme \'lu\' dans la bannette. Insère la donnée dans la table \'res_mark_as_read\' (utile si utilisée dans les clauses de bannettes).');
-define('_SEND_FILE_WS', 'Envoyer le document via Web Service');
-define('_SEND_DATA_WS', 'Envoyer des données via Web Service');
 define('_SEND_TO_EXTERNAL_SB', 'Envoyer des données vers un parapheur externe');
 define('_SEND_TO_EXTERNAL_NOTEBOOK', 'Envoyer des courriers à annoter vers Maarch Parapheur');
 define('_CLOSE_MAIL_AND_INDEX', 'Clôturer un courrier et lancer l\'indexation');
 define('_CLOSE_MAIL_AND_INDEX_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier ET ouvre la page d\'indexation afin d\'enregistrer un nouveau courrier.');
-define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe');
+define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe ou annotation');
 define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier avec présence OBLIGATOIRE de pièce(s) jointe(s) / annotation(s).');
-define('_SEND_SIGNED_DOCS', 'Transmettre réponses signées');
-define('_SEND_SIGNED_DOCS_DESC', 'Vérifie si les projets de réponse ont été signés.');
 define('_SEND_TO_VISA', 'Envoyer pour visa');
 define('_SEND_TO_VISA_DESC', 'Contrôle si un circuit de visa est configuré ET si un ou plusieurs projets de réponses sont associés au courrier.');
 define('_REJECTION_WORKFLOW_PREVIOUS', 'Refuser le visa - retour au précédent viseur');
 define('_REJECTION_WORKFLOW_PREVIOUS_DESC', 'Réinitialise la date de visa du précédent viseur présent dans le circuit de visa du courrier (\'process_date\' de la table listinstance).');
-define('_REJECTION_WORKFLOW_REDACTOR', 'Refuser le visa - retour rédacteur');
-define('_REJECTION_WORKFLOW_REDACTOR_DESC', 'Réinitialise la date de visa de tous les viseurs présents dans le circuit de visa du courrier (\'process_date\' de la table listinstance).');
+define('_RESET_VISA_WORKFLOW', 'Réinitialiser le circuit de visa');
+define('_RESET_VISA_WORKFLOW_DESC', 'Réinitialise la date de visa de tous les viseurs présents dans le circuit de visa du courrier (\'process_date\' de la table listinstance).');
 define('_REDIRECT_WORKFLOW_ENTITY', 'Rediriger à l\'entité initiatrice');
 define('_REDIRECT_WORKFLOW_ENTITY_DESC', "Renvoie le courrier vers l'entité initiatrice.");
 define('_INTERRUPT_WORKFLOW', 'Interrompre le circuit de visa');
@@ -259,7 +253,6 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel vis
 define('_PROCEED_WORKFLOW', 'Poursuivre le circuit de visa');
 define('_PROCEED_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel viseur / signataire présent dans le circuit de visa du courrier (\'process_date\' de la table listinstance).');
 define('_VISA_MAIL', 'Viser le courrier');
-define('_VISA_MAIL_DESC', 'Ouvre la page du parapheur afin de pouvoir viser / signer le document.');
 define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Envoyer au contact avec une pièce jointe obligatoire et accusé de réception');
 define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', "Ouvre une modal d'envoi de mail avec l'email du contact associé au courrier en tant que destinataire, présence OBLIGATOIRE de pièce(s) jointe(s) à l'envoi.");
 define('_SEND_ATTACHMENTS_TO_CONTACT', 'Envoyer au contact avec accusé de réception');
@@ -446,3 +439,11 @@ define("_DATE_LOCALE", "fr_FR.utf8");
 define("_USER_PREFERENCE_UPDATED", "Préférences utilisateur modifiées");
 
 define("_NO_SENDERS", "Aucun expéditeur lié au courrier");
+
+define("_INTERRUPTED_WORKFLOW", "Circuit interrompu");
+define("_HAS_INTERRUPTED_WORKFLOW", "A terminé le circuit");
+
+define("_AVIS_SENT", "Avis donné");
+define("_BY", "par");
+define("_TO_AVIS", "POUR AVIS");
+define("_VALIDATE_BY", "Validé par");

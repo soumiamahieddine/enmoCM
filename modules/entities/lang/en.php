@@ -258,9 +258,6 @@ if (!defined('_UPDATE_LIST_DIFF')) {
 if (!defined('_DIFF_LIST_COPY')) {
     define('_DIFF_LIST_COPY', 'Diffusion list');
 }
-if (!defined('_NO_COPY')) {
-    define('_NO_COPY', 'No copies');
-}
 if (!defined('_DIFF_LIST')) {
     define('_DIFF_LIST', 'Diffusion list');
 }
@@ -378,12 +375,6 @@ if (!defined('_ENTITY_LATE_MAIL')) {
 }
 
 /******************** Action put in copy ************/
-if (!defined('_ADD_COPY_FOR_DOC')) {
-    define('_ADD_COPY_FOR_DOC', 'Add on copy for the mail');
-}
-if (!defined('_VALIDATE_PUT_IN_COPY')) {
-    define('_VALIDATE_PUT_IN_COPY', 'Validate the addition on copy');
-}
 if (!defined('_ALL_LIST')) {
     define('_ALL_LIST', 'Display all the list');
 }

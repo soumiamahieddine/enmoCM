@@ -221,8 +221,6 @@ define('_PRIVATE_TAGS_DESC', 'De gebruiker zal enkel de sleutelwoorden zien die 
 // ACTIONS
 define('_REDIRECTION', 'Doorsturen');
 define('_REDIRECTION_DESC', 'Opent een modaliteit waarmee een nieuwe verwerkende gebruiker gekozen kan worden OF die de verwerkende dienst met een nieuwe distributielijst opnieuw kan instellen.');
-define('_PUT_IN_COPY', 'In kopie toevoegen');
-define('_PUT_IN_COPY_DESC', 'Opent een modaliteit die ENKEL toelaat personen in KOPIE aan de verdelingslijst toe te voegen of ervan te verwijderen.');
 define('_SIMPLE_CONFIRM', 'Eenvoudige bevestiging');
 define('_SIMPLE_CONFIRM_DESC', 'Opent eenvoudigweg een bevestigingsmodaliteit van de uit te voeren actie.');
 define('_NO_CONFIRM', 'No confirmation'); //_TO_TRANSLATE
@@ -236,21 +234,17 @@ define('_SET_PERSISTENT_MODE_OFF', 'De persistentie uitschakelen');
 define('_SET_PERSISTENT_MODE_OFF_DESC', 'Reset het weergavegedrag van het brief in het bakje. Verwijdert het gegeven in de tabel \basket_persistent_mode\.');
 define('_MARK_AS_READ', 'Markeren als gelezen');
 define('_MARK_AS_READ_DESC', 'Markeert het brief als \gelezen\ in het bakje. Voegt het gegeven van de \res_mark_as_read\ in de tabel in (nuttig indien gebruikt in de bakjes clauses)');
-define('_SEND_FILE_WS', 'Het document via Web Service verzenden');
-define('_SEND_DATA_WS', 'Gegevens via Web Service verzenden');
 define('_SEND_TO_EXTERNAL_SB', 'Gegevens naar een extern vloeiboek verzenden');
 define('_CLOSE_MAIL_AND_INDEX', 'Een brief afsluiten en de indexering starten');
 define('_CLOSE_MAIL_AND_INDEX_DESC', 'Om de afsluitingsdatum van een brief bij te werken EN de indexeringspagina te openen om een nieuw brief te bewaren.');
 define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Een brief met een bijlage afsluiten');
 define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', 'Om de afsluitingsdatum van een brief bij te werken met VERPLICHTE aanwezigheid van bijlage(n) / opmerking(en).');
-define('_SEND_SIGNED_DOCS', 'Ondertekende antwoorden doorsturen');
-define('_SEND_SIGNED_DOCS_DESC', 'Controleert of de antwoordprojecten ondertekend werden.');
 define('_SEND_TO_VISA', 'Versturen voor goedkeuring');
 define('_SEND_TO_VISA_DESC', 'Controleert of er een goedkeuringscircuit is geconfigureerd EN of er één of meerdere antwoordprojecten aan het brief gekoppeld zijn.');
 define('_REJECTION_WORKFLOW_PREVIOUS', 'De goedkeuring weigeren - terug naar de vorige goedkeurder');
 define('_REJECTION_WORKFLOW_PREVIOUS_DESC', 'Reset de datum van de vorige goedkeurder die in het goedkeuringscircuit van het brief aanwezig is (\process_date\ van de tabel listinstance).');
-define('_REJECTION_WORKFLOW_REDACTOR', 'Goedkeuring weigeren - terug naar opsteller');
-define('_REJECTION_WORKFLOW_REDACTOR_DESC', 'Reset de datum van alle huidige goedkeurders die in het goedkeuringscircuit van het brief aanwezig zijn (\process_date\ van de tabel listinstance).');
+define('_RESET_VISA_WORKFLOW', 'Goedkeuring weigeren - terug naar opsteller');
+define('_RESET_VISA_WORKFLOW_DESC', 'Reset de datum van alle huidige goedkeurders die in het goedkeuringscircuit van het brief aanwezig zijn (\process_date\ van de tabel listinstance).');
 define('_REDIRECT_WORKFLOW_ENTITY', 'Doorsturen naar de initiatiefnemende eenheid');
 define('_REDIRECT_WORKFLOW_ENTITY_DESC', 'Stuurt het brief terug naar de initiatiefnemende eenheid.');
 define('_INTERRUPT_WORKFLOW', 'Het goedkeuringscircuit onderbreken');
@@ -258,7 +252,6 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Werkt de datum bij van de huidige goedkeurde
 define('_PROCEED_WORKFLOW', 'Het goedkeuringscircuit verderzetten');
 define('_PROCEED_WORKFLOW_DESC', 'Werkt de datum bij van de huidige goedkeurder / ondertekenaar die in het goedkeuringscircuit van het brief aanwezig is (\process_date\ van de tabel listinstance).');
 define('_VISA_MAIL', 'De e-mail goedkeuren');
-define('_VISA_MAIL_DESC', 'Opent de pagina van het vloeiboek om het document te kunnen goedkeuren / ondertekenen.');
 define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Verzenden naar het contact met een bijlage verplicht');
 define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', 'Opent een mailverzendingsmodaliteit met de e-mail van het aan het document gekoppelde contact als bestemmeling, VERPLICHTE aanwezigheid van bijlage(n) aan de verzending.');
 define('_SEND_ATTACHMENTS_TO_CONTACT', 'Verzenden aan het contact');
@@ -452,3 +445,11 @@ define("_DATE_LOCALE", "en_US.utf8");
 define("_USER_PREFERENCE_UPDATED", "User preferences updated"); //TO TRANSLATE
 
 define("_NO_SENDERS", "No sender linked to resource"); //TO TRANSLATE
+
+define("_INTERRUPTED_WORKFLOW", "Interrupted workflow"); //TO TRANSLATE
+define("_HAS_INTERRUPTED_WORKFLOW", "Has interrupted the workflow "); //TO TRANSLATE
+
+define('_AVIS_SENT', 'Gegeven bericht');
+define('_BY', 'door');
+define('_TO_AVIS', 'VOOR BERICHT');
+define('_VALIDATE_BY', 'Gevalideerd door');

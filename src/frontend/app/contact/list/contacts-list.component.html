@@ -20,7 +20,7 @@
                     {{contact.function}}&nbsp;
                 </mat-card-subtitle>
                 <i class="contact-filling fa fa-circle"
-                    *ngIf="contact.type === 'contact' && !empty(contact.fillingRate)"
+                    *ngIf="contact.type === 'contact' && !empty(contact.fillingRate.color)"
                     [style.color]="contact.fillingRate.color"
                     [title]="lang.contactsFillingRate"></i>
             </mat-card-header>

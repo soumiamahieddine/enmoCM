@@ -143,7 +143,7 @@
                                     </plugin-autocomplete>
                                 </ng-container>-->
                                 <ng-container *ngIf="['senders','recipients'].indexOf(field.identifier) > -1">
-                                    <app-contact-autocomplete [control]="arrFormControl[field.identifier]" style="width:100%;">
+                                    <app-contact-autocomplete [control]="arrFormControl[field.identifier]" style="width:100%;" (retrieveDocumentEvent)="retrieveDocumentEvent.emit()">
                                     </app-contact-autocomplete>
                                 </ng-container>
                                 <ng-container *ngIf="field.identifier === 'folders'">

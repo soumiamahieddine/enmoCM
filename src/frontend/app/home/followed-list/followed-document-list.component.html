@@ -76,7 +76,8 @@
                                             (change)="toggleRes($event,row)" (click)="$event.stopPropagation();">
                                         </mat-checkbox>
                                     </span>
-                                    <button mat-icon-button (click)="$event.stopPropagation();unfollowMail(row)" style="margin-left: -25px; color: #F99830"
+                                    <button mat-icon-button (click)="$event.stopPropagation();unfollowMail(row)" style="margin-left: -25px;"
+                                        class="followIcon"
                                         title="{{lang.untrackThisMail}}">
                                         <mat-icon class="fas fa-star" style="margin-bottom: 5px;"></mat-icon>
                                     </button>

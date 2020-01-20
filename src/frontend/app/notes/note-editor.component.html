@@ -1,5 +1,5 @@
 <mat-form-field appearance="outline" class="noteEditorContent">
-    <textarea matInput placeholder="{{lang.addNote}}" [(ngModel)]="content"></textarea>
+    <textarea matInput placeholder="{{title}}" [(ngModel)]="content"></textarea>
     <button matSuffix color="primary" mat-icon-button title="{{lang.noteTemplates}}" [matMenuTriggerFor]="menu"
         (click)="getTemplatesNote()">
         <mat-icon fontSet="fas" fontIcon="fa-file-alt fa-2x"></mat-icon>
