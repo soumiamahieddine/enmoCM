@@ -2,9 +2,12 @@
 <ROOT>
     <user>superadmin</user>
     <password>maarch</password>
-    <uri></uri>
-    <triggerStatuses>
-        <sendFile>OZWILLOSF</sendFile>
-        <sendData>OZWILLOSD</sendData>
-    </triggerStatuses>
+    <sendFile>
+        <uri></uri>
+        <status>OZWILLOSF</status>
+    </sendFile>
+    <sendData>
+        <uri></uri>
+        <status>OZWILLOSD</status>
+    </sendData>
 </ROOT>
