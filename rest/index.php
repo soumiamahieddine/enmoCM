@@ -393,6 +393,7 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/ac
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkValidateParallelOpinion', \Action\controllers\PreProcessActionController::class . ':checkValidateParallelOpinion');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkContinueOpinionCircuit', \Action\controllers\PreProcessActionController::class . ':checkContinueOpinionCircuit');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkGiveParallelOpinion', \Action\controllers\PreProcessActionController::class . ':checkGiveParallelOpinion');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkValidateParallelOpinionDiffusion', \Action\controllers\PreProcessActionController::class . ':checkValidateParallelOpinionDiffusion');
 
 //Search
 $app->get('/search', \Search\controllers\SearchController::class . ':get');

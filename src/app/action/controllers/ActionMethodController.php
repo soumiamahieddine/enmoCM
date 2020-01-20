@@ -673,7 +673,7 @@ class ActionMethodController
             'limit'   => 1
         ]);
 
-        if (empty($currentStep) || empty($currentStep[0])) {
+        if (empty($currentStep)) {
             return ['errors' => ['No workflow or workflow finished']];
         }
         $currentStep = $currentStep[0];

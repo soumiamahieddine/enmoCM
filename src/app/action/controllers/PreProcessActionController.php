@@ -1175,7 +1175,7 @@ class PreProcessActionController
         return $response->withJson(['resourcesInformations' => $resourcesInformation]);
     }
 
-    public function checkValidateRecommendation(Request $request, Response $response, array $args)
+    public function checkValidateParallelOpinionDiffusion(Request $request, Response $response, array $args)
     {
         $body = $request->getParsedBody();
 
@@ -1216,8 +1216,8 @@ class PreProcessActionController
 
             $isSignatory = ListInstanceModel::get([
                 'select'  => [1],
-                'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
-                'data'    => [$resId, 'entity_id'],
+                'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is null', 'item_mode in (?)'],
+                'data'    => [$resId, 'entity_id', ['avis', 'avis_copy', 'avis_info']],
                 'orderBy' => ['listinstance_id'],
                 'limit'   => 1
             ]);
