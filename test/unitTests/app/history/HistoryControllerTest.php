@@ -41,11 +41,10 @@ class HistoryControllerTest extends TestCase
         $fullRequest = $request->withQueryParams($aArgs);
 
         $response = $history->get($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
+        $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertInternalType('array', $responseBody->histories);
-        $this->assertInternalType('bool', $responseBody->limitExceeded);
-        $this->assertNotEmpty($responseBody->histories);
+        $this->assertInternalType('array', $responseBody['history']);
+        $this->assertNotEmpty($responseBody['history']);
     }
 
     public function testGetBatchHistory()
