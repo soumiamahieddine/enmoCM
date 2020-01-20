@@ -10,7 +10,7 @@
                 <b *ngIf="data.resIds.length > 1" color="primary" class="highlight">{{data.resIds.length}}
                     {{lang.elements}}</b> ?
                 <div *ngIf="resourcesInfo.withoutEntity.length > 0">
-                    <div class="alert-message alert-message-info acknowledgementList" role="alert">
+                    <div class="alert-message alert-message-danger acknowledgementList" role="alert">
                         <p>
                             {{lang.hasNoEntity}} :
                         </p>
