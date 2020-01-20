@@ -238,7 +238,7 @@ define('_SEND_TO_EXTERNAL_SB', 'Envoyer des données vers un parapheur externe')
 define('_SEND_TO_EXTERNAL_NOTEBOOK', 'Envoyer des courriers à annoter vers Maarch Parapheur');
 define('_CLOSE_MAIL_AND_INDEX', 'Clôturer un courrier et lancer l\'indexation');
 define('_CLOSE_MAIL_AND_INDEX_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier ET ouvre la page d\'indexation afin d\'enregistrer un nouveau courrier.');
-define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe');
+define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe ou annotation');
 define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier avec présence OBLIGATOIRE de pièce(s) jointe(s) / annotation(s).');
 define('_SEND_TO_VISA', 'Envoyer pour visa');
 define('_SEND_TO_VISA_DESC', 'Contrôle si un circuit de visa est configuré ET si un ou plusieurs projets de réponses sont associés au courrier.');
