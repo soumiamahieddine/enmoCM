@@ -183,7 +183,7 @@ class SearchController
                     }
                 }
             }
-            if (!empty($resource['dest_user'])) {
+            if (!empty($resource['destUser'])) {
                 $resources[$key]['destUserLabel'] = UserModel::getLabelledUserById(['login' => $resource['destUser']]);
             }
             $resources[$key]['hasDocument'] = !empty($resource['filename']);

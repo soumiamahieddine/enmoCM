@@ -83,6 +83,9 @@ where group_id in (
 );
 
 -- /!\ Do not move : update actions AFTER all updates on groupbasket
+DELETE FROM actions_categories WHERE action_id in (SELECT id FROM actions WHERE component = 'viewDoc' OR action_page in ('view', 'validate_mail', 'process', 'visa_mail'));
+DELETE FROM actions_groupbaskets WHERE id_action in (SELECT id FROM actions WHERE component = 'viewDoc' OR action_page in ('view', 'validate_mail', 'process', 'visa_mail'));
+DELETE FROM groupbasket_redirect WHERE action_id in (SELECT id FROM actions WHERE component = 'viewDoc' OR action_page in ('view', 'validate_mail', 'process', 'visa_mail'));
 DELETE FROM actions WHERE component = 'viewDoc' OR action_page in ('view', 'validate_mail', 'process', 'visa_mail');
 
 UPDATE actions SET component = 'rejectVisaBackToPreviousAction' WHERE action_page = 'rejection_visa_previous';
