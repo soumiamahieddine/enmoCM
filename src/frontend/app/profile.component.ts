@@ -201,7 +201,7 @@ export class ProfileComponent implements OnInit {
                 this.sidenavRight.open();
             } 
             //if (this.histories.length == 0) {
-                this.http.get('../../rest/histories/users/' + this.user.id)
+                this.http.get('../../rest/history/users/' + this.user.id)
                     .subscribe((data: any) => {
                         this.histories = data.histories;
                         setTimeout(() => {

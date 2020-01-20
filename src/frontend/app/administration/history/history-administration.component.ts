@@ -78,9 +78,9 @@ export class HistoryAdministrationComponent implements OnInit {
 
         this.loading = true;
 
-        this.http.get('../../rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
+        this.http.get('../../rest/history', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
             .subscribe((data: any) => {
-                this.data = data['histories'];
+                this.data = data['history'];
                 this.limitExceeded = data['limitExceeded'];
                 this.loading = false;
                 setTimeout(() => {
@@ -111,7 +111,7 @@ export class HistoryAdministrationComponent implements OnInit {
                 }, 0);
             }, (data: any) => {
                 if(data['error'].errors == 'Service forbidden'){
-                        this.loading = false
+                        this.loading = false;
                         this.accessBatchHistory = false;
                 } else {
                     location.href = "index.php";
@@ -144,9 +144,9 @@ export class HistoryAdministrationComponent implements OnInit {
         if (historyType == 'normal') {
             this.startDate.setHours(0,0,0,0);
             this.endDate.setHours(23,59,59,59);
-            this.http.get('../../rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
+            this.http.get('../../rest/history', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
                 .subscribe((data: any) => {
-                    this.data = data['histories'];
+                    this.data = data['history'];
                     this.limitExceeded = data['limitExceeded'];
                     this.loading = false;
                     setTimeout(() => {

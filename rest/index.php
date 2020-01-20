@@ -250,11 +250,12 @@ $app->delete('/groups/{id}/privileges/{privilegeId}', \Group\controllers\Privile
 $app->put('/groups/{id}/privileges/{privilegeId}/parameters', \Group\controllers\PrivilegeController::class . ':updateParameters');
 $app->get('/groups/{id}/privileges/{privilegeId}/parameters', \Group\controllers\PrivilegeController::class . ':getParameters');
 
-//Histories
-$app->get('/histories', \History\controllers\HistoryController::class . ':get');
-$app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
-$app->get('/histories/resources/{resId}', \History\controllers\HistoryController::class . ':getByResourceId');
-$app->get('/histories/resources/{resId}/workflow', \History\controllers\HistoryController::class . ':getWorkflowByResourceId');
+//History
+$app->get('/history', \History\controllers\HistoryController::class . ':get');
+$app->get('/history/availableEventTypes', \History\controllers\HistoryController::class . ':getAvailableEventTypes');
+$app->get('/history/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
+$app->get('/history/resources/{resId}', \History\controllers\HistoryController::class . ':getByResourceId');
+$app->get('/history/resources/{resId}/workflow', \History\controllers\HistoryController::class . ':getWorkflowByResourceId');
 
 //Header
 $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');
