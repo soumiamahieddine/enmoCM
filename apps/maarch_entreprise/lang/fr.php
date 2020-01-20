@@ -4028,9 +4028,6 @@ if (!defined('_REDIRECT_WORKFLOW_ENTITY_DESC')) {
 if (!defined('_VISA_MAIL')) {
     define('_VISA_MAIL', 'Viser le courrier');
 }
-if (!defined('_VISA_MAIL_DESC')) {
-    define('_VISA_MAIL_DESC', 'Ouvre la page du parapheur afin de pouvoir viser / signer le document.');
-}
 if (!defined('_PREPARE_VISA')) {
     define('_PREPARE_VISA', 'Préparer le circuit de visa');
 }

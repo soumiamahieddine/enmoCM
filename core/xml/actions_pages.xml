@@ -201,19 +201,6 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
 	<ACTIONPAGE>
-        <ID>visa_mail</ID>
-        <LABEL>_VISA_MAIL</LABEL>
-        <NAME>visa_mail</NAME>
-        <DESC>_VISA_MAIL_DESC</DESC>
-        <component>signatureBookAction</component>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>visa</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-	<ACTIONPAGE>
         <ID>visa_workflow</ID>
         <LABEL>_PROCEED_WORKFLOW</LABEL>
         <NAME>visa_workflow</NAME>
