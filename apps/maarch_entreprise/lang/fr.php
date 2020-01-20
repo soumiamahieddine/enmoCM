@@ -1460,7 +1460,7 @@ if (!defined('_ADD_ATTACHMENT_OR_NOTE')) {
     define('_ADD_ATTACHMENT_OR_NOTE', 'Ajoutez une pièce jointe ou une annotation pour ce(s) courrier(s)');
 }
 if (!defined('_CLOSE_MAIL_WITH_ATTACHMENT')) {
-    define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe');
+    define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe ou annotation');
 }
 // if (!defined('_CLOSE_MAIL_WITH_ATTACHMENT_DESC')) {
 //     define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', "Permet de mettre à jour la date de clôture d'un courrier ('closing_date' de la table res_letterbox) avec présence OBLIGATOIRE de pièce(s) jointe(s) / annotation(s).");
@@ -4027,9 +4027,6 @@ if (!defined('_REDIRECT_WORKFLOW_ENTITY_DESC')) {
 }
 if (!defined('_VISA_MAIL')) {
     define('_VISA_MAIL', 'Viser le courrier');
-}
-if (!defined('_VISA_MAIL_DESC')) {
-    define('_VISA_MAIL_DESC', 'Ouvre la page du parapheur afin de pouvoir viser / signer le document.');
 }
 if (!defined('_PREPARE_VISA')) {
     define('_PREPARE_VISA', 'Préparer le circuit de visa');
