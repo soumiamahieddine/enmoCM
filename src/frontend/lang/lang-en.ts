@@ -324,7 +324,7 @@ export const LANG_EN = {
     "eachMinute"                            : "Each minute",
     "eachMonth"                             : "Each month",
     "editAttachment"                        : "Edit the attachment",
-    "editingAttachmentInterrupted"          : "Editing of the attachment has been interrupted. <br/>><sub>Please re-edit it.</sub>",
+    "editingAttachmentInterrupted"          : "Editing of the attachment has been interrupted. <br/><sub>Please re-edit it.</sub>",
     "editModelFirst"                        : "Please edit model first",
     "edtion"                                : "Edition",
     "electronicTemplate"                    : "Electronic template",

@@ -330,7 +330,7 @@ export const LANG_NL = {
     "eachMonth"                             : "Maandelijks",
     "edirectBaskets"                        : "De geselecteerde bakjes doorsturen",
     "editAttachment"                        : "Edit the attachment", //_TO_TRANSLATE
-    "editingAttachmentInterrupted"          : "Editing of the attachment has been interrupted. <br/>><sub>Please re-edit it. </sub>", //_TO_TRANSLATE
+    "editingAttachmentInterrupted"          : "Editing of the attachment has been interrupted. <br/><sub>Please re-edit it. </sub>", //_TO_TRANSLATE
     "editModelFirst"                        : "Gelieve het model te bewerken vooraleer te bevestigen",
     "edtion"                                : "Edition", //_TO_TRANSLATE
     "electronicTemplate"                    : "Electronic template", //_TO_TRANSLATE
