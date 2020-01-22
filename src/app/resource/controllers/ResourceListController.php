@@ -281,6 +281,17 @@ class ResourceListController
             $where[] = 'doctypes.type_id in (?)';
             $queryData[] = explode(',', $args['data']['doctypes']);
         }
+        if (!empty($args['data']['folders'])) {
+            $resourcesInFolders = FolderModel::getWithResources([
+                'select' => ['resources_folders.res_id'],
+                'where'  => ['resources_folders.folder_id in (?)'],
+                'data'   => [explode(',', $args['data']['folders'])]
+            ]);
+            $resourcesInFolders = array_column($resourcesInFolders, 'res_id');
+
+            $where[] = 'res_id in (?)';
+            $queryData[] = $resourcesInFolders;
+        }
 
         if (!empty($args['data']['order']) && strpos($args['data']['order'], 'alt_identifier') !== false) {
             $order = 'order_alphanum(alt_identifier) ' . explode(' ', $args['data']['order'])[1];
