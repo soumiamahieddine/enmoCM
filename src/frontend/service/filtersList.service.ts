@@ -16,6 +16,7 @@ interface listProperties {
     'subEntities': string[],
     'statuses': string[],
     'doctypes': string[],
+    'folders': string[],
 }
 
 @Injectable()
@@ -64,6 +65,7 @@ export class FiltersListService {
                 'subEntities': [],
                 'statuses': [],
                 'doctypes': [],
+                'folders': [],
             };
             this.listsProperties.push(listProperties);
             this.listsPropertiesIndex = this.listsProperties.length -1;
