@@ -985,6 +985,68 @@ class PreProcessActionController
         return $response->withJson(['resourcesInformations' => $resourcesInformations]);
     }
 
+    public function checkRejectVisaBackToPrevious(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $signableAttachmentsTypes = [];
+        $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
+        foreach ($attachmentsTypes as $key => $type) {
+            if ($type['sign']) {
+                $signableAttachmentsTypes[] = $key;
+            }
+        }
+
+        $resourcesInformation = [];
+        foreach ($body['resources'] as $resId) {
+            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier']]);
+            if (empty($resource['alt_identifier'])) {
+                $resource['alt_identifier'] = _UNDEFINED;
+            }
+
+            $isSignatory = ListInstanceModel::get(['select' => ['signatory', 'requested_signature'], 'where' => ['res_id = ?', 'difflist_type = ?', 'process_date is null'], 'data' => [$resId, 'VISA_CIRCUIT'], 'orderBy' => ['listinstance_id'], 'limit' => 1]);
+            if (empty($isSignatory[0])) {
+                $hasCircuit = ListInstanceModel::get(['select' => [1], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$resId, 'VISA_CIRCUIT']]);
+                if (!empty($hasCircuit)) {
+                    $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'endedCircuit'];
+                } else {
+                    $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noCircuitAvailable'];
+                }
+            } elseif ($isSignatory[0]['requested_signature'] && !$isSignatory[0]['signatory']) {
+                $resourcesInformation['warning'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'userHasntSigned'];
+            } else {
+                $hasPrevious = ListInstanceModel::get([
+                    'select'  => [1],
+                    'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is not null'],
+                    'data'    => [$resId, 'VISA_CIRCUIT'],
+                    'orderBy' => ['listinstance_id'],
+                    'limit'   => 1
+                ]);
+                if (!empty($hasPrevious)) {
+                    $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId];
+                } else {
+                    $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noPreviousAvailable'];
+                }
+            }
+        }
+
+        return $response->withJson(['resourcesInformations' => $resourcesInformation]);
+    }
+
     public function checkValidateParallelOpinion(Request $request, Response $response, array $args)
     {
         $body = $request->getParsedBody();

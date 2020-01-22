@@ -1460,4 +1460,5 @@ export const LANG_NL = {
     "validateBy": "Validate by", //_TO_TRANSLATE
     "validateAvisParallel": "Your are validating an opinion request", //_TO_TRANSLATE
     "validateAvisParallelSingle": "Your are validating an opinion request of", //_TO_TRANSLATE
+    "noPreviousAvailable": "No previous signatories or visa available", //_TO_TRANSLATE
 };
