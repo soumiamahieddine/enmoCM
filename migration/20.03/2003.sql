@@ -730,6 +730,8 @@ DO $$ BEGIN
 END$$;
 UPDATE baskets set basket_clause = replace(basket_clause, 'nature_id' , 'custom_fields->>''1''');
 
+UPDATE history SET user_id = (select user_id from users order by user_id='superadmin' desc limit 1) where user_id = '';
+
 /* users followed resources */
 DROP TABLE IF EXISTS users_followed_resources;
 CREATE TABLE users_followed_resources

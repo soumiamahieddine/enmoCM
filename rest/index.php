@@ -252,7 +252,7 @@ $app->get('/groups/{id}/privileges/{privilegeId}/parameters', \Group\controllers
 
 //History
 $app->get('/history', \History\controllers\HistoryController::class . ':get');
-$app->get('/history/availableEventTypes', \History\controllers\HistoryController::class . ':getAvailableEventTypes');
+$app->get('/history/availableFilters', \History\controllers\HistoryController::class . ':getAvailableFilters');
 $app->get('/history/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 $app->get('/history/resources/{resId}', \History\controllers\HistoryController::class . ':getByResourceId');
 $app->get('/history/resources/{resId}/workflow', \History\controllers\HistoryController::class . ':getWorkflowByResourceId');

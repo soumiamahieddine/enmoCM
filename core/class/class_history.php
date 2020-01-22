@@ -112,10 +112,13 @@ class history
         }
         $remote_ip = $REMOTE_ADDR;
 
-        $user = '';
+        if (empty($user)) {
+            $user = '';
+        }
         if (isset($_SESSION['user']['UserId'])) {
             $user = $_SESSION['user']['UserId'];
         }
+        \SrcCore\models\ValidatorModel::notEmpty(['user' => $user], ['user']);
 
         $traceInformations = array(
             'WHERE' => $table_name,

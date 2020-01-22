@@ -83,7 +83,7 @@ class HistoryController
         $orderBy = !in_array($queryParams['orderBy'], ['event_date', 'user_id', 'info']) ? ['event_date DESC'] : ["{$queryParams['orderBy']} {$order}"];
 
         $history = HistoryModel::get([
-            'select'    => ['event_date', 'user_id', 'info', 'remote_ip'],
+            'select'    => ['event_date', 'user_id', 'info', 'remote_ip', 'count(1) OVER()'],
             'where'     => $where,
             'data'      => $data,
             'orderBy'   => $orderBy,
@@ -91,7 +91,13 @@ class HistoryController
             'limit'     => $limit
         ]);
 
-        return $response->withJson(['history' => $history]);
+        $total = $history[0]['count'] ?? 0;
+        foreach ($history as $key => $value) {
+            $history[$key]['userLabel'] = UserModel::getLabelledUserById(['login' => $value['user_id']]);
+            unset($history[$key]['count']);
+        }
+
+        return $response->withJson(['history' => $history, 'count' => $total]);
     }
 
     public static function add(array $aArgs)
@@ -173,7 +179,7 @@ class HistoryController
         return $response->withJson(['history' => $history]);
     }
 
-    public function getAvailableEventTypes(Request $request, Response $response)
+    public function getAvailableFilters(Request $request, Response $response)
     {
         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_history', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
@@ -188,7 +194,9 @@ class HistoryController
         foreach ($eventTypes as $eventType) {
             if (strpos($eventType['event_type'], 'ACTION#') === 0) {
                 $exp = explode('#', $eventType['event_type']);
-                $action = ActionModel::getById(['select' => ['label_action'], 'id' => $exp[1]]);
+                if (!empty($exp[1])) {
+                    $action = ActionModel::getById(['select' => ['label_action'], 'id' => $exp[1]]);
+                }
                 $label = !empty($action) ? $action['label_action'] : null;
                 $actions[] = ['id' => $exp[1], 'label' => $label];
             } else {
@@ -196,6 +204,17 @@ class HistoryController
             }
         }
 
-        return $response->withJson(['actions' => $actions, 'systemActions' => $systemActions]);
+        $usersInHistory = HistoryModel::get([
+            'select'    => ['DISTINCT(user_id)']
+        ]);
+
+        $users = [];
+        foreach ($usersInHistory as $value) {
+            $user = UserModel::getByLogin(['login' => $value['user_id'], 'select' => ['id', 'firstname', 'lastname']]);
+
+            $users[] = ['id' => $user['id'] ?? null, 'login' => $value['user_id'], 'label' => !empty($user['id']) ? "{$user['firstname']} {$user['lastname']}" : null];
+        }
+
+        return $response->withJson(['actions' => $actions, 'systemActions' => $systemActions, 'users' => $users]);
     }
 }
