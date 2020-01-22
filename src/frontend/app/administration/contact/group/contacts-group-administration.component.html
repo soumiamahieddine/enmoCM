@@ -1,6 +1,6 @@
 <mat-sidenav-container autosize class="maarch-container">
     <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
-        fixedTopGap="56" [opened]="appService.getViewMode() ? false : true">
+        [opened]="appService.getViewMode() ? false : true">
         <header-panel [snavLeft]="snav"></header-panel>
         <menu-shortcut></menu-shortcut>
         <menu-nav></menu-nav>
@@ -135,7 +135,7 @@
         </div>
     </mat-sidenav-content>
     <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
-        fixedTopGap="56" position='end' [opened]="appService.getViewMode() || creationMode ? false : true" style="overflow-x:hidden;width:40%;">
+        position='end' [opened]="appService.getViewMode() || creationMode ? false : true" style="overflow-x:hidden;width:40%;">
         <mat-list>
             <h3 mat-subheader>{{nbContact}} {{lang.relatedContacts}} : </h3>
         </mat-list>

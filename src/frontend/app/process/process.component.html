@@ -12,7 +12,7 @@
                     (click)="changeTab(module.id)">
                     <i *ngIf="module.count > 0" class="fas fa-circle haveContent"></i>
                     <i [class]="module.icon"></i>
-                    <span *ngIf="!appService.getViewMode()">{{module.label}}</span>
+                    <span>{{module.label}}</span>
                 </div>
             </div>
         </div>

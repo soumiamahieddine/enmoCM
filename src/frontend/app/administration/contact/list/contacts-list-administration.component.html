@@ -1,6 +1,6 @@
 <mat-sidenav-container autosize class="maarch-container">
     <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
-        fixedTopGap="56" [opened]="appService.getViewMode() ? false : true">
+        [opened]="appService.getViewMode() ? false : true">
         <header-panel [snavLeft]="snav"></header-panel>
         <menu-shortcut></menu-shortcut>
         <menu-nav></menu-nav>
@@ -66,22 +66,19 @@
                             </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="firstname">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header
-                                [class.hide-for-mobile]="appService.getViewMode()">{{lang.firstname}}</mat-header-cell>
-                            <mat-cell mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.firstname}}</mat-header-cell>
+                            <mat-cell mat-cell *matCellDef="let element">
                                 {{element.firstname}} </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="lastname">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header
-                                [class.hide-for-mobile]="appService.getViewMode()">{{lang.lastname}}</mat-header-cell>
-                            <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.lastname}}</mat-header-cell>
+                            <mat-cell *matCellDef="let element">
                                 {{element.lastname}} </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="company">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header
-                                [class.hide-for-mobile]="appService.getViewMode()">{{lang.contactsParameters_company}}
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.contactsParameters_company}}
                             </mat-header-cell>
-                            <mat-cell *matCellDef="let element" [class.hide-for-mobile]="appService.getViewMode()">
+                            <mat-cell *matCellDef="let element">
                                 {{element.company}} </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="formatedAddress">
@@ -123,7 +120,4 @@
             </div>
         </div>
     </mat-sidenav-content>
-    <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
-        fixedTopGap="56" position='end' [opened]="appService.getViewMode() ? false : false">
-    </mat-sidenav>
 </mat-sidenav-container>

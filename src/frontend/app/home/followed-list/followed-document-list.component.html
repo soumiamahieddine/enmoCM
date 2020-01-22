@@ -48,11 +48,11 @@
                             {{lang.selected}}</small>
                     </div>
                     <div class="table-head-tool">
-                        <span style="float:right;height: 56px;margin-top: 5px;">
+                        <span>
                             <mat-paginator #paginatorResultList [length]="resultsLength" [pageSizeOptions]="[10, 25, 50, 100, 150]"
                                 class="paginatorResultList"></mat-paginator>
                         </span>
-                        <span style="float:right;height: 56px;margin-top: 11px;">
+                        <span>
                             <app-followed-action-list #actionsList [contextMode]="false" [currentFolderInfo]="folderInfo"
                                 [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [menuShortcut]="menuShortcut"
                                 (refreshEvent)="refreshDaoAfterAction()">
@@ -170,7 +170,7 @@
         <div *ngIf="innerHtml" [matTooltip]="currentChrono" [innerHTML]="innerHtml"
             style="height: 100%;overflow: hidden;"></div>
 
-        <div style="display:flex;">
+        <div style="display:flex;position: sticky;top: 0px;z-index: 2;">
             <button mat-icon-button (click)="snav2.close()" style="font-size: 20px;color:#666;">
                 <mat-icon class="fa fa-arrow-right"></mat-icon>
             </button>
