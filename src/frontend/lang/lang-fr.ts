@@ -609,7 +609,7 @@ export const LANG_FR = {
     "next"                                  : "Suivant",
     "no"                                    : "Non",
     "noAction"                              : "Aucune action",
-    "noAttachment"                          : "Sans pièce jointe",
+    "noAttachment"                          : "Aucune pièce jointe",
     "noAttachmentClickToAddOne"             : "Aucune pièce jointe disponible<br/><sub>Cliquez sur <i class=\"fa fa-paperclip fa-lg\" ></i><i class=\"fa fa-plus\"></i> pour en ajouter une.</sub>",
     "noAttachmentContact"                   : "Aucun contact attaché pour cette pièce jointe",
     "noAttachmentConversion"                : "La pièce jointe n'a pas de conversion PDF",
