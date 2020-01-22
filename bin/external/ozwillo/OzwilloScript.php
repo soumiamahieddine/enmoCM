@@ -32,14 +32,14 @@ class OzwilloScript
         if (empty($configuration)) {
             self::writeLog(['message' => "[SEND_FILE] File bin/external/ozwillo/config.xml does not exist"]);
             exit();
-        } elseif (empty($configuration->user) || empty($configuration->password) || empty($configuration->uri) || empty($configuration->triggerStatuses->sendFile)) {
+        } elseif (empty($configuration->user) || empty($configuration->password) || empty($configuration->sendFile->uri) || empty($configuration->sendFile->status)) {
             self::writeLog(['message' => "[SEND_FILE] File bin/external/ozwillo/config.xml is not filled enough"]);
-            exit();
+            return;
         }
         $user = (string)$configuration->user;
         $password = (string)$configuration->password;
-        $uri = (string)$configuration->uri;
-        $status = (string)$configuration->triggerStatuses->sendFile;
+        $uri = (string)$configuration->sendFile->uri;
+        $status = (string)$configuration->sendFile->status;
 
         \SrcCore\models\DatabasePDO::reset();
         new \SrcCore\models\DatabasePDO(['customId' => $customId]);
@@ -85,7 +85,7 @@ class OzwilloScript
                 continue;
             } elseif (empty($response['response']['publikId'])) {
                 self::writeLog(['message' => "[SEND_FILE] Resource {$resource['res_id']} : ({$resource['subject']}) publikId is missing"]);
-                self::writeLog(['message' => $response['response']]);
+                self::writeLog(['message' => json_encode($response['response'])]);
                 continue;
             }
 
@@ -108,14 +108,14 @@ class OzwilloScript
         if (empty($configuration)) {
             self::writeLog(['message' => "[SEND_DATA] File bin/external/ozwillo/config.xml does not exist"]);
             exit();
-        } elseif (empty($configuration->user) || empty($configuration->password) || empty($configuration->uri) || empty($configuration->triggerStatuses->sendData)) {
+        } elseif (empty($configuration->user) || empty($configuration->password) || empty($configuration->sendData->uri) || empty($configuration->sendData->status)) {
             self::writeLog(['message' => "[SEND_DATA] File bin/external/ozwillo/config.xml is not filled enough"]);
-            exit();
+            return;
         }
         $user = (string)$configuration->user;
         $password = (string)$configuration->password;
-        $uri = (string)$configuration->uri;
-        $status = (string)$configuration->triggerStatuses->sendData;
+        $uri = (string)$configuration->sendData->uri;
+        $status = (string)$configuration->sendData->status;
 
         \SrcCore\models\DatabasePDO::reset();
         new \SrcCore\models\DatabasePDO(['customId' => $customId]);

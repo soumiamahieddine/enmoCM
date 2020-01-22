@@ -122,21 +122,31 @@
                                     </mat-form-field>
                                 </ng-container>
                                 <ng-container *ngIf="field.type === 'radio'">
-                                    <label class="labelCustom">{{field.label}}</label>
+                                    <label class="labelCustom">{{field.label}} <ng-container *ngIf="field.required">*</ng-container></label>
                                     <mat-radio-group class="radio-form" color="primary" [formControl]="field.control">
                                         <mat-radio-button *ngFor="let value of field.values" [value]="value.id">
                                             {{value.label}}
                                         </mat-radio-button>
                                     </mat-radio-group>
+                                    <i *ngIf="field.filling" style="position:absolute;height: auto;padding-right: 10px;right: 0px;z-index: 1;top: 50%;transform: translateY(-50%);"
+                                            [title]="lang.targetFillingField" [style.color]="fillingRate.color"
+                                            class="fas fa-circle rate"></i>
+                                    <mat-error *ngIf="field.control.status!=='VALID'  && field.control.touched">
+                                        {{getErrorMsg(field.control.errors)}}</mat-error>
                                 </ng-container>
                                 <ng-container *ngIf="field.type === 'checkbox'">
-                                    <label class="labelCustom">{{field.label}}</label>
+                                    <label class="labelCustom">{{field.label}} <ng-container *ngIf="field.required">*</ng-container></label>
                                     <mat-selection-list #shoes class="checkbox-form" [formControl]="field.control">
                                         <mat-list-option *ngFor="let value of field.values" [value]="value.id"
                                             color="primary" checkboxPosition="before">
                                             {{value.label}}
                                         </mat-list-option>
                                     </mat-selection-list>
+                                    <i *ngIf="field.filling" style="position:absolute;height: auto;padding-right: 10px;right: 0px;z-index: 1;top: 50%;transform: translateY(-50%);"
+                                            [title]="lang.targetFillingField" [style.color]="fillingRate.color"
+                                            class="fas fa-circle rate"></i>
+                                    <mat-error *ngIf="field.control.status!=='VALID'  && field.control.touched">
+                                        {{getErrorMsg(field.control.errors)}}</mat-error>
                                 </ng-container>
                             </p>
                             <button *ngIf="field.display" [disabled]="!canDelete(field)" mat-icon-button matSuffix

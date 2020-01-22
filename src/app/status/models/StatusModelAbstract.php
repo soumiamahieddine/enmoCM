@@ -19,17 +19,19 @@ use SrcCore\models\DatabaseModel;
 
 abstract class StatusModelAbstract
 {
-    public static function get(array $aArgs = [])
+    public static function get(array $args = [])
     {
-        ValidatorModel::arrayType($aArgs, ['select']);
+        ValidatorModel::arrayType($args, ['select', 'where', 'data']);
 
-        $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+        $statuses = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
             'table'     => ['status'],
+            'where'     => $args['where'] ?? [],
+            'data'      => $args['data'] ?? [],
             'order_by'  => ['label_status']
         ]);
 
-        return $aReturn;
+        return $statuses;
     }
 
     public static function getById(array $aArgs)

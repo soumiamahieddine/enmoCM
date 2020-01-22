@@ -127,6 +127,13 @@ class SearchController
             }
         }
 
+        $nonSearchableStatuses = StatusModel::get(['select' => ['id'], 'where' => ['can_be_searched = ?'], 'data' => ['N']]);
+        if (!empty($nonSearchableStatuses)) {
+            $nonSearchableStatuses = array_column($nonSearchableStatuses, 'id');
+            $searchWhere[] = 'status not in (?)';
+            $searchData[] = $nonSearchableStatuses;
+        }
+
         $limit = 25;
         if (!empty($queryParams['limit']) && is_numeric($queryParams['limit'])) {
             $limit = (int)$queryParams['limit'];
@@ -183,7 +190,7 @@ class SearchController
                     }
                 }
             }
-            if (!empty($resource['dest_user'])) {
+            if (!empty($resource['destUser'])) {
                 $resources[$key]['destUserLabel'] = UserModel::getLabelledUserById(['login' => $resource['destUser']]);
             }
             $resources[$key]['hasDocument'] = !empty($resource['filename']);

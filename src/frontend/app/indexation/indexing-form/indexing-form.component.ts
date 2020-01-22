@@ -435,7 +435,9 @@ export class IndexingFormComponent implements OnInit {
         elem.endDate = '_TODAY';
 
         this.fieldCategories.forEach(element => {
-            if (this['indexingModels_' + element].filter((field: any) => field.identifier === 'departureDate').length > 0) {
+            if (this['indexingModels_' + element].filter((field: any) => field.identifier === 'arrivalDate').length > 0) {
+                elem.endDate = 'arrivalDate';
+            } else if (this['indexingModels_' + element].filter((field: any) => field.identifier === 'departureDate').length > 0) {
                 elem.endDate = 'departureDate';
             }
         });

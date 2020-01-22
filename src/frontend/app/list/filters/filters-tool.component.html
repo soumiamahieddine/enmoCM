@@ -98,4 +98,8 @@
         *ngFor="let doctype of this.listProperties.doctypes; let i=index"
         (click)="removeFilter('doctypes', i)">{{doctype.label}}
         <i class="fa fa-times-circle"></i></span>
+    <span class="label badge-folders" title="{{lang.folders}}"
+        *ngFor="let folder of this.listProperties.folders; let i=index"
+        (click)="removeFilter('folders', i)">{{folder.label}}
+        <i class="fa fa-times-circle"></i></span>
 </div>

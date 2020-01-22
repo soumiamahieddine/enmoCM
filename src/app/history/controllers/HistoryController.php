@@ -14,6 +14,7 @@
 
 namespace History\controllers;
 
+use Action\models\ActionModel;
 use Group\controllers\PrivilegeController;
 use Resource\controllers\ResController;
 use Respect\Validation\Validator;
@@ -33,27 +34,78 @@ class HistoryController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $data = $request->getQueryParams();
+        $queryParams = $request->getQueryParams();
 
-        $check = Validator::floatVal()->notEmpty()->validate($data['startDate']);
-        $check = $check && Validator::floatVal()->notEmpty()->validate($data['endDate']);
-        if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        $limit = 25;
+        if (!empty($queryParams['limit']) && is_numeric($queryParams['limit'])) {
+            $limit = (int)$queryParams['limit'];
+        }
+        $offset = 0;
+        if (!empty($queryParams['offset']) && is_numeric($queryParams['offset'])) {
+            $offset = (int)$queryParams['offset'];
         }
 
-        $maxRequestSize = 25000;
+        $where = [];
+        $data = [];
+        if (!empty($queryParams['users']) && is_array($queryParams['users'])) {
+            $userIds = [];
+            $userLogins = [];
+            foreach ($queryParams['users'] as $user) {
+                if (is_numeric($user)) {
+                    $userIds[] = $user;
+                } else {
+                    $userLogins[] = $user;
+                }
+            }
+            $users = [];
+            if (!empty($userIds)) {
+                $users = UserModel::get(['select' => ['user_id'], 'where' => ['id in (?)'], 'data' => [$userIds]]);
+                $users = array_column($users, 'user_id');
+            }
+            $users = array_merge($users, $userLogins);
+            $where[] = 'user_id in (?)';
+            $data[] = $users;
+        }
+        if (!empty($queryParams['startDate'])) {
+            $where[] = 'event_date > ?';
+            $data[] = date('Y-m-d H:i:s', $queryParams['startDate']);
+        }
+        if (!empty($queryParams['endDate'])) {
+            $where[] = 'event_date < ?';
+            $data[] = date('Y-m-d H:i:s', $queryParams['endDate']);
+        }
+        if (!empty($queryParams['actions']) && is_array($queryParams['actions'])) {
+            $actions = [];
+            foreach ($queryParams['actions'] as $action) {
+                if (is_numeric($action)) {
+                    $actions[] = "ACTION#{$action}";
+                } else {
+                    $actions[] = $action;
+                }
+            }
+            $where[] = 'event_type in (?)';
+            $data[] = $actions;
+        }
 
-        $histories = HistoryModel::get([
-            'select'    => ['event_date', 'event_type', 'user_id', 'info', 'remote_ip'],
-            'where'     => ['event_date > ?', 'event_date < ?'],
-            'data'      => [date('Y-m-d H:i:s', $data['startDate']), date('Y-m-d H:i:s', $data['endDate'])],
-            'orderBy'   => ['event_date DESC'],
-            'limit'     => $maxRequestSize
+        $order = !in_array($queryParams['order'], ['asc', 'desc']) ? '' : $queryParams['order'];
+        $orderBy = !in_array($queryParams['orderBy'], ['event_date', 'user_id', 'info']) ? ['event_date DESC'] : ["{$queryParams['orderBy']} {$order}"];
+
+        $history = HistoryModel::get([
+            'select'    => ['event_date', 'user_id', 'info', 'remote_ip', 'count(1) OVER()'],
+            'where'     => $where,
+            'data'      => $data,
+            'orderBy'   => $orderBy,
+            'offset'    => $offset,
+            'limit'     => $limit
         ]);
 
-        $limitExceeded = (count($histories) == $maxRequestSize);
+        $total = $history[0]['count'] ?? 0;
+        foreach ($history as $key => $value) {
+            $history[$key]['userLabel'] = UserModel::getLabelledUserById(['login' => $value['user_id']]);
+            unset($history[$key]['count']);
+        }
 
-        return $response->withJson(['histories' => $histories, 'limitExceeded' => $limitExceeded]);
+        return $response->withJson(['history' => $history, 'count' => $total]);
     }
 
     public static function add(array $aArgs)
@@ -133,5 +185,44 @@ class HistoryController
         $history = HistoryModel::getWorkflowByResourceId(['resId' => $args['resId'], 'select' => ['info', 'event_date'], 'limit' => (int)$queryParams['limit']]);
 
         return $response->withJson(['history' => $history]);
+    }
+
+    public function getAvailableFilters(Request $request, Response $response)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_history', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $eventTypes = HistoryModel::get([
+            'select'    => ['DISTINCT(event_type)']
+        ]);
+
+        $actions = [];
+        $systemActions = [];
+        foreach ($eventTypes as $eventType) {
+            if (strpos($eventType['event_type'], 'ACTION#') === 0) {
+                $exp = explode('#', $eventType['event_type']);
+                if (!empty($exp[1])) {
+                    $action = ActionModel::getById(['select' => ['label_action'], 'id' => $exp[1]]);
+                }
+                $label = !empty($action) ? $action['label_action'] : null;
+                $actions[] = ['id' => $exp[1], 'label' => $label];
+            } else {
+                $systemActions[] = ['id' => $eventType['event_type'], 'label' => null];
+            }
+        }
+
+        $usersInHistory = HistoryModel::get([
+            'select'    => ['DISTINCT(user_id)']
+        ]);
+
+        $users = [];
+        foreach ($usersInHistory as $value) {
+            $user = UserModel::getByLogin(['login' => $value['user_id'], 'select' => ['id', 'firstname', 'lastname']]);
+
+            $users[] = ['id' => $user['id'] ?? null, 'login' => $value['user_id'], 'label' => !empty($user['id']) ? "{$user['firstname']} {$user['lastname']}" : null];
+        }
+
+        return $response->withJson(['actions' => $actions, 'systemActions' => $systemActions, 'users' => $users]);
     }
 }

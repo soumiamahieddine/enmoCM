@@ -16,6 +16,7 @@ interface listProperties {
     'subEntities': string[],
     'statuses': string[],
     'doctypes': string[],
+    'folders': string[],
 }
 
 @Injectable()
@@ -64,6 +65,7 @@ export class FiltersListService {
                 'subEntities': [],
                 'statuses': [],
                 'doctypes': [],
+                'folders': [],
             };
             this.listsProperties.push(listProperties);
             this.listsPropertiesIndex = this.listsProperties.length -1;
@@ -157,6 +159,14 @@ export class FiltersListService {
                 });
 
                 filters += '&doctypes=' + doct.join(',');
+            }
+            if (this.listsProperties[this.listsPropertiesIndex].folders.length > 0) {
+                let folders: any[] = [];
+                this.listsProperties[this.listsPropertiesIndex].folders.forEach((element: any) => {
+                    folders.push(element.id);
+                });
+
+                filters += '&folders=' + folders.join(',');
             }
         }
         return filters;

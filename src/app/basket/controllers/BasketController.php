@@ -533,7 +533,6 @@ class BasketController
         ValidatorModel::arrayType($aArgs, ['groupActions']);
         ValidatorModel::stringType($aArgs, ['userId']);
 
-        $defaultAction = false;
         $actions = ActionModel::get(['select' => ['id']]);
 
         foreach ($aArgs['groupActions'] as $key => $groupAction) {
@@ -546,9 +545,6 @@ class BasketController
                 }
                 if (!$actionExists) {
                     return ['errors' => 'Action does not exist'];
-                }
-                if ($groupAction['default_action_list'] === true) {
-                    $defaultAction = true;
                 }
 
                 $aArgs['groupActions'][$key]['where_clause'] = empty($groupAction['where_clause']) ? '' : $groupAction['where_clause'];
@@ -565,9 +561,6 @@ class BasketController
                     }
                 }
             }
-        }
-        if (!$defaultAction) {
-            return ['errors' => 'Default action needed'];
         }
 
         return $aArgs['groupActions'];

@@ -238,7 +238,7 @@ define('_SEND_TO_EXTERNAL_SB', 'Envoyer des données vers un parapheur externe')
 define('_SEND_TO_EXTERNAL_NOTEBOOK', 'Envoyer des courriers à annoter vers Maarch Parapheur');
 define('_CLOSE_MAIL_AND_INDEX', 'Clôturer un courrier et lancer l\'indexation');
 define('_CLOSE_MAIL_AND_INDEX_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier ET ouvre la page d\'indexation afin d\'enregistrer un nouveau courrier.');
-define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe');
+define('_CLOSE_MAIL_WITH_ATTACHMENT', 'Clôturer un courrier avec pièce jointe ou annotation');
 define('_CLOSE_MAIL_WITH_ATTACHMENT_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier avec présence OBLIGATOIRE de pièce(s) jointe(s) / annotation(s).');
 define('_SEND_TO_VISA', 'Envoyer pour visa');
 define('_SEND_TO_VISA_DESC', 'Contrôle si un circuit de visa est configuré ET si un ou plusieurs projets de réponses sont associés au courrier.');
@@ -253,7 +253,6 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel vis
 define('_PROCEED_WORKFLOW', 'Poursuivre le circuit de visa');
 define('_PROCEED_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel viseur / signataire présent dans le circuit de visa du courrier (\'process_date\' de la table listinstance).');
 define('_VISA_MAIL', 'Viser le courrier');
-define('_VISA_MAIL_DESC', 'Ouvre la page du parapheur afin de pouvoir viser / signer le document.');
 define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Envoyer au contact avec une pièce jointe obligatoire et accusé de réception');
 define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', "Ouvre une modal d'envoi de mail avec l'email du contact associé au courrier en tant que destinataire, présence OBLIGATOIRE de pièce(s) jointe(s) à l'envoi.");
 define('_SEND_ATTACHMENTS_TO_CONTACT', 'Envoyer au contact avec accusé de réception');

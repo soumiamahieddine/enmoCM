@@ -323,7 +323,8 @@ export class AvisWorkflowComponent implements OnInit {
                     this.avisWorkflow.items.push(
                         {
                             ...element,
-                            difflist_type: this.mode === 'circuit' ? 'AVIS_CIRCUIT' : 'entity_id'
+                            difflist_type: this.mode === 'circuit' ? 'AVIS_CIRCUIT' : 'entity_id',
+                            item_entity: element.descriptionToDisplay
                         });
                 });
                 this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items))

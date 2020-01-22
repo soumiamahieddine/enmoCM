@@ -281,6 +281,17 @@ class ResourceListController
             $where[] = 'doctypes.type_id in (?)';
             $queryData[] = explode(',', $args['data']['doctypes']);
         }
+        if (!empty($args['data']['folders'])) {
+            $resourcesInFolders = FolderModel::getWithResources([
+                'select' => ['resources_folders.res_id'],
+                'where'  => ['resources_folders.folder_id in (?)'],
+                'data'   => [explode(',', $args['data']['folders'])]
+            ]);
+            $resourcesInFolders = array_column($resourcesInFolders, 'res_id');
+
+            $where[] = 'res_id in (?)';
+            $queryData[] = $resourcesInFolders;
+        }
 
         if (!empty($args['data']['order']) && strpos($args['data']['order'], 'alt_identifier') !== false) {
             $order = 'order_alphanum(alt_identifier) ' . explode(' ', $args['data']['order'])[1];
@@ -876,12 +887,14 @@ class ResourceListController
         $whereCategories = $where;
         $whereStatuses   = $where;
         $whereEntities   = $where;
-        $whereDocTypes    = $where;
+        $whereDocTypes   = $where;
+        $whereFolders    = $where;
         $dataPriorities  = $queryData;
         $dataCategories  = $queryData;
         $dataStatuses    = $queryData;
         $dataEntities    = $queryData;
-        $dataDocTypes     = $queryData;
+        $dataDocTypes    = $queryData;
+        $dataFolders     = $queryData;
 
         if (isset($data['priorities'])) {
             if (empty($data['priorities'])) {
@@ -898,12 +911,14 @@ class ResourceListController
                 $dataStatuses[]   = explode(',', $replace);
                 $dataEntities[]   = explode(',', $replace);
                 $dataDocTypes[]   = explode(',', $replace);
+                $dataFolders[]    = explode(',', $replace);
             }
 
             $whereCategories[] = $tmpWhere;
             $whereStatuses[]   = $tmpWhere;
             $whereEntities[]   = $tmpWhere;
             $whereDocTypes[]   = $tmpWhere;
+            $whereFolders[]    = $tmpWhere;
         }
         if (isset($data['categories'])) {
             if (empty($data['categories'])) {
@@ -920,12 +935,14 @@ class ResourceListController
                 $dataStatuses[]   = explode(',', $replace);
                 $dataEntities[]   = explode(',', $replace);
                 $dataDocTypes[]   = explode(',', $replace);
+                $dataFolders[]    = explode(',', $replace);
             }
 
             $wherePriorities[] = $tmpWhere;
             $whereStatuses[]   = $tmpWhere;
             $whereEntities[]   = $tmpWhere;
             $whereDocTypes[]   = $tmpWhere;
+            $whereFolders[]    = $tmpWhere;
         }
         if (!empty($data['statuses'])) {
             $wherePriorities[] = 'status in (?)';
@@ -936,6 +953,8 @@ class ResourceListController
             $dataEntities[]    = explode(',', $data['statuses']);
             $whereDocTypes[]   = 'status in (?)';
             $dataDocTypes[]    = explode(',', $data['statuses']);
+            $whereFolders[]    = 'status in (?)';
+            $dataFolders[]     = explode(',', $data['statuses']);
         }
         if (!empty($data['doctypes'])) {
             $wherePriorities[] = 'type_id in (?)';
@@ -946,6 +965,8 @@ class ResourceListController
             $dataEntities[]    = explode(',', $data['doctypes']);
             $whereStatuses[]   = 'type_id in (?)';
             $dataStatuses[]    = explode(',', $data['doctypes']);
+            $whereFolders[]    = 'type_id in (?)';
+            $dataFolders[]     = explode(',', $data['doctypes']);
         }
         if (isset($data['entities'])) {
             if (empty($data['entities'])) {
@@ -962,12 +983,14 @@ class ResourceListController
                 $dataCategories[] = explode(',', $replace);
                 $dataStatuses[] = explode(',', $replace);
                 $dataDocTypes[] = explode(',', $replace);
+                $dataFolders[]  = explode(',', $replace);
             }
 
             $wherePriorities[] = $tmpWhere;
             $whereCategories[] = $tmpWhere;
             $whereStatuses[]   = $tmpWhere;
             $whereDocTypes[]   = $tmpWhere;
+            $whereFolders[]    = $tmpWhere;
         }
         if (!empty($data['entitiesChildren'])) {
             $entities = explode(',', $data['entitiesChildren']);
@@ -985,6 +1008,8 @@ class ResourceListController
                 $dataStatuses[]    = $entitiesChildren;
                 $whereDocTypes[]   = 'destination in (?)';
                 $dataDocTypes[]    = $entitiesChildren;
+                $whereFolders[]    = 'destination in (?)';
+                $dataFolders[]     = $entitiesChildren;
             }
         }
 
@@ -1084,11 +1109,42 @@ class ResourceListController
             ];
         }
 
+        $folders = [];
+
+        $resIds = ResModel::getOnView([
+            'select' => ['res_id'],
+            'where'  => $whereFolders,
+            'data'   => $dataFolders
+        ]);
+        $resIds = array_column($resIds, 'res_id');
+
+        $userEntities = EntityModel::getWithUserEntities([
+            'select' => ['entities.id'],
+            'where'  => ['users_entities.user_id = ?'],
+            'data'   => [$GLOBALS['userId']]
+        ]);
+        $userEntities = array_column($userEntities, 'id');
+
+        $rawFolders = FolderModel::getWithEntitiesAndResources([
+            'select'  => ['folders.id', 'folders.label', 'count(resources_folders.res_id) as count'],
+            'where'   => ['resources_folders.res_id in (?)', '(folders.user_id = ? OR entities_folders.entity_id in (?))'],
+            'data'    => [$resIds, $GLOBALS['id'], $userEntities],
+            'groupBy' => ['folders.id', 'folders.label']
+        ]);
+        foreach ($rawFolders as $key => $value) {
+            $folders[] = [
+                'id'    => empty($value['id']) ? null : $value['id'],
+                'label' => empty($value['label']) ? '_UNDEFINED' : $value['label'],
+                'count' => $value['count']
+            ];
+        }
+
         $priorities = (count($priorities) >= 2) ? $priorities : [];
         $categories = (count($categories) >= 2) ? $categories : [];
         $statuses   = (count($statuses) >= 2) ? $statuses : [];
         $entities   = (count($entities) >= 2) ? $entities : [];
         $docTypes   = (count($docTypes) >= 2) ? $docTypes : [];
+        $folders    = (count($folders) >= 2) ? $folders : [];
 
         $entitiesChildren = [];
         foreach ($entities as $entity) {
@@ -1122,14 +1178,17 @@ class ResourceListController
 
         usort($docTypes, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
 
+        usort($folders, ['Resource\controllers\ResourceListController', 'compareSortOnLabel']);
+
 
         return [
-            'entities' => $entities,
-            'priorities' => $priorities,
-            'categories' => $categories,
-            'statuses' => $statuses,
+            'entities'         => $entities,
+            'priorities'       => $priorities,
+            'categories'       => $categories,
+            'statuses'         => $statuses,
             'entitiesChildren' => $entitiesChildren,
-            'doctypes' => $docTypes
+            'doctypes'         => $docTypes,
+            'folders'          => $folders
         ];
     }
 

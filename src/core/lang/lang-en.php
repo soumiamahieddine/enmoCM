@@ -253,7 +253,6 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Update visa date of current supervisor / sig
 define('_PROCEED_WORKFLOW', 'continue the visa flow');
 define('_PROCEED_WORKFLOW_DESC', 'Update visa date of current supervisor / signatory in visa circuit of mail (\'process_date\' of listinstance table).');
 define('_VISA_MAIL', 'Aim the mail');
-define('_VISA_MAIL_DESC', 'Open signatory book to visa / sign the document.');
 define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Send to the contact with a mandatory attachment');
 define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', 'Open sendmail modal with email of contact linked to document in recipient, attachment is MANDATORY.');
 define('_SEND_ATTACHMENTS_TO_CONTACT', 'Send to the contact');

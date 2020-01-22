@@ -27,9 +27,19 @@ class UserControllerTest extends TestCase
         $response     = $userController->get($request, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
-
         $this->assertInternalType('array', $responseBody->users);
         $this->assertNotEmpty($responseBody->users);
+
+        foreach ($responseBody->users as $value) {
+            $this->assertNotNull($value->id);
+            $this->assertInternalType('integer', $value->id);
+            $this->assertNotNull($value->user_id);
+            $this->assertNotNull($value->firstname);
+            $this->assertNotNull($value->lastname);
+            $this->assertNotNull($value->status);
+            $this->assertNotNull($value->mail);
+            $this->assertNotNull($value->loginmode);
+        }
     }
 
     public function testCreate()

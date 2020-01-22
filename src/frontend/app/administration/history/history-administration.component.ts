@@ -1,184 +1,293 @@
-import { Component, OnInit, ViewChild }  from '@angular/core';
-import { HttpClient }                                       from '@angular/common/http';
-import { MatPaginator } from '@angular/material/paginator';
+import { Component, OnInit, ViewChild, EventEmitter, ElementRef } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { LANG } from '../../translate.component';
+import { NotificationService } from '../../notification.service';
+import { HeaderService } from '../../../service/header.service';
 import { MatSidenav } from '@angular/material/sidenav';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { LANG }                                             from '../../translate.component';
-import { HeaderService }        from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
-
-declare function $j(selector: any): any;
+import { Observable, merge, Subject, of as observableOf, of } from 'rxjs';
+import { MatPaginator, MatSort, MatDialog } from '@angular/material';
+import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
+import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
+import { FormControl } from '@angular/forms';
+import { FunctionsService } from '../../../service/functions.service';
+import { LatinisePipe } from 'ngx-pipes';
 
 @Component({
+    selector: 'contact-list',
     templateUrl: "history-administration.component.html",
+    styleUrls: ['history-administration.component.scss'],
     providers: [AppService]
 })
 export class HistoryAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
+    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
-    lang                            : any       = LANG;
-    loading                         : boolean   = false;
-    limitExceeded                   : boolean   = false;
-    batchLimitExceeded              : boolean   = false;
+    lang: any = LANG;
+    loading: boolean = false;
 
-    data                            : any[]     = [];
-    batchData                       : any[]     = [];
-    startDate                       : Date      = new Date();
-    endDate                         : Date      = new Date();
-    batchStartDate                  : Date      = new Date();
-    batchEndDate                    : Date      = new Date();
+    filtersChange = new EventEmitter();
 
+    data: any;
 
-    dataSource          = new MatTableDataSource(this.data);
-    batchDataSource     = new MatTableDataSource(this.batchData);
-    displayedColumns    = ['event_date', 'event_type', 'user_id', 'info', 'remote_ip'];
-    batchDisplayedColumns = ['event_date', 'total_processed', 'total_errors', 'info', 'module_name'];
+    displayedColumnsHistory: string[] = ['event_date', 'userLabel', 'info', 'remote_ip'];
 
-    accessBatchHistory              : boolean   = true;
-    accessHistory                   : boolean   = true;
+    isLoadingResults = true;
+    routeUrl: string = '../../rest/history';
+    resultListDatabase: HistoryListHttpDao | null;
+    resultsLength = 0;
 
+    searchHistory = new FormControl();
+    startDateFilter: any = '';
+    endDateFilter: any = '';
+    filterUrl: string = '';
+    filterList: any = null;
+    filteredList: any = {};
+    filterUsed: any = {};
 
-    @ViewChild('paginator', { static: false }) paginator: MatPaginator;
-    @ViewChild('batchPaginator', { static: false }) batchPaginator: MatPaginator;
-    @ViewChild('sort', { static: false }) sort: MatSort;
-    @ViewChild('batchSort', { static: false }) batchSort: MatSort;
-    applyFilter(filterValue: string, historyType : string) {
-        filterValue = filterValue.trim();
-        filterValue = filterValue.toLowerCase();
-        if(historyType == 'normal'){
-            this.dataSource.filter = filterValue;
-        } else {
-            this.batchDataSource.filter = filterValue
-        }        
-    }
+    filterColor = {
+        startDate: '#b5cfd8',
+        endDate: '#7393a7',
+        actions: '#7d5ba6',
+        systemActions: '#d6716f',
+        users: '#009dc5',
+    };
+
+    loadingFilters: boolean = true;
+
+    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+    @ViewChild('tableHistoryListSort', { static: true }) sort: MatSort;
+    @ViewChild('autoCompleteInput', { static: true }) autoCompleteInput: ElementRef;
+
+    private destroy$ = new Subject<boolean>();
+
+    subMenus: any[] = [
+        {
+            icon: 'fa fa-history',
+            route: '/administration/history',
+            label: this.lang.history,
+            current: true
+        },
+        {
+            icon: 'fa fa-history',
+            route: '/administration/history-batch',
+            label: this.lang.historyBatch,
+            current: false
+        }
+    ];
 
     constructor(
-        public http: HttpClient, 
+        public http: HttpClient,
+        private notify: NotificationService,
         private headerService: HeaderService,
-        public appService: AppService
-    ) {
-        $j("link[href='merged_css.php']").remove();
-
-        this.startDate.setHours(0,0,0,0);
-        this.startDate.setMonth(this.endDate.getMonth()-1);
-        this.endDate.setHours(23,59,59,59);
-
-        this.batchStartDate.setHours(0,0,0,0);
-        this.batchStartDate.setMonth(this.endDate.getMonth()-1);
-        this.batchEndDate.setHours(23,59,59,59);
-    }
+        public appService: AppService,
+        public dialog: MatDialog,
+        public functions: FunctionsService,
+        private latinisePipe: LatinisePipe) { }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.history);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
-
         this.loading = true;
-
-        this.http.get('../../rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
-            .subscribe((data: any) => {
-                this.data = data['histories'];
-                this.limitExceeded = data['limitExceeded'];
-                this.loading = false;
-                setTimeout(() => {
-                    this.accessHistory = true;
-                    this.dataSource = new MatTableDataSource(this.data);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                }, 0);
-            }, (data: any) => {
-                if(data['error'].errors == 'Service forbidden'){
-                        this.loading = false;
-                        this.accessHistory = false;
-                } else {
-                    location.href = "index.php";
-                }                
-            });
-
-        this.http.get('../../rest/batchHistories', {params: {"startDate" : (this.batchStartDate.getTime() / 1000).toString(), "endDate" : (this.batchEndDate.getTime() / 1000).toString()}})
-            .subscribe((data: any) => {
-                this.batchData = data['batchHistories'];
-                this.batchLimitExceeded = data['limitExceeded'];
-                this.loading = false;
-                setTimeout(() => {
-                    this.accessBatchHistory = true;
-                    this.batchDataSource = new MatTableDataSource(this.batchData);
-                    this.batchDataSource.paginator = this.batchPaginator;
-                    this.batchDataSource.sort = this.batchSort;
-                }, 0);
-            }, (data: any) => {
-                if(data['error'].errors == 'Service forbidden'){
-                        this.loading = false
-                        this.accessBatchHistory = false;
-                } else {
-                    location.href = "index.php";
-                }
-                
-            });
-            
+        this.initHistoryList();
     }
 
-    ngAfterViewInit() {
-        this.batchDataSource.paginator = this.batchPaginator;
-        this.batchDataSource.sort = this.batchSort;
+    initHistoryList() {
+        this.resultListDatabase = new HistoryListHttpDao(this.http);
+        this.paginator.pageIndex = 0;
+        this.sort.active = 'event_date';
+        this.sort.direction = 'desc';
+        this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+
+        // When list is refresh (sort, page, filters)
+        merge(this.sort.sortChange, this.paginator.page, this.filtersChange)
+            .pipe(
+                takeUntil(this.destroy$),
+                startWith({}),
+                switchMap(() => {
+                    this.isLoadingResults = true;
+                    return this.resultListDatabase!.getRepoIssues(
+                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.routeUrl, this.filterUrl);
+                }),
+                map(data => {
+                    this.isLoadingResults = false;
+                    data = this.processPostData(data);
+                    this.resultsLength = data.count;
+                    this.headerService.setHeader(this.lang.administration + ' ' + this.lang.history.toLowerCase(), '', '');
+                    return data.history;
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    this.isLoadingResults = false;
+                    return observableOf([]);
+                })
+            ).subscribe(data => this.data = data);
     }
-    
-    _setDataSource(indexNumber : any) {
-        setTimeout(() => {
-            switch (indexNumber) {
-                case 0:
-                  !this.dataSource.paginator ? this.dataSource.paginator = this.paginator : null;
-                  !this.dataSource.sort ? this.dataSource.sort = this.sort : null;
-                  break;
-                case 1:
-                  !this.batchDataSource.paginator ? this.batchDataSource.paginator = this.batchPaginator : null;
-                  !this.batchDataSource.sort ? this.batchDataSource.sort = this.batchSort : null;
+
+    processPostData(data: any) {
+        data.history = data.history.map((item: any) => {
+            return {
+                ...item,
+                userLabel : !this.functions.empty(item.userLabel) ? item.userLabel : this.lang.userDeleted
             }
-        });
+        })
+        return data;
     }
 
-    refreshHistory(historyType : string) {
-        if (historyType == 'normal') {
-            this.startDate.setHours(0,0,0,0);
-            this.endDate.setHours(23,59,59,59);
-            this.http.get('../../rest/histories', {params: {"startDate" : (this.startDate.getTime() / 1000).toString(), "endDate" : (this.endDate.getTime() / 1000).toString()}})
-                .subscribe((data: any) => {
-                    this.data = data['histories'];
-                    this.limitExceeded = data['limitExceeded'];
-                    this.loading = false;
-                    setTimeout(() => {
-                        this.dataSource = new MatTableDataSource(this.data);
-                        this.dataSource.paginator = this.paginator;
-                        this.dataSource.sort = this.sort;
-                    }, 0);
-                }, () => {
-                    location.href = "index.php";
-                });
-        } else {
-            this.batchStartDate.setHours(0,0,0,0);
-            this.batchEndDate.setHours(23,59,59,59);
-            this.http.get('../../rest/batchHistories', {params: {"startDate" : (this.batchStartDate.getTime() / 1000).toString(), "endDate" : (this.batchEndDate.getTime() / 1000).toString()}})
-                .subscribe((data: any) => {
-                    this.batchData = data['batchHistories'];
-                    this.batchLimitExceeded = data['limitExceeded'];
-                    this.loading = false;
-                    setTimeout(() => {
-                        this.accessBatchHistory = true;
-                        this.batchDataSource = new MatTableDataSource(this.batchData);
-                        this.batchDataSource.paginator = this.batchPaginator;
-                        this.batchDataSource.sort = this.batchSort;
-                    }, 0);
-                }, (data: any) => {
-                    if(data['error'].errors == 'Service forbidden'){
-                        this.loading = false;
-                        this.accessBatchHistory = false;
-                    } else {
-                        location.href = "index.php";
+
+    refreshDao() {
+        this.paginator.pageIndex = 0;
+        this.filtersChange.emit();
+    }
+
+    initFilterListHistory() {
+
+        if (this.filterList === null) {
+            this.filterList = {};
+            this.loadingFilters = true;
+            this.http.get("../../rest/history/availableFilters").pipe(
+                map((data: any) => {
+                    let deletedActions = data.actions.filter((action: any) => action.label === null).map((action: any) => action.id);
+                    let deletedUser = data.users.filter((user: any) => user.label === null).map((user: any) => user.login);
+
+                    data.actions = data.actions.filter((action: any) => action.label !== null);
+                    if (deletedActions.length > 0) {
+                        data.actions.push({
+                            id: deletedActions,
+                            label: this.lang.actionDeleted
+                        });
                     }
-                });
+
+                    data.users = data.users.filter((user: any) => user.label !== null);
+
+                    if (deletedUser.length > 0) {
+                        data.users.push({
+                            id: deletedUser,
+                            label: this.lang.userDeleted
+                        });
+                    }
+
+                    data.systemActions = data.systemActions.map((syst: any) => {
+                        return {
+                            id: syst.id,
+                            label: this.lang[syst.id]
+                        }
+                    });
+                    return data;
+                }),
+                tap((data: any) => {
+                    Object.keys(data).forEach((filterType: any) => {
+                        if (this.functions.empty(this.filterList[filterType])) {
+                            this.filterList[filterType] = [];
+                            this.filteredList[filterType] = [];
+                        }
+                        data[filterType].forEach((element: any) => {
+                            this.filterList[filterType].push(element);
+                        });
+
+                        this.filteredList[filterType] = this.searchHistory.valueChanges
+                            .pipe(
+                                startWith(''),
+                                map(element => element ? this.filter(element, filterType) : this.filterList[filterType].slice())
+                            );
+                    });
+
+                }),
+                finalize(() => this.loadingFilters = false),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+
         }
+    }
+
+    filterStartDate() {
+        if (this.functions.empty(this.filterUsed['startDate'])) {
+            this.filterUsed['startDate'] = [];
+        }
+        this.filterUsed['startDate'][0] = {
+            id: this.functions.empty(this.startDateFilter) ? '' : this.functions.formatDateObjectToFrenchDateString(this.startDateFilter),
+            label: this.functions.empty(this.startDateFilter) ? '' : this.functions.formatDateObjectToFrenchDateString(this.startDateFilter)
+        };
+        this.generateUrlFilter();
+        this.refreshDao();
+    }
+
+    filterEndDate() {
+        if (this.functions.empty(this.filterUsed['endDate'])) {
+            this.filterUsed['endDate'] = [];
+        }
+        this.filterUsed['endDate'][0] = {
+            id: this.functions.empty(this.endDateFilter) ? '' : this.functions.formatDateObjectToFrenchDateString(this.endDateFilter, true),
+            label: this.functions.empty(this.endDateFilter) ? '' : this.functions.formatDateObjectToFrenchDateString(this.endDateFilter)
+        };
+        this.generateUrlFilter();
+        this.refreshDao();
+    }
+
+    addItemFilter(elem: any) {
+        elem.value.used = true;
+        if (this.functions.empty(this.filterUsed[elem.id])) {
+            this.filterUsed[elem.id] = [];
+        }
+        this.filterUsed[elem.id].push(elem.value);
+        this.generateUrlFilter();
+        this.searchHistory.reset();
+        this.autoCompleteInput.nativeElement.blur();
+        this.refreshDao();
+    }
+
+    removeItemFilter(elem: any, type: string, index: number) {
+        elem.used = false;
+        this.filterUsed[type].splice(index, 1);
+        this.generateUrlFilter();
+        this.refreshDao();
+    }
+
+
+    generateUrlFilter() {
+        this.filterUrl = '';
+        let arrTmpUrl: any[] = [];
+        Object.keys(this.filterUsed).forEach((type: any) => {
+            this.filterUsed[type].forEach((filter: any) => {
+                if (!this.functions.empty(filter.id)) {
+                    if (['startDate', 'endDate'].indexOf(type) > -1) {
+                        arrTmpUrl.push(`${type}=${filter.id}`);
+                    } else {
+                        arrTmpUrl.push(`${type}[]=${filter.id}`);
+                    }
+                }
+            });
+        });
+        if (arrTmpUrl.length > 0) {
+            this.filterUrl = '&' + arrTmpUrl.join('&');
+        }
+    }
+
+    private filter(value: string, type: string): any[] {
+        if (typeof value === 'string') {
+            const filterValue = this.latinisePipe.transform(value.toLowerCase());
+            return this.filterList[type].filter((elem: any) => this.latinisePipe.transform(elem.label.toLowerCase()).includes(filterValue));
+        } else {
+            return this.filterList[type];
+        }
+    }
+}
+
+export interface HistoryList {
+    history: any[];
+    count: number;
+}
+export class HistoryListHttpDao {
+
+    constructor(private http: HttpClient) { }
+
+    getRepoIssues(sort: string, order: string, page: number, href: string, search: string): Observable<HistoryList> {
+
+        let offset = page * 10;
+        const requestUrl = `${href}?limit=10&offset=${offset}&order=${order}&orderBy=${sort}${search}`;
+
+        return this.http.get<HistoryList>(requestUrl);
     }
 }

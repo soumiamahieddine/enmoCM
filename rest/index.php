@@ -250,11 +250,12 @@ $app->delete('/groups/{id}/privileges/{privilegeId}', \Group\controllers\Privile
 $app->put('/groups/{id}/privileges/{privilegeId}/parameters', \Group\controllers\PrivilegeController::class . ':updateParameters');
 $app->get('/groups/{id}/privileges/{privilegeId}/parameters', \Group\controllers\PrivilegeController::class . ':getParameters');
 
-//Histories
-$app->get('/histories', \History\controllers\HistoryController::class . ':get');
-$app->get('/histories/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
-$app->get('/histories/resources/{resId}', \History\controllers\HistoryController::class . ':getByResourceId');
-$app->get('/histories/resources/{resId}/workflow', \History\controllers\HistoryController::class . ':getWorkflowByResourceId');
+//History
+$app->get('/history', \History\controllers\HistoryController::class . ':get');
+$app->get('/history/availableFilters', \History\controllers\HistoryController::class . ':getAvailableFilters');
+$app->get('/history/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
+$app->get('/history/resources/{resId}', \History\controllers\HistoryController::class . ':getByResourceId');
+$app->get('/history/resources/{resId}/workflow', \History\controllers\HistoryController::class . ':getWorkflowByResourceId');
 
 //Header
 $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');
@@ -392,6 +393,7 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/ac
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkValidateParallelOpinion', \Action\controllers\PreProcessActionController::class . ':checkValidateParallelOpinion');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkContinueOpinionCircuit', \Action\controllers\PreProcessActionController::class . ':checkContinueOpinionCircuit');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkGiveParallelOpinion', \Action\controllers\PreProcessActionController::class . ':checkGiveParallelOpinion');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkInterruptRejectResetVisa', \Action\controllers\PreProcessActionController::class . ':checkInterruptRejectResetVisa');
 
 //Search
 $app->get('/search', \Search\controllers\SearchController::class . ':get');

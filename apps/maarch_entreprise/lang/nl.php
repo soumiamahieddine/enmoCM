@@ -1287,7 +1287,6 @@ if (!defined('_RESET_VISA_WORKFLOW_DESC')) { define('_RESET_VISA_WORKFLOW_DESC',
 if (!defined('_REJECTION_WORKFLOW_PREVIOUS')) { define('_REJECTION_WORKFLOW_PREVIOUS', 'De goedkeuring weigeren - terug naar de vorige goedkeurder');}
 if (!defined('_REJECTION_WORKFLOW_PREVIOUS_DESC')) { define('_REJECTION_WORKFLOW_PREVIOUS_DESC', 'Reset de datum van de vorige goedkeurder die in het goedkeuringscircuit van het brief aanwezig is (process_date van de tabel listinstance).');}
 if (!defined('_VISA_MAIL')) { define('_VISA_MAIL', 'De e-mail goedkeuren');}
-if (!defined('_VISA_MAIL_DESC')) { define('_VISA_MAIL_DESC', 'Opent de pagina van de parafeerder om het document te kunnen goedkeuren / ondertekenen.');}
 if (!defined('_PREPARE_VISA')) { define('_PREPARE_VISA', 'Het goedkeuringscircuit voorbereiden');}
 if (!defined('_SEND_TO_VISA')) { define('_SEND_TO_VISA', 'Versturen voor goedkeuring');}
 if (!defined('_SEND_TO_VISA_DESC')) { define('_SEND_TO_VISA_DESC', 'Controleert of er een goedkeuringscircuit is geconfigureerd EN of er één of meerdere antwoordprojecten aan het brief gekoppeld zijn.');}

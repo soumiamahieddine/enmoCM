@@ -252,7 +252,6 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Werkt de datum bij van de huidige goedkeurde
 define('_PROCEED_WORKFLOW', 'Het goedkeuringscircuit verderzetten');
 define('_PROCEED_WORKFLOW_DESC', 'Werkt de datum bij van de huidige goedkeurder / ondertekenaar die in het goedkeuringscircuit van het brief aanwezig is (\process_date\ van de tabel listinstance).');
 define('_VISA_MAIL', 'De e-mail goedkeuren');
-define('_VISA_MAIL_DESC', 'Opent de pagina van het vloeiboek om het document te kunnen goedkeuren / ondertekenen.');
 define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Verzenden naar het contact met een bijlage verplicht');
 define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', 'Opent een mailverzendingsmodaliteit met de e-mail van het aan het document gekoppelde contact als bestemmeling, VERPLICHTE aanwezigheid van bijlage(n) aan de verzending.');
 define('_SEND_ATTACHMENTS_TO_CONTACT', 'Verzenden aan het contact');
