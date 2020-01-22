@@ -394,7 +394,7 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/ac
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkContinueOpinionCircuit', \Action\controllers\PreProcessActionController::class . ':checkContinueOpinionCircuit');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkGiveParallelOpinion', \Action\controllers\PreProcessActionController::class . ':checkGiveParallelOpinion');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkValidateParallelOpinionDiffusion', \Action\controllers\PreProcessActionController::class . ':checkValidateParallelOpinionDiffusion');
-$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkRejectVisaBackToPrevious', \Action\controllers\PreProcessActionController::class . ':checkRejectVisaBackToPrevious');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkInterruptRejectResetVisa', \Action\controllers\PreProcessActionController::class . ':checkInterruptRejectResetVisa');
 
 //Search
 $app->get('/search', \Search\controllers\SearchController::class . ':get');

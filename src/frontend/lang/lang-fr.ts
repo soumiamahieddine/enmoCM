@@ -1475,5 +1475,5 @@ export const LANG_FR = {
     "validateBy": "Validé par",
     "validateAvisParallel": "Vous allez valider des demandes d'avis",
     "validateAvisParallelSingle": "Vous allez valider la demande d'avis de",
-    "noPreviousAvailable": "Aucun précédent signataire ou viseur disponible",
+    "circuitNotStarted": "Le circuit n'a pas encore commencé",
 };

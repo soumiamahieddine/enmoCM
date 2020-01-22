@@ -985,7 +985,7 @@ class PreProcessActionController
         return $response->withJson(['resourcesInformations' => $resourcesInformations]);
     }
 
-    public function checkRejectVisaBackToPrevious(Request $request, Response $response, array $args)
+    public function checkInterruptRejectResetVisa(Request $request, Response $response, array $args)
     {
         $body = $request->getParsedBody();
 
@@ -1026,8 +1026,6 @@ class PreProcessActionController
                 } else {
                     $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noCircuitAvailable'];
                 }
-            } elseif ($isSignatory[0]['requested_signature'] && !$isSignatory[0]['signatory']) {
-                $resourcesInformation['warning'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'userHasntSigned'];
             } else {
                 $hasPrevious = ListInstanceModel::get([
                     'select'  => [1],
@@ -1039,7 +1037,7 @@ class PreProcessActionController
                 if (!empty($hasPrevious)) {
                     $resourcesInformation['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId];
                 } else {
-                    $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noPreviousAvailable'];
+                    $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'circuitNotStarted'];
                 }
             }
         }
