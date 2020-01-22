@@ -48,13 +48,21 @@ class HistoryController
         $where = [];
         $data = [];
         if (!empty($queryParams['users']) && is_array($queryParams['users'])) {
+            $userIds = [];
+            $userLogins = [];
             foreach ($queryParams['users'] as $user) {
-                if (!is_numeric($user)) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Query params users : one of is not numeric']);
+                if (is_numeric($user)) {
+                    $userIds[] = $user;
+                } else {
+                    $userLogins[] = $user;
                 }
             }
-            $users = UserModel::get(['select' => ['user_id'], 'where' => ['id in (?)'], 'data' => [$queryParams['users']]]);
-            $users = array_column($users, 'user_id');
+            $users = [];
+            if (!empty($userIds)) {
+                $users = UserModel::get(['select' => ['user_id'], 'where' => ['id in (?)'], 'data' => [$userIds]]);
+                $users = array_column($users, 'user_id');
+            }
+            $users = array_merge($users, $userLogins);
             $where[] = 'user_id in (?)';
             $data[] = $users;
         }
