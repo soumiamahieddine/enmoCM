@@ -1475,4 +1475,5 @@ export const LANG_FR = {
     "validateBy": "Validé par",
     "validateAvisParallel": "Vous allez valider des demandes d'avis",
     "validateAvisParallelSingle": "Vous allez valider la demande d'avis de",
+    "displayWebserviceAccount": "Afficher les comptes de webservice",
 };

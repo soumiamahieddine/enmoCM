@@ -1435,4 +1435,5 @@ export const LANG_EN = {
     "validateBy": "Validate by",
     "validateAvisParallel": "Your are validating an opinion request",
     "validateAvisParallelSingle": "Your are validating an opinion request of",
+    "displayWebserviceAccount": "Display webservice account",
 };

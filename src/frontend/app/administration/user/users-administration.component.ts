@@ -38,6 +38,9 @@ export class UsersAdministrationComponent implements OnInit {
     listinstances                           : any[]                 = [];
     quota                                   : any                   = {};
     user                                    : any                   = {};
+    withWebserviceAccount                   : boolean               = false;
+    webserviceAccounts                      : any[]                 = [];
+    noWebserviceAccounts                    : any[]                 = [];
 
     dataSource          = new MatTableDataSource(this.data);
     displayedColumns    = ['id', 'user_id', 'lastname', 'firstname', 'status', 'mail', 'actions'];
@@ -72,23 +75,33 @@ export class UsersAdministrationComponent implements OnInit {
         this.http.get('../../rest/users')
             .subscribe((data: any) => {
                 this.data = data['users'];
-                 this.data.forEach(element => {
-                    element.statusLabel = this.lang['user'+element.status]
+                this.data.forEach(element => {
+                    element.statusLabel = this.lang['user'+element.status];
+                    if (element.loginmode == 'restMode') {
+                        this.webserviceAccounts.push(element);
+                    } else {
+                        this.noWebserviceAccounts.push(element);
+                    }
                 });
+                this.data = this.noWebserviceAccounts;
                 this.quota = data['quota'];
                 if (this.quota.actives > this.quota.userQuota) {
                     this.notify.error(this.lang.quotaExceeded);
                 }
 
                 this.loading = false;
-                setTimeout(() => {
-                    this.dataSource = new MatTableDataSource(this.data);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                }, 0);
+                this.setDatasource();
             }, () => {
                 location.href = "index.php";
             });
+    }
+
+    setDatasource() {
+        setTimeout(() => {
+            this.dataSource = new MatTableDataSource(this.data);
+            this.dataSource.paginator = this.paginator;
+            this.dataSource.sort = this.sort;
+        }, 0);
     }
 
     activateUser(user: any) {
@@ -190,9 +203,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                                         this.data.splice(Number(i), 1);
                                                                     }
                                                                 }
-                                                                this.dataSource = new MatTableDataSource(this.data);
-                                                                this.dataSource.paginator = this.paginator;
-                                                                this.dataSource.sort = this.sort;
+                                                                this.setDatasource();
 
                                                                 if (this.quota.userQuota && user.status != 'SPD') {
                                                                     this.quota.actives--;
@@ -244,9 +255,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                             this.data.splice(Number(i), 1);
                                                         }
                                                     }
-                                                    this.dataSource = new MatTableDataSource(this.data);
-                                                    this.dataSource.paginator = this.paginator;
-                                                    this.dataSource.sort = this.sort;
+                                                    this.setDatasource();
 
                                                     if (this.quota.userQuota && user.status == 'OK') {
                                                         this.quota.actives--;
@@ -297,9 +306,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                                 this.data.splice(Number(i), 1);
                                                             }
                                                         }
-                                                        this.dataSource = new MatTableDataSource(this.data);
-                                                        this.dataSource.paginator = this.paginator;
-                                                        this.dataSource.sort = this.sort;
+                                                        this.setDatasource();
 
                                                         if (this.quota.userQuota && user.status == 'OK') {
                                                             this.quota.actives--;
@@ -346,9 +353,7 @@ export class UsersAdministrationComponent implements OnInit {
                                                     this.data.splice(Number(i), 1);
                                                 }
                                             }
-                                            this.dataSource = new MatTableDataSource(this.data);
-                                            this.dataSource.paginator = this.paginator;
-                                            this.dataSource.sort = this.sort;
+                                            this.setDatasource();
 
                                             if (this.quota.userQuota && user.status == 'OK') {
                                                 this.quota.actives--;
@@ -388,6 +393,16 @@ export class UsersAdministrationComponent implements OnInit {
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
+    }
+
+    toggleWebserviceAccount () {
+        this.withWebserviceAccount = !this.withWebserviceAccount;
+        if (this.withWebserviceAccount) {
+            this.data = this.webserviceAccounts;
+        } else {
+            this.data = this.noWebserviceAccounts;
+        }
+        this.setDatasource();
     }
 
 }

@@ -65,7 +65,7 @@ class UserController
 
         if ($GLOBALS['userId'] == 'superadmin') {
             $users = UserModel::get([
-                'select'    => ['id', 'user_id', 'firstname', 'lastname', 'status', 'mail'],
+                'select'    => ['id', 'user_id', 'firstname', 'lastname', 'status', 'mail', 'loginmode'],
                 'where'     => ['user_id != ?', 'status != ?'],
                 'data'      => ['superadmin', 'DEL']
             ]);
@@ -74,18 +74,13 @@ class UserController
             $users = [];
             if (!empty($entities)) {
                 $users = UserEntityModel::getWithUsers([
-                    'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail'],
+                    'select'    => ['DISTINCT users.id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail', 'loginmode'],
                     'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
                     'data'      => [$entities, 'DEL']
                 ]);
             }
-            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail']]);
+            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id', 'users.user_id', 'firstname', 'lastname', 'status', 'mail', 'loginmode']]);
             $users = array_merge($users, $usersNoEntities);
-        }
-
-        $usersIds = [];
-        foreach ($users as $value) {
-            $usersIds[] = $value['user_id'];
         }
 
         $quota = [];
@@ -1310,7 +1305,6 @@ class UserController
             }
 
             if ($data['mode'] == 'reaffect') {
-
                 $listInstances = ListInstanceModel::getWithConfidentiality(['select' => ['listinstance.res_id'], 'entityId' => $aArgs['entityId'], 'userId' => $user['user_id']]);
                 $resIdsToReplace = [];
                 foreach ($listInstances as $listInstance) {
