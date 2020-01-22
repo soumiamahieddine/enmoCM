@@ -1436,4 +1436,5 @@ export const LANG_EN = {
     "validateAvisParallel": "Your are validating an opinion request",
     "validateAvisParallelSingle": "Your are validating an opinion request of",
     "displayWebserviceAccount": "Display webservice account",
+    "circuitNotStarted": "The workflow has not yet started",
 };
