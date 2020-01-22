@@ -12,8 +12,6 @@ import { MatDialog } from '@angular/material';
 import { AddAvisModelModalComponent } from './addAvisModel/add-avis-model-modal.component';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 
-declare function $j(selector: any): any;
-
 @Component({
     selector: 'app-avis-workflow',
     templateUrl: 'avis-workflow.component.html',
@@ -49,7 +47,7 @@ export class AvisWorkflowComponent implements OnInit {
 
     @Input('mode') mode: 'parallel' | 'circuit' = 'circuit';
 
-    @ViewChild('searchAvisUserInput', { static: true }) searchAvisUserInput: ElementRef;
+    @ViewChild('searchAvisUserInput', { static: false }) searchAvisUserInput: ElementRef;
 
     searchAvisUser = new FormControl();
 
@@ -432,6 +430,7 @@ export class AvisWorkflowComponent implements OnInit {
                 difflist_type: this.mode === 'circuit' ? 'AVIS_CIRCUIT' : 'entity_id'
             });
             this.searchAvisUser.reset();
+            this.searchAvisUserInput.nativeElement.blur();
         } else if (item.type === 'entity') {
             this.http.get(`../../rest/listTemplates/${item.id}`).pipe(
                 tap((data: any) => {
@@ -448,6 +447,7 @@ export class AvisWorkflowComponent implements OnInit {
                         })
                     );
                     this.searchAvisUser.reset();
+                    this.searchAvisUserInput.nativeElement.blur();
                 })
             ).subscribe();
         }

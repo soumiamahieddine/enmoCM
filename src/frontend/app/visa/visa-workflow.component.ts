@@ -47,7 +47,7 @@ export class VisaWorkflowComponent implements OnInit {
 
     @Input('linkedToMaarchParapheur') linkedToMaarchParapheur: boolean = false;
 
-    @ViewChild('searchVisaSignUserInput', { static: true }) searchVisaSignUserInput: ElementRef;
+    @ViewChild('searchVisaSignUserInput', { static: false }) searchVisaSignUserInput: ElementRef;
 
     searchVisaSignUser = new FormControl();
 
@@ -420,6 +420,8 @@ export class VisaWorkflowComponent implements OnInit {
             if (this.linkedToMaarchParapheur) {
                 this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
             }
+            this.searchVisaSignUser.reset();
+            this.searchVisaSignUserInput.nativeElement.blur();
         } else if (item.type === 'user') {
 
 
@@ -438,6 +440,7 @@ export class VisaWorkflowComponent implements OnInit {
                 this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
             }
             this.searchVisaSignUser.reset();
+            this.searchVisaSignUserInput.nativeElement.blur();
         } else if (item.type === 'entity') {
             this.http.get(`../../rest/listTemplates/${item.id}`).pipe(
                 tap((data: any) => {
@@ -455,6 +458,7 @@ export class VisaWorkflowComponent implements OnInit {
                         })
                     );
                     this.searchVisaSignUser.reset();
+                    this.searchVisaSignUserInput.nativeElement.blur();
                 })
             ).subscribe();
         }
