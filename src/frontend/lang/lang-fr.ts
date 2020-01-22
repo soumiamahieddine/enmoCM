@@ -1477,4 +1477,12 @@ export const LANG_FR = {
     "validateAvisParallelSingle": "Vous allez valider la demande d'avis de",
     "displayWebserviceAccount": "Afficher les comptes de webservice",
     "circuitNotStarted": "Le circuit n'a pas encore commencé",
+    "ADD": "Ajout",
+    "UP": "Modification",
+    "DEL": "Suppression",
+    "LOGIN": "Connexion",
+    "LOGOUT": "Déconnexion",
+    "VIEW": "Visualisation",
+    "ERROR": "Erreur",
+    "systemActions": "Événement(s) système",
 };
