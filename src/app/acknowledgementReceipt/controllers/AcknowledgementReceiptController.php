@@ -42,10 +42,7 @@ class AcknowledgementReceiptController
             'orderBy' => ['res_id']
         ]);
 
-        $resourcesInBasket = [];
-        foreach ($acknowledgements as $acknowledgement) {
-            $resourcesInBasket[] = $acknowledgement['res_id'];
-        }
+        $resourcesInBasket = array_column($acknowledgements, 'res_id');
 
         if (!ResController::hasRightByResId(['resId' => $resourcesInBasket, 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Documents out of perimeter']);
@@ -81,8 +78,8 @@ class AcknowledgementReceiptController
         }
 
         $fileContent = $pdf->Output('', 'S');
-        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->buffer($fileContent);
+        $finfo       = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType    = $finfo->buffer($fileContent);
 
         $response->write($fileContent);
         $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.pdf");

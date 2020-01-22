@@ -21,6 +21,7 @@ use Contact\models\ContactParameterModel;
 use Entity\models\EntityModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
+use MessageExchange\controllers\AnnuaryController;
 use Parameter\models\ParameterModel;
 use Resource\controllers\ResController;
 use Resource\models\ResModel;
@@ -141,6 +142,30 @@ class ContactController
                 $body['communicationMeans'] = ['url' => $body['communicationMeans']];
             }
         }
+
+        if (!empty($body['externalId']['maarch2maarch']) && !empty($body['company']) && empty($body['externalId']['m2m_annuary_id'])) {
+            $businessId = explode("/", $body['externalId']['maarch2maarch']);
+            if (!AnnuaryController::isSiretNumber(['siret' => $businessId[0]])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Wrong format for externalId[maarch2maarch]. It must be SIRET/entityId']);
+            }
+
+            if (empty($body['company']) || (empty($body['communicationMeans']['email']) && empty($body['communicationMeans']['url'])) || empty($body['department'])) {
+                $_SESSION['error'] = _CANNOT_SYNCHRONIZE_M2M_ANNUARY;
+            } else {
+                $annuaryInfo = AnnuaryController::addContact([
+                    'ouName'             => $body['company'],
+                    'communicationValue' => $body['communicationMeans']['email'] ?? $body['communicationMeans']['url'],
+                    'serviceName'        => $body['department'],
+                    'm2mId'              => $body['externalId']['maarch2maarch']
+                ]);
+                if (!empty($annuaryInfo['errors'])) {
+                    // TODO Display error
+                } else {
+                    $body['externalId']['m2m_annuary_id'] = $annuaryInfo['entryUUID'];
+                }
+            }
+        }
+
         if (!empty($body['externalId']) && is_array($body['externalId'])) {
             $externalId = json_encode($body['externalId']);
         } else {
@@ -242,6 +267,11 @@ class ContactController
             'customFields'          => !empty($rawContact['custom_fields']) ? json_decode($rawContact['custom_fields'], true) : null,
             'externalId'            => json_decode($rawContact['external_id'], true)
         ];
+
+        if (!empty($contact['externalId']['m2m'])) {
+            $contact['externalId']['maarch2maarch'] = $contact['externalId']['m2m'];
+            unset($contact['externalId']['m2m']);
+        }
 
         if (!empty($rawContact['civility'])) {
             $civilities = ContactModel::getCivilities();

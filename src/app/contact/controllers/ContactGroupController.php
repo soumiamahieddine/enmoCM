@@ -38,9 +38,9 @@ class ContactGroupController
                 unset($contactsGroups[$key]);
                 continue;
             }
-            $contactsGroups[$key]['position'] = $key;
+            $contactsGroups[$key]['position']      = $key;
             $contactsGroups[$key]['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
-            $contactsGroups[$key]['nbContacts'] = ContactGroupModel::getListById(['id' => $contactsGroup['id'], 'select' => ['COUNT(1)']])[0]['count'];
+            $contactsGroups[$key]['nbContacts']    = ContactGroupModel::getListById(['id' => $contactsGroup['id'], 'select' => ['COUNT(1)']])[0]['count'];
         }
         
         return $response->withJson(['contactsGroups' => array_values($contactsGroups)]);
@@ -59,8 +59,8 @@ class ContactGroupController
         }
 
         $contactsGroup['labelledOwner'] = UserModel::getLabelledUserById(['id' => $contactsGroup['owner']]);
-        $contactsGroup['contacts'] = ContactGroupController::getFormattedListById(['id' => $aArgs['id']])['list'];
-        $contactsGroup['nbContacts'] = count($contactsGroup['contacts']);
+        $contactsGroup['contacts']      = ContactGroupController::getFormattedListById(['id' => $aArgs['id']])['list'];
+        $contactsGroup['nbContacts']    = count($contactsGroup['contacts']);
 
         return $response->withJson(['contactsGroup' => $contactsGroup]);
     }
@@ -91,8 +91,8 @@ class ContactGroupController
             $entityOwner = $primaryEntity['entity_id'];
         }
 
-        $data['public'] = $data['public'] ? 'true' : 'false';
-        $data['owner'] = $user['id'];
+        $data['public']       = $data['public'] ? 'true' : 'false';
+        $data['owner']        = $user['id'];
         $data['entity_owner'] = $entityOwner;
 
         $id = ContactGroupModel::create($data);
@@ -201,10 +201,7 @@ class ContactGroupController
         }
 
         $rawList = ContactGroupModel::getListById(['select' => ['contact_id'], 'id' => $aArgs['id']]);
-        $list = [];
-        foreach ($rawList as $rawListItem) {
-            $list[] = $rawListItem['contact_id'];
-        }
+        $list = array_column($rawList, 'contact_id');
 
         foreach ($data['contacts'] as $contactId) {
             if (!in_array($contactId, $list)) {

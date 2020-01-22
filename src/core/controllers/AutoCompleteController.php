@@ -708,6 +708,7 @@ class AutoCompleteController
             }
         }
 
+        $unitOrganizations = [];
         foreach ($control['annuaries'] as $annuary) {
             $ldap = @ldap_connect($annuary['uri']);
             if ($ldap === false) {

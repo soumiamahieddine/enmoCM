@@ -234,7 +234,7 @@ export class ContactsFormComponent implements OnInit {
             id: 'externalId_maarch2maarch',
             unit: 'complement',
             label: this.lang.IdMaarch2Gec,
-            desc: `Doit correspondre au numéro SIRET d'une entité dans l'instance destinatrice (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
+            desc: `Format attendu : SIRET/ENTITY_ID de l'entité destinatrice (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
             type: 'string',
             control: new FormControl(),
             required: false,
@@ -261,6 +261,18 @@ export class ContactsFormComponent implements OnInit {
     }
 
     companyFound: any = null;
+    communicationMeanInfo: string = '';
+    communicationMeanResult: any[] = [];
+    communicationMeanLoading: boolean = false;
+    communicationMeanFilteredResult: Observable<any[]>;
+    communicationMeanControl = new FormControl();
+
+    externalId_maarch2maarchControl = new FormControl();
+    externalId_maarch2maarchInfo: string = '';
+    externalId_maarch2maarchResult: any[] = [];
+    externalId_maarch2maarchLoading: boolean = false;
+    externalId_maarch2maarchFilteredResult: Observable<any[]>;
+    annuaryM2MId: any = null;
 
     constructor(
         public http: HttpClient,
@@ -297,7 +309,8 @@ export class ContactsFormComponent implements OnInit {
                 tap((data: any) => {
                     this.initCustomElementForm(data);
                     this.initAutocompleteAddressBan();
-
+                    this.initAutocompleteCommunicationMeans();
+                    this.initAutocompleteExternalIdM2M();
                 }),
                 finalize(() => this.loading = false),
                 catchError((err: any) => {
@@ -326,6 +339,8 @@ export class ContactsFormComponent implements OnInit {
                 tap((data: any) => {
                     this.initCustomElementForm(data);
                     this.initAutocompleteAddressBan();
+                    this.initAutocompleteCommunicationMeans();
+                    this.initAutocompleteExternalIdM2M();
                 }),
                 exhaustMap(() => this.http.get("../../rest/contacts/" + this.contactId)),
                 map((data: any) => {
@@ -600,7 +615,7 @@ export class ContactsFormComponent implements OnInit {
                 contact[element.id] = element.control.value;
             }
         });
-        return contact;
+        console.log(contact);
     }
 
     isEmptyUnit(id: string) {
@@ -723,6 +738,77 @@ export class ContactsFormComponent implements OnInit {
         field.display = !field.display;
         field.control.reset();
         this.checkFilling();
+    }
+
+    initAutocompleteCommunicationMeans() {
+        this.communicationMeanInfo = this.lang.autocompleteInfo;
+        this.communicationMeanResult = [];
+        this.communicationMeanControl.valueChanges
+            .pipe(
+                debounceTime(300),
+                filter(value => value.length > 2),
+                distinctUntilChanged(),
+                tap(() => this.communicationMeanLoading = true),
+                switchMap((data: any) => this.http.get('../../rest/autocomplete/ouM2MAnnuary', { params: { "society": data } })),
+                tap((data: any) => {
+                    if (this.isEmptyValue(data)) {
+                        this.communicationMeanInfo = this.lang.noAvailableValue;
+                    } else {
+                        this.communicationMeanInfo = '';
+                    }
+                    this.communicationMeanResult = data;
+                    this.communicationMeanFilteredResult = of(this.communicationMeanResult);
+                    this.communicationMeanLoading = false;
+                })
+            ).subscribe();
+    }
+
+    selectCommunicationMean(ev: any) {
+        let indexFieldCommunicationMeans = this.contactForm.map(field => field.id).indexOf('communicationMeans');
+        this.contactForm[indexFieldCommunicationMeans].control.setValue(ev.option.value.communicationValue);
+        
+        let indexFieldExternalId = this.contactForm.map(field => field.id).indexOf('externalId_maarch2maarch');
+        this.contactForm[indexFieldExternalId].control.setValue(ev.option.value.businessIdValue + '/');
+        this.contactForm[indexFieldExternalId].display = true;
+    }
+
+    initAutocompleteExternalIdM2M() {
+        this.externalId_maarch2maarchInfo = this.lang.autocompleteInfo;
+        this.externalId_maarch2maarchResult = [];
+        this.externalId_maarch2maarchControl.valueChanges
+            .pipe(
+                debounceTime(300),
+                filter(value => value.length > 2),
+                distinctUntilChanged(),
+                tap(() => this.externalId_maarch2maarchLoading = true),
+                switchMap(() => this.http.get('../../rest/autocomplete/businessIdM2MAnnuary', { params: { "communicationValue": this.communicationMeanControl.value } })),
+                tap((data: any) => {
+                    if (this.isEmptyValue(data)) {
+                        this.externalId_maarch2maarchInfo = this.lang.noAvailableValue;
+                    } else {
+                        this.externalId_maarch2maarchInfo = '';
+                    }
+                    this.externalId_maarch2maarchResult = data;
+                    this.externalId_maarch2maarchFilteredResult = of(this.externalId_maarch2maarchResult);
+                    this.externalId_maarch2maarchLoading = false;
+                })
+            ).subscribe();
+    }
+
+    selectExternalIdM2M(ev: any) {
+        let indexFieldExternalId = this.contactForm.map(field => field.id).indexOf('externalId_maarch2maarch');
+        this.contactForm[indexFieldExternalId].control.setValue(ev.option.value.businessIdValue);
+
+        let indexFieldAnnuaryId = this.contactForm.map(field => field.id).indexOf('externalId_m2m_annuary_id');
+        this.contactForm[indexFieldAnnuaryId].control.setValue(ev.option.value.entryuuid);
+    }
+
+    resetAutocompleteExternalIdM2M() {
+        let indexFieldExternalId = this.contactForm.map(field => field.id).indexOf('externalId_maarch2maarch');
+        this.contactForm[indexFieldExternalId].control.setValue('');
+
+        let indexFieldAnnuaryId = this.contactForm.map(field => field.id).indexOf('externalId_m2m_annuary_id');
+        this.contactForm[indexFieldAnnuaryId].control.setValue('');
     }
 
     initAutocompleteAddressBan() {

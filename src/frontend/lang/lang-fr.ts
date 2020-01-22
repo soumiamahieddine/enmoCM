@@ -1477,4 +1477,6 @@ export const LANG_FR = {
     "validateAvisParallelSingle": "Vous allez valider la demande d'avis de",
     "displayWebserviceAccount": "Afficher les comptes de webservice",
     "circuitNotStarted": "Le circuit n'a pas encore commencé",
+    "searchCommunicationMean": "Recherchez un moyen de communication",
+    "searchExternalIdM2M": "Recherchez un identifiant M2GEC",
 };

@@ -248,10 +248,7 @@ class BasketController
                 'where'     => ['basket_id = ?', 'group_id = ?'],
                 'data'      => [$aArgs['id'], $group['group_id']]
             ]);
-            $actionIds = [];
-            foreach ($actions as $action) {
-                $actionIds[] = $action['id_action'];
-            }
+            $actionIds = array_column($actions, 'id_action');
             $redirects = [];
             if (!empty($actionIds)) {
                 $redirects = GroupBasketRedirectModel::get([
