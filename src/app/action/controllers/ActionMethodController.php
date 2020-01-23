@@ -126,56 +126,6 @@ class ActionMethodController
 
         ResModel::update(['set' => ['closing_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?', 'closing_date is null'], 'data' => [$aArgs['resId']]]);
 
-        if (CurlModel::isEnabled(['curlCallId' => 'closeResource'])) {
-            $bodyData = [];
-            $config = CurlModel::getConfigByCallId(['curlCallId' => 'closeResource']);
-
-            $resource = ResModel::getById(['select' => ['external_id'], 'resId' => $aArgs['resId']]);
-            $externalId = json_decode($resource['external_id'], true);
-
-            if (!empty($externalId['localeoId'])) {
-                if (!empty($config['inObject'])) {
-                    foreach ($config['objects'] as $object) {
-                        $select = [];
-                        $tmpBodyData = [];
-                        foreach ($object['rawData'] as $value) {
-                            if ($value != 'note' && $value != 'localeoId') {
-                                $select[] = $value;
-                            }
-                        }
-
-                        if (!empty($select)) {
-                            $document = ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
-                        }
-                        foreach ($object['rawData'] as $key => $value) {
-                            if ($value == 'note') {
-                                $tmpBodyData[$key] = empty($aArgs['note']) ? '' : $aArgs['note'];
-                            } elseif ($value == 'localeoId') {
-                                $tmpBodyData[$key] = $externalId['localeoId'];
-                            } elseif (!empty($document[0][$value])) {
-                                $tmpBodyData[$key] = $document[0][$value];
-                            } else {
-                                $tmpBodyData[$key] = '';
-                            }
-                        }
-
-                        if (!empty($object['data'])) {
-                            $tmpBodyData = array_merge($tmpBodyData, $object['data']);
-                        }
-
-                        $bodyData[$object['name']] = json_encode($tmpBodyData);
-                    }
-                }
-
-                CurlModel::execSimple([
-                    'url'           => $config['url'],
-                    'headers'       => $config['header'],
-                    'method'        => $config['method'],
-                    'body'          => $bodyData,
-                ]);
-            }
-        }
-
         return true;
     }
 

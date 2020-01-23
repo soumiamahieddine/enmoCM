@@ -136,51 +136,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             \Note\models\NoteModel::create(['resId' => $res_id, 'user_id' => $user['id'], 'note_text' => $formValues['note_content_to_users']]);
         }
 
-        if (\SrcCore\models\CurlModel::isEnabled(['curlCallId' => 'closeResource'])) {
-            $bodyData = [];
-            $config = \SrcCore\models\CurlModel::getConfigByCallId(['curlCallId' => 'closeResource']);
-
-            $resource = \Resource\models\ResModel::getOnView(['select' => ['external_id'], 'where' => ['res_id = ?'], 'data' => [$res_id]]);
-            $externalId = json_decode($resource[0]['external_id'], true);
-
-            if (!empty($externalId['localeoId'])) {
-                if (!empty($config['inObject'])) {
-
-                    foreach ($config['objects'] as $object) {
-                        $select = [];
-                        $tmpBodyData = [];
-                        foreach ($object['rawData'] as $value) {
-                            if ($value != 'note' && $value != 'localeoId') {
-                                $select[] = $value;
-                            }
-                        }
-
-                        if (!empty($select)) {
-                            $document = \Resource\models\ResModel::getOnView(['select' => $select, 'where' => ['res_id = ?'], 'data' => [$res_id]]);
-                        }
-                        foreach ($object['rawData'] as $key => $value) {
-                            if ($value == 'note') {
-                                $tmpBodyData[$key] = $formValues['note_content_to_users'];
-                            } elseif ($value == 'localeoId') {
-                                $tmpBodyData[$key] = $externalId['localeoId'];
-                            } elseif (!empty($document[0][$value])) {
-                                $tmpBodyData[$key] = $document[0][$value];
-                            } else {
-                                $tmpBodyData[$key] = '';
-                            }
-                        }
-
-                        if (!empty($object['data'])) {
-                            $tmpBodyData = array_merge($tmpBodyData, $object['data']);
-                        }
-
-                        $bodyData[$object['name']] = $tmpBodyData;
-                    }
-                }
-
-                \SrcCore\models\CurlModel::exec(['curlCallId' => 'closeResource', 'bodyData' => $bodyData, 'multipleObject' => true, 'noAuth' => true]);
-            }
-        }
     }
 
     return ['result' => $result, 'history_msg' => ''];
