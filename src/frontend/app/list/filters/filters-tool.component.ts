@@ -200,6 +200,10 @@ export class FiltersToolComponent implements OnInit {
                 letter: this.lang.doctypes,
                 names: []
             },
+            {
+                letter: this.lang.folders,
+                names: []
+            },
         ];
 
         this.http.get('../..' + this.routeDatas + '?init' + this.filtersListService.getUrlFilters())
@@ -274,6 +278,19 @@ export class FiltersToolComponent implements OnInit {
                         this.stateGroups[5].names.push(
                             {
                                 id: 'doctypes',
+                                value: element.id,
+                                label: (element.id !== null ? element.label : this.lang.undefined),
+                                count: element.count
+                            }
+                        )
+                    }
+                });
+
+                data.folders.forEach((element: any) => {
+                    if (this.listProperties.folders.map((doctype: any) => (doctype.id)).indexOf(element.id) === -1) {
+                        this.stateGroups[6].names.push(
+                            {
+                                id: 'folders',
                                 value: element.id,
                                 label: (element.id !== null ? element.label : this.lang.undefined),
                                 count: element.count

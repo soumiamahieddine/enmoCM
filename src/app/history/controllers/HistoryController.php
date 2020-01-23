@@ -66,6 +66,7 @@ class HistoryController
             $where[] = 'user_id in (?)';
             $data[] = $users;
         }
+
         if (!empty($queryParams['startDate'])) {
             $where[] = 'event_date > ?';
             $data[] = date('Y-m-d H:i:s', $queryParams['startDate']);
@@ -74,17 +75,19 @@ class HistoryController
             $where[] = 'event_date < ?';
             $data[] = date('Y-m-d H:i:s', $queryParams['endDate']);
         }
+
+        $eventTypes = [];
         if (!empty($queryParams['actions']) && is_array($queryParams['actions'])) {
-            $actions = [];
             foreach ($queryParams['actions'] as $action) {
-                if (is_numeric($action)) {
-                    $actions[] = "ACTION#{$action}";
-                } else {
-                    $actions[] = $action;
-                }
+                $eventTypes[] = "ACTION#{$action}";
             }
+        }
+        if (!empty($queryParams['systemActions']) && is_array($queryParams['systemActions'])) {
+            $eventTypes = array_merge($eventTypes, $queryParams['systemActions']);
+        }
+        if (!empty($eventTypes)) {
             $where[] = 'event_type in (?)';
-            $data[] = $actions;
+            $data[] = $eventTypes;
         }
 
         $order = !in_array($queryParams['order'], ['asc', 'desc']) ? '' : $queryParams['order'];

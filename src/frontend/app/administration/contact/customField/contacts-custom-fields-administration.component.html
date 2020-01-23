@@ -1,6 +1,6 @@
 <mat-sidenav-container autosize class="maarch-container">
     <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
-        fixedTopGap="56" [opened]="appService.getViewMode() ? false : true">
+        [opened]="appService.getViewMode() ? false : true">
         <header-panel [snavLeft]="snav"></header-panel>
         <menu-shortcut></menu-shortcut>
         <menu-nav></menu-nav>
@@ -104,7 +104,7 @@
         </div>
     </mat-sidenav-content>
     <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
-        fixedTopGap="56" position='end' opened class="col-md-4 col-sm-12 customFielsdPanel">
+        position='end' opened class="col-md-4 col-sm-12 customFielsdPanel">
         <mat-tab-group>
             <mat-tab [label]="lang.customFieldsTypesAvailable">
                 <div class="customFieldsTypesItem" *ngFor="let customField of customFieldsTypes">

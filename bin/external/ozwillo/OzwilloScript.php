@@ -34,7 +34,7 @@ class OzwilloScript
             exit();
         } elseif (empty($configuration->user) || empty($configuration->password) || empty($configuration->sendFile->uri) || empty($configuration->sendFile->status)) {
             self::writeLog(['message' => "[SEND_FILE] File bin/external/ozwillo/config.xml is not filled enough"]);
-            exit();
+            return;
         }
         $user = (string)$configuration->user;
         $password = (string)$configuration->password;
@@ -85,7 +85,7 @@ class OzwilloScript
                 continue;
             } elseif (empty($response['response']['publikId'])) {
                 self::writeLog(['message' => "[SEND_FILE] Resource {$resource['res_id']} : ({$resource['subject']}) publikId is missing"]);
-                self::writeLog(['message' => $response['response']]);
+                self::writeLog(['message' => json_encode($response['response'])]);
                 continue;
             }
 
@@ -110,7 +110,7 @@ class OzwilloScript
             exit();
         } elseif (empty($configuration->user) || empty($configuration->password) || empty($configuration->sendData->uri) || empty($configuration->sendData->status)) {
             self::writeLog(['message' => "[SEND_DATA] File bin/external/ozwillo/config.xml is not filled enough"]);
-            exit();
+            return;
         }
         $user = (string)$configuration->user;
         $password = (string)$configuration->password;

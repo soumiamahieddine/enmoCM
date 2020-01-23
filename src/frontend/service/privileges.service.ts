@@ -271,7 +271,7 @@ export class PrivilegeService {
             "id": "view_history_batch",
             "label": this.lang.historyBatch,
             "comment": this.lang.historyBatchAdmin,
-            "route": "/administration/history",
+            "route": "/administration/history-batch",
             "unit": "supervision",
             "style": "fa fa-history",
             "angular" : true,

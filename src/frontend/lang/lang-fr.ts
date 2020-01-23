@@ -1479,4 +1479,12 @@ export const LANG_FR = {
     "circuitNotStarted": "Le circuit n'a pas encore commencé",
     "searchCommunicationMean": "Recherchez un moyen de communication",
     "searchExternalIdM2M": "Recherchez un identifiant M2GEC",
+    "ADD": "Ajout",
+    "UP": "Modification",
+    "DEL": "Suppression",
+    "LOGIN": "Connexion",
+    "LOGOUT": "Déconnexion",
+    "VIEW": "Visualisation",
+    "ERROR": "Erreur",
+    "systemActions": "Événement(s) système",
 };

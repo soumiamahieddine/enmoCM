@@ -1,25 +1,24 @@
 import { Component, OnInit, ViewChild, EventEmitter, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { LANG } from '../../translate.component';
-import { NotificationService } from '../../notification.service';
-import { HeaderService } from '../../../service/header.service';
+import { LANG } from '../../../translate.component';
+import { NotificationService } from '../../../notification.service';
+import { HeaderService } from '../../../../service/header.service';
 import { MatSidenav } from '@angular/material/sidenav';
-import { AppService } from '../../../service/app.service';
+import { AppService } from '../../../../service/app.service';
 import { Observable, merge, Subject, of as observableOf, of } from 'rxjs';
 import { MatPaginator, MatSort, MatDialog } from '@angular/material';
 import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
-import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { FormControl } from '@angular/forms';
-import { FunctionsService } from '../../../service/functions.service';
+import { FunctionsService } from '../../../../service/functions.service';
 import { LatinisePipe } from 'ngx-pipes';
+import { PrivilegeService } from '../../../../service/privileges.service';
 
 @Component({
-    selector: 'contact-list',
-    templateUrl: "history-administration.component.html",
-    styleUrls: ['history-administration.component.scss'],
+    templateUrl: "history-batch-administration.component.html",
+    styleUrls: ['history-batch-administration.component.scss'],
     providers: [AppService]
 })
-export class HistoryAdministrationComponent implements OnInit {
+export class HistoryBatchAdministrationComponent implements OnInit {
 
     @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
@@ -31,10 +30,10 @@ export class HistoryAdministrationComponent implements OnInit {
 
     data: any;
 
-    displayedColumnsHistory: string[] = ['event_date', 'userLabel', 'info', 'remote_ip'];
+    displayedColumnsHistory: string[] = ['event_date', 'total_processed', 'total_errors', 'info', 'module_name'];
 
     isLoadingResults = true;
-    routeUrl: string = '../../rest/history';
+    routeUrl: string = '../../rest/batchHistory';
     resultListDatabase: HistoryListHttpDao | null;
     resultsLength = 0;
 
@@ -49,9 +48,7 @@ export class HistoryAdministrationComponent implements OnInit {
     filterColor = {
         startDate: '#b5cfd8',
         endDate: '#7393a7',
-        actions: '#7d5ba6',
-        systemActions: '#d6716f',
-        users: '#009dc5',
+        errors: '#7d5ba6'
     };
 
     loadingFilters: boolean = true;
@@ -62,20 +59,7 @@ export class HistoryAdministrationComponent implements OnInit {
 
     private destroy$ = new Subject<boolean>();
 
-    subMenus: any[] = [
-        {
-            icon: 'fa fa-history',
-            route: '/administration/history',
-            label: this.lang.history,
-            current: true
-        },
-        {
-            icon: 'fa fa-history',
-            route: '/administration/history-batch',
-            label: this.lang.historyBatch,
-            current: false
-        }
-    ];
+    subMenus: any[] = [];
 
     constructor(
         public http: HttpClient,
@@ -84,9 +68,35 @@ export class HistoryAdministrationComponent implements OnInit {
         public appService: AppService,
         public dialog: MatDialog,
         public functions: FunctionsService,
-        private latinisePipe: LatinisePipe) { }
+        private latinisePipe: LatinisePipe,
+        private privilegeService: PrivilegeService) { }
 
     ngOnInit(): void {
+        if (this.privilegeService.hasCurrentUserPrivilege('view_history')) {
+            this.subMenus = [
+                {
+                    icon: 'fa fa-history',
+                    route: '/administration/history',
+                    label: this.lang.history,
+                    current: false
+                },
+                {
+                    icon: 'fa fa-history',
+                    route: '/administration/history-batch',
+                    label: this.lang.historyBatch,
+                    current: true
+                }
+            ];
+        } else {
+            this.subMenus = [
+                {
+                    icon: 'fa fa-history',
+                    route: '/administration/history-batch',
+                    label: this.lang.historyBatch,
+                    current: true
+                }
+            ];
+        }
         this.loading = true;
         this.initHistoryList();
     }
@@ -112,7 +122,7 @@ export class HistoryAdministrationComponent implements OnInit {
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
                     this.resultsLength = data.count;
-                    this.headerService.setHeader(this.lang.administration + ' ' + this.lang.history.toLowerCase(), '', '');
+                    this.headerService.setHeader(this.lang.administration + ' ' + this.lang.historyBatch.toLowerCase(), '', '');
                     return data.history;
                 }),
                 catchError((err: any) => {
@@ -127,7 +137,7 @@ export class HistoryAdministrationComponent implements OnInit {
         data.history = data.history.map((item: any) => {
             return {
                 ...item,
-                userLabel : !this.functions.empty(item.userLabel) ? item.userLabel : this.lang.userDeleted
+                total_errors : item.total_errors === null ? 0 : item.total_errors
             }
         })
         return data;
@@ -144,34 +154,24 @@ export class HistoryAdministrationComponent implements OnInit {
         if (this.filterList === null) {
             this.filterList = {};
             this.loadingFilters = true;
+
             this.http.get("../../rest/history/availableFilters").pipe(
                 map((data: any) => {
-                    let deletedActions = data.actions.filter((action: any) => action.label === null).map((action: any) => action.id);
-                    let deletedUser = data.users.filter((user: any) => user.label === null).map((user: any) => user.login);
-
-                    data.actions = data.actions.filter((action: any) => action.label !== null);
-                    if (deletedActions.length > 0) {
-                        data.actions.push({
-                            id: deletedActions,
-                            label: this.lang.actionDeleted
-                        });
-                    }
-
-                    data.users = data.users.filter((user: any) => user.label !== null);
-
-                    if (deletedUser.length > 0) {
-                        data.users.push({
-                            id: deletedUser,
-                            label: this.lang.userDeleted
-                        });
-                    }
-
-                    data.systemActions = data.systemActions.map((syst: any) => {
-                        return {
-                            id: syst.id,
-                            label: this.lang[syst.id]
+                    data = {};
+                    data.modules = [
+                        {
+                            id : 'retrieveMailsFromSignatoryBook',
+                            label : 'retrieveMailsFromSignatoryBook'
                         }
-                    });
+                    ];
+
+                    data.totalErrors = [
+                        {
+                            id : 'errorElement',
+                            label : 'Éléments en erreur'
+                        }
+                    ];
+
                     return data;
                 }),
                 tap((data: any) => {
@@ -201,6 +201,7 @@ export class HistoryAdministrationComponent implements OnInit {
 
         }
     }
+
 
     filterStartDate() {
         if (this.functions.empty(this.filterUsed['startDate'])) {

@@ -43,16 +43,29 @@ export class FunctionsService {
         }
     }
 
-    formatDateObjectToFrenchDateString(date: Date, limitMode: boolean = false) {
+    formatDateObjectToDateString(date: Date, limitMode: boolean = false, format:string = 'dd-mm-yyyy') {
         if (date !== null) {
-            let day = date.getDate();
-            let month = date.getMonth() + 1;
-            let year = date.getFullYear();
+            let formatDate: any[] = [];
+            format.split('-').forEach((element: any) => {
+                if (element === 'dd') {
+                    let day: any = date.getDate();
+                    day = ('00' + day).slice(-2);
+                    formatDate.push(day);
+                } else if (element === 'mm') {
+                    let month: any = date.getMonth() + 1;
+                    month = ('00' + month).slice(-2);
+                    formatDate.push(month);
+                } else if (element === 'yyyy') {
+                    let year: any = date.getFullYear();
+                    formatDate.push(year);
+                }
+            });
+
             let limit = '';
             if (limitMode) {
                 limit = ' 23:59:59';
             }
-            return `${('00' + day).slice(-2)}-${('00' + month).slice(-2)}-${year}${limit}`;
+            return `${formatDate.join('-')}${limit}`;
         } else {
             return date;
         }

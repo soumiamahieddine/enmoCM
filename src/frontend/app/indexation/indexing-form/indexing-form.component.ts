@@ -296,15 +296,15 @@ export class IndexingFormComponent implements OnInit {
                 if (element.today === true) {
                     if (!this.adminMode) {
                         const now = new Date();
-                        element.default_value = this.functions.formatDateObjectToFrenchDateString(now, false);
+                        element.default_value = this.functions.formatDateObjectToDateString(now, false);
                     } else {
                         element.default_value = '_TODAY';
                     }
                 } else {
                     if (element.identifier === 'processLimitDate') {
-                        element.default_value = this.functions.formatDateObjectToFrenchDateString(this.arrFormControl[element.identifier].value, true);
+                        element.default_value = this.functions.formatDateObjectToDateString(this.arrFormControl[element.identifier].value, true);
                     } else {
-                        element.default_value = this.functions.formatDateObjectToFrenchDateString(this.arrFormControl[element.identifier].value, false);
+                        element.default_value = this.functions.formatDateObjectToDateString(this.arrFormControl[element.identifier].value, false);
                     }
                 }
             } else {

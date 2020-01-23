@@ -104,8 +104,8 @@ $app->delete('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketControl
 $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getSorted');
 $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
-//BatchHistories
-$app->get('/batchHistories', \History\controllers\BatchHistoryController::class . ':get');
+//BatchHistory
+$app->get('/batchHistory', \History\controllers\BatchHistoryController::class . ':get');
 
 //Configurations
 $app->get('/configurations/{service}', \Configuration\controllers\ConfigurationController::class . ':getByService');
@@ -393,7 +393,6 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/ac
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkValidateParallelOpinion', \Action\controllers\PreProcessActionController::class . ':checkValidateParallelOpinion');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkContinueOpinionCircuit', \Action\controllers\PreProcessActionController::class . ':checkContinueOpinionCircuit');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkGiveParallelOpinion', \Action\controllers\PreProcessActionController::class . ':checkGiveParallelOpinion');
-$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkValidateParallelOpinionDiffusion', \Action\controllers\PreProcessActionController::class . ':checkValidateParallelOpinionDiffusion');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkInterruptRejectResetVisa', \Action\controllers\PreProcessActionController::class . ':checkInterruptRejectResetVisa');
 
 //Search

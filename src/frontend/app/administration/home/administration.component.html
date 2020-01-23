@@ -26,7 +26,7 @@
                     <mat-spinner style="margin:auto;"></mat-spinner>
                 </div>
                 <div *ngIf="!loading" class="row adminArea">
-                    <div class="col-md-6 adminArea_1" *ngIf="organisationServices">
+                    <div class="col-md-6 col-sm-12 col-xs-12 adminArea_1" *ngIf="organisationServices">
                         <div class="adminArea-label">{{lang.organization}}</div>
                         <button class="col-md-4 col-xs-6 adminArea-button"
                             mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of organisationServices | sortBy : 'label'"
@@ -35,7 +35,7 @@
                             <br />{{modService.label}}</button>
                     </div>
 
-                    <div class="col-md-6 adminArea_2" *ngIf="productionServices">
+                    <div class="col-md-6 col-sm-12 col-xs-12 adminArea_2" *ngIf="productionServices">
                         <div class="adminArea-label">{{lang.production}}</div>
                         <button class="col-md-4 col-xs-6 adminArea-button"
                             mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of productionServices | sortBy : 'label'"
@@ -43,7 +43,7 @@
                             <i class="{{modService.style}} fa-4x"></i>
                             <br />{{modService.label}}</button>
                     </div>
-                    <div class="col-md-6 adminArea_3" *ngIf="classementServices">
+                    <div class="col-md-6 col-sm-12 col-xs-12 adminArea_3" *ngIf="classementServices">
                         <div class="adminArea-label">{{lang.classifying}}</div>
                         <button class="col-md-4 col-xs-6 adminArea-button"
                             mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of classementServices | sortBy : 'label'"
@@ -51,7 +51,7 @@
                             <i class="{{modService.style}} fa-4x"></i>
                             <br />{{modService.label}}</button>
                     </div>
-                    <div class="col-md-6 adminArea_4" *ngIf="supervisionServices">
+                    <div class="col-md-6 col-sm-12 col-xs-12 adminArea_4" *ngIf="supervisionServices">
                         <div class="adminArea-label">{{lang.supervision}}</div>
                         <ng-container>
                             <button class="col-md-4 col-xs-6 adminArea-button"

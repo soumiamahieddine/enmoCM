@@ -1439,4 +1439,12 @@ export const LANG_EN = {
     "circuitNotStarted": "The workflow has not yet started",
     "searchCommunicationMean": "Search communication mean",
     "searchExternalIdM2M": "Search M2GEC Identifier",
+    "ADD": "Add",
+    "UP": "Update",
+    "DEL": "Delete",
+    "LOGIN": "Login",
+    "LOGOUT": "Logout",
+    "VIEW": "View",
+    "ERROR": "Error",
+    "systemActions": "System action(s)",
 };

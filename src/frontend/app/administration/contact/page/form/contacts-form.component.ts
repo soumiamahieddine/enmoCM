@@ -609,7 +609,7 @@ export class ContactsFormComponent implements OnInit {
         this.contactForm.filter(field => field.display).forEach(element => {
             if (element.type === 'date' && !this.functions.empty(element.control.value)) {
                 const date = new Date(element.control.value);
-                element.control.value = this.functions.formatDateObjectToFrenchDateString(date);
+                element.control.value = this.functions.formatDateObjectToDateString(date);
             }
             if (element.id.match(regex) !== null) {
                 contact['customFields'][element.id.split(/_(.+)/)[1]] = element.control.value;

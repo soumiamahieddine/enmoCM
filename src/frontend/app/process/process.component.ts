@@ -190,6 +190,12 @@ export class ProcessComponent implements OnInit {
             this.loadBadges();
             this.loadResource();
 
+            if (this.appService.getViewMode()) {
+                setTimeout(() => {
+                    this.sidenavLeft.open();
+                }, 800);
+            }
+
             this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/processingData`).pipe(
                 tap((data: any) => {
                     if (data.listEventData !== null) {

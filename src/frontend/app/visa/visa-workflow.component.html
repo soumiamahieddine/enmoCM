@@ -1,7 +1,7 @@
 
 <mat-list *ngIf="!loading">
     <mat-form-field appearance="outline" *ngIf="adminMode && !linkedToMaarchParapheur">
-        <input type="text" matInput placeholder="Ajouter des personnes" id="searchVisaSignUserInput"
+        <input type="text" #searchVisaSignUserInput matInput placeholder="Ajouter des personnes" id="searchVisaSignUserInput"
             [formControl]="searchVisaSignUser" [matAutocomplete]="autoGroup">
         <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="addItemToWorkflow($event.option.value)" (opened)="initFilterVisaModelList()">
             <mat-option disabled *ngIf="visaModelListNotLoaded">
