@@ -56,9 +56,9 @@
         </mat-progress-bar>
 
     </div>
-    <div [class.multipleUnits]="!isEmptyUnit('address') || !isEmptyUnit('complement')">
+    <div class="row">
         <ng-container *ngFor="let unit of contactUnit">
-            <div *ngIf="!isEmptyUnit(unit.id)">
+            <div [class.col-sm-12]="unit.id !== 'complement' && !isEmptyUnit('mainInfo') && !isEmptyUnit('address')" [class.col-md-6]="unit.id !== 'complement' && !isEmptyUnit('mainInfo') && !isEmptyUnit('address')" [class.col-md-12]="unit.id === 'complement'" *ngIf="!isEmptyUnit(unit.id)">
                 <mat-list>
                     <h3 mat-subheader class="unitTitle"><span style="flex:1">{{unit.label}}</span><a
                             *ngIf="unit.id === 'address'" (click)="addressBANMode=!addressBANMode"
