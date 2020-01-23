@@ -30,11 +30,12 @@ class HistoryController
 {
     public function get(Request $request, Response $response)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_history', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
         $queryParams = $request->getQueryParams();
+
+        $service = PrivilegeController::hasPrivilege(['privilegeId' => 'view_history', 'userId' => $GLOBALS['id']]);
+        if (!$service && (!Validator::intVal()->notEmpty()->validate($queryParams['resId']) || !ResController::hasRightByResId(['resId' => [$queryParams['resId']], 'userId' => $GLOBALS['id']]))) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
 
         $limit = 25;
         if (!empty($queryParams['limit']) && is_numeric($queryParams['limit'])) {
@@ -74,6 +75,13 @@ class HistoryController
         if (!empty($queryParams['endDate'])) {
             $where[] = 'event_date < ?';
             $data[] = $queryParams['endDate'];
+        }
+        if (!empty($queryParams['resId'])) {
+            $where[] = 'table_name in (?)';
+            $data[] = ['res_letterbox', 'res_view_letterbox'];
+
+            $where[] = 'record_id = ?';
+            $data[] = $queryParams['resId'];
         }
 
         $eventTypes = [];
@@ -161,17 +169,6 @@ class HistoryController
         $aHistories = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['info', 'event_date']]);
 
         return $response->withJson(['histories' => $aHistories]);
-    }
-
-    public function getByResourceId(Request $request, Response $response, array $args)
-    {
-        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        }
-
-        $history = HistoryModel::getByResourceId(['resId' => $args['resId'], 'select' => ['info', 'event_date']]);
-
-        return $response->withJson(['history' => $history]);
     }
 
     public function getWorkflowByResourceId(Request $request, Response $response, array $args)
