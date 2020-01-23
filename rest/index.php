@@ -104,9 +104,6 @@ $app->delete('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketControl
 $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getSorted');
 $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
-//BatchHistory
-$app->get('/batchHistory', \History\controllers\BatchHistoryController::class . ':get');
-
 //Configurations
 $app->get('/configurations/{service}', \Configuration\controllers\ConfigurationController::class . ':getByService');
 $app->put('/configurations/{service}', \Configuration\controllers\ConfigurationController::class . ':update');
@@ -256,6 +253,10 @@ $app->get('/history/availableFilters', \History\controllers\HistoryController::c
 $app->get('/history/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
 $app->get('/history/resources/{resId}', \History\controllers\HistoryController::class . ':getByResourceId');
 $app->get('/history/resources/{resId}/workflow', \History\controllers\HistoryController::class . ':getWorkflowByResourceId');
+
+//BatchHistory
+$app->get('/batchHistory', \History\controllers\BatchHistoryController::class . ':get');
+$app->get('/batchHistory/availableFilters', \History\controllers\BatchHistoryController::class . ':getAvailableFilters');
 
 //Header
 $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');

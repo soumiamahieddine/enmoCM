@@ -49,6 +49,13 @@ class BatchHistoryController
             $where[] = 'event_date < ?';
             $data[] = date('Y-m-d H:i:s', $queryParams['endDate']);
         }
+        if (!empty($queryParams['modules'])) {
+            $where[] = 'module_name in (?)';
+            $data[] = $queryParams['modules'];
+        }
+        if (!empty($queryParams['totalErrors'])) {
+            $where[] = 'total_errors > 0';
+        }
 
         $order = !in_array($queryParams['order'], ['asc', 'desc']) ? '' : $queryParams['order'];
         $orderBy = !in_array($queryParams['orderBy'], ['event_date', 'module_name', 'total_processed', 'total_errors', 'info']) ? ['event_date DESC'] : ["{$queryParams['orderBy']} {$order}"];
@@ -68,5 +75,18 @@ class BatchHistoryController
         }
 
         return $response->withJson(['history' => $history, 'count' => $total]);
+    }
+
+    public function getAvailableFilters(Request $request, Response $response)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_history_batch', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        $modules = BatchHistoryModel::get([
+            'select' => ['DISTINCT(module_name) as id', 'module_name as label']
+        ]);
+
+        return $response->withJson(['modules' => $modules]);
     }
 }

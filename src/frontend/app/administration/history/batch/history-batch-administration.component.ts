@@ -48,7 +48,8 @@ export class HistoryBatchAdministrationComponent implements OnInit {
     filterColor = {
         startDate: '#b5cfd8',
         endDate: '#7393a7',
-        errors: '#7d5ba6'
+        totalErrors: '#fc6471',
+        modules: '#009dc5',
     };
 
     loadingFilters: boolean = true;
@@ -155,24 +156,19 @@ export class HistoryBatchAdministrationComponent implements OnInit {
             this.filterList = {};
             this.loadingFilters = true;
 
-            this.http.get("../../rest/history/availableFilters").pipe(
+            this.http.get("../../rest/batchHistory/availableFilters").pipe(
                 map((data: any) => {
-                    data = {};
-                    data.modules = [
-                        {
-                            id : 'retrieveMailsFromSignatoryBook',
-                            label : 'retrieveMailsFromSignatoryBook'
-                        }
-                    ];
+                    let returnData = {modules: [{}], totalErrors: [{}]};
+                    returnData.modules = data.modules;
 
-                    data.totalErrors = [
+                    returnData.totalErrors = [
                         {
                             id : 'errorElement',
-                            label : 'Éléments en erreur'
+                            label : this.lang.totalErrors
                         }
                     ];
 
-                    return data;
+                    return returnData;
                 }),
                 tap((data: any) => {
                     Object.keys(data).forEach((filterType: any) => {
