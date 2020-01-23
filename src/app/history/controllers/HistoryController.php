@@ -216,7 +216,8 @@ class HistoryController
         }
 
         $usersInHistory = HistoryModel::get([
-            'select'    => ['DISTINCT(user_id)']
+            'select'    => ['DISTINCT(user_id)'],
+            'where'     => ['user_id != \'\' and user_id is not null']
         ]);
 
         $users = [];
