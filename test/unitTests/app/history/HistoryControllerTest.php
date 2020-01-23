@@ -36,7 +36,7 @@ class HistoryControllerTest extends TestCase
 
         $aArgs = [
             'startDate' => '15-03-2018',
-            'endDate'   => time()
+            'endDate'   => date('d-m-Y')
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
@@ -57,7 +57,7 @@ class HistoryControllerTest extends TestCase
 
         $aArgs = [
             'startDate' => '15-03-2018',
-            'endDate'   => time()
+            'endDate'   => date('d-m-Y')
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
