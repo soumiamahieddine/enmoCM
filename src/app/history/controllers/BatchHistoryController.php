@@ -43,11 +43,11 @@ class BatchHistoryController
 
         if (!empty($queryParams['startDate'])) {
             $where[] = 'event_date > ?';
-            $data[] = date('Y-m-d H:i:s', $queryParams['startDate']);
+            $data[] = $queryParams['startDate'];
         }
         if (!empty($queryParams['endDate'])) {
             $where[] = 'event_date < ?';
-            $data[] = date('Y-m-d H:i:s', $queryParams['endDate']);
+            $data[] = $queryParams['endDate'];
         }
         if (!empty($queryParams['modules'])) {
             $where[] = 'module_name in (?)';
