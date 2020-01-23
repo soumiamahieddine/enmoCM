@@ -35,8 +35,8 @@ class HistoryControllerTest extends TestCase
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'startDate' => '15-03-2018',
-            'endDate'   => date('d-m-Y')
+            'startDate' => date('Y-m-d H:i:s', 1521100000),
+            'endDate'   => date('Y-m-d H:i:s', time())
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
@@ -56,8 +56,8 @@ class HistoryControllerTest extends TestCase
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'startDate' => '15-03-2018',
-            'endDate'   => date('d-m-Y')
+            'startDate' => date('Y-m-d H:i:s', 1521100000),
+            'endDate'   => date('Y-m-d H:i:s', time())
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
