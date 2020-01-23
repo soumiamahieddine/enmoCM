@@ -29,15 +29,15 @@
                     <mat-form-field (click)="startPicker.open()" style="cursor:pointer;" class="dateFilter">
                         <mat-label style="color:white;">{{lang.since}}
                         </mat-label>
-                        <input [(ngModel)]="startDateFilter" matInput [matDatepicker]="startPicker"
-                            [placeholder]="lang.since" [max]="endDateFilter" readonly style="cursor:pointer;"
-                            (dateChange)="filterStartDate()">
-                        <mat-datepicker-toggle matSuffix [for]="startPicker" *ngIf="!startDateFilter">
+                        <input [(ngModel)]="appHistoryList.startDateFilter" matInput [matDatepicker]="startPicker"
+                            [placeholder]="lang.since" [max]="appHistoryList.endDateFilter" readonly style="cursor:pointer;"
+                            (dateChange)="appHistoryList.filterStartDate()">
+                        <mat-datepicker-toggle matSuffix [for]="startPicker" *ngIf="!appHistoryList.startDateFilter">
                         </mat-datepicker-toggle>
                         <mat-datepicker [touchUi]="appService.getViewMode()" #startPicker>
                         </mat-datepicker>
-                        <button mat-button color="warn" matSuffix mat-icon-button *ngIf="startDateFilter"
-                            (click)="$event.stopPropagation();startDateFilter = '';filterStartDate()" [title]="lang.eraseValue">
+                        <button mat-button color="warn" matSuffix mat-icon-button *ngIf="appHistoryList.startDateFilter"
+                            (click)="$event.stopPropagation();appHistoryList.startDateFilter = '';appHistoryList.filterStartDate()" [title]="lang.eraseValue">
                             <mat-icon color="warn" class="fa fa-calendar-times">
                             </mat-icon>
                         </button>
@@ -45,15 +45,15 @@
                     <mat-form-field (click)="endPicker.open()" style="cursor:pointer;" class="dateFilter">
                         <mat-label style="color:white;">{{lang.until}}
                         </mat-label>
-                        <input [(ngModel)]="endDateFilter" matInput [matDatepicker]="endPicker"
-                            [placeholder]="lang.until" [min]="startDateFilter" readonly style="cursor:pointer;"
-                            (dateChange)="filterEndDate()">
-                        <mat-datepicker-toggle matSuffix [for]="endPicker" *ngIf="!endDateFilter">
+                        <input [(ngModel)]="appHistoryList.endDateFilter" matInput [matDatepicker]="endPicker"
+                            [placeholder]="lang.until" [min]="appHistoryList.startDateFilter" readonly style="cursor:pointer;"
+                            (dateChange)="appHistoryList.filterEndDate()">
+                        <mat-datepicker-toggle matSuffix [for]="endPicker" *ngIf="!appHistoryList.endDateFilter">
                         </mat-datepicker-toggle>
                         <mat-datepicker [touchUi]="appService.getViewMode()" #endPicker>
                         </mat-datepicker>
-                        <button mat-button color="warn" matSuffix mat-icon-button *ngIf="endDateFilter"
-                            (click)="$event.stopPropagation();endDateFilter = '';filterEndDate()" [title]="lang.eraseValue">
+                        <button mat-button color="warn" matSuffix mat-icon-button *ngIf="appHistoryList.endDateFilter"
+                            (click)="$event.stopPropagation();appHistoryList.endDateFilter = '';appHistoryList.filterEndDate()" [title]="lang.eraseValue">
                             <mat-icon color="warn" class="fa fa-calendar-times">
                             </mat-icon>
                         </button>
@@ -63,93 +63,7 @@
         </div>
         <div class="container" [class.fullContainer]="appService.getViewMode()">
             <div class="container-content">
-                <div class="example-loading-shade" *ngIf="isLoadingResults">
-                    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
-                </div>
-                <div class="table-head">
-                    <div class="table-head-result">
-                        <mat-form-field floatLabel="never" style="font-size: 13px;">
-                            <input type="text" #autoCompleteInput [matAutocomplete]="auto" [placeholder]="lang.filterBy"
-                                matInput [formControl]="searchHistory" (click)="$event.stopPropagation()"
-                                maxlength="128">
-                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addItemFilter($event.option)"
-                                (opened)="initFilterListHistory()">
-                                <mat-option disabled *ngIf="loadingFilters">
-                                    <div style="display: flex;justify-content: center;">
-                                        <mat-spinner diameter="35"></mat-spinner>
-                                    </div>
-                                </mat-option>
-                                <ng-container *ngIf="filterList!==null && !loadingFilters">
-                                    <ng-container *ngFor="let keyVal of filterList | keyvalue">
-                                        <mat-optgroup *ngIf="(filteredList[keyVal.key] | async)?.length > 0"
-                                            [label]="lang[keyVal.key]" class="filterList">
-                                            <mat-option [id]="keyVal.key"
-                                                [style.color]="!filter.used ? filterColor[keyVal.key] : ''"
-                                                *ngFor="let filter of filteredList[keyVal.key] | async | sortBy : 'label'"
-                                                [value]="filter" [disabled]="filter.used">
-                                                {{filter.label}}
-                                            </mat-option>
-                                        </mat-optgroup>
-                                    </ng-container>
-                                </ng-container>
-
-                            </mat-autocomplete>
-                        </mat-form-field>
-                    </div>
-                    <div class="table-head-tool">
-                        <mat-paginator #paginatorHistoryList [length]="resultsLength" [hidePageSize]="true"
-                            [pageSize]="10" class="paginatorResultList"></mat-paginator>
-                    </div>
-                </div>
-                <div style="height:90%;overflow:auto;position:absolute;width:100%;">
-                    <div class="filterBadges">
-                        <ng-container *ngFor="let keyVal of filterUsed | keyvalue">
-                            <ng-container *ngIf="['startDate','endDate'].indexOf(keyVal.key) === -1">
-                                <span *ngFor="let filter of filterUsed[keyVal.key]; let i=index;" class="label"
-                                    [style.background]="filterColor[keyVal.key]" [title]="lang[keyVal.key]"
-                                    (click)="removeItemFilter(filter,keyVal.key,i)">{{filter.label}}
-                                    <i class="fa fa-times-circle"></i></span>
-                            </ng-container>
-                        </ng-container>
-                    </div>
-                    <mat-table id="history-list" #tableHistoryListSort="matSort" [dataSource]="data" matSort
-                        matSortActive="event_date" matSortDirection="desc" style="width:100%;">
-                        <ng-container matColumnDef="event_date">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.event}}</mat-header-cell>
-                            <mat-cell mat-cell *matCellDef="let element"
-                                [title]="element.event_date | fullDate">
-                                {{element.event_date  | timeAgo : 'full' | ucfirst}} </mat-cell>
-                        </ng-container>
-                        <ng-container matColumnDef="userLabel">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.user | ucfirst}}</mat-header-cell>
-                            <mat-cell *matCellDef="let element">
-                                {{element.userLabel}} </mat-cell>
-                        </ng-container>
-                        <ng-container matColumnDef="info">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header
-                                style="flex: 2;">{{lang.information}}
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let element"
-                                style="flex: 2;">
-                                {{element.info}} </mat-cell>
-                        </ng-container>
-                        <ng-container matColumnDef="remote_ip">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header
-                               >{{lang.ip}}
-                            </mat-header-cell>
-                            <mat-cell *matCellDef="let element">
-                                {{element.remote_ip}} </mat-cell>
-                        </ng-container>
-                        <mat-header-row *matHeaderRowDef="displayedColumnsHistory"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumnsHistory;">
-                        </mat-row>
-                    </mat-table>
-                    <div class="mat-paginator"
-                        style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">
-                        {{resultsLength}} {{lang.elements}}</div>
-                </div>
-                <div class="table-head">
-                </div>
+                <app-history-list #appHistoryList></app-history-list>
             </div>
         </div>
     </mat-sidenav-content>

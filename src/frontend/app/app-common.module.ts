@@ -63,7 +63,7 @@ import { TagInputComponent }                        from '../app/tag/indexing/ta
 import { DragDropDirective }                        from '../app/viewer/upload-file-dnd.directive';
 import { ContactAutocompleteComponent } from './contact/autocomplete/contact-autocomplete.component';
 import { ContactsFormComponent }    from './administration/contact/page/form/contacts-form.component';
-
+import { HistoryComponent }                        from './history/history.component';
 
 import { DiffusionsListComponent }             from './diffusions/diffusions-list.component';
 
@@ -125,7 +125,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         EcplOnlyofficeViewerComponent,
         ContactAutocompleteComponent,
         ContactsFormComponent,
-        CustomSnackbarComponent
+        CustomSnackbarComponent,
+        HistoryComponent,
     ],
     exports: [
         CommonModule,
@@ -167,7 +168,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         DragDropDirective,
         EcplOnlyofficeViewerComponent,
         ContactAutocompleteComponent,
-        ContactsFormComponent
+        ContactsFormComponent,
+        HistoryComponent,
     ],
     providers: [
         HeaderService,

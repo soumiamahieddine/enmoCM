@@ -70,6 +70,9 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="!isModalOpen(); else elseTemplate">
+                <app-history-list *ngIf="currentTool === 'history' && !loading" #appHistoryList
+                    [resId]="currentResourceInformations.resId">
+                </app-history-list>
                 <app-notes-list *ngIf="currentTool === 'notes' && !loading" #appNotesList [editMode]="true"
                     [resId]="currentResourceInformations.resId">
                 </app-notes-list>
@@ -77,9 +80,11 @@
                     [adminMode]="false" [resId]="currentResourceInformations.resId" [expanded]="true">
                 </app-diffusions-list>
                 <app-visa-workflow *ngIf="currentTool === 'visaCircuit' && !loading" #appVisaWorkflow
-                    [resId]="currentResourceInformations.resId" [adminMode]="privilegeService.hasCurrentUserPrivilege('config_visa_workflow')"></app-visa-workflow>
+                    [resId]="currentResourceInformations.resId"
+                    [adminMode]="privilegeService.hasCurrentUserPrivilege('config_visa_workflow')"></app-visa-workflow>
                 <app-avis-workflow *ngIf="currentTool === 'opinionCircuit' && !loading" #appAvisWorkflow
-                    [resId]="currentResourceInformations.resId" [adminMode]="privilegeService.hasCurrentUserPrivilege('config_avis_workflow')"></app-avis-workflow>
+                    [resId]="currentResourceInformations.resId"
+                    [adminMode]="privilegeService.hasCurrentUserPrivilege('config_avis_workflow')"></app-avis-workflow>
                 <app-attachments-list *ngIf="currentTool === 'attachments' && !loading" #appAttachmentsList
                     [resId]="currentResourceInformations.resId" [target]="'process'"
                     (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
@@ -87,11 +92,11 @@
                 <app-indexing-form *ngIf="currentTool === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
                     [resId]="currentResourceInformations.resId" [indexingFormId]="currentResourceInformations.modelId"
                     [mode]="'process'" [canEdit]="canEditData" [hideDiffusionList]="true"
-                    (loadingFormEndEvent)="triggerProcessAction()" (retrieveDocumentEvent)="appDocumentViewer.saveDocService()"></app-indexing-form>
+                    (loadingFormEndEvent)="triggerProcessAction()"
+                    (retrieveDocumentEvent)="appDocumentViewer.saveDocService()"></app-indexing-form>
                 <div style="position: sticky;bottom: 0px;text-align:right;">
-                    <button mat-fab [title]="lang.saveModifications"
-                        *ngIf="isToolModified()"
-                        (click)="saveTool()" color="accent">
+                    <button mat-fab [title]="lang.saveModifications" *ngIf="isToolModified()" (click)="saveTool()"
+                        color="accent">
                         <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
                     </button>
                 </div>
@@ -238,17 +243,22 @@
         </button>
     </div>
     <div class="modal-module-content">
+        <app-history-list *ngIf="currentTool === 'history' && !loading" #appHistoryList
+            [resId]="currentResourceInformations.resId">
+        </app-history-list>
         <app-notes-list *ngIf="modal.id === 'notes' && !loading" #appNotesList [editMode]="true"
             [resId]="currentResourceInformations.resId">
         </app-notes-list>
         <app-diffusions-list *ngIf="modal.id === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="false"
             [resId]="currentResourceInformations.resId" [expanded]="true">
         </app-diffusions-list>
-        <app-visa-workflow *ngIf="modal.id === 'visaCircuit' && !loading" [adminMode]="privilegeService.hasCurrentUserPrivilege('config_visa_workflow')" #appVisaWorkflow
-            [resId]="currentResourceInformations.resId" >
+        <app-visa-workflow *ngIf="modal.id === 'visaCircuit' && !loading"
+            [adminMode]="privilegeService.hasCurrentUserPrivilege('config_visa_workflow')" #appVisaWorkflow
+            [resId]="currentResourceInformations.resId">
         </app-visa-workflow>
         <app-avis-workflow *ngIf="modal.id === 'opinionCircuit' && !loading" #appAvisWorkflow
-            [resId]="currentResourceInformations.resId" [adminMode]="privilegeService.hasCurrentUserPrivilege('config_avis_workflow')">
+            [resId]="currentResourceInformations.resId"
+            [adminMode]="privilegeService.hasCurrentUserPrivilege('config_avis_workflow')">
         </app-avis-workflow>
         <app-attachments-list *ngIf="modal.id === 'attachments'  && !loading" #appAttachmentsList
             [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
