@@ -79,10 +79,7 @@ class HistoryControllerTest extends TestCase
             'order_by'  => ['res_id DESC']
         ]);
 
-        $aNewResId = [];
-        foreach ($aResId as $value) {
-            $aNewResId[] = $value['res_id'];
-        }
+        $aNewResId = array_column($aResId, 'res_id');
 
         //  REAL DELETE
         \SrcCore\models\DatabaseModel::delete([
