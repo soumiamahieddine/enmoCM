@@ -18,6 +18,9 @@ require 'vendor/autoload.php';
 
 LocaleoScript::sendContact($argv);
 LocaleoScript::updateContact($argv);
+LocaleoScript::sendResource($argv);
+LocaleoScript::sendAttachment($argv);
+LocaleoScript::closeResource($argv);
 
 class LocaleoScript
 {
@@ -46,10 +49,10 @@ class LocaleoScript
 
         $configuration = LocaleoScript::getXmlLoaded(['path' => 'bin/external/localeo/config.xml', 'customId' => $customId]);
         if (empty($configuration)) {
-            self::writeLog(['message' => "[SEND_CONTACT] File bin/external/localeo/config.xml does not exist"]);
+            self::writeLog(['message' => "[ERROR] [SEND_CONTACT] File bin/external/localeo/config.xml does not exist"]);
             exit();
         } elseif (empty($configuration->apiKey) || empty($configuration->appName) || empty($configuration->sendContact)) {
-            self::writeLog(['message' => "[SEND_CONTACT] File bin/external/localeo/config.xml is not filled enough"]);
+            self::writeLog(['message' => "[ERROR] [SEND_CONTACT] File bin/external/localeo/config.xml is not filled enough"]);
             return;
         }
         if ((string)$configuration->sendContact->enabled == 'false') {
@@ -60,7 +63,7 @@ class LocaleoScript
         $appName = (string)$configuration->appName;
         $url = (string)$configuration->sendContact->url;
         if (empty($url)) {
-            self::writeLog(['message' => "[SEND_CONTACT] File bin/external/localeo/config.xml is not filled enough"]);
+            self::writeLog(['message' => "[ERROR] [SEND_CONTACT] File bin/external/localeo/config.xml url is empty"]);
             return;
         }
 
@@ -96,11 +99,11 @@ class LocaleoScript
             ]);
 
             if (!empty($response['errors'])) {
-                self::writeLog(['message' => "[SEND_CONTACT] Contact {$contact['id']} : curl call failed"]);
+                self::writeLog(['message' => "[ERROR] [SEND_CONTACT] Contact {$contact['id']} : curl call failed"]);
                 self::writeLog(['message' => $response['errors']]);
                 continue;
             } elseif (empty($response['response']['id'])) {
-                self::writeLog(['message' => "[SEND_CONTACT] Contact {$contact['id']} : id is missing"]);
+                self::writeLog(['message' => "[ERROR] [SEND_CONTACT] Contact {$contact['id']} : id is missing"]);
                 self::writeLog(['message' => json_encode($response['response'])]);
                 continue;
             }
@@ -109,7 +112,7 @@ class LocaleoScript
             $externalId['localeoId'] = $response['response']['id'];
             \Contact\models\ContactModel::update(['set' => ['external_id' => json_encode($externalId)], 'where' => ['id = ?'], 'data' => [$contact['id']]]);
 
-            self::writeLog(['message' => "[SEND_CONTACT] Contact {$contact['id']} : successfully sent to localeo"]);
+            self::writeLog(['message' => "[SUCCESS] [SEND_CONTACT] Contact {$contact['id']} : successfully sent to localeo"]);
         }
     }
 
@@ -122,10 +125,10 @@ class LocaleoScript
 
         $configuration = LocaleoScript::getXmlLoaded(['path' => 'bin/external/localeo/config.xml', 'customId' => $customId]);
         if (empty($configuration)) {
-            self::writeLog(['message' => "[UPDATE_CONTACT] File bin/external/localeo/config.xml does not exist"]);
+            self::writeLog(['message' => "[ERROR] [UPDATE_CONTACT] File bin/external/localeo/config.xml does not exist"]);
             exit();
         } elseif (empty($configuration->apiKey) || empty($configuration->appName) || empty($configuration->updateContact)) {
-            self::writeLog(['message' => "[UPDATE_CONTACT] File bin/external/localeo/config.xml is not filled enough"]);
+            self::writeLog(['message' => "[ERROR] [UPDATE_CONTACT] File bin/external/localeo/config.xml is not filled enough"]);
             return;
         }
         if ((string)$configuration->updateContact->enabled == 'false') {
@@ -136,7 +139,7 @@ class LocaleoScript
         $appName = (string)$configuration->appName;
         $url = (string)$configuration->updateContact->url;
         if (empty($url)) {
-            self::writeLog(['message' => "[UPDATE_CONTACT] File bin/external/localeo/config.xml is not filled enough"]);
+            self::writeLog(['message' => "[ERROR] [UPDATE_CONTACT] File bin/external/localeo/config.xml url is empty"]);
             return;
         }
 
@@ -187,112 +190,333 @@ class LocaleoScript
             ]);
 
             if (!empty($response['errors'])) {
-                self::writeLog(['message' => "[UPDATE_CONTACT] Contact {$contact['id']} : curl call failed"]);
+                self::writeLog(['message' => "[ERROR] [UPDATE_CONTACT] Contact {$contact['id']} : curl call failed"]);
                 self::writeLog(['message' => $response['errors']]);
                 continue;
             } elseif (empty($response['response']['id'])) {
-                self::writeLog(['message' => "[UPDATE_CONTACT] Contact {$contact['id']} : id is missing"]);
+                self::writeLog(['message' => "[ERROR] [UPDATE_CONTACT] Contact {$contact['id']} : id is missing"]);
                 self::writeLog(['message' => json_encode($response['response'])]);
                 continue;
             }
 
-            self::writeLog(['message' => "[UPDATE_CONTACT] Contact {$contact['id']} : successfully sent to localeo"]);
+            self::writeLog(['message' => "[SUCCESS] [UPDATE_CONTACT] Contact {$contact['id']} : successfully sent to localeo"]);
         }
     }
 
-//    public static function sendResource(array $args)
-//    {
-//        $customId = null;
-//        if (!empty($args[1]) && $args[1] == '--customId' && !empty($args[2])) {
-//            $customId = $args[2];
-//        }
-//
-//        $configuration = LocaleoScript::getXmlLoaded(['path' => 'bin/external/localeo/config.xml', 'customId' => $customId]);
-//        if (empty($configuration)) {
-//            self::writeLog(['message' => "[SEND_RESOURCE] File bin/external/localeo/config.xml does not exist"]);
-//            exit();
-//        } elseif (empty($configuration->apiKey) || empty($configuration->appName) || empty($configuration->sendResource)) {
-//            self::writeLog(['message' => "[SEND_RESOURCE] File bin/external/localeo/config.xml is not filled enough"]);
-//            return;
-//        }
-//        if ((string)$configuration->sendResource->enabled == 'false') {
-//            return;
-//        }
-//
-//        $apiKey = (string)$configuration->apiKey;
-//        $appName = (string)$configuration->appName;
-//        $url = (string)$configuration->sendResource->url;
-//        if (empty($url)) {
-//            self::writeLog(['message' => "[SEND_RESOURCE] File bin/external/localeo/config.xml is not filled enough"]);
-//            return;
-//        }
-//
-//        $dataToMerge = [];
-//        if (!empty($configuration->sendResource->data)) {
-//            foreach ($configuration->sendResource->data as $value) {
-//                $dataToMerge[(string)$value->key] = (string)$value->value;
-//            }
-//        }
-//
-//        \SrcCore\models\DatabasePDO::reset();
-//        new \SrcCore\models\DatabasePDO(['customId' => $customId]);
-//
-//        $resources = \Resource\models\ResModel::get([
-//            'select'    => ['res_id', 'subject', 'format', 'path', 'filename', 'docserver_id', 'external_id'],
-//            'where'     => ["external_id->>'localeoId' is null"]
-//        ]);
-//
-//        foreach ($resources as $resource) {
-//            if (empty($resource['filename'])) {
-//                self::writeLog(['message' => "[SEND_FILE] Resource {$resource['res_id']} : ({$resource['subject']}) has no file"]);
-//                continue;
-//            }
-//
-//            $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $resource['docserver_id'], 'select' => ['path_template']]);
-//            $file = file_get_contents($docserver['path_template'] . str_replace('#', '/', $resource['path']) . $resource['filename']);
-//            if (empty($file)) {
-//                self::writeLog(['message' => "[SEND_FILE] Resource {$resource['res_id']} : ({$resource['subject']}) file is missing"]);
-//                continue;
-//            }
-//
-//            $encodedFile = base64_encode($file);
-//
-//            if (!empty($config['file'])) {
-//                $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $_SESSION['indexing']['docserver_id'], 'select' => ['path_template']]);
-//                $bodyData[$config['file']] = \SrcCore\models\CurlModel::makeCurlFile(['path' => $docserver['path_template'] . str_replace('#', '/', $_SESSION['indexing']['destination_dir']) . $_SESSION['indexing']['file_destination_name']]);
-//            }
-//
-//            $body = [];
-//            foreach (self::MAPPING_CONTACT as $key => $value) {
-//                $body[$key] = $contact[$value] ?? '';
-//            }
-//            $body = array_merge($body, $dataToMerge);
-//
-//            $response = \SrcCore\models\CurlModel::execSimple([
-//                'url'       => $url,
-//                'method'    => 'NO-METHOD',
-//                'headers'   => ["Api-Key: {$apiKey}", "appName: {$appName}"],
-//                'body'      => [$objectName => json_encode($body)],
-//                'noLogs'    => true
-//            ]);
-//
-//            if (!empty($response['errors'])) {
-//                self::writeLog(['message' => "[SEND_CONTACT] Contact {$contact['id']} : curl call failed"]);
-//                self::writeLog(['message' => $response['errors']]);
-//                continue;
-//            } elseif (empty($response['response']['id'])) {
-//                self::writeLog(['message' => "[SEND_CONTACT] Contact {$contact['id']} : id is missing"]);
-//                self::writeLog(['message' => json_encode($response['response'])]);
-//                continue;
-//            }
-//
-//            $externalId = json_decode($contact['external_id'], true);
-//            $externalId['localeoId'] = $response['response']['id'];
-//            \Contact\models\ContactModel::update(['set' => ['external_id' => json_encode($externalId)], 'where' => ['id = ?'], 'data' => [$contact['id']]]);
-//
-//            self::writeLog(['message' => "[SEND_CONTACT] Contact {$contact['id']} : successfully sent to localeo"]);
-//        }
-//    }
+    public static function sendResource(array $args)
+    {
+        $customId = null;
+        if (!empty($args[1]) && $args[1] == '--customId' && !empty($args[2])) {
+            $customId = $args[2];
+        }
+
+        $configuration = LocaleoScript::getXmlLoaded(['path' => 'bin/external/localeo/config.xml', 'customId' => $customId]);
+        if (empty($configuration)) {
+            self::writeLog(['message' => "[ERROR] [SEND_RESOURCE] File bin/external/localeo/config.xml does not exist"]);
+            exit();
+        } elseif (empty($configuration->apiKey) || empty($configuration->appName) || empty($configuration->sendResource)) {
+            self::writeLog(['message' => "[ERROR] [SEND_RESOURCE] File bin/external/localeo/config.xml is not filled enough"]);
+            return;
+        }
+        if ((string)$configuration->sendResource->enabled == 'false') {
+            return;
+        }
+
+        $apiKey = (string)$configuration->apiKey;
+        $appName = (string)$configuration->appName;
+        $url = (string)$configuration->sendResource->url;
+        if (empty($url)) {
+            self::writeLog(['message' => "[ERROR] [SEND_RESOURCE] File bin/external/localeo/config.xml url is empty"]);
+            return;
+        }
+
+        $dataToMerge = [];
+        if (!empty($configuration->sendResource->data)) {
+            foreach ($configuration->sendResource->data as $value) {
+                $dataToMerge[(string)$value->key] = (string)$value->value;
+            }
+        }
+
+        \SrcCore\models\DatabasePDO::reset();
+        new \SrcCore\models\DatabasePDO(['customId' => $customId]);
+
+        $resources = \Resource\models\ResModel::get([
+            'select'    => ['res_id', 'subject', 'format', 'path', 'filename', 'docserver_id', 'external_id'],
+            'where'     => ["external_id->>'localeoId' is null", 'category_id = ?'],
+            'data'      => ['incoming']
+        ]);
+
+        foreach ($resources as $resource) {
+            $contact = \Resource\models\ResourceContactModel::get([
+                'select'    => ['item_id'],
+                'where'     => ['res_id = ?', 'type = ?', 'mode = ?'],
+                'data'      => [$resource['res_id'], 'contact', 'sender'],
+                'limit'     => 1
+            ]);
+            if (empty($contact[0])) {
+                self::writeLog(['message' => "[INFO] [SEND_RESOURCE] Resource {$resource['res_id']} : Has no sender"]);
+                continue;
+            }
+            $contact = \Contact\models\ContactModel::getById(['id' => $contact[0]['item_id'], 'select' => ['external_id', 'id']]);
+            $contactExternalId = json_decode($contact['external_id'], true);
+            if (empty($contactExternalId['localeoId'])) {
+                self::writeLog(['message' => "[WARNING] [SEND_RESOURCE] Resource {$resource['res_id']} : Sender is not linked to localeo"]);
+                continue;
+            }
+
+            $body = [];
+
+            if (!empty($resource['filename'])) {
+                $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $resource['docserver_id'], 'select' => ['path_template']]);
+                $path = $docserver['path_template'] . str_replace('#', '/', $resource['path']) . $resource['filename'];
+                if (!is_file($path)) {
+                    self::writeLog(['message' => "[ERROR] [SEND_RESOURCE] Resource {$resource['res_id']} : File is missing"]);
+                    continue;
+                }
+
+                $body['filename'] = \SrcCore\models\CurlModel::makeCurlFile(['path' => $path]);
+            }
+
+            $requete = [
+                'subject'       => $resource['subject'],
+                'externalId'    => $resource['res_id']
+            ];
+            $requete = array_merge($requete, $dataToMerge);
+
+            $citoyen = ['id' => $contactExternalId['localeoId'], 'externalId' => $contact['id']];
+
+            $body['requete'] = json_encode($requete);
+            $body['citoyen'] = json_encode($citoyen);
+
+            $response = \SrcCore\models\CurlModel::execSimple([
+                'url'       => $url,
+                'method'    => 'NO-METHOD',
+                'headers'   => ["Api-Key: {$apiKey}", "appName: {$appName}"],
+                'body'      => $body,
+                'noLogs'    => true
+            ]);
+
+            if (!empty($response['errors'])) {
+                self::writeLog(['message' => "[ERROR] [SEND_RESOURCE] Resource {$resource['res_id']} : curl call failed"]);
+                self::writeLog(['message' => $response['errors']]);
+                continue;
+            } elseif (empty($response['response']['id'])) {
+                self::writeLog(['message' => "[ERROR] [SEND_RESOURCE] Resource {$resource['res_id']} : id is missing"]);
+                self::writeLog(['message' => json_encode($response['response'])]);
+                continue;
+            }
+
+            $externalId = json_decode($resource['external_id'], true);
+            $externalId['localeoId'] = $response['response']['id'];
+            \Resource\models\ResModel::update(['set' => ['external_id' => json_encode($externalId)], 'where' => ['res_id = ?'], 'data' => [$resource['res_id']]]);
+
+            self::writeLog(['message' => "[SUCCESS] [SEND_RESOURCE] Resource {$resource['res_id']} : successfully sent to localeo"]);
+        }
+    }
+
+    public static function sendAttachment(array $args)
+    {
+        $customId = null;
+        if (!empty($args[1]) && $args[1] == '--customId' && !empty($args[2])) {
+            $customId = $args[2];
+        }
+
+        $configuration = LocaleoScript::getXmlLoaded(['path' => 'bin/external/localeo/config.xml', 'customId' => $customId]);
+        if (empty($configuration)) {
+            self::writeLog(['message' => "[ERROR] [SEND_ATTACHMENT] File bin/external/localeo/config.xml does not exist"]);
+            exit();
+        } elseif (empty($configuration->apiKey) || empty($configuration->appName) || empty($configuration->sendAttachment)) {
+            self::writeLog(['message' => "[ERROR] [SEND_ATTACHMENT] File bin/external/localeo/config.xml is not filled enough"]);
+            return;
+        }
+        if ((string)$configuration->sendAttachment->enabled == 'false') {
+            return;
+        }
+
+        $apiKey = (string)$configuration->apiKey;
+        $appName = (string)$configuration->appName;
+        $url = (string)$configuration->sendAttachment->url;
+        if (empty($url)) {
+            self::writeLog(['message' => "[ERROR] [SEND_ATTACHMENT] File bin/external/localeo/config.xml url is empty"]);
+            return;
+        }
+
+        $dataToMerge = [];
+        if (!empty($configuration->sendAttachment->data)) {
+            foreach ($configuration->sendAttachment->data as $value) {
+                $dataToMerge[(string)$value->key] = (string)$value->value;
+            }
+        }
+
+        \SrcCore\models\DatabasePDO::reset();
+        new \SrcCore\models\DatabasePDO(['customId' => $customId]);
+
+        $attachments = \SrcCore\models\DatabaseModel::select([
+            'select'    => [
+                'res_attachments.res_id', 'res_attachments.res_id_master', 'res_attachments.title', 'res_attachments.format', 'res_attachments.path', 'res_attachments.filename',
+                'res_attachments.docserver_id', 'res_attachments.external_id', "res_letterbox.external_id->>'localeoId' as \"localeoId\""
+            ],
+            'table'     => ['res_attachments, res_letterbox'],
+            'where'     => [
+                'res_attachments.res_id_master = res_letterbox.res_id', "res_letterbox.external_id->>'localeoId' is not null",
+                "res_attachments.external_id->>'localeoId' is null", 'res_attachments.status not in (?)'
+            ],
+            'data'      => [['DEL']]
+        ]);
+
+        foreach ($attachments as $attachment) {
+            $contact = \Resource\models\ResourceContactModel::get([
+                'select'    => ['item_id'],
+                'where'     => ['res_id = ?', 'type = ?', 'mode = ?'],
+                'data'      => [$attachment['res_id_master'], 'contact', 'sender'],
+                'limit'     => 1
+            ]);
+            if (empty($contact[0])) {
+                self::writeLog(['message' => "[INFO] [SEND_ATTACHMENT] Resource {$attachment['res_id_master']} : Has no sender"]);
+                continue;
+            }
+            $contact = \Contact\models\ContactModel::getById(['id' => $contact[0]['item_id'], 'select' => ['external_id', 'id']]);
+            $contactExternalId = json_decode($contact['external_id'], true);
+            if (empty($contactExternalId['localeoId'])) {
+                self::writeLog(['message' => "[WARNING] [SEND_ATTACHMENT] Resource {$attachment['res_id_master']} : Sender is not linked to localeo"]);
+                continue;
+            }
+
+            $body = [];
+
+            $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $attachment['docserver_id'], 'select' => ['path_template']]);
+            $path = $docserver['path_template'] . str_replace('#', '/', $attachment['path']) . $attachment['filename'];
+            if (!is_file($path)) {
+                self::writeLog(['message' => "[ERROR] [SEND_ATTACHMENT] Attachment {$attachment['res_id']} : File is missing"]);
+                continue;
+            }
+            $body['filename'] = \SrcCore\models\CurlModel::makeCurlFile(['path' => $path]);
+
+            $requete = [
+                'subject'       => $attachment['title'],
+                'externalId'    => $attachment['res_id'],
+                'parentQueryId' => $attachment['localeoId'],
+            ];
+            $requete = array_merge($requete, $dataToMerge);
+
+            $citoyen = ['id' => $contactExternalId['localeoId'], 'externalId' => $contact['id']];
+
+            $body['requete'] = json_encode($requete);
+            $body['citoyen'] = json_encode($citoyen);
+
+            $response = \SrcCore\models\CurlModel::execSimple([
+                'url'       => $url,
+                'method'    => 'NO-METHOD',
+                'headers'   => ["Api-Key: {$apiKey}", "appName: {$appName}"],
+                'body'      => $body,
+                'noLogs'    => true
+            ]);
+
+            if (!empty($response['errors'])) {
+                self::writeLog(['message' => "[ERROR] [SEND_ATTACHMENT] Attachment {$attachment['res_id']} : curl call failed"]);
+                self::writeLog(['message' => $response['errors']]);
+                continue;
+            } elseif (empty($response['response']['id'])) {
+                self::writeLog(['message' => "[ERROR] [SEND_ATTACHMENT] Attachment {$attachment['res_id']} : id is missing"]);
+                self::writeLog(['message' => json_encode($response['response'])]);
+                continue;
+            }
+
+            $externalId = json_decode($attachment['external_id'], true);
+            $externalId['localeoId'] = $response['response']['id'];
+            \Attachment\models\AttachmentModel::update(['set' => ['external_id' => json_encode($externalId)], 'where' => ['res_id = ?'], 'data' => [$attachment['res_id']]]);
+
+            self::writeLog(['message' => "[SUCCESS] [SEND_ATTACHMENT] Attachment {$attachment['res_id']} : successfully sent to localeo"]);
+        }
+    }
+
+    public static function closeResource(array $args)
+    {
+        $customId = null;
+        if (!empty($args[1]) && $args[1] == '--customId' && !empty($args[2])) {
+            $customId = $args[2];
+        }
+
+        $configuration = LocaleoScript::getXmlLoaded(['path' => 'bin/external/localeo/config.xml', 'customId' => $customId]);
+        if (empty($configuration)) {
+            self::writeLog(['message' => "[ERROR] [CLOSE_RESOURCE] File bin/external/localeo/config.xml does not exist"]);
+            exit();
+        } elseif (empty($configuration->apiKey) || empty($configuration->appName) || empty($configuration->closeResource)) {
+            self::writeLog(['message' => "[ERROR] [CLOSE_RESOURCE] File bin/external/localeo/config.xml is not filled enough"]);
+            return;
+        }
+        if ((string)$configuration->closeResource->enabled == 'false') {
+            return;
+        }
+
+        $apiKey = (string)$configuration->apiKey;
+        $appName = (string)$configuration->appName;
+        $url = (string)$configuration->closeResource->url;
+        $status = (string)$configuration->closeResource->status;
+        if (empty($url) || empty($status)) {
+            self::writeLog(['message' => "[ERROR] [CLOSE_RESOURCE] File bin/external/localeo/config.xml url or status is empty"]);
+            return;
+        }
+
+        $dataToMerge = [];
+        if (!empty($configuration->closeResource->data)) {
+            foreach ($configuration->closeResource->data as $value) {
+                $dataToMerge[(string)$value->key] = (string)$value->value;
+            }
+        }
+
+        \SrcCore\models\DatabasePDO::reset();
+        new \SrcCore\models\DatabasePDO(['customId' => $customId]);
+
+        $where = ["external_id->>'localeoId' is not null", 'status = ?', 'closing_date is not null'];
+        $data = [$status];
+        if (file_exists('bin/external/localeo/closeResource.timestamp')) {
+            $time = file_get_contents('bin/external/localeo/closeResource.timestamp');
+            $where[] = 'closing_date > ?';
+            $data[] = date('Y-m-d H:i:s', $time);
+        }
+
+        $file = fopen('bin/external/localeo/closeResource.timestamp', 'w');
+        fwrite($file, time());
+        fclose($file);
+
+        $resources = \Resource\models\ResModel::get([
+            'select'    => ['res_id', 'subject', 'format', 'path', 'filename', 'docserver_id', "external_id->>'localeoId' as \"localeoId\""],
+            'where'     => $where,
+            'data'      => $data
+        ]);
+
+        foreach ($resources as $resource) {
+            $body = [];
+
+            $requete = [
+                'id'    => $resource['localeoId']
+            ];
+            $requete = array_merge($requete, $dataToMerge);
+
+            $body['requete'] = json_encode($requete);
+
+            $response = \SrcCore\models\CurlModel::execSimple([
+                'url'       => $url,
+                'method'    => 'NO-METHOD',
+                'headers'   => ["Api-Key: {$apiKey}", "appName: {$appName}"],
+                'body'      => $body,
+                'noLogs'    => true
+            ]);
+
+            if (!empty($response['errors'])) {
+                self::writeLog(['message' => "[ERROR] [CLOSE_RESOURCE] Resource {$resource['res_id']} : curl call failed"]);
+                self::writeLog(['message' => $response['errors']]);
+                continue;
+            } elseif (empty($response['response']['requete']['id']) || empty($response['response']['statut']['id'])) {
+                self::writeLog(['message' => "[ERROR] [CLOSE_RESOURCE] Resource {$resource['res_id']} : bad response"]);
+                self::writeLog(['message' => json_encode($response['response'])]);
+                continue;
+            }
+
+            self::writeLog(['message' => "[SUCCESS] [CLOSE_RESOURCE] Resource {$resource['res_id']} : successfully closed in localeo"]);
+        }
+    }
 
     public static function getXmlLoaded(array $args)
     {
