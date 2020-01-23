@@ -293,8 +293,9 @@ export class VisaWorkflowComponent implements OnInit {
         this.visaWorkflow.items = [];
         this.http.get(`../../rest/attachments/${attachmentId}/maarchParapheurWorkflow`)
             .subscribe((data: any) => {
-                data.workflow.forEach((element: any) => {
+                data.workflow.forEach((element: any, key:any) => {
                     const user = {
+                        'listinstance_id': key,
                         'id': element.userId,
                         'labelToDisplay': element.userDisplay,
                         'requested_signature': element.mode === 'visa' ? false : true,
