@@ -104,8 +104,8 @@ $app->delete('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketControl
 $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getSorted');
 $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
-//BatchHistories
-$app->get('/batchHistories', \History\controllers\BatchHistoryController::class . ':get');
+//BatchHistory
+$app->get('/batchHistory', \History\controllers\BatchHistoryController::class . ':get');
 
 //Configurations
 $app->get('/configurations/{service}', \Configuration\controllers\ConfigurationController::class . ':getByService');

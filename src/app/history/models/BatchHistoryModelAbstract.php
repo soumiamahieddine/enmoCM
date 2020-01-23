@@ -19,21 +19,22 @@ use SrcCore\models\DatabaseModel;
 
 abstract class BatchHistoryModelAbstract
 {
-    public static function get(array $aArgs)
+    public static function get(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['select']);
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
-        ValidatorModel::intVal($aArgs, ['limit']);
+        ValidatorModel::notEmpty($args, ['select']);
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intVal($args, ['offset', 'limit']);
 
-        $aHistories = DatabaseModel::select([
-            'select'    => $aArgs['select'],
+        $history = DatabaseModel::select([
+            'select'    => $args['select'],
             'table'     => ['history_batch'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data'],
-            'order_by'  => $aArgs['orderBy'],
-            'limit'     => $aArgs['limit']
+            'where'     => $args['where'] ?? [],
+            'data'      => $args['data'] ?? [],
+            'order_by'  => $args['orderBy'] ?? [],
+            'offset'    => $args['offset'] ?? 0,
+            'limit'     => $args['limit'] ?? 0
         ]);
 
-        return $aHistories;
+        return $history;
     }
 }
