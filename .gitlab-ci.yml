@@ -44,6 +44,7 @@ job_php-7.3:
    - cd /var/www/html/MaarchCourrier
    - mkdir -p /var/www/html/MaarchCourrier
    - sed 's/<databaseserver>.*<\/databaseserver>/<databaseserver>postgres<\/databaseserver>/;s/<databasepassword>.*<\/databasepassword>/<databasepassword><\/databasepassword>/;s/<databasename>.*<\/databasename>/<databasename>MaarchCourrier<\/databasename>/;s/<databaseuser>.*<\/databaseuser>/<databaseuser>maarch<\/databaseuser>/' apps/maarch_entreprise/xml/config.xml.default > apps/maarch_entreprise/xml/config.xml
+   - sed -i -e "s/datestyle = 'iso, mdy'/datestyle = 'iso, dmy'/g" /etc/postgresql/10.1/main/postgresql.conf
    - curl --location -s --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-7.phar
    - chmod +x /usr/local/bin/phpunit
    - phpunit --coverage-text --colors=never -c phpunit.xml
@@ -69,6 +70,7 @@ job_php-7.2:
     #- npm set registry https://registry.npmjs.org/ 
     #- npm install
     - sed 's/<databaseserver>.*<\/databaseserver>/<databaseserver>postgres<\/databaseserver>/;s/<databasepassword>.*<\/databasepassword>/<databasepassword><\/databasepassword>/;s/<databasename>.*<\/databasename>/<databasename>MaarchCourrier<\/databasename>/;s/<databaseuser>.*<\/databaseuser>/<databaseuser>maarch<\/databaseuser>/' apps/maarch_entreprise/xml/config.xml.default > apps/maarch_entreprise/xml/config.xml
+    - sed -i -e "s/datestyle = 'iso, mdy'/datestyle = 'iso, dmy'/g" /etc/postgresql/10.1/main/postgresql.conf
     - curl --location -s --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-7.phar
     - chmod +x /usr/local/bin/phpunit
     - phpunit --coverage-text --colors=never -c phpunit.xml
@@ -94,6 +96,7 @@ job_php-7.1:
     #- npm set registry https://registry.npmjs.org/ 
     #- npm install
     - sed 's/<databaseserver>.*<\/databaseserver>/<databaseserver>postgres<\/databaseserver>/;s/<databasepassword>.*<\/databasepassword>/<databasepassword><\/databasepassword>/;s/<databasename>.*<\/databasename>/<databasename>MaarchCourrier<\/databasename>/;s/<databaseuser>.*<\/databaseuser>/<databaseuser>maarch<\/databaseuser>/' apps/maarch_entreprise/xml/config.xml.default > apps/maarch_entreprise/xml/config.xml
+    - sed -i -e "s/datestyle = 'iso, mdy'/datestyle = 'iso, dmy'/g" /etc/postgresql/10.1/main/postgresql.conf
     - curl --location -s --output /usr/local/bin/phpunit https://phar.phpunit.de/phpunit-7.phar
     - chmod +x /usr/local/bin/phpunit
     - phpunit --coverage-text --colors=never -c phpunit.xml
