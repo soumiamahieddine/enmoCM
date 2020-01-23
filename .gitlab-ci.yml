@@ -34,7 +34,7 @@ job_php-7.3:
  image: php:7.3-apache
  stage: test
  script:
-   - locate postgresql.conf
+   - ls -al /etc/postgresql/
    - mkdir -p /opt/maarch/docservers/indexes/{letterbox_coll,attachments_coll,version_attachments_coll}
    - mkdir -p /opt/maarch/docservers/{ai,manual,manual_attachments,templates}
    - mkdir -p /opt/maarch/docservers/{convert_attachments,convert_attachments_version,convert_mlb}
