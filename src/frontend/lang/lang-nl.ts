@@ -1462,4 +1462,6 @@ export const LANG_NL = {
     "validateAvisParallelSingle": "Your are validating an opinion request of", //_TO_TRANSLATE
     "displayWebserviceAccount": "Display webservice account", //_TO_TRANSLATE
     "circuitNotStarted": "The workflow has not yet started", //_TO_TRANSLATE
+    "searchCommunicationMean": "Search communication mean", //_TO_TRANSLATE
+    "searchExternalIdM2M": "Search M2GEC Identifier", //_TO_TRANSLATE
 };

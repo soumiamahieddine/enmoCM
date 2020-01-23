@@ -103,7 +103,7 @@ class ContactController
             $contacts[$key]['filling'] = $filling;
         }
         if ($queryParams['orderBy'] == 'filling') {
-            usort($contacts, function($a, $b) {
+            usort($contacts, function ($a, $b) {
                 return $a['filling']['rate'] <=> $b['filling']['rate'];
             });
             if ($queryParams['order'] == 'desc') {
@@ -143,28 +143,8 @@ class ContactController
             }
         }
 
-        if (!empty($body['externalId']['maarch2maarch']) && !empty($body['company']) && empty($body['externalId']['m2m_annuary_id'])) {
-            $businessId = explode("/", $body['externalId']['maarch2maarch']);
-            if (!AnnuaryController::isSiretNumber(['siret' => $businessId[0]])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Wrong format for externalId[maarch2maarch]. It must be SIRET/entityId']);
-            }
-
-            if (empty($body['company']) || (empty($body['communicationMeans']['email']) && empty($body['communicationMeans']['url'])) || empty($body['department'])) {
-                $_SESSION['error'] = _CANNOT_SYNCHRONIZE_M2M_ANNUARY;
-            } else {
-                $annuaryInfo = AnnuaryController::addContact([
-                    'ouName'             => $body['company'],
-                    'communicationValue' => $body['communicationMeans']['email'] ?? $body['communicationMeans']['url'],
-                    'serviceName'        => $body['department'],
-                    'm2mId'              => $body['externalId']['maarch2maarch']
-                ]);
-                if (!empty($annuaryInfo['errors'])) {
-                    // TODO Display error
-                } else {
-                    $body['externalId']['m2m_annuary_id'] = $annuaryInfo['entryUUID'];
-                }
-            }
-        }
+        $annuaryReturn = ContactController::addContactToM2MAnnuary(['body' => $body]);
+        $body = $annuaryReturn['body'];
 
         if (!empty($body['externalId']) && is_array($body['externalId'])) {
             $externalId = json_encode($body['externalId']);
@@ -226,7 +206,7 @@ class ContactController
             'eventId'   => 'contactCreation',
         ]);
 
-        return $response->withJson(['id' => $id]);
+        return $response->withJson(['id' => $id, 'warning' => $annuaryReturn['warning']]);
     }
 
     public function getById(Request $request, Response $response, array $args)
@@ -267,11 +247,6 @@ class ContactController
             'customFields'          => !empty($rawContact['custom_fields']) ? json_decode($rawContact['custom_fields'], true) : null,
             'externalId'            => json_decode($rawContact['external_id'], true)
         ];
-
-        if (!empty($contact['externalId']['m2m'])) {
-            $contact['externalId']['maarch2maarch'] = $contact['externalId']['m2m'];
-            unset($contact['externalId']['m2m']);
-        }
 
         if (!empty($rawContact['civility'])) {
             $civilities = ContactModel::getCivilities();
@@ -322,6 +297,10 @@ class ContactController
                 $body['communicationMeans'] = ['url' => $body['communicationMeans']];
             }
         }
+
+        $annuaryReturn = ContactController::addContactToM2MAnnuary(['body' => $body]);
+        $body = $annuaryReturn['body'];
+
         if (!empty($body['externalId']) && is_array($body['externalId'])) {
             $externalId = json_encode($body['externalId']);
         } else {
@@ -374,7 +353,36 @@ class ContactController
             'eventId'   => 'contactModification',
         ]);
 
+        if (!empty($annuaryReturn['warning'])) {
+            return $response->withJson(['warning' => $annuaryReturn['warning']]);
+        }
+
         return $response->withStatus(204);
+    }
+
+    public function addContactToM2MAnnuary($args = [])
+    {
+        $warning = '';
+        $body = $args['body'];
+        if (!empty($body['externalId']['m2m']) && !empty($body['company']) && empty($body['externalId']['m2m_annuary_id'])) {
+            if (empty($body['company']) || (empty($body['communicationMeans']['email']) && empty($body['communicationMeans']['url'])) || empty($body['department'])) {
+                $warning = _CANNOT_SYNCHRONIZE_M2M_ANNUARY;
+            } else {
+                $annuaryInfo = AnnuaryController::addContact([
+                    'ouName'             => $body['company'],
+                    'communicationValue' => $body['communicationMeans']['email'] ?? $body['communicationMeans']['url'],
+                    'serviceName'        => $body['department'],
+                    'm2mId'              => $body['externalId']['m2m']
+                ]);
+                if (!empty($annuaryInfo['errors'])) {
+                    $warning = $annuaryInfo['errors'];
+                } else {
+                    $body['externalId']['m2m_annuary_id'] = $annuaryInfo['entryUUID'];
+                }
+            }
+        }
+
+        return ['body' => $body, 'warning' => $warning];
     }
 
     public function updateActivation(Request $request, Response $response, array $args)
@@ -592,7 +600,7 @@ class ContactController
         $mode = '';
         if ($data['mode'] == 'sender') {
             $mode = _SENDER;
-        } else if ($data['mode'] == 'recipient') {
+        } elseif ($data['mode'] == 'recipient') {
             $mode = _RECIPIENT;
         }
 
@@ -1022,6 +1030,13 @@ class ContactController
                 if (empty($body[$mandatoryParameter['identifier']])) {
                     return ['errors' => "Body {$mandatoryParameter['identifier']} is mandatory"];
                 }
+            }
+        }
+
+        if (!empty($body['externalId']['m2m'])) {
+            $businessId = explode("/", $body['externalId']['m2m']);
+            if (!AnnuaryController::isSiretNumber(['siret' => $businessId[0]])) {
+                return ['errors' => "Wrong format for externalId[m2m]. It must be SIRET/entityId"];
             }
         }
 

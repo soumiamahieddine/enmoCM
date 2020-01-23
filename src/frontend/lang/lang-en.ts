@@ -1437,4 +1437,6 @@ export const LANG_EN = {
     "validateAvisParallelSingle": "Your are validating an opinion request of",
     "displayWebserviceAccount": "Display webservice account",
     "circuitNotStarted": "The workflow has not yet started",
+    "searchCommunicationMean": "Search communication mean",
+    "searchExternalIdM2M": "Search M2GEC Identifier",
 };

@@ -68,7 +68,7 @@
                         <mat-list-item class="contact-item"
                             *ngIf="(field.unit === unit.id && unit.id !== 'address') || (field.unit === unit.id && unit.id === 'address' && !addressBANMode)">
                             <p mat-line class="contact-content" *ngIf="field.display">
-                                <ng-container *ngIf="field.type === 'string' && field.id !== 'communicationMeans' && field.id !== 'externalId_maarch2maarch'">
+                                <ng-container *ngIf="field.type === 'string' && field.id !== 'communicationMeans' && field.id !== 'externalId_m2m'">
                                     <mat-form-field>
                                         <input matInput [formControl]="field.control" [placeholder]="field.label"
                                             (blur)="checkCompany(field);checkFilling();" [required]="field.required">
@@ -173,7 +173,7 @@
                                         </mat-autocomplete>
                                     </mat-form-field>
                                 </ng-container>
-                                <ng-container *ngIf="field.id === 'externalId_maarch2maarch'">
+                                <ng-container *ngIf="field.id === 'externalId_m2m'">
                                     <mat-form-field>
                                         <input type="text" #autoCompleteInputExternalIdM2M [placeholder]="lang.searchExternalIdM2M"
                                             matInput [formControl]="field.control" [matAutocomplete]="auto"
@@ -181,18 +181,18 @@
                                         <mat-hint *ngIf="!isEmptyValue(field.desc)" align="end" [innerHTML]="field.desc"></mat-hint>
                                         <mat-autocomplete #auto="matAutocomplete"
                                             (optionSelected)="selectExternalIdM2M($event)">
-                                            <ng-container *ngIf="externalId_maarch2maarchResult.length > 0 && !externalId_maarch2maarchLoading">
+                                            <ng-container *ngIf="externalId_m2mResult.length > 0 && !externalId_m2mLoading">
                                                 <mat-option
-                                                    *ngFor="let externalId_maarch2maarchResult of externalId_maarch2maarchFilteredResult | async"
-                                                    [value]="externalId_maarch2maarchResult.businessIdValue">
-                                                    {{externalId_maarch2maarchResult.unitOrganization}}
+                                                    *ngFor="let externalId_m2mResult of externalId_m2mFilteredResult | async"
+                                                    [value]="externalId_m2mResult">
+                                                    {{externalId_m2mResult.unitOrganization}}
                                                 </mat-option>
                                             </ng-container>
                                             <mat-option class="autoCompleteInfoResult smallInputInfo"
-                                                *ngIf="externalId_maarch2maarchResult.length === 0 && !externalId_maarch2maarchLoading" disabled
-                                                [innerHTML]="externalId_maarch2maarchInfo">
+                                                *ngIf="externalId_m2mResult.length === 0 && !externalId_m2mLoading" disabled
+                                                [innerHTML]="externalId_m2mInfo">
                                             </mat-option>
-                                            <mat-option *ngIf="externalId_maarch2maarchLoading" disabled>
+                                            <mat-option *ngIf="externalId_m2mLoading" disabled>
                                                 <mat-spinner diameter="20"></mat-spinner>
                                             </mat-option>
                                         </mat-autocomplete>
