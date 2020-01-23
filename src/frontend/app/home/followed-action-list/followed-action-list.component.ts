@@ -32,6 +32,7 @@ export class FollowedActionListComponent implements OnInit {
     contextResId = 0;
     currentLock: any = null;
     arrRes: any[] = [];
+    folderList: any[] = [];
 
     actionsList: any[] = [];
     basketList: any = {
@@ -69,6 +70,7 @@ export class FollowedActionListComponent implements OnInit {
         this.contextMenuTitle = row.chrono;
         this.contextResId = row.resId;
 
+        this.folderList = row.folders !== undefined ? row.folders : [];
         // Opens the menu
         this.contextMenu.openMenu();
 
@@ -115,4 +117,9 @@ export class FollowedActionListComponent implements OnInit {
             this.router.navigate(['/basketList/users/' + this.headerService.user.id + '/groups/' + basket.groupId + '/baskets/' + basket.basketId]);
         }
     }
+
+    refreshList() {
+        this.refreshEvent.emit();
+    }
+
 }

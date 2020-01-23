@@ -156,6 +156,7 @@ class UserFollowedResourceController
                     'attachments'   => $attachments,
                     'checkLocked'   => false,
                     'trackedMails'  => $followedResources,
+                    'listDisplay'   => ['folders']
                 ]);
             }
 

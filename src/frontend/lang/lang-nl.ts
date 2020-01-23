@@ -1464,6 +1464,7 @@ export const LANG_NL = {
     "circuitNotStarted": "The workflow has not yet started", //_TO_TRANSLATE
     "searchCommunicationMean": "Search communication mean", //_TO_TRANSLATE
     "searchExternalIdM2M": "Search M2GEC Identifier", //_TO_TRANSLATE
+    "goToFolder": "Go to folder", //_TO_TRANSLATE
     "ADD": "Add", //_TO_TRANSLATE
     "UP": "Update", //_TO_TRANSLATE
     "DEL": "Delete", //_TO_TRANSLATE

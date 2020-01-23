@@ -1479,6 +1479,7 @@ export const LANG_FR = {
     "circuitNotStarted": "Le circuit n'a pas encore commencé",
     "searchCommunicationMean": "Recherchez un moyen de communication",
     "searchExternalIdM2M": "Recherchez un identifiant M2GEC",
+    "goToFolder": "Accéder au dossier",
     "ADD": "Ajout",
     "UP": "Modification",
     "DEL": "Suppression",
