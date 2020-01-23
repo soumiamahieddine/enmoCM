@@ -62,11 +62,11 @@ class HistoryControllerTest extends TestCase
         $fullRequest = $request->withQueryParams($aArgs);
 
         $response = $batchHistory->get($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
+        $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertInternalType('array', $responseBody->batchHistories);
-        $this->assertInternalType('bool', $responseBody->limitExceeded);
-        $this->assertNotNull($responseBody->batchHistories);
+        $this->assertInternalType('array', $responseBody['history']);
+        $this->assertInternalType('integer', $responseBody['count']);
+        $this->assertNotNull($responseBody['history']);
     }
 
     public function testRealDelete()
