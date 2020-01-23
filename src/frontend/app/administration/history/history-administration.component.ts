@@ -207,8 +207,8 @@ export class HistoryAdministrationComponent implements OnInit {
             this.filterUsed['startDate'] = [];
         }
         this.filterUsed['startDate'][0] = {
-            id: this.functions.empty(this.startDateFilter) ? '' : this.functions.formatDateObjectToFrenchDateString(this.startDateFilter),
-            label: this.functions.empty(this.startDateFilter) ? '' : this.functions.formatDateObjectToFrenchDateString(this.startDateFilter)
+            id: this.functions.empty(this.startDateFilter) ? '' : this.functions.formatDateObjectToDateString(this.startDateFilter),
+            label: this.functions.empty(this.startDateFilter) ? '' : this.functions.formatDateObjectToDateString(this.startDateFilter)
         };
         this.generateUrlFilter();
         this.refreshDao();
@@ -219,8 +219,8 @@ export class HistoryAdministrationComponent implements OnInit {
             this.filterUsed['endDate'] = [];
         }
         this.filterUsed['endDate'][0] = {
-            id: this.functions.empty(this.endDateFilter) ? '' : this.functions.formatDateObjectToFrenchDateString(this.endDateFilter, true),
-            label: this.functions.empty(this.endDateFilter) ? '' : this.functions.formatDateObjectToFrenchDateString(this.endDateFilter)
+            id: this.functions.empty(this.endDateFilter) ? '' : this.functions.formatDateObjectToDateString(this.endDateFilter, true),
+            label: this.functions.empty(this.endDateFilter) ? '' : this.functions.formatDateObjectToDateString(this.endDateFilter)
         };
         this.generateUrlFilter();
         this.refreshDao();
