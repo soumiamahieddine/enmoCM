@@ -287,7 +287,7 @@
             color: $primary;
         }
 
-        &:hover {
+        &:hover:not(.tool-disabled) {
             transition: all 0.3s;
             color: $primary;
         }
@@ -313,7 +313,7 @@
     }
 }
 
-.jiggle:active {
+.jiggle:active:not(.tool-disabled) {
     i {
         -webkit-animation: jiggle 0.2s;
         -moz-animation-duration: 0.2s;
@@ -413,4 +413,9 @@
 
 .followIcon {
     color: $secondary;
+}
+
+.tool-disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
 }

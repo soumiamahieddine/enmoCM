@@ -9,6 +9,7 @@ import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, t
 import { FormControl } from '@angular/forms';
 import { FunctionsService } from '../../service/functions.service';
 import { LatinisePipe } from 'ngx-pipes';
+import { PrivilegeService } from '../../service/privileges.service';
 
 @Component({
     selector: 'app-history-list',
@@ -20,6 +21,8 @@ export class HistoryComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = false;
 
+    fullHistoryMode : boolean = true;
+    
     filtersChange = new EventEmitter();
 
     data: any;
@@ -28,6 +31,8 @@ export class HistoryComponent implements OnInit {
 
     isLoadingResults = true;
     routeUrl: string = '../../rest/history';
+    filterListUrl: string = '../../rest/history/availableFilters';
+    extraParamUrl: string = '';
     resultListDatabase: HistoryListHttpDao | null;
     resultsLength = 0;
 
@@ -63,18 +68,44 @@ export class HistoryComponent implements OnInit {
         private headerService: HeaderService,
         public dialog: MatDialog,
         public functions: FunctionsService,
-        private latinisePipe: LatinisePipe) { }
+        private latinisePipe: LatinisePipe,
+        public privilegeService: PrivilegeService) { }
 
     ngOnInit(): void {
         if (this.resId !== null) {
-            this.routeUrl = '../../rest/history';
             this.displayedColumnsHistory = ['event_date', 'info'];
+            this.fullHistoryMode = !this.privilegeService.hasCurrentUserPrivilege('view_doc_history')
         } else {
-            this.routeUrl = '../../rest/history';
             this.displayedColumnsHistory = ['event_date', 'userLabel', 'info', 'remote_ip'];
         }
         this.loading = true;
+        this.initHistoryMode();
         this.initHistoryList();
+    }
+
+    switchHistoryMode() {
+        this.fullHistoryMode = !this.fullHistoryMode;
+        this.initHistoryMode();
+        this.refreshDao();
+    }
+
+    resetFilter() {
+        this.loadingFilters = true;
+        this.filterList = null;
+        this.filterUsed = {};
+        this.filterUrl = '';
+    }
+
+    initHistoryMode() {
+        this.resetFilter();
+
+        if (this.fullHistoryMode) {
+            this.extraParamUrl = this.resId !== null ? `&resId=${this.resId}` : '';
+            this.filterListUrl = this.resId !== null ? `../../rest/history/availableFilters?resId=${this.resId}` : '../../rest/history/availableFilters';
+        } else {
+            this.extraParamUrl = this.resId !== null ? `&resId=${this.resId}&onlyActions=true` : '&onlyActions=true';
+            this.filterListUrl = this.resId !== null ? `../../rest/history/availableFilters?resId=${this.resId}&onlyActions=true` : '../../rest/history/availableFilters?onlyActions=true';
+        }
     }
 
     initHistoryList() {
@@ -92,7 +123,7 @@ export class HistoryComponent implements OnInit {
                 switchMap(() => {
                     this.isLoadingResults = true;
                     return this.resultListDatabase!.getRepoIssues(
-                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.routeUrl, this.filterUrl);
+                        this.sort.active, this.sort.direction, this.paginator.pageIndex, this.routeUrl, this.filterUrl, this.extraParamUrl);
                 }),
                 map(data => {
                     this.isLoadingResults = false;
@@ -129,8 +160,10 @@ export class HistoryComponent implements OnInit {
 
         if (this.filterList === null) {
             this.filterList = {};
+            this.filterUsed = {};
+            this.filterUrl = '';
             this.loadingFilters = true;
-            this.http.get("../../rest/history/availableFilters").pipe(
+            this.http.get(this.filterListUrl).pipe(
                 map((data: any) => {
                     let deletedActions = data.actions.filter((action: any) => action.label === null).map((action: any) => action.id);
                     let deletedUser = data.users.filter((user: any) => user.label === null).map((user: any) => user.login);
@@ -269,10 +302,10 @@ export class HistoryListHttpDao {
 
     constructor(private http: HttpClient) { }
 
-    getRepoIssues(sort: string, order: string, page: number, href: string, search: string): Observable<HistoryList> {
+    getRepoIssues(sort: string, order: string, page: number, href: string, search: string, extraParamUrl: string): Observable<HistoryList> {
 
         let offset = page * 10;
-        const requestUrl = `${href}?limit=10&offset=${offset}&order=${order}&orderBy=${sort}${search}`;
+        const requestUrl = `${href}?limit=10&offset=${offset}&order=${order}&orderBy=${sort}${search}${extraParamUrl}`;
 
         return this.http.get<HistoryList>(requestUrl);
     }

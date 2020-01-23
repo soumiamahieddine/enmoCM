@@ -9,7 +9,7 @@
             <div class="processTool">
                 <div class="processTool-module jiggle" *ngFor="let module of processTool"
                     [class.processTool-module-active]="module.id === currentTool" matRipple
-                    (click)="changeTab(module.id)">
+                    (click)="isToolEnabled(module.id) ? changeTab(module.id) : false" [class.tool-disabled]="!isToolEnabled(module.id)">
                     <i *ngIf="module.count > 0" class="fas fa-circle haveContent"></i>
                     <i [class]="module.icon"></i>
                     <span>{{module.label}}</span>

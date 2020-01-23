@@ -583,4 +583,16 @@ export class ProcessComponent implements OnInit {
             ).subscribe();
         }
     }
+
+    isToolEnabled(id: string) {
+        if (id === 'history') {
+            if (!this.privilegeService.hasCurrentUserPrivilege('view_full_history') && !this.privilegeService.hasCurrentUserPrivilege('view_doc_history')) {
+                return false
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
 }
