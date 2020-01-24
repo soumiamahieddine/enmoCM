@@ -93,3 +93,17 @@
 .followIcon {
     color: $secondary;
 }
+
+.folder-info {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.badge-folder {
+    cursor: pointer;
+    background: $secondary;
+    margin: 5px;
+    font-size: 12px;
+    border-radius: 3px;
+    opacity: 0.8;
+}
