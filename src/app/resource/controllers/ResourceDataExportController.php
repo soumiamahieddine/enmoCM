@@ -15,6 +15,7 @@
 namespace Resource\controllers;
 
 
+use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Attachment\models\AttachmentModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
@@ -44,7 +45,7 @@ class ResourceDataExportController
         if (!empty($queryParams['document'])) {
             $document = ResModel::getById([
                 'select' => ['res_id', 'docserver_id', 'path', 'filename', 'fingerprint', 'category_id', 'alt_identifier'],
-                'resId' => $args['resId']
+                'resId'  => $args['resId']
             ]);
             if (empty($document)) {
                 return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
@@ -75,9 +76,13 @@ class ResourceDataExportController
                     'limit'  => 1
                 ]);
                 if (empty($attachment[0])) {
-                    return ['errors' => 'Attachment not found', 'code' => 404];
+                    return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
                 }
                 $attachment = $attachment[0];
+
+                if ($attachment['res_id_master'] != $args['resId']) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Attachment not linked to resource']);
+                }
 
                 $path = ResourceDataExportController::getDocumentFilePath(['document' => $attachment, 'collId' => 'attachments_coll']);
 
@@ -94,7 +99,11 @@ class ResourceDataExportController
                 return $response->withStatus(400)->withJson(['errors' => 'Query param notes is not an array']);
             }
 
-            $noteFilePath = ResourceDataExportController::getNotesFilePath(['notes' => $queryParams['notes']]);
+            $noteFilePath = ResourceDataExportController::getNotesFilePath(['notes' => $queryParams['notes'], 'resId' => $args['resId']]);
+
+            if (!empty($noteFilePath['errors'])) {
+                return $response->withStatus($noteFilePath['code'])->withJson(['errors' => $noteFilePath['errors']]);
+            }
 
             if (file_exists($noteFilePath)) {
                 $documentPaths[] = $noteFilePath;
@@ -103,6 +112,32 @@ class ResourceDataExportController
             }
         }
 
+        if (!empty($queryParams['acknowledgementReceipts'])) {
+            if (!Validator::arrayType()->validate($queryParams['acknowledgementReceipts'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Query param acknowledgementReceipts is not an array']);
+            }
+
+            $acknowledgementReceipts = AcknowledgementReceiptModel::getByIds([
+                'select' => ['id', 'res_id', 'docserver_id', 'path', 'filename', 'fingerprint', 'format'],
+                'ids'    => $queryParams['acknowledgementReceipts']
+            ]);
+            foreach ($acknowledgementReceipts as $acknowledgementReceipt) {
+                if ($acknowledgementReceipt['res_id'] != $args['resId']) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement Receipt not linked to resource']);
+                }
+
+                $path = ResourceDataExportController::getDocumentFilePath(['document' => $acknowledgementReceipt]);
+
+                if ($acknowledgementReceipt['format'] == 'html') {
+                    $path = ResourceDataExportController::getPathConvertedAcknowledgementReceipt([
+                        'acknowledgementReceipt' => $acknowledgementReceipt,
+                        'pathHtml'               => $path
+                    ]);
+                }
+
+                $documentPaths[] = $path;
+            }
+        }
 
         if (!empty($documentPaths)) {
             $tmpDir = CoreConfigModel::getTmpPath();
@@ -133,16 +168,21 @@ class ResourceDataExportController
     {
         ValidatorModel::notEmpty($args, ['document']);
         ValidatorModel::arrayType($args, ['document']);
+        ValidatorModel::stringType($args, ['collId']);
 
         $resourceDocument = $args['document'];
 
-        $document = ConvertPdfController::getConvertedPdfById(['resId' => $resourceDocument['res_id'], 'collId' => $args['collId']]);
-        if (!empty($document['errors'])) {
-            return ['errors' => 'Conversion error : ' . $document['errors'], 'code' => 400];
-        }
+        if (in_array($args['collId'], ['letterbox_coll', 'attachments_coll'])) {
+            $document = ConvertPdfController::getConvertedPdfById(['resId' => $resourceDocument['res_id'], 'collId' => $args['collId']]);
+            if (!empty($document['errors'])) {
+                return ['errors' => 'Conversion error : ' . $document['errors'], 'code' => 400];
+            }
 
-        if ($document['docserver_id'] == $resourceDocument['docserver_id']) {
-            return ['errors' => 'Document can not be converted', 'code' => 400];
+            if ($document['docserver_id'] == $resourceDocument['docserver_id']) {
+                return ['errors' => 'Document can not be converted', 'code' => 400];
+            }
+        } else {
+            $document = $resourceDocument;
         }
 
         $docserver = DocserverModel::getByDocserverId([
@@ -155,7 +195,7 @@ class ResourceDataExportController
         $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
 
         if (!file_exists($pathToDocument)) {
-            return ['errors' => 'Attachment not found on docserver', 'code' => 404];
+            return ['errors' => 'Document not found on docserver', 'code' => 404];
         }
 
         $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
@@ -169,13 +209,19 @@ class ResourceDataExportController
 
     private static function getNotesFilePath(array $args)
     {
-        ValidatorModel::notEmpty($args, ['notes']);
+        ValidatorModel::notEmpty($args, ['notes', 'resId']);
         ValidatorModel::arrayType($args, ['notes']);
+        ValidatorModel::intVal($args, ['resId']);
 
         $notes = [];
 
         foreach ($args['notes'] as $noteId) {
             $note = NoteModel::getById(['id' => $noteId]);
+
+            if ($note['identifier'] != $args['resId']) {
+                return ['errors' => 'Note not linked to resource', 'code' => 400];
+            }
+
             $user = UserModel::getById(['id' => $note['user_id'], 'select' => ['firstname', 'lastname']]);
             $userName = $user['firstname'] . ' ' . $user['lastname'];
 
@@ -221,6 +267,26 @@ class ResourceDataExportController
 
         $tmpDir = CoreConfigModel::getTmpPath();
         $filePathOnTmp = $tmpDir . '/' . 'listNotes_' . $GLOBALS['id'] . '.pdf';
+        $pdf->Output($filePathOnTmp, 'F');
+
+        return $filePathOnTmp;
+    }
+
+    private static function getPathConvertedAcknowledgementReceipt(array $args)
+    {
+        $acknowledgementReceipt = $args['acknowledgementReceipt'];
+        $pathHtml = $args['pathHtml'];
+
+        $contentHtml = file_get_contents($pathHtml);
+
+        $pdf = new Fpdi('P', 'pt');
+        $pdf->setPrintHeader(false);
+        $pdf->AddPage();
+
+        $pdf->writeHTML($contentHtml);
+
+        $tmpDir = CoreConfigModel::getTmpPath();
+        $filePathOnTmp = $tmpDir . '/' . 'convertedAr_' . $acknowledgementReceipt['id'] . '_' . $GLOBALS['id'] . '.pdf';
         $pdf->Output($filePathOnTmp, 'F');
 
         return $filePathOnTmp;
