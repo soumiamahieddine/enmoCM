@@ -167,7 +167,7 @@
                                     <mat-form-field>
                                         <input type="text" #autoCompleteInputCommunicationMean [placeholder]="lang.searchCommunicationMean"
                                             matInput [formControl]="field.control" [matAutocomplete]="auto"
-                                            (click)="$event.stopPropagation()">
+                                            (click)="$event.stopPropagation()" (keyup)="resetM2MFields()">
                                         <mat-hint *ngIf="!isEmptyValue(field.desc)" align="end" [innerHTML]="field.desc"></mat-hint>
                                         <mat-autocomplete #auto="matAutocomplete"
                                             (optionSelected)="selectCommunicationMean($event)">
@@ -192,7 +192,7 @@
                                     <mat-form-field>
                                         <input type="text" #autoCompleteInputExternalIdM2M [placeholder]="lang.searchExternalIdM2M"
                                             matInput [formControl]="field.control" [matAutocomplete]="auto"
-                                            (click)="$event.stopPropagation()" (focus)="resetAutocompleteExternalIdM2M()">
+                                            (click)="$event.stopPropagation()" (keyup)="resetAutocompleteExternalIdM2M()">
                                         <mat-hint *ngIf="!isEmptyValue(field.desc)" align="end" [innerHTML]="field.desc"></mat-hint>
                                         <mat-autocomplete #auto="matAutocomplete"
                                             (optionSelected)="selectExternalIdM2M($event)">

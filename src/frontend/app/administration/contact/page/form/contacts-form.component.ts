@@ -837,6 +837,13 @@ export class ContactsFormComponent implements OnInit {
         }
     }
 
+    resetM2MFields() {
+        let indexFieldAnnuaryId = -1;
+        indexFieldAnnuaryId = this.contactForm.map(field => field.id).indexOf('externalId_m2m');
+        this.contactForm[indexFieldAnnuaryId].control.setValue('');
+        this.resetAutocompleteExternalIdM2M();
+    }
+
     initAutocompleteAddressBan() {
         this.addressBANInfo = this.lang.autocompleteInfo;
         this.addressBANResult = [];
