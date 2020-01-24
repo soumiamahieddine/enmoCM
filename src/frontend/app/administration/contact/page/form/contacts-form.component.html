@@ -56,9 +56,9 @@
         </mat-progress-bar>
 
     </div>
-    <div [class.multipleUnits]="!isEmptyUnit('address') || !isEmptyUnit('complement')">
+    <div class="row">
         <ng-container *ngFor="let unit of contactUnit">
-            <div *ngIf="!isEmptyUnit(unit.id)">
+            <div [class.col-sm-12]="unit.id !== 'complement' && !isEmptyUnit('mainInfo') && !isEmptyUnit('address')" [class.col-md-6]="unit.id !== 'complement' && !isEmptyUnit('mainInfo') && !isEmptyUnit('address')" [class.col-md-12]="unit.id === 'complement'" *ngIf="!isEmptyUnit(unit.id)">
                 <mat-list>
                     <h3 mat-subheader class="unitTitle"><span style="flex:1">{{unit.label}}</span><a
                             *ngIf="unit.id === 'address'" (click)="addressBANMode=!addressBANMode"
@@ -68,7 +68,7 @@
                         <mat-list-item class="contact-item"
                             *ngIf="(field.unit === unit.id && unit.id !== 'address') || (field.unit === unit.id && unit.id === 'address' && !addressBANMode)">
                             <p mat-line class="contact-content" *ngIf="field.display">
-                                <ng-container *ngIf="field.type === 'string'">
+                                <ng-container *ngIf="field.type === 'string' && field.id !== 'communicationMeans' && field.id !== 'externalId_m2m'">
                                     <mat-form-field>
                                         <input matInput [formControl]="field.control" [placeholder]="field.label"
                                             (blur)="checkCompany(field);checkFilling();" [required]="field.required">
@@ -148,12 +148,63 @@
                                     <mat-error *ngIf="field.control.status!=='VALID'  && field.control.touched">
                                         {{getErrorMsg(field.control.errors)}}</mat-error>
                                 </ng-container>
+                                <ng-container *ngIf="field.id === 'communicationMeans'" >
+                                    <mat-form-field>
+                                        <input type="text" #autoCompleteInputCommunicationMean [placeholder]="lang.searchCommunicationMean"
+                                            matInput [formControl]="field.control" [matAutocomplete]="auto"
+                                            (click)="$event.stopPropagation()">
+                                        <mat-hint *ngIf="!isEmptyValue(field.desc)" align="end" [innerHTML]="field.desc"></mat-hint>
+                                        <mat-autocomplete #auto="matAutocomplete"
+                                            (optionSelected)="selectCommunicationMean($event)">
+                                            <ng-container *ngIf="communicationMeanResult.length > 0 && !communicationMeanLoading">
+                                                <mat-option
+                                                    *ngFor="let communicationMeanResult of communicationMeanFilteredResult | async"
+                                                    [value]="communicationMeanResult">
+                                                    {{communicationMeanResult.unitOrganization}}
+                                                </mat-option>
+                                            </ng-container>
+                                            <mat-option class="autoCompleteInfoResult smallInputInfo"
+                                                *ngIf="communicationMeanResult.length === 0 && !communicationMeanLoading" disabled
+                                                [innerHTML]="communicationMeanInfo">
+                                            </mat-option>
+                                            <mat-option *ngIf="communicationMeanLoading" disabled>
+                                                <mat-spinner diameter="20"></mat-spinner>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </ng-container>
+                                <ng-container *ngIf="field.id === 'externalId_m2m'">
+                                    <mat-form-field>
+                                        <input type="text" #autoCompleteInputExternalIdM2M [placeholder]="lang.searchExternalIdM2M"
+                                            matInput [formControl]="field.control" [matAutocomplete]="auto"
+                                            (click)="$event.stopPropagation()" (focus)="resetAutocompleteExternalIdM2M()">
+                                        <mat-hint *ngIf="!isEmptyValue(field.desc)" align="end" [innerHTML]="field.desc"></mat-hint>
+                                        <mat-autocomplete #auto="matAutocomplete"
+                                            (optionSelected)="selectExternalIdM2M($event)">
+                                            <ng-container *ngIf="externalId_m2mResult.length > 0 && !externalId_m2mLoading">
+                                                <mat-option
+                                                    *ngFor="let externalId_m2mResult of externalId_m2mFilteredResult | async"
+                                                    [value]="externalId_m2mResult">
+                                                    {{externalId_m2mResult.unitOrganization}}
+                                                </mat-option>
+                                            </ng-container>
+                                            <mat-option class="autoCompleteInfoResult smallInputInfo"
+                                                *ngIf="externalId_m2mResult.length === 0 && !externalId_m2mLoading" disabled
+                                                [innerHTML]="externalId_m2mInfo">
+                                            </mat-option>
+                                            <mat-option *ngIf="externalId_m2mLoading" disabled>
+                                                <mat-spinner diameter="20"></mat-spinner>
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                </ng-container>
                             </p>
                             <button *ngIf="field.display" [disabled]="!canDelete(field)" mat-icon-button matSuffix
                                 color="warn" (click)="removeField(field)">
                                 <mat-icon class="fa fa-trash"></mat-icon>
                             </button>
                         </mat-list-item>
+
                         <ng-container
                             *ngIf="unit.id === 'address' && addressBANMode && ['addressAdditional1', 'addressAdditional2'].indexOf(field.id) > -1">
                             <mat-list-item class="contact-item">

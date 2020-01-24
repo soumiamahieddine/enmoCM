@@ -190,6 +190,12 @@ export class ProcessComponent implements OnInit {
             this.loadBadges();
             this.loadResource();
 
+            if (this.appService.getViewMode()) {
+                setTimeout(() => {
+                    this.sidenavLeft.open();
+                }, 800);
+            }
+
             this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/processingData`).pipe(
                 tap((data: any) => {
                     if (data.listEventData !== null) {
@@ -575,6 +581,18 @@ export class ProcessComponent implements OnInit {
                     return of(false);
                 })
             ).subscribe();
+        }
+    }
+
+    isToolEnabled(id: string) {
+        if (id === 'history') {
+            if (!this.privilegeService.hasCurrentUserPrivilege('view_full_history') && !this.privilegeService.hasCurrentUserPrivilege('view_doc_history')) {
+                return false
+            } else {
+                return true;
+            }
+        } else {
+            return true;
         }
     }
 }

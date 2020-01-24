@@ -1,7 +1,7 @@
 
 <mat-list *ngIf="!loading">
     <mat-form-field appearance="outline" *ngIf="adminMode && !linkedToMaarchParapheur">
-        <input type="text" matInput placeholder="Ajouter des personnes" id="searchVisaSignUserInput"
+        <input type="text" #searchVisaSignUserInput matInput placeholder="Ajouter des personnes" id="searchVisaSignUserInput"
             [formControl]="searchVisaSignUser" [matAutocomplete]="autoGroup">
         <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="addItemToWorkflow($event.option.value)" (opened)="initFilterVisaModelList()">
             <mat-option disabled *ngIf="visaModelListNotLoaded">
@@ -32,7 +32,7 @@
             <mat-optgroup [label]="lang.visaUser + ' / ' + lang.signUser" *ngIf="(filteredSignVisaUsers | async)?.length > 0"
                 class="visaSignList">
                 <mat-option *ngFor="let user of filteredSignVisaUsers | async | sortBy : 'label'" [value]="user">
-                    {{user.label}} <small>({{user.entity}})</small>
+                    {{user.label}}&nbsp;<small>({{user.entity}})</small>
                 </mat-option>
             </mat-optgroup>
         </mat-autocomplete>
@@ -65,7 +65,7 @@
             </mat-icon>
             <ng-container *ngIf="!adminMode || diffusion.process_date != null">
                 <mat-icon mat-list-icon class="fa-2x fa"
-                [title]="diffusion.process_comment"
+                [title]="diffusion.process_comment !== null ? diffusion.process_comment : ''"
                 [class.fa-hourglass]="diffusion.process_date == null"
                 [class.fa-thumbs-up]="diffusion.process_date != null && [lang.visaWorkflowInterrupted, lang.hasInterruptedWorkflow].indexOf(diffusion.process_comment) === -1"
                 [class.fa-hand-paper]="diffusion.process_date != null && diffusion.process_comment === lang.hasInterruptedWorkflow"

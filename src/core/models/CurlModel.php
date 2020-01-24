@@ -20,18 +20,13 @@ class CurlModel
 {
     public static function exec(array $aArgs)
     {
-        ValidatorModel::stringType($aArgs, ['curlCallId']);
         ValidatorModel::arrayType($aArgs, ['bodyData']);
         ValidatorModel::boolType($aArgs, ['noAuth', 'multipleObject']);
 
-        if (!empty($aArgs['curlCallId'])) {
-            $curlConfig = CurlModel::getConfigByCallId(['curlCallId' => $aArgs['curlCallId']]);
-        } else {
-            $curlConfig['url']      = $aArgs['url'];
-            $curlConfig['user']     = $aArgs['user'];
-            $curlConfig['password'] = $aArgs['password'];
-            $curlConfig['method']   = $aArgs['method'];
-        }
+        $curlConfig['url']      = $aArgs['url'];
+        $curlConfig['user']     = $aArgs['user'];
+        $curlConfig['password'] = $aArgs['password'];
+        $curlConfig['method']   = $aArgs['method'];
 
         $opts = [
             CURLOPT_URL => $curlConfig['url'],
@@ -194,77 +189,6 @@ class CurlModel
         return ['response' => simplexml_load_string($rawResponse), 'infos' => $infos, 'cookies' => $cookies, 'raw' => $rawResponse, 'error' => $error];
     }
 
-    public static function getConfigByCallId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['curlCallId']);
-        ValidatorModel::stringType($aArgs, ['curlCallId']);
-
-        $curlConfig = [];
-
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/curlCall.xml']);
-        if ($loadedXml) {
-            $curlConfig['user']     = (string)$loadedXml->user;
-            $curlConfig['password'] = (string)$loadedXml->password;
-            $curlConfig['apiKey']   = (string)$loadedXml->apiKey;
-            $curlConfig['appName']  = (string)$loadedXml->appName;
-            foreach ($loadedXml->call as $call) {
-                if ((string)$call->id == $aArgs['curlCallId']) {
-                    $curlConfig['url']      = (string)$call->url;
-                    $curlConfig['method']   = strtoupper((string)$call->method);
-                    if (!empty($call->file)) {
-                        $curlConfig['file'] = (string)$call->file;
-                    }
-                    if (!empty($call->header)) {
-                        $curlConfig['header'] = [];
-                        foreach ($call->header as $data) {
-                            $curlConfig['header'][] = (string)$data;
-                        }
-                    }
-                    if (!empty($call->sendInObject)) {
-                        $curlConfig['inObject'] = true;
-                        foreach ($call->sendInObject as $object) {
-                            $tmpdata = [];
-                            if (!empty($object->data)) {
-                                foreach ($object->data as $data) {
-                                    $tmpdata[(string)$data->key] = (string)$data->value;
-                                }
-                            }
-                            $tmpRawData = [];
-                            if (!empty($object->rawData)) {
-                                foreach ($object->rawData as $data) {
-                                    $tmpRawData[(string)$data->key] = (string)$data->value;
-                                }
-                            }
-                            $curlConfig['objects'][] = [
-                                'name'      => (string)$object->objectName,
-                                'data'      => $tmpdata,
-                                'rawData'   => $tmpRawData
-                            ];
-                        }
-                    }
-                    if (!empty($call->data)) {
-                        $curlConfig['data'] = [];
-                        foreach ($call->data as $data) {
-                            $curlConfig['data'][(string)$data->key] = (string)$data->value;
-                        }
-                    }
-                    if (!empty($call->rawData)) {
-                        $curlConfig['rawData'] = [];
-                        foreach ($call->rawData as $data) {
-                            $curlConfig['rawData'][(string)$data->key] = (string)$data->value;
-                        }
-                    }
-                    if (!empty($call->return)) {
-                        $curlConfig['return']['key'] = (string)$call->return->key;
-                        $curlConfig['return']['value'] = (string)$call->return->value;
-                    }
-                }
-            }
-        }
-
-        return $curlConfig;
-    }
-
     public static function execSimple(array $args)
     {
         ValidatorModel::notEmpty($args, ['url', 'method']);
@@ -364,25 +288,6 @@ class CurlModel
         $postData .= "--{$delimiter}--\r\n";
 
         return $postData;
-    }
-
-    public static function isEnabled(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['curlCallId']);
-        ValidatorModel::stringType($aArgs, ['curlCallId']);
-
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/curlCall.xml']);
-        if ($loadedXml) {
-            foreach ($loadedXml->call as $call) {
-                if ((string)$call->id == $aArgs['curlCallId']) {
-                    if (!empty((string)$call->enabled) && (string)$call->enabled == 'true') {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
     }
 
     public static function makeCurlFile(array $aArgs)

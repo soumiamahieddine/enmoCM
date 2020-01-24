@@ -14,14 +14,11 @@
 
 namespace SrcCore\controllers;
 
-use Basket\models\BasketModel;
-use Basket\models\RedirectBasketModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactGroupModel;
 use Contact\models\ContactModel;
 use Contact\models\ContactParameterModel;
 use Entity\models\EntityModel;
-use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -636,9 +633,9 @@ class AutoCompleteController
     {
         $data = $request->getQueryParams();
 
-        $check = Validator::stringType()->notEmpty()->validate($data['society']);
+        $check = Validator::stringType()->notEmpty()->validate($data['company']);
         if (!$check) {
-            return $response->withStatus(400)->withJson(['errors' => 'Query society is empty']);
+            return $response->withStatus(400)->withJson(['errors' => 'Query company is empty']);
         }
 
         $control = AnnuaryController::getAnnuaries();
@@ -659,7 +656,7 @@ class AutoCompleteController
                 ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
                 ldap_set_option($ldap, LDAP_OPT_NETWORK_TIMEOUT, 5);
     
-                $search = @ldap_search($ldap, $annuary['baseDN'], "(ou=*{$data['society']}*)", ['ou', 'postOfficeBox', 'destinationIndicator', 'labeledURI']);
+                $search = @ldap_search($ldap, $annuary['baseDN'], "(ou=*{$data['company']}*)", ['ou', 'postOfficeBox', 'destinationIndicator', 'labeledURI']);
                 if ($search === false) {
                     continue;
                 }
@@ -708,6 +705,7 @@ class AutoCompleteController
             }
         }
 
+        $unitOrganizations = [];
         foreach ($control['annuaries'] as $annuary) {
             $ldap = @ldap_connect($annuary['uri']);
             if ($ldap === false) {

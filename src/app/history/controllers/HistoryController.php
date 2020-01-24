@@ -30,11 +30,19 @@ class HistoryController
 {
     public function get(Request $request, Response $response)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_history', 'userId' => $GLOBALS['id']])) {
+        $queryParams = $request->getQueryParams();
+
+        if (!empty($queryParams['resId'])) {
+            if (!Validator::intVal()->notEmpty()->validate($queryParams['resId']) || !ResController::hasRightByResId(['resId' => [$queryParams['resId']], 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+            } elseif (empty($queryParams['onlyActions']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'view_full_history', 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_doc_history', 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+        } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_history', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
-
-        $queryParams = $request->getQueryParams();
 
         $limit = 25;
         if (!empty($queryParams['limit']) && is_numeric($queryParams['limit'])) {
@@ -48,42 +56,65 @@ class HistoryController
         $where = [];
         $data = [];
         if (!empty($queryParams['users']) && is_array($queryParams['users'])) {
+            $userIds = [];
+            $userLogins = [];
             foreach ($queryParams['users'] as $user) {
-                if (!is_numeric($user)) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Query params users : one of is not numeric']);
+                if (is_numeric($user)) {
+                    $userIds[] = $user;
+                } else {
+                    $userLogins[] = $user;
                 }
             }
-            $users = UserModel::get(['select' => ['user_id'], 'where' => ['id in (?)'], 'data' => [$queryParams['users']]]);
-            $users = array_column($users, 'user_id');
+            $users = [];
+            if (!empty($userIds)) {
+                $users = UserModel::get(['select' => ['user_id'], 'where' => ['id in (?)'], 'data' => [$userIds]]);
+                $users = array_column($users, 'user_id');
+            }
+            $users = array_merge($users, $userLogins);
             $where[] = 'user_id in (?)';
             $data[] = $users;
         }
+
         if (!empty($queryParams['startDate'])) {
             $where[] = 'event_date > ?';
-            $data[] = date('Y-m-d H:i:s', $queryParams['startDate']);
+            $data[] = $queryParams['startDate'];
         }
         if (!empty($queryParams['endDate'])) {
             $where[] = 'event_date < ?';
-            $data[] = date('Y-m-d H:i:s', $queryParams['endDate']);
+            $data[] = $queryParams['endDate'];
         }
+
+        if (!empty($queryParams['resId'])) {
+            $where[] = 'table_name in (?)';
+            $data[] = ['res_letterbox', 'res_view_letterbox'];
+
+            $where[] = 'record_id = ?';
+            $data[] = $queryParams['resId'];
+        }
+        if (!empty($queryParams['onlyActions'])) {
+            $where[] = 'event_type like ?';
+            $data[] = 'ACTION#%';
+        }
+
+        $eventTypes = [];
         if (!empty($queryParams['actions']) && is_array($queryParams['actions'])) {
-            $actions = [];
             foreach ($queryParams['actions'] as $action) {
-                if (is_numeric($action)) {
-                    $actions[] = "ACTION#{$action}";
-                } else {
-                    $actions[] = $action;
-                }
+                $eventTypes[] = "ACTION#{$action}";
             }
+        }
+        if (!empty($queryParams['systemActions']) && is_array($queryParams['systemActions'])) {
+            $eventTypes = array_merge($eventTypes, $queryParams['systemActions']);
+        }
+        if (!empty($eventTypes)) {
             $where[] = 'event_type in (?)';
-            $data[] = $actions;
+            $data[] = $eventTypes;
         }
 
         $order = !in_array($queryParams['order'], ['asc', 'desc']) ? '' : $queryParams['order'];
         $orderBy = !in_array($queryParams['orderBy'], ['event_date', 'user_id', 'info']) ? ['event_date DESC'] : ["{$queryParams['orderBy']} {$order}"];
 
         $history = HistoryModel::get([
-            'select'    => ['event_date', 'user_id', 'info', 'remote_ip'],
+            'select'    => ['event_date', 'user_id', 'info', 'remote_ip', 'count(1) OVER()'],
             'where'     => $where,
             'data'      => $data,
             'orderBy'   => $orderBy,
@@ -91,7 +122,13 @@ class HistoryController
             'limit'     => $limit
         ]);
 
-        return $response->withJson(['history' => $history]);
+        $total = $history[0]['count'] ?? 0;
+        foreach ($history as $key => $value) {
+            $history[$key]['userLabel'] = UserModel::getLabelledUserById(['login' => $value['user_id']]);
+            unset($history[$key]['count']);
+        }
+
+        return $response->withJson(['history' => $history, 'count' => $total]);
     }
 
     public static function add(array $aArgs)
@@ -146,17 +183,6 @@ class HistoryController
         return $response->withJson(['histories' => $aHistories]);
     }
 
-    public function getByResourceId(Request $request, Response $response, array $args)
-    {
-        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        }
-
-        $history = HistoryModel::getByResourceId(['resId' => $args['resId'], 'select' => ['info', 'event_date']]);
-
-        return $response->withJson(['history' => $history]);
-    }
-
     public function getWorkflowByResourceId(Request $request, Response $response, array $args)
     {
         if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
@@ -173,14 +199,40 @@ class HistoryController
         return $response->withJson(['history' => $history]);
     }
 
-    public function getAvailableEventTypes(Request $request, Response $response)
+    public function getAvailableFilters(Request $request, Response $response)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_history', 'userId' => $GLOBALS['id']])) {
+        $queryParams = $request->getQueryParams();
+
+        if (!empty($queryParams['resId'])) {
+            if (!Validator::intVal()->notEmpty()->validate($queryParams['resId']) || !ResController::hasRightByResId(['resId' => [$queryParams['resId']], 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+            } elseif (empty($queryParams['onlyActions']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'view_full_history', 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_doc_history', 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
+        } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_history', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
+        $where = [];
+        $data = [];
+
+        if (!empty($queryParams['resId'])) {
+            $where[] = 'table_name in (?)';
+            $data[] = ['res_letterbox', 'res_view_letterbox'];
+            $where[] = 'record_id = ?';
+            $data[] = $queryParams['resId'];
+        }
+        if (!empty($queryParams['onlyActions'])) {
+            $where[] = 'event_type like ?';
+            $data[] = 'ACTION#%';
+        }
+
         $eventTypes = HistoryModel::get([
-            'select'    => ['DISTINCT(event_type)']
+            'select'    => ['DISTINCT(event_type)'],
+            'where'     => $where,
+            'data'      => $data
         ]);
 
         $actions = [];
@@ -188,7 +240,9 @@ class HistoryController
         foreach ($eventTypes as $eventType) {
             if (strpos($eventType['event_type'], 'ACTION#') === 0) {
                 $exp = explode('#', $eventType['event_type']);
-                $action = ActionModel::getById(['select' => ['label_action'], 'id' => $exp[1]]);
+                if (!empty($exp[1])) {
+                    $action = ActionModel::getById(['select' => ['label_action'], 'id' => $exp[1]]);
+                }
                 $label = !empty($action) ? $action['label_action'] : null;
                 $actions[] = ['id' => $exp[1], 'label' => $label];
             } else {
@@ -196,6 +250,19 @@ class HistoryController
             }
         }
 
-        return $response->withJson(['actions' => $actions, 'systemActions' => $systemActions]);
+        $usersInHistory = HistoryModel::get([
+            'select'    => ['DISTINCT(user_id)'],
+            'where'     => $where,
+            'data'      => $data
+        ]);
+
+        $users = [];
+        foreach ($usersInHistory as $value) {
+            $user = UserModel::getByLogin(['login' => $value['user_id'], 'select' => ['id', 'firstname', 'lastname']]);
+
+            $users[] = ['id' => $user['id'] ?? null, 'login' => $value['user_id'], 'label' => !empty($user['id']) ? "{$user['firstname']} {$user['lastname']}" : null];
+        }
+
+        return $response->withJson(['actions' => $actions, 'systemActions' => $systemActions, 'users' => $users]);
     }
 }

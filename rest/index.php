@@ -104,9 +104,6 @@ $app->delete('/baskets/{id}/groups/{groupId}', \Basket\controllers\BasketControl
 $app->get('/sortedBaskets', \Basket\controllers\BasketController::class . ':getSorted');
 $app->put('/sortedBaskets/{id}', \Basket\controllers\BasketController::class . ':updateSort');
 
-//BatchHistories
-$app->get('/batchHistories', \History\controllers\BatchHistoryController::class . ':get');
-
 //Configurations
 $app->get('/configurations/{service}', \Configuration\controllers\ConfigurationController::class . ':getByService');
 $app->put('/configurations/{service}', \Configuration\controllers\ConfigurationController::class . ':update');
@@ -252,10 +249,13 @@ $app->get('/groups/{id}/privileges/{privilegeId}/parameters', \Group\controllers
 
 //History
 $app->get('/history', \History\controllers\HistoryController::class . ':get');
-$app->get('/history/availableEventTypes', \History\controllers\HistoryController::class . ':getAvailableEventTypes');
+$app->get('/history/availableFilters', \History\controllers\HistoryController::class . ':getAvailableFilters');
 $app->get('/history/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
-$app->get('/history/resources/{resId}', \History\controllers\HistoryController::class . ':getByResourceId');
 $app->get('/history/resources/{resId}/workflow', \History\controllers\HistoryController::class . ':getWorkflowByResourceId');
+
+//BatchHistory
+$app->get('/batchHistory', \History\controllers\BatchHistoryController::class . ':get');
+$app->get('/batchHistory/availableFilters', \History\controllers\BatchHistoryController::class . ':getAvailableFilters');
 
 //Header
 $app->get('/header', \SrcCore\controllers\CoreController::class . ':getHeader');
@@ -367,6 +367,7 @@ $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':u
 $app->get('/categories', \Resource\controllers\ResController::class . ':getCategories');
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 $app->get('/resources/{resId}/users/{userId}/groups/{groupId}/baskets/{basketId}/processingData', \Resource\controllers\ResController::class . ':getProcessingData');
+$app->get('/resources/{resId}/exportData', \Resource\controllers\ResourceDataExportController::class . ':get');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
@@ -393,6 +394,7 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/ac
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkValidateParallelOpinion', \Action\controllers\PreProcessActionController::class . ':checkValidateParallelOpinion');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkContinueOpinionCircuit', \Action\controllers\PreProcessActionController::class . ':checkContinueOpinionCircuit');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkGiveParallelOpinion', \Action\controllers\PreProcessActionController::class . ':checkGiveParallelOpinion');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkInterruptRejectResetVisa', \Action\controllers\PreProcessActionController::class . ':checkInterruptRejectResetVisa');
 
 //Search
 $app->get('/search', \Search\controllers\SearchController::class . ':get');

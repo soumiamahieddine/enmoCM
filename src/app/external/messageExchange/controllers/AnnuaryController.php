@@ -252,8 +252,9 @@ class AnnuaryController
             $entries = ldap_get_entries($ldap, $search);
 
             if ($entries['count'] > 0) {
-                $search = @ldap_search($ldap, "ou={$entries[0]['ou'][0]},{$annuary['baseDN']}", "(initials={$entityId})", ['ou', 'entryUUID']);
-                $entries = ldap_get_entries($ldap, $search);
+                $organization = $entries[0]['ou'][0];
+                $search       = @ldap_search($ldap, "ou={$entries[0]['ou'][0]},{$annuary['baseDN']}", "(initials={$entityId})", ['ou', 'entryUUID']);
+                $entries      = ldap_get_entries($ldap, $search);
                 if ($entries['count'] > 0) {
                     return ['entryUUID' => $entries[0]['entryuuid'][0]];
                 }

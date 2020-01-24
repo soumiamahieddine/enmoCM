@@ -330,7 +330,7 @@ export const LANG_NL = {
     "eachMonth"                             : "Maandelijks",
     "edirectBaskets"                        : "De geselecteerde bakjes doorsturen",
     "editAttachment"                        : "Edit the attachment", //_TO_TRANSLATE
-    "editingAttachmentInterrupted"          : "Editing of the attachment has been interrupted. <br/>><sub>Please re-edit it. </sub>", //_TO_TRANSLATE
+    "editingAttachmentInterrupted"          : "Editing of the attachment has been interrupted. <br/><sub>Please re-edit it. </sub>", //_TO_TRANSLATE
     "editModelFirst"                        : "Gelieve het model te bewerken vooraleer te bevestigen",
     "edtion"                                : "Edition", //_TO_TRANSLATE
     "electronicTemplate"                    : "Electronic template", //_TO_TRANSLATE
@@ -1460,4 +1460,19 @@ export const LANG_NL = {
     "validateBy": "Validate by", //_TO_TRANSLATE
     "validateAvisParallel": "Your are validating an opinion request", //_TO_TRANSLATE
     "validateAvisParallelSingle": "Your are validating an opinion request of", //_TO_TRANSLATE
+    "displayWebserviceAccount": "Display webservice account", //_TO_TRANSLATE
+    "circuitNotStarted": "The workflow has not yet started", //_TO_TRANSLATE
+    "searchCommunicationMean": "Search communication mean", //_TO_TRANSLATE
+    "searchExternalIdM2M": "Search M2GEC Identifier", //_TO_TRANSLATE
+    "goToFolder": "Go to folder", //_TO_TRANSLATE
+    "ADD": "Add", //_TO_TRANSLATE
+    "UP": "Update", //_TO_TRANSLATE
+    "DEL": "Delete", //_TO_TRANSLATE
+    "LOGIN": "Login", //_TO_TRANSLATE
+    "LOGOUT": "Logout", //_TO_TRANSLATE
+    "VIEW": "View", //_TO_TRANSLATE
+    "ERROR": "Error", //_TO_TRANSLATE
+    "systemActions": "System action(s)", //_TO_TRANSLATE
+    "viewAllHistory": "View all history", //_TO_TRANSLATE
+    "viewActionsHistory": "View only actions in history", //_TO_TRANSLATE
 };

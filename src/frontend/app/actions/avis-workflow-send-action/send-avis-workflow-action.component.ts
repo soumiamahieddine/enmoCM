@@ -85,7 +85,7 @@ export class SendAvisWorkflowComponent implements AfterViewInit {
 
     executeAction(realResSelected: number[]) {
         const noteContent: string = `[${this.lang.avisUserAsk.toUpperCase()}] ${this.noteEditor.getNoteContent()}`;
-        this.http.put(this.data.processActionRoute, { resources: realResSelected, note: noteContent, data: { opinionLimitDate: this.functions.formatDateObjectToFrenchDateString(this.opinionLimitDate, true) } }).pipe(
+        this.http.put(this.data.processActionRoute, { resources: realResSelected, note: noteContent, data: { opinionLimitDate: this.functions.formatDateObjectToDateString(this.opinionLimitDate, true) } }).pipe(
             tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close('success');
@@ -103,7 +103,7 @@ export class SendAvisWorkflowComponent implements AfterViewInit {
     }
 
     isValidAction() {
-        if (!this.noResourceToProcess && this.appAvisWorkflow !== undefined && !this.appAvisWorkflow.emptyWorkflow() && !this.appAvisWorkflow.workflowEnd() && !this.functions.empty(this.noteEditor.getNoteContent()) && !this.functions.empty(this.functions.formatDateObjectToFrenchDateString(this.opinionLimitDate))) {
+        if (!this.noResourceToProcess && this.appAvisWorkflow !== undefined && !this.appAvisWorkflow.emptyWorkflow() && !this.appAvisWorkflow.workflowEnd() && !this.functions.empty(this.noteEditor.getNoteContent()) && !this.functions.empty(this.functions.formatDateObjectToDateString(this.opinionLimitDate))) {
             return true;
         } else {
             return false;

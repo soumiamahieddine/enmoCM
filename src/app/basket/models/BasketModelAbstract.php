@@ -184,10 +184,7 @@ abstract class BasketModelAbstract
         ValidatorModel::arrayType($aArgs, ['unneededBasketId']);
 
         $userGroups = UserModel::getGroupsByLogin(['login' => $aArgs['login']]);
-        $groupIds = [];
-        foreach ($userGroups as $value) {
-            $groupIds[] = $value['group_id'];
-        }
+        $groupIds = array_column($userGroups, 'group_id');
 
         $aBaskets = [];
         if (!empty($groupIds)) {

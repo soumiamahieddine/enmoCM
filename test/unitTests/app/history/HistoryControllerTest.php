@@ -35,17 +35,16 @@ class HistoryControllerTest extends TestCase
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'startDate' => '1521100000',
-            'endDate'   => time()
+            'startDate' => date('Y-m-d H:i:s', 1521100000),
+            'endDate'   => date('Y-m-d H:i:s', time())
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
         $response = $history->get($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
+        $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertInternalType('array', $responseBody->histories);
-        $this->assertInternalType('bool', $responseBody->limitExceeded);
-        $this->assertNotEmpty($responseBody->histories);
+        $this->assertInternalType('array', $responseBody['history']);
+        $this->assertNotEmpty($responseBody['history']);
     }
 
     public function testGetBatchHistory()
@@ -57,17 +56,17 @@ class HistoryControllerTest extends TestCase
         $request     = \Slim\Http\Request::createFromEnvironment($environment);
 
         $aArgs = [
-            'startDate' => '1521100000',
-            'endDate'   => time()
+            'startDate' => date('Y-m-d H:i:s', 1521100000),
+            'endDate'   => date('Y-m-d H:i:s', time())
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
         $response = $batchHistory->get($fullRequest, new \Slim\Http\Response());
-        $responseBody = json_decode((string)$response->getBody());
+        $responseBody = json_decode((string)$response->getBody(), true);
 
-        $this->assertInternalType('array', $responseBody->batchHistories);
-        $this->assertInternalType('bool', $responseBody->limitExceeded);
-        $this->assertNotNull($responseBody->batchHistories);
+        $this->assertInternalType('array', $responseBody['history']);
+        $this->assertInternalType('integer', $responseBody['count']);
+        $this->assertNotNull($responseBody['history']);
     }
 
     public function testRealDelete()
@@ -80,10 +79,7 @@ class HistoryControllerTest extends TestCase
             'order_by'  => ['res_id DESC']
         ]);
 
-        $aNewResId = [];
-        foreach ($aResId as $value) {
-            $aNewResId[] = $value['res_id'];
-        }
+        $aNewResId = array_column($aResId, 'res_id');
 
         //  REAL DELETE
         \SrcCore\models\DatabaseModel::delete([

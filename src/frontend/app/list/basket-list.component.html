@@ -46,15 +46,15 @@
                                 {{lang.selected}}</small>
                         </div>
                         <div class="table-head-tool">
-                            <span style="float:right;height: 56px;margin-top: 5px;">
+                            <span>
                                 <mat-paginator #paginatorResultList [length]="resultsLength" [pageSizeOptions]="[10, 25, 50, 100, 150]"
                                     class="paginatorResultList"></mat-paginator>
                             </span>
-                            <span style="float:right;height: 56px;margin-top: 11px;">
+                            <span>
                                 <app-tools-list #actionsList [selectedRes]="selectedRes"
                                     [currentBasketInfo]="currentBasketInfo"></app-tools-list>
                             </span>
-                            <span style="float:right;height: 56px;margin-top: 11px;">
+                            <span>
                                 <app-actions-list #actionsList (refreshEvent)="refreshDao()"
                                     [contextMode]="false" [totalRes]="allResInBasket.length" [selectedRes]="selectedRes"
                                     [currentBasketInfo]="currentBasketInfo" [currentResource]="currentResource" (refreshPanelFolders)="panelFolder.refreshFoldersTree()"></app-actions-list>
@@ -176,7 +176,7 @@
                                         </span>
                                     </div>
                                     <div *ngIf="displayFolderTags && row.folders !== undefined && row.folders.length > 0" class="folder-info">
-                                        <span class="badge badge-folder" *ngFor="let folder of row.folders | sortBy : 'label'" routerLink="/folders/{{folder.id}}" title="Accéder au dossier : {{folder.label}}"><i class="fa fa-folder"></i> {{folder.label}}</span>
+                                        <span class="badge badge-folder" *ngFor="let folder of row.folders | sortBy : 'label'" routerLink="/folders/{{folder.id}}" title="{{lang.goToFolder}} : {{folder.label}}"><i class="fa fa-folder"></i> {{folder.label}}</span>
                                     </div>
                                 </td>
                             </ng-container>
@@ -199,8 +199,8 @@
             <div *ngIf="innerHtml && !filtersListService.filterMode" [matTooltip]="currentChrono"
                 [innerHTML]="innerHtml" style="height: 100%;overflow: hidden;"></div>
 
-            <div style="display:flex;">
-                <button mat-icon-button (click)="snav2.close()" style="font-size: 20px;color:#666;">
+                <div style="display:flex;position: sticky;top: 0px;z-index: 2;">
+                    <button mat-icon-button (click)="snav2.close()" style="font-size: 20px;color:#666;">
                     <mat-icon class="fa fa-arrow-right"></mat-icon>
                 </button>
             </div>

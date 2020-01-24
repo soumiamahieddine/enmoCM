@@ -172,6 +172,12 @@
     cursor: pointer;
 }
 
+.filterBadges>.badge-folders {
+    margin: 5px;
+    background: #a3d627;
+    cursor: pointer;
+}
+
 ::ng-deep.autoCompletePanelFilter {
     left: 25px;
     min-width: 400px !important;

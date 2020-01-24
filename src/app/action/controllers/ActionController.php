@@ -209,10 +209,7 @@ class ActionController
         $errors = [];
       
         $objs = StatusModel::get();
-
-        foreach ($objs as $obj) {
-            $status[] = $obj['id'];
-        }
+        $status = array_column($objs, 'id');
         array_unshift($status, '_NOSTATUS_');
 
         if (!(in_array($aArgs['id_status'], $status))) {

@@ -30,16 +30,16 @@ class OzwilloScript
 
         $configuration = OzwilloScript::getXmlLoaded(['path' => 'bin/external/ozwillo/config.xml', 'customId' => $customId]);
         if (empty($configuration)) {
-            self::writeLog(['message' => "[SEND_FILE] File bin/external/ozwillo/config.xml does not exist"]);
+            self::writeLog(['message' => "[ERROR] [SEND_FILE] File bin/external/ozwillo/config.xml does not exist"]);
             exit();
-        } elseif (empty($configuration->user) || empty($configuration->password) || empty($configuration->uri) || empty($configuration->triggerStatuses->sendFile)) {
-            self::writeLog(['message' => "[SEND_FILE] File bin/external/ozwillo/config.xml is not filled enough"]);
-            exit();
+        } elseif (empty($configuration->user) || empty($configuration->password) || empty($configuration->sendFile->uri) || empty($configuration->sendFile->status)) {
+            self::writeLog(['message' => "[ERROR] [SEND_FILE] File bin/external/ozwillo/config.xml is not filled enough"]);
+            return;
         }
         $user = (string)$configuration->user;
         $password = (string)$configuration->password;
-        $uri = (string)$configuration->uri;
-        $status = (string)$configuration->triggerStatuses->sendFile;
+        $uri = (string)$configuration->sendFile->uri;
+        $status = (string)$configuration->sendFile->status;
 
         \SrcCore\models\DatabasePDO::reset();
         new \SrcCore\models\DatabasePDO(['customId' => $customId]);
@@ -52,14 +52,14 @@ class OzwilloScript
         ]);
         foreach ($resources as $resource) {
             if (empty($resource['filename'])) {
-                self::writeLog(['message' => "[SEND_FILE] Resource {$resource['res_id']} : ({$resource['subject']}) has no file"]);
+                self::writeLog(['message' => "[INFO] [SEND_FILE] Resource {$resource['res_id']} : ({$resource['subject']}) has no file"]);
                 continue;
             }
 
             $docserver = \Docserver\models\DocserverModel::getByDocserverId(['docserverId' => $resource['docserver_id'], 'select' => ['path_template']]);
             $file = file_get_contents($docserver['path_template'] . str_replace('#', '/', $resource['path']) . $resource['filename']);
             if (empty($file)) {
-                self::writeLog(['message' => "[SEND_FILE] Resource {$resource['res_id']} : ({$resource['subject']}) file is missing"]);
+                self::writeLog(['message' => "[ERROR] [SEND_FILE] Resource {$resource['res_id']} : ({$resource['subject']}) file is missing"]);
                 continue;
             }
 
@@ -80,12 +80,12 @@ class OzwilloScript
             ]);
 
             if (!empty($response['errors'])) {
-                self::writeLog(['message' => "[SEND_FILE] Resource {$resource['res_id']} : ({$resource['subject']}) curl call failed"]);
+                self::writeLog(['message' => "[ERROR] [SEND_FILE] Resource {$resource['res_id']} : ({$resource['subject']}) curl call failed"]);
                 self::writeLog(['message' => $response['errors']]);
                 continue;
             } elseif (empty($response['response']['publikId'])) {
-                self::writeLog(['message' => "[SEND_FILE] Resource {$resource['res_id']} : ({$resource['subject']}) publikId is missing"]);
-                self::writeLog(['message' => $response['response']]);
+                self::writeLog(['message' => "[ERROR] [SEND_FILE] Resource {$resource['res_id']} : ({$resource['subject']}) publikId is missing"]);
+                self::writeLog(['message' => json_encode($response['response'])]);
                 continue;
             }
 
@@ -93,7 +93,7 @@ class OzwilloScript
             $externalId['publikId'] = $response['response']['publikId'];
             \Resource\models\ResModel::update(['set' => ['external_id' => json_encode($externalId)], 'where' => ['res_id = ?'], 'data' => [$resource['res_id']]]);
 
-            self::writeLog(['message' => "[SEND_FILE] Resource {$resource['res_id']} : ({$resource['subject']}) successfully sent to ozwillo"]);
+            self::writeLog(['message' => "[SUCCESS] [SEND_FILE] Resource {$resource['res_id']} : ({$resource['subject']}) successfully sent to ozwillo"]);
         }
     }
 
@@ -106,16 +106,16 @@ class OzwilloScript
 
         $configuration = OzwilloScript::getXmlLoaded(['path' => 'bin/external/ozwillo/config.xml', 'customId' => $customId]);
         if (empty($configuration)) {
-            self::writeLog(['message' => "[SEND_DATA] File bin/external/ozwillo/config.xml does not exist"]);
+            self::writeLog(['message' => "[ERROR] [SEND_DATA] File bin/external/ozwillo/config.xml does not exist"]);
             exit();
-        } elseif (empty($configuration->user) || empty($configuration->password) || empty($configuration->uri) || empty($configuration->triggerStatuses->sendData)) {
-            self::writeLog(['message' => "[SEND_DATA] File bin/external/ozwillo/config.xml is not filled enough"]);
-            exit();
+        } elseif (empty($configuration->user) || empty($configuration->password) || empty($configuration->sendData->uri) || empty($configuration->sendData->status)) {
+            self::writeLog(['message' => "[ERROR] [SEND_DATA] File bin/external/ozwillo/config.xml is not filled enough"]);
+            return;
         }
         $user = (string)$configuration->user;
         $password = (string)$configuration->password;
-        $uri = (string)$configuration->uri;
-        $status = (string)$configuration->triggerStatuses->sendData;
+        $uri = (string)$configuration->sendData->uri;
+        $status = (string)$configuration->sendData->status;
 
         \SrcCore\models\DatabasePDO::reset();
         new \SrcCore\models\DatabasePDO(['customId' => $customId]);
@@ -142,7 +142,7 @@ class OzwilloScript
             ]);
 
             if (!empty($response['errors'])) {
-                self::writeLog(['message' => "[SEND_DATA] Resource {$resource['res_id']} : ({$resource['subject']}) curl call failed"]);
+                self::writeLog(['message' => "[ERROR] [SEND_DATA] Resource {$resource['res_id']} : ({$resource['subject']}) curl call failed"]);
                 self::writeLog(['message' => $response['errors']]);
                 continue;
             }
@@ -150,7 +150,7 @@ class OzwilloScript
             unset($externalId['publikId']);
             \Resource\models\ResModel::update(['set' => ['external_id' => json_encode($externalId)], 'where' => ['res_id = ?'], 'data' => [$resource['res_id']]]);
 
-            self::writeLog(['message' => "[SEND_DATA] Resource {$resource['res_id']} : ({$resource['subject']}) successfully sent to ozwillo"]);
+            self::writeLog(['message' => "[SUCCESS] [SEND_DATA] Resource {$resource['res_id']} : ({$resource['subject']}) successfully sent to ozwillo"]);
         }
     }
 
