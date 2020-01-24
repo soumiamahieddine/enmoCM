@@ -53,20 +53,20 @@ export class HistoryAdministrationComponent implements OnInit {
                     icon: 'fa fa-history',
                     route: '/administration/history',
                     label: this.lang.history,
-                    current: false
+                    current: true
                 },
                 {
                     icon: 'fa fa-history',
                     route: '/administration/history-batch',
                     label: this.lang.historyBatch,
-                    current: true
+                    current: false
                 }
             ];
         } else {
             this.subMenus = [
                 {
                     icon: 'fa fa-history',
-                    route: '/administration/history-batch',
+                    route: '/administration/history',
                     label: this.lang.historyBatch,
                     current: true
                 }
