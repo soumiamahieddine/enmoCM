@@ -1465,6 +1465,7 @@ export const LANG_NL = {
     "searchCommunicationMean": "Search communication mean", //_TO_TRANSLATE
     "searchExternalIdM2M": "Search M2GEC Identifier", //_TO_TRANSLATE
     "goToFolder": "Go to folder", //_TO_TRANSLATE
+    "m2mContactInfo": "Expected Format : SIRET/ENTITY_ID of destination entity", //_TO_TRANSLATE
     "ADD": "Add", //_TO_TRANSLATE
     "UP": "Update", //_TO_TRANSLATE
     "DEL": "Delete", //_TO_TRANSLATE

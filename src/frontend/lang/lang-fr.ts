@@ -1480,6 +1480,7 @@ export const LANG_FR = {
     "searchCommunicationMean": "Recherchez un moyen de communication",
     "searchExternalIdM2M": "Recherchez un identifiant M2GEC",
     "goToFolder": "Accéder au dossier",
+    "m2mContactInfo": "Format attendu : SIRET/ENTITY_ID de l'entité destinatrice",
     "ADD": "Ajout",
     "UP": "Modification",
     "DEL": "Suppression",

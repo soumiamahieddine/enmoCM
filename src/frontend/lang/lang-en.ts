@@ -1440,6 +1440,7 @@ export const LANG_EN = {
     "searchCommunicationMean": "Search communication mean",
     "searchExternalIdM2M": "Search M2GEC Identifier",
     "goToFolder": "Go to folder",
+    "m2mContactInfo": "Expected Format : SIRET/ENTITY_ID of destination entity",
     "ADD": "Add",
     "UP": "Update",
     "DEL": "Delete",
