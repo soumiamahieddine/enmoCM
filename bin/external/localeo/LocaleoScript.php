@@ -361,7 +361,7 @@ class LocaleoScript
                 'res_attachments.res_id_master = res_letterbox.res_id', "res_letterbox.external_id->>'localeoId' is not null",
                 "res_attachments.external_id->>'localeoId' is null", 'res_attachments.status not in (?)'
             ],
-            'data'      => [['DEL']]
+            'data'      => [['DEL', 'OBS']]
         ]);
 
         foreach ($attachments as $attachment) {
@@ -481,7 +481,7 @@ class LocaleoScript
         fclose($file);
 
         $resources = \Resource\models\ResModel::get([
-            'select'    => ['res_id', 'subject', 'format', 'path', 'filename', 'docserver_id', "external_id->>'localeoId' as \"localeoId\""],
+            'select'    => ['res_id', "external_id->>'localeoId' as \"localeoId\""],
             'where'     => $where,
             'data'      => $data
         ]);
