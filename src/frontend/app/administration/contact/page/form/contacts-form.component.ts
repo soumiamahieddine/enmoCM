@@ -49,6 +49,10 @@ export class ContactsFormComponent implements OnInit {
         {
             id: 'complement',
             label: this.lang.additionals
+        },
+        {
+            id: 'maarch2maarch',
+            label: 'Maarch2Maarch'
         }
     ];
 
@@ -220,7 +224,7 @@ export class ContactsFormComponent implements OnInit {
         },
         {
             id: 'communicationMeans',
-            unit: 'complement',
+            unit: 'maarch2maarch',
             label: this.lang.communicationMean,
             desc: `${this.lang.communicationMeanDesc} (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
             type: 'string',
@@ -232,7 +236,7 @@ export class ContactsFormComponent implements OnInit {
         },
         {
             id: 'externalId_m2m',
-            unit: 'complement',
+            unit: 'maarch2maarch',
             label: this.lang.IdMaarch2Gec,
             desc: `${this.lang.m2mContactInfo} (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
             type: 'string',
@@ -490,7 +494,7 @@ export class ContactsFormComponent implements OnInit {
                     } else {
                         this.contactForm.push({
                             id: `externalId_${id}`,
-                            unit: 'complement',
+                            unit: 'maarch2maarch',
                             label: id,
                             type: 'string',
                             control: new FormControl({ value: data.externalId[id], disabled: true }),
@@ -821,7 +825,7 @@ export class ContactsFormComponent implements OnInit {
         } else {
             this.contactForm.push({
                 id: `externalId_m2m_annuary_id`,
-                unit: 'complement',
+                unit: 'maarch2maarch',
                 label: 'm2m_annuary_id',
                 type: 'string',
                 control: new FormControl({ value: '', disabled: true }),
