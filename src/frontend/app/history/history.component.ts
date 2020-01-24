@@ -48,7 +48,7 @@ export class HistoryComponent implements OnInit {
         startDate: '#b5cfd8',
         endDate: '#7393a7',
         actions: '#7d5ba6',
-        systemActions: '#d6716f',
+        systemActions: '#7d5ba6',
         users: '#009dc5',
     };
 
