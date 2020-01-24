@@ -1473,4 +1473,6 @@ export const LANG_NL = {
     "VIEW": "View", //_TO_TRANSLATE
     "ERROR": "Error", //_TO_TRANSLATE
     "systemActions": "System action(s)", //_TO_TRANSLATE
+    "viewAllHistory": "View all history", //_TO_TRANSLATE
+    "viewActionsHistory": "View only actions in history", //_TO_TRANSLATE
 };

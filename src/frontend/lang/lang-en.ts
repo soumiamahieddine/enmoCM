@@ -1448,4 +1448,6 @@ export const LANG_EN = {
     "VIEW": "View",
     "ERROR": "Error",
     "systemActions": "System action(s)",
+    "viewAllHistory": "View all history",
+    "viewActionsHistory": "View only actions in history",
 };

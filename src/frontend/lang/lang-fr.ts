@@ -1488,4 +1488,6 @@ export const LANG_FR = {
     "VIEW": "Visualisation",
     "ERROR": "Erreur",
     "systemActions": "Événement(s) système",
+    "viewAllHistory": "Afficher tout l'historique",
+    "viewActionsHistory": "Afficher l'historique des actions",
 };
