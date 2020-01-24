@@ -420,9 +420,6 @@ export class DoctypesAdministrationComponent implements OnInit {
                 this.secondLevels = data['secondLevel'];
                 this.processModes = ['NORMAL', 'SVA', 'SVR'];
                 this.models       = data['models'];
-                if(mode == 'doctype'){
-                    this.currentType.is_generated = 'N';
-                }
             }, (err) => {
                 this.notify.error(err.error.errors);
             });

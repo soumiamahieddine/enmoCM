@@ -206,23 +206,6 @@
                                     </mat-form-field>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <mat-radio-group required name="is_generated" [(ngModel)]="currentType.is_generated">
-                                        <mat-radio-button color="primary" name="is_generated" [checked]="currentType.is_generated=='Y'" value="Y">{{lang.generatedFile}}</mat-radio-button>
-                                        <mat-radio-button color="primary" name="is_generated" [checked]="currentType.is_generated=='N'" value="N">{{lang.loadedFile}}</mat-radio-button>
-                                    </mat-radio-group>
-                                </div>
-                                <div class="col-sm-12" *ngIf="currentType.is_generated=='Y'">
-                                    <mat-form-field>
-                                        <mat-select id="template_id" name="template_id" title="{{lang.chooseModel}}" placeholder="{{lang.chooseModel}}" [(ngModel)]="currentType.template_id">
-                                            <mat-option *ngFor="let model of models" [value]="model.template_id">
-                                                {{model.template_label}}
-                                            </mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </div>
-                            </div>
                             <mat-accordion>
                                 <mat-expansion-panel>
                                     <mat-expansion-panel-header>

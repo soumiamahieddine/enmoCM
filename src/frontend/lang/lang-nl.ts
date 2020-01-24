@@ -407,7 +407,6 @@ export const LANG_NL = {
     "from"                                  : "Vanaf",
     "fromRange"                             : "van",
     "functionnalities"                      : "Functies",
-    "generatedFile"                         : "Aangemaakt bestand",
     "genSummarySheets"                      : "_TO_TRANSLATE",
     "getAssignee"                           : "User destination (entity destination)", //_TO_TRANSLATE
     "getAssigneeSample"                     : "Barbara BAIN (Finance division)", //_TO_TRANSLATE
@@ -509,7 +508,6 @@ export const LANG_NL = {
     "links"                                 : "Verbindingen",
     "linkUser"                              : "Een gebruiker koppelen",
     "listTemplatesRolesUpdated"             : "Gewijzigde rollen",
-    "loadedFile"                            : "Geïmporteerd bestand",
     "loading"                               : "Aan het laden ...",
     "lockDocserver"                         : "De opslagruimte vergrendelen (enkel lezen)",
     "lockedBy"                              : "locked by", //_TO_TRANSLATE
