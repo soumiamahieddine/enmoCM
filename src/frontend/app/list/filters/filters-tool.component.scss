@@ -1,3 +1,5 @@
+@import '../../../css/vars.scss';
+
 .filtersContent {
     display: flex;
 
@@ -174,7 +176,7 @@
 
 .filterBadges>.badge-folders {
     margin: 5px;
-    background: #a3d627;
+    background: $secondary;
     cursor: pointer;
 }
 
