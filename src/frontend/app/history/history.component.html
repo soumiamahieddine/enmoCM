@@ -28,7 +28,7 @@
             </mat-autocomplete>
         </mat-form-field>
     </div>
-    <button *ngIf="privilegeService.hasCurrentUserPrivilege('view_full_history') && privilegeService.hasCurrentUserPrivilege('view_doc_history')" color="primary" mat-icon-button [title]="!fullHistoryMode ? 'Afficher tout l\'historique' : 'Afficher l\'historique des actions'" (click)="switchHistoryMode()">
+    <button *ngIf="privilegeService.hasCurrentUserPrivilege('view_full_history') && privilegeService.hasCurrentUserPrivilege('view_doc_history')" color="primary" mat-icon-button [title]="!fullHistoryMode ? lang.viewAllHistory : lang.viewActionsHistory" (click)="switchHistoryMode()">
         <mat-icon class="fas" [class.fa-exchange-alt]="fullHistoryMode" [class.fa-history]="!fullHistoryMode"></mat-icon>
     </button>
     <div class="table-head-tool">
