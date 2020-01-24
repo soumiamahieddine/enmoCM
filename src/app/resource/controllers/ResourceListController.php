@@ -1013,6 +1013,32 @@ class ResourceListController
             }
         }
 
+        if (!empty($data['folders'])) {
+            $folders = explode(',', $data['folders']);
+            $resIdsInFolders = [];
+            foreach ($folders as $folderId) {
+                $resources = FolderModel::getWithResources([
+                    'select' => ['res_id'],
+                    'where'  => ['folder_id in (?)'],
+                    'data'   => [$folderId]
+                ]);
+                $resources = array_column($resources, 'res_id');
+                $resIdsInFolders = array_merge($resIdsInFolders, $resources);
+            }
+            if (!empty($resIdsInFolders)) {
+                $wherePriorities[] = 'res_id in (?)';
+                $dataPriorities[]  = $resIdsInFolders;
+                $whereCategories[] = 'res_id in (?)';
+                $dataCategories[]  = $resIdsInFolders;
+                $whereEntities[]   = 'res_id in (?)';
+                $dataEntities[]    = $resIdsInFolders;
+                $whereStatuses[]   = 'res_id in (?)';
+                $dataStatuses[]    = $resIdsInFolders;
+                $whereDocTypes[]   = 'res_id in (?)';
+                $dataDocTypes[]    = $resIdsInFolders;
+            }
+        }
+
         $priorities = [];
         $rawPriorities = ResModel::getOnView([
             'select'    => ['count(res_id)', 'priority'],
@@ -1111,7 +1137,7 @@ class ResourceListController
 
         $folders = [];
 
-        $resIds = ResModel::getOnView([
+        $resIds = ResModel::get([
             'select' => ['res_id'],
             'where'  => $whereFolders,
             'data'   => $dataFolders
