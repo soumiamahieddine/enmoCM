@@ -453,3 +453,9 @@ define('_AVIS_SENT', 'Gegeven bericht');
 define('_BY', 'door');
 define('_TO_AVIS', 'VOOR BERICHT');
 define('_VALIDATE_BY', 'Gevalideerd door');
+
+define("_ACKNOWLEDGEMENT_RECEIPT", "Acknowledgement Receipt"); //TO TRANSLATE
+define("_CREATED_BY", "Created by"); //TO TRANSLATE
+define("_SENT_DATE", "Sent "); //TO TRANSLATE
+define("_SENT_TO", "Sent to"); //TO TRANSLATE
+define("_FORMAT", "Format"); //TO TRANSLATE

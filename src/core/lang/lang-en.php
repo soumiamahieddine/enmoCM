@@ -448,3 +448,10 @@ define("_AVIS_SENT", "Notice given");
 define("_BY", "by");
 define("_TO_AVIS", "For recommendation");
 define("_VALIDATE_BY", "Validate by");
+
+define("_ACKNOWLEDGEMENT_RECEIPT", "Acknowledgement Receipt");
+define("_CREATED_BY", "Created by");
+define("_SENT_DATE", "Sent ");
+define("_SENT_TO", "Sent to");
+define("_FORMAT", "Format");
+
