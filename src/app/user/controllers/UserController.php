@@ -842,7 +842,7 @@ class UserController
         HistoryController::add([
             'tableName'    => 'users',
             'recordId'     => $user['user_id'],
-            'eventType'    => 'RET',
+            'eventType'    => 'UP',
             'eventId'      => 'userabs',
             'info'         => "{$user['firstname']} {$user['lastname']} " ._BACK_FROM_VACATION
         ]);

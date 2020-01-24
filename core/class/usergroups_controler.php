@@ -513,42 +513,6 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
     */
     public function enable($group, $params=array())
     {
-        $control = array();
-        if (!isset($group) || empty($group)) {
-            $control = array(
-                'status' => 'ko',
-                'value'  => '',
-                'error'  => _GROUP_EMPTY,
-            );
-            return $control;
-        }
-        $group = $this->_isAGroup($group);
-        $this->set_foolish_ids(array('group_id'));
-        $this->set_specific_id('group_id');
-        if ($this->advanced_enable($group)) {
-            $control = array(
-                'status' => 'ok',
-                'value' => $group->group_id,
-            );
-            if (isset($params['log_group_enabled'])
-                && ($params['log_group_enabled'] == 'true'
-                    || $params['log_group_enabled'] == true)
-            ) {
-                $history = new history();
-                $history->add(
-                    USERGROUPS_TABLE, $group->group_id, 'VAL','usergroupval',
-                    _AUTORIZED_GROUP . ' : ' . $group->group_id,
-                    $params['databasetype']
-                );
-            }
-        } else {
-            $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _PB_WITH_GROUP_ID,
-            );
-        }
-        return $control;
     }
 
     /**
