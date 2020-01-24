@@ -5,6 +5,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../service/app.service';
 import { FunctionsService } from '../../../service/functions.service';
 import { HistoryComponent } from '../../history/history.component';
+import { PrivilegeService } from '../../../service/privileges.service';
 
 @Component({
     selector: 'contact-list',
@@ -42,7 +43,34 @@ export class HistoryAdministrationComponent implements OnInit {
     constructor(
         public http: HttpClient,
         public appService: AppService,
-        public functions: FunctionsService) { }
+        public functions: FunctionsService,
+        private privilegeService: PrivilegeService) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void {
+        if (this.privilegeService.hasCurrentUserPrivilege('view_history_batch')) {
+            this.subMenus = [
+                {
+                    icon: 'fa fa-history',
+                    route: '/administration/history',
+                    label: this.lang.history,
+                    current: false
+                },
+                {
+                    icon: 'fa fa-history',
+                    route: '/administration/history-batch',
+                    label: this.lang.historyBatch,
+                    current: true
+                }
+            ];
+        } else {
+            this.subMenus = [
+                {
+                    icon: 'fa fa-history',
+                    route: '/administration/history-batch',
+                    label: this.lang.historyBatch,
+                    current: true
+                }
+            ];
+        }
+    }
 }
