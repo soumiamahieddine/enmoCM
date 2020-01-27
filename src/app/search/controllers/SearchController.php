@@ -17,6 +17,7 @@ namespace Search\controllers;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\RedirectBasketModel;
+use Doctype\models\DoctypeModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
@@ -143,20 +144,38 @@ class SearchController
             $offset = (int)$queryParams['offset'];
         }
 
-        $resources = ResModel::getOnView([
-            'select'    => [
-                'res_id as "resId"', 'alt_identifier as "chrono"', 'subject', 'barcode', 'filename', 'creation_date as "creationDate"',
-                'type_id as "type"', 'priority', 'status', 'dest_user as "destUser"'
-            ],
+        $allResources = ResModel::getOnView([
+            'select'    => ['res_id as "resId"'],
             'where'     => $searchWhere,
             'data'      => $searchData,
-            'orderBy'   => ['creation_date  DESC'],
-            'limit'     => $limit,
-            'offset'    => $offset
+            'orderBy'   => ['creation_date  DESC']
         ]);
+        if (empty($allResources[$offset])) {
+            return $response->withJson(['resources' => [], 'count' => 0]);
+        }
 
+        $resIds = [];
+        $order = 'CASE res_id ';
+        for ($i = $offset; $i < $limit; $i++) {
+            if (empty($allResources[$i]['resId'])) {
+                break;
+            }
+            $order .= "WHEN {$allResources[$i]['resId']} THEN {$i} ";
+            $resIds[] = $allResources[$i]['resId'];
+        }
+        $order .= 'END';
+
+        $resources = ResModel::get([
+            'select'    => [
+                'res_id as "resId"', 'category_id as "category"', 'alt_identifier as "chrono"', 'subject', 'barcode', 'filename', 'creation_date as "creationDate"',
+                'type_id as "type"', 'priority', 'status', 'dest_user as "destUser"', 'count(1) OVER()'
+            ],
+            'where'     => ['res_id in (?)'],
+            'data'      => [$resIds],
+            'orderBy'   => [$order]
+        ]);
         if (empty($resources)) {
-            return $response->withJson([]);
+            return $response->withJson(['resources' => [], 'count' => 0]);
         }
 
         $resourcesIds = array_column($resources, 'resId');
@@ -167,6 +186,9 @@ class SearchController
 
         $statusesIds = array_column($resources, 'status');
         $statuses = StatusModel::get(['select' => ['id', 'label_status', 'img_filename'], 'where' => ['id in (?)'], 'data' => [$statusesIds]]);
+
+        $doctypesIds = array_column($resources, 'type');
+        $doctypes = DoctypeModel::get(['select' => ['type_id', 'description'], 'where' => ['type_id in (?)'], 'data' => [$doctypesIds]]);
 
         $correspondents = ResourceContactModel::get([
             'select'    => ['item_id as id', 'type', 'mode', 'res_id'],
@@ -188,6 +210,11 @@ class SearchController
                         $resources[$key]['statusLabel'] = $status['label_status'];
                         $resources[$key]['statusImage'] = $status['img_filename'];
                     }
+                }
+            }
+            foreach ($doctypes as $doctype) {
+                if ($doctype['type_id'] == $resource['type']) {
+                    $resources[$key]['typeLabel'] = $doctype['description'];
                 }
             }
             if (!empty($resource['destUser'])) {
@@ -212,6 +239,6 @@ class SearchController
             }
         }
 
-        return $response->withJson($resources);
+        return $response->withJson(['resources' => $resources, 'count' => count($allResources)]);
     }
 }
