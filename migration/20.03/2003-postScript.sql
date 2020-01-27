@@ -71,8 +71,6 @@ ALTER TABLE shippings DROP COLUMN IF EXISTS is_version;
 
 ALTER TABLE priorities DROP COLUMN IF EXISTS default_priority;
 
-UPDATE templates SET template_target = 'indexingFile', template_attachment_type = 'all' WHERE template_target = 'doctypes';
-
 DROP TABLE IF EXISTS doctypes_indexes;
 
 DROP TABLE IF EXISTS listmodels;
