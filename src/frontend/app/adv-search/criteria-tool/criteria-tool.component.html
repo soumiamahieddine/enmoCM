@@ -1,0 +1,40 @@
+<mat-accordion>
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Critères de recherche
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="col-md-12">
+            <mat-form-field appearance="outline" class="addCriteriaField">
+                <input type="text" #searchCriteriaInput matInput placeholder="Ajouter un critère"
+                    [formControl]="searchCriteria" [matAutocomplete]="autoGroup">
+                <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="addCriteria($event.option.value)">
+                    <ng-container *ngFor="let keyVal of criteria | keyvalue">
+                        <mat-optgroup [label]="keyVal.key" *ngIf="(filteredCriteria[keyVal.key] | async)?.length > 0">
+                            <mat-option *ngFor="let crit of filteredCriteria[keyVal.key] | async | sortBy : 'label'"
+                                [value]="crit" [disabled]="isCurrentCriteria(crit.id)">
+                                {{crit.label}}
+                            </mat-option>
+                        </mat-optgroup>
+                    </ng-container>
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
+        <div class="col-md-6" *ngFor="let criteria of currentCriteria;let i=index">
+            <mat-form-field appearance="outline" class="criteriaField">
+                <mat-label>{{criteria.label}}</mat-label>
+                <input matInput placeholder="First name" [formControl]="criteria.control">
+                <button mat-icon-button matSuffix color="primary" (click)="$event.stopPropagation();removeCriteria(i)">
+                    <mat-icon color="warn" class="fa fa-trash"></mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+        <div class="col-md-12">
+            <button mat-raised-button matSuffix color="primary" (click)="getSearchUrl()">
+                {{lang.searchMails}}
+            </button>
+        </div>
+    </mat-expansion-panel>
+</mat-accordion>

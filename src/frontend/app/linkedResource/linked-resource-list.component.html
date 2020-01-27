@@ -1,0 +1,29 @@
+<!--<app-criteria-tool></app-criteria-tool>
+<search-adv-list [search]="'&resourceField=aléa'"></search-adv-list>-->
+
+<div class="row">
+    <div class="col-md-12">
+        <mat-paginator #paginator [length]="100" [hidePageSize]="true" [pageSize]="10">
+        </mat-paginator>
+    </div>
+</div>
+<mat-table #table [dataSource]="dataSource" matSort matSortActive="resId" matSortDirection="asc">
+    <ng-container matColumnDef="resId">
+        <mat-cell *matCellDef="let element" style="flex:1;">
+            <span>
+                {{element.resId}}
+            </span>
+        </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="actions">
+        <mat-cell *matCellDef="let element" style="justify-content: flex-end;">
+            <button mat-icon-button color="warn" (click)="$event.stopPropagation();">
+                <mat-icon class="fa fa-unlink fa-2x" aria-hidden="true"></mat-icon>
+            </button>
+        </mat-cell>
+    </ng-container>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+<button mat-fab class="linkRes" color="primary" [title]="lang.link" (click)="createAttachment()">
+    <mat-icon class="fa fa-link" style="height:auto;"></mat-icon>
+</button>
