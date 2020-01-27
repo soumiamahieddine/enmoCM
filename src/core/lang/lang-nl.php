@@ -460,3 +460,4 @@ define("_CREATED_BY", "Created by"); //TO TRANSLATE
 define("_SENT_DATE", "Sent "); //TO TRANSLATE
 define("_SENT_TO", "Sent to"); //TO TRANSLATE
 define("_FORMAT", "Format"); //TO TRANSLATE
+define("_SUBJECT", "Subject"); //TO TRANSLATE

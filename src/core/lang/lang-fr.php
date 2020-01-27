@@ -454,3 +454,5 @@ define("_CREATED_BY", "Créer par");
 define("_SENT_DATE", "Envoyé le");
 define("_SENT_TO", "Envoyé à");
 define("_FORMAT", "Format");
+define("_SUBJECT", "Objet");
+define("_CONTACT", "Contact");

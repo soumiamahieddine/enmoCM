@@ -30,6 +30,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
+use Status\models\StatusModel;
 use User\models\UserModel;
 
 class ResourceDataExportController
@@ -70,7 +71,7 @@ class ResourceDataExportController
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
             $attachments = AttachmentModel::get([
-                'select' => ['res_id', 'docserver_id', 'res_id_master'],
+                'select' => ['*'],
                 'where'  => ['res_id in (?)', 'status not in (?)'],
                 'data'   => [$queryParams['attachments'], ['DEL']],
             ]);
@@ -83,6 +84,8 @@ class ResourceDataExportController
                 if ($attachment['res_id_master'] != $args['resId']) {
                     return $response->withStatus(400)->withJson(['errors' => 'Attachment not linked to resource']);
                 }
+
+                $documentPaths[] = ResourceDataExportController::getAttachmentSeparator(['attachment' => $attachment]);
 
                 $path = ResourceDataExportController::getDocumentFilePath(['document' => $attachment, 'collId' => 'attachments_coll']);
 
@@ -131,8 +134,7 @@ class ResourceDataExportController
                     return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement Receipt not linked to resource']);
                 }
 
-                $separatorPath = ResourceDataExportController::getAcknowledgementReceiptSeparator(['acknowledgementReceipt' => $acknowledgementReceipt]);
-                $documentPaths[] = $separatorPath;
+                $documentPaths[] = ResourceDataExportController::getAcknowledgementReceiptSeparator(['acknowledgementReceipt' => $acknowledgementReceipt]);
 
                 $path = ResourceDataExportController::getDocumentFilePath(['document' => $acknowledgementReceipt]);
 
@@ -281,7 +283,7 @@ class ResourceDataExportController
         }
 
         $tmpDir = CoreConfigModel::getTmpPath();
-        $filePathOnTmp = $tmpDir . '/' . 'listNotes_' . $GLOBALS['id'] . '.pdf';
+        $filePathOnTmp = $tmpDir . 'listNotes_' . $GLOBALS['id'] . '.pdf';
         $pdf->Output($filePathOnTmp, 'F');
 
         return $filePathOnTmp;
@@ -340,7 +342,7 @@ class ResourceDataExportController
 
 
         $tmpDir = CoreConfigModel::getTmpPath();
-        $filePathOnTmp = $tmpDir . '/' . 'convertedAr_' . $acknowledgementReceipt['id'] . '_SEPARATOR_' . $GLOBALS['id'] . '.pdf';
+        $filePathOnTmp = $tmpDir . 'convertedAr_' . $acknowledgementReceipt['id'] . '_SEPARATOR_' . $GLOBALS['id'] . '.pdf';
         $pdf->Output($filePathOnTmp, 'F');
 
         return $filePathOnTmp;
@@ -360,7 +362,79 @@ class ResourceDataExportController
         $pdf->writeHTML($contentHtml);
 
         $tmpDir = CoreConfigModel::getTmpPath();
-        $filePathOnTmp = $tmpDir . '/' . 'convertedAr_' . $acknowledgementReceipt['id'] . '_' . $GLOBALS['id'] . '.pdf';
+        $filePathOnTmp = $tmpDir . 'convertedAr_' . $acknowledgementReceipt['id'] . '_' . $GLOBALS['id'] . '.pdf';
+        $pdf->Output($filePathOnTmp, 'F');
+
+        return $filePathOnTmp;
+    }
+
+    private static function getAttachmentSeparator(array $args)
+    {
+        $attachment = $args['attachment'];
+
+        if ($attachment['recipient_type'] == 'user') {
+            $displayContact = UserModel::getLabelledUserById(['id' => $attachment['recipient_id']]);
+        } else if ($attachment['recipient_type'] == 'contact') {
+            $contact = ContactModel::getById([
+                'select' => ['*'],
+                'id'     => $attachment['recipient_id']
+            ]);
+            $displayContact = ContactController::getFormattedContactWithAddress([
+                'contact' => $contact
+            ]);
+            $displayContact = $displayContact['contact']['otherInfo'];
+        }
+
+        $creator = UserModel::getByLogin(['login' => $attachment['typist']]);
+
+        $status = StatusModel::getById(['id' => $attachment['status'], 'select' => ['label_status']]);
+        $status = $status['label_status'];
+
+        $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
+        $attachmentType = $attachmentTypes[$attachment['attachment_type']]['label'];
+
+        $pdf = new Fpdi('P', 'pt');
+        $pdf->setPrintHeader(false);
+        $pdf->AddPage();
+
+        $dimensions     = $pdf->getPageDimensions();
+        $widthNoMargins = $dimensions['w'] - $dimensions['rm'] - $dimensions['lm'];
+        $width          = $widthNoMargins / 2;
+
+        $pdf->SetFont('', 'B', 12);
+        $pdf->Cell($width, 15, _ATTACHMENT, 0, 0, 'L', false);
+        $pdf->Cell($width, 15, $attachment['identifier'], 0, 1, 'C', false);
+
+        $pdf->SetY($pdf->GetY() + 40);
+        $pdf->SetFont('', '', 10);
+
+        $pdf->MultiCell($width, 30, '<b>' . _CHRONO_NUMBER . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $attachment['identifier'] , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _SUBJECT . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $attachment['title'] . ' ' . $creator['lastname'] , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _CREATED_BY . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $creator['firstname'] . ' ' . $creator['lastname'] , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _CREATED . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $attachment['creation_date'] , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _FORMAT . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $attachment['format'] , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _STATUS . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $status , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _DOCTYPE . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $attachmentType , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _CONTACT . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $displayContact , 1, 'L', false, 1, '', '', true, 0, true);
+
+
+        $tmpDir = CoreConfigModel::getTmpPath();
+        $filePathOnTmp = $tmpDir . 'attachment_' . $attachment['res_id'] . '_SEPARATOR_' . $GLOBALS['id'] . '.pdf';
         $pdf->Output($filePathOnTmp, 'F');
 
         return $filePathOnTmp;
