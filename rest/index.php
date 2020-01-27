@@ -367,7 +367,7 @@ $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':u
 $app->get('/categories', \Resource\controllers\ResController::class . ':getCategories');
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 $app->get('/resources/{resId}/users/{userId}/groups/{groupId}/baskets/{basketId}/processingData', \Resource\controllers\ResController::class . ':getProcessingData');
-$app->get('/resources/{resId}/exportData', \Resource\controllers\ResourceDataExportController::class . ':get');
+$app->post('/resources/exportData', \Resource\controllers\ResourceDataExportController::class . ':generateFile');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
