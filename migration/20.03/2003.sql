@@ -581,6 +581,7 @@ FROM usergroups_services WHERE group_id IN (
     WHERE service_id = 'admin_users'
 );
 
+UPDATE history SET event_type = 'PRE' where event_type = 'RET';
 
 
 DO $$ 

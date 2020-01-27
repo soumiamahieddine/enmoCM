@@ -136,6 +136,7 @@ define('_ACCOUNT_LOCKED_FOR', 'Aantal verbindingspogingen overschreden. Uw accou
 define('_ACCOUNT_LOCKED_UNTIL', 'Aantal verbindingspogingen overschreden. Account vergrendeld tot');
 define('_MAX_SIZE_UPLOAD_REACHED', 'Maximumgrootte van het bestand overschreden');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Opslagruimtepad ontoegankelijk');
+define('_GO_ON_VACATION', 'go on vacation');//translate
 define('_BACK_FROM_VACATION', 'bij terugkeer na afwezigheid');
 define('_DOC_DISPLAYING', 'Weergave van het document');
 define('_DOC_ADDED', 'Document toegevoegd');

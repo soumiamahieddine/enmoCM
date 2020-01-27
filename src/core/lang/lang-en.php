@@ -136,6 +136,7 @@ define('_ACCOUNT_LOCKED_FOR', 'Too many connections attemps. Your account is loc
 define('_ACCOUNT_LOCKED_UNTIL', 'Too many connections attemps. Account locked until');
 define('_MAX_SIZE_UPLOAD_REACHED', 'File maximum size is exceeded');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Inaccessible Docserver path');
+define('_GO_ON_VACATION', 'go on vacation');
 define('_BACK_FROM_VACATION', 'back from vacation');
 define('_DOC_DISPLAYING', 'Displaying document');
 define('_DOC_ADDED', 'Document added');

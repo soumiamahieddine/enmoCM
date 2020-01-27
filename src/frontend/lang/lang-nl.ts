@@ -1469,6 +1469,9 @@ export const LANG_NL = {
     "LOGIN": "Login", //_TO_TRANSLATE
     "LOGOUT": "Logout", //_TO_TRANSLATE
     "VIEW": "View", //_TO_TRANSLATE
+    "ABS": "Vacation",//_TO_TRANSLATE
+    "PRE": "Back absence",//_TO_TRANSLATE
+    "RESETPSW": "Password reset",//_TO_TRANSLATE
     "ERROR": "Error", //_TO_TRANSLATE
     "systemActions": "System action(s)", //_TO_TRANSLATE
     "viewAllHistory": "View all history", //_TO_TRANSLATE
