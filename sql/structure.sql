@@ -777,15 +777,6 @@ WITH (
   OIDS=FALSE
 );
 
-
-CREATE TABLE templates_doctype_ext
-(
-  template_id bigint DEFAULT NULL,
-  type_id integer NOT NULL,
-  is_generated character(1) NOT NULL DEFAULT 'N'::bpchar
-)
-WITH (OIDS=FALSE);
-
 CREATE TABLE contacts
 (
     id SERIAL NOT NULL,

@@ -322,14 +322,6 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             );
             return $control;
         }
-        if ($this->linkExists($template->template_id)) {
-            $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _LINK_EXISTS,
-            );
-            return $control;
-        }
         $db = new Database();
         $query = "delete from "._TEMPLATES_TABLE_NAME." where template_id = ? " ;
             
@@ -432,27 +424,6 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
             return true;
         }
         return false;
-    }
-
-    /**
-    * Checks if the template is linked
-    *
-    * @param $template_id templates identifier
-    * @return bool true if the template is linked
-    */
-    public function linkExists($template_id)
-    {
-        if (!isset($template_id) || empty($template_id)) {
-            return false;
-        }
-        $db = new Database();
-
-        $query = "select template_id from " . _TEMPLATES_DOCTYPES_EXT_TABLE_NAME
-            . " where template_id = ? ";
-        $stmt = $db->query($query, array($template_id));
-        if ($stmt->rowCount() > 0) {
-            return true;
-        }
     }
     
     /**

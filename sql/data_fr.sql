@@ -223,7 +223,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('MAARCHTOGEC', 's
 TRUNCATE TABLE DOCTYPES_FIRST_LEVEL;
 TRUNCATE TABLE DOCTYPES_SECOND_LEVEL;
 TRUNCATE TABLE DOCTYPES;
-TRUNCATE TABLE TEMPLATES_DOCTYPE_EXT;
 
 INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (1, 'COURRIERS', '#000000', 'Y');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (1, '01. Correspondances', 1, '#000000', 'Y');
@@ -1177,13 +1176,6 @@ INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, key
 Select setval('groupbasket_redirect_system_id_seq', (select max(system_id)+1 from groupbasket_redirect), false);
 
 ------------
---TEMPLATES_DOCTYPE_EXT--
-------------
-TRUNCATE TABLE templates_doctype_ext;
-INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (3, 1201, 'Y');
-INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (9, 1202, 'Y');
-
-------------
 --KEYWORDS / TAGS
 ------------
 TRUNCATE TABLE tags;
@@ -1229,7 +1221,7 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 </table>
 <p>&nbsp;</p>
 <h4>Notes :</h4>
-<p>&nbsp;</p>', 'HTML', NULL, NULL, '', '', 'doctypes', 'all');
+<p>&nbsp;</p>', 'HTML', NULL, NULL, '', '', 'indexingFile', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
 VALUES (2, '[notification] Notifications événement', 'Notifications des événements système',
 '<p><font face="verdana,geneva" size="1">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
@@ -1392,7 +1384,7 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 <td>&nbsp;</td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'doctypes', 'all');
+</table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'indexingFile', 'all');
 INSERT INTO templates VALUES (10, '[maarch mairie] Clôture de demande', '[maarch mairie] Clôture de demande', '<p style="text-align: left;"><span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="text-decoration: underline;"><span style="font-size: small;">CLOTURE DEMANDE Maarch Mairie - [res_letterbox.type_label] - [res_letterbox.res_id] </span></span></p>
 <p style="text-align: center;">&nbsp;</p>
 <table style="background-color: #a8c33c; width: 800px; border: #000000 1pt solid;" border="1" cellspacing="1" cellpadding="5">
@@ -1435,7 +1427,7 @@ INSERT INTO templates VALUES (10, '[maarch mairie] Clôture de demande', '[maarc
 <td style="background-color: #e1f787;">&nbsp;</td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'doctypes');
+</table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'indexingFile');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (20, 'Accompagnement courriel', 'Modèle de courriel d''''accompagnement', '<p>Bonjour,</p>
 <p>En r&eacute;ponse &agrave; votre courrier en date du [res_letterbox.doc_date], veuillez trouver notre r&eacute;ponse en pi&egrave;ce-jointe.</p>
 <p>Cordialement,</p>

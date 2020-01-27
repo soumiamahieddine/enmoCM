@@ -53,10 +53,6 @@ class DoctypeControllerTest extends TestCase
         $this->assertNotNull($responseBody->firstLevel[0]->doctypes_first_level_label);
 
         $this->assertNotNull($responseBody->secondLevel);
-        $this->assertNotNull($responseBody->models);
-        $this->assertNotNull($responseBody->models[0]->template_id);
-        $this->assertNotNull($responseBody->models[0]->template_label);
-        $this->assertNotNull($responseBody->models[0]->template_comment);
     }
 
     public function testCreateFirstLevel()

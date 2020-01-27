@@ -114,7 +114,6 @@ class FirstLevelController
             'data'      => ['Y'],
             'order_by'  => ['doctypes_second_level_label asc']
         ]);
-        $obj['models'] = TemplateModel::getByTarget(['select' => ['template_id', 'template_label', 'template_comment'], 'template_target' => 'doctypes']);
         $obj['indexes'] = [];
 
         return $response->withJson($obj);

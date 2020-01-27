@@ -704,7 +704,7 @@ ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_filename;
 ALTER TABLE users DROP COLUMN IF EXISTS custom_t1;
 ALTER TABLE users DROP COLUMN IF EXISTS custom_t2;
 ALTER TABLE users DROP COLUMN IF EXISTS custom_t3;
-
+DROP TABLE IF EXISTS templates_doctype_ext;
 
 /* M2M */
 DO $$ BEGIN
