@@ -966,7 +966,8 @@ CREATE TABLE res_letterbox
   alarm2_date timestamp without time zone,
   flag_alarm1 char(1) default 'N'::character varying,
   flag_alarm2 char(1) default 'N'::character varying,
-  model_id integer NOT NULL,
+  model_id INTEGER NOT NULL,
+  version INTEGER NOT NULL,
   integrations jsonb DEFAULT '{}' NOT NULL,
   custom_fields jsonb,
   linked_resources jsonb NOT NULL DEFAULT '[]',
@@ -979,13 +980,13 @@ CREATE TABLE adr_letterbox
   id serial NOT NULL,
   res_id bigint NOT NULL,
   type character varying(32) NOT NULL,
-  relation INTEGER NOT NULL,
+  version INTEGER NOT NULL,
   docserver_id character varying(32) NOT NULL,
   path character varying(255) NOT NULL,
   filename character varying(255) NOT NULL,
   fingerprint character varying(255) DEFAULT NULL,
   CONSTRAINT adr_letterbox_pkey PRIMARY KEY (id),
-  CONSTRAINT adr_letterbox_unique_key UNIQUE (res_id, type, relation)
+  CONSTRAINT adr_letterbox_unique_key UNIQUE (res_id, type, version)
 )
 WITH (OIDS=FALSE);
 

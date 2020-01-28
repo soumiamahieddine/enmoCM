@@ -388,7 +388,7 @@ class AttachmentController
         ]);
 
         if (empty($tnlAdr)) {
-            ConvertThumbnailController::convert(['collId' => 'attachments_coll', 'resId' => $args['id']]);
+            ConvertThumbnailController::convert(['type' => 'attachment', 'resId' => $args['id']]);
             
             $tnlAdr = AdrModel::getTypedAttachAdrByResId([
                 'select'    => ['docserver_id', 'path', 'filename'],

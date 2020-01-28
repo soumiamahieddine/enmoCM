@@ -90,7 +90,7 @@ class ResController
             ConvertPdfController::convert([
                 'resId'     => $resId,
                 'collId'    => 'letterbox_coll',
-                'relation'  => 1
+                'version'   => 1
             ]);
 
             $customId = CoreConfigModel::getCustomId();
@@ -262,10 +262,7 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier', 'filename', 'docserver_id', 'path', 'fingerprint']]);
-        $oldRelation = AdrModel::getDocuments(['select' => ['MAX(relation)'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
-        $relation = empty($oldRelation[0]['max']) ? 1 : ($oldRelation[0]['max'] + 1);
-
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier', 'filename', 'docserver_id', 'path', 'fingerprint', 'version']]);
         if (!empty($resource['filename']) && !empty($body['encodedFile'])) {
             AdrModel::createDocumentAdr([
                 'resId'         => $args['resId'],
@@ -273,7 +270,7 @@ class ResController
                 'docserverId'   => $resource['docserver_id'],
                 'path'          => $resource['path'],
                 'filename'      => $resource['filename'],
-                'relation'      => $relation - 1,
+                'version'       => $resource['version'],
                 'fingerprint'   => $resource['fingerprint']
             ]);
         }
@@ -290,7 +287,7 @@ class ResController
             ConvertPdfController::convert([
                 'resId'     => $args['resId'],
                 'collId'    => 'letterbox_coll',
-                'relation'  => $relation
+                'version'   => $resource['version'] + 1
             ]);
 
             $customId = CoreConfigModel::getCustomId();
@@ -585,20 +582,19 @@ class ResController
 
         $pathToThumbnail = 'apps/maarch_entreprise/img/noThumbnail.png';
 
-        $document = ResModel::getById(['select' => ['filename'], 'resId' => $args['resId']]);
+        $document = ResModel::getById(['select' => ['filename', 'version'], 'resId' => $args['resId']]);
         if (empty($document)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
         }
 
         if (!empty($document['filename']) && ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
-            $relation = AdrModel::getDocuments(['select' => ['MAX(relation)'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
-            $relation = $relation[0]['max'];
-
-            $tnlAdr = AdrModel::getDocuments(['select' => ['docserver_id', 'path', 'filename'], 'where' => ['res_id = ?', 'type = ?', 'relation = ?'], 'data' => [$args['resId'], 'TNL', $relation]]);
-
+            $tnlAdr = AdrModel::getDocuments(['select' => ['docserver_id', 'path', 'filename'], 'where' => ['res_id = ?', 'type = ?', 'version = ?'], 'data' => [$args['resId'], 'TNL', $document['version']]]);
             if (empty($tnlAdr[0])) {
-                ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $args['resId']]);
-                $tnlAdr = AdrModel::getDocuments(['select' => ['docserver_id', 'path', 'filename'], 'where' => ['res_id = ?', 'type = ?', 'relation = ?'], 'data' => [$args['resId'], 'TNL', $relation]]);
+                $control = ConvertThumbnailController::convert(['type' => 'resource', 'resId' => $args['resId']]);
+                if (!empty($control['errors'])) {
+                    return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+                }
+                $tnlAdr = AdrModel::getDocuments(['select' => ['docserver_id', 'path', 'filename'], 'where' => ['res_id = ?', 'type = ?', 'version = ?'], 'data' => [$args['resId'], 'TNL', $document['version']]]);
             }
 
             if (!empty($tnlAdr[0])) {

@@ -200,6 +200,7 @@ class StoreController
             'departure_date'        => $args['departureDate'] ?? null,
             'process_limit_date'    => $args['processLimitDate'] ?? null,
             'priority'              => $args['priority'] ?? null,
+            'version'               => 1,
             'barcode'               => $args['barcode'] ?? null,
             'origin'                => $args['origin'] ?? null,
             'custom_fields'         => !empty($args['customFields']) ? json_encode($args['customFields']) : null,
@@ -253,7 +254,10 @@ class StoreController
         if (!empty($args['processLimitDate']) && !empty($args['priority'])) {
             $preparedData['priority'] = IndexingController::calculatePriorityWithProcessLimitDate(['processLimitDate' => $args['processLimitDate']]);
         }
-
+        if (!empty($args['encodedFile'])) {
+            $resource = ResModel::getById(['resId' => $args['id'], 'select' => ['version']]);
+            $preparedData['version'] = $resource['version'] + 1;
+        }
         if (!empty($args['externalId']) && is_array($args['externalId'])) {
             $resource = ResModel::getById(['resId' => $args['id'], 'select' => ['external_id']]);
             $externalId = array_merge(json_decode($resource['external_id'], true), $args['externalId']);

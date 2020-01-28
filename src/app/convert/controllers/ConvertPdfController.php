@@ -56,7 +56,7 @@ class ConvertPdfController
     {
         ValidatorModel::notEmpty($aArgs, ['collId', 'resId']);
         ValidatorModel::stringType($aArgs, ['collId']);
-        ValidatorModel::intVal($aArgs, ['resId', 'relation']);
+        ValidatorModel::intVal($aArgs, ['resId', 'version']);
 
         if ($aArgs['collId'] == 'letterbox_coll') {
             $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['docserver_id', 'path', 'filename', 'format']]);
@@ -123,7 +123,7 @@ class ConvertPdfController
                 'docserverId'   => $storeResult['docserver_id'],
                 'path'          => $storeResult['destination_dir'],
                 'filename'      => $storeResult['file_destination_name'],
-                'relation'      => $aArgs['relation'] ?? 1,
+                'version'       => $aArgs['version'] ?? 1,
                 'fingerprint'   => $storeResult['fingerPrint']
             ]);
         } else {
@@ -173,22 +173,36 @@ class ConvertPdfController
         return $aReturn;
     }
 
-    public static function getConvertedPdfById(array $aArgs)
+    public static function getConvertedPdfById(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'collId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::notEmpty($args, ['resId', 'collId']);
+        ValidatorModel::intVal($args, ['resId']);
 
-        $convertedDocument = AdrModel::getConvertedDocumentById([
-            'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
-            'resId'     => $aArgs['resId'],
-            'collId'    => $aArgs['collId'],
-            'type'      => 'PDF'
-        ]);
-        
+        if ($args['collId'] == 'letterbox_coll') {
+            $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['version']]);
+
+            $convertedDocument = AdrModel::getDocuments([
+                'select'    => ['docserver_id', 'path', 'filename', 'fingerprint'],
+                'where'     => ['res_id = ?', 'type in (?)', 'version = ?'],
+                'data'      => [$args['resId'], ['PDF', 'SIGN'], $resource['version']],
+                'orderBy'   => ["type='SIGN' DESC"],
+                'limit'     => 1
+            ]);
+            $convertedDocument = $convertedDocument[0] ?? null;
+        } else {
+            $convertedDocument = AdrModel::getConvertedDocumentById([
+                'select' => ['docserver_id','path', 'filename', 'fingerprint'],
+                'resId' => $args['resId'],
+                'collId' => 'attachment',
+                'type' => 'PDF'
+            ]);
+        }
+
         if (empty($convertedDocument)) {
             $convertedDocument = ConvertPdfController::convert([
-                'resId'     => $aArgs['resId'],
-                'collId'    => $aArgs['collId']
+                'resId'     => $args['resId'],
+                'collId'    => $args['collId'],
+                'version'   => $resource['version'] ?? 1
             ]);
         }
 

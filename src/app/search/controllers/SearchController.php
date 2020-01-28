@@ -148,7 +148,7 @@ class SearchController
             'select'    => ['res_id as "resId"'],
             'where'     => $searchWhere,
             'data'      => $searchData,
-            'orderBy'   => ['creation_date  DESC']
+            'orderBy'   => ['creation_date DESC']
         ]);
         if (empty($allResources[$offset])) {
             return $response->withJson(['resources' => [], 'count' => 0]);
@@ -168,7 +168,7 @@ class SearchController
         $resources = ResModel::get([
             'select'    => [
                 'res_id as "resId"', 'category_id as "category"', 'alt_identifier as "chrono"', 'subject', 'barcode', 'filename', 'creation_date as "creationDate"',
-                'type_id as "type"', 'priority', 'status', 'dest_user as "destUser"', 'count(1) OVER()'
+                'type_id as "type"', 'priority', 'status', 'dest_user as "destUser"'
             ],
             'where'     => ['res_id in (?)'],
             'data'      => [$resIds],
