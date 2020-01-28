@@ -1,5 +1,10 @@
 @import '../../css/vars.scss';
 
+.loading {
+    display: flex;
+    justify-content: center;
+}
+
 .linkRes {
     position: sticky;
     bottom: 5px;

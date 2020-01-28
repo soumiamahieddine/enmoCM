@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
@@ -23,7 +23,7 @@ declare function $j(selector: any): any;
 export class LinkedResourceListComponent implements OnInit {
 
     lang: any = LANG;
-    loading: boolean = false;
+    loading: boolean = true;
 
     linkedResources: any[] = [];
     dataSource: any;
@@ -31,53 +31,8 @@ export class LinkedResourceListComponent implements OnInit {
 
     thumbnailUrl: string = '';
 
-    displayedMainData: any = [
-        {
-            'value': 'chrono',
-            'cssClasses': ['softColorData', 'align_centerData', 'chronoData'],
-            'icon': ''
-        },
-        {
-            'value': 'subject',
-            'cssClasses': ['longData'],
-            'icon': ''
-        }
-    ];
-
-    displayedSubData: any = [
-        { 
-            "value": "getCategory", 
-            "cssClasses": [], 
-            "icon": "fa-exchange-alt", 
-            "displayValue": "incoming" 
-        }, 
-       { 
-           "value": "getAssignee", 
-           "cssClasses": [], 
-           "icon": "fa-sitemap", 
-           "displayValue": "Georges GRAND (Direction Générale des Services)" 
-        }, 
-        { 
-            "value": "getRecipients", 
-            "cssClasses": [], 
-            "icon": "fa-user", 
-            "displayValue": ["Patricia PETIT"] 
-        }, 
-        { 
-            "value": "getSenders",
-            "cssClasses": [], 
-            "icon": "fa-book", 
-            "displayValue": ["Pierre BRUNEL "] 
-        }, 
-        { 
-            "value": "getCreationAndProcessLimitDates", 
-            "cssClasses": ["align_rightData"], 
-            "icon": "fa-calendar", 
-            "displayValue": { "creationDate": "2020-01-27 10:45:01.012295" } 
-        }
-    ];
-
     @Input('resId') resId: number;
+    @Output() reloadBadgeLinkedResources = new EventEmitter<string>();
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -98,6 +53,7 @@ export class LinkedResourceListComponent implements OnInit {
         this.http.get(`../../rest/resources/${this.resId}/linkedResources`).pipe(
             tap((data: any) => {
                 this.linkedResources = data.linkedResources;
+                this.reloadBadgeLinkedResources.emit(`${this.linkedResources.length}`);
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.linkedResources);
                     this.dataSource.paginator = this.paginator;
@@ -124,6 +80,7 @@ export class LinkedResourceListComponent implements OnInit {
             exhaustMap(() => this.http.delete(`../../rest/resources/${this.resId}/linkedResources/${row.resId}`)),
             tap(() => {
                 this.linkedResources = this.linkedResources.filter(resource => resource.resId !== row.resId);
+                this.reloadBadgeLinkedResources.emit(`${this.linkedResources.length}`);
                 this.dataSource = new MatTableDataSource(this.linkedResources);
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
@@ -137,10 +94,10 @@ export class LinkedResourceListComponent implements OnInit {
     }
 
     viewThumbnail(row: any) {
-        //if (row.hasDocument) {
+        if (row.hasDocument) {
             this.thumbnailUrl = '../../rest/resources/' + row.resId + '/thumbnail';
             $j('#viewThumbnail').show();
-        //}
+        }
     }
 
     closeThumbnail() {
@@ -148,6 +105,17 @@ export class LinkedResourceListComponent implements OnInit {
     }
 
     openSearchResourceModal() {
-        this.dialog.open(LinkResourceModalComponent, { data: { resId: this.resId } });
+        const dialogRef =  this.dialog.open(LinkResourceModalComponent, { width: '80%',data: { resId: this.resId, currentLinkedRes : this.linkedResources.map(res => res.resId) } });
+        dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'success'),
+            tap(() => {
+                this.initLinkedResources();
+                this.notify.success(this.lang.resourcesLinked);
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 }

@@ -1493,4 +1493,7 @@ export const LANG_FR = {
     "viewActionsHistory": "Afficher l'historique des actions",
     "unlink": "Enlever la liaison",
     "linkResource": "Lier un nouveau courrier",
+    "linkSelectedResources": "Lier les courriers sélectionnés",
+    "resourceUnlinked": "Liaison supprimée",
+    "resourcesLinked": "Liaison(s) ajoutée(s)",
 };

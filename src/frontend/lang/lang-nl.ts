@@ -1477,5 +1477,8 @@ export const LANG_NL = {
     "viewAllHistory": "View all history", //_TO_TRANSLATE
     "viewActionsHistory": "View only actions in history", //_TO_TRANSLATE
     "unlink": "Unlink this resource", //_TO_TRANSLATE
-    "linkResource": "Link to a new resource", //_TO_TRANSLATE
+    "linkResource": "Link to a new resource",  //_TO_TRANSLATE
+    "linkSelectedResources": "Link selected resources", //_TO_TRANSLATE
+    "resourceUnlinked": "Resource unlinked", //_TO_TRANSLATE
+    "resourcesLinked": "Resources linked", //_TO_TRANSLATE
 };

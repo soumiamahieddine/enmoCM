@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { AppService } from '../../../service/app.service';
@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { startWith, map } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
+import { MatExpansionPanel } from '@angular/material';
 
 @Component({
     selector: 'app-criteria-tool',
@@ -41,6 +42,9 @@ export class CriteriaToolComponent implements OnInit {
 
     searchCriteria = new FormControl();
 
+    @Output() searchUrlGenerated = new EventEmitter<string>();
+
+    @ViewChild('criteriaTool', { static: false }) criteriaTool: MatExpansionPanel;
     @ViewChild('searchCriteriaInput', { static: false }) searchCriteriaInput: ElementRef;
 
     constructor(
@@ -93,7 +97,7 @@ export class CriteriaToolComponent implements OnInit {
                 arrUrl.push(`${crit.id}=${crit.control.value}`);
             }
         });
-        console.log(arrUrl.join('&'));
-        
+        this.criteriaTool.close();
+        this.searchUrlGenerated.emit('&' + arrUrl.join('&'));
     }
 }

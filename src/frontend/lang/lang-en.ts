@@ -1453,4 +1453,7 @@ export const LANG_EN = {
     "viewActionsHistory": "View only actions in history",
     "unlink": "Unlink this resource",
     "linkResource": "Link to a new resource",
+    "linkSelectedResources": "Link selected resources",
+    "resourceUnlinked": "Resource unlinked",
+    "resourcesLinked": "Resources linked",
 };

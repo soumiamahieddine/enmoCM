@@ -25,7 +25,7 @@ export class SearchAdvListComponent implements OnInit {
     
     data: any;
 
-    displayedColumnsResource: string[] = ['action', 'resId', 'status', 'subject', 'type', 'creationDate'];
+    displayedColumnsResource: string[] = ['action', 'category', 'chrono', 'status', 'subject', 'type', 'creationDate'];
 
     selectedRes: number[] = [];
     allResInSearch: number[] = [];
@@ -91,41 +91,13 @@ export class SearchAdvListComponent implements OnInit {
     }
 
     processPostData(data: any) {
-        // FOR TEST
-        data = {
-            resources : [
-                {
-                  "resId": 101,
-                  "chrono": "MAARCH/2020A/2",
-                  "subject": "test qualif",
-                  "barcode": null,
-                  "filename": "0048_1580814739.pdf",
-                  "creationDate": "2020-01-06 22:37:30.652561",
-                  "type": 112,
-                  "priority": "poiuytre1357nbvc",
-                  "status": "EAVIS",
-                  "destUser": "bbain",
-                  "priorityColor": "#009dc5",
-                  "statusLabel": "Avis demandé",
-                  "statusImage": "fa-lightbulb",
-                  "destUserLabel": "Barbara BAIN",
-                  "hasDocument": true,
-                  "senders": {
-                    "id": 6,
-                    "type": "contact",
-                    "mode": "sender"
-                  },
-                  "recipients": [],
-                  "attachments": 1
-                }
-              ],
-              count: 1,
-              allResources : [100]
-        }
         return data;
     }
 
-    refreshDao() {
+    refreshDao(newUrl: string = null) {
+        if (newUrl !== null) {
+            this.search = newUrl;
+        }
         this.filtersChange.emit();
     }
 

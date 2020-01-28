@@ -6,6 +6,10 @@
         <mat-icon class="fa fa-times"></mat-icon>
     </button></h1>
 <mat-dialog-content class="modal-container">
-    <app-criteria-tool></app-criteria-tool>
-    <search-adv-list [search]="'&resourceField=aléa'"></search-adv-list>
+    <app-criteria-tool (searchUrlGenerated)="launchSearch($event)"></app-criteria-tool>
+    <search-adv-list #appSearchAdvList></search-adv-list>
 </mat-dialog-content>
+<div mat-dialog-actions class="actions">
+    <button mat-raised-button color="primary" [disabled]="appSearchAdvList.getSelectedRessources().length === 0"
+        (click)="linkResources()">{{lang.linkSelectedResources}}</button>
+</div>
