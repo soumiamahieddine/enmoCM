@@ -255,30 +255,23 @@ foreach ($customs as $custom) {
             if ($template['template_target'] == 'doctypes') {
                 $pathFilename = $tmpPath . 'template_migration_' . rand() . '_'. rand() .'.html';
                 file_put_contents($pathFilename, $newContent);
-                // $docInfo = pathinfo($pathFilename);
-                // $command = "timeout 30 unoconv -f odt " . escapeshellarg($pathFilename);
-        
-                // exec('export HOME=' . $tmpPath . ' && '.$command.' 2>&1', $output, $return);
 
-                // if (!file_exists($tmpPath.$docInfo["filename"].'.odt')) {
-                //     $nonMigrated++;
-                //     echo implode(" ", $output);
-                // } else {
-                    $resource = file_get_contents($pathFilename);
-                    $pathInfo = pathinfo($pathFilename);
-                    $storeResult = DocserverController::storeResourceOnDocServer([
+                $resource = file_get_contents($pathFilename);
+                $pathInfo = pathinfo($pathFilename);
+                $storeResult = DocserverController::storeResourceOnDocServer([
                         'collId'            => 'templates',
                         'docserverTypeId'   => 'TEMPLATES',
                         'encodedResource'   => base64_encode($resource),
                         'format'            => $pathInfo['extension']
                     ]);
 
-                    TemplateModel::update([
+                TemplateModel::update([
                         'set'   => [
-                            // 'template_content'    => '',
+                            'template_content'    => '',
                             'template_type'       => 'OFFICE',
                             'template_path'       => $storeResult['destination_dir'],
                             'template_file_name'  => $storeResult['file_destination_name'],
+                            'template_style'      => '',
                             'template_datasource' => 'letterbox_attachment',
                             'template_target'     => 'indexingFile',
                             'template_attachment_type' => 'all'
@@ -286,9 +279,7 @@ foreach ($customs as $custom) {
                         'where' => ['template_id = ?'],
                         'data'  => [$template['template_id']]
                     ]);
-                    unlink($pathFilename);
-                    // unlink($tmpPath.$docInfo["filename"].'.html');
-                // }
+                unlink($pathFilename);
             } else {
                 if ($content != $newContent) {
                     TemplateModel::update([
