@@ -456,4 +456,6 @@ define("_SENT_DATE", "Sent ");
 define("_SENT_TO", "Sent to");
 define("_FORMAT", "Format");
 define("_SUBJECT", "Subject");
-
+define("_CHRONO_NUMBER_MASTER", "Resource chrono number");
+define("_SENT_BY", "Sent by");
+define('_TO_CCI', 'On copy hidden');

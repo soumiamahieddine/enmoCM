@@ -461,3 +461,6 @@ define("_SENT_DATE", "Sent "); //TO TRANSLATE
 define("_SENT_TO", "Sent to"); //TO TRANSLATE
 define("_FORMAT", "Format"); //TO TRANSLATE
 define("_SUBJECT", "Subject"); //TO TRANSLATE
+define("_CHRONO_NUMBER_MASTER", "Resource chrono number"); //TO TRANSLATE
+define("_SENT_BY", "Sent by"); //TO TRANSLATE
+define('_TO_CCI', 'On copy hidden'); //TO TRANSLATE
