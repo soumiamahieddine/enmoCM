@@ -38,12 +38,13 @@ class LinkController
         $linkedResources = [];
         if (!empty($linkedResourcesIds)) {
             $linkedResources = ResModel::get([
-                'select'    => ['res_id as "resId"', 'subject', 'doc_date as "documentDate"', 'status', 'dest_user as "destUser"', 'destination', 'alt_identifier as chrono', 'category_id as "categoryId"'],
+                'select'    => ['res_id as "resId"', 'subject', 'doc_date as "documentDate"', 'status', 'dest_user as "destUser"', 'destination', 'alt_identifier as chrono', 'category_id as "categoryId"', 'confidentiality'],
                 'where'     => ['res_id in (?)'],
                 'data'      => [$linkedResourcesIds]
             ]);
 
             foreach ($linkedResources as $key => $value) {
+                $linkedResources[$key]['confidentiality'] = $value['confidentiality'] == 'Y';
                 if (!empty($value['status'])) {
                     $status = StatusModel::getById(['id' => $value['status'], 'select' => ['label_status', 'img_filename']]);
                     $linkedResources[$key]['statusLabel'] = $status['label_status'];

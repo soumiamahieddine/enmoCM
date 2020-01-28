@@ -967,8 +967,7 @@ CREATE TABLE res_letterbox
   flag_alarm1 char(1) default 'N'::character varying,
   flag_alarm2 char(1) default 'N'::character varying,
   model_id integer NOT NULL,
-  in_signature_book boolean DEFAULT FALSE,
-  in_shipping boolean DEFAULT FALSE,
+  integrations jsonb DEFAULT '{}' NOT NULL,
   custom_fields jsonb,
   linked_resources jsonb NOT NULL DEFAULT '[]',
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
