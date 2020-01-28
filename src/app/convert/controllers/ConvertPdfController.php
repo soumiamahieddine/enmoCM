@@ -56,7 +56,7 @@ class ConvertPdfController
     {
         ValidatorModel::notEmpty($aArgs, ['collId', 'resId']);
         ValidatorModel::stringType($aArgs, ['collId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::intVal($aArgs, ['resId', 'relation']);
 
         if ($aArgs['collId'] == 'letterbox_coll') {
             $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['docserver_id', 'path', 'filename', 'format']]);
@@ -123,6 +123,7 @@ class ConvertPdfController
                 'docserverId'   => $storeResult['docserver_id'],
                 'path'          => $storeResult['destination_dir'],
                 'filename'      => $storeResult['file_destination_name'],
+                'relation'      => $aArgs['relation'] ?? 1,
                 'fingerprint'   => $storeResult['fingerPrint']
             ]);
         } else {

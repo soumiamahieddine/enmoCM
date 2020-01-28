@@ -19,6 +19,25 @@ use SrcCore\models\ValidatorModel;
 
 class AdrModel
 {
+    public static function getDocuments(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['select']);
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($args, ['offset', 'limit']);
+
+        $documents = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['adr_letterbox'],
+            'where'     => empty($args['where']) ? [] : $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data'],
+            'order_by'  => empty($args['orderBy']) ? [] : $args['orderBy'],
+            'offset'    => empty($args['offset']) ? 0 : $args['offset'],
+            'limit'     => empty($args['limit']) ? 0 : $args['limit']
+        ]);
+
+        return $documents;
+    }
+
     public static function getConvertedDocumentById(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'type', 'collId']);
@@ -87,21 +106,22 @@ class AdrModel
         return $adr[0];
     }
 
-    public static function createDocumentAdr(array $aArgs)
+    public static function createDocumentAdr(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'docserverId', 'path', 'filename', 'type']);
-        ValidatorModel::stringType($aArgs, ['docserverId', 'path', 'filename', 'type', 'fingerprint']);
-        ValidatorModel::intVal($aArgs, ['resId']);
+        ValidatorModel::notEmpty($args, ['resId', 'docserverId', 'path', 'filename', 'type', 'relation']);
+        ValidatorModel::stringType($args, ['docserverId', 'path', 'filename', 'type', 'fingerprint']);
+        ValidatorModel::intVal($args, ['resId', 'relation']);
 
         DatabaseModel::insert([
             'table'         => 'adr_letterbox',
             'columnsValues' => [
-                'res_id'        => $aArgs['resId'],
-                'type'          => $aArgs['type'],
-                'docserver_id'  => $aArgs['docserverId'],
-                'path'          => $aArgs['path'],
-                'filename'      => $aArgs['filename'],
-                'fingerprint'   => empty($aArgs['fingerprint']) ? null : $aArgs['fingerprint'],
+                'res_id'        => $args['resId'],
+                'type'          => $args['type'],
+                'docserver_id'  => $args['docserverId'],
+                'path'          => $args['path'],
+                'filename'      => $args['filename'],
+                'relation'      => $args['relation'],
+                'fingerprint'   => empty($args['fingerprint']) ? null : $args['fingerprint']
             ]
         ]);
 

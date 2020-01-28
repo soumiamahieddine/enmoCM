@@ -469,6 +469,17 @@ ALTER TABLE res_attachments ADD COLUMN recipient_type character varying(256);
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS recipient_id;
 ALTER TABLE res_attachments ADD COLUMN recipient_id integer;
 
+ALTER TABLE adr_letterbox DROP COLUMN IF EXISTS relation;
+ALTER TABLE adr_letterbox ADD COLUMN relation integer;
+UPDATE adr_letterbox SET relation = 1;
+ALTER TABLE adr_letterbox ALTER COLUMN relation SET NOT NULL;
+
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS in_signature_book;
+ALTER TABLE res_letterbox ADD COLUMN in_signature_book boolean DEFAULT FALSE;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS in_shipping;
+ALTER TABLE res_letterbox ADD COLUMN in_shipping boolean DEFAULT FALSE;
+
+
 /* REFACTORING DATA */
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'usergroups') AND attname = 'enabled') THEN

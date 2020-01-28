@@ -967,6 +967,8 @@ CREATE TABLE res_letterbox
   flag_alarm1 char(1) default 'N'::character varying,
   flag_alarm2 char(1) default 'N'::character varying,
   model_id integer NOT NULL,
+  in_signature_book boolean DEFAULT FALSE,
+  in_shipping boolean DEFAULT FALSE,
   custom_fields jsonb,
   linked_resources jsonb NOT NULL DEFAULT '[]',
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
@@ -978,10 +980,11 @@ CREATE TABLE adr_letterbox
   id serial NOT NULL,
   res_id bigint NOT NULL,
   type character varying(32) NOT NULL,
+  relation INTEGER NOT NULL,
   docserver_id character varying(32) NOT NULL,
   path character varying(255) NOT NULL,
   filename character varying(255) NOT NULL,
-  fingerprint character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL,
   CONSTRAINT adr_letterbox_pkey PRIMARY KEY (id),
   CONSTRAINT adr_letterbox_unique_key UNIQUE (res_id, type)
 )

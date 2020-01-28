@@ -89,7 +89,8 @@ class ResController
         if (!empty($body['encodedFile'])) {
             ConvertPdfController::convert([
                 'resId'     => $resId,
-                'collId'    => 'letterbox_coll'
+                'collId'    => 'letterbox_coll',
+                'relation'  => 1
             ]);
 
             $customId = CoreConfigModel::getCustomId();
@@ -261,6 +262,22 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
 
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier', 'filename', 'docserver_id', 'path', 'fingerprint']]);
+        $oldRelation = AdrModel::getDocuments(['select' => ['MAX(relation)'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+        $relation = empty($oldRelation[0]['max']) ? 1 : ($oldRelation[0]['max'] + 1);
+
+        if (!empty($resource['filename']) && !empty($body['encodedFile'])) {
+            AdrModel::createDocumentAdr([
+                'resId'         => $args['resId'],
+                'type'          => 'DOC',
+                'docserverId'   => $resource['docserver_id'],
+                'path'          => $resource['path'],
+                'filename'      => $resource['filename'],
+                'relation'      => $relation - 1,
+                'fingerprint'   => $resource['fingerprint']
+            ]);
+        }
+
         $body['resId'] = $args['resId'];
         $resId = StoreController::storeResource($body);
         if (empty($resId) || !empty($resId['errors'])) {
@@ -269,12 +286,11 @@ class ResController
 
         ResController::updateAdjacentData(['body' => $body, 'resId' => $args['resId']]);
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
         if (!empty($body['encodedFile'])) {
-            AdrModel::deleteDocumentAdr(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             ConvertPdfController::convert([
                 'resId'     => $args['resId'],
-                'collId'    => 'letterbox_coll'
+                'collId'    => 'letterbox_coll',
+                'relation'  => $relation
             ]);
 
             $customId = CoreConfigModel::getCustomId();

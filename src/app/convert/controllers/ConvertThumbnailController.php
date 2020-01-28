@@ -128,6 +128,7 @@ class ConvertThumbnailController
                 'docserverId'   => $storeResult['docserver_id'],
                 'path'          => $storeResult['destination_dir'],
                 'filename'      => $storeResult['file_destination_name'],
+                'relation'      => 1
             ]);
         } else {
             AdrModel::createAttachAdr([
