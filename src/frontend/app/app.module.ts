@@ -104,6 +104,7 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
 import { CriteriaToolComponent } from './adv-search/criteria-tool/criteria-tool.component';
 import { SearchAdvListComponent } from './adv-search/list/search-adv-list.component';
 import { LinkedResourceListComponent } from './linkedResource/linked-resource-list.component';
+import { LinkResourceModalComponent } from './linkedResource/linkResourceModal/link-resource-modal.component';
 
 
 @NgModule({
@@ -197,7 +198,8 @@ import { LinkedResourceListComponent } from './linkedResource/linked-resource-li
         AddAvisModelModalComponent,
         CriteriaToolComponent,
         SearchAdvListComponent,
-        LinkedResourceListComponent
+        LinkedResourceListComponent,
+        LinkResourceModalComponent
     ],
     entryComponents: [
         ConfirmModalComponent,
@@ -241,7 +243,8 @@ import { LinkedResourceListComponent } from './linkedResource/linked-resource-li
         ContactModalComponent,
         VisaWorkflowModalComponent,
         AddVisaModelModalComponent,
-        AddAvisModelModalComponent
+        AddAvisModelModalComponent,
+        LinkResourceModalComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],
     bootstrap: [ AppComponent ]

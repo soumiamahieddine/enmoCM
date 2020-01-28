@@ -84,7 +84,7 @@ export class ProcessComponent implements OnInit {
             count: 0
         },
         {
-            id: 'link',
+            id: 'linkedResources',
             icon: 'fas fa-link',
             label: this.lang.links,
             count: 0

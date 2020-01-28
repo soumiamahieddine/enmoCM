@@ -1451,4 +1451,6 @@ export const LANG_EN = {
     "systemActions": "System action(s)",
     "viewAllHistory": "View all history",
     "viewActionsHistory": "View only actions in history",
+    "unlink": "Unlink this resource",
+    "linkResource": "Link to a new resource",
 };

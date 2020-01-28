@@ -1491,4 +1491,6 @@ export const LANG_FR = {
     "systemActions": "Événement(s) système",
     "viewAllHistory": "Afficher tout l'historique",
     "viewActionsHistory": "Afficher l'historique des actions",
+    "unlink": "Enlever la liaison",
+    "linkResource": "Lier un nouveau courrier",
 };

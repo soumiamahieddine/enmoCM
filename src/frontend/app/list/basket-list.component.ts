@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef, ApplicationRef } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { merge, Observable, of as observableOf, Subject, Subscription, of } from 'rxjs';

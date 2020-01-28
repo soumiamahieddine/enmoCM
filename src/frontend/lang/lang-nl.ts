@@ -1476,4 +1476,6 @@ export const LANG_NL = {
     "systemActions": "System action(s)", //_TO_TRANSLATE
     "viewAllHistory": "View all history", //_TO_TRANSLATE
     "viewActionsHistory": "View only actions in history", //_TO_TRANSLATE
+    "unlink": "Unlink this resource", //_TO_TRANSLATE
+    "linkResource": "Link to a new resource", //_TO_TRANSLATE
 };

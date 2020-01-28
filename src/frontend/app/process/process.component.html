@@ -76,7 +76,7 @@
                 <app-notes-list *ngIf="currentTool === 'notes' && !loading" #appNotesList [editMode]="true"
                     [resId]="currentResourceInformations.resId">
                 </app-notes-list>
-                <app-linked-resource-list *ngIf="currentTool === 'link' && !loading" #appLinkedResourceList
+                <app-linked-resource-list *ngIf="currentTool === 'linkedResources' && !loading" #appLinkedResourceList
                     [resId]="currentResourceInformations.resId">
                 </app-linked-resource-list>
                 <app-diffusions-list *ngIf="currentTool === 'diffusionList' && !loading" #appDiffusionsList
@@ -252,7 +252,7 @@
         <app-notes-list *ngIf="modal.id === 'notes' && !loading" #appNotesList [editMode]="true"
             [resId]="currentResourceInformations.resId">
         </app-notes-list>
-        <app-linked-resource-list *ngIf="modal.id === 'link' && !loading" #appLinkedResourceList
+        <app-linked-resource-list *ngIf="modal.id === 'linkedResources' && !loading" #appLinkedResourceList
             [resId]="currentResourceInformations.resId"></app-linked-resource-list>
         <app-diffusions-list *ngIf="modal.id === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="false"
             [resId]="currentResourceInformations.resId" [expanded]="true">
