@@ -22,7 +22,9 @@ use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
+use Doctype\models\DoctypeModel;
 use Email\models\EmailModel;
+use IndexingModel\models\IndexingModelFieldModel;
 use Note\models\NoteModel;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
@@ -47,9 +49,56 @@ class ResourceDataExportController
         // Array containing all path to the pdf files to merge
         $documentPaths = [];
 
+        $withSeparators = !empty($body['withSeparator']);
+
+        $forceSummarySheet = count($body['resources']) > 1;
+
         foreach ($body['resources'] as $resource) {
             if (!Validator::notEmpty()->intVal()->validate($resource['resId']) || !ResController::hasRightByResId(['resId' => [$resource['resId']], 'userId' => $GLOBALS['id']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+            }
+
+            $withSummarySheet = $forceSummarySheet;
+            if (!$withSummarySheet) {
+                $withSummarySheet = !empty($resource['summarySheet']);
+            }
+            if ($withSummarySheet) {
+                if (!empty($resource['summarySheet']) && is_array($resource['summarySheet'])) {
+                    $units = $resource['summarySheet'];
+                } else {
+                    $units = [
+                        [
+                            "unit" => "qrcode",
+                            "label" => ""
+                        ],
+                        [
+                            "unit" => "primaryInformations",
+                            "label" => "Informations pricipales"
+                        ],
+                        [
+                            "unit" => "senderRecipientInformations",
+                            "label" => "Informations de destination"
+                        ],
+                        [
+                            "unit" => "secondaryInformations",
+                            "label" => "Informations secondaires"
+                        ],
+                        [
+                            "unit" => "diffusionList",
+                            "label" => "Liste de diffusion"
+                        ],
+                        [
+                            "unit" => "opinionWorkflow",
+                            "label" => "Circuit d'avis"
+                        ],
+                        [
+                            "unit" => "visaWorkflow",
+                            "label" => "Circuit de visa"
+                        ]
+                    ];
+                }
+
+                $documentPaths[] = ResourceDataExportController::getSummarySheet(['units' => $units, 'resId' => $resource['resId']]);
             }
 
             if (!empty($resource['document'])) {
@@ -117,9 +166,12 @@ class ResourceDataExportController
                             return $response->withStatus(400)->withJson(['errors' => 'Attachment not linked to resource']);
                         }
 
-                        $documentPaths[] = ResourceDataExportController::getAttachmentSeparator(['attachment'     => $attachment,
-                                                                                                 'chronoResource' => $chronoResource
-                        ]);
+                        if ($withSeparators) {
+                            $documentPaths[] = ResourceDataExportController::getAttachmentSeparator([
+                                'attachment'     => $attachment,
+                                'chronoResource' => $chronoResource
+                            ]);
+                        }
 
                         $path = ResourceDataExportController::getDocumentFilePath(['document' => $attachment, 'collId' => 'attachments_coll']);
 
@@ -144,16 +196,18 @@ class ResourceDataExportController
                     $notesIds = array_column($notesIds, 'id');
                 }
 
-                $noteFilePath = ResourceDataExportController::getNotesFilePath(['notes' => $notesIds, 'resId' => $resource['resId']]);
+                if (!empty($notesIds)) {
+                    $noteFilePath = ResourceDataExportController::getNotesFilePath(['notes' => $notesIds, 'resId' => $resource['resId']]);
 
-                if (!empty($noteFilePath['errors'])) {
-                    return $response->withStatus($noteFilePath['code'])->withJson(['errors' => $noteFilePath['errors']]);
-                }
+                    if (!empty($noteFilePath['errors'])) {
+                        return $response->withStatus($noteFilePath['code'])->withJson(['errors' => $noteFilePath['errors']]);
+                    }
 
-                if (file_exists($noteFilePath)) {
-                    $documentPaths[] = $noteFilePath;
-                } else {
-                    return $response->withStatus(500)->withJson(['errors' => 'Notes file not created']);
+                    if (file_exists($noteFilePath)) {
+                        $documentPaths[] = $noteFilePath;
+                    } else {
+                        return $response->withStatus(500)->withJson(['errors' => 'Notes file not created']);
+                    }
                 }
             }
 
@@ -163,38 +217,41 @@ class ResourceDataExportController
                 } else {
                     $acknowledgementReceiptsIds = AcknowledgementReceiptModel::get([
                         'select' => ['id'],
-                        'where' => ['res_id = ?'],
-                        'data' => [$resource['resId']]
+                        'where'  => ['res_id = ?'],
+                        'data'   => [$resource['resId']]
                     ]);
                     $acknowledgementReceiptsIds = array_column($acknowledgementReceiptsIds, 'id');
                 }
 
-                $acknowledgementReceipts = AcknowledgementReceiptModel::getByIds([
-                    'select' => ['*'],
-                    'ids'    => $acknowledgementReceiptsIds
-                ]);
+                if (!empty($acknowledgementReceiptsIds)) {
+                    $acknowledgementReceipts = AcknowledgementReceiptModel::getByIds([
+                        'select' => ['*'],
+                        'ids'    => $acknowledgementReceiptsIds
+                    ]);
 
-                if (count($acknowledgementReceipts) < count($acknowledgementReceiptsIds)) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement Receipt(s) not found']);
-                }
-
-                foreach ($acknowledgementReceipts as $acknowledgementReceipt) {
-                    if ($acknowledgementReceipt['res_id'] != $resource['resId']) {
-                        return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement Receipt not linked to resource']);
+                    if (count($acknowledgementReceipts) < count($acknowledgementReceiptsIds)) {
+                        return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement Receipt(s) not found']);
                     }
 
-                    $documentPaths[] = ResourceDataExportController::getAcknowledgementReceiptSeparator(['acknowledgementReceipt' => $acknowledgementReceipt]);
+                    foreach ($acknowledgementReceipts as $acknowledgementReceipt) {
+                        if ($acknowledgementReceipt['res_id'] != $resource['resId']) {
+                            return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement Receipt not linked to resource']);
+                        }
 
-                    $path = ResourceDataExportController::getDocumentFilePath(['document' => $acknowledgementReceipt]);
+                        if ($withSeparators) {
+                            $documentPaths[] = ResourceDataExportController::getAcknowledgementReceiptSeparator(['acknowledgementReceipt' => $acknowledgementReceipt]);
+                        }
+                        $path = ResourceDataExportController::getDocumentFilePath(['document' => $acknowledgementReceipt]);
 
-                    if ($acknowledgementReceipt['format'] == 'html') {
-                        $path = ResourceDataExportController::getPathConvertedAcknowledgementReceipt([
-                            'acknowledgementReceipt' => $acknowledgementReceipt,
-                            'pathHtml'               => $path
-                        ]);
+                        if ($acknowledgementReceipt['format'] == 'html') {
+                            $path = ResourceDataExportController::getPathConvertedAcknowledgementReceipt([
+                                'acknowledgementReceipt' => $acknowledgementReceipt,
+                                'pathHtml'               => $path
+                            ]);
+                        }
+
+                        $documentPaths[] = $path;
                     }
-
-                    $documentPaths[] = $path;
                 }
             }
 
@@ -210,27 +267,29 @@ class ResourceDataExportController
                     $emailsIds = array_column($emailsIds, 'id');
                 }
 
-                $emailsModel = EmailModel::get([
-                    'where'   => ['id in (?)'],
-                    'data'    => [$emailsIds],
-                    'orderBy' => ['creation_date desc']
-                ]);
+                if (!empty($emailsIds)) {
+                    $emailsModel = EmailModel::get([
+                        'where'   => ['id in (?)'],
+                        'data'    => [$emailsIds],
+                        'orderBy' => ['creation_date desc']
+                    ]);
 
-                if (count($emailsModel) < count($resource['emails'])) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Email(s) not found']);
-                }
-
-                foreach ($emailsModel as $email) {
-                    $emailDocument = json_decode($email['document'], true);
-                    if (!empty($emailDocument['id']) && $emailDocument['id'] != $resource['resId']) {
-                        return $response->withStatus(400)->withJson(['errors' => 'Email not linked to resource']);
+                    if (count($emailsModel) < count($resource['emails'])) {
+                        return $response->withStatus(400)->withJson(['errors' => 'Email(s) not found']);
                     }
-                    $emailFilePath = ResourceDataExportController::getEmailFilePath(['email' => $email, 'resId' => $resource['resId']]);
 
-                    if (file_exists($emailFilePath)) {
-                        $documentPaths[] = $emailFilePath;
-                    } else {
-                        return $response->withStatus(500)->withJson(['errors' => 'Email file not created']);
+                    foreach ($emailsModel as $email) {
+                        $emailDocument = json_decode($email['document'], true);
+                        if (!empty($emailDocument['id']) && $emailDocument['id'] != $resource['resId']) {
+                            return $response->withStatus(400)->withJson(['errors' => 'Email not linked to resource']);
+                        }
+                        $emailFilePath = ResourceDataExportController::getEmailFilePath(['email' => $email, 'resId' => $resource['resId']]);
+
+                        if (file_exists($emailFilePath)) {
+                            $documentPaths[] = $emailFilePath;
+                        } else {
+                            return $response->withStatus(500)->withJson(['errors' => 'Email file not created']);
+                        }
                     }
                 }
             }
@@ -238,7 +297,7 @@ class ResourceDataExportController
 
         if (!empty($documentPaths)) {
             $tmpDir = CoreConfigModel::getTmpPath();
-            $filePathOnTmp = $tmpDir . 'mergedFile2.pdf';
+            $filePathOnTmp = $tmpDir . 'mergedFile.pdf';
             $command = "pdfunite " . implode(" ", $documentPaths) . ' ' . $filePathOnTmp;
 
             exec($command . ' 2>&1', $output, $return);
@@ -379,6 +438,9 @@ class ResourceDataExportController
 
     private static function getAcknowledgementReceiptSeparator(array $args)
     {
+        ValidatorModel::notEmpty($args, ['acknowledgementReceipt']);
+        ValidatorModel::arrayType($args, ['acknowledgementReceipt']);
+
         $acknowledgementReceipt = $args['acknowledgementReceipt'];
 
         $contact = ContactModel::getById([
@@ -443,6 +505,10 @@ class ResourceDataExportController
 
     private static function getPathConvertedAcknowledgementReceipt(array $args)
     {
+        ValidatorModel::notEmpty($args, ['acknowledgementReceipt', 'pathHtml']);
+        ValidatorModel::arrayType($args, ['acknowledgementReceipt']);
+        ValidatorModel::stringType($args, ['pathHtml']);
+
         $acknowledgementReceipt = $args['acknowledgementReceipt'];
         $pathHtml = $args['pathHtml'];
 
@@ -463,6 +529,10 @@ class ResourceDataExportController
 
     private static function getAttachmentSeparator(array $args)
     {
+        ValidatorModel::notEmpty($args, ['attachment', 'chronoResource']);
+        ValidatorModel::arrayType($args, ['attachment']);
+        ValidatorModel::stringType($args, ['chronoResource']);
+
         $attachment = $args['attachment'];
         $chronoResource = $args['chronoResource'];
 
@@ -546,7 +616,7 @@ class ResourceDataExportController
         $email = $args['email'];
 
         $date = new \DateTime($email['send_date']);
-        $date = $date->format('d-Y H:i');
+        $date = $date->format('d-m-Y H:i');
 
         $sentDate = _SENT_DATE . ' ' . $date;
 
@@ -608,6 +678,50 @@ class ResourceDataExportController
 
         $tmpDir = CoreConfigModel::getTmpPath();
         $filePathOnTmp = $tmpDir . 'email_' . $email['id'] . '_' . $GLOBALS['id'] . '.pdf';
+        $pdf->Output($filePathOnTmp, 'F');
+
+        return $filePathOnTmp;
+    }
+
+    private static function getSummarySheet(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['units', 'resId']);
+        ValidatorModel::arrayType($args, ['units']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $units = $args['units'];
+        $resId = $args['resId'];
+
+        $resource = ResModel::getById([
+            'select' => ['*'],
+            'resId'  => $resId
+        ]);
+
+        $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
+        $resource['type_label'] = $doctype['description'];
+
+        $data = SummarySheetController::prepareData(['units' => $units, 'resourcesIds' => [$resId]]);
+
+        $indexingFields = IndexingModelFieldModel::get([
+            'select' => ['identifier', 'unit'],
+            'where'  => ['model_id = ?'],
+            'data'   => [$resource['model_id']]
+        ]);
+        $fieldsIdentifier = array_column($indexingFields, 'identifier');
+
+        $pdf = new Fpdi('P', 'pt');
+        $pdf->setPrintHeader(false);
+
+        SummarySheetController::createSummarySheet($pdf, [
+            'resource'         => $resource,
+            'units'            => $units,
+            'login'            => $GLOBALS['userId'],
+            'data'             => $data,
+            'fieldsIdentifier' => $fieldsIdentifier
+        ]);
+
+        $tmpDir = CoreConfigModel::getTmpPath();
+        $filePathOnTmp = $tmpDir . 'summarySheet_' . $resId . '_' . $GLOBALS['id'] . '.pdf';
         $pdf->Output($filePathOnTmp, 'F');
 
         return $filePathOnTmp;

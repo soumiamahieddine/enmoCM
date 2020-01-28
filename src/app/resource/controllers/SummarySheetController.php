@@ -230,7 +230,7 @@ class SummarySheetController
         $resourcesByModelIds = ResModel::get([
             'select'  => ["string_agg(cast(res_id as text), ',') as res_ids", 'model_id'],
             'where'   => ['res_id in (?)'],
-            'data'    => [$bodyData['resources']],
+            'data'    => [$resourcesData],
             'groupBy' => ['model_id']
         ]);
 
@@ -260,16 +260,6 @@ class SummarySheetController
             'destination'
         ];
 
-        $possibleFields = [
-            'documentDate'     => 'doc_date',
-            'arrivalDate'      => 'admission_date',
-            'initiator'        => 'initiator',
-            'priority'         => 'priority',
-            'processLimitDate' => 'process_limit_date',
-            'destination'      => 'destination'
-        ];
-
-
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
 
@@ -283,12 +273,6 @@ class SummarySheetController
                 'data'   => [$resourcesByModelId['model_id']]
             ]);
             $fieldsIdentifier = array_column($indexingFields, 'identifier');
-
-            foreach ($possibleFields as $key => $possibleField) {
-                if (!in_array($key, $fieldsIdentifier)) {
-                    unset($select[$possibleField]);
-                }
-            }
 
             $resources = ResModel::getOnView([
                 'select'  => $select,
@@ -839,7 +823,7 @@ class SummarySheetController
         }
     }
 
-    private static function prepareData(array $args)
+    public static function prepareData(array $args)
     {
         $units = $args['units'];
         $tmpIds = $args['resourcesIds'];
