@@ -81,7 +81,7 @@ trait AcknowledgementReceiptTrait
         $emailsToSend = [];
         DatabaseModel::beginTransaction();
         foreach ($contactsToProcess as $contactToProcess) {
-            $contact = ContactModel::getById(['select' => ['email', 'address_street', 'address_town', 'address_postcode'], 'id' => $contactToProcess]);
+            $contact = ContactModel::getById(['select' => ['*'], 'id' => $contactToProcess]);
 
             if (empty($contact['email']) && (empty($contact['address_street']) || empty($contact['address_town']) || empty($contact['address_postcode']))) {
                 DatabaseModel::rollbackTransaction();
@@ -95,7 +95,7 @@ trait AcknowledgementReceiptTrait
                 }
                 $mergedDocument = MergeController::mergeDocument([
                     'content'   => $template[0]['template_content'],
-                    'data'      => ['resId' => $args['resId'], 'contactId' => $contactToProcess, 'userId' => $currentUser['id']]
+                    'data'      => ['resId' => $args['resId'], 'recipients' => [['id' => $contactToProcess, 'type' => 'contact']], 'userId' => $currentUser['id']]
                 ]);
                 $format = 'html';
             } else {
@@ -105,7 +105,7 @@ trait AcknowledgementReceiptTrait
                 }
                 $mergedDocument = MergeController::mergeDocument([
                     'path'  => $pathToDocument,
-                    'data'  => ['resId' => $args['resId'], 'contactId' => $contactToProcess, 'userId' => $currentUser['id']]
+                    'data'  => ['resId' => $args['resId'], 'recipients' => [['id' => $contactToProcess, 'type' => 'contact']], 'userId' => $currentUser['id']]
                 ]);
                 $encodedDocument = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $mergedDocument['encodedDocument']]);
                 $mergedDocument['encodedDocument'] = $encodedDocument["encodedResource"];
