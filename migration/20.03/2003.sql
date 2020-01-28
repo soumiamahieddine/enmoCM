@@ -32,6 +32,9 @@ UPDATE res_letterbox SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' 
 UPDATE res_attachments SET fulltext_result = 'SUCCESS' WHERE fulltext_result = '1' OR fulltext_result = '2';
 UPDATE res_attachments SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' OR fulltext_result = '-2';
 
+UPDATE res_attachments SET attachment_type = 'response_project' WHERE attachment_type = 'outgoing_mail';
+UPDATE res_attachments SET attachment_type = 'signed_response' WHERE attachment_type = 'outgoing_mail_signed';
+UPDATE res_attachments SET attachment_type = 'simple_attachment' WHERE attachment_type = 'document_with_notes';
 
 /* GROUPS INDEXING */
 ALTER TABLE usergroups ALTER COLUMN group_desc DROP DEFAULT;
