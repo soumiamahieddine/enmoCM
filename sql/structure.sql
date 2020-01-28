@@ -985,7 +985,7 @@ CREATE TABLE adr_letterbox
   filename character varying(255) NOT NULL,
   fingerprint character varying(255) DEFAULT NULL,
   CONSTRAINT adr_letterbox_pkey PRIMARY KEY (id),
-  CONSTRAINT adr_letterbox_unique_key UNIQUE (res_id, type)
+  CONSTRAINT adr_letterbox_unique_key UNIQUE (res_id, type, relation)
 )
 WITH (OIDS=FALSE);
 

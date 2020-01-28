@@ -63,28 +63,7 @@ class AdrModel
 
         return $document[0];
     }
-
-    public static function getTypedDocumentAdrByResId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId', 'type']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::stringType($aArgs, ['type']);
-        ValidatorModel::arrayType($aArgs, ['select']);
-
-        $adr = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['adr_letterbox'],
-            'where'     => ['res_id = ?', 'type = ?'],
-            'data'      => [$aArgs['resId'], $aArgs['type']]
-        ]);
-
-        if (empty($adr[0])) {
-            return [];
-        }
-
-        return $adr[0];
-    }
-
+    
     public static function getTypedAttachAdrByResId(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'type']);
@@ -145,20 +124,6 @@ class AdrModel
                 'fingerprint'   => empty($aArgs['fingerprint']) ? null : $aArgs['fingerprint'],
             ]
         ]);
-        return true;
-    }
-
-    public static function deleteDocumentAdr(array $args)
-    {
-        ValidatorModel::notEmpty($args, ['where', 'data']);
-        ValidatorModel::arrayType($args, ['where', 'data']);
-
-        DatabaseModel::delete([
-            'table' => 'adr_letterbox',
-            'where' => $args['where'],
-            'data'  => $args['data']
-        ]);
-
         return true;
     }
 

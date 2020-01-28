@@ -473,6 +473,8 @@ ALTER TABLE adr_letterbox DROP COLUMN IF EXISTS relation;
 ALTER TABLE adr_letterbox ADD COLUMN relation integer;
 UPDATE adr_letterbox SET relation = 1;
 ALTER TABLE adr_letterbox ALTER COLUMN relation SET NOT NULL;
+ALTER TABLE adr_letterbox DROP CONSTRAINT adr_letterbox_unique_key;
+ALTER TABLE adr_letterbox ADD CONSTRAINT adr_letterbox_unique_key UNIQUE (res_id, type, relation);
 
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS integrations;
 ALTER TABLE res_letterbox ADD COLUMN integrations jsonb DEFAULT '{}' NOT NULL;

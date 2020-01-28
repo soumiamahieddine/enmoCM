@@ -577,41 +577,37 @@ class ResController
         return $response->withHeader('Content-Type', $mimeType);
     }
 
-    public function getThumbnailContent(Request $request, Response $response, array $aArgs)
+    public function getThumbnailContent(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($aArgs['resId'])) {
+        if (!Validator::intVal()->validate($args['resId'])) {
             return $response->withStatus(403)->withJson(['errors' => 'resId param is not an integer']);
         }
 
         $pathToThumbnail = 'apps/maarch_entreprise/img/noThumbnail.png';
 
-        $document = ResModel::getById(['select' => ['filename'], 'resId' => $aArgs['resId']]);
+        $document = ResModel::getById(['select' => ['filename'], 'resId' => $args['resId']]);
         if (empty($document)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
         }
 
-        if (!empty($document['filename']) && ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
-            $tnlAdr = AdrModel::getTypedDocumentAdrByResId([
-                'select'    => ['docserver_id', 'path', 'filename'],
-                'resId'     => $aArgs['resId'],
-                'type'      => 'TNL'
-            ]);
-            if (empty($tnlAdr)) {
-                ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $aArgs['resId']]);
-                $tnlAdr = AdrModel::getTypedDocumentAdrByResId([
-                    'select'    => ['docserver_id', 'path', 'filename'],
-                    'resId'     => $aArgs['resId'],
-                    'type'      => 'TNL'
-                ]);
+        if (!empty($document['filename']) && ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            $relation = AdrModel::getDocuments(['select' => ['MAX(relation)'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            $relation = $relation[0]['max'];
+
+            $tnlAdr = AdrModel::getDocuments(['select' => ['docserver_id', 'path', 'filename'], 'where' => ['res_id = ?', 'type = ?', 'relation = ?'], 'data' => [$args['resId'], 'TNL', $relation]]);
+
+            if (empty($tnlAdr[0])) {
+                ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $args['resId']]);
+                $tnlAdr = AdrModel::getDocuments(['select' => ['docserver_id', 'path', 'filename'], 'where' => ['res_id = ?', 'type = ?', 'relation = ?'], 'data' => [$args['resId'], 'TNL', $relation]]);
             }
 
-            if (!empty($tnlAdr)) {
-                $docserver = DocserverModel::getByDocserverId(['docserverId' => $tnlAdr['docserver_id'], 'select' => ['path_template']]);
+            if (!empty($tnlAdr[0])) {
+                $docserver = DocserverModel::getByDocserverId(['docserverId' => $tnlAdr[0]['docserver_id'], 'select' => ['path_template']]);
                 if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
                 }
 
-                $pathToThumbnail = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $tnlAdr['path']) . $tnlAdr['filename'];
+                $pathToThumbnail = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $tnlAdr[0]['path']) . $tnlAdr[0]['filename'];
             }
         }
 
