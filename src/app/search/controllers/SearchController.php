@@ -17,7 +17,10 @@ namespace Search\controllers;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\RedirectBasketModel;
+use Contact\controllers\ContactController;
+use Contact\models\ContactModel;
 use Doctype\models\DoctypeModel;
+use Entity\models\EntityModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
@@ -143,25 +146,30 @@ class SearchController
         if (!empty($queryParams['offset']) && is_numeric($queryParams['offset'])) {
             $offset = (int)$queryParams['offset'];
         }
+        $order = !in_array($queryParams['order'], ['asc', 'desc']) ? '' : $queryParams['order'];
+        $orderBy = str_replace(['chrono', 'typeLabel', 'creationDate'], ['alt_identifier', 'type_label', 'creation_date'], $queryParams['orderBy']);
+        $orderBy = !in_array($orderBy, ['alt_identifier', 'status', 'subject', 'type_label', 'creation_date']) ? ['creation_date'] : ["{$orderBy} {$order}"];
 
         $allResources = ResModel::getOnView([
             'select'    => ['res_id as "resId"'],
             'where'     => $searchWhere,
             'data'      => $searchData,
-            'orderBy'   => ['creation_date DESC']
+            'orderBy'   => $orderBy
         ]);
         if (empty($allResources[$offset])) {
             return $response->withJson(['resources' => [], 'count' => 0]);
         }
 
+        $allResources = array_column($allResources, 'resId');
+
         $resIds = [];
         $order = 'CASE res_id ';
-        for ($i = $offset; $i < $limit; $i++) {
-            if (empty($allResources[$i]['resId'])) {
+        for ($i = $offset; $i < ($offset + $limit); $i++) {
+            if (empty($allResources[$i])) {
                 break;
             }
-            $order .= "WHEN {$allResources[$i]['resId']} THEN {$i} ";
-            $resIds[] = $allResources[$i]['resId'];
+            $order .= "WHEN {$allResources[$i]} THEN {$i} ";
+            $resIds[] = $allResources[$i];
         }
         $order .= 'END';
 
@@ -191,7 +199,7 @@ class SearchController
         $doctypes = DoctypeModel::get(['select' => ['type_id', 'description'], 'where' => ['type_id in (?)'], 'data' => [$doctypesIds]]);
 
         $correspondents = ResourceContactModel::get([
-            'select'    => ['item_id as id', 'type', 'mode', 'res_id'],
+            'select'    => ['item_id', 'type', 'mode', 'res_id'],
             'where'     => ['res_id in (?)'],
             'data'      => [$resourcesIds]
         ]);
@@ -226,8 +234,18 @@ class SearchController
             $resources[$key]['recipients'] = [];
             foreach ($correspondents as $correspondent) {
                 if ($correspondent['res_id'] == $resource['resId']) {
-                    unset($correspondent['res_id']);
-                    $resources[$key]["{$correspondent['mode']}s"] = $correspondent;
+                    if ($correspondent['type'] == 'contact') {
+                        $contactRaw = ContactModel::getById(['select' => ['firstname', 'lastname', 'company'], 'id' => $correspondent['item_id']]);
+                        $contactToDisplay = ContactController::getFormattedOnlyContact(['contact' => $contactRaw]);
+                        $formattedCorrespondent = $contactToDisplay['contact']['otherInfo'];
+                    } elseif ($correspondent['type'] == 'user') {
+                        $formattedCorrespondent = UserModel::getLabelledUserById(['id' => $correspondent['item_id']]);
+                    } else {
+                        $entity = EntityModel::getById(['id' => $correspondent['item_id'], 'select' => ['entity_label']]);
+                        $formattedCorrespondent = $entity['entity_label'];
+                    }
+
+                    $resources[$key]["{$correspondent['mode']}s"][] = $formattedCorrespondent;
                 }
             }
 
@@ -239,6 +257,6 @@ class SearchController
             }
         }
 
-        return $response->withJson(['resources' => $resources, 'count' => count($allResources)]);
+        return $response->withJson(['resources' => $resources, 'count' => count($allResources), 'allResources' => $allResources]);
     }
 }

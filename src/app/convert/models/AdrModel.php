@@ -87,9 +87,9 @@ class AdrModel
 
     public static function createDocumentAdr(array $args)
     {
-        ValidatorModel::notEmpty($args, ['resId', 'docserverId', 'path', 'filename', 'type', 'relation']);
+        ValidatorModel::notEmpty($args, ['resId', 'docserverId', 'path', 'filename', 'type', 'version']);
         ValidatorModel::stringType($args, ['docserverId', 'path', 'filename', 'type', 'fingerprint']);
-        ValidatorModel::intVal($args, ['resId', 'relation']);
+        ValidatorModel::intVal($args, ['resId', 'version']);
 
         DatabaseModel::insert([
             'table'         => 'adr_letterbox',
@@ -99,7 +99,7 @@ class AdrModel
                 'docserver_id'  => $args['docserverId'],
                 'path'          => $args['path'],
                 'filename'      => $args['filename'],
-                'relation'      => $args['relation'],
+                'version'       => $args['version'],
                 'fingerprint'   => empty($args['fingerprint']) ? null : $args['fingerprint']
             ]
         ]);
