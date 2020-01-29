@@ -146,10 +146,10 @@ foreach ($customs as $custom) {
                 }
             }
             
-            // migrateHistoryVersion(['oldResId' => $attachmentInfo['res_id'], 'newResId' => $attachmentInfo['res_id_master']]);
-            // migrateEmailsVersion(['oldResId' => $attachmentInfo['res_id'], 'newResId' => $attachmentInfo['res_id_master']]);
-            // migrateMessageExchangeVersion(['oldResId' => $attachmentInfo['res_id'], 'newResId' => $attachmentInfo['res_id_master']]);
-            // migrateShippingVersion(['oldResId' => $attachmentInfo['res_id'], 'newResId' => $attachmentInfo['res_id_master']]);
+            migrateHistoryVersion(['oldResId' => $attachmentInfo['res_id'], 'newResId' => $attachmentInfo['res_id_master']]);
+            migrateEmailsVersion(['oldResId' => $attachmentInfo['res_id'], 'newResId' => $attachmentInfo['res_id_master']]);
+            migrateMessageExchangeVersion(['oldResId' => $attachmentInfo['res_id'], 'newResId' => $attachmentInfo['res_id_master']]);
+            migrateShippingVersion(['oldResId' => $attachmentInfo['res_id'], 'newResId' => $attachmentInfo['res_id_master']]);
         }
         $migrated++;
     }
@@ -174,24 +174,24 @@ foreach ($customs as $custom) {
         $document['relation'] = $document['version'];
         addOutgoingMailSignedInAdr($document);
         $attachmentToDelete[] = $document['res_id'];
-        // migrateHistoryVersion(['oldResId' => $document['res_id'], 'newResId' => $document['res_id_master']]);
-        // migrateEmailsVersion(['oldResId' => $document['res_id'], 'newResId' => $document['res_id_master']]);
-        // migrateMessageExchangeVersion(['oldResId' => $document['res_id'], 'newResId' => $document['res_id_master']]);
-        // migrateShippingVersion(['oldResId' => $document['res_id'], 'newResId' => $document['res_id_master']]);
+        migrateHistoryVersion(['oldResId' => $document['res_id'], 'newResId' => $document['res_id_master']]);
+        migrateEmailsVersion(['oldResId' => $document['res_id'], 'newResId' => $document['res_id_master']]);
+        migrateMessageExchangeVersion(['oldResId' => $document['res_id'], 'newResId' => $document['res_id_master']]);
+        migrateShippingVersion(['oldResId' => $document['res_id'], 'newResId' => $document['res_id_master']]);
         $documentWithNote++;
     }
 
-    // \SrcCore\models\DatabaseModel::delete([
-    //     'table' => 'res_attachments',
-    //     'where' => ['res_id in (?)'],
-    //     'data'  => [$attachmentToDelete]
-    // ]);
+    \SrcCore\models\DatabaseModel::delete([
+        'table' => 'res_attachments',
+        'where' => ['res_id in (?)'],
+        'data'  => [$attachmentToDelete]
+    ]);
 
-    // \SrcCore\models\DatabaseModel::delete([
-    //     'table' => 'adr_attachments',
-    //     'where' => ['res_id in (?)'],
-    //     'data'  => [$attachmentToDelete]
-    // ]);
+    \SrcCore\models\DatabaseModel::delete([
+        'table' => 'adr_attachments',
+        'where' => ['res_id in (?)'],
+        'data'  => [$attachmentToDelete]
+    ]);
 
     printf("Migration outgoing_mail, outgoing_mail_signed (CUSTOM {$custom}) : " . $migrated . " courier(s) départ(s) trouvé(s) et migré(s). ".$documentWithNote." courrier(s) annoté(s)\n");
 }
@@ -285,6 +285,6 @@ function migrateShippingVersion($args = [])
         'set'   => ['resource_id' => $args['newResId'], 'resource_type' => 'res_letterbox'],
         'table' => 'shippings',
         'where' => ['resource_id = ?', 'resource_type = ?'],
-        'data'  => [$args['oldResId'], 'res_attachment']
+        'data'  => [$args['oldResId'], 'res_attachments']
     ]);
 }
