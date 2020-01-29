@@ -1464,4 +1464,5 @@ export const LANG_EN = {
     "mailInformations": "Mail informations",
     "visaNote": "Order",
     "chooseBAN": "Choose a BAN",
+    "click": "Click",
 };

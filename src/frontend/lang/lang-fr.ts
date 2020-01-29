@@ -1504,4 +1504,5 @@ export const LANG_FR = {
     "mailInformations": "Informations du courrier",
     "visaNote": "Consigne",
     "chooseBAN": "Choisissez une BAN",
+    "click": "Cliquez",
 };

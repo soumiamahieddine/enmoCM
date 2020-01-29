@@ -1489,4 +1489,5 @@ export const LANG_NL = {
     "mailInformations": "Mail informations", //_TO_TRANSLATE
     "visaNote": "Order", //_TO_TRANSLATE
     "chooseBAN": "Choose a BAN", //_TO_TRANSLATE
+    "click": "Click", //_TO_TRANSLATE
 };

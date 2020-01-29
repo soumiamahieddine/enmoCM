@@ -12,6 +12,7 @@ import { FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContactService } from '../../../../../service/contact.service';
 import { FunctionsService } from '../../../../../service/functions.service';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 declare var angularGlobals: any;
 
@@ -19,7 +20,23 @@ declare var angularGlobals: any;
     selector: 'app-contact-form',
     templateUrl: "contacts-form.component.html",
     styleUrls: ['contacts-form.component.scss'],
-    providers: [NotificationService, AppService, ContactService]
+    providers: [NotificationService, AppService, ContactService],
+    animations: [
+        trigger('hideShow', [
+            transition(
+                ':enter', [
+                    style({ height: '0px'}),
+                    animate('200ms', style({ 'height': '30px' }))
+                ]
+            ),
+            transition(
+                ':leave', [
+                    style({ height: '30px' }),
+                    animate('200ms', style({ 'height': '0px' }))
+                ]
+            )
+        ]),
+    ],
 })
 export class ContactsFormComponent implements OnInit {
 
@@ -693,6 +710,7 @@ export class ContactsFormComponent implements OnInit {
     }
 
     setAddress(contact: any, disableBan: boolean = true) {
+        this.companyFound = null;
         let indexField = -1;
         Object.keys(contact).forEach(element => {
             indexField = this.contactForm.map(field => field.id).indexOf(element);
