@@ -555,8 +555,8 @@ export class ContactsFormComponent implements OnInit {
 
     onSubmit() {
         this.checkFilling();
-        if (this.addressBANMode && this.emptyAddress()) {
-            this.notify.error('Choisissez une BAN');
+        if (this.addressBANMode && this.emptyAddress() && !this.noAddressRequired()) {
+            this.notify.error(this.lang.chooseBAN);
         } else if (this.isValidForm()) {
             if (this.contactId !== null) {
                 this.updateContact();
@@ -564,7 +564,7 @@ export class ContactsFormComponent implements OnInit {
                 this.createContact();
             }
         } else {
-            this.notify.error('Veuillez corriger les erreurs');
+            this.notify.error(this.lang.mustFixErrors);
         }
 
     }
@@ -890,6 +890,14 @@ export class ContactsFormComponent implements OnInit {
 
     emptyAddress() {
         if (this.contactForm.filter(contact => this.isEmptyValue(contact.control.value) && ['addressNumber', 'addressStreet', 'addressPostcode', 'addressTown', 'addressCountry'].indexOf(contact.id) > -1).length === 5) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    noAddressRequired() {
+        if (this.contactForm.filter(contact => !contact.required && ['addressNumber', 'addressStreet', 'addressPostcode', 'addressTown', 'addressCountry'].indexOf(contact.id) > -1).length === 5) {
             return true;
         } else {
             return false;

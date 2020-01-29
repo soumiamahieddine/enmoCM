@@ -1463,4 +1463,5 @@ export const LANG_EN = {
     "criteriaContactFieldDesc": "Search the company, the name, the firstname or a part of these elements",
     "mailInformations": "Mail informations",
     "visaNote": "Order",
+    "chooseBAN": "Choose a BAN",
 };

@@ -1503,4 +1503,5 @@ export const LANG_FR = {
     "criteriaContactFieldDesc": "Recherche sur la structure, le nom, le prénom ou une partie des ces élements",
     "mailInformations": "Informations du courrier",
     "visaNote": "Consigne",
+    "chooseBAN": "Choisissez une BAN",
 };

@@ -71,7 +71,7 @@
         </mat-progress-bar>
 
     </div>
-    <div class="row">
+    <div class="row" style="margin: 0px;">
         <ng-container *ngFor="let unit of contactUnit">
             <div [class.col-sm-12]="unit.id !== 'maarch2maarch' && unit.id !== 'complement' && !isEmptyUnit('mainInfo') && !isEmptyUnit('address')" [class.col-md-6]="unit.id !== 'maarch2maarch' && unit.id !== 'complement' && !isEmptyUnit('mainInfo') && !isEmptyUnit('address')" [class.col-md-12]="unit.id === 'complement' || unit.id === 'maarch2maarch'" *ngIf="!isEmptyUnit(unit.id)">
                 <mat-list>
