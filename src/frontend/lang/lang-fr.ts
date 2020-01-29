@@ -1502,4 +1502,5 @@ export const LANG_FR = {
     "criteriaContactField": "Expéditeur / Destinataire",
     "criteriaContactFieldDesc": "Recherche sur la structure, le nom, le prénom ou une partie des ces élements",
     "mailInformations": "Informations du courrier",
+    "visaNote": "Consigne",
 };

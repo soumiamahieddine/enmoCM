@@ -1462,4 +1462,5 @@ export const LANG_EN = {
     "criteriaContactField": "Recipient / Sender",
     "criteriaContactFieldDesc": "Search the company, the name, the firstname or a part of these elements",
     "mailInformations": "Mail informations",
+    "visaNote": "Order",
 };

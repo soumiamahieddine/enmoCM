@@ -1487,4 +1487,5 @@ export const LANG_NL = {
     "criteriaContactField": "Recipient / Sender", //_TO_TRANSLATE
     "criteriaContactFieldDesc": "Search the company, the name, the firstname or a part of these elements", //_TO_TRANSLATE
     "mailInformations": "Mail informations", //_TO_TRANSLATE
+    "visaNote": "Order", //_TO_TRANSLATE
 };
