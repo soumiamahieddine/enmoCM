@@ -147,7 +147,7 @@ class SearchController
             $offset = (int)$queryParams['offset'];
         }
         $order = !in_array($queryParams['order'], ['asc', 'desc']) ? '' : $queryParams['order'];
-        $orderBy = str_replace(['chrono', 'typeLabel', 'creationDate'], ['alt_identifier', 'type_label', 'creation_date'], $queryParams['orderBy']);
+        $orderBy = str_replace(['chrono', 'typeLabel', 'creationDate'], ['order_alphanum(alt_identifier)', 'type_label', 'creation_date'], $queryParams['orderBy']);
         $orderBy = !in_array($orderBy, ['alt_identifier', 'status', 'subject', 'type_label', 'creation_date']) ? ['creation_date'] : ["{$orderBy} {$order}"];
 
         $allResources = ResModel::getOnView([
