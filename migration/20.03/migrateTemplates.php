@@ -259,11 +259,16 @@ foreach ($customs as $custom) {
                 $resource = file_get_contents($pathFilename);
                 $pathInfo = pathinfo($pathFilename);
                 $storeResult = DocserverController::storeResourceOnDocServer([
-                        'collId'            => 'templates',
-                        'docserverTypeId'   => 'TEMPLATES',
-                        'encodedResource'   => base64_encode($resource),
-                        'format'            => $pathInfo['extension']
-                    ]);
+                    'collId'           => 'templates',
+                    'docserverTypeId'  => 'TEMPLATES',
+                    'encodedResource'  => base64_encode($resource),
+                    'format'           => $pathInfo['extension']
+                ]);
+
+                if (!empty($storeResult['errors'])) {
+                    echo $storeResult['errors'];
+                    continue;
+                }
 
                 TemplateModel::update([
                         'set'   => [
