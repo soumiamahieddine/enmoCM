@@ -1500,7 +1500,7 @@ export const LANG_FR = {
     "criteriaResourceField": "Sujet / numéro chrono",
     "criteriaResourceFieldDesc": "Recherche un sujet / chrono ou une partie des ces élements",
     "criteriaContactField": "Expéditeur / Destinataire",
-    "criteriaContactFieldDesc": "Recherche sur la structure, le nom, le prénom ou une partie des ces élements",
+    "criteriaContactFieldDesc": "Recherche sur l'organisation, le nom, le prénom ou une partie des ces élements",
     "mailInformations": "Informations du courrier",
     "visaNote": "Consigne",
     "chooseBAN": "Choisissez une BAN",

@@ -1457,7 +1457,7 @@ export const LANG_EN = {
     "resourceUnlinked": "Resource unlinked",
     "resourcesLinked": "Resources linked",
     "criteriaSearch": "Criteria search",
-    "criteriaResourceField": "Subjec / Chrono number",
+    "criteriaResourceField": "Subject / Chrono number",
     "criteriaResourceFieldDesc": "Search a subject / chrono or a part of these elements",
     "criteriaContactField": "Recipient / Sender",
     "criteriaContactFieldDesc": "Search the company, the name, the firstname or a part of these elements",
