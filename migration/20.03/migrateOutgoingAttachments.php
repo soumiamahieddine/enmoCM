@@ -61,8 +61,8 @@ foreach ($customs as $custom) {
             ]);
 
             $integration = [];
-            $integration['in_signature_book'] = empty($attachmentInfo['in_signature_book']) ?  'false' : 'true';
-            $integration['in_send_attach']    = empty($attachmentInfo['in_send_attach']) ?  'false' : 'true';
+            $integration['inSignatureBook'] = empty($attachmentInfo['in_signature_book']) ?  'false' : 'true';
+            $integration['inShipping']      = empty($attachmentInfo['in_send_attach']) ?  'false' : 'true';
             $attachmentExternalId = json_decode($attachmentInfo['external_id'], true);
             $externalId           = json_decode($attachmentInfo['letterbox_external_id'], true);
 

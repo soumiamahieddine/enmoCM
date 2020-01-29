@@ -2017,9 +2017,6 @@ if (!defined('_IS_EXTERNAL_CONTACT')) {
 if (!defined('_SEARCH_DIRECTORY')) {
     define('_SEARCH_DIRECTORY', 'Recherche annuaire');
 }
-if (!defined('_M2M_ID')) {
-    define('_M2M_ID', 'Identifiant M2GEC');
-}
 if (!defined('_CONTACT_ID')) {
     define('_CONTACT_ID', 'ID Contact');
 }

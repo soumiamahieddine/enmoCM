@@ -1407,7 +1407,7 @@ export const LANG_NL = {
     "uriIsEmpty" : "URI of onlyoffice server is empty in documentEditorsConfig.xml", //_TO_TRANSLATE
     "portIsEmpty" : "Port of onlyoffice server is empty in documentEditorsConfig.xml", //_TO_TRANSLATE
     "externalVisaWorkflow" : "Visa workflow Maarch Parapheur", //_TO_TRANSLATE
-    "IdMaarch2Gec" : "MAARCH2GEC identifier", //_TO_TRANSLATE
+    "IdMaarch2Maarch" : "MAARCH2MAARCH identifier", //_TO_TRANSLATE
     "indexingFile" : "Indexation", //_TO_TRANSLATE
     "signUserRequired" : "A signatory is required", //_TO_TRANSLATE
     "signedUserDate" : "Signed", //_TO_TRANSLATE
@@ -1460,7 +1460,7 @@ export const LANG_NL = {
     "displayWebserviceAccount": "Display webservice account", //_TO_TRANSLATE
     "circuitNotStarted": "The workflow has not yet started", //_TO_TRANSLATE
     "searchCommunicationMean": "Search communication mean", //_TO_TRANSLATE
-    "searchExternalIdM2M": "Search M2GEC Identifier", //_TO_TRANSLATE
+    "searchExternalIdM2M": "Search M2M Identifier", //_TO_TRANSLATE
     "goToFolder": "Go to folder", //_TO_TRANSLATE
     "m2mContactInfo": "Expected Format : SIRET/ENTITY_ID of destination entity", //_TO_TRANSLATE
     "ADD": "Add", //_TO_TRANSLATE

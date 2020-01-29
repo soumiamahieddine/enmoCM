@@ -52,7 +52,7 @@ export class ContactsFormComponent implements OnInit {
 
     @Output() onSubmitEvent = new EventEmitter<number>();
 
-    maarch2GecUrl: string = `https://docs.maarch.org/gitbook/html/MaarchCourrier/${angularGlobals.applicationVersion.split('.')[0] + '.' + angularGlobals.applicationVersion.split('.')[1]}/guat/guat_exploitation/maarch2gec.html`;
+    maarch2maarchUrl: string = `https://docs.maarch.org/gitbook/html/MaarchCourrier/${angularGlobals.applicationVersion.split('.')[0] + '.' + angularGlobals.applicationVersion.split('.')[1]}/guat/guat_exploitation/maarch2maarch.html`;
 
     contactUnit = [
         {
@@ -243,7 +243,7 @@ export class ContactsFormComponent implements OnInit {
             id: 'communicationMeans',
             unit: 'maarch2maarch',
             label: this.lang.communicationMean,
-            desc: `${this.lang.communicationMeanDesc} (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
+            desc: `${this.lang.communicationMeanDesc} (${this.lang.see} <a href="${this.maarch2maarchUrl}" target="_blank">MAARCH2MAARCH</a>)`,
             type: 'string',
             control: new FormControl(),
             required: false,
@@ -254,8 +254,8 @@ export class ContactsFormComponent implements OnInit {
         {
             id: 'externalId_m2m',
             unit: 'maarch2maarch',
-            label: this.lang.IdMaarch2Gec,
-            desc: `${this.lang.m2mContactInfo} (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
+            label: this.lang.IdMaarch2Maarch,
+            desc: `${this.lang.m2mContactInfo} (${this.lang.see} <a href="${this.maarch2maarchUrl}" target="_blank">MAARCH2MAARCH</a>)`,
             type: 'string',
             control: new FormControl(),
             required: false,
