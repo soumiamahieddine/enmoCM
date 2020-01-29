@@ -713,6 +713,38 @@ class ResController
         return $response->withJson(['success' => 'success']);
     }
 
+    public static function setInIntegrations(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $body = $request->getParsedBody();
+
+        if (empty($body['integrations'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Query param integrations is missing']);
+        }
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['integrations']]);
+        if (empty($resource)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Resource not found']);
+        }
+        $integrations = json_decode($resource['integrations'], true);
+
+        $integrations['inSignatureBook'] = $body['integrations']['inSignatureBook'] ?? $integrations['inSignatureBook'];
+        $integrations['inShipping'] = $body['integrations']['inShipping'] ?? $integrations['inShipping'];
+
+        ResModel::update([
+            'set' => [
+                'integrations' => json_encode($integrations)
+            ],
+            'where' => ['res_id = ?'],
+            'data'  => [$args['resId']]
+        ]);
+
+        return $response->withStatus(204);
+    }
+
     public static function getEncodedDocument(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
