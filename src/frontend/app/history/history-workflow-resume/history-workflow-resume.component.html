@@ -4,7 +4,7 @@
     </div>
 </ng-container>
 <ng-template #elseTemplate>
-    <ng-container *ngIf="privilegeService.hasCurrentUserPrivilege('view_doc_history'); else noPrivilegeTemplate">
+    <ng-container *ngIf="!disabledHistory; else noPrivilegeTemplate">
         <div class="historyList" *ngFor="let history of histories">
             <div class="date" [title]="history.event_date | fullDate">
                 {{history.event_date | timeAgo}}

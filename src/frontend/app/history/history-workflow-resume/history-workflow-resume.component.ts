@@ -20,6 +20,7 @@ export class HistoryWorkflowResumeComponent implements OnInit {
     lang: any = LANG;
 
     loading: boolean = true;
+    disabledHistory: boolean = true;
 
     histories: any[] = [];
 
@@ -35,7 +36,12 @@ export class HistoryWorkflowResumeComponent implements OnInit {
 
     ngOnInit(): void {
         this.loading = true;
-        this.loadHistory(this.resId);
+        if (this.privilegeService.hasCurrentUserPrivilege('view_full_history') || this.privilegeService.hasCurrentUserPrivilege('view_doc_history')) {
+            this.disabledHistory = false;
+            this.loadHistory(this.resId);
+        } else {
+            this.loading = false;
+        }
     }
 
     loadHistory(resId: number) {
