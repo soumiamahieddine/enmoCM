@@ -179,7 +179,7 @@ export class ListAdministrationComponent implements OnInit {
             label: this.lang.attachments,
         },
         {
-            id: 'link',
+            id: 'linkedResources',
             icon: 'fas fa-link',
             label: this.lang.links,
         },
