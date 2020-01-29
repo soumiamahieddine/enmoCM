@@ -1496,4 +1496,10 @@ export const LANG_FR = {
     "linkSelectedResources": "Lier les courriers sélectionnés",
     "resourceUnlinked": "Liaison supprimée",
     "resourcesLinked": "Liaison(s) ajoutée(s)",
+    "criteriaSearch": "Critères de recherche",
+    "criteriaResourceField": "Sujet / numéro chrono",
+    "criteriaResourceFieldDesc": "Recherche un sujet / chrono ou une partie des ces élements",
+    "criteriaContactField": "Expéditeur / Destinataire",
+    "criteriaContactFieldDesc": "Recherche sur la structure, le nom, le prénom ou une partie des ces élements",
+    "mailInformations": "Informations du courrier",
 };

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter, Output, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { AppService } from '../../../service/app.service';
@@ -20,20 +20,20 @@ export class CriteriaToolComponent implements OnInit {
     lang: any = LANG;
 
     criteria: any = {
-        resource: [
+        mailInformations: [
             {
                 id : 'resourceField',
-                label: 'Recherche par sujet / numéro chrono',
+                label: this.lang.criteriaResourceField,
+                desc: this.lang.criteriaResourceFieldDesc,
                 control : new FormControl()
             },
             {
                 id : 'contactField',
-                label: 'Recherche par contact',
+                label: this.lang.criteriaContactField,
+                desc: this.lang.criteriaContactFieldDesc,
                 control : new FormControl()
             },
-        ],
-        attachment: [],
-        contact: []
+        ]
     }
 
     currentCriteria: any = [];
@@ -41,6 +41,8 @@ export class CriteriaToolComponent implements OnInit {
     filteredCriteria: any = {};
 
     searchCriteria = new FormControl();
+
+    @Input() defaultCriteria: any = [];
 
     @Output() searchUrlGenerated = new EventEmitter<string>();
 
@@ -54,9 +56,13 @@ export class CriteriaToolComponent implements OnInit {
         private latinisePipe: LatinisePipe) { }
 
     ngOnInit(): void {
-        this.currentCriteria.push(this.criteria.resource[0]);
 
         Object.keys(this.criteria).forEach(keyVal => {
+            this.criteria[keyVal].forEach((element: any) => {
+                if (this.defaultCriteria.indexOf(element.id) > -1) {
+                    this.currentCriteria.push(element);
+                }
+            });
             this.filteredCriteria[keyVal] = {};
             this.filteredCriteria[keyVal] = new Observable<string[]>();
             this.filteredCriteria[keyVal] = this.searchCriteria.valueChanges

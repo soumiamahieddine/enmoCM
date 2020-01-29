@@ -1481,4 +1481,10 @@ export const LANG_NL = {
     "linkSelectedResources": "Link selected resources", //_TO_TRANSLATE
     "resourceUnlinked": "Resource unlinked", //_TO_TRANSLATE
     "resourcesLinked": "Resources linked", //_TO_TRANSLATE
+    "criteriaSearch": "Criteria search", //_TO_TRANSLATE
+    "criteriaResourceField": "Subjec / Chrono number", //_TO_TRANSLATE
+    "criteriaResourceFieldDesc": "Search a subject / chrono or a part of these elements", //_TO_TRANSLATE
+    "criteriaContactField": "Recipient / Sender", //_TO_TRANSLATE
+    "criteriaContactFieldDesc": "Search the company, the name, the firstname or a part of these elements", //_TO_TRANSLATE
+    "mailInformations": "Mail informations", //_TO_TRANSLATE
 };

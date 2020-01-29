@@ -2,7 +2,7 @@
     <mat-expansion-panel expanded #criteriaTool>
         <mat-expansion-panel-header>
             <mat-panel-title>
-                Critères de recherche
+                {{lang.criteriaSearch}}
             </mat-panel-title>
         </mat-expansion-panel-header>
 
@@ -12,7 +12,7 @@
                     [formControl]="searchCriteria" [matAutocomplete]="autoGroup">
                 <mat-autocomplete #autoGroup="matAutocomplete" (optionSelected)="addCriteria($event.option.value)">
                     <ng-container *ngFor="let keyVal of criteria | keyvalue">
-                        <mat-optgroup [label]="keyVal.key" *ngIf="(filteredCriteria[keyVal.key] | async)?.length > 0">
+                        <mat-optgroup [label]="lang[keyVal.key]" *ngIf="(filteredCriteria[keyVal.key] | async)?.length > 0">
                             <mat-option *ngFor="let crit of filteredCriteria[keyVal.key] | async | sortBy : 'label'"
                                 [value]="crit" [disabled]="isCurrentCriteria(crit.id)">
                                 {{crit.label}}
@@ -22,19 +22,23 @@
                 </mat-autocomplete>
             </mat-form-field>
         </div>
-        <div class="col-md-6" *ngFor="let criteria of currentCriteria;let i=index">
-            <mat-form-field appearance="outline" class="criteriaField">
-                <mat-label>{{criteria.label}}</mat-label>
-                <input matInput placeholder="First name" [formControl]="criteria.control">
-                <button mat-icon-button matSuffix color="primary" (click)="$event.stopPropagation();removeCriteria(i)">
-                    <mat-icon color="warn" class="fa fa-trash"></mat-icon>
+        <form (ngSubmit)="getSearchUrl()" #criteriaFormUp="ngForm">
+            <div class="col-md-6" *ngFor="let criteria of currentCriteria;let i=index">
+                <mat-form-field appearance="outline" class="criteriaField">
+                    <mat-label>{{criteria.label}}</mat-label>
+                    <input matInput [formControl]="criteria.control">
+                    <button mat-icon-button type="button" matSuffix color="primary"
+                        (click)="$event.stopPropagation();removeCriteria(i)">
+                        <mat-icon color="warn" class="fa fa-trash"></mat-icon>
+                    </button>
+                    <mat-hint>{{criteria.desc}}</mat-hint>
+                </mat-form-field>
+            </div>
+            <div class="col-md-12">
+                <button mat-raised-button matSuffix color="primary" type="submit">
+                    {{lang.searchMails}}
                 </button>
-            </mat-form-field>
-        </div>
-        <div class="col-md-12">
-            <button mat-raised-button matSuffix color="primary" (click)="getSearchUrl()">
-                {{lang.searchMails}}
-            </button>
-        </div>
+            </div>
+        </form>
     </mat-expansion-panel>
 </mat-accordion>

@@ -3,8 +3,8 @@
 </div>
 <div style="display: flex;">
     <div style="display: flex;align-items: center;">
-        {{allResInSearch.length}}
-        {{lang.records | ucfirst}}&nbsp;<small *ngIf="selectedRes.length > 0">- {{selectedRes.length}}
+        <b>{{allResInSearch.length}}
+        {{lang.records | ucfirst}}</b>&nbsp;<small *ngIf="selectedRes.length > 0" style="color: #029BB6;">- {{selectedRes.length}}
             {{lang.selected}}</small>
     </div>
     <div style="flex:1;">
