@@ -91,6 +91,17 @@ export class SearchAdvListComponent implements OnInit {
     }
 
     processPostData(data: any) {
+
+        data.resources.forEach((linkeRes: any) => {
+            Object.keys(linkeRes).forEach((key) => {
+                if (key == 'statusImage' && this.functions.empty(linkeRes[key])) {
+                    linkeRes[key] = 'fa-question undefined';
+                } else if (this.functions.empty(linkeRes[key]) && ['senders', 'recipients', 'attachments', 'hasDocument'].indexOf(key) === -1) {
+                    linkeRes[key] = this.lang.undefined;
+                }
+            });
+        });
+        
         return data;
     }
 

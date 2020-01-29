@@ -11,6 +11,7 @@ import { of } from 'rxjs';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { MatDialog } from '@angular/material';
 import { LinkResourceModalComponent } from './linkResourceModal/link-resource-modal.component';
+import { FunctionsService } from '../../service/functions.service';
 
 declare function $j(selector: any): any;
 
@@ -42,6 +43,7 @@ export class LinkedResourceListComponent implements OnInit {
         private notify: NotificationService,
         public appService: AppService,
         public dialog: MatDialog,
+        public functions: FunctionsService
     ) { }
 
     ngOnInit(): void {
@@ -55,6 +57,7 @@ export class LinkedResourceListComponent implements OnInit {
                 this.linkedResources = data.linkedResources;
                 this.reloadBadgeLinkedResources.emit(`${this.linkedResources.length}`);
                 setTimeout(() => {
+                    this.linkedResources = this.processPostData(this.linkedResources);
                     this.dataSource = new MatTableDataSource(this.linkedResources);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
@@ -66,6 +69,21 @@ export class LinkedResourceListComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    processPostData(data: any) {
+
+        data.forEach((linkeRes: any) => {
+            Object.keys(linkeRes).forEach((key) => {
+                if (key == 'statusImage' && this.functions.empty(linkeRes[key])) {
+                    linkeRes[key] = 'fa-question undefined';
+                } else if (this.functions.empty(linkeRes[key]) && ['senders', 'recipients', 'attachments', 'hasDocument', 'confidentiality'].indexOf(key) === -1) {
+                    linkeRes[key] = this.lang.undefined;
+                }
+            });
+        });
+        
+        return data;
     }
 
     getUsersVisaCircuit(row: any) {
