@@ -71,7 +71,7 @@ export class HistoryAdministrationComponent implements OnInit {
                 {
                     icon: 'fa fa-history',
                     route: '/administration/history',
-                    label: this.lang.historyBatch,
+                    label: this.lang.history,
                     current: true
                 }
             ];
