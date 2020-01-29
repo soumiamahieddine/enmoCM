@@ -51,6 +51,11 @@ class ResourceDataExportController
 
         $withSeparators = !empty($body['withSeparator']);
 
+        $unitsSummarySheet = [];
+        if (!empty($body['summarySheet'])) {
+            $unitsSummarySheet = $body['summarySheet'];
+        }
+
         $forceSummarySheet = count($body['resources']) > 1;
 
         foreach ($body['resources'] as $resource) {
@@ -58,13 +63,15 @@ class ResourceDataExportController
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
 
-            $withSummarySheet = $forceSummarySheet;
+            $withSummarySheet = $forceSummarySheet || !empty($unitsSummarySheet);
             if (!$withSummarySheet) {
                 $withSummarySheet = !empty($resource['summarySheet']);
             }
             if ($withSummarySheet) {
                 if (!empty($resource['summarySheet']) && is_array($resource['summarySheet'])) {
                     $units = $resource['summarySheet'];
+                } else if (!empty($unitsSummarySheet)) {
+                    $units = $unitsSummarySheet;
                 } else {
                     $units = [
                         [
