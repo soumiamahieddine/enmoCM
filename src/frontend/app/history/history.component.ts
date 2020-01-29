@@ -129,7 +129,6 @@ export class HistoryComponent implements OnInit {
                     this.isLoadingResults = false;
                     data = this.processPostData(data);
                     this.resultsLength = data.count;
-                    this.headerService.setHeader(this.lang.administration + ' ' + this.lang.history.toLowerCase(), '', '');
                     return data.history;
                 }),
                 catchError((err: any) => {

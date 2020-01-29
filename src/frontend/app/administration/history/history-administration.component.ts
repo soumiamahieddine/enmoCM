@@ -6,6 +6,7 @@ import { AppService } from '../../../service/app.service';
 import { FunctionsService } from '../../../service/functions.service';
 import { HistoryComponent } from '../../history/history.component';
 import { PrivilegeService } from '../../../service/privileges.service';
+import { HeaderService } from '../../../service/header.service';
 
 @Component({
     selector: 'contact-list',
@@ -44,9 +45,12 @@ export class HistoryAdministrationComponent implements OnInit {
         public http: HttpClient,
         public appService: AppService,
         public functions: FunctionsService,
-        private privilegeService: PrivilegeService) { }
+        private privilegeService: PrivilegeService,
+        private headerService: HeaderService) { }
 
     ngOnInit(): void {
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.history.toLowerCase(), '', '');
+
         if (this.privilegeService.hasCurrentUserPrivilege('view_history_batch')) {
             this.subMenus = [
                 {
