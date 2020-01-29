@@ -93,24 +93,6 @@ foreach ($customs as $custom) {
                 'version'       => $attachmentInfo['relation'],
                 'fingerprint'   => $convertedDocument[0]['fingerprint']
             ]);
-
-            $thumbnailDocument = \SrcCore\models\DatabaseModel::select([
-                'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
-                'table'     => ['adr_attachments'],
-                'where'     => ['res_id = ?', 'type = ?'],
-                'data'      => [$attachmentInfo['res_id'], 'TNL'],
-            ]);
-            if (!empty($thumbnailDocument)) {
-                AdrModel::createDocumentAdr([
-                    'resId'         => $attachmentInfo['res_id_master'],
-                    'type'          => 'TNL',
-                    'docserverId'   => $thumbnailDocument[0]['docserver_id'],
-                    'path'          => $thumbnailDocument[0]['path'],
-                    'filename'      => $thumbnailDocument[0]['filename'],
-                    'version'       => $attachmentInfo['relation'],
-                    'fingerprint'   => $thumbnailDocument[0]['fingerprint']
-                ]);
-            }
     
             $attachmentToDelete[] = $attachmentInfo['res_id'];
             $customId = empty($custom) ? 'null' : $custom;
@@ -129,23 +111,6 @@ foreach ($customs as $custom) {
                     $attachmentVersion[0]['adrType'] = 'PDF';
                     $attachmentVersion[0]['relation'] = $attachmentVersion['relation'];
                     addOutgoingMailSignedInAdr($attachmentVersion[0]);
-                    $thumbnailDocument = \SrcCore\models\DatabaseModel::select([
-                        'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
-                        'table'     => ['adr_attachments'],
-                        'where'     => ['res_id = ?', 'type = ?'],
-                        'data'      => [$attachmentVersion['res_id'], 'TNL'],
-                    ]);
-                    if (!empty($thumbnailDocument)) {
-                        AdrModel::createDocumentAdr([
-                            'resId'         => $attachmentInfo['res_id_master'],
-                            'type'          => 'TNL',
-                            'docserverId'   => $thumbnailDocument[0]['docserver_id'],
-                            'path'          => $thumbnailDocument[0]['path'],
-                            'filename'      => $thumbnailDocument[0]['filename'],
-                            'version'       => $attachmentVersion['relation'],
-                            'fingerprint'   => $thumbnailDocument[0]['fingerprint']
-                        ]);
-                    }
                     $attachmentToDelete[] = $attachmentVersion['res_id'];
                 }
             }
