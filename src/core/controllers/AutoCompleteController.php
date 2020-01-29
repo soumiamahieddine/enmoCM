@@ -642,6 +642,8 @@ class AutoCompleteController
         if (!isset($control['annuaries'])) {
             if (isset($control['errors'])) {
                 return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+            } elseif (isset($control['success'])) {
+                return $response->withStatus(400)->withJson(['errors' => $control['success']]);
             }
         }
 
@@ -702,6 +704,8 @@ class AutoCompleteController
         if (!isset($control['annuaries'])) {
             if (isset($control['errors'])) {
                 return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+            } elseif (isset($control['success'])) {
+                return $response->withStatus(400)->withJson(['errors' => $control['success']]);
             }
         }
 

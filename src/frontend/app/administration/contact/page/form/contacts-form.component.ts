@@ -763,6 +763,12 @@ export class ContactsFormComponent implements OnInit {
     removeField(field: any) {
         field.display = !field.display;
         field.control.reset();
+        if (field.id == 'externalId_m2m' && !field.display) {
+            let indexFieldAnnuaryId = this.contactForm.map(field => field.id).indexOf('externalId_m2m_annuary_id');
+            if (indexFieldAnnuaryId > -1) {
+                this.contactForm[indexFieldAnnuaryId].display = false;
+            }
+        }
         this.checkFilling();
     }
 
@@ -770,7 +776,6 @@ export class ContactsFormComponent implements OnInit {
         this.communicationMeanInfo = this.lang.autocompleteInfo;
         this.communicationMeanResult = [];
         let indexFieldCommunicationMeans = this.contactForm.map(field => field.id).indexOf('communicationMeans');
-        let indexFieldCompany = this.contactForm.map(field => field.id).indexOf('company');
         this.contactForm[indexFieldCommunicationMeans].control.valueChanges
             .pipe(
                 debounceTime(300),
@@ -787,6 +792,11 @@ export class ContactsFormComponent implements OnInit {
                     this.communicationMeanResult = data;
                     this.communicationMeanFilteredResult = of(this.communicationMeanResult);
                     this.communicationMeanLoading = false;
+                }),
+                catchError((err: any) => {
+                    this.communicationMeanInfo = err.error.errors;
+                    this.communicationMeanLoading = false;
+                    return of(false);
                 })
             ).subscribe();
     }
@@ -823,6 +833,11 @@ export class ContactsFormComponent implements OnInit {
                     this.externalId_m2mResult = data;
                     this.externalId_m2mFilteredResult = of(this.externalId_m2mResult);
                     this.externalId_m2mLoading = false;
+                }),
+                catchError((err: any) => {
+                    this.externalId_m2mInfo = err.error.errors;
+                    this.externalId_m2mLoading = false;
+                    return of(false);
                 })
             ).subscribe();
     }
