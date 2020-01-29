@@ -116,11 +116,7 @@ class MergeController
         if (!empty($args['resId'])) {
             $resource = ResModel::getById(['select' => ['*'], 'resId' => $args['resId']]);
             $senders = ResourceContactModel::get(['select' => ['item_id as id', 'type'], 'where' => ['res_id = ?', 'mode = ?'], 'data' => [$args['resId'], 'sender'], 'limit' => 1]);
-            if (empty($args['recipients'])) {
-                $recipients = ResourceContactModel::get(['select' => ['item_id as id', 'type'], 'where' => ['res_id = ?', 'mode = ?'], 'data' => [$args['resId'], 'recipient'], 'limit' => 1]);
-            } else {
-                $recipients = $args['recipients'];
-            }
+            $recipients = ResourceContactModel::get(['select' => ['item_id as id', 'type'], 'where' => ['res_id = ?', 'mode = ?'], 'data' => [$args['resId'], 'recipient'], 'limit' => 1]);
         } else {
             if (!empty($args['modelId'])) {
                 $indexingModel = IndexingModelModel::getById(['id' => $args['modelId'], 'select' => ['category']]);
