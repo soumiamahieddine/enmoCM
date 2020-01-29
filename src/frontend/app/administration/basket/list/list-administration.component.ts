@@ -194,12 +194,12 @@ export class ListAdministrationComponent implements OnInit {
             label: this.lang.mailsSentAlt,
         },
         {
-            id: 'visa',
+            id: 'visaCircuit',
             icon: 'fas fa-list-ol',
             label: this.lang.visaWorkflow,
         },
         {
-            id: 'avis',
+            id: 'opinionCircuit',
             icon: 'fas fa-comment-alt',
             label: this.lang.avis,
         },
