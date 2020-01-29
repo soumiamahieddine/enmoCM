@@ -1,9 +1,6 @@
 <?php
 
-use Convert\controllers\ConvertPdfController;
-use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
-use Docserver\controllers\DocserverController;
 use Resource\models\ResModel;
 use SrcCore\models\CoreConfigModel;
 
@@ -23,7 +20,7 @@ foreach ($customs as $custom) {
 
     $migrated = 0;
     $attachmentsInfo = \SrcCore\models\DatabaseModel::select([
-        'select' => ['l.category_id', 'a.res_id', 'a.relation', 'a.docserver_id', 'a.path', 'a.filename', 'a.format', 'a.res_id_master', 'a.in_signature_book',
+        'select' => ['l.category_id', 'a.res_id', 'a.relation', 'a.docserver_id', 'a.path', 'a.filename', 'a.filesize', 'a.format', 'a.res_id_master', 'a.in_signature_book',
                         'a.in_send_attach', 'a.external_id', 'a.attachment_type', 'a.origin_id', 'a.external_id', 'l.external_id as letterbox_external_id'],
         'table'  => ['res_attachments a, res_letterbox l'],
         'where'  => ['attachment_type = ?', 'a.status not in (?)', 'a.res_id_master = l.res_id', 'category_id = ?'],
@@ -42,127 +39,117 @@ foreach ($customs as $custom) {
     $tmpPath = CoreConfigModel::getTmpPath();
 
     $previousResId = 0;
+    $attachmentToDelete = [];
     foreach ($attachmentsInfo as $attachmentInfo) {
         if ($previousResId == $attachmentInfo['res_id_master']) {
             continue;
         }
         $previousResId = $attachmentInfo['res_id_master'];
 
-        $inSignatureBook = empty($attachmentInfo['in_signature_book']) ?  'false' : 'true';
-        $inSendAttach    = empty($attachmentInfo['in_send_attach']) ?  'false' : 'true';
-        $format          = empty($attachmentInfo['format']) ?  pathinfo($attachmentInfo['filename'], PATHINFO_EXTENSION) : $attachmentInfo['format'];
-        
-        $docserver = \SrcCore\models\DatabaseModel::select([
-            'select' => ['path_template', 'docserver_type_id'],
-            'table'  => ['docservers'],
-            'where'  => ['docserver_id = ?'],
-            'data'   => [$attachmentInfo['docserver_id']]
+        $convertedDocument = \SrcCore\models\DatabaseModel::select([
+            'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
+            'table'     => ['adr_attachments'],
+            'where'     => ['res_id = ?', 'type = ?'],
+            'data'      => [$attachmentInfo['res_id'], 'PDF'],
         ]);
 
-        $pathToDocument = $docserver[0]['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachmentInfo['path']) . $attachmentInfo['filename'];
-
-        if (!file_exists($pathToDocument)) {
-            echo "Le document avec res_attachments.res_id = " . $attachmentInfo['res_id']
-                . " n'a pas été trouvé sur le docserver (path = '" . $pathToDocument . "')"
-                . ", il n'est donc pas migré\n";
-            continue;
-        } else {
-            $resource = file_get_contents($pathToDocument);
-            $storeResult = DocserverController::storeResourceOnDocServer([
-                'collId'            => 'letterbox_coll',
-                'docserverTypeId'   => 'DOC',
-                'encodedResource'   => base64_encode($resource),
-                'format'            => $format
+        if (!empty($convertedDocument)) {
+            \SrcCore\models\DatabaseModel::delete([
+                'table' => 'adr_letterbox',
+                'where' => ['res_id = ?'],
+                'data'  => [$attachmentInfo['res_id_master']]
             ]);
-            if (!empty($storeResult['errors'])) {
-                echo "[ConvertPdf] {$storeResult['errors']}";
+
+            $integration = [];
+            $integration['in_signature_book'] = empty($attachmentInfo['in_signature_book']) ?  'false' : 'true';
+            $integration['in_send_attach']    = empty($attachmentInfo['in_send_attach']) ?  'false' : 'true';
+            $attachmentExternalId = json_decode($attachmentInfo['external_id'], true);
+            $externalId           = json_decode($attachmentInfo['letterbox_external_id'], true);
+
+            $attachmentExternalId = empty($attachmentExternalId) ? [] : $attachmentExternalId;
+            $externalId           = empty($externalId) ? [] : $externalId;
+            $externalId           = array_merge($externalId, $attachmentExternalId);
+            ResModel::update([
+                'set' => [
+                    'docserver_id' => $attachmentInfo['docserver_id'],
+                    'path'         => $attachmentInfo['path'],
+                    'filename'     => $attachmentInfo['filename'],
+                    'fingerprint'  => $attachmentInfo['fingerprint'],
+                    'filesize'     => $attachmentInfo['filesize'],
+                    'version'      => $attachmentInfo['relation'],
+                    'integrations' => json_encode($integration),
+                    'external_id'  => json_encode($externalId)
+                ],
+                'where' => ['res_id = ?'],
+                'data'  => [$attachmentInfo['res_id_master']]
+            ]);
+
+            AdrModel::createDocumentAdr([
+                'resId'         => $attachmentInfo['res_id_master'],
+                'type'          => 'PDF',
+                'docserverId'   => $convertedDocument[0]['docserver_id'],
+                'path'          => $convertedDocument[0]['path'],
+                'filename'      => $convertedDocument[0]['filename'],
+                'version'       => $attachmentInfo['relation'],
+                'fingerprint'   => $convertedDocument[0]['fingerprint']
+            ]);
+
+            $thumbnailDocument = \SrcCore\models\DatabaseModel::select([
+                'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
+                'table'     => ['adr_attachments'],
+                'where'     => ['res_id = ?', 'type = ?'],
+                'data'      => [$attachmentInfo['res_id'], 'TNL'],
+            ]);
+            if (!empty($thumbnailDocument)) {
+                AdrModel::createDocumentAdr([
+                    'resId'         => $attachmentInfo['res_id_master'],
+                    'type'          => 'TNL',
+                    'docserverId'   => $thumbnailDocument[0]['docserver_id'],
+                    'path'          => $thumbnailDocument[0]['path'],
+                    'filename'      => $thumbnailDocument[0]['filename'],
+                    'version'       => $attachmentInfo['relation'],
+                    'fingerprint'   => $thumbnailDocument[0]['fingerprint']
+                ]);
             }
-
-            if (!empty($resource)) {
-                \SrcCore\models\DatabaseModel::delete([
-                    'table' => 'adr_letterbox',
-                    'where' => ['res_id = ?'],
-                    'data'  => [$attachmentInfo['res_id_master']]
-                ]);
-
-                $integration = [];
-                $integration['in_signature_book'] = empty($attachmentInfo['in_signature_book']) ?  'false' : 'true';
-                $integration['in_send_attach']    = empty($attachmentInfo['in_send_attach']) ?  'false' : 'true';
-                $attachmentExternalId = json_decode($attachmentInfo['external_id'], true);
-                $externalId           = json_decode($attachmentInfo['letterbox_external_id'], true);
-                $externalId           = array_merge($externalId, $attachmentExternalId);
-                ResModel::update([
-                    'set' => [
-                        'docserver_id' => $storeResult['docserver_id'],
-                        'path'         => $storeResult['destination_dir'],
-                        'filename'     => $storeResult['file_destination_name'],
-                        'fingerprint'  => $storeResult['fingerPrint'],
-                        'filesize'     => $storeResult['fileSize'],
-                        'version'      => $attachmentInfo['relation'],
-                        'integrations' => json_encode($integration),
-                        'external_id'  => json_encode($externalId)
-                    ],
-                    'where' => ['res_id = ?'],
-                    'data'  => [$attachmentInfo['res_id_master']]
-                ]);
-
-                ConvertPdfController::convert([
-                    'resId'   => $attachmentInfo['res_id_master'],
-                    'collId'  => 'letterbox_coll',
-                    'version' => $attachmentInfo['relation']
-                ]);
-                ConvertThumbnailController::convert(['type' => 'resource', 'resId' => $attachmentInfo['res_id_master']]);
     
-                $customId = empty($custom) ? 'null' : $custom;
-                exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$attachmentInfo['res_id_master']} --collId letterbox_coll --userId {$masterOwnerId} > /dev/null &");
+            $attachmentToDelete[] = $attachmentInfo['res_id'];
+            $customId = empty($custom) ? 'null' : $custom;
+            exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$attachmentInfo['res_id_master']} --collId letterbox_coll --userId {$masterOwnerId} > /dev/null &");
     
-                if ($attachmentInfo['relation'] > 1) {
-                    $attachmentsVersion = \SrcCore\models\DatabaseModel::select([
-                        'select'  => ['res_id', 'relation', 'docserver_id', 'path', 'filename', 'format', 'res_id_master', 'attachment_type'],
+            if ($attachmentInfo['relation'] > 1) {
+                $attachmentsVersion = \SrcCore\models\DatabaseModel::select([
+                        'select'  => ['res_id', 'relation', 'docserver_id', 'path', 'filename', 'fingerprint', 'format', 'res_id_master', 'attachment_type'],
                         'table'   => ['res_attachments'],
                         'where'   => ['(origin_id = ? or res_id = ?)', 'relation < ?'],
                         'data'    => [$attachmentInfo['origin_id'], $attachmentInfo['origin_id'], $attachmentInfo['relation']],
                         'orderBy' => ['relation asc']
                     ]);
 
-                    $attachmentToDelete = [];
-                    foreach ($attachmentsVersion as $attachmentVersion) {
-                        $attachmentVersion[0]['adrType'] = 'PDF';
-                        $attachmentVersion[0]['relation'] = $attachmentVersion['relation'];
-                        addOutgoingMailSignedInAdr($attachmentVersion[0]);
-                    
-                        $docserver = \SrcCore\models\DatabaseModel::select([
-                            'select' => ['path_template', 'docserver_type_id'],
-                            'table'  => ['docservers'],
-                            'where'  => ['docserver_id = ?'],
-                            'data'   => [$attachmentVersion['docserver_id']]
-                        ]);
-                    
-                        $pathToDocument = $docserver[0]['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachmentVersion['path']) . $attachmentVersion['filename'];
-                        $resource = file_get_contents($pathToDocument);
-                        $storeResult = DocserverController::storeResourceOnDocServer([
-                            'collId'            => 'letterbox_coll',
-                            'docserverTypeId'   => 'TNL',
-                            'encodedResource'   => base64_encode($resource),
-                            'format'            => $attachmentVersion['format']
-                        ]);
-    
+                foreach ($attachmentsVersion as $attachmentVersion) {
+                    $attachmentVersion[0]['adrType'] = 'PDF';
+                    $attachmentVersion[0]['relation'] = $attachmentVersion['relation'];
+                    addOutgoingMailSignedInAdr($attachmentVersion[0]);
+                    $thumbnailDocument = \SrcCore\models\DatabaseModel::select([
+                        'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
+                        'table'     => ['adr_attachments'],
+                        'where'     => ['res_id = ?', 'type = ?'],
+                        'data'      => [$attachmentVersion['res_id'], 'TNL'],
+                    ]);
+                    if (!empty($thumbnailDocument)) {
                         AdrModel::createDocumentAdr([
                             'resId'         => $attachmentInfo['res_id_master'],
                             'type'          => 'TNL',
-                            'docserverId'   => $storeResult['docserver_id'],
-                            'path'          => $storeResult['destination_dir'],
-                            'filename'      => $storeResult['file_destination_name'],
+                            'docserverId'   => $thumbnailDocument[0]['docserver_id'],
+                            'path'          => $thumbnailDocument[0]['path'],
+                            'filename'      => $thumbnailDocument[0]['filename'],
                             'version'       => $attachmentVersion['relation'],
-                            'fingerprint'   => $storeResult['fingerPrint']
+                            'fingerprint'   => $thumbnailDocument[0]['fingerprint']
                         ]);
-
-                        unlink($pathToDocument);
-                        unlink($tmpPath.$fileNameOnTmp.'.png');
-                        $attachmentToDelete[] = $attachmentVersion['res_id'];
                     }
+                    $attachmentToDelete[] = $attachmentVersion['res_id'];
                 }
-                $outgoingMailSigned = \SrcCore\models\DatabaseModel::select([
+            }
+            $outgoingMailSigned = \SrcCore\models\DatabaseModel::select([
                     'select'  => ['res_id', 'relation', 'docserver_id', 'path', 'filename', 'format', 'res_id_master', 'attachment_type'],
                     'table'   => ['res_attachments'],
                     'where'   => ['attachment_type = ?', 'res_id_master = ?', 'status not in (?)'],
@@ -170,14 +157,14 @@ foreach ($customs as $custom) {
                     'orderBy' => ['res_id desc'],
                     'limit'   => 1
                 ]);
-                if (!empty($outgoingMailSigned)) {
-                    // Version signée outgoing_mail_signed
-                    $outgoingMailSigned[0]['adrType'] = 'SIGN';
-                    $outgoingMailSigned[0]['relation'] = $attachmentInfo['relation'];
-                    addOutgoingMailSignedInAdr($outgoingMailSigned[0]);
-                    $attachmentToDelete[] = $outgoingMailSigned[0]['res_id'];
-                } else {
-                    $signedResponse = \SrcCore\models\DatabaseModel::select([
+            if (!empty($outgoingMailSigned)) {
+                // Version signée outgoing_mail_signed
+                $outgoingMailSigned[0]['adrType'] = 'SIGN';
+                $outgoingMailSigned[0]['relation'] = $attachmentInfo['relation'];
+                addOutgoingMailSignedInAdr($outgoingMailSigned[0]);
+                $attachmentToDelete[] = $outgoingMailSigned[0]['res_id'];
+            } else {
+                $signedResponse = \SrcCore\models\DatabaseModel::select([
                         'select'  => ['res_id', 'relation', 'docserver_id', 'path', 'filename', 'format', 'res_id_master', 'attachment_type'],
                         'table'   => ['res_attachments'],
                         'where'   => ['attachment_type = ?', 'origin = ?', 'status not in (?)'],
@@ -185,39 +172,48 @@ foreach ($customs as $custom) {
                         'orderBy' => ['res_id desc'],
                         'limit'   => 1
                     ]);
-                    if (!empty($signedResponse)) {
-                        // Réponse signée signed_response
-                        $signedResponse[0]['adrType'] = 'SIGN';
-                        $signedResponse[0]['relation'] = $attachmentInfo['relation'];
-                        addOutgoingMailSignedInAdr($signedResponse[0]);
-                        $attachmentToDelete[] = $signedResponse[0]['res_id'];
-                    }
+                if (!empty($signedResponse)) {
+                    // Réponse signée signed_response
+                    $signedResponse[0]['adrType'] = 'SIGN';
+                    $signedResponse[0]['relation'] = $attachmentInfo['relation'];
+                    addOutgoingMailSignedInAdr($signedResponse[0]);
+                    $attachmentToDelete[] = $signedResponse[0]['res_id'];
                 }
-                $attachmentToDelete[] = $attachmentInfo['res_id'];
-            }
-
-            $outgoigAnnotated = \SrcCore\models\DatabaseModel::select([
-                'select'  => ['res_id', 'relation', 'docserver_id', 'path', 'filename', 'format', 'res_id_master', 'attachment_type'],
-                'table'   => ['res_attachments'],
-                'where'   => ['attachment_type = ?', 'res_id_master = ?', 'status not in (?)'],
-                'data'    => ['document_with_notes', $attachmentInfo['res_id_master'], ['DEL']],
-                'orderBy' => ['res_id desc'],
-                'limit'   => 1
-            ]);
-            if (!empty($outgoigAnnotated)) {
-                // Version annotée
-                $outgoigAnnotated[0]['adrType'] = 'NOTE';
-                $outgoigAnnotated[0]['relation'] = empty($resource) ? 1 : $attachmentInfo['relation'];
-                addOutgoingMailSignedInAdr($outgoigAnnotated[0]);
-                $attachmentToDelete[] = $outgoigAnnotated[0]['res_id'];
             }
             
             // migrateHistoryVersion(['oldResId' => $attachmentInfo['res_id'], 'newResId' => $attachmentInfo['res_id_master']]);
             // migrateEmailsVersion(['oldResId' => $attachmentInfo['res_id'], 'newResId' => $attachmentInfo['res_id_master']]);
             // migrateMessageExchangeVersion(['oldResId' => $attachmentInfo['res_id'], 'newResId' => $attachmentInfo['res_id_master']]);
             // migrateShippingVersion(['oldResId' => $attachmentInfo['res_id'], 'newResId' => $attachmentInfo['res_id_master']]);
-            $migrated++;
         }
+        $migrated++;
+    }
+
+    // Version annotée
+    $outgoigAnnotated = \SrcCore\models\DatabaseModel::select([
+        'select'  => ['l.version', 'a.res_id', 'a.docserver_id', 'a.path', 'a.filename', 'a.format', 'a.res_id_master', 'a.attachment_type'],
+        'table'   => ['res_attachments a, res_letterbox l'],
+        'where'   => ['a.attachment_type = ?', 'a.status in (?)', 'category_id = ?', 'a.res_id_master = l.res_id'],
+        'data'    => ['document_with_notes', ['A_TRA', 'TRA'], 'incoming'],
+        'orderBy' => ['res_id desc']
+    ]);
+
+    $documentWithNote = 0;
+    $previousResId    = 0;
+    foreach ($outgoigAnnotated as $document) {
+        if ($previousResId == $document['res_id_master']) {
+            continue;
+        }
+        $previousResId = $document['res_id_master'];
+        $document['adrType']  = 'NOTE';
+        $document['relation'] = $document['version'];
+        addOutgoingMailSignedInAdr($document);
+        $attachmentToDelete[] = $document['res_id'];
+        // migrateHistoryVersion(['oldResId' => $document['res_id'], 'newResId' => $document['res_id_master']]);
+        // migrateEmailsVersion(['oldResId' => $document['res_id'], 'newResId' => $document['res_id_master']]);
+        // migrateMessageExchangeVersion(['oldResId' => $document['res_id'], 'newResId' => $document['res_id_master']]);
+        // migrateShippingVersion(['oldResId' => $document['res_id'], 'newResId' => $document['res_id_master']]);
+        $documentWithNote++;
     }
 
     // \SrcCore\models\DatabaseModel::delete([
@@ -232,65 +228,41 @@ foreach ($customs as $custom) {
     //     'data'  => [$attachmentToDelete]
     // ]);
 
-    printf("Migration outgoing_mail, outgoing_mail_signed (CUSTOM {$custom}) : " . $migrated . " courier(s) départ(s) trouvé(s) et migré(s).\n");
+    printf("Migration outgoing_mail, outgoing_mail_signed (CUSTOM {$custom}) : " . $migrated . " courier(s) départ(s) trouvé(s) et migré(s). ".$documentWithNote." courrier(s) annoté(s)\n");
 }
 
 function addOutgoingMailSignedInAdr($args = [])
 {
-    $tmpPath = CoreConfigModel::getTmpPath();
-
-    $formatVersion = empty($args['format']) ?  pathinfo($args['filename'], PATHINFO_EXTENSION) : $args['format'];
-    $fileNameOnTmp = 'migrationOutgoingAttachmentVersion_' . rand() . '_' . rand();
-
-    $docserver = \SrcCore\models\DatabaseModel::select([
-        'select' => ['path_template', 'docserver_type_id'],
-        'table'  => ['docservers'],
-        'where'  => ['docserver_id = ?'],
-        'data'   => [$args['docserver_id']]
+    $convertedDocument = \SrcCore\models\DatabaseModel::select([
+        'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
+        'table'     => ['adr_attachments'],
+        'where'     => ['res_id = ?', 'type = ?'],
+        'data'      => [$args['res_id'], 'PDF'],
     ]);
 
-    $pathToDocument = $docserver[0]['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $args['path']) . $args['filename'];
-    if (file_exists($pathToDocument)) {
-        copy($pathToDocument, $tmpPath.$fileNameOnTmp.'.'.$formatVersion);
-    
-        if (strtolower($formatVersion) != 'pdf') {
-            $command = "timeout 30 unoconv -f pdf " . escapeshellarg($tmpPath.$fileNameOnTmp.'.'.$formatVersion);
-            exec('export HOME=' . $tmpPath . ' && '.$command, $output, $return);
-    
-            if (!file_exists($tmpPath.$fileNameOnTmp.'.pdf')) {
-                echo '[ConvertPdf]  Conversion failed ! '. implode(" ", $output);
-                return '';
-            }
-        }
-    
-        $resource = file_get_contents("{$tmpPath}{$fileNameOnTmp}.pdf");
-        $storeResult = DocserverController::storeResourceOnDocServer([
-            'collId'            => 'letterbox_coll',
-            'docserverTypeId'   => 'CONVERT',
-            'encodedResource'   => base64_encode($resource),
-            'format'            => 'pdf'
+    if (!empty($convertedDocument)) {
+        \SrcCore\models\DatabaseModel::delete([
+            'table' => 'adr_letterbox',
+            'where' => ['res_id = ?', 'type = ?', 'version = ?'],
+            'data'  => [$args['res_id_master'], $args['adrType'], $args['relation']]
         ]);
-    
         AdrModel::createDocumentAdr([
-            'resId'         => $args['res_id_master'],
-            'type'          => $args['adrType'],
-            'docserverId'   => $storeResult['docserver_id'],
-            'path'          => $storeResult['destination_dir'],
-            'filename'      => $storeResult['file_destination_name'],
-            'version'       => $args['relation'],
-            'fingerprint'   => $storeResult['fingerPrint']
+            'resId'       => $args['res_id_master'],
+            'type'        => $args['adrType'],
+            'docserverId' => $convertedDocument[0]['docserver_id'],
+            'path'        => $convertedDocument[0]['path'],
+            'filename'    => $convertedDocument[0]['filename'],
+            'version'     => $args['relation'],
+            'fingerprint' => $convertedDocument[0]['fingerprint']
         ]);
     
-        if (in_array($args['adrType'], ['SIGN', 'NOTE'])) {
+        if ($args['adrType'] == 'SIGN') {
             \SrcCore\models\DatabaseModel::delete([
                 'table' => 'adr_letterbox',
                 'where' => ['res_id = ?', 'type = ?', 'version = ?'],
                 'data'  => [$args['res_id_master'], 'TNL', $args['relation']]
             ]);
         }
-    
-        unlink($tmpPath.$fileNameOnTmp.'.'.$formatVersion);
-        unlink($tmpPath.$fileNameOnTmp.'.pdf');
     }
 }
 
