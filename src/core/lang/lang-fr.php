@@ -136,6 +136,7 @@ define('_ACCOUNT_LOCKED_FOR', 'Nombre de tentatives de connexion dépassée. Vot
 define('_ACCOUNT_LOCKED_UNTIL', 'Nombre de tentatives de connexion dépassée. Compte verrouillé jusqu\'au');
 define('_MAX_SIZE_UPLOAD_REACHED', 'Taille maximum de fichier dépassée');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Chemin de la zone de stockage inaccessible');
+define('_GO_ON_VACATION', 'se met en absence');
 define('_BACK_FROM_VACATION', 'de retour de son absence');
 define('_DOC_DISPLAYING', 'Visualisation du document');
 define('_DOC_ADDED', 'Document ajouté');
@@ -447,3 +448,14 @@ define("_AVIS_SENT", "Avis donné");
 define("_BY", "par");
 define("_TO_AVIS", "POUR AVIS");
 define("_VALIDATE_BY", "Validé par");
+
+define("_ACKNOWLEDGEMENT_RECEIPT", "Accusé de réception");
+define("_CREATED_BY", "Créer par");
+define("_SENT_DATE", "Envoyé le");
+define("_SENT_TO", "Envoyé à");
+define("_FORMAT", "Format");
+define("_SUBJECT", "Objet");
+define("_CONTACT", "Contact");
+define("_CHRONO_NUMBER_MASTER", "Numéro chrono courrier");
+define("_SENT_BY", "Envoyé par");
+define('_TO_CCI', 'En copie caché');

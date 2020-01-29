@@ -423,8 +423,24 @@ class ActionMethodController
             'limit'     => 1
         ]);
 
-        if (empty($listInstances)) {
-            return false;
+        if (empty($listInstances[0])) {
+            $hasCircuit = ListInstanceModel::get(['select' => [1], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$args['resId'], 'VISA_CIRCUIT']]);
+            if (!empty($hasCircuit)) {
+                return ['errors' => ['Workflow has ended']];
+            } else {
+                return ['errors' => ['No workflow defined']];
+            }
+        } else {
+            $hasPrevious = ListInstanceModel::get([
+                'select'  => [1],
+                'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is not null'],
+                'data'    => [$args['resId'], 'VISA_CIRCUIT'],
+                'orderBy' => ['listinstance_id'],
+                'limit'   => 1
+            ]);
+            if (!empty($hasPrevious)) {
+                return ['errors' => ['Workflow not yet started']];
+            }
         }
 
         $listInstances = $listInstances[0];
@@ -442,6 +458,22 @@ class ActionMethodController
     {
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
+
+        $inCircuit = ListInstanceModel::get([
+            'select'  => [1],
+            'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
+            'data'    => [$args['resId'], 'VISA_CIRCUIT'],
+            'orderBy' => ['listinstance_id'],
+            'limit'   => 1
+        ]);
+        if (empty($inCircuit[0])) {
+            $hasCircuit = ListInstanceModel::get(['select' => [1], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$args['resId'], 'VISA_CIRCUIT']]);
+            if (!empty($hasCircuit)) {
+                return ['errors' => ['Workflow has ended']];
+            } else {
+                return ['errors' => ['No workflow defined']];
+            }
+        }
 
         ListInstanceModel::update([
             'set'   => ['process_date' => null],
@@ -466,7 +498,7 @@ class ActionMethodController
             'limit'    => 1
         ]);
 
-        if (!empty($listInstances)) {
+        if (!empty($listInstances[0])) {
             $listInstances = $listInstances[0];
 
             ListInstanceModel::update([
@@ -477,6 +509,13 @@ class ActionMethodController
                 'where' => ['listinstance_id = ?'],
                 'data'  => [$listInstances['listinstance_id']]
             ]);
+        } else {
+            $hasCircuit = ListInstanceModel::get(['select' => [1], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$args['resId'], 'VISA_CIRCUIT']]);
+            if (!empty($hasCircuit)) {
+                return ['errors' => ['Workflow has ended']];
+            } else {
+                return ['errors' => ['No workflow defined']];
+            }
         }
 
         ListInstanceModel::update([

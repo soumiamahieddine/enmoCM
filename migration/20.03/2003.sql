@@ -32,6 +32,9 @@ UPDATE res_letterbox SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' 
 UPDATE res_attachments SET fulltext_result = 'SUCCESS' WHERE fulltext_result = '1' OR fulltext_result = '2';
 UPDATE res_attachments SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' OR fulltext_result = '-2';
 
+UPDATE res_attachments SET attachment_type = 'response_project' WHERE attachment_type = 'outgoing_mail';
+UPDATE res_attachments SET attachment_type = 'signed_response' WHERE attachment_type = 'outgoing_mail_signed';
+UPDATE res_attachments SET attachment_type = 'simple_attachment' WHERE attachment_type = 'document_with_notes';
 
 /* GROUPS INDEXING */
 ALTER TABLE usergroups ALTER COLUMN group_desc DROP DEFAULT;
@@ -469,6 +472,22 @@ ALTER TABLE res_attachments ADD COLUMN recipient_type character varying(256);
 ALTER TABLE res_attachments DROP COLUMN IF EXISTS recipient_id;
 ALTER TABLE res_attachments ADD COLUMN recipient_id integer;
 
+ALTER TABLE adr_letterbox DROP COLUMN IF EXISTS version;
+ALTER TABLE adr_letterbox ADD COLUMN version integer;
+UPDATE adr_letterbox SET version = 1;
+ALTER TABLE adr_letterbox ALTER COLUMN version SET NOT NULL;
+ALTER TABLE adr_letterbox DROP CONSTRAINT adr_letterbox_unique_key;
+ALTER TABLE adr_letterbox ADD CONSTRAINT adr_letterbox_unique_key UNIQUE (res_id, type, version);
+
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS version;
+ALTER TABLE res_letterbox ADD COLUMN version integer;
+UPDATE res_letterbox SET version = 1;
+ALTER TABLE res_letterbox ALTER COLUMN version SET NOT NULL;
+
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS integrations;
+ALTER TABLE res_letterbox ADD COLUMN integrations jsonb DEFAULT '{}' NOT NULL;
+
+
 /* REFACTORING DATA */
 DO $$ BEGIN
   IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'usergroups') AND attname = 'enabled') THEN
@@ -581,6 +600,7 @@ FROM usergroups_services WHERE group_id IN (
     WHERE service_id = 'admin_users'
 );
 
+UPDATE history SET event_type = 'PRE' where event_type = 'RET';
 
 
 DO $$ 
@@ -704,7 +724,7 @@ ALTER TABLE res_attachments DROP COLUMN IF EXISTS tnl_filename;
 ALTER TABLE users DROP COLUMN IF EXISTS custom_t1;
 ALTER TABLE users DROP COLUMN IF EXISTS custom_t2;
 ALTER TABLE users DROP COLUMN IF EXISTS custom_t3;
-
+DROP TABLE IF EXISTS templates_doctype_ext;
 
 /* M2M */
 DO $$ BEGIN

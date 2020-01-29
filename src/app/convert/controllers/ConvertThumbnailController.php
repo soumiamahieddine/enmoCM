@@ -27,59 +27,49 @@ class ConvertThumbnailController
 {
     public static function convert(array $aArgs)
     {
-        ValidatorModel::notEmpty($aArgs, ['collId', 'resId']);
-        ValidatorModel::stringType($aArgs, ['collId']);
-        ValidatorModel::intVal($aArgs, ['resId', 'outgoingId']);
-        ValidatorModel::boolType($aArgs, ['isOutgoingVersion']);
+        ValidatorModel::notEmpty($aArgs, ['resId', 'type']);
+        ValidatorModel::stringType($aArgs, ['type']);
+        ValidatorModel::intVal($aArgs, ['resId']);
 
-        if ($aArgs['collId'] == 'letterbox_coll') {
-            if (empty($aArgs['outgoingId'])) {
-                $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['docserver_id', 'path', 'filename']]);
-                $convertedDocument = AdrModel::getConvertedDocumentById([
-                    'select' => ['docserver_id','path', 'filename'],
-                    'resId' => $aArgs['resId'],
-                    'collId' => $aArgs['collId'],
-                    'type' => 'PDF'
-                ]);
-            } else {
-                $resource = AttachmentModel::getById(['id' => $aArgs['outgoingId'], 'select' => ['docserver_id', 'path', 'filename']]);
-                $convertedDocument = AdrModel::getConvertedDocumentById([
-                    'select' => ['docserver_id','path', 'filename'],
-                    'resId' => $aArgs['outgoingId'],
-                    'collId' => 'attachments_coll',
-                    'type' => 'PDF'
-                ]);
+        if ($aArgs['type'] == 'resource') {
+            $resource = ResModel::getById(['resId' => $aArgs['resId'], 'select' => ['filename', 'version']]);
+            if (empty($resource)) {
+                return ['errors' => '[ConvertThumbnail] Resource does not exist'];
             }
+            if (empty($resource['filename'])) {
+                return true;
+            }
+
+            $convertedDocument = AdrModel::getDocuments([
+                'select'    => ['docserver_id', 'path', 'filename'],
+                'where'     => ['res_id = ?', 'type in (?)', 'version = ?'],
+                'data'      => [$aArgs['resId'], ['PDF', 'SIGN'], $resource['version']],
+                'orderBy'   => ["type='SIGN' DESC"],
+                'limit'     => 1
+            ]);
+            $convertedDocument = $convertedDocument[0] ?? null;
         } else {
-            $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'select' => ['docserver_id', 'path', 'filename']]);
+            $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'select' => [1]]);
+            if (empty($resource)) {
+                return ['errors' => '[ConvertThumbnail] Resource does not exist'];
+            }
+
             $convertedDocument = AdrModel::getConvertedDocumentById([
                 'select' => ['docserver_id','path', 'filename'],
                 'resId' => $aArgs['resId'],
-                'collId' => $aArgs['collId'],
+                'collId' => 'attachment',
                 'type' => 'PDF'
             ]);
         }
 
-        if (empty($resource)) {
-            return ['errors' => '[ConvertThumbnail] Resource does not exist'];
+        if (empty($convertedDocument)) {
+            return true;
         }
 
-        if (empty($convertedDocument)) {
-            $docserver = DocserverModel::getByDocserverId(['docserverId' => $resource['docserver_id'], 'select' => ['path_template']]);
-            if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
-                return ['errors' => '[ConvertThumbnail] Docserver does not exist'];
-            }
-
-            $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $resource['path']) . $resource['filename'];
-            if (!file_exists($pathToDocument)) {
-                return ['errors' => '[ConvertThumbnail] Document does not exist on docserver'];
-            }
-        } else {
-            $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
-            $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
-            if (!file_exists($pathToDocument)) {
-                return ['errors' => '[ConvertThumbnail] Document does not exist on docserver'];
-            }
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
+        if (!file_exists($pathToDocument)) {
+            return ['errors' => '[ConvertThumbnail] Document does not exist on docserver'];
         }
 
         $ext = pathinfo($pathToDocument, PATHINFO_EXTENSION);
@@ -109,11 +99,11 @@ class ConvertThumbnailController
             return ['errors' => "[ConvertThumbnail] ".implode(" ", $output)];
         }
 
-        $resource = file_get_contents("{$tmpPath}{$fileNameOnTmp}.png");
+        $content = file_get_contents("{$tmpPath}{$fileNameOnTmp}.png");
         $storeResult = DocserverController::storeResourceOnDocServer([
-            'collId'            => $aArgs['collId'],
+            'collId'            => $aArgs['type'] == 'resource' ? 'letterbox_coll' : 'attachments_coll',
             'docserverTypeId'   => 'TNL',
-            'encodedResource'   => base64_encode($resource),
+            'encodedResource'   => base64_encode($content),
             'format'            => 'png'
         ]);
 
@@ -121,13 +111,14 @@ class ConvertThumbnailController
             return ['errors' => "[ConvertThumbnail] {$storeResult['errors']}"];
         }
 
-        if ($aArgs['collId'] == 'letterbox_coll') {
+        if ($aArgs['type'] == 'resource') {
             AdrModel::createDocumentAdr([
                 'resId'         => $aArgs['resId'],
                 'type'          => 'TNL',
                 'docserverId'   => $storeResult['docserver_id'],
                 'path'          => $storeResult['destination_dir'],
                 'filename'      => $storeResult['file_destination_name'],
+                'version'       => $resource['version']
             ]);
         } else {
             AdrModel::createAttachAdr([

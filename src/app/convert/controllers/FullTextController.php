@@ -30,12 +30,24 @@ class FullTextController
         ValidatorModel::intVal($args, ['resId']);
         ValidatorModel::stringType($args, ['collId']);
 
-        $document = AdrModel::getConvertedDocumentById([
-            'select'    => ['docserver_id', 'path', 'filename', 'fingerprint'],
-            'resId'     => $args['resId'],
-            'collId'    => $args['collId'],
-            'type'      => 'PDF'
-        ]);
+        if ($args['collId'] == 'letterbox_coll') {
+            $document = AdrModel::getDocuments([
+                'select'    => ['docserver_id', 'path', 'filename', 'fingerprint'],
+                'where'     => ['res_id = ?', 'type = ?'],
+                'data'      => [$args['resId'], 'PDF'],
+                'orderBy'   => ['version DESC'],
+                'limit'     => 1
+            ]);
+            $document = $document[0] ?? null;
+        } else {
+            $document = AdrModel::getConvertedDocumentById([
+                'select' => ['docserver_id','path', 'filename', 'fingerprint'],
+                'resId' => $args['resId'],
+                'collId' => 'attachment',
+                'type' => 'PDF'
+            ]);
+        }
+
         if (empty($document)) {
             return ['errors' => 'Converted document does not exist'];
         }

@@ -8,7 +8,6 @@
     </CONFIG>
     <TABLENAME>
         <temp_templates>templates</temp_templates>
-        <temp_templates_doctype_ext>templates_doctype_ext</temp_templates_doctype_ext>
         <temp_templates_association>templates_association</temp_templates_association>
     </TABLENAME>
     <HISTORY>

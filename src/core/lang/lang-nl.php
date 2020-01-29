@@ -136,6 +136,7 @@ define('_ACCOUNT_LOCKED_FOR', 'Aantal verbindingspogingen overschreden. Uw accou
 define('_ACCOUNT_LOCKED_UNTIL', 'Aantal verbindingspogingen overschreden. Account vergrendeld tot');
 define('_MAX_SIZE_UPLOAD_REACHED', 'Maximumgrootte van het bestand overschreden');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Opslagruimtepad ontoegankelijk');
+define('_GO_ON_VACATION', 'go on vacation');//translate
 define('_BACK_FROM_VACATION', 'bij terugkeer na afwezigheid');
 define('_DOC_DISPLAYING', 'Weergave van het document');
 define('_DOC_ADDED', 'Document toegevoegd');
@@ -453,3 +454,13 @@ define('_AVIS_SENT', 'Gegeven bericht');
 define('_BY', 'door');
 define('_TO_AVIS', 'VOOR BERICHT');
 define('_VALIDATE_BY', 'Gevalideerd door');
+
+define("_ACKNOWLEDGEMENT_RECEIPT", "Acknowledgement Receipt"); //TO TRANSLATE
+define("_CREATED_BY", "Created by"); //TO TRANSLATE
+define("_SENT_DATE", "Sent "); //TO TRANSLATE
+define("_SENT_TO", "Sent to"); //TO TRANSLATE
+define("_FORMAT", "Format"); //TO TRANSLATE
+define("_SUBJECT", "Subject"); //TO TRANSLATE
+define("_CHRONO_NUMBER_MASTER", "Resource chrono number"); //TO TRANSLATE
+define("_SENT_BY", "Sent by"); //TO TRANSLATE
+define('_TO_CCI', 'On copy hidden'); //TO TRANSLATE

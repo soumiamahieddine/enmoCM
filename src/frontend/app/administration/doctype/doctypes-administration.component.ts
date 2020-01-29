@@ -35,7 +35,6 @@ export class DoctypesAdministrationComponent implements OnInit {
     types: any = false;
     secondLevels: any = false;
     processModes: any = false;
-    models: any = false;
 
     loading: boolean = false;
     creationMode: any = false;
@@ -160,7 +159,6 @@ export class DoctypesAdministrationComponent implements OnInit {
                     this.currentType  = dataValue['doctype'];
                     this.secondLevels = dataValue['secondLevel'];
                     this.processModes = ['NORMAL', 'SVA', 'SVR'];
-                    this.models       = dataValue['models'];
 
                     if(move){
                         if(this.currentType){
@@ -419,10 +417,6 @@ export class DoctypesAdministrationComponent implements OnInit {
                 this.firstLevels  = data['firstLevel'];
                 this.secondLevels = data['secondLevel'];
                 this.processModes = ['NORMAL', 'SVA', 'SVR'];
-                this.models       = data['models'];
-                if(mode == 'doctype'){
-                    this.currentType.is_generated = 'N';
-                }
             }, (err) => {
                 this.notify.error(err.error.errors);
             });

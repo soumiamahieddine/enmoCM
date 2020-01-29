@@ -17,9 +17,14 @@ namespace Resource\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Attachment\models\AttachmentModel;
+use Contact\controllers\ContactController;
+use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
+use Doctype\models\DoctypeModel;
+use Email\models\EmailModel;
+use IndexingModel\models\IndexingModelFieldModel;
 use Note\models\NoteModel;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
@@ -28,120 +33,278 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
+use Status\models\StatusModel;
 use User\models\UserModel;
 
 class ResourceDataExportController
 {
-    public static function get(Request $request, Response $response, array $args)
+    public static function generateFile(Request $request, Response $response)
     {
-        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        $body = $request->getParsedBody();
+
+        if (!Validator::notEmpty()->arrayType()->validate($body['resources'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Body resources is empty']);
         }
 
-        $queryParams = $request->getQueryParams();
-
+        // Array containing all path to the pdf files to merge
         $documentPaths = [];
 
-        if (!empty($queryParams['document'])) {
-            $document = ResModel::getById([
-                'select' => ['res_id', 'docserver_id', 'path', 'filename', 'fingerprint', 'category_id', 'alt_identifier'],
-                'resId'  => $args['resId']
-            ]);
-            if (empty($document)) {
-                return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
-            }
+        $withSeparators = !empty($body['withSeparator']);
 
-            if (empty($document['filename'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Document has no file']);
-            }
-
-            $path = ResourceDataExportController::getDocumentFilePath(['document' => $document, 'collId' => 'letterbox_coll']);
-
-            $documentPaths[] = $path;
+        $unitsSummarySheet = [];
+        if (!empty($body['summarySheet'])) {
+            $unitsSummarySheet = $body['summarySheet'];
         }
 
-        if (!empty($queryParams['attachments'])) {
-            if (!Validator::arrayType()->validate($queryParams['attachments'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Query param attachments is not an array']);
-            }
-            if (!ResController::hasRightByResId(['resId' => $queryParams['attachments'], 'userId' => $GLOBALS['id']])) {
+        $forceSummarySheet = count($body['resources']) > 1;
+
+        foreach ($body['resources'] as $resource) {
+            if (!Validator::notEmpty()->intVal()->validate($resource['resId']) || !ResController::hasRightByResId(['resId' => [$resource['resId']], 'userId' => $GLOBALS['id']])) {
                 return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
             }
 
-            foreach ($queryParams['attachments'] as $attachmentId) {
-                $attachment = AttachmentModel::get([
-                    'select' => ['res_id', 'docserver_id', 'res_id_master'],
-                    'where'  => ['res_id = ?', 'status not in (?)'],
-                    'data'   => [$attachmentId, ['DEL']],
-                    'limit'  => 1
+            $withSummarySheet = $forceSummarySheet || !empty($unitsSummarySheet);
+            if (!$withSummarySheet) {
+                $withSummarySheet = !empty($resource['summarySheet']);
+            }
+            if ($withSummarySheet) {
+                if (!empty($resource['summarySheet']) && is_array($resource['summarySheet'])) {
+                    $units = $resource['summarySheet'];
+                } else if (!empty($unitsSummarySheet)) {
+                    $units = $unitsSummarySheet;
+                } else {
+                    $units = [
+                        [
+                            "unit" => "qrcode",
+                            "label" => ""
+                        ],
+                        [
+                            "unit" => "primaryInformations",
+                            "label" => "Informations pricipales"
+                        ],
+                        [
+                            "unit" => "senderRecipientInformations",
+                            "label" => "Informations de destination"
+                        ],
+                        [
+                            "unit" => "secondaryInformations",
+                            "label" => "Informations secondaires"
+                        ],
+                        [
+                            "unit" => "diffusionList",
+                            "label" => "Liste de diffusion"
+                        ],
+                        [
+                            "unit" => "opinionWorkflow",
+                            "label" => "Circuit d'avis"
+                        ],
+                        [
+                            "unit" => "visaWorkflow",
+                            "label" => "Circuit de visa"
+                        ]
+                    ];
+                }
+
+                $documentPaths[] = ResourceDataExportController::getSummarySheet(['units' => $units, 'resId' => $resource['resId']]);
+            }
+
+            if (!empty($resource['document'])) {
+                $document = ResModel::getById([
+                    'select' => ['res_id', 'docserver_id', 'path', 'filename', 'fingerprint', 'category_id', 'alt_identifier'],
+                    'resId'  => $resource['resId']
                 ]);
-                if (empty($attachment[0])) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Attachment not found']);
-                }
-                $attachment = $attachment[0];
-
-                if ($attachment['res_id_master'] != $args['resId']) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Attachment not linked to resource']);
+                if (empty($document)) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
                 }
 
-                $path = ResourceDataExportController::getDocumentFilePath(['document' => $attachment, 'collId' => 'attachments_coll']);
+                if (empty($document['filename'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Document has no file']);
+                }
 
+                $path = ResourceDataExportController::getDocumentFilePath(['document' => $document, 'collId' => 'letterbox_coll']);
                 if (!empty($path['errors'])) {
                     return $response->withStatus($path['code'])->withJson(['errors' => $path['errors']]);
                 }
 
                 $documentPaths[] = $path;
             }
-        }
 
-        if (!empty($queryParams['notes'])) {
-            if (!Validator::arrayType()->validate($queryParams['notes'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Query param notes is not an array']);
-            }
-
-            $noteFilePath = ResourceDataExportController::getNotesFilePath(['notes' => $queryParams['notes'], 'resId' => $args['resId']]);
-
-            if (!empty($noteFilePath['errors'])) {
-                return $response->withStatus($noteFilePath['code'])->withJson(['errors' => $noteFilePath['errors']]);
-            }
-
-            if (file_exists($noteFilePath)) {
-                $documentPaths[] = $noteFilePath;
-            } else {
-                return $response->withStatus(500)->withJson(['errors' => 'Notes file not created']);
-            }
-        }
-
-        if (!empty($queryParams['acknowledgementReceipts'])) {
-            if (!Validator::arrayType()->validate($queryParams['acknowledgementReceipts'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Query param acknowledgementReceipts is not an array']);
-            }
-
-            $acknowledgementReceipts = AcknowledgementReceiptModel::getByIds([
-                'select' => ['id', 'res_id', 'docserver_id', 'path', 'filename', 'fingerprint', 'format'],
-                'ids'    => $queryParams['acknowledgementReceipts']
-            ]);
-            foreach ($acknowledgementReceipts as $acknowledgementReceipt) {
-                if ($acknowledgementReceipt['res_id'] != $args['resId']) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement Receipt not linked to resource']);
+            if (!empty($resource['attachments'])) {
+                $attachmentsIds = [];
+                if (!empty($resource['attachments']['resIds'])) {
+                    $attachmentsIds = $resource['attachments']['resIds'];
+                }
+                if (!empty($resource['attachments']['types'])) {
+                    if (in_array("ALL", $resource['attachments']['types'])) {
+                        $attachmentsIds = AttachmentModel::get([
+                            'select' => ['res_id'],
+                            'where'  => ['res_id_master = ?'],
+                            'data'   => [$resource['resId']]
+                        ]);
+                        $attachmentsIds = array_column($attachmentsIds, 'res_id');
+                    } else {
+                        $ids = AttachmentModel::get([
+                            'select' => ['res_id'],
+                            'where'  => ['attachment_type in (?)', 'res_id_master = ?'],
+                            'data'   => [$resource['attachments']['types'], $resource['resId']]
+                        ]);
+                        $ids = array_column($ids, 'res_id');
+                        $attachmentsIds = array_merge($attachmentsIds, $ids);
+                    }
                 }
 
-                $path = ResourceDataExportController::getDocumentFilePath(['document' => $acknowledgementReceipt]);
-
-                if ($acknowledgementReceipt['format'] == 'html') {
-                    $path = ResourceDataExportController::getPathConvertedAcknowledgementReceipt([
-                        'acknowledgementReceipt' => $acknowledgementReceipt,
-                        'pathHtml'               => $path
+                if (!empty($attachmentsIds)) {
+                    $attachments = AttachmentModel::get([
+                        'select'  => ['*'],
+                        'where'   => ['res_id in (?)', 'status not in (?)'],
+                        'data'    => [$attachmentsIds, ['DEL', 'OBS']],
+                        'orderBy' => ['creation_date desc']
                     ]);
+
+                    if (count($attachments) < count($attachmentsIds)) {
+                        return $response->withStatus(400)->withJson(['errors' => 'Attachment(s) not found']);
+                    }
+
+                    $chronoResource = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $resource['resId']]);
+                    $chronoResource = $chronoResource['alt_identifier'];
+
+                    foreach ($attachments as $attachment) {
+                        if ($attachment['res_id_master'] != $resource['resId']) {
+                            return $response->withStatus(400)->withJson(['errors' => 'Attachment not linked to resource']);
+                        }
+
+                        if ($withSeparators) {
+                            $documentPaths[] = ResourceDataExportController::getAttachmentSeparator([
+                                'attachment'     => $attachment,
+                                'chronoResource' => $chronoResource
+                            ]);
+                        }
+
+                        $path = ResourceDataExportController::getDocumentFilePath(['document' => $attachment, 'collId' => 'attachments_coll']);
+
+                        if (!empty($path['errors'])) {
+                            return $response->withStatus($path['code'])->withJson(['errors' => $path['errors']]);
+                        }
+
+                        $documentPaths[] = $path;
+                    }
+                }
+            }
+
+            if (!empty($resource['notes'])) {
+                if (is_array($resource['notes'])) {
+                    $notesIds = $resource['notes'];
+                } else {
+                    $notesIds = NoteModel::get([
+                        'select' => ['id'],
+                        'where' => ['identifier = ? '],
+                        'data' => [$resource['resId']]
+                    ]);
+                    $notesIds = array_column($notesIds, 'id');
                 }
 
-                $documentPaths[] = $path;
+                if (!empty($notesIds)) {
+                    $noteFilePath = ResourceDataExportController::getNotesFilePath(['notes' => $notesIds, 'resId' => $resource['resId']]);
+
+                    if (!empty($noteFilePath['errors'])) {
+                        return $response->withStatus($noteFilePath['code'])->withJson(['errors' => $noteFilePath['errors']]);
+                    }
+
+                    if (file_exists($noteFilePath)) {
+                        $documentPaths[] = $noteFilePath;
+                    } else {
+                        return $response->withStatus(500)->withJson(['errors' => 'Notes file not created']);
+                    }
+                }
+            }
+
+            if (!empty($resource['acknowledgementReceipts'])) {
+                if (is_array($resource['acknowledgementReceipts'])) {
+                    $acknowledgementReceiptsIds = $resource['acknowledgementReceipts'];
+                } else {
+                    $acknowledgementReceiptsIds = AcknowledgementReceiptModel::get([
+                        'select' => ['id'],
+                        'where'  => ['res_id = ?'],
+                        'data'   => [$resource['resId']]
+                    ]);
+                    $acknowledgementReceiptsIds = array_column($acknowledgementReceiptsIds, 'id');
+                }
+
+                if (!empty($acknowledgementReceiptsIds)) {
+                    $acknowledgementReceipts = AcknowledgementReceiptModel::getByIds([
+                        'select' => ['*'],
+                        'ids'    => $acknowledgementReceiptsIds
+                    ]);
+
+                    if (count($acknowledgementReceipts) < count($acknowledgementReceiptsIds)) {
+                        return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement Receipt(s) not found']);
+                    }
+
+                    foreach ($acknowledgementReceipts as $acknowledgementReceipt) {
+                        if ($acknowledgementReceipt['res_id'] != $resource['resId']) {
+                            return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement Receipt not linked to resource']);
+                        }
+
+                        if ($withSeparators) {
+                            $documentPaths[] = ResourceDataExportController::getAcknowledgementReceiptSeparator(['acknowledgementReceipt' => $acknowledgementReceipt]);
+                        }
+                        $path = ResourceDataExportController::getDocumentFilePath(['document' => $acknowledgementReceipt]);
+
+                        if ($acknowledgementReceipt['format'] == 'html') {
+                            $path = ResourceDataExportController::getPathConvertedAcknowledgementReceipt([
+                                'acknowledgementReceipt' => $acknowledgementReceipt,
+                                'pathHtml'               => $path
+                            ]);
+                        }
+
+                        $documentPaths[] = $path;
+                    }
+                }
+            }
+
+            if (!empty($resource['emails'])) {
+                if (is_array($resource['emails'])) {
+                    $emailsIds = $resource['emails'];
+                } else {
+                    $emailsIds = EmailModel::get([
+                        'select' => ['id'],
+                        'where' => ["cast(document->'id' as INT) = ? "],
+                        'data' => [$resource['resId']]
+                    ]);
+                    $emailsIds = array_column($emailsIds, 'id');
+                }
+
+                if (!empty($emailsIds)) {
+                    $emailsModel = EmailModel::get([
+                        'where'   => ['id in (?)'],
+                        'data'    => [$emailsIds],
+                        'orderBy' => ['creation_date desc']
+                    ]);
+
+                    if (count($emailsModel) < count($resource['emails'])) {
+                        return $response->withStatus(400)->withJson(['errors' => 'Email(s) not found']);
+                    }
+
+                    foreach ($emailsModel as $email) {
+                        $emailDocument = json_decode($email['document'], true);
+                        if (!empty($emailDocument['id']) && $emailDocument['id'] != $resource['resId']) {
+                            return $response->withStatus(400)->withJson(['errors' => 'Email not linked to resource']);
+                        }
+                        $emailFilePath = ResourceDataExportController::getEmailFilePath(['email' => $email, 'resId' => $resource['resId']]);
+
+                        if (file_exists($emailFilePath)) {
+                            $documentPaths[] = $emailFilePath;
+                        } else {
+                            return $response->withStatus(500)->withJson(['errors' => 'Email file not created']);
+                        }
+                    }
+                }
             }
         }
 
         if (!empty($documentPaths)) {
             $tmpDir = CoreConfigModel::getTmpPath();
-            $filePathOnTmp = $tmpDir . 'mergedFile2.pdf';
+            $filePathOnTmp = $tmpDir . 'mergedFile.pdf';
             $command = "pdfunite " . implode(" ", $documentPaths) . ' ' . $filePathOnTmp;
 
             exec($command . ' 2>&1', $output, $return);
@@ -215,9 +378,17 @@ class ResourceDataExportController
 
         $notes = [];
 
-        foreach ($args['notes'] as $noteId) {
-            $note = NoteModel::getById(['id' => $noteId]);
+        $notesModel = NoteModel::get([
+            'where'   => ['id in (?)'],
+            'data'    => [$args['notes']],
+            'orderBy' => ['creation_date desc']
+        ]);
 
+        if (count($notesModel) < count($args['notes'])) {
+            return ['errors' => 'Note(s) not found', 'code' => 400];
+        }
+
+        foreach ($notesModel as $note) {
             if ($note['identifier'] != $args['resId']) {
                 return ['errors' => 'Note not linked to resource', 'code' => 400];
             }
@@ -248,7 +419,7 @@ class ResourceDataExportController
         }
 
         $pdf->SetFont('', 'B', 11);
-        $pdf->Cell(0, 15, 'Annotations', 0, 2, 'L', false);
+        $pdf->Cell(0, 15, _NOTES_COMMENT, 0, 2, 'L', false);
 
         $pdf->SetY($pdf->GetY() + 2);
         $pdf->SetFont('', '', 10);
@@ -266,7 +437,74 @@ class ResourceDataExportController
         }
 
         $tmpDir = CoreConfigModel::getTmpPath();
-        $filePathOnTmp = $tmpDir . '/' . 'listNotes_' . $GLOBALS['id'] . '.pdf';
+        $filePathOnTmp = $tmpDir . 'listNotes_' . $GLOBALS['id'] . '.pdf';
+        $pdf->Output($filePathOnTmp, 'F');
+
+        return $filePathOnTmp;
+    }
+
+    private static function getAcknowledgementReceiptSeparator(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['acknowledgementReceipt']);
+        ValidatorModel::arrayType($args, ['acknowledgementReceipt']);
+
+        $acknowledgementReceipt = $args['acknowledgementReceipt'];
+
+        $contact = ContactModel::getById([
+            'select' => ['*'],
+            'id'     => $acknowledgementReceipt['contact_id']
+        ]);
+        if ($acknowledgementReceipt['format'] == 'html') {
+            $displayContact = $contact['firstname'] . ' ' . $contact['lastname'] . ' (' . $contact['email'] . ')';
+        } else {
+            $displayContact = ContactController::getFormattedContactWithAddress([
+                'contact' => $contact
+            ]);
+            $displayContact = $displayContact['contact']['otherInfo'];
+        }
+
+        $creator = UserModel::getById(['id' => $acknowledgementReceipt['user_id']]);
+
+        $creationDate = new \DateTime($acknowledgementReceipt['creation_date']);
+        $creationDate = $creationDate->format('d-m-Y H:i');
+
+        $sendDate = new \DateTime($acknowledgementReceipt['send_date']);
+        $sendDate = $sendDate->format('d-m-Y H:i');
+
+        $pdf = new Fpdi('P', 'pt');
+        $pdf->setPrintHeader(false);
+        $pdf->AddPage();
+
+        $dimensions     = $pdf->getPageDimensions();
+        $widthNoMargins = $dimensions['w'] - $dimensions['rm'] - $dimensions['lm'];
+        $width          = $widthNoMargins / 2;
+
+        $pdf->SetFont('', 'B', 12);
+        $pdf->Cell($width, 15, _ACKNOWLEDGEMENT_RECEIPT, 0, 1, 'L', false);
+
+        $pdf->SetY($pdf->GetY() + 40);
+
+        $pdf->SetFont('', '', 10);
+        $pdf->MultiCell($width, 30, '<b>' . _CREATED_BY . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $creator['firstname'] . ' ' . $creator['lastname'] , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _CREATED . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $creationDate , 1, 'L', false, 1, '', '', true, 0, true);
+
+        if ($acknowledgementReceipt['format'] == 'html') {
+            $pdf->MultiCell($width, 30, '<b>' . _SENT_DATE . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+            $pdf->MultiCell($width, 30, $sendDate, 1, 'L', false, 1, '', '', true, 0, true);
+        }
+
+        $pdf->MultiCell($width, 30, '<b>' . _FORMAT . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $acknowledgementReceipt['format'] , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _SENT_TO . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $displayContact , 1, 'L', false, 1, '', '', true, 0, true);
+
+
+        $tmpDir = CoreConfigModel::getTmpPath();
+        $filePathOnTmp = $tmpDir . 'convertedAr_' . $acknowledgementReceipt['id'] . '_SEPARATOR_' . $GLOBALS['id'] . '.pdf';
         $pdf->Output($filePathOnTmp, 'F');
 
         return $filePathOnTmp;
@@ -274,6 +512,10 @@ class ResourceDataExportController
 
     private static function getPathConvertedAcknowledgementReceipt(array $args)
     {
+        ValidatorModel::notEmpty($args, ['acknowledgementReceipt', 'pathHtml']);
+        ValidatorModel::arrayType($args, ['acknowledgementReceipt']);
+        ValidatorModel::stringType($args, ['pathHtml']);
+
         $acknowledgementReceipt = $args['acknowledgementReceipt'];
         $pathHtml = $args['pathHtml'];
 
@@ -286,7 +528,207 @@ class ResourceDataExportController
         $pdf->writeHTML($contentHtml);
 
         $tmpDir = CoreConfigModel::getTmpPath();
-        $filePathOnTmp = $tmpDir . '/' . 'convertedAr_' . $acknowledgementReceipt['id'] . '_' . $GLOBALS['id'] . '.pdf';
+        $filePathOnTmp = $tmpDir . 'convertedAr_' . $acknowledgementReceipt['id'] . '_' . $GLOBALS['id'] . '.pdf';
+        $pdf->Output($filePathOnTmp, 'F');
+
+        return $filePathOnTmp;
+    }
+
+    private static function getAttachmentSeparator(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['attachment', 'chronoResource']);
+        ValidatorModel::arrayType($args, ['attachment']);
+        ValidatorModel::stringType($args, ['chronoResource']);
+
+        $attachment = $args['attachment'];
+        $chronoResource = $args['chronoResource'];
+
+        if ($attachment['recipient_type'] == 'user') {
+            $displayContact = UserModel::getLabelledUserById(['id' => $attachment['recipient_id']]);
+        } else if ($attachment['recipient_type'] == 'contact') {
+            $contact = ContactModel::getById([
+                'select' => ['*'],
+                'id'     => $attachment['recipient_id']
+            ]);
+            $displayContact = ContactController::getFormattedContactWithAddress([
+                'contact' => $contact
+            ]);
+            $displayContact = $displayContact['contact']['otherInfo'];
+        }
+
+        $creator = UserModel::getByLogin(['login' => $attachment['typist']]);
+
+        $status = StatusModel::getById(['id' => $attachment['status'], 'select' => ['label_status']]);
+        $status = $status['label_status'];
+
+        $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
+        $attachmentType = $attachmentTypes[$attachment['attachment_type']]['label'];
+
+        $creationDate = new \DateTime($attachment['creation_date']);
+        $creationDate = $creationDate->format('d-m-Y H:i');
+
+        $pdf = new Fpdi('P', 'pt');
+        $pdf->setPrintHeader(false);
+        $pdf->AddPage();
+
+        $dimensions     = $pdf->getPageDimensions();
+        $widthNoMargins = $dimensions['w'] - $dimensions['rm'] - $dimensions['lm'];
+        $width          = $widthNoMargins / 2;
+
+        $pdf->SetFont('', 'B', 12);
+        $pdf->Cell($width, 15, _ATTACHMENT, 0, 0, 'L', false);
+        $pdf->Cell($width, 15, $attachment['identifier'], 0, 1, 'C', false);
+
+        $pdf->SetY($pdf->GetY() + 40);
+        $pdf->SetFont('', '', 10);
+
+        $pdf->MultiCell($width, 30, '<b>' . _CHRONO_NUMBER_MASTER . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $chronoResource , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _SUBJECT . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $attachment['title'], 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _CREATED_BY . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $creator['firstname'] . ' ' . $creator['lastname'] , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _CREATED . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $creationDate , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _FORMAT . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $attachment['format'] , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _STATUS . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $status , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _DOCTYPE . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $attachmentType , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($width, 30, '<b>' . _CONTACT . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $displayContact , 1, 'L', false, 1, '', '', true, 0, true);
+
+
+        $tmpDir = CoreConfigModel::getTmpPath();
+        $filePathOnTmp = $tmpDir . 'attachment_' . $attachment['res_id'] . '_SEPARATOR_' . $GLOBALS['id'] . '.pdf';
+        $pdf->Output($filePathOnTmp, 'F');
+
+        return $filePathOnTmp;
+    }
+
+    private static function getEmailFilePath(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['email', 'resId']);
+        ValidatorModel::arrayType($args, ['email']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $email = $args['email'];
+
+        $date = new \DateTime($email['send_date']);
+        $date = $date->format('d-m-Y H:i');
+
+        $sentDate = _SENT_DATE . ' ' . $date;
+
+        $sentBy = UserModel::getLabelledUserById(['id' => $email['user_id']]);
+
+        $sender = json_decode($email['sender'], true);
+        $sender = $sender['email'] ?? _UNDEFINED;
+
+        $recipients = json_decode($email['recipients'], true);
+        $recipients = implode(", ", $recipients);
+        $recipients = !empty($recipients) ? $recipients : _UNDEFINED;
+
+        $recipientsCopy = json_decode($email['cc'], true);
+        $recipientsCopy = implode(", ", $recipientsCopy);
+        $recipientsCopy = !empty($recipientsCopy) ? $recipientsCopy : _UNDEFINED;
+
+        $recipientsCopyHidden = json_decode($email['cci'], true);
+        $recipientsCopyHidden = implode(", ", $recipientsCopyHidden);
+        $recipientsCopyHidden = !empty($recipientsCopyHidden) ? $recipientsCopyHidden : _UNDEFINED;
+
+        $pdf = new Fpdi('P', 'pt');
+        $pdf->setPrintHeader(false);
+        $pdf->AddPage();
+
+        $dimensions        = $pdf->getPageDimensions();
+        $widthNoMargins    = $dimensions['w'] - $dimensions['rm'] - $dimensions['lm'];
+        $width             = $widthNoMargins / 2;
+        $widthQuarter      = $widthNoMargins / 4;
+        $widthThreeQuarter = $widthQuarter * 3;
+
+        $pdf->SetFont('', 'B', 12);
+        $pdf->Cell($width, 15, _EMAIL, 0, 0, 'L', false);
+        $pdf->SetFont('', '', 11);
+        $pdf->Cell($width, 15, $sentDate, 0, 1, 'R', false);
+
+        $pdf->SetY($pdf->GetY() + 5);
+        $pdf->SetFont('', '', 10);
+
+        $pdf->MultiCell($width, 15, '<b>' . _SENT_BY.'</b>', 1, 'C', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 15, '<b>' . _SENDER.'</b>', 1, 'C', false, 1, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $sentBy, 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $sender, 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($widthQuarter, 30, '<b>' . _RECIPIENTS . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($widthThreeQuarter, 30, $recipients, 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($widthQuarter, 30, '<b>' . _TO_CC . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($widthThreeQuarter, 30, $recipientsCopy , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($widthQuarter, 30, '<b>' . _TO_CCI . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($widthThreeQuarter, 30, $recipientsCopyHidden , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($widthQuarter, 30, '<b>' . _SUBJECT . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($widthThreeQuarter, 30, $email['object'] , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->SetY($pdf->GetY() + 5);
+
+        $pdf->writeHTML($email['body']);
+
+        $tmpDir = CoreConfigModel::getTmpPath();
+        $filePathOnTmp = $tmpDir . 'email_' . $email['id'] . '_' . $GLOBALS['id'] . '.pdf';
+        $pdf->Output($filePathOnTmp, 'F');
+
+        return $filePathOnTmp;
+    }
+
+    private static function getSummarySheet(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['units', 'resId']);
+        ValidatorModel::arrayType($args, ['units']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $units = $args['units'];
+        $resId = $args['resId'];
+
+        $resource = ResModel::getById([
+            'select' => ['*'],
+            'resId'  => $resId
+        ]);
+
+        $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $resource['type_id']]);
+        $resource['type_label'] = $doctype['description'];
+
+        $data = SummarySheetController::prepareData(['units' => $units, 'resourcesIds' => [$resId]]);
+
+        $indexingFields = IndexingModelFieldModel::get([
+            'select' => ['identifier', 'unit'],
+            'where'  => ['model_id = ?'],
+            'data'   => [$resource['model_id']]
+        ]);
+        $fieldsIdentifier = array_column($indexingFields, 'identifier');
+
+        $pdf = new Fpdi('P', 'pt');
+        $pdf->setPrintHeader(false);
+
+        SummarySheetController::createSummarySheet($pdf, [
+            'resource'         => $resource,
+            'units'            => $units,
+            'login'            => $GLOBALS['userId'],
+            'data'             => $data,
+            'fieldsIdentifier' => $fieldsIdentifier
+        ]);
+
+        $tmpDir = CoreConfigModel::getTmpPath();
+        $filePathOnTmp = $tmpDir . 'summarySheet_' . $resId . '_' . $GLOBALS['id'] . '.pdf';
         $pdf->Output($filePathOnTmp, 'F');
 
         return $filePathOnTmp;

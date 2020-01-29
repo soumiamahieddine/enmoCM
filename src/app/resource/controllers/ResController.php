@@ -89,7 +89,8 @@ class ResController
         if (!empty($body['encodedFile'])) {
             ConvertPdfController::convert([
                 'resId'     => $resId,
-                'collId'    => 'letterbox_coll'
+                'collId'    => 'letterbox_coll',
+                'version'   => 1
             ]);
 
             $customId = CoreConfigModel::getCustomId();
@@ -261,6 +262,19 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
 
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier', 'filename', 'docserver_id', 'path', 'fingerprint', 'version']]);
+        if (!empty($resource['filename']) && !empty($body['encodedFile'])) {
+            AdrModel::createDocumentAdr([
+                'resId'         => $args['resId'],
+                'type'          => 'DOC',
+                'docserverId'   => $resource['docserver_id'],
+                'path'          => $resource['path'],
+                'filename'      => $resource['filename'],
+                'version'       => $resource['version'],
+                'fingerprint'   => $resource['fingerprint']
+            ]);
+        }
+
         $body['resId'] = $args['resId'];
         $resId = StoreController::storeResource($body);
         if (empty($resId) || !empty($resId['errors'])) {
@@ -269,12 +283,11 @@ class ResController
 
         ResController::updateAdjacentData(['body' => $body, 'resId' => $args['resId']]);
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
         if (!empty($body['encodedFile'])) {
-            AdrModel::deleteDocumentAdr(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             ConvertPdfController::convert([
                 'resId'     => $args['resId'],
-                'collId'    => 'letterbox_coll'
+                'collId'    => 'letterbox_coll',
+                'version'   => $resource['version'] + 1
             ]);
 
             $customId = CoreConfigModel::getCustomId();
@@ -561,41 +574,36 @@ class ResController
         return $response->withHeader('Content-Type', $mimeType);
     }
 
-    public function getThumbnailContent(Request $request, Response $response, array $aArgs)
+    public function getThumbnailContent(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($aArgs['resId'])) {
+        if (!Validator::intVal()->validate($args['resId'])) {
             return $response->withStatus(403)->withJson(['errors' => 'resId param is not an integer']);
         }
 
         $pathToThumbnail = 'apps/maarch_entreprise/img/noThumbnail.png';
 
-        $document = ResModel::getById(['select' => ['filename'], 'resId' => $aArgs['resId']]);
+        $document = ResModel::getById(['select' => ['filename', 'version'], 'resId' => $args['resId']]);
         if (empty($document)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
         }
 
-        if (!empty($document['filename']) && ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
-            $tnlAdr = AdrModel::getTypedDocumentAdrByResId([
-                'select'    => ['docserver_id', 'path', 'filename'],
-                'resId'     => $aArgs['resId'],
-                'type'      => 'TNL'
-            ]);
-            if (empty($tnlAdr)) {
-                ConvertThumbnailController::convert(['collId' => 'letterbox_coll', 'resId' => $aArgs['resId']]);
-                $tnlAdr = AdrModel::getTypedDocumentAdrByResId([
-                    'select'    => ['docserver_id', 'path', 'filename'],
-                    'resId'     => $aArgs['resId'],
-                    'type'      => 'TNL'
-                ]);
+        if (!empty($document['filename']) && ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            $tnlAdr = AdrModel::getDocuments(['select' => ['docserver_id', 'path', 'filename'], 'where' => ['res_id = ?', 'type = ?', 'version = ?'], 'data' => [$args['resId'], 'TNL', $document['version']]]);
+            if (empty($tnlAdr[0])) {
+                $control = ConvertThumbnailController::convert(['type' => 'resource', 'resId' => $args['resId']]);
+                if (!empty($control['errors'])) {
+                    return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
+                }
+                $tnlAdr = AdrModel::getDocuments(['select' => ['docserver_id', 'path', 'filename'], 'where' => ['res_id = ?', 'type = ?', 'version = ?'], 'data' => [$args['resId'], 'TNL', $document['version']]]);
             }
 
-            if (!empty($tnlAdr)) {
-                $docserver = DocserverModel::getByDocserverId(['docserverId' => $tnlAdr['docserver_id'], 'select' => ['path_template']]);
+            if (!empty($tnlAdr[0])) {
+                $docserver = DocserverModel::getByDocserverId(['docserverId' => $tnlAdr[0]['docserver_id'], 'select' => ['path_template']]);
                 if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
                     return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
                 }
 
-                $pathToThumbnail = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $tnlAdr['path']) . $tnlAdr['filename'];
+                $pathToThumbnail = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $tnlAdr[0]['path']) . $tnlAdr[0]['filename'];
             }
         }
 
@@ -703,6 +711,38 @@ class ResController
         }
 
         return $response->withJson(['success' => 'success']);
+    }
+
+    public static function setInIntegrations(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $body = $request->getParsedBody();
+
+        if (empty($body['integrations'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Query param integrations is missing']);
+        }
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['integrations']]);
+        if (empty($resource)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Resource not found']);
+        }
+        $integrations = json_decode($resource['integrations'], true);
+
+        $integrations['inSignatureBook'] = $body['integrations']['inSignatureBook'] ?? $integrations['inSignatureBook'];
+        $integrations['inShipping'] = $body['integrations']['inShipping'] ?? $integrations['inShipping'];
+
+        ResModel::update([
+            'set' => [
+                'integrations' => json_encode($integrations)
+            ],
+            'where' => ['res_id = ?'],
+            'data'  => [$args['resId']]
+        ]);
+
+        return $response->withStatus(204);
     }
 
     public static function getEncodedDocument(array $aArgs)
@@ -1023,7 +1063,7 @@ class ResController
     {
         $body = $args['body'];
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status', 'model_id']]);
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status', 'model_id', 'external_signatory_book_id']]);
         if (empty($resource['status'])) {
             return ['errors' => 'Resource status is empty. It can not be modified'];
         }
@@ -1036,6 +1076,8 @@ class ResController
             return ['errors' => 'Body is not set or empty'];
         } elseif (!Validator::intVal()->notEmpty()->validate($body['doctype'])) {
             return ['errors' => 'Body doctype is empty or not an integer'];
+        } elseif (!empty($body['encodedFile']) && !empty($resource['external_signatory_book_id'])) {
+            return ['errors' => 'Resource is in external signature book, file can not be modified'];
         }
 
         $doctype = DoctypeModel::getById(['id' => $body['doctype'], 'select' => [1]]);

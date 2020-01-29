@@ -16,7 +16,6 @@ use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Doctype\models\SecondLevelModel;
 use Doctype\models\DoctypeModel;
-use Doctype\models\TemplateDoctypeModel;
 use Template\models\TemplateModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -51,14 +50,6 @@ class DoctypeController
             }
         }
 
-        $template   = TemplateDoctypeModel::getById(["id" => $obj['doctype']['type_id']]);
-
-        if (empty($template)) {
-            $template["template_id"] = null;
-            $template["is_generated"] = 'N';
-        }
-
-        $obj['doctype']      = array_merge($obj['doctype'], $template);
         $obj['secondLevel']  = SecondLevelModel::get([
             'select'    => ['doctypes_second_level_id', 'doctypes_second_level_label'],
             'where'     => ['enabled = ?'],
@@ -105,12 +96,6 @@ class DoctypeController
             "delay1"                        => $data['delay1'],
             "delay2"                        => $data['delay2'],
             "process_mode"                  => $data['process_mode'],
-        ]);
-
-        TemplateDoctypeModel::create([
-            "template_id"  => $data["template_id"],
-            "type_id"      => $doctypeId,
-            "is_generated" => $data["is_generated"]
         ]);
 
         HistoryController::add([
@@ -164,12 +149,6 @@ class DoctypeController
             "delay1"                        => $data['delay1'],
             "delay2"                        => $data['delay2'],
             "process_mode"                  => $data['process_mode']
-        ]);
-
-        TemplateDoctypeModel::update([
-            "template_id"  => $data["template_id"],
-            "type_id"      => $data['type_id'],
-            "is_generated" => $data["is_generated"]
         ]);
 
         HistoryController::add([
@@ -280,7 +259,6 @@ class DoctypeController
     {
         $doctypeInfo = DoctypeModel::getById(['id' => $aArgs['type_id']]);
         DoctypeModel::delete(['type_id' => $aArgs['type_id']]);
-        TemplateDoctypeModel::delete(["type_id" => $aArgs['type_id']]);
 
         HistoryController::add([
             'tableName' => 'doctypes',

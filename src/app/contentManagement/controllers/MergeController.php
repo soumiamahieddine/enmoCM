@@ -47,7 +47,6 @@ class MergeController
         $tbs = new \clsTinyButStrong();
         $tbs->NoErr = true;
         $tbs->Protect = false;
-        $tbs->PlugIn(TBS_INSTALL, OPENTBS_PLUGIN);
 
         if (!empty($args['path'])) {
             $pathInfo = pathinfo($args['path']);
@@ -56,6 +55,10 @@ class MergeController
             $tbs->Source = $args['content'];
             $extension = 'unknow';
             $args['path'] = null;
+        }
+
+        if (strtolower($extension) != 'html') {
+            $tbs->PlugIn(TBS_INSTALL, OPENTBS_PLUGIN);
         }
 
         $dataToBeMerge = MergeController::getDataForMerge($args['data']);

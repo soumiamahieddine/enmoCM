@@ -76,6 +76,9 @@
                 <app-notes-list *ngIf="currentTool === 'notes' && !loading" #appNotesList [editMode]="true"
                     [resId]="currentResourceInformations.resId">
                 </app-notes-list>
+                <app-linked-resource-list *ngIf="currentTool === 'linkedResources' && !loading" #appLinkedResourceList
+                    [resId]="currentResourceInformations.resId" (reloadBadgeLinkedResources)="refreshBadge($event,'linkedResources')">
+                </app-linked-resource-list>
                 <app-diffusions-list *ngIf="currentTool === 'diffusionList' && !loading" #appDiffusionsList
                     [adminMode]="false" [resId]="currentResourceInformations.resId" [expanded]="true">
                 </app-diffusions-list>
@@ -249,6 +252,8 @@
         <app-notes-list *ngIf="modal.id === 'notes' && !loading" #appNotesList [editMode]="true"
             [resId]="currentResourceInformations.resId">
         </app-notes-list>
+        <app-linked-resource-list *ngIf="modal.id === 'linkedResources' && !loading" #appLinkedResourceList
+            [resId]="currentResourceInformations.resId" (reloadBadgeLinkedResources)="refreshBadge($event,'linkedResources')"></app-linked-resource-list>
         <app-diffusions-list *ngIf="modal.id === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="false"
             [resId]="currentResourceInformations.resId" [expanded]="true">
         </app-diffusions-list>

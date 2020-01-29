@@ -1,7 +1,9 @@
 <?php
 
 use Contact\models\ContactCustomFieldListModel;
+use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
+use SrcCore\models\CoreConfigModel;
 use Template\models\TemplateModel;
 
 require '../../vendor/autoload.php';
@@ -232,15 +234,14 @@ foreach ($customs as $custom) {
         $DATA_TO_REPLACE["contact." . $customField['oldId']] = "[recipient.customField_{$idNewCustomField[0]['id']}]";
     }
 
-    $migrated = 0;
-
+    $migrated    = 0;
     $nonMigrated = 0;
 
-    $docserver = DocserverModel::getByDocserverId(['docserverId' => 'TEMPLATES']);
-
+    $docserver     = DocserverModel::getByDocserverId(['docserverId' => 'TEMPLATES']);
     $templatesPath = $docserver['path_template'];
+    $templates     = TemplateModel::get(['where' => ['template_target != ?'], 'data' => ['indexingFile']]);
 
-    $templates = TemplateModel::get(['where' => ['template_target != ?'], 'data' => ['indexingFile']]);
+    $tmpPath = CoreConfigModel::getTmpPath();
 
     foreach ($templates as $template) {
         if ($template['template_type'] == 'HTML' || $template['template_type'] == 'TXT' || $template['template_type'] == 'OFFICE_HTML') {
@@ -251,17 +252,47 @@ foreach ($customs as $custom) {
                 $newContent = str_replace('[' . $key . ']', $value, $newContent);
             }
 
-            if ($content != $newContent) {
+            if ($template['template_target'] == 'doctypes') {
+                $pathFilename = $tmpPath . 'template_migration_' . rand() . '_'. rand() .'.html';
+                file_put_contents($pathFilename, $newContent);
+
+                $resource = file_get_contents($pathFilename);
+                $pathInfo = pathinfo($pathFilename);
+                $storeResult = DocserverController::storeResourceOnDocServer([
+                        'collId'            => 'templates',
+                        'docserverTypeId'   => 'TEMPLATES',
+                        'encodedResource'   => base64_encode($resource),
+                        'format'            => $pathInfo['extension']
+                    ]);
+
                 TemplateModel::update([
-                    'set'   => [
-                        'template_content' => $newContent
-                    ],
-                    'where' => ['template_id = ?'],
-                    'data'  => [$template['template_id']]
-                ]);
-                $migrated++;
+                        'set'   => [
+                            'template_content'    => '',
+                            'template_type'       => 'OFFICE',
+                            'template_path'       => $storeResult['destination_dir'],
+                            'template_file_name'  => $storeResult['file_destination_name'],
+                            'template_style'      => '',
+                            'template_datasource' => 'letterbox_attachment',
+                            'template_target'     => 'indexingFile',
+                            'template_attachment_type' => 'all'
+                        ],
+                        'where' => ['template_id = ?'],
+                        'data'  => [$template['template_id']]
+                    ]);
+                unlink($pathFilename);
             } else {
-                $nonMigrated++;
+                if ($content != $newContent) {
+                    TemplateModel::update([
+                        'set'   => [
+                            'template_content' => $newContent
+                        ],
+                        'where' => ['template_id = ?'],
+                        'data'  => [$template['template_id']]
+                    ]);
+                    $migrated++;
+                } else {
+                    $nonMigrated++;
+                }
             }
         }
         if ($template['template_type'] == 'OFFICE' || $template['template_type'] == 'OFFICE_HTML') {

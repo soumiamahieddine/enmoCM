@@ -20,7 +20,9 @@ php ./migrateExtensions.php
 php ./migrateM2MConfiguration.php
 php ./removeNatureFromPrint.php
 php ./migrateCustomValues.php
+# migrateVersionAttachments always before migrateOutgoingAttachments
 php ./migrateVersionAttachments.php
+php ./migrateOutgoingAttachments.php
 php ./migrateContacts.php
 # migrateOutgoingTemplate always before migrateTemplates
 php ./migrateOutgoingTemplate.php

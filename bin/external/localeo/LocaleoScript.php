@@ -143,6 +143,13 @@ class LocaleoScript
             return;
         }
 
+        if (!file_exists('bin/external/localeo/updateContact.timestamp')) {
+            $file = fopen('bin/external/localeo/updateContact.timestamp', 'w');
+            fwrite($file, time());
+            fclose($file);
+            return;
+        }
+
         $dataToMerge = [];
         if (!empty($configuration->updateContact->data)) {
             foreach ($configuration->updateContact->data as $value) {
@@ -153,23 +160,17 @@ class LocaleoScript
         \SrcCore\models\DatabasePDO::reset();
         new \SrcCore\models\DatabasePDO(['customId' => $customId]);
 
-        $where = ['enabled = ?', "external_id->>'localeoId' is not null"];
-        $data = [true];
-        if (file_exists('bin/external/localeo/updateContact.timestamp')) {
-            $time = file_get_contents('bin/external/localeo/updateContact.timestamp');
-            $where[] = 'modification_date > ?';
-            $data[] = date('Y-m-d H:i:s', $time);
-
-        }
-        $file = fopen('bin/external/localeo/updateContact.timestamp', 'w');
-        fwrite($file, time());
-        fclose($file);
+        $time = file_get_contents('bin/external/localeo/updateContact.timestamp');
 
         $contacts = \Contact\models\ContactModel::get([
             'select'    => ['*'],
-            'where'     => $where,
-            'data'      => $data
+            'where'     => ['enabled = ?', "external_id->>'localeoId' is not null", 'modification_date > ?'],
+            'data'      => [true, date('Y-m-d H:i:s', $time)]
         ]);
+
+        $file = fopen('bin/external/localeo/updateContact.timestamp', 'w');
+        fwrite($file, time());
+        fclose($file);
 
         foreach ($contacts as $contact) {
             $externalId = json_decode($contact['external_id'], true);
@@ -361,7 +362,7 @@ class LocaleoScript
                 'res_attachments.res_id_master = res_letterbox.res_id', "res_letterbox.external_id->>'localeoId' is not null",
                 "res_attachments.external_id->>'localeoId' is null", 'res_attachments.status not in (?)'
             ],
-            'data'      => [['DEL']]
+            'data'      => [['DEL', 'OBS']]
         ]);
 
         foreach ($attachments as $attachment) {
@@ -458,6 +459,13 @@ class LocaleoScript
             return;
         }
 
+        if (!file_exists('bin/external/localeo/closeResource.timestamp')) {
+            $file = fopen('bin/external/localeo/closeResource.timestamp', 'w');
+            fwrite($file, time());
+            fclose($file);
+            return;
+        }
+
         $dataToMerge = [];
         if (!empty($configuration->closeResource->data)) {
             foreach ($configuration->closeResource->data as $value) {
@@ -468,23 +476,17 @@ class LocaleoScript
         \SrcCore\models\DatabasePDO::reset();
         new \SrcCore\models\DatabasePDO(['customId' => $customId]);
 
-        $where = ["external_id->>'localeoId' is not null", 'status = ?', 'closing_date is not null'];
-        $data = [$status];
-        if (file_exists('bin/external/localeo/closeResource.timestamp')) {
-            $time = file_get_contents('bin/external/localeo/closeResource.timestamp');
-            $where[] = 'closing_date > ?';
-            $data[] = date('Y-m-d H:i:s', $time);
-        }
+        $time = file_get_contents('bin/external/localeo/closeResource.timestamp');
+
+        $resources = \Resource\models\ResModel::get([
+            'select'    => ['res_id', "external_id->>'localeoId' as \"localeoId\""],
+            'where'     => ["external_id->>'localeoId' is not null", 'status = ?', 'closing_date is not null', 'closing_date > ?'],
+            'data'      => [$status, date('Y-m-d H:i:s', $time)]
+        ]);
 
         $file = fopen('bin/external/localeo/closeResource.timestamp', 'w');
         fwrite($file, time());
         fclose($file);
-
-        $resources = \Resource\models\ResModel::get([
-            'select'    => ['res_id', 'subject', 'format', 'path', 'filename', 'docserver_id', "external_id->>'localeoId' as \"localeoId\""],
-            'where'     => $where,
-            'data'      => $data
-        ]);
 
         foreach ($resources as $resource) {
             $body = [];

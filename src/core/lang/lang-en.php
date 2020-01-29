@@ -136,6 +136,7 @@ define('_ACCOUNT_LOCKED_FOR', 'Too many connections attemps. Your account is loc
 define('_ACCOUNT_LOCKED_UNTIL', 'Too many connections attemps. Account locked until');
 define('_MAX_SIZE_UPLOAD_REACHED', 'File maximum size is exceeded');
 define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Inaccessible Docserver path');
+define('_GO_ON_VACATION', 'go on vacation');
 define('_BACK_FROM_VACATION', 'back from vacation');
 define('_DOC_DISPLAYING', 'Displaying document');
 define('_DOC_ADDED', 'Document added');
@@ -448,3 +449,13 @@ define("_AVIS_SENT", "Notice given");
 define("_BY", "by");
 define("_TO_AVIS", "For recommendation");
 define("_VALIDATE_BY", "Validate by");
+
+define("_ACKNOWLEDGEMENT_RECEIPT", "Acknowledgement Receipt");
+define("_CREATED_BY", "Created by");
+define("_SENT_DATE", "Sent ");
+define("_SENT_TO", "Sent to");
+define("_FORMAT", "Format");
+define("_SUBJECT", "Subject");
+define("_CHRONO_NUMBER_MASTER", "Resource chrono number");
+define("_SENT_BY", "Sent by");
+define('_TO_CCI', 'On copy hidden');

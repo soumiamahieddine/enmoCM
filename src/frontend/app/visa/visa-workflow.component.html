@@ -84,9 +84,14 @@
                     <div class="workflowLineSubLabel">
                         {{diffusion.item_entity}}
                     </div>
+                    <div class="workflowLineSubLabel">
+                        <mat-form-field>
+                            <input matInput [disabled]="!adminMode || diffusion.process_date != null" [placeholder]="lang.visaNote" [(ngModel)]="diffusion.process_comment">
+                        </mat-form-field>
+                    </div>
                     <div *ngIf="diffusion.process_date != null && [lang.visaWorkflowInterrupted, lang.hasInterruptedWorkflow].indexOf(diffusion.process_comment) === -1" class="workflowLineProcessDate"
                         title='{{diffusion.process_date | fullDate}}'
-                        color="accent">{{diffusion.requested_signature ? lang.signedUserDate : lang.approvedUserDate}} {{diffusion.process_date
+                        color="accent" style="margin-top: -10px;padding-bottom: 5px;">{{diffusion.requested_signature ? lang.signedUserDate : lang.approvedUserDate}} {{diffusion.process_date
                                                 | timeAgo : 'full'}}</div>
                     <div *ngIf="diffusion.process_date != null && ['A terminé le circuit'].indexOf(diffusion.process_comment) > -1" class="workflowLineProcessDate"
                             title='{{diffusion.process_date | fullDate}}'

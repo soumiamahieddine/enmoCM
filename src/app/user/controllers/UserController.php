@@ -839,12 +839,15 @@ class UserController
         UserModel::updateStatus(['id' => $aArgs['id'], 'status' => $data['status']]);
 
         $user = UserModel::getById(['id' => $aArgs['id'], 'select' => ['user_id', 'firstname', 'lastname']]);
+        $message = "{$user['firstname']} {$user['lastname']} ";
+        $message .= ($data['status'] == 'ABS' ? _GO_ON_VACATION : _BACK_FROM_VACATION);
+
         HistoryController::add([
             'tableName'    => 'users',
             'recordId'     => $user['user_id'],
-            'eventType'    => 'RET',
+            'eventType'    => $data['status'] == 'ABS' ? 'ABS' : 'PRE',
             'eventId'      => 'userabs',
-            'info'         => "{$user['firstname']} {$user['lastname']} " ._BACK_FROM_VACATION
+            'info'         => $message
         ]);
 
         return $response->withJson(['user' => UserModel::getById(['id' => $aArgs['id'], 'select' => ['status']])]);
@@ -1656,7 +1659,7 @@ class UserController
         HistoryController::add([
             'tableName'    => 'users',
             'recordId'     => $body['login'],
-            'eventType'    => 'UP',
+            'eventType'    => 'RESETPSW',
             'eventId'      => 'userModification',
             'info'         => _PASSWORD_REINIT_SENT
         ]);

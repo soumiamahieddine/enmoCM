@@ -12,6 +12,7 @@ import { FormControl, Validators, ValidatorFn } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContactService } from '../../../../../service/contact.service';
 import { FunctionsService } from '../../../../../service/functions.service';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 declare var angularGlobals: any;
 
@@ -19,7 +20,23 @@ declare var angularGlobals: any;
     selector: 'app-contact-form',
     templateUrl: "contacts-form.component.html",
     styleUrls: ['contacts-form.component.scss'],
-    providers: [NotificationService, AppService, ContactService]
+    providers: [NotificationService, AppService, ContactService],
+    animations: [
+        trigger('hideShow', [
+            transition(
+                ':enter', [
+                    style({ height: '0px'}),
+                    animate('200ms', style({ 'height': '30px' }))
+                ]
+            ),
+            transition(
+                ':leave', [
+                    style({ height: '30px' }),
+                    animate('200ms', style({ 'height': '0px' }))
+                ]
+            )
+        ]),
+    ],
 })
 export class ContactsFormComponent implements OnInit {
 
@@ -49,6 +66,10 @@ export class ContactsFormComponent implements OnInit {
         {
             id: 'complement',
             label: this.lang.additionals
+        },
+        {
+            id: 'maarch2maarch',
+            label: 'Maarch2Maarch'
         }
     ];
 
@@ -220,7 +241,7 @@ export class ContactsFormComponent implements OnInit {
         },
         {
             id: 'communicationMeans',
-            unit: 'complement',
+            unit: 'maarch2maarch',
             label: this.lang.communicationMean,
             desc: `${this.lang.communicationMeanDesc} (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
             type: 'string',
@@ -232,9 +253,9 @@ export class ContactsFormComponent implements OnInit {
         },
         {
             id: 'externalId_m2m',
-            unit: 'complement',
+            unit: 'maarch2maarch',
             label: this.lang.IdMaarch2Gec,
-            desc: `Format attendu : SIRET/ENTITY_ID de l'entité destinatrice (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
+            desc: `${this.lang.m2mContactInfo} (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
             type: 'string',
             control: new FormControl(),
             required: false,
@@ -490,7 +511,7 @@ export class ContactsFormComponent implements OnInit {
                     } else {
                         this.contactForm.push({
                             id: `externalId_${id}`,
-                            unit: 'complement',
+                            unit: 'maarch2maarch',
                             label: id,
                             type: 'string',
                             control: new FormControl({ value: data.externalId[id], disabled: true }),
@@ -551,8 +572,8 @@ export class ContactsFormComponent implements OnInit {
 
     onSubmit() {
         this.checkFilling();
-        if (this.addressBANMode && this.emptyAddress()) {
-            this.notify.error('Choisissez une BAN');
+        if (this.addressBANMode && this.emptyAddress() && !this.noAddressRequired()) {
+            this.notify.error(this.lang.chooseBAN);
         } else if (this.isValidForm()) {
             if (this.contactId !== null) {
                 this.updateContact();
@@ -560,7 +581,7 @@ export class ContactsFormComponent implements OnInit {
                 this.createContact();
             }
         } else {
-            this.notify.error('Veuillez corriger les erreurs');
+            this.notify.error(this.lang.mustFixErrors);
         }
 
     }
@@ -689,6 +710,7 @@ export class ContactsFormComponent implements OnInit {
     }
 
     setAddress(contact: any, disableBan: boolean = true) {
+        this.companyFound = null;
         let indexField = -1;
         Object.keys(contact).forEach(element => {
             indexField = this.contactForm.map(field => field.id).indexOf(element);
@@ -821,16 +843,23 @@ export class ContactsFormComponent implements OnInit {
         } else {
             this.contactForm.push({
                 id: `externalId_m2m_annuary_id`,
-                unit: 'complement',
+                unit: 'maarch2maarch',
                 label: 'm2m_annuary_id',
                 type: 'string',
-                control: new FormControl({disabled: true}),
+                control: new FormControl({ value: '', disabled: true }),
                 required: false,
                 display: true,
                 filling: false,
                 values: []
             });
         }
+    }
+
+    resetM2MFields() {
+        let indexFieldAnnuaryId = -1;
+        indexFieldAnnuaryId = this.contactForm.map(field => field.id).indexOf('externalId_m2m');
+        this.contactForm[indexFieldAnnuaryId].control.setValue('');
+        this.resetAutocompleteExternalIdM2M();
     }
 
     initAutocompleteAddressBan() {
@@ -879,6 +908,14 @@ export class ContactsFormComponent implements OnInit {
 
     emptyAddress() {
         if (this.contactForm.filter(contact => this.isEmptyValue(contact.control.value) && ['addressNumber', 'addressStreet', 'addressPostcode', 'addressTown', 'addressCountry'].indexOf(contact.id) > -1).length === 5) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    noAddressRequired() {
+        if (this.contactForm.filter(contact => !contact.required && ['addressNumber', 'addressStreet', 'addressPostcode', 'addressTown', 'addressCountry'].indexOf(contact.id) > -1).length === 5) {
             return true;
         } else {
             return false;

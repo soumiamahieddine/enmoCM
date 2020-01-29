@@ -84,7 +84,7 @@ export class ProcessComponent implements OnInit {
             count: 0
         },
         {
-            id: 'link',
+            id: 'linkedResources',
             icon: 'fas fa-link',
             label: this.lang.links,
             count: 0
@@ -199,7 +199,9 @@ export class ProcessComponent implements OnInit {
             this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/processingData`).pipe(
                 tap((data: any) => {
                     if (data.listEventData !== null) {
-                        this.currentTool = data.listEventData.defaultTab;
+                        if (this.isToolEnabled(data.listEventData.defaultTab)) {
+                            this.currentTool = data.listEventData.defaultTab;
+                        }
                         this.canEditData = data.listEventData.canUpdate;
                     }
                 }),

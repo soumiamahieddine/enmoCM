@@ -53,10 +53,6 @@ class DoctypeControllerTest extends TestCase
         $this->assertNotNull($responseBody->firstLevel[0]->doctypes_first_level_label);
 
         $this->assertNotNull($responseBody->secondLevel);
-        $this->assertNotNull($responseBody->models);
-        $this->assertNotNull($responseBody->models[0]->template_id);
-        $this->assertNotNull($responseBody->models[0]->template_label);
-        $this->assertNotNull($responseBody->models[0]->template_comment);
     }
 
     public function testCreateFirstLevel()
@@ -153,7 +149,6 @@ class DoctypeControllerTest extends TestCase
             'delay2'                      => '5',
             'process_mode'                => 'NORMAL',
             'template_id'                 => 0,
-            'is_generated'                => 'N',
             'indexes' => [
                 0 => [
                     "column"        => "custom_t1",
@@ -213,7 +208,6 @@ class DoctypeControllerTest extends TestCase
             'delay2'                      => '',
             'process_mode'                => '',
             'template_id'                 => 0,
-            'is_generated'                => 'N',
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -327,7 +321,6 @@ class DoctypeControllerTest extends TestCase
             'delay2'                      => '6',
             'process_mode'                => 'SVR',
             'template_id'                 => 0,
-            'is_generated'                => 'N',
             'indexes' => [
                 0 => [
                     "column"        => "custom_t1",
@@ -387,7 +380,6 @@ class DoctypeControllerTest extends TestCase
             'delay2'                      => '',
             'process_mode'                => '',
             'template_id'                 => 0,
-            'is_generated'                => 'N',
         ];
         $fullRequest = \httpRequestCustom::addContentInBody($aArgs, $request);
 
@@ -458,7 +450,6 @@ class DoctypeControllerTest extends TestCase
         $this->assertSame('SVR', $responseBody->doctype->process_mode);
         $this->assertNotNull($responseBody->secondLevel);
         $this->assertSame(null, $responseBody->doctype->template_id);
-        $this->assertSame('N', $responseBody->doctype->is_generated);
         $this->assertNotNull($responseBody->models);
 
         // READ DOCTYPE FAIL
@@ -488,7 +479,6 @@ class DoctypeControllerTest extends TestCase
             'delay2'                      => '5',
             'process_mode'                => 'NORMAL',
             'template_id'                 => 0,
-            'is_generated'                => 'N',
             'indexes' => [
                 0 => [
                     "column"        => "custom_t1",

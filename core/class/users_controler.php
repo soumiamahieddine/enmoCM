@@ -524,47 +524,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     */
     public function disable($user, $params=array())
     {
-        $control = array();
-        if (! isset($user) || empty($user)) {
-            $control = array(
-                'status' => 'ko',
-                'value'  => '',
-                'error'  => _USER_EMPTY,
-            );
-            return $control;
-        }
-        $user = self::_isAUser($user);
-        self::set_foolish_ids(array('user_id', 'docserver_location_id'));
-        self::set_specific_id('user_id');
-
-        if (self::advanced_disable($user)) {
-            $control = array(
-                'status' => 'ok',
-                'value'  => $user->user_id,
-            );
-            if (isset($params['log_user_disabled'])
-                && ($params['log_user_disabled'] == 'true'
-                    || $params['log_user_disabled'] == true)
-            ) {
-                $history = new history();
-                $history->add(
-                    USERS_TABLE,
-                    $user->user_id,
-                    'BAN',
-                    'usersban',
-                    _SUSPENDED_USER . ' : ' . $user->lastname . ' '
-                    . $user->firstname . ' (' . $user->user_id . ')',
-                    $params['databasetype']
-                );
-            }
-        } else {
-            $control = array(
-                'status' => 'ko',
-                'value'  => '',
-                'error'  => _PB_WITH_USER_ID,
-            );
-        }
-        return $control;
     }
 
     /**
@@ -575,47 +534,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     */
     public function enable($user, $params=array())
     {
-        $control = array();
-        if (! isset($user) || empty($user)) {
-            $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _USER_EMPTY,
-            );
-            return $control;
-        }
-        $user = self::_isAUser($user);
-        self::set_foolish_ids(array('user_id', 'docserver_location_id'));
-        self::set_specific_id('user_id');
-
-        if (self::advanced_enable($user)) {
-            $control = array(
-                'status' => 'ok',
-                'value' => $user->user_id,
-            );
-            if (isset($params['log_user_enabled'])
-                && ($params['log_user_enabled'] == 'true'
-                    || $params['log_user_enabled'] == true)
-            ) {
-                $history = new history();
-                $history->add(
-                    USERS_TABLE,
-                    $user->user_id,
-                    'VAL',
-                    'usersval',
-                    _AUTORIZED_USER .' : ' . $user->lastname . ' '
-                    . $user->firstname . ' (' . $user->user_id . ')',
-                    $params['databasetype']
-                );
-            }
-        } else {
-            $control = array(
-                'status' => 'ko',
-                'value' => '',
-                'error' => _PB_WITH_USER_ID,
-            );
-        }
-        return $control;
     }
 
     /**

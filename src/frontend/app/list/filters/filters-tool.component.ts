@@ -252,7 +252,7 @@ export class FiltersToolComponent implements OnInit {
                             {
                                 id: 'entities',
                                 value: element.entityId,
-                                label: (element.id !== null ? element.label : this.lang.undefined),
+                                label: (element.entityId !== null ? element.label : this.lang.undefined),
                                 count: element.count
                             }
                         )
@@ -266,7 +266,7 @@ export class FiltersToolComponent implements OnInit {
                             {
                                 id: 'subEntities',
                                 value: element.entityId,
-                                label: (element.id !== null ? element.label : this.lang.undefined),
+                                label: (element.entityId !== null ? element.label : this.lang.undefined),
                                 count: element.count
                             }
                         )

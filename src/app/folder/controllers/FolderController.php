@@ -575,6 +575,7 @@ class FolderController
                     'attachments'   => $attachments,
                     'checkLocked'   => false,
                     'trackedMails'  => $followedResources,
+                    'listDisplay'   => ['folders']
                 ]);
             }
 

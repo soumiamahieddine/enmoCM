@@ -179,7 +179,7 @@ export class ListAdministrationComponent implements OnInit {
             label: this.lang.attachments,
         },
         {
-            id: 'link',
+            id: 'linkedResources',
             icon: 'fas fa-link',
             label: this.lang.links,
         },
@@ -194,12 +194,12 @@ export class ListAdministrationComponent implements OnInit {
             label: this.lang.mailsSentAlt,
         },
         {
-            id: 'visa',
+            id: 'visaCircuit',
             icon: 'fas fa-list-ol',
             label: this.lang.visaWorkflow,
         },
         {
-            id: 'avis',
+            id: 'opinionCircuit',
             icon: 'fas fa-comment-alt',
             label: this.lang.avis,
         },

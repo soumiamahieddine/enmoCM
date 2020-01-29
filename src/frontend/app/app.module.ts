@@ -101,6 +101,11 @@ import { VisaWorkflowModalComponent } from './visa/modal/visa-workflow-modal.com
 import { AddVisaModelModalComponent } from './visa/addVisaModel/add-visa-model-modal.component';
 import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-modal.component';
 
+import { CriteriaToolComponent } from './adv-search/criteria-tool/criteria-tool.component';
+import { SearchAdvListComponent } from './adv-search/list/search-adv-list.component';
+import { LinkedResourceListComponent } from './linkedResource/linked-resource-list.component';
+import { LinkResourceModalComponent } from './linkedResource/linkResourceModal/link-resource-modal.component';
+
 
 @NgModule({
     imports: [
@@ -190,7 +195,11 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         FollowedActionListComponent,
         VisaWorkflowModalComponent,
         AddVisaModelModalComponent,
-        AddAvisModelModalComponent
+        AddAvisModelModalComponent,
+        CriteriaToolComponent,
+        SearchAdvListComponent,
+        LinkedResourceListComponent,
+        LinkResourceModalComponent
     ],
     entryComponents: [
         ConfirmModalComponent,
@@ -234,7 +243,8 @@ import { AddAvisModelModalComponent } from './avis/addAvisModel/add-avis-model-m
         ContactModalComponent,
         VisaWorkflowModalComponent,
         AddVisaModelModalComponent,
-        AddAvisModelModalComponent
+        AddAvisModelModalComponent,
+        LinkResourceModalComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],
     bootstrap: [ AppComponent ]
