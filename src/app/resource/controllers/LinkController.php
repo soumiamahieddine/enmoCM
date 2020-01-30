@@ -14,8 +14,11 @@
 
 namespace Resource\controllers;
 
+use Contact\controllers\ContactController;
+use Contact\models\ContactModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
+use History\controllers\HistoryController;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
 use Respect\Validation\Validator;
@@ -59,16 +62,29 @@ class LinkController
                     $linkedResources[$key]['destinationLabel'] = EntityModel::getByEntityId(['entityId' => $value['destination'], 'select' => ['short_label']])['short_label'];
                 }
 
-                $contacts = ResourceContactModel::get([
-                    'select'    => ['item_id as id', 'type', 'mode'],
+                $correspondents = ResourceContactModel::get([
+                    'select'    => ['item_id', 'type', 'mode'],
                     'where'     => ['res_id = ?'],
                     'data'      => [$value['resId']]
                 ]);
 
                 $linkedResources[$key]['senders'] = [];
                 $linkedResources[$key]['recipients'] = [];
-                foreach ($contacts as $contact) {
-                    $linkedResources[$key]["{$contact['mode']}s"][] = $contact;
+                foreach ($correspondents as $correspondent) {
+                    if ($correspondent['res_id'] == $resource['resId']) {
+                        if ($correspondent['type'] == 'contact') {
+                            $contactRaw = ContactModel::getById(['select' => ['firstname', 'lastname', 'company'], 'id' => $correspondent['item_id']]);
+                            $contactToDisplay = ContactController::getFormattedOnlyContact(['contact' => $contactRaw]);
+                            $formattedCorrespondent = $contactToDisplay['contact']['otherInfo'];
+                        } elseif ($correspondent['type'] == 'user') {
+                            $formattedCorrespondent = UserModel::getLabelledUserById(['id' => $correspondent['item_id']]);
+                        } else {
+                            $entity = EntityModel::getById(['id' => $correspondent['item_id'], 'select' => ['entity_label']]);
+                            $formattedCorrespondent = $entity['entity_label'];
+                        }
+
+                        $linkedResources[$key]["{$correspondent['mode']}s"][] = $formattedCorrespondent;
+                    }
                 }
 
                 $linkedResources[$key]['visaCircuit'] = ListInstanceModel::get(['select' => ['item_id', 'item_mode'], 'where' => ['res_id = ?', 'difflist_type = ?'], 'data' => [$value['resId'], 'VISA_CIRCUIT']]);
@@ -97,7 +113,7 @@ class LinkController
             return $response->withStatus(400)->withJson(['errors' => 'Body linkedResources contains resource']);
         }
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['linked_resources']]);
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['linked_resources', 'alt_identifier']]);
         $linkedResources = json_decode($resource['linked_resources'], true);
         $linkedResources = array_merge($linkedResources, $body['linkedResources']);
         $linkedResources = array_unique($linkedResources);
@@ -115,6 +131,27 @@ class LinkController
             'where'     => ['res_id in (?)', "(linked_resources @> ?) = false"],
             'data'      => [$body['linkedResources'], "\"{$args['resId']}\""]
         ]);
+
+        foreach ($body['linkedResources'] as $value) {
+            HistoryController::add([
+                'tableName' => 'res_letterbox',
+                'recordId'  => $args['resId'],
+                'eventType' => 'UP',
+                'info'      => _LINK_ADDED . " : {$value}",
+                'moduleId'  => 'resource',
+                'eventId'   => 'resourceModification'
+            ]);
+        }
+        foreach ($body['linkedResources'] as $value) {
+            HistoryController::add([
+                'tableName' => 'res_letterbox',
+                'recordId'  => $value,
+                'eventType' => 'UP',
+                'info'      => _LINK_ADDED . " : {$args['resId']}",
+                'moduleId'  => 'resource',
+                'eventId'   => 'resourceModification'
+            ]);
+        }
 
         return $response->withStatus(204);
     }
@@ -138,6 +175,23 @@ class LinkController
             'postSet'   => ['linked_resources' => "linked_resources - '{$args['resId']}'"],
             'where'     => ['res_id = ?'],
             'data'      => [$args['id']]
+        ]);
+
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $args['resId'],
+            'eventType' => 'UP',
+            'info'      => _LINK_DELETED . " : {$args['id']}",
+            'moduleId'  => 'resource',
+            'eventId'   => 'resourceModification'
+        ]);
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $args['id'],
+            'eventType' => 'UP',
+            'info'      => _LINK_DELETED . " : {$args['resId']}",
+            'moduleId'  => 'resource',
+            'eventId'   => 'resourceModification'
         ]);
 
         return $response->withStatus(204);

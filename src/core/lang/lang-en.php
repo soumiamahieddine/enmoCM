@@ -153,6 +153,8 @@ define('_TAG_ADDED', 'Tag added');
 define('_TAG_DELETED', 'Tag deleted');
 define('_TAG_UPDATED', 'Tag updated');
 define('_TAG_MERGED', 'Tag merged');
+define('_LINK_ADDED', 'Link added');
+define('_LINK_DELETED', 'Link deleted');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');

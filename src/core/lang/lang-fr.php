@@ -153,6 +153,8 @@ define('_TAG_ADDED', 'Mot-clé ajouté');
 define('_TAG_DELETED', 'Mot-clé supprimé');
 define('_TAG_UPDATED', 'Mot-clé modifié');
 define('_TAG_MERGED', 'Mot-clé fusionné');
+define('_LINK_ADDED', 'Liaison ajoutée');
+define('_LINK_DELETED', 'Liaison supprimée');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');
