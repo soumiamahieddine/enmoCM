@@ -324,7 +324,7 @@ class ActionMethodController
             }
         }
 
-        $resource = ResModel::getById(['select' => ['integrations'], 'id' => $args['resId']]);
+        $resource = ResModel::getById(['select' => ['integrations'], 'resId' => $args['resId']]);
         $integrations = json_decode($resource['integrations'], true);
         if (!empty($integrations['inSignatureBook'])) {
             return true;
