@@ -452,7 +452,7 @@ define("_TO_AVIS", "POUR AVIS");
 define("_VALIDATE_BY", "Validé par");
 
 define("_ACKNOWLEDGEMENT_RECEIPT", "Accusé de réception");
-define("_CREATED_BY", "Créer par");
+define("_CREATED_BY", "Crée(e) par");
 define("_SENT_DATE", "Envoyé le");
 define("_SENT_TO", "Envoyé à");
 define("_FORMAT", "Format");

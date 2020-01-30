@@ -43,7 +43,7 @@ class ResourceDataExportController
         $body = $request->getParsedBody();
 
         if (!Validator::notEmpty()->arrayType()->validate($body['resources'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Body resources is empty']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty']);
         }
 
         // Array containing all path to the pdf files to merge
@@ -58,11 +58,12 @@ class ResourceDataExportController
 
         $forceSummarySheet = count($body['resources']) > 1;
 
-        foreach ($body['resources'] as $resource) {
-            if (!Validator::notEmpty()->intVal()->validate($resource['resId']) || !ResController::hasRightByResId(['resId' => [$resource['resId']], 'userId' => $GLOBALS['id']])) {
-                return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-            }
+        $resIds = array_column($body['resources'], 'resId');
 
+        if (!ResController::hasRightByResId(['resId' => $resIds, 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+        foreach ($body['resources'] as $resource) {
             $withSummarySheet = $forceSummarySheet || !empty($unitsSummarySheet);
             if (!$withSummarySheet) {
                 $withSummarySheet = !empty($resource['summarySheet']);
@@ -135,7 +136,7 @@ class ResourceDataExportController
                     $attachmentsIds = $resource['attachments']['resIds'];
                 }
                 if (!empty($resource['attachments']['types'])) {
-                    if (in_array("ALL", $resource['attachments']['types'])) {
+                    if (in_array("ALL", $resource['attachments']['types'])) { // TODO rm types
                         $attachmentsIds = AttachmentModel::get([
                             'select' => ['res_id'],
                             'where'  => ['res_id_master = ?'],
@@ -155,13 +156,14 @@ class ResourceDataExportController
 
                 if (!empty($attachmentsIds)) {
                     $attachments = AttachmentModel::get([
-                        'select'  => ['*'],
+                        'select'  => ['res_id', 'res_id_master', 'recipient_type', 'recipient_id', 'typist', 'status', 'attachment_type',
+                                      'creation_date', 'identifier', 'title', 'format', 'docserver_id'],
                         'where'   => ['res_id in (?)', 'status not in (?)'],
                         'data'    => [$attachmentsIds, ['DEL', 'OBS']],
                         'orderBy' => ['creation_date desc']
                     ]);
 
-                    if (count($attachments) < count($attachmentsIds)) {
+                    if (count($attachments) < count($attachmentsIds)) { // TODO do not count
                         return $response->withStatus(400)->withJson(['errors' => 'Attachment(s) not found']);
                     }
 
@@ -193,6 +195,11 @@ class ResourceDataExportController
 
             if (!empty($resource['notes'])) {
                 if (is_array($resource['notes'])) {
+                    foreach ($resource['notes'] as $note) {
+                        if (!Validator::intVal()->validate($note)) {
+                            return $response->withStatus(400)->withJson(['errors' => 'Note id is not an integer']);
+                        }
+                    }
                     $notesIds = $resource['notes'];
                 } else {
                     $notesIds = NoteModel::get([
@@ -220,6 +227,11 @@ class ResourceDataExportController
 
             if (!empty($resource['acknowledgementReceipts'])) {
                 if (is_array($resource['acknowledgementReceipts'])) {
+                    foreach ($resource['acknowledgementReceipts'] as $acknowledgementReceipt) {
+                        if (!Validator::intVal()->validate($acknowledgementReceipt)) {
+                            return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement Receipt id is not an integer']);
+                        }
+                    }
                     $acknowledgementReceiptsIds = $resource['acknowledgementReceipts'];
                 } else {
                     $acknowledgementReceiptsIds = AcknowledgementReceiptModel::get([
@@ -232,7 +244,8 @@ class ResourceDataExportController
 
                 if (!empty($acknowledgementReceiptsIds)) {
                     $acknowledgementReceipts = AcknowledgementReceiptModel::getByIds([
-                        'select' => ['*'],
+                        'select' => ['id', 'res_id', 'format', 'contact_id', 'user_id', 'creation_date', 'send_date', 'docserver_id', 'path',
+                                     'fileneme', 'fingerprint'],
                         'ids'    => $acknowledgementReceiptsIds
                     ]);
 
@@ -264,24 +277,30 @@ class ResourceDataExportController
 
             if (!empty($resource['emails'])) {
                 if (is_array($resource['emails'])) {
+                    foreach ($resource['emails'] as $email) {
+                        if (!Validator::intVal()->validate($email)) {
+                            return $response->withStatus(400)->withJson(['errors' => 'Email id is not an integer']);
+                        }
+                    }
                     $emailsIds = $resource['emails'];
                 } else {
                     $emailsIds = EmailModel::get([
                         'select' => ['id'],
-                        'where' => ["cast(document->'id' as INT) = ? "],
-                        'data' => [$resource['resId']]
+                        'where'  => ["cast(document->'id' as INT) = ? "], // TODO might not work if no emails in table (or if no 'id' in document ?) -> if document  is not null ?
+                        'data'   => [$resource['resId']]
                     ]);
                     $emailsIds = array_column($emailsIds, 'id');
                 }
 
                 if (!empty($emailsIds)) {
                     $emailsModel = EmailModel::get([
+                        'select'  => ['id', 'user_id', 'sender', 'recipients', 'cc', 'cci', 'object', 'body', 'document', 'send_date'],
                         'where'   => ['id in (?)'],
                         'data'    => [$emailsIds],
                         'orderBy' => ['creation_date desc']
                     ]);
 
-                    if (count($emailsModel) < count($resource['emails'])) {
+                    if (count($emailsModel) < count($emailsIds)) {
                         return $response->withStatus(400)->withJson(['errors' => 'Email(s) not found']);
                     }
 
@@ -378,13 +397,13 @@ class ResourceDataExportController
 
         $notes = [];
 
-        $notesModel = NoteModel::get([
+        $notesModel = NoteModel::get([ // TODO put this in a param -> query before
             'where'   => ['id in (?)'],
             'data'    => [$args['notes']],
             'orderBy' => ['creation_date desc']
         ]);
 
-        if (count($notesModel) < count($args['notes'])) {
+        if (count($notesModel) < count($args['notes'])) { // TODO useless here ?
             return ['errors' => 'Note(s) not found', 'code' => 400];
         }
 
@@ -396,7 +415,7 @@ class ResourceDataExportController
             $user = UserModel::getById(['id' => $note['user_id'], 'select' => ['firstname', 'lastname']]);
             $userName = $user['firstname'] . ' ' . $user['lastname'];
 
-            $noteText = str_replace('←', '<=', $note['note_text']);
+            $noteText = str_replace('←', '<=', $note['note_text']); // TODO might not work (Alex had '?')
 
             $date = explode('-', date('d-m-Y', strtotime($note['creation_date'])));
             $date = $date[0].'/'.$date[1].'/'.$date[2].' '.date('H:i', strtotime($note['creation_date']));
@@ -451,7 +470,8 @@ class ResourceDataExportController
         $acknowledgementReceipt = $args['acknowledgementReceipt'];
 
         $contact = ContactModel::getById([
-            'select' => ['*'],
+            'select' => ['id', 'firstname', 'lastname', 'email', 'address_number', 'address_street', 'address_postcode',
+                         'address_town', 'address_country', 'company'],
             'id'     => $acknowledgementReceipt['contact_id']
         ]);
         if ($acknowledgementReceipt['format'] == 'html') {
@@ -468,8 +488,12 @@ class ResourceDataExportController
         $creationDate = new \DateTime($acknowledgementReceipt['creation_date']);
         $creationDate = $creationDate->format('d-m-Y H:i');
 
-        $sendDate = new \DateTime($acknowledgementReceipt['send_date']);
-        $sendDate = $sendDate->format('d-m-Y H:i');
+        if (!empty($acknowledgementReceipt['send_date'])) {
+            $sendDate = new \DateTime($acknowledgementReceipt['send_date']);
+            $sendDate = $sendDate->format('d-m-Y H:i');
+        } else {
+            $sendDate = _UNDEFINED;
+        }
 
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
@@ -491,10 +515,8 @@ class ResourceDataExportController
         $pdf->MultiCell($width, 30, '<b>' . _CREATED . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
         $pdf->MultiCell($width, 30, $creationDate , 1, 'L', false, 1, '', '', true, 0, true);
 
-        if ($acknowledgementReceipt['format'] == 'html') {
-            $pdf->MultiCell($width, 30, '<b>' . _SENT_DATE . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
-            $pdf->MultiCell($width, 30, $sendDate, 1, 'L', false, 1, '', '', true, 0, true);
-        }
+        $pdf->MultiCell($width, 30, '<b>' . _SENT_DATE . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($width, 30, $sendDate, 1, 'L', false, 1, '', '', true, 0, true);
 
         $pdf->MultiCell($width, 30, '<b>' . _FORMAT . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
         $pdf->MultiCell($width, 30, $acknowledgementReceipt['format'] , 1, 'L', false, 1, '', '', true, 0, true);
@@ -517,9 +539,8 @@ class ResourceDataExportController
         ValidatorModel::stringType($args, ['pathHtml']);
 
         $acknowledgementReceipt = $args['acknowledgementReceipt'];
-        $pathHtml = $args['pathHtml'];
 
-        $contentHtml = file_get_contents($pathHtml);
+        $contentHtml = file_get_contents($args['pathHtml']);
 
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
@@ -547,7 +568,8 @@ class ResourceDataExportController
             $displayContact = UserModel::getLabelledUserById(['id' => $attachment['recipient_id']]);
         } else if ($attachment['recipient_type'] == 'contact') {
             $contact = ContactModel::getById([
-                'select' => ['*'],
+                'select' => ['id', 'firstname', 'lastname', 'email', 'address_number', 'address_street', 'address_postcode',
+                             'address_town', 'address_country', 'company'],
                 'id'     => $attachment['recipient_id']
             ]);
             $displayContact = ContactController::getFormattedContactWithAddress([
@@ -700,7 +722,8 @@ class ResourceDataExportController
         $resId = $args['resId'];
 
         $resource = ResModel::getById([
-            'select' => ['*'],
+            'select' => ['res_id', 'alt_identifier', 'type_id', 'model_id', 'subject', 'admission_date', 'creation_date',
+                         'doc_date', 'initiator', 'typist', 'category_id', 'status', 'priority', 'process_limit_date', 'destination'],
             'resId'  => $resId
         ]);
 
@@ -719,7 +742,7 @@ class ResourceDataExportController
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
 
-        SummarySheetController::createSummarySheet($pdf, [
+        SummarySheetController::createSummarySheet($pdf, [ // TODO check missing border for date limite de traitement
             'resource'         => $resource,
             'units'            => $units,
             'login'            => $GLOBALS['userId'],
