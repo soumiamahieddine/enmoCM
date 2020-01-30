@@ -77,7 +77,7 @@ export class LinkedResourceListComponent implements OnInit {
             Object.keys(linkeRes).forEach((key) => {
                 if (key == 'statusImage' && this.functions.empty(linkeRes[key])) {
                     linkeRes[key] = 'fa-question undefined';
-                } else if (this.functions.empty(linkeRes[key]) && ['senders', 'recipients', 'attachments', 'hasDocument', 'confidentiality'].indexOf(key) === -1) {
+                } else if (this.functions.empty(linkeRes[key]) && ['senders', 'recipients', 'attachments', 'hasDocument', 'confidentiality', 'visaCircuit'].indexOf(key) === -1) {
                     linkeRes[key] = this.lang.undefined;
                 }
             });
