@@ -124,11 +124,12 @@ class SearchController
                 'where'     => $requestData['where'],
                 'data'      => $requestData['data']
             ]);
-            if (!empty($contactsMatch)) {
-                $contactsMatch = array_column($contactsMatch, 'res_id');
-                $searchWhere[] = 'res_id in (?)';
-                $searchData[] = $contactsMatch;
+            if (empty($contactsMatch)) {
+                return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
             }
+            $contactsMatch = array_column($contactsMatch, 'res_id');
+            $searchWhere[] = 'res_id in (?)';
+            $searchData[] = $contactsMatch;
         }
 
         $nonSearchableStatuses = StatusModel::get(['select' => ['id'], 'where' => ['can_be_searched = ?'], 'data' => ['N']]);
@@ -157,7 +158,7 @@ class SearchController
             'orderBy'   => $orderBy
         ]);
         if (empty($allResources[$offset])) {
-            return $response->withJson(['resources' => [], 'count' => 0]);
+            return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
         }
 
         $allResources = array_column($allResources, 'resId');
@@ -183,7 +184,7 @@ class SearchController
             'orderBy'   => [$order]
         ]);
         if (empty($resources)) {
-            return $response->withJson(['resources' => [], 'count' => 0]);
+            return $response->withJson(['resources' => [], 'count' => 0, 'allResources' => []]);
         }
 
         $resourcesIds = array_column($resources, 'resId');
@@ -238,7 +239,7 @@ class SearchController
                         $contactRaw = ContactModel::getById(['select' => ['firstname', 'lastname', 'company'], 'id' => $correspondent['item_id']]);
                         $contactToDisplay = ContactController::getFormattedOnlyContact(['contact' => $contactRaw]);
                         $formattedCorrespondent = $contactToDisplay['contact']['otherInfo'];
-                    } elseif ($correspondent['type'] == 'user') {
+                    } elseif ($correspondent['type'] == 'user') {getFileCo
                         $formattedCorrespondent = UserModel::getLabelledUserById(['id' => $correspondent['item_id']]);
                     } else {
                         $entity = EntityModel::getById(['id' => $correspondent['item_id'], 'select' => ['entity_label']]);

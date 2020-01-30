@@ -430,13 +430,11 @@ export class SignatureBookComponent implements OnInit {
     }
 
     unsignFile(attachment: any) {
-        var collId: string;
         var resId: number;
 
         resId = attachment.res_id;
-        collId = "res_attachments";
 
-        this.http.put(this.coreUrl + 'rest/signatureBook/' + resId + '/unsign', {'table' : collId})
+        this.http.put(this.coreUrl + 'rest/attachments/' + resId + '/unsign', {})
             .subscribe(() => {
                 this.rightViewerLink = "../../rest/attachments/" + resId + "/content";
                 this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;

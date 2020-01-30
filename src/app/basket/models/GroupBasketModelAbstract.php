@@ -121,23 +121,4 @@ abstract class GroupBasketModelAbstract
 
         return $aGroupsBaskets;
     }
-
-    public static function hasBasketByGroupId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['groupId', 'basketId']);
-        ValidatorModel::stringType($aArgs, ['groupId', 'basketId']);
-
-        $aGroupBasket = DatabaseModel::select([
-            'select'    => [1],
-            'table'     => ['groupbasket'],
-            'where'     => ['group_id = ?', 'basket_id = ?'],
-            'data'      => [$aArgs['groupId'], $aArgs['basketId']]
-        ]);
-
-        if (empty($aGroupBasket)) {
-            return false;
-        }
-
-        return true;
-    }
 }

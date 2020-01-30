@@ -23,7 +23,7 @@ class GroupController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $groups = GroupModel::get();
+        $groups = GroupModel::get(['orderBy' => ['group_desc']]);
         foreach ($groups as $key => $value) {
             $groups[$key]['users'] = GroupModel::getUsersById(['id' => $value['id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
         }
@@ -128,7 +128,7 @@ class GroupController
 
         GroupModel::delete(['id' => $aArgs['id']]);
 
-        $groups = GroupModel::get();
+        $groups = GroupModel::get(['orderBy' => ['group_desc']]);
         foreach ($groups as $key => $value) {
             $groups[$key]['users'] = GroupModel::getUsersById(['id' => $value['id'], 'select' => ['users.user_id']]);
         }

@@ -121,28 +121,6 @@ abstract class AttachmentModelAbstract
         return $types;
     }
 
-    public static function unsignAttachment(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-
-        DatabaseModel::update([
-            'table'     => 'res_attachments',
-            'set'       => ['status' => 'A_TRA', 'signatory_user_serial_id' => null],
-            'where'     => ['res_id = ?'],
-            'data'      => [$aArgs['resId']]
-        ]);
-
-        DatabaseModel::update([
-            'table'     => 'res_attachments',
-            'set'       => ['status' => 'DEL'],
-            'where'     => ['origin = ?', 'status != ?'],
-            'data'      => ["{$aArgs['resId']},res_attachments", 'DEL']
-        ]);
-
-        return true;
-    }
-
     public static function freezeAttachment(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId', 'externalId']);
@@ -216,23 +194,16 @@ abstract class AttachmentModelAbstract
         return true;
     }
 
-    public static function hasAttachmentsSignedForUserById(array $aArgs)
+    public static function hasAttachmentsSignedByResId(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id', 'user_serial_id']);
-        ValidatorModel::intVal($aArgs, ['id', 'user_serial_id']);
-
-        $attachment = DatabaseModel::select([
-            'select'    => ['res_id_master'],
-            'table'     => ['res_attachments'],
-            'where'     => ['res_id = ?'],
-            'data'      => [$aArgs['id']],
-        ]);
+        ValidatorModel::notEmpty($args, ['resId', 'userId']);
+        ValidatorModel::intVal($args, ['resId', 'userId']);
 
         $attachments = DatabaseModel::select([
-            'select'    => ['res_id_master'],
+            'select'    => [1],
             'table'     => ['res_attachments'],
             'where'     => ['res_id_master = ?', 'signatory_user_serial_id = ?'],
-            'data'      => [$attachment[0]['res_id_master'], $aArgs['user_serial_id']],
+            'data'      => [$args['resId'], $args['userId']],
         ]);
 
         if (empty($attachments)) {

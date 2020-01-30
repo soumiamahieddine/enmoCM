@@ -221,7 +221,7 @@ abstract class NotificationModelAbstract
 
     public static function getDiffusionTypeGroups()
     {
-        $groups = GroupModel::get();
+        $groups = GroupModel::get(['orderBy' => ['group_desc']]);
 
         return $groups;
     }

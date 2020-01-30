@@ -258,7 +258,7 @@ export class AttachmentPageComponent implements OnInit {
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.put(`../../rest/signatureBook/${this.attachment['resId'].value}/unsign`, {})),
+            exhaustMap(() => this.http.put(`../../rest/attachments/${this.attachment['resId'].value}/unsign`, {})),
             tap(() => {
                 this.attachment.status.setValue('A_TRA');
                 this.attachment.signedResponse.setValue(null);

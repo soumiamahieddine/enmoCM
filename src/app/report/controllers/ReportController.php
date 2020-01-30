@@ -29,7 +29,7 @@ class ReportController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        return $response->withJson(['groups' => GroupModel::get()]);
+        return $response->withJson(['groups' => GroupModel::get(['orderBy' => ['group_desc']])]);
     }
 
     public function getByGroupId(Request $request, Response $response, array $aArgs)

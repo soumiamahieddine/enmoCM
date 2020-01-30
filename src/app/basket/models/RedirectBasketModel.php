@@ -91,7 +91,7 @@ class RedirectBasketModel
         ValidatorModel::intVal($aArgs, ['userId']);
 
         $aBaskets = DatabaseModel::select([
-            'select'    => ['rb.id', 'ba.basket_id', 'ba.basket_name', 'ba.basket_clause', 'rb.owner_user_id', 'rb.group_id', 'usergroups.group_desc'],
+            'select'    => ['rb.id', 'ba.basket_id', 'ba.basket_name', 'ba.basket_clause', 'rb.owner_user_id', 'rb.group_id', 'usergroups.group_id as "oldGroupId"', 'usergroups.group_desc'],
             'table'     => ['baskets ba, redirected_baskets rb, usergroups'],
             'where'     => ['rb.actual_user_id = ?', 'rb.basket_id = ba.basket_id', 'usergroups.id = rb.group_id'],
             'data'      => [$aArgs['userId']],
