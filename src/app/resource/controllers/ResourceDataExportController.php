@@ -145,7 +145,7 @@ class ResourceDataExportController
                         'orderBy' => ['creation_date desc']
                     ]);
 
-                    if (count($attachments) < count($attachmentsIds)) { // TODO do not count
+                    if (count($attachments) < count($attachmentsIds)) {
                         return $response->withStatus(400)->withJson(['errors' => 'Attachment(s) not found']);
                     }
 
@@ -223,27 +223,26 @@ class ResourceDataExportController
                             return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement Receipt id is not an integer']);
                         }
                     }
-                    $acknowledgementReceiptsIds = $resource['acknowledgementReceipts'];
-                } else {
-                    $acknowledgementReceiptsIds = AcknowledgementReceiptModel::get([
-                        'select' => ['id'],
-                        'where'  => ['res_id = ?'],
-                        'data'   => [$resource['resId']]
-                    ]);
-                    $acknowledgementReceiptsIds = array_column($acknowledgementReceiptsIds, 'id');
-                }
 
-                if (!empty($acknowledgementReceiptsIds)) {
                     $acknowledgementReceipts = AcknowledgementReceiptModel::getByIds([
                         'select' => ['id', 'res_id', 'format', 'contact_id', 'user_id', 'creation_date', 'send_date', 'docserver_id', 'path',
                                      'filename', 'fingerprint'],
-                        'ids'    => $acknowledgementReceiptsIds
+                        'ids'    => $resource['acknowledgementReceipts']
                     ]);
 
-                    if (count($acknowledgementReceipts) < count($acknowledgementReceiptsIds)) {
+                    if (count($acknowledgementReceipts) < count($resource['acknowledgementReceipts'])) {
                         return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement Receipt(s) not found']);
                     }
+                } else {
+                    $acknowledgementReceipts = AcknowledgementReceiptModel::get([
+                        'select' => ['id', 'res_id', 'format', 'contact_id', 'user_id', 'creation_date', 'send_date', 'docserver_id', 'path',
+                                     'filename', 'fingerprint'],
+                        'where'  => ['res_id = ?'],
+                        'data'   => [$resource['resId']]
+                    ]);
+                }
 
+                if (!empty($acknowledgementReceipts)) {
                     foreach ($acknowledgementReceipts as $acknowledgementReceipt) {
                         if ($acknowledgementReceipt['res_id'] != $resource['resId']) {
                             return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement Receipt not linked to resource']);
@@ -273,29 +272,26 @@ class ResourceDataExportController
                             return $response->withStatus(400)->withJson(['errors' => 'Email id is not an integer']);
                         }
                     }
-                    $emailsIds = $resource['emails'];
-                } else {
-                    $emailsIds = EmailModel::get([
-                        'select' => ['id'],
-                        'where'  => ["cast(document->'id' as INT) = ? "], // TODO might not work if no emails in table (or if no 'id' in document ?) -> if document  is not null ?
-                        'data'   => [$resource['resId']]
-                    ]);
-                    $emailsIds = array_column($emailsIds, 'id');
-                }
-
-                if (!empty($emailsIds)) {
-                    $emailsModel = EmailModel::get([
+                    $emails = EmailModel::get([
                         'select'  => ['id', 'user_id', 'sender', 'recipients', 'cc', 'cci', 'object', 'body', 'document', 'send_date'],
                         'where'   => ['id in (?)'],
-                        'data'    => [$emailsIds],
+                        'data'    => [$resource['emails']],
                         'orderBy' => ['creation_date desc']
                     ]);
-
-                    if (count($emailsModel) < count($emailsIds)) {
+                    if (count($emails) < count($resource['emails'])) {
                         return $response->withStatus(400)->withJson(['errors' => 'Email(s) not found']);
                     }
+                } else {
+                    $emails = EmailModel::get([
+                        'select'  => ['id', 'user_id', 'sender', 'recipients', 'cc', 'cci', 'object', 'body', 'document', 'send_date'],
+                        'where'   => ["cast(document->>'id' as INT) = ? "],
+                        'data'    => [$resource['resId']],
+                        'orderBy' => ['creation_date desc']
+                    ]);
+                }
 
-                    foreach ($emailsModel as $email) {
+                if (!empty($emails)) {
+                    foreach ($emails as $email) {
                         $emailDocument = json_decode($email['document'], true);
                         if (!empty($emailDocument['id']) && $emailDocument['id'] != $resource['resId']) {
                             return $response->withStatus(400)->withJson(['errors' => 'Email not linked to resource']);
