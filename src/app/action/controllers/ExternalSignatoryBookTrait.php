@@ -52,7 +52,14 @@ trait ExternalSignatoryBookTrait
                     'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
                     'data'      => [$args['resId'], ['converted_pdf', 'print_folder', 'signed_response']]
                 ]);
-                if ($attachments[0]['nb'] == 0 && $args['data']['objectSent'] == 'attachment') {
+
+                $integratedResource = ResModel::get([
+                    'select' => [1],
+                    'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_signatory_book_id is null', 'res_id = ?'],
+                    'data'   => [$args['resId']]
+                ]);
+
+                if ($attachments[0]['nb'] == 0 && empty($integratedResource) && $args['data']['objectSent'] == 'attachment') {
                     $noAttachmentsResource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
                     return ['errors' => ['No attachment for this mail : ' . $noAttachmentsResource['alt_identifier']]];
                 }

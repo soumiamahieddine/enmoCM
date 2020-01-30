@@ -498,7 +498,7 @@ class PreProcessActionController
                                 break;
                             }
                         }
-                        if (!$hasSignableAttachment && !empty($integratedResource)) {
+                        if (!$hasSignableAttachment && empty($integratedResource)) {
                             $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noSignableAttachmentInSignatoryBook'];
                         } else {
                             $additionalsInfos['attachments'][] = ['res_id' => $resId];
