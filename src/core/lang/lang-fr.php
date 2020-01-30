@@ -451,6 +451,13 @@ define("_BY", "par");
 define("_TO_AVIS", "POUR AVIS");
 define("_VALIDATE_BY", "Validé par");
 
+define("_UPDATE_LISTINSTANCE", "Liste de diffusion mise à jour");
+define("_UPDATE_VISA_CIRCUIT", "Circuit de visa mis à jour");
+define("_UPDATE_AVIS_CIRCUIT", "Circuit d'avis mis à jour");
+
+define("_VISA_CIRCUIT_DELETED", "Circuit de visa supprimé");
+define("_AVIS_CIRCUIT_DELETED", "Circuit d'avis supprimé");
+
 define("_ACKNOWLEDGEMENT_RECEIPT", "Accusé de réception");
 define("_CREATED_BY", "Crée(e) par");
 define("_SENT_DATE", "Envoyé le");

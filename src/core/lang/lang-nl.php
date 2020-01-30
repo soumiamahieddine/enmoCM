@@ -457,6 +457,13 @@ define('_BY', 'door');
 define('_TO_AVIS', 'VOOR BERICHT');
 define('_VALIDATE_BY', 'Gevalideerd door');
 
+define("_UPDATE_LISTINSTANCE", "Diffusion list updated"); //TO TRANSLATE
+define("_UPDATE_VISA_CIRCUIT", "Visa workflow updated"); //TO TRANSLATE
+define("_UPDATE_AVIS_CIRCUIT", "Opinion workflow updated"); //TO TRANSLATE
+
+define("_VISA_CIRCUIT_DELETED", "Visa workflow deleted"); //TO TRANSLATE
+define("_AVIS_CIRCUIT_DELETED", "Opinion workflow updated"); //TO TRANSLATE
+
 define("_ACKNOWLEDGEMENT_RECEIPT", "Acknowledgement Receipt"); //TO TRANSLATE
 define("_CREATED_BY", "Created by"); //TO TRANSLATE
 define("_SENT_DATE", "Sent "); //TO TRANSLATE

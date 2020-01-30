@@ -452,6 +452,13 @@ define("_BY", "by");
 define("_TO_AVIS", "For recommendation");
 define("_VALIDATE_BY", "Validate by");
 
+define("_UPDATE_LISTINSTANCE", "Diffusion list updated");
+define("_UPDATE_VISA_CIRCUIT", "Visa workflow updated");
+define("_UPDATE_AVIS_CIRCUIT", "Opinion workflow updated");
+
+define("_VISA_CIRCUIT_DELETED", "Visa workflow deleted");
+define("_AVIS_CIRCUIT_DELETED", "Opinion workflow updated");
+
 define("_ACKNOWLEDGEMENT_RECEIPT", "Acknowledgement Receipt");
 define("_CREATED_BY", "Created by");
 define("_SENT_DATE", "Sent ");

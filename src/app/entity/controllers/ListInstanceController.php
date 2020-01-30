@@ -14,20 +14,21 @@
 
 namespace Entity\controllers;
 
+use Entity\models\EntityModel;
 use Entity\models\ListInstanceHistoryDetailModel;
 use Entity\models\ListInstanceHistoryModel;
 use Entity\models\ListInstanceModel;
 use Group\controllers\PrivilegeController;
+use History\controllers\HistoryController;
+use Resource\controllers\ResController;
+use Resource\models\ResModel;
+use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Respect\Validation\Validator;
-use Resource\controllers\ResController;
-use Entity\models\EntityModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;
-use Resource\models\ResModel;
 
 class ListInstanceController
 {
@@ -127,6 +128,19 @@ class ListInstanceController
         $controller = ListInstanceController::updateListInstance(['data' => $body, 'userId' => $GLOBALS['id']]);
         if (!empty($controller['errors'])) {
             return $response->withStatus($controller['code'])->withJson(['errors' => $controller['errors']]);
+        }
+
+        $resIds = array_column($body['data'], 'resId');
+        $resIds = array_unique($resIds);
+        foreach ($resIds as $resId) {
+            HistoryController::add([
+                'tableName' => 'res_letterbox',
+                'recordId'  => $resId,
+                'eventType' => 'UP',
+                'info'      => _UPDATE_LISTINSTANCE,
+                'moduleId'  => 'listinstance',
+                'eventId'   => 'listinstanceCreation',
+            ]);
         }
 
         return $response->withStatus(204);
@@ -378,6 +392,26 @@ class ListInstanceController
             }
         }
 
+        $resIds = array_column($body['resources'], 'resId');
+        $resIds = array_unique($resIds);
+
+        if ($args['type'] == 'visaCircuit') {
+            $info = _UPDATE_VISA_CIRCUIT;
+        } else {
+            $info = _UPDATE_AVIS_CIRCUIT;
+        }
+
+        foreach ($resIds as $resId) {
+            HistoryController::add([
+                'tableName' => 'res_letterbox',
+                'recordId'  => $resId,
+                'eventType' => 'UP',
+                'info'      => $info,
+                'moduleId'  => 'listinstance',
+                'eventId'   => 'listinstanceCreation',
+            ]);
+        }
+
         DatabaseModel::commitTransaction();
 
         return $response->withStatus(204);
@@ -403,6 +437,21 @@ class ListInstanceController
         ListInstanceModel::delete([
             'where' => ['res_id = ?', 'difflist_type = ?'],
             'data'  => [$args['resId'], self::MAPPING_TYPES[$args['type']]]
+        ]);
+
+        if ($args['type'] == 'visaCircuit') {
+            $info = _VISA_CIRCUIT_DELETED;
+        } else {
+            $info = _AVIS_CIRCUIT_DELETED;
+        }
+
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $args['resId'],
+            'eventType' => 'DEL',
+            'info'      => $info,
+            'moduleId'  => 'listinstance',
+            'eventId'   => 'listinstanceCreation',
         ]);
 
         return $response->withStatus(204);
