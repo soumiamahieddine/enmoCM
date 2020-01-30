@@ -1,10 +1,12 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, ViewChild, Renderer2 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { LANG } from '../../../translate.component';
 import { HttpClient } from '@angular/common/http';
 import { PrivilegeService } from '../../../../service/privileges.service';
 import { HeaderService } from '../../../../service/header.service';
 import { MatSidenav } from '@angular/material';
+
+declare function $j(selector: any): any;
 
 @Component({
     templateUrl: 'contact-modal.component.html',
@@ -25,7 +27,8 @@ export class ContactModalComponent {
         private privilegeService: PrivilegeService,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<ContactModalComponent>,
-        public headerService: HeaderService,) {
+        public headerService: HeaderService,
+        private renderer: Renderer2) {
     }
 
     ngOnInit(): void {
@@ -50,7 +53,10 @@ export class ContactModalComponent {
 
     switchMode() {
         this.mode = this.mode === 'read' ? 'update' : 'read';
-        
+        if (this.mode === 'update') {
+            $j('.contact-modal-container').css({'height' : '90vh'});
+        }
+
         if (this.headerService.getLastLoadedFile() !== null) {
             this.drawer.toggle();
             setTimeout(() => {
