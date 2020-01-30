@@ -22,7 +22,7 @@
                     </li>
                 </ul>
             </div>
-            <app-visa-workflow *ngIf="data.resIds.length == 1 || (!noResourceToProcess && data.resIds.length > 1)" [adminMode]="true" #appVisaWorkflow>
+            <app-visa-workflow *ngIf="data.resIds.length <= 1 || (!noResourceToProcess && data.resIds.length > 1)" [adminMode]="true" #appVisaWorkflow>
             </app-visa-workflow>
             <div style="padding-top: 10px;">
                 <app-note-editor #noteEditor [resIds]="data.resIds"></app-note-editor>

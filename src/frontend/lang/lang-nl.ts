@@ -1062,7 +1062,7 @@ export const LANG_NL = {
     "indexation" : "Mail indexation", //_TO_TRANSLATE
     "keywordAdded" : "Keyword added", //_TO_TRANSLATE
     "keywordDeleted" : "Keyword deleted", //_TO_TRANSLATE
-    "actionsInfo" : "Only actions with \"simple confirmation\", \"close mail\" and \"no confirmation\" will be displayed", //_TO_TRANSLATE
+    "actionsInfo" : "Only actions with \"simple confirmation\", \"close mail\", \"no confirmation\" and \"send to visa\" will be displayed", //_TO_TRANSLATE
     "eventList" : "Open page", //_TO_TRANSLATE
     "folderAdded" : "Folder added", //_TO_TRANSLATE
     "folderDeleted" : "Folder deleted", //_TO_TRANSLATE

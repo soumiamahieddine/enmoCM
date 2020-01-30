@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, AfterViewInit } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -13,10 +13,10 @@ import { VisaWorkflowComponent } from '../../visa/visa-workflow.component';
     templateUrl: "send-signature-book-action.component.html",
     styleUrls: ['send-signature-book-action.component.scss'],
 })
-export class SendSignatureBookActionComponent implements OnInit {
+export class SendSignatureBookActionComponent implements AfterViewInit {
 
     lang: any = LANG;
-    loading: boolean = false;
+    loading: boolean = true;
 
     resourcesError: any[] = [];
 
@@ -32,10 +32,14 @@ export class SendSignatureBookActionComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any,
         public functions: FunctionsService) { }
 
-    async ngOnInit(): Promise<void> {
-        if (this.data.resIds.length > 0) {
-            this.loading = true;
+    async ngAfterViewInit(): Promise<void> {
+        if (this.data.resIds.length === 0 && !this.functions.empty(this.data.resource.destination)) {
+            await this.appVisaWorkflow.loadListModel(this.data.resource.destination);
+            this.loading = false;
+        } else  if (this.data.resIds.length > 0) {
             await this.checkSignatureBook();
+            this.loading = false;
+        } else {
             this.loading = false;
         }
         if (this.data.resIds.length === 1) {
@@ -44,6 +48,7 @@ export class SendSignatureBookActionComponent implements OnInit {
                 this.appVisaWorkflow.loadDefaultWorkflow(this.data.resIds[0]);
             }
         }
+        
     }
 
     checkSignatureBook() {
@@ -71,7 +76,7 @@ export class SendSignatureBookActionComponent implements OnInit {
                 res = await this.appVisaWorkflow.saveVisaWorkflow(this.data.resIds);
             }
             if (res) {
-                this.executeAction(this.data.resIds);
+                this.executeIndexingAction(this.data.resIds[0]);
             }
         } else {
             const realResSelected: number[] = this.data.resIds.filter((resId: any) => this.resourcesError.map(resErr => resErr.res_id).indexOf(resId) === -1);
@@ -86,6 +91,11 @@ export class SendSignatureBookActionComponent implements OnInit {
     }
 
     indexDocument() {
+        this.data.resource.integrations = [
+             {
+                 inSignatureBook : true
+             }
+        ];
         return new Promise((resolve, reject) => {
             this.http.post('../../rest/resources', this.data.resource).pipe(
                 tap((data: any) => {
@@ -104,6 +114,25 @@ export class SendSignatureBookActionComponent implements OnInit {
     executeAction(realResSelected: number[]) {
 
         this.http.put(this.data.processActionRoute, { resources: realResSelected, note: this.noteEditor.getNoteContent() }).pipe(
+            tap((data: any) => {
+                if (!data) {
+                    this.dialogRef.close('success');
+                }
+                if (data && data.errors != null) {
+                    this.notify.error(data.errors);
+                }
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    executeIndexingAction(resId: number) {
+
+        this.http.put(this.data.indexActionRoute, { resource: resId, note: this.noteEditor.getNoteContent() }).pipe(
             tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close('success');
