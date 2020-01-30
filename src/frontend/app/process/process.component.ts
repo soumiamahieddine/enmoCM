@@ -24,6 +24,7 @@ import { ContactService } from '../../service/contact.service';
 import { VisaWorkflowComponent } from '../visa/visa-workflow.component';
 import { PrivilegeService } from '../../service/privileges.service';
 import { AvisWorkflowComponent } from '../avis/avis-workflow.component';
+import { FunctionsService } from '../../service/functions.service';
 
 
 
@@ -161,7 +162,8 @@ export class ProcessComponent implements OnInit {
         public actionService: ActionsService,
         private contactService: ContactService,
         private router: Router,
-        public privilegeService: PrivilegeService
+        public privilegeService: PrivilegeService,
+        public functions: FunctionsService
     ) {
         // Event after process action 
         this.subscription = this.actionService.catchAction().subscribe(message => {
@@ -273,6 +275,7 @@ export class ProcessComponent implements OnInit {
     }
 
     loadSenders() {
+        
         if (this.currentResourceInformations.senders === undefined || this.currentResourceInformations.senders.length === 0) {
             this.hasContact = false;
             this.senderLightInfo = { 'displayName': this.lang.noSelectedContact, 'filling': null };
@@ -282,17 +285,25 @@ export class ProcessComponent implements OnInit {
                 this.http.get('../../rest/contacts/' + this.currentResourceInformations.senders[0].id).pipe(
                     tap((data: any) => {
                         const arrInfo = [];
-
                         if (this.empty(data.firstname) && this.empty(data.lastname)) {
-                            this.senderLightInfo = { 'displayName': data.company, 'filling': this.contactService.getFillingColor(data.fillingRate.thresholdLevel) };
+                            if (!this.functions.empty(data.fillingRate)) {
+                                this.senderLightInfo = { 'displayName': data.company, 'filling': this.contactService.getFillingColor(data.fillingRate.thresholdLevel) };
+                            } else {
+                                this.senderLightInfo = { 'displayName': data.company };
+                            }
+                            
                         } else {
                             arrInfo.push(data.firstname);
                             arrInfo.push(data.lastname);
                             if (!this.empty(data.company)) {
                                 arrInfo.push('(' + data.company + ')');
                             }
-
-                            this.senderLightInfo = { 'displayName': arrInfo.filter(info => info !== '').join(' '), 'filling': this.contactService.getFillingColor(data.fillingRate.thresholdLevel) };
+                            if (!this.functions.empty(data.fillingRate)) {
+                                this.senderLightInfo = { 'displayName': arrInfo.filter(info => info !== '').join(' '), 'filling': this.contactService.getFillingColor(data.fillingRate.thresholdLevel) };
+                            } else {
+                                this.senderLightInfo = { 'displayName': arrInfo.filter(info => info !== '').join(' ') };
+                            }
+                            
                         }
                     })
                 ).subscribe();
