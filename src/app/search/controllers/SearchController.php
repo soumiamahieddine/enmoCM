@@ -149,7 +149,7 @@ class SearchController
         }
         $order = !in_array($queryParams['order'], ['asc', 'desc']) ? '' : $queryParams['order'];
         $orderBy = str_replace(['chrono', 'typeLabel', 'creationDate'], ['order_alphanum(alt_identifier)', 'type_label', 'creation_date'], $queryParams['orderBy']);
-        $orderBy = !in_array($orderBy, ['alt_identifier', 'status', 'subject', 'type_label', 'creation_date']) ? ['creation_date'] : ["{$orderBy} {$order}"];
+        $orderBy = !in_array($orderBy, ['order_alphanum(alt_identifier)', 'status', 'subject', 'type_label', 'creation_date']) ? ['creation_date'] : ["{$orderBy} {$order}"];
 
         $allResources = ResModel::getOnView([
             'select'    => ['res_id as "resId"'],
@@ -210,6 +210,7 @@ class SearchController
                 foreach ($priorities as $priority) {
                     if ($priority['id'] == $resource['priority']) {
                         $resources[$key]['priorityColor'] = $priority['color'];
+                        break;
                     }
                 }
             }
@@ -218,12 +219,14 @@ class SearchController
                     if ($status['id'] == $resource['status']) {
                         $resources[$key]['statusLabel'] = $status['label_status'];
                         $resources[$key]['statusImage'] = $status['img_filename'];
+                        break;
                     }
                 }
             }
             foreach ($doctypes as $doctype) {
                 if ($doctype['type_id'] == $resource['type']) {
                     $resources[$key]['typeLabel'] = $doctype['description'];
+                    break;
                 }
             }
             if (!empty($resource['destUser'])) {
@@ -239,7 +242,7 @@ class SearchController
                         $contactRaw = ContactModel::getById(['select' => ['firstname', 'lastname', 'company'], 'id' => $correspondent['item_id']]);
                         $contactToDisplay = ContactController::getFormattedOnlyContact(['contact' => $contactRaw]);
                         $formattedCorrespondent = $contactToDisplay['contact']['otherInfo'];
-                    } elseif ($correspondent['type'] == 'user') {getFileCo
+                    } elseif ($correspondent['type'] == 'user') {
                         $formattedCorrespondent = UserModel::getLabelledUserById(['id' => $correspondent['item_id']]);
                     } else {
                         $entity = EntityModel::getById(['id' => $correspondent['item_id'], 'select' => ['entity_label']]);
@@ -254,6 +257,7 @@ class SearchController
             foreach ($attachments as $attachment) {
                 if ($attachment['res_id_master'] == $resource['resId']) {
                     $resources[$key]['attachments'] = $attachment['count'];
+                    break;
                 }
             }
         }
