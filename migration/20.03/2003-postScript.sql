@@ -73,6 +73,16 @@ DROP TABLE IF EXISTS res_version_attachments;
 DROP TABLE IF EXISTS adr_attachments_version;
 ALTER TABLE shippings DROP COLUMN IF EXISTS is_version;
 
+DO $$ BEGIN
+  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'shippings') AND attname = 'attachment_id') = 1 THEN
+    ALTER TABLE shippings DROP COLUMN IF EXISTS document_type;
+    ALTER TABLE shippings ADD COLUMN document_type character varying(255);
+    ALTER TABLE shippings RENAME COLUMN attachment_id TO document_id;
+    UPDATE shippings SET document_type = 'attachment';
+    ALTER TABLE doctypes ALTER COLUMN process_mode SET NOT NULL;
+  END IF;
+END$$;
+
 ALTER TABLE priorities DROP COLUMN IF EXISTS default_priority;
 
 DROP TABLE IF EXISTS doctypes_indexes;

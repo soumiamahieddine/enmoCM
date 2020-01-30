@@ -1099,7 +1099,8 @@ CREATE TABLE shippings
 (
 id serial NOT NULL,
 user_id INTEGER NOT NULL,
-attachment_id INTEGER NOT NULL,
+document_id INTEGER NOT NULL,
+document_type character varying(255) NOT NULL,
 options json DEFAULT '{}',
 fee FLOAT NOT NULL,
 recipient_entity_id INTEGER NOT NULL,
