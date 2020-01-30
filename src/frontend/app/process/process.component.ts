@@ -135,6 +135,18 @@ export class ProcessComponent implements OnInit {
 
     autoAction: boolean = false;
 
+    integrationsInfo: any = {
+        inSignatureBook: {
+            icon: 'fas fa-file-signature',
+            enable: true
+        },
+        inShipping: {
+            icon: 'fas fa-shipping-fast',
+            enable: false
+        },
+    };
+
+
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 

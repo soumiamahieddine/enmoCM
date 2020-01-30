@@ -36,7 +36,7 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
         if (this.data.resIds.length === 0 && !this.functions.empty(this.data.resource.destination)) {
             await this.appVisaWorkflow.loadListModel(this.data.resource.destination);
             this.loading = false;
-        } else  if (this.data.resIds.length > 0) {
+        } else if (this.data.resIds.length > 0) {
             await this.checkSignatureBook();
             this.loading = false;
         } else {
@@ -48,7 +48,7 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
                 this.appVisaWorkflow.loadDefaultWorkflow(this.data.resIds[0]);
             }
         }
-        
+
     }
 
     checkSignatureBook() {
@@ -70,6 +70,8 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
 
     async onSubmit() {
         this.loading = true;
+        console.log(this.data.resIds);
+
         if (this.data.resIds.length === 0) {
             let res = await this.indexDocument();
             if (res) {
@@ -91,11 +93,9 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
     }
 
     indexDocument() {
-        this.data.resource.integrations = [
-             {
-                 inSignatureBook : true
-             }
-        ];
+        this.data.resource.integrations = {
+            inSignatureBook: true
+        };
         return new Promise((resolve, reject) => {
             this.http.post('../../rest/resources', this.data.resource).pipe(
                 tap((data: any) => {
