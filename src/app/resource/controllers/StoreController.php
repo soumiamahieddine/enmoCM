@@ -174,8 +174,8 @@ class StoreController
 
         $integrations = ['inSignatureBook' => false, 'inShipping' => false];
         if (!empty($args['integrations'])) {
-            $integrations['inSignatureBook'] = !empty($integrations['inSignatureBook']);
-            $integrations['inShipping'] = !empty($integrations['inShipping']);
+            $integrations['inSignatureBook'] = !empty($args['integrations']['inSignatureBook']);
+            $integrations['inShipping'] = !empty($args['integrations']['inShipping']);
         }
 
         if (!empty($args['customFields'])) {
