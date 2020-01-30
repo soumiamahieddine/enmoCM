@@ -324,6 +324,12 @@ class ActionMethodController
             }
         }
 
+        $resource = ResModel::getById(['select' => ['integrations'], 'id' => $args['resId']]);
+        $integrations = json_decode($resource['integrations'], true);
+        if (!empty($integrations['inSignatureBook'])) {
+            return true;
+        }
+
         $attachments = AttachmentModel::get([
             'select'    => [1],
             'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],

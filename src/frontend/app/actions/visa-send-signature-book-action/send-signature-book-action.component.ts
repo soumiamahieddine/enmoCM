@@ -57,8 +57,8 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
         return new Promise((resolve, reject) => {
             this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkSignatureBook', { resources: this.data.resIds })
                 .subscribe((data: any) => {
-                    if (!this.functions.empty(data.resourcesInformations.noAttachment)) {
-                        this.resourcesError = data.resourcesInformations.noAttachment;
+                    if (!this.functions.empty(data.resourcesInformations.error)) {
+                        this.resourcesError = data.resourcesInformations.error;
                     }
                     this.noResourceToProcess = this.data.resIds.length === this.resourcesError.length;
                     resolve(true);

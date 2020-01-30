@@ -936,21 +936,26 @@ class PreProcessActionController
 
         $resourcesInformations = [];
         foreach ($body['resources'] as $resId) {
-            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier']]);
+            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'integrations']]);
             if (empty($resource['alt_identifier'])) {
                 $resource['alt_identifier'] = _UNDEFINED;
             }
 
-            $attachments = AttachmentModel::get([
-                'select'    => [1],
-                'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
-                'data'      => [$resId, $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
-            ]);
-
-            if (empty($attachments)) {
-                $resourcesInformations['noAttachment'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
+            $integrations = json_decode($resource['integrations'], true);
+            if (!empty($integrations['inSignatureBook'])) {
+                $resourcesInformations['success'][] = ['res_id' => $resId];
             } else {
-                $resourcesInformations['attachments'][] = ['res_id' => $resId];
+                $attachments = AttachmentModel::get([
+                    'select'    => [1],
+                    'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
+                    'data'      => [$resId, $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
+                ]);
+
+                if (empty($attachments)) {
+                    $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
+                } else {
+                    $resourcesInformations['success'][] = ['res_id' => $resId];
+                }
             }
         }
 

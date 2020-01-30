@@ -172,6 +172,12 @@ class StoreController
             $externalId = json_encode($args['externalId']);
         }
 
+        $integrations = ['inSignatureBook' => false, 'inShipping' => false];
+        if (!empty($args['integrations'])) {
+            $integrations['inSignatureBook'] = !empty($integrations['inSignatureBook']);
+            $integrations['inShipping'] = !empty($integrations['inShipping']);
+        }
+
         if (!empty($args['customFields'])) {
             foreach ($args['customFields'] as $key => $value) {
                 $customField = CustomFieldModel::getById(['id' => $key, 'select' => ['type']]);
@@ -204,6 +210,7 @@ class StoreController
             'barcode'               => $args['barcode'] ?? null,
             'origin'                => $args['origin'] ?? null,
             'custom_fields'         => !empty($args['customFields']) ? json_encode($args['customFields']) : null,
+            'integrations'          => json_encode($integrations),
             'linked_resources'      => !empty($args['linkedResources']) ? json_encode($args['linkedResources']) : '[]',
             'external_id'           => $externalId,
             'creation_date'         => 'CURRENT_TIMESTAMP'
