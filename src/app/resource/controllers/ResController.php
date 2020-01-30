@@ -727,18 +727,15 @@ class ResController
         }
 
         $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['integrations']]);
-        if (empty($resource)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Resource not found']);
-        }
         $integrations = json_decode($resource['integrations'], true);
 
-        if (!empty($body['integrations']['inSignatureBook']) && Validator::boolType()->validate($body['integrations']['inSignatureBook'])) {
+        if (Validator::boolType()->validate($body['integrations']['inSignatureBook'])) {
             $integrations['inSignatureBook'] = $body['integrations']['inSignatureBook'];
         } else {
             $integrations['inSignatureBook'] = $integrations['inSignatureBook'] ?? false;
         }
 
-        if (!empty($body['integrations']['inShipping']) && Validator::boolType()->validate($body['integrations']['inShipping'])) {
+        if (Validator::boolType()->validate($body['integrations']['inShipping'])) {
             $integrations['inShipping'] = $body['integrations']['inShipping'];
         } else {
             $integrations['inShipping'] = $integrations['inShipping'] ?? false;
@@ -753,18 +750,6 @@ class ResController
         ]);
 
         return $response->withStatus(204);
-    }
-
-    public static function getInIntegrations(Request $request, Response $response, array $args)
-    {
-        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        }
-
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['integrations']]);
-        $integrations = json_decode($resource['integrations'], true);
-
-        return $response->withJson(['integrations' => $integrations]);
     }
 
     public static function getEncodedDocument(array $aArgs)
