@@ -87,7 +87,12 @@ export class LinkedResourceListComponent implements OnInit {
     }
 
     getUsersVisaCircuit(row: any) {
-        return row.visaCircuit.map((item: any) => item.userLabel);
+        if (row.visaCircuit.length > 0) {
+            return row.visaCircuit.map((item: any) => item.userLabel);
+        } else {
+            return '';
+        }
+        
     }
 
     unlinkResource(row: any) {
