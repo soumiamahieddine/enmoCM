@@ -118,7 +118,7 @@ class ResController
 
         $queryParams = $request->getQueryParams();
 
-        $select = ['model_id', 'category_id', 'priority', 'subject', 'alt_identifier', 'process_limit_date', 'closing_date', 'creation_date', 'modification_date'];
+        $select = ['model_id', 'category_id', 'priority', 'subject', 'alt_identifier', 'process_limit_date', 'closing_date', 'creation_date', 'modification_date', 'integrations'];
         if (empty($queryParams['light'])) {
             $select = array_merge($select, ['type_id', 'typist', 'status', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date', 'departure_date', 'barcode', 'custom_fields']);
         }
@@ -132,32 +132,33 @@ class ResController
         }
 
         $unchangeableData = [
-            'resId'                 => (int)$args['resId'],
-            'modelId'               => $document['model_id'],
-            'categoryId'            => $document['category_id'],
-            'chrono'                => $document['alt_identifier'],
-            'closingDate'           => $document['closing_date'],
-            'creationDate'          => $document['creation_date'],
-            'modificationDate'      => $document['modification_date']
+            'resId'             => (int)$args['resId'],
+            'modelId'           => $document['model_id'],
+            'categoryId'        => $document['category_id'],
+            'chrono'            => $document['alt_identifier'],
+            'closingDate'       => $document['closing_date'],
+            'creationDate'      => $document['creation_date'],
+            'modificationDate'  => $document['modification_date'],
+            'integrations'      => json_decode($document['integrations'], true)
         ];
         $formattedData = [
-            'subject'               => $document['subject'],
-            'processLimitDate'      => $document['process_limit_date'],
-            'priority'              => $document['priority']
+            'subject'           => $document['subject'],
+            'processLimitDate'  => $document['process_limit_date'],
+            'priority'          => $document['priority']
         ];
         if (empty($queryParams['light'])) {
             $formattedData = array_merge($formattedData, [
-                'doctype'               => $document['type_id'],
-                'typist'                => $document['typist'],
-                'typistLabel'           => UserModel::getLabelledUserById(['id' => $document['typist']]),
-                'status'                => $document['status'],
-                'destination'           => $document['destination'],
-                'initiator'             => $document['initiator'],
-                'confidentiality'       => $document['confidentiality'] == 'Y',
-                'documentDate'          => $document['doc_date'],
-                'arrivalDate'           => $document['admission_date'],
-                'departureDate'         => $document['departure_date'],
-                'barcode'               => $document['barcode']
+                'doctype'           => $document['type_id'],
+                'typist'            => $document['typist'],
+                'typistLabel'       => UserModel::getLabelledUserById(['id' => $document['typist']]),
+                'status'            => $document['status'],
+                'destination'       => $document['destination'],
+                'initiator'         => $document['initiator'],
+                'confidentiality'   => $document['confidentiality'] == 'Y',
+                'documentDate'      => $document['doc_date'],
+                'arrivalDate'       => $document['admission_date'],
+                'departureDate'     => $document['departure_date'],
+                'barcode'           => $document['barcode']
             ]);
         }
 
@@ -752,6 +753,18 @@ class ResController
         ]);
 
         return $response->withStatus(204);
+    }
+
+    public static function getInIntegrations(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['integrations']]);
+        $integrations = json_decode($resource['integrations'], true);
+
+        return $response->withJson(['integrations' => $integrations]);
     }
 
     public static function getEncodedDocument(array $aArgs)

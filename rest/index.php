@@ -372,6 +372,7 @@ $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\con
 $app->get('/resources/{resId}/users/{userId}/groups/{groupId}/baskets/{basketId}/processingData', \Resource\controllers\ResController::class . ':getProcessingData');
 $app->post('/resources/exportData', \Resource\controllers\ResourceDataExportController::class . ':generateFile');
 $app->put('/resources/{resId}/integrations', \Resource\controllers\ResController::class . ':setInIntegrations');
+$app->get('/resources/{resId}/integrations', \Resource\controllers\ResController::class . ':getInIntegrations');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
