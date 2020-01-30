@@ -322,6 +322,9 @@ class ListInstanceController
                 } elseif (empty($listInstance['item_id'])) {
                     DatabaseModel::rollbackTransaction();
                     return $response->withStatus(400)->withJson(['errors' => "Body resources[{$resourceKey}] listInstances[{$key}] item_id is empty"]);
+                } elseif (!empty($listInstance['process_comment']) && !Validator::stringType()->length(1, 255)->validate($listInstance['process_comment'])) {
+                    DatabaseModel::rollbackTransaction();
+                    return $response->withStatus(400)->withJson(['errors' => "Body resources[{$resourceKey}] listInstances[{$key}] process_comment is too long"]);
                 }
 
                 if ($listInstance['item_type'] == 'user_id') {
