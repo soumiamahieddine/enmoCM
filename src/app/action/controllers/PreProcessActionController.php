@@ -446,9 +446,15 @@ class PreProcessActionController
                         'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
                     ]);
 
+                    $integratedResource = ResModel::get([
+                        'select' => [1],
+                        'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_signatory_book_id is null', 'res_id = ?'],
+                        'data'   => [$resId]
+                    ]);
+
                     $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
                     
-                    if (empty($attachments)) {
+                    if (empty($attachments) && empty($integratedResource)) {
                         $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
                     } else {
                         $hasSignableAttachment = false;
@@ -475,7 +481,24 @@ class PreProcessActionController
                                 $hasSignableAttachment = true;
                             }
                         }
-                        if (!$hasSignableAttachment) {
+                        if (!empty($integratedResource)) {
+                            $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => 'letterbox_coll']);
+                            if (empty($adrInfo['docserver_id'])) {
+                                $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noMailConversion'];
+                                break;
+                            }
+                            $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
+                            if (empty($docserverInfo['path_template'])) {
+                                $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'docserverDoesNotExists'];
+                                break;
+                            }
+                            $filePath = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
+                            if (!is_file($filePath)) {
+                                $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'fileDoesNotExists'];
+                                break;
+                            }
+                        }
+                        if (!$hasSignableAttachment && !empty($integratedResource)) {
                             $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noSignableAttachmentInSignatoryBook'];
                         } else {
                             $additionalsInfos['attachments'][] = ['res_id' => $resId];

@@ -611,7 +611,7 @@ export const LANG_FR = {
     "noAttachmentClickToAddOne"             : "Aucune pièce jointe disponible<br/><sub>Cliquez sur <i class=\"fa fa-paperclip fa-lg\" ></i><i class=\"fa fa-plus\"></i> pour en ajouter une.</sub>",
     "noAttachmentContact"                   : "Aucun contact (externe) attaché pour cette pièce jointe",
     "noAttachmentConversion"                : "La pièce jointe n'a pas de conversion PDF",
-    "noAttachmentInSignatoryBook"           : "Aucune pièce jointe éligible : non intégrée au parapheur, ou gelée",
+    "noAttachmentInSignatoryBook"           : "Aucun élément éligible : non intégrée au parapheur, ou gelée",
     "noSignableAttachmentInSignatoryBook"   : "Aucune pièce jointe éligible : non signable, ou gelée",
     "noAttachmentToSend"                    : "Aucune pièce jointe à envoyer",
     "noDocumentToSend"                      : "Aucun document à envoyer",

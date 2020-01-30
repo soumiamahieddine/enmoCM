@@ -603,7 +603,7 @@ export const LANG_NL = {
     "noAttachmentClickToAddOne"             : "No attachments available<br/><sub>Click on <i class=\"fa fa-paperclip fa-lg\" ></i><i class=\"fa fa-plus\"></i> to add one.</sub>", //_TO_TRANSLATE
     "noAttachmentContact"                   : "No contact (external) linked to this attachment",//TRANSLATE
     "noAttachmentConversion"                : "No PDF conversion for this attachment TRANSLATE",
-    "noAttachmentInSignatoryBook"           : "No attachment in signature book", //_TO_TRANSLATE
+    "noAttachmentInSignatoryBook"           : "No item in signature book", //_TO_TRANSLATE
     "noSignableAttachmentInSignatoryBook"   : "No signable attachment in signature book", //_TO_TRANSLATE
     "noAttachmentToSend"                    : "No attachment to send", //_TO_TRANSLATE
     "noDocumentToSend"                      : "No document to send", //_TO_TRANSLATE
