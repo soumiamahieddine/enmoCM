@@ -371,7 +371,7 @@ $app->get('/categories', \Resource\controllers\ResController::class . ':getCateg
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 $app->get('/resources/{resId}/users/{userId}/groups/{groupId}/baskets/{basketId}/processingData', \Resource\controllers\ResController::class . ':getProcessingData');
 $app->post('/resources/exportData', \Resource\controllers\ResourceDataExportController::class . ':generateFile');
-$app->put('/resources/{resId}/setInIntegrations', \Resource\controllers\ResController::class . ':setInIntegrations');
+$app->put('/resources/{resId}/integrations', \Resource\controllers\ResController::class . ':setInIntegrations');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');

@@ -722,7 +722,7 @@ class ResController
         $body = $request->getParsedBody();
 
         if (empty($body['integrations'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Query param integrations is missing']);
+            return $response->withStatus(400)->withJson(['errors' => 'Body  param integrations is missing']);
         }
 
         $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['integrations']]);
@@ -731,8 +731,17 @@ class ResController
         }
         $integrations = json_decode($resource['integrations'], true);
 
-        $integrations['inSignatureBook'] = $body['integrations']['inSignatureBook'] ?? $integrations['inSignatureBook'];
-        $integrations['inShipping'] = $body['integrations']['inShipping'] ?? $integrations['inShipping'];
+        if (!empty($body['integrations']['inSignatureBook']) && Validator::boolType()->validate($body['integrations']['inSignatureBook'])) {
+            $integrations['inSignatureBook'] = $body['integrations']['inSignatureBook'];
+        } else {
+            $integrations['inSignatureBook'] = $integrations['inSignatureBook'] ?? false;
+        }
+
+        if (!empty($body['integrations']['inShipping']) && Validator::boolType()->validate($body['integrations']['inShipping'])) {
+            $integrations['inShipping'] = $body['integrations']['inShipping'];
+        } else {
+            $integrations['inShipping'] = $integrations['inShipping'] ?? false;
+        }
 
         ResModel::update([
             'set' => [
