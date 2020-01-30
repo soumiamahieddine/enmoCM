@@ -46,6 +46,37 @@ class ResourceDataExportController
             return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty']);
         }
 
+        $defaultUnits = [
+            [
+                "unit" => "qrcode",
+                "label" => ""
+            ],
+            [
+                "unit" => "primaryInformations",
+                "label" => _PRIMARY_INFORMATION
+            ],
+            [
+                "unit" => "senderRecipientInformations",
+                "label" => _DEST_INFORMATION
+            ],
+            [
+                "unit" => "secondaryInformations",
+                "label" => _SECONDARY_INFORMATION
+            ],
+            [
+                "unit" => "diffusionList",
+                "label" => _DIFFUSION_LIST
+            ],
+            [
+                "unit" => "opinionWorkflow",
+                "label" => _AVIS_WORKFLOW
+            ],
+            [
+                "unit" => "visaWorkflow",
+                "label" => _VISA_WORKFLOW
+            ]
+        ];
+
         // Array containing all path to the pdf files to merge
         $documentPaths = [];
 
@@ -54,9 +85,9 @@ class ResourceDataExportController
         $unitsSummarySheet = [];
         if (!empty($body['summarySheet'])) {
             $unitsSummarySheet = $body['summarySheet'];
+        } else if (count($body['resources']) > 1) {
+            $unitsSummarySheet = $defaultUnits;
         }
-
-        $forceSummarySheet = count($body['resources']) > 1;
 
         $resIds = array_column($body['resources'], 'resId');
 
@@ -64,46 +95,13 @@ class ResourceDataExportController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
         foreach ($body['resources'] as $resource) {
-            $withSummarySheet = $forceSummarySheet || !empty($unitsSummarySheet);
-            if (!$withSummarySheet) {
-                $withSummarySheet = !empty($resource['summarySheet']);
-            }
+            $withSummarySheet = !empty($unitsSummarySheet) || !empty($resource['summarySheet']);
+
             if ($withSummarySheet) {
                 if (!empty($resource['summarySheet']) && is_array($resource['summarySheet'])) {
                     $units = $resource['summarySheet'];
-                } else if (!empty($unitsSummarySheet)) {
-                    $units = $unitsSummarySheet;
                 } else {
-                    $units = [
-                        [
-                            "unit" => "qrcode",
-                            "label" => ""
-                        ],
-                        [
-                            "unit" => "primaryInformations",
-                            "label" => "Informations pricipales"
-                        ],
-                        [
-                            "unit" => "senderRecipientInformations",
-                            "label" => "Informations de destination"
-                        ],
-                        [
-                            "unit" => "secondaryInformations",
-                            "label" => "Informations secondaires"
-                        ],
-                        [
-                            "unit" => "diffusionList",
-                            "label" => "Liste de diffusion"
-                        ],
-                        [
-                            "unit" => "opinionWorkflow",
-                            "label" => "Circuit d'avis"
-                        ],
-                        [
-                            "unit" => "visaWorkflow",
-                            "label" => "Circuit de visa"
-                        ]
-                    ];
+                    $units = $unitsSummarySheet;
                 }
 
                 $documentPaths[] = ResourceDataExportController::getSummarySheet(['units' => $units, 'resId' => $resource['resId']]);
@@ -730,7 +728,7 @@ class ResourceDataExportController
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
 
-        SummarySheetController::createSummarySheet($pdf, [ // TODO check missing border for date limite de traitement
+        SummarySheetController::createSummarySheet($pdf, [
             'resource'         => $resource,
             'units'            => $units,
             'login'            => $GLOBALS['userId'],

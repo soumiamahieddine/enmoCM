@@ -461,3 +461,4 @@ define("_CONTACT", "Contact");
 define("_CHRONO_NUMBER_MASTER", "Numéro chrono courrier");
 define("_SENT_BY", "Envoyé par");
 define('_TO_CCI', 'En copie caché');
+define('_PRIMARY_INFORMATION', 'Informations principales');
