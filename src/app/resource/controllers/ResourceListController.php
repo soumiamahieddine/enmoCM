@@ -462,6 +462,9 @@ class ResourceListController
         $historic = empty($methodResponse['history']) ? '' : $methodResponse['history'];
         ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name'], 'note' => $body['note'], 'history' => $historic]);
 
+        if (!empty($methodResponses['errors'])) {
+            return $response->withStatus(403)->withJson($methodResponses);
+        }
         if (!empty($methodResponses)) {
             return $response->withJson($methodResponses);
         }
