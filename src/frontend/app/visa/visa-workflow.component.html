@@ -61,7 +61,8 @@
             <mat-icon
                 [ngClass]="{'fa fa-user fa-2x': functions.empty(diffusion.picture),'avatar': !functions.empty(diffusion.picture)}"
                 mat-list-icon color="primary"
-                [style.background-image]="!functions.empty(diffusion.picture) ? 'url('+diffusion.picture+')' : ''">
+                [style.background-image]="!functions.empty(diffusion.picture) ? 'url('+diffusion.picture+')' : ''" style="position: relative;">
+                <i *ngIf="!functions.empty(diffusion.process_comment)" class="far fa-comment-dots commentBubble" [matTooltip]="diffusion.process_comment"></i>
             </mat-icon>
             <ng-container *ngIf="!adminMode || diffusion.process_date != null">
                 <mat-icon mat-list-icon class="fa-2x fa"
@@ -84,14 +85,14 @@
                     <div class="workflowLineSubLabel">
                         {{diffusion.item_entity}}
                     </div>
-                    <div class="workflowLineSubLabel">
+                    <div class="workflowLineSubLabel" *ngIf="adminMode && diffusion.process_date === null">
                         <mat-form-field>
                             <input matInput [disabled]="!adminMode || diffusion.process_date != null" [placeholder]="lang.visaNote" [(ngModel)]="diffusion.process_comment">
                         </mat-form-field>
                     </div>
                     <div *ngIf="diffusion.process_date != null && [lang.visaWorkflowInterrupted, lang.hasInterruptedWorkflow].indexOf(diffusion.process_comment) === -1" class="workflowLineProcessDate"
                         title='{{diffusion.process_date | fullDate}}'
-                        color="accent" style="margin-top: -10px;padding-bottom: 5px;">{{diffusion.requested_signature ? lang.signedUserDate : lang.approvedUserDate}} {{diffusion.process_date
+                        color="accent">{{diffusion.requested_signature ? lang.signedUserDate : lang.approvedUserDate}} {{diffusion.process_date
                                                 | timeAgo : 'full'}}</div>
                     <div *ngIf="diffusion.process_date != null && ['A terminé le circuit'].indexOf(diffusion.process_comment) > -1" class="workflowLineProcessDate"
                             title='{{diffusion.process_date | fullDate}}'
