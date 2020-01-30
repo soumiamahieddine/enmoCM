@@ -777,7 +777,7 @@ class SummarySheetController
                             $notes[] = [
                                 'user'  => UserModel::getLabelledUserById(['id' => $rawNote['user_id']]),
                                 'date'  => TextFormatModel::formatDate($rawNote['creation_date']),
-                                'note'  => $rawNote['note_text']
+                                'note'  => $noteText = str_replace('←', '<=', $rawNote['note_text'])
                             ];
                         }
                         unset($args['data']['notes'][$noteKey]);

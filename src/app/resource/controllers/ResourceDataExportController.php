@@ -135,24 +135,6 @@ class ResourceDataExportController
                 if (!empty($resource['attachments']['resIds'])) {
                     $attachmentsIds = $resource['attachments']['resIds'];
                 }
-                if (!empty($resource['attachments']['types'])) {
-                    if (in_array("ALL", $resource['attachments']['types'])) { // TODO rm types
-                        $attachmentsIds = AttachmentModel::get([
-                            'select' => ['res_id'],
-                            'where'  => ['res_id_master = ?'],
-                            'data'   => [$resource['resId']]
-                        ]);
-                        $attachmentsIds = array_column($attachmentsIds, 'res_id');
-                    } else {
-                        $ids = AttachmentModel::get([
-                            'select' => ['res_id'],
-                            'where'  => ['attachment_type in (?)', 'res_id_master = ?'],
-                            'data'   => [$resource['attachments']['types'], $resource['resId']]
-                        ]);
-                        $ids = array_column($ids, 'res_id');
-                        $attachmentsIds = array_merge($attachmentsIds, $ids);
-                    }
-                }
 
                 if (!empty($attachmentsIds)) {
                     $attachments = AttachmentModel::get([
@@ -200,18 +182,27 @@ class ResourceDataExportController
                             return $response->withStatus(400)->withJson(['errors' => 'Note id is not an integer']);
                         }
                     }
-                    $notesIds = $resource['notes'];
-                } else {
-                    $notesIds = NoteModel::get([
-                        'select' => ['id'],
-                        'where' => ['identifier = ? '],
-                        'data' => [$resource['resId']]
+
+                    $notes = NoteModel::get([
+                        'where'   => ['id in (?)'],
+                        'data'    => [$resource['notes']],
+                        'orderBy' => ['creation_date desc']
                     ]);
-                    $notesIds = array_column($notesIds, 'id');
+
+                    if (count($notes) < count($resource['notes'])) {
+                        return $response->withStatus(400)->withJson(['errors' => 'Note(s) not found']);
+                    }
+                } else {
+                    $notes = NoteModel::get([
+                        'select'  => ['id', 'identifier', 'user_id', 'note_text', 'creation_date'],
+                        'where'   => ['identifier = ? '],
+                        'data'    => [$resource['resId']],
+                        'orderBy' => ['creation_date desc']
+                    ]);
                 }
 
-                if (!empty($notesIds)) {
-                    $noteFilePath = ResourceDataExportController::getNotesFilePath(['notes' => $notesIds, 'resId' => $resource['resId']]);
+                if (!empty($notes)) {
+                    $noteFilePath = ResourceDataExportController::getNotesFilePath(['notes' => $notes, 'resId' => $resource['resId']]);
 
                     if (!empty($noteFilePath['errors'])) {
                         return $response->withStatus($noteFilePath['code'])->withJson(['errors' => $noteFilePath['errors']]);
@@ -245,7 +236,7 @@ class ResourceDataExportController
                 if (!empty($acknowledgementReceiptsIds)) {
                     $acknowledgementReceipts = AcknowledgementReceiptModel::getByIds([
                         'select' => ['id', 'res_id', 'format', 'contact_id', 'user_id', 'creation_date', 'send_date', 'docserver_id', 'path',
-                                     'fileneme', 'fingerprint'],
+                                     'filename', 'fingerprint'],
                         'ids'    => $acknowledgementReceiptsIds
                     ]);
 
@@ -354,7 +345,7 @@ class ResourceDataExportController
 
         $resourceDocument = $args['document'];
 
-        if (in_array($args['collId'], ['letterbox_coll', 'attachments_coll'])) {
+        if (!empty($args['collId']) && in_array($args['collId'], ['letterbox_coll', 'attachments_coll'])) {
             $document = ConvertPdfController::getConvertedPdfById(['resId' => $resourceDocument['res_id'], 'collId' => $args['collId']]);
             if (!empty($document['errors'])) {
                 return ['errors' => 'Conversion error : ' . $document['errors'], 'code' => 400];
@@ -397,17 +388,7 @@ class ResourceDataExportController
 
         $notes = [];
 
-        $notesModel = NoteModel::get([ // TODO put this in a param -> query before
-            'where'   => ['id in (?)'],
-            'data'    => [$args['notes']],
-            'orderBy' => ['creation_date desc']
-        ]);
-
-        if (count($notesModel) < count($args['notes'])) { // TODO useless here ?
-            return ['errors' => 'Note(s) not found', 'code' => 400];
-        }
-
-        foreach ($notesModel as $note) {
+        foreach ($args['notes'] as $note) {
             if ($note['identifier'] != $args['resId']) {
                 return ['errors' => 'Note not linked to resource', 'code' => 400];
             }
@@ -415,7 +396,7 @@ class ResourceDataExportController
             $user = UserModel::getById(['id' => $note['user_id'], 'select' => ['firstname', 'lastname']]);
             $userName = $user['firstname'] . ' ' . $user['lastname'];
 
-            $noteText = str_replace('←', '<=', $note['note_text']); // TODO might not work (Alex had '?')
+            $noteText = str_replace('←', '<=', $note['note_text']);
 
             $date = explode('-', date('d-m-Y', strtotime($note['creation_date'])));
             $date = $date[0].'/'.$date[1].'/'.$date[2].' '.date('H:i', strtotime($note['creation_date']));
