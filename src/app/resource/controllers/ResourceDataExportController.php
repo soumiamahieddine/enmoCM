@@ -131,24 +131,35 @@ class ResourceDataExportController
             }
 
             if (!empty($resource['attachments'])) {
-                $attachmentsIds = [];
-                if (!empty($resource['attachments']['resIds'])) {
-                    $attachmentsIds = $resource['attachments']['resIds'];
-                }
+                if (is_array($resource['attachments'])) {
+                    foreach ($resource['attachments'] as $note) {
+                        if (!Validator::intVal()->validate($note)) {
+                            return $response->withStatus(400)->withJson(['errors' => 'Attachment id is not an integer']);
+                        }
+                    }
 
-                if (!empty($attachmentsIds)) {
                     $attachments = AttachmentModel::get([
                         'select'  => ['res_id', 'res_id_master', 'recipient_type', 'recipient_id', 'typist', 'status', 'attachment_type',
                                       'creation_date', 'identifier', 'title', 'format', 'docserver_id'],
                         'where'   => ['res_id in (?)', 'status not in (?)'],
-                        'data'    => [$attachmentsIds, ['DEL', 'OBS']],
+                        'data'    => [$resource['attachments'], ['DEL', 'OBS']],
                         'orderBy' => ['creation_date desc']
                     ]);
 
-                    if (count($attachments) < count($attachmentsIds)) {
+                    if (count($attachments) < count($resource['attachments'])) {
                         return $response->withStatus(400)->withJson(['errors' => 'Attachment(s) not found']);
                     }
+                } else {
+                    $attachments = AttachmentModel::get([
+                        'select'  => ['res_id', 'res_id_master', 'recipient_type', 'recipient_id', 'typist', 'status', 'attachment_type',
+                                      'creation_date', 'identifier', 'title', 'format', 'docserver_id'],
+                        'where'   => ['res_id_master = ?', 'status not in (?)'],
+                        'data'    => [$resource['resId'], ['DEL', 'OBS']],
+                        'orderBy' => ['creation_date desc']
+                    ]);
+                }
 
+                if (!empty($attachments)) {
                     $chronoResource = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $resource['resId']]);
                     $chronoResource = $chronoResource['alt_identifier'];
 
