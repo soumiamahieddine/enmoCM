@@ -759,6 +759,17 @@ CREATE TABLE users_followed_resources
 )
 WITH (OIDS=FALSE);
 
+/* shipping */
+DO $$ BEGIN
+    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'shippings') AND attname = 'attachment_id') = 1 THEN
+        ALTER TABLE shippings DROP COLUMN IF EXISTS document_type;
+        ALTER TABLE shippings ADD COLUMN document_type character varying(255);
+        ALTER TABLE shippings RENAME COLUMN attachment_id TO document_id;
+        UPDATE shippings SET document_type = 'attachment';
+        ALTER TABLE doctypes ALTER COLUMN process_mode SET NOT NULL;
+    END IF;
+END$$;
+
 TRUNCATE TABLE indexing_models;
 INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (1, 'incoming', 'Courrier arrivée', TRUE, 23, FALSE);
 INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (2, 'outgoing', 'Courrier départ', FALSE, 23, FALSE);
