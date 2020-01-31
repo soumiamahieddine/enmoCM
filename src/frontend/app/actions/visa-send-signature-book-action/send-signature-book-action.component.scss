@@ -126,3 +126,12 @@
         margin: 10px;
     }
 }
+
+.checked {
+    opacity: 1;
+    color : $secondary;
+}
+
+.unchecked {
+    opacity: 0.5;
+}

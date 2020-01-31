@@ -138,12 +138,7 @@ export class ProcessComponent implements OnInit {
     integrationsInfo: any = {
         inSignatureBook: {
             icon: 'fas fa-file-signature',
-            enable: true
-        },
-        inShipping: {
-            icon: 'fas fa-shipping-fast',
-            enable: false
-        },
+        }
     };
 
 
@@ -262,6 +257,7 @@ export class ProcessComponent implements OnInit {
                 this.currentResourceInformations = data;
                 this.resourceFollowed = data.followed;
                 this.loadSenders();
+                this.loadAvaibleIntegrations(data.integrations);
                 this.headerService.setHeader(this.lang.eventProcessDoc, this.lang[this.currentResourceInformations.categoryId]);
             }),
             finalize(() => this.loading = false),
@@ -272,12 +268,44 @@ export class ProcessComponent implements OnInit {
         ).subscribe();
     }
 
+    loadAvaibleIntegrations(integrationsData: any) {
+        this.integrationsInfo['inSignatureBook'].enable = !this.functions.empty(integrationsData['inSignatureBook']) ? integrationsData['inSignatureBook'] : false;
+
+        this.http.get(`../../rest/externalConnectionsEnabled`).pipe(
+            tap((data: any) => {
+                Object.keys(data.connection).filter(connectionId => connectionId !== 'maarchParapheur').forEach(connectionId => {
+                    if (connectionId === 'maileva') {
+                        this.integrationsInfo['inShipping'] = {
+                            icon: 'fas fa-shipping-fast'                        }
+                    }
+                });
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    toggleIntegration(integrationId: string) {
+        this.http.put(`../../rest/resourcesList/integrations`, {resources : [this.currentResourceInformations.resId],integrations : { [integrationId] : !this.currentResourceInformations.integrations[integrationId]}}).pipe(
+            tap(() => {
+                this.currentResourceInformations.integrations[integrationId] = !this.currentResourceInformations.integrations[integrationId];
+                this.notify.success(this.lang.actionDone); 
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
     loadBadges() {
         this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/items`).pipe(
             tap((data: any) => {
                 this.processTool.forEach(element => {
                     element.count = data[element.id] !== undefined ? data[element.id] : 0;
-                }); 
+                });
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
@@ -287,7 +315,7 @@ export class ProcessComponent implements OnInit {
     }
 
     loadSenders() {
-        
+
         if (this.currentResourceInformations.senders === undefined || this.currentResourceInformations.senders.length === 0) {
             this.hasContact = false;
             this.senderLightInfo = { 'displayName': this.lang.noSelectedContact, 'filling': null };
@@ -303,7 +331,7 @@ export class ProcessComponent implements OnInit {
                             } else {
                                 this.senderLightInfo = { 'displayName': data.company };
                             }
-                            
+
                         } else {
                             arrInfo.push(data.firstname);
                             arrInfo.push(data.lastname);
@@ -315,7 +343,7 @@ export class ProcessComponent implements OnInit {
                             } else {
                                 this.senderLightInfo = { 'displayName': arrInfo.filter(info => info !== '').join(' ') };
                             }
-                            
+
                         }
                     })
                 ).subscribe();
@@ -593,14 +621,14 @@ export class ProcessComponent implements OnInit {
         this.resourceFollowed = !this.resourceFollowed;
 
         if (this.resourceFollowed) {
-            this.http.post('../../rest/resources/follow', {resources: [this.currentResourceInformations.resId]}).pipe(
+            this.http.post('../../rest/resources/follow', { resources: [this.currentResourceInformations.resId] }).pipe(
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
                 })
             ).subscribe();
         } else {
-            this.http.request('DELETE', '../../rest/resources/unfollow', {body: {resources: [this.currentResourceInformations.resId]}}).pipe(
+            this.http.request('DELETE', '../../rest/resources/unfollow', { body: { resources: [this.currentResourceInformations.resId] } }).pipe(
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);

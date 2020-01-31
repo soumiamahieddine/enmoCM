@@ -1505,4 +1505,6 @@ export const LANG_FR = {
     "visaNote": "Consigne",
     "chooseBAN": "Choisissez une BAN",
     "click": "Cliquez",
+    "inSignatureBook_doc" : "Intégrer le document principal au parapheur",
+    "inShipping_doc" : "Intégrer le document principal à l'envoi Maileva",
 };

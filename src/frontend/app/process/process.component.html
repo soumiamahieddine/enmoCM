@@ -211,8 +211,8 @@
                                 </ng-template>
                             </div>
                             <div style="position: absolute;right: 0px;top: 0px;height: 100%;display: flex;flex-direction: column;justify-content: center;">
-                                <button mat-icon-button *ngFor="let inteKey of integrationsInfo | keyvalue" [matTooltip]="lang[inteKey.key]">
-                                    <mat-icon [class]="inteKey.value.icon" [class.checked]="inteKey.value.enable" [class.unchecked]="!inteKey.value.enable"></mat-icon>
+                                <button mat-icon-button *ngFor="let inteKey of integrationsInfo | keyvalue" [matTooltip]="lang[inteKey.key]" (click)="toggleIntegration(inteKey.key)">
+                                    <mat-icon [class]="inteKey.value.icon" [class.checked]="currentResourceInformations.integrations[inteKey.key]" [class.unchecked]="!currentResourceInformations.integrations[inteKey.key]"></mat-icon>
                                 </button>
                             </div>
                         </div>
