@@ -17,6 +17,8 @@ use User\models\UserModel;
 
 class GroupController
 {
+    const INDEXING_ACTIONS = ['confirmAction', 'noConfirmAction', 'closeMailAction', 'sendSignatureBookAction'];
+
     public function get(Request $request, Response $response)
     {
         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
@@ -217,7 +219,7 @@ class GroupController
         $group['indexationParameters'] = json_decode($group['indexation_parameters'], true);
         unset($group['can_index'], $group['indexation_parameters']);
 
-        $allActions = ActionModel::get(['select' => ['id', 'label_action'], 'where' => ['component in (?)'], 'data' => [['confirmAction', 'closeMailAction', 'noConfirmAction', 'sendSignatureBookAction']]]);
+        $allActions = ActionModel::get(['select' => ['id', 'label_action'], 'where' => ['component in (?)'], 'data' => [GroupController::INDEXING_ACTIONS]]);
 
         $allEntities = EntityModel::get([
             'select'    => ['e1.id', 'e1.entity_id', 'e1.entity_label', 'e2.id as parent_id'],
