@@ -1492,4 +1492,6 @@ export const LANG_NL = {
     "visaNote": "Order", //_TO_TRANSLATE
     "chooseBAN": "Choose a BAN", //_TO_TRANSLATE
     "click": "Click", //_TO_TRANSLATE
+    "inSignatureBook_doc" : "Put the main document in signature book", //_TO_TRANSLATE
+    "inShipping_doc" : "Intégrer le document principal  in send Maileva", //_TO_TRANSLATE
 };

@@ -102,10 +102,6 @@ array_push(
 
 $where = " (res_id_master = ? and status <> 'DEL' and status <> 'OBS' and (status <> 'TMP' or (typist = ? and status = 'TMP')))";
 
-if (!$core->test_service('view_documents_with_notes', 'attachments', false)) {
-    $where .= ' AND attachment_type <> \'document_with_notes\'';
-}
-
 $arrayPDO = array($resId, $_SESSION['user']['UserId']);
 //Filtre sur le type
 if (isset($whereAttach) && $whereAttach <> '') {

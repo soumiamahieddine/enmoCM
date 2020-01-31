@@ -24,7 +24,9 @@ use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Doctype\models\DoctypeModel;
 use Email\models\EmailModel;
+use Entity\models\EntityModel;
 use IndexingModel\models\IndexingModelFieldModel;
+use Note\models\NoteEntityModel;
 use Note\models\NoteModel;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
@@ -192,21 +194,49 @@ class ResourceDataExportController
                         }
                     }
 
-                    $notes = NoteModel::get([
+                    $allNotes = NoteModel::get([
                         'where'   => ['id in (?)'],
                         'data'    => [$resource['notes']],
                         'orderBy' => ['creation_date desc']
                     ]);
 
+                    $userEntities = EntityModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['entity_id']]);
+                    $userEntities = array_column($userEntities, 'entity_id');
+
+                    $notes = [];
+                    foreach ($allNotes as $note) {
+                        $allowed = false;
+
+                        if ($note['user_id'] == $GLOBALS['id']) {
+                            $allowed = true;
+                        }
+
+                        $noteEntities = NoteEntityModel::getWithEntityInfo(['select' => ['item_id', 'short_label'], 'where' => ['note_id = ?'], 'data' => [$note['id']]]);
+                        if (!empty($noteEntities)) {
+                            foreach ($noteEntities as $noteEntity) {
+                                $note['entities_restriction'][] = ['short_label' => $noteEntity['short_label'], 'item_id' => [$noteEntity['item_id']]];
+
+                                if (in_array($noteEntity['item_id'], $userEntities)) {
+                                    $allowed = true;
+                                }
+                            }
+                        } else {
+                            $allowed = true;
+                        }
+
+                        if ($allowed) {
+                            $notes[] = $note;
+                        }
+                    }
+
                     if (count($notes) < count($resource['notes'])) {
                         return $response->withStatus(400)->withJson(['errors' => 'Note(s) not found']);
                     }
                 } else {
-                    $notes = NoteModel::get([
+                    $notes = NoteModel::getByUserIdForResource([
                         'select'  => ['id', 'identifier', 'user_id', 'note_text', 'creation_date'],
-                        'where'   => ['identifier = ? '],
-                        'data'    => [$resource['resId']],
-                        'orderBy' => ['creation_date desc']
+                        'userId'  => $GLOBALS['id'],
+                        'resId'   => $resource['resId']
                     ]);
                 }
 

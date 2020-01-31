@@ -302,6 +302,11 @@ class StoreController
             AttachmentModel::update(['set' => ['status' => 'OBS'], 'where' => ['(origin_id = ? OR res_id = ?)'], 'data' => [$args['originId'], $args['originId']]]);
         }
 
+        if (!empty($args['status']) && $args['status'] == 'SIGN') {
+            $linkSign = "{$args['originId']},res_attachments";
+            unset($args['originId']);
+        }
+
         $externalId = '{}';
         if (!empty($args['externalId']) && is_array($args['externalId'])) {
             $externalId = json_encode($args['externalId']);
@@ -311,13 +316,14 @@ class StoreController
             'title'                 => $args['title'] ?? null,
             'identifier'            => $args['chrono'] ?? null,
             'typist'                => $GLOBALS['userId'],
-            'status'                => 'A_TRA',
+            'status'                => $args['status'] ?? 'A_TRA',
             'relation'              => $relation,
             'origin_id'             => $args['originId'] ?? null,
+            'origin'                => $linkSign ?? null,
             'res_id_master'         => $args['resIdMaster'],
             'attachment_type'       => $args['type'],
             'recipient_id'          => $args['recipientId'] ?? null,
-            'recipient_type'        => $args['recipientType'] ?? null,
+            'recipient_type'        => !empty($args['recipientId']) ? $args['recipientType'] : null,
             'validation_date'       => $args['validationDate'] ?? null,
             'effective_date'        => $args['effectiveDate'] ?? null,
             'in_signature_book'     => $attachmentsTypes[$args['type']]['sign'] == true || !empty($args['inSignatureBook']) ? 'true' : 'false',

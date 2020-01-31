@@ -795,13 +795,67 @@ class PreProcessActionController
                             break;
                         }
 
+                        $attachment['collId'] = 'attachments_coll';
                         $resources[] = $attachment;
                         unset($aAttachments[$key]);
                     }
                 }
 
+                $resInfo = ResModel::getById(['select' => ['alt_identifier', 'integrations', 'res_id', 'subject as title'], 'resId' => $valueResId]);
+                $integrations = json_decode($resInfo['integrations'], true);
+                if (!empty($integrations['inShipping'])) {
+                    $resIdFound = true;
+
+                    $convertedDocument = ConvertPdfController::getConvertedPdfById([
+                        'select' => ['docserver_id', 'path', 'filename', 'fingerprint'],
+                        'resId'  => $valueResId,
+                        'collId' => 'letterbox_coll',
+                        'type'   => 'PDF'
+                    ]);
+                    if (empty($convertedDocument['docserver_id'])) {
+                        $canNotSend[] = [
+                            'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
+                            'reason' => 'noAttachmentConversion', 'attachmentIdentifier' => $resInfo['identifier']
+                        ];
+                    } else {
+                        $resourceContacts = ResourceContactModel::get([
+                            'where' => ['res_id = ?', 'mode = ?', 'type = ?'],
+                            'data'  => [$valueResId, 'recipient', 'contact']
+                        ]);
+                        if (empty($resourceContacts)) {
+                            $canNotSend[] = [
+                                'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
+                                'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $resInfo['identifier']
+                            ];
+                        } else {
+                            foreach ($resourceContacts as $resourceContact) {
+                                $contact = ContactModel::getById(['select' => ['*'], 'id' => $resourceContact['item_id']]);
+                                if (empty($contact)) {
+                                    $canNotSend[] = [
+                                        'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
+                                        'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $resInfo['identifier']
+                                    ];
+                                } else if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
+                                    $canNotSend[] = [
+                                        'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
+                                        'reason' => 'noFranceContact', 'attachmentIdentifier' => $resInfo['identifier']
+                                    ];
+                                } else {
+                                    $afnorAddress = ContactController::getContactAfnor($contact);
+                                    if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6]) || !preg_match("/^\d{5}\s/", $afnorAddress[6])) {
+                                        $canNotSend[] = [
+                                            'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
+                                            'reason' => 'incompleteAddressForPostal', 'attachmentIdentifier' => $resInfo['identifier']
+                                        ];
+                                    }
+                                }
+                            }
+                        }
+                        $resInfo['collId'] = 'letterbox_coll';
+                        $resources[] = $resInfo;
+                    }
+                }
                 if (!$resIdFound) {
-                    $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                     $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentToSend'];
                 }
             }

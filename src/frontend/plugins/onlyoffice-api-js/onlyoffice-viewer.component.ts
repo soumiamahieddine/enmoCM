@@ -39,6 +39,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
 
     @Output() triggerAfterUpdatedDoc = new EventEmitter<string>();
     @Output() triggerCloseEditor = new EventEmitter<string>();
+    @Output() triggerModifiedDocument = new EventEmitter<string>();
 
     editorConfig: any;
     docEditor: any;
@@ -61,10 +62,11 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
     onMessage(e: any) {
         //console.log(e);
         const response = JSON.parse(e.data);
-
         // EVENT TO CONSTANTLY UPDATE CURRENT DOCUMENT
         if (response.event === 'onDownloadAs') {
             this.getEncodedDocument(response.data);
+        } else if (response.event === 'onDocumentReady') {
+            this.triggerModifiedDocument.emit();
         }
     }
 
@@ -83,12 +85,15 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
     }
 
     closeEditor() {
+        console.log('close');
+        
         if (this.sidenavLeft !== null) {
             this.sidenavLeft.open();
         }
         $j("iframe[name='frameEditor']").css("position", "initial");
         this.fullscreenMode = false;
         this.triggerAfterUpdatedDoc.emit();
+        this.triggerCloseEditor.emit();
     }
 
     getDocument() {
@@ -144,12 +149,12 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                         this.appUrl = data.coreUrl;
                         resolve(true);
                     } else {
-                        this.closeEditor()
+                        this.closeEditor();
                     }
                 }),
                 catchError((err) => {
                     this.notify.handleErrors(err);
-                    this.closeEditor()
+                    this.closeEditor();
                     return of(false);
                 }),
             ).subscribe();
@@ -171,12 +176,12 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                             resolve(true);
                         } else {
                             this.notify.error(`${this.lang.errorOnlyoffice2} ${this.onlyfficeUrl}`);
-                            this.closeEditor()
+                            this.closeEditor();
                         }
                     }),
                     catchError((err) => {
                         this.notify.error(`${this.lang[err.error.lang]}`);
-                        this.closeEditor()
+                        this.closeEditor();
                         return of(false);
                     }),
                 ).subscribe();
@@ -202,7 +207,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                 }),
                 catchError((err) => {
                     this.notify.handleErrors(err);
-                    this.closeEditor()
+                    this.closeEditor();
                     return of(false);
                 }),
             ).subscribe();

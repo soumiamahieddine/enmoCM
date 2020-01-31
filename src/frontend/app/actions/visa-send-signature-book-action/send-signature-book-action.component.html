@@ -12,6 +12,9 @@
                 <b *ngIf="data.resIds.length > 1" color="primary" class="highlight">{{data.resIds.length}}
                     {{lang.elements}}</b> ?
             </div>
+            <div *ngIf="data.resIds.length > 0" style="padding:10px;display: flex;flex-direction: column;">
+                <mat-checkbox color="primary" *ngFor="let inteKey of integrationsInfo | keyvalue" (click)="toggleIntegration(inteKey.key)" [checked]="data.resource.integrations[inteKey.key]">{{lang[inteKey.key+'_doc']}}</mat-checkbox>
+            </div>
             <div *ngIf="resourcesError.length > 0" class="alert-message alert-message-danger mailList" role="alert">
                 <p>
                     {{lang.canNotMakeAction}} :

@@ -46,7 +46,8 @@
                 <button mat-icon-button (click)="downloadOriginalFile()" [matTooltip]="lang.downloadOriginalFile">
                     <mat-icon class="fa fa-download"></mat-icon>
                 </button>
-                <button *ngIf="editMode && mode === 'attachment' && resId !== null" mat-icon-button (click)="editAttachment()" [matTooltip]="lang.editDocument">
+                <button *ngIf="editMode && resId !== null" mat-icon-button (click)="editResource()"
+                    [matTooltip]="lang.editDocument">
                     <mat-icon class="fa fa-edit"></mat-icon>
                 </button>
                 <button mat-icon-button [matMenuTriggerFor]="menuOptions">
@@ -57,11 +58,11 @@
                         <mat-icon color="primary" class="fas fa-external-link-alt"></mat-icon>
                         <span>{{lang.openInExternalModal}}</span>
                     </button>
-                    <button mat-menu-item *ngIf="editMode" (click)="docToUpload.click()">
+                    <button mat-menu-item *ngIf="editMode && resId === null" (click)="docToUpload.click()">
                         <mat-icon color="primary" class="fa fa-file-upload"></mat-icon>
                         <span>{{lang.uploadAnOtherFile}}</span>
                     </button>
-                    <button mat-menu-item *ngIf="editMode" (click)="cleanFile()">
+                    <button mat-menu-item *ngIf="editMode && resId === null" (click)="cleanFile()">
                         <mat-icon class="fa fa-trash" color="warn"></mat-icon>
                         <span>{{lang.removeFile}}</span>
                     </button>
@@ -85,12 +86,11 @@
     </ng-template>
 </ng-container>
 <ng-container *ngIf="editInProgress && editor.mode === 'onlyoffice'">
-    <onlyoffice-viewer #onlyofficeViewer style="height:100%;width:100%;"
-    [params]="editor.options"
-    [file]="file"
-    [sidenavLeft]="sidenavLeft"
-    [editMode]="true"
-    (triggerAfterUpdatedDoc)="triggerEvent.emit()"
-    (triggerCloseEditor)="closeEditor()"
-    ></onlyoffice-viewer>
+    <onlyoffice-viewer #onlyofficeViewer style="height:100%;width:100%;" [params]="editor.options" [file]="file"
+        [sidenavLeft]="sidenavLeft" [editMode]="true" (triggerAfterUpdatedDoc)="triggerEvent.emit()"
+        (triggerCloseEditor)="closeEditor()" (triggerModifiedDocument)="isDocModified = true"></onlyoffice-viewer>
 </ng-container>
+<button mat-fab *ngIf="isDocModified && mode === 'mainDocument'" color="accent"
+    [title]="lang.saveModifications" style="position: absolute;z-index: 1;bottom: 40px;right: 60px;">
+    <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
+</button>

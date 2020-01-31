@@ -89,10 +89,6 @@ class ResourceListController
         $displayFolderTags = false;
         if (!empty($resIds)) {
             $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
-            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
-                $excludeAttachmentTypes[] = 'document_with_notes';
-            }
-
             $attachments = AttachmentModel::get([
                 'select'    => ['COUNT(res_id)', 'res_id_master'],
                 'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],
@@ -441,7 +437,7 @@ class ResourceListController
 
         $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
         $methodResponses = [];
-        foreach ($resourcesForAction as $resId) {
+        foreach ($resourcesForAction as $key => $resId) {
             if (!empty($method)) {
                 $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data'], 'note' => $body['note']]);
 
@@ -450,6 +446,7 @@ class ResourceListController
                         $methodResponses['errors'] = [];
                     }
                     $methodResponses['errors'] = array_merge($methodResponses['errors'], $methodResponse['errors']);
+                    unset($resourcesForAction[$key]);
                 }
                 if (!empty($methodResponse['data'])) {
                     if (empty($methodResponses['data'])) {
@@ -462,9 +459,6 @@ class ResourceListController
         $historic = empty($methodResponse['history']) ? '' : $methodResponse['history'];
         ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name'], 'note' => $body['note'], 'history' => $historic]);
 
-        if (!empty($methodResponses['errors'])) {
-            return $response->withStatus(403)->withJson($methodResponses);
-        }
         if (!empty($methodResponses)) {
             return $response->withJson($methodResponses);
         }
