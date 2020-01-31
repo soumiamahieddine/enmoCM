@@ -239,7 +239,8 @@
             "MIT"
         ],
         "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
-        "homepage": "https://github.com/container-interop/container-interop"
+        "homepage": "https://github.com/container-interop/container-interop",
+        "abandoned": "psr/container"
     },
     {
         "name": "endroid/qr-code",
@@ -311,6 +312,54 @@
             "qrcode",
             "symfony"
         ]
+    },
+    {
+        "name": "firebase/php-jwt",
+        "version": "v5.0.0",
+        "version_normalized": "5.0.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/firebase/php-jwt.git",
+            "reference": "9984a4d3a32ae7673d6971ea00bae9d0a1abba0e"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/firebase/php-jwt/zipball/9984a4d3a32ae7673d6971ea00bae9d0a1abba0e",
+            "reference": "9984a4d3a32ae7673d6971ea00bae9d0a1abba0e",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": " 4.8.35"
+        },
+        "time": "2017-06-27T22:17:23+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Firebase\\JWT\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Neuman Vong",
+                "email": "neuman+pear@twilio.com",
+                "role": "Developer"
+            },
+            {
+                "name": "Anant Narayanan",
+                "email": "anant@php.net",
+                "role": "Developer"
+            }
+        ],
+        "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
+        "homepage": "https://github.com/firebase/php-jwt"
     },
     {
         "name": "guzzlehttp/guzzle",
@@ -2199,24 +2248,177 @@
         ]
     },
     {
-        "name": "tecnickcom/tcpdf",
-        "version": "6.2.26",
-        "version_normalized": "6.2.26.0",
+        "name": "tecnickcom/tc-lib-barcode",
+        "version": "1.15.4",
+        "version_normalized": "1.15.4.0",
         "source": {
             "type": "git",
-            "url": "https://github.com/tecnickcom/TCPDF.git",
-            "reference": "367241059ca166e3a76490f4448c284e0a161f15"
+            "url": "https://github.com/tecnickcom/tc-lib-barcode.git",
+            "reference": "34b0224f71ebfe83adcef9f14f3d81965fb55493"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/367241059ca166e3a76490f4448c284e0a161f15",
-            "reference": "367241059ca166e3a76490f4448c284e0a161f15",
+            "url": "https://api.github.com/repos/tecnickcom/tc-lib-barcode/zipball/34b0224f71ebfe83adcef9f14f3d81965fb55493",
+            "reference": "34b0224f71ebfe83adcef9f14f3d81965fb55493",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.4",
+            "tecnickcom/tc-lib-color": "^1.12.1"
+        },
+        "require-dev": {
+            "apigen/apigen": "^4.1.2",
+            "bartlett/php-compatinfo": "^5.0.0",
+            "pdepend/pdepend": "^2.2.2",
+            "phploc/phploc": "^2.1.5|^3.0.0",
+            "phpmd/phpmd": "^2.3.2",
+            "phpunit/phpunit": "4.8.19|^5.0.0",
+            "sebastian/phpcpd": "^2.0.2",
+            "squizlabs/php_codesniffer": "^2.5.0|^3.0.0"
+        },
+        "time": "2016-11-17T18:13:54+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Com\\Tecnick\\Barcode\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "LGPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "Nicola Asuni",
+                "email": "info@tecnick.com",
+                "role": "lead"
+            }
+        ],
+        "description": "PHP library to generate linear and bidimensional barcodes",
+        "homepage": "http://www.tecnick.com",
+        "keywords": [
+            "3 of 9",
+            "ANSI MH10.8M-1983",
+            "CBC",
+            "CODABAR",
+            "CODE 11",
+            "CODE 128 A B C",
+            "CODE 39",
+            "CODE 93",
+            "EAN 13",
+            "EAN 8",
+            "ECC200",
+            "Intelligent Mail Barcode",
+            "Interleaved 2 of 5",
+            "KIX",
+            "Klant",
+            "MSI",
+            "Onecode",
+            "PHARMACODE",
+            "PHARMACODE TWO-TRACKS",
+            "POSTNET",
+            "RMS4CC",
+            "Standard 2 of 5",
+            "UPC-A",
+            "UPC-E",
+            "USD-3",
+            "USPS-B-3200",
+            "USS-93",
+            "barcode",
+            "datamatrix",
+            "pdf417",
+            "planet",
+            "qr-code",
+            "royal mail",
+            "tc-lib-barcode",
+            "upc"
+        ]
+    },
+    {
+        "name": "tecnickcom/tc-lib-color",
+        "version": "1.12.13",
+        "version_normalized": "1.12.13.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/tecnickcom/tc-lib-color.git",
+            "reference": "67402204a7120716fe8e885019990501c5d4cffb"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/tecnickcom/tc-lib-color/zipball/67402204a7120716fe8e885019990501c5d4cffb",
+            "reference": "67402204a7120716fe8e885019990501c5d4cffb",
+            "shasum": ""
+        },
+        "require": {
+            "ext-pcre": "*",
+            "php": ">=5.3"
+        },
+        "require-dev": {
+            "apigen/apigen": "^2.8.1 || ^4.1.2",
+            "bartlett/php-compatinfo": "^4.5.2 || ^5.0.10 || ^5.0.12",
+            "pdepend/pdepend": "^2.5.2",
+            "phploc/phploc": "^2.1 || ^3.0 || ^4.0",
+            "phpmd/phpmd": "^2.6.0",
+            "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.1",
+            "sebastian/phpcpd": "^2.0 || ^3.0 || ^4.0",
+            "squizlabs/php_codesniffer": "^2.8.0 || ^3.2.0"
+        },
+        "time": "2019-09-19T12:31:29+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Com\\Tecnick\\Color\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "LGPL-3.0"
+        ],
+        "authors": [
+            {
+                "name": "Nicola Asuni",
+                "email": "info@tecnick.com",
+                "role": "lead"
+            }
+        ],
+        "description": "PHP library to manipulate various color representations",
+        "homepage": "http://www.tecnick.com",
+        "keywords": [
+            "cmyk",
+            "color",
+            "colors",
+            "colour",
+            "colours",
+            "hsl",
+            "hsla",
+            "javascript",
+            "rgb",
+            "rgba",
+            "tc-lib-color",
+            "web"
+        ]
+    },
+    {
+        "name": "tecnickcom/tcpdf",
+        "version": "6.3.2",
+        "version_normalized": "6.3.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/tecnickcom/TCPDF.git",
+            "reference": "9fde7bb9b404b945e7ea88fb7eccd23d9a4e324b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/9fde7bb9b404b945e7ea88fb7eccd23d9a4e324b",
+            "reference": "9fde7bb9b404b945e7ea88fb7eccd23d9a4e324b",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2018-10-16T17:24:05+00:00",
+        "time": "2019-09-20T09:35:01+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -2313,23 +2515,23 @@
     },
     {
         "name": "tinybutstrong/tinybutstrong",
-        "version": "v3.10.1",
-        "version_normalized": "3.10.1.0",
+        "version": "v3.11.0",
+        "version_normalized": "3.11.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/Skrol29/tinybutstrong.git",
-            "reference": "09726cd6c2941a6026e3604e27f30a31accb2b03"
+            "reference": "ff416616690fd73d47529376880a883e9dec37b5"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Skrol29/tinybutstrong/zipball/09726cd6c2941a6026e3604e27f30a31accb2b03",
-            "reference": "09726cd6c2941a6026e3604e27f30a31accb2b03",
+            "url": "https://api.github.com/repos/Skrol29/tinybutstrong/zipball/ff416616690fd73d47529376880a883e9dec37b5",
+            "reference": "ff416616690fd73d47529376880a883e9dec37b5",
             "shasum": ""
         },
         "require": {
             "php": ">=5.0"
         },
-        "time": "2018-01-18T00:15:53+00:00",
+        "time": "2019-02-10T15:33:14+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -2514,206 +2716,5 @@
             "xml",
             "zend"
         ]
-    },
-    {
-        "name": "tecnickcom/tc-lib-color",
-        "version": "1.12.12",
-        "version_normalized": "1.12.12.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/tecnickcom/tc-lib-color.git",
-            "reference": "bfb8e97975ef9979e808adb464a2bb27052c7115"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/tecnickcom/tc-lib-color/zipball/bfb8e97975ef9979e808adb464a2bb27052c7115",
-            "reference": "bfb8e97975ef9979e808adb464a2bb27052c7115",
-            "shasum": ""
-        },
-        "require": {
-            "ext-pcre": "*",
-            "php": ">=5.3"
-        },
-        "require-dev": {
-            "apigen/apigen": "^2.8.1 || ^4.1.2",
-            "bartlett/php-compatinfo": "^4.5.2 || ^5.0.10 || ^5.0.12",
-            "pdepend/pdepend": "^2.5.2",
-            "phploc/phploc": "^2.1 || ^3.0 || ^4.0",
-            "phpmd/phpmd": "^2.6.0",
-            "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.1",
-            "sebastian/phpcpd": "^2.0 || ^3.0 || ^4.0",
-            "squizlabs/php_codesniffer": "^2.8.0 || ^3.2.0"
-        },
-        "time": "2018-06-23T09:21:30+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Com\\Tecnick\\Color\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "LGPL-3.0"
-        ],
-        "authors": [
-            {
-                "name": "Nicola Asuni",
-                "email": "info@tecnick.com",
-                "role": "lead"
-            }
-        ],
-        "description": "PHP library to manipulate various color representations",
-        "homepage": "http://www.tecnick.com",
-        "keywords": [
-            "cmyk",
-            "color",
-            "colors",
-            "colour",
-            "colours",
-            "hsl",
-            "hsla",
-            "javascript",
-            "rgb",
-            "rgba",
-            "tc-lib-color",
-            "web"
-        ]
-    },
-    {
-        "name": "tecnickcom/tc-lib-barcode",
-        "version": "1.15.4",
-        "version_normalized": "1.15.4.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/tecnickcom/tc-lib-barcode.git",
-            "reference": "34b0224f71ebfe83adcef9f14f3d81965fb55493"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/tecnickcom/tc-lib-barcode/zipball/34b0224f71ebfe83adcef9f14f3d81965fb55493",
-            "reference": "34b0224f71ebfe83adcef9f14f3d81965fb55493",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.4",
-            "tecnickcom/tc-lib-color": "^1.12.1"
-        },
-        "require-dev": {
-            "apigen/apigen": "^4.1.2",
-            "bartlett/php-compatinfo": "^5.0.0",
-            "pdepend/pdepend": "^2.2.2",
-            "phploc/phploc": "^2.1.5|^3.0.0",
-            "phpmd/phpmd": "^2.3.2",
-            "phpunit/phpunit": "4.8.19|^5.0.0",
-            "sebastian/phpcpd": "^2.0.2",
-            "squizlabs/php_codesniffer": "^2.5.0|^3.0.0"
-        },
-        "time": "2016-11-17T18:13:54+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Com\\Tecnick\\Barcode\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "LGPL-3.0"
-        ],
-        "authors": [
-            {
-                "name": "Nicola Asuni",
-                "email": "info@tecnick.com",
-                "role": "lead"
-            }
-        ],
-        "description": "PHP library to generate linear and bidimensional barcodes",
-        "homepage": "http://www.tecnick.com",
-        "keywords": [
-            "3 of 9",
-            "ANSI MH10.8M-1983",
-            "CBC",
-            "CODABAR",
-            "CODE 11",
-            "CODE 128 A B C",
-            "CODE 39",
-            "CODE 93",
-            "EAN 13",
-            "EAN 8",
-            "ECC200",
-            "Intelligent Mail Barcode",
-            "Interleaved 2 of 5",
-            "KIX",
-            "Klant",
-            "MSI",
-            "Onecode",
-            "PHARMACODE",
-            "PHARMACODE TWO-TRACKS",
-            "POSTNET",
-            "RMS4CC",
-            "Standard 2 of 5",
-            "UPC-A",
-            "UPC-E",
-            "USD-3",
-            "USPS-B-3200",
-            "USS-93",
-            "barcode",
-            "datamatrix",
-            "pdf417",
-            "planet",
-            "qr-code",
-            "royal mail",
-            "tc-lib-barcode",
-            "upc"
-        ]
-    },
-    {
-        "name": "firebase/php-jwt",
-        "version": "v5.0.0",
-        "version_normalized": "5.0.0.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/firebase/php-jwt.git",
-            "reference": "9984a4d3a32ae7673d6971ea00bae9d0a1abba0e"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/firebase/php-jwt/zipball/9984a4d3a32ae7673d6971ea00bae9d0a1abba0e",
-            "reference": "9984a4d3a32ae7673d6971ea00bae9d0a1abba0e",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.0"
-        },
-        "require-dev": {
-            "phpunit/phpunit": " 4.8.35"
-        },
-        "time": "2017-06-27T22:17:23+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "Firebase\\JWT\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause"
-        ],
-        "authors": [
-            {
-                "name": "Neuman Vong",
-                "email": "neuman+pear@twilio.com",
-                "role": "Developer"
-            },
-            {
-                "name": "Anant Narayanan",
-                "email": "anant@php.net",
-                "role": "Developer"
-            }
-        ],
-        "description": "A simple library to encode and decode JSON Web Tokens (JWT) in PHP. Should conform to the current spec.",
-        "homepage": "https://github.com/firebase/php-jwt"
     }
 ]
