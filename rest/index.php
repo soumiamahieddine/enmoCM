@@ -372,7 +372,6 @@ $app->get('/categories', \Resource\controllers\ResController::class . ':getCateg
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 $app->get('/resources/{resId}/users/{userId}/groups/{groupId}/baskets/{basketId}/processingData', \Resource\controllers\ResController::class . ':getProcessingData');
 $app->post('/resources/exportData', \Resource\controllers\ResourceDataExportController::class . ':generateFile');
-$app->put('/resources/{resId}/integrations', \Resource\controllers\ResController::class . ':setInIntegrations');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
@@ -385,6 +384,7 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/su
 $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}', \Resource\controllers\ResourceListController::class . ':setAction');
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplates');
 $app->get('/resourcesList/summarySheets', \Resource\controllers\SummarySheetController::class . ':createListWithAll');
+$app->put('/resourcesList/integrations', \Resource\controllers\ResController::class . ':setInIntegrations');
 $app->post('/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
 //PreProcess
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \Action\controllers\PreProcessActionController::class . ':checkAcknowledgementReceipt');

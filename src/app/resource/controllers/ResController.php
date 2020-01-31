@@ -679,40 +679,50 @@ class ResController extends ResourceControlController
         return $response->withJson(['success' => 'success']);
     }
 
-    public static function setInIntegrations(Request $request, Response $response, array $args)
+    public static function setInIntegrations(Request $request, Response $response)
     {
-        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+        $body = $request->getParsedBody();
+
+        if (empty($body['resources']) || !Validator::arrayType()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body param resources is missing']);
+        }
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $body = $request->getParsedBody();
-
-        if (empty($body['integrations'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body  param integrations is missing']);
+        if (empty($body['integrations']) || !Validator::arrayType()->validate($body['integrations'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body param integrations is missing or not an array']);
         }
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['integrations']]);
-        $integrations = json_decode($resource['integrations'], true);
-
-        if (Validator::boolType()->validate($body['integrations']['inSignatureBook'])) {
-            $integrations['inSignatureBook'] = $body['integrations']['inSignatureBook'];
-        } else {
-            $integrations['inSignatureBook'] = $integrations['inSignatureBook'] ?? false;
-        }
-
-        if (Validator::boolType()->validate($body['integrations']['inShipping'])) {
-            $integrations['inShipping'] = $body['integrations']['inShipping'];
-        } else {
-            $integrations['inShipping'] = $integrations['inShipping'] ?? false;
-        }
-
-        ResModel::update([
-            'set' => [
-                'integrations' => json_encode($integrations)
-            ],
-            'where' => ['res_id = ?'],
-            'data'  => [$args['resId']]
+        $resources = ResModel::get([
+            'select' => ['res_id', 'integrations'],
+            'where'  => ['res_id in (?)'],
+            'data'   => [$body['resources']]
         ]);
+
+        foreach ($resources as $resource) {
+            $integrations = json_decode($resource['integrations'], true);
+
+            if (Validator::boolType()->validate($body['integrations']['inSignatureBook'])) {
+                $integrations['inSignatureBook'] = $body['integrations']['inSignatureBook'];
+            } else {
+                $integrations['inSignatureBook'] = $integrations['inSignatureBook'] ?? false;
+            }
+
+            if (Validator::boolType()->validate($body['integrations']['inShipping'])) {
+                $integrations['inShipping'] = $body['integrations']['inShipping'];
+            } else {
+                $integrations['inShipping'] = $integrations['inShipping'] ?? false;
+            }
+
+            ResModel::update([
+                'set' => [
+                    'integrations' => json_encode($integrations)
+                ],
+                'where' => ['res_id = ?'],
+                'data'  => [$resource['res_id']]
+            ]);
+        }
 
         return $response->withStatus(204);
     }
