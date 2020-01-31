@@ -295,6 +295,11 @@ class StoreController
             $args['chrono'] = ChronoModel::getChrono(['id' => 'outgoing', 'entityId' => $resource['destination'], 'typeId' => $resource['type_id'], 'resId' => $args['resIdMaster']]);
         }
 
+        if (!empty($args['status']) && $args['status'] == 'SIGN') {
+            $linkSign = "{$args['originId']},res_attachments";
+            unset($args['originId']);
+        }
+
         $relation = 1;
         if (!empty($args['originId'])) {
             $relations = AttachmentModel::get(['select' => ['relation'], 'where' => ['(origin_id = ? or res_id = ?)'], 'data' => [$args['originId'], $args['originId']], 'orderBy' => ['relation DESC'], 'limit' => 1]);

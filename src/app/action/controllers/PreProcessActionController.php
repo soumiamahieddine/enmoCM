@@ -38,6 +38,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\ValidatorModel;
 use Template\models\TemplateModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;
@@ -934,6 +935,28 @@ class PreProcessActionController
             return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
         }
 
+        $resources = ResModel::get([
+            'select' => ['res_id', 'locker_user_id', 'locker_time'],
+            'where'  => ['res_id in (?)'],
+            'data'   => [$data['resources']]
+        ]);
+
+        $resourcesForProcess = [];
+        foreach ($resources as $resource) {
+            $lock = true;
+            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
+                $lock = false;
+            } elseif ($resource['locker_user_id'] == $GLOBALS['id']) {
+                $lock = false;
+            } elseif (strtotime($resource['locker_time']) < time()) {
+                $lock = false;
+            }
+            if (!$lock) {
+                $resourcesForProcess[] = $resource['res_id'];
+            }
+        }
+        $data['resources'] = $resourcesForProcess;
+
         $hasAttachmentsNotes = [];
         $noAttachmentsNotes = [];
 
@@ -991,6 +1014,28 @@ class PreProcessActionController
                 $signableAttachmentsTypes[] = $key;
             }
         }
+
+        $resources = ResModel::get([
+            'select' => ['res_id', 'locker_user_id', 'locker_time'],
+            'where'  => ['res_id in (?)'],
+            'data'   => [$body['resources']]
+        ]);
+
+        $resourcesForProcess = [];
+        foreach ($resources as $resource) {
+            $lock = true;
+            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
+                $lock = false;
+            } elseif ($resource['locker_user_id'] == $currentUser['id']) {
+                $lock = false;
+            } elseif (strtotime($resource['locker_time']) < time()) {
+                $lock = false;
+            }
+            if (!$lock) {
+                $resourcesForProcess[] = $resource['res_id'];
+            }
+        }
+        $body['resources'] = $resourcesForProcess;
 
         $resourcesInformations = [];
         foreach ($body['resources'] as $resId) {
@@ -1372,6 +1417,55 @@ class PreProcessActionController
 
     public function isDestinationChanging(Request $request, Response $response, array $args)
     {
+        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+        if (empty($user)) {
+            return $response->withStatus(400)->withJson(['errors' => 'User does not exist']);
+        }
+
+        $changeDestination = true;
+        $entities = UserEntityModel::get(['select' => ['entity_id'], 'where' => ['user_id = ?'], 'data' => [$user['user_id']]]);
+        $resource = ResModel::getById(['select' => ['destination'], 'resId' => $args['resId']]);
+        foreach ($entities as $entity) {
+            if ($entity['entity_id'] == $resource['destination']) {
+                $changeDestination = false;
+            }
+        }
+
+        return $response->withJson(['isDestinationChanging' => $changeDestination]);
+    }
+
+    private static function getNonLockedResources(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resources', 'userId']);
+        ValidatorModel::arrayType($args, ['resources']);
+        ValidatorModel::intVal($args, ['userId']);
+
+        $resources = ResModel::get([
+            'select' => ['res_id', 'locker_user_id', 'locker_time'],
+            'where'  => ['res_id in (?)'],
+            'data'   => [$args['resources']]
+        ]);
+
+        $resourcesForProcess = [];
+        foreach ($resources as $resource) {
+            $lock = true;
+            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
+                $lock = false;
+            } elseif ($resource['locker_user_id'] == $GLOBALS['id']) {
+                $lock = false;
+            } elseif (strtotime($resource['locker_time']) < time()) {
+                $lock = false;
+            }
+            if (!$lock) {
+                $resourcesForProcess[] = $resource['res_id'];
+            }
+        }
+        $data['resources'] = $resourcesForProcess;
+
         if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
