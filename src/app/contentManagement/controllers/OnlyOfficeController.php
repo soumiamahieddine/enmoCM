@@ -17,6 +17,7 @@ namespace ContentManagement\controllers;
 use Attachment\models\AttachmentModel;
 use Docserver\models\DocserverModel;
 use Resource\controllers\ResController;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -87,6 +88,19 @@ class OnlyOfficeController
                 'data' => $dataToMerge
             ]);
             $fileContent = base64_decode($mergedDocument['encodedDocument']);
+        } elseif ($body['objectType'] == 'resourceModification') {
+            if (!ResController::hasRightByResId(['resId' => [$body['objectId']], 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Resource out of perimeter']);
+            }
+            $resource = ResModel::getById(['resId' => $body['objectId'], 'select' => ['docserver_id', 'path', 'filename']]);
+            if (empty($resource['filename'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Resource has no file']);
+            }
+
+            $docserver  = DocserverModel::getByDocserverId(['docserverId' => $resource['docserver_id'], 'select' => ['path_template']]);
+
+            $path = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $resource['path']) . $resource['filename'];
+            $fileContent = file_get_contents($path);
         } elseif ($body['objectType'] == 'attachmentModification') {
             $attachment = AttachmentModel::getById(['id' => $body['objectId'], 'select' => ['docserver_id', 'path', 'filename', 'res_id_master']]);
             if (empty($attachment)) {

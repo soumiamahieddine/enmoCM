@@ -15,6 +15,7 @@
 namespace Resource\controllers;
 
 use Contact\models\ContactModel;
+use Convert\controllers\ConvertPdfController;
 use Convert\models\AdrModel;
 use CustomField\models\CustomFieldModel;
 use Doctype\models\DoctypeModel;
@@ -118,7 +119,11 @@ class ResourceControlController
     {
         $body = $args['body'];
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status', 'model_id', 'external_signatory_book_id']]);
+        if (empty($body)) {
+            return ['errors' => 'Body is not set or empty'];
+        }
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status', 'model_id', 'external_signatory_book_id', 'format']]);
         if (empty($resource['status'])) {
             return ['errors' => 'Resource status is empty. It can not be modified'];
         }
@@ -127,24 +132,31 @@ class ResourceControlController
             return ['errors' => 'Resource can not be modified because of status'];
         }
 
-        if (empty($body)) {
-            return ['errors' => 'Body is not set or empty'];
-        } elseif (!Validator::intVal()->notEmpty()->validate($body['doctype'])) {
-            return ['errors' => 'Body doctype is empty or not an integer'];
-        } elseif (!empty($body['encodedFile']) && !empty($resource['external_signatory_book_id'])) {
-            return ['errors' => 'Resource is in external signature book, file can not be modified'];
-        } elseif (!empty($body['encodedFile']) && ResourceControlController::isSigned(['resId' => $args['resId']])) {
-            return ['errors' => 'Resource is signed, file can not be modified'];
+        if ($args['onlyDocument'] && empty($body['encodedFile'])) {
+            return ['errors' => 'Body encodedFile is not set or empty'];
+        } elseif (!empty($body['encodedFile'])) {
+            if (!empty($resource['external_signatory_book_id'])) {
+                return ['errors' => 'Resource is in external signature book, file can not be modified'];
+            } elseif (ResourceControlController::isSigned(['resId' => $args['resId']])) {
+                return ['errors' => 'Resource is signed, file can not be modified'];
+            } elseif (!empty($resource['format']) && !ConvertPdfController::canConvert(['extension' => $resource['format']])) {
+                return ['errors' => 'Resource is not convertible, file can not be modified'];
+            }
+            $control = ResourceControlController::controlFileData(['body' => $body]);
+            if (!empty($control['errors'])) {
+                return ['errors' => $control['errors']];
+            }
+            if ($args['onlyDocument']) {
+                return true;
+            }
         }
 
+        if (!Validator::intVal()->notEmpty()->validate($body['doctype'])) {
+            return ['errors' => 'Body doctype is empty or not an integer'];
+        }
         $doctype = DoctypeModel::getById(['id' => $body['doctype'], 'select' => [1]]);
         if (empty($doctype)) {
             return ['errors' => 'Body doctype does not exist'];
-        }
-
-        $control = ResourceControlController::controlFileData(['body' => $body]);
-        if (!empty($control['errors'])) {
-            return ['errors' => $control['errors']];
         }
 
         $control = ResourceControlController::controlAdjacentData(['body' => $body, 'isWebServiceUser' => false]);

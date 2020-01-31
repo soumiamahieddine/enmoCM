@@ -250,7 +250,9 @@ class ResController extends ResourceControlController
             unset($body['diffusionList']);
         }
 
-        $control = ResourceControlController::controlUpdateResource(['body' => $body, 'resId' => $args['resId'], 'isProcessing' => $isProcessing]);
+        $onlyDocument = !empty($queryParams['onlyDocument']);
+
+        $control = ResourceControlController::controlUpdateResource(['body' => $body, 'resId' => $args['resId'], 'isProcessing' => $isProcessing, 'onlyDocument' => $onlyDocument]);
         if (!empty($control['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
@@ -268,15 +270,23 @@ class ResController extends ResourceControlController
             ]);
         }
 
+        if ($onlyDocument) {
+            $body = [
+                'encodedFile'   => $body['encodedFile'],
+                'format'        => $body['format']
+            ];
+        }
         $body['resId'] = $args['resId'];
         $resId = StoreController::storeResource($body);
         if (empty($resId) || !empty($resId['errors'])) {
             return $response->withStatus(500)->withJson(['errors' => '[ResController update] ' . $resId['errors']]);
         }
 
-        ResController::updateAdjacentData(['body' => $body, 'resId' => $args['resId']]);
+        if (!$onlyDocument) {
+            ResController::updateAdjacentData(['body' => $body, 'resId' => $args['resId']]);
+        }
 
-        if (!empty($body['encodedFile'])) {
+        if ($onlyDocument) {
             ConvertPdfController::convert([
                 'resId'     => $args['resId'],
                 'collId'    => 'letterbox_coll',
