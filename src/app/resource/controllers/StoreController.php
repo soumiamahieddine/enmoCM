@@ -306,12 +306,7 @@ class StoreController
             $relation = $relations[0]['relation'] + 1;
             AttachmentModel::update(['set' => ['status' => 'OBS'], 'where' => ['(origin_id = ? OR res_id = ?)'], 'data' => [$args['originId'], $args['originId']]]);
         }
-
-        if (!empty($args['status']) && $args['status'] == 'SIGN') {
-            $linkSign = "{$args['originId']},res_attachments";
-            unset($args['originId']);
-        }
-
+        
         $externalId = '{}';
         if (!empty($args['externalId']) && is_array($args['externalId'])) {
             $externalId = json_encode($args['externalId']);
