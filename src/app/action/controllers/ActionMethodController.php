@@ -480,7 +480,7 @@ class ActionMethodController
         }
 
         ListInstanceModel::update([
-            'set'   => ['process_date' => null],
+            'set'   => ['process_date' => null, 'process_comment' => null],
             'where' => ['res_id = ?', 'difflist_type = ?'],
             'data'  => [$args['resId'], 'VISA_CIRCUIT']
         ]);
