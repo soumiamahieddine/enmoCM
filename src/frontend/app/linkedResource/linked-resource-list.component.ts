@@ -12,6 +12,7 @@ import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { MatDialog } from '@angular/material';
 import { LinkResourceModalComponent } from './linkResourceModal/link-resource-modal.component';
 import { FunctionsService } from '../../service/functions.service';
+import { ContactsListModalComponent } from '../contact/list/modal/contacts-list-modal.component';
 
 declare function $j(selector: any): any;
 
@@ -80,6 +81,14 @@ export class LinkedResourceListComponent implements OnInit {
                 } else if (this.functions.empty(linkeRes[key]) && ['senders', 'recipients', 'attachments', 'hasDocument', 'confidentiality', 'visaCircuit'].indexOf(key) === -1) {
                     linkeRes[key] = this.lang.undefined;
                 }
+                
+                if (key === 'senders' && linkeRes[key].length > 1) {
+                    if (linkeRes[key].length > 1) {
+                        linkeRes[key] = linkeRes[key].length + ' ' + this.lang.contacts;
+                    } else {
+                        linkeRes[key] = linkeRes[key][0];
+                    }
+                }
             });
         });
         
@@ -140,5 +149,9 @@ export class LinkedResourceListComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    openContact(row: any, mode: string) {
+        this.dialog.open(ContactsListModalComponent, { data: { title: `${row.chrono} - ${row.subject}`, mode: mode, resId: row.resId } });
     }
 }
