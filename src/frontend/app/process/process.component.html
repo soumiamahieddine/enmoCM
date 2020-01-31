@@ -227,9 +227,9 @@
         </div>
         <div class="document-container" [class.fullContainer]="appService.getViewMode()">
             <div class="content">
-                <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="false"
+                <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="canEditData"
                     [resId]="currentResourceInformations.resId"
-                    [title]="currentResourceInformations.chrono + ' - ' + currentResourceInformations.subject">
+                    [title]="currentResourceInformations.chrono + ' - ' + currentResourceInformations.subject" [sidenavLeft]="sidenavLeft">
                 </app-document-viewer>
             </div>
         </div>
