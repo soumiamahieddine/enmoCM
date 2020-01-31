@@ -62,7 +62,6 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
     onMessage(e: any) {
         //console.log(e);
         const response = JSON.parse(e.data);
-        console.log(response);
         // EVENT TO CONSTANTLY UPDATE CURRENT DOCUMENT
         if (response.event === 'onDownloadAs') {
             this.getEncodedDocument(response.data);
