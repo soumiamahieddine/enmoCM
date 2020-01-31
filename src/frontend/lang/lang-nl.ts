@@ -1474,6 +1474,7 @@ export const LANG_NL = {
     "PRE": "Back absence",//_TO_TRANSLATE
     "RESETPSW": "Password reset",//_TO_TRANSLATE
     "ERROR": "Error", //_TO_TRANSLATE
+    "fileAlreadySentToSignatureBook": "File already send to signature book", //_TO_TRANSLATE
     "systemActions": "System action(s)", //_TO_TRANSLATE
     "viewAllHistory": "View all history", //_TO_TRANSLATE
     "viewActionsHistory": "View only actions in history", //_TO_TRANSLATE

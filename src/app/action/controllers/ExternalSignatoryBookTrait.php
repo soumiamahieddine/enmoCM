@@ -55,7 +55,7 @@ trait ExternalSignatoryBookTrait
 
                 $integratedResource = ResModel::get([
                     'select' => [1],
-                    'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_signatory_book_id is null', 'res_id = ?'],
+                    'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_id->>\'signatureBookId\' is null', 'res_id = ?'],
                     'data'   => [$args['resId']]
                 ]);
 
@@ -109,9 +109,9 @@ trait ExternalSignatoryBookTrait
         if (!empty($attachmentToFreeze)) {
             if (!empty($attachmentToFreeze['letterbox_coll'])) {
                 ResModel::update([
-                    'set' => ['external_signatory_book_id' => $attachmentToFreeze['letterbox_coll'][$args['resId']]],
-                    'where' => ['res_id = ?'],
-                    'data' => [$args['resId']]
+                    'postSet' => ['external_id' => "jsonb_set(external_id, '{signatureBookId}', '{$attachmentToFreeze['letterbox_coll'][$args['resId']]}'::text::jsonb)"],
+                    'where'   => ['res_id = ?'],
+                    'data'    => [$args['resId']]
                 ]);
             } else {
                 if (!empty($attachmentToFreeze['attachments_coll'])) {

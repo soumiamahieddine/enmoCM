@@ -1449,6 +1449,7 @@ export const LANG_EN = {
     "PRE": "Back absence",
     "RESETPSW": "Password reset",
     "ERROR": "Error",
+    "fileAlreadySentToSignatureBook": "File already send to signature book",
     "systemActions": "System action(s)",
     "viewAllHistory": "View all history",
     "viewActionsHistory": "View only actions in history",

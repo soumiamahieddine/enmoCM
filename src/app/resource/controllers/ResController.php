@@ -1070,7 +1070,7 @@ class ResController
     {
         $body = $args['body'];
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status', 'model_id', 'external_signatory_book_id']]);
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status', 'model_id', 'external_id->>\'signatureBookId\' as signaturebookid']]);
         if (empty($resource['status'])) {
             return ['errors' => 'Resource status is empty. It can not be modified'];
         }
@@ -1083,7 +1083,7 @@ class ResController
             return ['errors' => 'Body is not set or empty'];
         } elseif (!Validator::intVal()->notEmpty()->validate($body['doctype'])) {
             return ['errors' => 'Body doctype is empty or not an integer'];
-        } elseif (!empty($body['encodedFile']) && !empty($resource['external_signatory_book_id'])) {
+        } elseif (!empty($body['encodedFile']) && !empty($resource['signaturebookid'])) {
             return ['errors' => 'Resource is in external signature book, file can not be modified'];
         }
 

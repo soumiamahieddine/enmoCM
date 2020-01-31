@@ -234,7 +234,7 @@ if (file_exists($GLOBALS['errorLckFile'])) {
 Bt_getWorkBatch();
 
 $GLOBALS['logger']->write('Retrieve attachments sent to remote signatory book', 'INFO');
-$query = "SELECT res_id, external_id->>'signatureBookId' as external_id, external_id->>'xparaphDepot' as xparaphdepot, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user, typist, origin_id, relation 
+$query = "SELECT res_id, external_id->>'signatureBookId' as external_id, external_id->>'xparaphDepot' as xparaphdepot, format, res_id_master, title, identifier, attachment_type, recipient_id, recipient_type, typist, origin_id, relation 
         FROM res_attachments WHERE status = 'FRZ' AND external_id->>'signatureBookId' IS NOT NULL AND external_id->>'signatureBookId' <> ''";
 $stmt = $GLOBALS['db']->query($query, []);
     
@@ -259,8 +259,8 @@ if ($configRemoteSignatoryBook['id'] == 'ixbus') {
 }
 
 $GLOBALS['logger']->write('Retrieve mails sent to remote signatory book', 'INFO');
-$query = "SELECT res_id, external_signatory_book_id as external_id, subject, typist 
-        FROM res_letterbox WHERE external_signatory_book_id IS NOT NULL";
+$query = "SELECT res_id, external_id->>'signatureBookId' as external_id, subject, typist, version 
+        FROM res_letterbox WHERE external_id->>'signatureBookId' IS NOT NULL";
 $stmt = $GLOBALS['db']->query($query, []);
 
 while ($reqResult = $stmt->fetchObject()) {
@@ -286,18 +286,14 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
             'res_id_master'     => $value->res_id_master,
             'title'             => '[xParaph Log] ' . $value->title,
             'identifier'        => $value->identifier,
-            'type_id'           => $value->type_id,
-            'dest_contact_id'   => $value->dest_contact_id,
-            'dest_address_id'   => $value->dest_address_id,
-            'dest_user'         => $value->dest_user,
+            'recipient_id'      => $value->recipient_id,
+            'recipient_type'    => $value->recipient_type,
             'typist'            => $value->typist,
             'format'            => 'xml',
             'attachment_type'   => $value->attachment_type,
-            'relation'          => 1,
-            'status'            => 'TRA',
-            'encodedFile'       => $value->log,
             'in_signature_book' => 'false',
-            'table'             => 'res_attachments'
+            'encodedFile'       => $value->log,
+            'status'            => 'TRA'
         ]);
     }
     $additionalHistoryInfo = '';
@@ -307,23 +303,26 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
 
     if ($value->status == 'validated') {
         if (!empty($value->encodedFile)) {
+            \SrcCore\models\DatabaseModel::delete([
+                'table' => 'res_attachments',
+                'where' => ['res_id_master = ?', 'status = ?', 'relation = ?'],
+                'data'  => [$value->res_id_master, 'SIGN', $value->relation]
+            ]);
+
             $GLOBALS['logger']->write('Create validated Attachment', 'INFO');
             Bt_createAttachment([
                 'res_id_master'   => $value->res_id_master,
                 'title'           => $value->title,
                 'identifier'      => $value->identifier,
-                'type_id'         => $value->type_id,
-                'dest_contact_id' => $value->dest_contact_id,
-                'dest_address_id' => $value->dest_address_id,
-                'dest_user'       => $value->dest_user,
+                'recipient_id'    => $value->recipient_id,
+                'recipient_type'  => $value->recipient_type,
                 'typist'          => $value->typist,
                 'format'          => $value->format,
                 'attachment_type' => $value->attachment_type,
-                'relation'        => $value->relation + 1,
-                'origin_id'       => $resId,
-                'status'          => 'TRA',
+                'in_signature_book' => 'true',
+                'originId'       => $resId,
+                'status'          => 'SIGN',
                 'encodedFile'     => $value->encodedFile,
-                'table'           => 'res_attachments',
                 'noteContent'     => $value->noteContent,
                 'noteCreatorId'   => $value->noteCreatorId,
                 'noteCreatorName' => $value->noteCreatorName
@@ -361,17 +360,14 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
                 'res_id_master'   => $value->res_id_master,
                 'title'           => '[REFUSE] ' . $value->title,
                 'identifier'      => $value->identifier,
-                'type_id'         => $value->type_id,
-                'dest_contact_id' => $value->dest_contact_id,
-                'dest_address_id' => $value->dest_address_id,
-                'dest_user'       => $value->dest_user,
+                'recipient_id'    => $value->recipient_id,
+                'recipient_type'  => $value->recipient_type,
                 'typist'          => $value->typist,
                 'format'          => $value->format,
                 'attachment_type' => $value->attachment_type,
                 'status'          => 'A_TRA',
                 'encodedFile'     => $value->encodedFile,
                 'in_signature_book' => 'false',
-                'table'           => 'res_attachments',
                 'noteContent'     => $value->noteContent,
                 'noteCreatorId'   => $value->noteCreatorId,
                 'noteCreatorName' => $value->noteCreatorName
@@ -393,42 +389,72 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
 }
 
 foreach ($retrievedMails['resLetterbox'] as $resId => $value) {
-    $GLOBALS['logger']->write('Update res_letterbox : ' . $resId . '. ExternalSignatoryBookId : ' . $value->external_id, 'INFO');
+    $GLOBALS['logger']->write('Update res_letterbox : ' . $resId . '. SignatoryBookId : ' . $value->external_id, 'INFO');
 
     if (!empty($value->encodedFile)) {
-        $GLOBALS['logger']->write('Create Attachment', 'INFO');
-        Bt_createAttachment([
-            'res_id_master'     => $value->res_id,
-            'title'             => $value->subject,
-            'typist'            => $value->typist,
-            'format'            => $value->format,
-            'encodedFile'       => $value->encodedFile,
-            'noteContent'       => $value->noteContent,
-            'noteCreatorId'     => $value->noteCreatorId,
-            'noteCreatorName'   => $value->noteCreatorName,
-            'in_signature_book' => 'false',
-            'attachment_type'   => 'document_with_notes'
+        $GLOBALS['logger']->write('Create document in res_letterbox', 'INFO');
+        if ($value->status =='validated') {
+            \SrcCore\models\DatabaseModel::delete([
+                'table' => 'adr_letterbox',
+                'where' => ['res_id = ?', 'type in (?)', 'version = ?'],
+                'data'  => [$resId, ['SIGN', 'TNL'], $value->version]
+            ]);
+        } else {
+            \SrcCore\models\DatabaseModel::delete([
+                'table' => 'adr_letterbox',
+                'where' => ['res_id = ?', 'type in (?)', 'version = ?'],
+                'data'  => [$resId, ['NOTE'], $value->version]
+            ]);
+        }
+
+        $adrType = 'SIGN';
+        if (in_array($value->status, ['refused', 'refusedNote', 'validatedNote'])) {
+            $adrType = 'NOTE';
+        }
+        $storeResult = \Docserver\controllers\DocserverController::storeResourceOnDocServer([
+            'collId'          => 'letterbox_coll',
+            'docserverTypeId' => 'DOC',
+            'encodedResource' => $value->encodedFile,
+            'format'          => 'pdf'
+        ]);
+        \SrcCore\models\DatabaseModel::insert([
+            'table'         => 'adr_letterbox',
+            'columnsValues' => [
+                'res_id'       => $resId,
+                'type'         => $adrType,
+                'docserver_id' => $storeResult['docserver_id'],
+                'path'         => $storeResult['destination_dir'],
+                'filename'     => $storeResult['file_destination_name'],
+                'version'      => $value->version,
+                'fingerprint'  => empty($storeResult['fingerPrint']) ? null : $storeResult['fingerPrint']
+            ]
         ]);
     }
     $additionalHistoryInfo = '';
     if (!empty($value->workflowInfo)) {
         $additionalHistoryInfo =  ' : ' . $value->workflowInfo;
     }
-    if ($value->status == 'validatedNote') {
+    if (in_array($value->status, ['validatedNote', 'validated'])) {
         $GLOBALS['logger']->write('Document validated', 'INFO');
-        Bt_validatedMail(['status' => $validatedStatusAnnot, 'resId' => $value->res_id]);
-
+        $status = $validatedStatus;
+        if ($value->status == 'validatedNote') {
+            $status = $validatedStatusAnnot;
+        }
+        $GLOBALS['db']->query('UPDATE res_letterbox SET status = ? WHERE res_id = ? ', [$status, $resId]);
         Bt_history([
             'table_name' => 'res_letterbox',
-            'record_id'  => $value->res_id,
+            'record_id'  => $resId,
             'info'       => 'Le document '.$resId.' (res_letterbox) a été validé dans le parapheur externe' . $additionalHistoryInfo,
             'event_type' => 'ACTION#1',
             'event_id'   => '1'
         ]);
-    } elseif ($value->status == 'refusedNote') {
+    } elseif (in_array($value->status, ['refusedNote', 'refused'])) {
         $GLOBALS['logger']->write('Document refused', 'INFO');
-        $GLOBALS['db']->query("UPDATE res_letterbox SET status = '" . $refusedStatusAnnot . "' WHERE res_id = ?", [$resId]);
-    
+        $status = $refusedStatus;
+        if ($value->status == 'refusedNote') {
+            $status = $refusedStatusAnnot;
+        }
+        $GLOBALS['db']->query("UPDATE res_letterbox SET status = ? WHERE res_id = ?", [$status, $resId]);
         Bt_history([
             'table_name' => 'res_letterbox',
             'record_id'  => $resId,
@@ -437,7 +463,7 @@ foreach ($retrievedMails['resLetterbox'] as $resId => $value) {
             'event_id'   => '1'
         ]);
     }
-    $GLOBALS['db']->query("UPDATE res_letterbox SET external_signatory_book_id = null WHERE res_id = ?", [$resId]);
+    $GLOBALS['db']->query("UPDATE res_letterbox SET external_id = external_id - 'signatureBookId' WHERE res_id = ?", [$resId]);
 }
 
 $GLOBALS['logger']->write('End of process', 'INFO');

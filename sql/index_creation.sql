@@ -9,7 +9,6 @@ CREATE INDEX res_letterbox_docserver_id_idx ON res_letterbox (docserver_id);
 CREATE INDEX res_letterbox_filename_idx ON res_letterbox (filename);
 CREATE INDEX res_departure_date_idx ON res_letterbox (departure_date);
 CREATE INDEX res_barcode_idx ON res_letterbox (barcode);
-CREATE INDEX external_signatory_book_id_idx ON res_letterbox (external_signatory_book_id);
 CREATE INDEX category_id_idx ON res_letterbox (category_id);
 
 -- res_attachments

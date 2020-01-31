@@ -448,7 +448,7 @@ class PreProcessActionController
 
                     $integratedResource = ResModel::get([
                         'select' => [1],
-                        'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_signatory_book_id is null', 'res_id = ?'],
+                        'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_id->>\'signatureBookId\' is null', 'res_id = ?'],
                         'data'   => [$resId]
                     ]);
 
@@ -628,13 +628,13 @@ class PreProcessActionController
             }
 
             foreach ($data['resources'] as $resId) {
-                $noAttachmentsResource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'filename']]);
+                $noAttachmentsResource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'filename', 'external_id->>\'signatureBookId\' as signaturebookid']]);
                 if (empty($noAttachmentsResource['alt_identifier'])) {
                     $noAttachmentsResource['alt_identifier'] = _UNDEFINED;
                 }
 
                 if (empty($noAttachmentsResource['filename'])) {
-                    $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noDocument'];
+                    $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noDocumentToSend'];
                     continue;
                 }
                 $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => 'letterbox_coll']);
@@ -650,6 +650,10 @@ class PreProcessActionController
                 $filePath = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
                 if (!is_file($filePath)) {
                     $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'fileDoesNotExists'];
+                    continue;
+                }
+                if (!empty($noAttachmentsResource['signaturebookid'])) {
+                    $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'fileAlreadySendToSignatureBook'];
                     continue;
                 }
                 $additionalsInfos['mails'][] = ['res_id' => $resId];

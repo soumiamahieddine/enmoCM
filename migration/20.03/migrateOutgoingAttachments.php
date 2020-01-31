@@ -23,7 +23,7 @@ foreach ($customs as $custom) {
     $migrated = 0;
     $attachmentsInfo = \SrcCore\models\DatabaseModel::select([
         'select' => ['l.category_id', 'a.res_id', 'a.relation', 'a.docserver_id', 'a.path', 'a.filename', 'a.filesize', 'a.format', 'a.res_id_master', 'a.in_signature_book',
-                        'a.in_send_attach', 'a.external_id', 'a.origin_id', 'a.external_id', 'l.external_id as letterbox_external_id'],
+                        'a.in_send_attach', 'a.external_id->>\'signatureBookId\' as signaturebookid', 'a.origin_id'],
         'table'  => ['res_attachments a, res_letterbox l'],
         'where'  => ['attachment_type = ?', 'a.status not in (?)', 'a.res_id_master = l.res_id', 'category_id = ?'],
         'data'   => ['outgoing_mail', ['DEL', 'TMP', 'OBS'], 'outgoing'],
@@ -57,12 +57,7 @@ foreach ($customs as $custom) {
         $integration = [];
         $integration['inSignatureBook'] = empty($attachmentInfo['in_signature_book']) ?  'false' : 'true';
         $integration['inShipping']      = empty($attachmentInfo['in_send_attach']) ?  'false' : 'true';
-        $attachmentExternalId = json_decode($attachmentInfo['external_id'], true);
-        $externalId           = json_decode($attachmentInfo['letterbox_external_id'], true);
 
-        $attachmentExternalId = empty($attachmentExternalId) ? [] : $attachmentExternalId;
-        $externalId           = empty($externalId) ? [] : $externalId;
-        $externalId           = array_merge($externalId, $attachmentExternalId);
         ResModel::update([
             'set' => [
                 'docserver_id' => $attachmentInfo['docserver_id'],
@@ -71,9 +66,9 @@ foreach ($customs as $custom) {
                 'fingerprint'  => $attachmentInfo['fingerprint'],
                 'filesize'     => $attachmentInfo['filesize'],
                 'version'      => $attachmentInfo['relation'],
-                'integrations' => json_encode($integration),
-                'external_id'  => json_encode($externalId)
+                'integrations' => json_encode($integration)
             ],
+            'postSet' => ['external_id' => "jsonb_set(external_id, '{signatureBookId}', '{$attachmentInfo['signaturebookid']}'::text::jsonb)"],
             'where' => ['res_id = ?'],
             'data'  => [$attachmentInfo['res_id_master']]
         ]);

@@ -406,9 +406,9 @@ class ActionMethodController
 
         if (!empty($attachmentToFreeze)) {
             ResModel::update([
-                'set'   => ['external_signatory_book_id' => $attachmentToFreeze['letterbox_coll'][$args['resId']]],
-                'where' => ['res_id = ?'],
-                'data'  => [$args['resId']]
+                'postSet' => ['external_id' => "jsonb_set(external_id, '{signatureBookId}', '{$attachmentToFreeze['letterbox_coll'][$args['resId']]}'::text::jsonb)"],
+                'where'   => ['res_id = ?'],
+                'data'    => [$args['resId']]
             ]);
         }
 

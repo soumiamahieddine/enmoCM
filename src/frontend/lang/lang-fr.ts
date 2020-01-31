@@ -1488,6 +1488,7 @@ export const LANG_FR = {
     "PRE": "Retour d'absence",
     "RESETPSW": "Réinitialisation de mot de passe",
     "ERROR": "Erreur",
+    "fileAlreadySentToSignatureBook": "Fichier déjà envoyé au parapheur",
     "systemActions": "Événement(s) système",
     "viewAllHistory": "Afficher tout l'historique",
     "viewActionsHistory": "Afficher l'historique des actions",

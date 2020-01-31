@@ -211,7 +211,7 @@ class MaarchParapheurController
 
             $integratedResource = ResModel::get([
                 'select' => ['res_id', 'docserver_id', 'path', 'filename'],
-                'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_signatory_book_id is null', 'res_id = ?'],
+                'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_id->>\'signatureBookId\' is null', 'res_id = ?'],
                 'data'   => [$aArgs['resIdMaster']]
             ]);
 
@@ -493,12 +493,12 @@ class MaarchParapheurController
                     if (!empty($state['note'])) {
                         $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
                         $userInfos = UserModel::getByExternalId([
-                            'select'            => ['user_id'],
+                            'select'            => ['id'],
                             'externalId'        => $state['noteCreatorId'],
                             'externalName'      => 'maarchParapheur'
                         ]);
                         if (!empty($userInfos)) {
-                            $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorId = $userInfos['user_id'];
+                            $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorId = $userInfos['id'];
                         } else {
                             $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorName = $state['noteCreatorName'];
                         }

@@ -356,6 +356,12 @@ DO $$ BEGIN
     END IF;
 END$$;
 
+DO $$ BEGIN
+    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'external_signatory_book_id') = 0 THEN
+      UPDATE res_letterbox SET external_id = jsonb_set(external_id, '{signatureBookId}', external_signatory_book_id::text::jsonb) WHERE external_signatory_book_id IS NOT NULL;
+      ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_signatory_book_id;
+    END IF;
+END$$;
 
 /* RES_LETTERBOX */
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS model_id;

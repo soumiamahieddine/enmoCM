@@ -161,7 +161,10 @@ function Bt_createAttachment($aArgs = [])
         if (!empty($aArgs['noteCreatorId'])) {
             $creatorId = $aArgs['noteCreatorId'];
         } else {
-            $creatorId = 'superadmin';
+            $req = "SELECT id FROM users ORDER BY user_id='superadmin' desc limit 1";
+            $stmt = $GLOBALS['db']->query($req, array([]));
+            $reqResult = $stmt->fetchObject();
+            $creatorId = $reqResult->id;
             $creatorName = $aArgs['noteCreatorName'] . ' : ';
         }
         $GLOBALS['db']->query(
@@ -170,65 +173,22 @@ function Bt_createAttachment($aArgs = [])
         );
     }
 
-    if (!empty($aArgs['attachment_type'])) {
-        $attachmentType = $aArgs['attachment_type'];
-    } else {
-        $attachmentType = 'signed_response';
-    }
-
-    if (!empty($aArgs['in_signature_book'])) {
-        $inSignatureBook = $aArgs['in_signature_book'];
-    } else {
-        $inSignatureBook = 'true';
-    }
-
-    if (!empty($aArgs['table'])) {
-        $table = $aArgs['table'];
-    } else {
-        $table = 'res_attachments';
-    }
-
-    if (!empty($aArgs['relation'])) {
-        $relation = $aArgs['relation'];
-    } else {
-        $relation = 1;
-    }
-
-    if (!empty($aArgs['status'])) {
-        $status = $aArgs['status'];
-    } else {
-        $status = 'TRA';
-    }
-
     $dataValue = [];
-    array_push($dataValue, ['column' => 'res_id_master',    'value' => $aArgs['res_id_master'],   'type' => 'integer']);
-    array_push($dataValue, ['column' => 'title',            'value' => $aArgs['title'],           'type' => 'string']);
-    array_push($dataValue, ['column' => 'identifier',       'value' => $aArgs['identifier'],      'type' => 'string']);
-    array_push($dataValue, ['column' => 'type_id',          'value' => 1,                         'type' => 'integer']);
-    array_push($dataValue, ['column' => 'dest_contact_id',  'value' => $aArgs['dest_contact_id'], 'type' => 'integer']);
-    array_push($dataValue, ['column' => 'dest_address_id',  'value' => $aArgs['dest_address_id'], 'type' => 'integer']);
-    array_push($dataValue, ['column' => 'dest_user',        'value' => $aArgs['dest_user'],       'type' => 'string']);
-    array_push($dataValue, ['column' => 'typist',           'value' => $aArgs['typist'],          'type' => 'string']);
-    array_push($dataValue, ['column' => 'attachment_type',  'value' => $attachmentType,           'type' => 'string']);
-    array_push($dataValue, ['column' => 'coll_id',          'value' => 'letterbox_coll',          'type' => 'string']);
-    array_push($dataValue, ['column' => 'relation',         'value' => $relation,                 'type' => 'integer']);
-    array_push($dataValue, ['column' => 'in_signature_book','value' => $inSignatureBook,          'type' => 'bool']);
-
-    if (!empty($aArgs['origin_id'])) {
-        array_push($dataValue, ['column' => 'origin_id','value' => $aArgs['origin_id'], 'type' => 'integer']);
-    }
-
-    $allDatas = [
-        "encodedFile" => $aArgs['encodedFile'],
-        "data"        => $dataValue,
-        "collId"      => "letterbox_coll",
-        "table"       => $table,
-        "fileFormat"  => $aArgs['format'],
-        "status"      => $status
-    ];
+    $dataValue['resIdMaster']     = $aArgs['res_id_master'];
+    $dataValue['title']           = $aArgs['title'];
+    $dataValue['recipientId']     = $aArgs['recipient_id'];
+    $dataValue['recipientType']   = $aArgs['recipient_type'];
+    $dataValue['typist']          = $aArgs['typist'];
+    $dataValue['chrono']          = $aArgs['identifier'];
+    $dataValue['type']            = $aArgs['attachment_type'];
+    $dataValue['inSignatureBook'] = $aArgs['in_signature_book'];
+    $dataValue['encodedFile']     = $aArgs['encodedFile'];
+    $dataValue['format']          = $aArgs['format'];
+    $dataValue['status']          = $aArgs['status'];
+    $dataValue['originId']        = $aArgs['origin_id'];
 
     $opts = [
-        CURLOPT_URL => $GLOBALS['applicationUrl'] . 'rest/res',
+        CURLOPT_URL => $GLOBALS['applicationUrl'] . 'rest/attachments',
         CURLOPT_HTTPHEADER => [
             'accept:application/json',
             'content-type:application/json',
@@ -236,7 +196,7 @@ function Bt_createAttachment($aArgs = [])
         ],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_POSTFIELDS => json_encode($allDatas),
+        CURLOPT_POSTFIELDS => json_encode($dataValue),
         CURLOPT_POST => true
     ];
 
