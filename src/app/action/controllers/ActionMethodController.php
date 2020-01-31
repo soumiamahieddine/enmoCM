@@ -377,6 +377,7 @@ class ActionMethodController
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
         $config = [];
 
+        $historyInfo = '';
         if (!empty($loadedXml)) {
             $config['id'] = 'maarchParapheur';
             foreach ($loadedXml->signatoryBook as $value) {
@@ -697,6 +698,7 @@ class ActionMethodController
         if ($message == null) {
             return true;
         }
+
         return ['history' => $message];
     }
 

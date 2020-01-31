@@ -437,7 +437,7 @@ class ResourceListController
 
         $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
         $methodResponses = [];
-        foreach ($resourcesForAction as $resId) {
+        foreach ($resourcesForAction as $key => $resId) {
             if (!empty($method)) {
                 $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data'], 'note' => $body['note']]);
 
@@ -446,6 +446,7 @@ class ResourceListController
                         $methodResponses['errors'] = [];
                     }
                     $methodResponses['errors'] = array_merge($methodResponses['errors'], $methodResponse['errors']);
+                    unset($resourcesForAction[$key]);
                 }
                 if (!empty($methodResponse['data'])) {
                     if (empty($methodResponses['data'])) {
@@ -458,9 +459,6 @@ class ResourceListController
         $historic = empty($methodResponse['history']) ? '' : $methodResponse['history'];
         ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name'], 'note' => $body['note'], 'history' => $historic]);
 
-        if (!empty($methodResponses['errors'])) {
-            return $response->withStatus(403)->withJson($methodResponses);
-        }
         if (!empty($methodResponses)) {
             return $response->withJson($methodResponses);
         }
