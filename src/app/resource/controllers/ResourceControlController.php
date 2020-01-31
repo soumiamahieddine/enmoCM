@@ -123,7 +123,7 @@ class ResourceControlController
             return ['errors' => 'Body is not set or empty'];
         }
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status', 'model_id', 'external_signatory_book_id', 'format']]);
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status', 'model_id', 'format', 'external_id->>\'signatureBookId\' as signaturebookid']]);
         if (empty($resource['status'])) {
             return ['errors' => 'Resource status is empty. It can not be modified'];
         }
@@ -135,7 +135,7 @@ class ResourceControlController
         if ($args['onlyDocument'] && empty($body['encodedFile'])) {
             return ['errors' => 'Body encodedFile is not set or empty'];
         } elseif (!empty($body['encodedFile'])) {
-            if (!empty($resource['external_signatory_book_id'])) {
+            if (!empty($resource['signaturebookid'])) {
                 return ['errors' => 'Resource is in external signature book, file can not be modified'];
             } elseif (ResourceControlController::isSigned(['resId' => $args['resId']])) {
                 return ['errors' => 'Resource is signed, file can not be modified'];
