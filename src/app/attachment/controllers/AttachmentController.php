@@ -211,7 +211,6 @@ class AttachmentController
             'moduleId'  => 'attachment',
             'eventId'   => 'attachmentModification'
         ]);
-
         HistoryController::add([
             'tableName' => 'res_letterbox',
             'recordId'  => $attachment['res_id_master'],
@@ -723,6 +722,8 @@ class AttachmentController
             return ['errors' => 'Body resIdMaster is empty or not an integer'];
         } elseif (!Validator::stringType()->notEmpty()->validate($body['type'])) {
             return ['errors' => 'Body type is empty or not a string'];
+        } elseif (isset($body['status']) && !in_array($body['status'], ['A_TRA', 'TRA', 'SIGN'])) {
+            return ['errors' => 'Body type is empty or not a string'];
         }
 
         if (!ResController::hasRightByResId(['resId' => [$body['resIdMaster']], 'userId' => $GLOBALS['id']])) {
@@ -781,17 +782,27 @@ class AttachmentController
     {
         $body = $args['body'];
 
+        if (!empty($body['status']) && $body['status'] == 'SIGN' && empty($body['originId'])) {
+            return ['errors' => 'Body status is SIGN and body originId is empty'];
+        }
         if (!empty($body['originId'])) {
             if (!Validator::intVal()->notEmpty()->validate($body['originId'])) {
                 return ['errors' => 'Body originId is not an integer'];
             }
-            $origin = AttachmentModel::getById(['id' => $body['originId'], 'select' => ['res_id_master', 'origin_id']]);
+            $origin = AttachmentModel::getById(['id' => $body['originId'], 'select' => ['res_id_master', 'origin_id', 'status']]);
             if (empty($origin)) {
                 return ['errors' => 'Body originId does not exist'];
             } elseif ($origin['res_id_master'] != $body['resIdMaster']) {
                 return ['errors' => 'Body resIdMaster is different from origin'];
-            } elseif (!empty($origin['origin_id'])) {
-                return ['errors' => 'Body originId can not be a version, it must be the original version'];
+            }
+            if (!empty($body['status']) && $body['status'] == 'SIGN') {
+                if (!in_array($origin['status'], ['A_TRA', 'TRA', 'FRZ'])) {
+                    return ['errors' => 'Body originId has not an authorized status'];
+                }
+            } else {
+                if (!empty($origin['origin_id'])) {
+                    return ['errors' => 'Body originId can not be a version, it must be the original version'];
+                }
             }
         }
 
