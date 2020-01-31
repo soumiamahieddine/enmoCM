@@ -45,7 +45,6 @@ use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
 use Resource\models\UserFollowedResourceModel;
 use Respect\Validation\Validator;
-use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
@@ -376,18 +375,14 @@ class ResController
         $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'fingerprint', 'category_id', 'alt_identifier'], 'resId' => $aArgs['resId']]);
         if (empty($document)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
-        }
-
-        if (empty($document['filename'])) {
+        } elseif (empty($document['filename'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Document has no file']);
         }
 
         $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll']);
         if (!empty($convertedDocument['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Conversion error : ' . $convertedDocument['errors']]);
-        }
-
-        if ($document['docserver_id'] == $convertedDocument['docserver_id']) {
+        } elseif ($document['docserver_id'] == $convertedDocument['docserver_id']) {
             return $response->withStatus(400)->withJson(['errors' => 'Document can not be converted']);
         }
 
@@ -399,7 +394,6 @@ class ResController
         }
 
         $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
-
         if (!file_exists($pathToDocument)) {
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }
@@ -410,72 +404,7 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
         }
 
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/features.xml']);
-        if ($loadedXml) {
-            $watermark = (array)$loadedXml->FEATURES->watermark;
-            if ($watermark['enabled'] == 'true') {
-                $text = "watermark by {$GLOBALS['userId']}";
-                if (!empty($watermark['text'])) {
-                    $text = $watermark['text'];
-                    preg_match_all('/\[(.*?)\]/i', $watermark['text'], $matches);
-
-                    foreach ($matches[1] as $value) {
-                        $tmp = '';
-                        if ($value == 'date_now') {
-                            $tmp = date('d-m-Y');
-                        } elseif ($value == 'hour_now') {
-                            $tmp = date('H:i');
-                        } elseif ($value == 'alt_identifier') {
-                            $tmp = $document['alt_identifier'];
-                        } else {
-                            $backFromView = ResModel::getOnView(['select' => $value, 'where' => ['res_id = ?'], 'data' => [$aArgs['resId']]]);
-                            if (!empty($backFromView[0][$value])) {
-                                $tmp = $backFromView[0][$value];
-                            }
-                        }
-                        $text = str_replace("[{$value}]", $tmp, $text);
-                    }
-                }
-
-                $color = ['192', '192', '192']; //RGB
-                if (!empty($watermark['text_color'])) {
-                    $rawColor = explode(',', $watermark['text_color']);
-                    $color = count($rawColor) == 3 ? $rawColor : $color;
-                }
-
-                $font = ['helvetica', '10']; //Familly Size
-                if (!empty($watermark['font'])) {
-                    $rawFont = explode(',', $watermark['font']);
-                    $font = count($rawFont) == 2 ? $rawFont : $font;
-                }
-
-                $position = [30, 35, 0, 0.5]; //X Y Angle Opacity
-                if (!empty($watermark['position'])) {
-                    $rawPosition = explode(',', $watermark['position']);
-                    $position = count($rawPosition) == 4 ? $rawPosition : $position;
-                }
-
-                try {
-                    $pdf = new Fpdi('P', 'pt');
-                    $nbPages = $pdf->setSourceFile($pathToDocument);
-                    $pdf->setPrintHeader(false);
-                    for ($i = 1; $i <= $nbPages; $i++) {
-                        $page = $pdf->importPage($i, 'CropBox');
-                        $size = $pdf->getTemplateSize($page);
-                        $pdf->AddPage($size['orientation'], $size);
-                        $pdf->useImportedPage($page);
-                        $pdf->SetFont($font[0], '', $font[1]);
-                        $pdf->SetTextColor($color[0], $color[1], $color[2]);
-                        $pdf->SetAlpha($position[3]);
-                        $pdf->Rotate($position[2]);
-                        $pdf->Text($position[0], $position[1], $text);
-                    }
-                    $fileContent = $pdf->Output('', 'S');
-                } catch (\Exception $e) {
-                    $fileContent = null;
-                }
-            }
-        }
+        $fileContent = WatermarkController::watermarkResource(['resId' => $aArgs['resId'], 'path' => $pathToDocument]);
 
         if (empty($fileContent)) {
             $fileContent = file_get_contents($pathToDocument);
@@ -484,11 +413,6 @@ class ResController
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }
 
-        ListInstanceModel::update([
-            'postSet'   => ['viewed' => 'viewed + 1'],
-            'where'     => ['item_id = ?', 'res_id = ?'],
-            'data'      => [$GLOBALS['userId'], $aArgs['resId']]
-        ]);
         HistoryController::add([
             'tableName' => 'res_letterbox',
             'recordId'  => $aArgs['resId'],
@@ -511,6 +435,61 @@ class ResController
             $response = $response->withAddedHeader('Content-Disposition', "{$contentDisposition}; filename=maarch.{$pathInfo['extension']}");
             return $response->withHeader('Content-Type', $mimeType);
         }
+    }
+
+    public function getFileContents(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['version', 'filename']]);
+        if (empty($resource['filename'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document has no file']);
+        } elseif (!Validator::intVal()->validate($args['version']) || $args['version'] > $resource['version'] || $args['version'] < 1) {
+            return $response->withStatus(400)->withJson(['errors' => 'Incorrect version']);
+        }
+
+        $contents = [];
+        $convertedDocuments = AdrModel::getDocuments([
+            'select'    => ['docserver_id', 'path', 'filename', 'fingerprint', 'type'],
+            'where'     => ['res_id = ?', 'type in (?)', 'version = ?'],
+            'data'      => [$args['resId'], ['PDF', 'SIGN', 'NOTE'], $args['version']]
+        ]);
+
+        foreach ($convertedDocuments as $convertedDocument) {
+            $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+            if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+                continue;
+            }
+
+            $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
+            if (!file_exists($pathToDocument)) {
+                continue;
+            }
+
+            $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
+            $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
+            if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
+                return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
+            }
+
+            $fileContent = WatermarkController::watermarkResource(['resId' => $args['resId'], 'path' => $pathToDocument]);
+            if (empty($fileContent)) {
+                $fileContent = file_get_contents($pathToDocument);
+            }
+            if ($fileContent === false) {
+                continue;
+            }
+
+            if ($convertedDocument['type'] == 'NOTE' && !PrivilegeController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
+                continue;
+            }
+
+            $contents[$convertedDocument['type']] = base64_encode($fileContent);
+        }
+
+        return $response->withJson(['contents' => $contents]);
     }
 
     public function getOriginalFileContent(Request $request, Response $response, array $aArgs)
@@ -544,9 +523,7 @@ class ResController
             return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
         }
 
-        if (empty($fileContent)) {
-            $fileContent = file_get_contents($pathToDocument);
-        }
+        $fileContent = file_get_contents($pathToDocument);
         if ($fileContent === false) {
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }
@@ -558,11 +535,6 @@ class ResController
         $response->write($fileContent);
         $response = $response->withAddedHeader('Content-Disposition', "attachment; filename=maarch.{$pathInfo['extension']}");
 
-        ListInstanceModel::update([
-            'postSet'   => ['viewed' => 'viewed + 1'],
-            'where'     => ['item_id = ?', 'res_id = ?'],
-            'data'      => [$GLOBALS['userId'], $aArgs['resId']]
-        ]);
         HistoryController::add([
             'tableName' => 'res_letterbox',
             'recordId'  => $aArgs['resId'],

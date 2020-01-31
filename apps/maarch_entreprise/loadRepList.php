@@ -55,10 +55,6 @@ if (isset($_REQUEST['res_id_master'])) {
     $db = new Database();
 
     $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
-    if (!$Core_Tools->test_service('view_documents_with_notes', 'attachments', false)) {
-        $excludeAttachmentTypes[] = 'document_with_notes';
-    }
-
     $query = "SELECT * FROM res_attachments 
                             WHERE res_id_master = ? 
                             AND status NOT IN ('DEL', 'OBS') AND attachment_type NOT IN (?)  AND (status <> 'TMP' or (typist = ? and status = 'TMP')) 

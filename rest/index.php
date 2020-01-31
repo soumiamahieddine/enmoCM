@@ -343,6 +343,7 @@ $app->post('/resources', \Resource\controllers\ResController::class . ':create')
 $app->get('/resources/{resId}', \Resource\controllers\ResController::class . ':getById');
 $app->put('/resources/{resId}', \Resource\controllers\ResController::class . ':update');
 $app->get('/resources/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
+$app->get('/resources/{resId}/contents/{version}', \Resource\controllers\ResController::class . ':getFileContents');
 $app->get('/resources/{resId}/originalContent', \Resource\controllers\ResController::class . ':getOriginalFileContent');
 $app->get('/resources/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
 $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');

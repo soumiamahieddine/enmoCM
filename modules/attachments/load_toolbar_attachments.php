@@ -19,10 +19,6 @@ require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'cla
 $db = new Database;
 $core = new core_tools();
 
-if (!$core->test_service('view_documents_with_notes', 'attachments', false)) {
-    $exclude = ", 'document_with_notes'";
-}
-
 if ($_SESSION['req'] == 'details') {
     if (isset($_REQUEST['responses'])) {
         $stmt = $db->query("SELECT res_id, creation_date, title, format FROM "
