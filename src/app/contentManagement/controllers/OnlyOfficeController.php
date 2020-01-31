@@ -192,7 +192,7 @@ class OnlyOfficeController
 
         $exec = shell_exec("nc -vz -w 5 {$uri} {$port} 2>&1");
 
-        $isAvailable = strpos($exec, 'succeeded!') !== false;
+        $isAvailable = strpos($exec, 'succeeded!') !== false || strpos($exec, 'open') !== false;
 
         return $response->withJson(['isAvailable' => $isAvailable]);
     }
