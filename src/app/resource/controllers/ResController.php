@@ -385,8 +385,6 @@ class ResController extends ResourceControlController
         $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll']);
         if (!empty($convertedDocument['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Conversion error : ' . $convertedDocument['errors']]);
-        } elseif ($document['docserver_id'] == $convertedDocument['docserver_id']) {
-            return $response->withStatus(400)->withJson(['errors' => 'Document can not be converted']);
         }
 
         $document = $convertedDocument;

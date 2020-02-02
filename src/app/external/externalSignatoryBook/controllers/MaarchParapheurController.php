@@ -493,13 +493,14 @@ class MaarchParapheurController
                     if (!empty($state['note'])) {
                         $aArgs['idsToRetrieve'][$version][$resId]->noteContent = $state['note'];
                         $userInfos = UserModel::getByExternalId([
-                            'select'            => ['id'],
+                            'select'            => ['id', 'firstname', 'lastname'],
                             'externalId'        => $state['noteCreatorId'],
                             'externalName'      => 'maarchParapheur'
                         ]);
                         if (!empty($userInfos)) {
                             $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorId = $userInfos['id'];
-                        } else {
+                            $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorName = $userInfos['firstname'] . ' ' . $userInfos['lastname'];
+                        } elseif (!empty($state['noteCreatorName'])) {
                             $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorName = $state['noteCreatorName'];
                         }
                     }

@@ -312,6 +312,7 @@ class StoreController
             $externalId = json_encode($args['externalId']);
         }
 
+        $inSignatureBook = isset($args['inSignatureBook']) ? $args['inSignatureBook'] : $attachmentsTypes[$args['type']]['sign'];
         $preparedData = [
             'title'                 => $args['title'] ?? null,
             'identifier'            => $args['chrono'] ?? null,
@@ -326,7 +327,7 @@ class StoreController
             'recipient_type'        => !empty($args['recipientId']) ? $args['recipientType'] : null,
             'validation_date'       => $args['validationDate'] ?? null,
             'effective_date'        => $args['effectiveDate'] ?? null,
-            'in_signature_book'     => $attachmentsTypes[$args['type']]['sign'] == true || !empty($args['inSignatureBook']) ? 'true' : 'false',
+            'in_signature_book'     => $inSignatureBook ? 'true' : 'false',
             'external_id'           => $externalId,
             'creation_date'         => 'CURRENT_TIMESTAMP'
         ];
