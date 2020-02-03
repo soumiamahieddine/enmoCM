@@ -262,11 +262,11 @@ class StoreController
             $preparedData['priority'] = IndexingController::calculatePriorityWithProcessLimitDate(['processLimitDate' => $args['processLimitDate']]);
         }
         if (!empty($args['encodedFile'])) {
-            $resource = ResModel::getById(['resId' => $args['id'], 'select' => ['version']]);
+            $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['version']]);
             $preparedData['version'] = $resource['version'] + 1;
         }
         if (!empty($args['externalId']) && is_array($args['externalId'])) {
-            $resource = ResModel::getById(['resId' => $args['id'], 'select' => ['external_id']]);
+            $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['external_id']]);
             $externalId = array_merge(json_decode($resource['external_id'], true), $args['externalId']);
             $externalId = json_encode($externalId);
             $preparedData['external_id'] = $externalId;
