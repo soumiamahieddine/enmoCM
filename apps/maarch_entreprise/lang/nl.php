@@ -645,7 +645,6 @@ if (!defined('_IS_CORPORATE_PERSON')) { define('_IS_CORPORATE_PERSON', 'Rechtspe
 if (!defined('_IS_INTERNAL_CONTACT')) { define('_IS_INTERNAL_CONTACT', 'Intern contact');}
 if (!defined('_IS_EXTERNAL_CONTACT')) { define('_IS_EXTERNAL_CONTACT', 'Extern contact');}
 if (!defined('_SEARCH_DIRECTORY')) { define('_SEARCH_DIRECTORY', 'Opzoeking telefoonboek');}
-if (!defined('_M2M_ID')) { define('_M2M_ID', 'Gebruikersnaam M2GEC');}
 if (!defined('_INDIVIDUAL')) { define('_INDIVIDUAL', 'Privépersoon');}
 if (!defined('_CONTACT_TARGET')) { define('_CONTACT_TARGET', 'Voor welk contact kan dit type gebruikt worden?');}
 if (!defined('_CONTACT_TARGET_LIST')) { define('_CONTACT_TARGET_LIST', 'Doel van het contacttype');}

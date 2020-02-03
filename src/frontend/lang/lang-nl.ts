@@ -601,8 +601,9 @@ export const LANG_NL = {
     "noAction"                              : "No action", //_TO_TRANSLATE
     "noAttachment"                          : "Zonder bijlage",
     "noAttachmentClickToAddOne"             : "No attachments available<br/><sub>Click on <i class=\"fa fa-paperclip fa-lg\" ></i><i class=\"fa fa-plus\"></i> to add one.</sub>", //_TO_TRANSLATE
+    "noAttachmentContact"                   : "No contact (external) linked to this attachment",//TRANSLATE
     "noAttachmentConversion"                : "No PDF conversion for this attachment TRANSLATE",
-    "noAttachmentInSignatoryBook"           : "No attachment in signature book", //_TO_TRANSLATE
+    "noAttachmentInSignatoryBook"           : "No item in signature book", //_TO_TRANSLATE
     "noSignableAttachmentInSignatoryBook"   : "No signable attachment in signature book", //_TO_TRANSLATE
     "noAttachmentToSend"                    : "No attachment to send", //_TO_TRANSLATE
     "noDocumentToSend"                      : "No document to send", //_TO_TRANSLATE
@@ -1061,7 +1062,7 @@ export const LANG_NL = {
     "indexation" : "Mail indexation", //_TO_TRANSLATE
     "keywordAdded" : "Keyword added", //_TO_TRANSLATE
     "keywordDeleted" : "Keyword deleted", //_TO_TRANSLATE
-    "actionsInfo" : "Only actions with \"simple confirmation\", \"close mail\" and \"no confirmation\" will be displayed", //_TO_TRANSLATE
+    "actionsInfo" : "Only actions with \"simple confirmation\", \"close mail\", \"no confirmation\" and \"send to visa\" will be displayed", //_TO_TRANSLATE
     "eventList" : "Open page", //_TO_TRANSLATE
     "folderAdded" : "Folder added", //_TO_TRANSLATE
     "folderDeleted" : "Folder deleted", //_TO_TRANSLATE
@@ -1407,7 +1408,7 @@ export const LANG_NL = {
     "uriIsEmpty" : "URI of onlyoffice server is empty in documentEditorsConfig.xml", //_TO_TRANSLATE
     "portIsEmpty" : "Port of onlyoffice server is empty in documentEditorsConfig.xml", //_TO_TRANSLATE
     "externalVisaWorkflow" : "Visa workflow Maarch Parapheur", //_TO_TRANSLATE
-    "IdMaarch2Gec" : "MAARCH2GEC identifier", //_TO_TRANSLATE
+    "IdMaarch2Maarch" : "MAARCH2MAARCH identifier", //_TO_TRANSLATE
     "indexingFile" : "Indexation", //_TO_TRANSLATE
     "signUserRequired" : "A signatory is required", //_TO_TRANSLATE
     "signedUserDate" : "Signed", //_TO_TRANSLATE
@@ -1460,7 +1461,7 @@ export const LANG_NL = {
     "displayWebserviceAccount": "Display webservice account", //_TO_TRANSLATE
     "circuitNotStarted": "The workflow has not yet started", //_TO_TRANSLATE
     "searchCommunicationMean": "Search communication mean", //_TO_TRANSLATE
-    "searchExternalIdM2M": "Search M2GEC Identifier", //_TO_TRANSLATE
+    "searchExternalIdM2M": "Search M2M Identifier", //_TO_TRANSLATE
     "goToFolder": "Go to folder", //_TO_TRANSLATE
     "m2mContactInfo": "Expected Format : SIRET/ENTITY_ID of destination entity", //_TO_TRANSLATE
     "ADD": "Add", //_TO_TRANSLATE
@@ -1473,6 +1474,7 @@ export const LANG_NL = {
     "PRE": "Back absence",//_TO_TRANSLATE
     "RESETPSW": "Password reset",//_TO_TRANSLATE
     "ERROR": "Error", //_TO_TRANSLATE
+    "fileAlreadySentToSignatureBook": "File already send to signature book", //_TO_TRANSLATE
     "systemActions": "System action(s)", //_TO_TRANSLATE
     "viewAllHistory": "View all history", //_TO_TRANSLATE
     "viewActionsHistory": "View only actions in history", //_TO_TRANSLATE
@@ -1490,4 +1492,7 @@ export const LANG_NL = {
     "visaNote": "Order", //_TO_TRANSLATE
     "chooseBAN": "Choose a BAN", //_TO_TRANSLATE
     "click": "Click", //_TO_TRANSLATE
+    "inSignatureBook_doc" : "Put the main document in signature book", //_TO_TRANSLATE
+    "inShipping_doc" : "Intégrer le document principal  in send Maileva", //_TO_TRANSLATE
+    "preRequisiteMissing": "Prerequisite missing for OnlyOffice : netcat", //_TO_TRANSLATE
 };

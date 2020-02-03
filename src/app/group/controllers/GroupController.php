@@ -17,13 +17,15 @@ use User\models\UserModel;
 
 class GroupController
 {
+    const INDEXING_ACTIONS = ['confirmAction', 'noConfirmAction', 'closeMailAction', 'sendSignatureBookAction'];
+
     public function get(Request $request, Response $response)
     {
         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_groups', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        $groups = GroupModel::get();
+        $groups = GroupModel::get(['orderBy' => ['group_desc']]);
         foreach ($groups as $key => $value) {
             $groups[$key]['users'] = GroupModel::getUsersById(['id' => $value['id'], 'select' => ['users.user_id', 'users.firstname', 'users.lastname']]);
         }
@@ -128,7 +130,7 @@ class GroupController
 
         GroupModel::delete(['id' => $aArgs['id']]);
 
-        $groups = GroupModel::get();
+        $groups = GroupModel::get(['orderBy' => ['group_desc']]);
         foreach ($groups as $key => $value) {
             $groups[$key]['users'] = GroupModel::getUsersById(['id' => $value['id'], 'select' => ['users.user_id']]);
         }
@@ -217,7 +219,7 @@ class GroupController
         $group['indexationParameters'] = json_decode($group['indexation_parameters'], true);
         unset($group['can_index'], $group['indexation_parameters']);
 
-        $allActions = ActionModel::get(['select' => ['id', 'label_action'], 'where' => ['component in (?)'], 'data' => [['confirmAction', 'closeMailAction', 'noConfirmAction']]]);
+        $allActions = ActionModel::get(['select' => ['id', 'label_action'], 'where' => ['component in (?)'], 'data' => [GroupController::INDEXING_ACTIONS]]);
 
         $allEntities = EntityModel::get([
             'select'    => ['e1.id', 'e1.entity_id', 'e1.entity_label', 'e2.id as parent_id'],

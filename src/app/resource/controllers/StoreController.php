@@ -172,6 +172,12 @@ class StoreController
             $externalId = json_encode($args['externalId']);
         }
 
+        $integrations = ['inSignatureBook' => false, 'inShipping' => false];
+        if (!empty($args['integrations'])) {
+            $integrations['inSignatureBook'] = !empty($args['integrations']['inSignatureBook']);
+            $integrations['inShipping'] = !empty($args['integrations']['inShipping']);
+        }
+
         if (!empty($args['customFields'])) {
             foreach ($args['customFields'] as $key => $value) {
                 $customField = CustomFieldModel::getById(['id' => $key, 'select' => ['type']]);
@@ -204,6 +210,7 @@ class StoreController
             'barcode'               => $args['barcode'] ?? null,
             'origin'                => $args['origin'] ?? null,
             'custom_fields'         => !empty($args['customFields']) ? json_encode($args['customFields']) : null,
+            'integrations'          => json_encode($integrations),
             'linked_resources'      => !empty($args['linkedResources']) ? json_encode($args['linkedResources']) : '[]',
             'external_id'           => $externalId,
             'creation_date'         => 'CURRENT_TIMESTAMP'
@@ -255,11 +262,11 @@ class StoreController
             $preparedData['priority'] = IndexingController::calculatePriorityWithProcessLimitDate(['processLimitDate' => $args['processLimitDate']]);
         }
         if (!empty($args['encodedFile'])) {
-            $resource = ResModel::getById(['resId' => $args['id'], 'select' => ['version']]);
+            $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['version']]);
             $preparedData['version'] = $resource['version'] + 1;
         }
         if (!empty($args['externalId']) && is_array($args['externalId'])) {
-            $resource = ResModel::getById(['resId' => $args['id'], 'select' => ['external_id']]);
+            $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['external_id']]);
             $externalId = array_merge(json_decode($resource['external_id'], true), $args['externalId']);
             $externalId = json_encode($externalId);
             $preparedData['external_id'] = $externalId;
@@ -288,6 +295,11 @@ class StoreController
             $args['chrono'] = ChronoModel::getChrono(['id' => 'outgoing', 'entityId' => $resource['destination'], 'typeId' => $resource['type_id'], 'resId' => $args['resIdMaster']]);
         }
 
+        if ($args['type'] == 'signed_response') {
+            $linkSign = "{$args['originId']},res_attachments";
+            unset($args['originId']);
+        }
+
         $relation = 1;
         if (!empty($args['originId'])) {
             $relations = AttachmentModel::get(['select' => ['relation'], 'where' => ['(origin_id = ? or res_id = ?)'], 'data' => [$args['originId'], $args['originId']], 'orderBy' => ['relation DESC'], 'limit' => 1]);
@@ -300,20 +312,22 @@ class StoreController
             $externalId = json_encode($args['externalId']);
         }
 
+        $inSignatureBook = isset($args['inSignatureBook']) ? $args['inSignatureBook'] : $attachmentsTypes[$args['type']]['sign'];
         $preparedData = [
             'title'                 => $args['title'] ?? null,
             'identifier'            => $args['chrono'] ?? null,
             'typist'                => $GLOBALS['userId'],
-            'status'                => 'A_TRA',
+            'status'                => $args['status'] ?? 'A_TRA',
             'relation'              => $relation,
             'origin_id'             => $args['originId'] ?? null,
+            'origin'                => $linkSign ?? null,
             'res_id_master'         => $args['resIdMaster'],
             'attachment_type'       => $args['type'],
             'recipient_id'          => $args['recipientId'] ?? null,
-            'recipient_type'        => $args['recipientType'] ?? null,
+            'recipient_type'        => !empty($args['recipientId']) ? $args['recipientType'] : null,
             'validation_date'       => $args['validationDate'] ?? null,
             'effective_date'        => $args['effectiveDate'] ?? null,
-            'in_signature_book'     => $attachmentsTypes[$args['type']]['sign'] == true || !empty($args['inSignatureBook']) ? 'true' : 'false',
+            'in_signature_book'     => $inSignatureBook ? 'true' : 'false',
             'external_id'           => $externalId,
             'creation_date'         => 'CURRENT_TIMESTAMP'
         ];

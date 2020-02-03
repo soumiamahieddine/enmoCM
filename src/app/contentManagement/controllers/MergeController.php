@@ -115,8 +115,18 @@ class MergeController
         //Resource
         if (!empty($args['resId'])) {
             $resource = ResModel::getById(['select' => ['*'], 'resId' => $args['resId']]);
-            $senders = ResourceContactModel::get(['select' => ['item_id as id', 'type'], 'where' => ['res_id = ?', 'mode = ?'], 'data' => [$args['resId'], 'sender'], 'limit' => 1]);
-            $recipients = ResourceContactModel::get(['select' => ['item_id as id', 'type'], 'where' => ['res_id = ?', 'mode = ?'], 'data' => [$args['resId'], 'recipient'], 'limit' => 1]);
+
+            if (!empty($args['senderId']) && !empty($args['senderType'])) {
+                $senders = [['id' => $args['senderId'], 'type' => $args['senderType']]];
+            } else {
+                $senders = ResourceContactModel::get(['select' => ['item_id as id', 'type'], 'where' => ['res_id = ?', 'mode = ?'], 'data' => [$args['resId'], 'sender'], 'limit' => 1]);
+            }
+
+            if (!empty($args['recipientId']) && !empty($args['recipientType'])) {
+                $recipients = [['id' => $args['recipientId'], 'type' => $args['recipientType']]];
+            } else {
+                $recipients = ResourceContactModel::get(['select' => ['item_id as id', 'type'], 'where' => ['res_id = ?', 'mode = ?'], 'data' => [$args['resId'], 'recipient'], 'limit' => 1]);
+            }
         } else {
             if (!empty($args['modelId'])) {
                 $indexingModel = IndexingModelModel::getById(['id' => $args['modelId'], 'select' => ['category']]);

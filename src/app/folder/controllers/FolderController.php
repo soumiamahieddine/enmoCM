@@ -532,10 +532,6 @@ class FolderController
             $formattedResources = [];
             if (!empty($resIds)) {
                 $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
-                if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
-                    $excludeAttachmentTypes[] = 'document_with_notes';
-                }
-
                 $attachments = AttachmentModel::get([
                     'select'    => ['COUNT(res_id)', 'res_id_master'],
                     'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],

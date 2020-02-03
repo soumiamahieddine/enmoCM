@@ -22,10 +22,10 @@
                         &nbsp;
                         <span title="{{lang[row.categoryId]}}">{{lang[row.categoryId]}}</span>
                     </span>
-                    <span class="sub-info-data col-md-4  text-center">
+                    <span class="sub-info-data col-md-4 text-center senders" (click)="openContact(row,'senders')">
                         <i class="fas fa-user" title="{{lang.contact}}"></i>
                         &nbsp;
-                        <span [title]="'Pierre BRUNEL'">Pierre BRUNEL</span>
+                        <span [title]="row.senders">{{row.senders}}</span>
                     </span>
                     <span class="sub-info-data col-md-4 text-right">
                         <i class="fas fa-calendar" title="{{lang.creationDate}}"></i>

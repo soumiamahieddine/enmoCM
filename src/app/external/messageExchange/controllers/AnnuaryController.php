@@ -175,10 +175,10 @@ class AnnuaryController
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/m2m_config.xml']);
 
         if (!$loadedXml) {
-            return ['success' => 'M2M is disabled'];
+            return ['success' => _M2M_ANNUARY_IS_NOT_SET];
         }
         if (empty($loadedXml->annuaries) || $loadedXml->annuaries->enabled == 'false') {
-            return ['success' => 'Annuary is disabled'];
+            return ['success' => _NO_M2M_ANNUARY_AVAILABLE];
         }
         $organization = (string)$loadedXml->annuaries->organization;
         if (empty($organization)) {

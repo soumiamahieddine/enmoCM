@@ -18,12 +18,14 @@ use Action\models\ActionModel;
 use Attachment\models\AttachmentModel;
 use Basket\models\ActionGroupBasketModel;
 use Basket\models\BasketModel;
+use Basket\models\GroupBasketModel;
+use Basket\models\RedirectBasketModel;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
+use Convert\models\AdrModel;
 use Entity\models\ListInstanceModel;
 use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
-use Link\models\LinkModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\controllers\ResController;
@@ -34,6 +36,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\ValidatorModel;
+use User\models\UserGroupModel;
 use User\models\UserModel;
 use User\models\UserSignatureModel;
 
@@ -115,23 +118,6 @@ class SignatureBookController
         $datas['isCurrentWorkflowUser'] = $datas['listinstance']['item_id'] == $GLOBALS['userId'];
 
         return $response->withJson($datas);
-    }
-
-    public function unsignFile(Request $request, Response $response, array $aArgs)
-    {
-        //TODO Check les droits de modif
-        AttachmentModel::unsignAttachment(['resId' => $aArgs['resId']]);
-
-        if (!AttachmentModel::hasAttachmentsSignedForUserById(['id' => $aArgs['resId'], 'user_serial_id' => $GLOBALS['id']])) {
-            $attachment = AttachmentModel::getById(['id' => $aArgs['resId'], 'select' => ['res_id_master']]);
-            ListInstanceModel::update([
-                'set'   => ['signatory' => 'false'],
-                'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
-                'data'  => [$attachment['res_id_master'], $GLOBALS['userId'], 'VISA_CIRCUIT']
-            ]);
-        }
-
-        return $response->withJson(['success' => 'success']);
     }
 
     public function getIncomingMailAndAttachmentsById(Request $request, Response $response, array $aArgs)
@@ -417,5 +403,115 @@ class SignatureBookController
         }
 
         return $response->withJson(['resources' => $resources]);
+    }
+
+    public function unsignResource(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
+        } elseif (!SignatureBookController::isResourceInSignatureBook(['resId' => $args['resId'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['version']]);
+        AdrModel::deleteDocumentAdr(['where' => ['res_id = ?', 'type in (?)', 'version = ?'], 'data' => [$args['resId'], ['SIGN', 'TNL'], $resource['version']]]);
+
+        if (!AttachmentModel::hasAttachmentsSignedByResId(['resId' => $args['resId'], 'userId' => $GLOBALS['id']])) {
+            ListInstanceModel::update([
+                'set'   => ['signatory' => 'false'],
+                'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
+                'data'  => [$args['resId'], $GLOBALS['userId'], 'VISA_CIRCUIT']
+            ]);
+        }
+
+        return $response->withStatus(204);
+    }
+
+    public function unsignAttachment(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
+
+        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master']]);
+        if (empty($attachment) || !SignatureBookController::isResourceInSignatureBook(['resId' => $attachment['res_id_master'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        AttachmentModel::update([
+            'set'       => ['status' => 'A_TRA', 'signatory_user_serial_id' => null],
+            'where'     => ['res_id = ?'],
+            'data'      => [$args['id']]
+        ]);
+        AttachmentModel::update([
+            'set'       => ['status' => 'DEL'],
+            'where'     => ['origin = ?', 'status != ?'],
+            'data'      => ["{$args['id']},res_attachments", 'DEL']
+        ]);
+
+        if (!AttachmentModel::hasAttachmentsSignedByResId(['resId' => $attachment['res_id_master'], 'userId' => $GLOBALS['id']])) {
+            ListInstanceModel::update([
+                'set'   => ['signatory' => 'false'],
+                'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
+                'data'  => [$attachment['res_id_master'], $GLOBALS['userId'], 'VISA_CIRCUIT']
+            ]);
+        }
+
+        return $response->withStatus(204);
+    }
+
+    public static function isResourceInSignatureBook(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId', 'userId']);
+        ValidatorModel::intVal($args, ['resId', 'userId']);
+
+        $currentUser = UserModel::getById(['id' => $args['userId'], 'select' => ['id', 'user_id']]);
+
+        $basketsClause = '';
+
+        $groups = UserGroupModel::get(['select' => ['group_id'], 'where' => ['user_id = ?'], 'data' => [$currentUser['id']]]);
+        $groups = array_column($groups, 'group_id');
+        if (!empty($groups)) {
+            $groups = GroupModel::get(['select' => ['group_id'], 'where' => ['id in (?)'], 'data' => [$groups]]);
+            $groups = array_column($groups, 'group_id');
+
+            $baskets = GroupBasketModel::get(['select' => ['basket_id'], 'where' => ['group_id in (?)', 'list_event = ?'], 'data' => [$groups, 'signatureBookAction']]);
+            $baskets = array_column($baskets, 'basket_id');
+            if (!empty($baskets)) {
+                $clauses = BasketModel::get(['select' => ['basket_clause'], 'where' => ['basket_id in (?)'], 'data' => [$baskets]]);
+
+                foreach ($clauses as $clause) {
+                    $basketClause = PreparedClauseController::getPreparedClause(['clause' => $clause['basket_clause'], 'login' => $currentUser['user_id']]);
+                    if (!empty($basketsClause)) {
+                        $basketsClause .= ' or ';
+                    }
+                    $basketsClause .= "({$basketClause})";
+                }
+            }
+        }
+
+        $assignedBaskets = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $currentUser['id']]);
+        foreach ($assignedBaskets as $basket) {
+            $hasSB = GroupBasketModel::get(['select' => [1], 'where' => ['basket_id = ?', 'group_id = ?', 'list_event = ?'], 'data' => [$basket['basket_id'], $basket['oldGroupId'], 'signatureBookAction']]);
+            if (!empty($hasSB)) {
+                $basketOwner = UserModel::getById(['id' => $basket['owner_user_id'], 'select' => ['user_id']]);
+                $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $basketOwner['user_id']]);
+                if (!empty($basketsClause)) {
+                    $basketsClause .= ' or ';
+                }
+                $basketsClause .= "({$basketClause})";
+            }
+        }
+
+        try {
+            $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', "({$basketsClause})"], 'data' => [$args['resId']]]);
+            if (empty($res)) {
+                return false;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 }

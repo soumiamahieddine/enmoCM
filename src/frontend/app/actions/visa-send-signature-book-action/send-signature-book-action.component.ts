@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, AfterViewInit } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -13,14 +13,20 @@ import { VisaWorkflowComponent } from '../../visa/visa-workflow.component';
     templateUrl: "send-signature-book-action.component.html",
     styleUrls: ['send-signature-book-action.component.scss'],
 })
-export class SendSignatureBookActionComponent implements OnInit {
+export class SendSignatureBookActionComponent implements AfterViewInit {
 
     lang: any = LANG;
-    loading: boolean = false;
+    loading: boolean = true;
 
     resourcesError: any[] = [];
 
     noResourceToProcess: boolean = null;
+
+    integrationsInfo: any = {
+        inSignatureBook: {
+            icon: 'fas fa-file-signature'
+        }
+    };
 
     @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
     @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
@@ -32,10 +38,14 @@ export class SendSignatureBookActionComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any,
         public functions: FunctionsService) { }
 
-    async ngOnInit(): Promise<void> {
-        if (this.data.resIds.length > 0) {
-            this.loading = true;
+    async ngAfterViewInit(): Promise<void> {
+        if (this.data.resIds.length === 0 && !this.functions.empty(this.data.resource.destination)) {
+            await this.appVisaWorkflow.loadListModel(this.data.resource.destination);
+            this.loading = false;
+        } else if (this.data.resIds.length > 0) {
             await this.checkSignatureBook();
+            this.loading = false;
+        } else {
             this.loading = false;
         }
         if (this.data.resIds.length === 1) {
@@ -46,32 +56,16 @@ export class SendSignatureBookActionComponent implements OnInit {
         }
     }
 
-    checkSignatureBook() {
-        this.resourcesError = [];
-
-        return new Promise((resolve, reject) => {
-            this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkSignatureBook', { resources: this.data.resIds })
-                .subscribe((data: any) => {
-                    if (!this.functions.empty(data.resourcesInformations.noAttachment)) {
-                        this.resourcesError = data.resourcesInformations.noAttachment;
-                    }
-                    this.noResourceToProcess = this.data.resIds.length === this.resourcesError.length;
-                    resolve(true);
-                }, (err: any) => {
-                    this.notify.handleSoftErrors(err);
-                });
-        });
-    }
-
     async onSubmit() {
         this.loading = true;
+
         if (this.data.resIds.length === 0) {
             let res = await this.indexDocument();
             if (res) {
                 res = await this.appVisaWorkflow.saveVisaWorkflow(this.data.resIds);
             }
             if (res) {
-                this.executeAction(this.data.resIds);
+                this.executeIndexingAction(this.data.resIds[0]);
             }
         } else {
             const realResSelected: number[] = this.data.resIds.filter((resId: any) => this.resourcesError.map(resErr => resErr.res_id).indexOf(resId) === -1);
@@ -83,6 +77,36 @@ export class SendSignatureBookActionComponent implements OnInit {
             }
         }
         this.loading = false;
+    }
+
+    checkSignatureBook() {
+        this.resourcesError = [];
+
+        return new Promise((resolve, reject) => {
+            this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkSignatureBook', { resources: this.data.resIds })
+                .subscribe((data: any) => {
+                    if (!this.functions.empty(data.resourcesInformations.error)) {
+                        this.resourcesError = data.resourcesInformations.error;
+                    }
+                    this.noResourceToProcess = this.data.resIds.length === this.resourcesError.length;
+                    resolve(true);
+                }, (err: any) => {
+                    this.notify.handleSoftErrors(err);
+                });
+        });
+    }
+
+    toggleIntegration(integrationId: string) {
+        this.http.put(`../../rest/resourcesList/integrations`, {resources : this.data.resIds, integrations : { [integrationId] : !this.data.resource.integrations[integrationId]}}).pipe(
+            tap(() => {
+                this.data.resource.integrations[integrationId] = !this.data.resource.integrations[integrationId];
+                this.checkSignatureBook();
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     indexDocument() {
@@ -104,6 +128,25 @@ export class SendSignatureBookActionComponent implements OnInit {
     executeAction(realResSelected: number[]) {
 
         this.http.put(this.data.processActionRoute, { resources: realResSelected, note: this.noteEditor.getNoteContent() }).pipe(
+            tap((data: any) => {
+                if (!data) {
+                    this.dialogRef.close('success');
+                }
+                if (data && data.errors != null) {
+                    this.notify.error(data.errors);
+                }
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    executeIndexingAction(resId: number) {
+
+        this.http.put(this.data.indexActionRoute, { resource: resId, note: this.noteEditor.getNoteContent() }).pipe(
             tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close('success');

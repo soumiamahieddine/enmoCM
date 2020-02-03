@@ -52,7 +52,7 @@ export class ContactsFormComponent implements OnInit {
 
     @Output() onSubmitEvent = new EventEmitter<number>();
 
-    maarch2GecUrl: string = `https://docs.maarch.org/gitbook/html/MaarchCourrier/${angularGlobals.applicationVersion.split('.')[0] + '.' + angularGlobals.applicationVersion.split('.')[1]}/guat/guat_exploitation/maarch2gec.html`;
+    maarch2maarchUrl: string = `https://docs.maarch.org/gitbook/html/MaarchCourrier/${angularGlobals.applicationVersion.split('.')[0] + '.' + angularGlobals.applicationVersion.split('.')[1]}/guat/guat_exploitation/maarch2maarch.html`;
 
     contactUnit = [
         {
@@ -243,7 +243,7 @@ export class ContactsFormComponent implements OnInit {
             id: 'communicationMeans',
             unit: 'maarch2maarch',
             label: this.lang.communicationMean,
-            desc: `${this.lang.communicationMeanDesc} (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
+            desc: `${this.lang.communicationMeanDesc} (${this.lang.see} <a href="${this.maarch2maarchUrl}" target="_blank">MAARCH2MAARCH</a>)`,
             type: 'string',
             control: new FormControl(),
             required: false,
@@ -254,8 +254,8 @@ export class ContactsFormComponent implements OnInit {
         {
             id: 'externalId_m2m',
             unit: 'maarch2maarch',
-            label: this.lang.IdMaarch2Gec,
-            desc: `${this.lang.m2mContactInfo} (${this.lang.see} <a href="${this.maarch2GecUrl}" target="_blank">MAARCH2GEC</a>)`,
+            label: this.lang.IdMaarch2Maarch,
+            desc: `${this.lang.m2mContactInfo} (${this.lang.see} <a href="${this.maarch2maarchUrl}" target="_blank">MAARCH2MAARCH</a>)`,
             type: 'string',
             control: new FormControl(),
             required: false,
@@ -696,7 +696,10 @@ export class ContactsFormComponent implements OnInit {
                 tap(() => this.companyFound = null),
                 filter((data: any) => data.length > 0),
                 tap((data) => {
-                    this.companyFound = data[0];
+                    if (!this.functions.empty(data[0].addressNumber) || !this.functions.empty(data[0].addressStreet) || !this.functions.empty(data[0].addressPostcode) || !this.functions.empty(data[0].addressTown) || !this.functions.empty(data[0].addressCountry)) {
+                        this.companyFound = data[0];
+                    }
+                    
                 }),
                 //finalize(() => this.loading = false),
                 catchError((err: any) => {
@@ -763,6 +766,12 @@ export class ContactsFormComponent implements OnInit {
     removeField(field: any) {
         field.display = !field.display;
         field.control.reset();
+        if (field.id == 'externalId_m2m' && !field.display) {
+            let indexFieldAnnuaryId = this.contactForm.map(field => field.id).indexOf('externalId_m2m_annuary_id');
+            if (indexFieldAnnuaryId > -1) {
+                this.contactForm[indexFieldAnnuaryId].display = false;
+            }
+        }
         this.checkFilling();
     }
 
@@ -770,7 +779,6 @@ export class ContactsFormComponent implements OnInit {
         this.communicationMeanInfo = this.lang.autocompleteInfo;
         this.communicationMeanResult = [];
         let indexFieldCommunicationMeans = this.contactForm.map(field => field.id).indexOf('communicationMeans');
-        let indexFieldCompany = this.contactForm.map(field => field.id).indexOf('company');
         this.contactForm[indexFieldCommunicationMeans].control.valueChanges
             .pipe(
                 debounceTime(300),
@@ -787,6 +795,11 @@ export class ContactsFormComponent implements OnInit {
                     this.communicationMeanResult = data;
                     this.communicationMeanFilteredResult = of(this.communicationMeanResult);
                     this.communicationMeanLoading = false;
+                }),
+                catchError((err: any) => {
+                    this.communicationMeanInfo = err.error.errors;
+                    this.communicationMeanLoading = false;
+                    return of(false);
                 })
             ).subscribe();
     }
@@ -823,6 +836,11 @@ export class ContactsFormComponent implements OnInit {
                     this.externalId_m2mResult = data;
                     this.externalId_m2mFilteredResult = of(this.externalId_m2mResult);
                     this.externalId_m2mLoading = false;
+                }),
+                catchError((err: any) => {
+                    this.externalId_m2mInfo = err.error.errors;
+                    this.externalId_m2mLoading = false;
+                    return of(false);
                 })
             ).subscribe();
     }

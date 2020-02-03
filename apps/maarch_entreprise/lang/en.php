@@ -1996,9 +1996,6 @@ if (!defined('_IS_EXTERNAL_CONTACT')) {
 if (!defined('_SEARCH_DIRECTORY')) {
     define('_SEARCH_DIRECTORY', 'Directory search');
 }
-if (!defined('_M2M_ID')) {
-    define('_M2M_ID', 'M2GEC ID');
-}
 if (!defined('_CONTACT_ID')) {
     define('_CONTACT_ID', 'Contact ID');
 }

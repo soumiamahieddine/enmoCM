@@ -161,6 +161,23 @@ $DATA_TO_REPLACE = [
     'user.entity_type'      => '[userPrimaryEntity.entity_type]',
     'user.entity_path'      => '[userPrimaryEntity.path]',
 
+    'notes.identifier'                       => '[res_letterbox.res_id]',
+    'notes.subject'                          => '[res_letterbox.subject]',
+    'notes.note_text'                        => '[notes]',
+    'notes.user_id'                          => '',
+    'notes.# ;frm=0000'                      => '[res_letterbox.# ;frm=0000]',
+    'notes.doc_date;block=tr;frm=dd/mm/yyyy' => '[res_letterbox.doc_date;block=tr;frm=dd/mm/yyyy]',
+    'notes.doc_date;block=tr'                => '[res_letterbox.doc_date;block=tr]',
+    'notes.doc_date;frm=dd/mm/yyyy'          => '[res_letterbox.doc_date;frm=dd/mm/yyyy]',
+    'notes.doc_date'                         => '[res_letterbox.doc_date]',
+    'notes.contact_society'                  => '[contact.company]',
+    'notes.contact_firstname'                => '[contact.firstname]',
+    'notes.contact_lastname'                 => '[contact.lastname]',
+    'notes.linktodetail'                     => '[res_letterbox.linktodetail]',
+    'notes.linktodoc'                        => '[res_letterbox.linktodoc]',
+];
+
+const DATA_CONTACT_ATTACHMENT = [
     'contact.contact_type_label'        => '',
     'contact.society_short'             => '',
     'contact.contact_purpose_label'     => '',
@@ -187,21 +204,35 @@ $DATA_TO_REPLACE = [
     'contact.address_country'           => '[attachmentRecipient.address_country]',
     'contact.phone'                     => '[attachmentRecipient.phone]',
     'contact.email'                     => '[attachmentRecipient.email]',
+];
 
-    'notes.identifier'                       => '[res_letterbox.res_id]',
-    'notes.subject'                          => '[res_letterbox.subject]',
-    'notes.note_text'                        => '[notes]',
-    'notes.user_id'                          => '',
-    'notes.# ;frm=0000'                      => '[res_letterbox.# ;frm=0000]',
-    'notes.doc_date;block=tr;frm=dd/mm/yyyy' => '[res_letterbox.doc_date;block=tr;frm=dd/mm/yyyy]',
-    'notes.doc_date;block=tr'                => '[res_letterbox.doc_date;block=tr]',
-    'notes.doc_date;frm=dd/mm/yyyy'          => '[res_letterbox.doc_date;frm=dd/mm/yyyy]',
-    'notes.doc_date'                         => '[res_letterbox.doc_date]',
-    'notes.contact_society'                  => '[contact.company]',
-    'notes.contact_firstname'                => '[contact.firstname]',
-    'notes.contact_lastname'                 => '[contact.lastname]',
-    'notes.linktodetail'                     => '[res_letterbox.linktodetail]',
-    'notes.linktodoc'                        => '[res_letterbox.linktodoc]',
+const DATA_CONTACT_ACKNOWLEDGEMENT_RECEIPT = [
+    'contact.contact_type_label'        => '',
+    'contact.society_short'             => '',
+    'contact.contact_purpose_label'     => '',
+    'contact.website'                   => '',
+    'contact.salutation_header'         => '',
+    'contact.salutation_footer'         => '',
+    'contact.society'                   => '[sender.company]',
+    'contact.departement'               => '[sender.department]',
+    'contact.title'                     => '[sender.civility]',
+    'contact.contact_title'             => '[sender.civility]',
+    'contact.contact_lastname'          => '[sender.lastname]',
+    'contact.contact_firstname'         => '[sender.firstname]',
+    'contact.lastname'                  => '[sender.lastname]',
+    'contact.firstname'                 => '[sender.firstname]',
+    'contact.function'                  => '[sender.function]',
+    'contact.postal_address;strconv=no' => '[sender.postal_address;strconv=no]',
+    'contact.postal_address'            => '[sender.postal_address]',
+    'contact.address_num'               => '[sender.address_number]',
+    'contact.address_street'            => '[sender.address_street]',
+    'contact.occupancy'                 => '[sender.address_additional1]',
+    'contact.address_complement'        => '[sender.address_additional2]',
+    'contact.address_town'              => '[sender.address_town]',
+    'contact.address_postal_code'       => '[sender.address_postcode]',
+    'contact.address_country'           => '[sender.address_country]',
+    'contact.phone'                     => '[sender.phone]',
+    'contact.email'                     => '[sender.email]',
 ];
 
 $customFields = [
@@ -252,6 +283,16 @@ foreach ($customs as $custom) {
                 $newContent = str_replace('[' . $key . ']', $value, $newContent);
             }
 
+            if ($template['template_target'] == 'acknowledgementReceipt') {
+                foreach (DATA_CONTACT_ACKNOWLEDGEMENT_RECEIPT as $key => $value) {
+                    $newContent = str_replace('[' . $key . ']', $value, $newContent);
+                }
+            } else {
+                foreach (DATA_CONTACT_ATTACHMENT as $key => $value) {
+                    $newContent = str_replace('[' . $key . ']', $value, $newContent);
+                }
+            }
+
             if ($template['template_target'] == 'doctypes') {
                 $pathFilename = $tmpPath . 'template_migration_' . rand() . '_'. rand() .'.html';
                 file_put_contents($pathFilename, $newContent);
@@ -259,11 +300,16 @@ foreach ($customs as $custom) {
                 $resource = file_get_contents($pathFilename);
                 $pathInfo = pathinfo($pathFilename);
                 $storeResult = DocserverController::storeResourceOnDocServer([
-                        'collId'            => 'templates',
-                        'docserverTypeId'   => 'TEMPLATES',
-                        'encodedResource'   => base64_encode($resource),
-                        'format'            => $pathInfo['extension']
-                    ]);
+                    'collId'           => 'templates',
+                    'docserverTypeId'  => 'TEMPLATES',
+                    'encodedResource'  => base64_encode($resource),
+                    'format'           => $pathInfo['extension']
+                ]);
+
+                if (!empty($storeResult['errors'])) {
+                    echo $storeResult['errors'];
+                    continue;
+                }
 
                 TemplateModel::update([
                         'set'   => [
@@ -331,6 +377,12 @@ foreach ($customs as $custom) {
                 }
 
                 $tbs->ReplaceFields($DATA_TO_REPLACE);
+
+                if ($template['template_target'] == 'acknowledgementReceipt') {
+                    $tbs->ReplaceFields(DATA_CONTACT_ACKNOWLEDGEMENT_RECEIPT);
+                } else {
+                    $tbs->ReplaceFields(DATA_CONTACT_ATTACHMENT);
+                }
             }
 
             if (in_array($extension, OFFICE_EXTENSIONS)) {

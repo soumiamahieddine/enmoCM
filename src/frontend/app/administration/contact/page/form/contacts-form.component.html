@@ -77,13 +77,16 @@
 
     </div>
     <div *ngIf="companyFound !== null" class="alert-message alert-message-info" role="alert" [@hideShow]>
-       <div style="padding:10px;">
-        {{lang.contactsParameters_company}} <b>{{companyFound.company}}</b>
-        {{lang.found}}
-        !
-        {{lang.click}} <a (click)="setAddress(companyFound)" style="cursor: pointer;font-weight:bold;">{{lang.here}}</a>
-        {{lang.toCopyAddress}}
-       </div> 
+        <div style="padding:10px;">
+            {{lang.contactsParameters_company}} <b>{{companyFound.company}}</b>
+            {{lang.found}}
+            !
+            <a (click)="setAddress(companyFound)"
+                style="cursor: pointer;font-weight:bold;font-style: italic;">{{lang.click}} {{lang.here}}</a>
+            {{lang.toCopyAddress}} :<br/>
+            <q style="font-weight: bold;width: 100%;display: block;text-align: center;">{{companyFound.addressNumber}} {{companyFound.addressStreet}}, {{companyFound.addressPostcode}}
+                {{companyFound.addressTown}}, {{companyFound.addressCountry}}</q>
+        </div>
     </div>
     <div class="row" style="margin: 0px;">
         <ng-container *ngFor="let unit of contactUnit">

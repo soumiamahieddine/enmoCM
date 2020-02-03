@@ -38,6 +38,10 @@ UPDATE CONTACTS SET email = null WHERE email = '';
 UPDATE CONTACTS SET phone = null WHERE phone = '';
 UPDATE CONTACTS SET notes = null WHERE notes = '';
 
+UPDATE res_attachments SET attachment_type = 'response_project' WHERE attachment_type = 'outgoing_mail';
+UPDATE res_attachments SET attachment_type = 'signed_response' WHERE attachment_type = 'outgoing_mail_signed';
+UPDATE res_attachments SET attachment_type = 'simple_attachment' WHERE attachment_type = 'document_with_notes';
+
 ALTER TABLE acknowledgement_receipts ALTER COLUMN contact_id set not null;
 ALTER TABLE acknowledgement_receipts DROP COLUMN IF EXISTS contact_address_id;
 ALTER TABLE contacts_groups_lists ALTER COLUMN contact_id set not null;
@@ -155,7 +159,6 @@ SELECT r.res_id,
        r.opinion_limit_date,
        r.department_number_id,
        r.barcode,
-       r.external_signatory_book_id,
        r.initiator,
        r.destination,
        r.dest_user,

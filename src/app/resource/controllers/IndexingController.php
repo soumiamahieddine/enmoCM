@@ -99,12 +99,15 @@ class IndexingController
         if (!empty($method)) {
             $methodResponse = ActionMethodController::$method(['resId' => $body['resource'], 'data' => $body['data'], 'note' => $body['note']]);
         }
+        if (!empty($methodResponse['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $methodResponse['errors'][0]]);
+        }
 
         $historic = empty($methodResponse['history']) ? '' : $methodResponse['history'];
         ActionMethodController::terminateAction(['id' => $args['actionId'], 'resources' => [$body['resource']], 'note' => $body['note'], 'history' => $historic]);
 
-        if (!empty($methodResponses['data']) || !empty($methodResponses['errors'])) {
-            return $response->withJson($methodResponses);
+        if (!empty($methodResponse['data'])) {
+            return $response->withJson($methodResponse['data']);
         }
 
         return $response->withStatus(204);

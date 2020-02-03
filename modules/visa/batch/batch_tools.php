@@ -154,81 +154,30 @@ function Bt_myInclude($file)
     }
 }
 
-function Bt_createAttachment($aArgs = [])
+function Bt_createNote($aArgs = [])
 {
-    if (!empty($aArgs['noteContent'])) {
+    if (!empty($aArgs['content'])) {
         $creatorName = '';
-        if (!empty($aArgs['noteCreatorId'])) {
-            $creatorId = $aArgs['noteCreatorId'];
+        if (!empty($aArgs['creatorId'])) {
+            $creatorId = $aArgs['creatorId'];
         } else {
-            $creatorId = 'superadmin';
-            $creatorName = $aArgs['noteCreatorName'] . ' : ';
+            $req         = "SELECT id FROM users ORDER BY user_id='superadmin' desc limit 1";
+            $stmt        = $GLOBALS['db']->query($req, []);
+            $reqResult   = $stmt->fetchObject();
+            $creatorId   = $reqResult->id;
+            $creatorName = $aArgs['creatorName'] . ' : ';
         }
         $GLOBALS['db']->query(
             "INSERT INTO notes (identifier, user_id, creation_date, note_text) VALUES (?, ?, CURRENT_TIMESTAMP, ?)",
-            [$aArgs['res_id_master'], $creatorId, $creatorName . $aArgs['noteContent']]
+            [$aArgs['resId'], $creatorId, $creatorName . $aArgs['content']]
         );
     }
+}
 
-    if (!empty($aArgs['attachment_type'])) {
-        $attachmentType = $aArgs['attachment_type'];
-    } else {
-        $attachmentType = 'signed_response';
-    }
-
-    if (!empty($aArgs['in_signature_book'])) {
-        $inSignatureBook = $aArgs['in_signature_book'];
-    } else {
-        $inSignatureBook = 'true';
-    }
-
-    if (!empty($aArgs['table'])) {
-        $table = $aArgs['table'];
-    } else {
-        $table = 'res_attachments';
-    }
-
-    if (!empty($aArgs['relation'])) {
-        $relation = $aArgs['relation'];
-    } else {
-        $relation = 1;
-    }
-
-    if (!empty($aArgs['status'])) {
-        $status = $aArgs['status'];
-    } else {
-        $status = 'TRA';
-    }
-
-    $dataValue = [];
-    array_push($dataValue, ['column' => 'res_id_master',    'value' => $aArgs['res_id_master'],   'type' => 'integer']);
-    array_push($dataValue, ['column' => 'title',            'value' => $aArgs['title'],           'type' => 'string']);
-    array_push($dataValue, ['column' => 'identifier',       'value' => $aArgs['identifier'],      'type' => 'string']);
-    array_push($dataValue, ['column' => 'type_id',          'value' => 1,                         'type' => 'integer']);
-    array_push($dataValue, ['column' => 'dest_contact_id',  'value' => $aArgs['dest_contact_id'], 'type' => 'integer']);
-    array_push($dataValue, ['column' => 'dest_address_id',  'value' => $aArgs['dest_address_id'], 'type' => 'integer']);
-    array_push($dataValue, ['column' => 'dest_user',        'value' => $aArgs['dest_user'],       'type' => 'string']);
-    array_push($dataValue, ['column' => 'typist',           'value' => $aArgs['typist'],          'type' => 'string']);
-    array_push($dataValue, ['column' => 'attachment_type',  'value' => $attachmentType,           'type' => 'string']);
-    array_push($dataValue, ['column' => 'coll_id',          'value' => 'letterbox_coll',          'type' => 'string']);
-    array_push($dataValue, ['column' => 'relation',         'value' => $relation,                 'type' => 'integer']);
-    array_push($dataValue, ['column' => 'in_signature_book','value' => $inSignatureBook,          'type' => 'bool']);
-
-    if (!empty($aArgs['origin_id'])) {
-        array_push($dataValue, ['column' => 'origin_id','value' => $aArgs['origin_id'], 'type' => 'integer']);
-    }
-
-    $allDatas = [
-        "encodedFile" => $aArgs['encodedFile'],
-        "data"        => $dataValue,
-        "collId"      => "letterbox_coll",
-        "table"       => $table,
-        "fileFormat"  => $aArgs['format'],
-        "status"      => $status
-    ];
-
+function Bt_createAttachment($args = [])
+{
     $opts = [
-        CURLOPT_URL => $GLOBALS['applicationUrl'] . 'rest/res',
+        CURLOPT_URL => $GLOBALS['applicationUrl'] . 'rest/attachments',
         CURLOPT_HTTPHEADER => [
             'accept:application/json',
             'content-type:application/json',
@@ -236,58 +185,26 @@ function Bt_createAttachment($aArgs = [])
         ],
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_POSTFIELDS => json_encode($allDatas),
+        CURLOPT_POSTFIELDS => json_encode($args),
         CURLOPT_POST => true
     ];
 
     $curl = curl_init();
     curl_setopt_array($curl, $opts);
     $rawResponse = curl_exec($curl);
-    $error = curl_error($curl);
+    $error       = curl_error($curl);
     if (!empty($error)) {
         $GLOBALS['logger']->write($error, 'ERROR');
         exit;
     }
 
-    return json_decode($rawResponse, true);
-}
-
-function Bt_refusedSignedMail($aArgs = [])
-{
-    if (!empty($aArgs['noteContent'])) {
-        $creatorName = '';
-        if (!empty($aArgs['noteCreatorId'])) {
-            $creatorId = $aArgs['noteCreatorId'];
-        } else {
-            $creatorId = 'superadmin';
-            $creatorName = $aArgs['noteCreatorName'] . ' : ';
-        }
-        $GLOBALS['db']->query(
-            "INSERT INTO notes (identifier, user_id, creation_date, note_text) VALUES (?, '".$creatorId."', CURRENT_TIMESTAMP, ?)",
-            [$aArgs['resIdMaster'], $creatorName . $aArgs['noteContent']]
-        );
+    $return = json_decode($rawResponse, true);
+    if (!empty($return['errors'])) {
+        $GLOBALS['logger']->write($return['errors'], 'ERROR');
+        exit;
     }
-    $GLOBALS['db']->query("UPDATE ".$aArgs['tableAttachment']." SET status = 'A_TRA', external_id = external_id - 'signatureBookId' WHERE res_id = ?", [$aArgs['resIdAttachment']]);
-    $GLOBALS['db']->query('UPDATE listinstance SET process_date = NULL WHERE res_id = ? AND difflist_type = ?', [$aArgs['resIdMaster'], 'VISA_CIRCUIT']);
-    
-    $GLOBALS['db']->query("UPDATE res_letterbox SET status = '" . $aArgs['refusedStatus'] . "' WHERE res_id = ?", [$aArgs['resIdMaster']]);
 
-    $historyInfo = 'La signature de la pièce jointe '.$aArgs['resIdAttachment'].' ('.$aArgs['tableAttachment'].') a été refusée dans le parapheur externe' . $aArgs['additionalHistoryInfo'];
-    Bt_history([
-        'table_name' => $aArgs['tableAttachment'],
-        'record_id'  => $aArgs['resIdAttachment'],
-        'info'       => $historyInfo,
-        'event_type' => 'UP',
-        'event_id'   => 'attachup'
-    ]);
-
-    Bt_history([
-        'table_name' => 'res_letterbox',
-        'record_id'  => $aArgs['resIdMaster'],
-        'info'       => $historyInfo,
-        'event_type' => 'ACTION#1',
-        'event_id'   => '1'
-    ]);
+    return $return;
 }
 
 function Bt_validatedMail($aArgs = [])

@@ -11,6 +11,8 @@ import { of } from 'rxjs';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { MatDialog } from '@angular/material';
 import { LinkResourceModalComponent } from './linkResourceModal/link-resource-modal.component';
+import { FunctionsService } from '../../service/functions.service';
+import { ContactsListModalComponent } from '../contact/list/modal/contacts-list-modal.component';
 
 declare function $j(selector: any): any;
 
@@ -42,6 +44,7 @@ export class LinkedResourceListComponent implements OnInit {
         private notify: NotificationService,
         public appService: AppService,
         public dialog: MatDialog,
+        public functions: FunctionsService
     ) { }
 
     ngOnInit(): void {
@@ -55,6 +58,7 @@ export class LinkedResourceListComponent implements OnInit {
                 this.linkedResources = data.linkedResources;
                 this.reloadBadgeLinkedResources.emit(`${this.linkedResources.length}`);
                 setTimeout(() => {
+                    this.linkedResources = this.processPostData(this.linkedResources);
                     this.dataSource = new MatTableDataSource(this.linkedResources);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
@@ -68,8 +72,36 @@ export class LinkedResourceListComponent implements OnInit {
         ).subscribe();
     }
 
+    processPostData(data: any) {
+
+        data.forEach((linkeRes: any) => {
+            Object.keys(linkeRes).forEach((key) => {
+                if (key == 'statusImage' && this.functions.empty(linkeRes[key])) {
+                    linkeRes[key] = 'fa-question undefined';
+                } else if (this.functions.empty(linkeRes[key]) && ['senders', 'recipients', 'attachments', 'hasDocument', 'confidentiality', 'visaCircuit'].indexOf(key) === -1) {
+                    linkeRes[key] = this.lang.undefined;
+                }
+                
+                if (key === 'senders' && linkeRes[key].length > 1) {
+                    if (linkeRes[key].length > 1) {
+                        linkeRes[key] = linkeRes[key].length + ' ' + this.lang.contacts;
+                    } else {
+                        linkeRes[key] = linkeRes[key][0];
+                    }
+                }
+            });
+        });
+        
+        return data;
+    }
+
     getUsersVisaCircuit(row: any) {
-        return row.visaCircuit.map((item: any) => item.userLabel);
+        if (row.visaCircuit.length > 0) {
+            return row.visaCircuit.map((item: any) => item.userLabel);
+        } else {
+            return '';
+        }
+        
     }
 
     unlinkResource(row: any) {
@@ -117,5 +149,9 @@ export class LinkedResourceListComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    openContact(row: any, mode: string) {
+        this.dialog.open(ContactsListModalComponent, { data: { title: `${row.chrono} - ${row.subject}`, mode: mode, resId: row.resId } });
     }
 }

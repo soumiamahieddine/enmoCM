@@ -209,7 +209,7 @@ class ConvertPdfController
         return $convertedDocument;
     }
 
-    private static function canConvert(array $args)
+    public static function canConvert(array $args)
     {
         ValidatorModel::notEmpty($args, ['extension']);
         ValidatorModel::stringType($args, ['extension']);
@@ -220,6 +220,7 @@ class ConvertPdfController
             foreach ($loadedXml->FORMAT as $value) {
                 if (strtoupper((string)$value->name) == strtoupper($args['extension']) && (string)$value->canConvert == 'true') {
                     $canConvert = true;
+                    break;
                 }
             }
         }

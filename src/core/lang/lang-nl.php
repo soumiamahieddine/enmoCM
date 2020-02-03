@@ -153,6 +153,8 @@ define('_TAG_ADDED', 'Tag added'); //TRANSLATE
 define('_TAG_DELETED', 'Tag deleted'); //TRANSLATE
 define('_TAG_UPDATED', 'Tag updated'); //TRANSLATE
 define('_TAG_MERGED', 'Tag merged'); //TRANSLATE
+define('_LINK_ADDED', 'Link added');//TRANSLATE
+define('_LINK_DELETED', 'Link deleted');//TRANSLATE
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Lijst met filters en antwoorden');
@@ -455,12 +457,21 @@ define('_BY', 'door');
 define('_TO_AVIS', 'VOOR BERICHT');
 define('_VALIDATE_BY', 'Gevalideerd door');
 
+define("_UPDATE_LISTINSTANCE", "Diffusion list updated"); //TO TRANSLATE
+define("_UPDATE_VISA_CIRCUIT", "Visa workflow updated"); //TO TRANSLATE
+define("_UPDATE_AVIS_CIRCUIT", "Opinion workflow updated"); //TO TRANSLATE
+
+define("_VISA_CIRCUIT_DELETED", "Visa workflow deleted"); //TO TRANSLATE
+define("_AVIS_CIRCUIT_DELETED", "Opinion workflow updated"); //TO TRANSLATE
+
 define("_ACKNOWLEDGEMENT_RECEIPT", "Acknowledgement Receipt"); //TO TRANSLATE
 define("_CREATED_BY", "Created by"); //TO TRANSLATE
 define("_SENT_DATE", "Sent "); //TO TRANSLATE
 define("_SENT_TO", "Sent to"); //TO TRANSLATE
 define("_FORMAT", "Format"); //TO TRANSLATE
+define("_CONTACT", "Contact"); //TO TRANSLATE
 define("_SUBJECT", "Subject"); //TO TRANSLATE
 define("_CHRONO_NUMBER_MASTER", "Resource chrono number"); //TO TRANSLATE
 define("_SENT_BY", "Sent by"); //TO TRANSLATE
 define('_TO_CCI', 'On copy hidden'); //TO TRANSLATE
+define('_PRIMARY_INFORMATION', 'Primary information'); //TO TRANSLATE

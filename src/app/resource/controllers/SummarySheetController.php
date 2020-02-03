@@ -489,7 +489,7 @@ class SummarySheetController
                 }
                 if (isset($processLimitDate)) {
                     $nextLine = !empty($customFieldsIds) && $nextLine == 0 ? 1 : 0;
-                    $pdf->MultiCell($widthNotes, 30, _PROCESS_LIMIT_DATE . " : {$processLimitDate}", $nextLine, 'L', false, 1, '', '', true, 0, true);
+                    $pdf->MultiCell($widthNotes, 30, _PROCESS_LIMIT_DATE . " : {$processLimitDate}", 1, 'L', false, $nextLine, '', '', true, 0, true);
                 }
 
                 if (!empty($customFieldsIds)) {
@@ -777,7 +777,7 @@ class SummarySheetController
                             $notes[] = [
                                 'user'  => UserModel::getLabelledUserById(['id' => $rawNote['user_id']]),
                                 'date'  => TextFormatModel::formatDate($rawNote['creation_date']),
-                                'note'  => $rawNote['note_text']
+                                'note'  => $noteText = str_replace('←', '<=', $rawNote['note_text'])
                             ];
                         }
                         unset($args['data']['notes'][$noteKey]);

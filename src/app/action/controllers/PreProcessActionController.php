@@ -38,6 +38,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
+use SrcCore\models\ValidatorModel;
 use Template\models\TemplateModel;
 use User\models\UserEntityModel;
 use User\models\UserModel;
@@ -369,27 +370,7 @@ class PreProcessActionController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $resources = ResModel::get([
-            'select' => ['res_id', 'locker_user_id', 'locker_time'],
-            'where'  => ['res_id in (?)'],
-            'data'   => [$data['resources']]
-        ]);
-
-        $resourcesForProcess = [];
-        foreach ($resources as $resource) {
-            $lock = true;
-            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
-                $lock = false;
-            } elseif ($resource['locker_user_id'] == $currentUser['id']) {
-                $lock = false;
-            } elseif (strtotime($resource['locker_time']) < time()) {
-                $lock = false;
-            }
-            if (!$lock) {
-                $resourcesForProcess[] = $resource['res_id'];
-            }
-        }
-        $data['resources'] = $resourcesForProcess;
+        $data['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $data['resources'], 'userId' => $GLOBALS['id']]);
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
 
@@ -446,9 +427,15 @@ class PreProcessActionController
                         'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
                     ]);
 
+                    $integratedResource = ResModel::get([
+                        'select' => [1],
+                        'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_id->>\'signatureBookId\' is null', 'res_id = ?'],
+                        'data'   => [$resId]
+                    ]);
+
                     $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
                     
-                    if (empty($attachments)) {
+                    if (empty($attachments) && empty($integratedResource)) {
                         $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
                     } else {
                         $hasSignableAttachment = false;
@@ -475,7 +462,24 @@ class PreProcessActionController
                                 $hasSignableAttachment = true;
                             }
                         }
-                        if (!$hasSignableAttachment) {
+                        if (!empty($integratedResource)) {
+                            $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => 'letterbox_coll']);
+                            if (empty($adrInfo['docserver_id'])) {
+                                $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noMailConversion'];
+                                break;
+                            }
+                            $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
+                            if (empty($docserverInfo['path_template'])) {
+                                $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'docserverDoesNotExists'];
+                                break;
+                            }
+                            $filePath = $docserverInfo['path_template'] . str_replace('#', '/', $adrInfo['path']) . $adrInfo['filename'];
+                            if (!is_file($filePath)) {
+                                $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'fileDoesNotExists'];
+                                break;
+                            }
+                        }
+                        if (!$hasSignableAttachment && empty($integratedResource)) {
                             $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noSignableAttachmentInSignatoryBook'];
                         } else {
                             $additionalsInfos['attachments'][] = ['res_id' => $resId];
@@ -555,27 +559,7 @@ class PreProcessActionController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $resources = ResModel::get([
-            'select' => ['res_id', 'locker_user_id', 'locker_time'],
-            'where'  => ['res_id in (?)'],
-            'data'   => [$data['resources']]
-        ]);
-
-        $resourcesForProcess = [];
-        foreach ($resources as $resource) {
-            $lock = true;
-            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
-                $lock = false;
-            } elseif ($resource['locker_user_id'] == $currentUser['id']) {
-                $lock = false;
-            } elseif (strtotime($resource['locker_time']) < time()) {
-                $lock = false;
-            }
-            if (!$lock) {
-                $resourcesForProcess[] = $resource['res_id'];
-            }
-        }
-        $data['resources'] = $resourcesForProcess;
+        $data['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $data['resources'], 'userId' => $GLOBALS['id']]);
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
 
@@ -605,13 +589,13 @@ class PreProcessActionController
             }
 
             foreach ($data['resources'] as $resId) {
-                $noAttachmentsResource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'filename']]);
+                $noAttachmentsResource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'filename', 'external_id->>\'signatureBookId\' as signaturebookid']]);
                 if (empty($noAttachmentsResource['alt_identifier'])) {
                     $noAttachmentsResource['alt_identifier'] = _UNDEFINED;
                 }
 
                 if (empty($noAttachmentsResource['filename'])) {
-                    $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noDocument'];
+                    $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noDocumentToSend'];
                     continue;
                 }
                 $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => 'letterbox_coll']);
@@ -627,6 +611,10 @@ class PreProcessActionController
                 $filePath = $docserverMainInfo['path_template'] . str_replace('#', '/', $adrMainInfo['path']) . $adrMainInfo['filename'];
                 if (!is_file($filePath)) {
                     $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'fileDoesNotExists'];
+                    continue;
+                }
+                if (!empty($noAttachmentsResource['signaturebookid'])) {
+                    $additionalsInfos['noMail'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'fileAlreadySendToSignatureBook'];
                     continue;
                 }
                 $additionalsInfos['mails'][] = ['res_id' => $resId];
@@ -654,28 +642,7 @@ class PreProcessActionController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
-        $resources = ResModel::get([
-            'select' => ['res_id', 'locker_user_id', 'locker_time'],
-            'where'  => ['res_id in (?)'],
-            'data'   => [$data['resources']]
-        ]);
-
-        $resourcesForProcess = [];
-        foreach ($resources as $resource) {
-            $lock = true;
-            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
-                $lock = false;
-            } elseif ($resource['locker_user_id'] == $currentUser['id']) {
-                $lock = false;
-            } elseif (strtotime($resource['locker_time']) < time()) {
-                $lock = false;
-            }
-            if (!$lock) {
-                $resourcesForProcess[] = $resource['res_id'];
-            }
-        }
-        $data['resources'] = $resourcesForProcess;
+        $data['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $data['resources'], 'userId' => $GLOBALS['id']]);
 
         $aDestination = ResModel::get([
             'select' => ['distinct(destination)'],
@@ -768,13 +735,67 @@ class PreProcessActionController
                             break;
                         }
 
+                        $attachment['collId'] = 'attachments_coll';
                         $resources[] = $attachment;
                         unset($aAttachments[$key]);
                     }
                 }
 
+                $resInfo = ResModel::getById(['select' => ['alt_identifier', 'integrations', 'res_id', 'subject as title'], 'resId' => $valueResId]);
+                $integrations = json_decode($resInfo['integrations'], true);
+                if (!empty($integrations['inShipping'])) {
+                    $resIdFound = true;
+
+                    $convertedDocument = ConvertPdfController::getConvertedPdfById([
+                        'select' => ['docserver_id', 'path', 'filename', 'fingerprint'],
+                        'resId'  => $valueResId,
+                        'collId' => 'letterbox_coll',
+                        'type'   => 'PDF'
+                    ]);
+                    if (empty($convertedDocument['docserver_id'])) {
+                        $canNotSend[] = [
+                            'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
+                            'reason' => 'noAttachmentConversion', 'attachmentIdentifier' => $resInfo['identifier']
+                        ];
+                    } else {
+                        $resourceContacts = ResourceContactModel::get([
+                            'where' => ['res_id = ?', 'mode = ?', 'type = ?'],
+                            'data'  => [$valueResId, 'recipient', 'contact']
+                        ]);
+                        if (empty($resourceContacts)) {
+                            $canNotSend[] = [
+                                'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
+                                'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $resInfo['identifier']
+                            ];
+                        } else {
+                            foreach ($resourceContacts as $resourceContact) {
+                                $contact = ContactModel::getById(['select' => ['*'], 'id' => $resourceContact['item_id']]);
+                                if (empty($contact)) {
+                                    $canNotSend[] = [
+                                        'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
+                                        'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $resInfo['identifier']
+                                    ];
+                                } else if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
+                                    $canNotSend[] = [
+                                        'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
+                                        'reason' => 'noFranceContact', 'attachmentIdentifier' => $resInfo['identifier']
+                                    ];
+                                } else {
+                                    $afnorAddress = ContactController::getContactAfnor($contact);
+                                    if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6]) || !preg_match("/^\d{5}\s/", $afnorAddress[6])) {
+                                        $canNotSend[] = [
+                                            'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
+                                            'reason' => 'incompleteAddressForPostal', 'attachmentIdentifier' => $resInfo['identifier']
+                                        ];
+                                    }
+                                }
+                            }
+                        }
+                        $resInfo['collId'] = 'letterbox_coll';
+                        $resources[] = $resInfo;
+                    }
+                }
                 if (!$resIdFound) {
-                    $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
                     $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentToSend'];
                 }
             }
@@ -814,6 +835,7 @@ class PreProcessActionController
         if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
         }
+        $data['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $data['resources'], 'userId' => $GLOBALS['id']]);
 
         $withEntity = [];
         $withoutEntity = [];
@@ -852,6 +874,7 @@ class PreProcessActionController
         if (!Validator::arrayType()->notEmpty()->validate($data['resources'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Data resources is empty or not an array']);
         }
+        $data['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $data['resources'], 'userId' => $GLOBALS['id']]);
 
         $hasAttachmentsNotes = [];
         $noAttachmentsNotes = [];
@@ -911,23 +934,30 @@ class PreProcessActionController
             }
         }
 
+        $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
+
         $resourcesInformations = [];
         foreach ($body['resources'] as $resId) {
-            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier']]);
+            $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'integrations']]);
             if (empty($resource['alt_identifier'])) {
                 $resource['alt_identifier'] = _UNDEFINED;
             }
 
-            $attachments = AttachmentModel::get([
-                'select'    => [1],
-                'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
-                'data'      => [$resId, $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
-            ]);
-
-            if (empty($attachments)) {
-                $resourcesInformations['noAttachment'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
+            $integrations = json_decode($resource['integrations'], true);
+            if (!empty($integrations['inSignatureBook'])) {
+                $resourcesInformations['success'][] = ['res_id' => $resId];
             } else {
-                $resourcesInformations['attachments'][] = ['res_id' => $resId];
+                $attachments = AttachmentModel::get([
+                    'select'    => [1],
+                    'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
+                    'data'      => [$resId, $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
+                ]);
+
+                if (empty($attachments)) {
+                    $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
+                } else {
+                    $resourcesInformations['success'][] = ['res_id' => $resId];
+                }
             }
         }
 
@@ -951,6 +981,7 @@ class PreProcessActionController
         if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
+        $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
 
         $signableAttachmentsTypes = [];
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
@@ -1002,6 +1033,7 @@ class PreProcessActionController
         if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
+        $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
 
         $signableAttachmentsTypes = [];
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
@@ -1062,6 +1094,7 @@ class PreProcessActionController
         if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
+        $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
 
         $signableAttachmentsTypes = [];
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
@@ -1111,6 +1144,7 @@ class PreProcessActionController
         if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
+        $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
 
         $resourcesInformation = [];
 
@@ -1164,6 +1198,7 @@ class PreProcessActionController
         if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
+        $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
 
         $currentUser = UserModel::getById(['select' => ['user_id'], 'id' => $GLOBALS['id']]);
 
@@ -1231,6 +1266,7 @@ class PreProcessActionController
         if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
+        $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
 
         $resourcesInformation = [];
         foreach ($body['resources'] as $resId) {
@@ -1305,5 +1341,35 @@ class PreProcessActionController
         }
 
         return $response->withJson(['isDestinationChanging' => $changeDestination]);
+    }
+
+    private static function getNonLockedResources(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resources', 'userId']);
+        ValidatorModel::arrayType($args, ['resources']);
+        ValidatorModel::intVal($args, ['userId']);
+
+        $resources = ResModel::get([
+            'select' => ['res_id', 'locker_user_id', 'locker_time'],
+            'where'  => ['res_id in (?)'],
+            'data'   => [$args['resources']]
+        ]);
+
+        $resourcesForProcess = [];
+        foreach ($resources as $resource) {
+            $lock = true;
+            if (empty($resource['locker_user_id'] || empty($resource['locker_time']))) {
+                $lock = false;
+            } elseif ($resource['locker_user_id'] == $args['userId']) {
+                $lock = false;
+            } elseif (strtotime($resource['locker_time']) < time()) {
+                $lock = false;
+            }
+            if (!$lock) {
+                $resourcesForProcess[] = $resource['res_id'];
+            }
+        }
+
+        return $resourcesForProcess;
     }
 }

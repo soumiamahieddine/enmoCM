@@ -89,10 +89,6 @@ class ResourceListController
         $displayFolderTags = false;
         if (!empty($resIds)) {
             $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
-            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
-                $excludeAttachmentTypes[] = 'document_with_notes';
-            }
-
             $attachments = AttachmentModel::get([
                 'select'    => ['COUNT(res_id)', 'res_id_master'],
                 'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],
@@ -107,7 +103,7 @@ class ResourceListController
                 'res_letterbox.res_id', 'res_letterbox.subject', 'res_letterbox.barcode', 'res_letterbox.alt_identifier',
                 'status.label_status AS "status.label_status"', 'status.img_filename AS "status.img_filename"', 'priorities.color AS "priorities.color"',
                 'res_letterbox.closing_date', 'res_letterbox.locker_user_id', 'res_letterbox.locker_time', 'res_letterbox.confidentiality',
-                'res_letterbox.filename as res_filename'
+                'res_letterbox.filename as res_filename', 'res_letterbox.integrations'
             ];
             $tableFunction = ['status', 'priorities'];
             $leftJoinFunction = ['res_letterbox.status = status.id', 'res_letterbox.priority = priorities.id'];
@@ -441,7 +437,7 @@ class ResourceListController
 
         $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
         $methodResponses = [];
-        foreach ($resourcesForAction as $resId) {
+        foreach ($resourcesForAction as $key => $resId) {
             if (!empty($method)) {
                 $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data'], 'note' => $body['note']]);
 
@@ -450,6 +446,7 @@ class ResourceListController
                         $methodResponses['errors'] = [];
                     }
                     $methodResponses['errors'] = array_merge($methodResponses['errors'], $methodResponse['errors']);
+                    unset($resourcesForAction[$key]);
                 }
                 if (!empty($methodResponse['data'])) {
                     if (empty($methodResponses['data'])) {
@@ -792,6 +789,7 @@ class ResourceListController
             $formattedResources[$key]['countAttachments']   = 0;
             $formattedResources[$key]['hasDocument']        = $resource['res_filename'] != null;
             $formattedResources[$key]['mailTracking']       = in_array($resource['res_id'], $args['trackedMails']);
+            $formattedResources[$key]['integrations']       = json_decode($resource['integrations'], true);
             foreach ($attachments as $attachment) {
                 if ($attachment['res_id_master'] == $resource['res_id']) {
                     $formattedResources[$key]['countAttachments'] = $attachment['count'];

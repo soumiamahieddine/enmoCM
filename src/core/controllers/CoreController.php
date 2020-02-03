@@ -98,4 +98,19 @@ class CoreController
         $GLOBALS['userId'] = $args['login'];
         $GLOBALS['id'] = $user['id'];
     }
+
+    public function externalConnectionsEnabled(Request $request, Response $response)
+    {
+        $connections = [];
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+        if (!empty($loadedXml->signatoryBookEnabled)) {
+            $connections[(string)$loadedXml->signatoryBookEnabled] = true;
+        }
+        $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
+        if ($mailevaConfig['enabled']) {
+            $connections['maileva'] = true;
+        }
+
+        return $response->withJson(['connection' => $connections]);
+    }
 }

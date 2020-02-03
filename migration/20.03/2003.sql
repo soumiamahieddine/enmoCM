@@ -32,10 +32,6 @@ UPDATE res_letterbox SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' 
 UPDATE res_attachments SET fulltext_result = 'SUCCESS' WHERE fulltext_result = '1' OR fulltext_result = '2';
 UPDATE res_attachments SET fulltext_result = 'ERROR' WHERE fulltext_result = '-1' OR fulltext_result = '-2';
 
-UPDATE res_attachments SET attachment_type = 'response_project' WHERE attachment_type = 'outgoing_mail';
-UPDATE res_attachments SET attachment_type = 'signed_response' WHERE attachment_type = 'outgoing_mail_signed';
-UPDATE res_attachments SET attachment_type = 'simple_attachment' WHERE attachment_type = 'document_with_notes';
-
 /* GROUPS INDEXING */
 ALTER TABLE usergroups ALTER COLUMN group_desc DROP DEFAULT;
 ALTER TABLE usergroups DROP COLUMN IF EXISTS can_index;
@@ -360,6 +356,12 @@ DO $$ BEGIN
     END IF;
 END$$;
 
+DO $$ BEGIN
+    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'external_signatory_book_id') = 0 THEN
+      UPDATE res_letterbox SET external_id = jsonb_set(external_id, '{signatureBookId}', external_signatory_book_id::text::jsonb) WHERE external_signatory_book_id IS NOT NULL;
+      ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_signatory_book_id;
+    END IF;
+END$$;
 
 /* RES_LETTERBOX */
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS model_id;
@@ -762,6 +764,17 @@ CREATE TABLE users_followed_resources
     CONSTRAINT users_followed_resources_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
+
+/* shipping */
+DO $$ BEGIN
+    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'shippings') AND attname = 'attachment_id') = 1 THEN
+        ALTER TABLE shippings DROP COLUMN IF EXISTS document_type;
+        ALTER TABLE shippings ADD COLUMN document_type character varying(255);
+        ALTER TABLE shippings RENAME COLUMN attachment_id TO document_id;
+        UPDATE shippings SET document_type = 'attachment';
+        ALTER TABLE doctypes ALTER COLUMN process_mode SET NOT NULL;
+    END IF;
+END$$;
 
 TRUNCATE TABLE indexing_models;
 INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (1, 'incoming', 'Courrier arrivée', TRUE, 23, FALSE);

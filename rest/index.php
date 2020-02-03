@@ -72,6 +72,8 @@ $app->get('/attachments/{id}/originalContent', \Attachment\controllers\Attachmen
 $app->get('/attachments/{id}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
 $app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\AttachmentController::class . ':setInSendAttachment');
 $app->get('/attachments/{id}/maarchParapheurWorkflow', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':getWorkflow');
+$app->put('/attachments/{id}/inSignatureBook', \Attachment\controllers\AttachmentController::class . ':setInSignatureBook');
+$app->put('/attachments/{id}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignAttachment');
 $app->get('/attachmentsTypes', \Attachment\controllers\AttachmentController::class . ':getAttachmentsTypes');
 
 //AutoComplete
@@ -251,7 +253,6 @@ $app->get('/groups/{id}/privileges/{privilegeId}/parameters', \Group\controllers
 $app->get('/history', \History\controllers\HistoryController::class . ':get');
 $app->get('/history/availableFilters', \History\controllers\HistoryController::class . ':getAvailableFilters');
 $app->get('/history/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
-$app->get('/history/resources/{resId}/workflow', \History\controllers\HistoryController::class . ':getWorkflowByResourceId');
 
 //BatchHistory
 $app->get('/batchHistory', \History\controllers\BatchHistoryController::class . ':get');
@@ -341,6 +342,7 @@ $app->post('/resources', \Resource\controllers\ResController::class . ':create')
 $app->get('/resources/{resId}', \Resource\controllers\ResController::class . ':getById');
 $app->put('/resources/{resId}', \Resource\controllers\ResController::class . ':update');
 $app->get('/resources/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
+$app->get('/resources/{resId}/contents/{version}', \Resource\controllers\ResController::class . ':getFileContents');
 $app->get('/resources/{resId}/originalContent', \Resource\controllers\ResController::class . ':getOriginalFileContent');
 $app->get('/resources/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
 $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
@@ -359,6 +361,7 @@ $app->delete('/resources/{resId}/circuits/{type}', \Entity\controllers\ListInsta
 $app->get('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':getLinkedResources');
 $app->post('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':linkResources');
 $app->delete('/resources/{resId}/linkedResources/{id}', \Resource\controllers\LinkController::class . ':unlinkResources');
+$app->put('/resources/{resId}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignResource');
 
 $app->get('/res/{resId}/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
@@ -368,7 +371,6 @@ $app->get('/categories', \Resource\controllers\ResController::class . ':getCateg
 $app->get('/resources/{resId}/users/{userId}/isDestinationChanging', \Action\controllers\PreProcessActionController::class . ':isDestinationChanging');
 $app->get('/resources/{resId}/users/{userId}/groups/{groupId}/baskets/{basketId}/processingData', \Resource\controllers\ResController::class . ':getProcessingData');
 $app->post('/resources/exportData', \Resource\controllers\ResourceDataExportController::class . ':generateFile');
-$app->put('/resources/{resId}/setInIntegrations', \Resource\controllers\ResController::class . ':setInIntegrations');
 
 //ResourcesList
 $app->get('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}', \Resource\controllers\ResourceListController::class . ':get');
@@ -381,6 +383,7 @@ $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/su
 $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}', \Resource\controllers\ResourceListController::class . ':setAction');
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplates');
 $app->get('/resourcesList/summarySheets', \Resource\controllers\SummarySheetController::class . ':createListWithAll');
+$app->put('/resourcesList/integrations', \Resource\controllers\ResController::class . ':setInIntegrations');
 $app->post('/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
 //PreProcess
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \Action\controllers\PreProcessActionController::class . ':checkAcknowledgementReceipt');
@@ -414,8 +417,6 @@ $app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/res
 $app->get('/signatureBook/users/{userId}/groups/{groupId}/baskets/{basketId}/resources/{resId}', \SignatureBook\controllers\SignatureBookController::class . ':getSignatureBook');
 $app->get('/signatureBook/{resId}/attachments', \SignatureBook\controllers\SignatureBookController::class . ':getAttachmentsById');
 $app->get('/signatureBook/{resId}/incomingMailAttachments', \SignatureBook\controllers\SignatureBookController::class . ':getIncomingMailAndAttachmentsById');
-$app->put('/signatureBook/{resId}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignFile');
-$app->put('/attachments/{id}/inSignatureBook', \Attachment\controllers\AttachmentController::class . ':setInSignatureBook');
 
 //statuses
 $app->get('/statuses', \Status\controllers\StatusController::class . ':get');
@@ -521,5 +522,6 @@ $app->get('/maarchParapheur/user/{id}/picture', \ExternalSignatoryBook\controlle
 $app->get('/externalSignatureBooks/enabled', \ExternalSignatoryBook\controllers\ExternalSignatureBookController::class . ':getEnabledSignatureBook');
 $app->get('/externalSummary/{resId}', \ExternalSummary\controllers\SummaryController::class . ':getByResId');
 
+$app->get('/externalConnectionsEnabled', \SrcCore\controllers\CoreController::class . ':externalConnectionsEnabled');
 
 $app->run();

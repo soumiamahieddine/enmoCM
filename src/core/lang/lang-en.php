@@ -153,6 +153,8 @@ define('_TAG_ADDED', 'Tag added');
 define('_TAG_DELETED', 'Tag deleted');
 define('_TAG_UPDATED', 'Tag updated');
 define('_TAG_MERGED', 'Tag merged');
+define('_LINK_ADDED', 'Link added');
+define('_LINK_DELETED', 'Link deleted');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');
@@ -450,12 +452,21 @@ define("_BY", "by");
 define("_TO_AVIS", "For recommendation");
 define("_VALIDATE_BY", "Validate by");
 
+define("_UPDATE_LISTINSTANCE", "Diffusion list updated");
+define("_UPDATE_VISA_CIRCUIT", "Visa workflow updated");
+define("_UPDATE_AVIS_CIRCUIT", "Opinion workflow updated");
+
+define("_VISA_CIRCUIT_DELETED", "Visa workflow deleted");
+define("_AVIS_CIRCUIT_DELETED", "Opinion workflow updated");
+
 define("_ACKNOWLEDGEMENT_RECEIPT", "Acknowledgement Receipt");
 define("_CREATED_BY", "Created by");
 define("_SENT_DATE", "Sent ");
 define("_SENT_TO", "Sent to");
 define("_FORMAT", "Format");
 define("_SUBJECT", "Subject");
+define("_CONTACT", "Contact");
 define("_CHRONO_NUMBER_MASTER", "Resource chrono number");
 define("_SENT_BY", "Sent by");
 define('_TO_CCI', 'On copy hidden');
+define('_PRIMARY_INFORMATION', 'Primary information');

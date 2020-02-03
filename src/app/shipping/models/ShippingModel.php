@@ -21,20 +21,21 @@ class ShippingModel
 {
     public static function create(array $args)
     {
-        ValidatorModel::notEmpty($args, ['userId', 'attachmentId', 'accountId']);
-        ValidatorModel::intVal($args, ['userId', 'attachmentId', 'recipientEntityId']);
-        ValidatorModel::stringType($args, ['accountId']);
+        ValidatorModel::notEmpty($args, ['userId', 'documentId', 'documentType', 'accountId']);
+        ValidatorModel::intVal($args, ['userId', 'documentId', 'recipientEntityId']);
+        ValidatorModel::stringType($args, ['accountId', 'documentType']);
 
         DatabaseModel::insert([
             'table'         => 'shippings',
             'columnsValues' => [
-                'user_id'               => $args['userId'],
-                'attachment_id'         => $args['attachmentId'],
-                'options'               => $args['options'],
-                'fee'                   => $args['fee'],
-                'recipient_entity_id'   => $args['recipientEntityId'],
-                'account_id'            => $args['accountId'],
-                'creation_date'         => 'CURRENT_TIMESTAMP'
+                'user_id'             => $args['userId'],
+                'document_id'         => $args['documentId'],
+                'document_type'       => $args['documentType'],
+                'options'             => $args['options'],
+                'fee'                 => $args['fee'],
+                'recipient_entity_id' => $args['recipientEntityId'],
+                'account_id'          => $args['accountId'],
+                'creation_date'       => 'CURRENT_TIMESTAMP'
             ]
         ]);
 

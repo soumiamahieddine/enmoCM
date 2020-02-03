@@ -57,7 +57,6 @@ class ActionMethodController
         'sendShippingAction'                    => 'createMailevaShippings',
         'sendSignatureBookAction'               => 'sendSignatureBook',
         'continueVisaCircuitAction'             => 'continueVisaCircuit',
-        'rejectVisaBackToPrevious'              => 'rejectVisaBackToPrevious',
         'redirectInitiatorEntityAction'         => 'redirectInitiatorEntityAction',
         'rejectVisaBackToPreviousAction'        => 'rejectVisaBackToPrevious',
         'resetVisaAction'                       => 'resetVisa',
@@ -278,18 +277,18 @@ class ActionMethodController
                             'item_mode' => 'cc'
                         ],
                         'where' => ['item_mode = ?', 'res_id = ?'],
-                        'data' => ['dest', $args['resId']]
+                        'data'  => ['dest', $args['resId']]
                     ]);
                     $userInfo = UserModel::getById(['select' => ['user_id'], 'id' => $destUser[0]['item_id']]);
                     ListInstanceModel::create([
-                        'res_id'              => $args['resId'],
-                        'sequence'            => 0,
-                        'item_id'             => $userInfo['user_id'],
-                        'item_type'           => 'user_id',
-                        'item_mode'           => 'dest',
-                        'added_by_user'       => $GLOBALS['userId'],
-                        'viewed'              => 0,
-                        'difflist_type'       => 'entity_id'
+                        'res_id'          => $args['resId'],
+                        'sequence'        => 0,
+                        'item_id'         => $userInfo['user_id'],
+                        'item_type'       => 'user_id',
+                        'item_mode'       => 'dest',
+                        'added_by_user'   => $GLOBALS['userId'],
+                        'viewed'          => 0,
+                        'difflist_type'   => 'entity_id'
                     ]);
                     $destUser = $userInfo['user_id'];
                 } else {
@@ -324,10 +323,16 @@ class ActionMethodController
             }
         }
 
+        $resource     = ResModel::getById(['select' => ['integrations'], 'resId' => $args['resId']]);
+        $integrations = json_decode($resource['integrations'], true);
+        if (!empty($integrations['inSignatureBook'])) {
+            return true;
+        }
+
         $attachments = AttachmentModel::get([
-            'select'    => [1],
-            'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
-            'data'      => [$args['resId'], $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
+            'select'  => [1],
+            'where'   => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
+            'data'    => [$args['resId'], $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
         ]);
         if (empty($attachments)) {
             return ['errors' => ['No available attachments']];
@@ -372,6 +377,7 @@ class ActionMethodController
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
         $config = [];
 
+        $historyInfo = '';
         if (!empty($loadedXml)) {
             $config['id'] = 'maarchParapheur';
             foreach ($loadedXml->signatoryBook as $value) {
@@ -383,12 +389,12 @@ class ActionMethodController
 
             $processingUserInfo = MaarchParapheurController::getUserById(['config' => $config, 'id' => $args['data']['processingUser']]);
             $sendedInfo = MaarchParapheurController::sendDatas([
-                'config'            => $config,
-                'resIdMaster'       => $args['resId'],
-                'processingUser'    => $args['data']['processingUser'],
-                'objectSent'        => 'mail',
-                'userId'            => $GLOBALS['userId'],
-                'note'              => $args['note'] ?? null
+                'config'          => $config,
+                'resIdMaster'     => $args['resId'],
+                'processingUser'  => $args['data']['processingUser'],
+                'objectSent'      => 'mail',
+                'userId'          => $GLOBALS['userId'],
+                'note'            => $args['note'] ?? null
             ]);
             if (!empty($sendedInfo['error'])) {
                 return ['errors' => [$sendedInfo['error']]];
@@ -401,9 +407,9 @@ class ActionMethodController
 
         if (!empty($attachmentToFreeze)) {
             ResModel::update([
-                'set' => ['external_signatory_book_id' => $attachmentToFreeze['letterbox_coll'][$args['resId']]],
-                'where' => ['res_id = ?'],
-                'data' => [$args['resId']]
+                'postSet' => ['external_id' => "jsonb_set(external_id, '{signatureBookId}', '{$attachmentToFreeze['letterbox_coll'][$args['resId']]}'::text::jsonb)"],
+                'where'   => ['res_id = ?'],
+                'data'    => [$args['resId']]
             ]);
         }
 
@@ -416,11 +422,11 @@ class ActionMethodController
         ValidatorModel::intVal($args, ['resId']);
 
         $listInstances = ListInstanceModel::get([
-            'select'    => ['listinstance_id'],
-            'where'     => ['res_id = ?', 'difflist_type = ?', 'process_date is not null'],
-            'data'      => [$args['resId'], 'VISA_CIRCUIT'],
-            'orderBy'   => ['listinstance_id desc'],
-            'limit'     => 1
+            'select'  => ['listinstance_id'],
+            'where'   => ['res_id = ?', 'difflist_type = ?', 'process_date is not null'],
+            'data'    => [$args['resId'], 'VISA_CIRCUIT'],
+            'orderBy' => ['listinstance_id desc'],
+            'limit'   => 1
         ]);
 
         if (empty($listInstances[0])) {
@@ -438,17 +444,15 @@ class ActionMethodController
                 'orderBy' => ['listinstance_id'],
                 'limit'   => 1
             ]);
-            if (!empty($hasPrevious)) {
+            if (empty($hasPrevious)) {
                 return ['errors' => ['Workflow not yet started']];
             }
         }
 
-        $listInstances = $listInstances[0];
-
         ListInstanceModel::update([
             'set'   => ['process_date' => null],
             'where' => ['listinstance_id = ?'],
-            'data'  => [$listInstances['listinstance_id']]
+            'data'  => [$listInstances[0]['listinstance_id']]
         ]);
 
         return true;
@@ -476,7 +480,7 @@ class ActionMethodController
         }
 
         ListInstanceModel::update([
-            'set'   => ['process_date' => null],
+            'set'   => ['process_date' => null, 'process_comment' => null],
             'where' => ['res_id = ?', 'difflist_type = ?'],
             'data'  => [$args['resId'], 'VISA_CIRCUIT']
         ]);
@@ -611,7 +615,7 @@ class ActionMethodController
         foreach ($args['data']['opinionCircuit'] as $key => $instance) {
             if (in_array($instance['item_type'], ['user_id', 'user'])) {
                 $user = UserModel::getById(['id' => $instance['item_id'], 'select' => ['id', 'user_id']]);
-                $instance['item_id'] = $user['user_id'] ?? null;
+                $instance['item_id']   = $user['user_id'] ?? null;
                 $instance['item_type'] = 'user_id';
                 
                 if (empty($user)) {
@@ -694,6 +698,7 @@ class ActionMethodController
         if ($message == null) {
             return true;
         }
+
         return ['history' => $message];
     }
 
@@ -803,7 +808,7 @@ class ActionMethodController
             foreach ($args['data']['opinionWorkflow'] as $key => $instance) {
                 if (in_array($instance['item_type'], ['user_id', 'user'])) {
                     $user = UserModel::getById(['id' => $instance['item_id'], 'select' => ['id', 'user_id']]);
-                    $instance['item_id'] = $user['user_id'] ?? null;
+                    $instance['item_id']   = $user['user_id'] ?? null;
                     $instance['item_type'] = 'user_id';
 
                     if (empty($user)) {

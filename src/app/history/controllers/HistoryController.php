@@ -70,30 +70,30 @@ class HistoryController
                 $users = UserModel::get(['select' => ['user_id'], 'where' => ['id in (?)'], 'data' => [$userIds]]);
                 $users = array_column($users, 'user_id');
             }
-            $users = array_merge($users, $userLogins);
+            $users   = array_merge($users, $userLogins);
             $where[] = 'user_id in (?)';
-            $data[] = $users;
+            $data[]  = $users;
         }
 
         if (!empty($queryParams['startDate'])) {
             $where[] = 'event_date > ?';
-            $data[] = $queryParams['startDate'];
+            $data[]  = $queryParams['startDate'];
         }
         if (!empty($queryParams['endDate'])) {
             $where[] = 'event_date < ?';
-            $data[] = $queryParams['endDate'];
+            $data[]  = $queryParams['endDate'];
         }
 
         if (!empty($queryParams['resId'])) {
             $where[] = 'table_name in (?)';
-            $data[] = ['res_letterbox', 'res_view_letterbox'];
+            $data[]  = ['res_letterbox', 'res_view_letterbox'];
 
             $where[] = 'record_id = ?';
-            $data[] = $queryParams['resId'];
+            $data[]  = $queryParams['resId'];
         }
         if (!empty($queryParams['onlyActions'])) {
             $where[] = 'event_type like ?';
-            $data[] = 'ACTION#%';
+            $data[]  = 'ACTION#%';
         }
 
         $eventTypes = [];
@@ -111,8 +111,8 @@ class HistoryController
         }
 
         $order = !in_array($queryParams['order'], ['asc', 'desc']) ? '' : $queryParams['order'];
-        $queryParams['orderBy'] = (!empty($queryParams['orderBy']) && $queryParams['orderBy'] == 'userLabel') ? 'user_id' : null;
-        $orderBy = !in_array($queryParams['orderBy'], ['event_date', 'user_id', 'info']) ? ['event_date DESC'] : ["{$queryParams['orderBy']} {$order}"];
+        $orderBy = str_replace(['userLabel'], ['user_id'], $queryParams['orderBy']);
+        $orderBy = !in_array($orderBy, ['event_date', 'user_id', 'info']) ? ['event_date DESC'] : ["{$orderBy} {$order}"];
 
         $history = HistoryModel::get([
             'select'    => ['event_date', 'user_id', 'info', 'remote_ip', 'count(1) OVER()'],
@@ -182,22 +182,6 @@ class HistoryController
         $aHistories = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['info', 'event_date']]);
 
         return $response->withJson(['histories' => $aHistories]);
-    }
-
-    public function getWorkflowByResourceId(Request $request, Response $response, array $args)
-    {
-        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        }
-
-        $queryParams = $request->getQueryParams();
-        if (!empty($queryParams['limit']) && !Validator::intVal()->validate($queryParams['limit'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an int val']);
-        }
-
-        $history = HistoryModel::getWorkflowByResourceId(['resId' => $args['resId'], 'select' => ['info', 'event_date'], 'limit' => (int)$queryParams['limit']]);
-
-        return $response->withJson(['history' => $history]);
     }
 
     public function getAvailableFilters(Request $request, Response $response)

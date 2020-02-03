@@ -77,22 +77,4 @@ abstract class HistoryModelAbstract
 
         return $aHistories;
     }
-
-    public static function getWorkflowByResourceId(array $args)
-    {
-        ValidatorModel::notEmpty($args, ['resId']);
-        ValidatorModel::stringType($args, ['resId']);
-        ValidatorModel::intVal($args, ['limit']);
-
-        $history = DatabaseModel::select([
-            'select'   => empty($args['select']) ? ['*'] : $args['select'],
-            'table'    => ['history, users'],
-            'where'    => ['table_name in (?)', 'record_id = ?', 'event_id NOT LIKE ?', 'event_type LIKE ?', 'history.user_id = users.user_id'],
-            'data'     => [['res_letterbox', 'res_view_letterbox'], $args['resId'], '^[0-9]+$', 'ACTION#%'],
-            'order_by' => ['event_date DESC'],
-            'limit'    => empty($args['limit']) ? 500 : $args['limit']
-        ]);
-
-        return $history;
-    }
 }

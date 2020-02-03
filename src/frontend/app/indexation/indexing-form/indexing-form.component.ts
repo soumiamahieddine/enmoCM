@@ -5,8 +5,8 @@ import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AppService } from '../../../service/app.service';
-import { tap, catchError, finalize, exhaustMap, map, filter } from 'rxjs/operators';
-import { of, forkJoin, Subject, Observable } from 'rxjs';
+import { tap, catchError, exhaustMap, filter } from 'rxjs/operators';
+import { of} from 'rxjs';
 import { SortPipe } from '../../../plugins/sorting.pipe';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FormControl, Validators, FormGroup, ValidationErrors, ValidatorFn, AbstractControl } from '@angular/forms';
@@ -337,14 +337,14 @@ export class IndexingFormComponent implements OnInit {
         return arrIndexingModels;
     }
 
-    saveData(userId: number, groupId: number, basketId: number) {
+    saveData() {
         return new Promise((resolve, reject) => {
             if (this.isValidForm()) {
                 const formatdatas = this.formatDatas(this.getDatas());
 
-                this.http.put(`../../rest/resources/${this.resId}?userId=${userId}&groupId=${groupId}&basketId=${basketId}`, formatdatas).pipe(
+                this.http.put(`../../rest/resources/${this.resId}`, formatdatas).pipe(
                     tap(() => {
-                        this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));;
+                        this.currentResourceValues = JSON.parse(JSON.stringify(this.getDatas(false)));
                         this.notify.success(this.lang.dataUpdated);
                         resolve(true);
                     }),

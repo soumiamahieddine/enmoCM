@@ -188,6 +188,7 @@
     border: solid 1px #ccc;
     position: relative;
     padding: 20px;
+    padding-right: 40px;
     background: lighten($primary, 10%);
     width: 100%;
 
@@ -418,4 +419,13 @@
 .tool-disabled {
     cursor: not-allowed;
     opacity: 0.3;
+}
+
+.checked {
+    opacity: 1;
+    color : $secondary;
+}
+
+.unchecked {
+    opacity: 0.5;
 }

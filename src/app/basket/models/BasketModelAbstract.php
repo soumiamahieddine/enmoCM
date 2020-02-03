@@ -24,19 +24,21 @@ use User\models\UserModel;
 
 abstract class BasketModelAbstract
 {
-    public static function get(array $aArgs = [])
+    public static function get(array $args = [])
     {
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($args, ['limit']);
 
-        $aBaskets = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+        $baskets = DatabaseModel::select([
+            'select'    => $args['select'] ?? ['*'],
             'table'     => ['baskets'],
-            'where'     => $aArgs['where'],
-            'data'      => $aArgs['data'],
-            'order_by'  => $aArgs['orderBy']
+            'where'     => $args['where'] ?? [],
+            'data'      => $args['data'] ?? [],
+            'order_by'  => $args['orderBy'] ?? [],
+            'limit'     => $args['limit'] ?? 0
         ]);
 
-        return $aBaskets;
+        return $baskets;
     }
 
     public static function getById(array $aArgs)

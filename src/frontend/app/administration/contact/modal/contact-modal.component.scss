@@ -9,15 +9,23 @@
 .modal-container {
     min-height: 250px;
     height: auto;
+    padding: 0px !important;
+    margin: 0;
+    flex: 1;
+    position: relative;
 }
 
 .modal-body {
     min-height: auto;
 }
 
-
 .admin-contact {
-    //min-width: 850px;
-    max-width: 99vw;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     width: 90vw;
+}
+
+.mat-sidenav-container {
+    height: 100%;
 }

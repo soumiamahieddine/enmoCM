@@ -153,6 +153,8 @@ define('_TAG_ADDED', 'Mot-clé ajouté');
 define('_TAG_DELETED', 'Mot-clé supprimé');
 define('_TAG_UPDATED', 'Mot-clé modifié');
 define('_TAG_MERGED', 'Mot-clé fusionné');
+define('_LINK_ADDED', 'Liaison ajoutée');
+define('_LINK_DELETED', 'Liaison supprimée');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');
@@ -449,8 +451,15 @@ define("_BY", "par");
 define("_TO_AVIS", "POUR AVIS");
 define("_VALIDATE_BY", "Validé par");
 
+define("_UPDATE_LISTINSTANCE", "Liste de diffusion mise à jour");
+define("_UPDATE_VISA_CIRCUIT", "Circuit de visa mis à jour");
+define("_UPDATE_AVIS_CIRCUIT", "Circuit d'avis mis à jour");
+
+define("_VISA_CIRCUIT_DELETED", "Circuit de visa supprimé");
+define("_AVIS_CIRCUIT_DELETED", "Circuit d'avis supprimé");
+
 define("_ACKNOWLEDGEMENT_RECEIPT", "Accusé de réception");
-define("_CREATED_BY", "Créer par");
+define("_CREATED_BY", "Crée(e) par");
 define("_SENT_DATE", "Envoyé le");
 define("_SENT_TO", "Envoyé à");
 define("_FORMAT", "Format");
@@ -459,3 +468,4 @@ define("_CONTACT", "Contact");
 define("_CHRONO_NUMBER_MASTER", "Numéro chrono courrier");
 define("_SENT_BY", "Envoyé par");
 define('_TO_CCI', 'En copie caché');
+define('_PRIMARY_INFORMATION', 'Informations principales');

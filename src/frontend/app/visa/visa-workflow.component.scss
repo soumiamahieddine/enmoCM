@@ -89,9 +89,11 @@
 }
 
 .workflow {
+    padding-top: 10px;
+    padding-bottom: 10px;
     height: auto !important;
     margin-bottom: 10px;
-    background: rgba(216,216,216,0.1);
+    background: rgba(216, 216, 216, 0.1);
     border-radius: 10px;
     font-size: 13px;
 }
@@ -147,4 +149,13 @@
 
 .invalid {
     color: $warn;
+}
+
+.commentBubble {
+    color: #F99830;
+    position: absolute;
+    top: -12px;
+    right: -11px;
+    font-size: 20px;
+    cursor: help;
 }

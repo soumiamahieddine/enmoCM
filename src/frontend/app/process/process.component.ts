@@ -24,6 +24,7 @@ import { ContactService } from '../../service/contact.service';
 import { VisaWorkflowComponent } from '../visa/visa-workflow.component';
 import { PrivilegeService } from '../../service/privileges.service';
 import { AvisWorkflowComponent } from '../avis/avis-workflow.component';
+import { FunctionsService } from '../../service/functions.service';
 
 
 
@@ -134,6 +135,13 @@ export class ProcessComponent implements OnInit {
 
     autoAction: boolean = false;
 
+    integrationsInfo: any = {
+        inSignatureBook: {
+            icon: 'fas fa-file-signature',
+        }
+    };
+
+
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
@@ -161,7 +169,8 @@ export class ProcessComponent implements OnInit {
         public actionService: ActionsService,
         private contactService: ContactService,
         private router: Router,
-        public privilegeService: PrivilegeService
+        public privilegeService: PrivilegeService,
+        public functions: FunctionsService
     ) {
         // Event after process action 
         this.subscription = this.actionService.catchAction().subscribe(message => {
@@ -248,6 +257,7 @@ export class ProcessComponent implements OnInit {
                 this.currentResourceInformations = data;
                 this.resourceFollowed = data.followed;
                 this.loadSenders();
+                this.loadAvaibleIntegrations(data.integrations);
                 this.headerService.setHeader(this.lang.eventProcessDoc, this.lang[this.currentResourceInformations.categoryId]);
             }),
             finalize(() => this.loading = false),
@@ -258,12 +268,44 @@ export class ProcessComponent implements OnInit {
         ).subscribe();
     }
 
+    loadAvaibleIntegrations(integrationsData: any) {
+        this.integrationsInfo['inSignatureBook'].enable = !this.functions.empty(integrationsData['inSignatureBook']) ? integrationsData['inSignatureBook'] : false;
+
+        this.http.get(`../../rest/externalConnectionsEnabled`).pipe(
+            tap((data: any) => {
+                Object.keys(data.connection).filter(connectionId => connectionId !== 'maarchParapheur').forEach(connectionId => {
+                    if (connectionId === 'maileva') {
+                        this.integrationsInfo['inShipping'] = {
+                            icon: 'fas fa-shipping-fast'                        }
+                    }
+                });
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    toggleIntegration(integrationId: string) {
+        this.http.put(`../../rest/resourcesList/integrations`, {resources : [this.currentResourceInformations.resId],integrations : { [integrationId] : !this.currentResourceInformations.integrations[integrationId]}}).pipe(
+            tap(() => {
+                this.currentResourceInformations.integrations[integrationId] = !this.currentResourceInformations.integrations[integrationId];
+                this.notify.success(this.lang.actionDone); 
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
     loadBadges() {
         this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/items`).pipe(
             tap((data: any) => {
                 this.processTool.forEach(element => {
                     element.count = data[element.id] !== undefined ? data[element.id] : 0;
-                }); 
+                });
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
@@ -273,6 +315,7 @@ export class ProcessComponent implements OnInit {
     }
 
     loadSenders() {
+
         if (this.currentResourceInformations.senders === undefined || this.currentResourceInformations.senders.length === 0) {
             this.hasContact = false;
             this.senderLightInfo = { 'displayName': this.lang.noSelectedContact, 'filling': null };
@@ -282,17 +325,25 @@ export class ProcessComponent implements OnInit {
                 this.http.get('../../rest/contacts/' + this.currentResourceInformations.senders[0].id).pipe(
                     tap((data: any) => {
                         const arrInfo = [];
-
                         if (this.empty(data.firstname) && this.empty(data.lastname)) {
-                            this.senderLightInfo = { 'displayName': data.company, 'filling': this.contactService.getFillingColor(data.fillingRate.thresholdLevel) };
+                            if (!this.functions.empty(data.fillingRate)) {
+                                this.senderLightInfo = { 'displayName': data.company, 'filling': this.contactService.getFillingColor(data.fillingRate.thresholdLevel) };
+                            } else {
+                                this.senderLightInfo = { 'displayName': data.company };
+                            }
+
                         } else {
                             arrInfo.push(data.firstname);
                             arrInfo.push(data.lastname);
                             if (!this.empty(data.company)) {
                                 arrInfo.push('(' + data.company + ')');
                             }
+                            if (!this.functions.empty(data.fillingRate)) {
+                                this.senderLightInfo = { 'displayName': arrInfo.filter(info => info !== '').join(' '), 'filling': this.contactService.getFillingColor(data.fillingRate.thresholdLevel) };
+                            } else {
+                                this.senderLightInfo = { 'displayName': arrInfo.filter(info => info !== '').join(' ') };
+                            }
 
-                            this.senderLightInfo = { 'displayName': arrInfo.filter(info => info !== '').join(' '), 'filling': this.contactService.getFillingColor(data.fillingRate.thresholdLevel) };
                         }
                     })
                 ).subscribe();
@@ -427,7 +478,7 @@ export class ProcessComponent implements OnInit {
                 }),
                 filter((data: string) => data === 'ok'),
                 tap(() => {
-                    this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+                    this.indexingForm.saveData();
                     setTimeout(() => {
                         this.loadResource();
                     }, 400);
@@ -486,7 +537,7 @@ export class ProcessComponent implements OnInit {
     }
 
     confirmModification() {
-        this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+        this.indexingForm.saveData();
         setTimeout(() => {
             this.loadResource();
         }, 400);
@@ -534,7 +585,7 @@ export class ProcessComponent implements OnInit {
 
     async saveTool() {
         if (this.currentTool === 'info' && this.indexingForm !== undefined) {
-            await this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+            await this.indexingForm.saveData();
             this.loadResource();
         } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList !== undefined) {
             await this.appDiffusionsList.saveListinstance();
@@ -570,14 +621,14 @@ export class ProcessComponent implements OnInit {
         this.resourceFollowed = !this.resourceFollowed;
 
         if (this.resourceFollowed) {
-            this.http.post('../../rest/resources/follow', {resources: [this.currentResourceInformations.resId]}).pipe(
+            this.http.post('../../rest/resources/follow', { resources: [this.currentResourceInformations.resId] }).pipe(
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
                 })
             ).subscribe();
         } else {
-            this.http.request('DELETE', '../../rest/resources/unfollow', {body: {resources: [this.currentResourceInformations.resId]}}).pipe(
+            this.http.request('DELETE', '../../rest/resources/unfollow', { body: { resources: [this.currentResourceInformations.resId] } }).pipe(
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);

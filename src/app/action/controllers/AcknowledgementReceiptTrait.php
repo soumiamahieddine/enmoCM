@@ -95,7 +95,7 @@ trait AcknowledgementReceiptTrait
                 }
                 $mergedDocument = MergeController::mergeDocument([
                     'content'   => $template[0]['template_content'],
-                    'data'      => ['resId' => $args['resId'], 'recipientId' => $contactToProcess, 'recipientType' => 'contact', 'userId' => $currentUser['id']]
+                    'data'      => ['resId' => $args['resId'], 'senderId' => $contactToProcess, 'senderType' => 'contact', 'userId' => $currentUser['id']]
                 ]);
                 $format = 'html';
             } else {
@@ -105,7 +105,7 @@ trait AcknowledgementReceiptTrait
                 }
                 $mergedDocument = MergeController::mergeDocument([
                     'path'  => $pathToDocument,
-                    'data'  => ['resId' => $args['resId'], 'recipientId' => $contactToProcess, 'recipientType' => 'contact', 'userId' => $currentUser['id']]
+                    'data'  => ['resId' => $args['resId'], 'senderId' => $contactToProcess, 'senderType' => 'contact', 'userId' => $currentUser['id']]
                 ]);
                 $encodedDocument = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $mergedDocument['encodedDocument']]);
                 $mergedDocument['encodedDocument'] = $encodedDocument["encodedResource"];

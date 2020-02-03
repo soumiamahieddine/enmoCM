@@ -83,7 +83,8 @@ export class VisaWorkflowComponent implements OnInit {
 
         let route = this.linkedToMaarchParapheur === true ? `../../rest/listTemplates/entities/${entityId}?type=visaCircuit&maarchParapheur=true` : `../../rest/listTemplates/entities/${entityId}?type=visaCircuit`;
 
-        this.http.get(route)
+        return new Promise((resolve, reject) => {
+            this.http.get(route)
             .subscribe((data: any) => {
                 if (data.listTemplates[0]) {
                     this.visaWorkflow.items = data.listTemplates[0].items.map((item: any) => {
@@ -100,7 +101,11 @@ export class VisaWorkflowComponent implements OnInit {
                         this.getMaarchParapheurUserAvatar(element.externalId.maarchParapheur, key);
                     }
                 });
+                resolve(true);
             });
+        });
+
+        
     }
 
     loadVisaSignUsersList() {

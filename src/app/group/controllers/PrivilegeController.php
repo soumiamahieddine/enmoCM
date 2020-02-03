@@ -4,6 +4,7 @@ namespace Group\controllers;
 
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
+use Basket\models\RedirectBasketModel;
 use Group\models\GroupModel;
 use Group\models\PrivilegeModel;
 use Resource\controllers\ResController;
@@ -239,43 +240,59 @@ class PrivilegeController
 
     public static function canUpdateResource(array $args)
     {
-        ValidatorModel::notEmpty($args, ['currentUserId', 'resId']);
-        ValidatorModel::intVal($args, ['currentUserId', 'resId']);
-        ValidatorModel::arrayType($args, ['queryParams']);
+        ValidatorModel::notEmpty($args, ['userId', 'resId']);
+        ValidatorModel::intVal($args, ['userId', 'resId']);
 
-        if (!empty($args['queryParams']['userId']) && !empty($args['queryParams']['groupId']) && !empty($args['queryParams']['basketId'])) {
-            $errors = ResourceListController::listControl(['groupId' => $args['queryParams']['groupId'], 'userId' => $args['queryParams']['userId'], 'basketId' => $args['queryParams']['basketId'], 'currentUserId' => $args['currentUserId']]);
-            if (!empty($errors['errors'])) {
-                return ['errors' => $errors['errors']];
-            }
-
-            $user   = UserModel::getById(['id' => $args['queryParams']['userId'], 'select' => ['user_id']]);
-            $basket = BasketModel::getById(['id' => $args['queryParams']['basketId'], 'select' => ['basket_id', 'basket_clause']]);
-            $group  = GroupModel::getById(['id' => $args['queryParams']['groupId'], 'select' => ['group_id']]);
-
-            $groupBasket = GroupBasketModel::get(['select' => ['list_event_data', 'list_event'], 'where' => ['basket_id = ?', 'group_id = ?'], 'data' => [$basket['basket_id'], $group['group_id']]]);
-            $listEventData = json_decode($groupBasket[0]['list_event_data'], true);
-            if ($groupBasket[0]['list_event'] != 'processDocument' || !$listEventData['canUpdate']) {
-                return ['errors' => 'Basket can not update resources'];
-            }
-
-            $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
-            $resource = ResModel::getOnView([
-                'select'    => [1],
-                'where'     => [$whereClause, 'res_view_letterbox.res_id = ?'],
-                'data'      => [$args['resId']]
-            ]);
-            if (empty($resource)) {
-                return ['errors' => 'Resource does not belong to this basket'];
-            }
+        if (PrivilegeController::hasPrivilege(['privilegeId' => 'edit_resource', 'userId' => $args['userId']])) {
+            return ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $args['userId']]);
         } else {
-            if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $args['currentUserId']])) {
-                return ['errors' => 'Resource out of perimeter'];
-            } elseif (!PrivilegeController::hasPrivilege(['privilegeId' => 'edit_resource', 'userId' => $args['currentUserId']])) {
-                return ['errors' => 'Service forbidden'];
-            }
-        }
+            $basketsClause = '';
 
-        return true;
+            $currentUser = UserModel::getById(['id' => $args['userId'], 'select' => ['id', 'user_id']]);
+            $groups = UserGroupModel::get(['select' => ['group_id'], 'where' => ['user_id = ?'], 'data' => [$currentUser['id']]]);
+            $groups = array_column($groups, 'group_id');
+            if (!empty($groups)) {
+                $groups = GroupModel::get(['select' => ['group_id'], 'where' => ['id in (?)'], 'data' => [$groups]]);
+                $groups = array_column($groups, 'group_id');
+
+                $baskets = GroupBasketModel::get(['select' => ['basket_id'], 'where' => ['group_id in (?)', 'list_event = ?', "list_event_data->>'canUpdate' = ?"], 'data' => [$groups, 'processDocument', 'true']]);
+                $baskets = array_column($baskets, 'basket_id');
+                if (!empty($baskets)) {
+                    $clauses = BasketModel::get(['select' => ['basket_clause'], 'where' => ['basket_id in (?)'], 'data' => [$baskets]]);
+
+                    foreach ($clauses as $clause) {
+                        $basketClause = PreparedClauseController::getPreparedClause(['clause' => $clause['basket_clause'], 'login' => $currentUser['user_id']]);
+                        if (!empty($basketsClause)) {
+                            $basketsClause .= ' or ';
+                        }
+                        $basketsClause .= "({$basketClause})";
+                    }
+                }
+            }
+
+            $assignedBaskets = RedirectBasketModel::getAssignedBasketsByUserId(['userId' => $currentUser['id']]);
+            foreach ($assignedBaskets as $basket) {
+                $hasProcessBaskets = GroupBasketModel::get(['select' => [1], 'where' => ['basket_id = ?', 'group_id = ?', 'list_event = ?', "list_event_data->>'canUpdate' = ?"], 'data' => [$basket['basket_id'], $basket['oldGroupId'], 'processDocument', 'true']]);
+                if (!empty($hasProcessBaskets)) {
+                    $basketOwner = UserModel::getById(['id' => $basket['owner_user_id'], 'select' => ['user_id']]);
+                    $basketClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $basketOwner['user_id']]);
+                    if (!empty($basketsClause)) {
+                        $basketsClause .= ' or ';
+                    }
+                    $basketsClause .= "({$basketClause})";
+                }
+            }
+
+            try {
+                $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id = ?', "({$basketsClause})"], 'data' => [$args['resId']]]);
+                if (empty($res)) {
+                    return false;
+                }
+            } catch (\Exception $e) {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -25,9 +25,9 @@ use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
 use Resource\controllers\StoreController;
+use Resource\controllers\WatermarkController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
-use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
@@ -101,9 +101,6 @@ class AttachmentController
         }
 
         $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
-            $excludeAttachmentTypes[] = 'document_with_notes';
-        }
         if (in_array($attachment['type'], $excludeAttachmentTypes)) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment type out of perimeter']);
         }
@@ -213,7 +210,6 @@ class AttachmentController
             'moduleId'  => 'attachment',
             'eventId'   => 'attachmentModification'
         ]);
-
         HistoryController::add([
             'tableName' => 'res_letterbox',
             'recordId'  => $attachment['res_id_master'],
@@ -276,9 +272,6 @@ class AttachmentController
         }
 
         $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'signed_response'];
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
-            $excludeAttachmentTypes[] = 'document_with_notes';
-        }
 
         $attachments = AttachmentModel::get([
             'select'    => [
@@ -428,7 +421,7 @@ class AttachmentController
         }
 
         $attachment = AttachmentModel::get([
-            'select'    => ['res_id', 'docserver_id', 'res_id_master'],
+            'select'    => ['res_id', 'docserver_id', 'res_id_master', 'format'],
             'where'     => ['res_id = ?', 'status not in (?)'],
             'data'      => [$args['id'], ['DEL']],
             'limit'     => 1
@@ -444,9 +437,7 @@ class AttachmentController
         $document = ConvertPdfController::getConvertedPdfById(['resId' => $attachment['res_id'], 'collId' => 'attachments_coll']);
         if (!empty($document['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Conversion error : ' . $document['errors']]);
-        }
-
-        if ($document['docserver_id'] == $attachment['docserver_id']) {
+        } elseif ($document['docserver_id'] == $attachment['docserver_id']) {
             return $response->withStatus(400)->withJson(['errors' => 'Document can not be converted']);
         }
 
@@ -456,82 +447,17 @@ class AttachmentController
         }
 
         $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
-
         if (!file_exists($pathToDocument)) {
             return $response->withStatus(404)->withJson(['errors' => 'Attachment not found on docserver']);
         }
 
         $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
-        $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
+        $fingerprint   = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
         if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
             return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
         }
 
-        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/attachments/xml/config.xml']);
-        if ($loadedXml) {
-            $watermark = (array)$loadedXml->CONFIG->watermark;
-            if ($watermark['enabled'] == 'true') {
-                $text = "watermark by {$GLOBALS['userId']}";
-                if (!empty($watermark['text'])) {
-                    $text = $watermark['text'];
-                    preg_match_all('/\[(.*?)\]/i', $watermark['text'], $matches);
-
-                    foreach ($matches[1] as $value) {
-                        $tmp = '';
-                        if ($value == 'date_now') {
-                            $tmp = date('d-m-Y');
-                        } elseif ($value == 'hour_now') {
-                            $tmp = date('H:i');
-                        } else {
-                            $backFromView = AttachmentModel::get(['select' => [$value], 'where' => ['res_id = ?'], 'data' => [$args['id']]]);
-                            if (!empty($backFromView[0][$value])) {
-                                $tmp = $backFromView[0][$value];
-                            }
-                        }
-                        $text = str_replace("[{$value}]", $tmp, $text);
-                    }
-                }
-
-                $color = ['192', '192', '192']; //RGB
-                if (!empty($watermark['text_color'])) {
-                    $rawColor = explode(',', $watermark['text_color']);
-                    $color = count($rawColor) == 3 ? $rawColor : $color;
-                }
-
-                $font = ['helvetica', '10']; //Familly Size
-                if (!empty($watermark['font'])) {
-                    $rawFont = explode(',', $watermark['font']);
-                    $font = count($rawFont) == 2 ? $rawFont : $font;
-                }
-
-                $position = [30, 35, 0, 0.5]; //X Y Angle Opacity
-                if (!empty($watermark['position'])) {
-                    $rawPosition = explode(',', $watermark['position']);
-                    $position = count($rawPosition) == 4 ? $rawPosition : $position;
-                }
-
-                try {
-                    $pdf = new Fpdi('P', 'pt');
-                    $nbPages = $pdf->setSourceFile($pathToDocument);
-                    $pdf->setPrintHeader(false);
-                    for ($i = 1; $i <= $nbPages; $i++) {
-                        $page = $pdf->importPage($i, 'CropBox');
-                        $size = $pdf->getTemplateSize($page);
-                        $pdf->AddPage($size['orientation'], $size);
-                        $pdf->useImportedPage($page);
-                        $pdf->SetFont($font[0], '', $font[1]);
-                        $pdf->SetTextColor($color[0], $color[1], $color[2]);
-                        $pdf->SetAlpha($position[3]);
-                        $pdf->Rotate($position[2]);
-                        $pdf->Text($position[0], $position[1], $text);
-                    }
-                    $fileContent = $pdf->Output('', 'S');
-                } catch (\Exception $e) {
-                    $fileContent = null;
-                }
-            }
-        }
-
+        $fileContent = WatermarkController::watermarkAttachment(['attachmentId' => $args['id'], 'path' => $pathToDocument]);
         if (empty($fileContent)) {
             $fileContent = file_get_contents($pathToDocument);
         }
@@ -550,7 +476,7 @@ class AttachmentController
 
         $data = $request->getQueryParams();
         if ($data['mode'] == 'base64') {
-            return $response->withJson(['encodedDocument' => base64_encode($fileContent)]);
+            return $response->withJson(['encodedDocument' => base64_encode($fileContent), 'originalFormat' => $attachment['format']]);
         } else {
             $finfo    = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($fileContent);
@@ -795,6 +721,8 @@ class AttachmentController
             return ['errors' => 'Body resIdMaster is empty or not an integer'];
         } elseif (!Validator::stringType()->notEmpty()->validate($body['type'])) {
             return ['errors' => 'Body type is empty or not a string'];
+        } elseif (isset($body['status']) && !in_array($body['status'], ['A_TRA', 'TRA'])) {
+            return ['errors' => 'Body type is empty or not a string'];
         }
 
         if (!ResController::hasRightByResId(['resId' => [$body['resIdMaster']], 'userId' => $GLOBALS['id']])) {
@@ -853,17 +781,27 @@ class AttachmentController
     {
         $body = $args['body'];
 
+        if ($body['type'] == 'signed_response' && empty($body['originId'])) {
+            return ['errors' => 'Body type is signed_response and body originId is empty'];
+        }
         if (!empty($body['originId'])) {
             if (!Validator::intVal()->notEmpty()->validate($body['originId'])) {
                 return ['errors' => 'Body originId is not an integer'];
             }
-            $origin = AttachmentModel::getById(['id' => $body['originId'], 'select' => ['res_id_master', 'origin_id']]);
+            $origin = AttachmentModel::getById(['id' => $body['originId'], 'select' => ['res_id_master', 'origin_id', 'status']]);
             if (empty($origin)) {
                 return ['errors' => 'Body originId does not exist'];
             } elseif ($origin['res_id_master'] != $body['resIdMaster']) {
                 return ['errors' => 'Body resIdMaster is different from origin'];
-            } elseif (!empty($origin['origin_id'])) {
-                return ['errors' => 'Body originId can not be a version, it must be the original version'];
+            }
+            if ($body['type'] == 'signed_response') {
+                if (!in_array($origin['status'], ['A_TRA', 'TRA', 'SIGN', 'FRZ'])) {
+                    return ['errors' => 'Body originId has not an authorized status'];
+                }
+            } else {
+                if (!empty($origin['origin_id'])) {
+                    return ['errors' => 'Body originId can not be a version, it must be the original version'];
+                }
             }
         }
 

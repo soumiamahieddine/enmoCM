@@ -14,7 +14,6 @@
 
 namespace Group\models;
 
-use Group\controllers\GroupController;
 use Group\controllers\PrivilegeController;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
@@ -22,15 +21,21 @@ use User\models\UserModel;
 
 abstract class GroupModelAbstract
 {
-    public static function get(array $aArgs = [])
+    public static function get(array $args = [])
     {
-        $aGroups = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($args, ['limit']);
+
+        $groups = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
             'table'     => ['usergroups'],
-            'order_by'  => ['group_desc']
+            'where'     => $args['where'] ?? [],
+            'data'      => $args['data'] ?? [],
+            'order_by'  => $args['orderBy'] ?? [],
+            'limit'     => $args['limit'] ?? 0
         ]);
 
-        return $aGroups;
+        return $groups;
     }
 
     public static function getById(array $aArgs)
@@ -195,10 +200,10 @@ abstract class GroupModelAbstract
         $rawUserGroups = UserModel::getGroupsByUser(['id' => $aArgs['userId']]);
         $userGroups = array_column($rawUserGroups, 'group_id');
 
-        $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc']]);
+        $allGroups = GroupModel::get(['select' => ['group_id', 'group_desc'], 'orderBy' => ['group_desc']]);
 
         if ($GLOBALS['userId'] == 'superadmin') {
-            $assignableGroups = GroupModel::get(['select' => ['group_id']]);
+            $assignableGroups = GroupModel::get(['select' => ['group_id'], 'orderBy' => ['group_desc']]);
         } else {
             $assignableGroups = PrivilegeController::getAssignableGroups(['userId' => $GLOBALS['id']]);
         }

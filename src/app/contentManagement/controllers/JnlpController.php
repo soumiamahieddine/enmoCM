@@ -17,6 +17,7 @@ namespace ContentManagement\controllers;
 use Attachment\models\AttachmentModel;
 use Docserver\models\DocserverModel;
 use Resource\controllers\ResController;
+use Resource\models\ResModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\UrlController;
@@ -254,6 +255,23 @@ class JnlpController
 
                 file_put_contents($tmpPath . $newFileOnTmp, base64_decode($mergedDocument['encodedDocument']));
                 $pathToCopy = $tmpPath . $newFileOnTmp;
+            } elseif ($queryParams['objectType'] == 'resourceModification') {
+                if (!ResController::hasRightByResId(['resId' => [$queryParams['objectId']], 'userId' => $GLOBALS['id']])) {
+                    $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => "Resource out of perimeter"]]);
+                    $response->write($xmlResponse);
+                    return $response->withHeader('Content-Type', 'application/xml');
+                }
+                $resource = ResModel::getById(['resId' => $body['objectId'], 'select' => ['docserver_id', 'path', 'filename']]);
+                if (empty($resource['filename'])) {
+                    $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => "Resource has no file"]]);
+                    $response->write($xmlResponse);
+                    return $response->withHeader('Content-Type', 'application/xml');
+                }
+
+                $docserver  = DocserverModel::getByDocserverId(['docserverId' => $resource['docserver_id'], 'select' => ['path_template']]);
+                $pathToCopy = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $resource['path']) . $resource['filename'];
+                $extension  = pathinfo($pathToCopy, PATHINFO_EXTENSION);
+                $newFileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$extension}";
             } elseif ($queryParams['objectType'] == 'attachmentModification') {
                 $attachment = AttachmentModel::getById(['id' => $queryParams['objectId'], 'select' => ['docserver_id', 'path', 'filename', 'res_id_master']]);
                 if (empty($attachment)) {
@@ -268,7 +286,6 @@ class JnlpController
                 }
 
                 $docserver  = DocserverModel::getByDocserverId(['docserverId' => $attachment['docserver_id'], 'select' => ['path_template']]);
-
                 $pathToCopy = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachment['path']) . $attachment['filename'];
                 $extension  = pathinfo($pathToCopy, PATHINFO_EXTENSION);
                 $newFileOnTmp = "tmp_file_{$GLOBALS['id']}_{$args['jnlpUniqueId']}.{$extension}";
