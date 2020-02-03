@@ -39,6 +39,13 @@
                     </li>
                 </ul>
             </div>
+
+            <mat-form-field *ngIf="data.resIds.length === 1 && !noResourceToProcess" appearance="outline" style="cursor:pointer;margin-top: 10px;">
+                <mat-label>{{lang.opinionLimitDate}}</mat-label>
+                <input matInput [(ngModel)]="opinionLimitDate"
+                       readonly style="cursor:pointer;" disabled>
+            </mat-form-field>
+
             <app-note-editor #noteEditor [title]="lang.addOpinion" [resIds]="data.resIds"></app-note-editor>
         </mat-sidenav-content>
     </mat-sidenav-container>

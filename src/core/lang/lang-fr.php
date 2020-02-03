@@ -459,7 +459,7 @@ define("_VISA_CIRCUIT_DELETED", "Circuit de visa supprimé");
 define("_AVIS_CIRCUIT_DELETED", "Circuit d'avis supprimé");
 
 define("_ACKNOWLEDGEMENT_RECEIPT", "Accusé de réception");
-define("_CREATED_BY", "Crée(e) par");
+define("_CREATED_BY", "Créé par");
 define("_SENT_DATE", "Envoyé le");
 define("_SENT_TO", "Envoyé à");
 define("_FORMAT", "Format");
