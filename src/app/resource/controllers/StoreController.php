@@ -295,7 +295,7 @@ class StoreController
             $args['chrono'] = ChronoModel::getChrono(['id' => 'outgoing', 'entityId' => $resource['destination'], 'typeId' => $resource['type_id'], 'resId' => $args['resIdMaster']]);
         }
 
-        if (!empty($args['status']) && $args['status'] == 'SIGN') {
+        if ($args['type'] == 'signed_response') {
             $linkSign = "{$args['originId']},res_attachments";
             unset($args['originId']);
         }
@@ -306,7 +306,7 @@ class StoreController
             $relation = $relations[0]['relation'] + 1;
             AttachmentModel::update(['set' => ['status' => 'OBS'], 'where' => ['(origin_id = ? OR res_id = ?)'], 'data' => [$args['originId'], $args['originId']]]);
         }
-        
+
         $externalId = '{}';
         if (!empty($args['externalId']) && is_array($args['externalId'])) {
             $externalId = json_encode($args['externalId']);

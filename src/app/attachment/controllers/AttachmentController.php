@@ -28,7 +28,6 @@ use Resource\controllers\StoreController;
 use Resource\controllers\WatermarkController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
-use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
@@ -722,7 +721,7 @@ class AttachmentController
             return ['errors' => 'Body resIdMaster is empty or not an integer'];
         } elseif (!Validator::stringType()->notEmpty()->validate($body['type'])) {
             return ['errors' => 'Body type is empty or not a string'];
-        } elseif (isset($body['status']) && !in_array($body['status'], ['A_TRA', 'TRA', 'SIGN'])) {
+        } elseif (isset($body['status']) && !in_array($body['status'], ['A_TRA', 'TRA'])) {
             return ['errors' => 'Body type is empty or not a string'];
         }
 
@@ -782,8 +781,8 @@ class AttachmentController
     {
         $body = $args['body'];
 
-        if (!empty($body['status']) && $body['status'] == 'SIGN' && empty($body['originId'])) {
-            return ['errors' => 'Body status is SIGN and body originId is empty'];
+        if ($body['type'] == 'signed_response' && empty($body['originId'])) {
+            return ['errors' => 'Body type is signed_response and body originId is empty'];
         }
         if (!empty($body['originId'])) {
             if (!Validator::intVal()->notEmpty()->validate($body['originId'])) {
@@ -795,8 +794,8 @@ class AttachmentController
             } elseif ($origin['res_id_master'] != $body['resIdMaster']) {
                 return ['errors' => 'Body resIdMaster is different from origin'];
             }
-            if (!empty($body['status']) && $body['status'] == 'SIGN') {
-                if (!in_array($origin['status'], ['A_TRA', 'TRA', 'FRZ'])) {
+            if ($body['type'] == 'signed_response') {
+                if (!in_array($origin['status'], ['A_TRA', 'TRA', 'SIGN', 'FRZ'])) {
                     return ['errors' => 'Body originId has not an authorized status'];
                 }
             } else {
