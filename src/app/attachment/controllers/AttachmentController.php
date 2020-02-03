@@ -476,7 +476,7 @@ class AttachmentController
 
         $data = $request->getQueryParams();
         if ($data['mode'] == 'base64') {
-            return $response->withJson(['encodedDocument' => base64_encode($fileContent)]);
+            return $response->withJson(['encodedDocument' => base64_encode($fileContent), 'format' => pathinfo($pathToDocument, PATHINFO_EXTENSION)]);
         } else {
             $finfo    = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($fileContent);
