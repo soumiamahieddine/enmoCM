@@ -1508,4 +1508,5 @@ export const LANG_FR = {
     "click": "Cliquez",
     "inSignatureBook_doc" : "Intégrer le document principal au parapheur",
     "inShipping_doc" : "Intégrer le document principal à l'envoi Maileva",
+    "preRequisiteMissing": "Prérequis manquant pour OnlyOffice : netcat",
 };

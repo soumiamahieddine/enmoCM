@@ -206,6 +206,10 @@ class OnlyOfficeController
 
         $exec = shell_exec("nc -vz -w 5 {$uri} {$port} 2>&1");
 
+        if (strpos($exec, 'not found') !== false) {
+            return $response->withStatus(400)->withJson(['errors' => 'Netcat command not found', 'lang' => 'preRequisiteMissing']);
+        }
+
         $isAvailable = strpos($exec, 'succeeded!') !== false || strpos($exec, 'open') !== false;
 
         return $response->withJson(['isAvailable' => $isAvailable]);

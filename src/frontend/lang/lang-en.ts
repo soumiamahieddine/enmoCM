@@ -1469,4 +1469,5 @@ export const LANG_EN = {
     "click": "Click",
     "inSignatureBook_doc" : "Put the main document in signature book",
     "inShipping_doc" : "Intégrer le document principal  in send Maileva",
+    "preRequisiteMissing": "Prerequisite missing for OnlyOffice : netcat",
 };
