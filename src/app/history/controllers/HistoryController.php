@@ -70,30 +70,30 @@ class HistoryController
                 $users = UserModel::get(['select' => ['user_id'], 'where' => ['id in (?)'], 'data' => [$userIds]]);
                 $users = array_column($users, 'user_id');
             }
-            $users = array_merge($users, $userLogins);
+            $users   = array_merge($users, $userLogins);
             $where[] = 'user_id in (?)';
-            $data[] = $users;
+            $data[]  = $users;
         }
 
         if (!empty($queryParams['startDate'])) {
             $where[] = 'event_date > ?';
-            $data[] = $queryParams['startDate'];
+            $data[]  = $queryParams['startDate'];
         }
         if (!empty($queryParams['endDate'])) {
             $where[] = 'event_date < ?';
-            $data[] = $queryParams['endDate'];
+            $data[]  = $queryParams['endDate'];
         }
 
         if (!empty($queryParams['resId'])) {
             $where[] = 'table_name in (?)';
-            $data[] = ['res_letterbox', 'res_view_letterbox'];
+            $data[]  = ['res_letterbox', 'res_view_letterbox'];
 
             $where[] = 'record_id = ?';
-            $data[] = $queryParams['resId'];
+            $data[]  = $queryParams['resId'];
         }
         if (!empty($queryParams['onlyActions'])) {
             $where[] = 'event_type like ?';
-            $data[] = 'ACTION#%';
+            $data[]  = 'ACTION#%';
         }
 
         $eventTypes = [];
@@ -182,22 +182,6 @@ class HistoryController
         $aHistories = HistoryModel::getByUserId(['userId' => $user['user_id'], 'select' => ['info', 'event_date']]);
 
         return $response->withJson(['histories' => $aHistories]);
-    }
-
-    public function getWorkflowByResourceId(Request $request, Response $response, array $args)
-    {
-        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
-        }
-
-        $queryParams = $request->getQueryParams();
-        if (!empty($queryParams['limit']) && !Validator::intVal()->validate($queryParams['limit'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an int val']);
-        }
-
-        $history = HistoryModel::getWorkflowByResourceId(['resId' => $args['resId'], 'select' => ['info', 'event_date'], 'limit' => (int)$queryParams['limit']]);
-
-        return $response->withJson(['history' => $history]);
     }
 
     public function getAvailableFilters(Request $request, Response $response)

@@ -253,7 +253,6 @@ $app->get('/groups/{id}/privileges/{privilegeId}/parameters', \Group\controllers
 $app->get('/history', \History\controllers\HistoryController::class . ':get');
 $app->get('/history/availableFilters', \History\controllers\HistoryController::class . ':getAvailableFilters');
 $app->get('/history/users/{userSerialId}', \History\controllers\HistoryController::class . ':getByUserId');
-$app->get('/history/resources/{resId}/workflow', \History\controllers\HistoryController::class . ':getWorkflowByResourceId');
 
 //BatchHistory
 $app->get('/batchHistory', \History\controllers\BatchHistoryController::class . ':get');

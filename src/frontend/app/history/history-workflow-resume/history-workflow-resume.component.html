@@ -10,7 +10,10 @@
                 {{history.event_date | timeAgo}}
             </div>
             <div class="info">
-                {{history.info}}
+                {{history.info | shorten: 110: '...'}}
+            </div>
+            <div class="date">
+                {{history.userLabel}}
             </div>
         </div>
         <button mat-button *ngIf="histories.length === 3" class="showMore"
