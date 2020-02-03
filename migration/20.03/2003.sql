@@ -772,7 +772,7 @@ DO $$ BEGIN
         ALTER TABLE shippings ADD COLUMN document_type character varying(255);
         ALTER TABLE shippings RENAME COLUMN attachment_id TO document_id;
         UPDATE shippings SET document_type = 'attachment';
-        ALTER TABLE doctypes ALTER COLUMN process_mode SET NOT NULL;
+        ALTER TABLE shippings ALTER COLUMN document_type SET NOT NULL;
     END IF;
 END$$;
 
