@@ -1262,6 +1262,7 @@ export const LANG_FR = {
     "emailServerParamDesc" : "Connecter votre serveur e-mail à Maarch Courrier afin de pouvoir envoyer des courriels",
     "mailevaAdmin" : "Modèles d'envois postaux Maileva",
     "mailevaAdminDesc" : "Configurer les modèles d'envois postaux Maileva",
+    "infoMailevaAccount": "Indiquer ici votre identifiant ainsi que le mot de passe INITIAL communiqué par Maileva lors de l'ouverture de votre compte",
     "reportsAdmin" : "Administration des statistiques",
     "historyBatchAdmin" : "Consulter l'historique des batchs",
     "updateControl" : "Vérification de mise à jour",

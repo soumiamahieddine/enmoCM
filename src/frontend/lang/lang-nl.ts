@@ -1250,6 +1250,7 @@ export const LANG_NL = {
     "emailServerParamDesc" : "Link your mail server with application in order to send emails", //_TO_TRANSLATE
     "mailevaAdmin" : "Maileva shipping admin", //_TO_TRANSLATE
     "mailevaAdminDesc" : "Configure mailing templates for Maileva", //_TO_TRANSLATE
+    "infoMailevaAccount": "Indicate here your username and the INITIAL password communicated by Maileva when opening your account", //_TO_TRANSLATE
     "reportsAdmin" : "Administratie van de statistieken",
     "historyBatchAdmin" : "De geschiedenis van de batches raadplegen",
     "updateControl" : "Controle van de bijwerking",

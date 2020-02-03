@@ -1224,6 +1224,7 @@ export const LANG_EN = {
     "emailServerParamDesc" : "Link your mail server with application in order to send emails",
     "mailevaAdmin" : "Maileva shipping admin",
     "mailevaAdminDesc" : "Configure mailing templates for Maileva",
+    "infoMailevaAccount": "Indicate here your username and the INITIAL password communicated by Maileva when opening your account",
     "reportsAdmin" : "Reports administration",
     "historyBatchAdmin" : "Read batch history",
     "updateControl" : "Check for update(s)",
