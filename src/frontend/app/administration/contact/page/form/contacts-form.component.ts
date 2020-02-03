@@ -696,7 +696,10 @@ export class ContactsFormComponent implements OnInit {
                 tap(() => this.companyFound = null),
                 filter((data: any) => data.length > 0),
                 tap((data) => {
-                    this.companyFound = data[0];
+                    if (!this.functions.empty(data[0].addressNumber) || !this.functions.empty(data[0].addressStreet) || !this.functions.empty(data[0].addressPostcode) || !this.functions.empty(data[0].addressTown) || !this.functions.empty(data[0].addressCountry)) {
+                        this.companyFound = data[0];
+                    }
+                    
                 }),
                 //finalize(() => this.loading = false),
                 catchError((err: any) => {
