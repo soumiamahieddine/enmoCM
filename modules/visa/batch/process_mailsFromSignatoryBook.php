@@ -321,8 +321,8 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
                 'recipientType'   => $value->recipient_type,
                 'typist'          => $value->typist,
                 'format'          => $value->format,
-                'type'            => $value->attachment_type,
-                'status'          => 'SIGN',
+                'type'            => 'signed_response',
+                'status'          => 'TRA',
                 'encodedFile'     => $value->encodedFile,
                 'inSignatureBook' => true,
                 'originId'        => $resId
@@ -330,7 +330,7 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
         }
 
         $GLOBALS['logger']->write('Document validated', 'INFO');
-        $GLOBALS['db']->query("UPDATE res_attachments SET status = 'TRA', external_id = external_id - 'signatureBookId', in_signature_book = 'false' WHERE res_id = ?", [$resId]);
+        $GLOBALS['db']->query("UPDATE res_attachments SET status = 'SIGN', external_id = external_id - 'signatureBookId', in_signature_book = 'false' WHERE res_id = ?", [$resId]);
         if (!empty($value->onlyVisa) && $value->onlyVisa) {
             $status = $validatedStatusOnlyVisa;
         } else {
