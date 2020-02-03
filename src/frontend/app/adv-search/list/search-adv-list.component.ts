@@ -25,7 +25,7 @@ export class SearchAdvListComponent implements OnInit {
     
     data: any;
 
-    displayedColumnsResource: string[] = ['action', 'category', 'chrono', 'status', 'subject', 'type', 'creationDate'];
+    displayedColumnsResource: string[] = ['action', 'category', 'chrono', 'status', 'subject', 'typeLabel', 'creationDate'];
 
     selectedRes: number[] = [];
     allResInSearch: number[] = [];
