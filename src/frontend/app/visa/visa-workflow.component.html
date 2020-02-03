@@ -85,7 +85,7 @@
                     <div class="workflowLineSubLabel">
                         {{diffusion.item_entity}}
                     </div>
-                    <div class="workflowLineSubLabel" *ngIf="adminMode && functions.empty(diffusion.process_date)">
+                    <div class="workflowLineSubLabel" *ngIf="!linkedToMaarchParapheur && adminMode && functions.empty(diffusion.process_date)">
                         <mat-form-field>
                             <input matInput [disabled]="!adminMode || diffusion.process_date != null" [placeholder]="lang.visaNote" [(ngModel)]="diffusion.process_comment">
                         </mat-form-field>
