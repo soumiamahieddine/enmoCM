@@ -41,6 +41,9 @@ export class ContactModalComponent {
         } else {
             this.creationMode = true;
             this.mode = 'update';
+            if (this.mode === 'update') {
+                $j('.contact-modal-container').css({'height' : '90vh'});
+            }
             if (this.headerService.getLastLoadedFile() !== null) {
                 this.drawer.toggle();
                 setTimeout(() => {
