@@ -478,7 +478,7 @@ export class ProcessComponent implements OnInit {
                 }),
                 filter((data: string) => data === 'ok'),
                 tap(() => {
-                    this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+                    this.indexingForm.saveData();
                     setTimeout(() => {
                         this.loadResource();
                     }, 400);
@@ -537,7 +537,7 @@ export class ProcessComponent implements OnInit {
     }
 
     confirmModification() {
-        this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+        this.indexingForm.saveData();
         setTimeout(() => {
             this.loadResource();
         }, 400);
@@ -585,7 +585,7 @@ export class ProcessComponent implements OnInit {
 
     async saveTool() {
         if (this.currentTool === 'info' && this.indexingForm !== undefined) {
-            await this.indexingForm.saveData(this.currentUserId, this.currentGroupId, this.currentBasketId);
+            await this.indexingForm.saveData();
             this.loadResource();
         } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList !== undefined) {
             await this.appDiffusionsList.saveListinstance();

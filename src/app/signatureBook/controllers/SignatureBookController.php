@@ -26,7 +26,6 @@ use Convert\models\AdrModel;
 use Entity\models\ListInstanceModel;
 use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
-use Link\models\LinkModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\controllers\ResController;

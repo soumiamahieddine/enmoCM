@@ -235,24 +235,18 @@ class ResController extends ResourceControlController
 
     public function update(Request $request, Response $response, array $args)
     {
-        $queryParams = $request->getQueryParams();
-
-        $control = PrivilegeController::canUpdateResource(['currentUserId' => $GLOBALS['id'], 'resId' => $args['resId'], 'queryParams' => $queryParams]);
-        if (!empty($control['errors'])) {
-            return $response->withStatus(403)->withJson(['errors' => $control['errors']]);
+        if (!Validator::intVal()->validate($args['resId'])) {
+            return ['errors' => 'Route resId is not an integer'];
+        } elseif (!PrivilegeController::canUpdateResource(['userId' => $GLOBALS['id'], 'resId' => $args['resId']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $body = $request->getParsedBody();
-
-        $isProcessing = !empty($queryParams['basketId']);
-        if ($isProcessing) {
-            unset($body['destination']);
-            unset($body['diffusionList']);
-        }
+        $queryParams = $request->getQueryParams();
 
         $onlyDocument = !empty($queryParams['onlyDocument']);
 
-        $control = ResourceControlController::controlUpdateResource(['body' => $body, 'resId' => $args['resId'], 'isProcessing' => $isProcessing, 'onlyDocument' => $onlyDocument]);
+        $control = ResourceControlController::controlUpdateResource(['body' => $body, 'resId' => $args['resId'], 'onlyDocument' => $onlyDocument]);
         if (!empty($control['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }

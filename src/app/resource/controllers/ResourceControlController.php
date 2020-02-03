@@ -165,7 +165,7 @@ class ResourceControlController
         }
 
         $body['modelId'] = $resource['model_id'];
-        $control = ResourceControlController::controlIndexingModelFields(['body' => $body, 'isProcessing' => $args['isProcessing']]);
+        $control = ResourceControlController::controlIndexingModelFields(['body' => $body, 'isUpdating' => true]);
         if (!empty($control['errors'])) {
             return ['errors' => $control['errors']];
         }
@@ -364,7 +364,7 @@ class ResourceControlController
                         return ['errors' => "Body customFields[{$customFieldId}] is not a date"];
                     }
                 }
-            } elseif ($indexingModelField['identifier'] == 'destination' && !empty($args['isProcessing'])) {
+            } elseif ($indexingModelField['identifier'] == 'destination' && !empty($args['isUpdating'])) {
                 continue;
             } elseif ($indexingModelField['mandatory'] && !isset($body[$indexingModelField['identifier']])) {
                 return ['errors' => "Body {$indexingModelField['identifier']} is not set"];
