@@ -660,7 +660,7 @@ export class DocumentViewerComponent implements OnInit {
             this.http.post('../../rest/jnlp', this.editor.options).pipe(
                 tap((data: any) => {
                     window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
-                    this.checkLockFile(data.jnlpUniqueId, this.format);
+                    this.checkLockFile(data.jnlpUniqueId, this.file.format);
                 })
             ).subscribe();
         }
@@ -689,7 +689,7 @@ export class DocumentViewerComponent implements OnInit {
             this.http.post('../../rest/jnlp', this.editor.options).pipe(
                 tap((data: any) => {
                     window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
-                    this.checkLockFile(data.jnlpUniqueId, this.format);
+                    this.checkLockFile(data.jnlpUniqueId, this.file.format);
                 })
             ).subscribe();
         }
