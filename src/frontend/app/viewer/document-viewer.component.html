@@ -90,7 +90,7 @@
         [sidenavLeft]="sidenavLeft" [editMode]="true" (triggerAfterUpdatedDoc)="triggerEvent.emit()"
         (triggerCloseEditor)="closeEditor()" (triggerModifiedDocument)="isDocModified = true"></onlyoffice-viewer>
 </ng-container>
-<button mat-fab *ngIf="isDocModified && mode === 'mainDocument'" color="accent"
-    [title]="lang.saveModifications" style="position: absolute;z-index: 1;bottom: 40px;right: 60px;">
+<button mat-fab *ngIf="isDocModified && mode === 'mainDocument' && resId !== null" color="accent"
+    [title]="lang.saveModifications" style="position: absolute;z-index: 1;bottom: 40px;right: 60px;" (click)="saveMainDocument()">
     <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
 </button>

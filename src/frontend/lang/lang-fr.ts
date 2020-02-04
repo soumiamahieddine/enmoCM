@@ -1510,4 +1510,6 @@ export const LANG_FR = {
     "inSignatureBook_doc" : "Intégrer le document principal au parapheur",
     "inShipping_doc" : "Intégrer le document principal à l'envoi Maileva",
     "preRequisiteMissing": "Prérequis manquant pour OnlyOffice : netcat",
+    "onlyofficeEditDenied": "Le document avec l'extension",
+    "onlyofficeEditDenied2": "ne peut pas être édité avec onlyoffice",
 };

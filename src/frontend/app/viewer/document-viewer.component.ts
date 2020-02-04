@@ -512,6 +512,7 @@ export class DocumentViewerComponent implements OnInit {
                 (data: any) => {
                     if (data.encodedDocument) {
                         this.file.contentMode = 'route';
+                        this.file.format = data.originalFormat;
                         this.file.content = `../../rest/attachments/${resId}/originalContent`;
                         this.file.contentView = `../../rest/attachments/${resId}/content?mode=view`;
                         this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
@@ -538,8 +539,9 @@ export class DocumentViewerComponent implements OnInit {
                 (data: any) => {
                     if (data.encodedDocument) {
                         this.file.contentMode = 'route';
+                        this.file.format = data.originalFormat;
                         this.file.content = `../../rest/resources/${resId}/originalContent`;
-                        this.file.contentView = `../../rest/resources/${resId}/content?mode=view`
+                        this.file.contentView = `../../rest/resources/${resId}/content?mode=view`;
                         this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
                         this.loading = false;
                     }
@@ -584,6 +586,8 @@ export class DocumentViewerComponent implements OnInit {
                 this.triggerEvent.emit();
                 const template = this.listTemplates.filter(template => template.id === templateId)[0];
 
+                this.file.format = template.extension;
+                
                 if (this.editor.mode === 'onlyoffice') {
 
                     this.editor.async = false;
@@ -668,7 +672,7 @@ export class DocumentViewerComponent implements OnInit {
             this.editor.async = false;
             this.editor.options = {
                 objectType: 'resourceModification',
-                objectId: 1,
+                objectId: this.resId,
                 docUrl: `rest/onlyOffice/mergedFile`
             };
             this.editInProgress = true;
@@ -855,11 +859,12 @@ export class DocumentViewerComponent implements OnInit {
             map((data: any) => {
                 const formatdatas = {
                     encodedFile: data.content,
-                    format: data.format
+                    format: data.format,
+                    resId: this.resId
                 }
-                return formatdatas
+                return formatdatas;
             }),
-            exhaustMap((data) => this.http.put(`../../rest/resources/${this.resId}?onlyDocument=true`, { encodedResource: data })),
+            exhaustMap((data) => this.http.put(`../../rest/resources/${this.resId}?onlyDocument=true`, data )),
             tap(() => {
                 this.closeEditor();
                 this.loadRessource(this.resId);

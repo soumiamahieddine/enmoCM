@@ -1496,4 +1496,6 @@ export const LANG_NL = {
     "inSignatureBook_doc" : "Put the main document in signature book", //_TO_TRANSLATE
     "inShipping_doc" : "Intégrer le document principal  in send Maileva", //_TO_TRANSLATE
     "preRequisiteMissing": "Prerequisite missing for OnlyOffice : netcat", //_TO_TRANSLATE
+    "onlyofficeEditDenied": "This document with extension", //_TO_TRANSLATE
+    "onlyofficeEditDenied2": "can't be edited with onlyoffice", //_TO_TRANSLATE
 };

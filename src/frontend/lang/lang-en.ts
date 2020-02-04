@@ -1469,6 +1469,8 @@ export const LANG_EN = {
     "chooseBAN": "Choose a BAN",
     "click": "Click",
     "inSignatureBook_doc" : "Put the main document in signature book",
-    "inShipping_doc" : "Intégrer le document principal  in send Maileva",
+    "inShipping_doc" : "Put the main document in send Maileva",
     "preRequisiteMissing": "Prerequisite missing for OnlyOffice : netcat",
+    "onlyofficeEditDenied": "This document with extension",
+    "onlyofficeEditDenied2": "can't be edited with onlyoffice",
 };
