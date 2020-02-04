@@ -697,33 +697,27 @@ class ResController extends ResourceControlController
             return $response->withStatus(400)->withJson(['errors' => 'Body param integrations is missing or not an array']);
         }
 
-        $resources = ResModel::get([
-            'select' => ['res_id', 'integrations'],
-            'where'  => ['res_id in (?)'],
-            'data'   => [$body['resources']]
-        ]);
-
-        foreach ($resources as $resource) {
-            $integrations = json_decode($resource['integrations'], true);
-
-            if (Validator::boolType()->validate($body['integrations']['inSignatureBook'])) {
-                $integrations['inSignatureBook'] = $body['integrations']['inSignatureBook'];
-            } else {
-                $integrations['inSignatureBook'] = $integrations['inSignatureBook'] ?? false;
-            }
-
-            if (Validator::boolType()->validate($body['integrations']['inShipping'])) {
-                $integrations['inShipping'] = $body['integrations']['inShipping'];
-            } else {
-                $integrations['inShipping'] = $integrations['inShipping'] ?? false;
-            }
+        if (isset($body['integrations']['inSignatureBook']) && Validator::boolType()->validate($body['integrations']['inSignatureBook'])) {
+            $inSignatureBook = $body['integrations']['inSignatureBook'] ? 'true' : 'false';
 
             ResModel::update([
-                'set' => [
-                    'integrations' => json_encode($integrations)
+                'postSet'   => [
+                    'integrations' => "jsonb_set(integrations, '{inSignatureBook}', '".$inSignatureBook."')",
                 ],
-                'where' => ['res_id = ?'],
-                'data'  => [$resource['res_id']]
+                'where' => ['res_id in (?)'],
+                'data'  => [$body['resources']]
+            ]);
+        }
+
+        if (isset($body['integrations']['inShipping']) && Validator::boolType()->validate($body['integrations']['inShipping'])) {
+            $inShipping = $body['integrations']['inShipping'] ? 'true' : 'false';
+
+            ResModel::update([
+                'postSet'   => [
+                    'integrations' => "jsonb_set(integrations, '{inShipping}', '".$inShipping."')",
+                ],
+                'where' => ['res_id in (?)'],
+                'data'  => [$body['resources']]
             ]);
         }
 

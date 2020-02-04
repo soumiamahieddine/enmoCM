@@ -735,7 +735,7 @@ class PreProcessActionController
                             break;
                         }
 
-                        $attachment['collId'] = 'attachments_coll';
+                        $attachment['type'] = 'attachments_coll';
                         $resources[] = $attachment;
                         unset($aAttachments[$key]);
                     }
@@ -791,7 +791,7 @@ class PreProcessActionController
                                 }
                             }
                         }
-                        $resInfo['collId'] = 'letterbox_coll';
+                        $resInfo['type'] = 'letterbox_coll';
                         $resources[] = $resInfo;
                     }
                 }
