@@ -155,6 +155,7 @@ define('_TAG_UPDATED', 'Mot-clé modifié');
 define('_TAG_MERGED', 'Mot-clé fusionné');
 define('_LINK_ADDED', 'Liaison ajoutée');
 define('_LINK_DELETED', 'Liaison supprimée');
+define('_DOCUMENT_UNSIGNED', 'Document dé-signé');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');

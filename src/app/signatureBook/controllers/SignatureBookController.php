@@ -26,6 +26,7 @@ use Convert\models\AdrModel;
 use Entity\models\ListInstanceModel;
 use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
+use History\controllers\HistoryController;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\controllers\ResController;
@@ -409,11 +410,15 @@ class SignatureBookController
     {
         if (!Validator::intVal()->validate($args['resId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
-        } elseif (!SignatureBookController::isResourceInSignatureBook(['resId' => $args['resId'], 'userId' => $GLOBALS['id']])) {
+        } elseif (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['version']]);
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['typist', 'version']]);
+        if ($resource['typist'] != $GLOBALS['id'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Privilege forbidden']);
+        }
+
         AdrModel::deleteDocumentAdr(['where' => ['res_id = ?', 'type in (?)', 'version = ?'], 'data' => [$args['resId'], ['SIGN', 'TNL'], $resource['version']]]);
 
         if (!AttachmentModel::hasAttachmentsSignedByResId(['resId' => $args['resId'], 'userId' => $GLOBALS['id']])) {
@@ -424,6 +429,14 @@ class SignatureBookController
             ]);
         }
 
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $args['resId'],
+            'eventType' => 'UNSIGN',
+            'eventId'   => 'resourceUnsign',
+            'info'      => _DOCUMENT_UNSIGNED
+        ]);
+
         return $response->withStatus(204);
     }
 
@@ -433,9 +446,11 @@ class SignatureBookController
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
-        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master']]);
-        if (empty($attachment) || !SignatureBookController::isResourceInSignatureBook(['resId' => $attachment['res_id_master'], 'userId' => $GLOBALS['id']])) {
+        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master', 'typist']]);
+        if (empty($attachment) || !ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        } elseif ($attachment['typist'] != $GLOBALS['userId'] && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Privilege forbidden']);
         }
 
         AttachmentModel::update([
@@ -456,6 +471,14 @@ class SignatureBookController
                 'data'  => [$attachment['res_id_master'], $GLOBALS['userId'], 'VISA_CIRCUIT']
             ]);
         }
+
+        HistoryController::add([
+            'tableName' => 'res_attachments',
+            'recordId'  => $args['id'],
+            'eventType' => 'UNSIGN',
+            'eventId'   => 'attachmentUnsign',
+            'info'      => _DOCUMENT_UNSIGNED
+        ]);
 
         return $response->withStatus(204);
     }

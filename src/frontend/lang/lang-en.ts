@@ -1448,6 +1448,7 @@ export const LANG_EN = {
     "VIEW": "View",
     "ABS": "Vacation",
     "PRE": "Back absence",
+    "UNSIGN"    : "Unsign document",
     "RESETPSW": "Password reset",
     "ERROR": "Error",
     "fileAlreadySentToSignatureBook": "File already send to signature book",

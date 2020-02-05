@@ -155,6 +155,7 @@ define('_TAG_UPDATED', 'Tag updated'); //TRANSLATE
 define('_TAG_MERGED', 'Tag merged'); //TRANSLATE
 define('_LINK_ADDED', 'Link added');//TRANSLATE
 define('_LINK_DELETED', 'Link deleted');//TRANSLATE
+define('_DOCUMENT_UNSIGNED', 'Document unsigned');//TRANSLATE
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Lijst met filters en antwoorden');

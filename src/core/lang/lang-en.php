@@ -155,6 +155,7 @@ define('_TAG_UPDATED', 'Tag updated');
 define('_TAG_MERGED', 'Tag merged');
 define('_LINK_ADDED', 'Link added');
 define('_LINK_DELETED', 'Link deleted');
+define('_DOCUMENT_UNSIGNED', 'Document unsigned');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');
