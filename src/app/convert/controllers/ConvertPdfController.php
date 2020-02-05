@@ -191,10 +191,10 @@ class ConvertPdfController
             $convertedDocument = $convertedDocument[0] ?? null;
         } else {
             $convertedDocument = AdrModel::getConvertedDocumentById([
-                'select' => ['docserver_id','path', 'filename', 'fingerprint'],
-                'resId' => $args['resId'],
-                'collId' => 'attachment',
-                'type' => 'PDF'
+                'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
+                'resId'     => $args['resId'],
+                'collId'    => 'attachment',
+                'type'      => 'PDF'
             ]);
         }
 

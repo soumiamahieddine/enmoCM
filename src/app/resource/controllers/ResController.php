@@ -450,7 +450,8 @@ class ResController extends ResourceControlController
         $convertedDocuments = AdrModel::getDocuments([
             'select'    => ['type', 'version'],
             'where'     => ['res_id = ?', 'type in (?)'],
-            'data'      => [$args['resId'], ['PDF', 'SIGN', 'NOTE']]
+            'data'      => [$args['resId'], ['PDF', 'SIGN', 'NOTE']],
+            'orderBy'   => ['versions ASC']
         ]);
         if (empty($convertedDocuments)) {
             return $response->withJson(['PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions]);

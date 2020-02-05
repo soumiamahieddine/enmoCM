@@ -295,7 +295,6 @@ $app->get('/listTemplates/{id}', \Entity\controllers\ListTemplateController::cla
 $app->put('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':update');
 $app->delete('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':delete');
 $app->get('/listTemplates/entities/{entityId}', \Entity\controllers\ListTemplateController::class . ':getByEntityId');
-$app->get('/listTemplates/entities/{entityId}/maarchParapheur', \Entity\controllers\ListTemplateController::class . ':getByEntityIdWithMaarchParapheur');
 $app->put('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':updateByUserWithEntityDest');
 $app->get('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':getTypeRoles');
 $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':updateTypeRoles');
