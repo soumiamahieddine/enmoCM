@@ -253,7 +253,7 @@ class AttachmentController
             'tableName' => 'res_attachments',
             'recordId'  => $args['id'],
             'eventType' => 'DEL',
-            'info'      =>  _DOC_DELETED . " : {$attachment['title']}",
+            'info'      =>  _ATTACHMENT_DELETED . " : {$attachment['title']}",
             'eventId'   => 'attachmentSuppression',
         ]);
 

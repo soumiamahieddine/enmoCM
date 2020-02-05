@@ -141,7 +141,7 @@ define('_BACK_FROM_VACATION', 'back from vacation');
 define('_DOC_DISPLAYING', 'Displaying document');
 define('_DOC_ADDED', 'Document added');
 define('_DOC_UPDATED', 'Document updated');
-define('_DOC_DELETED', 'Document deleted');
+define('_ATTACHMENT_DELETED', 'Attachment deleted');
 define('_FILE_UPDATED', 'File updated');
 define('_ATTACHMENT_ADDED', 'Attachment added');
 define('_ATTACHMENT_UPDATED', 'Attachment updated');

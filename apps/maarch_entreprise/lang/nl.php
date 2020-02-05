@@ -835,7 +835,6 @@ if (!defined('_FULLTEXT_ERROR')) { define('_FULLTEXT_ERROR', 'Ongeldige invoer v
 if (!defined('_FILE_NOT_SEND')) { define('_FILE_NOT_SEND', 'Het bestand werd niet verzonden');}
 if (!defined('_TRY_AGAIN')) { define('_TRY_AGAIN', 'Probeer opnieuw');}
 if (!defined('_INDEX_UPDATED')) { define('_INDEX_UPDATED', 'Bijgewerkte index');}
-if (!defined('_DOC_DELETED')) { define('_DOC_DELETED', 'Verwijderd document');}
 if (!defined('_UPDATE_DOC_STATUS')) { define('_UPDATE_DOC_STATUS', 'Brief status is bijgewerkt');}
 if (!defined('_DOCTYPE_MANDATORY')) { define('_DOCTYPE_MANDATORY', 'Het stuktype is verplicht');}
 if (!defined('_CHECK_FORM_OK')) { define('_CHECK_FORM_OK', 'Controle formulier OK');}
