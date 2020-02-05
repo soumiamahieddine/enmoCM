@@ -15,6 +15,8 @@
 namespace AcknowledgementReceipt\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
+use Contact\controllers\ContactController;
+use Contact\models\ContactModel;
 use Docserver\models\DocserverModel;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
@@ -23,9 +25,47 @@ use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use User\models\UserModel;
 
 class AcknowledgementReceiptController
 {
+    public static function get(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $acknowledgementReceiptsModel = AcknowledgementReceiptModel::get([
+            'select' => ['id', 'res_id', 'type', 'format', 'user_id', 'creation_date', 'send_date', 'contact_id'],
+            'where'  => ['res_id = ?'],
+            'data'   => [$args['resId']]
+        ]);
+
+        $acknowledgementReceipts = [];
+
+        foreach ($acknowledgementReceiptsModel as $acknowledgementReceipt) {
+            $contact = ContactModel::getById(['id' => $acknowledgementReceipt['contact_id'], 'select' => ['firstname', 'lastname', 'company']]);
+            $contactLabel = ContactController::getFormattedOnlyContact(['contact' => $contact]);
+
+            $userLabel = UserModel::getLabelledUserById(['id' => $acknowledgementReceipt['user_id']]);
+
+            $acknowledgementReceipts[] = [
+                'id'           => $acknowledgementReceipt['id'],
+                'resId'        => $acknowledgementReceipt['res_id'],
+                'type'         => $acknowledgementReceipt['type'],
+                'format'       => $acknowledgementReceipt['format'],
+                'userId'       => $acknowledgementReceipt['user_id'],
+                'userLabel'    => $userLabel,
+                'creationDate' => $acknowledgementReceipt['creation_date'],
+                'sendDate'     => $acknowledgementReceipt['send_date'],
+                'contactId'    => $acknowledgementReceipt['contact_id'],
+                'contactLabel' => $contactLabel['contact']['idToDisplay']
+            ];
+        }
+
+        return $response->withJson($acknowledgementReceipts);
+    }
+
     public function createPaperAcknowledgement(Request $request, Response $response)
     {
         $bodyData = $request->getParsedBody();

@@ -362,6 +362,7 @@ $app->get('/resources/{resId}/linkedResources', \Resource\controllers\LinkContro
 $app->post('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':linkResources');
 $app->delete('/resources/{resId}/linkedResources/{id}', \Resource\controllers\LinkController::class . ':unlinkResources');
 $app->put('/resources/{resId}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignResource');
+$app->get('/resources/{resId}/acknowledgementReceipts', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':get');
 
 $app->get('/res/{resId}/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
