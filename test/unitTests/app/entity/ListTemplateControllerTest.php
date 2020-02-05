@@ -27,20 +27,17 @@ class ListTemplateControllerTest extends TestCase
             'description'       => 'TEST LISTTEMPLATE123 DESCRIPTION',
             'items'             => [
                 [
-                    'sequence'  => 0,
-                    'id'   => 1,
+                    'id'   => 5,
                     'type' => 'user',
                     'mode' => 'visa'
                 ],
                 [
-                    'sequence'  => 1,
-                    'id'   => 2,
+                    'id'   => 10,
                     'type' => 'user',
                     'mode' => 'visa'
                 ],
                 [
-                    'sequence'  => 0,
-                    'id'   => 3,
+                    'id'   => 17,
                     'type' => 'user',
                     'mode' => 'sign'
                 ]
@@ -86,17 +83,17 @@ class ListTemplateControllerTest extends TestCase
         $this->assertSame('visaCircuit', $responseBody->listTemplate->type);
 
         $this->assertSame(0, $responseBody->listTemplate->items[0]->sequence);
-        $this->assertSame(1, $responseBody->listTemplate->items[0]->item_id);
+        $this->assertSame(5, $responseBody->listTemplate->items[0]->item_id);
         $this->assertSame('user', $responseBody->listTemplate->items[0]->item_type);
         $this->assertSame('visa', $responseBody->listTemplate->items[0]->item_mode);
 
         $this->assertSame(1, $responseBody->listTemplate->items[1]->sequence);
-        $this->assertSame(2, $responseBody->listTemplate->items[1]->item_id);
+        $this->assertSame(10, $responseBody->listTemplate->items[1]->item_id);
         $this->assertSame('user', $responseBody->listTemplate->items[1]->item_type);
         $this->assertSame('visa', $responseBody->listTemplate->items[1]->item_mode);
 
         $this->assertSame(2, $responseBody->listTemplate->items[2]->sequence);
-        $this->assertSame(3, $responseBody->listTemplate->items[2]->item_id);
+        $this->assertSame(17, $responseBody->listTemplate->items[2]->item_id);
         $this->assertSame('user', $responseBody->listTemplate->items[2]->item_type);
         $this->assertSame('sign', $responseBody->listTemplate->items[2]->item_mode);
     }
@@ -113,14 +110,12 @@ class ListTemplateControllerTest extends TestCase
             'description'       => 'TEST LISTTEMPLATE123 DESCRIPTION UPDATED',
             'items'             => [
                 [
-                    'sequence'  => 0,
-                    'id'   => 4,
+                    'id'   => 10,
                     'type' => 'user',
                     'mode' => 'visa'
                 ],
                 [
-                    'sequence'  => 0,
-                    'id'   => 5,
+                    'id'   => 17,
                     'type' => 'user',
                     'mode' => 'sign'
                 ]
@@ -162,12 +157,12 @@ class ListTemplateControllerTest extends TestCase
         $this->assertSame('visaCircuit', $responseBody->listTemplate->type);
 
         $this->assertSame(0, $responseBody->listTemplate->items[0]->sequence);
-        $this->assertSame(4, $responseBody->listTemplate->items[0]->item_id);
+        $this->assertSame(10, $responseBody->listTemplate->items[0]->item_id);
         $this->assertSame('user', $responseBody->listTemplate->items[0]->item_type);
         $this->assertSame('visa', $responseBody->listTemplate->items[0]->item_mode);
 
         $this->assertSame(1, $responseBody->listTemplate->items[1]->sequence);
-        $this->assertSame(5, $responseBody->listTemplate->items[1]->item_id);
+        $this->assertSame(17, $responseBody->listTemplate->items[1]->item_id);
         $this->assertSame('user', $responseBody->listTemplate->items[1]->item_type);
         $this->assertSame('sign', $responseBody->listTemplate->items[1]->item_mode);
 
