@@ -97,6 +97,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'config_
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_tag_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'private_tag');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'tag_view');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'sign_document');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'visa_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'create_contacts');
@@ -117,6 +119,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_tag_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'private_tag');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'tag_view');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'sign_document');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'visa_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'create_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'update_contacts');

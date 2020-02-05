@@ -1133,7 +1133,7 @@ class ResController extends ResourceControlController
 
         $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status']]);
         if (empty($resource['status'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Resource does not exists']);
+            return $response->withStatus(400)->withJson(['errors' => 'Status does not exist']);
         }
         $status = StatusModel::getById(['id' => $resource['status'], 'select' => ['can_be_modified']]);
         if ($status['can_be_modified'] != 'Y') {

@@ -49,7 +49,7 @@ class CustomFieldController
 
         if (!Validator::stringType()->notEmpty()->validate($body['label'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body label is empty or not a string']);
-        } elseif (!Validator::stringType()->notEmpty()->validate($body['type'])) {
+        } elseif (!Validator::stringType()->notEmpty()->validate($body['type']) || in_array($body['type'], ['string', 'integer', 'select', 'date', 'radio', 'checkbox', 'ban'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body type is empty or not a string']);
         } elseif (!empty($body['values']) && !Validator::arrayType()->notEmpty()->validate($body['values'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body values is not an array']);

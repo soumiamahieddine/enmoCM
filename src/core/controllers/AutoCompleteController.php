@@ -618,6 +618,8 @@ class AutoCompleteController
         foreach ($hits as $key => $hit) {
             $addresses[] = [
                 'banId'         => $hit->banId,
+                'lon'           => $hit->lon,
+                'lat'           => $hit->lat,
                 'number'        => $hit->streetNumber,
                 'afnorName'     => $hit->afnorName,
                 'postalCode'    => $hit->postalCode,
