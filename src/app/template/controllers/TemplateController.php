@@ -499,6 +499,14 @@ class TemplateController
             if ($pathToTemplateInfo['extension'] == 'odt') {
                 $TBS->LoadTemplate('#styles.xml');
             } elseif ($pathToTemplateInfo['extension'] == 'docx') {
+                // TODO : TEST AFTER REFACTORING of getDatas function
+                // foreach (['recipient', 'sender', 'attachmentRecipient'] as $contact) {
+                //     if (!empty($dataToBeMerge[$contact]['postal_address'])) {
+                //         $dataToBeMerge[$contact]['postal_address'] = nl2br($dataToBeMerge[$contact]['postal_address']);
+                //         $dataToBeMerge[$contact]['postal_address'] = str_replace('<br />', '</w:t><w:br/><w:t>', $dataToBeMerge[$contact]['postal_address']);
+                //         $dataToBeMerge[$contact]['postal_address'] = str_replace(array("\n\r", "\r\n", "\r", "\n"), "", $dataToBeMerge[$contact]['postal_address']);
+                //     }
+                // }
                 $TBS->LoadTemplate('#word/header1.xml');
             }
             foreach ($datasources as $name => $datasource) {
