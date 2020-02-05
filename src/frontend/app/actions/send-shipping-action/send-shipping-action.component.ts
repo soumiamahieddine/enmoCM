@@ -98,9 +98,9 @@ export class SendShippingActionComponent implements OnInit {
     }
 
     executeAction() {
-        let realResSelected: string[] = this.attachList.filter(attach => attach.type === 'attachments_coll').map((e: any) => { return e.res_id_master; });
+        let realResSelected: string[] = this.attachList.filter(attach => attach.type === 'attachment').map((e: any) => { return e.res_id_master; });
 
-        realResSelected = realResSelected.concat(this.attachList.filter(attach => attach.type === 'letterbox_coll').map((e: any) => { return e.res_id; }));
+        realResSelected = realResSelected.concat(this.attachList.filter(attach => attach.type === 'mail').map((e: any) => { return e.res_id; }));
 
         this.http.put(this.data.processActionRoute, {resources : realResSelected, data: { shippingTemplateId: this.currentShipping.id }, note : this.noteEditor.getNoteContent()}).pipe(
             tap((data: any) => {

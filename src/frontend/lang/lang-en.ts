@@ -1479,4 +1479,5 @@ export const LANG_EN = {
     "versions": "Versions",
     "documentSignedMsg": "The document has been signed, you can't edit this document",
     "banAutocompleteInput": "Autocomplete BAN input",
+    "noMailContact" : "No (external) contact linked to this mail",
 };

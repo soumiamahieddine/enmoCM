@@ -684,10 +684,10 @@ class PreProcessActionController
 
         if (!empty($aTemplates)) {
             $aAttachments = AttachmentModel::get([
-                'select'    => ['max(relation) as relation', 'res_id_master', 'title', 'res_id', 'identifier', 'recipient_id', 'recipient_type'],
+                'select'    => ['max(relation) as relation', 'res_id_master', 'title', 'res_id', 'identifier as chrono', 'recipient_id', 'recipient_type'],
                 'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', 'in_send_attach = ?'],
                 'data'      => [$data['resources'], ['OBS', 'DEL', 'TMP', 'FRZ'], ['print_folder'], true],
-                'groupBy'   => ['res_id_master', 'title', 'res_id', 'identifier', 'recipient_id', 'recipient_type']
+                'groupBy'   => ['res_id_master', 'title', 'res_id', 'chrono', 'recipient_id', 'recipient_type']
             ]);
 
             foreach ($data['resources'] as $valueResId) {
@@ -704,46 +704,50 @@ class PreProcessActionController
                         ]);
                         if (empty($convertedDocument['docserver_id'])) {
                             $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentConversion', 'attachmentIdentifier' => $attachment['identifier']];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentConversion', 'attachmentIdentifier' => $attachment['chrono']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         if (empty($attachment['recipient_id']) || $attachment['recipient_type'] != 'contact') {
                             $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $attachment['identifier']];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $attachment['chrono']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         $contact = ContactModel::getById(['select' => ['*'], 'id' => $attachment['recipient_id']]);
                         if (empty($contact)) {
                             $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $attachment['identifier']];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $attachment['chrono']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
                             $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noFranceContact', 'attachmentIdentifier' => $attachment['identifier']];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noFranceContact', 'attachmentIdentifier' => $attachment['chrono']];
                             unset($aAttachments[$key]);
                             break;
                         }
                         $afnorAddress = ContactController::getContactAfnor($contact);
                         if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6]) || !preg_match("/^\d{5}\s/", $afnorAddress[6])) {
                             $resInfo = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $valueResId]);
-                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'incompleteAddressForPostal', 'attachmentIdentifier' => $attachment['identifier']];
+                            $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'incompleteAddressForPostal', 'attachmentIdentifier' => $attachment['chrono']];
                             unset($aAttachments[$key]);
                             break;
                         }
 
-                        $attachment['type'] = 'attachments_coll';
+                        $attachment['type'] = 'attachment';
                         $resources[] = $attachment;
                         unset($aAttachments[$key]);
                     }
                 }
 
-                $resInfo = ResModel::getById(['select' => ['alt_identifier', 'integrations', 'res_id', 'subject as title'], 'resId' => $valueResId]);
+                $resInfo = ResModel::getById(['select' => ['alt_identifier as chrono', 'integrations', 'res_id', 'subject as title', 'docserver_id'], 'resId' => $valueResId]);
                 $integrations = json_decode($resInfo['integrations'], true);
-                if (!empty($integrations['inShipping'])) {
+                if (!empty($integrations['inShipping']) && empty($resInfo['docserver_id'])) {
+                    $canNotSend[] = [
+                        'resId'  => $valueResId, 'chrono' => $resInfo['chrono'], 'reason' => 'noMailConversion'
+                    ];
+                } else if (!empty($integrations['inShipping']) && !empty($resInfo['docserver_id'])) {
                     $resIdFound = true;
 
                     $convertedDocument = ConvertPdfController::getConvertedPdfById([
@@ -754,8 +758,7 @@ class PreProcessActionController
                     ]);
                     if (empty($convertedDocument['docserver_id'])) {
                         $canNotSend[] = [
-                            'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
-                            'reason' => 'noAttachmentConversion', 'attachmentIdentifier' => $resInfo['identifier']
+                            'resId'  => $valueResId, 'chrono' => $resInfo['chrono'], 'reason' => 'noMailConversion'
                         ];
                     } else {
                         $resourceContacts = ResourceContactModel::get([
@@ -764,39 +767,35 @@ class PreProcessActionController
                         ]);
                         if (empty($resourceContacts)) {
                             $canNotSend[] = [
-                                'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
-                                'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $resInfo['identifier']
+                                'resId'  => $valueResId, 'chrono' => $resInfo['chrono'], 'reason' => 'noMailContact'
                             ];
                         } else {
                             foreach ($resourceContacts as $resourceContact) {
                                 $contact = ContactModel::getById(['select' => ['*'], 'id' => $resourceContact['item_id']]);
                                 if (empty($contact)) {
                                     $canNotSend[] = [
-                                        'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
-                                        'reason' => 'noAttachmentContact', 'attachmentIdentifier' => $resInfo['identifier']
+                                        'resId'  => $valueResId, 'chrono' => $resInfo['chrono'], 'reason' => 'noMailContact'
                                     ];
                                 } else if (!empty($contact['address_country']) && strtoupper(trim($contact['address_country'])) != 'FRANCE') {
                                     $canNotSend[] = [
-                                        'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
-                                        'reason' => 'noFranceContact', 'attachmentIdentifier' => $resInfo['identifier']
+                                        'resId'  => $valueResId, 'chrono' => $resInfo['chrono'], 'reason' => 'noFranceContact'
                                     ];
                                 } else {
                                     $afnorAddress = ContactController::getContactAfnor($contact);
                                     if ((empty($afnorAddress[1]) && empty($afnorAddress[2])) || empty($afnorAddress[6]) || !preg_match("/^\d{5}\s/", $afnorAddress[6])) {
                                         $canNotSend[] = [
-                                            'resId'  => $valueResId, 'chrono' => $resInfo['alt_identifier'],
-                                            'reason' => 'incompleteAddressForPostal', 'attachmentIdentifier' => $resInfo['identifier']
+                                            'resId'  => $valueResId, 'chrono' => $resInfo['chrono'], 'reason' => 'incompleteAddressForPostal'
                                         ];
                                     }
                                 }
                             }
                         }
-                        $resInfo['type'] = 'letterbox_coll';
+                        $resInfo['type'] = 'mail';
                         $resources[] = $resInfo;
                     }
                 }
                 if (!$resIdFound) {
-                    $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['alt_identifier'], 'reason' => 'noAttachmentToSend'];
+                    $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['chrono'], 'reason' => 'noDocumentToSend'];
                 }
             }
     

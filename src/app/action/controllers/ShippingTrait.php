@@ -169,7 +169,7 @@ trait ShippingTrait
                 'body'          => json_encode(['name' => $sendingName])
             ]);
             if ($createSending['code'] != 201) {
-                $errors[] = "Maileva sending creation failed for attachment {$attachmentId}";
+                $errors[] = "Maileva sending creation failed for attachment {$resId}";
                 continue;
             }
             foreach ($createSending['headers'] as $header) {
@@ -180,7 +180,7 @@ trait ShippingTrait
                 }
             }
             if (empty($sendingId)) {
-                $errors[] = "Maileva sending id not found for attachment {$attachmentId}";
+                $errors[] = "Maileva sending id not found for attachment {$resId}";
                 continue;
             }
 
@@ -264,7 +264,7 @@ trait ShippingTrait
                 ]),
             ]);
             if ($setOptions['code'] != 200) {
-                $errors[] = "Maileva options modification failed for attachment {$attachmentId}";
+                $errors[] = "Maileva options modification failed for attachment {$resId}";
                 continue;
             }
 
@@ -275,7 +275,7 @@ trait ShippingTrait
                 'method'        => 'POST'
             ]);
             if ($submit['code'] != 200) {
-                $errors[] = "Maileva submit failed for attachment {$attachmentId}";
+                $errors[] = "Maileva submit failed for attachment {$resId}";
                 continue;
             }
 
