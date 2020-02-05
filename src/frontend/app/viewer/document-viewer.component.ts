@@ -44,12 +44,7 @@ export class DocumentViewerComponent implements OnInit {
         type: '',
         contentMode: 'base64',
         content: null,
-        src: null,
-        subinfos : {
-            mainDocVersions: [],
-            signedDocVersions: false,
-            commentedDocVersions: false,
-        }
+        src: null
     };
 
     allowedExtensions: any[] = [];

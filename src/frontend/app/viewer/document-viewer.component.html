@@ -46,7 +46,7 @@
                 <button mat-icon-button (click)="downloadOriginalFile()" [matTooltip]="lang.downloadOriginalFile">
                     <mat-icon class="fa fa-download"></mat-icon>
                 </button>
-                <button [disabled]="file.subinfos.signedDocVersions" [class.disabledButton]="file.subinfos.signedDocVersions" *ngIf="editMode && resId !== null" mat-icon-button (click)="editResource()"
+                <button [disabled]="!functions.empty(file.subinfos) && file.subinfos.signedDocVersions" [class.disabledButton]="file.subinfos.signedDocVersions" *ngIf="editMode && resId !== null" mat-icon-button (click)="editResource()"
                     [matTooltip]="!file.subinfos.signedDocVersions ? lang.editDocument : lang.documentSignedMsg">
                     <mat-icon class="fa fa-edit"></mat-icon>
                 </button>
