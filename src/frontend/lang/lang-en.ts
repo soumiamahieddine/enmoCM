@@ -1480,4 +1480,5 @@ export const LANG_EN = {
     "documentSignedMsg": "The document has been signed, you can't edit this document",
     "banAutocompleteInput": "Autocomplete BAN input",
     "noMailContact" : "No (external) contact linked to this mail",
+    "noSelectedAddress": "No selected address",
 };

@@ -1519,4 +1519,5 @@ export const LANG_FR = {
     "documentSignedMsg": "Le document a été signé, vous ne pouvez pas editer ce document",
     "banAutocompleteInput": "Champ autocomplete BAN",
     "noMailContact" : "Aucun contact (externe) attaché pour ce courrier",
+    "noSelectedAddress": "Aucune adresse associée",
 };

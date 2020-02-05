@@ -2,14 +2,10 @@ import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { HeaderService } from '../../../service/header.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { AppService } from '../../../service/app.service';
-import { SortPipe } from '../../../plugins/sorting.pipe';
 import { FormControl } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { debounceTime, filter, distinctUntilChanged, tap, switchMap, exhaustMap, catchError } from 'rxjs/operators';
-import { LatinisePipe } from 'ngx-pipes';
 
 @Component({
     selector: 'app-address-ban-input',
@@ -17,8 +13,7 @@ import { LatinisePipe } from 'ngx-pipes';
     styleUrls: [
         'address-ban-autocomplete.component.scss',
         '../../indexation/indexing-form/indexing-form.component.scss'
-    ],
-    providers: [NotificationService, AppService, SortPipe]
+    ]
 })
 
 export class AddressBanAutocompleteComponent implements OnInit {
@@ -52,9 +47,6 @@ export class AddressBanAutocompleteComponent implements OnInit {
         public http: HttpClient,
         private notify: NotificationService,
         public dialog: MatDialog,
-        private headerService: HeaderService,
-        public appService: AppService,
-        private latinisePipe: LatinisePipe
     ) {
 
     }
@@ -118,8 +110,7 @@ export class AddressBanAutocompleteComponent implements OnInit {
             longitude: ev.option.value.lon,
             latitude: ev.option.value.lat
         }
-        console.log(ev.option.value);
-        
+
         this.setFormValue(objAddress);
 
         this.myControl.setValue('');
@@ -134,7 +125,6 @@ export class AddressBanAutocompleteComponent implements OnInit {
     setFormValue(item: any) {    
         this.valuesToDisplay[item['id']] = `${item.addressNumber} ${item.addressStreet}, ${item.addressTown} (${item.addressPostcode})`;
         this.controlAutocomplete.setValue([item]);
-        console.log(this.valuesToDisplay);
     }
 
     resetAutocomplete() {

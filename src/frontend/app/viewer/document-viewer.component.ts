@@ -7,7 +7,7 @@ import { AppService } from '../../service/app.service';
 import { tap, catchError, filter, map, exhaustMap } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
-import { MatDialogRef, MatDialog, MatSidenav, fadeInItems } from '@angular/material';
+import { MatDialogRef, MatDialog, MatSidenav } from '@angular/material';
 import { AlertComponent } from '../../plugins/modal/alert.component';
 import { SortPipe } from '../../plugins/sorting.pipe';
 import { PluginSelectSearchComponent } from '../../plugins/select-search/select-search.component';
@@ -44,7 +44,12 @@ export class DocumentViewerComponent implements OnInit {
         type: '',
         contentMode: 'base64',
         content: null,
-        src: null
+        src: null,
+        subinfos : {
+            mainDocVersions: [],
+            signedDocVersions: false,
+            commentedDocVersions: false,
+        }
     };
 
     allowedExtensions: any[] = [];
