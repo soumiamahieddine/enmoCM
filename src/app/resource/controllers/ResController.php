@@ -246,6 +246,8 @@ class ResController extends ResourceControlController
 
         $onlyDocument = !empty($queryParams['onlyDocument']);
 
+        unset($body['destination']);
+        unset($body['diffusionList']);
         $control = ResourceControlController::controlUpdateResource(['body' => $body, 'resId' => $args['resId'], 'onlyDocument' => $onlyDocument]);
         if (!empty($control['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);

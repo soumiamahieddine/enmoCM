@@ -238,10 +238,6 @@ class StoreController
             $entity = EntityModel::getById(['id' => $args['initiator'], 'select' => ['entity_id']]);
             $preparedData['initiator'] = $entity['entity_id'];
         }
-        if (!empty($args['destination'])) {
-            $entity = EntityModel::getById(['id' => $args['destination'], 'select' => ['entity_id']]);
-            $preparedData['destination'] = $entity['entity_id'];
-        }
 
         if (isset($args['documentDate'])) {
             $preparedData['doc_date'] = $args['documentDate'];
