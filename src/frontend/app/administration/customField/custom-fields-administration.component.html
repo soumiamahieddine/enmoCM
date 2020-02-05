@@ -98,7 +98,7 @@
                         </div>
                         <div style="flex:1;">
                             <div style="color: rgba(0,0,0,0.54);">{{customField.label}} :</div>
-                            <ng-container *ngIf="customField.type === 'string'">
+                            <ng-container *ngIf="customField.type === 'string' || customField.type === 'banAutocomplete'">
                                 <mat-form-field class="input-form" floatLabel="never">
                                     <textarea matInput [placeholder]="lang[customField.type + 'Input']"
                                         matTextareaAutosize matAutosizeMinRows="1" cdkAutosizeMaxRows="6" disabled></textarea>

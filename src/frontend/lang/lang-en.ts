@@ -1478,4 +1478,5 @@ export const LANG_EN = {
     "SIGN_version": "Original version",
     "versions": "Versions",
     "documentSignedMsg": "The document has been signed, you can't edit this document",
+    "banAutocompleteInput": "Autocomplete BAN input",
 };

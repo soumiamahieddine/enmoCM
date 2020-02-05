@@ -1517,4 +1517,5 @@ export const LANG_FR = {
     "SIGN_version": "Version original",
     "versions": "Versions",
     "documentSignedMsg": "Le document a été signé, vous ne pouvez pas editer ce document",
+    "banAutocompleteInput": "Champ autocomplete BAN",  
 };
