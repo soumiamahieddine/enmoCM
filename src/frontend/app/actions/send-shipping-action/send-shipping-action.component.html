@@ -26,6 +26,9 @@
                     <b *ngIf="data.resIds.length > 1" color="primary" class="highlight">{{data.resIds.length}}
                         {{lang.elements}}</b> ?
                 </div>
+                <div *ngIf="data.resIds.length > 0" style="padding:10px;display: flex;flex-direction: column;">
+                    <mat-checkbox color="primary" *ngFor="let inteKey of integrationsInfo | keyvalue" (click)="toggleIntegration(inteKey.key)" [checked]="data.resource.integrations[inteKey.key]">{{lang[inteKey.key+'_doc']}}</mat-checkbox>
+                </div>
                 <div class="col-md-12" style="padding-top: 10px;">
                     <mat-form-field>
                         <mat-label>{{lang.shippings}}</mat-label>
@@ -102,7 +105,7 @@
         <mat-sidenav mode="side" fixedTopGap="56" position='end' [opened]="attachList.length > 0" style="width: 50%;">
             <div class="pjList">
                 <img *ngFor="let attach of attachList" title="{{attach.identifier}} : {{attach.title}}"
-                    src="../../rest/attachments/{{attach.res_id}}/thumbnail" />
+                    src="../../rest/{{attach.type === 'attachments_coll' ? 'attachments' : 'resources'}}/{{attach.res_id}}/thumbnail" />
             </div>
         </mat-sidenav>
     </mat-sidenav-container>

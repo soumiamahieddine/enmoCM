@@ -36,7 +36,13 @@ export class SendShippingActionComponent implements OnInit {
     entitiesList: string[] = [];
     attachList: any[] = [];
 
-    mailsNotSend: any[] = []
+    mailsNotSend: any[] = [];
+
+    integrationsInfo: any = {
+        inShipping: {
+            icon: 'fas fa-shipping-fast'
+        }
+    };
 
     @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
 
@@ -45,17 +51,7 @@ export class SendShippingActionComponent implements OnInit {
     ngOnInit(): void {
         this.loading = true;
 
-        this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkShippings', { resources: this.data.resIds })
-            .subscribe((data: any) => {
-                this.shippings = data.shippingTemplates;
-                this.mailsNotSend = data.canNotSend;
-                this.entitiesList = data.entities;
-                this.attachList = data.resources;
-                this.loading = false;
-            }, (err: any) => {
-                this.notify.handleErrors(err);
-                this.loading = false;
-            });
+        this.checkShipping();
     }
 
     onSubmit() {
@@ -85,8 +81,26 @@ export class SendShippingActionComponent implements OnInit {
         ).subscribe()
     } */
 
+    checkShipping() {
+        this.http.post(`../../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/checkShippings`, { resources: this.data.resIds }).pipe(
+            tap((data: any) => {
+                this.shippings = data.shippingTemplates;
+                this.mailsNotSend = data.canNotSend;
+                this.entitiesList = data.entities;
+                this.attachList = data.resources;
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe()
+    }
+
     executeAction() {
-        let realResSelected: string[] = this.attachList.map((e: any) => { return e.res_id_master; });
+        let realResSelected: string[] = this.attachList.filter(attach => attach.type === 'attachments_coll').map((e: any) => { return e.res_id_master; });
+
+        realResSelected = realResSelected.concat(this.attachList.filter(attach => attach.type === 'letterbox_coll').map((e: any) => { return e.res_id; }));
 
         this.http.put(this.data.processActionRoute, {resources : realResSelected, data: { shippingTemplateId: this.currentShipping.id }, note : this.noteEditor.getNoteContent()}).pipe(
             tap((data: any) => {
@@ -99,6 +113,19 @@ export class SendShippingActionComponent implements OnInit {
             finalize(() => this.loading = false),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    toggleIntegration(integrationId: string) {
+        this.http.put(`../../rest/resourcesList/integrations`, {resources : this.data.resIds, integrations : { [integrationId] : !this.data.resource.integrations[integrationId]}}).pipe(
+            tap(() => {
+                this.data.resource.integrations[integrationId] = !this.data.resource.integrations[integrationId];
+                this.checkShipping();
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
                 return of(false);
             })
         ).subscribe();
