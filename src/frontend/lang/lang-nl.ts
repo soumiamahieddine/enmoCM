@@ -1499,4 +1499,8 @@ export const LANG_NL = {
     "preRequisiteMissing": "Prerequisite missing for OnlyOffice : netcat", //_TO_TRANSLATE
     "onlyofficeEditDenied": "This document with extension", //_TO_TRANSLATE
     "onlyofficeEditDenied2": "can't be edited with onlyoffice", //_TO_TRANSLATE
+    "NOTE_version": "Annotated version", //_TO_TRANSLATE
+    "SIGN_version": "Original version", //_TO_TRANSLATE
+    "versions": "Versions", //_TO_TRANSLATE
+    "documentSignedMsg": "The document has been signed, you can't edit this document", //_TO_TRANSLATE
 };

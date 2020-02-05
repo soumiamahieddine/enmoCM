@@ -7,13 +7,14 @@ import { AppService } from '../../service/app.service';
 import { tap, catchError, filter, map, exhaustMap } from 'rxjs/operators';
 import { of, Subject } from 'rxjs';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
-import { MatDialogRef, MatDialog, MatSidenav } from '@angular/material';
+import { MatDialogRef, MatDialog, MatSidenav, fadeInItems } from '@angular/material';
 import { AlertComponent } from '../../plugins/modal/alert.component';
 import { SortPipe } from '../../plugins/sorting.pipe';
 import { PluginSelectSearchComponent } from '../../plugins/select-search/select-search.component';
 import { FormControl } from '@angular/forms';
 import { EcplOnlyofficeViewerComponent } from '../../plugins/onlyoffice-api-js/onlyoffice-viewer.component';
 import { FunctionsService } from '../../service/functions.service';
+import { DocumentViewerModalComponent } from './modal/document-viewer-modal.component';
 
 
 @Component({
@@ -177,8 +178,8 @@ export class DocumentViewerComponent implements OnInit {
         this.loading = true;
         this.file = {
             name: 'maarch',
-            format: null,
-            type: null,
+            format: 'pdf',
+            type: 'application/pdf',
             contentMode: 'base64',
             content: this.base64,
             src: this.base64ToArrayBuffer(this.base64)
@@ -500,8 +501,13 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     openPdfInTab() {
+        let src = this.file.contentView;
+        if (this.file.contentMode === 'base64') {
+            src = `data:${this.file.type};base64,${this.file.content}`;
+        }
+
         let newWindow = window.open();
-        newWindow.document.write(`<iframe style="width: 100%;height: 100%;margin: 0;padding: 0;" src="${this.file.contentView}" frameborder="0" allowfullscreen></iframe>`);
+        newWindow.document.write(`<iframe style="width: 100%;height: 100%;margin: 0;padding: 0;" src="${src}" frameborder="0" allowfullscreen></iframe>`);
         newWindow.document.title = this.title;
     }
 
@@ -538,6 +544,7 @@ export class DocumentViewerComponent implements OnInit {
             this.requestWithLoader(`../../rest/resources/${resId}/content?mode=base64`).subscribe(
                 (data: any) => {
                     if (data.encodedDocument) {
+                        this.loadMainDocumentSubInformations();
                         this.file.contentMode = 'route';
                         this.file.format = data.originalFormat;
                         this.file.content = `../../rest/resources/${resId}/originalContent`;
@@ -562,7 +569,30 @@ export class DocumentViewerComponent implements OnInit {
                 }
             );
         }
+    }
 
+    loadMainDocumentSubInformations() {
+        this.http.get(`../../rest/resources/${this.resId}/versionsInformations`).pipe(
+            tap((data: any) => {
+                const mainDocVersions = data.PDF;
+                let signedDocVersions = false;
+                let commentedDocVersions = false;
+                if (data.PDF[data.PDF.length - 1] !== undefined) {
+                    signedDocVersions = data.SIGN.indexOf(data.PDF[data.PDF.length - 1]) > -1 ? true : false;
+                    commentedDocVersions = data.NOTE.indexOf(data.PDF[data.PDF.length - 1]) > -1 ? true : false;
+                }
+                
+                this.file.subinfos = {
+                    mainDocVersions: mainDocVersions,
+                    signedDocVersions: signedDocVersions,
+                    commentedDocVersions: commentedDocVersions,
+                };
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     editTemplate(templateId: number) {
@@ -587,7 +617,7 @@ export class DocumentViewerComponent implements OnInit {
                 const template = this.listTemplates.filter(template => template.id === templateId)[0];
 
                 this.file.format = template.extension;
-                
+
                 if (this.editor.mode === 'onlyoffice') {
 
                     this.editor.async = false;
@@ -864,10 +894,30 @@ export class DocumentViewerComponent implements OnInit {
                 }
                 return formatdatas;
             }),
-            exhaustMap((data) => this.http.put(`../../rest/resources/${this.resId}?onlyDocument=true`, data )),
+            exhaustMap((data) => this.http.put(`../../rest/resources/${this.resId}?onlyDocument=true`, data)),
             tap(() => {
                 this.closeEditor();
                 this.loadRessource(this.resId);
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    openResourceVersion(version: number, type: string) {
+        console.log(type + '_version');
+        
+        const title = type !== 'PDF' ? this.lang[type + '_version'] : `${this.lang.version} ${version}`;
+
+        // TO SHOW ORIGINAL DOC (because autoload signed doc)
+        type = type === 'SIGN' ? 'PDF' : type;
+
+        this.http.get(`../../rest/resources/${this.resId}/content/${version}?type=${type}`).pipe(
+            tap((data: any) => {
+
+                this.dialog.open(DocumentViewerModalComponent, { autoFocus: false, height: '90vh', width: '90vw', data: { title: `${title}`, base64: data.encodedDocument } });
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);

@@ -1513,4 +1513,8 @@ export const LANG_FR = {
     "preRequisiteMissing": "Prérequis manquant pour OnlyOffice : netcat",
     "onlyofficeEditDenied": "Le document avec l'extension",
     "onlyofficeEditDenied2": "ne peut pas être édité avec onlyoffice",
+    "NOTE_version": "Version annotée",
+    "SIGN_version": "Version original",
+    "versions": "Versions",
+    "documentSignedMsg": "Le document a été signé, vous ne pouvez pas editer ce document",
 };

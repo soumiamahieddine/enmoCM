@@ -1474,4 +1474,8 @@ export const LANG_EN = {
     "preRequisiteMissing": "Prerequisite missing for OnlyOffice : netcat",
     "onlyofficeEditDenied": "This document with extension",
     "onlyofficeEditDenied2": "can't be edited with onlyoffice",
+    "NOTE_version": "Annotated version",
+    "SIGN_version": "Original version",
+    "versions": "Versions",
+    "documentSignedMsg": "The document has been signed, you can't edit this document",
 };

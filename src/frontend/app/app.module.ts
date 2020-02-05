@@ -106,6 +106,9 @@ import { SearchAdvListComponent } from './adv-search/list/search-adv-list.compon
 import { LinkedResourceListComponent } from './linkedResource/linked-resource-list.component';
 import { LinkResourceModalComponent } from './linkedResource/linkResourceModal/link-resource-modal.component';
 
+import { DocumentViewerModalComponent } from './viewer/modal/document-viewer-modal.component';
+
+
 
 @NgModule({
     imports: [
@@ -199,7 +202,8 @@ import { LinkResourceModalComponent } from './linkedResource/linkResourceModal/l
         CriteriaToolComponent,
         SearchAdvListComponent,
         LinkedResourceListComponent,
-        LinkResourceModalComponent
+        LinkResourceModalComponent,
+        DocumentViewerModalComponent
     ],
     entryComponents: [
         ConfirmModalComponent,
@@ -244,7 +248,8 @@ import { LinkResourceModalComponent } from './linkedResource/linkResourceModal/l
         VisaWorkflowModalComponent,
         AddVisaModelModalComponent,
         AddAvisModelModalComponent,
-        LinkResourceModalComponent
+        LinkResourceModalComponent,
+        DocumentViewerModalComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],
     bootstrap: [ AppComponent ]

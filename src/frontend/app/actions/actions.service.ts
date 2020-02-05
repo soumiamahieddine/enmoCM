@@ -561,7 +561,7 @@ export class ActionsService {
     sendShippingAction(options: any = null) {
         const dialogRef = this.dialog.open(SendShippingActionComponent, {
             disableClose: true,
-            width: '500px',
+            minWidth: '500px',
             data: this.setDatasActionToSend()
         });
         dialogRef.afterClosed().pipe(
