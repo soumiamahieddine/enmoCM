@@ -433,7 +433,43 @@ class ResController extends ResourceControlController
         }
     }
 
-    public function getFileContents(Request $request, Response $response, array $args)
+    public function getVersionsInformations(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $pdfVersions = [];
+        $signedVersions = [];
+        $noteVersions = [];
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['version', 'filename']]);
+        if (empty($resource['filename'])) {
+            return $response->withJson(['PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions]);
+        }
+
+        $convertedDocuments = AdrModel::getDocuments([
+            'select'    => ['type', 'version'],
+            'where'     => ['res_id = ?', 'type in (?)'],
+            'data'      => [$args['resId'], ['PDF', 'SIGN', 'NOTE']]
+        ]);
+        if (empty($convertedDocuments)) {
+            return $response->withJson(['PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions]);
+        }
+
+        foreach ($convertedDocuments as $convertedDocument) {
+            if ($convertedDocument['type'] == 'PDF') {
+                $pdfVersions[] = $convertedDocument['version'];
+            } elseif ($convertedDocument['type'] == 'SIGN') {
+                $signedVersions[] = $convertedDocument['version'];
+            } elseif ($convertedDocument['type'] == 'NOTE') {
+                $noteVersions[] = $convertedDocument['version'];
+            }
+        }
+
+        return $response->withJson(['PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions]);
+    }
+
+    public function getVersionFileContent(Request $request, Response $response, array $args)
     {
         if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
@@ -446,46 +482,53 @@ class ResController extends ResourceControlController
             return $response->withStatus(400)->withJson(['errors' => 'Incorrect version']);
         }
 
-        $contents = [];
-        $convertedDocuments = AdrModel::getDocuments([
-            'select'    => ['docserver_id', 'path', 'filename', 'fingerprint', 'type'],
-            'where'     => ['res_id = ?', 'type in (?)', 'version = ?'],
-            'data'      => [$args['resId'], ['PDF', 'SIGN', 'NOTE'], $args['version']]
-        ]);
+        $queryParams = $request->getQueryParams();
 
-        foreach ($convertedDocuments as $convertedDocument) {
-            $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
-            if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
-                continue;
-            }
-
-            $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
-            if (!file_exists($pathToDocument)) {
-                continue;
-            }
-
-            $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
-            $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
-            if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
-                return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
-            }
-
-            $fileContent = WatermarkController::watermarkResource(['resId' => $args['resId'], 'path' => $pathToDocument]);
-            if (empty($fileContent)) {
-                $fileContent = file_get_contents($pathToDocument);
-            }
-            if ($fileContent === false) {
-                continue;
-            }
-
-            if ($convertedDocument['type'] == 'NOTE' && !PrivilegeController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
-                continue;
-            }
-
-            $contents[$convertedDocument['type']] = base64_encode($fileContent);
+        $type = 'PDF';
+        if (!empty($queryParams['type']) && in_array($queryParams['type'], ['PDF', 'SIGN', 'NOTE'])) {
+            $type = $queryParams['type'];
         }
 
-        return $response->withJson(['contents' => $contents]);
+        if ($type == 'NOTE' && !PrivilegeController::hasPrivilege(['privilegeId' => 'view_documents_with_notes', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $convertedDocument = AdrModel::getDocuments([
+            'select'    => ['docserver_id', 'path', 'filename', 'fingerprint'],
+            'where'     => ['res_id = ?', 'type = ?', 'version = ?'],
+            'data'      => [$args['resId'], $type, $args['version']]
+        ]);
+
+        if (empty($convertedDocument[0])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Type has no file']);
+        }
+        $convertedDocument = $convertedDocument[0];
+
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
+        }
+
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
+        if (!file_exists($pathToDocument)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+        }
+
+        $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
+        $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
+        if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
+            return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
+        }
+
+        $fileContent = WatermarkController::watermarkResource(['resId' => $args['resId'], 'path' => $pathToDocument]);
+        if (empty($fileContent)) {
+            $fileContent = file_get_contents($pathToDocument);
+        }
+        if ($fileContent === false) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+        }
+
+        return $response->withJson(['encodedDocument' => base64_encode($fileContent)]);
     }
 
     public function getOriginalFileContent(Request $request, Response $response, array $aArgs)
