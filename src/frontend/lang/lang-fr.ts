@@ -1520,4 +1520,5 @@ export const LANG_FR = {
     "banAutocompleteInput": "Champ autocomplete BAN",
     "noMailContact" : "Aucun contact (externe) attaché pour ce courrier",
     "noSelectedAddress": "Aucune adresse associée",
+    "documentUnsigned": "La signature du document a été retirée",
 };

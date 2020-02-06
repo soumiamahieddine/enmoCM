@@ -15,6 +15,7 @@ import { FormControl } from '@angular/forms';
 import { EcplOnlyofficeViewerComponent } from '../../plugins/onlyoffice-api-js/onlyoffice-viewer.component';
 import { FunctionsService } from '../../service/functions.service';
 import { DocumentViewerModalComponent } from './modal/document-viewer-modal.component';
+import { PrivilegeService } from '../../service/privileges.service';
 
 
 @Component({
@@ -108,7 +109,8 @@ export class DocumentViewerComponent implements OnInit {
         public appService: AppService,
         private dialog: MatDialog,
         private sortPipe: SortPipe,
-        public functions: FunctionsService
+        public functions: FunctionsService,
+        public privilegeService: PrivilegeService,
     ) {
         (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
     }
@@ -540,30 +542,31 @@ export class DocumentViewerComponent implements OnInit {
                     return of(false);
                 }
             );
-        } else {
+        } else {            
             await this.loadMainDocumentSubInformations();
+            console.log(this.file.subinfos.mainDocVersions.length);
             if (this.file.subinfos.mainDocVersions.length > 0) {
                 this.requestWithLoader(`../../rest/resources/${resId}/content?mode=base64`).subscribe(
                     (data: any) => {
-                        if (data.encodedDocument) {
-                            this.loadMainDocumentSubInformations();
-                            this.file.contentMode = 'route';
-                            this.file.format = data.originalFormat;
-                            this.file.content = `../../rest/resources/${resId}/originalContent`;
-                            this.file.contentView = `../../rest/resources/${resId}/content?mode=view`;
-                            this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
-                            this.loading = false;
-                        }
-                    },
-                    (err: any) => {
-                        if (err.error.errors === 'Converted Document not found') {
+                        if (!this.file.subinfos.mainDocPDFVersions) {
                             this.file.contentMode = 'route';
                             this.file.content = `../../rest/resources/${resId}/originalContent`;
                             this.noConvertedFound = true;
+                            this.loading = false;
                         } else {
-                            this.notify.error(err.error.errors);
-                            this.noFile = true;
+                            if (data.encodedDocument) {
+                                this.file.contentMode = 'route';
+                                this.file.format = data.originalFormat;
+                                this.file.content = `../../rest/resources/${resId}/originalContent`;
+                                this.file.contentView = `../../rest/resources/${resId}/content?mode=view`;
+                                this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
+                                this.loading = false;
+                            }
                         }
+                    },
+                    (err: any) => {
+                        this.notify.error(err.error.errors);
+                        this.noFile = true;
                         this.loading = false;
                         return of(false);
                     }
@@ -581,18 +584,22 @@ export class DocumentViewerComponent implements OnInit {
             this.http.get(`../../rest/resources/${this.resId}/versionsInformations`).pipe(
                 tap((data: any) => {
                     const mainDocVersions = data.DOC;
+                    let mainDocPDFVersions = false;
                     let signedDocVersions = false;
                     let commentedDocVersions = false;
                     if (data.DOC[data.DOC.length - 1] !== undefined) {
                         signedDocVersions = data.SIGN.indexOf(data.DOC[data.DOC.length - 1]) > -1 ? true : false;
                         commentedDocVersions = data.NOTE.indexOf(data.DOC[data.DOC.length - 1]) > -1 ? true : false;
+                        mainDocPDFVersions = data.PDF.indexOf(data.DOC[data.DOC.length - 1]) > -1 ? true : false;
                     }
                     
                     this.file.subinfos = {
                         mainDocVersions: mainDocVersions,
                         signedDocVersions: signedDocVersions,
                         commentedDocVersions: commentedDocVersions,
+                        mainDocPDFVersions : mainDocPDFVersions
                     };
+                    
                     resolve(true);
                 }),
                 catchError((err: any) => {
@@ -915,7 +922,6 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     openResourceVersion(version: number, type: string) {
-        console.log(type + '_version');
         
         const title = type !== 'PDF' ? this.lang[type + '_version'] : `${this.lang.version} ${version}`;
 
@@ -929,6 +935,23 @@ export class DocumentViewerComponent implements OnInit {
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    unsignMainDocument() {
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.unsignDocument, msg: this.lang.confirmAction } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.put(`../../rest/resources/${this.resId}/unsign`, {})),
+            tap(() => {
+                this.notify.success(this.lang.documentUnsigned);
+                this.loadRessource(this.resId);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
                 return of(false);
             })
         ).subscribe();

@@ -46,7 +46,7 @@
                 <button mat-icon-button (click)="downloadOriginalFile()" [matTooltip]="lang.downloadOriginalFile">
                     <mat-icon class="fa fa-download"></mat-icon>
                 </button>
-                <button [disabled]="!functions.empty(file.subinfos) && file.subinfos.signedDocVersions" [class.disabledButton]="file.subinfos.signedDocVersions" *ngIf="editMode && resId !== null" mat-icon-button (click)="editResource()"
+                <button [disabled]="!functions.empty(file.subinfos) && file.subinfos.signedDocVersions" [class.disabledButton]="file.subinfos.signedDocVersions" *ngIf="editMode && resId !== null && !noConvertedFound" mat-icon-button (click)="editResource()"
                     [matTooltip]="!file.subinfos.signedDocVersions ? lang.editDocument : lang.documentSignedMsg">
                     <mat-icon class="fa fa-edit"></mat-icon>
                 </button>
@@ -113,4 +113,9 @@
     [title]="lang.saveModifications" style="position: absolute;z-index: 1;bottom: 40px;right: 60px;"
     (click)="saveMainDocument()">
     <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
+</button>
+<button mat-raised-button *ngIf="!isDocModified && mode === 'mainDocument' && resId !== null && !functions.empty(file.subinfos) && file.subinfos.signedDocVersions && privilegeService.hasCurrentUserPrivilege('sign_document');" color="warn"
+    [title]="lang.unsign" style="position: fixed;z-index: 1;bottom: 30px;right: 70px;"
+    (click)="unsignMainDocument()">
+    Supprimer la signature
 </button>

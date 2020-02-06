@@ -1481,4 +1481,5 @@ export const LANG_EN = {
     "banAutocompleteInput": "Autocomplete BAN input",
     "noMailContact" : "No (external) contact linked to this mail",
     "noSelectedAddress": "No selected address",
+    "documentUnsigned": "This document has been unsigned",
 };
