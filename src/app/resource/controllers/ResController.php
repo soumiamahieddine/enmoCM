@@ -441,26 +441,29 @@ class ResController extends ResourceControlController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
+        $docVersions = [];
         $pdfVersions = [];
         $signedVersions = [];
         $noteVersions = [];
         $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['version', 'filename']]);
         if (empty($resource['filename'])) {
-            return $response->withJson(['PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions]);
+            return $response->withJson(['DOC' => $docVersions, 'PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions]);
         }
 
         $convertedDocuments = AdrModel::getDocuments([
             'select'    => ['type', 'version'],
             'where'     => ['res_id = ?', 'type in (?)'],
-            'data'      => [$args['resId'], ['PDF', 'SIGN', 'NOTE']],
+            'data'      => [$args['resId'], ['DOC', 'PDF', 'SIGN', 'NOTE']],
             'orderBy'   => ['version ASC']
         ]);
         if (empty($convertedDocuments)) {
-            return $response->withJson(['PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions]);
+            return $response->withJson(['DOC' => [$resource['version']], 'PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions]);
         }
 
         foreach ($convertedDocuments as $convertedDocument) {
-            if ($convertedDocument['type'] == 'PDF') {
+            if ($convertedDocument['type'] == 'DOC') {
+                $docVersions[] = $convertedDocument['version'];
+            } elseif ($convertedDocument['type'] == 'PDF') {
                 $pdfVersions[] = $convertedDocument['version'];
             } elseif ($convertedDocument['type'] == 'SIGN') {
                 $signedVersions[] = $convertedDocument['version'];
@@ -468,8 +471,9 @@ class ResController extends ResourceControlController
                 $noteVersions[] = $convertedDocument['version'];
             }
         }
+        $docVersions[] = $resource['version'];
 
-        return $response->withJson(['PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions]);
+        return $response->withJson(['DOC' => $docVersions, 'PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions]);
     }
 
     public function getVersionFileContent(Request $request, Response $response, array $args)

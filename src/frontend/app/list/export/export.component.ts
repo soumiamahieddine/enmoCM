@@ -247,6 +247,7 @@ export class ExportComponent implements OnInit {
             }),
             tap((data: any) => {
                 this.dataAvailable = this.dataAvailable.concat(data.customFields);
+                this.dataAvailableClone = this.dataAvailableClone.concat(data.customFields);
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
