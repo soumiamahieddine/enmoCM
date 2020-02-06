@@ -357,6 +357,7 @@ $app->get('/resources/{resId}/contacts', \Contact\controllers\ContactController:
 $app->get('/resources/{resId}/emails', \Email\controllers\EmailController::class . ':getByResId');
 $app->get('/resources/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
 $app->get('/resources/{resId}/templates', \Template\controllers\TemplateController::class . ':getByResId');
+$app->get('/resources/{resId}/emailTemplates', \Template\controllers\TemplateController::class . ':getEmailTemplatesByResId');
 $app->get('/resources/{resId}/listInstance', \Entity\controllers\ListInstanceController::class . ':getByResId');
 $app->get('/resources/{resId}/visaCircuit', \Entity\controllers\ListInstanceController::class . ':getVisaCircuitByResId');
 $app->get('/resources/{resId}/opinionCircuit', \Entity\controllers\ListInstanceController::class . ':getOpinionCircuitByResId');
