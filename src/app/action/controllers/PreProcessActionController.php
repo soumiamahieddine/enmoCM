@@ -464,7 +464,7 @@ class PreProcessActionController
                         }
                         if (!empty($integratedResource)) {
                             $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => 'letterbox_coll']);
-                            if (empty($adrInfo['docserver_id'])) {
+                            if (empty($adrInfo['docserver_id']) || strtolower(pathinfo($adrInfo['filename'], PATHINFO_EXTENSION)) != 'pdf') {
                                 $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noMailConversion'];
                                 break;
                             }

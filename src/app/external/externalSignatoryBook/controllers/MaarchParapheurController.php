@@ -78,7 +78,7 @@ class MaarchParapheurController
         }
         if (!empty($mainResource[0]['filename'])) {
             $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resIdMaster'], 'collId' => 'letterbox_coll']);
-            if (empty($adrMainInfo['docserver_id'])) {
+            if (empty($adrMainInfo['docserver_id']) || strtolower(pathinfo($mainResource[0]['filename'], PATHINFO_EXTENSION)) != 'pdf') {
                 return ['error' => 'Document ' . $aArgs['resIdMaster'] . ' is not converted in pdf'];
             }
             $docserverMainInfo = DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
@@ -224,7 +224,7 @@ class MaarchParapheurController
                 foreach ($attachments as $key => $value) {
                     if (!$attachmentTypes[$value['attachment_type']]['sign']) {
                         $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $value['res_id'], 'collId' => 'attachments_coll']);
-                        if (empty($adrInfo['docserver_id'])) {
+                        if (empty($adrInfo['docserver_id']) || strtolower(pathinfo($adrInfo['filename'], PATHINFO_EXTENSION)) != 'pdf') {
                             return ['error' => 'Attachment ' . $value['res_id'] . ' is not converted in pdf'];
                         }
                         $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);
@@ -248,7 +248,7 @@ class MaarchParapheurController
                     $collId = 'attachments_coll';
                     
                     $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId]);
-                    if (empty($adrInfo['docserver_id'])) {
+                    if (empty($adrInfo['docserver_id']) || strtolower(pathinfo($adrInfo['filename'], PATHINFO_EXTENSION)) != 'pdf') {
                         return ['error' => 'Attachment ' . $resId . ' is not converted in pdf'];
                     }
                     $docserverInfo = DocserverModel::getByDocserverId(['docserverId' => $adrInfo['docserver_id']]);

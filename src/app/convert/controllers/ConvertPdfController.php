@@ -64,7 +64,7 @@ class ConvertPdfController
             $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'select' => ['docserver_id', 'path', 'filename', 'format']]);
         }
 
-        if (empty($resource)) {
+        if (empty($resource['docserver_id']) || empty($resource['path']) || empty($resource['filename'])) {
             return ['errors' => '[ConvertPdf] Resource does not exist'];
         }
 
