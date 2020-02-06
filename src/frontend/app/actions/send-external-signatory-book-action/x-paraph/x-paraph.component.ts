@@ -101,11 +101,11 @@ export class XParaphComponent implements OnInit {
         }
     }
 
-    checkValidParaph() {
+    isValidParaph() {
         if (this.additionalsInfos.attachments.length > 0 && this.currentWorkflow.length > 0 && this.currentAccount.login != '' && this.currentAccount.siret != '') {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 

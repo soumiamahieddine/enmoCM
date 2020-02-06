@@ -15,6 +15,9 @@
                     <b *ngIf="data.resIds.length > 1" color="primary" class="highlight">{{data.resIds.length}}
                         {{lang.elements}}</b> ?
                 </div>
+                <div *ngIf="data.resIds.length > 0" style="padding:10px;display: flex;flex-direction: column;">
+                    <mat-checkbox color="primary" *ngFor="let inteKey of integrationsInfo | keyvalue" (click)="toggleIntegration(inteKey.key)" [checked]="data.resource.integrations[inteKey.key]">{{lang[inteKey.key+'_doc']}}</mat-checkbox>
+                </div>
                 <div>
                     <app-maarch-paraph #maarchParapheur *ngIf="signatoryBookEnabled=='maarchParapheur'"
                         [additionalsInfos]="additionalsInfos" [externalSignatoryBookDatas]="externalSignatoryBookDatas">
@@ -45,7 +48,7 @@
     </mat-sidenav-container>
 </div>
 <div mat-dialog-actions class="actions">
-    <button mat-raised-button mat-button color="primary" [disabled]="loading || checkValidAction()"
+    <button mat-raised-button mat-button color="primary" [disabled]="loading || !isValidAction()"
         (click)="onSubmit()">{{lang.validate}}</button>
     <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
 </div>

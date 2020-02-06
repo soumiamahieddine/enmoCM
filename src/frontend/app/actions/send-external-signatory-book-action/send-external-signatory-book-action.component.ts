@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -30,6 +30,13 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
         steps: [],
         objectSent: 'attachment'
     };
+
+    integrationsInfo: any = {
+        inSignatureBook: {
+            icon: 'fas fa-file-signature'
+        }
+    };
+
     errors: any;
 
     @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
@@ -37,23 +44,17 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     @ViewChild('xParaph', { static: false }) xParaph: XParaphComponent;
     @ViewChild('maarchParapheur', { static: false }) maarchParapheur: MaarchParaphComponent;
 
-    constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendExternalSignatoryBookActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(
+        public http: HttpClient,
+        private notify: NotificationService,
+        public dialogRef: MatDialogRef<SendExternalSignatoryBookActionComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        private changeDetectorRef: ChangeDetectorRef) { }
 
     ngOnInit(): void {
         this.loading = true;
 
-        this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/checkExternalSignatoryBook', { resources: this.data.resIds })
-            .subscribe((data: any) => {
-                this.additionalsInfos = data.additionalsInfos;
-                if (this.additionalsInfos.attachments.length > 0) {
-                    this.signatoryBookEnabled = data.signatureBookEnabled;
-                }  
-                this.errors = data.errors;
-                this.loading = false;
-            }, (err: any) => {
-                this.notify.handleErrors(err);
-                this.loading = false;
-            });
+        this.checkExternalSignatureBook();
     }
 
     onSubmit() {
@@ -83,6 +84,28 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
         ).subscribe()
     } */
 
+    checkExternalSignatureBook() {
+        this.loading = true;
+        
+        return new Promise((resolve, reject) => {
+            this.http.post(`../../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/checkExternalSignatoryBook`, { resources: this.data.resIds }).pipe(
+                tap((data: any) => {
+                    this.additionalsInfos = data.additionalsInfos;
+                    if (this.additionalsInfos.attachments.length > 0) {
+                        this.signatoryBookEnabled = data.signatureBookEnabled;
+                    }  
+                    this.errors = data.errors;
+                    resolve(true);
+                }),
+                finalize(() => this.loading = false),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
     executeAction() {
         let realResSelected: string[];
         let datas: any;
@@ -107,11 +130,27 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
         ).subscribe();
     }
 
-    checkValidAction() {
+    isValidAction() {
         if (this[this.signatoryBookEnabled] !== undefined) {   
-            return this[this.signatoryBookEnabled].checkValidParaph();
+            return this[this.signatoryBookEnabled].isValidParaph();
         } else {
-            return true;
+            return false;
         }
     }
+
+    toggleIntegration(integrationId: string) {
+        this.http.put(`../../rest/resourcesList/integrations`, {resources : this.data.resIds, integrations : { [integrationId] : !this.data.resource.integrations[integrationId]}}).pipe(
+            tap(async () => {
+                this.data.resource.integrations[integrationId] = !this.data.resource.integrations[integrationId];
+                await this.checkExternalSignatureBook();
+                this.changeDetectorRef.detectChanges();
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+
 }
