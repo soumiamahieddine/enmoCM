@@ -445,11 +445,13 @@ class ResController extends ResourceControlController
         $pdfVersions = [];
         $signedVersions = [];
         $noteVersions = [];
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['version', 'filename']]);
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['version', 'filename', 'format']]);
         if (empty($resource['filename'])) {
             return $response->withJson(['DOC' => $docVersions, 'PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions]);
         }
 
+        $canConvert = ConvertPdfController::canConvert(['extension' => $resource['format']]);
+        
         $convertedDocuments = AdrModel::getDocuments([
             'select'    => ['type', 'version'],
             'where'     => ['res_id = ?', 'type in (?)'],
@@ -457,7 +459,7 @@ class ResController extends ResourceControlController
             'orderBy'   => ['version ASC']
         ]);
         if (empty($convertedDocuments)) {
-            return $response->withJson(['DOC' => [$resource['version']], 'PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions]);
+            return $response->withJson(['DOC' => [$resource['version']], 'PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions, 'convert' => $canConvert]);
         }
 
         foreach ($convertedDocuments as $convertedDocument) {
@@ -473,7 +475,7 @@ class ResController extends ResourceControlController
         }
         $docVersions[] = $resource['version'];
 
-        return $response->withJson(['DOC' => $docVersions, 'PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions]);
+        return $response->withJson(['DOC' => $docVersions, 'PDF' => $pdfVersions, 'SIGN' => $signedVersions, 'NOTE' => $noteVersions, 'convert' => $canConvert]);
     }
 
     public function getVersionFileContent(Request $request, Response $response, array $args)
