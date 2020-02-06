@@ -106,6 +106,7 @@ export class AttachmentsListComponent implements OnInit {
     }
 
     loadAttachments(resId: number) {
+        let timeStamp = +new Date();
         this.resId = resId;
         this.loading = true;
         this.filterAttachTypes = [];
@@ -120,7 +121,7 @@ export class AttachmentsListComponent implements OnInit {
                             label: element.typeLabel
                         });
                     }
-                    element.thumbnailUrl = '../../rest/attachments/' + element.resId + '/thumbnail';
+                    element.thumbnailUrl = '../../rest/attachments/' + element.resId + '/thumbnail?tsp=' + timeStamp;
                     element.canDelete = this.privilegeService.hasCurrentUserPrivilege('manage_attachments') || this.headerService.user.id === element.typist;
                 });
                 if (this.attachments.filter((attach: any) => attach.type === this.currentFilter).length === 0) {
