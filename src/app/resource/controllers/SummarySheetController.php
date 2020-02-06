@@ -517,6 +517,8 @@ class SummarySheetController
                         $nbSenders = count($senders);
                         $senders = [];
                         $senders[0] = $nbSenders . ' ' . _CONTACTS;
+                    } elseif (empty($senders)) {
+                        $senders = [''];
                     }
                 }
 
@@ -530,6 +532,8 @@ class SummarySheetController
                         $nbRecipients = count($recipients);
                         $recipients = [];
                         $recipients[0] = $nbRecipients . ' ' . _CONTACTS;
+                    } elseif (empty($recipients)) {
+                        $recipients = [''];
                     }
                 }
 
