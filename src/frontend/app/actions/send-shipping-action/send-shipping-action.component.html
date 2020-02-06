@@ -104,7 +104,7 @@
         </mat-sidenav-content>
         <mat-sidenav mode="side" fixedTopGap="56" position='end' [opened]="attachList.length > 0" style="width: 50%;">
             <div class="pjList">
-                <img *ngFor="let attach of attachList" title="{{attach.identifier}} : {{attach.title}}"
+                <img *ngFor="let attach of attachList" title="{{attach.chrono}} : {{attach.title}}"
                     src="../../rest/{{attach.type === 'attachments_coll' ? 'attachments' : 'resources'}}/{{attach.res_id}}/thumbnail" />
             </div>
         </mat-sidenav>
