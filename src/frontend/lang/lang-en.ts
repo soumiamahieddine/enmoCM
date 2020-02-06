@@ -1477,6 +1477,7 @@ export const LANG_EN = {
     "NOTE_version": "Annotated version",
     "SIGN_version": "Original version",
     "versions": "Versions",
+    "itemRemovedFromVisaTemplate": "The following users have been removed because they cannot make the action",
     "documentSignedMsg": "The document has been signed, you can't edit this document",
     "banAutocompleteInput": "Autocomplete BAN input",
     "noMailContact" : "No (external) contact linked to this mail",

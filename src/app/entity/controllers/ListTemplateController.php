@@ -583,14 +583,26 @@ class ListTemplateController
         }
         $circuit = $circuit[0];
 
+        $itemsRemoved = [];
         $listTemplateItems = ListTemplateItemModel::get(['select' => ['*'], 'where' => ['list_template_id = ?'], 'data' => [$circuit['id']]]);
         foreach ($listTemplateItems as $key => $value) {
             $listTemplateItems[$key]['labelToDisplay'] = UserModel::getLabelledUserById(['id' => $value['item_id']]);
             $listTemplateItems[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityById(['id' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
-        }
-        $circuit['items'] = $listTemplateItems;
 
-        return $response->withJson(['circuit' => $circuit]);
+            if ($queryParams['circuit'] == 'visaCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'visa_documents', 'userId' => $value['item_id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $value['item_id']])) {
+                $itemsRemoved[] = $listTemplateItems[$key]['labelToDisplay'];
+                unset($listTemplateItems[$key]);
+                continue;
+            } elseif ($queryParams['circuit'] == 'opinionCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'avis_documents', 'userId' => $value['item_id']])) {
+                $itemsRemoved[] = $listTemplateItems[$key]['labelToDisplay'];
+                unset($listTemplateItems[$key]);
+                continue;
+            }
+        }
+
+        $circuit['items'] = array_values($listTemplateItems);
+
+        return $response->withJson(['circuit' => $circuit, 'itemsRemoved' => $itemsRemoved]);
     }
 
     private static function controlItems(array $args)

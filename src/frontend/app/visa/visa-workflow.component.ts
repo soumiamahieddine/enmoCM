@@ -87,6 +87,9 @@ export class VisaWorkflowComponent implements OnInit {
         return new Promise((resolve, reject) => {
             this.http.get(route)
             .subscribe((data: any) => {
+                if (!this.functions.empty(data.itemsRemoved)) {
+                    this.notify.error(this.lang.itemRemovedFromVisaTemplate + ' : ' + data.itemsRemoved.join(', '));
+                }
                 if (data.listTemplates[0]) {
                     this.visaWorkflow.items = data.listTemplates[0].items.map((item: any) => {
                         return {
@@ -188,6 +191,11 @@ export class VisaWorkflowComponent implements OnInit {
 
         return new Promise((resolve, reject) => {
             this.http.get(`../../rest/resources/${this.resId}/defaultCircuit?circuit=visa`).pipe(
+                tap((data: any) => {
+                    if (!this.functions.empty(data.itemsRemoved)) {
+                        this.notify.error(this.lang.itemRemovedFromVisaTemplate + ' : ' + data.itemsRemoved.join(', '));
+                    }
+                }),
                 filter((data: any) => !this.functions.empty(data.circuit)),
                 tap((data: any) => {
                     if (!this.functions.empty(data.circuit)) {
@@ -254,9 +262,15 @@ export class VisaWorkflowComponent implements OnInit {
         this.loading = true;
         this.visaWorkflow.items = [];
         return new Promise((resolve, reject) => {
-            this.http.get("../../rest/resources/" + resId + "/visaCircuit")
-                .subscribe((data: any) => {
-                    data.forEach((element: any) => {
+            this.http.get("../../rest/resources/" + resId + "/visaCircuit").pipe(
+                tap((data: any) => {
+                    if (!this.functions.empty(data.itemsRemoved)) {
+                        this.notify.error(this.lang.itemRemovedFromVisaTemplate + ' : ' + data.itemsRemoved.join(', '));
+                    }
+                }),
+                filter((data: any) => !this.functions.empty(data.circuit)),
+                tap((data: any) => {
+                    data.circuit.forEach((element: any) => {
                         this.visaWorkflow.items.push(
                             {
                                 ...element,
@@ -264,11 +278,16 @@ export class VisaWorkflowComponent implements OnInit {
                             });
                     });
                     this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items))
+                }),
+                finalize(() => {
                     this.loading = false;
                     resolve(true);
-                }, (err: any) => {
-                    this.notify.handleErrors(err);
-                });
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
         });
     }
 
@@ -276,6 +295,11 @@ export class VisaWorkflowComponent implements OnInit {
         this.loading = true;
         this.visaWorkflow.items = [];
         this.http.get("../../rest/resources/" + resId + "/defaultCircuit?circuit=visaCircuit").pipe(
+            tap((data: any) => {
+                if (!this.functions.empty(data.itemsRemoved)) {
+                    this.notify.error(this.lang.itemRemovedFromVisaTemplate + ' : ' + data.itemsRemoved.join(', '));
+                }
+            }),
             filter((data: any) => !this.functions.empty(data.circuit)),
             tap((data: any) => {
                 data.circuit.items.forEach((element: any) => {

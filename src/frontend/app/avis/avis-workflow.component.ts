@@ -204,6 +204,11 @@ export class AvisWorkflowComponent implements OnInit {
 
         return new Promise((resolve, reject) => {
             this.http.get(`../../rest/resources/${this.resId}/defaultCircuit?circuit=opinion`).pipe(
+                tap((data: any) => {
+                    if (!this.functions.empty(data.itemsRemoved)) {
+                        this.notify.error(this.lang.itemRemovedFromVisaTemplate + ' : ' + data.itemsRemoved.join(', '));
+                    }
+                }),
                 filter((data: any) => !this.functions.empty(data.circuit)),
                 tap((data: any) => {
                     if (!this.functions.empty(data.circuit)) {
@@ -268,21 +273,32 @@ export class AvisWorkflowComponent implements OnInit {
         this.loading = true;
         this.avisWorkflow.items = [];
         return new Promise((resolve, reject) => {
-            this.http.get("../../rest/resources/" + resId + "/opinionCircuit")
-            .subscribe((data: any) => {
-                data.forEach((element: any) => {
-                    this.avisWorkflow.items.push(
-                        {
-                            ...element,
-                            difflist_type: this.mode === 'circuit' ? 'AVIS_CIRCUIT' : 'entity_id'
-                        });
-                });
-                this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items))
-                this.loading = false;
-                resolve(true);
-            }, (err: any) => {
-                this.notify.handleErrors(err);
-            });
+            this.http.get("../../rest/resources/" + resId + "/opinionCircuit").pipe(
+                tap((data: any) => {
+                    if (!this.functions.empty(data.itemsRemoved)) {
+                        this.notify.error(this.lang.itemRemovedFromVisaTemplate + ' : ' + data.itemsRemoved.join(', '));
+                    }
+                }),
+                filter((data: any) => !this.functions.empty(data.circuit)),
+                tap((data: any) => {
+                    data.circuit.forEach((element: any) => {
+                        this.avisWorkflow.items.push(
+                            {
+                                ...element,
+                                difflist_type: this.mode === 'circuit' ? 'AVIS_CIRCUIT' : 'entity_id'
+                            });
+                    });
+                    this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items))
+                }),
+                finalize(() => {
+                    this.loading = false;
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
         });
         
     }
@@ -315,6 +331,11 @@ export class AvisWorkflowComponent implements OnInit {
         this.loading = true;
         this.avisWorkflow.items = [];
         this.http.get("../../rest/resources/" + resId + "/defaultCircuit?circuit=opinion").pipe(
+            tap((data: any) => {
+                if (!this.functions.empty(data.itemsRemoved)) {
+                    this.notify.error(this.lang.itemRemovedFromVisaTemplate + ' : ' + data.itemsRemoved.join(', '));
+                }
+            }),
             filter((data: any) => !this.functions.empty(data.circuit)),
             tap((data: any) => {
                 data.circuit.items.forEach((element: any) => {

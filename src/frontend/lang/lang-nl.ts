@@ -1502,6 +1502,7 @@ export const LANG_NL = {
     "NOTE_version": "Annotated version", //_TO_TRANSLATE
     "SIGN_version": "Original version", //_TO_TRANSLATE
     "versions": "Versions", //_TO_TRANSLATE
+    "itemRemovedFromVisaTemplate": "The following users have been removed because they cannot make the action", //_TO_TRANSLATE
     "documentSignedMsg": "The document has been signed, you can't edit this document", //_TO_TRANSLATE
     "banAutocompleteInput": "Autocomplete BAN input", //_TO_TRANSLATE
     "noMailContact" : "No (external) contact linked to this mail", //_TO_TRANSLATE
