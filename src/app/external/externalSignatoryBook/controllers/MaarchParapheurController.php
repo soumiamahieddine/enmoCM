@@ -32,6 +32,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\CurlModel;
+use SrcCore\models\ValidatorModel;
 use User\controllers\UserController;
 use User\models\UserModel;
 use User\models\UserSignatureModel;
@@ -429,7 +430,7 @@ class MaarchParapheurController
             if (count($args['recipient']) > 1) {
                 $contact = count($args['recipient']) . ' ' . _RECIPIENTS;
             } else {
-                $contact = $contact[0];
+                $contact = $args['recipient'][0];
             }
             $metadata[_RECIPIENTS] = $contact;
         }
@@ -995,5 +996,43 @@ class MaarchParapheurController
         }
 
         return $response->withJson($curlResponse['response']);
+    }
+
+    public static function userExists($args)
+    {
+        ValidatorModel::notEmpty($args, ['userId']);
+        ValidatorModel::intVal($args, ['userId']);
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
+        if (empty($loadedXml)) {
+            return false;
+        } elseif ($loadedXml->signatoryBookEnabled != 'maarchParapheur') {
+            return false;
+        }
+
+        foreach ($loadedXml->signatoryBook as $signatoryBook) {
+            if ($signatoryBook->id == "maarchParapheur") {
+                $url      = $signatoryBook->url;
+                $userId   = $signatoryBook->userId;
+                $password = $signatoryBook->password;
+                break;
+            }
+        }
+        if (empty($url) || empty($userId) || empty($password)) {
+            return false;
+        }
+
+        $curlResponse = CurlModel::execSimple([
+            'url'           => rtrim($url, '/') . '/rest/users/' . $args['userId'],
+            'basicAuth'     => ['user' => $userId, 'password' => $password],
+            'headers'       => ['content-type:application/json'],
+            'method'        => 'GET'
+        ]);
+
+        if (empty($curlResponse['response']['user'])) {
+            return false;
+        }
+
+        return true;
     }
 }

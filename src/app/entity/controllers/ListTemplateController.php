@@ -17,6 +17,7 @@ namespace Entity\controllers;
 use Entity\models\EntityModel;
 use Entity\models\ListTemplateItemModel;
 use Entity\models\ListTemplateModel;
+use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use Resource\models\ResModel;
@@ -307,50 +308,33 @@ class ListTemplateController
             }
         }
 
-        $itemsRemoved = false;
+        $itemsRemoved = [];
         $listTemplates = ListTemplateModel::get(['select' => ['*'], 'where' => $where, 'data' => $data]);
         foreach ($listTemplates as $key => $listTemplate) {
             $listTemplateItems = ListTemplateItemModel::get(['select' => ['*'], 'where' => ['list_template_id = ?'], 'data' => [$listTemplate['id']]]);
             foreach ($listTemplateItems as $itemKey => $value) {
-                if ($listTemplate['type'] == 'visaCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'visa_documents', 'userId' => $value['item_id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $value['item_id']])) {
-                    unset($listTemplateItems[$itemKey]);
-                    $itemsRemoved = true;
-                    continue;
-                } elseif ($listTemplate['type'] == 'opinionCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'avis_documents', 'userId' => $value['item_id']])) {
-                    unset($listTemplateItems[$itemKey]);
-                    $itemsRemoved = true;
-                    continue;
-                }
-
                 if ($value['item_type'] == 'entity') {
                     $listTemplateItems[$itemKey]['labelToDisplay'] = Entitymodel::getById(['id' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
                     $listTemplateItems[$itemKey]['descriptionToDisplay'] = '';
                 } else {
                     $user = UserModel::getById(['id' => $value['item_id'], 'select' => ['firstname', 'lastname', 'external_id']]);
+                    if ($listTemplate['type'] == 'visaCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'visa_documents', 'userId' => $value['item_id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $value['item_id']])) {
+                        unset($listTemplateItems[$itemKey]);
+                        $itemsRemoved[] = "{$user['firstname']} {$user['lastname']}";
+                        continue;
+                    } elseif ($listTemplate['type'] == 'opinionCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'avis_documents', 'userId' => $value['item_id']])) {
+                        unset($listTemplateItems[$itemKey]);
+                        $itemsRemoved[] = "{$user['firstname']} {$user['lastname']}";
+                        continue;
+                    }
                     $listTemplateItems[$itemKey]['labelToDisplay'] = "{$user['firstname']} {$user['lastname']}";
                     $listTemplateItems[$itemKey]['descriptionToDisplay'] = UserModel::getPrimaryEntityById(['id' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
 
                     $externalId = json_decode($user['external_id'], true);
                     if (!empty($queryParams['maarchParapheur']) && !empty($externalId['maarchParapheur'])) {
-                        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
-                        if ($loadedXml->signatoryBookEnabled == 'maarchParapheur') {
-                            foreach ($loadedXml->signatoryBook as $signatoryBook) {
-                                if ($signatoryBook->id == "maarchParapheur") {
-                                    $url      = $signatoryBook->url;
-                                    $userId   = $signatoryBook->userId;
-                                    $password = $signatoryBook->password;
-                                    break;
-                                }
-                            }
-                            $curlResponse = CurlModel::execSimple([
-                                'url'           => rtrim($url, '/') . '/rest/users/' . $externalId['maarchParapheur'],
-                                'basicAuth'     => ['user' => $userId, 'password' => $password],
-                                'headers'       => ['content-type:application/json'],
-                                'method'        => 'GET'
-                            ]);
-                            if (!empty($curlResponse['response']['user'])) {
-                                $listTemplateItems[$itemKey]['externalId']['maarchParapheur'] = $externalId['maarchParapheur'];
-                            }
+                        $userExists = MaarchParapheurController::userExists(['userId' => $externalId['maarchParapheur']]);
+                        if (!empty($userExists)) {
+                            $listTemplateItems[$itemKey]['externalId']['maarchParapheur'] = $externalId['maarchParapheur'];
                         }
                     }
                 }
