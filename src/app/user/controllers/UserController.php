@@ -982,7 +982,7 @@ class UserController
         ]);
 
         return $response->withJson([
-            'signature' => UserSignatureModel::getById(['id' => $aArgs['signatureId']])
+            'signature' => UserSignatureModel::getById(['id' => $aArgs['signatureId'], 'select' => ['id', 'user_serial_id', 'signature_label']])
         ]);
     }
 

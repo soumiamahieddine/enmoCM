@@ -22,6 +22,8 @@ use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
 use Convert\models\AdrModel;
+use Docserver\controllers\DocserverController;
+use Docserver\models\DocserverModel;
 use Entity\models\ListInstanceModel;
 use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
@@ -35,6 +37,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserGroupModel;
 use User\models\UserModel;
@@ -366,6 +369,94 @@ class SignatureBookController
         }
 
         return $response->withJson(['resources' => $resources]);
+    }
+
+    public function signResource(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
+//        } elseif (!SignatureBookController::isResourceInSignatureBook(['resId' => $args['resId'], 'userId' => $GLOBALS['id']])) {
+//            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $body = $request->getParsedBody();
+        if (!Validator::intVal()->notEmpty()->validate($body['signatureId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body signatureId is empty or not an integer']);
+        }
+
+        $signature = UserSignatureModel::getById(['id' => $body['signatureId'], 'select' => ['user_serial_id', 'signature_path', 'signature_file_name']]);
+        if (empty($signature)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Signature does not exist']);
+        } elseif ($signature['user_serial_id'] != $GLOBALS['id']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Signature out of perimeter']);
+        }
+
+        $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
+        if (empty($docserver['path_template']) || !is_dir($docserver['path_template'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver TEMPLATES does not exist']);
+        }
+        $signaturePath = $docserver['path_template'] . str_replace('#', '/', $signature['signature_path']) . $signature['signature_file_name'];
+        if (!file_exists($signaturePath)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Signature not found on docserver']);
+        }
+
+        $convertedDocument = AdrModel::getDocuments([
+            'select'    => ['docserver_id', 'path', 'filename'],
+            'where'     => ['res_id = ?', 'type = ?'],
+            'data'      => [$args['resId'], 'PDF'],
+            'orderBy'   => ['version DESC'],
+            'limit'     => 1
+        ]);
+        if (empty($convertedDocument)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Converted document does not exist']);
+        }
+        $convertedDocument = $convertedDocument[0];
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+        if (empty($docserver['path_template']) || !is_dir($docserver['path_template'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
+        }
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
+        if (!file_exists($pathToDocument)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+        }
+
+        //TODO params height width
+        //TODO date in block
+        $tmpPath = CoreConfigModel::getTmpPath();
+        $command = "java -jar modules/visa/dist/SignPdf.jar {$pathToDocument} {$signaturePath} 150 100 {$tmpPath}";
+        exec($command, $output, $return);
+
+        $signedDocument = file_get_contents($tmpPath.$convertedDocument['filename']);
+        if ($signedDocument === false) {
+            return $response->withStatus(400)->withJson(['errors' => 'Signed document not found : ' . implode($output)]);
+        }
+        unlink($tmpPath.$convertedDocument['filename']);
+
+        $storeResult = DocserverController::storeResourceOnDocServer([
+            'collId'            => 'letterbox_coll',
+            'docserverTypeId'   => 'DOC',
+            'encodedResource'   => base64_encode($signedDocument),
+            'format'            => 'pdf'
+        ]);
+        if (!empty($storeResult['errors'])) {
+            return ['errors' => "[storeResourceOnDocServer] {$storeResult['errors']}"];
+        }
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['version']]);
+        AdrModel::createDocumentAdr([
+            'resId'         => $args['resId'],
+            'type'          => 'SIGN',
+            'docserverId'   => $storeResult['docserver_id'],
+            'path'          => $storeResult['directory'],
+            'filename'      => $storeResult['file_destination_name'],
+            'version'       => $resource['version'],
+            'fingerprint'   => $storeResult['fingerPrint']
+        ]);
+
+        //TODO update signatory listinstance
+        //TODO mettre à jour departure_date ?
+        //TODO history
+
+        return $response->withStatus(204);
     }
 
     public function unsignResource(Request $request, Response $response, array $args)
