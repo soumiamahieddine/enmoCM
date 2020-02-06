@@ -34,3 +34,7 @@
     overflow-x: hidden;
     max-height: 165px;
 }
+
+.depList ::ng-deep.mat-form-field-infix {
+    margin-left: -20px;
+}
