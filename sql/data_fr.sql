@@ -665,7 +665,7 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'Maileva_Sended';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'Maileva_Sended';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'Maileva_Sended';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('Maileva_Sended', 'Courriers transmis via Maileva', 'Courriers transmis via Maileva', 'dest_user = @user AND res_id IN(SELECT distinct r.res_id_master from res_attachments r inner join shippings s on s.attachment_id = r.res_id) and status not in (''END'')', 'letterbox_coll', 'Y', 'N', 'Y',200);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('Maileva_Sended', 'Courriers transmis via Maileva', 'Courriers transmis via Maileva', 'dest_user = @user AND res_id IN(SELECT distinct r.res_id_master from res_attachments r inner join shippings s on s.document_id = r.res_id) and status not in (''END'')', 'letterbox_coll', 'Y', 'N', 'Y',200);
 DELETE FROM baskets WHERE basket_id = 'ToArcBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'ToArcBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'ToArcBasket';

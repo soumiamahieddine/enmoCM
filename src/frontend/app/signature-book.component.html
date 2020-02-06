@@ -24,14 +24,13 @@
                 </i>
             </div>
         </div>
-        <div id="labelSignatureBook" title="{{signatureBook.currentAction.actionLabel}}" ><div>{{signatureBook.currentAction.actionLabel}}</div></div>
         <div id="closeSignatureBook">
             <i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i>
         </div>
         <div class="actions">
             <i style="cursor: pointer;vertical-align: middle;" title="{{lang.linkDetails}}" class="fa fa-info-circle fa-2x" (click)="backToDetails()"></i>&nbsp;
             <select id="signatureBookActions">
-                <option *ngFor="let option of signatureBook.actions" value="{{option.value}}">{{option.label}}</option>
+                <option *ngFor="let option of signatureBook.actions" value="{{option.id}}">{{option.label}}</option>
             </select>
             <input name="send" id="send" value="{{lang.validate}}" class="button" type="button" (click)="validForm()">
         </div>

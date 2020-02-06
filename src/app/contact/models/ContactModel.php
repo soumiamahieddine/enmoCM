@@ -126,24 +126,6 @@ class ContactModel
         }
     }
 
-    public static function getLabelledContactWithAddress(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['contactId', 'addressId']);
-        ValidatorModel::intVal($aArgs, ['contactId', 'addressId']);
-
-        $rawContact = ContactModel::getByAddressId(['addressId' => $aArgs['addressId'], 'select' => ['firstname', 'lastname']]);
-
-        $labelledContact = '';
-        if (!empty($rawContact)) {
-            if (empty($rawContact['firstname']) && empty($rawContact['lastname'])) {
-                $rawContact = ContactModel::getById(['id' => $aArgs['contactId'], 'select' => ['firstname', 'lastname']]);
-            }
-            $labelledContact = $rawContact['firstname']. ' ' .$rawContact['lastname'];
-        }
-
-        return $labelledContact;
-    }
-
     public static function purgeContact($aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['id']);
@@ -154,25 +136,6 @@ class ContactModel
         if ($count[0]['count'] < 1) {
             ContactModel::delete(['where' => ['id = ?'], 'data' => [$aArgs['id']]]);
         }
-    }
-
-    public static function getByAddressId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['addressId']);
-        ValidatorModel::intVal($aArgs, ['addressId']);
-
-        $aContact = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['contact_addresses'],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['addressId']],
-        ]);
-
-        if (empty($aContact[0])) {
-            return [];
-        }
-
-        return $aContact[0];
     }
 
     public static function getCivilities()
