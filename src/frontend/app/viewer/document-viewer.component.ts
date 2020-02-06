@@ -511,7 +511,7 @@ export class DocumentViewerComponent implements OnInit {
         newWindow.document.title = this.title;
     }
 
-    loadRessource(resId: any, target: string = 'mainDocument') {
+    async loadRessource(resId: any, target: string = 'mainDocument') {
         this.loading = true;
         if (target === 'attachment') {
             this.requestWithLoader(`../../rest/attachments/${resId}/content?mode=base64`).subscribe(
@@ -541,58 +541,66 @@ export class DocumentViewerComponent implements OnInit {
                 }
             );
         } else {
-            this.requestWithLoader(`../../rest/resources/${resId}/content?mode=base64`).subscribe(
-                (data: any) => {
-                    if (data.encodedDocument) {
-                        this.loadMainDocumentSubInformations();
-                        this.file.contentMode = 'route';
-                        this.file.format = data.originalFormat;
-                        this.file.content = `../../rest/resources/${resId}/originalContent`;
-                        this.file.contentView = `../../rest/resources/${resId}/content?mode=view`;
-                        this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
+            await this.loadMainDocumentSubInformations();
+            if (this.file.subinfos.mainDocVersions.length > 0) {
+                this.requestWithLoader(`../../rest/resources/${resId}/content?mode=base64`).subscribe(
+                    (data: any) => {
+                        if (data.encodedDocument) {
+                            this.loadMainDocumentSubInformations();
+                            this.file.contentMode = 'route';
+                            this.file.format = data.originalFormat;
+                            this.file.content = `../../rest/resources/${resId}/originalContent`;
+                            this.file.contentView = `../../rest/resources/${resId}/content?mode=view`;
+                            this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
+                            this.loading = false;
+                        }
+                    },
+                    (err: any) => {
+                        if (err.error.errors === 'Converted Document not found') {
+                            this.file.contentMode = 'route';
+                            this.file.content = `../../rest/resources/${resId}/originalContent`;
+                            this.noConvertedFound = true;
+                        } else {
+                            this.notify.error(err.error.errors);
+                            this.noFile = true;
+                        }
                         this.loading = false;
+                        return of(false);
                     }
-                },
-                (err: any) => {
-                    if (err.error.errors === 'Document has no file') {
-                        this.noFile = true;
-                    } else if (err.error.errors === 'Converted Document not found') {
-                        this.file.contentMode = 'route';
-                        this.file.content = `../../rest/resources/${resId}/originalContent`;
-                        this.noConvertedFound = true;
-                    } else {
-                        this.notify.error(err.error.errors);
-                        this.noFile = true;
-                    }
-                    this.loading = false;
-                    return of(false);
-                }
-            );
+                );
+            } else {
+                this.noFile = true;
+                this.loading = false;
+            }
+            
         }
     }
 
     loadMainDocumentSubInformations() {
-        this.http.get(`../../rest/resources/${this.resId}/versionsInformations`).pipe(
-            tap((data: any) => {
-                const mainDocVersions = data.PDF;
-                let signedDocVersions = false;
-                let commentedDocVersions = false;
-                if (data.PDF[data.PDF.length - 1] !== undefined) {
-                    signedDocVersions = data.SIGN.indexOf(data.PDF[data.PDF.length - 1]) > -1 ? true : false;
-                    commentedDocVersions = data.NOTE.indexOf(data.PDF[data.PDF.length - 1]) > -1 ? true : false;
-                }
-                
-                this.file.subinfos = {
-                    mainDocVersions: mainDocVersions,
-                    signedDocVersions: signedDocVersions,
-                    commentedDocVersions: commentedDocVersions,
-                };
-            }),
-            catchError((err: any) => {
-                this.notify.handleSoftErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/resources/${this.resId}/versionsInformations`).pipe(
+                tap((data: any) => {
+                    const mainDocVersions = data.DOC;
+                    let signedDocVersions = false;
+                    let commentedDocVersions = false;
+                    if (data.DOC[data.DOC.length - 1] !== undefined) {
+                        signedDocVersions = data.SIGN.indexOf(data.DOC[data.DOC.length - 1]) > -1 ? true : false;
+                        commentedDocVersions = data.NOTE.indexOf(data.DOC[data.DOC.length - 1]) > -1 ? true : false;
+                    }
+                    
+                    this.file.subinfos = {
+                        mainDocVersions: mainDocVersions,
+                        signedDocVersions: signedDocVersions,
+                        commentedDocVersions: commentedDocVersions,
+                    };
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe(); 
+        });
     }
 
     editTemplate(templateId: number) {
