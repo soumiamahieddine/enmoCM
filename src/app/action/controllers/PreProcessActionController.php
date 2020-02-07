@@ -700,12 +700,10 @@ class PreProcessActionController
                         $resIdFound = true;
                         $attachmentId = $attachment['res_id'];
                         $convertedDocument = ConvertPdfController::getConvertedPdfById([
-                            'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
                             'resId'     => $attachmentId,
-                            'collId'    => 'attachments_coll',
-                            'type'      => 'PDF'
+                            'collId'    => 'attachments_coll'
                         ]);
-                        if (empty($convertedDocument['docserver_id'])) {
+                        if (empty($convertedDocument['docserver_id']) || strtolower(pathinfo($convertedDocument['filename'], PATHINFO_EXTENSION)) != 'pdf') {
                             $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resourcesChrono[$valueResId], 'reason' => 'noAttachmentConversion', 'attachmentIdentifier' => $attachment['chrono']];
                             unset($aAttachments[$key]);
                             break;
@@ -749,12 +747,10 @@ class PreProcessActionController
                     $resIdFound = true;
 
                     $convertedDocument = ConvertPdfController::getConvertedPdfById([
-                        'select' => ['docserver_id', 'path', 'filename', 'fingerprint'],
                         'resId'  => $valueResId,
-                        'collId' => 'letterbox_coll',
-                        'type'   => 'PDF'
+                        'collId' => 'letterbox_coll'
                     ]);
-                    if (empty($convertedDocument['docserver_id'])) {
+                    if (empty($convertedDocument['docserver_id']) || strtolower(pathinfo($convertedDocument['filename'], PATHINFO_EXTENSION)) != 'pdf') {
                         $canNotSend[] = [
                             'resId'  => $valueResId, 'chrono' => $resInfo['chrono'], 'reason' => 'noMailConversion'
                         ];

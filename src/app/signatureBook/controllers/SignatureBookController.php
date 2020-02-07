@@ -145,7 +145,7 @@ class SignatureBookController
 
             $realId = $value['res_id'];
 
-            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $realId, 'collId' => 'attachments_coll']);
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['resId' => $realId, 'collId' => 'attachments_coll']);
 
             if (empty($convertedAttachment['errors'])) {
                 $isConverted = true;
@@ -210,7 +210,7 @@ class SignatureBookController
             $pathToFind     = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
             $isConverted    = false;
 
-            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => [1], 'resId' => $realId, 'collId' => 'attachments_coll']);
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['resId' => $realId, 'collId' => 'attachments_coll']);
 
             if (empty($convertedAttachment['errors'])) {
                 $isConverted = true;
