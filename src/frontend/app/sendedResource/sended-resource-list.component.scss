@@ -11,10 +11,13 @@
 
     .type {
         .badge {
+            overflow: hidden;
+            text-overflow: ellipsis;
             font-size: 10px !important;
             color: white;
             font-weight: normal;
             width: 100px;
+            border-radius: .25em;
         }
 
     }

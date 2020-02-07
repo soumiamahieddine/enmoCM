@@ -4,7 +4,7 @@
     </div>
 </ng-container>
 <ng-template #elseLoading>
-    <div class="row">
+    <div class="row" style="margin: 0px;">
         <div class="col-md-12" style="padding-bottom: 10px;">
             <mat-button-toggle-group *ngIf="sendedResources.length > 0" class="filterTypes" (change)="filterType($event)">
                 <mat-button-toggle [checked]="currentFilter === ''" [value]="''">Tous</mat-button-toggle>
@@ -34,10 +34,10 @@
                         Pris en charge : <b>{{row.creationDate | timeAgo : 'full'}}</b>
                     </span>
                 </div>
-                <div style="display: grid;grid-template-columns: 100px 1fr 170px;width: 100%;grid-gap: 10px;align-items: center;">
+                <div style="display: grid;grid-template-columns: 100px 1fr 170px;width: 100%;grid-gap: 10px;align-items: center;padding:10px;">
                     <div class="dateType">
                         <span class="type">
-                            <span class="badge" [style.background]="row.typeColor">{{lang[row.type]}}</span>
+                            <span class="badge" [style.background]="row.typeColor" [title]="lang[row.type]">{{lang[row.type]}}</span>
                             <div class="attach">
                                 <i *ngIf="row.hasMainDoc" class="fas fa-file" title="Document attaché"></i>
                                 <i *ngIf="row.hasAttach" class="fas fa-paperclip" title="Pièce(s) jointe(s) attachée(s)"></i>
@@ -51,10 +51,10 @@
                         
                     </div>
                     <div class="contact">
-                        <span *ngIf="row.sender" style="white-space: pre;overflow: hidden;text-overflow: ellipsis;">
+                        <span *ngIf="row.sender" style="white-space: pre;overflow: hidden;text-overflow: ellipsis;" [title]="row.sender">
                             De : {{row.sender}}
                         </span>
-                        <span style="white-space: pre;overflow: hidden;text-overflow: ellipsis;">
+                        <span style="white-space: pre;overflow: hidden;text-overflow: ellipsis;" [title]="row.recipients">
                             Pour : {{row.recipients}}
                         </span>
                     </div>
