@@ -466,6 +466,9 @@ define("_UPDATE_AVIS_CIRCUIT", "Opinion workflow updated"); //TO TRANSLATE
 define("_VISA_CIRCUIT_DELETED", "Visa workflow deleted"); //TO TRANSLATE
 define("_AVIS_CIRCUIT_DELETED", "Opinion workflow updated"); //TO TRANSLATE
 
+define("_COMMUNICATION_MEANS_VALIDATOR", "Communication Means should be an url or an email"); //TO TRANSLATE
+define("_EXTERNALID_M2M_VALIDATOR", "Wrong format for externalId[m2m]. It must be SIRET/entityId"); //TO TRANSLATE
+
 define("_ACKNOWLEDGEMENT_RECEIPT", "Acknowledgement Receipt"); //TO TRANSLATE
 define("_CREATED_BY", "Created by"); //TO TRANSLATE
 define("_SENT_DATE", "Sent "); //TO TRANSLATE

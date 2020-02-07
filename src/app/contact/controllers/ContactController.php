@@ -140,6 +140,8 @@ class ContactController
                 $body['communicationMeans'] = ['email' => $body['communicationMeans']];
             } elseif (filter_var($body['communicationMeans'], FILTER_VALIDATE_URL)) {
                 $body['communicationMeans'] = ['url' => $body['communicationMeans']];
+            } else {
+                return $response->withStatus(400)->withJson(['errors' => _COMMUNICATION_MEANS_VALIDATOR]);
             }
         }
 
@@ -1036,7 +1038,7 @@ class ContactController
         if (!empty($body['externalId']['m2m'])) {
             $businessId = explode("/", $body['externalId']['m2m']);
             if (!AnnuaryController::isSiretNumber(['siret' => $businessId[0]])) {
-                return ['errors' => "Wrong format for externalId[m2m]. It must be SIRET/entityId"];
+                return ['errors' => _EXTERNALID_M2M_VALIDATOR];
             }
         }
 

@@ -460,6 +460,9 @@ define("_UPDATE_AVIS_CIRCUIT", "Circuit d'avis mis à jour");
 define("_VISA_CIRCUIT_DELETED", "Circuit de visa supprimé");
 define("_AVIS_CIRCUIT_DELETED", "Circuit d'avis supprimé");
 
+define("_COMMUNICATION_MEANS_VALIDATOR", "Le moyen de communication doit être une uri ou un courriel");
+define("_EXTERNALID_M2M_VALIDATOR", "L'identifiant Maarch2Maarch doit être au format SIRET/entityId");
+
 define("_ACKNOWLEDGEMENT_RECEIPT", "Accusé de réception");
 define("_CREATED_BY", "Créé par");
 define("_SENT_DATE", "Envoyé le");
