@@ -68,6 +68,10 @@ class AcknowledgementReceiptController
 
     public static function getById(Request $request, Response $response, array $args)
     {
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route param id is not an integer']);
+        }
+
         $acknowledgementReceipt = AcknowledgementReceiptModel::getByIds([
             'select'  => ['id', 'res_id', 'type', 'format', 'user_id', 'creation_date', 'send_date', 'contact_id'],
             'ids'     => [$args['id']]

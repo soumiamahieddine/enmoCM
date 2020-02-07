@@ -63,9 +63,9 @@ $app->put('/actions/{id}', \Action\controllers\ActionController::class . ':updat
 $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':delete');
 
 //Acknowledgement Receipt
-$app->post('/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
-$app->get('/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getById');
-$app->get('/acknowledgementReceipt/{id}/content', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
+$app->post('/acknowledgementReceipts', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
+$app->get('/acknowledgementReceipts/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getById');
+$app->get('/acknowledgementReceipts/{id}/content', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
 
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');
