@@ -1,7 +1,7 @@
 <form>
     <input type="hidden" [formControl]="controlAutocomplete">
     <mat-form-field floatLabel="never" class="input-form depList" *ngIf="!controlAutocomplete.disabled">
-        <button mat-button matPrefix [matMenuTriggerFor]="menu"(click)="$event.stopPropagation()">
+        <button mat-button matPrefix [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()" [disabled]="adminMode">
             {{addressBANCurrentDepartment}} <i class="fas fa-angle-down"></i>
         </button>
         <mat-menu #menu="matMenu">
