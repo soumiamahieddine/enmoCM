@@ -1382,7 +1382,7 @@ export const LANG_FR = {
     "contactsList": "Liste des contacts",
     "listConfiguration": "Paramétrer l'affichage de la liste",
     "noticeGroupeOrder": "Glisser-déposer les groupes pour définir l'ordre",
-    "searchAddressBan": "Recherchez une adresse via la BAN",
+    "searchAddressBan": "Recherchez une adresse",
     "searchAddressDb": "Rechercher dans la Base Adresse Nationale",
     "switchManualAddress": "Basculer en saisie manuelle",
     "targetDepartment": "Département cible",
