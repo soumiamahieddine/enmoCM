@@ -29,7 +29,7 @@ use User\models\UserModel;
 
 class AcknowledgementReceiptController
 {
-    public static function get(Request $request, Response $response, array $args)
+    public static function getByResId(Request $request, Response $response, array $args)
     {
         if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);

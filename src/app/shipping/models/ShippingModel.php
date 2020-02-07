@@ -48,7 +48,7 @@ class ShippingModel
         ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy']);
         ValidatorModel::intType($args, ['limit']);
 
-        $contacts = DatabaseModel::select([
+        $shippings = DatabaseModel::select([
             'select'    => $args['select'],
             'table'     => ['shippings'],
             'where'     => empty($args['where']) ? [] : $args['where'],
@@ -58,6 +58,6 @@ class ShippingModel
             'limit'     => empty($args['limit']) ? 0 : $args['limit']
         ]);
 
-        return $contacts;
+        return $shippings;
     }
 }

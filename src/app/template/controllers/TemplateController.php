@@ -458,13 +458,9 @@ class TemplateController
 
         $queryParams = $request->getQueryParams();
 
-        if (!empty($queryParams['attachmentType'])) {
-            $where[] = 'templates.template_attachment_type in (?)';
-            $data[] = explode(',', $queryParams['attachmentType']);
-        }
 
         $templates = TemplateModel::getWithAssociation([
-            'select'    => ['DISTINCT(templates.template_id)', 'templates.template_label', 'templates.template_file_name', 'templates.template_path', 'templates.template_attachment_type'],
+            'select'    => ['DISTINCT(templates.template_id)', 'templates.template_label'],
             'where'     => $where,
             'data'      => $data,
             'orderBy'   => ['templates.template_label']
@@ -473,8 +469,7 @@ class TemplateController
         foreach ($templates as $key => $template) {
             $templates[$key] = [
                 'id'                => $template['template_id'],
-                'label'             => $template['template_label'],
-                'attachmentType'    => $template['template_attachment_type']
+                'label'             => $template['template_label']
             ];
         }
 
