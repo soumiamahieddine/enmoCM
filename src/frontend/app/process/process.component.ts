@@ -98,7 +98,7 @@ export class ProcessComponent implements OnInit {
             count: 0
         },
         {
-            id: 'mails',
+            id: 'emails',
             icon: 'fas fa-envelope',
             label: this.lang.mailsSentAlt,
             count: 0

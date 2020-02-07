@@ -189,7 +189,7 @@ export class ListAdministrationComponent implements OnInit {
             label: this.lang.diffusionList,
         },
         {
-            id: 'mails',
+            id: 'emails',
             icon: 'fas fa-envelope',
             label: this.lang.mailsSentAlt,
         },

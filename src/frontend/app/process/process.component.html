@@ -60,12 +60,12 @@
                     </div>
                 </div>
                 <div class="banner" [style.borderColor]="currentPriorityColor">
-                    <div class="title" (click)="currentTool = 'mails'">
+                    <div class="title" (click)="currentTool = 'emails'">
                         {{lang.mailsSentAlt}}
                         <div class="title-divider"></div>
                     </div>
                     <div class="content">
-                        <app-mail-resume [resId]="currentResourceInformations.resId" (goTo)="currentTool = 'mails'">
+                        <app-mail-resume [resId]="currentResourceInformations.resId" (goTo)="currentTool = 'emails'">
                         </app-mail-resume>
                     </div>
                 </div>
@@ -84,7 +84,7 @@
                 <app-diffusions-list *ngIf="currentTool === 'diffusionList' && !loading" #appDiffusionsList
                     [adminMode]="false" [resId]="currentResourceInformations.resId" [expanded]="true">
                 </app-diffusions-list>
-                <app-sended-resource-list *ngIf="currentTool === 'mails' && !loading" #appSendedResource
+                <app-sended-resource-list *ngIf="currentTool === 'emails' && !loading" #appSendedResource
                     [resId]="currentResourceInformations.resId">
                 </app-sended-resource-list>
                 <app-visa-workflow *ngIf="currentTool === 'visaCircuit' && !loading" #appVisaWorkflow
@@ -274,7 +274,7 @@
         <app-diffusions-list *ngIf="modal.id === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="false"
             [resId]="currentResourceInformations.resId" [expanded]="true">
         </app-diffusions-list>
-        <app-sended-resource-list *ngIf="modal.id === 'mails' && !loading" #appSendedResource
+        <app-sended-resource-list *ngIf="modal.id === 'emails' && !loading" #appSendedResource
             [resId]="currentResourceInformations.resId">
         </app-sended-resource-list>
         <app-visa-workflow *ngIf="modal.id === 'visaCircuit' && !loading"
