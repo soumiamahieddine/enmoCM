@@ -47,7 +47,7 @@
                         <mat-tab label="{{lang.diffusionList}}">
                                 <div class="row" style="margin:0px;" id="visaCircuitContent">
                                     <div class="col-md-12">
-                                        <plugin-autocomplete [labelPlaceholder]="lang.addUser" [labelList]="lang.availableUsers" [routeDatas]="diffusionModel.type == 'visaCircuit' ? ['/rest/autocomplete/users/circuit'] : ['/rest/autocomplete/users/circuit?circuit=avis']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelVisa($event)"></plugin-autocomplete>
+                                        <plugin-autocomplete [labelPlaceholder]="lang.addUser" [labelList]="lang.availableUsers" [routeDatas]="diffusionModel.type == 'visaCircuit' ? ['/rest/autocomplete/users/circuit'] : ['/rest/autocomplete/users/circuit?circuit=opinion']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelVisa($event)"></plugin-autocomplete>
                                         <mat-list>
                                             <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="diffusionModel.items">
                                                 <mat-list-item disableRipple="true" *ngFor="let template of diffusionModel.items; let i = index" title="{{lang.move}}"
