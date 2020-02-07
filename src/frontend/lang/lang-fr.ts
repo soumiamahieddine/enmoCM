@@ -1524,4 +1524,6 @@ export const LANG_FR = {
     "noMailContact" : "Aucun contact (externe) attaché pour ce courrier",
     "noSelectedAddress": "Aucune adresse associée",
     "documentUnsigned": "La signature du document a été retirée",
+    "m2m_ARCHIVETRANSFER" : "Pli numérique",
+    "m2m_ARCHIVETRANSFERREPLY" :  "Réponse envoyée",
 };
