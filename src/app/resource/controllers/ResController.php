@@ -282,7 +282,7 @@ class ResController extends ResourceControlController
             ResController::updateAdjacentData(['body' => $body, 'resId' => $args['resId']]);
         }
 
-        if ($onlyDocument) {
+        if (!empty($body['encodedFile'])) {
             ConvertPdfController::convert([
                 'resId'     => $args['resId'],
                 'collId'    => 'letterbox_coll',
@@ -303,14 +303,16 @@ class ResController extends ResourceControlController
             ]);
         }
 
-        HistoryController::add([
-            'tableName' => 'res_letterbox',
-            'recordId'  => $args['resId'],
-            'eventType' => 'UP',
-            'info'      => _DOC_UPDATED . " : {$resource['alt_identifier']}",
-            'moduleId'  => 'resource',
-            'eventId'   => 'resourceModification'
-        ]);
+        if (!$onlyDocument) {
+            HistoryController::add([
+                'tableName' => 'res_letterbox',
+                'recordId'  => $args['resId'],
+                'eventType' => 'UP',
+                'info'      => _DOC_UPDATED . " : {$resource['alt_identifier']}",
+                'moduleId'  => 'resource',
+                'eventId'   => 'resourceModification'
+            ]);
+        }
 
         return $response->withStatus(204);
     }

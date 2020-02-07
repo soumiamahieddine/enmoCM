@@ -140,7 +140,7 @@ define('_GO_ON_VACATION', 'go on vacation');//translate
 define('_BACK_FROM_VACATION', 'bij terugkeer na afwezigheid');
 define('_DOC_DISPLAYING', 'Weergave van het document');
 define('_DOC_ADDED', 'Document toegevoegd');
-define('_DOC_UPDATED', 'Document updated');//translate
+define('_DOC_UPDATED', 'Document updated (metadata)');//translate
 define('_ATTACHMENT_DELETED', 'Document deleted');//TRANSLATE
 define('_FILE_UPDATED', 'File updated');//translate
 define('_ATTACHMENT_ADDED', 'Attachment added');//TRANSLATE

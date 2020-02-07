@@ -140,7 +140,7 @@ define('_GO_ON_VACATION', 'se met en absence');
 define('_BACK_FROM_VACATION', 'de retour de son absence');
 define('_DOC_DISPLAYING', 'Visualisation du document');
 define('_DOC_ADDED', 'Courrier créé');
-define('_DOC_UPDATED', 'Courrier modifié');
+define('_DOC_UPDATED', 'Courrier modifié (métadonnées)');
 define('_ATTACHMENT_DELETED', 'Pièce-jointe supprimée');
 define('_FILE_UPDATED', 'Fichier modifié');
 define('_ATTACHMENT_ADDED', 'Pièce jointe ajoutée');
