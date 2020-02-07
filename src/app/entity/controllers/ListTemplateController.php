@@ -340,7 +340,7 @@ class ListTemplateController
                 }
             }
 
-            $listTemplates[$key]['items'] = $listTemplateItems;
+            $listTemplates[$key]['items'] = array_values($listTemplateItems);
         }
 
         return $response->withJson(['listTemplates' => $listTemplates, 'itemsRemoved' => $itemsRemoved]);

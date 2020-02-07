@@ -38,7 +38,6 @@ export class VisaWorkflowComponent implements OnInit {
     filteredPrivateModels: Observable<string[]>;
 
     loading: boolean = false;
-    itemsRemoved: boolean = false;
     visaModelListNotLoaded: boolean = true;
     data: any;
 
@@ -99,7 +98,6 @@ export class VisaWorkflowComponent implements OnInit {
                         }
                     });
                     this.loading = false;
-                    this.itemsRemoved = data.itemsRemoved;
                 }
                 this.visaWorkflow.items.forEach((element: any, key: number) => {
                     if (!this.functions.empty(element['externalId'])) {
