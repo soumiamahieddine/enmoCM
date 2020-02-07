@@ -1151,6 +1151,7 @@ class PreProcessActionController
             $today = new \DateTime('today');
             if ($opinionLimitDate < $today) {
                 $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resource['res_id'], 'reason' => 'opinionLimitDateOutdated'];
+                continue;
             }
 
             $opinionNote = NoteModel::get([
@@ -1211,6 +1212,7 @@ class PreProcessActionController
             $today = new \DateTime('today');
             if ($opinionLimitDate < $today) {
                 $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'opinionLimitDateOutdated'];
+                continue;
             }
 
             $opinionNote = NoteModel::get([
@@ -1277,6 +1279,7 @@ class PreProcessActionController
             $today = new \DateTime('today');
             if ($opinionLimitDate < $today) {
                 $resourcesInformation['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'opinionLimitDateOutdated'];
+                continue;
             }
 
             $opinionNote = NoteModel::get([
