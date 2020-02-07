@@ -44,8 +44,7 @@ class AcknowledgementReceiptController
         $acknowledgementReceipts = [];
 
         foreach ($acknowledgementReceiptsModel as $acknowledgementReceipt) {
-            $contact = ContactModel::getById(['id' => $acknowledgementReceipt['contact_id'], 'select' => ['firstname', 'lastname', 'company']]);
-            $contactLabel = ContactController::getFormattedOnlyContact(['contact' => $contact]);
+            $contact = ContactModel::getById(['id' => $acknowledgementReceipt['contact_id'], 'select' => ['firstname', 'lastname', 'company', 'email']]);
 
             $userLabel = UserModel::getLabelledUserById(['id' => $acknowledgementReceipt['user_id']]);
 
@@ -58,8 +57,7 @@ class AcknowledgementReceiptController
                 'userLabel'    => $userLabel,
                 'creationDate' => $acknowledgementReceipt['creation_date'],
                 'sendDate'     => $acknowledgementReceipt['send_date'],
-                'contactId'    => $acknowledgementReceipt['contact_id'],
-                'contactLabel' => $contactLabel['contact']['idToDisplay']
+                'contact'      => $contact
             ];
         }
 
@@ -86,8 +84,7 @@ class AcknowledgementReceiptController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $contact = ContactModel::getById(['id' => $acknowledgementReceipt['contact_id'], 'select' => ['firstname', 'lastname', 'company']]);
-        $contactLabel = ContactController::getFormattedOnlyContact(['contact' => $contact]);
+        $contact = ContactModel::getById(['id' => $acknowledgementReceipt['contact_id'], 'select' => ['firstname', 'lastname', 'company', 'email']]);
 
         $userLabel = UserModel::getLabelledUserById(['id' => $acknowledgementReceipt['user_id']]);
 
@@ -100,8 +97,7 @@ class AcknowledgementReceiptController
             'userLabel'    => $userLabel,
             'creationDate' => $acknowledgementReceipt['creation_date'],
             'sendDate'     => $acknowledgementReceipt['send_date'],
-            'contactId'    => $acknowledgementReceipt['contact_id'],
-            'contactLabel' => $contactLabel['contact']['idToDisplay']
+            'contact'      => $contact,
         ];
 
         return $response->withJson(['acknowledgementReceipt' => $acknowledgementReceipt]);
