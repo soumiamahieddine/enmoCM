@@ -488,6 +488,7 @@ $app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':upd
 $app->put('/users/{id}/accountActivationNotification', \User\controllers\UserController::class . ':sendAccountActivationNotification');
 $app->post('/password', \User\controllers\UserController::class . ':forgotPassword');
 $app->put('/password', \User\controllers\UserController::class . ':passwordInitialization');
+$app->get('/users/{id}/availableEmails', \Email\controllers\EmailController::class . ':getAvailableEmails');
 
 //UserFollowedResources
 $app->post('/resources/follow', \Resource\controllers\UserFollowedResourceController::class . ':follow');

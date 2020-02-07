@@ -322,6 +322,73 @@ class EmailController
         return $response->withJson(['emails' => $emails]);
     }
 
+    public static function getAvailableEmails(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route param id is not an integer']);
+        }
+
+        $emails = [];
+
+        // User's email
+        $emailCurrentUser = UserModel::getById(['select' => ['firstname', 'lastname', 'mail'], 'id' => $GLOBALS['id']]);
+
+        $emails[] = [
+            'label' => $emailCurrentUser['firstname'] . ' ' . $emailCurrentUser['lastname'],
+            'email' => $emailCurrentUser['mail']
+        ];
+
+        if (PrivilegeController::hasPrivilege(['privilegeId' => 'use_mail_services', 'userId' => $GLOBALS['id']])) {
+            // User's entities emails
+            $entities = EntityModel::getWithUserEntities([
+                'select' => ['entities.entity_label', 'entities.email', 'entities.entity_id'],
+                'where'  => ['users_entities.user_id = ?'],
+                'data'   => [$GLOBALS['userId']]
+            ]);
+
+            foreach ($entities as $entity) {
+                if (!empty($entity['email'])) {
+                    $emails[] = [
+                        'label' => $entity['entity_label'],
+                        'email' => $entity['email']
+                    ];
+                }
+            }
+
+            // Get from XML
+            $emailsEntities = CoreConfigModel::getXmlLoaded(['path' => 'modules/sendmail/xml/externalMailsEntities.xml']);
+
+            $userEntities = array_column($entities, 'entity_id');
+
+            if ($emailsEntities != null) {
+                foreach ($emailsEntities->externalEntityMail as $entityMail) {
+                    $entityId = (string)$entityMail->targetEntityId;
+
+                    if ($entityId == '') {
+                        $emails[] = [
+                            'label' => (string)$entityMail->defaultName,
+                            'email' => (string)$entityMail->EntityMail
+                        ];
+                    } else if (in_array($entityId, $userEntities)) {
+                        $entityLabel = EntityModel::getByEntityId([
+                            'select'   => ['entity_label'],
+                            'entityId' => $entityId
+                        ]);
+
+                        if (!empty($entityLabel)) {
+                            $emails[] = [
+                                'label' => $entityLabel['entity_label'],
+                                'email' => (string)$entityMail->EntityMail
+                            ];
+                        }
+                    }
+                }
+            }
+        }
+
+        return $response->withJson(['emails' => $emails]);
+    }
+
     public static function sendEmail(array $args)
     {
         ValidatorModel::notEmpty($args, ['emailId', 'userId']);
