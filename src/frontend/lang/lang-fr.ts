@@ -1487,6 +1487,7 @@ export const LANG_FR = {
     "VIEW": "Visualisation",
     "ABS": "Absence",
     "PRE": "Retour d'absence",
+    "SIGN"    : "Signer un document",
     "UNSIGN"    : "Dé-signer un document",
     "RESETPSW": "Réinitialisation de mot de passe",
     "ERROR": "Erreur",

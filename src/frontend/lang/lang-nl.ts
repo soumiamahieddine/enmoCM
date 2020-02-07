@@ -1473,6 +1473,7 @@ export const LANG_NL = {
     "VIEW": "View", //_TO_TRANSLATE
     "ABS": "Vacation",//_TO_TRANSLATE
     "PRE": "Back absence",//_TO_TRANSLATE
+    "SIGN"    : "Sign document",//TRANSLATE
     "UNSIGN"    : "Unsign document",//TRANSLATE
     "RESETPSW": "Password reset",//_TO_TRANSLATE
     "ERROR": "Error", //_TO_TRANSLATE

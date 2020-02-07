@@ -511,7 +511,7 @@ class ExportController
                 'select'    => ['item_id', 'res_id'],
                 'where'     => ['res_id in (?)', 'item_type = ?', 'signatory = ?'],
                 'data'      => [$resIds, 'user_id', true],
-                'order_by'   => ['res_id']
+                'order_by'  => ['res_id']
             ]);
 
             foreach ($listInstances as $key => $listInstance) {

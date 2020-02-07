@@ -452,9 +452,19 @@ class SignatureBookController
             'fingerprint'   => $storeResult['fingerPrint']
         ]);
 
-        //TODO update signatory listinstance
-        //TODO mettre à jour departure_date ?
-        //TODO history
+        ListInstanceModel::update([
+            'set'   => ['signatory' => 'true'],
+            'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
+            'data'  => [$args['resId'], $GLOBALS['userId'], 'VISA_CIRCUIT']
+        ]);
+
+        HistoryController::add([
+            'tableName' => 'res_letterbox',
+            'recordId'  => $args['resId'],
+            'eventType' => 'SIGN',
+            'eventId'   => 'resourceSign',
+            'info'      => _DOCUMENT_SIGNED
+        ]);
 
         return $response->withStatus(204);
     }
