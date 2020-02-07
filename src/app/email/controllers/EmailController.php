@@ -314,10 +314,32 @@ class EmailController
 
         $queryParams = $request->getQueryParams();
         if (!empty($queryParams['limit']) && !Validator::intVal()->validate($queryParams['limit'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an int val']);
+            return $response->withStatus(400)->withJson(['errors' => 'Query limit is not an int value']);
         }
 
-        $emails = EmailModel::get(['select' => ['*'], 'where' => ['document->>\'id\' = ?'], 'data' => [$args['resId']], 'limit' => (int)$queryParams['limit']]);
+        $where = ['document->>\'id\' = ?'];
+
+        if (!empty($queryParams['type'])) {
+            if (!Validator::stringType()->validate($queryParams['type'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Query type is not a string value']);
+            }
+
+            if ($queryParams['type'] == 'ar') {
+                $where[] = "object LIKE '[AR]%'";
+            } else if ($queryParams['type'] == 'm2m') {
+                $where[] = 'message_exchange_id is not null';
+            } else if ($queryParams['type'] == 'email') {
+                $where[] = "object NOT LIKE '[AR]%'";
+                $where[] = 'message_exchange_id is null';
+            }
+        }
+
+        $emails = EmailModel::get([
+            'select' => ['*'],
+            'where'  => $where,
+            'data'   => [$args['resId']],
+            'limit'  => (int)$queryParams['limit']
+        ]);
 
         foreach ($emails as $key => $email) {
             $emails[$key]['sender'] = json_decode($emails[$key]['sender']);
