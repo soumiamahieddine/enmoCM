@@ -9,7 +9,8 @@
             <div class="processTool">
                 <div class="processTool-module jiggle" *ngFor="let module of processTool"
                     [class.processTool-module-active]="module.id === currentTool" matRipple
-                    (click)="isToolEnabled(module.id) ? changeTab(module.id) : false" [class.tool-disabled]="!isToolEnabled(module.id)">
+                    (click)="isToolEnabled(module.id) ? changeTab(module.id) : false"
+                    [class.tool-disabled]="!isToolEnabled(module.id)">
                     <i *ngIf="module.count > 0" class="fas fa-circle haveContent"></i>
                     <i [class]="module.icon"></i>
                     <span>{{module.label}}</span>
@@ -77,11 +78,15 @@
                     [resId]="currentResourceInformations.resId">
                 </app-notes-list>
                 <app-linked-resource-list *ngIf="currentTool === 'linkedResources' && !loading" #appLinkedResourceList
-                    [resId]="currentResourceInformations.resId" (reloadBadgeLinkedResources)="refreshBadge($event,'linkedResources')">
+                    [resId]="currentResourceInformations.resId"
+                    (reloadBadgeLinkedResources)="refreshBadge($event,'linkedResources')">
                 </app-linked-resource-list>
                 <app-diffusions-list *ngIf="currentTool === 'diffusionList' && !loading" #appDiffusionsList
                     [adminMode]="false" [resId]="currentResourceInformations.resId" [expanded]="true">
                 </app-diffusions-list>
+                <app-sended-resource-list *ngIf="currentTool === 'mails' && !loading" #appSendedResource
+                    [resId]="currentResourceInformations.resId">
+                </app-sended-resource-list>
                 <app-visa-workflow *ngIf="currentTool === 'visaCircuit' && !loading" #appVisaWorkflow
                     [resId]="currentResourceInformations.resId"
                     [adminMode]="privilegeService.hasCurrentUserPrivilege('config_visa_workflow')"></app-visa-workflow>
@@ -210,9 +215,14 @@
                                     </div>
                                 </ng-template>
                             </div>
-                            <div style="position: absolute;right: 0px;top: 0px;height: 100%;display: flex;flex-direction: column;justify-content: center;">
-                                <button mat-icon-button *ngFor="let inteKey of integrationsInfo | keyvalue" [matTooltip]="lang[inteKey.key]" (click)="toggleIntegration(inteKey.key)">
-                                    <mat-icon [class]="inteKey.value.icon" [class.checked]="currentResourceInformations.integrations[inteKey.key]" [class.unchecked]="!currentResourceInformations.integrations[inteKey.key]"></mat-icon>
+                            <div
+                                style="position: absolute;right: 0px;top: 0px;height: 100%;display: flex;flex-direction: column;justify-content: center;">
+                                <button mat-icon-button *ngFor="let inteKey of integrationsInfo | keyvalue"
+                                    [matTooltip]="lang[inteKey.key]" (click)="toggleIntegration(inteKey.key)">
+                                    <mat-icon [class]="inteKey.value.icon"
+                                        [class.checked]="currentResourceInformations.integrations[inteKey.key]"
+                                        [class.unchecked]="!currentResourceInformations.integrations[inteKey.key]">
+                                    </mat-icon>
                                 </button>
                             </div>
                         </div>
@@ -229,7 +239,8 @@
             <div class="content">
                 <app-document-viewer #appDocumentViewer style="height:100%;width:100%;" [editMode]="canEditData"
                     [resId]="currentResourceInformations.resId"
-                    [title]="currentResourceInformations.chrono + ' - ' + currentResourceInformations.subject" [sidenavLeft]="sidenavLeft">
+                    [title]="currentResourceInformations.chrono + ' - ' + currentResourceInformations.subject"
+                    [sidenavLeft]="sidenavLeft">
                 </app-document-viewer>
             </div>
         </div>
@@ -258,10 +269,14 @@
             [resId]="currentResourceInformations.resId">
         </app-notes-list>
         <app-linked-resource-list *ngIf="modal.id === 'linkedResources' && !loading" #appLinkedResourceList
-            [resId]="currentResourceInformations.resId" (reloadBadgeLinkedResources)="refreshBadge($event,'linkedResources')"></app-linked-resource-list>
+            [resId]="currentResourceInformations.resId"
+            (reloadBadgeLinkedResources)="refreshBadge($event,'linkedResources')"></app-linked-resource-list>
         <app-diffusions-list *ngIf="modal.id === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="false"
             [resId]="currentResourceInformations.resId" [expanded]="true">
         </app-diffusions-list>
+        <app-sended-resource-list *ngIf="modal.id === 'mails' && !loading" #appSendedResource
+            [resId]="currentResourceInformations.resId">
+        </app-sended-resource-list>
         <app-visa-workflow *ngIf="modal.id === 'visaCircuit' && !loading"
             [adminMode]="privilegeService.hasCurrentUserPrivilege('config_visa_workflow')" #appVisaWorkflow
             [resId]="currentResourceInformations.resId">

@@ -1,0 +1,66 @@
+<ng-container *ngIf="loading; else elseLoading">
+    <div class="loading">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-container>
+<ng-template #elseLoading>
+    <div class="row">
+        <div class="col-md-12" style="padding-bottom: 10px;">
+            <mat-button-toggle-group *ngIf="sendedResources.length > 0" class="filterTypes" (change)="filterType($event)">
+                <mat-button-toggle [checked]="currentFilter === ''" [value]="''">Tous</mat-button-toggle>
+                <mat-button-toggle *ngFor="let type of filterTypes | sortBy : 'label'"
+                    [checked]="currentFilter === type.id" [value]="type.id">{{type.label}}
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+    </div>
+    <mat-table #table [dataSource]="dataSource" matSort matSortActive="creationDate" matSortDirection="desc">
+        <ng-container matColumnDef="creationDate">
+            <mat-cell *matCellDef="let row" class="dataLine" style="flex: 1;padding: 0px;flex-direction: column;">
+                <div class="subinfo">
+                    <span style="flex:1" [title]="row.creationDate | fullDate">
+                        Créé : <b>{{row.creationDate | timeAgo : 'full'}}</b>
+                    </span>
+                    <span *ngIf="row.sendDate !== null" style="flex:1;color:green" [title]="row.sendDate | fullDate">
+                        Envoyé : <b>{{row.sendDate | timeAgo : 'full'}}</b>
+                    </span>
+                    <span *ngIf="row.status === 'DRAFT'" style="flex:1;color:orange">
+                        Brouillon
+                    </span>
+                    <span *ngIf="row.sendDate === null" style="flex:1;color:red">
+                        Non envoyé
+                    </span>
+                    <span style="flex:1" *ngIf="!functions.empty(row.sendBackDate)" [title]="row.creationDate | fullDate">
+                        Pris en charge : <b>{{row.creationDate | timeAgo : 'full'}}</b>
+                    </span>
+                </div>
+                <div style="display: grid;grid-template-columns: 100px 1fr 170px;width: 100%;grid-gap: 10px;align-items: center;">
+                    <div class="dateType">
+                        <span class="type">
+                            <span class="badge" [style.background]="row.typeColor">{{lang[row.type]}}</span>
+                            <div class="attach">
+                                <i *ngIf="row.hasMainDoc" class="fas fa-file" title="Document attaché"></i>
+                                <i *ngIf="row.hasAttach" class="fas fa-paperclip" title="Pièce(s) jointe(s) attachée(s)"></i>
+                                <i *ngIf="row.hasNote" class="fas fa-pen-square" title="Note(s) attachée(s)"></i>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="desc">
+    
+                        {{row.desc}}
+                        
+                    </div>
+                    <div class="contact">
+                        <span *ngIf="row.sender" style="white-space: pre;overflow: hidden;text-overflow: ellipsis;">
+                            De : {{row.sender}}
+                        </span>
+                        <span style="white-space: pre;overflow: hidden;text-overflow: ellipsis;">
+                            Pour : {{row.recipients}}
+                        </span>
+                    </div>
+                </div>
+            </mat-cell>
+        </ng-container>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" style="cursor: pointer;"></mat-row>
+    </mat-table>
+</ng-template>

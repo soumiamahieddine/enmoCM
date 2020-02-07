@@ -1515,7 +1515,7 @@ export const LANG_FR = {
     "onlyofficeEditDenied": "Le document avec l'extension",
     "onlyofficeEditDenied2": "ne peut pas être édité avec onlyoffice",
     "NOTE_version": "Version annotée",
-    "SIGN_version": "Version original",
+    "SIGN_version": "Version originale",
     "versions": "Versions",
     "itemRemovedFromVisaTemplate": "Les utilisateurs suivants ont été retirés car ils n'ont pas le droit de viser ou signer",
     "itemRemovedFromAvisTemplate": "Les utilisateurs suivants ont été retirés car ils n'ont pas le droit de donner un avis",

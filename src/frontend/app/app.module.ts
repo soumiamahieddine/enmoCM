@@ -107,6 +107,7 @@ import { LinkedResourceListComponent } from './linkedResource/linked-resource-li
 import { LinkResourceModalComponent } from './linkedResource/linkResourceModal/link-resource-modal.component';
 
 import { DocumentViewerModalComponent } from './viewer/modal/document-viewer-modal.component';
+import { SendedResourceListComponent } from './sendedResource/sended-resource-list.component';
 
 
 
@@ -203,7 +204,8 @@ import { DocumentViewerModalComponent } from './viewer/modal/document-viewer-mod
         SearchAdvListComponent,
         LinkedResourceListComponent,
         LinkResourceModalComponent,
-        DocumentViewerModalComponent
+        DocumentViewerModalComponent,
+        SendedResourceListComponent
     ],
     entryComponents: [
         ConfirmModalComponent,
