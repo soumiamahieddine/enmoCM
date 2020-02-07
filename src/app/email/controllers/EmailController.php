@@ -319,6 +319,14 @@ class EmailController
 
         $emails = EmailModel::get(['select' => ['*'], 'where' => ['document->>\'id\' = ?'], 'data' => [$args['resId']], 'limit' => (int)$queryParams['limit']]);
 
+        foreach ($emails as $key => $email) {
+            $emails[$key]['sender'] = json_decode($emails[$key]['sender']);
+            $emails[$key]['recipients'] = json_decode($emails[$key]['recipients']);
+            $emails[$key]['cc'] = json_decode($emails[$key]['cc']);
+            $emails[$key]['cci'] = json_decode($emails[$key]['cci']);
+            $emails[$key]['document'] = json_decode($emails[$key]['document']);
+        }
+
         return $response->withJson(['emails' => $emails]);
     }
 
