@@ -16,49 +16,68 @@ use SrcCore\models\DatabaseModel;
 
 class EntityFolderModelAbstract
 {
-    public static function getByFolderId(array $aArgs)
+    public static function get(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['folder_id']);
-        ValidatorModel::intVal($aArgs, ['folder_id']);
+        ValidatorModel::notEmpty($args, ['select']);
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy', 'groupBy']);
+        ValidatorModel::intType($args, ['limit']);
 
         $entitiesFolder = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['entities_folders', 'entities'],
-            'left_join' => ['entities_folders.entity_id = entities.id'],
-            'where'     => ['folder_id = ?'],
-            'data'      => [$aArgs['folder_id']]
+            'select'    => $args['select'],
+            'table'     => ['entities_folders'],
+            'where'     => empty($args['where']) ? [] : $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data'],
+            'order_by'  => empty($args['orderBy']) ? [] : $args['orderBy'],
+            'limit'     => empty($args['limit']) ? 0 : $args['limit'],
+            'groupBy'   => empty($args['groupBy']) ? [] : $args['groupBy'],
         ]);
 
         return $entitiesFolder;
     }
 
-    public static function create(array $aArgs)
+    public static function getByFolderId(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['folder_id', 'entity_id']);
-        ValidatorModel::intVal($aArgs, ['entity_id', 'folder_id']);
-        ValidatorModel::boolType($aArgs, ['edition']);
+        ValidatorModel::notEmpty($args, ['folder_id']);
+        ValidatorModel::intVal($args, ['folder_id']);
+
+        $entitiesFolder = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['entities_folders', 'entities'],
+            'left_join' => ['entities_folders.entity_id = entities.id'],
+            'where'     => ['folder_id = ?'],
+            'data'      => [$args['folder_id']]
+        ]);
+
+        return $entitiesFolder;
+    }
+
+    public static function create(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['folder_id', 'entity_id']);
+        ValidatorModel::intVal($args, ['entity_id', 'folder_id']);
+        ValidatorModel::boolType($args, ['edition']);
 
         DatabaseModel::insert([
             'table'     => 'entities_folders',
             'columnsValues' => [
-                'folder_id'  => $aArgs['folder_id'],
-                'entity_id'  => $aArgs['entity_id'],
-                'edition'    => empty($aArgs['edition']) ? 'false' : 'true'
+                'folder_id'  => $args['folder_id'],
+                'entity_id'  => $args['entity_id'],
+                'edition'    => empty($args['edition']) ? 'false' : 'true'
             ]
         ]);
 
         return true;
     }
 
-    public static function deleteByFolderId(array $aArgs)
+    public static function deleteByFolderId(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['folder_id']);
-        ValidatorModel::intVal($aArgs, ['folder_id']);
+        ValidatorModel::notEmpty($args, ['folder_id']);
+        ValidatorModel::intVal($args, ['folder_id']);
 
         DatabaseModel::delete([
             'table' => 'entities_folders',
             'where' => ['folder_id = ?'],
-            'data'  => [$aArgs['folder_id']]
+            'data'  => [$args['folder_id']]
         ]);
 
         return true;
@@ -66,14 +85,13 @@ class EntityFolderModelAbstract
 
     public static function delete(array $args)
     {
-        ValidatorModel::notEmpty($args, ['entity_id', 'folder_id']);
-        ValidatorModel::arrayType($args, ['entity_id']);
-        ValidatorModel::intVal($args, ['folder_id']);
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
 
         DatabaseModel::delete([
             'table' => 'entities_folders',
-            'where' => ['entity_id in (?)', 'folder_id = ?'],
-            'data'  => [$args['entity_id'], $args['folder_id']]
+            'where' => $args['where'],
+            'data'  => $args['data']
         ]);
 
         return true;

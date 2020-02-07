@@ -39,23 +39,23 @@ abstract class ResModelAbstract
         return $aResources;
     }
 
-    public static function get(array $aArgs)
+    public static function get(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['select']);
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy', 'groupBy']);
-        ValidatorModel::intType($aArgs, ['limit']);
+        ValidatorModel::notEmpty($args, ['select']);
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy', 'groupBy']);
+        ValidatorModel::intType($args, ['limit']);
 
-        $aResources = DatabaseModel::select([
-            'select'    => $aArgs['select'],
+        $resources = DatabaseModel::select([
+            'select'    => $args['select'],
             'table'     => ['res_letterbox'],
-            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
-            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
-            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
-            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit'],
-            'groupBy'   => empty($aArgs['groupBy']) ? [] : $aArgs['groupBy'],
+            'where'     => empty($args['where']) ? [] : $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data'],
+            'order_by'  => empty($args['orderBy']) ? [] : $args['orderBy'],
+            'limit'     => empty($args['limit']) ? 0 : $args['limit'],
+            'groupBy'   => empty($args['groupBy']) ? [] : $args['groupBy'],
         ]);
 
-        return $aResources;
+        return $resources;
     }
 
     public static function getById(array $args)
