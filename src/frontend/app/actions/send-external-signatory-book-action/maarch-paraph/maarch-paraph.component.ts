@@ -40,11 +40,11 @@ export class MaarchParaphComponent implements OnInit {
         }
     }
 
-    checkValidParaph() {
+    isValidParaph() {
         if (this.additionalsInfos.attachments.length == 0 || this.appVisaWorkflow.getWorkflow().length === 0 || this.appVisaWorkflow.checkExternalSignatoryBook().length > 0) {
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
 

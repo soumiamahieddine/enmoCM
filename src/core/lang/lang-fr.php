@@ -139,9 +139,9 @@ define('_PATH_OF_DOCSERVER_UNAPPROACHABLE', 'Chemin de la zone de stockage inacc
 define('_GO_ON_VACATION', 'se met en absence');
 define('_BACK_FROM_VACATION', 'de retour de son absence');
 define('_DOC_DISPLAYING', 'Visualisation du document');
-define('_DOC_ADDED', 'Document ajouté');
-define('_DOC_UPDATED', 'Document modifié');
-define('_DOC_DELETED', 'Document supprimé');
+define('_DOC_ADDED', 'Courrier créé');
+define('_DOC_UPDATED', 'Courrier modifié');
+define('_ATTACHMENT_DELETED', 'Pièce-jointe supprimée');
 define('_FILE_UPDATED', 'Fichier modifié');
 define('_ATTACHMENT_ADDED', 'Pièce jointe ajoutée');
 define('_ATTACHMENT_UPDATED', 'Pièce jointe modifiée');
@@ -155,6 +155,8 @@ define('_TAG_UPDATED', 'Mot-clé modifié');
 define('_TAG_MERGED', 'Mot-clé fusionné');
 define('_LINK_ADDED', 'Liaison ajoutée');
 define('_LINK_DELETED', 'Liaison supprimée');
+define('_DOCUMENT_SIGNED', 'Document signé');
+define('_DOCUMENT_UNSIGNED', 'Document dé-signé');
 
 // LISTS
 define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');
@@ -459,7 +461,7 @@ define("_VISA_CIRCUIT_DELETED", "Circuit de visa supprimé");
 define("_AVIS_CIRCUIT_DELETED", "Circuit d'avis supprimé");
 
 define("_ACKNOWLEDGEMENT_RECEIPT", "Accusé de réception");
-define("_CREATED_BY", "Crée(e) par");
+define("_CREATED_BY", "Créé par");
 define("_SENT_DATE", "Envoyé le");
 define("_SENT_TO", "Envoyé à");
 define("_FORMAT", "Format");

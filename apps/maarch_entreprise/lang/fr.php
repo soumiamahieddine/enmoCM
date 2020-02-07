@@ -2625,9 +2625,6 @@ if (!defined('_TRY_AGAIN')) {
 if (!defined('_INDEX_UPDATED')) {
     define('_INDEX_UPDATED', 'Index mis à jour');
 }
-if (!defined('_DOC_DELETED')) {
-    define('_DOC_DELETED', 'Document supprimé');
-}
 if (!defined('_UPDATE_DOC_STATUS')) {
     define('_UPDATE_DOC_STATUS', 'Statut du document mis à jour');
 }

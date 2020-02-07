@@ -52,7 +52,18 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
     tmpFilename: string = '';
 
     appUrl: string = '';
-    onlyfficeUrl: string = '';
+    onlyOfficeUrl: string = '';
+
+    allowedExtension: string[] = [
+        "doc",
+        "docx",
+        "dotx",
+        "odt",
+        "ott",
+        "rtf",
+        "txt",
+        "html"
+    ];
 
     private eventAction = new Subject<any>();
     dialogRef: MatDialogRef<any>;
@@ -86,7 +97,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
 
     closeEditor() {
         console.log('close');
-        
+
         if (this.sidenavLeft !== null) {
             this.sidenavLeft.open();
         }
@@ -127,15 +138,27 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
     async ngOnInit() {
         this.key = this.generateUniqueId();
 
-        await this.getServerConfiguration();
+        if (this.canLaunchOnlyOffice()) {
+            await this.getServerConfiguration();
 
-        await this.checkServerStatus();
-
-        await this.getMergedFileTemplate();
-
-        this.initOfficeEditor();
-
-        this.loading = false;
+            await this.checkServerStatus();
+    
+            await this.getMergedFileTemplate();
+    
+            this.initOfficeEditor();
+    
+            this.loading = false;
+        }
+    }
+    
+    canLaunchOnlyOffice() {
+        if (this.isAllowedEditExtension(this.file.format)) {
+            return true;
+        } else {
+            this.notify.error(this.lang.onlyofficeEditDenied + ' <b>' + this.file.format  + '</b> ' + this.lang.onlyofficeEditDenied2);
+            this.closeEditor();
+            return false;
+        }
     }
 
     getServerConfiguration() {
@@ -145,7 +168,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                     if (data.enabled) {
                         const protocol = data.serverSsl ? 'https://' : 'http://';
                         const port = data.serverPort ? `:${data.serverPort}` : ':80';
-                        this.onlyfficeUrl = `${protocol}${data.serverUri}${port}`;
+                        this.onlyOfficeUrl = `${protocol}${data.serverUri}${port}`;
                         this.appUrl = data.coreUrl;
                         resolve(true);
                     } else {
@@ -175,7 +198,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                         if (data.isAvailable) {
                             resolve(true);
                         } else {
-                            this.notify.error(`${this.lang.errorOnlyoffice2} ${this.onlyfficeUrl}`);
+                            this.notify.error(`${this.lang.errorOnlyoffice2} ${this.onlyOfficeUrl}`);
                             this.closeEditor();
                         }
                     }),
@@ -266,7 +289,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                 },
             },
         };
-        this.docEditor = new DocsAPI.DocEditor('placeholder', this.editorConfig, this.onlyfficeUrl);
+        this.docEditor = new DocsAPI.DocEditor('placeholder', this.editorConfig, this.onlyOfficeUrl);
     }
 
     isLocked() {
@@ -303,5 +326,9 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
             $j("iframe[name='frameEditor']").css("position", "initial");
         }
         this.fullscreenMode = !this.fullscreenMode;
+    }
+
+    isAllowedEditExtension(extension: string) {
+        return this.allowedExtension.filter(ext => ext.toLowerCase() === extension.toLowerCase()).length > 0;
     }
 }

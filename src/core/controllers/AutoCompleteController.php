@@ -153,6 +153,8 @@ class AutoCompleteController
             return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
         }
 
+        $searchOnEmails = !empty($queryParams['searchEmails']);
+
         //Contacts
         $autocompleteContacts = [];
         if (empty($queryParams['noContacts'])) {
@@ -168,6 +170,10 @@ class AutoCompleteController
                 }
             }
 
+            if ($searchOnEmails && !in_array('email', $fields)) {
+                $fields[] = 'emails';
+            }
+
             $fieldsNumber = count($fields);
             $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
 
@@ -180,7 +186,7 @@ class AutoCompleteController
             ]);
 
             $contacts = ContactModel::get([
-                'select'    => ['id'],
+                'select'    => ['id', 'email'],
                 'where'     => $requestData['where'],
                 'data'      => $requestData['data'],
                 'orderBy'   => ['company', 'lastname NULLS FIRST'],
@@ -188,7 +194,13 @@ class AutoCompleteController
             ]);
 
             foreach ($contacts as $contact) {
-                $autocompleteContacts[] = ContactController::getAutocompleteFormat(['id' => $contact['id']]);
+                $autoContact = ContactController::getAutocompleteFormat(['id' => $contact['id']]);
+
+                if ($searchOnEmails && empty($autoContact['email'])) {
+                    $autoContact['email'] = $contact['email'];
+                }
+
+                $autocompleteContacts[] = $autoContact;
             }
         }
 
@@ -196,17 +208,24 @@ class AutoCompleteController
         $autocompleteUsers = [];
         if (empty($queryParams['noUsers'])) {
             $fields = ['firstname', 'lastname'];
+
+            if ($searchOnEmails) {
+                $fields[] = 'mail';
+            }
+
+            $nbFields = count($fields);
+
             $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
             $requestData = AutoCompleteController::getDataForRequest([
                 'search'        => $queryParams['search'],
                 'fields'        => $fields,
                 'where'         => ['status not in (?)', 'user_id not in (?)'],
                 'data'          => [['DEL', 'SPD'], ['superadmin']],
-                'fieldsNumber'  => 2,
+                'fieldsNumber'  => $nbFields,
             ]);
 
             $users = UserModel::get([
-                'select'    => ['id', 'firstname', 'lastname'],
+                'select'    => ['id', 'firstname', 'lastname', 'mail'],
                 'where'     => $requestData['where'],
                 'data'      => $requestData['data'],
                 'orderBy'   => ['lastname'],
@@ -214,12 +233,18 @@ class AutoCompleteController
             ]);
 
             foreach ($users as $user) {
-                $autocompleteUsers[] = [
+                $autoUser = [
                     'type'          => 'user',
                     'id'            => $user['id'],
                     'firstname'     => $user['firstname'],
                     'lastname'      => $user['lastname']
                 ];
+
+                if ($searchOnEmails) {
+                    $autoUser['email'] = $user['mail'];
+                }
+
+                $autocompleteUsers[] = $autoUser;
             }
         }
 
@@ -227,17 +252,24 @@ class AutoCompleteController
         $autocompleteEntities = [];
         if (empty($queryParams['noEntities'])) {
             $fields = ['entity_label'];
+
+            if ($searchOnEmails) {
+                $fields[] = 'email';
+            }
+
+            $nbFields = count($fields);
+
             $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
             $requestData = AutoCompleteController::getDataForRequest([
                 'search'        => $queryParams['search'],
                 'fields'        => $fields,
                 'where'         => ['enabled = ?'],
                 'data'          => ['Y'],
-                'fieldsNumber'  => 1,
+                'fieldsNumber'  => $nbFields,
             ]);
 
             $entities = EntityModel::get([
-                'select'    => ['id', 'entity_id', 'entity_label', 'short_label'],
+                'select'    => ['id', 'entity_id', 'entity_label', 'short_label', 'email'],
                 'where'     => $requestData['where'],
                 'data'      => $requestData['data'],
                 'orderBy'   => ['entity_label'],
@@ -245,12 +277,18 @@ class AutoCompleteController
             ]);
 
             foreach ($entities as $value) {
-                $autocompleteEntities[] = [
+                $entity = [
                     'type'          => 'entity',
                     'id'            => $value['id'],
                     'lastname'      => $value['entity_label'],
                     'firstname'     => ''
                 ];
+
+                if ($searchOnEmails) {
+                    $entity['email'] = $value['email'];
+                }
+
+                $autocompleteEntities[] = $entity;
             }
         }
 
@@ -618,6 +656,8 @@ class AutoCompleteController
         foreach ($hits as $key => $hit) {
             $addresses[] = [
                 'banId'         => $hit->banId,
+                'lon'           => $hit->lon,
+                'lat'           => $hit->lat,
                 'number'        => $hit->streetNumber,
                 'afnorName'     => $hit->afnorName,
                 'postalCode'    => $hit->postalCode,

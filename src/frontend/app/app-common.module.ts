@@ -61,6 +61,8 @@ import { PluginSelectSearchComponent }                        from '../plugins/s
 import { FolderInputComponent }                        from '../app/folder/indexing/folder-input.component';
 import { TagInputComponent }                        from '../app/tag/indexing/tag-input.component';
 import { DragDropDirective }                        from '../app/viewer/upload-file-dnd.directive';
+import { AddressBanAutocompleteComponent } from './contact/ban-autocomplete/address-ban-autocomplete.component';
+
 import { ContactAutocompleteComponent } from './contact/autocomplete/contact-autocomplete.component';
 import { ContactsFormComponent }    from './administration/contact/page/form/contacts-form.component';
 import { HistoryComponent }                        from './history/history.component';
@@ -127,6 +129,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         ContactsFormComponent,
         CustomSnackbarComponent,
         HistoryComponent,
+        AddressBanAutocompleteComponent
     ],
     exports: [
         CommonModule,
@@ -170,6 +173,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         ContactAutocompleteComponent,
         ContactsFormComponent,
         HistoryComponent,
+        AddressBanAutocompleteComponent
     ],
     providers: [
         HeaderService,

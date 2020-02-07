@@ -17,6 +17,7 @@ namespace Resource\controllers;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Contact\controllers\ContactController;
+use CustomField\models\CustomFieldModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Folder\controllers\FolderController;
@@ -510,7 +511,7 @@ class ExportController
                 'select'    => ['item_id', 'res_id'],
                 'where'     => ['res_id in (?)', 'item_type = ?', 'signatory = ?'],
                 'data'      => [$resIds, 'user_id', true],
-                'order_by'   => ['res_id']
+                'order_by'  => ['res_id']
             ]);
 
             foreach ($listInstances as $key => $listInstance) {
@@ -656,8 +657,15 @@ class ExportController
             return null;
         }
 
-        if (is_array($customValues)) {
-            return implode("\n", $customValues);
+        $field = CustomFieldModel::getById(['select' => ['type'], 'id' => $customFieldId]);
+
+        if ($field['type'] == 'banAutocomplete') {
+            $line = "{$customValues[0]['addressNumber']} {$customValues[0]['addressStreet']} {$customValues[0]['addressTown']} ({$customValues[0]['addressPostcode']})";
+            $line .= "\n";
+            $line .= "{$customValues[0]['latitude']},{$customValues[0]['longitude']}";
+            $customValues = $line;
+        } elseif (is_array($customValues)) {
+            $customValues = implode("\n", $customValues);
         }
 
         return $customValues;

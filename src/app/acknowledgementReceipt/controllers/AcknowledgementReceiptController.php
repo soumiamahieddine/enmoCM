@@ -15,6 +15,8 @@
 namespace AcknowledgementReceipt\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
+use Contact\controllers\ContactController;
+use Contact\models\ContactModel;
 use Docserver\models\DocserverModel;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
@@ -23,9 +25,84 @@ use Respect\Validation\Validator;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use User\models\UserModel;
 
 class AcknowledgementReceiptController
 {
+    public static function get(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $acknowledgementReceiptsModel = AcknowledgementReceiptModel::get([
+            'select' => ['id', 'res_id', 'type', 'format', 'user_id', 'creation_date', 'send_date', 'contact_id'],
+            'where'  => ['res_id = ?'],
+            'data'   => [$args['resId']]
+        ]);
+
+        $acknowledgementReceipts = [];
+
+        foreach ($acknowledgementReceiptsModel as $acknowledgementReceipt) {
+            $contact = ContactModel::getById(['id' => $acknowledgementReceipt['contact_id'], 'select' => ['firstname', 'lastname', 'company']]);
+            $contactLabel = ContactController::getFormattedOnlyContact(['contact' => $contact]);
+
+            $userLabel = UserModel::getLabelledUserById(['id' => $acknowledgementReceipt['user_id']]);
+
+            $acknowledgementReceipts[] = [
+                'id'           => $acknowledgementReceipt['id'],
+                'resId'        => $acknowledgementReceipt['res_id'],
+                'type'         => $acknowledgementReceipt['type'],
+                'format'       => $acknowledgementReceipt['format'],
+                'userId'       => $acknowledgementReceipt['user_id'],
+                'userLabel'    => $userLabel,
+                'creationDate' => $acknowledgementReceipt['creation_date'],
+                'sendDate'     => $acknowledgementReceipt['send_date'],
+                'contactId'    => $acknowledgementReceipt['contact_id'],
+                'contactLabel' => $contactLabel['contact']['idToDisplay']
+            ];
+        }
+
+        return $response->withJson($acknowledgementReceipts);
+    }
+
+    public static function getById(Request $request, Response $response, array $args)
+    {
+        $acknowledgementReceipt = AcknowledgementReceiptModel::getByIds([
+            'select'  => ['id', 'res_id', 'type', 'format', 'user_id', 'creation_date', 'send_date', 'contact_id'],
+            'ids'     => [$args['id']]
+        ]);
+
+        if (empty($acknowledgementReceipt[0])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement receipt does not exist']);
+        }
+        $acknowledgementReceipt = $acknowledgementReceipt[0];
+
+        if (!Validator::intVal()->validate($acknowledgementReceipt['res_id']) || !ResController::hasRightByResId(['resId' => [$acknowledgementReceipt['res_id']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $contact = ContactModel::getById(['id' => $acknowledgementReceipt['contact_id'], 'select' => ['firstname', 'lastname', 'company']]);
+        $contactLabel = ContactController::getFormattedOnlyContact(['contact' => $contact]);
+
+        $userLabel = UserModel::getLabelledUserById(['id' => $acknowledgementReceipt['user_id']]);
+
+        $acknowledgementReceipt = [
+            'id'           => $acknowledgementReceipt['id'],
+            'resId'        => $acknowledgementReceipt['res_id'],
+            'type'         => $acknowledgementReceipt['type'],
+            'format'       => $acknowledgementReceipt['format'],
+            'userId'       => $acknowledgementReceipt['user_id'],
+            'userLabel'    => $userLabel,
+            'creationDate' => $acknowledgementReceipt['creation_date'],
+            'sendDate'     => $acknowledgementReceipt['send_date'],
+            'contactId'    => $acknowledgementReceipt['contact_id'],
+            'contactLabel' => $contactLabel['contact']['idToDisplay']
+        ];
+
+        return $response->withJson(['acknowledgementReceipt' => $acknowledgementReceipt]);
+    }
+
     public function createPaperAcknowledgement(Request $request, Response $response)
     {
         $bodyData = $request->getParsedBody();
@@ -87,30 +164,35 @@ class AcknowledgementReceiptController
         return $response->withHeader('Content-Type', $mimeType);
     }
 
-    public function getAcknowledgementReceipt(Request $request, Response $response, array $aArgs)
+    public function getAcknowledgementReceipt(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
+        $document = AcknowledgementReceiptModel::getByIds([
+            'select'  => ['docserver_id', 'path', 'filename', 'fingerprint', 'res_id'],
+            'ids'     => [$args['id']]
+        ]);
+
+        if (empty($document[0])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Acknowledgement receipt does not exist']);
+        }
+        $document = $document[0];
+
+        if (!Validator::intVal()->validate($document['res_id']) || !ResController::hasRightByResId(['resId' => [$document['res_id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $document = AcknowledgementReceiptModel::getByIds([
-            'select'  => ['docserver_id', 'path', 'filename', 'fingerprint'],
-            'ids'     => [$aArgs['id']]
-        ]);
-
-        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document[0]['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
         if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
         }
 
-        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document[0]['path']) . $document[0]['filename'];
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
 
         if (!file_exists($pathToDocument)) {
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }
 
         $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument]);
-        if (!empty($document[0]['fingerprint']) && $document[0]['fingerprint'] != $fingerprint) {
+        if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
             return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
         }
 
@@ -129,9 +211,9 @@ class AcknowledgementReceiptController
 
         HistoryController::add([
             'tableName' => 'acknowledgement_receipts',
-            'recordId'  => $aArgs['id'],
+            'recordId'  => $args['id'],
             'eventType' => 'VIEW',
-            'info'      => _ACKNOWLEDGEMENT_RECEIPT_DISPLAYING . " : {$aArgs['id']}",
+            'info'      => _ACKNOWLEDGEMENT_RECEIPT_DISPLAYING . " : {$args['id']}",
             'moduleId'  => 'res',
             'eventId'   => 'acknowledgementreceiptview',
         ]);

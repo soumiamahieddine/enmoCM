@@ -1250,6 +1250,7 @@ export const LANG_NL = {
     "emailServerParamDesc" : "Link your mail server with application in order to send emails", //_TO_TRANSLATE
     "mailevaAdmin" : "Maileva shipping admin", //_TO_TRANSLATE
     "mailevaAdminDesc" : "Configure mailing templates for Maileva", //_TO_TRANSLATE
+    "infoMailevaAccount": "Indicate here your username and the INITIAL password communicated by Maileva when opening your account", //_TO_TRANSLATE
     "reportsAdmin" : "Administratie van de statistieken",
     "historyBatchAdmin" : "De geschiedenis van de batches raadplegen",
     "updateControl" : "Controle van de bijwerking",
@@ -1472,6 +1473,8 @@ export const LANG_NL = {
     "VIEW": "View", //_TO_TRANSLATE
     "ABS": "Vacation",//_TO_TRANSLATE
     "PRE": "Back absence",//_TO_TRANSLATE
+    "SIGN"    : "Sign document",//TRANSLATE
+    "UNSIGN"    : "Unsign document",//TRANSLATE
     "RESETPSW": "Password reset",//_TO_TRANSLATE
     "ERROR": "Error", //_TO_TRANSLATE
     "fileAlreadySentToSignatureBook": "File already send to signature book", //_TO_TRANSLATE
@@ -1495,4 +1498,15 @@ export const LANG_NL = {
     "inSignatureBook_doc" : "Put the main document in signature book", //_TO_TRANSLATE
     "inShipping_doc" : "Intégrer le document principal  in send Maileva", //_TO_TRANSLATE
     "preRequisiteMissing": "Prerequisite missing for OnlyOffice : netcat", //_TO_TRANSLATE
+    "onlyofficeEditDenied": "This document with extension", //_TO_TRANSLATE
+    "onlyofficeEditDenied2": "can't be edited with onlyoffice", //_TO_TRANSLATE
+    "NOTE_version": "Annotated version", //_TO_TRANSLATE
+    "SIGN_version": "Original version", //_TO_TRANSLATE
+    "versions": "Versions", //_TO_TRANSLATE
+    "itemRemovedFromVisaTemplate": "The following users have been removed because they cannot make the action", //_TO_TRANSLATE
+    "documentSignedMsg": "The document has been signed, you can't edit this document", //_TO_TRANSLATE
+    "banAutocompleteInput": "Autocomplete BAN input", //_TO_TRANSLATE
+    "noMailContact" : "No (external) contact linked to this mail", //_TO_TRANSLATE
+    "noSelectedAddress": "No selected address",  //_TO_TRANSLATE
+    "documentUnsigned": "This document has been unsigned", //_TO_TRANSLATE
 };

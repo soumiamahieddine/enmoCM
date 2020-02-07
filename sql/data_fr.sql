@@ -97,6 +97,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'config_
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_tag_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'private_tag');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'tag_view');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'sign_document');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'visa_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'create_contacts');
@@ -117,6 +119,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_tag_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'private_tag');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'tag_view');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'sign_document');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'visa_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'create_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'update_contacts');
@@ -145,6 +149,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'a
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_tag_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'private_tag');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'tag_view');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'sign_document');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'visa_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id, parameters) VALUES ('ADMINISTRATEUR_N1', 'admin_users', '{"groups": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]}');
@@ -659,7 +665,7 @@ INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id
 DELETE FROM baskets WHERE basket_id = 'Maileva_Sended';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'Maileva_Sended';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'Maileva_Sended';
-INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('Maileva_Sended', 'Courriers transmis via Maileva', 'Courriers transmis via Maileva', 'dest_user = @user AND res_id IN(SELECT distinct r.res_id_master from res_attachments r inner join shippings s on s.attachment_id = r.res_id) and status not in (''END'')', 'letterbox_coll', 'Y', 'N', 'Y',200);
+INSERT INTO baskets (basket_id, basket_name, basket_desc, basket_clause, coll_id, is_visible, flag_notif, enabled, basket_order) VALUES ('Maileva_Sended', 'Courriers transmis via Maileva', 'Courriers transmis via Maileva', 'dest_user = @user AND res_id IN(SELECT distinct r.res_id_master from res_attachments r inner join shippings s on s.document_id = r.res_id) and status not in (''END'')', 'letterbox_coll', 'Y', 'N', 'Y',200);
 DELETE FROM baskets WHERE basket_id = 'ToArcBasket';
 DELETE FROM actions_groupbaskets WHERE basket_id = 'ToArcBasket';
 DELETE FROM groupbasket_redirect WHERE basket_id = 'ToArcBasket';

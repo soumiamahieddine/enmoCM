@@ -53,7 +53,7 @@ export class FolderMenuComponent implements OnInit {
             }),
             filter(value => value.length > 2),
             tap(() => this.loading = true),
-            distinctUntilChanged(),
+            //distinctUntilChanged(),
             switchMap(data => this.http.get('../../rest/autocomplete/folders', { params: { "search": data } })),
             tap((data: any) => {
                 this.pinnedFolder = false;

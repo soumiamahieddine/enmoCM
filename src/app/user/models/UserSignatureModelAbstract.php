@@ -34,17 +34,22 @@ abstract class UserSignatureModelAbstract
         return $signatures;
     }
 
-    public static function getById(array $aArgs)
+    public static function getById(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
+        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
+        ValidatorModel::arrayType($args, ['select']);
 
         $signature = DatabaseModel::select([
-            'select'    => ['id', 'user_serial_id', 'signature_label'],
+            'select'    => $args['select'] ?? ['*'],
             'table'     => ['user_signatures'],
             'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']],
+            'data'      => [$args['id']],
         ]);
+
+        if (empty($signature[0])) {
+            return [];
+        }
 
         return $signature[0];
     }

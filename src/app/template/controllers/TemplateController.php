@@ -437,6 +437,50 @@ class TemplateController
         return $response->withJson(['templates' => $templates]);
     }
 
+    public function getEmailTemplatesByResId(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) && !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['destination']]);
+        if (!empty($resource['destination'])) {
+            $entities = [$resource['destination']];
+        } else {
+            $entities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
+            $entities = array_column($entities, 'entity_id');
+            if (empty($entities)) {
+                $entities = [0];
+            }
+        }
+        $where = ['(templates_association.value_field in (?) OR templates_association.template_id IS NULL)', 'templates.template_type = ?', 'templates.template_target = ?'];
+        $data = [$entities, 'HTML', 'sendmail'];
+
+        $queryParams = $request->getQueryParams();
+
+        if (!empty($queryParams['attachmentType'])) {
+            $where[] = 'templates.template_attachment_type in (?)';
+            $data[] = explode(',', $queryParams['attachmentType']);
+        }
+
+        $templates = TemplateModel::getWithAssociation([
+            'select'    => ['DISTINCT(templates.template_id)', 'templates.template_label', 'templates.template_file_name', 'templates.template_path', 'templates.template_attachment_type'],
+            'where'     => $where,
+            'data'      => $data,
+            'orderBy'   => ['templates.template_label']
+        ]);
+
+        foreach ($templates as $key => $template) {
+            $templates[$key] = [
+                'id'                => $template['template_id'],
+                'label'             => $template['template_label'],
+                'attachmentType'    => $template['template_attachment_type']
+            ];
+        }
+
+        return $response->withJson(['templates' => $templates]);
+    }
+
     private static function checkData(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['data']);
@@ -499,6 +543,14 @@ class TemplateController
             if ($pathToTemplateInfo['extension'] == 'odt') {
                 $TBS->LoadTemplate('#styles.xml');
             } elseif ($pathToTemplateInfo['extension'] == 'docx') {
+                // TODO : TEST AFTER REFACTORING of getDatas function
+                // foreach (['recipient', 'sender', 'attachmentRecipient'] as $contact) {
+                //     if (!empty($dataToBeMerge[$contact]['postal_address'])) {
+                //         $dataToBeMerge[$contact]['postal_address'] = nl2br($dataToBeMerge[$contact]['postal_address']);
+                //         $dataToBeMerge[$contact]['postal_address'] = str_replace('<br />', '</w:t><w:br/><w:t>', $dataToBeMerge[$contact]['postal_address']);
+                //         $dataToBeMerge[$contact]['postal_address'] = str_replace(array("\n\r", "\r\n", "\r", "\n"), "", $dataToBeMerge[$contact]['postal_address']);
+                //     }
+                // }
                 $TBS->LoadTemplate('#word/header1.xml');
             }
             foreach ($datasources as $name => $datasource) {

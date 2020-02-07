@@ -356,6 +356,19 @@ class ResourceControlController
                                 return ['errors' => "Body customFields[{$customFieldId}] has wrong value"];
                             }
                         }
+                    } elseif ($customField['type'] == 'banAutocomplete') {
+                        if (empty($body['customFields'][$customFieldId][0]) || !is_array($body['customFields'][$customFieldId][0])) {
+                            return ['errors' => "Body customFields[{$customFieldId}] is not an array"];
+                        }
+                        if (empty($body['customFields'][$customFieldId][0]['longitude'])) {
+                            return ['errors' => "Body customFields[{$customFieldId}] longitude is empty"];
+                        } elseif (empty($body['customFields'][$customFieldId][0]['latitude'])) {
+                            return ['errors' => "Body customFields[{$customFieldId}] latitude is empty"];
+                        } elseif (empty($body['customFields'][$customFieldId][0]['addressTown'])) {
+                            return ['errors' => "Body customFields[{$customFieldId}] addressTown is empty"];
+                        } elseif (empty($body['customFields'][$customFieldId][0]['addressPostcode'])) {
+                            return ['errors' => "Body customFields[{$customFieldId}] addressPostcode is empty"];
+                        }
                     } elseif ($customField['type'] == 'string' && !Validator::stringType()->notEmpty()->validate($body['customFields'][$customFieldId])) {
                         return ['errors' => "Body customFields[{$customFieldId}] is not a string"];
                     } elseif ($customField['type'] == 'integer' && !Validator::intVal()->notEmpty()->validate($body['customFields'][$customFieldId])) {

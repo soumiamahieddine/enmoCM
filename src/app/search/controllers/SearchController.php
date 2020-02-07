@@ -148,8 +148,8 @@ class SearchController
             $offset = (int)$queryParams['offset'];
         }
         $order = !in_array($queryParams['order'], ['asc', 'desc']) ? '' : $queryParams['order'];
-        $orderBy = str_replace(['chrono', 'typeLabel', 'creationDate'], ['order_alphanum(alt_identifier)', 'type_label', 'creation_date'], $queryParams['orderBy']);
-        $orderBy = !in_array($orderBy, ['order_alphanum(alt_identifier)', 'status', 'subject', 'type_label', 'creation_date']) ? ['creation_date'] : ["{$orderBy} {$order}"];
+        $orderBy = str_replace(['chrono', 'typeLabel', 'creationDate', 'category'], ['order_alphanum(alt_identifier)', 'type_label', 'creation_date', 'category_id'], $queryParams['orderBy']);
+        $orderBy = !in_array($orderBy, ['order_alphanum(alt_identifier)', 'status', 'subject', 'type_label', 'creation_date', 'category_id']) ? ['creation_date'] : ["{$orderBy} {$order}"];
 
         $allResources = ResModel::getOnView([
             'select'    => ['res_id as "resId"'],
@@ -214,6 +214,8 @@ class SearchController
                     }
                 }
             }
+            $resources[$key]['statusLabel'] = null;
+            $resources[$key]['statusImage'] = null;
             if (!empty($resource['status'])) {
                 foreach ($statuses as $status) {
                     if ($status['id'] == $resource['status']) {

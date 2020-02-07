@@ -906,10 +906,6 @@ abstract class templates_controler_Abstract extends ObjectControler implements O
         }
         
         $ext = strrchr($pathToTemplate, '.');
-        if (!empty($datasources['contact'][0]['postal_address']) && $ext === '.docx') {
-            $datasources['contact'][0]['postal_address'] = nl2br($datasources['contact'][0]['postal_address']);
-            $datasources['contact'][0]['postal_address'] = str_replace('<br />', '</w:t><w:br/><w:t>', $datasources['contact'][0]['postal_address']);
-        }
         foreach ($datasources as $name => $datasource) {
             // Scalar values or arrays ?
             if (!is_array($datasource)) {

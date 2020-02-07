@@ -55,6 +55,10 @@ export class CustomFieldsAdministrationComponent implements OnInit {
         {
             label: this.lang.checkboxInput,
             type: 'checkbox'
+        },
+        {
+            label: this.lang.banAutocompleteInput,
+            type: 'banAutocomplete'
         }
     ];
     customFields: any[] = [];

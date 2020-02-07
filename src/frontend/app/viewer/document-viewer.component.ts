@@ -14,6 +14,8 @@ import { PluginSelectSearchComponent } from '../../plugins/select-search/select-
 import { FormControl } from '@angular/forms';
 import { EcplOnlyofficeViewerComponent } from '../../plugins/onlyoffice-api-js/onlyoffice-viewer.component';
 import { FunctionsService } from '../../service/functions.service';
+import { DocumentViewerModalComponent } from './modal/document-viewer-modal.component';
+import { PrivilegeService } from '../../service/privileges.service';
 
 
 @Component({
@@ -107,7 +109,8 @@ export class DocumentViewerComponent implements OnInit {
         public appService: AppService,
         private dialog: MatDialog,
         private sortPipe: SortPipe,
-        public functions: FunctionsService
+        public functions: FunctionsService,
+        public privilegeService: PrivilegeService,
     ) {
         (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
     }
@@ -177,8 +180,8 @@ export class DocumentViewerComponent implements OnInit {
         this.loading = true;
         this.file = {
             name: 'maarch',
-            format: null,
-            type: null,
+            format: 'pdf',
+            type: 'application/pdf',
             contentMode: 'base64',
             content: this.base64,
             src: this.base64ToArrayBuffer(this.base64)
@@ -500,18 +503,24 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     openPdfInTab() {
+        let src = this.file.contentView;
+        if (this.file.contentMode === 'base64') {
+            src = `data:${this.file.type};base64,${this.file.content}`;
+        }
+
         let newWindow = window.open();
-        newWindow.document.write(`<iframe style="width: 100%;height: 100%;margin: 0;padding: 0;" src="${this.file.contentView}" frameborder="0" allowfullscreen></iframe>`);
+        newWindow.document.write(`<iframe style="width: 100%;height: 100%;margin: 0;padding: 0;" src="${src}" frameborder="0" allowfullscreen></iframe>`);
         newWindow.document.title = this.title;
     }
 
-    loadRessource(resId: any, target: string = 'mainDocument') {
+    async loadRessource(resId: any, target: string = 'mainDocument') {
         this.loading = true;
         if (target === 'attachment') {
             this.requestWithLoader(`../../rest/attachments/${resId}/content?mode=base64`).subscribe(
                 (data: any) => {
                     if (data.encodedDocument) {
                         this.file.contentMode = 'route';
+                        this.file.format = data.originalFormat;
                         this.file.content = `../../rest/attachments/${resId}/originalContent`;
                         this.file.contentView = `../../rest/attachments/${resId}/content?mode=view`;
                         this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
@@ -533,34 +542,72 @@ export class DocumentViewerComponent implements OnInit {
                     return of(false);
                 }
             );
-        } else {
-            this.requestWithLoader(`../../rest/resources/${resId}/content?mode=base64`).subscribe(
-                (data: any) => {
-                    if (data.encodedDocument) {
-                        this.file.contentMode = 'route';
-                        this.file.content = `../../rest/resources/${resId}/originalContent`;
-                        this.file.contentView = `../../rest/resources/${resId}/content?mode=view`
-                        this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
-                        this.loading = false;
-                    }
-                },
-                (err: any) => {
-                    if (err.error.errors === 'Document has no file') {
-                        this.noFile = true;
-                    } else if (err.error.errors === 'Converted Document not found') {
-                        this.file.contentMode = 'route';
-                        this.file.content = `../../rest/resources/${resId}/originalContent`;
-                        this.noConvertedFound = true;
-                    } else {
+        } else {            
+            await this.loadMainDocumentSubInformations();
+            console.log(this.file.subinfos.mainDocVersions.length);
+            if (this.file.subinfos.mainDocVersions.length > 0) {
+                this.requestWithLoader(`../../rest/resources/${resId}/content?mode=base64`).subscribe(
+                    (data: any) => {
+                        if (!this.file.subinfos.mainDocPDFVersions) {
+                            this.file.contentMode = 'route';
+                            this.file.content = `../../rest/resources/${resId}/originalContent`;
+                            this.noConvertedFound = true;
+                            this.loading = false;
+                        } else {
+                            if (data.encodedDocument) {
+                                this.file.contentMode = 'route';
+                                this.file.format = data.originalFormat;
+                                this.file.content = `../../rest/resources/${resId}/originalContent`;
+                                this.file.contentView = `../../rest/resources/${resId}/content?mode=view`;
+                                this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
+                                this.loading = false;
+                            }
+                        }
+                    },
+                    (err: any) => {
                         this.notify.error(err.error.errors);
                         this.noFile = true;
+                        this.loading = false;
+                        return of(false);
                     }
-                    this.loading = false;
-                    return of(false);
-                }
-            );
+                );
+            } else {
+                this.noFile = true;
+                this.loading = false;
+            }
+            
         }
+    }
 
+    loadMainDocumentSubInformations() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/resources/${this.resId}/versionsInformations`).pipe(
+                tap((data: any) => {
+                    const mainDocVersions = data.DOC;
+                    let mainDocPDFVersions = false;
+                    let signedDocVersions = false;
+                    let commentedDocVersions = false;
+                    if (data.DOC[data.DOC.length - 1] !== undefined) {
+                        signedDocVersions = data.SIGN.indexOf(data.DOC[data.DOC.length - 1]) > -1 ? true : false;
+                        commentedDocVersions = data.NOTE.indexOf(data.DOC[data.DOC.length - 1]) > -1 ? true : false;
+                        mainDocPDFVersions = data.PDF.indexOf(data.DOC[data.DOC.length - 1]) > -1 ? true : false;
+                    }
+                    
+                    this.file.subinfos = {
+                        mainDocVersions: mainDocVersions,
+                        signedDocVersions: signedDocVersions,
+                        commentedDocVersions: commentedDocVersions,
+                        mainDocPDFVersions : mainDocPDFVersions
+                    };
+                    
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe(); 
+        });
     }
 
     editTemplate(templateId: number) {
@@ -583,6 +630,8 @@ export class DocumentViewerComponent implements OnInit {
 
                 this.triggerEvent.emit();
                 const template = this.listTemplates.filter(template => template.id === templateId)[0];
+
+                this.file.format = template.extension;
 
                 if (this.editor.mode === 'onlyoffice') {
 
@@ -656,7 +705,7 @@ export class DocumentViewerComponent implements OnInit {
             this.http.post('../../rest/jnlp', this.editor.options).pipe(
                 tap((data: any) => {
                     window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
-                    this.checkLockFile(data.jnlpUniqueId, this.format);
+                    this.checkLockFile(data.jnlpUniqueId, this.file.format);
                 })
             ).subscribe();
         }
@@ -668,7 +717,7 @@ export class DocumentViewerComponent implements OnInit {
             this.editor.async = false;
             this.editor.options = {
                 objectType: 'resourceModification',
-                objectId: 1,
+                objectId: this.resId,
                 docUrl: `rest/onlyOffice/mergedFile`
             };
             this.editInProgress = true;
@@ -685,7 +734,7 @@ export class DocumentViewerComponent implements OnInit {
             this.http.post('../../rest/jnlp', this.editor.options).pipe(
                 tap((data: any) => {
                     window.location.href = '../../rest/jnlp/' + data.generatedJnlp;
-                    this.checkLockFile(data.jnlpUniqueId, this.format);
+                    this.checkLockFile(data.jnlpUniqueId, this.file.format);
                 })
             ).subscribe();
         }
@@ -855,17 +904,54 @@ export class DocumentViewerComponent implements OnInit {
             map((data: any) => {
                 const formatdatas = {
                     encodedFile: data.content,
-                    format: data.format
+                    format: data.format,
+                    resId: this.resId
                 }
-                return formatdatas
+                return formatdatas;
             }),
-            exhaustMap((data) => this.http.put(`../../rest/resources/${this.resId}?onlyDocument=true`, { encodedResource: data })),
+            exhaustMap((data) => this.http.put(`../../rest/resources/${this.resId}?onlyDocument=true`, data)),
             tap(() => {
                 this.closeEditor();
                 this.loadRessource(this.resId);
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    openResourceVersion(version: number, type: string) {
+        
+        const title = type !== 'PDF' ? this.lang[type + '_version'] : `${this.lang.version} ${version}`;
+
+        // TO SHOW ORIGINAL DOC (because autoload signed doc)
+        type = type === 'SIGN' ? 'PDF' : type;
+
+        this.http.get(`../../rest/resources/${this.resId}/content/${version}?type=${type}`).pipe(
+            tap((data: any) => {
+
+                this.dialog.open(DocumentViewerModalComponent, { autoFocus: false, height: '90vh', width: '90vw', data: { title: `${title}`, base64: data.encodedDocument } });
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    unsignMainDocument() {
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.unsignDocument, msg: this.lang.confirmAction } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.put(`../../rest/resources/${this.resId}/unsign`, {})),
+            tap(() => {
+                this.notify.success(this.lang.documentUnsigned);
+                this.loadRessource(this.resId);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
                 return of(false);
             })
         ).subscribe();

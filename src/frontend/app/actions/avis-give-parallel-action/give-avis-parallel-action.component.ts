@@ -22,6 +22,8 @@ export class GiveAvisParallelActionComponent implements OnInit {
 
     noResourceToProcess: boolean = null;
 
+    opinionLimitDate: string | Date = null;
+
     ownerOpinion: string = '';
     opinionContent: string = '';
 
@@ -57,6 +59,8 @@ export class GiveAvisParallelActionComponent implements OnInit {
                 if (!this.noResourceToProcess) {
                     this.ownerOpinion = data.resourcesInformations.success[0].avisUserAsk;
                     this.opinionContent = data.resourcesInformations.success[0].note;
+                    this.opinionLimitDate = new Date(data.resourcesInformations.success[0].opinionLimitDate);
+                    this.opinionLimitDate = this.functions.formatDateObjectToDateString(this.opinionLimitDate);
                 }
             }),
             finalize(() => this.loading = false),

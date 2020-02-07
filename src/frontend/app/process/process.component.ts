@@ -399,8 +399,26 @@ export class ProcessComponent implements OnInit {
         if (this.currentTool === 'info' || this.isModalOpen('info')) {
             this.processAction();
         } else {
-            this.autoAction = true;
-            this.currentTool = 'info';
+            if (this.isToolModified()) {
+                const dialogRef = this.openConfirmModification();
+                dialogRef.afterClosed().pipe(
+                    filter((data: string) => data === 'ok'),
+                    tap(() => {
+                        this.saveTool();
+                    }),
+                    finalize(() => {
+                        this.autoAction = true;
+                        this.currentTool = 'info';
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else {
+                this.autoAction = true;
+                this.currentTool = 'info';
+            }
         }
     }
 

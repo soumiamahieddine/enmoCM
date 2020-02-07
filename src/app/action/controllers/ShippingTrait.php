@@ -99,7 +99,7 @@ trait ShippingTrait
             }
             $contacts[] = $afnorAddress;
 
-            $attachment['collId'] = 'attachments_coll';
+            $attachment['type'] = 'attachments_coll';
             $resourcesList[] = $attachment;
         }
 
@@ -136,7 +136,7 @@ trait ShippingTrait
                 }
                 $contactsResource[] = $afnorAddress;
             }
-            $resource['collId'] = 'letterbox_coll';
+            $resource['type'] = 'letterbox_coll';
             $resourcesList[] = $resource;
         }
 
@@ -169,7 +169,7 @@ trait ShippingTrait
                 'body'          => json_encode(['name' => $sendingName])
             ]);
             if ($createSending['code'] != 201) {
-                $errors[] = "Maileva sending creation failed for attachment {$attachmentId}";
+                $errors[] = "Maileva sending creation failed for attachment {$resId}";
                 continue;
             }
             foreach ($createSending['headers'] as $header) {
@@ -180,11 +180,11 @@ trait ShippingTrait
                 }
             }
             if (empty($sendingId)) {
-                $errors[] = "Maileva sending id not found for attachment {$attachmentId}";
+                $errors[] = "Maileva sending id not found for attachment {$resId}";
                 continue;
             }
 
-            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $resource['collId']]);
+            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $resource['type']]);
             $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
             if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
                 $errors[] = "Docserver does not exist for resource {$resId}";
@@ -207,7 +207,7 @@ trait ShippingTrait
                 continue;
             }
 
-            if ($resource['collId'] == 'attachments_coll') {
+            if ($resource['type'] == 'attachments_coll') {
                 $createRecipient = CurlModel::execSimple([
                     'url'           => $mailevaConfig['uri'] . "/mail/v1/sendings/{$sendingId}/recipients",
                     'bearerAuth'    => ['token' => $token],
@@ -264,7 +264,7 @@ trait ShippingTrait
                 ]),
             ]);
             if ($setOptions['code'] != 200) {
-                $errors[] = "Maileva options modification failed for attachment {$attachmentId}";
+                $errors[] = "Maileva options modification failed for attachment {$resId}";
                 continue;
             }
 
@@ -275,7 +275,7 @@ trait ShippingTrait
                 'method'        => 'POST'
             ]);
             if ($submit['code'] != 200) {
-                $errors[] = "Maileva submit failed for attachment {$attachmentId}";
+                $errors[] = "Maileva submit failed for attachment {$resId}";
                 continue;
             }
 
@@ -288,7 +288,7 @@ trait ShippingTrait
                 'resources' => [$resource]
             ]);
 
-            $documentType = $resource['collId'] == 'attachments_coll' ? 'attachment' : 'resource';
+            $documentType = $resource['type'] == 'attachments_coll' ? 'attachment' : 'resource';
             ShippingModel::create([
                 'userId'            => $currentUser['id'],
                 'documentId'        => $resId,

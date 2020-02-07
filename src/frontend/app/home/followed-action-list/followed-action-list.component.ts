@@ -94,9 +94,8 @@ export class FollowedActionListComponent implements OnInit {
             exhaustMap(() => this.http.request('DELETE', '../../rest/resources/unfollow' , { body: { resources: this.selectedRes } })),
             tap((data: any) => {
                 this.notify.success(this.lang.removedFromFolder);
-                this.refreshFolders();
+                this.headerService.nbResourcesFollowed--;
                 this.refreshDaoAfterAction();
-                this.menuShortcut.loadShortcuts();
             })
         ).subscribe();
     }

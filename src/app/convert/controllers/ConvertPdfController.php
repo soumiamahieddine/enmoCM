@@ -64,7 +64,7 @@ class ConvertPdfController
             $resource = AttachmentModel::getById(['id' => $aArgs['resId'], 'select' => ['docserver_id', 'path', 'filename', 'format']]);
         }
 
-        if (empty($resource)) {
+        if (empty($resource['docserver_id']) || empty($resource['path']) || empty($resource['filename'])) {
             return ['errors' => '[ConvertPdf] Resource does not exist'];
         }
 
@@ -191,10 +191,10 @@ class ConvertPdfController
             $convertedDocument = $convertedDocument[0] ?? null;
         } else {
             $convertedDocument = AdrModel::getConvertedDocumentById([
-                'select' => ['docserver_id','path', 'filename', 'fingerprint'],
-                'resId' => $args['resId'],
-                'collId' => 'attachment',
-                'type' => 'PDF'
+                'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
+                'resId'     => $args['resId'],
+                'collId'    => 'attachment',
+                'type'      => 'PDF'
             ]);
         }
 

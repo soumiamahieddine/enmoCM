@@ -284,7 +284,8 @@ export class BasketListComponent implements OnInit {
 
     viewThumbnail(row: any) {
         if (row.hasDocument) {
-            this.thumbnailUrl = '../../rest/resources/' + row.resId + '/thumbnail';
+            let timeStamp = +new Date();
+            this.thumbnailUrl = '../../rest/resources/' + row.resId + '/thumbnail?tsp=' + timeStamp;
             $j('#viewThumbnail').show();
             $j('#listContent').css({"overflow": "hidden"});
         }

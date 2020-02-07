@@ -41,9 +41,9 @@ class LinkController
         $linkedResources = [];
         if (!empty($linkedResourcesIds)) {
             $linkedResources = ResModel::get([
-                'select'    => ['res_id as "resId"', 'subject', 'doc_date as "documentDate"', 'status', 'dest_user as "destUser"', 'destination', 'alt_identifier as chrono', 'category_id as "categoryId"', 'filename', 'confidentiality'],
-                'where'     => ['res_id in (?)'],
-                'data'      => [$linkedResourcesIds]
+                'select' => ['res_id as "resId"', 'subject', 'doc_date as "documentDate"', 'status', 'dest_user as "destUser"', 'destination', 'alt_identifier as chrono', 'category_id as "categoryId"', 'filename', 'confidentiality'],
+                'where'  => ['res_id in (?)'],
+                'data'   => [$linkedResourcesIds]
             ]);
 
             foreach ($linkedResources as $key => $value) {
@@ -132,22 +132,27 @@ class LinkController
             'data'      => [$body['linkedResources'], "\"{$args['resId']}\""]
         ]);
 
+        $linkedResourcesInfo = ResModel::get([
+            'select' => ['alt_identifier', 'res_id'],
+            'where'  => ['res_id in (?)'],
+            'data'   => [$body['linkedResources']]
+        ]);
+        $linkedResourcesAltIdentifier = array_column($linkedResourcesInfo, 'alt_identifier', 'res_id');
+
         foreach ($body['linkedResources'] as $value) {
             HistoryController::add([
                 'tableName' => 'res_letterbox',
                 'recordId'  => $args['resId'],
                 'eventType' => 'UP',
-                'info'      => _LINK_ADDED . " : {$value}",
+                'info'      => _LINK_ADDED . " : {$linkedResourcesAltIdentifier[$value]}",
                 'moduleId'  => 'resource',
                 'eventId'   => 'resourceModification'
             ]);
-        }
-        foreach ($body['linkedResources'] as $value) {
             HistoryController::add([
                 'tableName' => 'res_letterbox',
                 'recordId'  => $value,
                 'eventType' => 'UP',
-                'info'      => _LINK_ADDED . " : {$args['resId']}",
+                'info'      => _LINK_ADDED . " : {$resource['alt_identifier']}",
                 'moduleId'  => 'resource',
                 'eventId'   => 'resourceModification'
             ]);
@@ -177,11 +182,18 @@ class LinkController
             'data'      => [$args['id']]
         ]);
 
+        $linkedResourcesInfo = ResModel::get([
+            'select' => ['alt_identifier', 'res_id'],
+            'where'  => ['res_id in (?)'],
+            'data'   => [[$args['resId'], $args['id']]]
+        ]);
+        $linkedResourcesAltIdentifier = array_column($linkedResourcesInfo, 'alt_identifier', 'res_id');
+
         HistoryController::add([
             'tableName' => 'res_letterbox',
             'recordId'  => $args['resId'],
             'eventType' => 'UP',
-            'info'      => _LINK_DELETED . " : {$args['id']}",
+            'info'      => _LINK_DELETED . " : {$linkedResourcesAltIdentifier[$args['id']]}",
             'moduleId'  => 'resource',
             'eventId'   => 'resourceModification'
         ]);
@@ -189,7 +201,7 @@ class LinkController
             'tableName' => 'res_letterbox',
             'recordId'  => $args['id'],
             'eventType' => 'UP',
-            'info'      => _LINK_DELETED . " : {$args['resId']}",
+            'info'      => _LINK_DELETED . " : {$linkedResourcesAltIdentifier[$args['resId']]}",
             'moduleId'  => 'resource',
             'eventId'   => 'resourceModification'
         ]);

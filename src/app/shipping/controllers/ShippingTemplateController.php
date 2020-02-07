@@ -291,7 +291,9 @@ class ShippingTemplateController
         foreach ($aArgs['resources'] as $value) {
             $resourceId = $value['res_id'];
 
-            $convertedResource = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $resourceId, 'collId' => $value['collId']]);
+            $collId = $value['type'] == 'attachment' ? 'attachments_coll' : 'letterbox_coll';
+
+            $convertedResource = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $resourceId, 'collId' => $collId]);
             $docserver         = DocserverModel::getByDocserverId(['docserverId' => $convertedResource['docserver_id'], 'select' => ['path_template']]);
             $pathToDocument    = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedResource['path']) . $convertedResource['filename'];
 

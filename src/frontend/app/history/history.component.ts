@@ -76,7 +76,7 @@ export class HistoryComponent implements OnInit {
             this.displayedColumnsHistory = ['event_date', 'info'];
             this.fullHistoryMode = !this.privilegeService.hasCurrentUserPrivilege('view_doc_history')
         } else {
-            this.displayedColumnsHistory = ['event_date', 'userLabel', 'info', 'remote_ip'];
+            this.displayedColumnsHistory = ['event_date', 'record_id', 'userLabel', 'info', 'remote_ip'];
         }
         this.loading = true;
         this.initHistoryMode();

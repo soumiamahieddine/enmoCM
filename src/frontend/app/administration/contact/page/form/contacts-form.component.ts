@@ -508,7 +508,7 @@ export class ContactsFormComponent implements OnInit {
                     if (id === 'm2m') {
                         this.contactForm.filter(contact => contact.id === 'externalId_m2m')[0].control.setValue(data.externalId[id]);
                         this.contactForm.filter(contact => contact.id === 'externalId_m2m')[0].display = true;
-                    } else {
+                    } else if (id === 'm2m_annuary_id') {
                         this.contactForm.push({
                             id: `externalId_${id}`,
                             unit: 'maarch2maarch',
@@ -520,6 +520,19 @@ export class ContactsFormComponent implements OnInit {
                             filling: false,
                             values: []
                         });
+                    } else {
+                        this.contactForm.push({
+                            id: `externalId_${id}`,
+                            unit: 'complement',
+                            label: id,
+                            type: 'string',
+                            control: new FormControl({ value: data.externalId[id], disabled: true }),
+                            required: false,
+                            display: true,
+                            filling: false,
+                            values: []
+                        });
+
                     }
                 }
             });
@@ -766,10 +779,10 @@ export class ContactsFormComponent implements OnInit {
     removeField(field: any) {
         field.display = !field.display;
         field.control.reset();
-        if (field.id == 'externalId_m2m' && !field.display) {
+        if ((field.id == 'externalId_m2m' || field.id == 'communicationMeans') && !field.display) {
             let indexFieldAnnuaryId = this.contactForm.map(field => field.id).indexOf('externalId_m2m_annuary_id');
             if (indexFieldAnnuaryId > -1) {
-                this.contactForm[indexFieldAnnuaryId].display = false;
+                this.contactForm.splice(indexFieldAnnuaryId, 1);
             }
         }
         this.checkFilling();

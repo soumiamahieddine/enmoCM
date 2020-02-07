@@ -110,6 +110,10 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
     }
 
     indexDocument() {
+        this.data.resource['integrations'] = {
+            inSignatureBook : true
+        };
+
         return new Promise((resolve, reject) => {
             this.http.post('../../rest/resources', this.data.resource).pipe(
                 tap((data: any) => {

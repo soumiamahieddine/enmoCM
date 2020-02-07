@@ -62,6 +62,11 @@ $app->post('/actions', \Action\controllers\ActionController::class . ':create');
 $app->put('/actions/{id}', \Action\controllers\ActionController::class . ':update');
 $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':delete');
 
+//Acknowledgement Receipt
+$app->post('/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
+$app->get('/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getById');
+$app->get('/acknowledgementReceipt/{id}/content', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
+
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');
 $app->get('/attachments/{id}', \Attachment\controllers\AttachmentController::class . ':getById');
@@ -295,7 +300,6 @@ $app->get('/listTemplates/{id}', \Entity\controllers\ListTemplateController::cla
 $app->put('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':update');
 $app->delete('/listTemplates/{id}', \Entity\controllers\ListTemplateController::class . ':delete');
 $app->get('/listTemplates/entities/{entityId}', \Entity\controllers\ListTemplateController::class . ':getByEntityId');
-$app->get('/listTemplates/entities/{entityId}/maarchParapheur', \Entity\controllers\ListTemplateController::class . ':getByEntityIdWithMaarchParapheur');
 $app->put('/listTemplates/entityDest/itemId/{itemId}', \Entity\controllers\ListTemplateController::class . ':updateByUserWithEntityDest');
 $app->get('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':getTypeRoles');
 $app->put('/listTemplates/types/{typeId}/roles', \Entity\controllers\ListTemplateController::class . ':updateTypeRoles');
@@ -342,7 +346,8 @@ $app->post('/resources', \Resource\controllers\ResController::class . ':create')
 $app->get('/resources/{resId}', \Resource\controllers\ResController::class . ':getById');
 $app->put('/resources/{resId}', \Resource\controllers\ResController::class . ':update');
 $app->get('/resources/{resId}/content', \Resource\controllers\ResController::class . ':getFileContent');
-$app->get('/resources/{resId}/contents/{version}', \Resource\controllers\ResController::class . ':getFileContents');
+$app->get('/resources/{resId}/versionsInformations', \Resource\controllers\ResController::class . ':getVersionsInformations');
+$app->get('/resources/{resId}/content/{version}', \Resource\controllers\ResController::class . ':getVersionFileContent');
 $app->get('/resources/{resId}/originalContent', \Resource\controllers\ResController::class . ':getOriginalFileContent');
 $app->get('/resources/{resId}/thumbnail', \Resource\controllers\ResController::class . ':getThumbnailContent');
 $app->get('/resources/{resId}/isAllowed', \Resource\controllers\ResController::class . ':isAllowedForCurrentUser');
@@ -352,6 +357,7 @@ $app->get('/resources/{resId}/contacts', \Contact\controllers\ContactController:
 $app->get('/resources/{resId}/emails', \Email\controllers\EmailController::class . ':getByResId');
 $app->get('/resources/{resId}/notes', \Note\controllers\NoteController::class . ':getByResId');
 $app->get('/resources/{resId}/templates', \Template\controllers\TemplateController::class . ':getByResId');
+$app->get('/resources/{resId}/emailTemplates', \Template\controllers\TemplateController::class . ':getEmailTemplatesByResId');
 $app->get('/resources/{resId}/listInstance', \Entity\controllers\ListInstanceController::class . ':getByResId');
 $app->get('/resources/{resId}/visaCircuit', \Entity\controllers\ListInstanceController::class . ':getVisaCircuitByResId');
 $app->get('/resources/{resId}/opinionCircuit', \Entity\controllers\ListInstanceController::class . ':getOpinionCircuitByResId');
@@ -361,9 +367,11 @@ $app->delete('/resources/{resId}/circuits/{type}', \Entity\controllers\ListInsta
 $app->get('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':getLinkedResources');
 $app->post('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':linkResources');
 $app->delete('/resources/{resId}/linkedResources/{id}', \Resource\controllers\LinkController::class . ':unlinkResources');
+$app->put('/resources/{resId}/sign', \SignatureBook\controllers\SignatureBookController::class . ':signResource');
 $app->put('/resources/{resId}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignResource');
+$app->get('/resources/{resId}/acknowledgementReceipts', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':get');
+$app->get('/resources/{resId}/shippings', \Shipping\controllers\ShippingController::class . ':get');
 
-$app->get('/res/{resId}/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
 $app->put('/res/externalInfos', \Resource\controllers\ResController::class . ':updateExternalInfos');
@@ -384,7 +392,7 @@ $app->put('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/act
 $app->get('/resourcesList/exportTemplate', \Resource\controllers\ExportController::class . ':getExportTemplates');
 $app->get('/resourcesList/summarySheets', \Resource\controllers\SummarySheetController::class . ':createListWithAll');
 $app->put('/resourcesList/integrations', \Resource\controllers\ResController::class . ':setInIntegrations');
-$app->post('/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
+
 //PreProcess
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \Action\controllers\PreProcessActionController::class . ':checkAcknowledgementReceipt');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkExternalSignatoryBook', \Action\controllers\PreProcessActionController::class . ':checkExternalSignatoryBook');

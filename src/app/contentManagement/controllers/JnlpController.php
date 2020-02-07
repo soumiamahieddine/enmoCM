@@ -261,7 +261,7 @@ class JnlpController
                     $response->write($xmlResponse);
                     return $response->withHeader('Content-Type', 'application/xml');
                 }
-                $resource = ResModel::getById(['resId' => $body['objectId'], 'select' => ['docserver_id', 'path', 'filename']]);
+                $resource = ResModel::getById(['resId' => $queryParams['objectId'], 'select' => ['docserver_id', 'path', 'filename']]);
                 if (empty($resource['filename'])) {
                     $xmlResponse = JnlpController::generateResponse(['type' => 'ERROR', 'data' => ['ERROR' => "Resource has no file"]]);
                     $response->write($xmlResponse);

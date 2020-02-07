@@ -215,3 +215,7 @@
   transform-origin: center bottom;
   animation-iteration-count: infinite;
 }
+
+.disabledButton {
+  cursor: not-allowed;
+}

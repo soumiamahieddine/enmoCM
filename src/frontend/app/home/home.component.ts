@@ -86,7 +86,8 @@ export class HomeComponent implements OnInit {
     }
 
     viewThumbnail(row:any) {
-        this.thumbnailUrl = '../../rest/resources/' + row.res_id + '/thumbnail';
+        let timeStamp = +new Date();
+        this.thumbnailUrl = '../../rest/resources/' + row.res_id + '/thumbnail?tsp=' + timeStamp;
         $j('#viewThumbnail').show();
         $j('#listContent').css({"overflow":"hidden"});
     }
