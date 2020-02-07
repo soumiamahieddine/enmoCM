@@ -281,7 +281,11 @@ class MergeController
             $customs = !empty($resource['custom_fields']) ? json_decode($resource['custom_fields'], true) : [];
             foreach ($customs as $customId => $custom) {
                 if (is_array($custom)) {
-                    $resource['customField_' . $customId] = implode("\n", $custom);
+                    if (is_array($custom[0])) { //Custom BAN
+                        $resource['customField_' . $customId] = "{$custom[0]['addressNumber']} {$custom[0]['addressStreet']} {$custom[0]['addressTown']} ({$custom[0]['addressPostcode']})";
+                    } else {
+                        $resource['customField_' . $customId] = implode("\n", $custom);
+                    }
                 } else {
                     $resource['customField_' . $customId] = $custom;
                 }
@@ -290,7 +294,11 @@ class MergeController
             if (!empty($args['customFields'])) {
                 foreach ($args['customFields'] as $key => $customField) {
                     if (is_array($customField)) {
-                        $resource['customField_' . $key] = implode("\n", $customField);
+                        if (is_array($customField[0])) { //Custom BAN
+                            $resource['customField_' . $key] = "{$customField[0]['addressNumber']} {$customField[0]['addressStreet']} {$customField[0]['addressTown']} ({$customField[0]['addressPostcode']})";
+                        } else {
+                            $resource['customField_' . $key] = implode("\n", $customField);
+                        }
                     } else {
                         $resource['customField_' . $key] = $customField;
                     }

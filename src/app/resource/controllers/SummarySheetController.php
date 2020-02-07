@@ -496,7 +496,14 @@ class SummarySheetController
                     foreach ($customFieldsIds as $customFieldsId) {
                         $label = $customFields[$customFieldsId];
                         if (is_array($customFieldsValues[$customFieldsId])) {
-                            $value = !empty($customFieldsValues[$customFieldsId]) ? '<b>' . implode(',', $customFieldsValues[$customFieldsId]) . '</b>' : '<i>' . _UNDEFINED . '</i>';
+                            if (!empty($customFieldsValues[$customFieldsId])) {
+                                if (is_array($customFieldsValues[$customFieldsId][0])) { //Custom BAN
+                                    $customValue = "{$customFieldsValues[$customFieldsId][0]['addressNumber']} {$customFieldsValues[$customFieldsId][0]['addressStreet']} {$customFieldsValues[$customFieldsId][0]['addressTown']} ({$customFieldsValues[$customFieldsId][0]['addressPostcode']})";
+                                } else {
+                                    $customValue = implode(',', $customFieldsValues[$customFieldsId]);
+                                }
+                            }
+                            $value = !empty($customValue) ? '<b>' . $customValue . '</b>' : '<i>' . _UNDEFINED . '</i>';
                         } else {
                             $value = $customFieldsValues[$customFieldsId] ? '<b>' . $customFieldsValues[$customFieldsId] . '</b>' : '<i>' . _UNDEFINED . '</i>';
                         }
