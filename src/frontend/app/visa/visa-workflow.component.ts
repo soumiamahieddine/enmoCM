@@ -26,7 +26,7 @@ export class VisaWorkflowComponent implements OnInit {
         roles: ['sign', 'visa'],
         items: []
     };
-    visaWorkflowClone: any = null;
+    visaWorkflowClone: any = [];
     visaTemplates: any = {
         private: [],
         public: []

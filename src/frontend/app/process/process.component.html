@@ -251,7 +251,7 @@
         [ngStyle]="{'width': appService.getViewMode() ? '80%' : '30%'}" autoFocus="false">
     </mat-sidenav>
 </mat-sidenav-container>
-<div class="modal-module" cdkDrag *ngFor="let modal of modalModule; let i=index"
+<div class="modal-module {{modal.id}}" cdkDrag *ngFor="let modal of modalModule; let i=index"
     [class.largeModal]="modal.id === 'info'">
     <div class="modal-module-title" cdkDragHandle>
         <span>

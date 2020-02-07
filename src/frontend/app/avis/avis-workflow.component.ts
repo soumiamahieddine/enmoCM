@@ -24,7 +24,7 @@ export class AvisWorkflowComponent implements OnInit {
         roles: ['sign', 'avis'],
         items: []
     };
-    avisWorkflowClone: any = null;
+    avisWorkflowClone: any = [];
     avisTemplates: any = {
         private: [],
         public: []
