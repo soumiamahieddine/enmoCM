@@ -429,12 +429,6 @@ export class PrivilegeService {
             "unit": 'visaWorkflow'
         },
         {
-            "id": "use_date_in_signBlock",
-            "label": this.lang.useDateInSignBlock,
-            "comment": this.lang.useDateInSignBlockDesc,
-            "unit": 'visaWorkflow'
-        },
-        {
             "id": "print_folder_doc",
             "label": this.lang.printFolderDoc,
             "comment": this.lang.printFolderDoc,

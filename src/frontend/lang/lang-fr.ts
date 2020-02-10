@@ -1247,8 +1247,6 @@ export const LANG_FR = {
     "signDocs": "Signer les documents",
     "modifyVisaInSignatureBook" : "Modifier le viseur en cours depuis le parapheur",
     "modifyVisaInSignatureBookDesc" : "Utile si le parapheur sert en tant que parapheur de supervision",
-    "useDateInSignBlock" : "Inclure la date dans la griffe de signature",
-    "useDateInSignBlockDesc" : "La date de signature aparaîtra en haut de la griffe de signature (avec la ville si celle-ci a été inscrite dans le service racine de l'application).",
     "printFolderDoc" : "Imprimer le dossier complet",
     "statusesAdmin" : "Créer ou modifier des statuts",
     "actionsAdmin" : "Créer ou modifier des actions",
