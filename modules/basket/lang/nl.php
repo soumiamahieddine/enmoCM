@@ -6,12 +6,6 @@
  */
 
 /*********************** SERVICES ***********************************/
-if (!defined('_ADMIN_BASKETS')) {
-    define('_ADMIN_BASKETS', 'Bakjes');
-}
-if (!defined('_USE_BASKETS')) {
-    define('_USE_BASKETS', 'De bakjes gebruiken');
-}
 if (!defined('_DIFFUSION_LIST')) {
     define('_DIFFUSION_LIST', 'Verdelingslijst');
 }
@@ -29,24 +23,6 @@ if (!defined('_THE_ID')) {
 }
 if (!defined('_THE_DESC')) {
     define('_THE_DESC', 'De beschrijving');
-}
-if (!defined('_BELONGS_TO_NO_GROUP')) {
-    define('_BELONGS_TO_NO_GROUP', 'behoort tot geen enkele groep');
-}
-if (!defined('_SYSTEM_BASKET_MESSAGE')) {
-    define('_SYSTEM_BASKET_MESSAGE', 'Dit bakje is een systeembakje u kunt de tabel en de WHERE clause niet wijzigen Ze worden ter informatie weergegeven');
-}
-if (!defined('_BASKET_MISSING')) {
-    define('_BASKET_MISSING', 'Het Bakje bestaat niet');
-}
-if (!defined('_BASKET_UPDATED')) {
-    define('_BASKET_UPDATED', 'Bakje gewijzigd');
-}
-if (!defined('_BASKET_UPDATE')) {
-    define('_BASKET_UPDATE', 'Wijziging van het bakje');
-}
-if (!defined('_BASKET_ADDED')) {
-    define('_BASKET_ADDED', 'Nieuwe bakje toegevoegd');
 }
 if (!defined('_DELETED_BASKET')) {
     define('_DELETED_BASKET', 'Bakje verwijderd');
@@ -483,9 +459,6 @@ if (!defined('_ARCHIVE_LIST')) {
 if (!defined('_COUNT_LIST')) {
     define('_COUNT_LIST', 'Lijst van de kopieën');
 }
-if (!defined('_FILTER_BY_ENTITY')) {
-    define('_FILTER_BY_ENTITY', 'Filteren op dienst');
-}
 if (!defined('_FILTER_BY')) {
     define('_FILTER_BY', 'Filteren op');
 }
@@ -539,39 +512,6 @@ if (!defined('_COMBINATED_ACTION')) {
 }
 if (!defined('_END_OF_THE_WF')) {
     define('_END_OF_THE_WF', 'Einde van de workflow');
-}
-if (!defined('_BASKET_VISIBLE_ONLY_ON_SEARCH')) {
-    define('_BASKET_VISIBLE_ONLY_ON_SEARCH', 'Enkel opzoekingsbakje');
-}
-if (!defined('_MANAGE_SECONDARY_USER_BASKETS')) {
-    define('_MANAGE_SECONDARY_USER_BASKETS', 'De toegang tot de bakjes van de secundaire groepen beheren.');
-}
-if (!defined('_MANAGE_SECONDARY_USER_BASKETS_TEXT')) {
-    define('_MANAGE_SECONDARY_USER_BASKETS_TEXT', 'Om de toegang tot de bakjes van de secundaire groepen van de gebruiker te beheren.');
-}
-if (!defined('_MANAGE_SECONDARY_USER_BASKETS_HELP')) {
-    define('_MANAGE_SECONDARY_USER_BASKETS_HELP', 'De gebruiker moet minstens een secundaire groep met bakjes hebben om tot deze functie toegang te hebben.');
-}
-if (!defined('_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL')) {
-    define('_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL', '(Een secundaire groep met bakjes toevoegen daarna de gebruiker registreren vooraleer naar dit scherm terug te keren).');
-}
-if (!defined('_MANAGE_BASKET_ORDER')) {
-    define('_MANAGE_BASKET_ORDER', 'De volgorde van de bakjes beheren');
-}
-if (!defined('_MOVE_UP_TOP')) {
-    define('_MOVE_UP_TOP', 'Helemaal bovenaan de lijst gaan');
-}
-if (!defined('_MOVE_UP_ONE_LEVEL')) {
-    define('_MOVE_UP_ONE_LEVEL', 'Een lijn hoger');
-}
-if (!defined('_MOVE_DOWN_ONE_LEVEL')) {
-    define('_MOVE_DOWN_ONE_LEVEL', 'Een lijn lager');
-}
-if (!defined('_MOVE_DOWN_BOTTOM')) {
-    define('_MOVE_DOWN_BOTTOM', 'Helemaal onderaan de lijst gaan');
-}
-if (!defined('_BASKET_ORDER_EDITED')) {
-    define('_BASKET_ORDER_EDITED', 'Volgorde van de bakjes gewijzigd');
 }
 if (!defined('_ALL_BASKETS')) {
     define('_ALL_BASKETS', 'Mijn volledige perimeter');
@@ -629,9 +569,6 @@ if (!defined('_REDIRECT_TO_DEP_OK')) {
 }
 if (!defined('_AUTHORISED_ENTITIES')) {
     define('_AUTHORISED_ENTITIES', 'Lijst van de toegelaten eenheden');
-}
-if (!defined('_FILTER_BY_ENTITY')) {
-    define('_FILTER_BY_ENTITY', 'Filteren op eenheid');
 }
 if (!defined('_SPREAD_SEARCH_TO_BASKETS')) {
     define('_SPREAD_SEARCH_TO_BASKETS', 'Omvang van de opzoeking');

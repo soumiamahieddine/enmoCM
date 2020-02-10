@@ -20,10 +20,6 @@
  */
 
 /*********************** SERVICES ***********************************/
-if (!defined("_ADMIN_BASKETS"))
-    define("_ADMIN_BASKETS", "Baskets");
-if (!defined("_USE_BASKETS"))
-    define("_USE_BASKETS", "Use the baskets");
 if (!defined("_DIFFUSION_LIST"))
     define("_DIFFUSION_LIST", "Diffusion List");
 
@@ -38,18 +34,6 @@ if (!defined("_THE_ID"))
     define("_THE_ID", "The ID ");
 if (!defined("_THE_DESC"))
     define("_THE_DESC", "The description ");
-if (!defined("_BELONGS_TO_NO_GROUP"))
-    define("_BELONGS_TO_NO_GROUP", "Does not belong to any group");
-if (!defined("_SYSTEM_BASKET_MESSAGE"))
-    define("_SYSTEM_BASKET_MESSAGE", "This basket is a system basket, you cannot modify the table and the where clause either. They are displayed for information");
-if (!defined("_BASKET_MISSING"))
-    define("_BASKET_MISSING", "The basket doesn't exist");
-if (!defined("_BASKET_UPDATED"))
-    define("_BASKET_UPDATED", "Modified basket");
-if (!defined("_BASKET_UPDATE"))
-    define("_BASKET_UPDATE", "Basket modification");
-if (!defined("_BASKET_ADDED"))
-    define("_BASKET_ADDED", "Added new basket");
 if (!defined("_DELETED_BASKET"))
     define("_DELETED_BASKET", "Deleted basket");
 if (!defined("_BASKET_DELETION"))
@@ -353,8 +337,6 @@ if (!defined("_ARCHIVE_LIST"))
     define("_ARCHIVE_LIST", "Archiving units list");
 if (!defined("_COUNT_LIST"))
     define("_COUNT_LIST", "Copies list");
-if (!defined("_FILTER_BY_ENTITY"))
-    define("_FILTER_BY_ENTITY", "Filter by department");
 if (!defined("_FILTER_BY"))
     define("_FILTER_BY", "Filter by");
 if (!defined("_OTHER_BASKETS"))
@@ -393,28 +375,3 @@ if (!defined("_COMBINATED_ACTION"))
     define("_COMBINATED_ACTION", "Combined action");
 if (!defined("_END_OF_THE_WF"))
     define("_END_OF_THE_WF", "Workflow end");
-
-if (!defined("_BASKET_VISIBLE_ONLY_ON_SEARCH"))
-    define("_BASKET_VISIBLE_ONLY_ON_SEARCH", "Only search basket");
-
-if (!defined("_MANAGE_SECONDARY_USER_BASKETS"))
-    define("_MANAGE_SECONDARY_USER_BASKETS", "Manage the access to the second groups.");
-if (!defined("_MANAGE_SECONDARY_USER_BASKETS_TEXT"))
-    define("_MANAGE_SECONDARY_USER_BASKETS_TEXT", "Allows to manage the access to user's secondary groups baskets ");
-if (!defined("_MANAGE_SECONDARY_USER_BASKETS_HELP"))
-    define("_MANAGE_SECONDARY_USER_BASKETS_HELP", "The user must have a second group at least with baskets to access to this function.");
-if (!defined("_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL"))
-    define("_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL", "(Add a secondary group with baskets, then save the user before coming back to this screen.");
-if (!defined("_MANAGE_BASKET_ORDER"))
-    define("_MANAGE_BASKET_ORDER", "Manage baskets order");
-if (!defined("_MOVE_UP_TOP"))
-    define("_MOVE_UP_TOP", "Move up to the bottom of the list");
-if (!defined("_MOVE_UP_ONE_LEVEL"))
-    define("_MOVE_UP_ONE_LEVEL", "Move a lign up");
-if (!defined("_MOVE_DOWN_ONE_LEVEL"))
-    define("_MOVE_DOWN_ONE_LEVEL", "Move down one lign");
-if (!defined("_MOVE_DOWN_BOTTOM"))
-    define("_MOVE_DOWN_BOTTOM", "Move down on the bottom of the list");
-
-if (!defined("_BASKET_ORDER_EDITED"))
-    define("_BASKET_ORDER_EDITED", "Modified baskets orders");

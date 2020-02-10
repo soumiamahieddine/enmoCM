@@ -80,18 +80,6 @@
       <parameter name="display" value="true"/>
       <parameter name="selectedObject"/>
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajax_ShowTown" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="ajaxShowVille"/>
-      <parameter name="display" value="true"/>
-      <parameter name="id"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajax_ShowCP" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="ajaxShowCodePostal"/>
-      <parameter name="display" value="true"/>
-      <parameter name="id"/>
-    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="choose_file" >
       <parameter name="dir" value="indexing_searching"/>
       <parameter name="page" value="choose_file"/>

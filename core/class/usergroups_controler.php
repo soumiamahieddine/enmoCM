@@ -33,7 +33,6 @@
 // Loads the required class
 try {
     require_once 'core/core_tables.php';
-    require_once 'modules/basket/basket_tables.php';
     require_once 'core/class/usergroups.php';
     require_once 'core/class/ObjectControlerAbstract.php';
     require_once 'core/class/ObjectControlerIF.php';
@@ -150,8 +149,7 @@ class usergroups_controler extends ObjectControler implements ObjectControlerIF
         }
         $baskets = array();
         $db = new Database();
-        $query = 'select basket_id from ' . GROUPBASKET_TABLE
-               . " where group_id = ?";
+        $query = 'select basket_id from groupbasket where group_id = ?';
         try {
             $stmt = $db->query($query, array($groupId));
         } catch (Exception $e) {
