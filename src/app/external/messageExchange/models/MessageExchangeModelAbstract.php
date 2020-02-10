@@ -212,4 +212,20 @@ abstract class MessageExchangeModelAbstract
 
         return ['messageId' => $messageObject->messageId];
     }
+
+    public static function getUnitIdentifierByMessageId(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['messageId']);
+        ValidatorModel::stringType($args, ['messageId']);
+
+        $messages = DatabaseModel::select([
+                'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+                'table'  => ['unit_identifier'],
+                'where'  => ['message_id = ?'],
+                'data'   => [$aArgs['message_id']]
+            ]
+        );
+
+        return $messages;
+    }
 }
