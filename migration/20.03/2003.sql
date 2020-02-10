@@ -242,9 +242,9 @@ DO $$ BEGIN
       ALTER TABLE tags DROP COLUMN IF EXISTS parent_id;
       ALTER TABLE tags ADD COLUMN parent_id INT;
       ALTER TABLE tags DROP COLUMN IF EXISTS creation_date;
-      ALTER TABLE tags ADD COLUMN creation_date TIMESTAMP;
+      ALTER TABLE tags ADD COLUMN creation_date TIMESTAMP DEFAULT NOW();
       ALTER TABLE tags DROP COLUMN IF EXISTS links;
-      ALTER TABLE tags ADD COLUMN links jsonb DEFAULT cast('[]' as jsonb);
+      ALTER TABLE tags ADD COLUMN links jsonb DEFAULT '[]';
       ALTER TABLE tags DROP COLUMN IF EXISTS usage;
       ALTER TABLE tags ADD COLUMN usage TEXT;
   END IF;
@@ -254,17 +254,8 @@ SELECT setval('tags_id_seq', (SELECT MAX(id) from tags));
 DROP TABLE IF EXISTS tags_entities;
 
 DROP TABLE IF EXISTS resources_tags;
-CREATE TABLE resources_tags
-(
-    id SERIAL NOT NULL,
-    res_id INT,
-    tag_id INT,
-    CONSTRAINT resources_tags_id_pkey PRIMARY KEY (id)
-)
-WITH (OIDS=FALSE);
-INSERT INTO resources_tags (res_id, tag_id) SELECT res_id, tag_id FROM tag_res;
-
-DROP TABLE IF EXISTS tag_res;
+ALTER TABLE tag_res RENAME TO resources_tags;
+ALTER TABLE tag_res ADD COLUMN id serial NOT NULL;
 
 /* DOCTYPES */
 DO $$ BEGIN
