@@ -358,7 +358,7 @@ DO $$ BEGIN
 END$$;
 
 DO $$ BEGIN
-    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'external_signatory_book_id') = 0 THEN
+    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'external_signatory_book_id') = 1 THEN
       UPDATE res_letterbox SET external_id = jsonb_set(external_id, '{signatureBookId}', external_signatory_book_id::text::jsonb) WHERE external_signatory_book_id IS NOT NULL;
       ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_signatory_book_id;
     END IF;
@@ -479,7 +479,7 @@ ALTER TABLE adr_letterbox DROP COLUMN IF EXISTS version;
 ALTER TABLE adr_letterbox ADD COLUMN version integer;
 UPDATE adr_letterbox SET version = 1;
 ALTER TABLE adr_letterbox ALTER COLUMN version SET NOT NULL;
-ALTER TABLE adr_letterbox DROP CONSTRAINT adr_letterbox_unique_key;
+ALTER TABLE adr_letterbox DROP CONSTRAINT IF EXISTS adr_letterbox_unique_key;
 ALTER TABLE adr_letterbox ADD CONSTRAINT adr_letterbox_unique_key UNIQUE (res_id, type, version);
 
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS version;
