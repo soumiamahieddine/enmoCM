@@ -108,6 +108,7 @@ import { LinkResourceModalComponent } from './linkedResource/linkResourceModal/l
 
 import { DocumentViewerModalComponent } from './viewer/modal/document-viewer-modal.component';
 import { SendedResourceListComponent } from './sendedResource/sended-resource-list.component';
+import { SendedResourcePageComponent } from './sendedResource/sended-resource-page/sended-resource-page.component';
 
 
 
@@ -205,7 +206,8 @@ import { SendedResourceListComponent } from './sendedResource/sended-resource-li
         LinkedResourceListComponent,
         LinkResourceModalComponent,
         DocumentViewerModalComponent,
-        SendedResourceListComponent
+        SendedResourceListComponent,
+        SendedResourcePageComponent
     ],
     entryComponents: [
         ConfirmModalComponent,
@@ -251,7 +253,8 @@ import { SendedResourceListComponent } from './sendedResource/sended-resource-li
         AddVisaModelModalComponent,
         AddAvisModelModalComponent,
         LinkResourceModalComponent,
-        DocumentViewerModalComponent
+        DocumentViewerModalComponent,
+        SendedResourcePageComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],
     bootstrap: [ AppComponent ]

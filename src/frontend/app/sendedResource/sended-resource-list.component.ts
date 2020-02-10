@@ -8,6 +8,7 @@ import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, t
 import { FormControl } from '@angular/forms';
 import { FunctionsService } from '../../service/functions.service';
 import { PrivilegeService } from '../../service/privileges.service';
+import { SendedResourcePageComponent } from './sended-resource-page/sended-resource-page.component';
 
 @Component({
     selector: 'app-sended-resource-list',
@@ -187,5 +188,9 @@ export class SendedResourceListComponent implements OnInit {
     filterType(ev: any) {
         this.currentFilter = ev.value;
         this.dataSource.filter = ev.value;
+    }
+
+    openPromptMail() {
+        this.dialog.open(SendedResourcePageComponent, { data: { title: `Toto`, resId: this.resId } });
     }
 }

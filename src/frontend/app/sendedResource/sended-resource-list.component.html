@@ -63,4 +63,7 @@
         </ng-container>
         <mat-row *matRowDef="let row; columns: displayedColumns;" style="cursor: pointer;"></mat-row>
     </mat-table>
+    <button mat-fab class="addSendedResource" color="primary" [title]="lang.addAttachment" (click)="openPromptMail()">
+        <mat-icon class="fa fa-plus"></mat-icon>
+    </button>
 </ng-template>

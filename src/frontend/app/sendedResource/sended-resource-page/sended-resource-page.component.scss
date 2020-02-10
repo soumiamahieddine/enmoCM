@@ -1,0 +1,22 @@
+@import '../../../css/vars.scss';
+
+.mat-dialog-title {
+    display: flex;
+    align-items: center;
+}
+
+.recipients,
+.copy {
+    font-size: 10px !important;
+    font-size: 10px;
+    padding: 5px !important;
+    min-height: auto;
+    height: auto;
+    border-radius: 5px;
+
+    .mat-icon {
+        width: auto;
+        font-size: 12px;
+        height: auto;
+    }
+}

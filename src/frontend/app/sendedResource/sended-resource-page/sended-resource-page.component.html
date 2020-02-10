@@ -1,0 +1,77 @@
+<h1 mat-dialog-title>
+    <span style="flex: 1;">
+        Envoyer un élement
+    </span>
+    <button [title]="lang.close" mat-icon-button (click)="dialogRef.close();">
+        <mat-icon class="fa fa-times"></mat-icon>
+    </button></h1>
+<mat-dialog-content class="modal-container">
+    <mat-form-field>
+        <span matPrefix>De&nbsp;:&nbsp;</span>
+        <mat-select>
+            <mat-option *ngFor="let email of availableSenders" [value]="email">
+                {{email}}
+            </mat-option>
+        </mat-select>
+        <button mat-button matSuffix>Cc</button>
+        <button mat-button matSuffix>Cci</button>
+    </mat-form-field>
+
+    <mat-form-field>
+        <span matPrefix>À&nbsp;:&nbsp;</span>
+        <mat-chip-list #chipList>
+            <mat-chip class="recipients" *ngFor="let recipient of recipients" [selectable]="selectable" removable (removed)="remove(recipient, 'recipients')">
+                {{recipient}}
+                <mat-icon matChipRemove class="fa fa-times"></mat-icon>
+            </mat-chip>
+            <input [formControl]="recipientsInput" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="add($event, 'recipients')">
+        </mat-chip-list>
+    </mat-form-field>
+
+    <mat-form-field>
+        <span matPrefix>Cc&nbsp;:&nbsp;</span>
+        <mat-chip-list #chipList aria-label="Fruit selection">
+            <mat-chip class="copy" *ngFor="let copy of copies" [selectable]="selectable" removable (removed)="remove(copy, 'copies')">
+                {{copy}}
+                <mat-icon matChipRemove class="fa fa-times"></mat-icon>
+            </mat-chip>
+            <input [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="add($event, 'copies')">
+        </mat-chip-list>
+    </mat-form-field>
+
+    <mat-form-field>
+        <span matPrefix>Cci&nbsp;:&nbsp;</span>
+        <mat-chip-list #chipList aria-label="Fruit selection">
+            <mat-chip class="copy" *ngFor="let invCopy of invisibleCopies" [selectable]="selectable" removable (removed)="remove(invCopy, 'invisibleCopies')">
+                {{invCopy}}
+                <mat-icon matChipRemove class="fa fa-times"></mat-icon>
+            </mat-chip>
+            <input [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="true" (matChipInputTokenEnd)="add($event, 'invisibleCopies')">
+        </mat-chip-list>
+    </mat-form-field>
+
+    <mat-form-field floatLabel="never">
+        <input matInput placeholder="Sujet">
+    </mat-form-field>
+
+
+    <editor [init]="{
+     height: 500,
+     menubar: false,
+     plugins: [
+       'advlist autolink lists link image charmap print preview anchor',
+       'searchreplace visualblocks code fullscreen',
+       'insertdatetime media table paste code help wordcount'
+     ],
+     toolbar:
+       'undo redo | formatselect | bold italic backcolor | \
+       alignleft aligncenter alignright alignjustify | \
+       bullist numlist outdent indent | removeformat'
+   }"></editor>
+</mat-dialog-content>
+<div mat-dialog-actions class="actions">
+    <button mat-raised-button color="primary" (click)="onSubmit()">{{lang.validate}}</button>
+</div>
