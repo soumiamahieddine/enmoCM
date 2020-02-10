@@ -16,6 +16,7 @@ namespace Attachment\controllers;
 
 use Attachment\models\AttachmentModel;
 use Contact\models\ContactModel;
+use ContentManagement\controllers\MergeController;
 use Convert\controllers\ConvertPdfController;
 use Convert\controllers\ConvertThumbnailController;
 use Convert\models\AdrModel;
@@ -27,6 +28,7 @@ use Resource\controllers\ResController;
 use Resource\controllers\StoreController;
 use Resource\controllers\WatermarkController;
 use Resource\models\ResModel;
+use Resource\models\ResourceContactModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -707,6 +709,75 @@ class AttachmentController
         return $return;
     }
 
+    public static function generateMailingById(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
+
+        $attachment = AttachmentModel::getById([
+            'select'    => ['status', 'res_id_master', 'title', 'identifier', 'docserver_id', 'path', 'filename', 'format', 'attachment_type'],
+            'id'        => $args['id']
+        ]);
+        if (empty($attachment)) {
+            return $response->withStatus(403)->withJson(['errors' => 'Attachment does not exist']);
+        } elseif (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        } elseif ($attachment['status'] != 'SEND_MASS') {
+            return $response->withStatus(403)->withJson(['errors' => 'Attachment is not candidate to mailing']);
+        }
+
+        $recipients = ResourceContactModel::get([
+            'select'    => ['item_id'],
+            'where'     => ['res_id = ?', 'type = ?', 'mode = ?'],
+            'data'      => [$attachment['res_id_master'], 'contact', 'sender']
+        ]);
+        if (empty($recipients)) {
+            return $response->withStatus(400)->withJson(['errors' => 'No contacts available']);
+        }
+
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $attachment['docserver_id'], 'select' => ['path_template']]);
+        if (empty($docserver['path_template']) || !is_dir($docserver['path_template'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
+        }
+        $pathToAttachment = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachment['path']) . $attachment['filename'];
+        if (!is_file($pathToAttachment)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Attachment not found on docserver']);
+        }
+
+        foreach ($recipients as $key => $recipient) {
+            $chrono = $attachment['identifier'] . '-' . ($key+1);
+
+            $mergedDocument = MergeController::mergeDocument([
+                'path'  => $pathToAttachment,
+                'data'  => ['userId' => $GLOBALS['id'], 'recipientId' => $recipient['item_id'], 'recipientType' => 'contact']
+            ]);
+
+            $data = [
+                'title'             => $attachment['title'],
+                'encodedFile'       => $mergedDocument['encodedDocument'],
+                'format'            => $attachment['format'],
+                'resIdMaster'       => $attachment['res_id_master'],
+                'chrono'            => $chrono,
+                'type'              => $attachment['attachment_type'],
+                'recipientId'       => $recipient['item_id'],
+                'recipientType'     => 'contact'
+            ];
+
+            StoreController::storeAttachment($data);
+        }
+
+        AttachmentModel::update([
+            'set'       => [
+                'status'  => 'DEL',
+            ],
+            'where'     => ['res_id = ?'],
+            'data'      => [$args['id']]
+        ]);
+
+        return $response->withStatus(204);
+    }
+
     private static function controlAttachment(array $args)
     {
         $body = $args['body'];
@@ -721,7 +792,7 @@ class AttachmentController
             return ['errors' => 'Body resIdMaster is empty or not an integer'];
         } elseif (!Validator::stringType()->notEmpty()->validate($body['type'])) {
             return ['errors' => 'Body type is empty or not a string'];
-        } elseif (isset($body['status']) && !in_array($body['status'], ['A_TRA', 'TRA'])) {
+        } elseif (isset($body['status']) && !in_array($body['status'], ['A_TRA', 'TRA', 'SEND_MASS'])) {
             return ['errors' => 'Body type is empty or not a string'];
         }
 

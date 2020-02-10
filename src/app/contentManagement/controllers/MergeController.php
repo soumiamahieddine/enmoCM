@@ -318,8 +318,6 @@ class MergeController
         $dataToBeMerge['destination']           = empty($destination) ? [] : $destination;
         $dataToBeMerge['parentDestination']     = empty($parentDestination) ? [] : $parentDestination;
         $dataToBeMerge['attachment']            = $attachment;
-        $dataToBeMerge['attachmentRecipient']   = $attachmentRecipient;
-        $dataToBeMerge['sender']                = $sender;
         $dataToBeMerge['recipient']             = $recipient;
         $dataToBeMerge['user']                  = $currentUser;
         $dataToBeMerge['userPrimaryEntity']     = $currentUserPrimaryEntity;
@@ -329,6 +327,10 @@ class MergeController
         $dataToBeMerge['contact']               = [];
         $dataToBeMerge['notes']                 = $mergedNote;
         $dataToBeMerge['datetime']              = $datetime;
+        if (!empty($args['inMailing'])) {
+            $dataToBeMerge['attachmentRecipient']   = $attachmentRecipient;
+            $dataToBeMerge['sender']                = $sender;
+        }
 
         return $dataToBeMerge;
     }

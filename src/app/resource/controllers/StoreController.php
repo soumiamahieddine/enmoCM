@@ -46,7 +46,7 @@ class StoreController
             if (!empty($args['encodedFile'])) {
                 $fileContent = base64_decode(str_replace(['-', '_'], ['+', '/'], $args['encodedFile']));
 
-                if (empty($args['resId']) && in_array($args['format'], MergeController::OFFICE_EXTENSIONS)) {
+                if (empty($args['resId']) && in_array($args['format'], MergeController::OFFICE_EXTENSIONS) && empty($args['integrations']['inMailing'])) {
                     $tmpPath = CoreConfigModel::getTmpPath();
                     $uniqueId = CoreConfigModel::uniqueId();
                     $tmpFilename = "storeTmp_{$GLOBALS['id']}_{$uniqueId}.{$args['format']}";
@@ -98,7 +98,7 @@ class StoreController
             if (!empty($args['encodedFile'])) {
                 $fileContent    = base64_decode(str_replace(['-', '_'], ['+', '/'], $args['encodedFile']));
 
-                if (empty($args['id']) && in_array($args['format'], MergeController::OFFICE_EXTENSIONS)) {
+                if (empty($args['id']) && in_array($args['format'], MergeController::OFFICE_EXTENSIONS) && $data['status'] != 'SEND_MASS') {
                     $tmpPath = CoreConfigModel::getTmpPath();
                     $uniqueId = CoreConfigModel::uniqueId();
                     $tmpFilename = "storeTmp_{$GLOBALS['id']}_{$uniqueId}.{$args['format']}";
@@ -172,10 +172,11 @@ class StoreController
             $externalId = json_encode($args['externalId']);
         }
 
-        $integrations = ['inSignatureBook' => false, 'inShipping' => false];
+        $integrations = ['inSignatureBook' => false, 'inShipping' => false, 'inMailing' => false];
         if (!empty($args['integrations'])) {
             $integrations['inSignatureBook'] = !empty($args['integrations']['inSignatureBook']);
             $integrations['inShipping'] = !empty($args['integrations']['inShipping']);
+            $integrations['inMailing'] = !empty($args['integrations']['inMailing']);
         }
 
         if (!empty($args['customFields'])) {
