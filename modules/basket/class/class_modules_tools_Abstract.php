@@ -152,7 +152,7 @@ abstract class basket_Abstract extends Database
         $stmt = $db->query(
             "select agb.id_action, agb.where_clause, agb.used_in_basketlist, "
             . "agb.used_in_action_page, a.label_action, a.id_status, "
-            . "a.action_page from " . ACTIONS_TABLE . " a, "
+            . "a.action_page from actions a, "
             . ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action and "
             . "agb.group_id = ? and agb.basket_id = ? and "
             . "agb.default_action_list ='N'",
@@ -201,7 +201,7 @@ abstract class basket_Abstract extends Database
     {
         $db = new Database();
         $stmt = $db->query(
-            "select agb.id_action from " . ACTIONS_TABLE . " a, "
+            "select agb.id_action from actions a, "
             . ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action "
             . "and agb.group_id = ? and agb.basket_id = ? "
             . "and agb.default_action_list ='Y'",

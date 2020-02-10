@@ -505,10 +505,6 @@
       <parameter name="param1" type="string" />
     </validationRule>
 
-    <validationRule name="get_content_js" extends="standardForm" mode="error">  
-      <parameter name="scripts" type="filename_secure" />
-    </validationRule>
-
     <validationRule name="static_filename" extends="standardForm" mode="error">  
       <parameter name="filename" type="boolean" />
     </validationRule>

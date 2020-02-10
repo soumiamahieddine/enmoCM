@@ -33,7 +33,7 @@ abstract class EmailSignaturesAbstract extends Database
     public function getForCurrentUser() {
         $db = new Database();
 
-        $stmt = $db->query('SELECT * FROM ' .EMAIL_SIGNATURES_TABLE. ' WHERE user_id = ? order by title',
+        $stmt = $db->query('SELECT * FROM users_email_signatures WHERE user_id = ? order by title',
             [$_SESSION['user']['UserId']]
         );
         $mailSignatures = [];
