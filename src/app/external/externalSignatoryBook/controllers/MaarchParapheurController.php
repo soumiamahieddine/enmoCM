@@ -78,7 +78,7 @@ class MaarchParapheurController
         }
         if (!empty($mainResource[0]['filename'])) {
             $adrMainInfo = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resIdMaster'], 'collId' => 'letterbox_coll']);
-            if (empty($adrMainInfo['docserver_id']) || strtolower(pathinfo($mainResource[0]['filename'], PATHINFO_EXTENSION)) != 'pdf') {
+            if (empty($adrMainInfo['docserver_id']) || strtolower(pathinfo($adrMainInfo['filename'], PATHINFO_EXTENSION)) != 'pdf') {
                 return ['error' => 'Document ' . $aArgs['resIdMaster'] . ' is not converted in pdf'];
             }
             $docserverMainInfo = DocserverModel::getByDocserverId(['docserverId' => $adrMainInfo['docserver_id']]);
@@ -417,7 +417,7 @@ class MaarchParapheurController
         return ['sended' => $attachmentToFreeze, 'historyInfos' => $historyInfos];
     }
 
-    public static function setMetadata($args = []) 
+    public static function setMetadata($args = [])
     {
         $metadata = [];
         if (!empty($args['priority'])) {

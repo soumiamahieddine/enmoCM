@@ -68,7 +68,7 @@
                     </button>
                 </mat-menu>
                 <ng-container *ngIf="mode === 'mainDocument' && !functions.empty(file.subinfos)">
-                    <button *ngIf="file.subinfos.mainDocVersions.length > 1" mat-button
+                    <button *ngIf="file.subinfos.mainDocVersions.length > 1 && !file.subinfos.signedDocVersions" mat-button
                         [matBadge]="file.subinfos.mainDocVersions.length" [matMenuTriggerFor]="menuVersionsDoc">
                         {{lang.versions}}
                     </button>

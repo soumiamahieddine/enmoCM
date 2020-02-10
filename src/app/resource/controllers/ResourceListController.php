@@ -76,7 +76,7 @@ class ResourceListController
         $resIds = ResourceListController::getIdsWithOffsetAndLimit(['resources' => $rawResources, 'offset' => $data['offset'], 'limit' => $data['limit']]);
 
         $followedDocuments = UserFollowedResourceModel::get([
-	    'select' => ['res_id'],
+        'select' => ['res_id'],
             'where'  => ['user_id = ?'],
             'data'   => [$GLOBALS['id']],
         ]);
@@ -457,7 +457,9 @@ class ResourceListController
             }
         }
         $historic = empty($methodResponse['history']) ? '' : $methodResponse['history'];
-        ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name'], 'note' => $body['note'], 'history' => $historic]);
+        if (!empty($resourcesForAction)) {
+            ActionMethodController::terminateAction(['id' => $aArgs['actionId'], 'resources' => $resourcesForAction, 'basketName' => $basket['basket_name'], 'note' => $body['note'], 'history' => $historic]);
+        }
 
         if (!empty($methodResponses)) {
             return $response->withJson($methodResponses);

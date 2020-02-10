@@ -941,7 +941,7 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     unsignMainDocument() {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.unsignDocument, msg: this.lang.confirmAction } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.UNSIGN, msg: this.lang.confirmAction } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

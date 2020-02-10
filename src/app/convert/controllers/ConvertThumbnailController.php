@@ -72,9 +72,9 @@ class ConvertThumbnailController
             return ['errors' => '[ConvertThumbnail] Document does not exist on docserver'];
         }
 
-        $ext = pathinfo($pathToDocument, PATHINFO_EXTENSION);
-        $filename = pathinfo($pathToDocument, PATHINFO_FILENAME);
-        $tmpPath = CoreConfigModel::getTmpPath();
+        $ext           = pathinfo($pathToDocument, PATHINFO_EXTENSION);
+        $filename      = pathinfo($pathToDocument, PATHINFO_FILENAME);
+        $tmpPath       = CoreConfigModel::getTmpPath();
         $fileNameOnTmp = rand() . $filename;
 
         if (in_array($ext, ['maarch', 'html'])) {
