@@ -34,12 +34,14 @@ use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
+use MessageExchange\models\MessageExchangeModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
 use Resource\models\UserFollowedResourceModel;
 use Respect\Validation\Validator;
+use Shipping\models\ShippingModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
@@ -677,7 +679,37 @@ class ResController extends ResourceControlController
         $formattedData['notes'] = NoteModel::countByResId(['resId' => $args['resId'], 'userId' => $GLOBALS['id'], 'login' => $GLOBALS['userId']]);
 
         $emails = EmailModel::get(['select' => ['count(1)'], 'where' => ["document->>'id' = ?"], 'data' => [$args['resId']]]);
-        $formattedData['emails'] = $emails[0]['count'];
+        $acknowledgementReceipts = AcknowledgementReceiptModel::get([
+            'select' => ['count(1)'],
+            'where'  => ['res_id = ?'],
+            'data'   => [$args['resId']]
+        ]);
+        $messageExchanges = MessageExchangeModel::get([
+            'select' => ['count(1)'],
+            'where'  => ['res_id_master = ?'],
+            'data'   => [$args['resId']]
+        ]);
+        $attachments = AttachmentModel::get([
+            'select' => ['res_id'],
+            'where'  => ['res_id_master = ?'],
+            'data'   => [$args['resId']]
+        ]);
+        $attachments = array_column($attachments, 'res_id');
+
+        $where = '(document_id = ? and document_type = ?)';
+        $data  = [$args['resId'], 'resource'];
+        if (!empty($attachments)) {
+            $where .= ' or (document_id in (?) and document_type = ?)';
+            $data[] = $attachments;
+            $data[] = 'attachment';
+        }
+        $shippings = ShippingModel::get([
+            'select' => ['count(1)'],
+            'where'  => [$where],
+            'data'   => $data
+        ]);
+
+        $formattedData['emails'] = $emails[0]['count'] + $acknowledgementReceipts[0]['count'] + $messageExchanges[0]['count'] + $shippings[0]['count'];
 
         return $response->withJson($formattedData);
     }
