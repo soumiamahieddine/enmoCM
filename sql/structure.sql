@@ -901,7 +901,21 @@ CREATE TABLE tags
   id serial NOT NULL,
   label character varying(128) NOT NULL,
   entity_id_owner character varying(32),
+  description text,
+  parent_id INT,
+  creation_date timestamp,
+  links jsonb,
+  usage text,
   CONSTRAINT tags_id_pkey PRIMARY KEY (id)
+)
+WITH (OIDS=FALSE);
+
+CREATE TABLE resources_tags
+(
+    id SERIAL NOT NULL,
+    res_id INT,
+    tag_id INT,
+    CONSTRAINT resources_tags_id_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
