@@ -294,11 +294,10 @@ export class IndexingFormComponent implements OnInit {
         arrIndexingModels.forEach(element => {
             if (element.type === 'date' && !this.functions.empty(this.arrFormControl[element.identifier].value)) {
                 if (element.today === true) {
-                    if (!this.adminMode) {
-                        const now = new Date();
-                        element.default_value = this.functions.formatDateObjectToDateString(now, false);
-                    } else {
+                    if (this.adminMode) {
                         element.default_value = '_TODAY';
+                    } else {
+                        element.default_value = this.functions.formatDateObjectToDateString(this.arrFormControl[element.identifier].value, false);
                     }
                 } else {
                     if (element.identifier === 'processLimitDate') {
