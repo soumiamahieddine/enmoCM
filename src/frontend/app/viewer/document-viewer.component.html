@@ -114,8 +114,10 @@
     (click)="saveMainDocument()">
     <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
 </button>
-<button mat-raised-button *ngIf="!isDocModified && mode === 'mainDocument' && resId !== null && !functions.empty(file.subinfos) && file.subinfos.signedDocVersions && privilegeService.hasCurrentUserPrivilege('sign_document');" color="warn"
+<button mat-raised-button 
+    *ngIf="!isDocModified && mode === 'mainDocument' && resId !== null && !functions.empty(file.subinfos) && file.subinfos.signedDocVersions && (privilegeService.hasCurrentUserPrivilege('sign_document') || this.headerService.user.id == file.creatorId)" 
+    color="warn"
     [title]="lang.unsign" style="position: fixed;z-index: 1;bottom: 30px;right: 70px;"
     (click)="unsignMainDocument()">
-    Supprimer la signature
+    {{lang.removeSignature}}
 </button>

@@ -1484,6 +1484,7 @@ export const LANG_EN = {
     "noMailContact" : "No (external) contact linked to this mail",
     "noSelectedAddress": "No selected address",
     "documentUnsigned": "This document has been unsigned",
+    "removeSignature" : "Remove signature",
     "sent" :  "Sent",
     "notSent" :  "Not sent",
     "delivery" :  "Delivery",

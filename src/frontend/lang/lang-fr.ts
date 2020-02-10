@@ -1525,6 +1525,7 @@ export const LANG_FR = {
     "documentUnsigned": "La signature du document a été retirée",
     "m2m_ARCHIVETRANSFER" : "Pli numérique",
     "m2m_ARCHIVETRANSFERREPLY" :  "Réponse envoyée",
+    "removeSignature" : "Supprimer la signature",
     "sent" :  "Envoyé",
     "notSent" :  "Non envoyé",
     "delivery" :  "Pris en charge",

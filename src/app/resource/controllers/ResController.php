@@ -375,13 +375,14 @@ class ResController extends ResourceControlController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $document = ResModel::getById(['select' => ['filename', 'format'], 'resId' => $aArgs['resId']]);
+        $document = ResModel::getById(['select' => ['filename', 'format', 'typist'], 'resId' => $aArgs['resId']]);
         if (empty($document)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
         } elseif (empty($document['filename'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Document has no file']);
         }
         $originalFormat = $document['format'];
+        $creatorId = $document['typist'];
 
         $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll']);
         if (!empty($convertedDocument['errors'])) {
@@ -426,7 +427,7 @@ class ResController extends ResourceControlController
 
         $data = $request->getQueryParams();
         if ($data['mode'] == 'base64') {
-            return $response->withJson(['encodedDocument' => base64_encode($fileContent), 'originalFormat' => $originalFormat]);
+            return $response->withJson(['encodedDocument' => base64_encode($fileContent), 'originalFormat' => $originalFormat, 'originalCreatorId' => $creatorId]);
         } else {
             $finfo    = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($fileContent);
