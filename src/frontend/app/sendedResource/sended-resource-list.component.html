@@ -7,7 +7,7 @@
     <div class="row" style="margin: 0px;">
         <div class="col-md-12" style="padding-bottom: 10px;">
             <mat-button-toggle-group *ngIf="sendedResources.length > 0" class="filterTypes" (change)="filterType($event)">
-                <mat-button-toggle [checked]="currentFilter === ''" [value]="''">Tous</mat-button-toggle>
+                <mat-button-toggle [checked]="currentFilter === ''" [value]="''">{{lang.all}}</mat-button-toggle>
                 <mat-button-toggle *ngFor="let type of filterTypes | sortBy : 'label'"
                     [checked]="currentFilter === type.id" [value]="type.id">{{type.label}}
                 </mat-button-toggle>
@@ -19,19 +19,19 @@
             <mat-cell *matCellDef="let row" class="dataLine" style="flex: 1;padding: 0px;flex-direction: column;">
                 <div class="subinfo">
                     <span style="flex:1" [title]="row.creationDate | fullDate">
-                        Créé : <b>{{row.creationDate | timeAgo : 'full'}}</b>
+                        {{lang.createdAlt}} : <b>{{row.creationDate | timeAgo : 'full'}}</b>
                     </span>
                     <span *ngIf="row.sendDate !== null" style="flex:1;color:green" [title]="row.sendDate | fullDate">
-                        Envoyé : <b>{{row.sendDate | timeAgo : 'full'}}</b>
+                        {{lang.sent}} : <b>{{row.sendDate | timeAgo : 'full'}}</b>
                     </span>
                     <span *ngIf="row.status === 'DRAFT'" style="flex:1;color:orange">
-                        Brouillon
+                        {{lang.draft}}
                     </span>
-                    <span *ngIf="row.sendDate === null" style="flex:1;color:red">
-                        Non envoyé
+                    <span *ngIf="row.sendDate === null" style="flex:1;color:red;font-weight: bold;">
+                        {{lang.notSent}}
                     </span>
-                    <span style="flex:1" *ngIf="!functions.empty(row.sendBackDate)" [title]="row.creationDate | fullDate">
-                        Pris en charge : <b>{{row.creationDate | timeAgo : 'full'}}</b>
+                    <span style="flex:1" *ngIf="!functions.empty(row.operationDate)" [title]="row.operationDate | fullDate">
+                        {{lang.delivery}} : <b>{{row.operationDate | timeAgo : 'full'}}</b>
                     </span>
                 </div>
                 <div style="display: grid;grid-template-columns: 100px 1fr 170px;width: 100%;grid-gap: 10px;align-items: center;padding:10px;">
@@ -52,10 +52,10 @@
                     </div>
                     <div class="contact">
                         <span *ngIf="row.sender" style="white-space: pre;overflow: hidden;text-overflow: ellipsis;" [title]="row.sender">
-                            De : {{row.sender}}
+                            {{lang.senderShort}} : {{row.sender}}
                         </span>
                         <span style="white-space: pre;overflow: hidden;text-overflow: ellipsis;" [title]="row.recipients">
-                            Pour : {{row.recipients}}
+                            {{lang.recipientShort}} : {{row.recipients}}
                         </span>
                     </div>
                 </div>

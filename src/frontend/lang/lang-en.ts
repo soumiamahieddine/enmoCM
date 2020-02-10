@@ -1295,6 +1295,7 @@ export const LANG_EN = {
     "confidentialityAndSecurity"   : "Confidentiality and security",
     "modified"   : "Modified",
     "created"   : "Created",
+    "createdAlt": "Created",
     "signedAlt"   : "Signed",
     "deleteResource"   : "Delete document",
     "viewResource"   : "View document",
@@ -1483,4 +1484,9 @@ export const LANG_EN = {
     "noMailContact" : "No (external) contact linked to this mail",
     "noSelectedAddress": "No selected address",
     "documentUnsigned": "This document has been unsigned",
+    "sent" :  "Sent",
+    "notSent" :  "Not sent",
+    "delivery" :  "Delivery",
+    "senderShort" :  "From",
+    "recipientShort" :  "To",
 };

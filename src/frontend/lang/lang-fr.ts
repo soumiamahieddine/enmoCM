@@ -1334,6 +1334,7 @@ export const LANG_FR = {
     "confidentialityAndSecurity": "Vie privée et sécurité",
     "modified": "Modifiée",
     "created": "Créée",
+    "createdAlt": "Créé",
     "signedAlt": "Signée",
     "deleteResource": "Supprimer le document",
     "viewResource": "Voir le document",
@@ -1524,4 +1525,9 @@ export const LANG_FR = {
     "documentUnsigned": "La signature du document a été retirée",
     "m2m_ARCHIVETRANSFER" : "Pli numérique",
     "m2m_ARCHIVETRANSFERREPLY" :  "Réponse envoyée",
+    "sent" :  "Envoyé",
+    "notSent" :  "Non envoyé",
+    "delivery" :  "Pris en charge",
+    "senderShort" :  "De",
+    "recipientShort" :  "Pour",
 };

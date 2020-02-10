@@ -1320,6 +1320,7 @@ export const LANG_NL = {
     "confidentialityAndSecurity"   : "Confidentiality and security", //_TO_TRANSLATE
     "modified"   : "Modified", //_TO_TRANSLATE
     "created"   : "Created", //_TO_TRANSLATE
+    "createdAlt": "Created", //_TO_TRANSLATE
     "signedAlt"   : "Signed", //_TO_TRANSLATE
     "deleteResource"   : "Delete document", //_TO_TRANSLATE
     "viewResource"   : "View document", //_TO_TRANSLATE
@@ -1508,4 +1509,9 @@ export const LANG_NL = {
     "noMailContact" : "No (external) contact linked to this mail", //_TO_TRANSLATE
     "noSelectedAddress": "No selected address",  //_TO_TRANSLATE
     "documentUnsigned": "This document has been unsigned", //_TO_TRANSLATE
+    "sent" :  "Sent", //_TO_TRANSLATE
+    "notSent" :  "Not sent", //_TO_TRANSLATE
+    "delivery" :  "Delivery", //_TO_TRANSLATE
+    "senderShort" :  "From", //_TO_TRANSLATE
+    "recipientShort" :  "To", //_TO_TRANSLATE
 };
