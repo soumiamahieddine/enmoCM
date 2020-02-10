@@ -103,7 +103,7 @@ export class SendedResourceListComponent implements OnInit {
                     data.emails = data.emails.map((item: any) => {
                         return {
                             id: item.id,
-                            sender: item.receptionDate,
+                            sender: item.sender.email,
                             recipients: item.recipients,
                             creationDate: item.creation_date,
                             sendDate: item.send_date,
