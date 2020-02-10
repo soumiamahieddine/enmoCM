@@ -140,7 +140,7 @@ define('_GO_ON_VACATION', 'go on vacation');
 define('_BACK_FROM_VACATION', 'back from vacation');
 define('_DOC_DISPLAYING', 'Displaying document');
 define('_DOC_ADDED', 'Document added');
-define('_DOC_UPDATED', 'Document updated (metadata)');
+define('_DOC_UPDATED', 'Mail metadata updated');
 define('_ATTACHMENT_DELETED', 'Attachment deleted');
 define('_FILE_UPDATED', 'File updated');
 define('_ATTACHMENT_ADDED', 'Attachment added');
