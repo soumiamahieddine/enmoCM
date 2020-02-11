@@ -51,8 +51,8 @@ export class AttachmentPageComponent implements OnInit {
         public appService: AppService,
         private notify: NotificationService,
         private sortPipe: SortPipe,
-        private headerService: HeaderService,
-        private privilegeService: PrivilegeService) {
+        public headerService: HeaderService,
+        public privilegeService: PrivilegeService) {
     }
 
     ngOnInit(): void {

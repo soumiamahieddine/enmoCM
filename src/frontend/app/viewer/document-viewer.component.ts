@@ -105,7 +105,7 @@ export class DocumentViewerComponent implements OnInit {
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
-        private headerService: HeaderService,
+        public headerService: HeaderService,
         public appService: AppService,
         private dialog: MatDialog,
         private sortPipe: SortPipe,

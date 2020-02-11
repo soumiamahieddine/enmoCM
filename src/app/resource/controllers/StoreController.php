@@ -172,11 +172,10 @@ class StoreController
             $externalId = json_encode($args['externalId']);
         }
 
-        $integrations = ['inSignatureBook' => false, 'inShipping' => false, 'inMailing' => false];
+        $integrations = ['inSignatureBook' => false, 'inShipping' => false];
         if (!empty($args['integrations'])) {
             $integrations['inSignatureBook'] = !empty($args['integrations']['inSignatureBook']);
             $integrations['inShipping'] = !empty($args['integrations']['inShipping']);
-            $integrations['inMailing'] = !empty($args['integrations']['inMailing']);
         }
 
         if (!empty($args['customFields'])) {

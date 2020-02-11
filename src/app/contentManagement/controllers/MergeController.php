@@ -72,7 +72,7 @@ class MergeController
                     if (!empty($dataToBeMerge[$contact]['postal_address'])) {
                         $dataToBeMerge[$contact]['postal_address'] = nl2br($dataToBeMerge[$contact]['postal_address']);
                         $dataToBeMerge[$contact]['postal_address'] = str_replace('<br />', '</w:t><w:br/><w:t>', $dataToBeMerge[$contact]['postal_address']);
-                        $dataToBeMerge[$contact]['postal_address'] = str_replace(array("\n\r", "\r\n", "\r", "\n"), "", $dataToBeMerge[$contact]['postal_address']);
+                        $dataToBeMerge[$contact]['postal_address'] = str_replace(["\n\r", "\r\n", "\r", "\n"], "", $dataToBeMerge[$contact]['postal_address']);
                     }
                 }
                 $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
@@ -318,6 +318,7 @@ class MergeController
         $dataToBeMerge['destination']           = empty($destination) ? [] : $destination;
         $dataToBeMerge['parentDestination']     = empty($parentDestination) ? [] : $parentDestination;
         $dataToBeMerge['attachment']            = $attachment;
+        $dataToBeMerge['sender']                = $sender;
         $dataToBeMerge['recipient']             = $recipient;
         $dataToBeMerge['user']                  = $currentUser;
         $dataToBeMerge['userPrimaryEntity']     = $currentUserPrimaryEntity;
@@ -327,9 +328,8 @@ class MergeController
         $dataToBeMerge['contact']               = [];
         $dataToBeMerge['notes']                 = $mergedNote;
         $dataToBeMerge['datetime']              = $datetime;
-        if (!empty($args['inMailing'])) {
+        if (empty($args['inMailing'])) {
             $dataToBeMerge['attachmentRecipient']   = $attachmentRecipient;
-            $dataToBeMerge['sender']                = $sender;
         }
 
         return $dataToBeMerge;

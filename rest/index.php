@@ -79,7 +79,7 @@ $app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\Attachme
 $app->get('/attachments/{id}/maarchParapheurWorkflow', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':getWorkflow');
 $app->put('/attachments/{id}/inSignatureBook', \Attachment\controllers\AttachmentController::class . ':setInSignatureBook');
 $app->put('/attachments/{id}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignAttachment');
-$app->post('/attachments/{id}/mailing', \Attachment\controllers\AttachmentController::class . ':generateMailingById');
+$app->post('/attachments/{id}/mailing', \Attachment\controllers\AttachmentController::class . ':getMailingById');
 $app->get('/attachmentsTypes', \Attachment\controllers\AttachmentController::class . ':getAttachmentsTypes');
 
 //AutoComplete

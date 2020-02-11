@@ -152,26 +152,6 @@ abstract class ResModelAbstract
         return $resources;
     }
 
-    public static function getDocsByClause(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['clause']);
-
-        if (!empty($aArgs['table'])) {
-            $table = $aArgs['table'];
-        } else {
-            $table = 'res_view_letterbox';
-        }
-
-        $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => [$table],
-            'where'     => [$aArgs['clause']],
-            'order_by'  => ['res_id']
-        ]);
-
-        return $aReturn;
-    }
-
     public static function getByAltIdentifier(array $args)
     {
         ValidatorModel::notEmpty($args, ['altIdentifier']);
@@ -227,19 +207,5 @@ abstract class ResModelAbstract
         }
 
         return '';
-    }
-
-    public static function getNbContactsByResId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-
-        $aResources = DatabaseModel::select([
-            'select'    => ['count(1) as nb_contacts'],
-            'table'     => ['contacts_res'],
-            'where'     => ['res_id = ?', 'mode = ?'],
-            'data'      => [$aArgs['resId'], 'multi']
-        ]);
-        return $aResources[0]['nb_contacts'];
     }
 }

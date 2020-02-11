@@ -18,13 +18,13 @@ use Respect\Validation\Validator;
 
 class ValidatorModel
 {
-    public static function notEmpty(array $aArgs, $aKeys)
+    public static function notEmpty(array $args, $keys)
     {
-        if (!Validator::arrayType()->notEmpty()->validate($aArgs)) {
+        if (!Validator::arrayType()->notEmpty()->validate($args)) {
             throw new \Exception('First argument must be a non empty array');
         }
-        foreach ($aKeys as $key) {
-            if (!Validator::notEmpty()->validate($aArgs[$key])) {
+        foreach ($keys as $key) {
+            if (!Validator::notEmpty()->validate($args[$key])) {
                 throw new \Exception("Argument {$key} is empty");
             }
         }

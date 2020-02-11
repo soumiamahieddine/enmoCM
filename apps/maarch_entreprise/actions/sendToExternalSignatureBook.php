@@ -202,8 +202,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 
     foreach ($arr_id as $res_id) {
         $result .= $res_id.'#';
-        \Attachment\controllers\AttachmentController::generateAttachForMailing(['resIdMaster' => $res_id, 'userId' => $_SESSION['user']['UserId']]);
-        
+
         if (!empty($config)) {
             if ($config['id'] == 'ixbus') {
                 include_once 'modules/visa/class/IxbusController.php';

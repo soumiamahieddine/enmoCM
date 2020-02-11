@@ -621,102 +621,14 @@ class AttachmentController
         return ['encodedDocument' => $encodedDocument, 'fileName' => $fileName];
     }
 
-    public static function generateAttachForMailing(array $aArgs)
-    {
-        $attachments = AttachmentModel::get([
-            'select'    => ['*'],
-            'where'     => ['res_id_master = ?', 'status = ?', 'in_signature_book = ?'],
-            'data'      => [$aArgs['resIdMaster'], 'SEND_MASS', true]
-        ]);
-
-        $contactsForMailing = DatabaseModel::select([
-            'select'    => ['*'],
-            'table'     => ['contacts_res'],
-            'where'     => ['res_id = ?', 'address_id <> 0'],
-            'data'      => [$aArgs['resIdMaster']]
-        ]);
-
-        if (!empty($attachments[0])) {
-            foreach ($attachments as $attachment) {
-                $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'DOC', 'collId' => 'letterbox_coll', 'select' => ['path_template']]);
-                $pathToAttachmentToCopy = $docserver['path_template'] . str_replace('#', '/', $attachment['path']) . $attachment['filename'];
-
-                foreach ($contactsForMailing as $keyContact => $contactForMailing) {
-                    $chronoPubli = $attachment['identifier'].'-'.($keyContact+1);
-
-                    $params = [
-                        'userId'           => $aArgs['userId'],
-                        'res_id'           => $aArgs['resIdMaster'],
-                        'coll_id'          => 'letterbox_coll',
-                        'res_view'         => 'res_attachments',
-                        'res_table'        => 'res_attachments',
-                        'res_contact_id'   => $contactForMailing['contact_id'],
-                        'res_address_id'   => $contactForMailing['address_id'],
-                        'pathToAttachment' => $pathToAttachmentToCopy,
-                        'chronoAttachment' => $chronoPubli,
-                    ];
-
-                    $filePathOnTmp = TemplateController::mergeDatasource($params);
-
-                    $allDatas = [
-                        "encodedFile"       => base64_encode(file_get_contents($filePathOnTmp)),
-                        "format"            => $attachment['format'],
-                        'resIdMaster'       => $aArgs['resIdMaster'],
-                        'type'              => $attachment['attachment_type'],
-                        'chrono'            => $chronoPubli,
-                        'title'             => $attachment['title'],
-                        'inSignatureBook'   => true,
-                    ];
-
-                    StoreController::storeAttachment($allDatas);
-                }
-                
-                AttachmentModel::update([
-                    'set'       => [
-                        'status'  => 'DEL',
-                    ],
-                    'where'     => ['res_id = ?'],
-                    'data'      => [$attachment['res_id']]
-                ]);
-            }
-        }
-
-        return ['success' => 'success'];
-    }
-
-    public static function isMailingAttach(array $aArgs)
-    {
-        $user = UserModel::getByLogin(['login' => $aArgs['login'], 'select' => ['id']]);
-
-        if (!Validator::intVal()->validate($aArgs['resIdMaster']) || !ResController::hasRightByResId(['resId' => [$aArgs['resIdMaster']], 'userId' => $user['id']])) {
-            return ['errors' => 'Document out of perimeter'];
-        }
-
-        $attachments = AttachmentModel::get([
-            'select' => ['res_id'],
-            'where' => ['res_id_master = ?', 'status = ?'],
-            'data' => [$aArgs['resIdMaster'],'SEND_MASS']
-        ]);
-
-        $return['nbAttach'] = count($attachments);
-
-        if ($return['nbAttach'] == 0) {
-            return false;
-        }
-
-        $return['nbContacts'] = ResModel::getNbContactsByResId(["resId" => $aArgs['resIdMaster']]);
-
-        return $return;
-    }
-
-    public static function generateMailingById(Request $request, Response $response, array $args)
+    public function getMailingById(Request $request, Response $response, array $args)
     {
         if (!Validator::intVal()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
         }
 
         $attachment = AttachmentModel::getById([
-            'select'    => ['status', 'res_id_master', 'title', 'identifier', 'docserver_id', 'path', 'filename', 'format', 'attachment_type'],
+            'select'    => ['status', 'res_id_master'],
             'id'        => $args['id']
         ]);
         if (empty($attachment)) {
@@ -727,22 +639,43 @@ class AttachmentController
             return $response->withStatus(403)->withJson(['errors' => 'Attachment is not candidate to mailing']);
         }
 
+        $generated = AttachmentController::generateMailing(['id' => $args['id'], 'userId' => $GLOBALS['id']]);
+        if (!empty($generated['errors'])) {
+            return $response->withStatus(400)->withJson(['errors' => $generated['errors']]);
+        }
+
+        return $response->withStatus(204);
+    }
+
+    public static function generateMailing(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['id', 'userId']);
+        ValidatorModel::intVal($args, ['id', 'userId']);
+
+        $attachment = AttachmentModel::getById([
+            'select'    => ['res_id_master', 'title', 'identifier', 'docserver_id', 'path', 'filename', 'format', 'attachment_type'],
+            'id'        => $args['id']
+        ]);
+
+        $resource = ResModel::getById(['resId' => $attachment['res_id_master'], 'select' => ['category_id']]);
+
+        $mode = $resource['category_id'] == 'incoming' ? 'sender' : 'recipient';
         $recipients = ResourceContactModel::get([
             'select'    => ['item_id'],
             'where'     => ['res_id = ?', 'type = ?', 'mode = ?'],
-            'data'      => [$attachment['res_id_master'], 'contact', 'sender']
+            'data'      => [$attachment['res_id_master'], 'contact', $mode]
         ]);
         if (empty($recipients)) {
-            return $response->withStatus(400)->withJson(['errors' => 'No contacts available']);
+            return ['errors' => 'No contacts available'];
         }
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $attachment['docserver_id'], 'select' => ['path_template']]);
         if (empty($docserver['path_template']) || !is_dir($docserver['path_template'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
+            return ['errors' => 'Docserver does not exist'];
         }
         $pathToAttachment = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $attachment['path']) . $attachment['filename'];
         if (!is_file($pathToAttachment)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Attachment not found on docserver']);
+            return ['errors' => 'Attachment not found on docserver'];
         }
 
         foreach ($recipients as $key => $recipient) {
@@ -750,7 +683,7 @@ class AttachmentController
 
             $mergedDocument = MergeController::mergeDocument([
                 'path'  => $pathToAttachment,
-                'data'  => ['userId' => $GLOBALS['id'], 'recipientId' => $recipient['item_id'], 'recipientType' => 'contact']
+                'data'  => ['userId' => $args['userId'], 'recipientId' => $recipient['item_id'], 'recipientType' => 'contact']
             ]);
 
             $data = [
@@ -761,10 +694,14 @@ class AttachmentController
                 'chrono'            => $chrono,
                 'type'              => $attachment['attachment_type'],
                 'recipientId'       => $recipient['item_id'],
-                'recipientType'     => 'contact'
+                'recipientType'     => 'contact',
+                'inSignatureBook'   => true
             ];
 
-            StoreController::storeAttachment($data);
+            $isStored = StoreController::storeAttachment($data);
+            if (!empty($isStored['errors'])) {
+                return ['errors' => $isStored['errors']];
+            }
         }
 
         AttachmentModel::update([
@@ -775,7 +712,7 @@ class AttachmentController
             'data'      => [$args['id']]
         ]);
 
-        return $response->withStatus(204);
+        return true;
     }
 
     private static function controlAttachment(array $args)

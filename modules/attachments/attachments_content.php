@@ -380,8 +380,6 @@ if (isset($_POST['add']) && $_POST['add']) {
                                                 'chronoAttachment' => $chronoPubli,
                                             ];
 
-                                            $filePathOnTmp = \Template\controllers\TemplateController::mergeDatasource($params);
-
                                             $fileInfos = [
                                                 'tmpDir'        => $_SESSION['config']['tmppath'],
                                                 'size'          => $_SESSION['upfile'][$numAttach]['size'],
@@ -1085,8 +1083,6 @@ if (isset($_POST['add']) && $_POST['add']) {
                 'pathToAttachment' => $pathToAttachmentToCopy,
                 'chronoAttachment' => $chronoPubli,
             ];
-
-            $filePathOnTmp = \Template\controllers\TemplateController::mergeDatasource($params);
 
             $fileInfos = [
                 'tmpDir'        => $_SESSION['config']['tmppath'],

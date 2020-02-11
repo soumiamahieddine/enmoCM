@@ -333,12 +333,6 @@ abstract class visa_Abstract extends Database
         // If there is only one step in the visa workflow, we set status to ESIG
         if ($resListDiffVisa->requested_signature) {
             $mailStatus = 'ESIG';
-            if ($inDetails == false) {
-                \Attachment\controllers\AttachmentController::generateAttachForMailing([
-                    'resIdMaster' => $res_id,
-                    'userId' => $_SESSION['user']['UserId']
-                ]);
-            }
         } else {
             $mailStatus = 'EVIS';
         }
