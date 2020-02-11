@@ -271,4 +271,64 @@ class TagController
 
         return $response->withStatus(204);
     }
+
+    public static function link(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Route id is not an integer']);
+        }
+
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['links'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body links is empty or not an array']);
+        } elseif (in_array($args['id'], $body['links'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body links contains tag']);
+        }
+
+        $tag = TagModel::getById(['id' => $args['id']]);
+        $linkedTags = json_decode($tag['links'], true);
+        $linkedTags = array_merge($linkedTags, $body['links']);
+        $linkedTags = array_unique($linkedTags);
+        foreach ($linkedTags as $key => $linkedTag) {
+            $linkedTags[$key] = (string)$linkedTag;
+        }
+
+        TagModel::update([
+            'set'       => ['links' => json_encode($linkedTags)],
+            'where'     => ['id = ?'],
+            'data'      => [$args['id']]
+        ]);
+        TagModel::update([
+            'postSet'   => ['links' => "jsonb_insert(links, '{0}', '\"{$args['id']}\"')"],
+            'where'     => ['id in (?)', "(links @> ?) = false"],
+            'data'      => [$body['links'], "\"{$args['id']}\""]
+        ]);
+
+        $linkedTagsInfo = TagModel::get([
+            'select' => ['label', 'id'],
+            'where'  => ['id in (?)'],
+            'data'   => [$body['links']]
+        ]);
+        $linkedTagsInfo = array_column($linkedTagsInfo, 'label', 'id');
+
+        foreach ($body['linkedResources'] as $value) {
+            HistoryController::add([
+                'tableName' => 'tags',
+                'recordId'  => $args['resId'],
+                'eventType' => 'UP',
+                'info'      => _LINK_ADDED . " : {$linkedTagsInfo[$value]}",
+                'eventId'   => 'tagModification'
+            ]);
+            HistoryController::add([
+                'tableName' => 'tags',
+                'recordId'  => $value,
+                'eventType' => 'UP',
+                'info'      => _LINK_ADDED . " : {$tag['label']}",
+                'eventId'   => 'tagModification'
+            ]);
+        }
+
+        return $response->withStatus(204);
+    }
 }
