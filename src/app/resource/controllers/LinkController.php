@@ -41,6 +41,7 @@ class LinkController
 
         $linkedResources = [];
         if (!empty($linkedResourcesIds)) {
+            $linkedResourcesIds = ResController::getAuthorizedResources(['resources' => $linkedResourcesIds, 'userId' => $GLOBALS['id']]);
             $linkedResources = ResModel::get([
                 'select' => ['res_id as "resId"', 'subject', 'doc_date as "documentDate"', 'status', 'dest_user as "destUser"', 'destination', 'alt_identifier as chrono', 'category_id as "categoryId"', 'filename', 'confidentiality'],
                 'where'  => ['res_id in (?)'],

@@ -663,6 +663,9 @@ class ResController extends ResourceControlController
         }
 
         $linkedResources = json_decode($document['linked_resources'], true);
+        if (!empty($linkedResources)) {
+            $linkedResources = ResController::getAuthorizedResources(['resources' => $linkedResources, 'userId' => $GLOBALS['id']]);
+        }
         $formattedData['linkedResources'] = count($linkedResources);
 
         $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
@@ -871,10 +874,21 @@ class ResController extends ResourceControlController
 
         $resources = array_unique($args['resId']);
 
-        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+        $authorizedResources = ResController::getAuthorizedResources(['resources' => $resources, 'userId' => $args['userId']]);
 
+        return count($authorizedResources) == count($resources);
+    }
+
+    public static function getAuthorizedResources(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resources', 'userId']);
+        ValidatorModel::intVal($args, ['userId']);
+        ValidatorModel::arrayType($args, ['resources']);
+
+
+        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
         if ($user['user_id'] == 'superadmin') {
-            return true;
+            return $args['resources'];
         }
 
         $whereClause = '(res_id in (select res_id from users_followed_resources where user_id = ?))';
@@ -928,15 +942,11 @@ class ResController extends ResourceControlController
         }
 
         try {
-            $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id in (?)', "({$whereClause})"], 'data' => [$resources, $args['userId'], $entities, $args['userId']]]);
-            if (!empty($res) && count($res) == count($resources)) {
-                return true;
-            }
+            $res = ResModel::getOnView(['select' => ['res_id'], 'where' => ['res_id in (?)', "({$whereClause})"], 'data' => [$args['resources'], $args['userId'], $entities, $args['userId']]]);
+            return $res;
         } catch (\Exception $e) {
-            return false;
+            return [];
         }
-
-        return false;
     }
 
     private static function createAdjacentData(array $args)
