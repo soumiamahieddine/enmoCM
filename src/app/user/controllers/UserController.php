@@ -1711,4 +1711,20 @@ class UserController
 
         return $response->withStatus(204);
     }
+
+    public static function getCurrentUserSignatures(Request $request, Response $response)
+    {
+        $signatureModels = UserModel::getEmailSignaturesById(['userId' => $GLOBALS['userId']]);
+
+        $signatures = [];
+
+        foreach ($signatureModels as $signature) {
+            $signatures[] = [
+                'label' => $signature['title'],
+                'content' => $signature['html_body']
+            ];
+        }
+
+        return $response->withJson(['emailSignatures' => $signatures]);
+    }
 }
