@@ -2,8 +2,11 @@ import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { tap, finalize, catchError } from 'rxjs/operators';
+import { tap, finalize, catchError, exhaustMap, filter } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { HeaderService } from '../../service/header.service';
+import { ConfirmComponent } from '../../plugins/modal/confirm.component';
+import { MatDialogRef, MatDialog } from '@angular/material';
 
 @Component({
     selector: 'app-notes-list',
@@ -25,9 +28,13 @@ export class NotesListComponent implements OnInit {
 
     @Output('reloadBadgeNotes') reloadBadgeNotes = new EventEmitter<string>();
 
+    dialogRef: MatDialogRef<any>;
+
     constructor(
         public http: HttpClient,
-        private notify: NotificationService
+        private notify: NotificationService,
+        private headerService: HeaderService,
+        public dialog: MatDialog
     ) { }
 
     ngOnInit(): void {
@@ -55,5 +62,21 @@ export class NotesListComponent implements OnInit {
             this.reloadBadgeNotes.emit(`${this.notes.length}`);
             this.loading = false;
         });
+    }
+
+    removeNote(note: any) {
+        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: false, data: { title: this.lang.confirmRemoveNote, msg: this.lang.confirmAction } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.request('DELETE', '../../rest/notes/' + note.id)),
+            tap(() => {
+                var index = this.notes.findIndex(elem => elem.id == note.id)
+                if (index > -1) {
+                    this.notes.splice(index, 1);
+                }
+                this.notify.success(this.lang.noteRemoved);
+            })
+        ).subscribe();
     }
 }

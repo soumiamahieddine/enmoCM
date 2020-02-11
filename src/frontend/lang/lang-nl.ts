@@ -1495,6 +1495,9 @@ export const LANG_NL = {
     "visaNote": "Order", //_TO_TRANSLATE
     "chooseBAN": "Choose a BAN", //_TO_TRANSLATE
     "click": "Click", //_TO_TRANSLATE
+    "removeNote" : "Remove note", //_TO_TRANSLATE
+    "noteRemoved" : "Note deleted", //_TO_TRANSLATE
+    "confirmRemoveNote" : "Note deletion", //_TO_TRANSLATE
     "inSignatureBook_doc" : "Put the main document in signature book", //_TO_TRANSLATE
     "inShipping_doc" : "Intégrer le document principal  in send Maileva", //_TO_TRANSLATE
     "preRequisiteMissing": "Prerequisite missing for OnlyOffice : netcat", //_TO_TRANSLATE
