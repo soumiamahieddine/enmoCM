@@ -66,8 +66,12 @@ class TagModel
         DatabaseModel::insert([
             'table'         => 'tags',
             'columnsValues' => [
-                'id'        => $nextSequenceId,
-                'label'     => $args['label'],
+                'id'          => $nextSequenceId,
+                'label'       => $args['label'],
+                'description' => $args['description'] ?? null,
+                'parent_id'   => $args['parentId'] ?? null,
+                'links'       => $args['links'] ?? json_encode('[]'),
+                'usage'       => $args['usage'] ?? null
             ]
         ]);
 
@@ -96,6 +100,7 @@ class TagModel
         DatabaseModel::update([
             'table'     => 'tags',
             'set'       => empty($args['set']) ? [] : $args['set'],
+            'postSet'   => empty($args['postSet']) ? [] : $args['postSet'],
             'where'     => $args['where'],
             'data'      => empty($args['data']) ? [] : $args['data']
         ]);

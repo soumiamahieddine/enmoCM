@@ -48,7 +48,7 @@ use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
-use Tag\models\TagResModel;
+use Tag\models\ResourceTagModel;
 use User\models\UserModel;
 
 class ResController extends ResourceControlController
@@ -221,7 +221,7 @@ class ResController extends ResourceControlController
             ]);
             $formattedData['folders'] = array_column($folders, 'folder_id');
 
-            $tags = TagResModel::get(['select' => ['tag_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            $tags = ResourceTagModel::get(['select' => ['tag_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             $formattedData['tags'] = array_column($tags, 'tag_id');
         } else {
             $followed = UserFollowedResourceModel::get([
@@ -978,7 +978,7 @@ class ResController extends ResourceControlController
         }
         if (!empty($body['tags'])) {
             foreach ($body['tags'] as $tag) {
-                TagResModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
+                ResourceTagModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
             }
         }
         if (!empty($body['senders'])) {
@@ -1023,10 +1023,10 @@ class ResController extends ResourceControlController
                 ResourceFolderModel::create(['res_id' => $args['resId'], 'folder_id' => $folder]);
             }
         }
-        TagResModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+        ResourceTagModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
         if (!empty($body['tags'])) {
             foreach ($body['tags'] as $tag) {
-                TagResModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
+                ResourceTagModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
             }
         }
         ResourceContactModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);

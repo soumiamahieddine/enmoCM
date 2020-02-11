@@ -8,7 +8,7 @@
  */
 
 /**
- * @brief Tag Res Model
+ * @brief Resource Tag Model
  * @author dev@maarch.org
  */
 
@@ -17,7 +17,7 @@ namespace Tag\models;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 
-class TagResModel
+class ResourceTagModel
 {
 
     public static function get(array $aArgs)
@@ -27,7 +27,7 @@ class TagResModel
 
         $tags = DatabaseModel::select([
             'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => ['tag_res'],
+            'table'     => ['resources_tags'],
             'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
             'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
@@ -43,7 +43,7 @@ class TagResModel
         ValidatorModel::intVal($args, ['res_id', 'tag_id']);
 
         DatabaseModel::insert([
-            'table'         => 'tag_res',
+            'table'         => 'resources_tags',
             'columnsValues' => [
                 'res_id'    => $args['res_id'],
                 'tag_id'    => $args['tag_id']
@@ -59,7 +59,7 @@ class TagResModel
         ValidatorModel::arrayType($args, ['set', 'where', 'data']);
 
         DatabaseModel::update([
-            'table'     => 'tag_res',
+            'table'     => 'resources_tags',
             'set'       => empty($args['set']) ? [] : $args['set'],
             'where'     => $args['where'],
             'data'      => empty($args['data']) ? [] : $args['data']
@@ -74,7 +74,7 @@ class TagResModel
         ValidatorModel::arrayType($args, ['where', 'data']);
 
         DatabaseModel::delete([
-            'table' => 'tag_res',
+            'table' => 'resources_tags',
             'where' => $args['where'],
             'data'  => $args['data']
         ]);

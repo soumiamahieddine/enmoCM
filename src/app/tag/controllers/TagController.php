@@ -19,7 +19,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Tag\models\TagModel;
-use Tag\models\TagResModel;
+use Tag\models\ResourceTagModel;
 
 class TagController
 {
@@ -61,9 +61,57 @@ class TagController
             return $response->withStatus(400)->withJson(['errors' => 'Body label has more than 128 characters']);
         }
 
+        $parent = null;
+        if (!empty($body['parentId'])) {
+            if (!Validator::intVal()->validate($body['parentId'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body parentId is not an integer']);
+            }
+            $parent = TagModel::getById(['id' => $body['parentId'], 'select' => ['id']]);
+            if (empty($parent)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Parent tag does not exist']);
+            }
+            $parent = $parent['id'];
+        }
+
+        $links = json_encode([]);
+        if (!empty($body['links'])) {
+            if (!Validator::arrayType()->validate($body['links'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body links is not an integer']);
+            }
+            $listTags = [];
+            foreach ($body['links'] as $link) {
+                if (!Validator::intVal()->validate($link)) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Body links element is not an integer']);
+                }
+                $listTags[] = (string)$link;
+            }
+            $tags = TagModel::get([
+                'select' => ['count(1)'],
+                'where'  => ['id in (?)'],
+                'data'   => [$body['links']]
+            ]);
+            if ($tags[0]['count'] != count($body['links'])) {
+                return $response->withStatus(404)->withJson(['errors' => 'Tag(s) not found']);
+            }
+
+            $links = json_encode($listTags);
+        }
+
         $id = TagModel::create([
-            'label' => $body['label']
+            'label'       => $body['label'],
+            'description' => $body['description'] ?? null,
+            'parentId'    => $parent,
+            'links'       => $links,
+            'usage'       => $body['usage'] ?? null
         ]);
+
+        if (!empty($body['links'])) {
+            TagModel::update([
+                'postSet' => ['links' => "jsonb_insert(links, '{0}', '\"{$id}\"')"],
+                'where'   => ['id in (?)', "(links @> ?) = false"],
+                'data'    => [$body['links'], "\"{$id}\""]
+            ]);
+        }
 
         HistoryController::add([
             'tableName' => 'tags',
@@ -96,9 +144,24 @@ class TagController
             return $response->withStatus(400)->withJson(['errors' => 'Body label has more than 128 characters']);
         }
 
+        $parent = null;
+        if (!empty($body['parentId'])) {
+            if (!Validator::intVal()->validate($body['parentId'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body parentId is not an integer']);
+            }
+            $parent = TagModel::getById(['id' => $body['parentId'], 'select' => ['id']]);
+            if (empty($parent)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Parent tag does not exist']);
+            }
+            $parent = $parent['id'];
+        }
+
         TagModel::update([
             'set' => [
-                'label' => $body['label']
+                'label'       => $body['label'],
+                'description' => $body['description'] ?? null,
+                'parentId'    => $parent,
+                'usage'       => $body['usage'] ?? null
             ],
             'where' => ['id = ?'],
             'data' => [$args['id']]
@@ -174,13 +237,13 @@ class TagController
             return $response->withStatus(404)->withJson(['errors' => 'Merge tag not found']);
         }
 
-        $tagResMaster = TagResModel::get([
+        $tagResMaster = ResourceTagModel::get([
            'where'  => ['tag_id = ?'],
             'data'  => [$tagMaster['id']]
         ]);
         $tagResMaster = array_column($tagResMaster, 'res_id');
 
-        TagResModel::update([
+        ResourceTagModel::update([
            'set'    => [
                'tag_id' => $tagMaster['id']
            ],
@@ -188,7 +251,7 @@ class TagController
            'data'   => [$tagMerge['id'], $tagResMaster]
         ]);
 
-        TagResModel::delete([
+        ResourceTagModel::delete([
            'where'  => ['tag_id = ?'],
            'data'   => [$tagMerge['id']]
         ]);
