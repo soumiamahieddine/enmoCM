@@ -259,13 +259,15 @@ class ContactGroupController
         foreach ($list as $listItem) {
             $contact = ContactModel::getById([
                 'select'    => [
-                    'id', 'firstname', 'lastname', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'
+                    'id', 'firstname', 'lastname', 'email', 'company', 'address_number', 'address_street', 'address_town', 'address_postcode'
                 ],
-                'id'      => $listItem['contact_id']
+                'id'        => $listItem['contact_id']
             ]);
 
             if (!empty($contact)) {
+                $email = $contact['email'];
                 $contact = ContactController::getFormattedContactWithAddress(['contact' => $contact, 'position' => $position])['contact'];
+                $contact['email'] = $email;
                 $contact['position'] = !empty($position) ? $position : 0;
                 $contacts[] = $contact;
                 ++$position;
