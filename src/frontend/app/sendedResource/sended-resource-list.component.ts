@@ -47,6 +47,11 @@ export class SendedResourceListComponent implements OnInit {
 
     async ngOnInit(): Promise<void> {
         this.sendedResources = [];
+        this.loadList();
+    }
+
+    async loadList() {
+        this.loading = true;
         await this.initAcknowledgementReceipList();
         await this.initEmailList();
         await this.initMessageExchange();
@@ -56,9 +61,7 @@ export class SendedResourceListComponent implements OnInit {
             this.dataSource = new MatTableDataSource(this.sendedResources);
             this.dataSource.sort = this.sort;
         }, 0);
-
         this.loading = false;
-
     }
 
     initAcknowledgementReceipList() {
@@ -191,6 +194,18 @@ export class SendedResourceListComponent implements OnInit {
     }
 
     openPromptMail() {
-        this.dialog.open(SendedResourcePageComponent, { data: { title: `Toto`, resId: this.resId } });
+
+        const dialogRef = this.dialog.open(SendedResourcePageComponent, { maxWidth: '90vw', width: '750px', data: { title: `Toto`, resId: this.resId } });
+
+        dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'success'),
+            tap(() => {
+                this.loadList();
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 }

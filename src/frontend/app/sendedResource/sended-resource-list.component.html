@@ -27,7 +27,10 @@
                     <span *ngIf="row.status === 'DRAFT'" style="flex:1;color:orange">
                         {{lang.draft}}
                     </span>
-                    <span *ngIf="row.sendDate === null" style="flex:1;color:red;font-weight: bold;">
+                    <span *ngIf="row.status === 'WAITING'" style="flex:1;color:orange;font-weight: bold;">
+                        En cours d'envoi...
+                    </span>
+                    <span *ngIf="row.status === 'ERROR'" style="flex:1;color:red;font-weight: bold;">
                         {{lang.notSent}}
                     </span>
                     <span style="flex:1" *ngIf="!functions.empty(row.operationDate)" [title]="row.operationDate | fullDate">
