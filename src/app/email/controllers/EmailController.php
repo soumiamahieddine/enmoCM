@@ -326,9 +326,9 @@ class EmailController
 
             if ($queryParams['type'] == 'ar') {
                 $where[] = "object LIKE '[AR]%'";
-            } else if ($queryParams['type'] == 'm2m') {
+            } elseif ($queryParams['type'] == 'm2m') {
                 $where[] = 'message_exchange_id is not null';
-            } else if ($queryParams['type'] == 'email') {
+            } elseif ($queryParams['type'] == 'email') {
                 $where[] = "object NOT LIKE '[AR]%'";
                 $where[] = 'message_exchange_id is null';
             }
@@ -399,7 +399,7 @@ class EmailController
                             'label' => (string)$entityMail->defaultName,
                             'email' => (string)$entityMail->EntityMail
                         ];
-                    } else if (in_array($entityId, $userEntities)) {
+                    } elseif (in_array($entityId, $userEntities)) {
                         $entityLabel = EntityModel::getByEntityId([
                             'select'   => ['entity_label'],
                             'entityId' => $entityId
@@ -426,9 +426,18 @@ class EmailController
 
         $email = EmailModel::getById(['id' => $args['emailId']]);
         $email['sender']        = (array)json_decode($email['sender']);
-        $email['recipients']    = json_decode($email['recipients']);
-        $email['cc']            = json_decode($email['cc']);
-        $email['cci']           = json_decode($email['cci']);
+        $email['recipients']    = array_unique(json_decode($email['recipients']));
+        $email['cc']            = array_unique(json_decode($email['cc']));
+        $email['cci']           = array_unique(json_decode($email['cci']));
+
+        $hierarchyMail = ['cci' => 'cc', 'cc' => 'recipients'];
+        foreach ($hierarchyMail as $lowEmail => $highEmail) {
+            foreach ($email[$lowEmail] as $currentKey => $currentEmail) {
+                if (in_array($currentEmail, $email[$highEmail])) {
+                    unset($email[$lowEmail][$currentKey]);
+                }
+            }
+        }
 
         $configuration = ConfigurationModel::getByService(['service' => 'admin_email_server', 'select' => ['value']]);
         $configuration = (array)json_decode($configuration['value']);
