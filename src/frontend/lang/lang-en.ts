@@ -1181,6 +1181,7 @@ export const LANG_EN = {
     "viewFullHistoryDesc" : "Read the full events history linked to the utilisation of Maarch.",
     "editResource" : "Edit a document",
     "editResourceDesc" : "Edit a document. Il will also depend on status setting (Index modification)",
+    "addLinks" : "Add links",
     "deleteDocumentInDetail" : "Delete a document in detail page",
     "manageTagsInApplication" : "Create tags",
     "manageTagsInApplicationDesc" : "Create tags while indexing, processing and in details",

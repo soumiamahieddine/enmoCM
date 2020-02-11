@@ -1207,6 +1207,7 @@ export const LANG_NL = {
     "viewFullHistoryDesc" : "De volledige geschiedenis van de evenementen over het gebruik van GED Maarch raadplegen.",
     "editResource" : "Een document in de gedetailleerde",
     "editResourceDesc" : "Een document in de gedetailleerde. Dat zal ook van de instelling van de status afhangen (Wijziging van de indexen)",
+    "addLinks" : "Add links", //_TO_TRANSLATE
     "deleteDocumentInDetail" : "Een document in de gedetailleerde fiche verwijderen",
     "manageTagsInApplication" : "Create tags", //_TO_TRANSLATE
     "manageTagsInApplicationDesc" : "Create tags while indexing, processing and in details", //_TO_TRANSLATE

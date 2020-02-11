@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material';
 import { LinkResourceModalComponent } from './linkResourceModal/link-resource-modal.component';
 import { FunctionsService } from '../../service/functions.service';
 import { ContactsListModalComponent } from '../contact/list/modal/contacts-list-modal.component';
+import { PrivilegeService } from '../../service/privileges.service';
 
 declare function $j(selector: any): any;
 
@@ -44,7 +45,8 @@ export class LinkedResourceListComponent implements OnInit {
         private notify: NotificationService,
         public appService: AppService,
         public dialog: MatDialog,
-        public functions: FunctionsService
+        public functions: FunctionsService,
+        private privilegeService: PrivilegeService
     ) { }
 
     ngOnInit(): void {

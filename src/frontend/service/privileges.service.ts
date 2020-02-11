@@ -309,6 +309,12 @@ export class PrivilegeService {
             "unit": 'application'
         },
         {
+            "id": "add_links",
+            "label": this.lang.addLinks,
+            "comment": this.lang.addLinks,
+            "unit": 'application'
+        },
+        {
             "id": "delete_document_in_detail",
             "label": this.lang.deleteDocumentInDetail,
             "comment": this.lang.deleteDocumentInDetail,

@@ -18,6 +18,7 @@ use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
+use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
@@ -99,6 +100,10 @@ class LinkController
 
     public function linkResources(Request $request, Response $response, array $args)
     {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'add_links', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Resource out of perimeter']);
         }
@@ -163,6 +168,10 @@ class LinkController
 
     public function unlinkResources(Request $request, Response $response, array $args)
     {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'add_links', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
         if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Resource out of perimeter']);
         }
