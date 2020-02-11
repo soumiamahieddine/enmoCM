@@ -14,6 +14,7 @@
 
 namespace Template\controllers;
 
+use ContentManagement\controllers\MergeController;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Group\controllers\PrivilegeController;
@@ -456,9 +457,6 @@ class TemplateController
         $where = ['(templates_association.value_field in (?) OR templates_association.template_id IS NULL)', 'templates.template_type = ?', 'templates.template_target = ?'];
         $data = [$entities, 'HTML', 'sendmail'];
 
-        $queryParams = $request->getQueryParams();
-
-
         $templates = TemplateModel::getWithAssociation([
             'select'    => ['DISTINCT(templates.template_id)', 'templates.template_label'],
             'where'     => $where,
@@ -474,6 +472,31 @@ class TemplateController
         }
 
         return $response->withJson(['templates' => $templates]);
+    }
+
+    public static function mergeEmailTemplate(Request $request, Response $response, array $args)
+    {
+        $template = TemplateModel::getById(['id' => $args['id'], 'select' => ['template_content']]);
+        if (empty($template)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
+        }
+        if (empty($template['template_content'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Template has no content']);
+        }
+
+        $body = $request->getParsedBody();
+
+        $dataToMerge = ['userId' => $GLOBALS['id']];
+        if (!empty($body['data']) && is_array($body['data'])) {
+            $dataToMerge = array_merge($dataToMerge, $body['data']);
+        }
+        $mergedDocument = MergeController::mergeDocument([
+            'content' => $template['template_content'],
+            'data'    => $dataToMerge
+        ]);
+        $fileContent = base64_decode($mergedDocument['encodedDocument']);
+
+        return $response->withJson(['mergedDocument' => $fileContent]);
     }
 
     private static function checkData(array $aArgs)

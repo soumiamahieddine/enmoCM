@@ -456,6 +456,7 @@ $app->put('/templates/{id}', \Template\controllers\TemplateController::class . '
 $app->delete('/templates/{id}', \Template\controllers\TemplateController::class . ':delete');
 $app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController::class . ':duplicate');
 $app->get('/administration/templates/new', \Template\controllers\TemplateController::class . ':initTemplates');
+$app->post('/templates/{id}/mergeEmail', \Template\controllers\TemplateController::class . ':mergeEmailTemplate');
 
 //Users
 $app->get('/users', \User\controllers\UserController::class . ':get');
