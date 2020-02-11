@@ -517,6 +517,7 @@ $app->delete('/currentUser/emailSignature/{id}', \User\controllers\UserControlle
 $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \User\controllers\UserController::class . ':updateCurrentUserBasketPreferences');
 $app->get('/currentUser/templates', \User\controllers\UserController::class . ':getTemplates');
 $app->get('/currentUser/emailSignatures', \User\controllers\UserController::class . ':getCurrentUserSignatures');
+$app->get('/currentUser/emailSignatures/{id}', \User\controllers\UserController::class . ':getCurrentUserSignatureContentById');
 
 //Notifications
 $app->get('/notifications', \Notification\controllers\NotificationController::class . ':get');

@@ -1720,11 +1720,33 @@ class UserController
 
         foreach ($signatureModels as $signature) {
             $signatures[] = [
-                'label' => $signature['title'],
+                'id'      => $signature['id'],
+                'label'   => $signature['title'],
                 'content' => $signature['html_body']
             ];
         }
 
         return $response->withJson(['emailSignatures' => $signatures]);
+    }
+
+    public static function getCurrentUserSignatureContentById(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body param id is missing']);
+        }
+
+        $signatureModels = UserModel::getEmailSignatureWithSignatureIdById(['userId' => $GLOBALS['userId'], 'signatureId' => $args['id']]);
+
+        if (empty($signatureModels)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Signature not found']);
+        }
+
+        $signature = [
+            'id'      => $signatureModels['id'],
+            'label'   => $signatureModels['title'],
+            'content' => $signatureModels['html_body']
+        ];
+
+        return $response->withJson(['emailSignature' => $signature]);
     }
 }
