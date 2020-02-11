@@ -25,7 +25,7 @@
             </mat-header-cell>
             <mat-cell *matCellDef="let row" style="width: 70px;flex: initial;">
                 <mat-checkbox color="primary" [checked]="row.checked" (change)="toggleRes($event,row)"
-                    (click)="$event.stopPropagation();">
+                    (click)="$event.stopPropagation();" [disabled]="row.resId == currentResId">
                 </mat-checkbox>
             </mat-cell>
         </ng-container>

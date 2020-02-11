@@ -943,7 +943,7 @@ class ResController extends ResourceControlController
 
         try {
             $res = ResModel::getOnView(['select' => ['res_id'], 'where' => ['res_id in (?)', "({$whereClause})"], 'data' => [$args['resources'], $args['userId'], $entities, $args['userId']]]);
-            return $res;
+            return array_column($res, 'res_id');
         } catch (\Exception $e) {
             return [];
         }

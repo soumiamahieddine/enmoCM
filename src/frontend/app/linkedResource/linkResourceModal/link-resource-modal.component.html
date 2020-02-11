@@ -7,7 +7,7 @@
     </button></h1>
 <mat-dialog-content class="modal-container">
     <app-criteria-tool (searchUrlGenerated)="launchSearch($event)" [defaultCriteria]="['resourceField','contactField']"></app-criteria-tool>
-    <search-adv-list #appSearchAdvList></search-adv-list>
+    <search-adv-list #appSearchAdvList [currentResId]="data.resId"></search-adv-list>
 </mat-dialog-content>
 <div mat-dialog-actions class="actions">
     <button mat-raised-button color="primary" [disabled]="appSearchAdvList.getSelectedRessources().length === 0"
