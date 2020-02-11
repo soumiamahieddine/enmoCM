@@ -1,7 +1,7 @@
 DELETE FROM usergroups WHERE group_id = 'MAARCHTOGEC';
 INSERT INTO usergroups (group_id,group_desc,enabled) VALUES ('MAARCHTOGEC', 'Envoi dématérialisé','Y');
 DELETE FROM usergroups_services WHERE group_id = 'MAARCHTOGEC';
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('MAARCHTOGEC', 'save_numeric_package');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MAARCHTOGEC', 'manage_numeric_package');
 
 DELETE FROM security WHERE group_id = 'MAARCHTOGEC';
 INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('MAARCHTOGEC', 'letterbox_coll', '1=0', 'Aucun courrier');

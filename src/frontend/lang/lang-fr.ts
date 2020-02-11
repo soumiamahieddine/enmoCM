@@ -811,7 +811,7 @@ export const LANG_FR = {
     "sameLevelMyPrimaryEntity"              : "Même niveau de mon entité primaire",
     "saturday"                              : "Samedi",
     "save"                                  : "Enregistrer",
-    "saveNumericPackage"                    : "Enregistrer un pli numérique",
+    "manageNumericPackage"                  : "Envoyer et enregistrer un pli numérique",
     "sbSignatures"                          : "Signatures de parapheur",
     "script"                                : "Script",
     "scriptCreated"                         : "Script créé",

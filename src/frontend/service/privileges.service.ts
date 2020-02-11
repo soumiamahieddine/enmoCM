@@ -502,9 +502,9 @@ export class PrivilegeService {
             'shortcut' : false
         },
         {
-            "id": "save_numeric_package",
-            "label": this.lang.saveNumericPackage,
-            "comment": this.lang.saveNumericPackage,
+            "id": "manage_numeric_package",
+            "label": this.lang.manageNumericPackage,
+            "comment": this.lang.manageNumericPackage,
             "route": "/saveNumericPackage",
             "style": "fa fa-file-archive",
             "unit": "sendmail",

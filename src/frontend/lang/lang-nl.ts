@@ -806,7 +806,7 @@ export const LANG_NL = {
     "sameLevelMyPrimaryEntity"              : "Same level of my primary entity", //_TO_TRANSLATE
     "saturday"                              : "Zaterdag",
     "save"                                  : "Bewaren",
-    "saveNumericPackage"                    : "Een digitale brief bewaren",
+    "manageNumericPackage"                    : "Een digitale brief bewaren",
     "sbSignatures"                          : "Handtekeningen van de parafeerder",
     "script"                                : "Script",
     "scriptCreated"                         : "Script aangemaakt",

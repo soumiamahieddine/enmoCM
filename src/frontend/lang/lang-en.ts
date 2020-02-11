@@ -778,7 +778,7 @@ export const LANG_EN = {
     "sameLevelMyPrimaryEntity"              : "Same level of my primary entity",
     "saturday"                              : "Saturday",
     "save"                                  : "Save",
-    "saveNumericPackage"                    : "Save numeric package",
+    "manageNumericPackage"                  : "Send and save numeric package",
     "sbSignatures"                          : "Signature Book Signatures",
     "script"                                : "Script",
     "scriptCreated"                         : "Script created",
