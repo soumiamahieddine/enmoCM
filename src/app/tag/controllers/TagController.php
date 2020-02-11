@@ -222,19 +222,34 @@ class TagController
         if (!Validator::intVal()->notEmpty()->validate($body['idMaster'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body idMaster must be an integer val']);
         }
+        if (!Validator::intVal()->notEmpty()->validate($body['idMerge'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body idMerge must be an integer val']);
+        }
+        if ($body['idMaster'] == $body['idMerge']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Cannot merge tag with itself']);
+        }
 
         $tagMaster = TagModel::getById(['id' => $body['idMaster']]);
         if (empty($tagMaster)) {
             return $response->withStatus(404)->withJson(['errors' => 'Master tag not found']);
         }
 
-        if (!Validator::intVal()->notEmpty()->validate($body['idMerge'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body idMerge must be an integer val']);
-        }
-
         $tagMerge = TagModel::getById(['id' => $body['idMerge']]);
         if (empty($tagMerge)) {
             return $response->withStatus(404)->withJson(['errors' => 'Merge tag not found']);
+        }
+
+        if (!empty($tagMerge['parent_id']) || !empty($tagMaster['parent_id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Cannot merge tag : tag has a parent']);
+        }
+
+        $childTags = TagModel::get([
+            'select' => ['count(1)'],
+            'where'  => ['parent_id in (?)'],
+            'data'   => [[$tagMaster['id'], $tagMerge['id']]]
+        ]);
+        if ($childTags[0]['count'] > 0) {
+            return $response->withStatus(400)->withJson(['errors' => 'Cannot merge tag : tag has a child']);
         }
 
         $tagResMaster = ResourceTagModel::get([
