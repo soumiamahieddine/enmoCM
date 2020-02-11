@@ -160,7 +160,7 @@ class TagController
             'set' => [
                 'label'       => $body['label'],
                 'description' => $body['description'] ?? null,
-                'parentId'    => $parent,
+                'parent_id'   => $parent,
                 'usage'       => $body['usage'] ?? null
             ],
             'where' => ['id = ?'],
