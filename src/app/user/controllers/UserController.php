@@ -1731,8 +1731,8 @@ class UserController
 
     public static function getCurrentUserSignatureContentById(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($args['id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body param id is missing']);
+        if (!Validator::notEmpty()->intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body param id is empty or not an integer']);
         }
 
         $signatureModels = UserModel::getEmailSignatureWithSignatureIdById(['userId' => $GLOBALS['userId'], 'signatureId' => $args['id']]);
