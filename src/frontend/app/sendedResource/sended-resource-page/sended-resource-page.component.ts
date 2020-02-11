@@ -51,16 +51,17 @@ export class SendedResourcePageComponent implements OnInit {
     tinyMCEConfig = {
         language: this.lang.langISO.replace('-', '_'),
         language_url: `../../node_modules/tinymce-i18n/langs/${this.lang.langISO.replace('-', '_')}.js`,
-        height: 300,
         menubar: false,
         plugins: [
-            'advlist autolink lists link image charmap print preview anchor',
-            'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code help wordcount'
+            'autolink', 'autoresize'
         ],
+        external_plugins: {
+            'maarch_b64image': "../../src/frontend/plugins/tinymce/maarch_b64image/plugin.min.js"
+        },
+        toolbar_drawer: 'floating',
         toolbar:
-            'undo redo | formatselect | bold italic backcolor | \
-          alignleft aligncenter alignright alignjustify | \
+            'undo redo | fontselect fontsizeselect | bold italic underline strikethrough forecolor | maarch_b64image | \
+          alignleft aligncenter alignright alignjustify \
           bullist numlist outdent indent | removeformat'
     }
 
