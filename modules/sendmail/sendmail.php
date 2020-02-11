@@ -358,9 +358,9 @@ if (isset($_REQUEST['load'])) {
 
     $content .= '<script>loadToolbarBadge(\'sendmail_tab\',\''.$toolbarBagde_script.'\');</script>';
 
-    /********* MESSAGE EXCHANGE PART ***************/
-    include_once 'modules/sendmail/messageExchangeList.php';
-    include_once 'modules/sendmail/acknowledgementReceiptsList.php';
+    // /********* MESSAGE EXCHANGE PART ***************/
+    // include_once 'modules/sendmail/messageExchangeList.php';
+    // include_once 'modules/sendmail/acknowledgementReceiptsList.php';
 
     echo '{status : '.$status.", content : '".addslashes($debug.$content.$contentMessageExchange.$contentAcknowledgementReceipts)."', error : '".addslashes($error)."'}";
 }

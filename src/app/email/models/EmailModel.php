@@ -115,25 +115,4 @@ class EmailModel
 
         return true;
     }
-
-    public static function hasJoinFiles(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
-
-        $email = DatabaseModel::select([
-            'select'    => ['document'],
-            'table'     => ['emails'],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']],
-        ]);
-
-        $document = (array)json_decode($email[0]['document']);
-
-        if ($document['isLinked'] || !empty($document['attachments']) || !empty($document['notes'])) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

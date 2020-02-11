@@ -526,103 +526,6 @@ abstract class SendmailAbstract extends Database
         return $filename;
     }
 
-    public function createNotesFile($coll_id, $id, $notesArray)
-    {
-        include_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
-            . "class" . DIRECTORY_SEPARATOR
-            . "class_modules_tools.php";
-        $notes_tools = new notes();
-
-        $db = new Database();
-
-        if (count($notesArray) > 0) {
-            //Format
-            $format = 'html';
-            //Mime type
-            $mimeType = 'text/html';
-            //Filename
-            $fileName = "notes_".date(dmY_Hi).".".$format;
-            //File path
-            $fileNameOnTmp = 'tmp_file_' . rand()
-                . '.' . strtolower($format);
-            $filePathOnTmp = $_SESSION['config']
-                ['tmppath'] . DIRECTORY_SEPARATOR
-                . $fileNameOnTmp;
-
-            //Create file
-            if (file_exists($filePathOnTmp)) {
-                unlink($filePathOnTmp);
-            }
-
-            //File content
-            $content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" '
-                . '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" >';
-            $content .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">';
-            $content .= "<head><title>Maarch Notes</title><meta http-equiv='Content-Type' "
-                . "content='text/html; charset=UTF-8' /><meta content='fr' "
-                . "http-equiv='Content-Language'/><meta http-equiv='cache-control' "
-                . "content='no-cache'/><meta http-equiv='pragma' content='no-cache'>"
-                . "<meta http-equiv='Expires' content='0'></head>";
-            $content .= "<body onload='javascript:window.print();' style='font-size:8pt'>";
-            $content .= "<h2>"._NOTES."</h2>";
-            $content .= "<table cellpadding='4' cellspacing='0' border='1' width='100%'>";
-
-            for ($i=0; $i < count($notesArray); $i++) {
-                $stmt = $db->query(
-                    "select n.creation_date, n.note_text, u.lastname, "
-                    . "u.firstname from " . NOTES_TABLE . " n inner join ". USERS_TABLE
-                    . " u on n.user_id  = u.user_id where n.id = ? and identifier = ? order by creation_date desc",
-                    array($notesArray[$i], $id)
-                );
-
-                if ($stmt->rowCount() > 0) {
-                    $line = $stmt->fetchObject();
-
-                    $user = functions::show_string($line->firstname . " " . $line->lastname);
-                    $notes = functions::show_string($line->note_text);
-                    $date = functions::dateformat($line->creation_date);
-
-                    $content .= "<tr height='130px'>";
-                    $content .= "<td width='15%'>";
-                    $content .= "<h3>"._USER.": ". $user."</h3>";
-                    $content .= "<h3>"._DATE.": ". $date."</h3>";
-                    $content .= "</td>";
-                    $content .= "<td width='85%'>";
-                    $content .= $notes;
-                    $content .= "</td>";
-                    $content .= "</tr>";
-                }
-            }
-
-            $content .= "</table>";
-            $content .= "</body></html>";
-            //Write file
-            $inF = fopen($filePathOnTmp, "w");
-            fwrite($inF, $content);
-            fclose($inF);
-
-            $viewAttachmentArr = array(
-                'status' => 'ok',
-                'label' => '',
-                'mime_type' => $mimeType,
-                'ext' => $format,
-                'file_content' => '',
-                'tmp_path' => $_SESSION['config']
-                ['tmppath'],
-                'file_path' => $filePathOnTmp,
-                'filename' => $fileName,
-                'called_by_ws' => '',
-                'error' => ''
-            );
-
-            // $this->show_array($viewAttachmentArr);
-
-            return $viewAttachmentArr;
-        } else {
-            return false;
-        }
-    }
-
     public function getAttachedEntitiesMails($user_id="")
     {
         $db = new Database;
@@ -731,19 +634,6 @@ abstract class SendmailAbstract extends Database
         } elseif ($args['status'] == 'ERROR') {
             return _EMAIL_ERROR;
         } elseif ($args['status'] == 'WAITING') {
-            return _EMAIL_WAIT;
-        } else {
-            return _EMAIL_DRAFT;
-        }
-    }
-
-    public function messageExchangeStatus(array $args)
-    {
-        if ($args['status'] == 'S') {
-            return _EMAIL_SENT;
-        } elseif ($args['status'] == 'E') {
-            return _EMAIL_ERROR;
-        } elseif ($args['status'] == 'W') {
             return _EMAIL_WAIT;
         } else {
             return _EMAIL_DRAFT;
