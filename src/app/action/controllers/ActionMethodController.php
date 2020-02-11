@@ -30,7 +30,6 @@ use Resource\controllers\ResController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use SrcCore\models\CoreConfigModel;
-use SrcCore\models\CurlModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;

@@ -17,6 +17,7 @@ namespace ExternalSignatoryBook\controllers;
 use Attachment\models\AttachmentModel;
 use Contact\controllers\ContactController;
 use Convert\controllers\ConvertPdfController;
+use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
@@ -246,8 +247,26 @@ class MaarchParapheurController
                 foreach ($attachments as $value) {
                     $resId  = $value['res_id'];
                     $collId = 'attachments_coll';
-                    
-                    $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId]);
+
+                    if ($value['status'] == 'SIGN') {
+                        $signedAttachment = AttachmentModel::get([
+                            'select'    => ['res_id'],
+                            'where'     => ['origin = ?', 'status not in (?)', 'attachment_type = ?'],
+                            'data'      => ["{$resId},res_attachments", ['OBS', 'DEL', 'TMP', 'FRZ'], 'signed_response']
+                        ]);
+                        if (!empty($signedAttachment[0])) {
+                            $adrInfo = AdrModel::getConvertedDocumentById([
+                                'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
+                                'resId'     => $signedAttachment[0]['res_id'],
+                                'collId'    => 'attachments_coll',
+                                'type'      => 'PDF'
+                            ]);
+                        }
+                    }
+
+                    if (empty($adrInfo)) {
+                        $adrInfo = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $collId]);
+                    }
                     if (empty($adrInfo['docserver_id']) || strtolower(pathinfo($adrInfo['filename'], PATHINFO_EXTENSION)) != 'pdf') {
                         return ['error' => 'Attachment ' . $resId . ' is not converted in pdf'];
                     }
