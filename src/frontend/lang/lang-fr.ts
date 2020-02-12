@@ -1218,7 +1218,7 @@ export const LANG_FR = {
     "viewFullHistoryDesc" : "Consulter l'historique complet des événements relatifs à l'utilisation de la GED Maarch.",
     "editResource" : "Modifier les données d'un courrier",
     "editResourceDesc" : "Modifier les données d'un courrier. Cela dépendra aussi du paramétrage du statut (Modification des index)",
-    "addLinks" : "Ajouter des liaisons à un courrier",
+    "addLinks" : "Ajouter/supprimer des liaisons à un courrier",
     "deleteDocumentInDetail" : "Supprimer un courrier dans la fiche détaillée",
     "manageTagsInApplication" : "Créer des mots-clés depuis les pages d'actions",
     "manageTagsInApplicationDesc" : "Créer des mots-clés depuis l'indexation, le traitement et la fiche détaillée",
