@@ -1283,6 +1283,7 @@ export const LANG_NL = {
     "viewPersonalData": "Viewable", //_TO_TRANSLATE
     "managePersonalData": "Viewable and updatable", //_TO_TRANSLATE
     "attachmentDeleted": "Attachment deleted", //_TO_TRANSLATE
+    "attachment_SEND_MASS": "Send to mailing", //_TO_TRANSLATE
     "attachment_A_TRA": "To process", //_TO_TRANSLATE
     "attachment_SIGN": "Signed", //_TO_TRANSLATE
     "attachment_FRZ": "Freez", //_TO_TRANSLATE

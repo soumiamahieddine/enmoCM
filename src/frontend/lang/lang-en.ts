@@ -1258,6 +1258,7 @@ export const LANG_EN = {
     "viewPersonalData": "Viewable",
     "managePersonalData": "Viewable and updatable",
     "attachmentDeleted": "Attachment deleted",
+    "attachment_SEND_MASS": "Send to mailing",
     "attachment_A_TRA": "To process",
     "attachment_SIGN": "Signed",
     "attachment_FRZ": "Freez",

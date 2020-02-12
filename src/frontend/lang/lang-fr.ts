@@ -1297,6 +1297,7 @@ export const LANG_FR = {
     "managePersonalData": "Consultables et modifiables",
     "attachmentDeleted": "Pièce jointe supprimée",
     "attachment_A_TRA": "À traiter",
+    "attachment_SEND_MASS": "À publiposter",
     "attachment_SIGN": "Signée",
     "attachment_FRZ": "Gelée",
     "attachment_TRA": "Traitée",
