@@ -41,7 +41,7 @@ TRUNCATE TABLE lc_stack;
 TRUNCATE TABLE tags;
 ALTER SEQUENCE tags_id_seq restart WITH 1;
 
-TRUNCATE TABLE tag_res;
+TRUNCATE TABLE resources_tags;
 
 TRUNCATE TABLE emails;
 

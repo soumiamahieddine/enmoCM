@@ -254,8 +254,8 @@ SELECT setval('tags_id_seq', (SELECT MAX(id) from tags));
 DROP TABLE IF EXISTS tags_entities;
 
 DROP TABLE IF EXISTS resources_tags;
-ALTER TABLE tag_res RENAME TO resources_tags;
 ALTER TABLE tag_res ADD COLUMN id serial NOT NULL;
+ALTER TABLE tag_res RENAME TO resources_tags;
 
 /* DOCTYPES */
 DO $$ BEGIN
@@ -626,13 +626,13 @@ FROM usergroups_services WHERE group_id IN (
     WHERE service_id = 'admin_users'
 );
 INSERT INTO usergroups_services (group_id, service_id)
-SELECT distinct(group_id), 'admin_tags'
+SELECT distinct(group_id), 'admin_tag'
 FROM usergroups_services WHERE group_id IN (
     SELECT group_id FROM usergroups_services
     WHERE service_id = 'admin_thesaurus'
 ) AND group_id NOT IN (
     SELECT group_id FROM usergroups_services
-    WHERE service_id = 'admin_tags'
+    WHERE service_id = 'admin_tag'
 );
 DELETE FROM usergroups_services WHERE service_id = 'admin_thesaurus';
 

@@ -85,6 +85,8 @@ DROP TABLE IF EXISTS thesaurus;
 DROP TABLE IF EXISTS thesaurus_res;
 DROP SEQUENCE IF EXISTS thesaurus_id_seq;
 
+SELECT setval('tags_id_seq', (SELECT max(id)+1 FROM tags), false);
+
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_t1;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_t2;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS custom_t3;

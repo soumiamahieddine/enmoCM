@@ -148,7 +148,7 @@ try {
         #### TAGS ####
         $stmt2 = Bt_doQuery(
             $GLOBALS['db'], 
-            "SELECT tags.label FROM tags, tag_res WHERE tags.id = tag_res.tag_id and tag_res.res_id = ?", array($selectedFile->res_id)
+            "SELECT tags.label FROM tags, resources_tags WHERE tags.id = resources_tags.tag_id and resources_tags.res_id = ?", array($selectedFile->res_id)
         );
 
         $labelTags = "";
