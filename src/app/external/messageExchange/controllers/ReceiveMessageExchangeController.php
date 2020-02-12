@@ -57,7 +57,7 @@ class ReceiveMessageExchangeController
         $res = $receiveMessage->receive($tmpPath, $tmpName, 'ArchiveTransfer');
 
         if ($res['status'] == 1) {
-            return $response->withStatus(400)->withJson(["errors" => _ERROR_RECEIVE_FAIL. ' ' . $res['content']]);
+            return $response->withStatus(400)->withJson(["errors" => 'Reception error : ' . $res['content']]);
         }
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] Pli numérique validé';
 
@@ -162,11 +162,11 @@ class ReceiveMessageExchangeController
         $tmpName  = 'tmp_file_' .$GLOBALS['userId']. '_ArchiveTransfer_' .rand(). '.' . $ext;
 
         if (!in_array(strtolower($ext), ['zip', 'tar'])) {
-            return ["errors" => _WRONG_FILE_TYPE_M2M];
+            return ["errors" => 'Only zip file is allowed'];
         }
 
         if ($mimeType != "application/x-tar" && $mimeType != "application/zip" && $mimeType != "application/tar" && $mimeType != "application/x-gzip") {
-            return ['errors' => _WRONG_FILE_TYPE];
+            return ['errors' => 'Filetype is not allowed'];
         }
 
         $tmpPath = CoreConfigModel::getTmpPath();
@@ -337,7 +337,7 @@ class ReceiveMessageExchangeController
                 'recordId'  => $aArgs['resId'],
                 'eventType' => 'ADD',
                 'eventId'   => 'noteadd',
-                'info'       => _NOTES_ADDED
+                'info'       => _NOTE_ADDED
             ]);
 
             $countNote++;

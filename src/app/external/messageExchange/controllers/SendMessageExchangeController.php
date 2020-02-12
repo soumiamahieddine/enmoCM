@@ -281,7 +281,7 @@ class SendMessageExchangeController
         }
 
         if (empty($aArgs['object'])) {
-            array_push($errors, _EMAIL_OBJECT . ' ' . _IS_EMPTY);
+            array_push($errors, 'Body object is empty');
         }
 
         if (empty($aArgs['joinFile']) && empty($aArgs['joinAttachment']) && empty($aArgs['mainExchangeDoc'])) {
@@ -289,11 +289,11 @@ class SendMessageExchangeController
         }
 
         if (empty($aArgs['contacts'])) {
-            array_push($errors, _NO_RECIPIENT);
+            array_push($errors, 'body contacts is empty');
         }
 
         if (empty($aArgs['senderEmail'])) {
-            array_push($errors, _NO_SENDER);
+            array_push($errors, 'Body senderEmail is empty');
         }
 
         return $errors;

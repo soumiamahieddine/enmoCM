@@ -140,7 +140,7 @@ define('_GO_ON_VACATION', 'se met en absence');
 define('_BACK_FROM_VACATION', 'de retour de son absence');
 define('_DOC_DISPLAYING', 'Visualisation du document');
 define('_DOC_ADDED', 'Courrier créé');
-define('_DOC_UPDATED', 'Métadonnées des courriers modifiées');
+define('_DOC_UPDATED', 'Métadonnées du courrier modifiées');
 define('_ATTACHMENT_DELETED', 'Pièce-jointe supprimée');
 define('_FILE_UPDATED', 'Fichier modifié');
 define('_ATTACHMENT_ADDED', 'Pièce jointe ajoutée');
@@ -456,6 +456,10 @@ define("_AVIS_CIRCUIT_DELETED", "Circuit d'avis supprimé");
 
 define("_COMMUNICATION_MEANS_VALIDATOR", "Le moyen de communication doit être une uri ou un courriel");
 define("_EXTERNALID_M2M_VALIDATOR", "L'identifiant Maarch2Maarch doit être au format SIRET/entityId");
+
+define("_NUMERIC_PACKAGE_ADDED", "Pli numérique ajouté");
+define('_ON_DOC_NUM', ' sur le document n°');
+define("_NUMERIC_PACKAGE_IMPORTED", "Pli numérique importé");
 
 define("_ACKNOWLEDGEMENT_RECEIPT", "Accusé de réception");
 define("_CREATED_BY", "Créé par");
