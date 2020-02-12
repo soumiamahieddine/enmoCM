@@ -190,9 +190,29 @@ class TagController
         }
 
 
-        $tag = TagModel::getById(['select' => ['label'], 'id' => $args['id']]);
+        $tag = TagModel::getById(['select' => ['label', 'links'], 'id' => $args['id']]);
         if (empty($tag)) {
             return $response->withStatus(400)->withJson(['errors' => 'Tag does not exist']);
+        }
+
+        $children = TagModel::get([
+           'select' => ['count(1)'],
+           'where'  => ['parent_id = ?'],
+           'data'   => [$args['id']]
+        ]);
+        if ($children[0]['count'] > 0) {
+            return $response->withStatus(400)->withJson(['errors' => 'Tag has children']);
+        }
+
+        $links = json_decode($tag['links'], true);
+        if (!empty($links)) {
+            foreach ($links as $link) {
+                TagModel::update([
+                    'postSet'   => ['links' => "links - '{$args['id']}'"],
+                    'where'     => ['id = ?'],
+                    'data'      => [$link]
+                ]);
+            }
         }
 
         TagModel::delete([
