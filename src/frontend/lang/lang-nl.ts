@@ -453,7 +453,6 @@ export const LANG_NL = {
     "incoming"                              : "Brief Aangekomen",
     "incompleteAddressForPostal"            : "Incomplete address for postal TRANSLATE",
     "indexing"                              : "Indexeringen",
-    "indexingWithProfile"                   : "Een brief met een profiel bewaren",
     "informations"                          : "Gegevens",
     "infosActions"                          : "U moet minstens een status en/of een script kiezen.",
     "initials"                              : "Initialen",

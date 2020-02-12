@@ -443,7 +443,6 @@ export const LANG_EN = {
     "incoming"                              : "Incoming",
     "incompleteAddressForPostal"            : "Incomplete address for postal",
     "indexing"                              : "Indexing",
-    "indexingWithProfile"                   : "Index mail with profile",
     "informations"                          : "Informations",
     "initials"                              : "Initials",
     "initiator"                             : "Initiator",

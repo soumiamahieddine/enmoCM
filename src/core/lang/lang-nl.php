@@ -158,19 +158,12 @@ define('_LINK_DELETED', 'Link deleted');//TRANSLATE
 define('_DOCUMENT_SIGNED', 'Document signed');//TRANSLATE
 define('_DOCUMENT_UNSIGNED', 'Document unsigned');//TRANSLATE
 
-// LISTS
-define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Lijst met filters en antwoorden');
-define('_DOCUMENTS_LIST_WITH_AVIS', 'Lijst van de documenten met berichten');
-define('_DOCUMENTS_LIST_COPIES', 'Lijst van de kopieën');
-define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Lijst van de documenten met ondertekenaar');
-
 // ADMINISTRATION
 define('_USERS', 'Gebruikers');
 define('_GROUPS', 'Gebruikersgroepen');
 define('_ENTITIES', 'Eenheden');
 define('_DOCTYPES', 'Soorten brieven');
 define('_FOLDERTYPES', 'Maptypes');
-define('_ADMIN_FOLDERTYPES_DESC', 'De maptypes beheren. Voor elk type de gekoppelde kwalificatoren en de verplichte documenttypes bepalen voor de volledigheid van de map.');
 define('_TAGS', 'Sleutelwoorden');
 define('_DOCSERVERS', 'Opslagruimtes');
 define('_REPORTS', 'Statistieken');

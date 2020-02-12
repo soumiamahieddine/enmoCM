@@ -158,19 +158,12 @@ define('_LINK_DELETED', 'Link deleted');
 define('_DOCUMENT_SIGNED', 'Document signed');
 define('_DOCUMENT_UNSIGNED', 'Document unsigned');
 
-// LISTS
-define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');
-define('_DOCUMENTS_LIST_WITH_AVIS', 'List of mails with recommendation');
-define('_DOCUMENTS_LIST_COPIES', 'List of copies');
-define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Mails list with signatory');
-
 // ADMINISTRATION
 define('_USERS', 'Users');
 define('_GROUPS', 'users groups');
 define('_ENTITIES', 'Entities');
 define('_DOCTYPES', 'File plan');
 define('_FOLDERTYPES', 'Types of folders');
-define('_ADMIN_FOLDERTYPES_DESC', "Administrate folder's types. For each type, define the linked qualifiers and the mandatory folder's types for the folder completeness.");
 define('_TAGS', 'Tags');
 define('_DOCSERVERS', 'Storage zones');
 define('_REPORTS', 'Statistiques');

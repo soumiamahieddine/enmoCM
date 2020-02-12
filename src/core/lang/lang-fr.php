@@ -42,9 +42,9 @@ define('_DOCSERVER_ADDED', 'Zone de stockage ajoutée');
 define('_DOCSERVER_UPDATED', 'Zone de stockage modifiée');
 define('_DOCSERVER_DELETED', 'Zone de stockage supprimée');
 define('_DOCSERVER_ACTIVATED_EXISTS', 'Une zone de stockage avec le même type et la même collection est déjà activée');
-define('_DOCTYPE_UPDATED', 'Type de document modifié');
-define('_DOCTYPE_ADDED', 'Type de document ajouté');
-define('_DOCTYPE_DELETED', 'Type de document supprimé');
+define('_DOCTYPE_UPDATED', 'Type de courrier modifié');
+define('_DOCTYPE_ADDED', 'Type de courrier ajouté');
+define('_DOCTYPE_DELETED', 'Type de courrier supprimé');
 define('_DOCTYPE_FIRSTLEVEL_ADDED', 'Chemise ajoutée');
 define('_DOCTYPE_FIRSTLEVEL_DELETED', 'Chemise supprimée');
 define('_DOCTYPE_FIRSTLEVEL_UPDATED', 'Chemise modifiée');
@@ -52,7 +52,7 @@ define('_DOCTYPE_SECONDLEVEL_ADDED', 'Sous-chemise ajoutée');
 define('_DOCTYPE_SECONDLEVEL_DELETED', 'Sous-chemise supprimée');
 define('_DOCTYPE_SECONDLEVEL_UPDATED', 'Sous-chemise modifiée');
 define('_DOCUMENT_NOT_FOUND', 'Document introuvable');
-define('_DOCUMENT_OUT_PERIMETER', 'Document en dehors du périmètre');
+define('_DOCUMENT_OUT_PERIMETER', 'Courrier en dehors du périmètre');
 define('_EMAIL_ADDED', 'Courriel ajouté');
 define('_EMAIL_REMOVED', 'Courriel supprimé');
 define('_ENTITY_CREATION', 'Création entité');
@@ -158,19 +158,12 @@ define('_LINK_DELETED', 'Liaison supprimée');
 define('_DOCUMENT_SIGNED', 'Document signé');
 define('_DOCUMENT_UNSIGNED', 'Document dé-signé');
 
-// LISTS
-define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtres et réponses');
-define('_DOCUMENTS_LIST_WITH_AVIS', 'Liste des courriers avec avis');
-define('_DOCUMENTS_LIST_COPIES', 'Liste des copies');
-define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Liste des courriers avec signataire');
-
 // ADMINISTRATION
 define('_USERS', 'Utilisateurs');
 define('_GROUPS', 'Groupes d\'utilisateurs');
 define('_ENTITIES', 'Entités');
 define('_DOCTYPES', 'Typologies de courriers');
 define('_FOLDERTYPES', 'Types de dossier');
-define('_ADMIN_FOLDERTYPES_DESC', 'Administrer les types de dossier. Définir pour chaque type les qualificateurs liés et les types de documents obligatoires pour la complétude du dossier.');
 define('_TAGS', 'Mots-clés');
 define('_DOCSERVERS', 'Zones de stockage');
 define('_REPORTS', 'Statistiques');
@@ -305,7 +298,7 @@ define('_PROCESS_DELAY_REPORT_DESC', 'Permet d\'afficher le délai (en jour) de 
 define('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT', 'Délai moyen de traitement par période');
 define('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_DESC', 'Permet d\'afficher le délai (en jour) de la création jusqu\'à la clôture d\'un courrier.');
 define('_MAIL_TYPOLOGY_REPORT', 'Volume de courriers par typologie');
-define('_MAIL_TYPOLOGY_REPORT_DESC', 'Permet d\'afficher le nombre de courriers enregistrés par type de document.');
+define('_MAIL_TYPOLOGY_REPORT_DESC', 'Permet d\'afficher le nombre de courriers enregistrés par type de courrier.');
 define('_MAIL_VOL_BY_CAT_REPORT', 'Volume de courriers par catégorie');
 define('_MAIL_VOL_BY_CAT_REPORT_DESC', 'Permet d\'afficher le nombre de courriers enregistrés par catégorie (arrivé, départ, etc.).');
 
@@ -339,7 +332,7 @@ define('_DESTINATION_ENTITY', 'Entité traitante');
 define('_PRIORITY', 'Priorité');
 define('_STATUS', 'Statut');
 define('_NATURE', 'Nature');
-define('_DOCTYPE', 'Type de document');
+define('_DOCTYPE', 'Type de courrier');
 define('_TYPIST', 'Opérateur');
 define('_CREATED', 'Créé le');
 define('_DOC_DATE', 'Date du courrier');
