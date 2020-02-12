@@ -33,9 +33,7 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
-use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
-use Template\controllers\TemplateController;
 use User\models\UserModel;
 
 class AttachmentController

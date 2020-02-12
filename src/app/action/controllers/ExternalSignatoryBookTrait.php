@@ -12,6 +12,7 @@
 
 namespace Action\controllers;
 
+use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use ExternalSignatoryBook\controllers\XParaphController;
@@ -38,6 +39,25 @@ trait ExternalSignatoryBookTrait
                 }
             }
 
+            if (!empty($config['id'])) {
+                $attachments = AttachmentModel::get([
+                    'select'    => [
+                        'res_id', 'status'
+                    ],
+                    'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
+                    'data'      => [$args['resId'], ['converted_pdf', 'print_folder', 'signed_response']]
+                ]);
+
+                foreach ($attachments as $attachment) {
+                    if ($attachment['status'] == 'SEND_MASS') {
+                        $generated = AttachmentController::generateMailing(['id' => $attachment['res_id'], 'userId' => $GLOBALS['id']]);
+                        if (!empty($generated['errors'])) {
+                            return ['errors' => $generated['errors']];
+                        }
+                    }
+                }
+            }
+
             if ($config['id'] == 'ixbus') {
                 // TODO
             } elseif ($config['id'] == 'iParapheur') {
@@ -45,21 +65,13 @@ trait ExternalSignatoryBookTrait
             } elseif ($config['id'] == 'fastParapheur') {
                 // TODO
             } elseif ($config['id'] == 'maarchParapheur') {
-                $attachments = AttachmentModel::get([
-                    'select'    => [
-                        'count(1) as nb'
-                    ],
-                    'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
-                    'data'      => [$args['resId'], ['converted_pdf', 'print_folder', 'signed_response']]
-                ]);
-
                 $integratedResource = ResModel::get([
                     'select' => [1],
                     'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_id->>\'signatureBookId\' is null', 'res_id = ?'],
                     'data'   => [$args['resId']]
                 ]);
 
-                if ($attachments[0]['nb'] == 0 && empty($integratedResource) && $args['data']['objectSent'] == 'attachment') {
+                if (empty($attachments) && empty($integratedResource) && $args['data']['objectSent'] == 'attachment') {
                     $noAttachmentsResource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
                     return ['errors' => ['No attachment for this mail : ' . $noAttachmentsResource['alt_identifier']]];
                 }
@@ -80,14 +92,7 @@ trait ExternalSignatoryBookTrait
 
                 $historyInfo = $sendedInfo['historyInfos'];
             } elseif ($config['id'] == 'xParaph') {
-                $attachments = AttachmentModel::get([
-                    'select'    => [
-                        'count(1) as nb'
-                    ],
-                    'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
-                    'data'      => [$args['resId'], ['converted_pdf', 'print_folder', 'signed_response']]
-                ]);
-                if ($attachments[0]['nb'] == 0) {
+                if (empty($attachments)) {
                     $noAttachmentsResource = ResModel::getById(['resId' => $args['resId'], 'select' => ['alt_identifier']]);
                     return ['errors' => ['No attachment for this mail : ' . $noAttachmentsResource['alt_identifier']]];
                 }

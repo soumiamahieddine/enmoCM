@@ -423,7 +423,7 @@ class PreProcessActionController
                             'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
                             'validation_date', 'relation', 'origin_id'
                         ],
-                        'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
+                        'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
                         'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
                     ]);
 
@@ -507,7 +507,7 @@ class PreProcessActionController
                             'status', 'typist', 'docserver_id', 'path', 'filename', 'creation_date',
                             'validation_date', 'relation', 'origin_id'
                         ],
-                        'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP', 'SEND_MASS')", "in_signature_book = 'true'"],
+                        'where'     => ["res_id_master = ?", "attachment_type not in (?)", "status not in ('DEL', 'OBS', 'FRZ', 'TMP')", "in_signature_book = 'true'"],
                         'data'      => [$resId, ['converted_pdf', 'print_folder', 'signed_response']]
                     ]);
                     
