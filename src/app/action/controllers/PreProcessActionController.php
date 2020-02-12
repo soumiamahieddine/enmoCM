@@ -694,10 +694,10 @@ class PreProcessActionController
             $resourcesChrono = array_column($resourcesInfo, 'alt_identifier', 'res_id');
 
             foreach ($data['resources'] as $valueResId) {
-                $resIdFound = false;
+                $documentToSend = false;
                 foreach ($aAttachments as $key => $attachment) {
                     if ($attachment['res_id_master'] == $valueResId) {
-                        $resIdFound = true;
+                        $documentToSend = true;
                         $attachmentId = $attachment['res_id'];
                         $convertedDocument = ConvertPdfController::getConvertedPdfById([
                             'resId'     => $attachmentId,
@@ -740,11 +740,12 @@ class PreProcessActionController
                 $resInfo = ResModel::getById(['select' => ['alt_identifier as chrono', 'integrations', 'res_id', 'subject as title', 'docserver_id'], 'resId' => $valueResId]);
                 $integrations = json_decode($resInfo['integrations'], true);
                 if (!empty($integrations['inShipping']) && empty($resInfo['docserver_id'])) {
+                    $documentToSend = true;
                     $canNotSend[] = [
                         'resId'  => $valueResId, 'chrono' => $resInfo['chrono'], 'reason' => 'noMailConversion'
                     ];
                 } elseif (!empty($integrations['inShipping']) && !empty($resInfo['docserver_id'])) {
-                    $resIdFound = true;
+                    $documentToSend = true;
 
                     $convertedDocument = ConvertPdfController::getConvertedPdfById([
                         'resId'  => $valueResId,
@@ -788,7 +789,7 @@ class PreProcessActionController
                         $resources[] = $resInfo;
                     }
                 }
-                if (!$resIdFound) {
+                if (!$documentToSend) {
                     $canNotSend[] = ['resId' => $valueResId, 'chrono' => $resInfo['chrono'], 'reason' => 'noDocumentToSend'];
                 }
             }
