@@ -25,7 +25,21 @@ class TagController
 {
     public function get(Request $request, Response $response)
     {
-        $tags = TagModel::get();
+        $tags = TagModel::get(['orderBy' => ['id']]);
+
+        $ids = array_column($tags, 'id');
+
+        $countResources = ResourceTagModel::get([
+            'select'  => ['count(res_id)', 'tag_id'],
+            'where'   => ['tag_id in (?)'],
+            'data'    => [$ids],
+            'groupBy' => ['tag_id']
+        ]);
+        $countResources = array_column($countResources, 'count', 'tag_id');
+
+        foreach ($tags as $key => $tag) {
+            $tags[$key]['countResources'] = $countResources[$tag['id']] ?? 0;
+        }
 
         return $response->withJson(['tags' => $tags]);
     }
@@ -40,6 +54,13 @@ class TagController
         if (empty($tag)) {
             return $response->withStatus(404)->withJson(['errors' => 'id not found']);
         }
+
+        $countResources = ResourceTagModel::get([
+           'select' => ['count(1)'],
+           'where'  => ['tag_id = ?'],
+           'data'   => [$args['id']]
+        ]);
+        $tag['countResources'] = $countResources[0]['count'];
 
         return $response->withJson($tag);
     }

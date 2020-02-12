@@ -31,6 +31,7 @@ class ResourceTagModel
             'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
             'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
             'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
+            'groupBy'   => empty($aArgs['groupBy']) ? [] : $aArgs['groupBy'],
             'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
         ]);
 
