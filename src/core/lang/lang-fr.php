@@ -154,9 +154,10 @@ define('_TAG_DELETED', 'Mot-clé supprimé');
 define('_TAG_UPDATED', 'Mot-clé modifié');
 define('_TAG_MERGED', 'Mot-clé fusionné');
 define('_LINK_ADDED', 'Liaison ajoutée');
-define('_LINK_DELETED', 'Liaison supprimée');
 define('_DOCUMENT_SIGNED', 'Document signé');
 define('_DOCUMENT_UNSIGNED', 'Document dé-signé');
+define('_LINK_ADDED_TAG', 'Liaison de mot-clé ajoutée');
+define('_LINK_DELETED_TAG', 'Liaison de mot-clé supprimée');
 
 // ADMINISTRATION
 define('_USERS', 'Utilisateurs');

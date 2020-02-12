@@ -154,9 +154,10 @@ define('_TAG_DELETED', 'Tag deleted');
 define('_TAG_UPDATED', 'Tag updated');
 define('_TAG_MERGED', 'Tag merged');
 define('_LINK_ADDED', 'Link added');
-define('_LINK_DELETED', 'Link deleted');
 define('_DOCUMENT_SIGNED', 'Document signed');
 define('_DOCUMENT_UNSIGNED', 'Document unsigned');
+define('_LINK_ADDED_TAG', 'Tag link added');
+define('_LINK_DELETED_TAG', 'Tag link deleted');
 
 // ADMINISTRATION
 define('_USERS', 'Users');

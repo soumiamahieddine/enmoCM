@@ -377,14 +377,14 @@ class TagController
                 'tableName' => 'tags',
                 'recordId'  => $args['resId'],
                 'eventType' => 'UP',
-                'info'      => _LINK_ADDED . " : {$linkedTagsInfo[$value]}",
+                'info'      => _LINK_ADDED_TAG . " : {$linkedTagsInfo[$value]}",
                 'eventId'   => 'tagModification'
             ]);
             HistoryController::add([
                 'tableName' => 'tags',
                 'recordId'  => $value,
                 'eventType' => 'UP',
-                'info'      => _LINK_ADDED . " : {$tag['label']}",
+                'info'      => _LINK_ADDED_TAG . " : {$tag['label']}",
                 'eventId'   => 'tagModification'
             ]);
         }
@@ -424,14 +424,14 @@ class TagController
             'tableName' => 'tags',
             'recordId'  => $args['tagId'],
             'eventType' => 'UP',
-            'info'      => _LINK_DELETED . " : {$linkedTagsInfo[$args['id']]}",
+            'info'      => _LINK_DELETED_TAG . " : {$linkedTagsInfo[$args['id']]}",
             'eventId'   => 'tagModification'
         ]);
         HistoryController::add([
             'tableName' => 'tags',
             'recordId'  => $args['id'],
             'eventType' => 'UP',
-            'info'      => _LINK_DELETED . " : {$linkedTagsInfo[$args['tagId']]}",
+            'info'      => _LINK_DELETED_TAG . " : {$linkedTagsInfo[$args['tagId']]}",
             'eventId'   => 'tagModification'
         ]);
 
