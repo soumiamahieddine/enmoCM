@@ -97,7 +97,7 @@ class TagController
         $links = json_encode([]);
         if (!empty($body['links'])) {
             if (!Validator::arrayType()->validate($body['links'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Body links is not an integer']);
+                return $response->withStatus(400)->withJson(['errors' => 'Body links is not an array']);
             }
             $listTags = [];
             foreach ($body['links'] as $link) {
@@ -112,7 +112,7 @@ class TagController
                 'data'   => [$body['links']]
             ]);
             if ($tags[0]['count'] != count($body['links'])) {
-                return $response->withStatus(404)->withJson(['errors' => 'Tag(s) not found']);
+                return $response->withStatus(400)->withJson(['errors' => 'Tag(s) not found']);
             }
 
             $links = json_encode($listTags);
@@ -372,7 +372,7 @@ class TagController
         ]);
         $linkedTagsInfo = array_column($linkedTagsInfo, 'label', 'id');
 
-        foreach ($body['linkedResources'] as $value) {
+        foreach ($body['links'] as $value) {
             HistoryController::add([
                 'tableName' => 'tags',
                 'recordId'  => $args['resId'],

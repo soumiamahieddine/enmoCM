@@ -1712,7 +1712,7 @@ class UserController
         return $response->withStatus(204);
     }
 
-    public static function getCurrentUserSignatures(Request $request, Response $response)
+    public static function getCurrentUserEmailSignatures(Request $request, Response $response)
     {
         $signatureModels = UserModel::getEmailSignaturesById(['userId' => $GLOBALS['userId']]);
 
@@ -1728,7 +1728,7 @@ class UserController
         return $response->withJson(['emailSignatures' => $signatures]);
     }
 
-    public static function getCurrentUserSignatureContentById(Request $request, Response $response, array $args)
+    public static function getCurrentUserEmailSignatureById(Request $request, Response $response, array $args)
     {
         if (!Validator::notEmpty()->intVal()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body param id is empty or not an integer']);

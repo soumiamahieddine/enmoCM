@@ -494,7 +494,6 @@ $app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':upd
 $app->put('/users/{id}/accountActivationNotification', \User\controllers\UserController::class . ':sendAccountActivationNotification');
 $app->post('/password', \User\controllers\UserController::class . ':forgotPassword');
 $app->put('/password', \User\controllers\UserController::class . ':passwordInitialization');
-$app->get('/users/{id}/availableEmails', \Email\controllers\EmailController::class . ':getAvailableEmails');
 
 //UserFollowedResources
 $app->post('/resources/follow', \Resource\controllers\UserFollowedResourceController::class . ':follow');
@@ -516,8 +515,9 @@ $app->put('/currentUser/emailSignature/{id}', \User\controllers\UserController::
 $app->delete('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \User\controllers\UserController::class . ':updateCurrentUserBasketPreferences');
 $app->get('/currentUser/templates', \User\controllers\UserController::class . ':getTemplates');
-$app->get('/currentUser/emailSignatures', \User\controllers\UserController::class . ':getCurrentUserSignatures');
-$app->get('/currentUser/emailSignatures/{id}', \User\controllers\UserController::class . ':getCurrentUserSignatureContentById');
+$app->get('/currentUser/emailSignatures', \User\controllers\UserController::class . ':getCurrentUserEmailSignatures');
+$app->get('/currentUser/emailSignatures/{id}', \User\controllers\UserController::class . ':getCurrentUserEmailSignatureById');
+$app->get('/currentUser/availableEmails', \Email\controllers\EmailController::class . ':getAvailableEmails');
 
 //Notifications
 $app->get('/notifications', \Notification\controllers\NotificationController::class . ':get');

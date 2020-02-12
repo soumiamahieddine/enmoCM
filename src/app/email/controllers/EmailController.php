@@ -352,12 +352,8 @@ class EmailController
         return $response->withJson(['emails' => $emails]);
     }
 
-    public static function getAvailableEmails(Request $request, Response $response, array $args)
+    public static function getAvailableEmails(Request $request, Response $response)
     {
-        if (!Validator::intVal()->validate($args['id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Route param id is not an integer']);
-        }
-
         $emails = [];
 
         // User's email
