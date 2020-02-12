@@ -913,9 +913,10 @@ WITH (OIDS=FALSE);
 CREATE TABLE resources_tags
 (
     id SERIAL NOT NULL,
-    res_id INT,
-    tag_id INT,
-    CONSTRAINT resources_tags_id_pkey PRIMARY KEY (id)
+    res_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    CONSTRAINT resources_tags_id_pkey PRIMARY KEY (id),
+    CONSTRAINT resources_tags_unique_key UNIQUE (res_id, tag_id)
 )
 WITH (OIDS=FALSE);
 
