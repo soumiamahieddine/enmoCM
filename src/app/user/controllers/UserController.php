@@ -1722,7 +1722,6 @@ class UserController
             $signatures[] = [
                 'id'      => $signature['id'],
                 'label'   => $signature['title'],
-                'content' => $signature['html_body']
             ];
         }
 

@@ -486,6 +486,10 @@ class TemplateController
 
         $body = $request->getParsedBody();
 
+        if (!Validator::intVal()->validate($body['data']['resId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body param resId is missing']);
+        }
+
         $dataToMerge = ['userId' => $GLOBALS['id']];
         if (!empty($body['data']) && is_array($body['data'])) {
             $dataToMerge = array_merge($dataToMerge, $body['data']);
