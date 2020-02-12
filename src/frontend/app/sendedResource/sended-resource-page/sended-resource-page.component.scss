@@ -35,3 +35,13 @@
 .attachLabel {
     color: $primary;
 }
+
+.pdfVersion:hover {
+    color: $primary;
+}
+
+::ng-deep.attachListMenu {
+    width: auto;
+    max-width: initial;
+    min-height: auto;
+}

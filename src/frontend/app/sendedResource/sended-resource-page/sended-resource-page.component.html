@@ -58,7 +58,7 @@
 
     <mat-form-field *ngIf="showInvisibleCopies">
         <span matPrefix class="attachLabel">Cci&nbsp;:&nbsp;</span>
-        <mat-chip-list id="invcopies-list" #invCopiesList cdkDropList [cdkDropListConnectedTo]="['recipients-list','copies-list']" [cdkDropListData]="copies" (cdkDropListDropped)="drop($event)">
+        <mat-chip-list id="invcopies-list" #invCopiesList cdkDropList [cdkDropListConnectedTo]="['recipients-list','copies-list']" [cdkDropListData]="invisibleCopies" (cdkDropListDropped)="drop($event)">
             <mat-chip class="copy" *ngFor="let invCopy of invisibleCopies" [selectable]="selectable" removable
                 (removed)="remove(invCopy, 'invisibleCopies')">
                 {{invCopy.email}}
@@ -76,40 +76,39 @@
     </mat-form-field>
     <mat-form-field floatLabel="never">
         <input matInput placeholder="Sujet" [(ngModel)]="emailsubject" maxlength="70">
-        <button mat-icon-button matSuffix (click)="$event.stopPropagation();" [matMenuTriggerFor]="mainDocListMenu">
+        <button mat-icon-button matSuffix [title]="'Attacher le document principal'" (click)="$event.stopPropagation();" [matMenuTriggerFor]="mainDocListMenu">
             <mat-icon class="fa fa-file" color="primary"></mat-icon>
         </button>
-        <mat-menu #mainDocListMenu="matMenu">
+        <mat-menu #mainDocListMenu="matMenu" [class]="'attachListMenu'">
             <button mat-menu-item *ngFor="let doc of mainDocList" (click)="toggleAttachMail(doc,'maindocument','original')">{{doc.label}}</button>
         </mat-menu>
-
-        <button mat-icon-button matSuffix (click)="$event.stopPropagation();" [matMenuTriggerFor]="notesListMenu">
+        <button mat-icon-button matSuffix [title]="'Attacher une annotations'" (click)="$event.stopPropagation();" [matMenuTriggerFor]="notesListMenu">
             <mat-icon class="fas fa-pen-square" color="primary"></mat-icon>
         </button>
-        <mat-menu #notesListMenu="matMenu">
+        <mat-menu #notesListMenu="matMenu" [class]="'attachListMenu'">
             <button mat-menu-item *ngFor="let note of notesList" (click)="toggleAttachMail(note,'note','original')">{{note.label}}</button>
         </mat-menu>
-        <button mat-icon-button matSuffix (click)="$event.stopPropagation();" [matMenuTriggerFor]="attachListMenu">
+        <button mat-icon-button [title]="'Attacher une pièce jointe'" matSuffix (click)="$event.stopPropagation();" [matMenuTriggerFor]="attachListMenu">
             <mat-icon class="fa fa-paperclip" color="primary"></mat-icon>
         </button>
-        <mat-menu #attachListMenu="matMenu">
-            <button mat-menu-item *ngFor="let attach of attachmentsList" (click)="toggleAttachMail(attach,'attachment','original')">{{attach.label}}</button>
+        <mat-menu #attachListMenu="matMenu" [class]="'attachListMenu'">
+            <button mat-menu-item disableRipple *ngFor="let attach of attachmentsList"><span (click)="toggleAttachMail(attach,'attachment','original')">{{attach.label}} - {{attach.format}}</span>&nbsp;<span class="pdfVersion" (click)="toggleAttachMail(attach,'attachment','pdf');">(version PDF)</span></button>
         </mat-menu>
     </mat-form-field>
     <mat-chip-list>
         <mat-chip class="copy" *ngIf="emailAttach.document.isLinked" [selectable]="selectable" removable
             (removed)="removeAttachMail(0, 'document')">
-            <i class="fa fa-file attachLabel"></i>&nbsp;{{emailAttach.document.label}}
+            <i class="fa fa-file attachLabel"></i>&nbsp;{{emailAttach.document.label}}&nbsp;<small class="attachLabel">(pdf - 25 Ko)</small>
             <mat-icon matChipRemove class="fa fa-times"></mat-icon>
         </mat-chip>
         <mat-chip class="copy" *ngFor="let item of emailAttach.attachments; let i=index;" [selectable]="selectable" removable
             (removed)="removeAttachMail(i, 'attachments')">
-            <i class="fa fa-paperclip attachLabel"></i>&nbsp;{{item.label}}
+            <i class="fa fa-paperclip attachLabel"></i>&nbsp;{{item.label}}&nbsp;<small class="attachLabel">({{item.format}} - {{item.size}})</small>
             <mat-icon matChipRemove class="fa fa-times"></mat-icon>
         </mat-chip>
         <mat-chip class="copy" *ngFor="let item of emailAttach.notes; let i=index;" [selectable]="selectable" removable
             (removed)="removeAttachMail(i, 'notes')">
-            <i class="fas fa-pen-square attachLabel"></i>&nbsp;{{item.label}}
+            <i class="fas fa-pen-square attachLabel"></i>&nbsp;{{item.label}}&nbsp;<small class="attachLabel">({{item.format}})</small>
             <mat-icon matChipRemove class="fa fa-times"></mat-icon>
         </mat-chip>
     </mat-chip-list>

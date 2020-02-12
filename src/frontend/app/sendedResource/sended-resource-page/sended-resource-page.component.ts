@@ -238,11 +238,13 @@ export class SendedResourcePageComponent implements OnInit {
     setSender(id: number) {
         this.http.get(`../../rest/contacts/${id}`).pipe(
             tap((data: any) => {
-                this.recipients.push(
-                    {
-                        email: data.email
-                    }
-                )
+                if (!this.functions.empty(data.email)) {
+                    this.recipients.push(
+                        {
+                            email: data.email
+                        }
+                    )
+                }
             }),
             catchError((err) => {
                 this.notify.handleSoftErrors(err);
@@ -269,29 +271,35 @@ export class SendedResourcePageComponent implements OnInit {
         this.mainDocList = [
             {
                 id: 100,
+                chrono : 'MAARCH/2019A/0001',
                 label: 'Réservation Bal',
                 typeLabel: 'Document principal',
-                pdfVersion: 131,
+                isPdfVersion: true,
                 creator: 'Bernard Blier',
-                size: '40ko'
+                format: 'pdf',
+                size: '40 Ko'
             }
         ];
         this.attachmentsList = [
             {
                 id: 100,
+                chrono : 'MAARCH/2019D/0002',
                 label: 'je suis une pj',
                 typeLabel: 'Projet de réponse',
-                pdfVersion: 131,
+                isPdfVersion: true,
                 creator: 'Bernard Blier',
+                format: 'odt',
                 size: '40ko'
             },
             {
                 id: 102,
+                chrono : 'MAARCH/2019D/0003',
                 label: 'je suis une pj 2',
                 typeLabel: 'Projet de réponse',
-                pdfVersion: 131,
+                isPdfVersion: true,
                 creator: 'Bernard Blier',
-                size: '40ko'
+                format: 'docx',
+                size: '40 Ko'
             }
         ];
 
@@ -300,8 +308,9 @@ export class SendedResourcePageComponent implements OnInit {
                 id: 100,
                 label: 'Je suis une note',
                 typeLabel: 'Note',
-                pdfVersion: null,
+                isPdfVersion: true,
                 creator: 'Bernard Blier',
+                format: 'html',
                 size: null
             }
         ];
@@ -403,6 +412,8 @@ export class SendedResourcePageComponent implements OnInit {
                 this.emailAttach.attachments.push({
                     id: item.id,
                     label: item.label,
+                    format : mode !== 'pdf' ? item.format : 'pdf',
+                    size: item.size,
                     original: mode === 'pdf' ? false : true
                 });
             }
@@ -410,7 +421,9 @@ export class SendedResourcePageComponent implements OnInit {
             if (this.emailAttach.notes.filter((noteId: any) => noteId === item.id).length === 0) {
                 this.emailAttach.notes.push({
                     id: item.id,
-                    label: item.label
+                    label: item.label,
+                    format : mode !== 'pdf' ? item.format : 'pdf',
+                    size: item.size,
                 });
             }
         }
@@ -439,8 +452,8 @@ export class SendedResourcePageComponent implements OnInit {
         const data = {
             sender: this.currentSender,
             recipients: this.recipients.map(recipient => recipient.email),
-            cc: this.copies.map(copy => copy.email),
-            cci: this.invisibleCopies.map((invCopy => invCopy.email)),
+            cc: this.showCopies ? this.copies.map(copy => copy.email) : [],
+            cci: this.showInvisibleCopies ? this.invisibleCopies.map((invCopy => invCopy.email)) : [],
             object: this.emailsubject,
             body: this.tinymceInput,
             isHtml: true,
@@ -448,5 +461,9 @@ export class SendedResourcePageComponent implements OnInit {
         };
 
         return Object.assign({}, this.emailAttach, data);
+    }
+
+    isSelectedAttachMail() {
+        
     }
 }
