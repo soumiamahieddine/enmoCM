@@ -77,7 +77,7 @@ class MessageExchangeReviewController
             $reviewObject->UnitIdentifier->value = $messageExchangeData['external_id']['m2m'];
 
             $messageExchangeReply = MessageExchangeModel::getMessageByReference(['reference' => $messageExchangeData['external_id']['m2m'].'_ReplySent']);
-            $dataObject = json_decode($messageExchangeReply[0]['data']);
+            $dataObject = json_decode($messageExchangeReply['data']);
             $reviewObject->OriginatingAgency = $dataObject->TransferringAgency;
             $reviewObject->ArchivalAgency = $dataObject->ArchivalAgency;
 

@@ -58,7 +58,7 @@ abstract class MessageExchangeModelAbstract
             return [];
         }
        
-        return $aReturn;
+        return $aReturn[0];
     }
 
     public static function getMessageByIdentifier($aArgs = [])
@@ -78,7 +78,7 @@ abstract class MessageExchangeModelAbstract
             return [];
         }
        
-        return $aReturn;
+        return $aReturn[0];
     }
 
     public static function updateStatusMessage(array $aArgs)

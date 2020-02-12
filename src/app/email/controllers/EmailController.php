@@ -524,17 +524,17 @@ class EmailController
         //zip M2M
         if ($email['message_exchange_id']) {
             $messageExchange = MessageExchangeModel::getMessageByIdentifier(['messageId' => $email['message_exchange_id'], 'select' => ['docserver_id','path','filename','fingerprint','reference']]);
-            $docserver       = DocserverModel::getByDocserverId(['docserverId' => $messageExchange[0]['docserver_id']]);
+            $docserver       = DocserverModel::getByDocserverId(['docserverId' => $messageExchange['docserver_id']]);
             $docserverType   = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id']]);
 
-            $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $messageExchange[0]['path']);
-            $filePath      = $docserver['path_template'] . $pathDirectory . $messageExchange[0]['filename'];
+            $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $messageExchange['path']);
+            $filePath      = $docserver['path_template'] . $pathDirectory . $messageExchange['filename'];
             $fingerprint   = StoreController::getFingerPrint([
                 'filePath' => $filePath,
                 'mode'     => $docserverType['fingerprint_mode'],
             ]);
 
-            if ($fingerprint != $messageExchange[0]['fingerprint']) {
+            if ($fingerprint != $messageExchange['fingerprint']) {
                 $email['document'] = (array)json_decode($email['document']);
                 return ['errors' => 'Pb with fingerprint of document. ResId master : ' . $email['document']['id']];
             }
@@ -545,7 +545,7 @@ class EmailController
                     return ['errors' => 'Document not found on docserver'];
                 }
 
-                $title = preg_replace(utf8_decode('@[\\/:*?"<>|]@i'), '_', substr($messageExchange[0]['reference'], 0, 30));
+                $title = preg_replace(utf8_decode('@[\\/:*?"<>|]@i'), '_', substr($messageExchange['reference'], 0, 30));
 
                 $phpmailer->addStringAttachment($fileContent, $title . '.zip');
             }

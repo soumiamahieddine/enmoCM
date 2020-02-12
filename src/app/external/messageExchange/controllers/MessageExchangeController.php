@@ -83,10 +83,9 @@ class MessageExchangeController
             'messageId' => $args['id']
         ]);
 
-        if (empty($message[0])) {
+        if (empty($message)) {
             return $response->withStatus(404)->withJson(['errors' => 'Message not found']);
         }
-        $message = $message[0];
 
         if (!ResController::hasRightByResId(['resId' => [$message['res_id_master']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);

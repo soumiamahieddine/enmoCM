@@ -26,22 +26,21 @@ class AdapterMaarchCourrierController
         $res = []; // [0] = url, [1] = header, [2] = cookie, [3] = data
 
         $message = MessageExchangeModel::getMessageByReference(['reference' => $messageId]);
+        $messageObject = json_decode($message['data']);
 
-        $messageObject = json_decode($message[0]['data']);
-
-        $docserver     = DocserverModel::getByDocserverId(['docserverId' => $message[0]['docserver_id']]);
+        $docserver     = DocserverModel::getByDocserverId(['docserverId' => $message['docserver_id']]);
         $docserverType = DocserverTypeModel::getById(
             ['id' => $docserver['docserver_type_id']]
         );
 
-        $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $message[0]['path']);
-        $filePath      = $docserver['path_template'] . $pathDirectory . $message[0]['filename'];
+        $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $message['path']);
+        $filePath      = $docserver['path_template'] . $pathDirectory . $message['filename'];
         $fingerprint   = StoreController::getFingerPrint([
             'filePath' => $filePath,
             'mode'     => $docserverType['fingerprint_mode'],
         ]);
 
-        if ($fingerprint != $message[0]['fingerprint']) {
+        if ($fingerprint != $message['fingerprint']) {
             echo _PB_WITH_FINGERPRINT_OF_DOCUMENT;
             exit;
         }
