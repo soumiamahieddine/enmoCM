@@ -56,7 +56,9 @@ class SummaryController
         }
         $maarch2ged = MessageExchangeModel::get(['select' => ['type', 'date as send_date', 'account_id'], 'where' => ['res_id_master = ?', 'status = ?'], 'data' => [$args['resId'], 'S'], 'limit' => (int)$queryParams['limit']]);
         foreach ($maarch2ged as $key => $value) {
-            $userInfo = UserModel::getByLogin(['select' => ['firstname', 'lastname'], 'login' => $value['account_id']]);
+            if (!empty($value['account_id'])) {
+                $userInfo = UserModel::getByLogin(['select' => ['firstname', 'lastname'], 'login' => $value['account_id']]);
+            }
             $maarch2ged[$key]['userInfo'] = $userInfo['firstname'] . ' ' . $userInfo['lastname'];
             $maarch2ged[$key]['object']   = '';
             $maarch2ged[$key]['status']   = 'SENT';
