@@ -666,7 +666,7 @@ class AttachmentController
             'data'      => [$attachment['res_id_master'], 'contact', $mode]
         ]);
         if (empty($recipients)) {
-            return ['errors' => 'No contacts available'];
+            return true;
         }
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $attachment['docserver_id'], 'select' => ['path_template']]);

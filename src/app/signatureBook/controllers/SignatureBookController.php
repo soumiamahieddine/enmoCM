@@ -376,7 +376,7 @@ class SignatureBookController
         if (!Validator::intVal()->validate($args['resId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
         } elseif (!SignatureBookController::isResourceInSignatureBook(['resId' => $args['resId'], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of signatory book']);
         }
 
         $body = $request->getParsedBody();

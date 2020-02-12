@@ -568,7 +568,7 @@ INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'manage_numeric_package'
 FROM usergroups_services WHERE group_id IN (
     SELECT group_id FROM usergroups_services
-    WHERE service_id = 'use_mail_services' AND group_id not in (SELECT group_id FROM usergroups_services WHERE service_id = 'manage_numeric_package')
+    WHERE service_id = 'sendmail' AND group_id not in (SELECT group_id FROM usergroups_services WHERE service_id = 'manage_numeric_package')
 );
 
 
