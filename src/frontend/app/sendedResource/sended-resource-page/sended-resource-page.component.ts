@@ -25,10 +25,6 @@ export class SendedResourcePageComponent implements OnInit {
     availableEmailModels: any[] = [];
     availableSignEmailModels: any[] = [];
 
-    mainDocList: any[] = [];
-    notesList: any[] = [];
-    attachmentsList: any[] = [];
-
     resourceData: any = null;
     availableSenders: any[] = [];
     currentSender: any = {};
@@ -72,35 +68,56 @@ export class SendedResourcePageComponent implements OnInit {
     }
 
     emailsubject: string = '';
-    emailAttach: any = {
-        document: {
-            isLinked: false,
-            original: false
+
+    currentEmailAttachTool :string = '';
+    emailAttachTool: any = {
+        document : {
+            icon : 'fa fa-file',
+            title : 'Attacher le document principal',
+            list : []
         },
-        notes: [],
-        attachments: []
+        notes : {
+            icon : 'fas fa-pen-square',
+            title : 'Attacher une annotations',
+            list : []
+        },
+        attachments : {
+            icon : 'fa fa-paperclip',
+            title : 'Attacher une pièce jointe',
+            list : []
+        },
     };
+    emailAttach: any = {};
 
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<SendedResourcePageComponent>,
-        private functions: FunctionsService
+        public functions: FunctionsService
     ) { }
 
     async ngOnInit(): Promise<void> {
 
-        this.emailAttach.document.id = this.data.resId;
-
-        this.loading = false;
-        this.getAttachElements();
-        this.getResourceData();
+        Object.keys(this.emailAttachTool).forEach(element => {
+            if (element === 'document') {
+                this.emailAttach[element] = {
+                    id : this.data.resId,
+                    isLinked: false,
+                    original: false
+                };
+            } else {
+                this.emailAttach[element] = [];
+            }
+        });
         this.initEmailModelsList();
-        this.getUserEmails();
         this.initEmailsList();
         this.initSignEmailModelsList();
 
+        await this.getAttachElements();
+        await this.getResourceData();
+        await this.getUserEmails();
+        this.loading = false;
     }
 
     add(event: MatChipInputEvent, type: string): void {
@@ -111,7 +128,7 @@ export class SendedResourcePageComponent implements OnInit {
         if ((value || '').trim()) {
             this[type].push(
                 {
-                    label: '',
+                    label: value.trim(),
                     email: value.trim()
                 });
         }
@@ -145,7 +162,7 @@ export class SendedResourcePageComponent implements OnInit {
             ).subscribe();
         } else {
             this[type].push({
-                label: 'toto',
+                label: item.label,
                 email: item.email
             });
         }
@@ -216,23 +233,27 @@ export class SendedResourcePageComponent implements OnInit {
     }
 
     getResourceData() {
-        this.http.get(`../../rest/resources/${this.data.resId}?light=true`).pipe(
-            tap((data: any) => {
-                this.resourceData = data;
-                this.emailsubject = `[${this.resourceData.chrono}] ${this.resourceData.subject}`;
-                this.emailAttach.document.label = this.resourceData.subject;
-
-                if (!this.functions.empty(this.resourceData.senders)) {
-                    this.resourceData.senders.forEach((sender: any) => {
-                        this.setSender(sender.id);
-                    });
-                }
-            }),
-            catchError((err) => {
-                this.notify.handleSoftErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/resources/${this.data.resId}?light=true`).pipe(
+                tap((data: any) => {
+                    this.resourceData = data;
+                    this.emailsubject = `[${this.resourceData.chrono}] ${this.resourceData.subject}`;
+                    this.emailAttach.document.label = this.resourceData.subject;
+    
+                    if (!this.functions.empty(this.resourceData.senders)) {
+                        this.resourceData.senders.forEach((sender: any) => {
+                            this.setSender(sender.id);
+                        });
+                    }
+                    resolve(true);
+                }),
+                catchError((err) => {
+                    this.notify.handleSoftErrors(err);
+                    resolve(false);
+                    return of(false);
+                })
+            ).subscribe();
+        });
     }
 
     setSender(id: number) {
@@ -254,84 +275,103 @@ export class SendedResourcePageComponent implements OnInit {
     }
 
     getUserEmails() {
-        this.http.get('../../rest/users/21/availableEmails').pipe(
-            tap((data: any) => {
-                this.availableSenders = data.emails;
-                this.currentSender = this.availableSenders[0];
-            }),
-            catchError((err) => {
-                this.notify.handleSoftErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+        return new Promise((resolve, reject) => {
+            this.http.get('../../rest/currentUser/availableEmails').pipe(
+                tap((data: any) => {
+                    this.availableSenders = data.emails;
+                    this.currentSender = this.availableSenders[0];
+                    resolve(true);
+                }),
+                catchError((err) => {
+                    this.notify.handleSoftErrors(err);
+                    resolve(false);
+                    return of(false);
+                })
+            ).subscribe();
+        });
     }
 
     getAttachElements() {
-
-        this.mainDocList = [
-            {
-                id: 100,
-                chrono : 'MAARCH/2019A/0001',
-                label: 'Réservation Bal',
-                typeLabel: 'Document principal',
-                isPdfVersion: true,
-                creator: 'Bernard Blier',
-                format: 'pdf',
-                size: '40 Ko'
-            }
-        ];
-        this.attachmentsList = [
-            {
-                id: 100,
-                chrono : 'MAARCH/2019D/0002',
-                label: 'je suis une pj',
-                typeLabel: 'Projet de réponse',
-                isPdfVersion: true,
-                creator: 'Bernard Blier',
-                format: 'odt',
-                size: '40ko'
-            },
-            {
-                id: 102,
-                chrono : 'MAARCH/2019D/0003',
-                label: 'je suis une pj 2',
-                typeLabel: 'Projet de réponse',
-                isPdfVersion: true,
-                creator: 'Bernard Blier',
-                format: 'docx',
-                size: '40 Ko'
-            }
-        ];
-
-        this.notesList = [
-            {
-                id: 100,
-                label: 'Je suis une note',
-                typeLabel: 'Note',
-                isPdfVersion: true,
-                creator: 'Bernard Blier',
-                format: 'html',
-                size: null
-            }
-        ];
+        return new Promise((resolve, reject) => {
+            this.emailAttachTool.document.list = [
+                {
+                    id: 100,
+                    chrono : 'MAARCH/2019A/0001',
+                    label: 'Réservation Bal',
+                    typeLabel: 'Document principal',
+                    isPdfVersion: true,
+                    creator: 'Bernard Blier',
+                    format: 'pdf',
+                    size: '40 Ko'
+                }
+            ];
+            this.emailAttachTool.attachments.list = [
+                {
+                    id: 100,
+                    chrono : 'MAARCH/2019D/0002',
+                    label: 'je suis une pj',
+                    typeLabel: 'Projet de réponse',
+                    isPdfVersion: true,
+                    creator: 'Bernard Blier',
+                    format: 'odt',
+                    size: '40ko'
+                },
+                {
+                    id: 102,
+                    chrono : 'MAARCH/2019D/0003',
+                    label: 'je suis une pj 2',
+                    typeLabel: 'Projet de réponse',
+                    isPdfVersion: true,
+                    creator: 'Bernard Blier',
+                    format: 'docx',
+                    size: '40 Ko'
+                }
+            ];
+    
+            this.emailAttachTool.notes.list = [
+                {
+                    id: 100,
+                    label: 'Je suis une note',
+                    typeLabel: 'Note',
+                    isPdfVersion: true,
+                    creator: 'Bernard Blier',
+                    format: 'html',
+                    size: null
+                }
+            ];
+            resolve(true);
+            /*this.http.get(`../../rest/resources/${this.resId}/emails?type=email`).pipe(
+                tap((data: any) => {
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    resolve(false);
+                    return of(false);
+                })
+            ).subscribe();*/
+        });
     }
 
     initEmailsList() {
         this.recipientsInput.valueChanges.pipe(
             debounceTime(300),
-
+            tap((value) => {
+                if (value.length === 0) {
+                    this.filteredEmails = of([]);
+                }
+            }),
             filter(value => value.length > 2),
-            tap(() => this.loading = true),
             switchMap(data => this.http.get('../../rest/autocomplete/correspondents', { params: { "search": data, "searchEmails": 'true' } })),
             tap((data: any) => {
                 data = data.filter((contact: any) => !this.functions.empty(contact.email) || contact.type === 'contactGroup').map((contact: any) => {
                     let label = '';
-                    if (contact.type === 'user') {
-                        label = `${contact.firstname} ${contact.lastname} (${contact.email})`;
+                    if (contact.type === 'user' || contact.type === 'contact') {
+                        label = `${contact.firstname} ${contact.lastname}`;
                     } else if (contact.type === 'contactGroup') {
                         label = `${contact.firstname} ${contact.lastname}`;
                     } else {
-                        label = `${contact.lastname} (${contact.email})`;
+                        label = `${contact.lastname}`;
                     }
                     return {
                         id: contact.id,
@@ -402,14 +442,14 @@ export class SendedResourcePageComponent implements OnInit {
     }
 
     toggleAttachMail(item: any, type: string, mode: string) {
-        if (type === 'maindocument') {
+        if (type === 'document') {
             if (this.emailAttach.document.isLinked === false) {
                 this.emailAttach.document.isLinked = true;
                 this.emailAttach.document.original = mode === 'pdf' ? false : true;
             }
-        } else if (type === 'attachment') {
-            if (this.emailAttach.attachments.filter((attach: any) => attach.id === item.id).length === 0) {
-                this.emailAttach.attachments.push({
+        } else {
+            if (this.emailAttach[type].filter((attach: any) => attach.id === item.id).length === 0) {
+                this.emailAttach[type].push({
                     id: item.id,
                     label: item.label,
                     format : mode !== 'pdf' ? item.format : 'pdf',
@@ -417,29 +457,15 @@ export class SendedResourcePageComponent implements OnInit {
                     original: mode === 'pdf' ? false : true
                 });
             }
-        } else if (type === 'note') {
-            if (this.emailAttach.notes.filter((noteId: any) => noteId === item.id).length === 0) {
-                this.emailAttach.notes.push({
-                    id: item.id,
-                    label: item.label,
-                    format : mode !== 'pdf' ? item.format : 'pdf',
-                    size: item.size,
-                });
-            }
         }
     }
 
     removeAttachMail(index: number, type: string) {
-        console.log(index);
-        console.log(type);
-        
         if (type === 'document') {
-            this.emailAttach.document.isLinked = true;
+            this.emailAttach.document.isLinked = false;
             this.emailAttach.document.original = false;
-        } else if (type === 'attachments') {
-            this.emailAttach.attachments.splice(index, 1);
-        } else if (type === 'notes') {
-            this.emailAttach.notes.splice(index, 1);
+        } else {
+            this.emailAttach[type].splice(index, 1);
         }
     }
 
@@ -463,7 +489,11 @@ export class SendedResourcePageComponent implements OnInit {
         return Object.assign({}, this.emailAttach, data);
     }
 
-    isSelectedAttachMail() {
-        
+    isSelectedAttachMail(item: any, type: string) {
+        if (type === 'document') {
+            return this.emailAttach.document.isLinked;
+        } else {
+            return this.emailAttach[type].filter((attach: any) => attach.id === item.id).length > 0;
+        }
     }
 }

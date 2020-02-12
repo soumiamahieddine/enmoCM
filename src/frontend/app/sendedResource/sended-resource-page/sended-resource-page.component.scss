@@ -1,5 +1,12 @@
 @import '../../../css/vars.scss';
 
+.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
 .mat-dialog-title {
     display: flex;
     align-items: center;

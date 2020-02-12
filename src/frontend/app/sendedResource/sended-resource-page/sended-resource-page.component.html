@@ -6,131 +6,129 @@
         <mat-icon class="fa fa-times"></mat-icon>
     </button></h1>
 <mat-dialog-content class="modal-container">
-    <mat-form-field>
-        <span matPrefix class="attachLabel">De&nbsp;:&nbsp;</span>
-        <mat-select [(ngModel)]="currentSender">
-            <mat-option *ngFor="let email of availableSenders | sortBy: 'label'" [value]="email">
-                {{email.label}} ({{email.email}})
-            </mat-option>
-        </mat-select>
-        <button mat-button color="primary" matSuffix [class.activeButton]="showCopies" (click)="$event.stopPropagation();showCopies = !showCopies">Cc</button>
-        <button mat-button color="primary" matSuffix [class.activeButton]="showInvisibleCopies"
-            (click)="$event.stopPropagation();showInvisibleCopies = !showInvisibleCopies">Cci</button>
-    </mat-form-field>
-
-    <mat-form-field>
-        <span matPrefix class="attachLabel">À&nbsp;:&nbsp;</span>
-        <mat-chip-list id="recipients-list" #recipientsList cdkDropList [cdkDropListConnectedTo]="['copies-list','invcopies-list']" [cdkDropListData]="recipients" (cdkDropListDropped)="drop($event)">
-            <mat-chip cdkDrag class="recipients" *ngFor="let recipient of recipients" [selectable]="selectable" removable
-                (removed)="remove(recipient, 'recipients')">
-                {{recipient.email}}
-                <mat-icon matChipRemove class="fa fa-times"></mat-icon>
-            </mat-chip>
-            <input [formControl]="recipientsInput" [matChipInputFor]="recipientsList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
-                (matChipInputTokenEnd)="add($event, 'recipients')" [matAutocomplete]="autoEmails" (focus)="resetAutocomplete()">
-        </mat-chip-list>
-        <mat-autocomplete #autoEmails="matAutocomplete" (optionSelected)="addEmail($event.option.value, 'recipients')">
-            <mat-option *ngFor="let option of filteredEmails | async" [value]="option">
-                {{option.label}}
-            </mat-option>
-        </mat-autocomplete>
-    </mat-form-field>
-
-    <mat-form-field *ngIf="showCopies">
-        <span matPrefix class="attachLabel">Cc&nbsp;:&nbsp;</span>
-        <mat-chip-list id="copies-list" #copiesList cdkDropList [cdkDropListConnectedTo]="['recipients-list','invcopies-list']" [cdkDropListData]="copies" (cdkDropListDropped)="drop($event)">
-            <mat-chip cdkDrag class="copy" *ngFor="let copy of copies" [selectable]="selectable" removable
-                (removed)="remove(copy, 'copies')">
-                {{copy.email}}
-                <mat-icon matChipRemove class="fa fa-times"></mat-icon>
-            </mat-chip>
-            <input [formControl]="recipientsInput" [matChipInputFor]="copiesList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
-                (matChipInputTokenEnd)="add($event, 'copies')" [matAutocomplete]="autoEmails2" (focus)="resetAutocomplete()">
-        </mat-chip-list>
-        <mat-autocomplete #autoEmails2="matAutocomplete" (optionSelected)="addEmail($event.option.value, 'copies')">
-            <mat-option *ngFor="let option of filteredEmails | async" [value]="option">
-                {{option.label}}
-            </mat-option>
-        </mat-autocomplete>
-    </mat-form-field>
-
-    <mat-form-field *ngIf="showInvisibleCopies">
-        <span matPrefix class="attachLabel">Cci&nbsp;:&nbsp;</span>
-        <mat-chip-list id="invcopies-list" #invCopiesList cdkDropList [cdkDropListConnectedTo]="['recipients-list','copies-list']" [cdkDropListData]="invisibleCopies" (cdkDropListDropped)="drop($event)">
-            <mat-chip class="copy" *ngFor="let invCopy of invisibleCopies" [selectable]="selectable" removable
-                (removed)="remove(invCopy, 'invisibleCopies')">
-                {{invCopy.email}}
-                <mat-icon matChipRemove class="fa fa-times"></mat-icon>
-            </mat-chip>
-            <input [formControl]="recipientsInput" [matChipInputFor]="invCopiesList"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
-                (matChipInputTokenEnd)="add($event, 'invisibleCopies')" [matAutocomplete]="autoEmails3" (focus)="resetAutocomplete()">
-        </mat-chip-list>
-        <mat-autocomplete #autoEmails3="matAutocomplete" (optionSelected)="addEmail($event.option.value, 'invisibleCopies')">
-            <mat-option *ngFor="let option of filteredEmails | async" [value]="option">
-                {{option.label}}
-            </mat-option>
-        </mat-autocomplete>
-    </mat-form-field>
-    <mat-form-field floatLabel="never">
-        <input matInput placeholder="Sujet" [(ngModel)]="emailsubject" maxlength="70">
-        <button mat-icon-button matSuffix [title]="'Attacher le document principal'" (click)="$event.stopPropagation();" [matMenuTriggerFor]="mainDocListMenu">
-            <mat-icon class="fa fa-file" color="primary"></mat-icon>
-        </button>
-        <mat-menu #mainDocListMenu="matMenu" [class]="'attachListMenu'">
-            <button mat-menu-item *ngFor="let doc of mainDocList" (click)="toggleAttachMail(doc,'maindocument','original')">{{doc.label}}</button>
-        </mat-menu>
-        <button mat-icon-button matSuffix [title]="'Attacher une annotations'" (click)="$event.stopPropagation();" [matMenuTriggerFor]="notesListMenu">
-            <mat-icon class="fas fa-pen-square" color="primary"></mat-icon>
-        </button>
-        <mat-menu #notesListMenu="matMenu" [class]="'attachListMenu'">
-            <button mat-menu-item *ngFor="let note of notesList" (click)="toggleAttachMail(note,'note','original')">{{note.label}}</button>
-        </mat-menu>
-        <button mat-icon-button [title]="'Attacher une pièce jointe'" matSuffix (click)="$event.stopPropagation();" [matMenuTriggerFor]="attachListMenu">
-            <mat-icon class="fa fa-paperclip" color="primary"></mat-icon>
-        </button>
-        <mat-menu #attachListMenu="matMenu" [class]="'attachListMenu'">
-            <button mat-menu-item disableRipple *ngFor="let attach of attachmentsList"><span (click)="toggleAttachMail(attach,'attachment','original')">{{attach.label}} - {{attach.format}}</span>&nbsp;<span class="pdfVersion" (click)="toggleAttachMail(attach,'attachment','pdf');">(version PDF)</span></button>
-        </mat-menu>
-    </mat-form-field>
-    <mat-chip-list>
-        <mat-chip class="copy" *ngIf="emailAttach.document.isLinked" [selectable]="selectable" removable
-            (removed)="removeAttachMail(0, 'document')">
-            <i class="fa fa-file attachLabel"></i>&nbsp;{{emailAttach.document.label}}&nbsp;<small class="attachLabel">(pdf - 25 Ko)</small>
-            <mat-icon matChipRemove class="fa fa-times"></mat-icon>
-        </mat-chip>
-        <mat-chip class="copy" *ngFor="let item of emailAttach.attachments; let i=index;" [selectable]="selectable" removable
-            (removed)="removeAttachMail(i, 'attachments')">
-            <i class="fa fa-paperclip attachLabel"></i>&nbsp;{{item.label}}&nbsp;<small class="attachLabel">({{item.format}} - {{item.size}})</small>
-            <mat-icon matChipRemove class="fa fa-times"></mat-icon>
-        </mat-chip>
-        <mat-chip class="copy" *ngFor="let item of emailAttach.notes; let i=index;" [selectable]="selectable" removable
-            (removed)="removeAttachMail(i, 'notes')">
-            <i class="fas fa-pen-square attachLabel"></i>&nbsp;{{item.label}}&nbsp;<small class="attachLabel">({{item.format}})</small>
-            <mat-icon matChipRemove class="fa fa-times"></mat-icon>
-        </mat-chip>
-    </mat-chip-list>
-    <div class="models">
-        <mat-form-field appearance="outline" style="font-size: 11px;">
-            <mat-label>Modèle(s) de mail</mat-label>
-            <mat-select [(ngModel)]="currentSelected" (selectionChange)="mergeEmailTemplate($event.value.id)">
-                <mat-option *ngFor="let model of availableEmailModels" [value]="model">
-                    {{model.label}}
+    <ng-container *ngIf="loading; else elseTemplate">
+        <div class="loading">
+            <mat-spinner></mat-spinner>
+        </div>
+    </ng-container>
+    <ng-template #elseTemplate>
+        <mat-form-field>
+            <span matPrefix class="attachLabel">De&nbsp;:&nbsp;</span>
+            <mat-select [(ngModel)]="currentSender">
+                <mat-option *ngFor="let email of availableSenders | sortBy: 'label'" [value]="email">
+                    {{email.label}} ({{email.email}})
                 </mat-option>
             </mat-select>
+            <button mat-button color="primary" matSuffix [class.activeButton]="showCopies" (click)="$event.stopPropagation();showCopies = !showCopies">Cc</button>
+            <button mat-button color="primary" matSuffix [class.activeButton]="showInvisibleCopies"
+                (click)="$event.stopPropagation();showInvisibleCopies = !showInvisibleCopies">Cci</button>
         </mat-form-field>
-        <mat-form-field appearance="outline" style="font-size: 11px;">
-            <mat-label>Signature(s) de mail</mat-label>
-            <mat-select [(ngModel)]="currentSelected" (selectionChange)="mergeSignEmailTemplate($event.value.id)">
-                <mat-option *ngFor="let model of availableSignEmailModels" [value]="model">
-                    {{model.label}}
+    
+        <mat-form-field>
+            <span matPrefix class="attachLabel">À&nbsp;:&nbsp;</span>
+            <mat-chip-list id="recipients-list" #recipientsList cdkDropList [cdkDropListConnectedTo]="['copies-list','invcopies-list']" [cdkDropListData]="recipients" (cdkDropListDropped)="drop($event)">
+                <mat-chip cdkDrag class="recipients" *ngFor="let recipient of recipients" [selectable]="selectable" removable
+                    (removed)="remove(recipient, 'recipients')" [title]="recipient.email">
+                    {{recipient.label}}
+                    <mat-icon matChipRemove class="fa fa-times"></mat-icon>
+                </mat-chip>
+                <input [formControl]="recipientsInput" [matChipInputFor]="recipientsList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
+                    (matChipInputTokenEnd)="add($event, 'recipients')" [matAutocomplete]="autoEmails" (focus)="resetAutocomplete()">
+            </mat-chip-list>
+            <mat-autocomplete #autoEmails="matAutocomplete" (optionSelected)="addEmail($event.option.value, 'recipients')">
+                <mat-option *ngFor="let option of filteredEmails | async" [value]="option">
+                    {{option.label}}<span class="attachLabel" *ngIf="option.type !== 'contactGroup'"> ({{option.email}})</span>
                 </mat-option>
-            </mat-select>
+            </mat-autocomplete>
         </mat-form-field>
-    </div>
-    <editor #tinymce [(ngModel)]="tinymceInput"  [init]="tinyMCEConfig"></editor>
+    
+        <mat-form-field *ngIf="showCopies">
+            <span matPrefix class="attachLabel">Cc&nbsp;:&nbsp;</span>
+            <mat-chip-list id="copies-list" #copiesList cdkDropList [cdkDropListConnectedTo]="['recipients-list','invcopies-list']" [cdkDropListData]="copies" (cdkDropListDropped)="drop($event)">
+                <mat-chip cdkDrag class="copy" *ngFor="let copy of copies" [selectable]="selectable" removable
+                    (removed)="remove(copy, 'copies')" [title]="copy.email">
+                    {{copy.label}}
+                    <mat-icon matChipRemove class="fa fa-times"></mat-icon>
+                </mat-chip>
+                <input [formControl]="recipientsInput" [matChipInputFor]="copiesList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
+                    (matChipInputTokenEnd)="add($event, 'copies')" [matAutocomplete]="autoEmails2" (focus)="resetAutocomplete()">
+            </mat-chip-list>
+            <mat-autocomplete #autoEmails2="matAutocomplete" (optionSelected)="addEmail($event.option.value, 'copies')">
+                <mat-option *ngFor="let option of filteredEmails | async" [value]="option">
+                    {{option.label}}<span class="attachLabel" *ngIf="option.type !== 'contactGroup'"> ({{option.email}})</span>
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    
+        <mat-form-field *ngIf="showInvisibleCopies">
+            <span matPrefix class="attachLabel">Cci&nbsp;:&nbsp;</span>
+            <mat-chip-list id="invcopies-list" #invCopiesList cdkDropList [cdkDropListConnectedTo]="['recipients-list','copies-list']" [cdkDropListData]="invisibleCopies" (cdkDropListDropped)="drop($event)">
+                <mat-chip class="copy" *ngFor="let invCopy of invisibleCopies" [selectable]="selectable" removable
+                    (removed)="remove(invCopy, 'invisibleCopies')" [title]="invCopy.email">
+                    {{invCopy.label}}
+                    <mat-icon matChipRemove class="fa fa-times"></mat-icon>
+                </mat-chip>
+                <input [formControl]="recipientsInput" [matChipInputFor]="invCopiesList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
+                    (matChipInputTokenEnd)="add($event, 'invisibleCopies')" [matAutocomplete]="autoEmails3" (focus)="resetAutocomplete()">
+            </mat-chip-list>
+            <mat-autocomplete #autoEmails3="matAutocomplete" (optionSelected)="addEmail($event.option.value, 'invisibleCopies')">
+                <mat-option *ngFor="let option of filteredEmails | async" [value]="option">
+                    {{option.label}}<span class="attachLabel" *ngIf="option.type !== 'contactGroup'"> ({{option.email}})</span>
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field floatLabel="never">
+            <input matInput placeholder="Sujet" [(ngModel)]="emailsubject" maxlength="70">
+            <button mat-icon-button matSuffix *ngFor="let keyVal of emailAttachTool | keyvalue" [title]="emailAttachTool[keyVal.key].title" (click)="$event.stopPropagation();currentEmailAttachTool=keyVal.key;" [matMenuTriggerFor]="emailAttachListMenu">
+                <mat-icon class="{{emailAttachTool[keyVal.key].icon}}" [class.activeButton]="(keyVal.key === 'document' && emailAttach.document.isLinked) || (keyVal.key !== 'document' && emailAttach[keyVal.key].length > 0)" color="primary"></mat-icon>
+            </button>
+            <mat-menu #emailAttachListMenu="matMenu" [class]="'attachListMenu'">
+                <ng-container *ngFor="let keyVal of emailAttachTool | keyvalue">
+                    <ng-container *ngIf="keyVal.key === currentEmailAttachTool">
+                        <button mat-menu-item disableRipple *ngFor="let attach of emailAttachTool[keyVal.key].list" [disabled]="isSelectedAttachMail(attach,keyVal.key)"><span (click)="toggleAttachMail(attach,keyVal.key,'original')">{{attach.label}} - {{attach.format}}</span>&nbsp;<span class="pdfVersion" (click)="toggleAttachMail(attach,keyVal.key,'pdf');">(version PDF)</span></button>
+                    </ng-container>  
+                </ng-container>
+            </mat-menu>
+        </mat-form-field>
+        <mat-chip-list>
+            <mat-chip class="copy" *ngIf="emailAttach.document.isLinked" [selectable]="selectable" removable
+                (removed)="removeAttachMail(0, 'document')">
+                <i class="fa fa-file attachLabel"></i>&nbsp;{{emailAttach.document.label}}&nbsp;<small class="attachLabel">(pdf - 25 Ko)</small>
+                <mat-icon matChipRemove class="fa fa-times"></mat-icon>
+            </mat-chip>
+            <ng-container *ngFor="let keyVal of emailAttach | keyvalue">
+                <ng-container *ngIf="keyVal.key !== 'document'">
+                    <mat-chip class="copy" *ngFor="let item of emailAttach[keyVal.key]; let i=index;" [selectable]="selectable" removable
+                    (removed)="removeAttachMail(i, keyVal.key)">
+                    <i class="{{emailAttachTool[keyVal.key].icon}} attachLabel"></i>&nbsp;{{item.label}}&nbsp;<small class="attachLabel">({{item.format}}{{!functions.empty(item.size) ? ' - '+item.size : ''}})</small>
+                    <mat-icon matChipRemove class="fa fa-times"></mat-icon>
+                </mat-chip>
+                </ng-container>  
+            </ng-container>
+        </mat-chip-list>
+        <div class="models">
+            <mat-form-field appearance="outline" style="font-size: 11px;">
+                <mat-label>Modèle(s) de mail</mat-label>
+                <mat-select [(ngModel)]="currentSelected" (selectionChange)="mergeEmailTemplate($event.value.id)">
+                    <mat-option *ngFor="let model of availableEmailModels" [value]="model">
+                        {{model.label}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" style="font-size: 11px;">
+                <mat-label>Signature(s) de mail</mat-label>
+                <mat-select [(ngModel)]="currentSelected" (selectionChange)="mergeSignEmailTemplate($event.value.id)">
+                    <mat-option *ngFor="let model of availableSignEmailModels" [value]="model">
+                        {{model.label}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <editor #tinymce [(ngModel)]="tinymceInput"  [init]="tinyMCEConfig"></editor>
+    </ng-template>
 </mat-dialog-content>
 <div mat-dialog-actions class="actions">
     <button mat-raised-button color="primary" (click)="onSubmit()">{{lang.validate}}</button>
