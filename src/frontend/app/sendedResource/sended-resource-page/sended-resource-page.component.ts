@@ -370,9 +370,7 @@ export class SendedResourcePageComponent implements OnInit {
     }
 
     onSubmit() {
-        console.log(this.formatEmail());
-
-        /*this.http.post(`../../rest/emails`, this.formatEmail()).pipe(
+        this.http.post(`../../rest/emails`, this.formatEmail()).pipe(
             tap(() => {
                 this.notify.success("Email en cours d'envoi...")
                 this.dialogRef.close('success');
@@ -381,7 +379,7 @@ export class SendedResourcePageComponent implements OnInit {
                 this.notify.handleSoftErrors(err);
                 return of(false);
             })
-        ).subscribe();*/
+        ).subscribe();
     }
 
     drop(event: CdkDragDrop<string[]>) {
