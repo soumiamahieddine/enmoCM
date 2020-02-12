@@ -75,7 +75,7 @@
                     [resId]="currentResourceInformations.resId">
                 </app-history-list>
                 <app-notes-list *ngIf="currentTool === 'notes' && !loading" #appNotesList [editMode]="true"
-                    [resId]="currentResourceInformations.resId">
+                    [resId]="currentResourceInformations.resId" (reloadBadgeNotes)="refreshBadge($event,'notes')">
                 </app-notes-list>
                 <app-linked-resource-list *ngIf="currentTool === 'linkedResources' && !loading" #appLinkedResourceList
                     [resId]="currentResourceInformations.resId"

@@ -76,6 +76,7 @@ export class NotesListComponent implements OnInit {
                     this.notes.splice(index, 1);
                 }
                 this.notify.success(this.lang.noteRemoved);
+                this.reloadBadgeNotes.emit(`${this.notes.length}`);
             })
         ).subscribe();
     }
