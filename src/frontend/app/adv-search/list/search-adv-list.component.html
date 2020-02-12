@@ -14,7 +14,7 @@
 </div>
 <div style="overflow: auto;">
     <mat-table cdkDropList id="document-list" #tableResourceListSort="matSort" [dataSource]="data" matSort
-        matSortActive="chrono" matSortDisableClear matSortDirection="asc" style="width:100%;min-width: 800px;">
+        matSortActive="creationDate" matSortDisableClear matSortDirection="desc" style="width:100%;min-width: 800px;">
 
         <ng-container matColumnDef="action">
             <mat-header-cell *matHeaderCellDef style="width: 70px;flex: initial;">
