@@ -68,13 +68,6 @@ class MergeController
                 $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
             //  $tbs->LoadTemplate("{$args['path']}#content.xml;styles.xml", OPENTBS_ALREADY_UTF8);
             } elseif ($extension == 'docx') {
-                foreach (['recipient', 'sender', 'attachmentRecipient'] as $contact) {
-                    if (!empty($dataToBeMerge[$contact]['postal_address'])) {
-                        $dataToBeMerge[$contact]['postal_address'] = nl2br($dataToBeMerge[$contact]['postal_address']);
-                        $dataToBeMerge[$contact]['postal_address'] = str_replace('<br />', '</w:t><w:br/><w:t>', $dataToBeMerge[$contact]['postal_address']);
-                        $dataToBeMerge[$contact]['postal_address'] = str_replace(["\n\r", "\r\n", "\r", "\n"], "", $dataToBeMerge[$contact]['postal_address']);
-                    }
-                }
                 $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
                 $templates = ['word/header1.xml', 'word/header2.xml', 'word/header3.xml', 'word/footer1.xml', 'word/footer2.xml', 'word/footer3.xml'];
                 foreach ($templates as $template) {
