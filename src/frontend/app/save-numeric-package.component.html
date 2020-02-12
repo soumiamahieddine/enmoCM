@@ -12,7 +12,7 @@
             <div *ngIf="!loading" class="container-fluid">
                 <div class="row row-eq-height">
                     <div class="col-md-4 col-md-offset-4" style="margin-top: 50px;border-top: solid 2px #F99830;border-bottom: solid 2px #F99830;padding:10px;">
-                        <h2>{{lang.saveNumericPackage}}</h2>
+                        <h2>{{lang.manageNumericPackage}}</h2>
                         <form class="form-horizontal" (ngSubmit)="submitNumericPackage()" #saveNumericPackageForm="ngForm">
                             <input id="numericPackageFilePath" type="file" name="files[]"(change)="uploadNumericPackage($event)">
                             <br>

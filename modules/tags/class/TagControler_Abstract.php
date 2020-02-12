@@ -249,9 +249,9 @@ abstract class tag_controler_Abstract extends ObjectControler
         $db = new Database();
         
         $stmt = $db->query(
-            "SELECT tag_res.tag_id FROM tag_res"
-            . " INNER JOIN tags ON tag_res.tag_id = tags.id"
-            . " WHERE tag_res.res_id = ?",
+            "SELECT resources_tags.tag_id FROM resources_tags"
+            . " INNER JOIN tags ON resources_tags.tag_id = tags.id"
+            . " WHERE resources_tags.res_id = ?",
             array($res_id)
         );
         //$db->show();
@@ -315,7 +315,7 @@ abstract class tag_controler_Abstract extends ObjectControler
          
         $db = new Database();
         $stmt = $db->query(
-                "SELECT count(res_id) AS bump FROM tag_res"
+                "SELECT count(res_id) AS bump FROM resources_tags"
                 . " WHERE tag_id = ?"
                 . " AND res_id <> 0",
             array($tag_id)
@@ -341,7 +341,7 @@ abstract class tag_controler_Abstract extends ObjectControler
         $result = array();
         $db = new Database();
         $stmt = $db->query(
-                "SELECT res_id FROM tag_res"
+                "SELECT res_id FROM resources_tags"
                 . " WHERE tag_id = ?",
             array($tag_id)
         );
@@ -408,7 +408,7 @@ abstract class tag_controler_Abstract extends ObjectControler
         }
         
         $stmt = $db->query(
-                "DELETE FROM tag_res"
+                "DELETE FROM resources_tags"
                 . " WHERE res_id = ?"
                 . $where,
             array($res_id)
@@ -435,7 +435,7 @@ abstract class tag_controler_Abstract extends ObjectControler
             array($tag_id)
         );
         $stmt = $db->query(
-                "DELETE FROM tag_res"
+                "DELETE FROM resources_tags"
                 . " WHERE tag_id = ?",
             array($tag_id)
         );
@@ -625,7 +625,7 @@ abstract class tag_controler_Abstract extends ObjectControler
         $db = new Database();
 
         $stmt = $db->query(
-                "INSERT INTO tag_res"
+                "INSERT INTO resources_tags"
                 . " (tag_id, res_id)"
                 . " VALUES (?,?)  ",
             array($tag_id, $res_id)

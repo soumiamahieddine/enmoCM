@@ -14,6 +14,7 @@
 
 namespace Template\controllers;
 
+use ContentManagement\controllers\MergeController;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
 use Group\controllers\PrivilegeController;
@@ -439,7 +440,7 @@ class TemplateController
 
     public function getEmailTemplatesByResId(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($args['resId']) && !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
@@ -456,15 +457,8 @@ class TemplateController
         $where = ['(templates_association.value_field in (?) OR templates_association.template_id IS NULL)', 'templates.template_type = ?', 'templates.template_target = ?'];
         $data = [$entities, 'HTML', 'sendmail'];
 
-        $queryParams = $request->getQueryParams();
-
-        if (!empty($queryParams['attachmentType'])) {
-            $where[] = 'templates.template_attachment_type in (?)';
-            $data[] = explode(',', $queryParams['attachmentType']);
-        }
-
         $templates = TemplateModel::getWithAssociation([
-            'select'    => ['DISTINCT(templates.template_id)', 'templates.template_label', 'templates.template_file_name', 'templates.template_path', 'templates.template_attachment_type'],
+            'select'    => ['DISTINCT(templates.template_id)', 'templates.template_label'],
             'where'     => $where,
             'data'      => $data,
             'orderBy'   => ['templates.template_label']
@@ -473,12 +467,40 @@ class TemplateController
         foreach ($templates as $key => $template) {
             $templates[$key] = [
                 'id'                => $template['template_id'],
-                'label'             => $template['template_label'],
-                'attachmentType'    => $template['template_attachment_type']
+                'label'             => $template['template_label']
             ];
         }
 
         return $response->withJson(['templates' => $templates]);
+    }
+
+    public static function mergeEmailTemplate(Request $request, Response $response, array $args)
+    {
+        $template = TemplateModel::getById(['id' => $args['id'], 'select' => ['template_content']]);
+        if (empty($template)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
+        }
+        if (empty($template['template_content'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Template has no content']);
+        }
+
+        $body = $request->getParsedBody();
+
+        if (!Validator::intVal()->validate($body['data']['resId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body param resId is missing']);
+        }
+
+        $dataToMerge = ['userId' => $GLOBALS['id']];
+        if (!empty($body['data']) && is_array($body['data'])) {
+            $dataToMerge = array_merge($dataToMerge, $body['data']);
+        }
+        $mergedDocument = MergeController::mergeDocument([
+            'content' => $template['template_content'],
+            'data'    => $dataToMerge
+        ]);
+        $fileContent = base64_decode($mergedDocument['encodedDocument']);
+
+        return $response->withJson(['mergedDocument' => $fileContent]);
     }
 
     private static function checkData(array $aArgs)
@@ -507,95 +529,5 @@ class TemplateController
         }
 
         return $check;
-    }
-
-    public static function mergeDatasource(array $aArgs)
-    {
-        include_once 'apps/maarch_entreprise/tools/tbs/tbs_class_php5.php';
-        include_once 'apps/maarch_entreprise/tools/tbs/tbs_plugin_opentbs.php';
-
-        $pathToTemplate = $aArgs['pathToAttachment'];
-        $pathToTemplateInfo = pathinfo($pathToTemplate);
-        $datasources = TemplateController::getDatas(["id" => 'letterbox_attachment', 'resId' => $aArgs['res_id'], 'contactId' => (int)$aArgs['res_contact_id'], 'addressId' => (int)$aArgs['res_address_id'], 'chronoAttachment' => $aArgs['chronoAttachment']]);
-    
-        if (in_array($pathToTemplateInfo['extension'], ['odt', 'ods', 'odp', 'xlsx', 'pptx', 'docx', 'odf'])) {
-            $fileNameOnTmp = 'tmp_file_' . $aArgs['userId'] . '_' . rand() . '.' . $pathToTemplateInfo['extension'];
-            $tmpPath = CoreConfigModel::getTmpPath();
-            $myFile = $tmpPath . $fileNameOnTmp;
-
-            // Merge with TBS
-            $TBS = new \clsTinyButStrong;
-            $TBS->NoErr = true;
-    
-            //LOAD PLUGIN FOR ODT/DOCX DOCUMENT
-            $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
-            $TBS->LoadTemplate($pathToTemplate, OPENTBS_ALREADY_UTF8);
-    
-            
-            foreach ($datasources as $name => $datasource) {
-                if (!is_array($datasource)) {
-                    $TBS->MergeField($name, $datasource);
-                } else {
-                    $TBS->MergeBlock($name, 'array', $datasource);
-                }
-            }
-    
-            if ($pathToTemplateInfo['extension'] == 'odt') {
-                $TBS->LoadTemplate('#styles.xml');
-            } elseif ($pathToTemplateInfo['extension'] == 'docx') {
-                // TODO : TEST AFTER REFACTORING of getDatas function
-                // foreach (['recipient', 'sender', 'attachmentRecipient'] as $contact) {
-                //     if (!empty($dataToBeMerge[$contact]['postal_address'])) {
-                //         $dataToBeMerge[$contact]['postal_address'] = nl2br($dataToBeMerge[$contact]['postal_address']);
-                //         $dataToBeMerge[$contact]['postal_address'] = str_replace('<br />', '</w:t><w:br/><w:t>', $dataToBeMerge[$contact]['postal_address']);
-                //         $dataToBeMerge[$contact]['postal_address'] = str_replace(array("\n\r", "\r\n", "\r", "\n"), "", $dataToBeMerge[$contact]['postal_address']);
-                //     }
-                // }
-                $TBS->LoadTemplate('#word/header1.xml');
-            }
-            foreach ($datasources as $name => $datasource) {
-                if (!is_array($datasource)) {
-                    $TBS->MergeField($name, $datasource);
-                } else {
-                    $TBS->MergeBlock($name, 'array', $datasource);
-                }
-            }
-    
-            if ($pathToTemplateInfo['extension'] == 'docx') {
-                $TBS->LoadTemplate('#word/footer1.xml');
-                foreach ($datasources as $name => $datasource) {
-                    if (!is_array($datasource)) {
-                        $TBS->MergeField($name, $datasource);
-                    } else {
-                        $TBS->MergeBlock($name, 'array', $datasource);
-                    }
-                }
-            }
-    
-            $TBS->Show(OPENTBS_FILE, $myFile);
-        } else {
-            $myFile = $pathToTemplate;
-        }
-
-        return $myFile;
-    }
-
-    private static function getDatas(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-
-        $res_id = $aArgs['resId'];
-        $datasources['datetime'][0]['date'] = date('d-m-Y');
-        $datasources['datetime'][0]['time'] = date('H:i:s.u');
-        $datasources['datetime'][0]['timestamp'] = time();
-
-        $datasourceScript = TemplateModel::getDatasourceById(["id" => $aArgs['id']]);
-        $res_contact_id = $aArgs['contactId'];
-        $res_address_id = $aArgs['addressId'];
-        $chronoAttachment = $aArgs['chronoAttachment'];
-
-        include $datasourceScript['script'];
-
-        return $datasources;
     }
 }

@@ -20,10 +20,6 @@
  */
 
 /*********************** SERVICES ***********************************/
-if (!defined("_ADMIN_BASKETS"))
-    define("_ADMIN_BASKETS", "Bannettes");
-if (!defined("_USE_BASKETS"))
-    define("_USE_BASKETS", "Utiliser les bannettes");
 if (!defined("_DIFFUSION_LIST"))
     define("_DIFFUSION_LIST", "Liste de diffusion");
 
@@ -38,18 +34,6 @@ if (!defined("_THE_ID"))
     define("_THE_ID", "L'identifiant ");
 if (!defined("_THE_DESC"))
     define("_THE_DESC", "La description ");
-if (!defined("_BELONGS_TO_NO_GROUP"))
-    define("_BELONGS_TO_NO_GROUP", "n'appartient à aucun groupe");
-if (!defined("_SYSTEM_BASKET_MESSAGE"))
-    define("_SYSTEM_BASKET_MESSAGE", "Cette bannette est une bannette système, vous ne pouvez pas modifier la table et la where clause. Elles sont affichées à titre indicatif");
-if (!defined("_BASKET_MISSING"))
-    define("_BASKET_MISSING", "La Bannette n'existe pas");
-if (!defined("_BASKET_UPDATED"))
-    define("_BASKET_UPDATED", "Bannette modifiée");
-if (!defined("_BASKET_UPDATE"))
-    define("_BASKET_UPDATE", "Modification de la bannette");
-if (!defined("_BASKET_ADDED"))
-    define("_BASKET_ADDED", "Nouvelle bannette ajoutée");
 if (!defined("_DELETED_BASKET"))
     define("_DELETED_BASKET", "Bannette supprimée");
 if (!defined("_BASKET_DELETION"))
@@ -353,8 +337,6 @@ if (!defined("_ARCHIVE_LIST"))
     define("_ARCHIVE_LIST", "Liste d'unités d'archive");
 if (!defined("_COUNT_LIST"))
     define("_COUNT_LIST", "Liste des copies");
-if (!defined("_FILTER_BY_ENTITY"))
-    define("_FILTER_BY_ENTITY", "Filtrer par entité");
 if (!defined("_FILTER_BY"))
     define("_FILTER_BY", "Filtrer par");
 if (!defined("_OTHER_BASKETS"))
@@ -393,28 +375,3 @@ if (!defined("_COMBINATED_ACTION"))
     define("_COMBINATED_ACTION", "Action combinée");
 if (!defined("_END_OF_THE_WF"))
     define("_END_OF_THE_WF", "Fin du workflow");
-
-if (!defined("_BASKET_VISIBLE_ONLY_ON_SEARCH"))
-    define("_BASKET_VISIBLE_ONLY_ON_SEARCH", "Bannette de recherche uniquement");
-
-if (!defined("_MANAGE_SECONDARY_USER_BASKETS"))
-    define("_MANAGE_SECONDARY_USER_BASKETS", "Gérer l'accès aux bannettes des groupes secondaires.");
-if (!defined("_MANAGE_SECONDARY_USER_BASKETS_TEXT"))
-    define("_MANAGE_SECONDARY_USER_BASKETS_TEXT", "Permet de gérer l'accès à des bannettes des groupes secondaires de l'utilisateur.");
-if (!defined("_MANAGE_SECONDARY_USER_BASKETS_HELP"))
-    define("_MANAGE_SECONDARY_USER_BASKETS_HELP", "L'utilisateur doit avoir au moins un groupe secondaire ayant des bannettes pour accéder à cette fonctionnalité.");
-if (!defined("_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL"))
-    define("_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL", "(Ajouter un groupe secondaire ayant des bannettes puis enregistrer l'utilisateur avant de revenir sur cet écran).");
-if (!defined("_MANAGE_BASKET_ORDER"))
-    define("_MANAGE_BASKET_ORDER", "Gérer l'ordre des bannettes");
-if (!defined("_MOVE_UP_TOP"))
-    define("_MOVE_UP_TOP", "Remonter tout en haut de la liste");
-if (!defined("_MOVE_UP_ONE_LEVEL"))
-    define("_MOVE_UP_ONE_LEVEL", "Monter d'une ligne");
-if (!defined("_MOVE_DOWN_ONE_LEVEL"))
-    define("_MOVE_DOWN_ONE_LEVEL", "Descendre d'une ligne");
-if (!defined("_MOVE_DOWN_BOTTOM"))
-    define("_MOVE_DOWN_BOTTOM", "Descendre tout en bas de la liste");
-
-if (!defined("_BASKET_ORDER_EDITED"))
-    define("_BASKET_ORDER_EDITED", "Ordre des bannettes modifié");

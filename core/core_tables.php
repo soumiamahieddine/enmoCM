@@ -29,15 +29,8 @@
 * @version $Revision$
 * @ingroup core
 */
-if (! defined('ACTIONS_TABLE')) {
-    define('ACTIONS_TABLE', 'actions');
-}
-if (! defined('ACTIONS_CATEGORIES_TABLE_NAME')) {
-    define('ACTIONS_CATEGORIES_TABLE_NAME', 'actions_categories');
-}
-if (! defined('AUTHORS_TABLE')) {
-    define('AUTHORS_TABLE', 'authors');
-}
+
+
 if (! defined('_DOCSERVERS_TABLE_NAME')) {
     define('_DOCSERVERS_TABLE_NAME', 'docservers');
 }
@@ -47,17 +40,8 @@ if (!defined('_DOCSERVER_TYPES_TABLE_NAME')) {
 if (! defined('_LC_CYCLE_STEPS_TABLE_NAME')) {
     define('_LC_CYCLE_STEPS_TABLE_NAME', 'lc_cycle_steps');
 }
-if (! defined('DOCTYPES_TABLE')) {
-    define('DOCTYPES_TABLE', 'doctypes');
-}
-if (! defined('DOCTYPES_INDEXES_TABLE')) {
-    define('DOCTYPES_INDEXES_TABLE', 'doctypes_indexes');
-}
 if (! defined('HISTORY_TABLE')) {
     define('HISTORY_TABLE', 'history');
-}
-if (! defined('HISTORY_BATCH_TABLE')) {
-    define('HISTORY_BATCH_TABLE', 'history_batch');
 }
 if (! defined('PARAM_TABLE')) {
     define('PARAM_TABLE', 'parameters');
@@ -80,15 +64,6 @@ if (! defined('USERGROUPS_TABLE')) {
 if (! defined('USERGROUPS_SERVICES_TABLE')) {
     define('USERGROUPS_SERVICES_TABLE', 'usergroups_services');
 }
-if(! defined('LISTMODELS_CONTENT_TABLE')) {
-    define('LISTMODELS_CONTENT_TABLE', 'listmodels');
-}
 if (! defined('USERS_TABLE')) {
     define('USERS_TABLE', 'users');
-}
-if (! defined('EMAIL_SIGNATURES_TABLE')) {
-    define('EMAIL_SIGNATURES_TABLE', 'users_email_signatures');
-}
-if (! defined('USER_SIGNATURES_TABLE')) {
-    define('USER_SIGNATURES_TABLE', 'user_signatures');
 }

@@ -80,18 +80,6 @@
       <parameter name="display" value="true"/>
       <parameter name="selectedObject"/>
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajax_ShowTown" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="ajaxShowVille"/>
-      <parameter name="display" value="true"/>
-      <parameter name="id"/>
-    </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="ajax_ShowCP" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="ajaxShowCodePostal"/>
-      <parameter name="display" value="true"/>
-      <parameter name="id"/>
-    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="choose_file" >
       <parameter name="dir" value="indexing_searching"/>
       <parameter name="page" value="choose_file"/>
@@ -286,11 +274,6 @@
       <parameter name="display" value="true"/>
     </requestDefinition>
 
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="id_identifier" >
-      <parameter name="page" value="user_info"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="only_id" >
       <parameter name="page" value="print"/>
       <parameter name="display" value="true"/>
@@ -310,23 +293,6 @@
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="url_path" >
       <parameter name="page" value="documents_list_copies"/>
       <parameter name="display" value="true"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="get_content_js" >
-      <parameter name="page" value="get_content_js"/>
-      <parameter name="display" value="true"/>
-    </requestDefinition>
-
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="get_content_js" >
-      <parameter name="page" value="get_content_js"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="get_content_js" >
-      <parameter name="page" value="get_content_js"/>
-    </requestDefinition>
-
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="get_content_js" >
-      <parameter name="page" value="get_content_js"/>
     </requestDefinition>
 
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="static_filename" >

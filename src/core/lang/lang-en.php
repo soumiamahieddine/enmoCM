@@ -140,7 +140,7 @@ define('_GO_ON_VACATION', 'go on vacation');
 define('_BACK_FROM_VACATION', 'back from vacation');
 define('_DOC_DISPLAYING', 'Displaying document');
 define('_DOC_ADDED', 'Document added');
-define('_DOC_UPDATED', 'Document updated');
+define('_DOC_UPDATED', 'Mail metadata updated');
 define('_ATTACHMENT_DELETED', 'Attachment deleted');
 define('_FILE_UPDATED', 'File updated');
 define('_ATTACHMENT_ADDED', 'Attachment added');
@@ -158,19 +158,12 @@ define('_LINK_DELETED', 'Link deleted');
 define('_DOCUMENT_SIGNED', 'Document signed');
 define('_DOCUMENT_UNSIGNED', 'Document unsigned');
 
-// LISTS
-define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'List with filters and responses');
-define('_DOCUMENTS_LIST_WITH_AVIS', 'List of mails with recommendation');
-define('_DOCUMENTS_LIST_COPIES', 'List of copies');
-define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Mails list with signatory');
-
 // ADMINISTRATION
 define('_USERS', 'Users');
 define('_GROUPS', 'users groups');
 define('_ENTITIES', 'Entities');
 define('_DOCTYPES', 'File plan');
 define('_FOLDERTYPES', 'Types of folders');
-define('_ADMIN_FOLDERTYPES_DESC', "Administrate folder's types. For each type, define the linked qualifiers and the mandatory folder's types for the folder completeness.");
 define('_TAGS', 'Tags');
 define('_DOCSERVERS', 'Storage zones');
 define('_REPORTS', 'Statistiques');
@@ -460,6 +453,9 @@ define("_UPDATE_AVIS_CIRCUIT", "Opinion workflow updated");
 
 define("_VISA_CIRCUIT_DELETED", "Visa workflow deleted");
 define("_AVIS_CIRCUIT_DELETED", "Opinion workflow updated");
+
+define("_COMMUNICATION_MEANS_VALIDATOR", "Communication Means should be an url or an email");
+define("_EXTERNALID_M2M_VALIDATOR", "Wrong format for externalId[m2m]. It must be SIRET/entityId");
 
 define("_ACKNOWLEDGEMENT_RECEIPT", "Acknowledgement Receipt");
 define("_CREATED_BY", "Created by");

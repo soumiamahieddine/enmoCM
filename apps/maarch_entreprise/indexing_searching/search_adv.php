@@ -131,7 +131,7 @@ $size = '';
 $param = array();
 
 // Custom fields
-$customFields = \CustomField\models\CustomFieldModel::get(['orderBy' => ['label']]);
+$customFields = \CustomField\models\CustomFieldModel::get(['where' => ['type != ?'], 'data' => ['banAutocomplete'], 'orderBy' => ['label']]);
 foreach ($customFields as $customField) {
     $field = 'indexingCustomField_'.$customField['id'];
 

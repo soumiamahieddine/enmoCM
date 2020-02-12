@@ -31,7 +31,6 @@ require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
 require_once 'modules'.DIRECTORY_SEPARATOR.'sendmail'.DIRECTORY_SEPARATOR
     .'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php';
 require_once 'modules/sendmail/class/class_email_signatures.php';
-require_once 'modules/sendmail/Controllers/ReadMessageExchangeController.php';
 
 $core_tools     = new core_tools();
 $request        = new request();
@@ -1009,7 +1008,6 @@ if ($mode == 'add') {
     if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
         $id = $_REQUEST['id'];
         if ($formContent == 'messageExchange') {
-            $emailArray = ReadMessageExchangeController::getMessageExchange(['id' => $id]);
         } else {
             $user = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
             $emailArray = [];

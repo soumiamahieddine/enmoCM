@@ -11,7 +11,6 @@
 
 if (isset($_REQUEST["res_id"]) && isset($_REQUEST["coll_id"]) && isset($_REQUEST["is_version"])) {
     $convertedDocument =  \Convert\controllers\ConvertPdfController::getConvertedPdfById([
-        'select' => ['docserver_id', 'path', 'filename'],
         'resId' => $_REQUEST["res_id"],
         'collId' => $_REQUEST["coll_id"],
     ]);

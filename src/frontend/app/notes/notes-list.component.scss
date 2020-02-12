@@ -46,6 +46,15 @@
     color: $primary;
 }
 
+.removeNote {
+    position: absolute;
+    font-size: 12px;
+    margin: 0;
+    top: 22px;
+    color: red;
+    right: 0px;
+}
+
 .noteTextContent {
     white-space: pre-line;
     padding: 30px;

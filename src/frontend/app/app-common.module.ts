@@ -24,6 +24,8 @@ import { TimeLimitPipe }                        from '../plugins/timeLimit.pipe'
 import { FilterListPipe }                       from '../plugins/filterList.pipe';
 import { FullDatePipe }                       from '../plugins/fullDate.pipe';
 import { EcplOnlyofficeViewerComponent }                       from '../plugins/onlyoffice-api-js/onlyoffice-viewer.component';
+import { EditorModule } from '@tinymce/tinymce-angular';
+
 
 /*FRONT IMPORTS*/
 import { AppMaterialModule }                    from './app-material.module';
@@ -92,7 +94,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         PdfViewerModule,
         NgStringPipesModule,
         AppMaterialModule,
-        DragDropModule
+        DragDropModule,
+        EditorModule
     ],
     declarations: [
         MainHeaderComponent,
@@ -160,6 +163,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         SmdFabSpeedDialTrigger,
         SmdFabSpeedDialActions,
         DragDropModule,
+        EditorModule,
         PluginAutocomplete,
         IndexingFormComponent,
         FieldListComponent,

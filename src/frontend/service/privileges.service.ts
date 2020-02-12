@@ -309,6 +309,12 @@ export class PrivilegeService {
             "unit": 'application'
         },
         {
+            "id": "add_links",
+            "label": this.lang.addLinks,
+            "comment": this.lang.addLinks,
+            "unit": 'application'
+        },
+        {
             "id": "delete_document_in_detail",
             "label": this.lang.deleteDocumentInDetail,
             "comment": this.lang.deleteDocumentInDetail,
@@ -429,12 +435,6 @@ export class PrivilegeService {
             "unit": 'visaWorkflow'
         },
         {
-            "id": "use_date_in_signBlock",
-            "label": this.lang.useDateInSignBlock,
-            "comment": this.lang.useDateInSignBlockDesc,
-            "unit": 'visaWorkflow'
-        },
-        {
             "id": "print_folder_doc",
             "label": this.lang.printFolderDoc,
             "comment": this.lang.printFolderDoc,
@@ -502,9 +502,9 @@ export class PrivilegeService {
             'shortcut' : false
         },
         {
-            "id": "save_numeric_package",
-            "label": this.lang.saveNumericPackage,
-            "comment": this.lang.saveNumericPackage,
+            "id": "manage_numeric_package",
+            "label": this.lang.manageNumericPackage,
+            "comment": this.lang.manageNumericPackage,
             "route": "/saveNumericPackage",
             "style": "fa fa-file-archive",
             "unit": "sendmail",

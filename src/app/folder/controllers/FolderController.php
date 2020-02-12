@@ -354,8 +354,14 @@ class FolderController
             'data' => [$args['folderId']]
         ]);
 
+        $entitiesToAdd = array_column($args['add'], 'entity_id');
+        if (!empty($entitiesToAdd)) {
+            $alreadyPresentEntities = EntityFolderModel::get(['select' => ['entity_id'], 'where' => ['folder_id = ?', 'entity_id in (?)'], 'data' => [$args['folderId'], $entitiesToAdd]]);
+            $alreadyPresentEntities = array_column($alreadyPresentEntities, 'entity_id');
+            $entitiesToRemove = array_merge($entitiesToRemove, $alreadyPresentEntities);
+        }
         if (!empty($entitiesToRemove)) {
-            EntityFolderModel::delete(['entity_id' => $entitiesToRemove, 'folder_id' => $args['folderId']]);
+            EntityFolderModel::delete(['where' => ['entity_id in (?)', 'folder_id = ?'], 'data' => [$entitiesToRemove, $args['folderId']]]);
         }
         if (!empty($args['add'])) {
             foreach ($args['add'] as $entity) {

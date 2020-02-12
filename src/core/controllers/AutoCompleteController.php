@@ -171,7 +171,7 @@ class AutoCompleteController
             }
 
             if ($searchOnEmails && !in_array('email', $fields)) {
-                $fields[] = 'emails';
+                $fields[] = 'email';
             }
 
             $fieldsNumber = count($fields);

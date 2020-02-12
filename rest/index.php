@@ -63,9 +63,9 @@ $app->put('/actions/{id}', \Action\controllers\ActionController::class . ':updat
 $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':delete');
 
 //Acknowledgement Receipt
-$app->post('/acknowledgementReceipt', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
-$app->get('/acknowledgementReceipt/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getById');
-$app->get('/acknowledgementReceipt/{id}/content', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
+$app->post('/acknowledgementReceipts', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
+$app->get('/acknowledgementReceipts/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getById');
+$app->get('/acknowledgementReceipts/{id}/content', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
 
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');
@@ -79,6 +79,7 @@ $app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\Attachme
 $app->get('/attachments/{id}/maarchParapheurWorkflow', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':getWorkflow');
 $app->put('/attachments/{id}/inSignatureBook', \Attachment\controllers\AttachmentController::class . ':setInSignatureBook');
 $app->put('/attachments/{id}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignAttachment');
+$app->post('/attachments/{id}/mailing', \Attachment\controllers\AttachmentController::class . ':getMailingById');
 $app->get('/attachmentsTypes', \Attachment\controllers\AttachmentController::class . ':getAttachmentsTypes');
 
 //AutoComplete
@@ -369,8 +370,10 @@ $app->post('/resources/{resId}/linkedResources', \Resource\controllers\LinkContr
 $app->delete('/resources/{resId}/linkedResources/{id}', \Resource\controllers\LinkController::class . ':unlinkResources');
 $app->put('/resources/{resId}/sign', \SignatureBook\controllers\SignatureBookController::class . ':signResource');
 $app->put('/resources/{resId}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignResource');
-$app->get('/resources/{resId}/acknowledgementReceipts', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':get');
-$app->get('/resources/{resId}/shippings', \Shipping\controllers\ShippingController::class . ':get');
+$app->get('/resources/{resId}/acknowledgementReceipts', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getByResId');
+$app->get('/resources/{resId}/shippings', \Shipping\controllers\ShippingController::class . ':getByResId');
+$app->get('/resources/{resId}/messageExchanges', \MessageExchange\controllers\MessageExchangeController::class . ':getByResId');
+$app->get('/messageExchanges/{id}', \MessageExchange\controllers\MessageExchangeController::class . ':getById');
 
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');
@@ -442,6 +445,8 @@ $app->get('/tags/{id}', \Tag\controllers\TagController::class . ':getById');
 $app->put('/tags/{id}', \Tag\controllers\TagController::class . ':update');
 $app->put('/mergeTags', \Tag\controllers\TagController::class . ':merge');
 $app->delete('/tags/{id}', \Tag\controllers\TagController::class . ':delete');
+$app->put('/tags/{id}/link', \Tag\controllers\TagController::class . ':link');
+$app->delete('/tags/{tagId}/link/{id}', \Tag\controllers\TagController::class . ':unLink');
 
 //Templates
 $app->get('/templates', \Template\controllers\TemplateController::class . ':get');
@@ -451,6 +456,7 @@ $app->put('/templates/{id}', \Template\controllers\TemplateController::class . '
 $app->delete('/templates/{id}', \Template\controllers\TemplateController::class . ':delete');
 $app->post('/templates/{id}/duplicate', \Template\controllers\TemplateController::class . ':duplicate');
 $app->get('/administration/templates/new', \Template\controllers\TemplateController::class . ':initTemplates');
+$app->post('/templates/{id}/mergeEmail', \Template\controllers\TemplateController::class . ':mergeEmailTemplate');
 
 //Users
 $app->get('/users', \User\controllers\UserController::class . ':get');
@@ -488,6 +494,7 @@ $app->put('/users/{id}/baskets', \User\controllers\UserController::class . ':upd
 $app->put('/users/{id}/accountActivationNotification', \User\controllers\UserController::class . ':sendAccountActivationNotification');
 $app->post('/password', \User\controllers\UserController::class . ':forgotPassword');
 $app->put('/password', \User\controllers\UserController::class . ':passwordInitialization');
+$app->get('/users/{id}/availableEmails', \Email\controllers\EmailController::class . ':getAvailableEmails');
 
 //UserFollowedResources
 $app->post('/resources/follow', \Resource\controllers\UserFollowedResourceController::class . ':follow');
@@ -509,6 +516,8 @@ $app->put('/currentUser/emailSignature/{id}', \User\controllers\UserController::
 $app->delete('/currentUser/emailSignature/{id}', \User\controllers\UserController::class . ':deleteCurrentUserEmailSignature');
 $app->put('/currentUser/groups/{groupId}/baskets/{basketId}', \User\controllers\UserController::class . ':updateCurrentUserBasketPreferences');
 $app->get('/currentUser/templates', \User\controllers\UserController::class . ':getTemplates');
+$app->get('/currentUser/emailSignatures', \User\controllers\UserController::class . ':getCurrentUserSignatures');
+$app->get('/currentUser/emailSignatures/{id}', \User\controllers\UserController::class . ':getCurrentUserSignatureContentById');
 
 //Notifications
 $app->get('/notifications', \Notification\controllers\NotificationController::class . ':get');
@@ -521,9 +530,10 @@ $app->get('/administration/notifications/new', \Notification\controllers\Notific
 $app->get('/notifications/{id}', \Notification\controllers\NotificationController::class . ':getBySid');
 $app->post('/scriptNotification', \Notification\controllers\NotificationScheduleController::class . ':createScriptNotification');
 
-$app->post('/saveNumericPackage', \Sendmail\Controllers\ReceiveMessageExchangeController::class . ':saveMessageExchange');
-$app->post('/saveMessageExchangeReturn', \Sendmail\Controllers\ReceiveMessageExchangeController::class . ':saveMessageExchangeReturn');
-$app->post('/saveMessageExchangeReview', \Sendmail\Controllers\MessageExchangeReviewController::class . ':saveMessageExchangeReview');
+$app->post('/saveNumericPackage', \MessageExchange\Controllers\ReceiveMessageExchangeController::class . ':saveMessageExchange');
+$app->post('/saveMessageExchangeReturn', \MessageExchange\Controllers\ReceiveMessageExchangeController::class . ':saveMessageExchangeReturn');
+$app->post('/saveMessageExchangeReview', \MessageExchange\Controllers\MessageExchangeReviewController::class . ':saveMessageExchangeReview');
+$app->post('/resources/{resId}/messageExchange', \MessageExchange\Controllers\SendMessageExchangeController::class . ':createMessageExchangeReview');
 
 //ExternalSignatoryBooks
 $app->get('/maarchParapheur/user/{id}/picture', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':getUserPicture');

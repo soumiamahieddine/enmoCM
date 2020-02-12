@@ -140,7 +140,7 @@ define('_GO_ON_VACATION', 'go on vacation');//translate
 define('_BACK_FROM_VACATION', 'bij terugkeer na afwezigheid');
 define('_DOC_DISPLAYING', 'Weergave van het document');
 define('_DOC_ADDED', 'Document toegevoegd');
-define('_DOC_UPDATED', 'Document updated');//translate
+define('_DOC_UPDATED', 'Mail metadata updated');//translate
 define('_ATTACHMENT_DELETED', 'Document deleted');//TRANSLATE
 define('_FILE_UPDATED', 'File updated');//translate
 define('_ATTACHMENT_ADDED', 'Attachment added');//TRANSLATE
@@ -158,19 +158,12 @@ define('_LINK_DELETED', 'Link deleted');//TRANSLATE
 define('_DOCUMENT_SIGNED', 'Document signed');//TRANSLATE
 define('_DOCUMENT_UNSIGNED', 'Document unsigned');//TRANSLATE
 
-// LISTS
-define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Lijst met filters en antwoorden');
-define('_DOCUMENTS_LIST_WITH_AVIS', 'Lijst van de documenten met berichten');
-define('_DOCUMENTS_LIST_COPIES', 'Lijst van de kopieën');
-define('_DOCUMENTS_LIST_WITH_SIGNATORY', 'Lijst van de documenten met ondertekenaar');
-
 // ADMINISTRATION
 define('_USERS', 'Gebruikers');
 define('_GROUPS', 'Gebruikersgroepen');
 define('_ENTITIES', 'Eenheden');
 define('_DOCTYPES', 'Soorten brieven');
 define('_FOLDERTYPES', 'Maptypes');
-define('_ADMIN_FOLDERTYPES_DESC', 'De maptypes beheren. Voor elk type de gekoppelde kwalificatoren en de verplichte documenttypes bepalen voor de volledigheid van de map.');
 define('_TAGS', 'Sleutelwoorden');
 define('_DOCSERVERS', 'Opslagruimtes');
 define('_REPORTS', 'Statistieken');
@@ -465,6 +458,9 @@ define("_UPDATE_AVIS_CIRCUIT", "Opinion workflow updated"); //TO TRANSLATE
 
 define("_VISA_CIRCUIT_DELETED", "Visa workflow deleted"); //TO TRANSLATE
 define("_AVIS_CIRCUIT_DELETED", "Opinion workflow updated"); //TO TRANSLATE
+
+define("_COMMUNICATION_MEANS_VALIDATOR", "Communication Means should be an url or an email"); //TO TRANSLATE
+define("_EXTERNALID_M2M_VALIDATOR", "Wrong format for externalId[m2m]. It must be SIRET/entityId"); //TO TRANSLATE
 
 define("_ACKNOWLEDGEMENT_RECEIPT", "Acknowledgement Receipt"); //TO TRANSLATE
 define("_CREATED_BY", "Created by"); //TO TRANSLATE

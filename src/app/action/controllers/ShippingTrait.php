@@ -59,9 +59,9 @@ trait ShippingTrait
         $shippingTemplate['fee'] = json_decode($shippingTemplate['fee'], true);
 
         $attachments = AttachmentModel::get([
-            'select'    => ['res_id', 'title', 'recipient_id', 'recipient_type', 'external_id'],
+            'select'    => ['res_id', 'title', 'recipient_id', 'recipient_type', 'external_id', 'status'],
             'where'     => ['res_id_master = ?', 'in_send_attach = ?', 'status not in (?)', 'attachment_type not in (?)'],
-            'data'      => [$args['resId'], true, ['OBS', 'DEL', 'TMP', 'FRZ'], ['print_folder']]
+            'data'      => [$args['resId'], true, ['OBS', 'DEL', 'TMP', 'FRZ'], ['print_folder', 'signed_response']]
         ]);
 
         if (empty($attachments) && empty($integrations['inShipping'])) {
@@ -73,6 +73,16 @@ trait ShippingTrait
         $contacts = [];
         foreach ($attachments as $attachment) {
             $attachmentId = $attachment['res_id'];
+            if ($attachment['status'] == 'SIGN') {
+                $signedAttachment = AttachmentModel::get([
+                    'select'    => ['res_id'],
+                    'where'     => ['origin = ?', 'status not in (?)', 'attachment_type = ?'],
+                    'data'      => ["{$args['resId']},res_attachments", ['OBS', 'DEL', 'TMP', 'FRZ'], 'signed_response']
+                ]);
+                if (!empty($signedAttachment[0])) {
+                    $attachmentId = $signedAttachment[0]['res_id'];
+                }
+            }
 
             $convertedDocument = AdrModel::getConvertedDocumentById([
                 'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
@@ -105,12 +115,14 @@ trait ShippingTrait
 
         $contactsResource = [];
         if (!empty($integrations['inShipping'])) {
-            $convertedDocument = AdrModel::getConvertedDocumentById([
-                'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
-                'resId'     => $args['resId'],
-                'collId'    => 'letterbox_coll',
-                'type'      => 'PDF'
+            $convertedDocument = AdrModel::getDocuments([
+                'select'    => ['docserver_id', 'path', 'filename', 'fingerprint'],
+                'where'     => ['res_id = ?', 'type in (?)', 'version = ?'],
+                'data'      => [$args['resId'], ['PDF', 'SIGN'], $resource['version']],
+                'orderBy'   => ['version', "type='SIGN' DESC"],
+                'limit'     => 1
             ]);
+            $convertedDocument = $convertedDocument[0] ?? null;
             if (empty($convertedDocument)) {
                 return ['errors' => ['No conversion for resource']];
             }

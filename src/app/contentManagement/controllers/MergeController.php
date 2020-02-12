@@ -68,13 +68,6 @@ class MergeController
                 $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
             //  $tbs->LoadTemplate("{$args['path']}#content.xml;styles.xml", OPENTBS_ALREADY_UTF8);
             } elseif ($extension == 'docx') {
-                foreach (['recipient', 'sender', 'attachmentRecipient'] as $contact) {
-                    if (!empty($dataToBeMerge[$contact]['postal_address'])) {
-                        $dataToBeMerge[$contact]['postal_address'] = nl2br($dataToBeMerge[$contact]['postal_address']);
-                        $dataToBeMerge[$contact]['postal_address'] = str_replace('<br />', '</w:t><w:br/><w:t>', $dataToBeMerge[$contact]['postal_address']);
-                        $dataToBeMerge[$contact]['postal_address'] = str_replace(array("\n\r", "\r\n", "\r", "\n"), "", $dataToBeMerge[$contact]['postal_address']);
-                    }
-                }
                 $tbs->LoadTemplate($args['path'], OPENTBS_ALREADY_UTF8);
                 $templates = ['word/header1.xml', 'word/header2.xml', 'word/header3.xml', 'word/footer1.xml', 'word/footer2.xml', 'word/footer3.xml'];
                 foreach ($templates as $template) {
@@ -281,7 +274,11 @@ class MergeController
             $customs = !empty($resource['custom_fields']) ? json_decode($resource['custom_fields'], true) : [];
             foreach ($customs as $customId => $custom) {
                 if (is_array($custom)) {
-                    $resource['customField_' . $customId] = implode("\n", $custom);
+                    if (is_array($custom[0])) { //Custom BAN
+                        $resource['customField_' . $customId] = "{$custom[0]['addressNumber']} {$custom[0]['addressStreet']} {$custom[0]['addressTown']} ({$custom[0]['addressPostcode']})";
+                    } else {
+                        $resource['customField_' . $customId] = implode("\n", $custom);
+                    }
                 } else {
                     $resource['customField_' . $customId] = $custom;
                 }
@@ -290,7 +287,11 @@ class MergeController
             if (!empty($args['customFields'])) {
                 foreach ($args['customFields'] as $key => $customField) {
                     if (is_array($customField)) {
-                        $resource['customField_' . $key] = implode("\n", $customField);
+                        if (is_array($customField[0])) { //Custom BAN
+                            $resource['customField_' . $key] = "{$customField[0]['addressNumber']} {$customField[0]['addressStreet']} {$customField[0]['addressTown']} ({$customField[0]['addressPostcode']})";
+                        } else {
+                            $resource['customField_' . $key] = implode("\n", $customField);
+                        }
                     } else {
                         $resource['customField_' . $key] = $customField;
                     }
@@ -310,7 +311,6 @@ class MergeController
         $dataToBeMerge['destination']           = empty($destination) ? [] : $destination;
         $dataToBeMerge['parentDestination']     = empty($parentDestination) ? [] : $parentDestination;
         $dataToBeMerge['attachment']            = $attachment;
-        $dataToBeMerge['attachmentRecipient']   = $attachmentRecipient;
         $dataToBeMerge['sender']                = $sender;
         $dataToBeMerge['recipient']             = $recipient;
         $dataToBeMerge['user']                  = $currentUser;
@@ -321,6 +321,9 @@ class MergeController
         $dataToBeMerge['contact']               = [];
         $dataToBeMerge['notes']                 = $mergedNote;
         $dataToBeMerge['datetime']              = $datetime;
+        if (empty($args['inMailing'])) {
+            $dataToBeMerge['attachmentRecipient']   = $attachmentRecipient;
+        }
 
         return $dataToBeMerge;
     }

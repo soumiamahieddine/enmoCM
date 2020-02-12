@@ -453,7 +453,6 @@ export const LANG_NL = {
     "incoming"                              : "Brief Aangekomen",
     "incompleteAddressForPostal"            : "Incomplete address for postal TRANSLATE",
     "indexing"                              : "Indexeringen",
-    "indexingWithProfile"                   : "Een brief met een profiel bewaren",
     "informations"                          : "Gegevens",
     "infosActions"                          : "U moet minstens een status en/of een script kiezen.",
     "initials"                              : "Initialen",
@@ -806,7 +805,7 @@ export const LANG_NL = {
     "sameLevelMyPrimaryEntity"              : "Same level of my primary entity", //_TO_TRANSLATE
     "saturday"                              : "Zaterdag",
     "save"                                  : "Bewaren",
-    "saveNumericPackage"                    : "Een digitale brief bewaren",
+    "manageNumericPackage"                    : "Een digitale brief bewaren",
     "sbSignatures"                          : "Handtekeningen van de parafeerder",
     "script"                                : "Script",
     "scriptCreated"                         : "Script aangemaakt",
@@ -1207,6 +1206,7 @@ export const LANG_NL = {
     "viewFullHistoryDesc" : "De volledige geschiedenis van de evenementen over het gebruik van GED Maarch raadplegen.",
     "editResource" : "Een document in de gedetailleerde",
     "editResourceDesc" : "Een document in de gedetailleerde. Dat zal ook van de instelling van de status afhangen (Wijziging van de indexen)",
+    "addLinks" : "Add links", //_TO_TRANSLATE
     "deleteDocumentInDetail" : "Een document in de gedetailleerde fiche verwijderen",
     "manageTagsInApplication" : "Create tags", //_TO_TRANSLATE
     "manageTagsInApplicationDesc" : "Create tags while indexing, processing and in details", //_TO_TRANSLATE
@@ -1235,8 +1235,6 @@ export const LANG_NL = {
     "signDocs": "De documenten ondertekenen",
     "modifyVisaInSignatureBook" : "De huidige goedkeurder wijzigen vanuit het vloeiboek",
     "modifyVisaInSignatureBookDesc" : "Nuttig indien het vloeiboek als controlevloeiboek dient",
-    "useDateInSignBlock" : "De datum in de handtekening insluiten",
-    "useDateInSignBlockDesc" : "De datum van ondertekening zal bovenaan de handtekening verschijnen (met de gemeente indien deze in de rootservice van de applicatie werd ingeschreven)",
     "printFolderDoc" : "De volledige map afdrukken",
     "statusesAdmin" : "Statussen aanmaken of wijzigen",
     "actionsAdmin" : "Acties aanmaken of wijzigen",
@@ -1322,6 +1320,7 @@ export const LANG_NL = {
     "confidentialityAndSecurity"   : "Confidentiality and security", //_TO_TRANSLATE
     "modified"   : "Modified", //_TO_TRANSLATE
     "created"   : "Created", //_TO_TRANSLATE
+    "createdAlt": "Created", //_TO_TRANSLATE
     "signedAlt"   : "Signed", //_TO_TRANSLATE
     "deleteResource"   : "Delete document", //_TO_TRANSLATE
     "viewResource"   : "View document", //_TO_TRANSLATE
@@ -1495,6 +1494,9 @@ export const LANG_NL = {
     "visaNote": "Order", //_TO_TRANSLATE
     "chooseBAN": "Choose a BAN", //_TO_TRANSLATE
     "click": "Click", //_TO_TRANSLATE
+    "removeNote" : "Remove note", //_TO_TRANSLATE
+    "noteRemoved" : "Note deleted", //_TO_TRANSLATE
+    "confirmRemoveNote" : "Note deletion", //_TO_TRANSLATE
     "inSignatureBook_doc" : "Put the main document in signature book", //_TO_TRANSLATE
     "inShipping_doc" : "Intégrer le document principal  in send Maileva", //_TO_TRANSLATE
     "preRequisiteMissing": "Prerequisite missing for OnlyOffice : netcat", //_TO_TRANSLATE
@@ -1503,10 +1505,17 @@ export const LANG_NL = {
     "NOTE_version": "Annotated version", //_TO_TRANSLATE
     "SIGN_version": "Original version", //_TO_TRANSLATE
     "versions": "Versions", //_TO_TRANSLATE
-    "itemRemovedFromVisaTemplate": "The following users have been removed because they cannot make the action", //_TO_TRANSLATE
+    "itemRemovedFromVisaTemplate": "The following users have been removed because they cannot approve or sign", //_TO_TRANSLATE
+    "itemRemovedFromAvisTemplate": "The following users have been removed because they cannot give opinion", //_TO_TRANSLATE
     "documentSignedMsg": "The document has been signed, you can't edit this document", //_TO_TRANSLATE
     "banAutocompleteInput": "Autocomplete BAN input", //_TO_TRANSLATE
     "noMailContact" : "No (external) contact linked to this mail", //_TO_TRANSLATE
     "noSelectedAddress": "No selected address",  //_TO_TRANSLATE
     "documentUnsigned": "This document has been unsigned", //_TO_TRANSLATE
+    "removeSignature" : "Remove signature", //_TO_TRANSLATE
+    "sent" :  "Sent", //_TO_TRANSLATE
+    "notSent" :  "Not sent", //_TO_TRANSLATE
+    "delivery" :  "Delivery", //_TO_TRANSLATE
+    "senderShort" :  "From", //_TO_TRANSLATE
+    "recipientShort" :  "To", //_TO_TRANSLATE
 };

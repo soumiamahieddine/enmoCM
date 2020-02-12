@@ -89,7 +89,7 @@ class LinkControllerTest extends TestCase
         $response     = $linkController->linkResources($fullRequest, new \Slim\Http\Response(), ['resId' => self::$firstResourceId]);
         $this->assertSame(403, $response->getStatusCode());
         $responseBody = json_decode((string)$response->getBody(), true);
-        $this->assertSame('Resource out of perimeter', $responseBody['errors']);
+        $this->assertSame('Service forbidden', $responseBody['errors']);
 
         $GLOBALS['userId'] = 'superadmin';
         $userInfo = \User\models\UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);

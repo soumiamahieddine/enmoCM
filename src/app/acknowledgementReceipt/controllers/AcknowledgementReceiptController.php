@@ -29,7 +29,7 @@ use User\models\UserModel;
 
 class AcknowledgementReceiptController
 {
-    public static function get(Request $request, Response $response, array $args)
+    public static function getByResId(Request $request, Response $response, array $args)
     {
         if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
@@ -44,8 +44,7 @@ class AcknowledgementReceiptController
         $acknowledgementReceipts = [];
 
         foreach ($acknowledgementReceiptsModel as $acknowledgementReceipt) {
-            $contact = ContactModel::getById(['id' => $acknowledgementReceipt['contact_id'], 'select' => ['firstname', 'lastname', 'company']]);
-            $contactLabel = ContactController::getFormattedOnlyContact(['contact' => $contact]);
+            $contact = ContactModel::getById(['id' => $acknowledgementReceipt['contact_id'], 'select' => ['firstname', 'lastname', 'company', 'email']]);
 
             $userLabel = UserModel::getLabelledUserById(['id' => $acknowledgementReceipt['user_id']]);
 
@@ -58,8 +57,7 @@ class AcknowledgementReceiptController
                 'userLabel'    => $userLabel,
                 'creationDate' => $acknowledgementReceipt['creation_date'],
                 'sendDate'     => $acknowledgementReceipt['send_date'],
-                'contactId'    => $acknowledgementReceipt['contact_id'],
-                'contactLabel' => $contactLabel['contact']['idToDisplay']
+                'contact'      => $contact
             ];
         }
 
@@ -68,6 +66,10 @@ class AcknowledgementReceiptController
 
     public static function getById(Request $request, Response $response, array $args)
     {
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route param id is not an integer']);
+        }
+
         $acknowledgementReceipt = AcknowledgementReceiptModel::getByIds([
             'select'  => ['id', 'res_id', 'type', 'format', 'user_id', 'creation_date', 'send_date', 'contact_id'],
             'ids'     => [$args['id']]
@@ -82,8 +84,7 @@ class AcknowledgementReceiptController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $contact = ContactModel::getById(['id' => $acknowledgementReceipt['contact_id'], 'select' => ['firstname', 'lastname', 'company']]);
-        $contactLabel = ContactController::getFormattedOnlyContact(['contact' => $contact]);
+        $contact = ContactModel::getById(['id' => $acknowledgementReceipt['contact_id'], 'select' => ['firstname', 'lastname', 'company', 'email']]);
 
         $userLabel = UserModel::getLabelledUserById(['id' => $acknowledgementReceipt['user_id']]);
 
@@ -96,8 +97,7 @@ class AcknowledgementReceiptController
             'userLabel'    => $userLabel,
             'creationDate' => $acknowledgementReceipt['creation_date'],
             'sendDate'     => $acknowledgementReceipt['send_date'],
-            'contactId'    => $acknowledgementReceipt['contact_id'],
-            'contactLabel' => $contactLabel['contact']['idToDisplay']
+            'contact'      => $contact,
         ];
 
         return $response->withJson(['acknowledgementReceipt' => $acknowledgementReceipt]);

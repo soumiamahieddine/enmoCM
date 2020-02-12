@@ -42,7 +42,6 @@
 require_once 'core/class/SecurityControler.php';
 require_once 'core/class/class_security.php';
 require_once 'core/core_tables.php';
-require_once 'modules/basket/basket_tables.php';
 require_once 'modules/entities/entities_tables.php';
 
 
@@ -152,8 +151,7 @@ abstract class basket_Abstract extends Database
         $stmt = $db->query(
             "select agb.id_action, agb.where_clause, agb.used_in_basketlist, "
             . "agb.used_in_action_page, a.label_action, a.id_status, "
-            . "a.action_page from " . ACTIONS_TABLE . " a, "
-            . ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action and "
+            . "a.action_page from actions a, actions_groupbaskets agb where a.id = agb.id_action and "
             . "agb.group_id = ? and agb.basket_id = ? and "
             . "agb.default_action_list ='N'",
             array($groupId,$basketId)
@@ -201,8 +199,7 @@ abstract class basket_Abstract extends Database
     {
         $db = new Database();
         $stmt = $db->query(
-            "select agb.id_action from " . ACTIONS_TABLE . " a, "
-            . ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action "
+            "select agb.id_action from actions a, actions_groupbaskets agb where a.id = agb.id_action "
             . "and agb.group_id = ? and agb.basket_id = ? "
             . "and agb.default_action_list ='Y'",
             array($groupId,$basketId)
@@ -293,221 +290,6 @@ abstract class basket_Abstract extends Database
         }
         return $jsonActions;
     }
-    /**
-     * Builds the basket results list (using class_list_show.php method)
-     *
-     * @param   $paramsList  array  Parameters array used to display the result
-     *                              list
-     * @param   $actions actions  Array to be displayed in the list
-     * @param   $lineTxt  string String to be displayed at the bottom of the
-     *                       list to describe the default action
-     */
-    public function basket_list_doc($paramsList, $actions, $lineTxt)
-    {
-        ////////////////////////////////////////////////////////////////////////
-        //$this->show_array($paramsList);
-        ////////////////////////////////////////////////////////////////////////
-        $actionForm = '';
-        $boolCheckForm = false;
-        $method = '';
-        $actionsList = array();
-        // Browse the actions array to build the jason string that will be used
-        // to display the actions in the list
-        if (count($actions) > 0) {
-            for ($i = 0; $i < count($actions); $i ++) {
-                if ($actions[$i]['MASS_USE'] == 'Y') {
-                    array_push(
-                        $actionsList,
-                        array(
-                            'VALUE' => $actions[$i]['ID'],
-                            'LABEL' => addslashes($actions[$i]['LABEL']),
-                        )
-                    );
-                }
-            }
-        }
-
-        $jsonActions = $this->translates_actions_to_json($actions);
-
-        if (count($actionsList) > 0) {
-            $actionForm = $_SESSION['config']['businessappurl']
-            . 'index.php?display=true&page=manage_action'
-            . '&module=core';
-            $boolCheckForm = true;
-            $method = 'get';
-        }
-
-        $doAction = false;
-        if (! empty($_SESSION['current_basket']['default_action'])) {
-            $doAction = true;
-        }
-
-        $list = new list_show();
-        if (! isset($paramsList['link_in_line'])) {
-            $paramsList['link_in_line'] = false;
-        }
-        if (! isset($paramsList['template'])) {
-            $paramsList['template'] = false;
-        }
-        if (! isset($paramsList['template_list'])) {
-            $paramsList['template_list'] = array();
-        }
-        if (! isset($paramsList['actual_template'])) {
-            $paramsList['actual_template'] = '';
-        }
-        if (! isset($paramsList['bool_export'])) {
-            $paramsList['bool_export'] = false;
-        }
-        if (! isset($paramsList['comp_link'])) {
-            $paramsList['comp_link'] = '';
-        }
-        $str = '';
-        // Displays the list using list_doc method from class_list_shows
-        $str .= $list->list_doc(
-            $paramsList['values'],
-            count($paramsList['values']),
-            $paramsList['title'],
-            $paramsList['what'],
-            $paramsList['page_name'],
-            $paramsList['key'],
-            $paramsList['detail_destination'],
-            $paramsList['view_doc'],
-            false,
-            $method,
-            $actionForm,
-            '',
-            $paramsList['bool_details'],
-            $paramsList['bool_order'],
-            $paramsList['bool_frame'],
-            $paramsList['bool_export'],
-            false,
-            false,
-            true,
-            $boolCheckForm,
-            '',
-            $paramsList['module'],
-            false,
-            '',
-            '',
-            $paramsList['css'],
-            $paramsList['comp_link'],
-            $paramsList['link_in_line'],
-            true,
-            $actionsList,
-            $paramsList['hidden_fields'],
-            $jsonActions,
-            $doAction,
-            $_SESSION['current_basket']['default_action'],
-            $paramsList['open_details_popup'],
-            $paramsList['do_actions_arr'],
-            $paramsList['template'],
-            $paramsList['template_list'],
-            $paramsList['actual_template'],
-            true
-        );
-
-        // Displays the text line if needed
-        if (count($paramsList['values']) > 0 && ($paramsList['link_in_line']
-        || $doAction)
-        ) {
-            $str .= "<em>".$lineTxt."</em>";
-        }
-        if (! isset($paramsList['mode_string'])
-        || $paramsList['mode_string'] == false
-        ) {
-            echo $str;
-        } else {
-            return $str;
-        }
-    }
-
-    /**
-     * Returns the actions for the current basket for a given mode.
-     * The mode can be "MASS_USE" or "PAGE_USE".
-     *
-     * @param   $resId  string  Resource identifier
-     *   (used in PAGE_USE mode to test the action where_clause)
-     * @param   $collId  string Collection identifier
-     *   (used in PAGE_USE mode to test the action where_clause)
-     * @param   $mode  string  "PAGE_USE" or "MASS_USE"
-     * @param   $testWhere  boolean
-     * @return array  Actions to be displayed
-     */
-    public function get_actions_from_current_basket($resId, $collId, $mode, $testWhere = true)
-    {
-        $arr = [];
-
-        if ($_SESSION['category_id'] == '') {
-            $_SESSION['category_id'] = $_SESSION['coll_categories'][$collId]['default_category'];
-        }
-
-        if (empty($resId) || empty($collId) || (strtoupper($mode) != 'MASS_USE' && strtoupper($mode) != 'PAGE_USE')) {
-            return $arr;
-        } else {
-            $sec = new security();
-            $db = new Database();
-            $table = $sec->retrieve_view_from_coll_id($collId);
-            if (empty($table)) {
-                $table = $sec->retrieve_table_from_coll_id($collId);
-            }
-            if (empty($table)) {
-                // If the view and the table of the collection is empty,
-                return $arr;
-            }
-            // If mode "PAGE_USE", add the action 'end_action' to validate the current action
-            if ($mode == 'PAGE_USE') {
-                $db = new Database();
-                $stmt = $db->query("SELECT label_action FROM actions WHERE id= ?", [$_SESSION['current_basket']['default_action']]);
-                $label_action = $stmt->fetchObject();
-                $arr[] = ['VALUE' => 'end_action', 'LABEL' => $label_action->label_action.' (par défaut)'];
-            }
-
-            // Browsing the current basket actions to build the actions array
-            for ($i = 0; $i < count($_SESSION['current_basket']['actions']); $i++) {
-                $noFilterOnCat = true;
-                if (!empty($_SESSION['current_basket']['actions'][$i]['CATEGORIES'])
-                    && is_array($_SESSION['current_basket']['actions'][$i]['CATEGORIES'])
-                    && count($_SESSION['current_basket']['actions'][$i]['CATEGORIES']) > 0) {
-                    $noFilterOnCat = false;
-                }
-                $categoryIdForActions = '';
-                $cl = 0;
-                if (!empty($_SESSION['current_basket']['actions'][$i]['CATEGORIES']) && is_array($_SESSION['current_basket']['actions'][$i]['CATEGORIES'])) {
-                    $cl = count($_SESSION['current_basket']['actions'][$i]['CATEGORIES']);
-                }
-
-                for ($cptCat=0; $cptCat < $cl; $cptCat++) {
-                    if ($_SESSION['current_basket']['actions'][$i]['CATEGORIES'][$cptCat] == $_SESSION['category_id']) {
-                        $categoryIdForActions = $_SESSION['category_id'];
-                    }
-                }
-                if ($noFilterOnCat || $categoryIdForActions != '') {
-                    // If in mode "PAGE_USE", testing the action where clause on the res_id before adding the action
-                    if (
-                        strtoupper($mode) == 'PAGE_USE'
-                        && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y'
-                        && $testWhere && strtoupper($resId) != 'NONE'
-                    ) {
-                        $where = ' where res_id = ' . $resId;
-                        if (!empty($_SESSION['current_basket']['actions'][$i]['WHERE'])) {
-                            $where = $where . ' and ' . $_SESSION['current_basket']['actions'][$i]['WHERE'];
-                        }
-                        $stmt = $db->query('select res_id from ' . $table . ' ' . $where);
-                        if ($stmt->rowCount() > 0) {
-                            $arr[] = ['VALUE' => $_SESSION['current_basket']['actions'][$i]['ID'], 'LABEL' => $_SESSION['current_basket']['actions'][$i]['LABEL']];
-                        }
-                    } elseif (strtoupper($mode) == 'PAGE_USE' && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y') {
-                        $arr[] = ['VALUE' => $_SESSION['current_basket']['actions'][$i]['ID'], 'LABEL' => $_SESSION['current_basket']['actions'][$i]['LABEL']];
-                    } elseif (strtoupper($mode) == 'MASS_USE' && $_SESSION['current_basket']['actions'][$i]['MASS_USE'] == 'Y') {
-                        // If "MASS_USE" adding the actions in the array
-                        $arr[] = ['VALUE' => $_SESSION['current_basket']['actions'][$i]['ID'], 'LABEL' => $_SESSION['current_basket']['actions'][$i]['LABEL']];
-                    }
-                }
-            }
-        }
-
-        return $arr;
-    }
 
     /**
      * Returns in an array all the data of a basket for a user
@@ -525,8 +307,7 @@ abstract class basket_Abstract extends Database
         $secCtrl = new SecurityControler();
         $stmt = $db->query(
             "select basket_id, coll_id, basket_name, basket_desc, "
-            . "basket_clause, is_visible, color, basket_res_order from "
-            . BASKET_TABLE . " where basket_id = ? and enabled = 'Y'",
+            . "basket_clause, is_visible, color, basket_res_order from baskets where basket_id = ? and enabled = 'Y'",
             array($basketId)
         );
         $res = $stmt->fetchObject();

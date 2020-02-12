@@ -314,10 +314,107 @@ class EmailController
 
         $queryParams = $request->getQueryParams();
         if (!empty($queryParams['limit']) && !Validator::intVal()->validate($queryParams['limit'])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Query limit is not an int val']);
+            return $response->withStatus(400)->withJson(['errors' => 'Query limit is not an int value']);
         }
 
-        $emails = EmailModel::get(['select' => ['*'], 'where' => ['document->>\'id\' = ?'], 'data' => [$args['resId']], 'limit' => (int)$queryParams['limit']]);
+        $where = ['document->>\'id\' = ?'];
+
+        if (!empty($queryParams['type'])) {
+            if (!Validator::stringType()->validate($queryParams['type'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Query type is not a string value']);
+            }
+
+            if ($queryParams['type'] == 'ar') {
+                $where[] = "object LIKE '[AR]%'";
+            } elseif ($queryParams['type'] == 'm2m') {
+                $where[] = 'message_exchange_id is not null';
+            } elseif ($queryParams['type'] == 'email') {
+                $where[] = "object NOT LIKE '[AR]%'";
+                $where[] = 'message_exchange_id is null';
+            }
+        }
+
+        $emails = EmailModel::get([
+            'select' => ['*'],
+            'where'  => $where,
+            'data'   => [$args['resId']],
+            'limit'  => (int)$queryParams['limit']
+        ]);
+
+        foreach ($emails as $key => $email) {
+            $emails[$key]['sender'] = json_decode($emails[$key]['sender']);
+            $emails[$key]['recipients'] = json_decode($emails[$key]['recipients']);
+            $emails[$key]['cc'] = json_decode($emails[$key]['cc']);
+            $emails[$key]['cci'] = json_decode($emails[$key]['cci']);
+            $emails[$key]['document'] = json_decode($emails[$key]['document']);
+        }
+
+        return $response->withJson(['emails' => $emails]);
+    }
+
+    public static function getAvailableEmails(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route param id is not an integer']);
+        }
+
+        $emails = [];
+
+        // User's email
+        $emailCurrentUser = UserModel::getById(['select' => ['firstname', 'lastname', 'mail'], 'id' => $GLOBALS['id']]);
+
+        $emails[] = [
+            'label' => $emailCurrentUser['firstname'] . ' ' . $emailCurrentUser['lastname'],
+            'email' => $emailCurrentUser['mail']
+        ];
+
+        if (PrivilegeController::hasPrivilege(['privilegeId' => 'use_mail_services', 'userId' => $GLOBALS['id']])) {
+            // User's entities emails
+            $entities = EntityModel::getWithUserEntities([
+                'select' => ['entities.entity_label', 'entities.email', 'entities.entity_id'],
+                'where'  => ['users_entities.user_id = ?'],
+                'data'   => [$GLOBALS['userId']]
+            ]);
+
+            foreach ($entities as $entity) {
+                if (!empty($entity['email'])) {
+                    $emails[] = [
+                        'label' => $entity['entity_label'],
+                        'email' => $entity['email']
+                    ];
+                }
+            }
+
+            // Get from XML
+            $emailsEntities = CoreConfigModel::getXmlLoaded(['path' => 'modules/sendmail/xml/externalMailsEntities.xml']);
+
+            $userEntities = array_column($entities, 'entity_id');
+
+            if ($emailsEntities != null) {
+                foreach ($emailsEntities->externalEntityMail as $entityMail) {
+                    $entityId = (string)$entityMail->targetEntityId;
+
+                    if ($entityId == '') {
+                        $emails[] = [
+                            'label' => (string)$entityMail->defaultName,
+                            'email' => (string)$entityMail->EntityMail
+                        ];
+                    } elseif (in_array($entityId, $userEntities)) {
+                        $entityLabel = EntityModel::getByEntityId([
+                            'select'   => ['entity_label'],
+                            'entityId' => $entityId
+                        ]);
+
+                        if (!empty($entityLabel)) {
+                            $emails[] = [
+                                'label' => $entityLabel['entity_label'],
+                                'email' => (string)$entityMail->EntityMail
+                            ];
+                        }
+                    }
+                }
+            }
+        }
 
         return $response->withJson(['emails' => $emails]);
     }
@@ -329,9 +426,18 @@ class EmailController
 
         $email = EmailModel::getById(['id' => $args['emailId']]);
         $email['sender']        = (array)json_decode($email['sender']);
-        $email['recipients']    = json_decode($email['recipients']);
-        $email['cc']            = json_decode($email['cc']);
-        $email['cci']           = json_decode($email['cci']);
+        $email['recipients']    = array_unique(json_decode($email['recipients']));
+        $email['cc']            = array_unique(json_decode($email['cc']));
+        $email['cci']           = array_unique(json_decode($email['cci']));
+
+        $hierarchyMail = ['cci' => 'cc', 'cc' => 'recipients'];
+        foreach ($hierarchyMail as $lowEmail => $highEmail) {
+            foreach ($email[$lowEmail] as $currentKey => $currentEmail) {
+                if (in_array($currentEmail, $email[$highEmail])) {
+                    unset($email[$lowEmail][$currentKey]);
+                }
+            }
+        }
 
         $configuration = ConfigurationModel::getByService(['service' => 'admin_email_server', 'select' => ['value']]);
         $configuration = (array)json_decode($configuration['value']);

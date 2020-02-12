@@ -25,7 +25,7 @@ abstract class UserSignaturesAbstract extends Database
     public function getForUser($user_id) {
 //        $db = new Database();
 //
-//        $stmt = $db->query('SELECT * FROM ' .USER_SIGNATURES_TABLE. ' WHERE user_id = ? ',
+//        $stmt = $db->query('SELECT * FROM user_signatures WHERE user_id = ? ',
 //            [$user_id]
 //        );
 //        $userSignatures = [];

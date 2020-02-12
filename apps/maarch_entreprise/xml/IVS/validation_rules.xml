@@ -287,18 +287,6 @@
       <parameter name="url" type="string" />
     </validationRule>
     
-    <validationRule name="ajax_ShowTown" extends="standardForm" mode="error">  
-      <parameter name="what" type="identifier" />
-      <parameter name="dir" type="identifier" />
-      <parameter name="id" type="integer" />
-    </validationRule>
-
-    <validationRule name="ajax_ShowCP" extends="standardForm" mode="error">  
-      <parameter name="what" type="safetext" />
-      <parameter name="dir" type="identifier" />
-      <parameter name="id" type="integer" />
-    </validationRule>
-    
     <validationRule name="type_id_integer" extends="standardForm" mode="error">  
       <parameter name="type_id" type="integer" />
       <parameter name="dir" type="identifier" />
@@ -503,10 +491,6 @@
     </validationRule>
     <validationRule name="baseExample" >
       <parameter name="param1" type="string" />
-    </validationRule>
-
-    <validationRule name="get_content_js" extends="standardForm" mode="error">  
-      <parameter name="scripts" type="filename_secure" />
     </validationRule>
 
     <validationRule name="static_filename" extends="standardForm" mode="error">  

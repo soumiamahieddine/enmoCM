@@ -76,12 +76,14 @@ class ListInstanceController
             $listInstances[$key]['item_id'] = $listInstances[$key]['id'];
             $listInstances[$key]['item_type'] = 'user';
             $listInstances[$key]['labelToDisplay'] = $listInstances[$key]['item_firstname'].' '.$listInstances[$key]['item_lastname'];
-            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'visa_documents', 'userId' => $value['id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $value['id']])) {
+            if (empty($value['process_date']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'visa_documents', 'userId' => $value['id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $value['id']])) {
                 $itemsRemoved[] = $listInstances[$key]['labelToDisplay'];
                 unset($listInstances[$key]);
                 continue;
             }
         }
+
+        $listInstances = array_values($listInstances);
 
         return $response->withJson(['circuit' => $listInstances, 'itemsRemoved' => $itemsRemoved]);
     }
@@ -98,12 +100,14 @@ class ListInstanceController
             $listInstances[$key]['item_id'] = $listInstances[$key]['id'];
             $listInstances[$key]['item_type'] = 'user';
             $listInstances[$key]['labelToDisplay'] = $listInstances[$key]['item_firstname'].' '.$listInstances[$key]['item_lastname'];
-            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'avis_documents', 'userId' => $value['id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $value['id']])) {
+            if (empty($value['process_date']) && !PrivilegeController::hasPrivilege(['privilegeId' => 'avis_documents', 'userId' => $value['id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $value['id']])) {
                 $itemsRemoved[] = $listInstances[$key]['labelToDisplay'];
                 unset($listInstances[$key]);
                 continue;
             }
         }
+
+        $listInstances = array_values($listInstances);
 
         return $response->withJson(['circuit' => $listInstances, 'itemsRemoved' => $itemsRemoved]);
     }

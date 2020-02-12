@@ -7,7 +7,7 @@
     <mat-card id="viewThumbnail"
         style="display:none;position: fixed;z-index: 2;margin-left: 1px;left: 50%;transform: translate(-50%,-50%);top: 50%;">
         <img style="max-height: 100vh;" src="{{thumbnailUrl}}" /></mat-card>
-    <div class="row">
+    <div class="row" style="margin: 0px;">
         <div class="col-md-12">
             <mat-paginator #paginator [length]="100" [hidePageSize]="true" [pageSize]="10">
             </mat-paginator>
@@ -59,7 +59,7 @@
                         [class.undefined]="row.subject == lang.undefined"
                         title="{{row.subject}}">{{row.subject | shorten: 150: '...'}}</span>
                     <span class="main-info-data">
-                        <button mat-icon-button color="warn" [title]="lang.unlink"
+                        <button *ngIf="privilegeService.hasCurrentUserPrivilege('add_links')" mat-icon-button color="warn" [title]="lang.unlink"
                             (click)="$event.stopPropagation();unlinkResource(row)">
                             <mat-icon class="fa fa-unlink fa-2x" aria-hidden="true"></mat-icon>
                         </button>
@@ -70,7 +70,7 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;" (mouseenter)="viewThumbnail(row);"
             (mouseleave)="closeThumbnail();"></mat-row>
     </mat-table>
-    <button mat-fab class="linkRes" color="primary" [title]="lang.linkResource" (click)="openSearchResourceModal()">
+    <button *ngIf="privilegeService.hasCurrentUserPrivilege('add_links')" mat-fab class="linkRes" color="primary" [title]="lang.linkResource" (click)="openSearchResourceModal()">
         <mat-icon class="fa fa-link" style="height:auto;"></mat-icon>
     </button>
 </ng-template>

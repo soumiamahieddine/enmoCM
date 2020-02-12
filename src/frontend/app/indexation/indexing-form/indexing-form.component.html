@@ -155,7 +155,7 @@
                                     </app-tag-input>
                                 </ng-container>
                                 <ng-container *ngIf="field.type === 'banAutocomplete'">
-                                    <app-address-ban-input [control]="arrFormControl[field.identifier]" style="width:100%;">
+                                    <app-address-ban-input [control]="arrFormControl[field.identifier]" [admin]="adminMode" style="width:100%;">
                                     </app-address-ban-input>
                                 </ng-container>
                             </div>

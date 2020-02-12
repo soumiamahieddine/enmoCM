@@ -39,23 +39,23 @@ abstract class ResModelAbstract
         return $aResources;
     }
 
-    public static function get(array $aArgs)
+    public static function get(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['select']);
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy', 'groupBy']);
-        ValidatorModel::intType($aArgs, ['limit']);
+        ValidatorModel::notEmpty($args, ['select']);
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy', 'groupBy']);
+        ValidatorModel::intType($args, ['limit']);
 
-        $aResources = DatabaseModel::select([
-            'select'    => $aArgs['select'],
+        $resources = DatabaseModel::select([
+            'select'    => $args['select'],
             'table'     => ['res_letterbox'],
-            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
-            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
-            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
-            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit'],
-            'groupBy'   => empty($aArgs['groupBy']) ? [] : $aArgs['groupBy'],
+            'where'     => empty($args['where']) ? [] : $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data'],
+            'order_by'  => empty($args['orderBy']) ? [] : $args['orderBy'],
+            'limit'     => empty($args['limit']) ? 0 : $args['limit'],
+            'groupBy'   => empty($args['groupBy']) ? [] : $args['groupBy'],
         ]);
 
-        return $aResources;
+        return $resources;
     }
 
     public static function getById(array $args)
@@ -152,26 +152,6 @@ abstract class ResModelAbstract
         return $resources;
     }
 
-    public static function getDocsByClause(array $aArgs = [])
-    {
-        ValidatorModel::notEmpty($aArgs, ['clause']);
-
-        if (!empty($aArgs['table'])) {
-            $table = $aArgs['table'];
-        } else {
-            $table = 'res_view_letterbox';
-        }
-
-        $aReturn = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
-            'table'     => [$table],
-            'where'     => [$aArgs['clause']],
-            'order_by'  => ['res_id']
-        ]);
-
-        return $aReturn;
-    }
-
     public static function getByAltIdentifier(array $args)
     {
         ValidatorModel::notEmpty($args, ['altIdentifier']);
@@ -227,19 +207,5 @@ abstract class ResModelAbstract
         }
 
         return '';
-    }
-
-    public static function getNbContactsByResId(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-
-        $aResources = DatabaseModel::select([
-            'select'    => ['count(1) as nb_contacts'],
-            'table'     => ['contacts_res'],
-            'where'     => ['res_id = ?', 'mode = ?'],
-            'data'      => [$aArgs['resId'], 'multi']
-        ]);
-        return $aResources[0]['nb_contacts'];
     }
 }

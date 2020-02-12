@@ -34,19 +34,21 @@ use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
 use IndexingModel\models\IndexingModelFieldModel;
+use MessageExchange\models\MessageExchangeModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
 use Resource\models\UserFollowedResourceModel;
 use Respect\Validation\Validator;
+use Shipping\models\ShippingModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
-use Tag\models\TagResModel;
+use Tag\models\ResourceTagModel;
 use User\models\UserModel;
 
 class ResController extends ResourceControlController
@@ -219,7 +221,7 @@ class ResController extends ResourceControlController
             ]);
             $formattedData['folders'] = array_column($folders, 'folder_id');
 
-            $tags = TagResModel::get(['select' => ['tag_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+            $tags = ResourceTagModel::get(['select' => ['tag_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
             $formattedData['tags'] = array_column($tags, 'tag_id');
         } else {
             $followed = UserFollowedResourceModel::get([
@@ -282,7 +284,7 @@ class ResController extends ResourceControlController
             ResController::updateAdjacentData(['body' => $body, 'resId' => $args['resId']]);
         }
 
-        if ($onlyDocument) {
+        if (!empty($body['encodedFile'])) {
             ConvertPdfController::convert([
                 'resId'     => $args['resId'],
                 'collId'    => 'letterbox_coll',
@@ -303,14 +305,16 @@ class ResController extends ResourceControlController
             ]);
         }
 
-        HistoryController::add([
-            'tableName' => 'res_letterbox',
-            'recordId'  => $args['resId'],
-            'eventType' => 'UP',
-            'info'      => _DOC_UPDATED . " : {$resource['alt_identifier']}",
-            'moduleId'  => 'resource',
-            'eventId'   => 'resourceModification'
-        ]);
+        if (!$onlyDocument) {
+            HistoryController::add([
+                'tableName' => 'res_letterbox',
+                'recordId'  => $args['resId'],
+                'eventType' => 'UP',
+                'info'      => _DOC_UPDATED . " : {$resource['alt_identifier']}",
+                'moduleId'  => 'resource',
+                'eventId'   => 'resourceModification'
+            ]);
+        }
 
         return $response->withStatus(204);
     }
@@ -371,13 +375,14 @@ class ResController extends ResourceControlController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $document = ResModel::getById(['select' => ['filename', 'format'], 'resId' => $aArgs['resId']]);
+        $document = ResModel::getById(['select' => ['filename', 'format', 'typist'], 'resId' => $aArgs['resId']]);
         if (empty($document)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
         } elseif (empty($document['filename'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Document has no file']);
         }
         $originalFormat = $document['format'];
+        $creatorId = $document['typist'];
 
         $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['resId'], 'collId' => 'letterbox_coll']);
         if (!empty($convertedDocument['errors'])) {
@@ -422,7 +427,7 @@ class ResController extends ResourceControlController
 
         $data = $request->getQueryParams();
         if ($data['mode'] == 'base64') {
-            return $response->withJson(['encodedDocument' => base64_encode($fileContent), 'originalFormat' => $originalFormat]);
+            return $response->withJson(['encodedDocument' => base64_encode($fileContent), 'originalFormat' => $originalFormat, 'originalCreatorId' => $creatorId]);
         } else {
             $finfo    = new \finfo(FILEINFO_MIME_TYPE);
             $mimeType = $finfo->buffer($fileContent);
@@ -658,6 +663,9 @@ class ResController extends ResourceControlController
         }
 
         $linkedResources = json_decode($document['linked_resources'], true);
+        if (!empty($linkedResources)) {
+            $linkedResources = ResController::getAuthorizedResources(['resources' => $linkedResources, 'userId' => $GLOBALS['id']]);
+        }
         $formattedData['linkedResources'] = count($linkedResources);
 
         $attachments = AttachmentModel::get(['select' => ['count(1)'], 'where' => ['res_id_master = ?', 'status in (?)'], 'data' => [$args['resId'], ['TRA', 'A_TRA', 'FRZ']]]);
@@ -675,7 +683,37 @@ class ResController extends ResourceControlController
         $formattedData['notes'] = NoteModel::countByResId(['resId' => $args['resId'], 'userId' => $GLOBALS['id'], 'login' => $GLOBALS['userId']]);
 
         $emails = EmailModel::get(['select' => ['count(1)'], 'where' => ["document->>'id' = ?"], 'data' => [$args['resId']]]);
-        $formattedData['emails'] = $emails[0]['count'];
+        $acknowledgementReceipts = AcknowledgementReceiptModel::get([
+            'select' => ['count(1)'],
+            'where'  => ['res_id = ?'],
+            'data'   => [$args['resId']]
+        ]);
+        $messageExchanges = MessageExchangeModel::get([
+            'select' => ['count(1)'],
+            'where'  => ['res_id_master = ?'],
+            'data'   => [$args['resId']]
+        ]);
+        $attachments = AttachmentModel::get([
+            'select' => ['res_id'],
+            'where'  => ['res_id_master = ?'],
+            'data'   => [$args['resId']]
+        ]);
+        $attachments = array_column($attachments, 'res_id');
+
+        $where = '(document_id = ? and document_type = ?)';
+        $data  = [$args['resId'], 'resource'];
+        if (!empty($attachments)) {
+            $where .= ' or (document_id in (?) and document_type = ?)';
+            $data[] = $attachments;
+            $data[] = 'attachment';
+        }
+        $shippings = ShippingModel::get([
+            'select' => ['count(1)'],
+            'where'  => [$where],
+            'data'   => $data
+        ]);
+
+        $formattedData['emails'] = $emails[0]['count'] + $acknowledgementReceipts[0]['count'] + $messageExchanges[0]['count'] + $shippings[0]['count'];
 
         return $response->withJson($formattedData);
     }
@@ -836,10 +874,21 @@ class ResController extends ResourceControlController
 
         $resources = array_unique($args['resId']);
 
-        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+        $authorizedResources = ResController::getAuthorizedResources(['resources' => $resources, 'userId' => $args['userId']]);
 
+        return count($authorizedResources) == count($resources);
+    }
+
+    public static function getAuthorizedResources(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resources', 'userId']);
+        ValidatorModel::intVal($args, ['userId']);
+        ValidatorModel::arrayType($args, ['resources']);
+
+
+        $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
         if ($user['user_id'] == 'superadmin') {
-            return true;
+            return $args['resources'];
         }
 
         $whereClause = '(res_id in (select res_id from users_followed_resources where user_id = ?))';
@@ -893,15 +942,11 @@ class ResController extends ResourceControlController
         }
 
         try {
-            $res = ResModel::getOnView(['select' => [1], 'where' => ['res_id in (?)', "({$whereClause})"], 'data' => [$resources, $args['userId'], $entities, $args['userId']]]);
-            if (!empty($res) && count($res) == count($resources)) {
-                return true;
-            }
+            $res = ResModel::getOnView(['select' => ['res_id'], 'where' => ['res_id in (?)', "({$whereClause})"], 'data' => [$args['resources'], $args['userId'], $entities, $args['userId']]]);
+            return array_column($res, 'res_id');
         } catch (\Exception $e) {
-            return false;
+            return [];
         }
-
-        return false;
     }
 
     private static function createAdjacentData(array $args)
@@ -943,7 +988,7 @@ class ResController extends ResourceControlController
         }
         if (!empty($body['tags'])) {
             foreach ($body['tags'] as $tag) {
-                TagResModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
+                ResourceTagModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
             }
         }
         if (!empty($body['senders'])) {
@@ -988,10 +1033,10 @@ class ResController extends ResourceControlController
                 ResourceFolderModel::create(['res_id' => $args['resId'], 'folder_id' => $folder]);
             }
         }
-        TagResModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
+        ResourceTagModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);
         if (!empty($body['tags'])) {
             foreach ($body['tags'] as $tag) {
-                TagResModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
+                ResourceTagModel::create(['res_id' => $args['resId'], 'tag_id' => $tag]);
             }
         }
         ResourceContactModel::delete(['where' => ['res_id = ?'], 'data' => [$args['resId']]]);

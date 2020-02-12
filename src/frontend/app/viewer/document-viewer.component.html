@@ -47,7 +47,7 @@
                     <mat-icon class="fa fa-download"></mat-icon>
                 </button>
                 <button [disabled]="!functions.empty(file.subinfos) && file.subinfos.signedDocVersions" [class.disabledButton]="!functions.empty(file.subinfos) && file.subinfos.signedDocVersions" *ngIf="editMode && resId !== null && !noConvertedFound" mat-icon-button (click)="editResource()"
-                    [matTooltip]="!functions.empty(file.subinfos) && !file.subinfos.signedDocVersions ? lang.editDocument : lang.documentSignedMsg">
+                    [matTooltip]="functions.empty(file.subinfos) || (!functions.empty(file.subinfos) && !file.subinfos.signedDocVersions) ? lang.editDocument : lang.documentSignedMsg">
                     <mat-icon class="fa fa-edit"></mat-icon>
                 </button>
                 <button mat-icon-button [matMenuTriggerFor]="menuOptions">
@@ -68,7 +68,7 @@
                     </button>
                 </mat-menu>
                 <ng-container *ngIf="mode === 'mainDocument' && !functions.empty(file.subinfos)">
-                    <button *ngIf="file.subinfos.mainDocVersions.length > 1" mat-button
+                    <button *ngIf="file.subinfos.mainDocVersions.length > 1 && !file.subinfos.signedDocVersions" mat-button
                         [matBadge]="file.subinfos.mainDocVersions.length" [matMenuTriggerFor]="menuVersionsDoc">
                         {{lang.versions}}
                     </button>
@@ -114,8 +114,10 @@
     (click)="saveMainDocument()">
     <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
 </button>
-<button mat-raised-button *ngIf="!isDocModified && mode === 'mainDocument' && resId !== null && !functions.empty(file.subinfos) && file.subinfos.signedDocVersions && privilegeService.hasCurrentUserPrivilege('sign_document');" color="warn"
+<button mat-raised-button 
+    *ngIf="!isDocModified && mode === 'mainDocument' && resId !== null && !functions.empty(file.subinfos) && file.subinfos.signedDocVersions && (privilegeService.hasCurrentUserPrivilege('sign_document') || this.headerService.user.id == file.creatorId)" 
+    color="warn"
     [title]="lang.unsign" style="position: fixed;z-index: 1;bottom: 30px;right: 70px;"
     (click)="unsignMainDocument()">
-    Supprimer la signature
+    {{lang.removeSignature}}
 </button>

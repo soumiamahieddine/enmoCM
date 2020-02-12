@@ -13,7 +13,7 @@
 * @ingroup core
 */
 
-namespace Sendmail\Controllers;
+namespace MessageExchange\Controllers;
 
 use Basket\models\BasketModel;
 use Contact\models\ContactModel;
@@ -24,15 +24,13 @@ use Note\models\NoteModel;
 use Resource\controllers\StoreController;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
+use ExportSeda\controllers\SendMessageController;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\models\CoreConfigModel;
 use User\models\UserModel;
 
 require_once 'modules/export_seda/Controllers/ReceiveMessage.php';
-require_once 'modules/export_seda/Controllers/SendMessage.php';
-require_once 'modules/export_seda/RequestSeda.php';
-require_once 'modules/sendmail/Controllers/SendMessageExchangeController.php';
 
 class ReceiveMessageExchangeController
 {
@@ -40,7 +38,7 @@ class ReceiveMessageExchangeController
 
     public function saveMessageExchange(Request $request, Response $response)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'save_numeric_package', 'userId' => $GLOBALS['id']])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_numeric_package', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
@@ -190,10 +188,10 @@ class ReceiveMessageExchangeController
         } else {
             $path = 'apps/maarch_entreprise/xml/m2m_config.xml';
         }
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'apps/maarch_entreprise/xml/m2m_config.xml']);
 
         $aDefaultConfig = [];
-        if (file_exists($path)) {
-            $loadedXml = simplexml_load_file($path);
+        if (!empty($loadedXml)) {
             foreach ($loadedXml as $key => $value) {
                 $aDefaultConfig[$key] = (array)$value;
             }
@@ -433,11 +431,9 @@ class ReceiveMessageExchangeController
             $acknowledgementObject->Receiver->OrganizationDescriptiveMetadata->Communication[0]->value .= '/rest/saveMessageExchangeReturn';
         }
 
-        $sendMessage = new \SendMessage();
-
         $acknowledgementObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_Ack';
         $tmpPath = CoreConfigModel::getTmpPath();
-        $filePath = $sendMessage->generateMessageFile($acknowledgementObject, 'Acknowledgement', $tmpPath);
+        $filePath = SendMessageController::generateMessageFile($acknowledgementObject, 'Acknowledgement', $tmpPath);
 
         $acknowledgementObject->ArchivalAgency = $acknowledgementObject->Receiver;
         $acknowledgementObject->TransferringAgency = $acknowledgementObject->Sender;
@@ -445,7 +441,7 @@ class ReceiveMessageExchangeController
         $acknowledgementObject->TransferringAgency->OrganizationDescriptiveMetadata->UserIdentifier = $GLOBALS['userId'];
 
         $acknowledgementObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_AckSent';
-        $messageExchangeSaved = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $acknowledgementObject, 'res_id_master' => 0, 'type' => 'Acknowledgement', 'file_path' => $filePath]);
+        $messageExchangeSaved = SendMessageExchangeController::saveMessageExchange(['dataObject' => $acknowledgementObject, 'res_id_master' => 0, 'type' => 'Acknowledgement', 'file_path' => $filePath]);
 
         $acknowledgementObject->DataObjectPackage = new \stdClass();
         $acknowledgementObject->DataObjectPackage->DescriptiveMetadata = new \stdClass();
@@ -454,7 +450,7 @@ class ReceiveMessageExchangeController
         $acknowledgementObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->Content = new \stdClass();
         $acknowledgementObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->Content->Title[0] = '[CAPTUREM2M_ACK]'.date("Ymd_his");
 
-        $sendMessage->send($acknowledgementObject, $messageExchangeSaved['messageId'], 'Acknowledgement');
+        SendMessageController::send($acknowledgementObject, $messageExchangeSaved['messageId'], 'Acknowledgement');
 
         return $messageExchangeSaved;
     }
@@ -480,14 +476,12 @@ class ReceiveMessageExchangeController
         $replyObject->TransferringAgency->OrganizationDescriptiveMetadata->UserIdentifier = $GLOBALS['userId'];
         $replyObject->ArchivalAgency                    = $dataObject->TransferringAgency;
 
-        $sendMessage = new \SendMessage();
-
         $replyObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_Reply';
         $tmpPath = CoreConfigModel::getTmpPath();
-        $filePath = $sendMessage->generateMessageFile($replyObject, "ArchiveTransferReply", $tmpPath);
+        $filePath = SendMessageController::generateMessageFile($replyObject, "ArchiveTransferReply", $tmpPath);
 
         $replyObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_ReplySent';
-        $messageExchangeSaved = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $replyObject, 'res_id_master' => $aArgs['res_id_master'], 'type' => 'ArchiveTransferReply', 'file_path' => $filePath]);
+        $messageExchangeSaved = SendMessageExchangeController::saveMessageExchange(['dataObject' => $replyObject, 'res_id_master' => $aArgs['res_id_master'], 'type' => 'ArchiveTransferReply', 'file_path' => $filePath]);
 
         $replyObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_Reply';
 
@@ -500,7 +494,7 @@ class ReceiveMessageExchangeController
 
         $replyObject->DataObjectPackage->DescriptiveMetadata->ArchiveUnit[0]->Content->Title[0] = '[CAPTUREM2M_REPLY]'.date("Ymd_his");
 
-        $sendMessage->send($replyObject, $messageExchangeSaved['messageId'], 'ArchiveTransferReply');
+        SendMessageController::send($replyObject, $messageExchangeSaved['messageId'], 'ArchiveTransferReply');
     }
 
     public function saveMessageExchangeReturn(Request $request, Response $response)
@@ -524,18 +518,16 @@ class ReceiveMessageExchangeController
         $sDataObject = $res['content'];
         $dataObject = json_decode($sDataObject);
 
-        $RequestSeda = new \RequestSeda();
-
         if ($dataObject->type == 'Acknowledgement') {
-            $messageExchange                = $RequestSeda->getMessageByReference($dataObject->MessageReceivedIdentifier->value);
+            $messageExchange = MessageExchangeModel::getMessageByReference(['select' => ['message_id', 'res_id_master'], 'reference' => $dataObject->MessageReceivedIdentifier->value]);
             $dataObject->TransferringAgency = $dataObject->Sender;
             $dataObject->ArchivalAgency     = $dataObject->Receiver;
-            $RequestSeda->updateReceptionDateMessage(['reception_date' => $dataObject->Date, 'message_id' => $messageExchange->message_id]);
+            MessageExchangeModel::updateReceptionDateMessage(['reception_date' => $dataObject->Date, 'message_id' => $messageExchange['message_id']]);
         } elseif ($dataObject->type == 'ArchiveTransferReply') {
-            $messageExchange = $RequestSeda->getMessageByReference($dataObject->MessageRequestIdentifier->value);
+            $messageExchange = MessageExchangeModel::getMessageByReference(['select' => ['message_id', 'res_id_master'], 'reference' => $dataObject->MessageRequestIdentifier->value]);
         }
 
-        $messageExchangeSaved = \SendMessageExchangeController::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $messageExchange->res_id_master, 'type' => $data['type']]);
+        $messageExchangeSaved = SendMessageExchangeController::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $messageExchange['res_id_master'], 'type' => $data['type']]);
         if (!empty($messageExchangeSaved['error'])) {
             return $response->withStatus(400)->withJson(['errors' => $messageExchangeSaved['error']]);
         }

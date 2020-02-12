@@ -17,7 +17,13 @@
             "tsConfig": "src/frontend/tsconfig.app.json",
             "styles": [],
             "scripts": [
+              "node_modules/tinymce/tinymce.min.js",
               "node_modules/hammerjs/hammer.js"
+            ],
+            "assets": [
+              { "glob": "**/*", "input": "node_modules/tinymce/skins", "output": "/tinymce/skins/" },
+              { "glob": "**/*", "input": "node_modules/tinymce/themes", "output": "/tinymce/themes/" },
+              { "glob": "**/*", "input": "node_modules/tinymce/plugins", "output": "/tinymce/plugins/" }
             ]
           },
           "configurations": {

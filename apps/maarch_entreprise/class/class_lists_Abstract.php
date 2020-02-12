@@ -462,8 +462,7 @@ abstract class lists_Abstract extends Database
 
                 $stmt = $db->query(
                     'SELECT distinct(r.type_id), t.description FROM '
-                    .$this->params['tableName'].' r left join '.DOCTYPES_TABLE
-                    .' t on t.type_id = r.type_id '.$where
+                    .$this->params['tableName'].' r left join doctypes t on t.type_id = r.type_id '.$where
                     .' group by t.description, r.type_id order by t.description'
                 );
                 while ($res = $stmt->fetchObject()) {

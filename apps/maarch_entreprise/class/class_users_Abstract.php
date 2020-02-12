@@ -49,7 +49,8 @@ abstract class class_users_Abstract extends Database
     * Return a array of user informations
     *
     */
-    public function get_user($user_id) {
+    public function get_user($user_id)
+    {
         require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR. "class" . DIRECTORY_SEPARATOR. "class_user_signatures.php";
         $us = new UserSignatures();
         if (!empty($user_id)) {
@@ -63,8 +64,8 @@ abstract class class_users_Abstract extends Database
                 $line = $stmt->fetchObject();
                 /* MODIFICATION POUR LES SIGNATURES */
 
-                $query = "SELECT path_template FROM " 
-                    . _DOCSERVERS_TABLE_NAME 
+                $query = "SELECT path_template FROM "
+                    . _DOCSERVERS_TABLE_NAME
                     . " WHERE docserver_id = 'TEMPLATES'";
                 $stmt = $db->query($query);
                 $resDs = $stmt->fetchObject();
@@ -74,8 +75,8 @@ abstract class class_users_Abstract extends Database
                 $pathToSignature = array();
                 foreach ($tab_sign as $sign) {
                     $path = $pathToDs . str_replace(
-                        "#", 
-                        DIRECTORY_SEPARATOR, 
+                        "#",
+                        DIRECTORY_SEPARATOR,
                         $sign['signature_path']
                     )
                     . $sign['signature_file_name'];
@@ -101,51 +102,4 @@ abstract class class_users_Abstract extends Database
             return false;
         }
     }
-
-    /**
-    * Return where clause security for user(include baskets)
-    *
-    */
-    public function get_global_security() {
-        if (!empty($_SESSION['user']['UserId'])) {
-            require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php';
-            $sec = new security();
-            $coll_id = 'letterbox_coll';
-
-            //group clause
-            $group_clause = $sec->get_where_clause_from_coll_id($coll_id);
-
-            //baskets clause
-            $basketQuery = '';
-            for (
-                $ind_bask = 0;
-                $ind_bask < count($_SESSION['user']['baskets']);
-                $ind_bask++
-            ) {
-                if (
-                    $_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id
-                ) {
-                    if(
-                        isset($_SESSION['user']['baskets'][$ind_bask]['clause']) 
-                        && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> ''
-                    ) {
-                        $basketQuery .= ' or (' 
-                            . $_SESSION['user']['baskets'][$ind_bask]['clause'] 
-                            . ')';
-                    }
-                 }
-            }
-            if ($basketQuery <> '') {
-                $basketQuery = preg_replace('/^ or/', '', $basketQuery);
-            }
-
-            $global_clause = $group_clause . ' OR ' . $basketQuery;
-
-            return $global_clause;
-
-        } else {
-            return false;
-        }
-    }
 }
-

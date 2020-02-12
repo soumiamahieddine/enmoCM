@@ -1711,4 +1711,41 @@ class UserController
 
         return $response->withStatus(204);
     }
+
+    public static function getCurrentUserSignatures(Request $request, Response $response)
+    {
+        $signatureModels = UserModel::getEmailSignaturesById(['userId' => $GLOBALS['userId']]);
+
+        $signatures = [];
+
+        foreach ($signatureModels as $signature) {
+            $signatures[] = [
+                'id'      => $signature['id'],
+                'label'   => $signature['title'],
+            ];
+        }
+
+        return $response->withJson(['emailSignatures' => $signatures]);
+    }
+
+    public static function getCurrentUserSignatureContentById(Request $request, Response $response, array $args)
+    {
+        if (!Validator::notEmpty()->intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body param id is empty or not an integer']);
+        }
+
+        $signatureModels = UserModel::getEmailSignatureWithSignatureIdById(['userId' => $GLOBALS['userId'], 'signatureId' => $args['id']]);
+
+        if (empty($signatureModels)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Signature not found']);
+        }
+
+        $signature = [
+            'id'      => $signatureModels['id'],
+            'label'   => $signatureModels['title'],
+            'content' => $signatureModels['html_body']
+        ];
+
+        return $response->withJson(['emailSignature' => $signature]);
+    }
 }

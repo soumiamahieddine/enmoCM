@@ -19,13 +19,27 @@ use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use Tag\models\TagModel;
-use Tag\models\TagResModel;
+use Tag\models\ResourceTagModel;
 
 class TagController
 {
     public function get(Request $request, Response $response)
     {
-        $tags = TagModel::get();
+        $tags = TagModel::get(['orderBy' => ['id']]);
+
+        $ids = array_column($tags, 'id');
+
+        $countResources = ResourceTagModel::get([
+            'select'  => ['count(res_id)', 'tag_id'],
+            'where'   => ['tag_id in (?)'],
+            'data'    => [$ids],
+            'groupBy' => ['tag_id']
+        ]);
+        $countResources = array_column($countResources, 'count', 'tag_id');
+
+        foreach ($tags as $key => $tag) {
+            $tags[$key]['countResources'] = $countResources[$tag['id']] ?? 0;
+        }
 
         return $response->withJson(['tags' => $tags]);
     }
@@ -40,6 +54,13 @@ class TagController
         if (empty($tag)) {
             return $response->withStatus(404)->withJson(['errors' => 'id not found']);
         }
+
+        $countResources = ResourceTagModel::get([
+           'select' => ['count(1)'],
+           'where'  => ['tag_id = ?'],
+           'data'   => [$args['id']]
+        ]);
+        $tag['countResources'] = $countResources[0]['count'];
 
         return $response->withJson($tag);
     }
@@ -61,9 +82,57 @@ class TagController
             return $response->withStatus(400)->withJson(['errors' => 'Body label has more than 128 characters']);
         }
 
+        $parent = null;
+        if (!empty($body['parentId'])) {
+            if (!Validator::intVal()->validate($body['parentId'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body parentId is not an integer']);
+            }
+            $parent = TagModel::getById(['id' => $body['parentId'], 'select' => ['id']]);
+            if (empty($parent)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Parent tag does not exist']);
+            }
+            $parent = $parent['id'];
+        }
+
+        $links = json_encode([]);
+        if (!empty($body['links'])) {
+            if (!Validator::arrayType()->validate($body['links'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body links is not an integer']);
+            }
+            $listTags = [];
+            foreach ($body['links'] as $link) {
+                if (!Validator::intVal()->validate($link)) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Body links element is not an integer']);
+                }
+                $listTags[] = (string)$link;
+            }
+            $tags = TagModel::get([
+                'select' => ['count(1)'],
+                'where'  => ['id in (?)'],
+                'data'   => [$body['links']]
+            ]);
+            if ($tags[0]['count'] != count($body['links'])) {
+                return $response->withStatus(404)->withJson(['errors' => 'Tag(s) not found']);
+            }
+
+            $links = json_encode($listTags);
+        }
+
         $id = TagModel::create([
-            'label' => $body['label']
+            'label'       => $body['label'],
+            'description' => $body['description'] ?? null,
+            'parentId'    => $parent,
+            'links'       => $links,
+            'usage'       => $body['usage'] ?? null
         ]);
+
+        if (!empty($body['links'])) {
+            TagModel::update([
+                'postSet' => ['links' => "jsonb_insert(links, '{0}', '\"{$id}\"')"],
+                'where'   => ['id in (?)', "(links @> ?) = false"],
+                'data'    => [$body['links'], "\"{$id}\""]
+            ]);
+        }
 
         HistoryController::add([
             'tableName' => 'tags',
@@ -96,9 +165,24 @@ class TagController
             return $response->withStatus(400)->withJson(['errors' => 'Body label has more than 128 characters']);
         }
 
+        $parent = null;
+        if (!empty($body['parentId'])) {
+            if (!Validator::intVal()->validate($body['parentId'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Body parentId is not an integer']);
+            }
+            $parent = TagModel::getById(['id' => $body['parentId'], 'select' => ['id']]);
+            if (empty($parent)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Parent tag does not exist']);
+            }
+            $parent = $parent['id'];
+        }
+
         TagModel::update([
             'set' => [
-                'label' => $body['label']
+                'label'       => $body['label'],
+                'description' => $body['description'] ?? null,
+                'parent_id'   => $parent,
+                'usage'       => $body['usage'] ?? null
             ],
             'where' => ['id = ?'],
             'data' => [$args['id']]
@@ -127,9 +211,29 @@ class TagController
         }
 
 
-        $tag = TagModel::getById(['select' => ['label'], 'id' => $args['id']]);
+        $tag = TagModel::getById(['select' => ['label', 'links'], 'id' => $args['id']]);
         if (empty($tag)) {
             return $response->withStatus(400)->withJson(['errors' => 'Tag does not exist']);
+        }
+
+        $children = TagModel::get([
+           'select' => ['count(1)'],
+           'where'  => ['parent_id = ?'],
+           'data'   => [$args['id']]
+        ]);
+        if ($children[0]['count'] > 0) {
+            return $response->withStatus(400)->withJson(['errors' => 'Tag has children']);
+        }
+
+        $links = json_decode($tag['links'], true);
+        if (!empty($links)) {
+            foreach ($links as $link) {
+                TagModel::update([
+                    'postSet'   => ['links' => "links - '{$args['id']}'"],
+                    'where'     => ['id = ?'],
+                    'data'      => [$link]
+                ]);
+            }
         }
 
         TagModel::delete([
@@ -159,14 +263,16 @@ class TagController
         if (!Validator::intVal()->notEmpty()->validate($body['idMaster'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body idMaster must be an integer val']);
         }
+        if (!Validator::intVal()->notEmpty()->validate($body['idMerge'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body idMerge must be an integer val']);
+        }
+        if ($body['idMaster'] == $body['idMerge']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Cannot merge tag with itself']);
+        }
 
         $tagMaster = TagModel::getById(['id' => $body['idMaster']]);
         if (empty($tagMaster)) {
             return $response->withStatus(404)->withJson(['errors' => 'Master tag not found']);
-        }
-
-        if (!Validator::intVal()->notEmpty()->validate($body['idMerge'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Body idMerge must be an integer val']);
         }
 
         $tagMerge = TagModel::getById(['id' => $body['idMerge']]);
@@ -174,13 +280,26 @@ class TagController
             return $response->withStatus(404)->withJson(['errors' => 'Merge tag not found']);
         }
 
-        $tagResMaster = TagResModel::get([
+        if (!empty($tagMerge['parent_id']) || !empty($tagMaster['parent_id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Cannot merge tag : tag has a parent']);
+        }
+
+        $childTags = TagModel::get([
+            'select' => ['count(1)'],
+            'where'  => ['parent_id in (?)'],
+            'data'   => [[$tagMaster['id'], $tagMerge['id']]]
+        ]);
+        if ($childTags[0]['count'] > 0) {
+            return $response->withStatus(400)->withJson(['errors' => 'Cannot merge tag : tag has a child']);
+        }
+
+        $tagResMaster = ResourceTagModel::get([
            'where'  => ['tag_id = ?'],
             'data'  => [$tagMaster['id']]
         ]);
         $tagResMaster = array_column($tagResMaster, 'res_id');
 
-        TagResModel::update([
+        ResourceTagModel::update([
            'set'    => [
                'tag_id' => $tagMaster['id']
            ],
@@ -188,7 +307,7 @@ class TagController
            'data'   => [$tagMerge['id'], $tagResMaster]
         ]);
 
-        TagResModel::delete([
+        ResourceTagModel::delete([
            'where'  => ['tag_id = ?'],
            'data'   => [$tagMerge['id']]
         ]);
@@ -204,6 +323,116 @@ class TagController
             'eventType' => 'DEL',
             'info'      =>  _TAG_MERGED . " : {$tagMerge['label']} vers {$tagMaster['label']}",
             'eventId'   => 'tagSuppression',
+        ]);
+
+        return $response->withStatus(204);
+    }
+
+    public static function link(Request $request, Response $response, array $args)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_tag', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
+
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['links'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body links is empty or not an array']);
+        } elseif (in_array($args['id'], $body['links'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body links contains tag']);
+        }
+
+        $tag = TagModel::getById(['id' => $args['id']]);
+        $linkedTags = json_decode($tag['links'], true);
+        $linkedTags = array_merge($linkedTags, $body['links']);
+        $linkedTags = array_unique($linkedTags);
+        foreach ($linkedTags as $key => $linkedTag) {
+            $linkedTags[$key] = (string)$linkedTag;
+        }
+
+        TagModel::update([
+            'set'       => ['links' => json_encode($linkedTags)],
+            'where'     => ['id = ?'],
+            'data'      => [$args['id']]
+        ]);
+        TagModel::update([
+            'postSet'   => ['links' => "jsonb_insert(links, '{0}', '\"{$args['id']}\"')"],
+            'where'     => ['id in (?)', "(links @> ?) = false"],
+            'data'      => [$body['links'], "\"{$args['id']}\""]
+        ]);
+
+        $linkedTagsInfo = TagModel::get([
+            'select' => ['label', 'id'],
+            'where'  => ['id in (?)'],
+            'data'   => [$body['links']]
+        ]);
+        $linkedTagsInfo = array_column($linkedTagsInfo, 'label', 'id');
+
+        foreach ($body['linkedResources'] as $value) {
+            HistoryController::add([
+                'tableName' => 'tags',
+                'recordId'  => $args['resId'],
+                'eventType' => 'UP',
+                'info'      => _LINK_ADDED . " : {$linkedTagsInfo[$value]}",
+                'eventId'   => 'tagModification'
+            ]);
+            HistoryController::add([
+                'tableName' => 'tags',
+                'recordId'  => $value,
+                'eventType' => 'UP',
+                'info'      => _LINK_ADDED . " : {$tag['label']}",
+                'eventId'   => 'tagModification'
+            ]);
+        }
+
+        return $response->withStatus(204);
+    }
+
+    public static function unLink(Request $request, Response $response, array $args)
+    {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_tag', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
+
+        if (!Validator::intVal()->validate($args['tagId']) || !Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route tagId or id is not an integer']);
+        }
+
+        TagModel::update([
+            'postSet'   => ['links' => "links - '{$args['id']}'"],
+            'where'     => ['id = ?'],
+            'data'      => [$args['tagId']]
+        ]);
+        TagModel::update([
+            'postSet'   => ['links' => "links - '{$args['tagId']}'"],
+            'where'     => ['id = ?'],
+            'data'      => [$args['id']]
+        ]);
+
+        $linkedTagsInfo = TagModel::get([
+            'select' => ['label', 'id'],
+            'where'  => ['id in (?)'],
+            'data'   => [[$args['tagId'], $args['id']]]
+        ]);
+        $linkedTagsInfo = array_column($linkedTagsInfo, 'label', 'id');
+
+        HistoryController::add([
+            'tableName' => 'tags',
+            'recordId'  => $args['tagId'],
+            'eventType' => 'UP',
+            'info'      => _LINK_DELETED . " : {$linkedTagsInfo[$args['id']]}",
+            'eventId'   => 'tagModification'
+        ]);
+        HistoryController::add([
+            'tableName' => 'tags',
+            'recordId'  => $args['id'],
+            'eventType' => 'UP',
+            'info'      => _LINK_DELETED . " : {$linkedTagsInfo[$args['tagId']]}",
+            'eventId'   => 'tagModification'
         ]);
 
         return $response->withStatus(204);

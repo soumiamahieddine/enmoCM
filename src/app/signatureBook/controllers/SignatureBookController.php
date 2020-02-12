@@ -145,7 +145,7 @@ class SignatureBookController
 
             $realId = $value['res_id'];
 
-            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => ['docserver_id', 'path', 'filename'], 'resId' => $realId, 'collId' => 'attachments_coll']);
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['resId' => $realId, 'collId' => 'attachments_coll']);
 
             if (empty($convertedAttachment['errors'])) {
                 $isConverted = true;
@@ -210,7 +210,7 @@ class SignatureBookController
             $pathToFind     = $value['path'] . str_replace(strrchr($value['filename'], '.'), '.pdf', $value['filename']);
             $isConverted    = false;
 
-            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['select' => [1], 'resId' => $realId, 'collId' => 'attachments_coll']);
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['resId' => $realId, 'collId' => 'attachments_coll']);
 
             if (empty($convertedAttachment['errors'])) {
                 $isConverted = true;
@@ -375,8 +375,8 @@ class SignatureBookController
     {
         if (!Validator::intVal()->validate($args['resId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
-//        } elseif (!SignatureBookController::isResourceInSignatureBook(['resId' => $args['resId'], 'userId' => $GLOBALS['id']])) {
-//            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        } elseif (!SignatureBookController::isResourceInSignatureBook(['resId' => $args['resId'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
         $body = $request->getParsedBody();
@@ -401,15 +401,18 @@ class SignatureBookController
         }
 
         $convertedDocument = AdrModel::getDocuments([
-            'select'    => ['docserver_id', 'path', 'filename'],
-            'where'     => ['res_id = ?', 'type = ?'],
-            'data'      => [$args['resId'], 'PDF'],
-            'orderBy'   => ['version DESC'],
+            'select'    => ['docserver_id', 'path', 'filename', 'type'],
+            'where'     => ['res_id = ?', 'type in (?)'],
+            'data'      => [$args['resId'], ['PDF', 'SIGN']],
+            'orderBy'   => ["type='SIGN' DESC", 'version DESC'],
             'limit'     => 1
         ]);
-        if (empty($convertedDocument)) {
+        if (empty($convertedDocument[0])) {
             return $response->withStatus(400)->withJson(['errors' => 'Converted document does not exist']);
+        } elseif ($convertedDocument[0]['type'] == 'SIGN') {
+            return $response->withStatus(400)->withJson(['errors' => 'Document has already been signed']);
         }
+
         $convertedDocument = $convertedDocument[0];
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
         if (empty($docserver['path_template']) || !is_dir($docserver['path_template'])) {
@@ -420,15 +423,17 @@ class SignatureBookController
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }
 
-        //TODO params height width
-        //TODO date in block
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/config.xml']);
+        $width = (int)$loadedXml->CONFIG->width_blocsign ?? 150;
+        $height = (int)$loadedXml->CONFIG->height_blocsign ?? 100;
         $tmpPath = CoreConfigModel::getTmpPath();
-        $command = "java -jar modules/visa/dist/SignPdf.jar {$pathToDocument} {$signaturePath} 150 100 {$tmpPath}";
+
+        $command = "java -jar modules/visa/dist/SignPdf.jar {$pathToDocument} {$signaturePath} {$width} {$height} {$tmpPath}";
         exec($command, $output, $return);
 
-        $signedDocument = file_get_contents($tmpPath.$convertedDocument['filename']);
+        $signedDocument = @file_get_contents($tmpPath.$convertedDocument['filename']);
         if ($signedDocument === false) {
-            return $response->withStatus(400)->withJson(['errors' => 'Signed document not found : ' . implode($output)]);
+            return $response->withStatus(400)->withJson(['errors' => 'Signature failed : ' . implode($output)]);
         }
         unlink($tmpPath.$convertedDocument['filename']);
 

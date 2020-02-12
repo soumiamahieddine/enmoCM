@@ -901,19 +901,23 @@ CREATE TABLE tags
   id serial NOT NULL,
   label character varying(128) NOT NULL,
   entity_id_owner character varying(32),
+  description text,
+  parent_id INT,
+  creation_date timestamp DEFAULT NOW(),
+  links jsonb  DEFAULT '[]',
+  usage text,
   CONSTRAINT tags_id_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
 
-CREATE TABLE tag_res
+CREATE TABLE resources_tags
 (
-  res_id bigint NOT NULL,
-  tag_id bigint NOT NULL,
-  CONSTRAINT tag_res_pkey PRIMARY KEY (res_id,tag_id)
+    id SERIAL NOT NULL,
+    res_id INT,
+    tag_id INT,
+    CONSTRAINT resources_tags_id_pkey PRIMARY KEY (id)
 )
-WITH (
-  OIDS=FALSE
-);
+WITH (OIDS=FALSE);
 
 CREATE SEQUENCE res_id_mlb_seq
   INCREMENT 1

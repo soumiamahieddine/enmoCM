@@ -25,7 +25,7 @@ use User\models\UserModel;
 
 class ShippingController
 {
-    public static function get(Request $request, Response $response, array $args)
+    public static function getByResId(Request $request, Response $response, array $args)
     {
         if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
@@ -36,13 +36,21 @@ class ShippingController
             'where'  => ['res_id_master = ?'],
             'data'   => [$args['resId']]
         ]);
-
         $attachments = array_column($attachments, 'res_id');
+
+        $where = '(document_id = ? and document_type = ?)';
+        $data  = [$args['resId'], 'resource'];
+
+        if (!empty($attachments)) {
+            $where .= ' or (document_id in (?) and document_type = ?)';
+            $data[] = $attachments;
+            $data[] = 'attachment';
+        }
 
         $shippingsModel = ShippingModel::get([
             'select' => ['*'],
-            'where'  => ['(document_id = ? and document_type = ?) or (document_id in (?) and document_type = ?)'],
-            'data'   => [$args['resId'], 'resource', $attachments, 'attachment']
+            'where'  => [$where],
+            'data'   => $data
         ]);
 
         $shippings = [];

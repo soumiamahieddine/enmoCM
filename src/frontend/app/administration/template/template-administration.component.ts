@@ -122,8 +122,8 @@ export class TemplateAdministrationComponent implements OnInit {
             tinymce.init({
                 selector: selectorId,
                 statusbar: false,
-                language: "fr_FR",
-                language_url: "tools/tinymce/langs/fr_FR.js",
+                language: this.lang.langISO.replace('-', '_'),
+                language_url: `../../node_modules/tinymce-i18n/langs/${this.lang.langISO.replace('-', '_')}.js`,
                 height: "200",
                 plugins: [
                     "textcolor",
@@ -131,10 +131,10 @@ export class TemplateAdministrationComponent implements OnInit {
                     "code"
                 ],
                 external_plugins: {
-                    'bdesk_photo': "../../apps/maarch_entreprise/tools/tinymce/bdesk_photo/plugin.min.js"
+                    'maarch_b64image': "../../src/frontend/plugins/tinymce/maarch_b64image/plugin.min.js"
                 },
                 menubar: false,
-                toolbar: "undo | bold italic underline | alignleft aligncenter alignright | bdesk_photo | forecolor | code",
+                toolbar: "undo | bold italic underline | alignleft aligncenter alignright | maarch_b64image | forecolor | code",
                 theme_buttons1_add: "fontselect,fontsizeselect",
                 theme_buttons2_add_before: "cut,copy,paste,pastetext,pasteword,separator,search,replace,separator",
                 theme_buttons2_add: "separator,insertdate,inserttime,preview,separator,forecolor,backcolor",

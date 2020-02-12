@@ -14,12 +14,16 @@
 
 namespace MessageExchange\controllers;
 
-use DateTime;
-use User\models\UserModel;
-use Resource\models\ResModel;
 use Action\models\ActionModel;
-use MessageExchange\models\MessageExchangeModel;
 use ExportSeda\controllers\SendMessageController;
+use MessageExchange\Controllers\ReceiveMessageExchangeController;
+use MessageExchange\controllers\SendMessageExchangeController;
+use MessageExchange\models\MessageExchangeModel;
+use Resource\models\ResModel;
+use SrcCore\models\CoreConfigModel;
+use User\models\UserModel;
+
+require_once 'modules/export_seda/Controllers/ReceiveMessage.php';
 
 class MessageExchangeReviewController
 {
@@ -58,8 +62,8 @@ class MessageExchangeReviewController
             $primaryEntity = UserModel::getPrimaryEntityByUserId(['userId' => $aArgs['userId']]);
             $reviewObject->Comment[0]->value = '['.date('d/m/Y H:i:s').'] "'.$actionInfo['label_action'].'" '._M2M_ACTION_DONE.' '.$primaryEntity['entity_label'].'. '._M2M_ENTITY_DESTINATION.' : '.$messageExchangeData['entity_label'];
 
-            $date = new DateTime();
-            $reviewObject->Date = $date->format(DateTime::ATOM);
+            $date = new \DateTime();
+            $reviewObject->Date = $date->format(\DateTime::ATOM);
 
             $reviewObject->MessageIdentifier = new \stdClass();
             $reviewObject->MessageIdentifier->value = $messageExchangeData['external_id']['m2m'].'_NotificationSent';
@@ -104,4 +108,42 @@ class MessageExchangeReviewController
             SendMessageController::send($reviewObject, $messageExchangeSaved['messageId'], 'ArchiveModificationNotification');
         }
     }
+
+    public function saveMessageExchangeReview(Request $request, Response $response)
+    {
+        if (empty($GLOBALS['userId'])) {
+            return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
+        }
+
+        $data = $request->getParams();
+
+        if (!ReceiveMessageExchangeController::checkNeededParameters(['data' => $data, 'needed' => ['type']])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Bad Request']);
+        }
+
+        $tmpName = ReceiveMessageExchangeController::createFile(['base64' => $data['base64'], 'extension' => $data['extension'], 'size' => $data['size']]);
+        if (!empty($tmpName['errors'])) {
+            return $response->withStatus(400)->withJson($tmpName);
+        }
+
+        $receiveMessage = new \ReceiveMessage();
+        $tmpPath = CoreConfigModel::getTmpPath();
+        $res = $receiveMessage->receive($tmpPath, $tmpName, $data['type']);
+
+        $sDataObject = $res['content'];
+        $dataObject = json_decode($sDataObject);
+        $dataObject->TransferringAgency = $dataObject->OriginatingAgency;
+
+        $messageExchange = MessageExchangeModel::getMessageByReference(['select' => ['operation_date', 'message_id', 'res_id_master'], 'reference' => $dataObject->UnitIdentifier->value]);
+        if (empty($messageExchange['operation_date'])) {
+            MessageExchangeModel::updateOperationDateMessage(['operation_date' => $dataObject->Date, 'message_id' => $messageExchange['message_id']]);
+        }
+
+        $messageExchangeSaved = SendMessageExchangeController::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $messageExchange['res_id_master'], 'type' => 'ArchiveModificationNotification']);
+
+        return $response->withJson([
+            'messageId' => $messageExchangeSaved['messageId'],
+        ]);
+    }
+
 }

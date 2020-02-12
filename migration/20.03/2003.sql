@@ -7,6 +7,7 @@
 -- *************************************************************************--
 UPDATE parameters SET param_value_string = '20.03' WHERE id = 'database_version';
 
+UPDATE parameters SET description = 'Département par défaut sélectionné dans les autocomplétions de la Base Adresse Nationale' WHERE id = 'defaultDepartment';
 
 /* VIEWS */
 DROP VIEW IF EXISTS res_view_letterbox;
@@ -235,11 +236,26 @@ DO $$ BEGIN
 	  ALTER TABLE tags ADD COLUMN id serial NOT NULL;
 	  UPDATE tags SET id = tag_id;
       ALTER TABLE tags DROP COLUMN IF EXISTS tag_id;
+
+      ALTER TABLE tags DROP COLUMN IF EXISTS description;
+	  ALTER TABLE tags ADD COLUMN description TEXT;
+      ALTER TABLE tags DROP COLUMN IF EXISTS parent_id;
+      ALTER TABLE tags ADD COLUMN parent_id INT;
+      ALTER TABLE tags DROP COLUMN IF EXISTS creation_date;
+      ALTER TABLE tags ADD COLUMN creation_date TIMESTAMP DEFAULT NOW();
+      ALTER TABLE tags DROP COLUMN IF EXISTS links;
+      ALTER TABLE tags ADD COLUMN links jsonb DEFAULT '[]';
+      ALTER TABLE tags DROP COLUMN IF EXISTS usage;
+      ALTER TABLE tags ADD COLUMN usage TEXT;
   END IF;
 END$$;
 SELECT setval('tags_id_seq', (SELECT MAX(id) from tags));
 
 DROP TABLE IF EXISTS tags_entities;
+
+DROP TABLE IF EXISTS resources_tags;
+ALTER TABLE tag_res ADD COLUMN id serial NOT NULL;
+ALTER TABLE tag_res RENAME TO resources_tags;
 
 /* DOCTYPES */
 DO $$ BEGIN
@@ -357,7 +373,7 @@ DO $$ BEGIN
 END$$;
 
 DO $$ BEGIN
-    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'external_signatory_book_id') = 0 THEN
+    IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'res_letterbox') AND attname = 'external_signatory_book_id') = 1 THEN
       UPDATE res_letterbox SET external_id = jsonb_set(external_id, '{signatureBookId}', external_signatory_book_id::text::jsonb) WHERE external_signatory_book_id IS NOT NULL;
       ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_signatory_book_id;
     END IF;
@@ -478,7 +494,7 @@ ALTER TABLE adr_letterbox DROP COLUMN IF EXISTS version;
 ALTER TABLE adr_letterbox ADD COLUMN version integer;
 UPDATE adr_letterbox SET version = 1;
 ALTER TABLE adr_letterbox ALTER COLUMN version SET NOT NULL;
-ALTER TABLE adr_letterbox DROP CONSTRAINT adr_letterbox_unique_key;
+ALTER TABLE adr_letterbox DROP CONSTRAINT IF EXISTS adr_letterbox_unique_key;
 ALTER TABLE adr_letterbox ADD CONSTRAINT adr_letterbox_unique_key UNIQUE (res_id, type, version);
 
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS version;
@@ -525,7 +541,6 @@ DELETE FROM usergroups_services WHERE service_id = 'add_cases';
 DELETE FROM usergroups_services WHERE service_id IN ('folder_search', 'view_folder_tree', 'select_folder', 'show_history_folder', 'modify_folder', 'associate_folder', 'delete_folder', 'admin_foldertypes', 'create_folder', 'folder_freeze', 'close_folder');
 DELETE FROM usergroups_services WHERE service_id = 'add_tag_to_res';
 DELETE FROM usergroups_services WHERE service_id = 'tag_view';
-DELETE FROM usergroups_services WHERE service_id = 'admin_thesaurus';
 DELETE FROM usergroups_services WHERE service_id = 'thesaurus_view';
 DELETE FROM usergroups_services WHERE service_id = 'add_thesaurus_to_res';
 UPDATE usergroups_services SET service_id = 'manage_tags_application' WHERE service_id = 'create_tag';
@@ -547,6 +562,15 @@ DELETE FROM usergroups_services WHERE service_id = 'show_reports';
 DELETE FROM usergroups_services WHERE service_id = 'param_templates_doctypes';
 DELETE FROM usergroups_services WHERE service_id = 'doctype_template_use';
 DELETE FROM usergroups_services WHERE service_id = 'search_contacts';
+DELETE FROM usergroups_services WHERE service_id = 'use_date_in_signBlock';
+UPDATE usergroups_services SET service_id = 'manage_numeric_package' WHERE service_id = 'save_numeric_package';
+INSERT INTO usergroups_services (group_id, service_id)
+SELECT distinct(group_id), 'manage_numeric_package'
+FROM usergroups_services WHERE group_id IN (
+    SELECT group_id FROM usergroups_services
+    WHERE service_id = 'use_mail_services' AND group_id not in (SELECT group_id FROM usergroups_services WHERE service_id = 'manage_numeric_package')
+);
+
 
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'update_diffusion_indexing'
@@ -601,6 +625,16 @@ FROM usergroups_services WHERE group_id IN (
     SELECT group_id FROM usergroups_services
     WHERE service_id = 'admin_users'
 );
+INSERT INTO usergroups_services (group_id, service_id)
+SELECT distinct(group_id), 'admin_tag'
+FROM usergroups_services WHERE group_id IN (
+    SELECT group_id FROM usergroups_services
+    WHERE service_id = 'admin_thesaurus'
+) AND group_id NOT IN (
+    SELECT group_id FROM usergroups_services
+    WHERE service_id = 'admin_tag'
+);
+DELETE FROM usergroups_services WHERE service_id = 'admin_thesaurus';
 
 UPDATE history SET event_type = 'PRE' where event_type = 'RET';
 
@@ -691,9 +725,6 @@ DROP TABLE IF EXISTS foldertypes_indexes;
 ALTER TABLE doctypes DROP COLUMN IF EXISTS coll_id;
 DROP TABLE IF EXISTS mlb_doctype_ext;
 ALTER TABLE priorities DROP COLUMN IF EXISTS working_days;
-DROP TABLE IF EXISTS thesaurus;
-DROP TABLE IF EXISTS thesaurus_res;
-DROP SEQUENCE IF EXISTS thesaurus_id_seq;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS title;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS identifier;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS source;

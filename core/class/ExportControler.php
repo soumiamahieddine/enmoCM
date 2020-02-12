@@ -360,7 +360,7 @@ class ExportFunctions
         $db = new Database();
         $collection = $this->collection;
 
-        $query = 'SELECT t.tag_label FROM tags t LEFT JOIN tag_res tr ON t.tag_id = tr.tag_id WHERE t.coll_id = ? AND tr.res_id = ?';
+        $query = 'SELECT t.tag_label FROM tags t LEFT JOIN resources_tags tr ON t.tag_id = tr.tag_id WHERE t.coll_id = ? AND tr.res_id = ?';
         $stmt = $db->query($query, array($collection, $res_id));
 
         $arr_tags = [];

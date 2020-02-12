@@ -1,0 +1,37 @@
+@import '../../../css/vars.scss';
+
+.mat-dialog-title {
+    display: flex;
+    align-items: center;
+}
+
+.recipients,
+.copy {
+    font-size: 12px !important;
+    padding: 5px !important;
+    min-height: auto;
+    height: auto;
+    border-radius: 5px;
+
+    .mat-icon {
+        width: auto;
+        font-size: 12px;
+        height: auto;
+    }
+}
+
+.models {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    padding-top: 10px;
+}
+
+.activeButton {
+    color: $secondary;
+    font-weight: bold;
+}
+
+.attachLabel {
+    color: $primary;
+}

@@ -24,7 +24,7 @@ export class AvisWorkflowComponent implements OnInit {
         roles: ['sign', 'avis'],
         items: []
     };
-    avisWorkflowClone: any = null;
+    avisWorkflowClone: any = [];
     avisTemplates: any = {
         private: [],
         public: []
@@ -128,7 +128,7 @@ export class AvisWorkflowComponent implements OnInit {
 
     loadAvisUsersList() {
         return new Promise((resolve, reject) => {
-            this.http.get(`../../rest/autocomplete/users/circuit`).pipe(
+            this.http.get(`../../rest/autocomplete/users/circuit?circuit=opinion`).pipe(
                 map((data: any) => {
                     data = data.map((user: any) => {
                         return {
@@ -206,7 +206,7 @@ export class AvisWorkflowComponent implements OnInit {
             this.http.get(`../../rest/resources/${this.resId}/defaultCircuit?circuit=opinion`).pipe(
                 tap((data: any) => {
                     if (!this.functions.empty(data.itemsRemoved)) {
-                        this.notify.error(this.lang.itemRemovedFromVisaTemplate + ' : ' + data.itemsRemoved.join(', '));
+                        this.notify.error(this.lang.itemRemovedFromAvisTemplate + ' : ' + data.itemsRemoved.join(', '));
                     }
                 }),
                 filter((data: any) => !this.functions.empty(data.circuit)),
@@ -276,7 +276,7 @@ export class AvisWorkflowComponent implements OnInit {
             this.http.get("../../rest/resources/" + resId + "/opinionCircuit").pipe(
                 tap((data: any) => {
                     if (!this.functions.empty(data.itemsRemoved)) {
-                        this.notify.error(this.lang.itemRemovedFromVisaTemplate + ' : ' + data.itemsRemoved.join(', '));
+                        this.notify.error(this.lang.itemRemovedFromAvisTemplate + ' : ' + data.itemsRemoved.join(', '));
                     }
                 }),
                 filter((data: any) => !this.functions.empty(data.circuit)),
@@ -333,7 +333,7 @@ export class AvisWorkflowComponent implements OnInit {
         this.http.get("../../rest/resources/" + resId + "/defaultCircuit?circuit=opinion").pipe(
             tap((data: any) => {
                 if (!this.functions.empty(data.itemsRemoved)) {
-                    this.notify.error(this.lang.itemRemovedFromVisaTemplate + ' : ' + data.itemsRemoved.join(', '));
+                    this.notify.error(this.lang.itemRemovedFromAvisTemplate + ' : ' + data.itemsRemoved.join(', '));
                 }
             }),
             filter((data: any) => !this.functions.empty(data.circuit)),

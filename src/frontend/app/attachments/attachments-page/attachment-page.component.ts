@@ -51,8 +51,8 @@ export class AttachmentPageComponent implements OnInit {
         public appService: AppService,
         private notify: NotificationService,
         private sortPipe: SortPipe,
-        private headerService: HeaderService,
-        private privilegeService: PrivilegeService) {
+        public headerService: HeaderService,
+        public privilegeService: PrivilegeService) {
     }
 
     ngOnInit(): void {
@@ -254,7 +254,7 @@ export class AttachmentPageComponent implements OnInit {
     }
 
     deleteSignedVersion() {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.deleteSignedVersion, msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

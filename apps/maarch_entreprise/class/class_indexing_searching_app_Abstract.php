@@ -17,35 +17,6 @@ abstract class indexing_searching_app_Abstract extends Database
         parent::__construct();
     }
 
-    public function is_filetype_allowed($ext)
-    {
-        if (file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'extensions.xml')) {
-            $path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'extensions.xml';
-        } else {
-            $path = 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'extensions.xml';
-        }
-        $xmlconfig = simplexml_load_file($path);
-
-        $ext_list = array();
-        $i = 0;
-        foreach ($xmlconfig->FORMAT as $FORMAT) {
-            $ext_list[$i] = array('name' => (string) $FORMAT->name, 'mime' => (string) $FORMAT->mime);
-            ++$i;
-        }
-
-        $type_state = false;
-        for ($i = 0; $i < count($ext_list); ++$i) {
-            if ($ext_list[$i]['name'] == strtoupper($ext)) {
-                $mime_type = $ext_list[$i]['mime'];
-                $type_state = true;
-                //  $i = count($ext_list);
-                break;
-            }
-        }
-
-        return $type_state;
-    }
-
     public function show_index_frame($ext)
     {
         if (empty($ext)) {

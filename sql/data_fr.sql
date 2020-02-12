@@ -73,7 +73,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'priv
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'tag_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', '_print_sep');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'physical_archive_print_sep_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'save_numeric_package');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'manage_numeric_package');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'create_contacts');
@@ -223,7 +223,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'vi
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'avis_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'tag_view');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('MAARCHTOGEC', 'save_numeric_package');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MAARCHTOGEC', 'manage_numeric_package');
 
 -- Create DOCTYPES
 TRUNCATE TABLE DOCTYPES_FIRST_LEVEL;
@@ -954,7 +954,7 @@ INSERT INTO parameters (id, param_value_string, param_value_int, param_value_dat
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('postindexing_workbatch', NULL, 1, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', '20.03', NULL, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('user_quota', '', 0, NULL);
-INSERT INTO parameters (id, description, param_value_string, param_value_int, param_value_date) VALUES ('defaultDepartment', 'Département par défaut sélectionné dans le formulaire des adresses', NULL, 75, NULL);
+INSERT INTO parameters (id, description, param_value_string, param_value_int, param_value_date) VALUES ('defaultDepartment', 'Département par défaut sélectionné dans les autocomplétions de la Base Adresse Nationale', NULL, 75, NULL);
 INSERT INTO parameters (id, description, param_value_string) VALUES ('homepage_message', 'Texte apparaissant dans la bannière sur la page d''accueil, mettre un espace pour supprimer la bannière.', '<p>D&eacute;couvrez <strong>Maarch Courrier 20.03</strong> avec <a title="notre guide de visite" href="https://docs.maarch.org/gitbook/html/MaarchCourrier/20.03/guu/home.html" target="_blank"><span style="color:#f99830;"><strong>notre guide de visite en ligne</strong></span></a>.</p>');
 INSERT INTO parameters (id, description, param_value_string) VALUES ('loginpage_message', 'Texte apparaissant sur la page de login.', '<h3><span style="color:#24b0ed"><strong>Découvrez votre application via</strong></span> <a title="le guide de visite" href="https://docs.maarch.org/gitbook/html/MaarchCourrier/20.03/guu/home.html" target="_blank"><span style="color:#f99830;"><strong>le guide de visite en ligne</strong></span></a></h3>');
 INSERT INTO parameters (id, description, param_value_string) VALUES ('thumbnailsSize', 'Résolution des imagettes', '750x900');

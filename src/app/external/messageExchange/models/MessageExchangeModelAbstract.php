@@ -97,6 +97,38 @@ abstract class MessageExchangeModelAbstract
         return true;
     }
 
+    public static function updateOperationDateMessage(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['operation_date','message_id']);
+
+        DatabaseModel::update([
+            'table'     => 'message_exchange',
+            'set'       => [
+                'operation_date' => $aArgs['operation_date']
+            ],
+            'where'     => ['message_id = ?'],
+            'data'      => [$aArgs['message_id']]
+        ]);
+
+        return true;
+    }
+
+    public static function updateReceptionDateMessage(array $aArgs)
+    {
+        ValidatorModel::notEmpty($aArgs, ['reception_date','message_id']);
+
+        DatabaseModel::update([
+            'table'     => 'message_exchange',
+            'set'       => [
+                'reception_date' => $aArgs['reception_date']
+            ],
+            'where'     => ['message_id = ?'],
+            'data'      => [$aArgs['message_id']]
+        ]);
+
+        return true;
+    }
+
     /*** Generates a local unique identifier
     @return string The unique id*/
     public static function generateUniqueId()
@@ -211,5 +243,39 @@ abstract class MessageExchangeModelAbstract
         }
 
         return ['messageId' => $messageObject->messageId];
+    }
+
+    public static function getUnitIdentifierByMessageId(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['messageId']);
+        ValidatorModel::stringType($args, ['messageId']);
+
+        $messages = DatabaseModel::select([
+                'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+                'table'  => ['unit_identifier'],
+                'where'  => ['message_id = ?'],
+                'data'   => [$aArgs['message_id']]
+            ]
+        );
+
+        return $messages;
+    }
+
+    public static function insertUnitIdentifier(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['messageId', 'tableName', 'resId', 'disposition']);
+        ValidatorModel::stringType($args, ['messageId', 'tableName', 'resId', 'disposition']);
+
+        $messages = DatabaseModel::insert([
+            'table'         => 'unit_identifier',
+            'columnsValues' => [
+                'message_id'   => $args['messageId'],
+                'tablename'    => $args['tableName'],
+                'res_id'       => $args['resId'],
+                'disposition'  => $args['disposition']
+            ]
+        ]);
+
+        return $messages;
     }
 }

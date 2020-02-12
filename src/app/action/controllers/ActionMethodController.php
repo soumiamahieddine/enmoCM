@@ -16,6 +16,7 @@ use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Action\models\ActionModel;
 use Action\models\BasketPersistenceModel;
 use Action\models\ResMarkAsReadModel;
+use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
 use Entity\controllers\ListInstanceController;
 use Entity\models\EntityModel;
@@ -29,7 +30,6 @@ use Resource\controllers\ResController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use SrcCore\models\CoreConfigModel;
-use SrcCore\models\CurlModel;
 use SrcCore\models\DatabaseModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
@@ -310,10 +310,20 @@ class ActionMethodController
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
 
-        $circuit = ListInstanceModel::get(['select' => [1], 'where' => ['res_id = ?', 'difflist_type = ?', 'process_date is null'], 'data' => [$args['resId'], 'VISA_CIRCUIT']]);
+        $circuit = ListInstanceModel::get([
+            'select'    => ['requested_signature'],
+            'where'     => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
+            'data'      => [$args['resId'], 'VISA_CIRCUIT'],
+            'orderBy'   => ['listinstance_id'],
+            'limit'     => 1
+        ]);
         if (empty($circuit)) {
             return ['errors' => ['No available circuit']];
         }
+
+        $resource       = ResModel::getById(['select' => ['integrations'], 'resId' => $args['resId']]);
+        $integrations   = json_decode($resource['integrations'], true);
+        $resourceIn     = !empty($integrations['inSignatureBook']);
 
         $signableAttachmentsTypes = [];
         $attachmentsTypes = AttachmentModel::getAttachmentsTypesByXML();
@@ -323,19 +333,24 @@ class ActionMethodController
             }
         }
 
-        $resource     = ResModel::getById(['select' => ['integrations'], 'resId' => $args['resId']]);
-        $integrations = json_decode($resource['integrations'], true);
-        if (!empty($integrations['inSignatureBook'])) {
-            return true;
-        }
-
         $attachments = AttachmentModel::get([
-            'select'  => [1],
+            'select'  => ['res_id', 'status'],
             'where'   => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
             'data'    => [$args['resId'], $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
         ]);
-        if (empty($attachments)) {
+        if (empty($attachments) && !$resourceIn) {
             return ['errors' => ['No available attachments']];
+        }
+
+        if ($circuit[0]['requested_signature'] == true) {
+            foreach ($attachments as $attachment) {
+                if ($attachment['status'] == 'SEND_MASS') {
+                    $generated = AttachmentController::generateMailing(['id' => $attachment['res_id'], 'userId' => $GLOBALS['id']]);
+                    if (!empty($generated['errors'])) {
+                        return ['errors' => $generated['errors']];
+                    }
+                }
+            }
         }
 
         return true;
@@ -353,7 +368,6 @@ class ActionMethodController
             'orderBy'   => ['listinstance_id'],
             'limit'     => 1
         ]);
-
         if (empty($listInstance[0])) {
             return ['errors' => ['No available circuit']];
         }
@@ -365,6 +379,28 @@ class ActionMethodController
             'where' => ['listinstance_id = ?'],
             'data'  => [$listInstance[0]['listinstance_id']]
         ]);
+
+        $circuit = ListInstanceModel::get([
+            'select'    => ['requested_signature'],
+            'where'     => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
+            'data'      => [$args['resId'], 'VISA_CIRCUIT'],
+            'orderBy'   => ['listinstance_id'],
+            'limit'     => 1
+        ]);
+
+        if ($circuit[0]['requested_signature'] == true) {
+            $attachments = AttachmentModel::get([
+                'select'  => ['res_id'],
+                'where'   => ['res_id_master = ?', 'in_signature_book = ?', 'status = ?'],
+                'data'    => [$args['resId'], true, 'SEND_MASS']
+            ]);
+            foreach ($attachments as $attachment) {
+                $generated = AttachmentController::generateMailing(['id' => $attachment['res_id'], 'userId' => $GLOBALS['id']]);
+                if (!empty($generated['errors'])) {
+                    return ['errors' => $generated['errors']];
+                }
+            }
+        }
 
         return true;
     }
