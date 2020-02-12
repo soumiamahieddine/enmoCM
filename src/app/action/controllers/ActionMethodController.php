@@ -347,7 +347,7 @@ class ActionMethodController
                 if ($attachment['status'] == 'SEND_MASS') {
                     $generated = AttachmentController::generateMailing(['id' => $attachment['res_id'], 'userId' => $GLOBALS['id']]);
                     if (!empty($generated['errors'])) {
-                        return ['errors' => $generated['errors']];
+                        return ['errors' => [$generated['errors']]];
                     }
                 }
             }
@@ -397,7 +397,7 @@ class ActionMethodController
             foreach ($attachments as $attachment) {
                 $generated = AttachmentController::generateMailing(['id' => $attachment['res_id'], 'userId' => $GLOBALS['id']]);
                 if (!empty($generated['errors'])) {
-                    return ['errors' => $generated['errors']];
+                    return ['errors' => [$generated['errors']]];
                 }
             }
         }
