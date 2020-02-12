@@ -175,6 +175,20 @@ class TagController
                 return $response->withStatus(400)->withJson(['errors' => 'Parent tag does not exist']);
             }
             $parent = $parent['id'];
+
+            if ($parent == $args['id']) {
+                return $response->withStatus(400)->withJson(['errors' => 'Tag cannot be its own parent']);
+            }
+
+            $children = TagModel::get([
+                'select' => ['id'],
+                'where'  => ['parent_id = ?'],
+                'data'   => [$args['id']]
+            ]);
+            $children = array_column($children, 'id');
+            if (in_array($parent, $children)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Parent tag cannot also be a children']);
+            }
         }
 
         TagModel::update([
