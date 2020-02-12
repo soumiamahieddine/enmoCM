@@ -13,7 +13,7 @@
 * @ingroup core
 */
 
-namespace MessageExchange\Controllers;
+namespace MessageExchange\controllers;
 
 use Basket\models\BasketModel;
 use Contact\models\ContactModel;
@@ -40,10 +40,6 @@ class ReceiveMessageExchangeController
     {
         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_numeric_package', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
-        }
-
-        if (empty($GLOBALS['userId'])) {
-            return $response->withStatus(401)->withJson(['errors' => 'User Not Connected']);
         }
 
         $data = $request->getParams();
@@ -432,9 +428,7 @@ class ReceiveMessageExchangeController
         }
 
         $acknowledgementObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_Ack';
-        $tmpPath = CoreConfigModel::getTmpPath();
-        $filePath = SendMessageController::generateMessageFile($acknowledgementObject, 'Acknowledgement', $tmpPath);
-
+        $filePath = SendMessageController::generateMessageFile(['messageObject' => $acknowledgementObject, 'type' => 'Acknowledgement']);
         $acknowledgementObject->ArchivalAgency = $acknowledgementObject->Receiver;
         $acknowledgementObject->TransferringAgency = $acknowledgementObject->Sender;
 
@@ -477,9 +471,7 @@ class ReceiveMessageExchangeController
         $replyObject->ArchivalAgency                    = $dataObject->TransferringAgency;
 
         $replyObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_Reply';
-        $tmpPath = CoreConfigModel::getTmpPath();
-        $filePath = SendMessageController::generateMessageFile($replyObject, "ArchiveTransferReply", $tmpPath);
-
+        $filePath = SendMessageController::generateMessageFile(['messageObject' => $replyObject, 'type' => 'ArchiveTransferReply']);
         $replyObject->MessageIdentifier->value          = $dataObject->MessageIdentifier->value . '_ReplySent';
         $messageExchangeSaved = SendMessageExchangeController::saveMessageExchange(['dataObject' => $replyObject, 'res_id_master' => $aArgs['res_id_master'], 'type' => 'ArchiveTransferReply', 'file_path' => $filePath]);
 

@@ -16,12 +16,14 @@ namespace MessageExchange\controllers;
 
 use Action\models\ActionModel;
 use ExportSeda\controllers\SendMessageController;
-use MessageExchange\Controllers\ReceiveMessageExchangeController;
+use MessageExchange\controllers\ReceiveMessageExchangeController;
 use MessageExchange\controllers\SendMessageExchangeController;
 use MessageExchange\models\MessageExchangeModel;
 use Resource\models\ResModel;
 use SrcCore\models\CoreConfigModel;
 use User\models\UserModel;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 require_once 'modules/export_seda/Controllers/ReceiveMessage.php';
 

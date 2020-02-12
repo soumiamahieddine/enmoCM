@@ -840,7 +840,7 @@ export const LANG_FR = {
     "sender"                                : "Expéditeur",
     "senderRecipientInformations"           : "Informations de destination",
     "senders"                               : "Expéditeur(s)",
-    "sendmail"                              : "Envoi de courriels et plis numériques",
+    "sendmail"                              : "Envoi de courriels",
     "sendmailShort"                         : "Envoi de courriels",
     "sendMode"                              : "Mode d'envoi",
     "sendModes"                             : "Modes d'envoi",
