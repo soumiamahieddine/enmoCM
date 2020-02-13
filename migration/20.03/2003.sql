@@ -236,7 +236,7 @@ DO $$ BEGIN
 	  ALTER TABLE tags ADD COLUMN id serial NOT NULL;
 	  UPDATE tags SET id = tag_id;
       ALTER TABLE tags DROP COLUMN IF EXISTS tag_id;
-      ALTER TABLE tags DROP COLUMN IF EXISTS entity_id_owner
+      ALTER TABLE tags DROP COLUMN IF EXISTS entity_id_owner;
       ALTER TABLE tags DROP COLUMN IF EXISTS description;
 	  ALTER TABLE tags ADD COLUMN description TEXT;
       ALTER TABLE tags DROP COLUMN IF EXISTS parent_id;
