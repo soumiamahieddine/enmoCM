@@ -1518,5 +1518,7 @@ export const LANG_NL = {
     "notSent" :  "Not sent", //_TO_TRANSLATE
     "delivery" :  "Delivery", //_TO_TRANSLATE
     "senderShort" :  "From", //_TO_TRANSLATE
-    "recipientShort" :  "To", //_TO_TRANSLATE
+    "recipientShort" :  "To", //_TO_TRANSLATE,
+    "m2m_ARCHIVETRANSFER" : "Digitale brief",
+    "m2m_ARCHIVETRANSFERREPLY" :  "Antwoord verzonden",
 };

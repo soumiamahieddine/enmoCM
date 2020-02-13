@@ -1494,4 +1494,6 @@ export const LANG_EN = {
     "delivery" :  "Delivery",
     "senderShort" :  "From",
     "recipientShort" :  "To",
+    "m2m_ARCHIVETRANSFER" : "Archive transfer",
+    "m2m_ARCHIVETRANSFERREPLY" : "Archive transfer reply",
 };
