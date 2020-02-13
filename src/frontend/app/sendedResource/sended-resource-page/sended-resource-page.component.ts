@@ -300,12 +300,12 @@ export class SendedResourcePageComponent implements OnInit {
                     Object.keys(data.document).forEach(element => {
                         if (['id', 'isLinked', 'original'].indexOf(element) === -1) {
                             data.document[element].forEach((dataAttach: any) => {
-                                const elem = this.emailAttachTool[element].list.filter((item: any) => item.id === dataAttach.id);
+                                const elem = this.emailAttachTool[element].list.filter((item: any) => item.id === dataAttach.id || item.id === dataAttach);
                                 if (elem.length > 0) {
                                     this.emailAttach[element] = elem.map((item: any) => {
                                         return {
                                             ...item,
-                                            format: dataAttach.original ? item.format : 'pdf',
+                                            format: dataAttach.original || dataAttach.original === undefined ? item.format : 'pdf',
                                             original: dataAttach.original
                                         }
                                     })
@@ -316,8 +316,9 @@ export class SendedResourcePageComponent implements OnInit {
                             this.emailAttach.document.original = data.document.original;
                         }
                     });
-                    data.document
-
+                    console.log(this.emailAttachTool);
+                    console.log(this.emailAttach);
+                    
                     resolve(true);
                 }),
                 catchError((err) => {
@@ -402,12 +403,13 @@ export class SendedResourcePageComponent implements OnInit {
                             this.emailAttachTool[element].list = data[element].map((item: any) => {
                                 return {
                                     ...item,
+                                    original : item.original !== undefined ? item.original : true, 
                                     title: item.chrono !== undefined ? `${item.chrono} - ${item.label} (${item.typeLabel})` : `${item.label} (${item.typeLabel})`
                                 }
                             });
                         }
                     });
-
+                    
                     resolve(true);
                 }),
                 catchError((err: any) => {

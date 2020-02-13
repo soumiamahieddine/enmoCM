@@ -129,5 +129,5 @@
 <div mat-dialog-actions class="actions" *ngIf="emailStatus !== 'SENT'">
     <button mat-raised-button color="primary" (click)="onSubmit()">Envoyer</button>
     <button mat-raised-button color="primary" (click)="saveDraft()">Enregistrer le brouilon</button>
-    <button mat-raised-button color="warn" (click)="deleteEmail()" [disabled]="emailStatus === 'SENT' || emailStatus === 'WAITING'">Supprimer</button>
+    <button mat-raised-button color="warn" (click)="deleteEmail()" *ngIf="data.emailId" [disabled]="emailStatus === 'SENT' || emailStatus === 'WAITING'">Supprimer</button>
 </div>
