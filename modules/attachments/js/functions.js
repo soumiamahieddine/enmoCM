@@ -1,33 +1,3 @@
-// Date + 60 jours, utile pour les transmissions
-function defineBackDate(delay) {
-	var date1 = new Date();
-	date1.setDate(date1.getDate() + Number(delay));
-	var str_date = date1.toLocaleDateString();
-    var t = str_date.split('/');
-    if(t[1].length == 1){
-        t[1] = '0'+t[1];
-    }
-    if(t[0].length == 1){
-        t[0] = '0'+t[0];
-    }
-    str_date = t.join('-');
-	return str_date;
-}
-
-function hideEditAndAddButton(editParagraph) {
-  $(editParagraph).style.display = "none";
-}
-
-
-function hideInput(target) {
-	if ($j('#'+target.id).val() == "NO_RTURN") {
-        $j('#'+target.id).parent().parent().find('[name=back_date\\[\\]]').val("");
-	} else {
-        var delay = $j('#'+target.id).parent().parent().find('[name=attachment_types\\[\\]] option:selected').attr("width_delay");
-        var delay_date = defineBackDate(delay);
-        $j('#'+target.id).parent().parent().find('[name=back_date\\[\\]]').val(delay_date);
-	}
-}
 
 function showAttachmentsForm(path, width, height) {
     if(typeof(width)==='undefined'){

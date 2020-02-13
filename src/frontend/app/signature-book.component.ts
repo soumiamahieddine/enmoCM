@@ -345,7 +345,7 @@ export class SignatureBookComponent implements OnInit {
     }
 
     addAttachmentIframe() {
-        showAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&docId=' + this.resId);
+        // showAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&docId=' + this.resId);
     }
 
     editAttachmentIframe(attachment: any) {
@@ -353,7 +353,7 @@ export class SignatureBookComponent implements OnInit {
             var resId: number;
             resId = attachment.res_id;
 
-            modifyAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId, '98%', 'auto');
+            // modifyAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId, '98%', 'auto');
         }
     }
 
@@ -368,10 +368,10 @@ export class SignatureBookComponent implements OnInit {
                 var resId: number;
                 resId = attachment.res_id;
 
-                this.http.get('index.php?display=true&module=attachments&page=del_attachment&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId + '&rest=true')
-                    .subscribe(() => {
-                        this.refreshAttachments('del');
-                    });
+                // this.http.get('index.php?display=true&module=attachments&page=del_attachment&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId + '&rest=true')
+                //     .subscribe(() => {
+                //         this.refreshAttachments('del');
+                //     });
             }
         }
     }

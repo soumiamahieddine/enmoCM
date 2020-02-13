@@ -1455,15 +1455,7 @@ abstract class lists_Abstract extends Database
             }
         }
 
-        $core_tools = new core_tools();
-        if (($core_tools->test_service('delete_attachments', 'attachments', false) || $typist == $_SESSION['user']['UserId']) && $status != 'FRZ') {
-            $return = '<a href="index.php?display=true'
-                            .'&module=attachments&page=del_attachment&docId='.$_SESSION['doc_id'].'&relation='.$resultTheLine[1]['value'].'&id='.$resultTheLine[0]['value'].'&fromDetail='.$fromDetail.'"'
-                            .'onclick="return(confirm(\''._REALLY_DELETE.' ?\n\r\n\r'
-                            ._DEFINITIVE_ACTION.'\'));"><i class="tooltip fa fa-trash-alt fa-2x visaPjDel" style="color:white;font-size: 21px;padding-right: 12px;padding-bottom: 12px;padding-top:11px;margin-right:10px;" title="'._DELETE.'"></i></a>';
-        } else {
-            $return = '<a href="" class="delete" style="visibility:hidden;"><i class="tooltip fa fa-trash-alt fa-2x" title="'._DELETE.'"></i></a>';
-        }
+        $return = '<a href="" class="delete" style="visibility:hidden;"><i class="tooltip fa fa-trash-alt fa-2x" title="'._DELETE.'"></i></a>';
         $return .= '<script>titleWithTooltipsterClass("tooltip");</script>';
 
         return $return;
@@ -1488,14 +1480,8 @@ abstract class lists_Abstract extends Database
             }
         }
 
-        $core_tools = new core_tools();
-        if (($core_tools->test_service('modify_attachments', 'attachments', false) || $typist == $_SESSION['user']['UserId']) && !in_array($status, ['TRA', 'FRZ'])) {
-            $return = '<i style="font-size: 21px;padding-bottom: 11px;padding-left: 13px;margin-right:10px;padding-top:12px" class="tooltip fa fa-edit fa-2x visaPjUp" title="'._MODIFY.'" onclick="modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl']
-                            .'index.php?display=true&module=attachments&page=attachments_content&id='.$resultTheLine[0]['value'].'&relation='.$relation.'&fromDetail='.$fromDetail.'\',\'98%\',\'auto\');"></i>';
-        } else {
-            $return = '<a href="javascript://" disabled="disabled" class="change" style="visibility:hidden;">
+        $return = '<a href="javascript://" disabled="disabled" class="change" style="visibility:hidden;">
                                 <i class="tooltip fa fa-edit fa-2x" title="'._MODIFY.'"></i></a>';
-        }
 
         return $return;
     }

@@ -144,7 +144,11 @@ class EmailController
             }
         }
 
-        return ($isSent['success'] ?? $id);
+        if (!empty($isSent['errors'])) {
+            return $isSent;
+        }
+
+        return $id;
     }
 
     public function getById(Request $request, Response $response, array $args)

@@ -40,6 +40,11 @@
             <label>_ROUTING</label>
             <process_mode/>
         </type>
+        <type show="true" with_chrono="true" icon="DS" sign="true">
+            <id>outgoing_mail</id>
+            <label>_OUTGOING_MAIL</label>
+            <process_mode/>
+        </type>
 	    <type show="false" with_chrono="false" icon="" sign="false">
             <id>converted_pdf</id>
             <label>_CONVERTED_PDF</label>
@@ -59,11 +64,6 @@
             <id>svr</id>
             <label>_SVR</label>
             <process_mode>SVR</process_mode>
-        </type>
-        <type show="false" with_chrono="false" icon="" sign="false">
-            <id>document_with_notes</id>
-            <label>_DOCUMENT_WITH_NOTES</label>
-            <process_mode/>
         </type>
     </attachment_types>
     <contact_check>

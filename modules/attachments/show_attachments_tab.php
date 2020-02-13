@@ -31,12 +31,6 @@ $core_tools->load_js();
 
 $frm_str .= '<div class="ref-unit">';
 $frm_str .= '<center>';
-if ($core_tools->is_module_loaded('templates')) {
-    $frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'
-            . _CREATE_PJ
-            . '" onclick="showAttachmentsForm(\'' . $_SESSION['config']['businessappurl']
-            . 'index.php?display=true&module=attachments&page=attachments_content\')" />';
-}
 $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'
         . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=converted_pdf,print_folder" '

@@ -40,11 +40,6 @@ $core_tools->load_js();
 
 $frm_str .= '<div class="ref-unit">';
 $frm_str .= '<center>';
-if ($core_tools->is_module_loaded('templates') && ($core_tools->test_service('edit_attachments_from_detail', 'attachments', false))) {
-    $frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'. _CREATE_PJ.'"
-        onclick="showAttachmentsForm(\''. $_SESSION['config']['businessappurl']
-        . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create\',\'98%\',\'auto\')" />';
-}
 $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=frame_list_attachments&view_only=true&load&fromDetail='.$from_detail.$extraParam.'" '
         . 'frameborder="0" width="100%" height="550px"></iframe>';
 $frm_str .= '</div>';
