@@ -224,6 +224,13 @@ class TagController
             return $response->withStatus(400)->withJson(['errors' => 'Route id must be an integer val']);
         }
 
+        $resourcesTags = ResourceTagModel::get([
+            'where' => ['tag_id = ?'],
+            'data'  => [$args['id']]
+        ]);
+        if (!empty($resourcesTags) && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_tag', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $tag = TagModel::getById(['select' => ['label', 'links'], 'id' => $args['id']]);
         if (empty($tag)) {
