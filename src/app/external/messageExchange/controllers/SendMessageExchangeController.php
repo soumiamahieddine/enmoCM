@@ -129,7 +129,7 @@ class SendMessageExchangeController
         }
 
         if (empty($TransferringAgencyInformations)) {
-            return ['errors' => "no sender"];
+            return $response->withStatus(400)->withJson(['errors' => "no sender"]);
         }
 
         $AllInfoMainMail = ResModel::getById(['select' => ['*'], 'resId' => $args['resId']]);
@@ -231,7 +231,7 @@ class SendMessageExchangeController
             $filePath = SendMessageController::generateMessageFile(['messageObject' => $dataObject, 'type' => 'ArchiveTransfer']);
 
             /******** SAVE MESSAGE *********/
-            $messageExchangeReturn = self::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $args['resId'], 'file_path' => $filePath, 'type' => 'ArchiveTransfer']);
+            $messageExchangeReturn = self::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $args['resId'], 'file_path' => $filePath, 'type' => 'ArchiveTransfer', 'userId' => $GLOBALS['userId']]);
             if (!empty($messageExchangeReturn['error'])) {
                 return $response->withStatus(400)->withJson(['errors' => $messageExchangeReturn['error']]);
             } else {

@@ -141,11 +141,10 @@ class MessageExchangeReviewController
             MessageExchangeModel::updateOperationDateMessage(['operation_date' => $dataObject->Date, 'message_id' => $messageExchange['message_id']]);
         }
 
-        $messageExchangeSaved = SendMessageExchangeController::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $messageExchange['res_id_master'], 'type' => 'ArchiveModificationNotification']);
+        $messageExchangeSaved = SendMessageExchangeController::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $messageExchange['res_id_master'], 'type' => 'ArchiveModificationNotification', 'userId' => $GLOBALS['userId']]);
 
         return $response->withJson([
             'messageId' => $messageExchangeSaved['messageId'],
         ]);
     }
-
 }
