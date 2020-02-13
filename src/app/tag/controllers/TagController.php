@@ -250,6 +250,11 @@ class TagController
             }
         }
 
+        ResourceTagModel::delete([
+            'where' => ['tag_id = ?'],
+            'data'  => [$args['id']]
+        ]);
+
         TagModel::delete([
             'where' => ['id = ?'],
             'data'  => [$args['id']]
