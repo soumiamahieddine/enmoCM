@@ -594,8 +594,8 @@ abstract class tag_controler_Abstract extends ObjectControler
         {*/
         $stmt = $db->query(
                 "INSERT INTO " ._TAG_TABLE_NAME
-                . "(label, entity_id_owner) VALUES (?, ?)",
-                 array($new_tag_label,$_SESSION['user']['primaryentity']['id'])
+                . "(label) VALUES (?, ?)",
+                 array($new_tag_label)
              );
              
         $tag_id = $db->lastInsertId('tags_id_seq');

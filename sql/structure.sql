@@ -900,7 +900,6 @@ CREATE TABLE tags
 (
   id serial NOT NULL,
   label character varying(128) NOT NULL,
-  entity_id_owner character varying(32),
   description text,
   parent_id INT,
   creation_date timestamp DEFAULT NOW(),

@@ -236,7 +236,7 @@ DO $$ BEGIN
 	  ALTER TABLE tags ADD COLUMN id serial NOT NULL;
 	  UPDATE tags SET id = tag_id;
       ALTER TABLE tags DROP COLUMN IF EXISTS tag_id;
-
+      ALTER TABLE tags DROP COLUMN IF EXISTS entity_id_owner
       ALTER TABLE tags DROP COLUMN IF EXISTS description;
 	  ALTER TABLE tags ADD COLUMN description TEXT;
       ALTER TABLE tags DROP COLUMN IF EXISTS parent_id;
@@ -247,16 +247,13 @@ DO $$ BEGIN
       ALTER TABLE tags ADD COLUMN links jsonb DEFAULT '[]';
       ALTER TABLE tags DROP COLUMN IF EXISTS usage;
       ALTER TABLE tags ADD COLUMN usage TEXT;
-  END IF;
-END$$;
 
-DO $$ BEGIN
-  IF (SELECT count(attname) FROM pg_attribute WHERE attrelid = (SELECT oid FROM pg_class WHERE relname = 'tag_res')) = 1 THEN
       DROP TABLE IF EXISTS resources_tags;
       ALTER TABLE tag_res ADD COLUMN id serial NOT NULL;
       ALTER TABLE tag_res RENAME TO resources_tags;
   END IF;
 END$$;
+
 SELECT setval('tags_id_seq', (SELECT MAX(id) from tags));
 
 DROP TABLE IF EXISTS tags_entities;
