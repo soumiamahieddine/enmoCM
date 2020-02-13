@@ -393,58 +393,42 @@ export class SignatureBookComponent implements OnInit {
     signFile(attachment: any, signature: any) {
         if (!this.loadingSign && this.signatureBook.canSign) {
             this.loadingSign = true;
-            var path = "index.php?display=true&module=visa&page=sign_file&collId=letterbox_coll&resIdMaster=" + this.resId + "&signatureId=" + signature.id;
-
-            if (attachment.attachment_type == "outgoing_mail" && this.signatureBook.documents[0].category_id == "outgoing") {
-                path += "&isOutgoing&id=" + attachment.res_id;
-            } else {
-                path += "&id=" + attachment.res_id;
-            }
-
-            this.http.get(path, signature)
+            var route = attachment.isResource ? '../../rest/resources/' + attachment.res_id + '/sign' : '../../rest/attachments/' + attachment.res_id + '/sign';
+            this.http.put(route, {'signatureId' : signature.id})
                 .subscribe((data : any) => {
-                    if (data.status == 0) {
-                        this.rightViewerLink = "../../rest/attachments/" + data.new_id + "/content";
-                        this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
+                    if (!attachment.isResource) {
+                        this.rightViewerLink = "../../rest/attachments/" + data.id + "/content";
                         this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'SIGN';
                         this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = data.new_id;
-                        var allSigned = true;
-                        this.signatureBook.attachments.forEach((value: any) => {
-                            if (value.sign && value.status != 'SIGN') {
-                                allSigned = false;
-                            }
-                        });
-                        if (this.signatureBook.resList.length > 0) {
-                            this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = allSigned;
-                        }
-
-                        if(this.headerTab==3){
-                            this.changeSignatureBookLeftContent(0);
-                            setTimeout(() => {
-                                this.changeSignatureBookLeftContent(3);
-                            }, 0);
-                        }
                     } else {
-                        alert(data.error);
+                        this.rightViewerLink += "?tsp=" + Math.floor(Math.random() * 100);
+                    }
+                    this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
+                    var allSigned = true;
+                    this.signatureBook.attachments.forEach((value: any) => {
+                        if (value.sign && value.status != 'SIGN') {
+                            allSigned = false;
+                        }
+                    });
+                    if (this.signatureBook.resList.length > 0) {
+                        this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = allSigned;
                     }
 
                     this.showSignaturesPanel = false;
+                    this.loadingSign = false;
+                }, (error: any) => {
                     this.loadingSign = false;
                 });
         }
     }
 
     unsignFile(attachment: any) {
-        var resId: number;
-
-        resId = attachment.res_id;
-
-        this.http.put(this.coreUrl + 'rest/attachments/' + resId + '/unsign', {})
+        this.http.put('../../rest/attachments/' + attachment.res_id + '/unsign', {})
             .subscribe(() => {
-                this.rightViewerLink = "../../rest/attachments/" + resId + "/content";
+                this.rightViewerLink = "../../rest/attachments/" + attachment.res_id + "/content";
                 this.signatureBook.attachments[this.rightSelectedThumbnail].viewerLink = this.rightViewerLink;
                 this.signatureBook.attachments[this.rightSelectedThumbnail].status = 'A_TRA';
-                this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = resId;
+                this.signatureBook.attachments[this.rightSelectedThumbnail].idToDl = attachment.res_id;
                 if (this.signatureBook.resList.length > 0) {
                     this.signatureBook.resList[this.signatureBook.resListIndex].allSigned = false;
                 }
@@ -456,7 +440,6 @@ export class SignatureBookComponent implements OnInit {
                 }
 
             });
-
     }
 
     backToBasket() {

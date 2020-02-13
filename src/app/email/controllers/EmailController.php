@@ -214,7 +214,7 @@ class EmailController
 
             HistoryController::add([
                 'tableName' => 'emails',
-                'recordId'  => $args['emailId'],
+                'recordId'  => $args['id'],
                 'eventType' => 'ADD',
                 'eventId'   => 'emailCreation',
                 'info'      => _EMAIL_ADDED
@@ -232,7 +232,7 @@ class EmailController
         } else {
             HistoryController::add([
                 'tableName'    => 'emails',
-                'recordId'     => $args['emailId'],
+                'recordId'     => $args['id'],
                 'eventType'    => 'UP',
                 'eventId'      => 'emailModification',
                 'info'         => _EMAIL_UPDATED
