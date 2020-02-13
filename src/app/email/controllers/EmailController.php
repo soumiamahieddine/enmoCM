@@ -550,11 +550,13 @@ class EmailController
         $email['cc']            = array_unique(json_decode($email['cc']));
         $email['cci']           = array_unique(json_decode($email['cci']));
 
-        $hierarchyMail = ['cci' => 'recipients', 'cci' => 'cc', 'cc' => 'recipients'];
-        foreach ($hierarchyMail as $lowEmail => $highEmail) {
-            foreach ($email[$lowEmail] as $currentKey => $currentEmail) {
-                if (in_array($currentEmail, $email[$highEmail])) {
-                    unset($email[$lowEmail][$currentKey]);
+        $hierarchyMail = ['cci' => ['recipients', 'cc'], 'cc' => ['recipients']];
+        foreach ($hierarchyMail as $lowEmail => $ahighEmail) {
+            foreach ($ahighEmail as $highEmail) {
+                foreach ($email[$lowEmail] as $currentKey => $currentEmail) {
+                    if (in_array($currentEmail, $email[$highEmail])) {
+                        unset($email[$lowEmail][$currentKey]);
+                    }
                 }
             }
         }
