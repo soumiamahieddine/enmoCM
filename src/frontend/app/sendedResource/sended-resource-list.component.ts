@@ -195,7 +195,7 @@ export class SendedResourceListComponent implements OnInit {
 
     openPromptMail() {
 
-        const dialogRef = this.dialog.open(SendedResourcePageComponent, { maxWidth: '90vw', width: '750px', data: { title: `Toto`, resId: this.resId } });
+        const dialogRef = this.dialog.open(SendedResourcePageComponent, { maxWidth: '90vw', width: '750px', disableClose: true, data: { title: `Toto`, resId: this.resId } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'success'),

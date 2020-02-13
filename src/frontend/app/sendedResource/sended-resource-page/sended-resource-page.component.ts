@@ -1,5 +1,5 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, OnInit, ViewChild, EventEmitter, ElementRef, Input, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, ElementRef, Input, Inject, AfterViewInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
@@ -9,11 +9,17 @@ import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, t
 import { FormControl } from '@angular/forms';
 import { FunctionsService } from '../../../service/functions.service';
 import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
+import { ContactService } from '../../../service/contact.service';
+import { AppService } from '../../../service/app.service';
+import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
+
+declare var tinymce: any;
 
 @Component({
     selector: 'app-sended-resource-page',
     templateUrl: "sended-resource-page.component.html",
     styleUrls: ['sended-resource-page.component.scss'],
+    providers: [ContactService, AppService],
 })
 export class SendedResourcePageComponent implements OnInit {
 
@@ -38,6 +44,10 @@ export class SendedResourcePageComponent implements OnInit {
     fruits: any[] = [];
 
     recipientsInput: FormControl = new FormControl();
+
+    emailSignListForm = new FormControl();
+    templateEmailListForm = new FormControl();
+
     tinymceInput: string = '';
 
     filteredEmails: Observable<string[]>;
@@ -48,61 +58,45 @@ export class SendedResourcePageComponent implements OnInit {
     showCopies: boolean = false;
     showInvisibleCopies: boolean = false;
 
-    tinyMCEConfig = {
-        language: this.lang.langISO.replace('-', '_'),
-        language_url: `../../node_modules/tinymce-i18n/langs/${this.lang.langISO.replace('-', '_')}.js`,
-        menubar: false,
-        statusbar: false,
-        plugins: [
-            'autolink', 'autoresize'
-        ],
-        external_plugins: {
-            'maarch_b64image': "../../src/frontend/plugins/tinymce/maarch_b64image/plugin.min.js"
-        },
-        toolbar_sticky: true,
-        toolbar_drawer: 'floating',
-        toolbar:
-            'undo redo | fontselect fontsizeselect | bold italic underline strikethrough forecolor | maarch_b64image | \
-          alignleft aligncenter alignright alignjustify \
-          bullist numlist outdent indent | removeformat'
-    }
-
+    emailId: number = null;
     emailsubject: string = '';
-
-    currentEmailAttachTool :string = '';
+    emailStatus: string = 'WAITING';
+    currentEmailAttachTool: string = '';
     emailAttachTool: any = {
-        document : {
-            icon : 'fa fa-file',
-            title : 'Attacher le document principal',
-            list : []
+        document: {
+            icon: 'fa fa-file',
+            title: 'Attacher le document principal',
+            list: []
         },
-        notes : {
-            icon : 'fas fa-pen-square',
-            title : 'Attacher une annotations',
-            list : []
+        notes: {
+            icon: 'fas fa-pen-square',
+            title: 'Attacher une annotations',
+            list: []
         },
-        attachments : {
-            icon : 'fa fa-paperclip',
-            title : 'Attacher une pièce jointe',
-            list : []
+        attachments: {
+            icon: 'fa fa-paperclip',
+            title: 'Attacher une pièce jointe',
+            list: []
         },
     };
     emailAttach: any = {};
+    lastClicked: any = Date.now();
 
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
         @Inject(MAT_DIALOG_DATA) public data: any,
+        public dialog: MatDialog,
         public dialogRef: MatDialogRef<SendedResourcePageComponent>,
-        public functions: FunctionsService
+        public functions: FunctionsService,
+        private contactService: ContactService,
     ) { }
 
     async ngOnInit(): Promise<void> {
-
         Object.keys(this.emailAttachTool).forEach(element => {
             if (element === 'document') {
                 this.emailAttach[element] = {
-                    id : this.data.resId,
+                    id: this.data.resId,
                     isLinked: false,
                     original: false
                 };
@@ -118,6 +112,29 @@ export class SendedResourcePageComponent implements OnInit {
         await this.getResourceData();
         await this.getUserEmails();
         this.loading = false;
+        this.initMce();
+    }
+
+    initMce() {
+        tinymce.init({
+            selector: "textarea#emailSignature",
+            language: this.lang.langISO.replace('-', '_'),
+            language_url: `../../node_modules/tinymce-i18n/langs/${this.lang.langISO.replace('-', '_')}.js`,
+            menubar: false,
+            statusbar: false,
+            plugins: [
+                'autolink', 'autoresize'
+            ],
+            external_plugins: {
+                'maarch_b64image': "../../src/frontend/plugins/tinymce/maarch_b64image/plugin.min.js"
+            },
+            toolbar_sticky: true,
+            toolbar_drawer: 'floating',
+            toolbar:
+                'undo redo | fontselect fontsizeselect | bold italic underline strikethrough forecolor | maarch_b64image | \
+            alignleft aligncenter alignright alignjustify \
+            bullist numlist outdent indent | removeformat'
+        });
     }
 
     add(event: MatChipInputEvent, type: string): void {
@@ -136,6 +153,11 @@ export class SendedResourcePageComponent implements OnInit {
         if (input) {
             input.value = '';
         }
+    }
+
+    closeModal(state: string = '') {
+        tinymce.remove();
+        this.dialogRef.close(state);
     }
 
     addEmail(item: any, type: string) {
@@ -168,15 +190,16 @@ export class SendedResourcePageComponent implements OnInit {
         }
     }
 
-    mergeEmailTemplate(templateId: number) {
-        this.currentSelected = '';
+    mergeEmailTemplate(templateId: any) {
+
+        this.templateEmailListForm.reset();
 
         this.http.post(`../../rest/templates/${templateId}/mergeEmail`, { data: { resId: this.data.resId } }).pipe(
             tap((data: any) => {
 
                 var div = document.createElement('div');
 
-                div.innerHTML = this.tinymceInput.trim();
+                div.innerHTML = tinymce.get('emailSignature').getContent();
 
                 if (div.getElementsByClassName('signature').length > 0) {
 
@@ -184,10 +207,10 @@ export class SendedResourcePageComponent implements OnInit {
 
                     div.getElementsByClassName('signature')[0].remove();
 
-                    this.tinymceInput = `${div.innerHTML}${data.mergedDocument}<div class="signature">${signatureContent}</div>`;
+                    tinymce.get('emailSignature').setContent(`${div.innerHTML}${data.mergedDocument}<div class="signature">${signatureContent}</div>`);
 
                 } else {
-                    this.tinymceInput += data.mergedDocument;
+                    tinymce.get('emailSignature').setContent(`${tinymce.get('emailSignature').getContent()}${data.mergedDocument}`);
                 }
             }),
             catchError((err) => {
@@ -197,23 +220,23 @@ export class SendedResourcePageComponent implements OnInit {
         ).subscribe();
     }
 
-    mergeSignEmailTemplate(templateId: number) {
-        this.currentSelected = '';
+    mergeSignEmailTemplate(templateId: any) {
+
+        this.emailSignListForm.reset();
 
         this.http.get(`../../rest/currentUser/emailSignatures/${templateId}`).pipe(
             tap((data: any) => {
                 var div = document.createElement('div');
 
-                div.innerHTML = this.tinymceInput.trim();
-
+                div.innerHTML = tinymce.get('emailSignature').getContent();
 
                 if (div.getElementsByClassName('signature').length > 0) {
 
                     div.getElementsByClassName('signature')[0].remove();
 
-                    this.tinymceInput = `${div.innerHTML}<div class="signature">${data.emailSignature.content}</div>`;
+                    tinymce.get('emailSignature').setContent(`${div.innerHTML}<div class="signature">${data.emailSignature.content}</div>`);
                 } else {
-                    this.tinymceInput += `<div class="signature">${data.emailSignature.content}</div>`;
+                    tinymce.get('emailSignature').setContent(`${tinymce.get('emailSignature').getContent()}<div class="signature">${data.emailSignature.content}</div>`);
                 }
             }),
             catchError((err) => {
@@ -238,8 +261,9 @@ export class SendedResourcePageComponent implements OnInit {
                 tap((data: any) => {
                     this.resourceData = data;
                     this.emailsubject = `[${this.resourceData.chrono}] ${this.resourceData.subject}`;
+                    this.emailAttach.document.chrono = this.resourceData.chrono;
                     this.emailAttach.document.label = this.resourceData.subject;
-    
+
                     if (!this.functions.empty(this.resourceData.senders)) {
                         this.resourceData.senders.forEach((sender: any) => {
                             this.setSender(sender.id);
@@ -262,6 +286,7 @@ export class SendedResourcePageComponent implements OnInit {
                 if (!this.functions.empty(data.email)) {
                     this.recipients.push(
                         {
+                            label: this.contactService.formatContact(data),
                             email: data.email
                         }
                     )
@@ -293,55 +318,21 @@ export class SendedResourcePageComponent implements OnInit {
 
     getAttachElements() {
         return new Promise((resolve, reject) => {
-            this.emailAttachTool.document.list = [
-                {
-                    id: 100,
-                    chrono : 'MAARCH/2019A/0001',
-                    label: 'Réservation Bal',
-                    typeLabel: 'Document principal',
-                    isPdfVersion: true,
-                    creator: 'Bernard Blier',
-                    format: 'pdf',
-                    size: '40 Ko'
-                }
-            ];
-            this.emailAttachTool.attachments.list = [
-                {
-                    id: 100,
-                    chrono : 'MAARCH/2019D/0002',
-                    label: 'je suis une pj',
-                    typeLabel: 'Projet de réponse',
-                    isPdfVersion: true,
-                    creator: 'Bernard Blier',
-                    format: 'odt',
-                    size: '40ko'
-                },
-                {
-                    id: 102,
-                    chrono : 'MAARCH/2019D/0003',
-                    label: 'je suis une pj 2',
-                    typeLabel: 'Projet de réponse',
-                    isPdfVersion: true,
-                    creator: 'Bernard Blier',
-                    format: 'docx',
-                    size: '40 Ko'
-                }
-            ];
-    
-            this.emailAttachTool.notes.list = [
-                {
-                    id: 100,
-                    label: 'Je suis une note',
-                    typeLabel: 'Note',
-                    isPdfVersion: true,
-                    creator: 'Bernard Blier',
-                    format: 'html',
-                    size: null
-                }
-            ];
-            resolve(true);
-            /*this.http.get(`../../rest/resources/${this.resId}/emails?type=email`).pipe(
+            this.http.get(`../../rest/resources/${this.data.resId}/emailsInitialization`).pipe(
                 tap((data: any) => {
+                    Object.keys(data).forEach(element => {
+                        if (element === 'resource') {
+                            this.emailAttachTool.document.list = [data[element]];
+                        } else {
+                            this.emailAttachTool[element].list = data[element].map((item: any) => {
+                                return {
+                                    ...item,
+                                    title: item.chrono !== undefined ? `${item.chrono} - ${item.label} (${item.typeLabel})` : `${item.label} (${item.typeLabel})`
+                                }
+                            });
+                        }
+                    });
+
                     resolve(true);
                 }),
                 catchError((err: any) => {
@@ -349,7 +340,7 @@ export class SendedResourcePageComponent implements OnInit {
                     resolve(false);
                     return of(false);
                 })
-            ).subscribe();*/
+            ).subscribe();
         });
     }
 
@@ -419,16 +410,77 @@ export class SendedResourcePageComponent implements OnInit {
     }
 
     onSubmit() {
+        this.emailStatus = 'WAITING';
+        if (this.emailId === null) {
+            if (this.emailsubject === '') {
+                const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: 'Vous allez envoyer un courriel sans sujet, continuer ?' } });
+
+                dialogRef.afterClosed().pipe(
+                    filter((data: string) => data === 'ok'),
+                    tap(() => {
+                        this.createEmail(true);
+                    })
+                ).subscribe();
+            } else {
+                this.createEmail(true);
+            }
+
+        } else {
+            this.updateEmail(true);
+        }
+    }
+
+    createEmail(closeModal: boolean = true) {
         this.http.post(`../../rest/emails`, this.formatEmail()).pipe(
-            tap(() => {
-                this.notify.success("Email en cours d'envoi...")
-                this.dialogRef.close('success');
+            tap((data: any) => {
+                //this.emailId = data.id;
+
+                if (this.emailStatus === 'DRAFT') {
+                    this.notify.success("Brouillon enregitré");
+                } else {
+                    this.notify.success("Email en cours d'envoi...");
+                }
+
+                if (closeModal) {
+                    this.closeModal('success');
+                }
+
             }),
             catchError((err) => {
                 this.notify.handleSoftErrors(err);
                 return of(false);
             })
         ).subscribe();
+    }
+
+    updateEmail(closeModal: boolean = true) {
+        this.http.put(`../../rest/emails/${this.emailId}`, this.formatEmail()).pipe(
+            tap(() => {
+                if (this.emailStatus === 'DRAFT') {
+                    this.notify.success("Brouillon modifié");
+                } else {
+                    this.notify.success("Email en cours d'envoi...");
+                }
+
+                if (closeModal) {
+                    this.closeModal('success');
+                }
+            }),
+            catchError((err) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    saveDraft() {
+        this.emailStatus = 'DRAFT';
+        if (this.emailId === null) {
+            this.createEmail();
+        } else {
+            this.updateEmail();
+        }
+
     }
 
     drop(event: CdkDragDrop<string[]>) {
@@ -450,10 +502,8 @@ export class SendedResourcePageComponent implements OnInit {
         } else {
             if (this.emailAttach[type].filter((attach: any) => attach.id === item.id).length === 0) {
                 this.emailAttach[type].push({
-                    id: item.id,
-                    label: item.label,
-                    format : mode !== 'pdf' ? item.format : 'pdf',
-                    size: item.size,
+                    ...item,
+                    format: mode !== 'pdf' ? item.format : 'pdf',
                     original: mode === 'pdf' ? false : true
                 });
             }
@@ -470,23 +520,45 @@ export class SendedResourcePageComponent implements OnInit {
     }
 
     formatEmail() {
+        let objAttach: any = {}
         Object.keys(this.emailAttach).forEach(element => {
-            if (this.functions.empty(this.emailAttach[element])) {
-                delete this.emailAttach[element];
+            if (!this.functions.empty(this.emailAttach[element])) {
+                if (element === 'document') {
+                    objAttach = {
+                        id: this.emailAttach[element].id,
+                        isLinked: this.emailAttach[element].isLinked,
+                        original: this.emailAttach[element].original
+                    }
+                } else if (element === 'notes') {
+                    objAttach[element] = this.emailAttach[element].map((item: any) => item.id)
+                } else {
+                    objAttach[element] = this.emailAttach[element].map((item: any) => {
+                        return {
+                            id: item.id,
+                            original: item.original
+                        }
+                    })
+                }
             }
         });
+
+        let formatSender = this.currentSender;
+
+        delete formatSender.label;
+
         const data = {
-            sender: this.currentSender,
+            document: objAttach,
+            sender: formatSender,
             recipients: this.recipients.map(recipient => recipient.email),
             cc: this.showCopies ? this.copies.map(copy => copy.email) : [],
             cci: this.showInvisibleCopies ? this.invisibleCopies.map((invCopy => invCopy.email)) : [],
             object: this.emailsubject,
-            body: this.tinymceInput,
+            body: tinymce.get('emailSignature').getContent(),
             isHtml: true,
-            status: 'WAITING'
+            status: this.emailStatus
         };
 
-        return Object.assign({}, this.emailAttach, data);
+        return data;
     }
 
     isSelectedAttachMail(item: any, type: string) {
@@ -494,6 +566,13 @@ export class SendedResourcePageComponent implements OnInit {
             return this.emailAttach.document.isLinked;
         } else {
             return this.emailAttach[type].filter((attach: any) => attach.id === item.id).length > 0;
+        }
+    }
+
+    test() {
+        if (Date.now() - this.lastClicked >= 5000) {
+            this.lastClicked = Date.now();
+            console.log('modifié');
         }
     }
 }
