@@ -163,7 +163,7 @@ class EmailController
         $email = [
             'id'            => $rawEmail['id'],
             'sender'        => json_decode($rawEmail['sender'], true),
-            'to'            => json_decode($rawEmail['recipients'], true),
+            'recipients'    => json_decode($rawEmail['recipients'], true),
             'cc'            => json_decode($rawEmail['cc'], true),
             'cci'           => json_decode($rawEmail['cci'], true),
             'userId'        => $rawEmail['user_id'],
