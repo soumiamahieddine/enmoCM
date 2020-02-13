@@ -59,7 +59,7 @@ class EmailController
             return $response->withStatus($httpCode)->withJson(['errors' => $isSent['errors']]);
         }
 
-        return $response->withStatus(204);
+        return $response->withJson(['id' => $isSent]);
     }
 
     public static function createEmail(array $args)
@@ -75,8 +75,8 @@ class EmailController
 
         $id = EmailModel::create([
             'userId'                => $args['userId'],
-            'sender'                => json_encode($args['data']['sender']),
-            'recipients'            => json_encode($args['data']['recipients']),
+            'sender'                => empty($args['data']['sender']) ? '{}' : json_encode($args['data']['sender']),
+            'recipients'            => empty($args['data']['recipients']) ? '[]' : json_encode($args['data']['recipients']),
             'cc'                    => empty($args['data']['cc']) ? '[]' : json_encode($args['data']['cc']),
             'cci'                   => empty($args['data']['cci']) ? '[]' : json_encode($args['data']['cci']),
             'object'                => empty($args['data']['object']) ? null : $args['data']['object'],
@@ -144,7 +144,7 @@ class EmailController
             }
         }
 
-        return $isSent;
+        return ($isSent['success'] ?? $id);
     }
 
     public function getById(Request $request, Response $response, array $args)
@@ -156,10 +156,10 @@ class EmailController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $sender        = (array)json_decode($emailArray['sender']);
-        $email['to']   = (array)json_decode($emailArray['recipients']);
-        $email['cc']   = (array)json_decode($emailArray['cc']);
-        $email['cci']  = (array)json_decode($emailArray['cci']);
+        $sender        = json_decode($emailArray['sender'], true);
+        $email['to']   = json_decode($emailArray['recipients'], true);
+        $email['cc']   = json_decode($emailArray['cc'], true);
+        $email['cci']  = json_decode($emailArray['cci'], true);
         $email['id']    = $emailArray['id'];
         $email['resId'] = $document['id'];
 
@@ -208,8 +208,8 @@ class EmailController
 
         EmailModel::update([
             'set' => [
-                'sender'      => json_encode($body['sender']),
-                'recipients'  => json_encode($body['recipients']),
+                'sender'      => empty($body['sender']) ? '{}' : json_encode($body['sender']),
+                'recipients'  => empty($body['recipients']) ? '[]' : json_encode($body['recipients']),
                 'cc'          => empty($body['cc']) ? '[]' : json_encode($body['cc']),
                 'cci'         => empty($body['cci']) ? '[]' : json_encode($body['cci']),
                 'object'      => empty($body['object']) ? null : $body['object'],
@@ -741,14 +741,14 @@ class EmailController
         ValidatorModel::intVal($args, ['userId']);
         ValidatorModel::arrayType($args, ['data']);
 
-        if (!Validator::arrayType()->notEmpty()->validate($args['data']['sender']) || !Validator::stringType()->notEmpty()->validate($args['data']['sender']['email'])) {
+        if (!Validator::stringType()->notEmpty()->validate($args['data']['status'])) {
+            return ['errors' => 'Data status is not a string or empty', 'code' => 400];
+        } elseif ($args['data']['status'] != 'DRAFT' && (!Validator::arrayType()->notEmpty()->validate($args['data']['sender']) || !Validator::stringType()->notEmpty()->validate($args['data']['sender']['email']))) {
             return ['errors' => 'Data sender email is not set', 'code' => 400];
-        } elseif (!Validator::arrayType()->notEmpty()->validate($args['data']['recipients'])) {
+        } elseif ($args['data']['status'] != 'DRAFT' && !Validator::arrayType()->notEmpty()->validate($args['data']['recipients'])) {
             return ['errors' => 'Data recipients is not an array or empty', 'code' => 400];
         } elseif (!Validator::boolType()->validate($args['data']['isHtml'])) {
             return ['errors' => 'Data isHtml is not a boolean or empty', 'code' => 400];
-        } elseif (!Validator::stringType()->notEmpty()->validate($args['data']['status'])) {
-            return ['errors' => 'Data status is not a string or empty', 'code' => 400];
         }
 
         $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);

@@ -421,11 +421,13 @@ class StoreController
     public static function getFormattedSizeFromBytes(array $args)
     {
         if ($args['size'] / 1073741824 > 1) {
-            return round($args['size'] / 1073741824, 2) . ' Go';
+            return round($args['size'] / 1073741824) . ' Go';
         } elseif ($args['size'] / 1048576 > 1) {
-            return round($args['size'] / 1048576, 2) . ' Mo';
+            return round($args['size'] / 1048576) . ' Mo';
+        } elseif ($args['size'] / 1024 > 1) {
+            return round($args['size'] / 1024) . ' Ko';
         }
 
-        return round($args['size'] / 1024, 2) . ' Ko';
+        return $args['size'] . ' o';
     }
 }
