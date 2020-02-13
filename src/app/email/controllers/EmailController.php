@@ -17,6 +17,7 @@ namespace Email\controllers;
 use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
 use Configuration\models\ConfigurationModel;
+use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Email\models\EmailModel;
@@ -31,6 +32,7 @@ use Note\models\NoteModel;
 use PHPMailer\PHPMailer\PHPMailer;
 use Resource\controllers\ResController;
 use Resource\controllers\StoreController;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -413,6 +415,128 @@ class EmailController
         }
 
         return $response->withJson(['emails' => $emails]);
+    }
+    public static function getInitializationByResId(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resource = ResModel::getById(['select' => ['filename', 'version', 'alt_identifier', 'subject', 'typist', 'format', 'filesize'], 'resId' => $args['resId']]);
+        if (empty($resource)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
+        }
+
+        $document = [];
+        if (!empty($resource['filename'])) {
+            $convertedResource = AdrModel::getDocuments([
+                'select'    => ['docserver_id', 'path', 'filename'],
+                'where'     => ['res_id = ?', 'type in (?)', 'version = ?'],
+                'data'      => [$args['resId'], ['PDF', 'SIGN'], $resource['version']],
+                'orderBy'   => ["type='SIGN' DESC"],
+                'limit'     => 1
+            ]);
+            $convertedDocument = null;
+            if (!empty($convertedResource[0])) {
+                $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedResource[0]['docserver_id'], 'select' => ['path_template']]);
+                $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedResource[0]['path']) . $convertedResource[0]['filename'];
+                if (file_exists($pathToDocument)) {
+                    $convertedDocument = [
+                        'size'  => StoreController::getFormattedSizeFromBytes(['size' => filesize($pathToDocument)])
+                    ];
+                }
+            }
+
+            $document = [
+                'id'                => $args['resId'],
+                'chrono'            => $resource['alt_identifier'],
+                'label'             => $resource['subject'],
+                'convertedDocument' => $convertedDocument,
+                'creator'           => UserModel::getLabelledUserById(['id' => $resource['typist']]),
+                'format'            => $resource['format'],
+                'size'              => StoreController::getFormattedSizeFromBytes(['size' => $resource['filesize']])
+            ];
+        }
+
+        $attachments = [];
+        $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
+        $rawAttachments = AttachmentModel::get([
+            'select'    => ['res_id', 'title', 'identifier', 'attachment_type', 'typist', 'format', 'filesize'],
+            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', 'status not in (?)'],
+            'data'      => [$args['resId'], ['signed_response'], ['DEL', 'OBS']]
+        ]);
+        foreach ($rawAttachments as $attachment) {
+            $attachmentId = $attachment['res_id'];
+            $signedAttachment = AttachmentModel::get([
+                'select'    => ['res_id'],
+                'where'     => ['origin = ?', 'status != ?', 'attachment_type = ?'],
+                'data'      => ["{$attachment['resId']},res_attachments", 'DEL', 'signed_response']
+            ]);
+            if (!empty($signedAttachment[0])) {
+                $attachmentId = $signedAttachment[0]['res_id'];
+            }
+
+            $convertedAttachment = AdrModel::getAttachments([
+                'select'    => ['docserver_id', 'path', 'filename'],
+                'where'     => ['res_id = ?', 'type = ?'],
+                'data'      => [$attachmentId, 'PDF'],
+            ]);
+            $convertedDocument = null;
+            if (!empty($convertedAttachment[0])) {
+                $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedAttachment[0]['docserver_id'], 'select' => ['path_template']]);
+                $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedAttachment[0]['path']) . $convertedAttachment[0]['filename'];
+                if (file_exists($pathToDocument)) {
+                    $convertedDocument = [
+                        'size'  => StoreController::getFormattedSizeFromBytes(['size' => filesize($pathToDocument)])
+                    ];
+                }
+            }
+
+            $attachments[] = [
+                'id'                => $attachment['res_id'],
+                'chrono'            => $attachment['identifier'],
+                'label'             => $attachment['title'],
+                'typeLabel'         => $attachmentTypes[$attachment['attachment_type']]['label'],
+                'convertedDocument' => $convertedDocument,
+                'creator'           => UserModel::getLabelledUserById(['login' => $attachment['typist']]),
+                'format'            => $attachment['format'],
+                'size'              => StoreController::getFormattedSizeFromBytes(['size' => $attachment['filesize']])
+            ];
+        }
+
+        $notes = [];
+        $userEntities = EntityModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['entity_id']]);
+        $userEntities = array_column($userEntities, 'entity_id');
+        $rawNotes = NoteModel::get(['select' => ['id', 'note_text', 'user_id'], 'where' => ['identifier = ?'], 'data' => [$args['resId']]]);
+        foreach ($rawNotes as $rawNote) {
+            $allowed = false;
+            if ($rawNote['user_id'] == $GLOBALS['id']) {
+                $allowed = true;
+            } else {
+                $noteEntities = NoteEntityModel::get(['select' => ['item_id'], 'where' => ['note_id = ?'], 'data' => [$rawNote['id']]]);
+                if (!empty($noteEntities)) {
+                    foreach ($noteEntities as $noteEntity) {
+                        if (in_array($noteEntity['item_id'], $userEntities)) {
+                            $allowed = true;
+                            break;
+                        }
+                    }
+                } else {
+                    $allowed = true;
+                }
+            }
+            if ($allowed) {
+                $notes[] = [
+                    'id'        => $rawNote['id'],
+                    'label'     => $rawNote['note_text'],
+                    'creator'   => UserModel::getLabelledUserById(['id' => $rawNote['user_id']]),
+                    'format'    => 'html',
+                    'size'      => null
+                ];
+            }
+        }
+
+        return $response->withJson(['resource' => $document, 'attachments' => $attachments, 'notes' => $notes]);
     }
 
     public static function sendEmail(array $args)

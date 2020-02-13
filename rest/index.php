@@ -373,6 +373,7 @@ $app->put('/resources/{resId}/unsign', \SignatureBook\controllers\SignatureBookC
 $app->get('/resources/{resId}/acknowledgementReceipts', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getByResId');
 $app->get('/resources/{resId}/shippings', \Shipping\controllers\ShippingController::class . ':getByResId');
 $app->get('/resources/{resId}/messageExchanges', \MessageExchange\controllers\MessageExchangeController::class . ':getByResId');
+$app->get('/resources/{resId}/emailsInitialization', \Email\controllers\EmailController::class . ':getInitializationByResId');
 $app->get('/messageExchanges/{id}', \MessageExchange\controllers\MessageExchangeController::class . ':getById');
 
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
