@@ -16,7 +16,7 @@
     </div>
     <mat-table #table [dataSource]="dataSource" matSort matSortActive="creationDate" matSortDirection="desc">
         <ng-container matColumnDef="creationDate">
-            <mat-cell *matCellDef="let row" class="dataLine" style="flex: 1;padding: 0px;flex-direction: column;">
+            <mat-cell *matCellDef="let row" class="dataLine" style="flex: 1;padding: 0px;flex-direction: column;" (click)="openPromptMail(row.id)">
                 <div class="subinfo">
                     <span style="flex:1" [title]="row.creationDate | fullDate">
                         {{lang.createdAlt}} : <b>{{row.creationDate | timeAgo : 'full'}}</b>
@@ -49,9 +49,7 @@
                         </span>
                     </div>
                     <div class="desc">
-    
                         {{row.desc}}
-                        
                     </div>
                     <div class="contact">
                         <span *ngIf="row.sender" style="white-space: pre;overflow: hidden;text-overflow: ellipsis;" [title]="row.sender">

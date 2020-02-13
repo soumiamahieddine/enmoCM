@@ -46,11 +46,11 @@ export class SendedResourceListComponent implements OnInit {
         public privilegeService: PrivilegeService) { }
 
     async ngOnInit(): Promise<void> {
-        this.sendedResources = [];
         this.loadList();
     }
 
     async loadList() {
+        this.sendedResources = [];
         this.loading = true;
         await this.initAcknowledgementReceipList();
         await this.initEmailList();
@@ -193,9 +193,9 @@ export class SendedResourceListComponent implements OnInit {
         this.dataSource.filter = ev.value;
     }
 
-    openPromptMail() {
+    openPromptMail(emailId: number = null) {
 
-        const dialogRef = this.dialog.open(SendedResourcePageComponent, { maxWidth: '90vw', width: '750px', disableClose: true, data: { title: `Toto`, resId: this.resId } });
+        const dialogRef = this.dialog.open(SendedResourcePageComponent, { maxWidth: '90vw', width: '750px', disableClose: true, data: { title: `Toto`, resId: this.resId, emailId : emailId } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'success'),
