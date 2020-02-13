@@ -1531,6 +1531,8 @@ export const LANG_FR = {
     "m2m_ARCHIVETRANSFER" : "Pli numérique",
     "m2m_ARCHIVETRANSFERREPLY" :  "Réponse envoyée",
     "removeSignature" : "Supprimer la signature",
+    "cannotCloseMails" : "Certains courriers ne peuvent pas être clôturés",
+    "followingFieldsAreEmpty" : "Les champs suivants sont vides",
     "sent" :  "Envoyé",
     "notSent" :  "Non envoyé",
     "delivery" :  "Pris en charge",

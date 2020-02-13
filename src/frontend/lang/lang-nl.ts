@@ -1515,6 +1515,8 @@ export const LANG_NL = {
     "noSelectedAddress": "No selected address",  //_TO_TRANSLATE
     "documentUnsigned": "This document has been unsigned", //_TO_TRANSLATE
     "removeSignature" : "Remove signature", //_TO_TRANSLATE
+    "cannotCloseMails" : "Some mails cannot be closed", //_TO_TRANSLATE
+    "followingFieldsAreEmpty" : "Following fields are empty", //_TO_TRANSLATE
     "sent" :  "Sent", //_TO_TRANSLATE
     "notSent" :  "Not sent", //_TO_TRANSLATE
     "delivery" :  "Delivery", //_TO_TRANSLATE

@@ -17,7 +17,9 @@ export class CloseMailActionComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = false;
 
-    @ViewChild('noteEditor', { static: true }) noteEditor: NoteEditorComponent;
+    @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
+    mailsWithEmptyFields: Array<any> = [];
+    canCloseResIds: Array<any> = [];
 
     constructor(
         public http: HttpClient, 
@@ -26,7 +28,26 @@ export class CloseMailActionComponent implements OnInit {
         @Inject(MAT_DIALOG_DATA) public data: any
     ) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void { 
+        if (this.data.resIds.length > 0) {
+            this.loading = true;
+            this.checkClose();
+        }
+    }
+
+    checkClose() {
+        this.http.post(`../../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/checkCloseMails`, { resources: this.data.resIds }).pipe(
+            tap((data: any) => {
+                this.mailsWithEmptyFields = data.emptyFields;
+                this.canCloseResIds = data.canClose;
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe()
+    }
 
     onSubmit() {
         this.loading = true;
@@ -56,7 +77,7 @@ export class CloseMailActionComponent implements OnInit {
     }
 
     executeAction() {
-        this.http.put(this.data.processActionRoute, {resources : this.data.resIds, note : this.noteEditor.getNoteContent()}).pipe(
+        this.http.put(this.data.processActionRoute, {resources : this.canCloseResIds, note : this.noteEditor.getNoteContent()}).pipe(
             tap(() => {
                 this.dialogRef.close('success');
             }),

@@ -1490,6 +1490,8 @@ export const LANG_EN = {
     "noSelectedAddress": "No selected address",
     "documentUnsigned": "This document has been unsigned",
     "removeSignature" : "Remove signature",
+    "cannotCloseMails" : "Some mails cannot be closed",
+    "followingFieldsAreEmpty" : "Following fields are empty",
     "sent" :  "Sent",
     "notSent" :  "Not sent",
     "delivery" :  "Delivery",
