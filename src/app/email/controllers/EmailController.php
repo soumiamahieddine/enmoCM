@@ -301,7 +301,7 @@ class EmailController
             return $response->withStatus(400)->withJson(['errors' => 'Query limit is not an int value']);
         }
 
-        $where = ['document->>\'id\' = ?'];
+        $where = ["document->>'id' = ?", "(status != 'DRAFT' or (status = 'DRAFT' and user_id = ?))"];
 
         if (!empty($queryParams['type'])) {
             if (!Validator::stringType()->validate($queryParams['type'])) {
@@ -321,16 +321,16 @@ class EmailController
         $emails = EmailModel::get([
             'select' => ['*'],
             'where'  => $where,
-            'data'   => [$args['resId']],
+            'data'   => [$args['resId'], $GLOBALS['id']],
             'limit'  => (int)$queryParams['limit']
         ]);
 
         foreach ($emails as $key => $email) {
-            $emails[$key]['sender'] = json_decode($emails[$key]['sender']);
+            $emails[$key]['sender']     = json_decode($emails[$key]['sender']);
             $emails[$key]['recipients'] = json_decode($emails[$key]['recipients']);
-            $emails[$key]['cc'] = json_decode($emails[$key]['cc']);
-            $emails[$key]['cci'] = json_decode($emails[$key]['cci']);
-            $emails[$key]['document'] = json_decode($emails[$key]['document']);
+            $emails[$key]['cc']         = json_decode($emails[$key]['cc']);
+            $emails[$key]['cci']        = json_decode($emails[$key]['cci']);
+            $emails[$key]['document']   = json_decode($emails[$key]['document']);
         }
 
         return $response->withJson(['emails' => $emails]);
