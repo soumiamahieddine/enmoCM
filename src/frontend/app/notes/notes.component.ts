@@ -80,4 +80,12 @@ export class NotesListComponent implements OnInit {
             })
         ).subscribe();
     }
+
+    editNote(note: any) {
+        if (!note.edit) {
+            note.edit = true;
+        } else {
+            note.edit = false;
+        }
+    }
 }

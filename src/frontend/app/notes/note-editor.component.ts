@@ -20,17 +20,34 @@ export class NoteEditorComponent implements AfterViewInit {
     @Input('content') content: string = '';
     @Input('resIds') resIds: any[];
     @Input('addMode') addMode: boolean;
+    @Input('upMode') upMode: boolean;
+    @Input('noteContent') noteContent: string;
+    @Input('noteId') noteId: number;
     @Output('refreshNotes') refreshNotes = new EventEmitter<string>();
 
     constructor(public http: HttpClient) { }
 
-    ngAfterViewInit() {
+    ngOnInit() {
+        if (this.upMode) {
+            this.content = this.noteContent;
+        }
+    }
 
+    ngAfterViewInit() {
     }
 
     addNote() {
         this.loading = true;
         this.http.post("../../rest/notes", { value: this.content, resId: this.resIds[0] })
+            .subscribe((data: any) => {
+                this.refreshNotes.emit(this.resIds[0]);
+                this.loading = false;
+            });
+    }
+
+    updateNote() {
+        this.loading = true;
+        this.http.put("../../rest/notes/" + this.noteId, { value: this.content, resId: this.resIds[0] })
             .subscribe((data: any) => {
                 this.refreshNotes.emit(this.resIds[0]);
                 this.loading = false;

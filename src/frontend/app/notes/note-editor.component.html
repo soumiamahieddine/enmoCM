@@ -21,4 +21,8 @@
         [disabled]="content.trim() == '' || loading">
         <mat-icon fontSet="far" fontIcon="fa-paper-plane fa-2x"></mat-icon>
     </button>
+    <button *ngIf="upMode" color="primary" matSuffix mat-icon-button title="{{lang.validate}}" (click)="updateNote()"
+        [disabled]="content.trim() == '' || loading">
+        <mat-icon fontSet="far" fontIcon="fa-paper-plane fa-2x"></mat-icon>
+    </button>
 </mat-form-field>

@@ -14,12 +14,16 @@
             <mat-card-subtitle title='{{note.creation_date | fullDate}}' class="dateNote">{{note.creation_date
                 | timeAgo}}</mat-card-subtitle>
             <mat-card-subtitle *ngIf="note.user_id == headerService.user.id" class="removeNote">
-                <button matSuffix mat-icon-button title='{{lang.removeNote}}' (click)="removeNote(note)">
+                <button matSuffix mat-icon-button title='{{lang.editNote}}' class="editNote" (click)="editNote(note)">
+                    <mat-icon fontSet="fas" fontIcon="fa-pencil-alt fa-2x"></mat-icon>
+                </button>
+                <button matSuffix mat-icon-button title='{{lang.removeNote}}' style="color: red;" (click)="removeNote(note)">
                     <mat-icon fontSet="far" fontIcon="fa-trash-alt fa-2x"></mat-icon>
                 </button>
             </mat-card-subtitle>
         </mat-card-header>
-        <mat-card-content>
+        <app-note-editor *ngIf="note.edit" #noteEditor [resIds]="resIds" [upMode]="true" [noteId]="note.id" [noteContent]="note.value" (refreshNotes)="loadNotes($event)" style="margin: 20px;display: flex;"></app-note-editor>
+        <mat-card-content *ngIf="!note.edit">
             <p class="noteTextContent">
                 {{note.value}}
             </p>

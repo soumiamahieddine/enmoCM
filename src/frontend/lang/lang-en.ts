@@ -1471,6 +1471,7 @@ export const LANG_EN = {
     "chooseBAN": "Choose a BAN",
     "click": "Click",
     "removeNote" : "Remove note",
+    "editNote" : "Edit note",
     "noteRemoved" : "Note deleted",
     "confirmRemoveNote" : "Note deletion",
     "inSignatureBook_doc" : "Put the main document in signature book",

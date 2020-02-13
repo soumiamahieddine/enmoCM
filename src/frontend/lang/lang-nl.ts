@@ -1496,6 +1496,7 @@ export const LANG_NL = {
     "chooseBAN": "Choose a BAN", //_TO_TRANSLATE
     "click": "Click", //_TO_TRANSLATE
     "removeNote" : "Remove note", //_TO_TRANSLATE
+    "editNote" : "Edit note", //_TO_TRANSLATE
     "noteRemoved" : "Note deleted", //_TO_TRANSLATE
     "confirmRemoveNote" : "Note deletion", //_TO_TRANSLATE
     "inSignatureBook_doc" : "Put the main document in signature book", //_TO_TRANSLATE

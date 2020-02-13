@@ -1510,6 +1510,7 @@ export const LANG_FR = {
     "chooseBAN": "Choisissez une BAN",
     "click": "Cliquez",
     "removeNote" : "Supprimer l'annotation",
+    "editNote" : "Modifier l'annotation",
     "noteRemoved" : "Annotation supprimée",
     "confirmRemoveNote" : "Suppression de l'annotation",
     "inSignatureBook_doc" : "Intégrer le document principal au parapheur",
