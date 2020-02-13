@@ -13,6 +13,7 @@
 namespace Action\controllers;
 
 use Basket\models\GroupBasketRedirectModel;
+use CustomField\models\CustomFieldModel;
 use Group\controllers\GroupController;
 use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
@@ -104,6 +105,28 @@ class ActionController
         }
 
         unset($body['actionPageId']);
+
+        if (!empty($body['required_fields'])) {
+            if (!Validator::arrayType()->validate($body['required_fields'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Data required_fields is not an array']);
+            }
+            $customFields = CustomFieldModel::get(['select' => ['id']]);
+            $customFields = array_column($customFields, 'id');
+            $requiredFields = [];
+            foreach ($body['required_fields'] as $key => $requiredField) {
+                if (strpos($requiredField, 'indexingCustomField_') !== false) {
+                    $idCustom = explode("_", $requiredField);
+                    $idCustom = $idCustom[1];
+                    if (!in_array($idCustom, $customFields)) {
+                        return $response->withStatus(400)->withJson(['errors' => 'Data custom field does not exist']);
+                    }
+                    $requiredFields[] = $requiredField;
+                }
+            }
+
+            $body['required_fields'] = json_encode($requiredFields);
+        }
+
         $id = ActionModel::create($body);
         if (!empty($body['actionCategories'])) {
             ActionModel::createCategories(['id' => $id, 'categories' => $body['actionCategories']]);
@@ -146,6 +169,26 @@ class ActionController
         if (empty($body['action_page'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Data actionPageId does not exist']);
         }
+
+        $requiredFields = [];
+        if (!empty($body['required_fields'])) {
+            if (!Validator::arrayType()->validate($body['required_fields'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Data required_fields is not an array']);
+            }
+            $customFields = CustomFieldModel::get(['select' => ['id']]);
+            $customFields = array_column($customFields, 'id');
+            foreach ($body['required_fields'] as $key => $requiredField) {
+                if (strpos($requiredField, 'indexingCustomField_') !== false) {
+                    $idCustom = explode("_", $requiredField);
+                    $idCustom = $idCustom[1];
+                    if (!in_array($idCustom, $customFields)) {
+                        return $response->withStatus(400)->withJson(['errors' => 'Data custom field does not exist']);
+                    }
+                    $requiredFields[] = $requiredField;
+                }
+            }
+        }
+        $body['required_fields'] = json_encode($requiredFields);
 
         ActionModel::update($body);
         ActionModel::deleteCategories(['id' => $aArgs['id']]);
