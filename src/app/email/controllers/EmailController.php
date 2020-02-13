@@ -153,51 +153,29 @@ class EmailController
 
     public function getById(Request $request, Response $response, array $args)
     {
-        $emailArray = EmailModel::getById(['id' => $args['id']]);
-        $document   = (array)json_decode($emailArray['document']);
+        $rawEmail = EmailModel::getById(['id' => $args['id']]);
+        $document = json_decode($rawEmail['document'], true);
 
-        if (!ResController::hasRightByResId(['resId' => [$document['id']], 'userId' => $GLOBALS['id']])) {
+        if (!empty($document['id']) && !ResController::hasRightByResId(['resId' => [$document['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $sender        = json_decode($emailArray['sender'], true);
-        $email['to']   = json_decode($emailArray['recipients'], true);
-        $email['cc']   = json_decode($emailArray['cc'], true);
-        $email['cci']  = json_decode($emailArray['cci'], true);
-        $email['id']    = $emailArray['id'];
-        $email['resId'] = $document['id'];
-
-        $user = UserModel::getById(['id' => $emailArray['user_id'], 'select' => ['user_id']]);
-        $email['login'] = $user['user_id'];
-
-        $email['attachments'] = [];
-        $email['attachments_version'] = [];
-
-        if (!empty($document['attachments'])) {
-            $document['attachments'] = (array)$document['attachments'];
-            foreach ($document['attachments'] as $attachment) {
-                $attachment = (array)$attachment;
-                $email['attachments'][] = $attachment['id'];
-            }
-        }
-
-        $email['notes'] = $document['notes'];
-
-        $email['object']            = $emailArray['object'];
-        $email['body']              = $emailArray['body'];
-        $email['resMasterAttached'] = ($document['isLinked']) ? 'Y' : 'N';
-        $email['isHtml']            = ($emailArray['is_html']) ? 'Y' : 'N';
-        $email['status']            = $emailArray['status'];
-        $email['creationDate']      = $emailArray['creation_date'];
-        $email['sendDate']          = $emailArray['send_date'];
-
-        if (!empty($sender['entityId'])) {
-            $entity = EntityModel::getById(['select' => ['entity_id'], 'id' => $sender['entityId']]);
-            $email['sender_email'] = $entity['entity_id'] . ',' . $sender['email'];
-        } else {
-            $email['sender_email'] = $sender['email'];
-        }
-
+        $email = [
+            'id'            => $rawEmail['id'],
+            'sender'        => json_decode($rawEmail['sender'], true),
+            'to'            => json_decode($rawEmail['recipients'], true),
+            'cc'            => json_decode($rawEmail['cc'], true),
+            'cci'           => json_decode($rawEmail['cci'], true),
+            'userId'        => $rawEmail['user_id'],
+            'object'        => $rawEmail['object'],
+            'body'          => $rawEmail['body'],
+            'isHtml'        => $rawEmail['is_html'],
+            'status'        => $rawEmail['status'],
+            'creationDate'  => $rawEmail['creation_date'],
+            'sendDate'      => $rawEmail['send_date'],
+            'document'      => $document
+        ];
+        
         return $response->withJson($email);
     }
 
@@ -533,6 +511,7 @@ class EmailController
                 $notes[] = [
                     'id'        => $rawNote['id'],
                     'label'     => $rawNote['note_text'],
+                    'typeLabel' => 'note',
                     'creator'   => UserModel::getLabelledUserById(['id' => $rawNote['user_id']]),
                     'format'    => 'html',
                     'size'      => null

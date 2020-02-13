@@ -59,7 +59,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
     $objectId = $_REQUEST['id'];
     $tableName = 'res_attachments';
 
-    $stmt = $db->query("select relation, res_id, format, res_id_master, title, identifier, type_id, attachment_type, dest_contact_id, dest_address_id, dest_user from "
+    $stmt = $db->query("select relation, res_id, format, res_id_master, title, identifier, attachment_type from "
         . $tableName
         . " where (attachment_type NOT IN ('converted_pdf','print_folder')) and res_id = ?", array($objectId));
 
@@ -72,9 +72,6 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
         $_SESSION['visa']['last_resId_signed']['title'] = $line->title;
         $_SESSION['visa']['last_resId_signed']['identifier'] = $line->identifier;
         $_SESSION['visa']['last_resId_signed']['type_id'] = $line->type_id;
-        $_SESSION['visa']['last_resId_signed']['dest_contact'] = $line->dest_contact_id;
-        $_SESSION['visa']['last_resId_signed']['dest_address'] = $line->dest_address_id;
-        $_SESSION['visa']['last_resId_signed']['dest_user'] = $line->dest_user;
 
         if ($line->attachment_type == 'response_project') {
             //Update outgoing date
