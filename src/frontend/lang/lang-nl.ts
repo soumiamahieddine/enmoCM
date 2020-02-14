@@ -1539,4 +1539,5 @@ export const LANG_NL = {
     "draftSaved" : "Draft saved",  //_TO_TRANSLATE
     "draftUpdated" : "Draft updated", //_TO_TRANSLATE
     "sendingEmail" : "Sending email...", //_TO_TRANSLATE
+    "restrictions" : "Restrictions", //_TO_TRANSLATE
 };

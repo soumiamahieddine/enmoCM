@@ -1553,4 +1553,5 @@ export const LANG_FR = {
     "draftSaved" : "Brouillon enregistré",
     "draftUpdated" : "Brouillon modifié",
     "sendingEmail" : "Email en cours d'envoi...",
+    "restrictions" : "Restrictions",    
 };

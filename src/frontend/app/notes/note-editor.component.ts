@@ -15,6 +15,9 @@ export class NoteEditorComponent implements AfterViewInit {
     notes: any;
     loading: boolean = false;
     templatesNote: any = [];
+    entities: any = [];
+
+    entitiesRestriction: string[] = [];
 
     @Input('title') title: string = this.lang.addNote;
     @Input('content') content: string = '';
@@ -22,14 +25,17 @@ export class NoteEditorComponent implements AfterViewInit {
     @Input('addMode') addMode: boolean;
     @Input('upMode') upMode: boolean;
     @Input('noteContent') noteContent: string;
+    @Input('entitiesNoteRestriction') entitiesNoteRestriction: string[];
     @Input('noteId') noteId: number;
     @Output('refreshNotes') refreshNotes = new EventEmitter<string>();
 
     constructor(public http: HttpClient) { }
 
     ngOnInit() {
+        this.getEntities();
         if (this.upMode) {
             this.content = this.noteContent;
+            this.entitiesRestriction = this.entitiesNoteRestriction;
         }
     }
 
@@ -38,7 +44,7 @@ export class NoteEditorComponent implements AfterViewInit {
 
     addNote() {
         this.loading = true;
-        this.http.post("../../rest/notes", { value: this.content, resId: this.resIds[0] })
+        this.http.post("../../rest/notes", { value: this.content, resId: this.resIds[0], entities : this.entitiesRestriction })
             .subscribe((data: any) => {
                 this.refreshNotes.emit(this.resIds[0]);
                 this.loading = false;
@@ -47,7 +53,7 @@ export class NoteEditorComponent implements AfterViewInit {
 
     updateNote() {
         this.loading = true;
-        this.http.put("../../rest/notes/" + this.noteId, { value: this.content, resId: this.resIds[0] })
+        this.http.put("../../rest/notes/" + this.noteId, { value: this.content, resId: this.resIds[0], entities : this.entitiesRestriction })
             .subscribe((data: any) => {
                 this.refreshNotes.emit(this.resIds[0]);
                 this.loading = false;
@@ -64,7 +70,11 @@ export class NoteEditorComponent implements AfterViewInit {
         } else {
             this.content = template.template_content;
         }
+    }
 
+    selectEntity(entity: any) {
+        entity.selected = true;
+       this.entitiesRestriction.push(entity.id);
     }
 
     getTemplatesNote() {
@@ -79,5 +89,24 @@ export class NoteEditorComponent implements AfterViewInit {
                 });
 
         }
+    }
+
+    getEntities() {
+        if (this.entities.length == 0) {
+            let params = {};
+            if (this.resIds.length == 1) {
+                params['resId'] = this.resIds[0];
+            }
+            this.http.get("../../rest/entities")
+                .subscribe((data: any) => {
+                    this.entities = data['entities'];
+                });
+
+        }
+    }
+
+    removeEntityRestriction(index: number, realIndex: number) {
+        this.entities[realIndex].selected = false;
+        this.entitiesRestriction.splice(index,1);
     }
 }

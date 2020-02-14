@@ -64,6 +64,10 @@ export class NotesListComponent implements OnInit {
         });
     }
 
+    getRestrictionEntitiesId(entities: any) {
+        return entities.map((entity: any) => entity.item_id[0]);
+    }
+
     removeNote(note: any) {
         this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: false, data: { title: this.lang.confirmRemoveNote, msg: this.lang.confirmAction } });
 
