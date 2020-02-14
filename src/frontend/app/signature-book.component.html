@@ -4,23 +4,12 @@
 <div *ngIf="!loading" class='visaContent'>
     <div class="titleSignatureBook">
         <div id="tabSignatureBook">
-            <div *ngIf="signatureBook.documents[0] && signatureBook.documents[0].category_id != 'outgoing'" title="{{lang.mail}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" (click)="changeSignatureBookLeftContent(1)">
+            <div *ngIf="signatureBook.documents[0] && signatureBook.documents[0].category_id != 'outgoing'" title="{{lang.mail}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 'document'}" (click)="changeSignatureBookLeftContent(1)">
                 <i class="fa fa-file-alt fa-2x"></i>
             </div>
-            <div title="{{lang.notes}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
-                <i class="fa fa-pencil-alt fa-2x">
-                    <sup *ngIf="signatureBook.nbNotes > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{signatureBook.nbNotes}}</sup>
-                </i>
-            </div>
-            <div title="{{lang.visaWorkflow}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 3}" (click)="changeSignatureBookLeftContent(3)">
-                <i class="fa fa-list-ol fa-2x"></i>
-            </div>
-            <div title="{{lang.progression}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 4}" (click)="changeSignatureBookLeftContent(4)">
-                <i class="fa fa-history fa-2x"></i>
-            </div>
-            <div title="{{lang.links}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 5}" (click)="changeSignatureBookLeftContent(5)">
-                <i class="fa fa-link fa-2x">
-                    <sup *ngIf="signatureBook.nbLinks > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{signatureBook.nbLinks}}</sup>
+            <div *ngFor="let module of processTool" title="{{module.label}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == module.id}" (click)="changeSignatureBookLeftContent(module.id)">
+                <i [class]="module.icon">
+                    <sup *ngIf="module.count > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{module.count}}</sup>
                 </i>
             </div>
         </div>
@@ -72,7 +61,7 @@
                 <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showResLeftPanel"></i>
                 <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showResLeftPanel"></i>
             </div>
-            <div *ngIf="headerTab == 1" class="contentShow">
+            <div *ngIf="headerTab == 'document'" class="contentShow">
                 <div *ngIf="showTopLeftPanel" class="pjDoc">
                     <div style="height:100%;">
                         <img title="{{document.title}}" id="thumnails_img" *ngFor="let document of signatureBook.documents; let i = index" (click)="changeLeftViewer(i)" [src]="coreUrl + document.thumbnailLink"
@@ -98,17 +87,22 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="headerTab == 2" class="contentShow" style="width:98%;">
-                <iframe [src]="notesViewerLink | safeUrl"></iframe>
+            <div *ngIf="headerTab == 'notes'" class="contentShow" style="width:98%;">
+                <app-notes-list #appNotesList [editMode]="true"
+                    [resId]="resId" (reloadBadgeNotes)="refreshBadge($event,'notes')">
+                </app-notes-list>
             </div>
-            <div *ngIf="headerTab == 3" class="contentShow" style="width:98%;overflow-x: hidden;">
-                <iframe [src]="visaViewerLink | safeUrl"></iframe>
+            <div *ngIf="headerTab == 'visaCircuit'" class="contentShow" style="width:98%;overflow-x: hidden;">
+                <app-visa-workflow #appVisaWorkflow [resId]="resId"
+                    [adminMode]="privilegeService.hasCurrentUserPrivilege('config_visa_workflow')"></app-visa-workflow>
             </div>
-            <div *ngIf="headerTab == 4" class="contentShow" style="width:98%;">
-                <iframe [src]="histViewerLink | safeUrl"></iframe>
+            <div *ngIf="headerTab == 'history'" class="contentShow" style="width:98%;">
+                <app-history-list #appHistoryList [resId]="resId"></app-history-list>
             </div>
-            <div *ngIf="headerTab == 5" class="contentShow" style="width:98%;">
-                <iframe [src]="linksViewerLink | safeUrl"></iframe>
+            <div *ngIf="headerTab == 'linkedResources'" class="contentShow" style="width:98%;">
+                <app-linked-resource-list #appLinkedResourceList [resId]="resId"
+                    (reloadBadgeLinkedResources)="refreshBadge($event,'linkedResources')">
+                </app-linked-resource-list>
             </div>
             <div class="hideRightContent" (click)="displayPanel('MIDDLE')" [ngStyle]="{'right': showRightPanel ? '-10px' : '0px'}">
                 <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="showRightPanel"></i>
