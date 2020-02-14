@@ -33,7 +33,14 @@ class ActionController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        return $response->withJson(['actions' => ActionModel::get()]);
+        $actions = ActionModel::get();
+
+        foreach ($actions as $key => $action) {
+            $actions[$key]['requiredFields'] = json_decode($action['required_fields'], true);
+            unset($actions[$key]['required_fields']);
+        }
+
+        return $response->withJson(['actions' => $actions]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
@@ -74,6 +81,9 @@ class ActionController
                 $action['action']['actionPageId'] = $actionPage['id'];
             }
         }
+
+        $action['action']['requiredFields'] = json_decode($action['action']['required_fields'], true);
+        unset($action['action']['required_fields']);
 
         return $response->withJson($action);
     }
