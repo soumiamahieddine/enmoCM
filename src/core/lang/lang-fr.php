@@ -227,6 +227,8 @@ define('_NO_CONFIRM_DESC', "Effectue l'action sans confirmation");
 define('_VIEW_DOC', 'Voir le courrier');
 define('_CLOSE_MAIL', 'Clôturer un courrier');
 define('_CLOSE_MAIL_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier. ESSENTIEL afin de terminer votre workflow de courrier.');
+define('_CLOSE_MAIL_WITH_FIELDS', 'Clôturer un courrier avec des champs personnalisés');
+define('_CLOSE_MAIL_WITH_FIELDS_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier. ESSENTIEL afin de terminer votre workflow de courrier. L\'action ne pourra se faire seulement si les champs choisis sont renseignés dans le courrier');
 define('_SET_PERSISTENT_MODE_ON', 'Activer la persistance');
 define('_SET_PERSISTENT_MODE_ON_DESC', 'Permet de conserver un courrier dans une bannette quelque soit son état. Insère la donnée dans la table \'basket_persistent_mode\'.');
 define('_SET_PERSISTENT_MODE_OFF', 'Désactiver la persistance');

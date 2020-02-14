@@ -41,32 +41,33 @@ class ActionMethodController
     use ExternalSignatoryBookTrait;
 
     const COMPONENTS_ACTIONS = [
-        'confirmAction'                         => null,
-        'closeMailAction'                       => 'closeMailAction',
-        'closeMailWithAttachmentsOrNotesAction' => 'closeMailWithAttachmentsOrNotesAction',
-        'redirectAction'                        => 'redirect',
-        'closeAndIndexAction'                   => 'closeAndIndexAction',
-        'updateDepartureDateAction'             => 'updateDepartureDateAction',
-        'enabledBasketPersistenceAction'        => 'enabledBasketPersistenceAction',
-        'disabledBasketPersistenceAction'       => 'disabledBasketPersistenceAction',
-        'resMarkAsReadAction'                   => 'resMarkAsReadAction',
-        'sendExternalSignatoryBookAction'       => 'sendExternalSignatoryBookAction',
-        'sendExternalNoteBookAction'            => 'sendExternalNoteBookAction',
-        'createAcknowledgementReceiptsAction'   => 'createAcknowledgementReceipts',
-        'updateAcknowledgementSendDateAction'   => 'updateAcknowledgementSendDateAction',
-        'sendShippingAction'                    => 'createMailevaShippings',
-        'sendSignatureBookAction'               => 'sendSignatureBook',
-        'continueVisaCircuitAction'             => 'continueVisaCircuit',
-        'redirectInitiatorEntityAction'         => 'redirectInitiatorEntityAction',
-        'rejectVisaBackToPreviousAction'        => 'rejectVisaBackToPrevious',
-        'resetVisaAction'                       => 'resetVisa',
-        'interruptVisaAction'                   => 'interruptVisa',
-        'sendToParallelOpinion'                 => 'sendToParallelOpinion',
-        'sendToOpinionCircuitAction'            => 'sendToOpinionCircuit',
-        'continueOpinionCircuitAction'          => 'continueOpinionCircuit',
-        'giveOpinionParallelAction'             => 'giveOpinionParallel',
+        'confirmAction'                          => null,
+        'closeMailAction'                        => 'closeMailAction',
+        'closeMailWithAttachmentsOrNotesAction'  => 'closeMailWithAttachmentsOrNotesAction',
+        'redirectAction'                         => 'redirect',
+        'closeAndIndexAction'                    => 'closeAndIndexAction',
+        'updateDepartureDateAction'              => 'updateDepartureDateAction',
+        'enabledBasketPersistenceAction'         => 'enabledBasketPersistenceAction',
+        'disabledBasketPersistenceAction'        => 'disabledBasketPersistenceAction',
+        'resMarkAsReadAction'                    => 'resMarkAsReadAction',
+        'sendExternalSignatoryBookAction'        => 'sendExternalSignatoryBookAction',
+        'sendExternalNoteBookAction'             => 'sendExternalNoteBookAction',
+        'createAcknowledgementReceiptsAction'    => 'createAcknowledgementReceipts',
+        'updateAcknowledgementSendDateAction'    => 'updateAcknowledgementSendDateAction',
+        'sendShippingAction'                     => 'createMailevaShippings',
+        'sendSignatureBookAction'                => 'sendSignatureBook',
+        'continueVisaCircuitAction'              => 'continueVisaCircuit',
+        'redirectInitiatorEntityAction'          => 'redirectInitiatorEntityAction',
+        'rejectVisaBackToPreviousAction'         => 'rejectVisaBackToPrevious',
+        'resetVisaAction'                        => 'resetVisa',
+        'interruptVisaAction'                    => 'interruptVisa',
+        'sendToParallelOpinion'                  => 'sendToParallelOpinion',
+        'sendToOpinionCircuitAction'             => 'sendToOpinionCircuit',
+        'continueOpinionCircuitAction'           => 'continueOpinionCircuit',
+        'giveOpinionParallelAction'              => 'giveOpinionParallel',
         'validateParallelOpinionDiffusionAction' => 'validateParallelOpinionDiffusion',
-        'noConfirmAction'                       => null
+        'closeWithFieldsAction'                  => 'closeWithFields',
+        'noConfirmAction'                        => null
     ];
 
     public static function terminateAction(array $aArgs)
@@ -879,6 +880,17 @@ class ActionMethodController
             'where' => ['res_id = ?'],
             'data'  => [$args['resId']]
         ]);
+
+        return true;
+    }
+
+    public static function closeWithFields(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId']);
+        ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::stringType($args, ['note']);
+
+        ResModel::update(['set' => ['closing_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?', 'closing_date is null'], 'data' => [$args['resId']]]);
 
         return true;
     }
