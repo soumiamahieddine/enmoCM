@@ -166,7 +166,7 @@ class AcknowledgementReceiptController
     public function getAcknowledgementReceipt(Request $request, Response $response, array $args)
     {
         $document = AcknowledgementReceiptModel::getByIds([
-            'select'  => ['docserver_id', 'path', 'filename', 'fingerprint', 'res_id'],
+            'select'  => ['docserver_id', 'path', 'filename', 'fingerprint', 'res_id', 'format'],
             'ids'     => [$args['id']]
         ]);
 
@@ -209,6 +209,6 @@ class AcknowledgementReceiptController
             'eventId'   => 'acknowledgementReceiptView',
         ]);
 
-        return $response->withJson(['encodedDocument' => base64_encode($fileContent)]);
+        return $response->withJson(['encodedDocument' => base64_encode($fileContent), 'format' => $document['format']]);
     }
 }
