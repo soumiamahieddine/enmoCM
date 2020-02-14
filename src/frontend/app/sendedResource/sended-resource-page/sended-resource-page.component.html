@@ -10,7 +10,7 @@
         <mat-spinner style="margin:auto;"></mat-spinner>
     </div>
     <mat-form-field>
-        <span matPrefix class="attachLabel">De&nbsp;:&nbsp;</span>
+        <span matPrefix class="attachLabel">{{lang.senderShort}}&nbsp;:&nbsp;</span>
         <input *ngIf="!canManageMail()" matInput [value]="currentSender.email" readonly>
         <mat-select *ngIf="canManageMail()" [(ngModel)]="currentSender">
             <mat-option *ngFor="let email of availableSenders | sortBy: 'label'" [value]="email">
@@ -18,14 +18,13 @@
             </mat-option>
         </mat-select>
         <button mat-button color="primary" matSuffix [disabled]="!canManageMail()" [class.activeButton]="showCopies"
-            (click)="$event.stopPropagation();showCopies = !showCopies">Cc</button>
+            (click)="$event.stopPropagation();showCopies = !showCopies">{{lang.copieShort}}</button>
         <button mat-button color="primary" matSuffix [disabled]="!canManageMail()"
             [class.activeButton]="showInvisibleCopies"
-            (click)="$event.stopPropagation();showInvisibleCopies = !showInvisibleCopies">Cci</button>
+            (click)="$event.stopPropagation();showInvisibleCopies = !showInvisibleCopies">{{lang.invisibleCopyShort}}</button>
     </mat-form-field>
-
     <mat-form-field>
-        <span matPrefix class="attachLabel">À&nbsp;:&nbsp;</span>
+        <span matPrefix class="attachLabel">{{lang.recipientShort}}&nbsp;:&nbsp;</span>
         <mat-chip-list id="recipients-list" #recipientsList cdkDropList
             [cdkDropListConnectedTo]="['copies-list','invcopies-list']" [cdkDropListData]="recipients"
             (cdkDropListDropped)="drop($event)">
@@ -46,9 +45,8 @@
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>
-
     <mat-form-field *ngIf="showCopies">
-        <span matPrefix class="attachLabel">Cc&nbsp;:&nbsp;</span>
+        <span matPrefix class="attachLabel">{{lang.copieShort}}&nbsp;:&nbsp;</span>
         <mat-chip-list id="copies-list" #copiesList cdkDropList
             [cdkDropListConnectedTo]="['recipients-list','invcopies-list']" [cdkDropListData]="copies"
             (cdkDropListDropped)="drop($event)">
@@ -69,9 +67,8 @@
             </mat-option>
         </mat-autocomplete>
     </mat-form-field>
-
     <mat-form-field *ngIf="showInvisibleCopies">
-        <span matPrefix class="attachLabel">Cci&nbsp;:&nbsp;</span>
+        <span matPrefix class="attachLabel">{{lang.invisibleCopyShort}}&nbsp;:&nbsp;</span>
         <mat-chip-list id="invcopies-list" #invCopiesList cdkDropList
             [cdkDropListConnectedTo]="['recipients-list','copies-list']" [cdkDropListData]="invisibleCopies"
             (cdkDropListDropped)="drop($event)">
@@ -94,7 +91,7 @@
         </mat-autocomplete>
     </mat-form-field>
     <mat-form-field floatLabel="never">
-        <input matInput placeholder="Sujet" [readonly]="!canManageMail()" [(ngModel)]="emailsubject" maxlength="70">
+        <input matInput [placeholder]="lang.object" [readonly]="!canManageMail()" [(ngModel)]="emailsubject" maxlength="70">
         <button mat-icon-button matSuffix *ngFor="let keyVal of emailAttachTool | keyvalue"
             [disabled]="!canManageMail() || emailAttachTool[keyVal.key].list.length === 0"
             [title]="emailAttachTool[keyVal.key].title"
@@ -115,7 +112,7 @@
                                 ({{attach.creator}})</div>
                             {{attach.label | shorten: 45: '...'}} - {{attach.format}}
                         </span>&nbsp;<span class="pdfVersion" *ngIf="!functions.empty(attach.convertedDocument)"
-                            (click)="toggleAttachMail(attach,keyVal.key,'pdf');">(version PDF)
+                            (click)="toggleAttachMail(attach,keyVal.key,'pdf');">({{lang.pdfVersion}})
                         </span>
                     </button>
                 </ng-container>
@@ -127,7 +124,7 @@
             [removable]="canManageMail()" (removed)="removeAttachMail(0, 'document')"
             [title]="emailAttach.document.chrono + ' - ' + emailAttach.document.label">
             <i class="fa fa-file attachLabel"></i>&nbsp;{{emailAttach.document.label | shorten: 25: '...'}}&nbsp;<small
-                class="attachLabel">(pdf - 25 Ko)</small>
+                class="attachLabel">(pdf - {{emailAttach.document.size}})</small>
             <mat-icon matChipRemove class="fa fa-times" *ngIf="canManageMail()"></mat-icon>
         </mat-chip>
         <ng-container *ngFor="let keyVal of emailAttach | keyvalue">
@@ -144,13 +141,13 @@
         </ng-container>
     </mat-chip-list>
     <div class="models" *ngIf="canManageMail()">
-        <plugin-select-search *ngIf="availableEmailModels.length > 0" [label]="'Modèle(s) de mail'"
-            [placeholderLabel]="'Modèle(s) de mail'" [datas]="availableEmailModels"
+        <plugin-select-search *ngIf="availableEmailModels.length > 0" [label]="lang.emailModel"
+            [placeholderLabel]="lang.emailModel" [datas]="availableEmailModels"
             [formControlSelect]="templateEmailListForm" (afterSelected)="mergeEmailTemplate($event)">
         </plugin-select-search>
 
-        <plugin-select-search #templateList *ngIf="availableSignEmailModels.length > 0" [label]="'Signature(s) de mail'"
-            [placeholderLabel]="'Signature(s) de mail'" [datas]="availableSignEmailModels"
+        <plugin-select-search #templateList *ngIf="availableSignEmailModels.length > 0" [label]="lang.emailSignatures"
+            [placeholderLabel]="lang.emailSignatures" [datas]="availableSignEmailModels"
             [formControlSelect]="emailSignListForm" (afterSelected)="mergeSignEmailTemplate($event)">
         </plugin-select-search>
     </div>
@@ -169,12 +166,12 @@
     </button>
     <mat-menu #emailActionMenu="matMenu" [class]="'attachListMenu'">
         <button mat-menu-item (click)="onSubmit('brut')">
-            Envoyer en text brut
+            {{lang.sendInPlainText}}
         </button>
     </mat-menu>
     <button mat-raised-button color="primary" *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail')"
-        (click)="onSubmit()" [disabled]="recipients.length === 0">Envoyer</button>
-    <button mat-raised-button color="primary" *ngIf="canManageMail()" (click)="saveDraft()">Enregistrer le brouilon</button>
+        (click)="onSubmit()" [disabled]="recipients.length === 0">{{lang.send}}</button>
+    <button mat-raised-button color="primary" *ngIf="canManageMail()" (click)="saveDraft()">{{lang.saveDraft}}</button>
     <button mat-raised-button color="warn" (click)="deleteEmail()" *ngIf="data.emailId && data.emailType === 'email'"
-        [disabled]="headerService.user.id !== emailCreatorId">Supprimer</button>
+        [disabled]="headerService.user.id !== emailCreatorId">{{lang.delete}}</button>
 </div>

@@ -69,17 +69,17 @@ export class SendedResourcePageComponent implements OnInit {
     emailAttachTool: any = {
         document: {
             icon: 'fa fa-file',
-            title: 'Attacher le document principal',
+            title: this.lang.attachMainDocument,
             list: []
         },
         notes: {
             icon: 'fas fa-pen-square',
-            title: 'Attacher une annotations',
+            title: this.lang.attachNote,
             list: []
         },
         attachments: {
             icon: 'fa fa-paperclip',
-            title: 'Attacher une pièce jointe',
+            title: this.lang.attachAttachment,
             list: []
         },
     };
@@ -561,9 +561,9 @@ export class SendedResourcePageComponent implements OnInit {
         this.http.post(`../../rest/emails`, this.formatEmail(textMode)).pipe(
             tap(() => {
                 if (this.emailStatus === 'DRAFT') {
-                    this.notify.success("Brouillon enregitré");
+                    this.notify.success(this.lang.draftSaved);
                 } else {
-                    this.notify.success("Email en cours d'envoi...");
+                    this.notify.success(`${this.lang.sendingEmail}...`);
                 }
 
                 if (closeModal) {
@@ -599,9 +599,9 @@ export class SendedResourcePageComponent implements OnInit {
         this.http.put(`../../rest/emails/${this.data.emailId}`, this.formatEmail()).pipe(
             tap(() => {
                 if (this.emailStatus === 'DRAFT') {
-                    this.notify.success("Brouillon modifié");
+                    this.notify.success(this.lang.draftUpdated);
                 } else {
-                    this.notify.success("Email en cours d'envoi...");
+                    this.notify.success(`${this.lang.sendingEmail}...`);
                 }
 
                 if (closeModal) {
@@ -622,7 +622,6 @@ export class SendedResourcePageComponent implements OnInit {
         } else {
             this.updateEmail();
         }
-
     }
 
     drop(event: CdkDragDrop<string[]>) {

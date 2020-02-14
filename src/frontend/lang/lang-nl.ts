@@ -1521,9 +1521,21 @@ export const LANG_NL = {
     "notSent" :  "Not sent", //_TO_TRANSLATE
     "delivery" :  "Delivery", //_TO_TRANSLATE
     "senderShort" :  "From", //_TO_TRANSLATE
-    "recipientShort" :  "To", //_TO_TRANSLATE,
+    "recipientShort" :  "To", //_TO_TRANSLATE
+    "copieShort" :  "Cc", //_TO_TRANSLATE
+    "invisibleCopyShort" :  "Cci", //_TO_TRANSLATE
     "m2m_ARCHIVETRANSFER" : "Digitale brief",
     "m2m_ARCHIVETRANSFERREPLY" :  "Antwoord verzonden",
     "shipping" :  "Send maileva", //_TO_TRANSLATE
     "sendElement" :  "Send an element", //_TO_TRANSLATE
+    "pdfVersion" : "PDF version", //_TO_TRANSLATE
+    "emailModel" : "Email modele", //_TO_TRANSLATE
+    "sendInPlainText" : "Send in plain text", //_TO_TRANSLATE
+    "saveDraft" : "Save draft", //_TO_TRANSLATE
+    "attachMainDocument" : "Link main document", //_TO_TRANSLATE
+    "attachNote" : "Link a note", //_TO_TRANSLATE
+    "attachAttachment" : "Link an attachment", //_TO_TRANSLATE
+    "draftSaved" : "Draft saved",  //_TO_TRANSLATE
+    "draftUpdated" : "Draft updated", //_TO_TRANSLATE
+    "sendingEmail" : "Sending email...", //_TO_TRANSLATE
 };
