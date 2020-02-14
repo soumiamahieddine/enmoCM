@@ -19,6 +19,7 @@ use Action\models\ActionModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Group\models\GroupModel;
+use IndexingModel\models\IndexingModelFieldModel;
 use Parameter\models\ParameterModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
@@ -77,13 +78,14 @@ class IndexingController
             return $response->withStatus(400)->withJson(['errors' => 'Action is not linked to this group']);
         }
 
-        $action = ActionModel::getById(['id' => $args['actionId'], 'select' => ['component']]);
+        $action = ActionModel::getById(['id' => $args['actionId'], 'select' => ['component', 'required_fields']]);
         if (empty($action['component'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Action component does not exist']);
         }
         if (!array_key_exists($action['component'], ActionMethodController::COMPONENTS_ACTIONS)) {
             return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
         }
+        $actionRequiredFields = json_decode($action['required_fields']);
 
         $resource = ResModel::getById(['resId' => $body['resource'], 'select' => ['status']]);
         if (empty($resource)) {
@@ -94,6 +96,25 @@ class IndexingController
 
         $body['data'] = empty($body['data']) ? [] : $body['data'];
         $body['note'] = empty($body['note']) ? null : $body['note'];
+
+        if (!empty($actionRequiredFields)) {
+            $resource = ResModel::getById(['resId' => $body['resource'], 'select' => ['model_id', 'custom_fields']]);
+            $model = $resource['model_id'];
+            $resourceCustomFields = json_decode($resource['custom_fields'], true);
+            $modelFields = IndexingModelFieldModel::get([
+                'select' => ['identifier'],
+                'where'  => ['model_id = ?', "identifier LIKE 'indexingCustomField_%'"],
+                'data'   => [$model]
+            ]);
+            $modelFields = array_column($modelFields, 'identifier');
+
+            foreach ($actionRequiredFields as $actionRequiredField) {
+                $idCustom = explode("_", $actionRequiredField)[1];
+                if (in_array($actionRequiredField, $modelFields) && empty($resourceCustomFields[$idCustom])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Missing required custom field to do action']);
+                }
+            }
+        }
 
         $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
         if (!empty($method)) {
