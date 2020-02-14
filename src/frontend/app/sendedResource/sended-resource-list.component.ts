@@ -83,7 +83,7 @@ export class SendedResourceListComponent implements OnInit {
                             hasAttach: false,
                             hasNote: false,
                             hasMainDoc: false,
-                            canManage: false
+                            canManage: true
                         }
                     })
                     return data;
@@ -185,19 +185,19 @@ export class SendedResourceListComponent implements OnInit {
                         return {
                             id: item.id,
                             sender: item.userLabel,
-                            recipients: item.userLabel,
+                            recipients: item.recipients.map((item: any) => item.contactLabel),
                             creationDate: item.creationDate,
                             sendDate: item.creationDate,
                             type: 'shipping',
                             typeColor: '#9440D5',
-                            desc: 'Envoi maileva',
+                            desc: this.lang.shipping,
                             status: 'SENT',
                             hasAttach: item.creationDate === 'attachment',
                             hasNote: false,
                             hasMainDoc: item.creationDate === 'resource',
                             canManage: false
                         }
-                    })
+                    });
                     return data;
                 }),
                 tap((data: any) => {
@@ -234,10 +234,16 @@ export class SendedResourceListComponent implements OnInit {
         this.dataSource.filter = ev.value;
     }
 
-    openPromptMail(row: any = null) {
+    openPromptMail(row: any = {id: null, type: null}) {
 
-        if (row.canManage) {
-            const dialogRef = this.dialog.open(SendedResourcePageComponent, { maxWidth: '90vw', width: '750px', disableClose: true, data: { title: `Toto`, resId: this.resId, emailId: row.id } });
+        let title = this.lang.sendElement;
+
+        if (row.id !== null) {
+            title = this.lang[row.type];
+        }
+
+        if (row.canManage || row.id === null) {
+            const dialogRef = this.dialog.open(SendedResourcePageComponent, { maxWidth: '90vw', width: '750px', minHeight:'500px', disableClose: true, data: { title: title, resId: this.resId, emailId: row.id, emailType: row.type } });
 
             dialogRef.afterClosed().pipe(
                 filter((data: string) => data === 'success'),
@@ -250,6 +256,5 @@ export class SendedResourceListComponent implements OnInit {
                 })
             ).subscribe();
         }
-
     }
 }

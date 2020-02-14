@@ -1539,4 +1539,5 @@ export const LANG_FR = {
     "senderShort" :  "De",
     "recipientShort" :  "Pour",
     "shipping" :  "Envoi maileva",
+    "sendElement" :  "Envoyer un element",
 };

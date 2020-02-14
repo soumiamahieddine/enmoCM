@@ -1500,4 +1500,5 @@ export const LANG_EN = {
     "m2m_ARCHIVETRANSFER" : "Archive transfer",
     "m2m_ARCHIVETRANSFERREPLY" : "Archive transfer reply",
     "shipping" :  "Send maileva",
+    "sendElement" :  "Send an element",
 };

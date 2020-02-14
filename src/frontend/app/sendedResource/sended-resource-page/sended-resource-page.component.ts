@@ -1,17 +1,19 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, OnInit, ViewChild, EventEmitter, ElementRef, Input, Inject, AfterViewInit } from '@angular/core';
+import { COMMA } from '@angular/cdk/keycodes';
+import { Component, OnInit, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { Observable, merge, Subject, of as observableOf, of } from 'rxjs';
-import { MatPaginator, MatSort, MatDialog, MatTableDataSource, MAT_DIALOG_DATA, MatDialogRef, MatChipInputEvent, MatSelect } from '@angular/material';
-import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatChipInputEvent } from '@angular/material';
+import { switchMap, map, catchError, filter, exhaustMap, tap, debounceTime } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { FunctionsService } from '../../../service/functions.service';
 import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ContactService } from '../../../service/contact.service';
 import { AppService } from '../../../service/app.service';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
+import { PrivilegeService } from '../../../service/privileges.service';
+import { HeaderService } from '../../../service/header.service';
 
 declare var tinymce: any;
 
@@ -58,6 +60,7 @@ export class SendedResourcePageComponent implements OnInit {
     showCopies: boolean = false;
     showInvisibleCopies: boolean = false;
 
+    emailCreatorId: number = null;
     emailId: number = null;
     emailsubject: string = '';
     emailStatus: string = 'WAITING';
@@ -83,6 +86,9 @@ export class SendedResourcePageComponent implements OnInit {
     emailAttach: any = {};
     lastClicked: any = Date.now();
 
+    canManage: boolean = false;
+    pdfMode : boolean = false;
+
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
@@ -91,6 +97,8 @@ export class SendedResourcePageComponent implements OnInit {
         public dialogRef: MatDialogRef<SendedResourcePageComponent>,
         public functions: FunctionsService,
         private contactService: ContactService,
+        public privilegeService: PrivilegeService,
+        private headerService: HeaderService
     ) { }
 
     async ngOnInit(): Promise<void> {
@@ -112,9 +120,11 @@ export class SendedResourcePageComponent implements OnInit {
         await this.getAttachElements();
         await this.getResourceData();
         await this.getUserEmails();
-
-        if (this.data.emailId) {
+        
+        if (this.data.emailId && this.data.emailType === 'email') {
             await this.getEmailData(this.data.emailId);
+        } else if (this.data.emailId && this.data.emailType === 'acknowledgementReceipt'){
+            await this.getAcknowledgementReceiptData(this.data.emailId);
         }
         this.loading = false;
         setTimeout(() => {
@@ -265,9 +275,10 @@ export class SendedResourcePageComponent implements OnInit {
     }
 
     getEmailData(emailId: number) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this.http.get(`../../rest/emails/${emailId}`).pipe(
                 tap((data: any) => {
+                    this.emailCreatorId = data.userId;
                     this.currentSender = data.sender.email;
                     this.recipients = data.recipients.map((item: any) => {
                         return {
@@ -315,10 +326,42 @@ export class SendedResourcePageComponent implements OnInit {
                             this.emailAttach.document.isLinked = true;
                             this.emailAttach.document.original = data.document.original;
                         }
-                    });
-                    console.log(this.emailAttachTool);
-                    console.log(this.emailAttach);
-                    
+                    });                    
+                    resolve(true);
+                }),
+                catchError((err) => {
+                    this.notify.handleSoftErrors(err);
+                    resolve(false);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    getAcknowledgementReceiptData(emailId: number) {
+        return new Promise((resolve) => {
+            this.http.get(`../../rest/acknowledgementReceipts/${emailId}`).pipe(
+                tap((data: any) => {
+                    this.currentSender = data.acknowledgementReceipt.userLabel;
+                    this.recipients = [{
+                        label: this.contactService.formatContact(data.acknowledgementReceipt.contact),
+                        email: data.acknowledgementReceipt.contact.email
+                    }];
+
+                    this.emailsubject = this.lang.shipping;
+
+                    this.emailStatus = 'SENT';
+                }),
+                exhaustMap(() => this.http.get(`../../rest/acknowledgementReceipts/${emailId}/content`)),
+                tap((data: any) => {
+                    this.pdfMode = data.format === 'pdf';
+
+                    if (this.pdfMode) {
+                        this.emailContent = data.encodedDocument;
+                        
+                    } else {
+                        this.emailContent = atob(data.encodedDocument);
+                    }
                     resolve(true);
                 }),
                 catchError((err) => {
@@ -331,7 +374,7 @@ export class SendedResourcePageComponent implements OnInit {
     }
 
     getResourceData() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this.http.get(`../../rest/resources/${this.data.resId}?light=true`).pipe(
                 tap((data: any) => {
                     this.resourceData = data;
@@ -376,7 +419,7 @@ export class SendedResourcePageComponent implements OnInit {
     }
 
     getUserEmails() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this.http.get('../../rest/currentUser/availableEmails').pipe(
                 tap((data: any) => {
                     this.availableSenders = data.emails;
@@ -393,7 +436,7 @@ export class SendedResourcePageComponent implements OnInit {
     }
 
     getAttachElements() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this.http.get(`../../rest/resources/${this.data.resId}/emailsInitialization`).pipe(
                 tap((data: any) => {
                     Object.keys(data).forEach(element => {
@@ -423,6 +466,7 @@ export class SendedResourcePageComponent implements OnInit {
 
     initEmailsList() {
         this.recipientsInput.valueChanges.pipe(
+            filter(value => value !== null),
             debounceTime(300),
             tap((value) => {
                 if (value.length === 0) {
@@ -509,9 +553,7 @@ export class SendedResourcePageComponent implements OnInit {
 
     createEmail(closeModal: boolean = true) {
         this.http.post(`../../rest/emails`, this.formatEmail()).pipe(
-            tap((data: any) => {
-                //this.data.emailId = data.id;
-
+            tap(() => {
                 if (this.emailStatus === 'DRAFT') {
                     this.notify.success("Brouillon enregitré");
                 } else {
@@ -663,10 +705,13 @@ export class SendedResourcePageComponent implements OnInit {
         }
     }
 
-    test() {
-        if (Date.now() - this.lastClicked >= 5000) {
-            this.lastClicked = Date.now();
-            console.log('modifié');
+    canManageMail() {
+        if ((this.data.emailId === null) || (this.emailStatus !== 'SENT' && this.headerService.user.id === this.emailCreatorId)) {
+            this.recipientsInput.enable();
+            return true;
+        } else {
+            this.recipientsInput.disable();
+            return false;
         }
     }
 }

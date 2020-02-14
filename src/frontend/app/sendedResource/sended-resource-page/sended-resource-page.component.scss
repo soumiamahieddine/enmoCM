@@ -2,9 +2,13 @@
 
 .loading {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    height: 100%;
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: white;
 }
 
 .mat-dialog-title {

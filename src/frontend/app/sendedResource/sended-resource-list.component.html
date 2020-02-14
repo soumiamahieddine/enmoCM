@@ -64,7 +64,7 @@
         </ng-container>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
-    <button mat-fab class="addSendedResource" color="primary" [title]="lang.addAttachment" (click)="openPromptMail()">
-        <mat-icon class="fa fa-plus"></mat-icon>
+    <button mat-fab *ngIf="privilegeService.hasCurrentUserPrivilege('sendmail')" class="addSendedResource" color="primary" [title]="lang.sendElement" (click)="openPromptMail()">
+        <mat-icon style="height: auto;width: auto;font-size: 20px;" class="far fa-paper-plane"></mat-icon>
     </button>
 </ng-template>
