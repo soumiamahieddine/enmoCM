@@ -340,18 +340,17 @@ class EmailController
     {
         $emails = [];
 
-        // User's email
-        $emailCurrentUser = UserModel::getById(['select' => ['firstname', 'lastname', 'mail'], 'id' => $GLOBALS['id']]);
+        $currentUser = UserModel::getById(['select' => ['firstname', 'lastname', 'mail'], 'id' => $GLOBALS['id']]);
 
         $emails[] = [
-            'label' => $emailCurrentUser['firstname'] . ' ' . $emailCurrentUser['lastname'],
-            'email' => $emailCurrentUser['mail']
+            'entityId'  => null,
+            'label'     => $currentUser['firstname'] . ' ' . $currentUser['lastname'],
+            'email'     => $currentUser['mail']
         ];
 
         if (PrivilegeController::hasPrivilege(['privilegeId' => 'use_mail_services', 'userId' => $GLOBALS['id']])) {
-            // User's entities emails
             $entities = EntityModel::getWithUserEntities([
-                'select' => ['entities.entity_label', 'entities.email', 'entities.entity_id'],
+                'select' => ['entities.entity_label', 'entities.email', 'entities.entity_id', 'entities.id'],
                 'where'  => ['users_entities.user_id = ?'],
                 'data'   => [$GLOBALS['userId']]
             ]);
@@ -359,36 +358,36 @@ class EmailController
             foreach ($entities as $entity) {
                 if (!empty($entity['email'])) {
                     $emails[] = [
-                        'label' => $entity['entity_label'],
-                        'email' => $entity['email']
+                        'entityId'  => $entity['id'],
+                        'label'     => $entity['entity_label'],
+                        'email'     => $entity['email']
                     ];
                 }
             }
 
-            // Get from XML
             $emailsEntities = CoreConfigModel::getXmlLoaded(['path' => 'modules/sendmail/xml/externalMailsEntities.xml']);
-
-            $userEntities = array_column($entities, 'entity_id');
-
-            if ($emailsEntities != null) {
+            if (!empty($emailsEntities)) {
+                $userEntities = array_column($entities, 'entity_id');
                 foreach ($emailsEntities->externalEntityMail as $entityMail) {
                     $entityId = (string)$entityMail->targetEntityId;
 
-                    if ($entityId == '') {
+                    if (empty($entityId)) {
                         $emails[] = [
-                            'label' => (string)$entityMail->defaultName,
-                            'email' => (string)$entityMail->EntityMail
+                            'entityId'  => null,
+                            'label'     => (string)$entityMail->defaultName,
+                            'email'     => (string)$entityMail->EntityMail
                         ];
                     } elseif (in_array($entityId, $userEntities)) {
-                        $entityLabel = EntityModel::getByEntityId([
-                            'select'   => ['entity_label'],
+                        $entity = EntityModel::getByEntityId([
+                            'select'   => ['entity_label', 'id'],
                             'entityId' => $entityId
                         ]);
 
-                        if (!empty($entityLabel)) {
+                        if (!empty($entity)) {
                             $emails[] = [
-                                'label' => $entityLabel['entity_label'],
-                                'email' => (string)$entityMail->EntityMail
+                                'entityId'  => $entity['id'],
+                                'label'     => $entity['entity_label'],
+                                'email'     => (string)$entityMail->EntityMail
                             ];
                         }
                     }
