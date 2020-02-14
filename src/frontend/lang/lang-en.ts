@@ -1492,6 +1492,7 @@ export const LANG_EN = {
     "removeSignature" : "Remove signature",
     "cannotCloseMails" : "Some mails cannot be closed",
     "followingFieldsAreEmpty" : "Following fields are empty",
+    "checkEmptyFields" : "Requisite fields to make this action",
     "sent" :  "Sent",
     "notSent" :  "Not sent",
     "delivery" :  "Delivery",

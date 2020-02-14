@@ -1517,6 +1517,7 @@ export const LANG_NL = {
     "removeSignature" : "Remove signature", //_TO_TRANSLATE
     "cannotCloseMails" : "Some mails cannot be closed", //_TO_TRANSLATE
     "followingFieldsAreEmpty" : "Following fields are empty", //_TO_TRANSLATE
+    "checkEmptyFields" : "Requisite fields to make this action", //_TO_TRANSLATE
     "sent" :  "Sent", //_TO_TRANSLATE
     "notSent" :  "Not sent", //_TO_TRANSLATE
     "delivery" :  "Delivery", //_TO_TRANSLATE

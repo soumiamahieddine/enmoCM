@@ -6,6 +6,10 @@ import { NotificationService } from '../../notification.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { HeaderService }        from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
+import { tap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { FunctionsService } from '../../../service/functions.service';
+import { FormControl } from '@angular/forms';
 
 declare function $j(selector: any): any;
 
@@ -28,6 +32,11 @@ export class ActionAdministrationComponent implements OnInit {
     keywordsList: any[] = [];
 
     loading: boolean = false;
+    availableCustomFields: Array<any> = [];
+    customFieldsFormControl = new FormControl({ value: '', disabled: false });
+    selectedFieldsValue: Array<any> = [];
+    selectedFieldsId: Array<any> = [];
+    selectedValue: any;
 
     constructor(
         public http: HttpClient, 
@@ -35,7 +44,8 @@ export class ActionAdministrationComponent implements OnInit {
         private router: Router, 
         private notify: NotificationService, 
         private headerService: HeaderService,
-        public appService: AppService) {
+        public appService: AppService,
+        public functions: FunctionsService) {
         $j("link[href='merged_css.php']").remove();
     }
 
@@ -68,20 +78,71 @@ export class ActionAdministrationComponent implements OnInit {
                 this.creationMode = false;
 
                 this.http.get('../../rest/actions/' + params['id'])
-                    .subscribe((data: any) => {
+                    .subscribe(async (data: any) => {
                         this.action = data.action;
                         this.categoriesList = data.categoriesList;
                         this.statuses = data.statuses;
                         this.actionPages = data['actionPages'];
                         this.keywordsList = data.keywordsList;
                         this.headerService.setHeader(this.lang.actionCreation, data.action.label_action);
+                        await this.getCustomFields();
                         this.loading = false;
+                        this.customFieldsFormControl = new FormControl({ value: this.action.requiredFields, disabled: false });
+                        this.selectedFieldsId = this.action.requiredFields;
+                        this.selectedFieldsId.forEach((element: any) => {
+                            this.availableCustomFields.forEach((availableElement: any) => {
+                                if (availableElement.id == element) {
+                                    this.selectedFieldsValue.push(availableElement.label);
+                                }
+                            });
+                        });
                     });
             }
         });
     }
 
+    getCustomFields() {
+        return new Promise((resolve, reject) => {
+            if (this.action.actionPageId=='close_mail' && this.functions.empty(this.availableCustomFields)) {
+                this.http.get('../../rest/customFields').pipe(
+                    tap((data: any) => {
+                        this.availableCustomFields = data.customFields.map((info: any) => {
+                            info.id = 'indexingCustomField_' + info.id; 
+                            return info;
+                        });
+                        return resolve(true);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleSoftErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else {
+                resolve(true);
+            }
+        });
+    }
+
+    getSelectedFields() {
+        this.availableCustomFields.forEach((element: any) => {
+            if (element.id == this.customFieldsFormControl.value) {
+                this.selectedValue = element;
+            }
+        });
+        if (this.selectedFieldsId.indexOf(this.customFieldsFormControl.value) < 0) {
+            this.selectedFieldsValue.push(this.selectedValue.label);
+            this.selectedFieldsId.push(this.customFieldsFormControl.value);
+        }
+        this.customFieldsFormControl.reset();
+    }
+
+    removeSelectedFields(index: number) {
+        this.selectedFieldsValue.splice(index, 1);
+        this.selectedFieldsId.splice(index, 1);
+    }
+
     onSubmit() {
+        this.action.requiredFields = this.selectedFieldsId;
         if (this.creationMode) {
             this.http.post('../../rest/actions', this.action)
                 .subscribe(() => {

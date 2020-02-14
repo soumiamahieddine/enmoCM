@@ -1533,6 +1533,7 @@ export const LANG_FR = {
     "removeSignature" : "Supprimer la signature",
     "cannotCloseMails" : "Certains courriers ne peuvent pas être clôturés",
     "followingFieldsAreEmpty" : "Les champs suivants sont vides",
+    "checkEmptyFields" : "Champs requis pour effectuer cette action",
     "sent" :  "Envoyé",
     "notSent" :  "Non envoyé",
     "delivery" :  "Pris en charge",
