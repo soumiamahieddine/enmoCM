@@ -153,14 +153,14 @@ class ActionController
         return $response->withJson(['actionId' => $id]);
     }
 
-    public function update(Request $request, Response $response, array $aArgs)
+    public function update(Request $request, Response $response, array $args)
     {
         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_actions', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $body = $request->getParsedBody();
-        $body['id'] = $aArgs['id'];
+        $body['id'] = $args['id'];
 
         $body    = $this->manageValue($body);
         $errors = $this->control($body, 'update');
@@ -201,22 +201,34 @@ class ActionController
         }
         $body['required_fields'] = json_encode($requiredFields);
 
-        ActionModel::update($body);
-        ActionModel::deleteCategories(['id' => $aArgs['id']]);
+        ActionModel::update([
+            'set'   => [
+                'keyword'         => $body['keyword'],
+                'label_action'    => $body['label_action'],
+                'id_status'       => $body['id_status'],
+                'action_page'     => $body['action_page'],
+                'component'       => $body['component'],
+                'history'         => $body['history'],
+                'required_fields' => $body['required_fields'],
+            ],
+            'where'   => ['id = ?'],
+            'data'    => [$body['id']]
+        ]);
+        ActionModel::deleteCategories(['id' => $args['id']]);
         if (!empty($body['actionCategories'])) {
-            ActionModel::createCategories(['id' => $aArgs['id'], 'categories' => $body['actionCategories']]);
+            ActionModel::createCategories(['id' => $args['id'], 'categories' => $body['actionCategories']]);
         }
 
         if (!in_array($body['component'], GroupController::INDEXING_ACTIONS)) {
             GroupModel::update([
-                'postSet'   => ['indexation_parameters' => "jsonb_set(indexation_parameters, '{actions}', (indexation_parameters->'actions') - '{$aArgs['id']}')"],
+                'postSet'   => ['indexation_parameters' => "jsonb_set(indexation_parameters, '{actions}', (indexation_parameters->'actions') - '{$args['id']}')"],
                 'where'     => ['1=1']
             ]);
         }
 
         HistoryController::add([
             'tableName' => 'actions',
-            'recordId'  => $aArgs['id'],
+            'recordId'  => $args['id'],
             'eventType' => 'UP',
             'eventId'   => 'actionup',
             'info'      => _ACTION_UPDATED. ' : ' . $body['label_action']

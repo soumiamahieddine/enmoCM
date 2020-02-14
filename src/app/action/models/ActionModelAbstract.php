@@ -73,22 +73,15 @@ abstract class ActionModelAbstract
 
     public static function update(array $args)
     {
-        ValidatorModel::notEmpty($args, ['id']);
-        ValidatorModel::intVal($args, ['id']);
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
 
         DatabaseModel::update([
-            'table' => 'actions',
-            'set'   => [
-                'keyword'         => $args['keyword'],
-                'label_action'    => $args['label_action'],
-                'id_status'       => $args['id_status'],
-                'action_page'     => $args['action_page'],
-                'component'       => $args['component'],
-                'history'         => $args['history'],
-                'required_fields' => $args['required_fields'],
-            ],
-            'where' => ['id = ?'],
-            'data'  => [$args['id']]
+            'table'   => 'actions',
+            'set'     => !empty($args['set']) ? $args['set'] : [],
+            'postSet' => !empty($args['postSet']) ? $args['postSet'] : [],
+            'where'   => $args['where'],
+            'data'    => $args['data'],
         ]);
 
         return true;
