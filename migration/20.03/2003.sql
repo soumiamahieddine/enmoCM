@@ -809,6 +809,7 @@ DO $$ BEGIN
         ALTER TABLE shippings ALTER COLUMN document_type SET NOT NULL;
     END IF;
 END$$;
+ALTER TABLE shippings ADD COLUMN recipients jsonb DEFAULT '[]';
 
 TRUNCATE TABLE indexing_models;
 INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (1, 'incoming', 'Courrier arrivée', TRUE, 23, FALSE);

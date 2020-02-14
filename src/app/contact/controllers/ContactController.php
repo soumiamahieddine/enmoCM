@@ -700,7 +700,7 @@ class ContactController
 
         if (!empty($args['company'])) {
             // Ligne 1
-            $afnorAddress[1] = substr($args['company'], 0, 38);
+            $afnorAddress[1] = trim(substr($args['company'], 0, 38));
         }
 
         // Ligne 2
@@ -710,11 +710,12 @@ class ContactController
                 'fullName'      => $args['firstname'].' '.$args['lastname'],
                 'strMaxLength'  => 38
             ]);
+            $afnorAddress[2] = trim($afnorAddress[2]);
         }
 
         // Ligne 3
         if (!empty($args['address_additional1'])) {
-            $afnorAddress[3] = substr($args['address_additional1'], 0, 38);
+            $afnorAddress[3] = trim(substr($args['address_additional1'], 0, 38));
         }
 
         // Ligne 4
@@ -728,17 +729,17 @@ class ContactController
             $args['address_street'] = preg_replace('/[^\w]/s', ' ', $args['address_street']);
             $args['address_street'] = strtoupper($args['address_street']);
         }
-        $afnorAddress[4] = substr($args['address_number'].' '.$args['address_street'], 0, 38);
+        $afnorAddress[4] = trim(substr($args['address_number'].' '.$args['address_street'], 0, 38));
 
         // Ligne 5
         if (!empty($args['address_additional2'])) {
-            $afnorAddress[5] = substr($args['address_additional2'], 0, 38);
+            $afnorAddress[5] = trim(substr($args['address_additional2'], 0, 38));
         }
 
         // Ligne 6
         $args['address_postcode'] = strtoupper($args['address_postcode']);
         $args['address_town'] = strtoupper($args['address_town']);
-        $afnorAddress[6] = substr($args['address_postcode'].' '.$args['address_town'], 0, 38);
+        $afnorAddress[6] = trim(substr($args['address_postcode'].' '.$args['address_town'], 0, 38));
 
         return $afnorAddress;
     }
