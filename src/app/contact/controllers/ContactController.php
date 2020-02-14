@@ -13,6 +13,8 @@
 
 namespace Contact\controllers;
 
+use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
+use Attachment\models\AttachmentModel;
 use Contact\models\ContactCustomFieldListModel;
 use Contact\models\ContactFillingModel;
 use Contact\models\ContactGroupModel;
@@ -100,6 +102,9 @@ class ContactController
         foreach ($contacts as $key => $contact) {
             unset($contacts[$key]['count']);
             $filling = ContactController::getFillingRate(['contactId' => $contact['id']]);
+
+            $contacts[$key]['isUsed'] = ContactController::isContactUsed(['id' => $contact['id']]);
+
             $contacts[$key]['filling'] = $filling;
         }
         if ($queryParams['orderBy'] == 'filling') {
@@ -1233,5 +1238,34 @@ class ContactController
         $contact['fillingRate'] = empty($fillingRate) ? null : $fillingRate;
 
         return $contact;
+    }
+
+    private static function isContactUsed(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
+
+        $inResources = ResourceContactModel::get([
+            'select' => ['count(1)'],
+            'where'  => ['item_id = ?', "type = 'contact'"],
+            'data'   => [$args['id']]
+        ]);
+        $inResources = $inResources[0]['count'] > 0;
+
+        $inAcknowledgementReceipts = AcknowledgementReceiptModel::get([
+            'select' => ['count(1)'],
+            'where'  => ['contact_id = ?'],
+            'data'   => [$args['id']]
+        ]);
+        $inAcknowledgementReceipts = $inAcknowledgementReceipts[0]['count'] > 0;
+
+        $inAttachments = AttachmentModel::get([
+            'select' => ['count(1)'],
+            'where'  => ['recipient_id = ?', "recipient_type = 'contact'"],
+            'data'   => [$args['id']]
+        ]);
+        $inAttachments = $inAttachments[0]['count'] > 0;
+
+        return $inResources || $inAcknowledgementReceipts || $inAttachments;
     }
 }
