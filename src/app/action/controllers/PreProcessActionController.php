@@ -13,18 +13,21 @@
 namespace Action\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
+use Action\models\ActionModel;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketRedirectModel;
 use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
 use Convert\controllers\ConvertPdfController;
+use CustomField\models\CustomFieldModel;
 use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use Group\models\GroupModel;
+use IndexingModel\models\IndexingModelFieldModel;
 use Note\models\NoteModel;
 use Parameter\models\ParameterModel;
 use Resource\controllers\ResController;
@@ -1338,6 +1341,84 @@ class PreProcessActionController
         }
 
         return $response->withJson(['isDestinationChanging' => $changeDestination]);
+    }
+
+    public static function checkCloseWithFieldsAction(Request $request, Response $response, array $args)
+    {
+        $body = $request->getParsedBody();
+
+        if (!Validator::arrayType()->notEmpty()->validate($body['resources'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body resources is empty or not an array']);
+        }
+
+        $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $GLOBALS['id']]);
+        if (!empty($errors['errors'])) {
+            return $response->withStatus($errors['code'])->withJson(['errors' => $errors['errors']]);
+        }
+
+        $body['resources'] = array_slice($body['resources'], 0, 500);
+        if (!ResController::hasRightByResId(['resId' => $body['resources'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+        $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
+
+        $action = ActionModel::getById(['id' => $args['actionId'], 'select' => ['required_fields']]);
+        if (empty($action)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action does not exist']);
+        }
+        $actionRequiredFields = json_decode($action['required_fields']);
+
+        $canClose = [];
+        $emptyFields = [];
+
+        foreach ($body['resources'] as $resId) {
+            if (!empty($actionRequiredFields)) {
+                $resource = ResModel::getById(['resId' => $resId, 'select' => ['model_id', 'custom_fields', 'alt_identifier']]);
+                $model = $resource['model_id'];
+                $resourceCustomFields = json_decode($resource['custom_fields'], true);
+                $modelFields = IndexingModelFieldModel::get([
+                    'select' => ['identifier'],
+                    'where'  => ['model_id = ?', "identifier LIKE 'indexingCustomField_%'"],
+                    'data'   => [$model]
+                ]);
+                $modelFields = array_column($modelFields, 'identifier');
+
+                $emptyList = [];
+
+                foreach ($actionRequiredFields as $actionRequiredField) {
+                    $idCustom = explode("_", $actionRequiredField)[1];
+                    if (in_array($actionRequiredField, $modelFields) && empty($resourceCustomFields[$idCustom])) {
+                        $emptyList[] = $idCustom;
+                    }
+                }
+
+                if (!empty($emptyList)) {
+                    $fieldsList = [];
+
+                    $customs = CustomFieldModel::get([
+                        'select' => ['label'],
+                        'where'  => ['id in (?)'],
+                        'data'   => [$emptyList]
+                    ]);
+
+                    foreach ($customs as $custom) {
+                        $fieldsList[] = $custom['label'];
+                    }
+
+                    $emptyFields[] = [
+                        'chrono' => $resource['alt_identifier'],
+                        'fields' => !empty($fieldsList) ? implode(", ", $fieldsList) : ''
+                    ];
+
+                } else {
+                    $canClose[] = $resId;
+                }
+            } else {
+                $canClose[] = $resId;
+            }
+        }
+
+        return $response->withJson(['emptyFields' => $emptyFields, 'canClose' => $canClose]);
     }
 
     private static function getNonLockedResources(array $args)
