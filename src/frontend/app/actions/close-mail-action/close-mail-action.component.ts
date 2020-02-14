@@ -36,7 +36,7 @@ export class CloseMailActionComponent implements OnInit {
     }
 
     checkClose() {
-        this.http.post(`../../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/checkCloseMails`, { resources: this.data.resIds }).pipe(
+        this.http.post(`../../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/checkCloseWithFieldsAction`, { resources: this.data.resIds }).pipe(
             tap((data: any) => {
                 this.mailsWithEmptyFields = data.emptyFields;
                 this.canCloseResIds = data.canClose;

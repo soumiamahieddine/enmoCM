@@ -9,7 +9,7 @@
                 <p>{{lang.cannotCloseMails}} :</p>
                 <ul>
                     <li *ngFor="let emptyFields of mailsWithEmptyFields">
-                        <b>[{{emptyFields.chrono}}]</b> {{lang.cannotCloseMails}} : {{emptyFields.fields}}
+                        <b>[{{emptyFields.chrono}}]</b> {{lang.followingFieldsAreEmpty}} : {{emptyFields.fields}}
                     </li>
                 </ul>
             </div>
