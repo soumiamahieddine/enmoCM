@@ -36,7 +36,7 @@ export class ContactModalComponent {
             this.contact = {
                 id: this.data.contactId,
                 type: this.data.contactType
-            }
+            };
             this.creationMode = false;
         } else {
             this.creationMode = true;

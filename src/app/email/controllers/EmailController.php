@@ -276,7 +276,7 @@ class EmailController
         ]);
 
         if (!empty($email['document'])) {
-            $document = (array)json_decode($email['document']);
+            $document = json_decode($email['document'], true);
 
             HistoryController::add([
                 'tableName' => 'res_letterbox',
