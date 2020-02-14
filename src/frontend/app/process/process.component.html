@@ -85,7 +85,7 @@
                     [adminMode]="false" [resId]="currentResourceInformations.resId" [expanded]="true">
                 </app-diffusions-list>
                 <app-sended-resource-list *ngIf="currentTool === 'emails' && !loading" #appSendedResource
-                    [resId]="currentResourceInformations.resId">
+                    [resId]="currentResourceInformations.resId" (reloadBadgeSendedResource)="refreshBadge($event,'emails')">
                 </app-sended-resource-list>
                 <app-visa-workflow *ngIf="currentTool === 'visaCircuit' && !loading" #appVisaWorkflow
                     [resId]="currentResourceInformations.resId"
@@ -275,7 +275,7 @@
             [resId]="currentResourceInformations.resId" [expanded]="true">
         </app-diffusions-list>
         <app-sended-resource-list *ngIf="modal.id === 'emails' && !loading" #appSendedResource
-            [resId]="currentResourceInformations.resId">
+            [resId]="currentResourceInformations.resId" (reloadBadgeSendedResource)="refreshBadge($event,'emails')">
         </app-sended-resource-list>
         <app-visa-workflow *ngIf="modal.id === 'visaCircuit' && !loading"
             [adminMode]="privilegeService.hasCurrentUserPrivilege('config_visa_workflow')" #appVisaWorkflow

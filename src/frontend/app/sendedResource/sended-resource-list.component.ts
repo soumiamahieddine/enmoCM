@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, EventEmitter, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, ElementRef, Input, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
@@ -36,6 +36,8 @@ export class SendedResourceListComponent implements OnInit {
 
     @Input('resId') resId: number = null;
 
+    @Output() reloadBadgeSendedResource = new EventEmitter<string>();
+
     @ViewChild(MatSort, { static: false }) sort: MatSort;
 
     constructor(
@@ -55,7 +57,9 @@ export class SendedResourceListComponent implements OnInit {
         await this.initAcknowledgementReceipList();
         await this.initEmailList();
         await this.initMessageExchange();
-        await this.initShippings()
+        await this.initShippings();
+        this.reloadBadgeSendedResource.emit(`${this.sendedResources.length}`);
+
         this.initFilter();
 
         setTimeout(() => {
