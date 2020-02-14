@@ -566,16 +566,26 @@ class AttachmentController
         return $response->withJson(['attachmentsTypes' => $attachmentsTypes]);
     }
 
-    public static function getEncodedDocument(array $aArgs)
+    public static function getEncodedDocument(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        ValidatorModel::boolType($aArgs, ['original']);
+        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
+        ValidatorModel::boolType($args, ['original']);
 
-        $document = AttachmentModel::getById(['select' => ['docserver_id', 'path', 'filename', 'title'], 'id' => $aArgs['id']]);
+        $document = AttachmentModel::getById(['select' => ['docserver_id', 'path', 'filename', 'title', 'status'], 'id' => $args['id']]);
 
-        if (empty($aArgs['original'])) {
-            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $aArgs['id'], 'collId' => 'attachments_coll']);
+        if (empty($args['original'])) {
+            if ($document['status'] == 'SIGN') {
+                $signedAttachment = AttachmentModel::get([
+                    'select'    => ['res_id'],
+                    'where'     => ['origin = ?', 'status not in (?)', 'attachment_type = ?'],
+                    'data'      => ["{$args['id']},res_attachments", ['OBS', 'DEL', 'TMP', 'FRZ'], 'signed_response']
+                ]);
+                if (!empty($signedAttachment[0])) {
+                    $args['id'] = $signedAttachment[0]['res_id'];
+                }
+            }
+            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $args['id'], 'collId' => 'attachments_coll']);
 
             if (empty($convertedDocument['errors'])) {
                 $document['docserver_id'] = $convertedDocument['docserver_id'];
@@ -605,7 +615,6 @@ class AttachmentController
         if ($fileContent === false) {
             return ['errors' => 'Document not found on docserver'];
         }
-
 
         $encodedDocument = base64_encode($fileContent);
 

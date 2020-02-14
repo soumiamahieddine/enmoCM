@@ -644,7 +644,7 @@ class EmailController
             ]);
 
             if ($fingerprint != $messageExchange['fingerprint']) {
-                $email['document'] = (array)json_decode($email['document']);
+                $email['document'] = json_decode($email['document'], true);
                 return ['errors' => 'Pb with fingerprint of document. ResId master : ' . $email['document']['id']];
             }
 
@@ -660,7 +660,7 @@ class EmailController
             }
         } else {
             if (!empty($email['document'])) {
-                $email['document'] = (array)json_decode($email['document']);
+                $email['document'] = json_decode($email['document'], true);
                 if ($email['document']['isLinked']) {
                     $encodedDocument = ResController::getEncodedDocument(['resId' => $email['document']['id'], 'original' => $email['document']['original']]);
                     if (empty($encodedDocument['errors'])) {
@@ -668,9 +668,7 @@ class EmailController
                     }
                 }
                 if (!empty($email['document']['attachments'])) {
-                    $email['document']['attachments'] = (array)$email['document']['attachments'];
                     foreach ($email['document']['attachments'] as $attachment) {
-                        $attachment = (array)$attachment;
                         $encodedDocument = AttachmentController::getEncodedDocument(['id' => $attachment['id'], 'original' => $attachment['original']]);
                         if (empty($encodedDocument['errors'])) {
                             $phpmailer->addStringAttachment(base64_decode($encodedDocument['encodedDocument']), $encodedDocument['fileName']);
@@ -678,7 +676,6 @@ class EmailController
                     }
                 }
                 if (!empty($email['document']['notes'])) {
-                    $email['document']['notes'] = (array)$email['document']['notes'];
                     $encodedDocument = NoteController::getEncodedPdfByIds(['ids' => $email['document']['notes']]);
                     if (empty($encodedDocument['errors'])) {
                         $phpmailer->addStringAttachment(base64_decode($encodedDocument['encodedDocument']), 'notes.pdf');
