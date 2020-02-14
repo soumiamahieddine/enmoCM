@@ -16,7 +16,7 @@
     </div>
     <mat-table #table [dataSource]="dataSource" matSort matSortActive="creationDate" matSortDirection="desc">
         <ng-container matColumnDef="creationDate">
-            <mat-cell *matCellDef="let row" class="dataLine" style="flex: 1;padding: 0px;flex-direction: column;" (click)="openPromptMail(row.id)">
+            <mat-cell *matCellDef="let row" class="dataLine" [class.canManage]="row.canManage" style="flex: 1;padding: 0px;flex-direction: column;" (click)="openPromptMail(row)">
                 <div class="subinfo">
                     <span style="flex:1" [title]="row.creationDate | fullDate">
                         {{lang.createdAlt}} : <b>{{row.creationDate | timeAgo : 'full'}}</b>
@@ -62,7 +62,7 @@
                 </div>
             </mat-cell>
         </ng-container>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" style="cursor: pointer;"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
     <button mat-fab class="addSendedResource" color="primary" [title]="lang.addAttachment" (click)="openPromptMail()">
         <mat-icon class="fa fa-plus"></mat-icon>

@@ -55,6 +55,7 @@ export class SendedResourceListComponent implements OnInit {
         await this.initAcknowledgementReceipList();
         await this.initEmailList();
         await this.initMessageExchange();
+        await this.initShippings()
         this.initFilter();
 
         setTimeout(() => {
@@ -81,7 +82,8 @@ export class SendedResourceListComponent implements OnInit {
                             status: item.format === 'html' && item.sendDate === null ? 'ERROR' : 'SENT',
                             hasAttach: false,
                             hasNote: false,
-                            hasMainDoc: false
+                            hasMainDoc: false,
+                            canManage: false
                         }
                     })
                     return data;
@@ -117,7 +119,8 @@ export class SendedResourceListComponent implements OnInit {
                             status: item.status,
                             hasAttach: !this.functions.empty(item.document.attachments),
                             hasNote: !this.functions.empty(item.document.notes),
-                            hasMainDoc: item.document.isLinked
+                            hasMainDoc: item.document.isLinked,
+                            canManage: true
                         }
                     })
                     return data.emails;
@@ -154,10 +157,48 @@ export class SendedResourceListComponent implements OnInit {
                             status: item.status,
                             hasAttach: false,
                             hasNote: false,
-                            hasMainDoc: false
+                            hasMainDoc: false,
+                            canManage: false
                         }
                     })
                     return data.messageExchanges;
+                }),
+                tap((data: any) => {
+                    this.sendedResources = this.sendedResources.concat(data);
+
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    resolve(false);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    initShippings() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/resources/${this.resId}/shippings`).pipe(
+                map((data: any) => {
+                    data = data.map((item: any) => {
+                        return {
+                            id: item.id,
+                            sender: item.userLabel,
+                            recipients: item.userLabel,
+                            creationDate: item.creationDate,
+                            sendDate: item.creationDate,
+                            type: 'shipping',
+                            typeColor: '#9440D5',
+                            desc: 'Envoi maileva',
+                            status: 'SENT',
+                            hasAttach: item.creationDate === 'attachment',
+                            hasNote: false,
+                            hasMainDoc: item.creationDate === 'resource',
+                            canManage: false
+                        }
+                    })
+                    return data;
                 }),
                 tap((data: any) => {
                     this.sendedResources = this.sendedResources.concat(data);
@@ -193,19 +234,22 @@ export class SendedResourceListComponent implements OnInit {
         this.dataSource.filter = ev.value;
     }
 
-    openPromptMail(emailId: number = null) {
+    openPromptMail(row: any = null) {
 
-        const dialogRef = this.dialog.open(SendedResourcePageComponent, { maxWidth: '90vw', width: '750px', disableClose: true, data: { title: `Toto`, resId: this.resId, emailId : emailId } });
+        if (row.canManage) {
+            const dialogRef = this.dialog.open(SendedResourcePageComponent, { maxWidth: '90vw', width: '750px', disableClose: true, data: { title: `Toto`, resId: this.resId, emailId: row.id } });
 
-        dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'success'),
-            tap(() => {
-                this.loadList();
-            }),
-            catchError((err: any) => {
-                this.notify.handleSoftErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+            dialogRef.afterClosed().pipe(
+                filter((data: string) => data === 'success'),
+                tap(() => {
+                    this.loadList();
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
+
     }
 }

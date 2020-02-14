@@ -1524,4 +1524,5 @@ export const LANG_NL = {
     "recipientShort" :  "To", //_TO_TRANSLATE,
     "m2m_ARCHIVETRANSFER" : "Digitale brief",
     "m2m_ARCHIVETRANSFERREPLY" :  "Antwoord verzonden",
+    "shipping" :  "Send maileva", //_TO_TRANSLATE,
 };
