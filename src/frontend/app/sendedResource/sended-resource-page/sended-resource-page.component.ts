@@ -87,7 +87,7 @@ export class SendedResourcePageComponent implements OnInit {
     lastClicked: any = Date.now();
 
     canManage: boolean = false;
-    pdfMode : boolean = false;
+    pdfMode: boolean = false;
 
     constructor(
         public http: HttpClient,
@@ -98,7 +98,7 @@ export class SendedResourcePageComponent implements OnInit {
         public functions: FunctionsService,
         private contactService: ContactService,
         public privilegeService: PrivilegeService,
-        private headerService: HeaderService
+        public headerService: HeaderService
     ) { }
 
     async ngOnInit(): Promise<void> {
@@ -120,10 +120,10 @@ export class SendedResourcePageComponent implements OnInit {
         await this.getAttachElements();
         await this.getResourceData();
         await this.getUserEmails();
-        
+
         if (this.data.emailId && this.data.emailType === 'email') {
             await this.getEmailData(this.data.emailId);
-        } else if (this.data.emailId && this.data.emailType === 'acknowledgementReceipt'){
+        } else if (this.data.emailId && this.data.emailType === 'acknowledgementReceipt') {
             await this.getAcknowledgementReceiptData(this.data.emailId);
         }
         this.loading = false;
@@ -135,7 +135,7 @@ export class SendedResourcePageComponent implements OnInit {
     initMce() {
         tinymce.init({
             selector: "textarea#emailSignature",
-            readonly : this.emailStatus === 'SENT',
+            readonly: this.emailStatus === 'SENT',
             suffix: '.min',
             language: this.lang.langISO.replace('-', '_'),
             language_url: `../../node_modules/tinymce-i18n/langs/${this.lang.langISO.replace('-', '_')}.js`,
@@ -279,7 +279,10 @@ export class SendedResourcePageComponent implements OnInit {
             this.http.get(`../../rest/emails/${emailId}`).pipe(
                 tap((data: any) => {
                     this.emailCreatorId = data.userId;
-                    this.currentSender = data.sender.email;
+                    this.currentSender = {
+                        label: data.sender.email,
+                        email: data.sender.email
+                    };
                     this.recipients = data.recipients.map((item: any) => {
                         return {
                             label: item,
@@ -326,7 +329,7 @@ export class SendedResourcePageComponent implements OnInit {
                             this.emailAttach.document.isLinked = true;
                             this.emailAttach.document.original = data.document.original;
                         }
-                    });                    
+                    });
                     resolve(true);
                 }),
                 catchError((err) => {
@@ -342,7 +345,10 @@ export class SendedResourcePageComponent implements OnInit {
         return new Promise((resolve) => {
             this.http.get(`../../rest/acknowledgementReceipts/${emailId}`).pipe(
                 tap((data: any) => {
-                    this.currentSender = data.acknowledgementReceipt.userLabel;
+                    this.currentSender = {
+                        label: data.acknowledgementReceipt.userLabel,
+                        email: data.acknowledgementReceipt.userLabel
+                    };
                     this.recipients = [{
                         label: this.contactService.formatContact(data.acknowledgementReceipt.contact),
                         email: data.acknowledgementReceipt.contact.email
@@ -358,7 +364,7 @@ export class SendedResourcePageComponent implements OnInit {
 
                     if (this.pdfMode) {
                         this.emailContent = data.encodedDocument;
-                        
+
                     } else {
                         this.emailContent = atob(data.encodedDocument);
                     }
@@ -423,7 +429,7 @@ export class SendedResourcePageComponent implements OnInit {
             this.http.get('../../rest/currentUser/availableEmails').pipe(
                 tap((data: any) => {
                     this.availableSenders = data.emails;
-                    this.currentSender = this.availableSenders[0].email;
+                    this.currentSender = this.availableSenders[0];
                     resolve(true);
                 }),
                 catchError((err) => {
@@ -446,13 +452,13 @@ export class SendedResourcePageComponent implements OnInit {
                             this.emailAttachTool[element].list = data[element].map((item: any) => {
                                 return {
                                     ...item,
-                                    original : item.original !== undefined ? item.original : true, 
+                                    original: item.original !== undefined ? item.original : true,
                                     title: item.chrono !== undefined ? `${item.chrono} - ${item.label} (${item.typeLabel})` : `${item.label} (${item.typeLabel})`
                                 }
                             });
                         }
                     });
-                    
+
                     resolve(true);
                 }),
                 catchError((err: any) => {
@@ -530,7 +536,7 @@ export class SendedResourcePageComponent implements OnInit {
         this.filteredEmails = of([]);
     }
 
-    onSubmit() {
+    onSubmit(textMode: string = 'html') {
         this.emailStatus = 'WAITING';
         if (this.data.emailId === null) {
             if (this.emailsubject === '') {
@@ -539,20 +545,20 @@ export class SendedResourcePageComponent implements OnInit {
                 dialogRef.afterClosed().pipe(
                     filter((data: string) => data === 'ok'),
                     tap(() => {
-                        this.createEmail(true);
+                        this.createEmail(textMode, true);
                     })
                 ).subscribe();
             } else {
-                this.createEmail(true);
+                this.createEmail(textMode, true);
             }
 
         } else {
-            this.updateEmail(true);
+            this.updateEmail(textMode, true);
         }
     }
 
-    createEmail(closeModal: boolean = true) {
-        this.http.post(`../../rest/emails`, this.formatEmail()).pipe(
+    createEmail(textMode: string = 'html', closeModal: boolean = true) {
+        this.http.post(`../../rest/emails`, this.formatEmail(textMode)).pipe(
             tap(() => {
                 if (this.emailStatus === 'DRAFT') {
                     this.notify.success("Brouillon enregitré");
@@ -589,7 +595,7 @@ export class SendedResourcePageComponent implements OnInit {
         ).subscribe();
     }
 
-    updateEmail(closeModal: boolean = true) {
+    updateEmail(textMode: string = 'html', closeModal: boolean = true) {
         this.http.put(`../../rest/emails/${this.data.emailId}`, this.formatEmail()).pipe(
             tap(() => {
                 if (this.emailStatus === 'DRAFT') {
@@ -655,7 +661,7 @@ export class SendedResourcePageComponent implements OnInit {
         }
     }
 
-    formatEmail() {
+    formatEmail(textMode: string = 'html') {
         let objAttach: any = {}
         Object.keys(this.emailAttach).forEach(element => {
             if (!this.functions.empty(this.emailAttach[element])) {
@@ -677,19 +683,20 @@ export class SendedResourcePageComponent implements OnInit {
                 }
             }
         });
-
-        let formatSender = this.currentSender;
-
-        delete formatSender.label;
+        
+        let formatSender = {
+            email: this.currentSender.email,
+            entityId: !this.functions.empty(this.currentSender.entityId) ? this.currentSender.entityId : null
+        };
 
         const data = {
             document: objAttach,
-            sender: { email: formatSender },
+            sender: formatSender,
             recipients: this.recipients.map(recipient => recipient.email),
             cc: this.showCopies ? this.copies.map(copy => copy.email) : [],
             cci: this.showInvisibleCopies ? this.invisibleCopies.map((invCopy => invCopy.email)) : [],
             object: this.emailsubject,
-            body: tinymce.get('emailSignature').getContent(),
+            body: textMode === 'html' ? tinymce.get('emailSignature').getContent() : tinymce.get('emailSignature').getContent({ format: 'text' }),
             isHtml: true,
             status: this.emailStatus
         };

@@ -11,9 +11,9 @@
     </div>
     <mat-form-field>
         <span matPrefix class="attachLabel">De&nbsp;:&nbsp;</span>
-        <input *ngIf="!canManageMail()" matInput [value]="currentSender" readonly>
+        <input *ngIf="!canManageMail()" matInput [value]="currentSender.email" readonly>
         <mat-select *ngIf="canManageMail()" [(ngModel)]="currentSender">
-            <mat-option *ngFor="let email of availableSenders | sortBy: 'label'" [value]="email.email">
+            <mat-option *ngFor="let email of availableSenders | sortBy: 'label'" [value]="email">
                 {{email.label}} ({{email.email}})
             </mat-option>
         </mat-select>
@@ -158,15 +158,23 @@
         <textarea *ngIf="!pdfMode" style="padding-top: 10px;" name="emailSignature" id="emailSignature"
             [(ngModel)]="emailContent"></textarea>
 
-        <app-document-viewer *ngIf="pdfMode" #appDocumentViewer style="display:block;height:400px;width:100%;overflow: auto;"
-            [editMode]="false" [base64]="emailContent">
+        <app-document-viewer *ngIf="pdfMode" #appDocumentViewer
+            style="display:block;height:400px;width:100%;overflow: auto;" [editMode]="false" [base64]="emailContent">
         </app-document-viewer>
     </div>
 </mat-dialog-content>
-<div mat-dialog-actions class="actions" *ngIf="!loading && canManageMail()">
-    <button mat-raised-button color="primary" *ngIf="privilegeService.hasCurrentUserPrivilege('sendmail')"
-        (click)="onSubmit()">Envoyer</button>
-    <button mat-raised-button color="primary" (click)="saveDraft()">Enregistrer le brouilon</button>
-    <button mat-raised-button color="warn" (click)="deleteEmail()" *ngIf="data.emailId"
-        [disabled]="!canManageMail()">Supprimer</button>
+<div mat-dialog-actions class="actions" *ngIf="!loading">
+    <button mat-raised-button color="primary" style="min-width: auto;width: 40px;padding: 0;" *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail')" [disabled]="recipients.length === 0" [matMenuTriggerFor]="emailActionMenu">
+        <mat-icon style="height:auto;" class="fas fa-ellipsis-v"></mat-icon>
+    </button>
+    <mat-menu #emailActionMenu="matMenu" [class]="'attachListMenu'">
+        <button mat-menu-item (click)="onSubmit('brut')">
+            Envoyer en text brut
+        </button>
+    </mat-menu>
+    <button mat-raised-button color="primary" *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail')"
+        (click)="onSubmit()" [disabled]="recipients.length === 0">Envoyer</button>
+    <button mat-raised-button color="primary" *ngIf="canManageMail()" (click)="saveDraft()">Enregistrer le brouilon</button>
+    <button mat-raised-button color="warn" (click)="deleteEmail()" *ngIf="data.emailId && data.emailType === 'email'"
+        [disabled]="headerService.user.id !== emailCreatorId">Supprimer</button>
 </div>
