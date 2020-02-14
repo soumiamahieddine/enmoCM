@@ -116,14 +116,14 @@ class ActionController
 
         unset($body['actionPageId']);
 
-        if (!empty($body['required_fields'])) {
-            if (!Validator::arrayType()->validate($body['required_fields'])) {
+        $requiredFields = [];
+        if (!empty($body['requiredFields'])) {
+            if (!Validator::arrayType()->validate($body['requiredFields'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Data required_fields is not an array']);
             }
             $customFields = CustomFieldModel::get(['select' => ['id']]);
             $customFields = array_column($customFields, 'id');
-            $requiredFields = [];
-            foreach ($body['required_fields'] as $key => $requiredField) {
+            foreach ($body['requiredFields'] as $requiredField) {
                 if (strpos($requiredField, 'indexingCustomField_') !== false) {
                     $idCustom = explode("_", $requiredField);
                     $idCustom = $idCustom[1];
@@ -133,9 +133,9 @@ class ActionController
                     $requiredFields[] = $requiredField;
                 }
             }
-
-            $body['required_fields'] = json_encode($requiredFields);
+            unset($body['requiredFields']);
         }
+        $body['required_fields'] = json_encode($requiredFields);
 
         $id = ActionModel::create($body);
         if (!empty($body['actionCategories'])) {
@@ -181,13 +181,13 @@ class ActionController
         }
 
         $requiredFields = [];
-        if (!empty($body['required_fields'])) {
-            if (!Validator::arrayType()->validate($body['required_fields'])) {
+        if (!empty($body['requiredFields'])) {
+            if (!Validator::arrayType()->validate($body['requiredFields'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Data required_fields is not an array']);
             }
             $customFields = CustomFieldModel::get(['select' => ['id']]);
             $customFields = array_column($customFields, 'id');
-            foreach ($body['required_fields'] as $key => $requiredField) {
+            foreach ($body['requiredFields'] as $requiredField) {
                 if (strpos($requiredField, 'indexingCustomField_') !== false) {
                     $idCustom = explode("_", $requiredField);
                     $idCustom = $idCustom[1];
@@ -197,6 +197,7 @@ class ActionController
                     $requiredFields[] = $requiredField;
                 }
             }
+            unset($body['requiredFields']);
         }
         $body['required_fields'] = json_encode($requiredFields);
 
