@@ -473,7 +473,7 @@ class SendMessageExchangeController
     {
         $archivalAgencyObject                    = new \stdClass();
         $archivalAgencyObject->Identifier        = new \stdClass();
-        $externalId = (array)json_decode($aArgs['ArchivalAgency']['ContactInformations']['external_id']);
+        $externalId = json_decode($aArgs['ArchivalAgency']['ContactInformations']['external_id'], true);
         $archivalAgencyObject->Identifier->value = $externalId['m2m'];
 
         $archivalAgencyObject->OrganizationDescriptiveMetadata       = new \stdClass();

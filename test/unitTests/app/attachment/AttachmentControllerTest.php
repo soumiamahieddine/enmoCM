@@ -48,7 +48,7 @@ class AttachmentControllerTest extends TestCase
         $fullRequest = \httpRequestCustom::addContentInBody($aArgsFail, $request);
         $response = $attachmentController->create($fullRequest, new \Slim\Http\Response());
         $this->assertSame(400, $response->getStatusCode());
-        $response = (array)json_decode((string)$response->getBody());
+        $response = json_decode((string)$response->getBody(), true);
 
         $this->assertSame('Body type is empty or not a string', $response['errors']);
 
@@ -99,13 +99,13 @@ class AttachmentControllerTest extends TestCase
 
         $response     = $attachmentController->update($fullRequest, new \Slim\Http\Response(), ['id' => self::$id]);
         $this->assertSame(400, $response->getStatusCode());
-        $response = (array)json_decode((string)$response->getBody());
+        $response = json_decode((string)$response->getBody(), true);
 
         $this->assertSame('Body type is empty or not a string', $response['errors']);
 
         //  READ
         $response = $attachmentController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
-        $res = (array)json_decode((string)$response->getBody());
+        $res = json_decode((string)$response->getBody(), true);
         $this->assertInternalType('array', $res);
 
         $this->assertSame($aArgs['title'], $res['title']);
@@ -119,25 +119,25 @@ class AttachmentControllerTest extends TestCase
         $attachmentController = new \Attachment\controllers\AttachmentController();
 
         //  DELETE
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
-        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request      = \Slim\Http\Request::createFromEnvironment($environment);
 
         $response     = $attachmentController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
         $this->assertSame(204, $response->getStatusCode());
 
         //  DELETE
-        $environment    = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
-        $request        = \Slim\Http\Request::createFromEnvironment($environment);
+        $environment  = \Slim\Http\Environment::mock(['REQUEST_METHOD' => 'DELETE']);
+        $request      = \Slim\Http\Request::createFromEnvironment($environment);
 
-        $response     = $attachmentController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
-        $res = (array)json_decode((string)$response->getBody());
+        $response = $attachmentController->delete($request, new \Slim\Http\Response(), ['id' => self::$id]);
+        $res      = json_decode((string)$response->getBody(), true);
         $this->assertSame(400, $response->getStatusCode());
 
         $this->assertSame('Attachment does not exist', $res['errors']);
 
         //  READ
         $response = $attachmentController->getById($request, new \Slim\Http\Response(), ['id' => self::$id]);
-        $res = (array)json_decode((string)$response->getBody());
+        $res = json_decode((string)$response->getBody(), true);
         $this->assertSame(400, $response->getStatusCode());
 
         $this->assertSame('Attachment does not exist', $res['errors']);

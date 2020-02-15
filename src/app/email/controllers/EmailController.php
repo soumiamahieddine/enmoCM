@@ -527,7 +527,7 @@ class EmailController
         ValidatorModel::intVal($args, ['emailId', 'userId']);
 
         $email = EmailModel::getById(['id' => $args['emailId']]);
-        $email['sender']        = (array)json_decode($email['sender']);
+        $email['sender']        = json_decode($email['sender'], true);
         $email['recipients']    = array_unique(json_decode($email['recipients']));
         $email['cc']            = array_unique(json_decode($email['cc']));
         $email['cci']           = array_unique(json_decode($email['cci']));
@@ -544,7 +544,7 @@ class EmailController
         }
 
         $configuration = ConfigurationModel::getByService(['service' => 'admin_email_server', 'select' => ['value']]);
-        $configuration = (array)json_decode($configuration['value']);
+        $configuration = json_decode($configuration['value'], true);
         if (empty($configuration)) {
             return ['errors' => 'Configuration is missing'];
         }

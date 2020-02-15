@@ -50,11 +50,11 @@ class ShippingTemplateController
             return $response->withStatus(400)->withJson(['errors' => 'Shipping does not exist']);
         }
         
-        $shippingInfo['account'] = (array)json_decode($shippingInfo['account']);
+        $shippingInfo['account'] = json_decode($shippingInfo['account'], true);
         $shippingInfo['account']['password'] = '';
-        $shippingInfo['options']  = (array)json_decode($shippingInfo['options']);
-        $shippingInfo['fee']      = (array)json_decode($shippingInfo['fee']);
-        $shippingInfo['entities'] = (array)json_decode($shippingInfo['entities']);
+        $shippingInfo['options']  = json_decode($shippingInfo['options'], true);
+        $shippingInfo['fee']      = json_decode($shippingInfo['fee'], true);
+        $shippingInfo['entities'] = json_decode($shippingInfo['entities'], true);
 
         $allEntities = EntityModel::get([
             'select'    => ['e1.id', 'e1.entity_id', 'e1.entity_label', 'e2.id as parent_id'],

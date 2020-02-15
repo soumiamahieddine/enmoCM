@@ -49,9 +49,9 @@ class ExportController
         $templates = ['pdf' => ['data' => []], 'csv' => ['data' => []]];
         foreach ($rawTemplates as $rawTemplate) {
             if ($rawTemplate['format'] == 'pdf') {
-                $templates['pdf'] = ['data' => (array)json_decode($rawTemplate['data'])];
+                $templates['pdf'] = ['data' => json_decode($rawTemplate['data'], true)];
             } elseif ($rawTemplate['format'] == 'csv') {
-                $templates['csv'] = ['delimiter' => $rawTemplate['delimiter'], 'data' => (array)json_decode($rawTemplate['data'])];
+                $templates['csv'] = ['delimiter' => $rawTemplate['delimiter'], 'data' => json_decode($rawTemplate['data'], true)];
             }
         }
 
@@ -290,7 +290,7 @@ class ExportController
                 }
             }
 
-            foreach($csvContent as $key => $value) {
+            foreach ($csvContent as $key => $value) {
                 $csvContent[$key] = utf8_decode($value);
             }
             fputcsv($file, $csvContent, $delimiter);
@@ -354,7 +354,7 @@ class ExportController
                         $content[] = str_replace('rest/', "apps/maarch_entreprise/index.php?page=details&dir=indexing_searching&id={$resource['res_id']}", \Url::coreurl());
                     } elseif ($value['value'] == 'getParentFolder') {
                         $content[] = ExportController::getParentFolderLabel(['res_id' => $resource['res_id']]);
-                    }  elseif ($value['value'] == 'getFolder') {
+                    } elseif ($value['value'] == 'getFolder') {
                         $content[] = ExportController::getFolderLabel(['res_id' => $resource['res_id']]);
                     } elseif ($value['value'] == 'getCategory') {
                         $content[] = ResModel::getCategoryLabel(['categoryId' => $resource['category_id']]);
