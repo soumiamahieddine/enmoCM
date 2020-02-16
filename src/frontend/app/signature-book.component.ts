@@ -4,18 +4,19 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
-import { tap, catchError } from 'rxjs/operators';
+import { tap, catchError, filter } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { PrivilegeService } from '../service/privileges.service';
+import { MatDialogRef, MatDialog } from '@angular/material';
+import { AttachmentCreateComponent } from './attachments/attachment-create/attachment-create.component';
+import { FunctionsService } from '../service/functions.service';
+import { AttachmentPageComponent } from './attachments/attachments-page/attachment-page.component';
 
 declare function lockDocument(resId: number) : void;
 declare function unlockDocument(resId: number) : void;
 declare function valid_action_form(a1: string, a2: string, a3: string, a4: number, a5: string, a6: string, a7: string, a8: string, a9: boolean, a10: any) : void;
 declare function $j(selector: string) : any;
-declare function showAttachmentsForm(path: string) : void;
-declare function modifyAttachmentsForm(path: string, width: string, height: string) : void;
 declare function setSessionForSignatureBook(resId: any) : void;
-// declare function triggerAngular(route: string) : void;
 
 declare var angularGlobals : any;
 
@@ -68,8 +69,7 @@ export class SignatureBookComponent implements OnInit {
 
     leftContentWidth            : string    = "44%";
     rightContentWidth           : string    = "44%";
-
-    attachmentsViewerLink       : string    = "";
+    dialogRef: MatDialogRef<any>;
     
     processTool: any[] = [
         {
@@ -104,19 +104,10 @@ export class SignatureBookComponent implements OnInit {
         private router: Router, 
         private zone: NgZone, 
         private notify: NotificationService,
-        public privilegeService: PrivilegeService
+        public privilegeService: PrivilegeService,
+        public dialog: MatDialog,
+        public functions: FunctionsService
     ) {
-        
-        // $j("head style").remove();
-        // if ($j("link[href='merged_css.php']").length == 0) {
-        //     var head = document.getElementsByTagName('head')[0];
-        //     var link = document.createElement('link');
-        //     link.rel = 'stylesheet';
-        //     link.href = 'merged_css.php';
-        //     link.type = 'text/css';
-        //     link.media = 'screen';
-        //     head.insertBefore(link,head.children[5])
-        // }
         window['angularSignatureBookComponent'] = {
             componentAfterAttach: (value: string) => this.processAfterAttach(value),
             componentAfterAction: () => this.processAfterAction()
@@ -124,13 +115,7 @@ export class SignatureBookComponent implements OnInit {
         (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
     }
 
-    prepareSignatureBook() {
-        $j('main-header').remove();
-        $j('#container').width("99%");
-    }
-
     ngOnInit() : void {
-        this.prepareSignatureBook();
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
@@ -164,7 +149,6 @@ export class SignatureBookComponent implements OnInit {
                     this.showTopLeftPanel       = false;
                     this.showTopRightPanel      = false;
                     this.showAttachmentPanel    = false;
-                    // this.attachmentsViewerLink = "index.php?display=true&module=attachments&page=frame_list_attachments&resId=" + this.resId + "&noModification=true&template_selected=documents_list_attachments_simple&load&attach_type_exclude=converted_pdf,print_folder";
 
                     this.leftContentWidth  = "44%";
                     this.rightContentWidth = "44%";
@@ -192,6 +176,7 @@ export class SignatureBookComponent implements OnInit {
                         }
                     }, 0);
                     this.loadBadges();
+                    this.loadActions();
                 }, (err) => {
                     this.notify.error(err.error.errors);
                     setTimeout(() => {
@@ -199,12 +184,15 @@ export class SignatureBookComponent implements OnInit {
                     }, 2000);
 
                 });
-            this.http.get("../../rest/resourcesList/users/" + this.userId + "/groups/" + this.groupId + "/baskets/" + this.basketId + "/actions?resId=" + this.resId)
-                .subscribe((data : any) => {
-                    this.signatureBook.actions = data.actions;
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
+        });
+    }
+    
+    loadActions() {
+        this.http.get("../../rest/resourcesList/users/" + this.userId + "/groups/" + this.groupId + "/baskets/" + this.basketId + "/actions?resId=" + this.resId)
+        .subscribe((data : any) => {
+            this.signatureBook.actions = data.actions;
+        }, (err) => {
+            this.notify.error(err.error.errors);
         });
     }
 
@@ -254,13 +242,11 @@ export class SignatureBookComponent implements OnInit {
             this.rightViewerLink = "";
         }
         this.rightSelectedThumbnail = index;
-        //this.reloadViewerRight();
     }
 
     changeLeftViewer(index: number) {
         this.leftViewerLink = this.signatureBook.documents[index].viewerLink;
         this.leftSelectedThumbnail = index;
-        //this.reloadViewerLeft();
     }
 
     displayPanel(panel: string) {
@@ -277,7 +263,7 @@ export class SignatureBookComponent implements OnInit {
             } else {
                 this.rightContentWidth = "48%";
                 this.leftContentWidth = "48%";
-                $j("#hideLeftContent").css('background', '#F2F2F2');
+                $j("#hideLeftContent").css('background', '#fbfbfb');
             }
         } else if (panel == "RESLEFT") {
             this.showResLeftPanel = !this.showResLeftPanel;
@@ -365,19 +351,6 @@ export class SignatureBookComponent implements OnInit {
         }
     }
 
-    addAttachmentIframe() {
-        // showAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&docId=' + this.resId);
-    }
-
-    editAttachmentIframe(attachment: any) {
-        if (attachment.canModify && attachment.status != "SIGN") {
-            var resId: number;
-            resId = attachment.res_id;
-
-            // modifyAttachmentsForm('index.php?display=true&module=attachments&page=attachments_content&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId, '98%', 'auto');
-        }
-    }
-
     delAttachment(attachment: any) {
         if (attachment.canDelete) {
             if (this.signatureBook.attachments.length <= 1) {
@@ -386,13 +359,15 @@ export class SignatureBookComponent implements OnInit {
                 var r = confirm('Voulez-vous vraiment supprimer la pièce jointe ?');
             }
             if (r) {
-                var resId: number;
-                resId = attachment.res_id;
-
-                // this.http.get('index.php?display=true&module=attachments&page=del_attachment&id=' + resId + '&relation=' + attachment.relation + '&docId=' + this.resId + '&rest=true')
-                //     .subscribe(() => {
-                //         this.refreshAttachments('del');
-                //     });
+                this.http.delete('../../rest/attachments/' + attachment.res_id).pipe(
+                    tap(() => {
+                        this.refreshAttachments('del');
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
             }
         }
     }
@@ -524,6 +499,38 @@ export class SignatureBookComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    createAttachment() {
+        this.dialogRef = this.dialog.open(AttachmentCreateComponent, { disableClose: true, panelClass: 'modal-container', height: '90vh', width: '90vw', data: { resIdMaster: this.resId } });
+
+        this.dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'success'),
+            tap(() => {
+                this.refreshAttachments('add');
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    showAttachment(attachment: any) {
+        if (attachment.canModify && attachment.status != "SIGN") {
+            this.dialogRef = this.dialog.open(AttachmentPageComponent, { height: '99vh', width: '99vw', panelClass: 'modal-container', disableClose: true, data: { resId: attachment.res_id} });
+    
+            this.dialogRef.afterClosed().pipe(
+                filter((data: string) => data === 'success'),
+                tap(() => {
+                    this.refreshAttachments('edit');
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
     }
 
 }

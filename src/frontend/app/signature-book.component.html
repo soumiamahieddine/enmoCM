@@ -1,18 +1,18 @@
 <div *ngIf="loading" class='visaContent'>
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
 </div>
-<div *ngIf="!loading" class='visaContent'>
+<div *ngIf="!loading" class='visaContent' style="margin-top: -64px;">
     <div class="titleSignatureBook">
         <div id="tabSignatureBook">
-            <div *ngIf="signatureBook.documents[0] && signatureBook.documents[0].category_id != 'outgoing'" title="{{lang.mail}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 'document'}" (click)="changeSignatureBookLeftContent(1)">
+            <div *ngIf="signatureBook.documents[0] && signatureBook.documents[0].category_id != 'outgoing'" title="{{lang.mail}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 'document'}" (click)="changeSignatureBookLeftContent('document')">
                 <i class="fa fa-file-alt fa-2x"></i>
             </div>
             <div *ngFor="let module of processTool" title="{{module.label}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == module.id}" (click)="changeSignatureBookLeftContent(module.id)">
-                <i [class]="module.icon">
-                    <sup *ngIf="module.count > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{module.count}}</sup>
-                </i>
+                <i [class]="module.icon"></i>
+                <i *ngIf="module.count > 0" class="fas fa-circle haveContent"></i>
             </div>
         </div>
+        <div id="labelSignatureBook" title="{{signatureBook.documents[0].title}}" ><div>{{signatureBook.documents[0].alt_id}} : {{signatureBook.documents[0].title}}</div></div>
         <div id="closeSignatureBook">
             <i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i>
         </div>
@@ -21,9 +21,9 @@
             <select id="signatureBookActions">
                 <option *ngFor="let option of signatureBook.actions" value="{{option.id}}">{{option.label}}</option>
             </select>
-            <input name="send" id="send" value="{{lang.validate}}" class="button" type="button" (click)="validForm()">
+            <input name="send" id="send" value="{{lang.validate}}" class="button button-form-primary-filled" type="button" (click)="validForm()">
         </div>
-        <div class="others" *ngIf="signatureBook.consigne != ''">
+        <div class="others" *ngIf="!functions.empty(signatureBook.consigne)">
             <span id="consigne">
                 <input type="text" value="{{signatureBook.consigne}}" title="{{signatureBook.consigne}}" readonly="readonly">
             </span>
@@ -181,7 +181,7 @@
                     <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'TMP' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
                         <div style="padding-top: 25%;" [innerHTML]="lang.editingAttachmentInterrupted"></div>
                         <div>
-                            <a title="{{lang.editAttachment}}" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                            <a title="{{lang.editAttachment}}" (click)="showAttachment(signatureBook.attachments[rightSelectedThumbnail])">
                                 <i class="fa fa-edit fa-2x" style="cursor:pointer;"></i>
                             </a>
                         </div>
@@ -199,7 +199,10 @@
                         </span>
                     </div>
                 </div>
-                <iframe *ngIf="showAttachmentPanel" [src]="attachmentsViewerLink | safeUrl"></iframe>
+                <app-attachments-list *ngIf="showAttachmentPanel" #appAttachmentsList
+                    [resId]="resId" [target]="'process'"
+                    (reloadBadgeAttachments)="refreshAttachments()" (afterActionAttachment)="refreshAttachments()">
+                </app-attachments-list>
             </div>
             <div *ngIf="!signatureBook.hasWorkflow" class="visaNoWorkflowWarning">
                 <div style="margin-top:200px;" [innerHTML]="noVisaWorkflowNoSignature"></div>
@@ -225,12 +228,12 @@
                     <i class="fa fa-bars fa-2x" ></i>
                 </div>
                 <hr style="background-color:#666;margin-top:0px;"/>
-                <div class="panelRightAddPj" (click)="addAttachmentIframe()" title="{{lang.createAtt}}">
+                <div class="panelRightAddPj" (click)="createAttachment()" title="{{lang.createAtt}}">
                     <i class="fa fa-paperclip fa-2x" ></i>
                     <i class="fa fa-plus" style="position:absolute;"></i>
                 </div>
                 <div *ngIf="signatureBook.attachments[rightSelectedThumbnail]">
-                    <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canModify || signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'}" title="{{lang.updateAtt}}" class="visaPjUp" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                    <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canModify || signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'}" title="{{lang.updateAtt}}" class="visaPjUp" (click)="showAttachment(signatureBook.attachments[rightSelectedThumbnail])">
                         <i class="fa fa-edit fa-2x"></i>
                     </div>
                     <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canDelete}" title="{{lang.deleteAtt}}" class="visaPjDel" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">

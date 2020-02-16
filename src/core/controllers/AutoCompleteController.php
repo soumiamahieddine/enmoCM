@@ -326,9 +326,9 @@ class AutoCompleteController
         $total = count($autocompleteContacts) + count($autocompleteUsers) + count($autocompleteEntities) + count($autocompleteContactsGroups);
         if ($total > self::TINY_LIMIT) {
             $divider = $total / self::TINY_LIMIT;
-            $autocompleteContacts = array_slice($autocompleteContacts, 0, round(count($autocompleteContacts) / $divider));
-            $autocompleteUsers = array_slice($autocompleteUsers, 0, round(count($autocompleteUsers) / $divider));
-            $autocompleteEntities = array_slice($autocompleteEntities, 0, round(count($autocompleteEntities) / $divider));
+            $autocompleteContacts       = array_slice($autocompleteContacts, 0, round(count($autocompleteContacts) / $divider));
+            $autocompleteUsers          = array_slice($autocompleteUsers, 0, round(count($autocompleteUsers) / $divider));
+            $autocompleteEntities       = array_slice($autocompleteEntities, 0, round(count($autocompleteEntities) / $divider));
             $autocompleteContactsGroups = array_slice($autocompleteContactsGroups, 0, round(count($autocompleteContactsGroups) / $divider));
         }
         $autocompleteData = array_merge($autocompleteContacts, $autocompleteUsers, $autocompleteEntities, $autocompleteContactsGroups);

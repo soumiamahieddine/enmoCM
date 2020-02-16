@@ -3,7 +3,7 @@
     <form #redirectConfForm="ngForm">
         <div class="modal-body">
             <div class="alert alert-warning" role="alert">
-                Ce contact est lié à des courriers
+                {{lang.contactLinkedToMails}}
             </div>
             <div class="input-group">
                 <mat-radio-group id="processMode" name="processMode" style="display: inline-flex;flex-direction: column;" [(ngModel)]="this.processMode"
@@ -12,14 +12,14 @@
                         {{lang.delete}}
                     </mat-radio-button>
                     <mat-radio-button value="reaffect" color="primary">
-                        {{lang.reaffectUserRedirect}}
+                        {{lang.reaffectContactRedirect}}
                     </mat-radio-button>
                 </mat-radio-group>
-                <plugin-autocomplete *ngIf="this.processMode == 'reaffect'" [labelPlaceholder]="lang.userReplacement" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/correspondents?noUsers=true&noEntities=true&noContactsGroups=true']" [targetSearchKey]="'firstname'" (triggerEvent)="setRedirectUser($event)" singleMode required></plugin-autocomplete>
+                <plugin-autocomplete *ngIf="this.processMode == 'reaffect'" [labelPlaceholder]="lang.contactReplacement" [labelList]="lang.availableContacts" [routeDatas]="['/rest/autocomplete/correspondents?noUsers=true&noEntities=true&noContactsGroups=true']" [targetSearchKey]="'firstname'" (triggerEvent)="setRedirectUser($event)" singleMode required></plugin-autocomplete>
 
-                <div class="alert-message alert-message-info" role="alert" style="max-width: inherit;">
-                    <span *ngIf="this.processMode == 'delete'" [innerHTML]="'Supprimer'"></span>
-                    <span *ngIf="this.processMode == 'reaffect'"><em>Réaffecter</em></span>
+                <div *ngIf="this.processMode" class="alert-message alert-message-info" role="alert" style="max-width: inherit;">
+                    <span *ngIf="this.processMode == 'delete'"><em>{{lang.delete}}</em></span>
+                    <span *ngIf="this.processMode == 'reaffect'"><em>{{lang.reaffect}}</em></span>
                 </div>
             </div>
         </div>

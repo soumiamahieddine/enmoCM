@@ -405,10 +405,8 @@ class ResourceListController
             'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
             'data'      => [$body['resources']]
         ]);
-        $resourcesInBasket = [];
-        foreach ($resources as $resource) {
-            $resourcesInBasket[] = $resource['res_id'];
-        }
+
+        $resourcesInBasket = array_column($resources, 'res_id');
 
         if (!empty(array_diff($body['resources'], $resourcesInBasket))) {
             return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
@@ -511,10 +509,8 @@ class ResourceListController
             'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
             'data'      => [$body['resources']]
         ]);
-        $resourcesInBasket = [];
-        foreach ($resources as $resource) {
-            $resourcesInBasket[] = $resource['res_id'];
-        }
+
+        $resourcesInBasket = array_column($resources, 'res_id');
 
         if (!empty(array_diff($body['resources'], $resourcesInBasket))) {
             return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
@@ -583,10 +579,8 @@ class ResourceListController
             'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
             'data'      => [$body['resources']]
         ]);
-        $resourcesInBasket = [];
-        foreach ($resources as $resource) {
-            $resourcesInBasket[] = $resource['res_id'];
-        }
+
+        $resourcesInBasket = array_column($resources, 'res_id');
 
         if (!empty(array_diff($body['resources'], $resourcesInBasket))) {
             return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
