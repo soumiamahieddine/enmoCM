@@ -1565,6 +1565,6 @@ export const LANG_FR = {
     "restrictions" : "Restrictions",
     "contactDeleted" : "Contact supprimé",
     "badEmailsFormat" : "Certaines adresses de courriel ne sont pas correctes",    
-    "warnEmptySubject" : "Vous allez envoyer un courriel sans sujet, continuer ?",    
+    "warnEmptySubject" : "Vous allez envoyer un courriel sans objet, continuer ?",    
     "emailDeleted" : "Courriel supprimé",    
 };

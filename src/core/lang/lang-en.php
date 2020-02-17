@@ -460,6 +460,10 @@ define("_AVIS_CIRCUIT_DELETED", "Opinion workflow updated");
 define("_COMMUNICATION_MEANS_VALIDATOR", "Communication Means should be an url or an email");
 define("_EXTERNALID_M2M_VALIDATOR", "Wrong format for externalId[m2m]. It must be SIRET/entityId");
 
+define("_NUMERIC_PACKAGE_ADDED", "Numeric package added");
+define('_ON_DOC_NUM', ' on document n°');
+define("_NUMERIC_PACKAGE_IMPORTED", "Numeric package imported");
+
 define("_ACKNOWLEDGEMENT_RECEIPT", "Acknowledgement Receipt");
 define("_CREATED_BY", "Created by");
 define("_SENT_DATE", "Sent ");
