@@ -18,3 +18,11 @@
 ::ng-deep.mat-tooltip {
     font-size: 14px;
 }
+
+.noteRestriction {
+    background-color: rgba(0, 0, 0, 0.4);
+    white-space: normal;
+    display: inline-block;
+    margin: 5px !important;
+    cursor: pointer;
+}

@@ -1206,7 +1206,7 @@ export const LANG_NL = {
     "viewFullHistoryDesc" : "De volledige geschiedenis van de evenementen over het gebruik van GED Maarch raadplegen.",
     "editResource" : "Een document in de gedetailleerde",
     "editResourceDesc" : "Een document in de gedetailleerde. Dat zal ook van de instelling van de status afhangen (Wijziging van de indexen)",
-    "addLinks" : "Add links", //_TO_TRANSLATE
+    "addLinks" : "Add/remove links", //_TO_TRANSLATE
     "deleteDocumentInDetail" : "Een document in de gedetailleerde fiche verwijderen",
     "manageTagsInApplication" : "Create tags", //_TO_TRANSLATE
     "manageTagsInApplicationDesc" : "Create tags while indexing, processing and in details", //_TO_TRANSLATE
@@ -1283,6 +1283,7 @@ export const LANG_NL = {
     "viewPersonalData": "Viewable", //_TO_TRANSLATE
     "managePersonalData": "Viewable and updatable", //_TO_TRANSLATE
     "attachmentDeleted": "Attachment deleted", //_TO_TRANSLATE
+    "attachment_SEND_MASS": "Send to mailing", //_TO_TRANSLATE
     "attachment_A_TRA": "To process", //_TO_TRANSLATE
     "attachment_SIGN": "Signed", //_TO_TRANSLATE
     "attachment_FRZ": "Freez", //_TO_TRANSLATE
@@ -1495,6 +1496,7 @@ export const LANG_NL = {
     "chooseBAN": "Choose a BAN", //_TO_TRANSLATE
     "click": "Click", //_TO_TRANSLATE
     "removeNote" : "Remove note", //_TO_TRANSLATE
+    "editNote" : "Edit note", //_TO_TRANSLATE
     "noteRemoved" : "Note deleted", //_TO_TRANSLATE
     "confirmRemoveNote" : "Note deletion", //_TO_TRANSLATE
     "inSignatureBook_doc" : "Put the main document in signature book", //_TO_TRANSLATE
@@ -1513,9 +1515,42 @@ export const LANG_NL = {
     "noSelectedAddress": "No selected address",  //_TO_TRANSLATE
     "documentUnsigned": "This document has been unsigned", //_TO_TRANSLATE
     "removeSignature" : "Remove signature", //_TO_TRANSLATE
+    "cannotCloseMails" : "Some mails cannot be closed because at least one of mandatory fields are empty", //_TO_TRANSLATE
+    "cannotCloseThisMail" : "This mail cannot be closed because at least one of mandatory fields are empty", //_TO_TRANSLATE
+    "checkEmptyFields" : "Requisite fields to make this action", //_TO_TRANSLATE
+    "contactsReassign" : "Contacts reassign",//_TO_TRANSLATE
+    "contactLinkedToMails" : "Contact linked to mails", //_TO_TRANSLATE
+    "reaffect" : "Reaffect", //_TO_TRANSLATE
+    "reaffectContactRedirect" : "Reaffect to a contact", //_TO_TRANSLATE
+    "contactReplacement" : "Replacement contact", //_TO_TRANSLATE
+    "deleteContactwithtoutReassign" : "Delete contact without reassign", //_TO_TRANSLATE
+    "deleteContactInformations" : "Links between contact and resources, attachments or acknowledgement receipts will be deleted.",//_TO_TRANSLATE
+    "reaffectContactInformations" : "Links between contact and resources, attachments or acknowledgement receipts will be reassigned to choosen contact.",//_TO_TRANSLATE
+    "availableContacts" : "Available contact", //_TO_TRANSLATE
     "sent" :  "Sent", //_TO_TRANSLATE
     "notSent" :  "Not sent", //_TO_TRANSLATE
     "delivery" :  "Delivery", //_TO_TRANSLATE
     "senderShort" :  "From", //_TO_TRANSLATE
     "recipientShort" :  "To", //_TO_TRANSLATE
+    "copieShort" :  "Cc", //_TO_TRANSLATE
+    "invisibleCopyShort" :  "Cci", //_TO_TRANSLATE
+    "m2m_ARCHIVETRANSFER" : "Digitale brief",
+    "m2m_ARCHIVETRANSFERREPLY" :  "Antwoord verzonden",
+    "shipping" :  "Send maileva", //_TO_TRANSLATE
+    "sendElement" :  "Send an element", //_TO_TRANSLATE
+    "pdfVersion" : "PDF version", //_TO_TRANSLATE
+    "emailModel" : "Email modele", //_TO_TRANSLATE
+    "sendInPlainText" : "Send in plain text", //_TO_TRANSLATE
+    "saveDraft" : "Save draft", //_TO_TRANSLATE
+    "attachMainDocument" : "Link main document", //_TO_TRANSLATE
+    "attachNote" : "Link a note", //_TO_TRANSLATE
+    "attachAttachment" : "Link an attachment", //_TO_TRANSLATE
+    "draftSaved" : "Draft saved",  //_TO_TRANSLATE
+    "draftUpdated" : "Draft updated", //_TO_TRANSLATE
+    "sendingEmail" : "Sending email...", //_TO_TRANSLATE
+    "restrictions" : "Restrictions", //_TO_TRANSLATE
+    "contactDeleted" : "Contact deleted", //_TO_TRANSLATE
+    "badEmailsFormat" : "Some email address are not correct", //_TO_TRANSLATE
+    "warnEmptySubject" : "You will send an email without subject, continue ?", //_TO_TRANSLATE
+    "emailDeleted" : "Email deleted", //_TO_TRANSLATE
 };

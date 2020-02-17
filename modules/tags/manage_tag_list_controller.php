@@ -187,13 +187,10 @@ function display_list()
     array_push(
         $select['tags'], 'id', 'label'
     );
-    if ($_SESSION['user']['UserId'] == 'superadmin') {
-        $where = '';
-        $where_what = array();
-    } else {
-        $where = '(entity_id_owner = ? OR entity_id_owner IS NULL)';
-        $where_what = array($_SESSION['user']['primaryentity']['id']);   
-    }
+
+    $where = '';
+    $where_what = array();
+
     $what = '';
 
     if (isset($_REQUEST['what'])) {

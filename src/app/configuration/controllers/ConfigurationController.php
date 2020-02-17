@@ -30,7 +30,7 @@ class ConfigurationController
         }
 
         $configuration = ConfigurationModel::getByService(['service' => $aArgs['service']]);
-        $configuration['value'] = (array)json_decode($configuration['value']);
+        $configuration['value'] = json_decode($configuration['value'], true);
         if (!empty($configuration['value']['password'])) {
             $configuration['value']['password'] = '';
             $configuration['value']['passwordAlreadyExists'] = true;
@@ -56,7 +56,7 @@ class ConfigurationController
         if ($aArgs['service'] == 'admin_email_server') {
             if ($data['auth'] && empty($data['password'])) {
                 $configuration = ConfigurationModel::getByService(['service' => $aArgs['service']]);
-                $configuration['value'] = (array)json_decode($configuration['value']);
+                $configuration['value'] = json_decode($configuration['value'], true);
                 if (!empty($configuration['value']['password'])) {
                     $data['password'] = $configuration['value']['password'];
                 }

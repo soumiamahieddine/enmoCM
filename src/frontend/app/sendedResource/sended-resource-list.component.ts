@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, EventEmitter, ElementRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, ElementRef, Input, Output } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
@@ -36,6 +36,8 @@ export class SendedResourceListComponent implements OnInit {
 
     @Input('resId') resId: number = null;
 
+    @Output() reloadBadgeSendedResource = new EventEmitter<string>();
+
     @ViewChild(MatSort, { static: false }) sort: MatSort;
 
     constructor(
@@ -46,15 +48,18 @@ export class SendedResourceListComponent implements OnInit {
         public privilegeService: PrivilegeService) { }
 
     async ngOnInit(): Promise<void> {
-        this.sendedResources = [];
         this.loadList();
     }
 
     async loadList() {
+        this.sendedResources = [];
         this.loading = true;
         await this.initAcknowledgementReceipList();
         await this.initEmailList();
         await this.initMessageExchange();
+        await this.initShippings();
+        this.reloadBadgeSendedResource.emit(`${this.sendedResources.length}`);
+
         this.initFilter();
 
         setTimeout(() => {
@@ -69,10 +74,23 @@ export class SendedResourceListComponent implements OnInit {
             this.http.get(`../../rest/resources/${this.resId}/acknowledgementReceipts?type=ar`).pipe(
                 map((data: any) => {
                     data = data.map((item: any) => {
+                        let email;
+                        if (!this.functions.empty(item.contact.email)) {
+                            email = item.contact.email;
+                        } else {
+                            email = this.lang.contactDeleted;
+                        }
+                        let name;
+                        if (!this.functions.empty(item.contact.firstname) && !this.functions.empty(item.contact.lastname)) {
+                            name = `${item.contact.firstname} ${item.contact.lastname}`
+                        } else {
+                            name = this.lang.contactDeleted;
+                        }
+
                         return {
                             id: item.id,
                             sender: false,
-                            recipients: item.format === 'html' ? item.contact.email : `${item.contact.firstname} ${item.contact.lastname}`,
+                            recipients: item.format === 'html' ? email : name,
                             creationDate: item.creationDate,
                             sendDate: item.sendDate,
                             type: 'acknowledgementReceipt',
@@ -81,7 +99,8 @@ export class SendedResourceListComponent implements OnInit {
                             status: item.format === 'html' && item.sendDate === null ? 'ERROR' : 'SENT',
                             hasAttach: false,
                             hasNote: false,
-                            hasMainDoc: false
+                            hasMainDoc: false,
+                            canManage: true
                         }
                     })
                     return data;
@@ -117,7 +136,8 @@ export class SendedResourceListComponent implements OnInit {
                             status: item.status,
                             hasAttach: !this.functions.empty(item.document.attachments),
                             hasNote: !this.functions.empty(item.document.notes),
-                            hasMainDoc: item.document.isLinked
+                            hasMainDoc: item.document.isLinked,
+                            canManage: true
                         }
                     })
                     return data.emails;
@@ -154,10 +174,48 @@ export class SendedResourceListComponent implements OnInit {
                             status: item.status,
                             hasAttach: false,
                             hasNote: false,
-                            hasMainDoc: false
+                            hasMainDoc: false,
+                            canManage: false
                         }
                     })
                     return data.messageExchanges;
+                }),
+                tap((data: any) => {
+                    this.sendedResources = this.sendedResources.concat(data);
+
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    resolve(false);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    initShippings() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/resources/${this.resId}/shippings`).pipe(
+                map((data: any) => {
+                    data = data.map((item: any) => {
+                        return {
+                            id: item.id,
+                            sender: item.userLabel,
+                            recipients: item.recipients.map((item: any) => item.contactLabel),
+                            creationDate: item.creationDate,
+                            sendDate: item.creationDate,
+                            type: 'shipping',
+                            typeColor: '#9440D5',
+                            desc: this.lang.shipping,
+                            status: 'SENT',
+                            hasAttach: item.creationDate === 'attachment',
+                            hasNote: false,
+                            hasMainDoc: item.creationDate === 'resource',
+                            canManage: false
+                        }
+                    });
+                    return data;
                 }),
                 tap((data: any) => {
                     this.sendedResources = this.sendedResources.concat(data);
@@ -193,19 +251,27 @@ export class SendedResourceListComponent implements OnInit {
         this.dataSource.filter = ev.value;
     }
 
-    openPromptMail() {
+    openPromptMail(row: any = {id: null, type: null}) {
 
-        const dialogRef = this.dialog.open(SendedResourcePageComponent, { maxWidth: '90vw', width: '750px', data: { title: `Toto`, resId: this.resId } });
+        let title = this.lang.sendElement;
 
-        dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'success'),
-            tap(() => {
-                this.loadList();
-            }),
-            catchError((err: any) => {
-                this.notify.handleSoftErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+        if (row.id !== null) {
+            title = this.lang[row.type];
+        }
+
+        if (row.canManage || row.id === null) {
+            const dialogRef = this.dialog.open(SendedResourcePageComponent, { maxWidth: '90vw', width: '750px', minHeight:'500px', disableClose: true, data: { title: title, resId: this.resId, emailId: row.id, emailType: row.type } });
+
+            dialogRef.afterClosed().pipe(
+                filter((data: string) => data === 'success'),
+                tap(() => {
+                    this.loadList();
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
     }
 }

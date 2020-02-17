@@ -476,10 +476,27 @@ class TemplateController
 
     public static function mergeEmailTemplate(Request $request, Response $response, array $args)
     {
-        $template = TemplateModel::getById(['id' => $args['id'], 'select' => ['template_content']]);
-        if (empty($template)) {
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route param id is not an integer']);
+        }
+
+        $entities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
+        $entities = array_column($entities, 'entity_id');
+        if (empty($entities)) {
+            $entities = [0];
+        }
+
+        $templates = TemplateModel::getWithAssociation([
+            'select'  => ['DISTINCT(templates.template_id)', 'templates.template_content'],
+            'where'   => ['(templates_association.value_field in (?) OR templates_association.template_id IS NULL)', 'templates.template_type = ?', 'templates.template_target = ?', 'templates.template_id = ?'],
+            'data'    => [$entities, 'HTML', 'sendmail', $args['id']],
+            'orderBy' => ['templates.template_id']
+        ]);
+
+        if (empty($templates[0])) {
             return $response->withStatus(400)->withJson(['errors' => 'Template does not exist']);
         }
+        $template = $templates[0];
         if (empty($template['template_content'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Template has no content']);
         }

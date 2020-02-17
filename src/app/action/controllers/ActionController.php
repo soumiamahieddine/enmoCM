@@ -13,6 +13,7 @@
 namespace Action\controllers;
 
 use Basket\models\GroupBasketRedirectModel;
+use CustomField\models\CustomFieldModel;
 use Group\controllers\GroupController;
 use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
@@ -32,7 +33,14 @@ class ActionController
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        return $response->withJson(['actions' => ActionModel::get()]);
+        $actions = ActionModel::get();
+
+        foreach ($actions as $key => $action) {
+            $actions[$key]['requiredFields'] = json_decode($action['required_fields'], true);
+            unset($actions[$key]['required_fields']);
+        }
+
+        return $response->withJson(['actions' => $actions]);
     }
 
     public function getById(Request $request, Response $response, array $aArgs)
@@ -74,6 +82,9 @@ class ActionController
             }
         }
 
+        $action['action']['requiredFields'] = json_decode($action['action']['required_fields'], true);
+        unset($action['action']['required_fields']);
+
         return $response->withJson($action);
     }
 
@@ -104,6 +115,28 @@ class ActionController
         }
 
         unset($body['actionPageId']);
+
+        $requiredFields = [];
+        if (!empty($body['requiredFields'])) {
+            if (!Validator::arrayType()->validate($body['requiredFields'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Data required_fields is not an array']);
+            }
+            $customFields = CustomFieldModel::get(['select' => ['id']]);
+            $customFields = array_column($customFields, 'id');
+            foreach ($body['requiredFields'] as $requiredField) {
+                if (strpos($requiredField, 'indexingCustomField_') !== false) {
+                    $idCustom = explode("_", $requiredField);
+                    $idCustom = $idCustom[1];
+                    if (!in_array($idCustom, $customFields)) {
+                        return $response->withStatus(400)->withJson(['errors' => 'Data custom field does not exist']);
+                    }
+                    $requiredFields[] = $requiredField;
+                }
+            }
+            unset($body['requiredFields']);
+        }
+        $body['required_fields'] = json_encode($requiredFields);
+
         $id = ActionModel::create($body);
         if (!empty($body['actionCategories'])) {
             ActionModel::createCategories(['id' => $id, 'categories' => $body['actionCategories']]);
@@ -120,14 +153,14 @@ class ActionController
         return $response->withJson(['actionId' => $id]);
     }
 
-    public function update(Request $request, Response $response, array $aArgs)
+    public function update(Request $request, Response $response, array $args)
     {
         if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_actions', 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
         $body = $request->getParsedBody();
-        $body['id'] = $aArgs['id'];
+        $body['id'] = $args['id'];
 
         $body    = $this->manageValue($body);
         $errors = $this->control($body, 'update');
@@ -147,22 +180,55 @@ class ActionController
             return $response->withStatus(400)->withJson(['errors' => 'Data actionPageId does not exist']);
         }
 
-        ActionModel::update($body);
-        ActionModel::deleteCategories(['id' => $aArgs['id']]);
+        $requiredFields = [];
+        if (!empty($body['requiredFields'])) {
+            if (!Validator::arrayType()->validate($body['requiredFields'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Data required_fields is not an array']);
+            }
+            $customFields = CustomFieldModel::get(['select' => ['id']]);
+            $customFields = array_column($customFields, 'id');
+            foreach ($body['requiredFields'] as $requiredField) {
+                if (strpos($requiredField, 'indexingCustomField_') !== false) {
+                    $idCustom = explode("_", $requiredField);
+                    $idCustom = $idCustom[1];
+                    if (!in_array($idCustom, $customFields)) {
+                        return $response->withStatus(400)->withJson(['errors' => 'Data custom field does not exist']);
+                    }
+                    $requiredFields[] = $requiredField;
+                }
+            }
+            unset($body['requiredFields']);
+        }
+        $body['required_fields'] = json_encode($requiredFields);
+
+        ActionModel::update([
+            'set'   => [
+                'keyword'         => $body['keyword'],
+                'label_action'    => $body['label_action'],
+                'id_status'       => $body['id_status'],
+                'action_page'     => $body['action_page'],
+                'component'       => $body['component'],
+                'history'         => $body['history'],
+                'required_fields' => $body['required_fields'],
+            ],
+            'where'   => ['id = ?'],
+            'data'    => [$body['id']]
+        ]);
+        ActionModel::deleteCategories(['id' => $args['id']]);
         if (!empty($body['actionCategories'])) {
-            ActionModel::createCategories(['id' => $aArgs['id'], 'categories' => $body['actionCategories']]);
+            ActionModel::createCategories(['id' => $args['id'], 'categories' => $body['actionCategories']]);
         }
 
         if (!in_array($body['component'], GroupController::INDEXING_ACTIONS)) {
             GroupModel::update([
-                'postSet'   => ['indexation_parameters' => "jsonb_set(indexation_parameters, '{actions}', (indexation_parameters->'actions') - '{$aArgs['id']}')"],
+                'postSet'   => ['indexation_parameters' => "jsonb_set(indexation_parameters, '{actions}', (indexation_parameters->'actions') - '{$args['id']}')"],
                 'where'     => ['1=1']
             ]);
         }
 
         HistoryController::add([
             'tableName' => 'actions',
-            'recordId'  => $aArgs['id'],
+            'recordId'  => $args['id'],
             'eventType' => 'UP',
             'eventId'   => 'actionup',
             'info'      => _ACTION_UPDATED. ' : ' . $body['label_action']

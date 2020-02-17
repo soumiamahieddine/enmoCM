@@ -48,11 +48,13 @@
 
 .removeNote {
     position: absolute;
-    font-size: 12px;
-    margin: 0;
     top: 22px;
-    color: red;
     right: 0px;
+}
+
+.editNote {
+    margin-right: -10px;
+    color: $primary;
 }
 
 .noteTextContent {

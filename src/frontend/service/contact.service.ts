@@ -3,13 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../app/translate.component';
 import { tap, catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { FunctionsService } from './functions.service';
 
 @Injectable()
 export class ContactService {
 
     lang: any = LANG;
 
-    constructor(public http: HttpClient) { }
+    constructor(
+        public http: HttpClient,
+        public functions: FunctionsService 
+    ) { }
 
     getFillingColor(thresholdLevel: 'first' | 'second' | 'third') {
         if (thresholdLevel === 'first') {
@@ -53,6 +57,22 @@ export class ContactService {
             return false;
         } else {
             return true;
+        }
+    }
+
+    formatContact(contact: any) {
+        if (this.functions.empty(contact.firstname) && this.functions.empty(contact.lastname)) {
+            return contact.company;
+
+        } else {
+            const arrInfo = [];
+            arrInfo.push(contact.firstname);
+            arrInfo.push(contact.lastname);
+            if (!this.functions.empty(contact.company)) {
+                arrInfo.push('(' + contact.company + ')');
+            }
+
+            return arrInfo.filter(info => info !== '').join(' ');
         }
     }
 }

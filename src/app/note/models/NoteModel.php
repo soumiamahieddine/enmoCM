@@ -210,10 +210,7 @@ class NoteModel
         $user = UserModel::getById(['select' => ['user_id'], 'id' => $aArgs['userId']]);
         $rawUserEntities = EntityModel::getByLogin(['login' => $user['user_id'], 'select' => ['entity_id']]);
 
-        $userEntities = [];
-        foreach ($rawUserEntities as $rawUserEntity) {
-            $userEntities[] = $rawUserEntity['entity_id'];
-        }
+        $userEntities = array_column($rawUserEntities, 'entity_id');
 
         $allNotes = NoteModel::get([
             'select'    => $aArgs['select'],

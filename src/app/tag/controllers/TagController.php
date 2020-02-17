@@ -97,7 +97,7 @@ class TagController
         $links = json_encode([]);
         if (!empty($body['links'])) {
             if (!Validator::arrayType()->validate($body['links'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Body links is not an integer']);
+                return $response->withStatus(400)->withJson(['errors' => 'Body links is not an array']);
             }
             $listTags = [];
             foreach ($body['links'] as $link) {
@@ -112,7 +112,7 @@ class TagController
                 'data'   => [$body['links']]
             ]);
             if ($tags[0]['count'] != count($body['links'])) {
-                return $response->withStatus(404)->withJson(['errors' => 'Tag(s) not found']);
+                return $response->withStatus(400)->withJson(['errors' => 'Tag(s) not found']);
             }
 
             $links = json_encode($listTags);
@@ -175,6 +175,20 @@ class TagController
                 return $response->withStatus(400)->withJson(['errors' => 'Parent tag does not exist']);
             }
             $parent = $parent['id'];
+
+            if ($parent == $args['id']) {
+                return $response->withStatus(400)->withJson(['errors' => 'Tag cannot be its own parent']);
+            }
+
+            $children = TagModel::get([
+                'select' => ['id'],
+                'where'  => ['parent_id = ?'],
+                'data'   => [$args['id']]
+            ]);
+            $children = array_column($children, 'id');
+            if (in_array($parent, $children)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Parent tag cannot also be a children']);
+            }
         }
 
         TagModel::update([
@@ -210,6 +224,13 @@ class TagController
             return $response->withStatus(400)->withJson(['errors' => 'Route id must be an integer val']);
         }
 
+        $resourcesTags = ResourceTagModel::get([
+            'where' => ['tag_id = ?'],
+            'data'  => [$args['id']]
+        ]);
+        if (!empty($resourcesTags) && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_tag', 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        }
 
         $tag = TagModel::getById(['select' => ['label', 'links'], 'id' => $args['id']]);
         if (empty($tag)) {
@@ -235,6 +256,11 @@ class TagController
                 ]);
             }
         }
+
+        ResourceTagModel::delete([
+            'where' => ['tag_id = ?'],
+            'data'  => [$args['id']]
+        ]);
 
         TagModel::delete([
             'where' => ['id = ?'],
@@ -372,19 +398,19 @@ class TagController
         ]);
         $linkedTagsInfo = array_column($linkedTagsInfo, 'label', 'id');
 
-        foreach ($body['linkedResources'] as $value) {
+        foreach ($body['links'] as $value) {
             HistoryController::add([
                 'tableName' => 'tags',
                 'recordId'  => $args['resId'],
                 'eventType' => 'UP',
-                'info'      => _LINK_ADDED . " : {$linkedTagsInfo[$value]}",
+                'info'      => _LINK_ADDED_TAG . " : {$linkedTagsInfo[$value]}",
                 'eventId'   => 'tagModification'
             ]);
             HistoryController::add([
                 'tableName' => 'tags',
                 'recordId'  => $value,
                 'eventType' => 'UP',
-                'info'      => _LINK_ADDED . " : {$tag['label']}",
+                'info'      => _LINK_ADDED_TAG . " : {$tag['label']}",
                 'eventId'   => 'tagModification'
             ]);
         }
@@ -424,14 +450,14 @@ class TagController
             'tableName' => 'tags',
             'recordId'  => $args['tagId'],
             'eventType' => 'UP',
-            'info'      => _LINK_DELETED . " : {$linkedTagsInfo[$args['id']]}",
+            'info'      => _LINK_DELETED_TAG . " : {$linkedTagsInfo[$args['id']]}",
             'eventId'   => 'tagModification'
         ]);
         HistoryController::add([
             'tableName' => 'tags',
             'recordId'  => $args['id'],
             'eventType' => 'UP',
-            'info'      => _LINK_DELETED . " : {$linkedTagsInfo[$args['tagId']]}",
+            'info'      => _LINK_DELETED_TAG . " : {$linkedTagsInfo[$args['tagId']]}",
             'eventId'   => 'tagModification'
         ]);
 

@@ -1,12 +1,28 @@
+<div style="overflow: auto;max-height: 75px;">
+    <ng-container *ngFor="let entity of entities | sortBy: 'entity_label';let i=index;">
+        <span *ngIf="entitiesRestriction.indexOf(entity.id) > -1" class="label label-default noteRestriction"
+            (click)="removeEntityRestriction(entitiesRestriction.indexOf(entity.id), i)"
+            title="{{lang.restrictedEntity}}"><i class="fa fa-sitemap"></i>
+            {{entity.entity_label}}&nbsp;<i class="fa fa-times" style="cursor: pointer;"></i></span>
+    </ng-container>
+</div>
 <mat-form-field appearance="outline" class="noteEditorContent">
     <textarea matInput placeholder="{{title}}" [(ngModel)]="content"></textarea>
-    <button matSuffix color="primary" mat-icon-button title="{{lang.noteTemplates}}" [matMenuTriggerFor]="menu"
-        (click)="getTemplatesNote()">
-        <mat-icon fontSet="fas" fontIcon="fa-file-alt fa-2x"></mat-icon>
+    <button matSuffix color="primary" mat-icon-button title="{{lang.options}}" [matMenuTriggerFor]="menuMain">
+        <mat-icon fontSet="fas" fontIcon="fa-angle-right fa-2x"></mat-icon>
     </button>
-    <mat-menu #menu="matMenu" [class]="'templateNoteListMenu'">
+    <mat-menu #menuMain="matMenu" [class]="'templateNoteListMenu'">
+        <button mat-menu-item [matMenuTriggerFor]="menuTemplates" (menuOpened)="getTemplatesNote()">
+            <span>{{lang.noteTemplates}}</span>
+        </button>
+        <button mat-menu-item [matMenuTriggerFor]="menuEntities">
+            <span>{{lang.restrictions}}</span>
+        </button>
+    </mat-menu>
+
+    <mat-menu #menuTemplates="matMenu" [class]="'templateNoteListMenu'">
         <div
-            style="text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;">
+            style="z-index:1;position: sticky;top: 0px;text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;">
             {{lang.noteTemplates}}
         </div>
         <button mat-menu-item *ngFor="let template of templatesNote" matTooltip="{{template.template_content}}"
@@ -17,7 +33,22 @@
             <span>{{lang.noTemplate}}</span>
         </button>
     </mat-menu>
+    <mat-menu #menuEntities="matMenu" [class]="'templateNoteListMenu'">
+        <div
+            style="z-index:1;position: sticky;top: 0px;text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;">
+            {{lang.entities}}
+        </div>
+        <button mat-menu-item *ngFor="let entity of entities" [disabled]="entity.selected" [title]="entity.entity_label"
+            (click)="$event.stopPropagation();selectEntity(entity)">
+            <span>{{entity.entity_label}}</span>
+        </button>
+    </mat-menu>
+
     <button *ngIf="addMode" color="primary" matSuffix mat-icon-button title="{{lang.add}}" (click)="addNote()"
+        [disabled]="content.trim() == '' || loading">
+        <mat-icon fontSet="far" fontIcon="fa-paper-plane fa-2x"></mat-icon>
+    </button>
+    <button *ngIf="upMode" color="primary" matSuffix mat-icon-button title="{{lang.validate}}" (click)="updateNote()"
         [disabled]="content.trim() == '' || loading">
         <mat-icon fontSet="far" fontIcon="fa-paper-plane fa-2x"></mat-icon>
     </button>

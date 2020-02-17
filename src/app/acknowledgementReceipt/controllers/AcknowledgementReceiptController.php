@@ -15,7 +15,6 @@
 namespace AcknowledgementReceipt\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
-use Contact\controllers\ContactController;
 use Contact\models\ContactModel;
 use Docserver\models\DocserverModel;
 use History\controllers\HistoryController;
@@ -167,7 +166,7 @@ class AcknowledgementReceiptController
     public function getAcknowledgementReceipt(Request $request, Response $response, array $args)
     {
         $document = AcknowledgementReceiptModel::getByIds([
-            'select'  => ['docserver_id', 'path', 'filename', 'fingerprint', 'res_id'],
+            'select'  => ['docserver_id', 'path', 'filename', 'fingerprint', 'res_id', 'format'],
             'ids'     => [$args['id']]
         ]);
 
@@ -181,13 +180,13 @@ class AcknowledgementReceiptController
         }
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
-        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+        if (empty($docserver['path_template']) || !is_dir($docserver['path_template'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
         }
 
         $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $document['path']) . $document['filename'];
 
-        if (!file_exists($pathToDocument)) {
+        if (!is_file($pathToDocument)) {
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }
 
@@ -197,31 +196,19 @@ class AcknowledgementReceiptController
         }
 
         $fileContent = file_get_contents($pathToDocument);
-
         if ($fileContent === false) {
             return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
         }
-
-        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
-        $mimeType = $finfo->buffer($fileContent);
-        $pathInfo = pathinfo($pathToDocument);
-
-        $response->write($fileContent);
-        $response = $response->withAddedHeader('Content-Disposition', "inline; filename=maarch.{$pathInfo['extension']}");
 
         HistoryController::add([
             'tableName' => 'acknowledgement_receipts',
             'recordId'  => $args['id'],
             'eventType' => 'VIEW',
             'info'      => _ACKNOWLEDGEMENT_RECEIPT_DISPLAYING . " : {$args['id']}",
-            'moduleId'  => 'res',
-            'eventId'   => 'acknowledgementreceiptview',
+            'moduleId'  => 'acknowledgementReceipt',
+            'eventId'   => 'acknowledgementReceiptView',
         ]);
 
-        if ($mimeType == 'text/plain') {
-            $mimeType = 'text/html';
-        }
-
-        return $response->withHeader('Content-Type', $mimeType);
+        return $response->withJson(['encodedDocument' => base64_encode($fileContent), 'format' => $document['format']]);
     }
 }

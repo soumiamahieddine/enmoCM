@@ -236,7 +236,7 @@ DO $$ BEGIN
 	  ALTER TABLE tags ADD COLUMN id serial NOT NULL;
 	  UPDATE tags SET id = tag_id;
       ALTER TABLE tags DROP COLUMN IF EXISTS tag_id;
-
+      ALTER TABLE tags DROP COLUMN IF EXISTS entity_id_owner;
       ALTER TABLE tags DROP COLUMN IF EXISTS description;
 	  ALTER TABLE tags ADD COLUMN description TEXT;
       ALTER TABLE tags DROP COLUMN IF EXISTS parent_id;
@@ -247,15 +247,17 @@ DO $$ BEGIN
       ALTER TABLE tags ADD COLUMN links jsonb DEFAULT '[]';
       ALTER TABLE tags DROP COLUMN IF EXISTS usage;
       ALTER TABLE tags ADD COLUMN usage TEXT;
+
+      DROP TABLE IF EXISTS resources_tags;
+      ALTER TABLE tag_res ADD COLUMN id serial NOT NULL;
+      ALTER TABLE tag_res RENAME TO resources_tags;
   END IF;
 END$$;
+
 SELECT setval('tags_id_seq', (SELECT MAX(id) from tags));
 
 DROP TABLE IF EXISTS tags_entities;
 
-DROP TABLE IF EXISTS resources_tags;
-ALTER TABLE tag_res ADD COLUMN id serial NOT NULL;
-ALTER TABLE tag_res RENAME TO resources_tags;
 
 /* DOCTYPES */
 DO $$ BEGIN
@@ -527,6 +529,7 @@ DO $$ BEGIN
     DELETE FROM actions_groupbaskets WHERE id_action in (SELECT id FROM actions WHERE enabled = 'N');
     DELETE FROM groupbasket_redirect WHERE action_id in (SELECT id FROM actions WHERE enabled = 'N');
     DELETE FROM actions WHERE enabled = 'N';
+    ALTER TABLE actions ADD COLUMN required_fields jsonb NOT NULL DEFAULT '[]';
   END IF;
 END$$;
 
@@ -568,7 +571,7 @@ INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'manage_numeric_package'
 FROM usergroups_services WHERE group_id IN (
     SELECT group_id FROM usergroups_services
-    WHERE service_id = 'use_mail_services' AND group_id not in (SELECT group_id FROM usergroups_services WHERE service_id = 'manage_numeric_package')
+    WHERE service_id = 'sendmail' AND group_id not in (SELECT group_id FROM usergroups_services WHERE service_id = 'manage_numeric_package')
 );
 
 
@@ -806,6 +809,8 @@ DO $$ BEGIN
         ALTER TABLE shippings ALTER COLUMN document_type SET NOT NULL;
     END IF;
 END$$;
+ALTER TABLE shippings DROP COLUMN IF EXISTS recipients;
+ALTER TABLE shippings ADD COLUMN recipients jsonb DEFAULT '[]';
 
 TRUNCATE TABLE indexing_models;
 INSERT INTO indexing_models (id, category, label, "default", owner, private) VALUES (1, 'incoming', 'Courrier arrivée', TRUE, 23, FALSE);

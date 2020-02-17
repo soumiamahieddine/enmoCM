@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, EventEmitter } from '@angular/core';
+import {Component, OnInit, ViewChild, EventEmitter, Inject} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../../translate.component';
 import { NotificationService } from '../../../notification.service';
@@ -6,11 +6,12 @@ import { HeaderService }        from '../../../../service/header.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../../service/app.service';
 import { Observable, merge, Subject, of as observableOf, of } from 'rxjs';
-import { MatPaginator, MatSort, MatDialog } from '@angular/material';
+import {MatPaginator, MatSort, MatDialog, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ConfirmComponent } from '../../../../plugins/modal/confirm.component';
 import { FormControl } from '@angular/forms';
 import { FunctionsService } from '../../../../service/functions.service';
+import {UserAdministrationRedirectModalComponent} from "../../user/user-administration.component";
 
 @Component({
     selector: 'contact-list',
@@ -39,6 +40,7 @@ export class ContactsListAdministrationComponent implements OnInit {
 
     searchContact = new FormControl();
     search: string = '';
+    dialogRef                               : MatDialogRef<any>;
 
     @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
     @ViewChild('tableContactListSort', { static: true }) sort: MatSort;
@@ -138,20 +140,38 @@ export class ContactsListAdministrationComponent implements OnInit {
     }
 
     deleteContact(contact: any) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
 
-        dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.delete(`../../rest/contacts/${contact.id}`)),
-            tap((data: any) => {
-                this.refreshDao();
-                this.notify.success(this.lang.contactDeleted);
-            }),
-            catchError((err: any) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+        if (contact.isUsed) {
+            this.dialogRef = this.dialog.open(ContactsListAdministrationRedirectModalComponent, {});
+            this.dialogRef.afterClosed().subscribe((result: any) => {
+                var queryparams = '';
+                if (result.processMode == 'reaffect') {
+                    queryparams = '?redirect=' + result.contactId;
+                }
+                this.http.request('DELETE', `../../rest/contacts/${contact.id}${queryparams}`)
+                    .subscribe(() => {
+                        this.refreshDao();
+                        this.notify.success(this.lang.contactDeleted);
+                    }, (err) => {
+                        this.notify.error(err.error.errors);
+                    });
+                this.dialogRef = null;
+            });
+        } else {
+            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+            dialogRef.afterClosed().pipe(
+                filter((data: string) => data === 'ok'),
+                exhaustMap(() => this.http.delete(`../../rest/contacts/${contact.id}`)),
+                tap((data: any) => {
+                    this.refreshDao();
+                    this.notify.success(this.lang.contactDeleted);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
     }
 
     toggleContact(contact: any) {
@@ -233,5 +253,31 @@ export class ContactListHttpDao {
         const requestUrl = `${href}?limit=10&offset=${offset}&order=${order}&orderBy=${sort}&search=${search}`;
 
         return this.http.get<ContactList>(requestUrl);
+    }
+}
+@Component({
+    templateUrl: "contacts-list-administration-redirect-modal.component.html",
+    styleUrls: [],
+    providers: [NotificationService]
+})
+export class ContactsListAdministrationRedirectModalComponent {
+    lang: any               = LANG;
+    modalTitle: string      = this.lang.confirmAction;
+    redirectContact: number;
+    processMode: string;
+
+    constructor(
+        public http: HttpClient,
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        public dialogRef: MatDialogRef<ContactsListAdministrationRedirectModalComponent>,
+        private notify: NotificationService) {
+    }
+
+    ngOnInit(): void {
+
+    }
+
+    setRedirectUser(contact: any) {
+        this.redirectContact = contact.id;
     }
 }

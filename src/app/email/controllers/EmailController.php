@@ -17,6 +17,7 @@ namespace Email\controllers;
 use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
 use Configuration\models\ConfigurationModel;
+use Convert\models\AdrModel;
 use Docserver\models\DocserverModel;
 use Docserver\models\DocserverTypeModel;
 use Email\models\EmailModel;
@@ -31,6 +32,7 @@ use Note\models\NoteModel;
 use PHPMailer\PHPMailer\PHPMailer;
 use Resource\controllers\ResController;
 use Resource\controllers\StoreController;
+use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -57,7 +59,7 @@ class EmailController
             return $response->withStatus($httpCode)->withJson(['errors' => $isSent['errors']]);
         }
 
-        return $response->withStatus(204);
+        return $response->withJson(['id' => $isSent]);
     }
 
     public static function createEmail(array $args)
@@ -73,8 +75,8 @@ class EmailController
 
         $id = EmailModel::create([
             'userId'                => $args['userId'],
-            'sender'                => json_encode($args['data']['sender']),
-            'recipients'            => json_encode($args['data']['recipients']),
+            'sender'                => empty($args['data']['sender']) ? '{}' : json_encode($args['data']['sender']),
+            'recipients'            => empty($args['data']['recipients']) ? '[]' : json_encode($args['data']['recipients']),
             'cc'                    => empty($args['data']['cc']) ? '[]' : json_encode($args['data']['cc']),
             'cci'                   => empty($args['data']['cci']) ? '[]' : json_encode($args['data']['cci']),
             'object'                => empty($args['data']['object']) ? null : $args['data']['object'],
@@ -142,56 +144,38 @@ class EmailController
             }
         }
 
-        return $isSent;
+        if (!empty($isSent['errors'])) {
+            return $isSent;
+        }
+
+        return $id;
     }
 
     public function getById(Request $request, Response $response, array $args)
     {
-        $emailArray = EmailModel::getById(['id' => $args['id']]);
-        $document   = (array)json_decode($emailArray['document']);
+        $rawEmail = EmailModel::getById(['id' => $args['id']]);
+        $document = json_decode($rawEmail['document'], true);
 
-        if (!ResController::hasRightByResId(['resId' => [$document['id']], 'userId' => $GLOBALS['id']])) {
+        if (!empty($document['id']) && !ResController::hasRightByResId(['resId' => [$document['id']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $sender        = (array)json_decode($emailArray['sender']);
-        $email['to']   = (array)json_decode($emailArray['recipients']);
-        $email['cc']   = (array)json_decode($emailArray['cc']);
-        $email['cci']  = (array)json_decode($emailArray['cci']);
-        $email['id']    = $emailArray['id'];
-        $email['resId'] = $document['id'];
-
-        $user = UserModel::getById(['id' => $emailArray['user_id'], 'select' => ['user_id']]);
-        $email['login'] = $user['user_id'];
-
-        $email['attachments'] = [];
-        $email['attachments_version'] = [];
-
-        if (!empty($document['attachments'])) {
-            $document['attachments'] = (array)$document['attachments'];
-            foreach ($document['attachments'] as $attachment) {
-                $attachment = (array)$attachment;
-                $email['attachments'][] = $attachment['id'];
-            }
-        }
-
-        $email['notes'] = $document['notes'];
-
-        $email['object']            = $emailArray['object'];
-        $email['body']              = $emailArray['body'];
-        $email['resMasterAttached'] = ($document['isLinked']) ? 'Y' : 'N';
-        $email['isHtml']            = ($emailArray['is_html']) ? 'Y' : 'N';
-        $email['status']            = $emailArray['status'];
-        $email['creationDate']      = $emailArray['creation_date'];
-        $email['sendDate']          = $emailArray['send_date'];
-
-        if (!empty($sender['entityId'])) {
-            $entity = EntityModel::getById(['select' => ['entity_id'], 'id' => $sender['entityId']]);
-            $email['sender_email'] = $entity['entity_id'] . ',' . $sender['email'];
-        } else {
-            $email['sender_email'] = $sender['email'];
-        }
-
+        $email = [
+            'id'            => $rawEmail['id'],
+            'sender'        => json_decode($rawEmail['sender'], true),
+            'recipients'    => json_decode($rawEmail['recipients'], true),
+            'cc'            => json_decode($rawEmail['cc'], true),
+            'cci'           => json_decode($rawEmail['cci'], true),
+            'userId'        => $rawEmail['user_id'],
+            'object'        => $rawEmail['object'],
+            'body'          => $rawEmail['body'],
+            'isHtml'        => $rawEmail['is_html'],
+            'status'        => $rawEmail['status'],
+            'creationDate'  => $rawEmail['creation_date'],
+            'sendDate'      => $rawEmail['send_date'],
+            'document'      => $document
+        ];
+        
         return $response->withJson($email);
     }
 
@@ -206,8 +190,8 @@ class EmailController
 
         EmailModel::update([
             'set' => [
-                'sender'      => json_encode($body['sender']),
-                'recipients'  => json_encode($body['recipients']),
+                'sender'      => empty($body['sender']) ? '{}' : json_encode($body['sender']),
+                'recipients'  => empty($body['recipients']) ? '[]' : json_encode($body['recipients']),
                 'cc'          => empty($body['cc']) ? '[]' : json_encode($body['cc']),
                 'cci'         => empty($body['cci']) ? '[]' : json_encode($body['cci']),
                 'object'      => empty($body['object']) ? null : $body['object'],
@@ -230,7 +214,7 @@ class EmailController
 
             HistoryController::add([
                 'tableName' => 'emails',
-                'recordId'  => $args['emailId'],
+                'recordId'  => $args['id'],
                 'eventType' => 'ADD',
                 'eventId'   => 'emailCreation',
                 'info'      => _EMAIL_ADDED
@@ -248,7 +232,7 @@ class EmailController
         } else {
             HistoryController::add([
                 'tableName'    => 'emails',
-                'recordId'     => $args['emailId'],
+                'recordId'     => $args['id'],
                 'eventType'    => 'UP',
                 'eventId'      => 'emailModification',
                 'info'         => _EMAIL_UPDATED
@@ -292,7 +276,7 @@ class EmailController
         ]);
 
         if (!empty($email['document'])) {
-            $document = (array)json_decode($email['document']);
+            $document = json_decode($email['document'], true);
 
             HistoryController::add([
                 'tableName' => 'res_letterbox',
@@ -317,7 +301,7 @@ class EmailController
             return $response->withStatus(400)->withJson(['errors' => 'Query limit is not an int value']);
         }
 
-        $where = ['document->>\'id\' = ?'];
+        $where = ["document->>'id' = ?", "(status != 'DRAFT' or (status = 'DRAFT' and user_id = ?))"];
 
         if (!empty($queryParams['type'])) {
             if (!Validator::stringType()->validate($queryParams['type'])) {
@@ -337,41 +321,36 @@ class EmailController
         $emails = EmailModel::get([
             'select' => ['*'],
             'where'  => $where,
-            'data'   => [$args['resId']],
+            'data'   => [$args['resId'], $GLOBALS['id']],
             'limit'  => (int)$queryParams['limit']
         ]);
 
         foreach ($emails as $key => $email) {
-            $emails[$key]['sender'] = json_decode($emails[$key]['sender']);
+            $emails[$key]['sender']     = json_decode($emails[$key]['sender']);
             $emails[$key]['recipients'] = json_decode($emails[$key]['recipients']);
-            $emails[$key]['cc'] = json_decode($emails[$key]['cc']);
-            $emails[$key]['cci'] = json_decode($emails[$key]['cci']);
-            $emails[$key]['document'] = json_decode($emails[$key]['document']);
+            $emails[$key]['cc']         = json_decode($emails[$key]['cc']);
+            $emails[$key]['cci']        = json_decode($emails[$key]['cci']);
+            $emails[$key]['document']   = json_decode($emails[$key]['document']);
         }
 
         return $response->withJson(['emails' => $emails]);
     }
 
-    public static function getAvailableEmails(Request $request, Response $response, array $args)
+    public static function getAvailableEmails(Request $request, Response $response)
     {
-        if (!Validator::intVal()->validate($args['id'])) {
-            return $response->withStatus(400)->withJson(['errors' => 'Route param id is not an integer']);
-        }
-
         $emails = [];
 
-        // User's email
-        $emailCurrentUser = UserModel::getById(['select' => ['firstname', 'lastname', 'mail'], 'id' => $GLOBALS['id']]);
+        $currentUser = UserModel::getById(['select' => ['firstname', 'lastname', 'mail'], 'id' => $GLOBALS['id']]);
 
         $emails[] = [
-            'label' => $emailCurrentUser['firstname'] . ' ' . $emailCurrentUser['lastname'],
-            'email' => $emailCurrentUser['mail']
+            'entityId'  => null,
+            'label'     => $currentUser['firstname'] . ' ' . $currentUser['lastname'],
+            'email'     => $currentUser['mail']
         ];
 
         if (PrivilegeController::hasPrivilege(['privilegeId' => 'use_mail_services', 'userId' => $GLOBALS['id']])) {
-            // User's entities emails
             $entities = EntityModel::getWithUserEntities([
-                'select' => ['entities.entity_label', 'entities.email', 'entities.entity_id'],
+                'select' => ['entities.entity_label', 'entities.email', 'entities.entity_id', 'entities.id'],
                 'where'  => ['users_entities.user_id = ?'],
                 'data'   => [$GLOBALS['userId']]
             ]);
@@ -379,36 +358,36 @@ class EmailController
             foreach ($entities as $entity) {
                 if (!empty($entity['email'])) {
                     $emails[] = [
-                        'label' => $entity['entity_label'],
-                        'email' => $entity['email']
+                        'entityId'  => $entity['id'],
+                        'label'     => $entity['entity_label'],
+                        'email'     => $entity['email']
                     ];
                 }
             }
 
-            // Get from XML
             $emailsEntities = CoreConfigModel::getXmlLoaded(['path' => 'modules/sendmail/xml/externalMailsEntities.xml']);
-
-            $userEntities = array_column($entities, 'entity_id');
-
-            if ($emailsEntities != null) {
+            if (!empty($emailsEntities)) {
+                $userEntities = array_column($entities, 'entity_id');
                 foreach ($emailsEntities->externalEntityMail as $entityMail) {
                     $entityId = (string)$entityMail->targetEntityId;
 
-                    if ($entityId == '') {
+                    if (empty($entityId)) {
                         $emails[] = [
-                            'label' => (string)$entityMail->defaultName,
-                            'email' => (string)$entityMail->EntityMail
+                            'entityId'  => null,
+                            'label'     => (string)$entityMail->defaultName,
+                            'email'     => (string)$entityMail->EntityMail
                         ];
                     } elseif (in_array($entityId, $userEntities)) {
-                        $entityLabel = EntityModel::getByEntityId([
-                            'select'   => ['entity_label'],
+                        $entity = EntityModel::getByEntityId([
+                            'select'   => ['entity_label', 'id'],
                             'entityId' => $entityId
                         ]);
 
-                        if (!empty($entityLabel)) {
+                        if (!empty($entity)) {
                             $emails[] = [
-                                'label' => $entityLabel['entity_label'],
-                                'email' => (string)$entityMail->EntityMail
+                                'entityId'  => $entity['id'],
+                                'label'     => $entity['entity_label'],
+                                'email'     => (string)$entityMail->EntityMail
                             ];
                         }
                     }
@@ -418,6 +397,129 @@ class EmailController
 
         return $response->withJson(['emails' => $emails]);
     }
+    public static function getInitializationByResId(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resource = ResModel::getById(['select' => ['filename', 'version', 'alt_identifier', 'subject', 'typist', 'format', 'filesize'], 'resId' => $args['resId']]);
+        if (empty($resource)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
+        }
+
+        $document = [];
+        if (!empty($resource['filename'])) {
+            $convertedResource = AdrModel::getDocuments([
+                'select'    => ['docserver_id', 'path', 'filename'],
+                'where'     => ['res_id = ?', 'type in (?)', 'version = ?'],
+                'data'      => [$args['resId'], ['PDF', 'SIGN'], $resource['version']],
+                'orderBy'   => ["type='SIGN' DESC"],
+                'limit'     => 1
+            ]);
+            $convertedDocument = null;
+            if (!empty($convertedResource[0])) {
+                $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedResource[0]['docserver_id'], 'select' => ['path_template']]);
+                $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedResource[0]['path']) . $convertedResource[0]['filename'];
+                if (file_exists($pathToDocument)) {
+                    $convertedDocument = [
+                        'size'  => StoreController::getFormattedSizeFromBytes(['size' => filesize($pathToDocument)])
+                    ];
+                }
+            }
+
+            $document = [
+                'id'                => $args['resId'],
+                'chrono'            => $resource['alt_identifier'],
+                'label'             => $resource['subject'],
+                'convertedDocument' => $convertedDocument,
+                'creator'           => UserModel::getLabelledUserById(['id' => $resource['typist']]),
+                'format'            => $resource['format'],
+                'size'              => StoreController::getFormattedSizeFromBytes(['size' => $resource['filesize']])
+            ];
+        }
+
+        $attachments = [];
+        $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
+        $rawAttachments = AttachmentModel::get([
+            'select'    => ['res_id', 'title', 'identifier', 'attachment_type', 'typist', 'format', 'filesize'],
+            'where'     => ['res_id_master = ?', 'attachment_type not in (?)', 'status not in (?)'],
+            'data'      => [$args['resId'], ['signed_response'], ['DEL', 'OBS']]
+        ]);
+        foreach ($rawAttachments as $attachment) {
+            $attachmentId = $attachment['res_id'];
+            $signedAttachment = AttachmentModel::get([
+                'select'    => ['res_id'],
+                'where'     => ['origin = ?', 'status != ?', 'attachment_type = ?'],
+                'data'      => ["{$attachment['resId']},res_attachments", 'DEL', 'signed_response']
+            ]);
+            if (!empty($signedAttachment[0])) {
+                $attachmentId = $signedAttachment[0]['res_id'];
+            }
+
+            $convertedAttachment = AdrModel::getAttachments([
+                'select'    => ['docserver_id', 'path', 'filename'],
+                'where'     => ['res_id = ?', 'type = ?'],
+                'data'      => [$attachmentId, 'PDF'],
+            ]);
+            $convertedDocument = null;
+            if (!empty($convertedAttachment[0])) {
+                $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedAttachment[0]['docserver_id'], 'select' => ['path_template']]);
+                $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedAttachment[0]['path']) . $convertedAttachment[0]['filename'];
+                if (file_exists($pathToDocument)) {
+                    $convertedDocument = [
+                        'size'  => StoreController::getFormattedSizeFromBytes(['size' => filesize($pathToDocument)])
+                    ];
+                }
+            }
+
+            $attachments[] = [
+                'id'                => $attachment['res_id'],
+                'chrono'            => $attachment['identifier'],
+                'label'             => $attachment['title'],
+                'typeLabel'         => $attachmentTypes[$attachment['attachment_type']]['label'],
+                'convertedDocument' => $convertedDocument,
+                'creator'           => UserModel::getLabelledUserById(['login' => $attachment['typist']]),
+                'format'            => $attachment['format'],
+                'size'              => StoreController::getFormattedSizeFromBytes(['size' => $attachment['filesize']])
+            ];
+        }
+
+        $notes = [];
+        $userEntities = EntityModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['entity_id']]);
+        $userEntities = array_column($userEntities, 'entity_id');
+        $rawNotes = NoteModel::get(['select' => ['id', 'note_text', 'user_id'], 'where' => ['identifier = ?'], 'data' => [$args['resId']]]);
+        foreach ($rawNotes as $rawNote) {
+            $allowed = false;
+            if ($rawNote['user_id'] == $GLOBALS['id']) {
+                $allowed = true;
+            } else {
+                $noteEntities = NoteEntityModel::get(['select' => ['item_id'], 'where' => ['note_id = ?'], 'data' => [$rawNote['id']]]);
+                if (!empty($noteEntities)) {
+                    foreach ($noteEntities as $noteEntity) {
+                        if (in_array($noteEntity['item_id'], $userEntities)) {
+                            $allowed = true;
+                            break;
+                        }
+                    }
+                } else {
+                    $allowed = true;
+                }
+            }
+            if ($allowed) {
+                $notes[] = [
+                    'id'        => $rawNote['id'],
+                    'label'     => $rawNote['note_text'],
+                    'typeLabel' => 'note',
+                    'creator'   => UserModel::getLabelledUserById(['id' => $rawNote['user_id']]),
+                    'format'    => 'html',
+                    'size'      => null
+                ];
+            }
+        }
+
+        return $response->withJson(['resource' => $document, 'attachments' => $attachments, 'notes' => $notes]);
+    }
 
     public static function sendEmail(array $args)
     {
@@ -425,22 +527,24 @@ class EmailController
         ValidatorModel::intVal($args, ['emailId', 'userId']);
 
         $email = EmailModel::getById(['id' => $args['emailId']]);
-        $email['sender']        = (array)json_decode($email['sender']);
+        $email['sender']        = json_decode($email['sender'], true);
         $email['recipients']    = array_unique(json_decode($email['recipients']));
         $email['cc']            = array_unique(json_decode($email['cc']));
         $email['cci']           = array_unique(json_decode($email['cci']));
 
-        $hierarchyMail = ['cci' => 'cc', 'cc' => 'recipients'];
-        foreach ($hierarchyMail as $lowEmail => $highEmail) {
-            foreach ($email[$lowEmail] as $currentKey => $currentEmail) {
-                if (in_array($currentEmail, $email[$highEmail])) {
-                    unset($email[$lowEmail][$currentKey]);
+        $hierarchyMail = ['cci' => ['recipients', 'cc'], 'cc' => ['recipients']];
+        foreach ($hierarchyMail as $lowEmail => $ahighEmail) {
+            foreach ($ahighEmail as $highEmail) {
+                foreach ($email[$lowEmail] as $currentKey => $currentEmail) {
+                    if (in_array($currentEmail, $email[$highEmail])) {
+                        unset($email[$lowEmail][$currentKey]);
+                    }
                 }
             }
         }
 
         $configuration = ConfigurationModel::getByService(['service' => 'admin_email_server', 'select' => ['value']]);
-        $configuration = (array)json_decode($configuration['value']);
+        $configuration = json_decode($configuration['value'], true);
         if (empty($configuration)) {
             return ['errors' => 'Configuration is missing'];
         }
@@ -528,18 +632,18 @@ class EmailController
         //zip M2M
         if ($email['message_exchange_id']) {
             $messageExchange = MessageExchangeModel::getMessageByIdentifier(['messageId' => $email['message_exchange_id'], 'select' => ['docserver_id','path','filename','fingerprint','reference']]);
-            $docserver       = DocserverModel::getByDocserverId(['docserverId' => $messageExchange[0]['docserver_id']]);
+            $docserver       = DocserverModel::getByDocserverId(['docserverId' => $messageExchange['docserver_id']]);
             $docserverType   = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id']]);
 
-            $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $messageExchange[0]['path']);
-            $filePath      = $docserver['path_template'] . $pathDirectory . $messageExchange[0]['filename'];
+            $pathDirectory = str_replace('#', DIRECTORY_SEPARATOR, $messageExchange['path']);
+            $filePath      = $docserver['path_template'] . $pathDirectory . $messageExchange['filename'];
             $fingerprint   = StoreController::getFingerPrint([
                 'filePath' => $filePath,
                 'mode'     => $docserverType['fingerprint_mode'],
             ]);
 
-            if ($fingerprint != $messageExchange[0]['fingerprint']) {
-                $email['document'] = (array)json_decode($email['document']);
+            if ($fingerprint != $messageExchange['fingerprint']) {
+                $email['document'] = json_decode($email['document'], true);
                 return ['errors' => 'Pb with fingerprint of document. ResId master : ' . $email['document']['id']];
             }
 
@@ -549,13 +653,13 @@ class EmailController
                     return ['errors' => 'Document not found on docserver'];
                 }
 
-                $title = preg_replace(utf8_decode('@[\\/:*?"<>|]@i'), '_', substr($messageExchange[0]['reference'], 0, 30));
+                $title = preg_replace(utf8_decode('@[\\/:*?"<>|]@i'), '_', substr($messageExchange['reference'], 0, 30));
 
                 $phpmailer->addStringAttachment($fileContent, $title . '.zip');
             }
         } else {
             if (!empty($email['document'])) {
-                $email['document'] = (array)json_decode($email['document']);
+                $email['document'] = json_decode($email['document'], true);
                 if ($email['document']['isLinked']) {
                     $encodedDocument = ResController::getEncodedDocument(['resId' => $email['document']['id'], 'original' => $email['document']['original']]);
                     if (empty($encodedDocument['errors'])) {
@@ -563,9 +667,7 @@ class EmailController
                     }
                 }
                 if (!empty($email['document']['attachments'])) {
-                    $email['document']['attachments'] = (array)$email['document']['attachments'];
                     foreach ($email['document']['attachments'] as $attachment) {
-                        $attachment = (array)$attachment;
                         $encodedDocument = AttachmentController::getEncodedDocument(['id' => $attachment['id'], 'original' => $attachment['original']]);
                         if (empty($encodedDocument['errors'])) {
                             $phpmailer->addStringAttachment(base64_decode($encodedDocument['encodedDocument']), $encodedDocument['fileName']);
@@ -573,7 +675,6 @@ class EmailController
                     }
                 }
                 if (!empty($email['document']['notes'])) {
-                    $email['document']['notes'] = (array)$email['document']['notes'];
                     $encodedDocument = NoteController::getEncodedPdfByIds(['ids' => $email['document']['notes']]);
                     if (empty($encodedDocument['errors'])) {
                         $phpmailer->addStringAttachment(base64_decode($encodedDocument['encodedDocument']), 'notes.pdf');
@@ -621,14 +722,14 @@ class EmailController
         ValidatorModel::intVal($args, ['userId']);
         ValidatorModel::arrayType($args, ['data']);
 
-        if (!Validator::arrayType()->notEmpty()->validate($args['data']['sender']) || !Validator::stringType()->notEmpty()->validate($args['data']['sender']['email'])) {
+        if (!Validator::stringType()->notEmpty()->validate($args['data']['status'])) {
+            return ['errors' => 'Data status is not a string or empty', 'code' => 400];
+        } elseif ($args['data']['status'] != 'DRAFT' && (!Validator::arrayType()->notEmpty()->validate($args['data']['sender']) || !Validator::stringType()->notEmpty()->validate($args['data']['sender']['email']))) {
             return ['errors' => 'Data sender email is not set', 'code' => 400];
-        } elseif (!Validator::arrayType()->notEmpty()->validate($args['data']['recipients'])) {
+        } elseif ($args['data']['status'] != 'DRAFT' && !Validator::arrayType()->notEmpty()->validate($args['data']['recipients'])) {
             return ['errors' => 'Data recipients is not an array or empty', 'code' => 400];
         } elseif (!Validator::boolType()->validate($args['data']['isHtml'])) {
             return ['errors' => 'Data isHtml is not a boolean or empty', 'code' => 400];
-        } elseif (!Validator::stringType()->notEmpty()->validate($args['data']['status'])) {
-            return ['errors' => 'Data status is not a string or empty', 'code' => 400];
         }
 
         $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);

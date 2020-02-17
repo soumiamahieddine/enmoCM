@@ -61,7 +61,7 @@ export class SearchAdvListComponent implements OnInit {
     initResourceList() {
         this.resultListDatabase = new ResourceListHttpDao(this.http);
         this.paginator.pageIndex = 0;
-        this.sort.active = 'resId';
+        this.sort.active = 'creationDate';
         this.sort.direction = 'desc';
         this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 

@@ -32,6 +32,7 @@ use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
+use Resource\controllers\StoreController;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
@@ -114,30 +115,30 @@ class SignatureBookController
 
         $incomingMail = ResModel::getById([
             'resId'     => $resId,
-            'select'    => ['res_id', 'subject', 'alt_identifier', 'category_id']
+            'select'    => ['res_id', 'subject', 'alt_identifier', 'category_id', 'filename', 'integrations']
         ]);
-
         if (empty($incomingMail)) {
             return ['error' => 'No Document Found'];
         }
 
-        $incomingMailAttachments = AttachmentModel::get([
-            'select'      => ['res_id', 'title', 'format', 'attachment_type', 'path', 'filename'],
-            'where'     => ['res_id_master = ?', 'attachment_type in (?)', "status not in ('DEL', 'TMP', 'OBS')"],
-            'data'      => [$resId, ['incoming_mail_attachment', 'converted_pdf']]
-        ]);
-
-        $documents = [
-            [
+        $integrations = json_decode($incomingMail['integrations'], true);
+        $documents = [];
+        if (!empty($incomingMail['filename']) && empty($integrations['inSignatureBook'])) {
+            $documents[] = [
                 'res_id'        => $incomingMail['res_id'],
                 'alt_id'        => $incomingMail['alt_identifier'],
                 'title'         => $incomingMail['subject'],
                 'category_id'   => $incomingMail['category_id'],
                 'viewerLink'    => "../../rest/resources/{$resId}/content",
                 'thumbnailLink' => "rest/resources/{$resId}/thumbnail"
-            ]
-        ];
+            ];
+        }
 
+        $incomingMailAttachments = AttachmentModel::get([
+            'select'    => ['res_id', 'title', 'format', 'attachment_type', 'path', 'filename'],
+            'where'     => ['res_id_master = ?', 'attachment_type in (?)', "status not in ('DEL', 'TMP', 'OBS')"],
+            'data'      => [$resId, ['incoming_mail_attachment', 'converted_pdf']]
+        ]);
         foreach ($incomingMailAttachments as $value) {
             if ($value['attachment_type'] == 'converted_pdf') {
                 continue;
@@ -311,7 +312,18 @@ class SignatureBookController
             );
         }
 
-        return array_values($attachments);
+        $attachments = array_values($attachments);
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['res_id', 'subject', 'alt_identifier', 'filename', 'integrations', 'format']]);
+        $integrations = json_decode($resource['integrations'], true);
+        if (!empty($resource['filename']) && !empty($integrations['inSignatureBook'])) {
+            array_unshift($attachments, $resource);
+            $attachments[0]['isResource'] = true;
+            $attachments[0]['sign'] = true;
+            $attachments[0]['viewerLink'] = "../../rest/resources/{$args['resId']}/content?".rand();
+        }
+
+        return $attachments;
     }
 
     public function getResources(Request $request, Response $response, array $aArgs)
@@ -376,7 +388,7 @@ class SignatureBookController
         if (!Validator::intVal()->validate($args['resId'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Route resId is not an integer']);
         } elseif (!SignatureBookController::isResourceInSignatureBook(['resId' => $args['resId'], 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of signatory book']);
         }
 
         $body = $request->getParsedBody();
@@ -506,6 +518,114 @@ class SignatureBookController
         ]);
 
         return $response->withStatus(204);
+    }
+
+    public function signAttachment(Request $request, Response $response, array $args)
+    {
+        if (!Validator::intVal()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Route id is not an integer']);
+        }
+
+        $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master', 'title', 'typist', 'identifier', 'recipient_id', 'recipient_type']]);
+        if (empty($attachment)) {
+            return $response->withStatus(403)->withJson(['errors' => 'Attachment out of perimeter']);
+        } elseif (!SignatureBookController::isResourceInSignatureBook(['resId' => $attachment['res_id_master'], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of signatory book']);
+        }
+
+        $body = $request->getParsedBody();
+        if (!Validator::intVal()->notEmpty()->validate($body['signatureId'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Body signatureId is empty or not an integer']);
+        }
+
+        $signature = UserSignatureModel::getById(['id' => $body['signatureId'], 'select' => ['user_serial_id', 'signature_path', 'signature_file_name']]);
+        if (empty($signature)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Signature does not exist']);
+        } elseif ($signature['user_serial_id'] != $GLOBALS['id']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Signature out of perimeter']);
+        }
+
+        $docserver = DocserverModel::getCurrentDocserver(['typeId' => 'TEMPLATES', 'collId' => 'templates', 'select' => ['path_template']]);
+        if (empty($docserver['path_template']) || !is_dir($docserver['path_template'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver TEMPLATES does not exist']);
+        }
+        $signaturePath = $docserver['path_template'] . str_replace('#', '/', $signature['signature_path']) . $signature['signature_file_name'];
+        if (!file_exists($signaturePath)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Signature not found on docserver']);
+        }
+
+        $convertedDocument = AdrModel::getAttachments([
+            'select'    => ['docserver_id', 'path', 'filename', 'type'],
+            'where'     => ['res_id = ?', 'type = ?'],
+            'data'      => [$args['id'], 'PDF']
+        ]);
+        if (empty($convertedDocument[0])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Converted document does not exist']);
+        }
+
+        $convertedDocument = $convertedDocument[0];
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+        if (empty($docserver['path_template']) || !is_dir($docserver['path_template'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
+        }
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
+        if (!file_exists($pathToDocument)) {
+            return $response->withStatus(404)->withJson(['errors' => 'Document not found on docserver']);
+        }
+
+        $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/config.xml']);
+        $width = (int)$loadedXml->CONFIG->width_blocsign ?? 150;
+        $height = (int)$loadedXml->CONFIG->height_blocsign ?? 100;
+        $tmpPath = CoreConfigModel::getTmpPath();
+
+        $command = "java -jar modules/visa/dist/SignPdf.jar {$pathToDocument} {$signaturePath} {$width} {$height} {$tmpPath}";
+        exec($command, $output, $return);
+
+        $signedDocument = @file_get_contents($tmpPath.$convertedDocument['filename']);
+        if ($signedDocument === false) {
+            return $response->withStatus(400)->withJson(['errors' => 'Signature failed : ' . implode($output)]);
+        }
+        unlink($tmpPath.$convertedDocument['filename']);
+
+        $data = [
+            'title'             => $attachment['title'],
+            'encodedFile'       => base64_encode($signedDocument),
+            'format'            => 'pdf',
+            'typist'            => $attachment['typist'],
+            'resIdMaster'       => $attachment['res_id_master'],
+            'chrono'            => $attachment['identifier'],
+            'type'              => 'signed_response',
+            'originId'          => $args['id'],
+            'recipientId'       => $attachment['recipient_id'],
+            'recipientType'     => $attachment['recipient_type'],
+            'inSignatureBook'   => true
+        ];
+        $id = StoreController::storeAttachment($data);
+        if (!empty($id['errors'])) {
+            return ['errors' => $id['errors']];
+        }
+
+        AttachmentModel::update([
+            'set'   => ['status' => 'SIGN'],
+            'where' => ['res_id = ?'],
+            'data'  => [$args['id']]
+        ]);
+
+        ListInstanceModel::update([
+            'set'   => ['signatory' => 'true'],
+            'where' => ['res_id = ?', 'item_id = ?', 'difflist_type = ?'],
+            'data'  => [$attachment['res_id_master'], $GLOBALS['userId'], 'VISA_CIRCUIT']
+        ]);
+
+        HistoryController::add([
+            'tableName' => 'res_attachments',
+            'recordId'  => $args['id'],
+            'eventType' => 'SIGN',
+            'eventId'   => 'attachmentSign',
+            'info'      => _DOCUMENT_SIGNED
+        ]);
+
+        return $response->withJson(['id' => $id]);
     }
 
     public function unsignAttachment(Request $request, Response $response, array $args)

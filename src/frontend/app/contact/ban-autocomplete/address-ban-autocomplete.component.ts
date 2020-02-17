@@ -55,7 +55,9 @@ export class AddressBanAutocompleteComponent implements OnInit {
     ngOnInit() {
         this.controlAutocomplete.setValue(this.controlAutocomplete.value === null || this.controlAutocomplete.value === '' ? [] : this.controlAutocomplete.value);
         this.initFormValue();
-        this.initBanSearch();
+        if (!this.adminMode) {
+            this.initBanSearch();
+        }
         this.initAutocompleteRoute();
     }
 

@@ -1,29 +1,18 @@
 <div *ngIf="loading" class='visaContent'>
     <i class="fa fa-spinner fa-spin fa-5x" style="margin-left: 50%;margin-top: 16%;font-size: 8em"></i>
 </div>
-<div *ngIf="!loading" class='visaContent'>
+<div *ngIf="!loading" class='visaContent' style="margin-top: -64px;">
     <div class="titleSignatureBook">
         <div id="tabSignatureBook">
-            <div *ngIf="signatureBook.documents[0] && signatureBook.documents[0].category_id != 'outgoing'" title="{{lang.mail}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 1}" (click)="changeSignatureBookLeftContent(1)">
+            <div *ngIf="signatureBook.documents[0] && signatureBook.documents[0].category_id != 'outgoing'" title="{{lang.mail}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 'document'}" (click)="changeSignatureBookLeftContent('document')">
                 <i class="fa fa-file-alt fa-2x"></i>
             </div>
-            <div title="{{lang.notes}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 2}" (click)="changeSignatureBookLeftContent(2)">
-                <i class="fa fa-pencil-alt fa-2x">
-                    <sup *ngIf="signatureBook.nbNotes > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{signatureBook.nbNotes}}</sup>
-                </i>
-            </div>
-            <div title="{{lang.visaWorkflow}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 3}" (click)="changeSignatureBookLeftContent(3)">
-                <i class="fa fa-list-ol fa-2x"></i>
-            </div>
-            <div title="{{lang.progression}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 4}" (click)="changeSignatureBookLeftContent(4)">
-                <i class="fa fa-history fa-2x"></i>
-            </div>
-            <div title="{{lang.links}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 5}" (click)="changeSignatureBookLeftContent(5)">
-                <i class="fa fa-link fa-2x">
-                    <sup *ngIf="signatureBook.nbLinks > 0" class="nbRes" style="font-size: 12px;font-weight: bold;">{{signatureBook.nbLinks}}</sup>
-                </i>
+            <div *ngFor="let module of processTool" title="{{module.label}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == module.id}" (click)="changeSignatureBookLeftContent(module.id)">
+                <i [class]="module.icon"></i>
+                <i *ngIf="module.count > 0" class="fas fa-circle haveContent"></i>
             </div>
         </div>
+        <div id="labelSignatureBook" title="{{signatureBook.documents[0].title}}" ><div>{{signatureBook.documents[0].alt_id}} : {{signatureBook.documents[0].title}}</div></div>
         <div id="closeSignatureBook">
             <i style="cursor: pointer" (click)="backToBasket()" class="fa fa-times-circle fa-2x"></i>
         </div>
@@ -32,9 +21,9 @@
             <select id="signatureBookActions">
                 <option *ngFor="let option of signatureBook.actions" value="{{option.id}}">{{option.label}}</option>
             </select>
-            <input name="send" id="send" value="{{lang.validate}}" class="button" type="button" (click)="validForm()">
+            <input name="send" id="send" value="{{lang.validate}}" class="button button-form-primary-filled" type="button" (click)="validForm()">
         </div>
-        <div class="others" *ngIf="signatureBook.consigne != ''">
+        <div class="others" *ngIf="!functions.empty(signatureBook.consigne)">
             <span id="consigne">
                 <input type="text" value="{{signatureBook.consigne}}" title="{{signatureBook.consigne}}" readonly="readonly">
             </span>
@@ -72,7 +61,7 @@
                 <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showResLeftPanel"></i>
                 <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showResLeftPanel"></i>
             </div>
-            <div *ngIf="headerTab == 1" class="contentShow">
+            <div *ngIf="headerTab == 'document'" class="contentShow">
                 <div *ngIf="showTopLeftPanel" class="pjDoc">
                     <div style="height:100%;">
                         <img title="{{document.title}}" id="thumnails_img" *ngFor="let document of signatureBook.documents; let i = index" (click)="changeLeftViewer(i)" [src]="coreUrl + document.thumbnailLink"
@@ -98,17 +87,22 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="headerTab == 2" class="contentShow" style="width:98%;">
-                <iframe [src]="notesViewerLink | safeUrl"></iframe>
+            <div *ngIf="headerTab == 'notes'" class="contentShow" style="width:98%;">
+                <app-notes-list #appNotesList [editMode]="true"
+                    [resId]="resId" (reloadBadgeNotes)="refreshBadge($event,'notes')">
+                </app-notes-list>
             </div>
-            <div *ngIf="headerTab == 3" class="contentShow" style="width:98%;overflow-x: hidden;">
-                <iframe [src]="visaViewerLink | safeUrl"></iframe>
+            <div *ngIf="headerTab == 'visaCircuit'" class="contentShow" style="width:98%;overflow-x: hidden;">
+                <app-visa-workflow #appVisaWorkflow [resId]="resId"
+                    [adminMode]="privilegeService.hasCurrentUserPrivilege('config_visa_workflow')"></app-visa-workflow>
             </div>
-            <div *ngIf="headerTab == 4" class="contentShow" style="width:98%;">
-                <iframe [src]="histViewerLink | safeUrl"></iframe>
+            <div *ngIf="headerTab == 'history'" class="contentShow" style="width:98%;">
+                <app-history-list #appHistoryList [resId]="resId"></app-history-list>
             </div>
-            <div *ngIf="headerTab == 5" class="contentShow" style="width:98%;">
-                <iframe [src]="linksViewerLink | safeUrl"></iframe>
+            <div *ngIf="headerTab == 'linkedResources'" class="contentShow" style="width:98%;">
+                <app-linked-resource-list #appLinkedResourceList [resId]="resId"
+                    (reloadBadgeLinkedResources)="refreshBadge($event,'linkedResources')">
+                </app-linked-resource-list>
             </div>
             <div class="hideRightContent" (click)="displayPanel('MIDDLE')" [ngStyle]="{'right': showRightPanel ? '-10px' : '0px'}">
                 <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="showRightPanel"></i>
@@ -187,7 +181,7 @@
                     <div *ngIf="signatureBook.attachments[rightSelectedThumbnail].status == 'TMP' && !signatureBook.attachments[rightSelectedThumbnail].isConverted" [ngStyle]="{'height': showTopRightPanel ? '79%' : '96%'}" class="visaNoPdfWarning">
                         <div style="padding-top: 25%;" [innerHTML]="lang.editingAttachmentInterrupted"></div>
                         <div>
-                            <a title="{{lang.editAttachment}}" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                            <a title="{{lang.editAttachment}}" (click)="showAttachment(signatureBook.attachments[rightSelectedThumbnail])">
                                 <i class="fa fa-edit fa-2x" style="cursor:pointer;"></i>
                             </a>
                         </div>
@@ -205,7 +199,10 @@
                         </span>
                     </div>
                 </div>
-                <iframe *ngIf="showAttachmentPanel" [src]="attachmentsViewerLink | safeUrl"></iframe>
+                <app-attachments-list *ngIf="showAttachmentPanel" #appAttachmentsList
+                    [resId]="resId" [target]="'process'"
+                    (reloadBadgeAttachments)="refreshAttachments()" (afterActionAttachment)="refreshAttachments()">
+                </app-attachments-list>
             </div>
             <div *ngIf="!signatureBook.hasWorkflow" class="visaNoWorkflowWarning">
                 <div style="margin-top:200px;" [innerHTML]="noVisaWorkflowNoSignature"></div>
@@ -231,12 +228,12 @@
                     <i class="fa fa-bars fa-2x" ></i>
                 </div>
                 <hr style="background-color:#666;margin-top:0px;"/>
-                <div class="panelRightAddPj" (click)="addAttachmentIframe()" title="{{lang.createAtt}}">
+                <div class="panelRightAddPj" (click)="createAttachment()" title="{{lang.createAtt}}">
                     <i class="fa fa-paperclip fa-2x" ></i>
                     <i class="fa fa-plus" style="position:absolute;"></i>
                 </div>
                 <div *ngIf="signatureBook.attachments[rightSelectedThumbnail]">
-                    <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canModify || signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'}" title="{{lang.updateAtt}}" class="visaPjUp" (click)="editAttachmentIframe(signatureBook.attachments[rightSelectedThumbnail])">
+                    <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canModify || signatureBook.attachments[rightSelectedThumbnail].status == 'SIGN'}" title="{{lang.updateAtt}}" class="visaPjUp" (click)="showAttachment(signatureBook.attachments[rightSelectedThumbnail])">
                         <i class="fa fa-edit fa-2x"></i>
                     </div>
                     <div [ngClass]="{'visaDisabledButton': !signatureBook.attachments[rightSelectedThumbnail].canDelete}" title="{{lang.deleteAtt}}" class="visaPjDel" (click)="delAttachment(signatureBook.attachments[rightSelectedThumbnail])">

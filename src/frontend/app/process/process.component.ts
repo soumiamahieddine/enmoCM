@@ -561,7 +561,7 @@ export class ProcessComponent implements OnInit {
         }, 400);
     }
 
-    refreshBadge(nbRres: any, id: string) {
+    refreshBadge(nbRres: any, id: string) {        
         this.processTool.filter(tool => tool.id === id)[0].count = nbRres;
     }
 

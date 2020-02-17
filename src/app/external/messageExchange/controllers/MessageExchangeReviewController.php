@@ -16,12 +16,14 @@ namespace MessageExchange\controllers;
 
 use Action\models\ActionModel;
 use ExportSeda\controllers\SendMessageController;
-use MessageExchange\Controllers\ReceiveMessageExchangeController;
+use MessageExchange\controllers\ReceiveMessageExchangeController;
 use MessageExchange\controllers\SendMessageExchangeController;
 use MessageExchange\models\MessageExchangeModel;
 use Resource\models\ResModel;
 use SrcCore\models\CoreConfigModel;
 use User\models\UserModel;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 require_once 'modules/export_seda/Controllers/ReceiveMessage.php';
 
@@ -75,7 +77,7 @@ class MessageExchangeReviewController
             $reviewObject->UnitIdentifier->value = $messageExchangeData['external_id']['m2m'];
 
             $messageExchangeReply = MessageExchangeModel::getMessageByReference(['reference' => $messageExchangeData['external_id']['m2m'].'_ReplySent']);
-            $dataObject = json_decode($messageExchangeReply[0]['data']);
+            $dataObject = json_decode($messageExchangeReply['data']);
             $reviewObject->OriginatingAgency = $dataObject->TransferringAgency;
             $reviewObject->ArchivalAgency = $dataObject->ArchivalAgency;
 
@@ -139,11 +141,10 @@ class MessageExchangeReviewController
             MessageExchangeModel::updateOperationDateMessage(['operation_date' => $dataObject->Date, 'message_id' => $messageExchange['message_id']]);
         }
 
-        $messageExchangeSaved = SendMessageExchangeController::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $messageExchange['res_id_master'], 'type' => 'ArchiveModificationNotification']);
+        $messageExchangeSaved = SendMessageExchangeController::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $messageExchange['res_id_master'], 'type' => 'ArchiveModificationNotification', 'userId' => $GLOBALS['userId']]);
 
         return $response->withJson([
             'messageId' => $messageExchangeSaved['messageId'],
         ]);
     }
-
 }

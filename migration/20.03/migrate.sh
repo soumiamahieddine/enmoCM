@@ -24,7 +24,7 @@ php ./migrateCustomValues.php
 php ./migrateVersionAttachments.php
 php ./migrateOutgoingAttachments.php
 php ./migrateContacts.php
-# migrateOutgoingTemplate always before migrateTemplates
-php ./migrateOutgoingTemplate.php
+# migrateTemplates always before migrateOutgoingTemplate
 php ./migrateTemplates.php
+php ./migrateOutgoingTemplate.php
 php ./migrateLinkedResources.php

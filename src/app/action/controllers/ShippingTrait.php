@@ -41,7 +41,7 @@ trait ShippingTrait
 
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
-        $resource = ResModel::getById(['select' => ['destination', 'integrations', 'subject as title', 'external_id', 'res_id'], 'resId' => $args['resId']]);
+        $resource = ResModel::getById(['select' => ['destination', 'integrations', 'subject as title', 'external_id', 'res_id', 'version'], 'resId' => $args['resId']]);
         $integrations = json_decode($resource['integrations'], true);
 
         $recipientEntity = EntityModel::getByEntityId(['select' => ['id'], 'entityId' => $resource['destination']]);
@@ -109,11 +109,10 @@ trait ShippingTrait
             }
             $contacts[] = $afnorAddress;
 
-            $attachment['type'] = 'attachments_coll';
+            $attachment['type'] = 'attachment';
             $resourcesList[] = $attachment;
         }
 
-        $contactsResource = [];
         if (!empty($integrations['inShipping'])) {
             $convertedDocument = AdrModel::getDocuments([
                 'select'    => ['docserver_id', 'path', 'filename', 'fingerprint'],
@@ -134,6 +133,7 @@ trait ShippingTrait
                 return ['errors' => ['No contact found for resource']];
             }
 
+            $contactsResource = [];
             foreach ($resourceContacts as $resourceContact) {
                 $contact = ContactModel::getById(['select' => ['*'], 'id' => $resourceContact['item_id']]);
                 if (empty($contact)) {
@@ -148,7 +148,9 @@ trait ShippingTrait
                 }
                 $contactsResource[] = $afnorAddress;
             }
-            $resource['type'] = 'letterbox_coll';
+            $contacts[] = $contactsResource;
+
+            $resource['type'] = 'resource';
             $resourcesList[] = $resource;
         }
 
@@ -196,15 +198,26 @@ trait ShippingTrait
                 continue;
             }
 
-            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $resId, 'collId' => $resource['type']]);
+            $resourceIdToFind = $resId;
+            if ($resource['type'] == 'attachment' && $resource['status'] == 'SIGN') {
+                $signedAttachment = AttachmentModel::get([
+                    'select'    => ['res_id'],
+                    'where'     => ['origin = ?', 'status not in (?)', 'attachment_type = ?'],
+                    'data'      => ["{$args['resId']},res_attachments", ['OBS', 'DEL', 'TMP', 'FRZ'], 'signed_response']
+                ]);
+                if (!empty($signedAttachment[0])) {
+                    $resourceIdToFind = $signedAttachment[0]['res_id'];
+                }
+            }
+            $convertedDocument = ConvertPdfController::getConvertedPdfById(['resId' => $resourceIdToFind, 'collId' => ($resource['type'] == 'resource' ? 'letterbox_coll' : 'attachments_coll')]);
             $docserver = DocserverModel::getByDocserverId(['docserverId' => $convertedDocument['docserver_id'], 'select' => ['path_template']]);
             if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
-                $errors[] = "Docserver does not exist for resource {$resId}";
+                $errors[] = "Docserver does not exist for {$resource['type']} {$resId}";
                 continue;
             }
             $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $convertedDocument['path']) . $convertedDocument['filename'];
             if (!file_exists($pathToDocument) || !is_file($pathToDocument)) {
-                $errors[] = "Document not found on docserver for resource {$resId}";
+                $errors[] = "Document not found on docserver for {$resource['type']} {$resId}";
                 continue;
             }
 
@@ -219,7 +232,8 @@ trait ShippingTrait
                 continue;
             }
 
-            if ($resource['type'] == 'attachments_coll') {
+            $recipients = [];
+            if ($resource['type'] == 'attachment') {
                 $createRecipient = CurlModel::execSimple([
                     'url'           => $mailevaConfig['uri'] . "/mail/v1/sendings/{$sendingId}/recipients",
                     'bearerAuth'    => ['token' => $token],
@@ -239,8 +253,9 @@ trait ShippingTrait
                     $errors[] = "Maileva recipient creation failed for resource {$resId}";
                     continue;
                 }
+                $recipients[] = $contacts[$key];
             } else {
-                foreach ($contactsResource as $contact) {
+                foreach ($contacts[$key] as $contact) {
                     $createRecipient = CurlModel::execSimple([
                         'url'           => $mailevaConfig['uri'] . "/mail/v1/sendings/{$sendingId}/recipients",
                         'bearerAuth'    => ['token' => $token],
@@ -260,6 +275,7 @@ trait ShippingTrait
                         $errors[] = "Maileva recipient creation failed for resource {$resId}";
                         continue 2;
                     }
+                    $recipients[] = $contact;
                 }
             }
 
@@ -293,22 +309,26 @@ trait ShippingTrait
 
             $externalId = json_decode($resource['external_id'], true);
             $externalId['mailevaSendingId'] = $sendingId;
-            AttachmentModel::update(['set' => ['external_id' => json_encode($externalId)], 'where' => ['res_id = ?'], 'data' => [$resId]]);
+            if ($resource['type'] == 'attachment') {
+                AttachmentModel::update(['set' => ['external_id' => json_encode($externalId)], 'where' => ['res_id = ?'], 'data' => [$resId]]);
+            } else {
+                ResModel::update(['set' => ['external_id' => json_encode($externalId)], 'where' => ['res_id = ?'], 'data' => [$resId]]);
+            }
 
             $fee = ShippingTemplateController::calculShippingFee([
                 'fee'       => $shippingTemplate['fee'],
                 'resources' => [$resource]
             ]);
 
-            $documentType = $resource['type'] == 'attachments_coll' ? 'attachment' : 'resource';
             ShippingModel::create([
                 'userId'            => $currentUser['id'],
                 'documentId'        => $resId,
-                'documentType'      => $documentType,
+                'documentType'      => $resource['type'],
                 'options'           => json_encode($shippingTemplate['options']),
                 'fee'               => $fee,
                 'recipientEntityId' => $recipientEntity['id'],
-                'accountId'         => $shippingTemplate['account']['id']
+                'accountId'         => $shippingTemplate['account']['id'],
+                'recipients'        => json_encode($recipients)
             ]);
         }
 

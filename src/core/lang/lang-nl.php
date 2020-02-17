@@ -157,6 +157,8 @@ define('_LINK_ADDED', 'Link added');//TRANSLATE
 define('_LINK_DELETED', 'Link deleted');//TRANSLATE
 define('_DOCUMENT_SIGNED', 'Document signed');//TRANSLATE
 define('_DOCUMENT_UNSIGNED', 'Document unsigned');//TRANSLATE
+define('_LINK_ADDED_TAG', 'Tag link added');//TRANSLATE
+define('_LINK_DELETED_TAG', 'Tag link deleted');//TRANSLATE
 
 // ADMINISTRATION
 define('_USERS', 'Gebruikers');
@@ -226,6 +228,8 @@ define('_NO_CONFIRM_DESC', "Perform the action without confirmation"); //_TO_TRA
 define('_VIEW_DOC', 'Het brief bekijken');
 define('_CLOSE_MAIL', 'Een brief afsluiten');
 define('_CLOSE_MAIL_DESC', 'Om de afsluitingsdatum van een brief bij te werken. ESSENTIEEL om uw documentworkflow af te sluiten.');
+define('_CLOSE_MAIL_WITH_FIELDS', 'Close a mail with custom fields'); //_TO_TRANSLATE
+define('_CLOSE_MAIL_WITH_FIELDS_DESC', 'Allows you to update the closing date of a mail. ESSENTIAL in order to complete your document workflow. Chosen fields will be needed to do the action.'); //_TO_TRANSLATE
 define('_SET_PERSISTENT_MODE_ON', 'De persistentie activeren');
 define('_SET_PERSISTENT_MODE_ON_DESC', 'Om een biref in een bakje te bewaren ongeacht zijn status. Voegt het gegeven in de tabel \basket_persistent_mode\.');
 define('_SET_PERSISTENT_MODE_OFF', 'De persistentie uitschakelen');
@@ -461,6 +465,10 @@ define("_AVIS_CIRCUIT_DELETED", "Opinion workflow updated"); //TO TRANSLATE
 
 define("_COMMUNICATION_MEANS_VALIDATOR", "Communication Means should be an url or an email"); //TO TRANSLATE
 define("_EXTERNALID_M2M_VALIDATOR", "Wrong format for externalId[m2m]. It must be SIRET/entityId"); //TO TRANSLATE
+
+define("_NUMERIC_PACKAGE_ADDED", "Numeric package added"); //TO TRANSLATE
+define('_ON_DOC_NUM', ' on document n°'); //TO TRANSLATE
+define("_NUMERIC_PACKAGE_IMPORTED", "Numeric package imported"); //TO TRANSLATE
 
 define("_ACKNOWLEDGEMENT_RECEIPT", "Acknowledgement Receipt"); //TO TRANSLATE
 define("_CREATED_BY", "Created by"); //TO TRANSLATE

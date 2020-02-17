@@ -13,6 +13,8 @@
 
 namespace Contact\controllers;
 
+use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
+use Attachment\models\AttachmentModel;
 use Contact\models\ContactCustomFieldListModel;
 use Contact\models\ContactFillingModel;
 use Contact\models\ContactGroupModel;
@@ -100,6 +102,9 @@ class ContactController
         foreach ($contacts as $key => $contact) {
             unset($contacts[$key]['count']);
             $filling = ContactController::getFillingRate(['contactId' => $contact['id']]);
+
+            $contacts[$key]['isUsed'] = ContactController::isContactUsed(['id' => $contact['id']]);
+
             $contacts[$key]['filling'] = $filling;
         }
         if ($queryParams['orderBy'] == 'filling') {
@@ -428,6 +433,76 @@ class ContactController
             return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
         }
 
+        $queryParams = $request->getQueryParams();
+
+        if (!empty($queryParams['redirect'])) {
+            if (!Validator::intVal()->validate($queryParams['redirect'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Query param redirect is not an integer']);
+            } elseif ($queryParams['redirect'] == $args['id']) {
+                return $response->withStatus(400)->withJson(['errors' => 'Cannot redirect to contact you are deleting']);
+            }
+
+            $contactRedirect = ContactModel::getById(['id' => $queryParams['redirect'], 'select' => [1]]);
+            if (empty($contactRedirect)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
+            }
+
+            $resourcesContacts = ResourceContactModel::get([
+                'select' => ['res_id', 'mode'],
+                'where'  => ['item_id = ?', "type = 'contact'"],
+                'data'   => [$args['id']]
+            ]);
+
+            ResourceContactModel::update([
+                'set'   => ['item_id' => $queryParams['redirect']],
+                'where' => ['item_id = ?', 'type = ?'],
+                'data'  => [$args['id'], 'contact']
+            ]);
+
+            // Delete duplicates if needed
+            $toDelete = [];
+            foreach ($resourcesContacts as $resourcesContact) {
+                $resContact = ResourceContactModel::get([
+                    'select'  => ['id'],
+                    'where'   => ['res_id = ?', 'item_id = ?', 'mode = ?', "type = 'contact'"],
+                    'data'    => [$resourcesContact['res_id'], $queryParams['redirect'], $resourcesContact['mode']],
+                    'orderBy' => ['id desc']
+                ]);
+                if (count($resContact) > 1) {
+                    $toDelete[] = $resContact[0]['id'];
+                }
+            }
+            if (!empty($toDelete)) {
+                ResourceContactModel::delete([
+                    'where' => ['id in (?)'],
+                    'data' => [$toDelete]
+                ]);
+            }
+
+            AcknowledgementReceiptModel::update([
+                'set'   => ['contact_id' => $queryParams['redirect']],
+                'where' => ['contact_id = ?'],
+                'data'  => [$args['id']]
+            ]);
+
+            AttachmentModel::update([
+                'set'   => ['recipient_id' => $queryParams['redirect']],
+                'where' => ['recipient_id = ?', "recipient_type = 'contact'"],
+                'data'  => [$args['id']]
+            ]);
+        }
+
+        AttachmentModel::update([
+            'set'   => ['recipient_id' => null, 'recipient_type' => null],
+            'where' => ['recipient_id = ?', "recipient_type = 'contact'"],
+            'data'  => [$args['id']]
+        ]);
+
+        ResourceContactModel::delete([
+            'where' => ['item_id = ?', "type = 'contact'"],
+            'data'  => [$args['id']]
+        ]);
+
         ContactModel::delete([
             'where' => ['id = ?'],
             'data'  => [$args['id']]
@@ -436,13 +511,13 @@ class ContactController
         ContactGroupModel::deleteByContactId(['contactId' => $args['id']]);
 
         $historyInfoContact = '';
-        if (!empty($contact[0]['firstname']) || !empty($contact[0]['lastname'])) {
-            $historyInfoContact .= $contact[0]['firstname'] . ' ' . $contact[0]['lastname'];
+        if (!empty($contact['firstname']) || !empty($contact['lastname'])) {
+            $historyInfoContact .= $contact['firstname'] . ' ' . $contact['lastname'];
         }
-        if (!empty($historyInfoContact) && !empty($contact[0]['company'])) {
-            $historyInfoContact .= ' (' . $contact[0]['company'] . ')';
+        if (!empty($historyInfoContact) && !empty($contact['company'])) {
+            $historyInfoContact .= ' (' . $contact['company'] . ')';
         } else {
-            $historyInfoContact .= $contact[0]['company'];
+            $historyInfoContact .= $contact['company'];
         }
 
         HistoryController::add([
@@ -700,7 +775,7 @@ class ContactController
 
         if (!empty($args['company'])) {
             // Ligne 1
-            $afnorAddress[1] = substr($args['company'], 0, 38);
+            $afnorAddress[1] = trim(substr($args['company'], 0, 38));
         }
 
         // Ligne 2
@@ -710,11 +785,12 @@ class ContactController
                 'fullName'      => $args['firstname'].' '.$args['lastname'],
                 'strMaxLength'  => 38
             ]);
+            $afnorAddress[2] = trim($afnorAddress[2]);
         }
 
         // Ligne 3
         if (!empty($args['address_additional1'])) {
-            $afnorAddress[3] = substr($args['address_additional1'], 0, 38);
+            $afnorAddress[3] = trim(substr($args['address_additional1'], 0, 38));
         }
 
         // Ligne 4
@@ -728,17 +804,17 @@ class ContactController
             $args['address_street'] = preg_replace('/[^\w]/s', ' ', $args['address_street']);
             $args['address_street'] = strtoupper($args['address_street']);
         }
-        $afnorAddress[4] = substr($args['address_number'].' '.$args['address_street'], 0, 38);
+        $afnorAddress[4] = trim(substr($args['address_number'].' '.$args['address_street'], 0, 38));
 
         // Ligne 5
         if (!empty($args['address_additional2'])) {
-            $afnorAddress[5] = substr($args['address_additional2'], 0, 38);
+            $afnorAddress[5] = trim(substr($args['address_additional2'], 0, 38));
         }
 
         // Ligne 6
         $args['address_postcode'] = strtoupper($args['address_postcode']);
         $args['address_town'] = strtoupper($args['address_town']);
-        $afnorAddress[6] = substr($args['address_postcode'].' '.$args['address_town'], 0, 38);
+        $afnorAddress[6] = trim(substr($args['address_postcode'].' '.$args['address_town'], 0, 38));
 
         return $afnorAddress;
     }
@@ -1232,5 +1308,34 @@ class ContactController
         $contact['fillingRate'] = empty($fillingRate) ? null : $fillingRate;
 
         return $contact;
+    }
+
+    private static function isContactUsed(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['id']);
+        ValidatorModel::intVal($args, ['id']);
+
+        $inResources = ResourceContactModel::get([
+            'select' => ['count(1)'],
+            'where'  => ['item_id = ?', "type = 'contact'"],
+            'data'   => [$args['id']]
+        ]);
+        $inResources = $inResources[0]['count'] > 0;
+
+        $inAcknowledgementReceipts = AcknowledgementReceiptModel::get([
+            'select' => ['count(1)'],
+            'where'  => ['contact_id = ?'],
+            'data'   => [$args['id']]
+        ]);
+        $inAcknowledgementReceipts = $inAcknowledgementReceipts[0]['count'] > 0;
+
+        $inAttachments = AttachmentModel::get([
+            'select' => ['count(1)'],
+            'where'  => ['recipient_id = ?', "recipient_type = 'contact'"],
+            'data'   => [$args['id']]
+        ]);
+        $inAttachments = $inAttachments[0]['count'] > 0;
+
+        return $inResources || $inAcknowledgementReceipts || $inAttachments;
     }
 }

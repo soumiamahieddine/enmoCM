@@ -58,18 +58,23 @@ class ShippingController
         foreach ($shippingsModel as $shipping) {
             $recipientEntityLabel = EntityModel::getById(['id' => $shipping['recipient_entity_id'], 'select' => ['entity_label']]);
             $recipientEntityLabel = $recipientEntityLabel['entity_label'];
-
-            $userLabel = UserModel::getLabelledUserById(['id' => $shipping['user_id']]);
+            $recipients = json_decode($shipping['recipients'], true);
+            $contacts = [];
+            foreach ($recipients as $recipient) {
+                $contacts[] = ['company' => $recipient[1], 'contactLabel' => $recipient[2]];
+            }
 
             $shippings[] = [
-                'id'           => $shipping['id'],
-                'documentId'   => $shipping['document_id'],
-                'documentType' => $shipping['document_type'],
-                'userId'       => $shipping['user_id'],
-                'userLabel'    => $userLabel,
-                'fee' => $shipping['fee'],
-                'recipientEntityId' => $shipping['recipient_entity_id'],
-                'recipientEntityLabel' => $recipientEntityLabel
+                'id'                    => $shipping['id'],
+                'documentId'            => $shipping['document_id'],
+                'documentType'          => $shipping['document_type'],
+                'userId'                => $shipping['user_id'],
+                'userLabel'             => UserModel::getLabelledUserById(['id' => $shipping['user_id']]),
+                'fee'                   => $shipping['fee'],
+                'creationDate'          => $shipping['creation_date'],
+                'recipientEntityId'     => $shipping['recipient_entity_id'],
+                'recipientEntityLabel'  => $recipientEntityLabel,
+                'recipients'            => $contacts
             ];
         }
 

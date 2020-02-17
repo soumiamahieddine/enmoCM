@@ -154,9 +154,10 @@ define('_TAG_DELETED', 'Tag deleted');
 define('_TAG_UPDATED', 'Tag updated');
 define('_TAG_MERGED', 'Tag merged');
 define('_LINK_ADDED', 'Link added');
-define('_LINK_DELETED', 'Link deleted');
 define('_DOCUMENT_SIGNED', 'Document signed');
 define('_DOCUMENT_UNSIGNED', 'Document unsigned');
+define('_LINK_ADDED_TAG', 'Tag link added');
+define('_LINK_DELETED_TAG', 'Tag link deleted');
 
 // ADMINISTRATION
 define('_USERS', 'Users');
@@ -226,6 +227,8 @@ define('_NO_CONFIRM_DESC', "Perform the action without confirmation");
 define('_VIEW_DOC', 'See the mail');
 define('_CLOSE_MAIL', 'Close a mail');
 define('_CLOSE_MAIL_DESC', 'Allows you to update the closing date of a mail. ESSENTIAL in order to complete your document workflow.');
+define('_CLOSE_MAIL_WITH_FIELDS', 'Close a mail with custom fields');
+define('_CLOSE_MAIL_WITH_FIELDS_DESC', 'Allows you to update the closing date of a mail. ESSENTIAL in order to complete your document workflow. Chosen fields will be needed to do the action.');
 define('_SET_PERSISTENT_MODE_ON', 'Activate the persistence');
 define('_SET_PERSISTENT_MODE_ON_DESC', 'Keeps a mail in a basket regardless of its state. Insert data in the \'basket_persistent_mode\' table.');
 define('_SET_PERSISTENT_MODE_OFF', 'Deactivate the persistence');
@@ -456,6 +459,10 @@ define("_AVIS_CIRCUIT_DELETED", "Opinion workflow updated");
 
 define("_COMMUNICATION_MEANS_VALIDATOR", "Communication Means should be an url or an email");
 define("_EXTERNALID_M2M_VALIDATOR", "Wrong format for externalId[m2m]. It must be SIRET/entityId");
+
+define("_NUMERIC_PACKAGE_ADDED", "Numeric package added");
+define('_ON_DOC_NUM', ' on document n°');
+define("_NUMERIC_PACKAGE_IMPORTED", "Numeric package imported");
 
 define("_ACKNOWLEDGEMENT_RECEIPT", "Acknowledgement Receipt");
 define("_CREATED_BY", "Created by");

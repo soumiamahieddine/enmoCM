@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 import { HeaderService } from '../../service/header.service';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material';
+import { FunctionsService } from '../../service/functions.service';
 
 @Component({
     selector: 'app-notes-list',
@@ -18,7 +19,7 @@ export class NotesListComponent implements OnInit {
 
     lang: any = LANG;
     notes: any[] = [];
-    loading: boolean = false;
+    loading: boolean = true;
     resIds : number[] = [];
 
     @Input('injectDatas') injectDatas: any;
@@ -34,7 +35,8 @@ export class NotesListComponent implements OnInit {
         public http: HttpClient,
         private notify: NotificationService,
         private headerService: HeaderService,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        public functions: FunctionsService
     ) { }
 
     ngOnInit(): void {
@@ -64,6 +66,13 @@ export class NotesListComponent implements OnInit {
         });
     }
 
+    getRestrictionEntitiesId(entities: any) {
+        if (!this.functions.empty(entities)) {
+            return entities.map((entity: any) => entity.item_id[0]);
+        }
+        return [];
+    }
+
     removeNote(note: any) {
         this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: false, data: { title: this.lang.confirmRemoveNote, msg: this.lang.confirmAction } });
 
@@ -76,7 +85,16 @@ export class NotesListComponent implements OnInit {
                     this.notes.splice(index, 1);
                 }
                 this.notify.success(this.lang.noteRemoved);
+                this.reloadBadgeNotes.emit(`${this.notes.length}`);
             })
         ).subscribe();
+    }
+
+    editNote(note: any) {
+        if (!note.edit) {
+            note.edit = true;
+        } else {
+            note.edit = false;
+        }
     }
 }

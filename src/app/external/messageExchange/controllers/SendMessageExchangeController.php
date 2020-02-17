@@ -20,14 +20,19 @@ use Docserver\models\DocserverModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use ExportSeda\controllers\SendMessageController;
+use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
-use MessageExchange\Controllers\ReceiveMessageExchangeController;
+use MessageExchange\controllers\ReceiveMessageExchangeController;
 use MessageExchange\models\MessageExchangeModel;
 use Note\models\NoteModel;
+use Resource\controllers\ResController;
 use Resource\models\ResModel;
+use Respect\Validation\Validator;
 use SrcCore\models\TextFormatModel;
 use Status\models\StatusModel;
 use User\models\UserModel;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class SendMessageExchangeController
 {
@@ -110,25 +115,25 @@ class SendMessageExchangeController
         $errors = self::control($body);
 
         if (!empty($errors)) {
-            return ['errors' => $errors];
+            return $response->withStatus(400)->withJson(['errors' => $errors]);
         }
 
         /***************** GET MAIL INFOS *****************/
         $AllUserEntities = EntityModel::getWithUserEntities(['where' => ['user_id = ?', 'business_id != \'\''], 'data' => [$GLOBALS['userId']]]);
 
         foreach ($AllUserEntities as $value) {
-            if ($value['entity_id'] == $body['senderEmail']) {
+            if ($value['id'] == $body['senderEmail']) {
                 $TransferringAgencyInformations = $value;
                 break;
             }
         }
 
         if (empty($TransferringAgencyInformations)) {
-            return ['errors' => "no sender"];
+            return $response->withStatus(400)->withJson(['errors' => "no sender"]);
         }
 
-        $AllInfoMainMail = ResModel::getById(['resId' => $args['resId']]);
-        $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $AllInfoMainMail['doctype']]);
+        $AllInfoMainMail = ResModel::getById(['select' => ['*'], 'resId' => $args['resId']]);
+        $doctype = DoctypeModel::getById(['select' => ['description'], 'id' => $AllInfoMainMail['type_id']]);
 
         $tmpMainExchangeDoc = explode("__", $body['mainExchangeDoc']);
         $MainExchangeDoc    = ['tablename' => $tmpMainExchangeDoc[0], 'res_id' => $tmpMainExchangeDoc[1]];
@@ -143,17 +148,18 @@ class SendMessageExchangeController
         }
 
         if ($MainExchangeDoc['tablename'] == 'res_attachments') {
-            $body['join_attachment'][] = $MainExchangeDoc['res_id'];
+            $body['joinAttachment'][] = $MainExchangeDoc['res_id'];
         }
 
         /**************** GET ATTACHMENTS INFOS ***************/
         $AttachmentsInfo = [];
         if (!empty($body['joinAttachment'])) {
             $AttachmentsInfo = AttachmentModel::get(['select' => ['*'], 'where' => ['res_id in (?)'], 'data' => [$body['joinAttachment']]]);
+            $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
             foreach ($AttachmentsInfo as $key => $value) {
                 $AttachmentsInfo[$key]['Title']                                  = $value['title'];
                 $AttachmentsInfo[$key]['OriginatingAgencyArchiveUnitIdentifier'] = $value['identifier'];
-                $AttachmentsInfo[$key]['DocumentType']                           = $_SESSION['attachment_types'][$value['attachment_type']];
+                $AttachmentsInfo[$key]['DocumentType']                           = $attachmentTypes[$value['attachment_type']]['label'];
                 $AttachmentsInfo[$key]['tablenameExchangeMessage']               = 'res_attachments';
             }
         }
@@ -194,15 +200,25 @@ class SendMessageExchangeController
 
         foreach ($body['contacts'] as $contactId) {
             /******** GET ARCHIVAl INFORMATIONs **************/
-            $ArchivalAgencyCommunicationType   = ContactModel::getContactCommunication(['contactId' => $contactId]);
-            $ArchivalAgencyContactInformations = ContactModel::getById(['id' => $contactId]);
+            $communicationType   = ContactModel::getById(['select' => ['communication_means'], 'id' => $contactId]);
+            $aArchivalAgencyCommunicationType = json_decode($communicationType['communication_means'], true);
+            if (!empty($aArchivalAgencyCommunicationType)) {
+                if (!empty($aArchivalAgencyCommunicationType['email'])) {
+                    $ArchivalAgencyCommunicationType['type'] = 'email';
+                    $ArchivalAgencyCommunicationType['value'] = $aArchivalAgencyCommunicationType['email'];
+                } else {
+                    $ArchivalAgencyCommunicationType['type'] = 'url';
+                    $ArchivalAgencyCommunicationType['value'] = rtrim($aArchivalAgencyCommunicationType['url'], "/");
+                }
+            }
+            $ArchivalAgencyContactInformations = ContactModel::getById(['select' => ['*'], 'id' => $contactId]);
 
             /******** GENERATE MESSAGE EXCHANGE OBJECT *********/
             $dataObject = self::generateMessageObject([
                 'Comment' => $aComments,
                 'ArchivalAgency' => [
                     'CommunicationType'   => $ArchivalAgencyCommunicationType,
-                    'ContactInformations' => $ArchivalAgencyContactInformations[0]
+                    'ContactInformations' => $ArchivalAgencyContactInformations
                 ],
                 'TransferringAgency' => [
                     'EntitiesInformations' => $TransferringAgencyInformations
@@ -212,12 +228,12 @@ class SendMessageExchangeController
                 'mainExchangeDocument'  => $MainExchangeDoc
             ]);
             /******** GENERATION DU BORDEREAU */
-            $filePath = SendMessageController::generateMessageFile($dataObject, "ArchiveTransfer", $_SESSION['config']['tmppath']);
+            $filePath = SendMessageController::generateMessageFile(['messageObject' => $dataObject, 'type' => 'ArchiveTransfer']);
 
             /******** SAVE MESSAGE *********/
-            $messageExchangeReturn = self::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $args['resId'], 'file_path' => $filePath, 'type' => 'ArchiveTransfer']);
+            $messageExchangeReturn = self::saveMessageExchange(['dataObject' => $dataObject, 'res_id_master' => $args['resId'], 'file_path' => $filePath, 'type' => 'ArchiveTransfer', 'userId' => $GLOBALS['userId']]);
             if (!empty($messageExchangeReturn['error'])) {
-                return ['errors' => $messageExchangeReturn['error']];
+                return $response->withStatus(400)->withJson(['errors' => $messageExchangeReturn['error']]);
             } else {
                 $messageId = $messageExchangeReturn['messageId'];
             }
@@ -247,13 +263,13 @@ class SendMessageExchangeController
 
             if ($res['status'] == 1) {
                 $errors = [];
-                array_push($errors, _SENDS_FAIL);
+                array_push($errors, "L'envoi a échoué");
                 array_push($errors, $res['content']);
-                return ['errors' => $errors];
+                return $response->withStatus(400)->withJson(['errors' => $errors]);
             }
         }
 
-        return true;
+        return $response->withStatus(200);
     }
 
     protected static function control($aArgs = [])
@@ -265,7 +281,7 @@ class SendMessageExchangeController
         }
 
         if (empty($aArgs['object'])) {
-            array_push($errors, _EMAIL_OBJECT . ' ' . _IS_EMPTY);
+            array_push($errors, 'Body object is empty');
         }
 
         if (empty($aArgs['joinFile']) && empty($aArgs['joinAttachment']) && empty($aArgs['mainExchangeDoc'])) {
@@ -273,11 +289,11 @@ class SendMessageExchangeController
         }
 
         if (empty($aArgs['contacts'])) {
-            array_push($errors, _NO_RECIPIENT);
+            array_push($errors, 'body contacts is empty');
         }
 
         if (empty($aArgs['senderEmail'])) {
-            array_push($errors, _NO_SENDER);
+            array_push($errors, 'Body senderEmail is empty');
         }
 
         return $errors;
@@ -311,7 +327,7 @@ class SendMessageExchangeController
                     $additionalUserInfos = '';
                     if (!empty($value['entity_id'])) {
                         $entityRoot      = EntityModel::getEntityRootById(['entityId' => $value['entity_id']]);
-                        $userEntity      = Entitymodel::getByEntityId(['entityId' => $value['entity_id']]);
+                        $userEntity      = EntityModel::getByEntityId(['entityId' => $value['entity_id']]);
                         $additionalUserInfos = ' ('.$entityRoot['entity_label'].' - '.$userEntity['entity_label'].')';
                     }
                     $oComment->value = $value['firstname'].' '.$value['lastname'].' - '.$date->format('d-m-Y H:i:s'). $additionalUserInfos . ' : '.$value['note_text'];
@@ -442,7 +458,7 @@ class SendMessageExchangeController
         $contentObject->DocumentType                           = $aArgs['DocumentType'];
         $contentObject->Status                                 = StatusModel::getById(['id' => $aArgs['Status']])['label_status'];
 
-        $userInfos = UserModel::getByLogin(['login' => $aArgs['Writer']]);
+        $userInfos = UserModel::getById(['id' => $aArgs['Writer']]);
         $writer                = new \stdClass();
         $writer->FirstName     = $userInfos['firstname'];
         $writer->BirthName     = $userInfos['lastname'];
@@ -457,7 +473,7 @@ class SendMessageExchangeController
     {
         $archivalAgencyObject                    = new \stdClass();
         $archivalAgencyObject->Identifier        = new \stdClass();
-        $externalId = (array)json_decode($aArgs['ArchivalAgency']['ContactInformations']['external_id']);
+        $externalId = json_decode($aArgs['ArchivalAgency']['ContactInformations']['external_id'], true);
         $archivalAgencyObject->Identifier->value = $externalId['m2m'];
 
         $archivalAgencyObject->OrganizationDescriptiveMetadata       = new \stdClass();
@@ -554,9 +570,9 @@ class SendMessageExchangeController
             }
 
             MessageExchangeModel::insertUnitIdentifier([
-                'messageId'   => $aArgs['messageId'], 
-                'tableName'   => $value['tablenameExchangeMessage'], 
-                'resId'       => $value['res_id'], 
+                'messageId'   => $aArgs['messageId'],
+                'tableName'   => $value['tablenameExchangeMessage'],
+                'resId'       => $value['res_id'],
                 'disposition' => $disposition
             ]);
         }
@@ -564,9 +580,9 @@ class SendMessageExchangeController
         if (!empty($aArgs['notes'])) {
             foreach ($aArgs['notes'] as $value) {
                 MessageExchangeModel::insertUnitIdentifier([
-                    'messageId'   => $aArgs['messageId'], 
-                    'tableName'   => "notes", 
-                    'resId'       => $value, 
+                    'messageId'   => $aArgs['messageId'],
+                    'tableName'   => "notes",
+                    'resId'       => $value,
                     'disposition' => "note"
                 ]);
             }

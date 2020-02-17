@@ -422,4 +422,17 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>close_mail_with_fields</ID>
+        <LABEL>_CLOSE_MAIL_WITH_FIELDS</LABEL>
+        <NAME>close_mail_with_fields</NAME>
+        <DESC>_CLOSE_MAIL_WITH_FIELDS_DESC</DESC>
+        <component>closeWithFieldsAction</component>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
 </ROOT>

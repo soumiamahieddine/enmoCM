@@ -25,8 +25,8 @@ use Contact\controllers\ContactController;
 use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Folder\models\FolderModel;
-use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
+use IndexingModel\models\IndexingModelFieldModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
@@ -88,7 +88,7 @@ class ResourceListController
         $defaultAction = [];
         $displayFolderTags = false;
         if (!empty($resIds)) {
-            $excludeAttachmentTypes = ['converted_pdf', 'print_folder'];
+            $excludeAttachmentTypes = ['converted_pdf', 'print_folder', 'signed_response'];
             $attachments = AttachmentModel::get([
                 'select'    => ['COUNT(res_id)', 'res_id_master'],
                 'where'     => ['res_id_master in (?)', 'status not in (?)', 'attachment_type not in (?)', '((status = ? AND typist = ?) OR status != ?)'],
@@ -389,13 +389,14 @@ class ResourceListController
             return $response->withStatus(400)->withJson(['errors' => 'Action is not linked to this group basket']);
         }
 
-        $action = ActionModel::getById(['id' => $aArgs['actionId'], 'select' => ['component']]);
+        $action = ActionModel::getById(['id' => $aArgs['actionId'], 'select' => ['component', 'required_fields']]);
         if (empty($action['component'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Action component does not exist']);
         }
         if (!array_key_exists($action['component'], ActionMethodController::COMPONENTS_ACTIONS)) {
             return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
         }
+        $actionRequiredFields = json_decode($action['required_fields']);
 
         $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
@@ -404,10 +405,8 @@ class ResourceListController
             'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
             'data'      => [$body['resources']]
         ]);
-        $resourcesInBasket = [];
-        foreach ($resources as $resource) {
-            $resourcesInBasket[] = $resource['res_id'];
-        }
+
+        $resourcesInBasket = array_column($resources, 'res_id');
 
         if (!empty(array_diff($body['resources'], $resourcesInBasket))) {
             return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
@@ -438,6 +437,25 @@ class ResourceListController
         $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
         $methodResponses = [];
         foreach ($resourcesForAction as $key => $resId) {
+            if (!empty($actionRequiredFields)) {
+                $resource = ResModel::getById(['resId' => $resId, 'select' => ['model_id', 'custom_fields']]);
+                $model = $resource['model_id'];
+                $resourceCustomFields = json_decode($resource['custom_fields'], true);
+                $modelFields = IndexingModelFieldModel::get([
+                    'select' => ['identifier'],
+                    'where'  => ['model_id = ?', "identifier LIKE 'indexingCustomField_%'"],
+                    'data'   => [$model]
+                ]);
+                $modelFields = array_column($modelFields, 'identifier');
+
+                foreach ($actionRequiredFields as $actionRequiredField) {
+                    $idCustom = explode("_", $actionRequiredField)[1];
+                    if (in_array($actionRequiredField, $modelFields) && empty($resourceCustomFields[$idCustom])) {
+                        return $response->withStatus(400)->withJson(['errors' => 'Missing required custom field to do action']);
+                    }
+                }
+            }
+
             if (!empty($method)) {
                 $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data'], 'note' => $body['note']]);
 
@@ -491,10 +509,8 @@ class ResourceListController
             'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
             'data'      => [$body['resources']]
         ]);
-        $resourcesInBasket = [];
-        foreach ($resources as $resource) {
-            $resourcesInBasket[] = $resource['res_id'];
-        }
+
+        $resourcesInBasket = array_column($resources, 'res_id');
 
         if (!empty(array_diff($body['resources'], $resourcesInBasket))) {
             return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);
@@ -563,10 +579,8 @@ class ResourceListController
             'where'     => [$whereClause, 'res_view_letterbox.res_id in (?)'],
             'data'      => [$body['resources']]
         ]);
-        $resourcesInBasket = [];
-        foreach ($resources as $resource) {
-            $resourcesInBasket[] = $resource['res_id'];
-        }
+
+        $resourcesInBasket = array_column($resources, 'res_id');
 
         if (!empty(array_diff($body['resources'], $resourcesInBasket))) {
             return $response->withStatus(403)->withJson(['errors' => 'Resources out of perimeter']);

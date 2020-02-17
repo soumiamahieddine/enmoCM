@@ -16,7 +16,7 @@
     </div>
     <mat-table #table [dataSource]="dataSource" matSort matSortActive="creationDate" matSortDirection="desc">
         <ng-container matColumnDef="creationDate">
-            <mat-cell *matCellDef="let row" class="dataLine" style="flex: 1;padding: 0px;flex-direction: column;">
+            <mat-cell *matCellDef="let row" class="dataLine" [class.canManage]="row.canManage" style="flex: 1;padding: 0px;flex-direction: column;" (click)="openPromptMail(row)">
                 <div class="subinfo">
                     <span style="flex:1" [title]="row.creationDate | fullDate">
                         {{lang.createdAlt}} : <b>{{row.creationDate | timeAgo : 'full'}}</b>
@@ -49,9 +49,7 @@
                         </span>
                     </div>
                     <div class="desc">
-    
                         {{row.desc}}
-                        
                     </div>
                     <div class="contact">
                         <span *ngIf="row.sender" style="white-space: pre;overflow: hidden;text-overflow: ellipsis;" [title]="row.sender">
@@ -64,9 +62,9 @@
                 </div>
             </mat-cell>
         </ng-container>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" style="cursor: pointer;"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
-    <button mat-fab class="addSendedResource" color="primary" [title]="lang.addAttachment" (click)="openPromptMail()">
-        <mat-icon class="fa fa-plus"></mat-icon>
+    <button mat-fab *ngIf="privilegeService.hasCurrentUserPrivilege('sendmail')" class="addSendedResource" color="primary" [title]="lang.sendElement" (click)="openPromptMail()">
+        <mat-icon style="height: auto;width: auto;font-size: 20px;" class="far fa-paper-plane"></mat-icon>
     </button>
 </ng-template>

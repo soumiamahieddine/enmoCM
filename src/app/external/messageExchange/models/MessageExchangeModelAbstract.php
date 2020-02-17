@@ -58,7 +58,7 @@ abstract class MessageExchangeModelAbstract
             return [];
         }
        
-        return $aReturn;
+        return $aReturn[0];
     }
 
     public static function getMessageByIdentifier($aArgs = [])
@@ -78,7 +78,7 @@ abstract class MessageExchangeModelAbstract
             return [];
         }
        
-        return $aReturn;
+        return $aReturn[0];
     }
 
     public static function updateStatusMessage(array $aArgs)
@@ -264,7 +264,8 @@ abstract class MessageExchangeModelAbstract
     public static function insertUnitIdentifier(array $args)
     {
         ValidatorModel::notEmpty($args, ['messageId', 'tableName', 'resId', 'disposition']);
-        ValidatorModel::stringType($args, ['messageId', 'tableName', 'resId', 'disposition']);
+        ValidatorModel::stringType($args, ['messageId', 'tableName', 'disposition']);
+        ValidatorModel::intVal($args, ['resId']);
 
         $messages = DatabaseModel::insert([
             'table'         => 'unit_identifier',

@@ -38,9 +38,9 @@ foreach ($customs as $custom) {
             'columnsValues' => [
                 'id'            => $tagId,
                 'label'         => $thesaurus['thesaurus_name'],
-                'description'   => $args['thesaurus_description'] ?? null,
-                'usage'         => $args['used_for'] ?? null,
-                'creation_date' => $args['creation_date'] ?? null
+                'description'   => $thesaurus['thesaurus_description'] ?? null,
+                'usage'         => $thesaurus['used_for'] ?? null,
+                'creation_date' => $thesaurus['creation_date'] ?? null
             ]
         ]);
 

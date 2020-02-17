@@ -12,7 +12,6 @@
 }
 
 #visa_left{
-	/*border:1px solid blue;*/
 	height:95%;
 	width:41%;
 	margin-left:1%;
@@ -27,7 +26,6 @@
 }
 
 #visa_right{
-	/*border:1px solid green;*/
 	height:95%;
 	width:41%;
 	margin-left:1%;
@@ -87,12 +85,7 @@
 
 .listDocsBasket div{
 	width:100%;
-	/*height:15%;*/
 	border-bottom: thin solid black;
-}
-
-.unselectedId{
-	background-color:#F2F2F2;
 }
 
 .selectedId{
@@ -346,11 +339,6 @@
     border-right: solid 1px;
     vertical-align: top;
     padding-left: 10px;
-    /*width:39%;*/
-}
-
-.contentRight{
-    /*width:39%;*/
 }
 
 .contentLeft, .contentRight{
@@ -418,7 +406,7 @@
     margin-bottom: 5px;
 }
 
-.pjDetails,.pjSign,.pjCreate{
+.pjDetails,.pjSign{
     background-color:white;
     display: block;
     width: 97%;
@@ -435,7 +423,7 @@
     height:100px;
 }
 
-.pjSign,.pjCreate{
+.pjSign{
     cursor: pointer;
 }
 
@@ -454,35 +442,11 @@
     background: #135F7F;
     color: white;
     padding:10px;
-    /*border-radius: 25px;*/
     -moz-box-shadow: 0px 0px 10px 0px #656565;
     -webkit-box-shadow: 0px 0px 10px 0px #656565;
     -o-box-shadow: 0px 0px 10px 0px #656565;
     box-shadow: 0px 0px 10px 0px #656565;
     filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565,Direction=NaN,Strength=10);
-}
-
-.pjCreate{
-    height: auto;
-    white-space: initial;
-}
-
-.pjCreate input,.pjCreate select{    
-    width:80%;
-}
-
-.pjCreateFile{
-    border: dashed 12px #ccc;
-    height: 60%;
-    border-radius: 5px;
-    margin-top: 10px;
-}
-
-.pjCreateFile i{
-    font-size: 100px;
-    opacity: 0.5;
-    margin-top: 20%;
-    cursor: pointer;
 }
 
 .pjDetails div{
@@ -563,7 +527,6 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 }
 
 #labelSignatureBook div{
-    /*width: 100%;*/
     overflow: hidden;
     text-overflow: ellipsis;
     display: block;
@@ -592,32 +555,6 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     color:#666;
     background-color: #F2F2F2;
 }
-/*.titleSignatureBook span{
-    display: inline-block;
-    vertical-align: middle;
-    padding:10px;
-    width: 90%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-}
-
-.titleSignatureBook span:nth-child(2){
-    position: absolute;
-    right: 0px;
-    text-align: right;
-    padding-left: 5px;
-    top: -4px;
-}*/
-
-.headerSignatureBook{
-    border: solid 1px black;
-    display: table;
-    margin-bottom: 10px;
-    white-space: nowrap;
-    text-align: center;
-    width: 100%;
-}
 
 .contentSignatureBook{
     border: solid 1px black;
@@ -630,24 +567,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     margin-top: 5px;
 }
 
-.headerSignatureBook .item{
-    border-right: solid 1px black;
-    display: table-cell;
-    padding: 5px;
-    cursor: pointer;
-    width: 5%;
-    vertical-align: middle;
-    background-color: #F2F2F2;
-}
-
-.headerSignatureBook .activeTabSignatureBook i{
-    display: table-cell;
-    vertical-align: middle;
-}
-
 #tabSignatureBook .item.activeTabSignatureBook{
-    /*background: #135F7F;
-    color:white;*/
     -moz-box-shadow: inset 0px 0px 5px 0px #656565;
     -webkit-box-shadow: inset 0px 0px 5px 0px #656565;
     -o-box-shadow: inset 0px 0px 5px 0px #656565;
@@ -768,7 +688,6 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
 .ng-table th.filter .input{
     margin:0;display:block;
     width:auto;
-    /*min-height:30px;*/
     font-size: 9px;
     box-sizing:border-box;
 }

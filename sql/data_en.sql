@@ -1057,19 +1057,19 @@ INSERT INTO templates_doctype_ext (template_id, type_id, is_generated) VALUES (9
 --KEYWORDS / TAGS
 ------------
 TRUNCATE TABLE tags;
-INSERT INTO tags (label, entity_id_owner) VALUES ('SEMINAIRE', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('INNOVATION', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('MAARCH', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('ENVIRONNEMENT', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('PARTENARIAT', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('JUMELAGE', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('ECONOMIE', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('ASSOCIATIONS', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('RH', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('BUDGET', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('QUARTIERS', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('LITTORAL', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('SPORT', 'COU');
+INSERT INTO tags (label) VALUES ('SEMINAIRE');
+INSERT INTO tags (label) VALUES ('INNOVATION');
+INSERT INTO tags (label) VALUES ('MAARCH');
+INSERT INTO tags (label) VALUES ('ENVIRONNEMENT');
+INSERT INTO tags (label) VALUES ('PARTENARIAT');
+INSERT INTO tags (label) VALUES ('JUMELAGE');
+INSERT INTO tags (label) VALUES ('ECONOMIE');
+INSERT INTO tags (label) VALUES ('ASSOCIATIONS');
+INSERT INTO tags (label) VALUES ('RH');
+INSERT INTO tags (label) VALUES ('BUDGET');
+INSERT INTO tags (label) VALUES ('QUARTIERS');
+INSERT INTO tags (label) VALUES ('LITTORAL');
+INSERT INTO tags (label) VALUES ('SPORT');
 
 TRUNCATE TABLE tags_entities;
 INSERT INTO tags_entities (tag_id, entity_id) VALUES (1, 'COU');

@@ -110,7 +110,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
             debounceTime(500),
             filter(value => value.length > 2),
             distinctUntilChanged(),
-            switchMap(data => this.http.get('../../rest/autocomplete/contacts/groups', { params: { "search": data } }))
+            switchMap(data => this.http.get('../../rest/autocomplete/contacts', { params: { "search": data } }))
         ).subscribe((response: any) => {
             this.searchResult = response;
             this.dataSource = new MatTableDataSource(this.searchResult);

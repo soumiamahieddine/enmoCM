@@ -140,7 +140,7 @@ define('_GO_ON_VACATION', 'se met en absence');
 define('_BACK_FROM_VACATION', 'de retour de son absence');
 define('_DOC_DISPLAYING', 'Visualisation du document');
 define('_DOC_ADDED', 'Courrier créé');
-define('_DOC_UPDATED', 'Métadonnées des courriers modifiées');
+define('_DOC_UPDATED', 'Métadonnées du courrier modifiées');
 define('_ATTACHMENT_DELETED', 'Pièce-jointe supprimée');
 define('_FILE_UPDATED', 'Fichier modifié');
 define('_ATTACHMENT_ADDED', 'Pièce jointe ajoutée');
@@ -154,9 +154,10 @@ define('_TAG_DELETED', 'Mot-clé supprimé');
 define('_TAG_UPDATED', 'Mot-clé modifié');
 define('_TAG_MERGED', 'Mot-clé fusionné');
 define('_LINK_ADDED', 'Liaison ajoutée');
-define('_LINK_DELETED', 'Liaison supprimée');
 define('_DOCUMENT_SIGNED', 'Document signé');
 define('_DOCUMENT_UNSIGNED', 'Document dé-signé');
+define('_LINK_ADDED_TAG', 'Liaison de mot-clé ajoutée');
+define('_LINK_DELETED_TAG', 'Liaison de mot-clé supprimée');
 
 // ADMINISTRATION
 define('_USERS', 'Utilisateurs');
@@ -226,6 +227,8 @@ define('_NO_CONFIRM_DESC', "Effectue l'action sans confirmation");
 define('_VIEW_DOC', 'Voir le courrier');
 define('_CLOSE_MAIL', 'Clôturer un courrier');
 define('_CLOSE_MAIL_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier. ESSENTIEL afin de terminer votre workflow de courrier.');
+define('_CLOSE_MAIL_WITH_FIELDS', 'Clôturer un courrier avec des champs personnalisés');
+define('_CLOSE_MAIL_WITH_FIELDS_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier. ESSENTIEL afin de terminer votre workflow de courrier. L\'action ne pourra se faire seulement si les champs choisis sont renseignés dans le courrier');
 define('_SET_PERSISTENT_MODE_ON', 'Activer la persistance');
 define('_SET_PERSISTENT_MODE_ON_DESC', 'Permet de conserver un courrier dans une bannette quelque soit son état. Insère la donnée dans la table \'basket_persistent_mode\'.');
 define('_SET_PERSISTENT_MODE_OFF', 'Désactiver la persistance');
@@ -455,6 +458,10 @@ define("_AVIS_CIRCUIT_DELETED", "Circuit d'avis supprimé");
 
 define("_COMMUNICATION_MEANS_VALIDATOR", "Le moyen de communication doit être une uri ou un courriel");
 define("_EXTERNALID_M2M_VALIDATOR", "L'identifiant Maarch2Maarch doit être au format SIRET/entityId");
+
+define("_NUMERIC_PACKAGE_ADDED", "Pli numérique ajouté");
+define('_ON_DOC_NUM', ' sur le document n°');
+define("_NUMERIC_PACKAGE_IMPORTED", "Pli numérique importé");
 
 define("_ACKNOWLEDGEMENT_RECEIPT", "Accusé de réception");
 define("_CREATED_BY", "Créé par");

@@ -188,6 +188,24 @@ $DATA_TO_REPLACE = [
     'contact.phone'                     => '[recipient.phone]',
     'contact.email'                     => '[recipient.email]',
 
+    'attachmentRecipient.company'                   => '[recipient.company]',
+    'attachmentRecipient.departement'               => '[recipient.department]',
+    'attachmentRecipient.civility'                  => '[recipient.civility]',
+    'attachmentRecipient.lastname'                  => '[recipient.lastname]',
+    'attachmentRecipient.firstname'                 => '[recipient.firstname]',
+    'attachmentRecipient.function'                  => '[recipient.function]',
+    'attachmentRecipient.postal_address;strconv=no' => '[recipient.postal_address;strconv=no]',
+    'attachmentRecipient.postal_address'            => '[recipient.postal_address]',
+    'attachmentRecipient.address_number'            => '[recipient.address_number]',
+    'attachmentRecipient.address_street'            => '[recipient.address_street]',
+    'attachmentRecipient.address_additional1'       => '[recipient.address_additional1]',
+    'attachmentRecipient.address_additional2'       => '[recipient.address_additional2]',
+    'attachmentRecipient.address_town'              => '[recipient.address_town]',
+    'attachmentRecipient.address_postcode'          => '[recipient.address_postcode]',
+    'attachmentRecipient.address_country'           => '[recipient.address_country]',
+    'attachmentRecipient.phone'                     => '[recipient.phone]',
+    'attachmentRecipient.email'                     => '[recipient.email]',
+
     'notes.identifier'                       => '[res_letterbox.res_id]',
     'notes.subject'                          => '[res_letterbox.subject]',
     'notes.note_text'                        => '[notes]',
@@ -231,9 +249,12 @@ foreach ($customs as $custom) {
     // BEGIN Change attachment all in outgoingMail
 
     $templatesAllAttachmentTypes = TemplateModel::get([
-        'where' => ['template_target = ?', 'template_attachment_type = ?'],
-        'data'  => ['attachments', 'all']
+        'where' => ['template_target = ?', 'template_attachment_type in (?)'],
+        'data'  => ['attachments', ['all', 'outgoing_mail']]
     ]);
+
+    $migrated      = 0;
+    $nonMigrated   = 0;
 
     foreach ($templatesAllAttachmentTypes as $template) {
         $path = str_replace('#', '/', $template['template_path']);
@@ -284,15 +305,6 @@ foreach ($customs as $custom) {
 
     // END
 
-    TemplateModel::update([
-        'set'   => [
-            'template_target'          => 'indexingFile',
-            'template_attachment_type' => 'all'
-        ],
-        'where' => ['template_target = ?', 'template_attachment_type = ?'],
-        'data'  => ['attachments', 'outgoing_mail']
-    ]);
-
     foreach ($customFields as $customField) {
         $idNewCustomField = ContactCustomFieldListModel::get([
             'select' => ['id'],
@@ -302,8 +314,6 @@ foreach ($customs as $custom) {
         $DATA_TO_REPLACE["contact." . $customField['oldId']] = "[recipient.customField_{$idNewCustomField[0]['id']}]";
     }
 
-    $migrated      = 0;
-    $nonMigrated   = 0;
     $templates     = TemplateModel::get([
         'where' => ['template_target = ?', 'template_attachment_type = ?'],
         'data'  => ['indexingFile', 'all']
@@ -374,7 +384,7 @@ foreach ($customs as $custom) {
         
         if ($loadedXml) {
             for ($i=count($loadedXml->attachment_types->type); $i >= 0; $i--) {
-                if (in_array($loadedXml->attachment_types->type[$i]->id, ['outgoing_mail', 'outgoing_mail_signed'])) {
+                if (in_array($loadedXml->attachment_types->type[$i]->id, ['outgoing_mail_signed'])) {
                     unset($loadedXml->attachment_types->type[$i]);
                 }
             }

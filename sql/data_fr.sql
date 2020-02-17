@@ -4,46 +4,45 @@ TRUNCATE TABLE usergroups;
 TRUNCATE TABLE usergroups_services;
 DELETE FROM usergroups WHERE group_id = 'COURRIER';
 DELETE FROM usergroups_services WHERE group_id = 'COURRIER';
-INSERT INTO usergroups (id, group_id,group_desc, can_index, indexation_parameters) VALUES (1, 'COURRIER', 'Opérateur de numérisation', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (1, 'COURRIER', 'Opérateur de numérisation', True, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'AGENT';
 DELETE FROM usergroups_services WHERE group_id = 'AGENT';
-INSERT INTO usergroups (id, group_id,group_desc, can_index, indexation_parameters) VALUES (2, 'AGENT', 'Utilisateur', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (2, 'AGENT', 'Utilisateur', True, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'RESP_COURRIER';
 DELETE FROM usergroups_services WHERE group_id = 'RESP_COURRIER';
-INSERT INTO usergroups (id, group_id,group_desc, can_index, indexation_parameters) VALUES (3, 'RESP_COURRIER', 'Superviseur Courrier', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (3, 'RESP_COURRIER', 'Superviseur Courrier', True, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'RESPONSABLE';
 DELETE FROM usergroups_services WHERE group_id = 'RESPONSABLE';
-INSERT INTO usergroups (id, group_id,group_desc, can_index, indexation_parameters) VALUES (4, 'RESPONSABLE', 'Manager', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (4, 'RESPONSABLE', 'Manager', True, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'ADMINISTRATEUR_N1';
 DELETE FROM usergroups_services WHERE group_id = 'ADMINISTRATEUR_N1';
-INSERT INTO usergroups (id, group_id,group_desc) VALUES (5, 'ADMINISTRATEUR_N1', 'Admin. Fonctionnel N1');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (5, 'ADMINISTRATEUR_N1', 'Admin. Fonctionnel N1', False, '{"actions" : [], "entities" : [], "keywords" : []}');
 DELETE FROM usergroups WHERE group_id = 'ADMINISTRATEUR_N2';
 DELETE FROM usergroups_services WHERE group_id = 'ADMINISTRATEUR_N2';
-INSERT INTO usergroups (id, group_id,group_desc) VALUES (6, 'ADMINISTRATEUR_N2', 'Admin. Fonctionnel N2');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (6, 'ADMINISTRATEUR_N2', 'Admin. Fonctionnel N2', False, '{"actions" : [], "entities" : [], "keywords" : []}');
 DELETE FROM usergroups WHERE group_id = 'DIRECTEUR';
 DELETE FROM usergroups_services WHERE group_id = 'DIRECTEUR';
-INSERT INTO usergroups (id, group_id,group_desc) VALUES (7, 'DIRECTEUR', 'Directeur');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (7, 'DIRECTEUR', 'Directeur', False, '{"actions" : [], "entities" : [], "keywords" : []}');
 DELETE FROM usergroups WHERE group_id = 'ELU';
 DELETE FROM usergroups_services WHERE group_id = 'ELU';
-INSERT INTO usergroups (id, group_id,group_desc) VALUES (8, 'ELU', 'Elu');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (8, 'ELU', 'Elu', False, '{"actions" : [], "entities" : [], "keywords" : []}');
 DELETE FROM usergroups WHERE group_id = 'CABINET';
 DELETE FROM usergroups_services WHERE group_id = 'CABINET';
-INSERT INTO usergroups (id, group_id,group_desc) VALUES (9, 'CABINET', 'Cabinet');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (9, 'CABINET', 'Cabinet', False, '{"actions" : [], "entities" : [], "keywords" : []}');
 DELETE FROM usergroups WHERE group_id = 'ARCHIVISTE';
 DELETE FROM usergroups_services WHERE group_id = 'ARCHIVISTE';
-INSERT INTO usergroups (id, group_id,group_desc) VALUES (10, 'ARCHIVISTE', 'Archiviste');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (10, 'ARCHIVISTE', 'Archiviste', False, '{"actions" : [], "entities" : [], "keywords" : []}');
 DELETE FROM usergroups WHERE group_id = 'MAARCHTOGEC';
 DELETE FROM usergroups_services WHERE group_id = 'MAARCHTOGEC';
-INSERT INTO usergroups (id, group_id,group_desc) VALUES (11, 'MAARCHTOGEC', 'Envoi dématérialisé');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (11, 'MAARCHTOGEC', 'Envoi dématérialisé', False, '{"actions" : [], "entities" : [], "keywords" : []}');
 DELETE FROM usergroups WHERE group_id = 'SERVICE';
 DELETE FROM usergroups_services WHERE group_id = 'SERVICE';
-INSERT INTO usergroups (id, group_id,group_desc) VALUES (12, 'SERVICE', 'Service');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (12, 'SERVICE', 'Service', False, '{"actions" : [], "entities" : [], "keywords" : []}');
 DELETE FROM usergroups WHERE group_id = 'WEBSERVICE';
 DELETE FROM usergroups_services WHERE group_id = 'WEBSERVICE';
-INSERT INTO usergroups (id, group_id,group_desc, can_index, indexation_parameters) VALUES (13, 'WEBSERVICE', 'Utilisateurs de WebService', TRUE, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
-
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (13, 'WEBSERVICE', 'Utilisateurs de WebService', True, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 select setval('usergroups_id_seq', (select max(id)+1 from usergroups), false);
-
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'admin');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'create_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_contacts');
@@ -60,48 +59,42 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'enti
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'use_mail_services');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'reports');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'edit_attachments_from_detail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'modify_attachments');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'delete_attachments');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'manage_own_attachments_in_details');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'manage_attachments');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view_documents_with_notes');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_new_version');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view_version_letterbox');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'print_folder_doc');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_tag_to_res');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'create_tag');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'manage_tags_application');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'private_tag');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'tag_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', '_print_sep');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'physical_archive_print_sep_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'manage_numeric_package');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'create_contacts');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_doc_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_links');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_diffusion_indexing');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_diffusion_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'use_mail_services');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'edit_attachments_from_detail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'modify_attachments');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'delete_attachments');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'manage_own_attachments_in_details');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'manage_attachments');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_documents_with_notes');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_new_version');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_version_letterbox');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'config_visa_workflow');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'config_visa_workflow_in_detail');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'sign_document');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'visa_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'print_folder_doc');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'config_avis_workflow');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'config_avis_workflow_in_detail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_tag_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'private_tag');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'tag_view');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'sign_document');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'visa_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'create_contacts');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_doc_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_full_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_links');
@@ -115,12 +108,10 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_documents_with_notes');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_new_version');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_version_letterbox');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'print_folder_doc');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_tag_to_res');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'private_tag');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'tag_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'sign_document');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'visa_documents');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'print_folder_doc');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'private_tag');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'create_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'update_contacts');
@@ -131,9 +122,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'u
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'use_mail_services');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'reports');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'edit_attachments_from_detail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'modify_attachments');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'delete_attachments');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'manage_own_attachments_in_details');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'manage_attachments');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_documents_with_notes');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_new_version');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_version_letterbox');
@@ -146,14 +136,10 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'p
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'config_avis_workflow');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'config_avis_workflow_in_detail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'avis_documents');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_tag_to_res');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'private_tag');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'tag_view');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'sign_document');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'visa_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id, parameters) VALUES ('ADMINISTRATEUR_N1', 'admin_users', '{"groups": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]}');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_users');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_groups');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_architecture');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'view_history');
@@ -161,6 +147,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_status');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_actions');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_contacts');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_indexing_models');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_custom_fields');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'create_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'update_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'update_status_mail');
@@ -185,9 +173,8 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'use_mail_services');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'reports');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_reports');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'edit_attachments_from_detail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'modify_attachments');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'delete_attachments');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'manage_own_attachments_in_details');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'manage_attachments');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'view_documents_with_notes');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'add_new_version');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'view_version_letterbox');
@@ -197,23 +184,21 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'config_avis_workflow');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_templates');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_tag');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'add_tag_to_res');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'create_tag');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'manage_tags_application');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'private_tag');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'tag_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_notif');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', '_print_sep');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'physical_archive_print_sep_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'physical_archive_batch_manage');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_life_cycle');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_indexing_models');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N1', 'admin_custom_fields');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'admin');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'view_doc_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'view_full_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'edit_resource');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'admin_templates');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR_N2', 'admin_tag');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'sign_document');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'visa_documents');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'create_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'update_contacts');
@@ -222,7 +207,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'vi
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'view_full_history');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'sendmail');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'avis_documents');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'tag_view');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTE', 'export_seda_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MAARCHTOGEC', 'manage_numeric_package');
 
 -- Create DOCTYPES
@@ -232,118 +217,116 @@ TRUNCATE TABLE DOCTYPES;
 
 INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (1, 'COURRIERS', '#000000', 'Y');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (1, '01. Correspondances', 1, '#000000', 'Y');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('101', 'Abonnements – documentation – archives', 'Y', 1, 1, 30, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('102', 'Convocation', 'Y', 1, 1, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('103', 'Demande de documents', 'Y', 1, 1, 30, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('104', 'Demande de fournitures et matériels', 'Y', 1, 1, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('105', 'Demande de RDV', 'Y', 1, 1, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('106', 'Demande de renseignements', 'Y', 1, 1, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('107', 'Demande mise à jour de fichiers', 'Y', 1, 1, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('108', 'Demande Multi-Objet', 'Y', 1, 1, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('109', 'Installation provisoire dans un équipement ville', 'Y', 1, 1, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('110', 'Invitation', 'Y', 1, 1, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('111', 'Rapport – Compte-rendu – Bilan', 'Y', 1, 1, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('112', 'Réservation d''un local communal et scolaire', 'Y', 1, 1, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (2, '02. Cabinet', 1, '#000000', 'Y');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('201', 'Pétition', 'Y', 1, 2, 15, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('202', 'Communication', 'Y', 1, 2, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('203', 'Politique', 'Y', 1, 2, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('204', 'Relations et solidarité internationales ', 'Y', 1, 2, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('205', 'Remerciements et félicitations', 'Y', 1, 2, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('206', 'Sécurité', 'Y', 1, 2, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('207', 'Suggestion', 'Y', 1, 2, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (3, '03. Éducation', 1, '#000000', 'Y');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('301', 'Culture', 'Y', 1, 3, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('302', 'Demande scolaire hors inscription et dérogation', 'Y', 1, 3, 60, 14, 1, 'SVR');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('303', 'Éducation nationale', 'Y', 1, 3, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('304', 'Jeunesse', 'Y', 1, 3, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('305', 'Lycées et collèges', 'Y', 1, 3, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('306', 'Parentalité', 'Y', 1, 3, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('307', 'Petite Enfance', 'Y', 1, 3, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('308', 'Sport', 'Y', 1, 3, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (4, '04. Finances', 1, '#000000', 'Y');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (6, '06. Population ', 1, '#000000', 'Y');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('401', 'Contestation financière', 'Y', 1, 4, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('402', 'Contrat de prêt', 'Y', 1, 4, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('403', 'Garantie d''emprunt', 'Y', 1, 4, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('404', 'Paiement', 'Y', 1, 4, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('405', 'Quotient familial', 'Y', 1, 4, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('406', 'Subvention', 'Y', 1, 4, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('407', 'Facture ou avoir', 'Y', 1, 4, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('408', 'Proposition financière', 'Y', 1, 4, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (5, '05. Juridique', 1, '#000000', 'Y');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('501', 'Hospitalisation d''office', 'Y', 1, 5, 2, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('502', 'Mise en demeure', 'Y', 1, 5, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('503', 'Plainte', 'Y', 1, 5, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('504', 'Recours contentieux', 'Y', 1, 5, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('505', 'Recours gracieux et réclamations', 'Y', 1, 5, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (6, '06. Population ', 1, '#000000', 'Y');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('601', 'Débits de boisson', 'Y', 1, 6, 60, 14, 1, 'SVR');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('602', 'Demande d’État Civil', 'Y', 1, 6, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('603', 'Élections', 'Y', 1, 6, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('604', 'Étrangers', 'Y', 1, 6, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('605', 'Marché', 'Y', 1, 6, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('606', 'Médaille du travail', 'Y', 1, 6, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('607', 'Stationnement taxi', 'Y', 1, 6, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('608', 'Vente au déballage', 'Y', 1, 6, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (7, '07. Ressources Humaines', 1, '#000000', 'Y');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('701', 'Arrêts de travail et maladie', 'Y', 1, 7, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('702', 'Assurance du personnel', 'Y', 1, 7, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('703', 'Candidature', 'Y', 1, 7, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('704', 'Carrière', 'Y', 1, 7, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('705', 'Conditions de travail santé', 'Y', 1, 7, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('706', 'Congés exceptionnels et concours', 'Y', 1, 7, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('707', 'Formation', 'Y', 1, 7, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('708', 'Instances RH', 'Y', 1, 7, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('709', 'Retraite', 'Y', 1, 7, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('710', 'Stage', 'Y', 1, 7, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('711', 'Syndicats', 'Y', 1, 7, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (8, '08. Social', 1, '#000000', 'Y');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('801', 'Aide à domicile', 'Y', 1, 8, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('802', 'Aide Financière', 'Y', 1, 8, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('803', 'Animations retraités', 'Y', 1, 8, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('804', 'Domiciliation', 'Y', 1, 8, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('805', 'Dossier de logement', 'Y', 1, 8, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('806', 'Expulsion', 'Y', 1, 8, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('807', 'Foyer', 'Y', 1, 8, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('808', 'Obligation alimentaire', 'Y', 1, 8, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('809', 'RSA', 'Y', 1, 8, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('810', 'Scolarisation à domicile', 'Y', 1, 8, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (9, '09. Technique', 1, '#000000', 'Y');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('901', 'Aire d''accueil des gens du voyage', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('902', 'Assainissement', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('903', 'Assurance et sinistre', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('904', 'Autorisation d''occupation du domaine public', 'Y', 1, 9, 60, 14, 1, 'SVR');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('905', 'Contrat et convention hors marchés publics', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('906', 'Détention de chiens dangereux', 'Y', 1, 9, 60, 14, 1, 'SVR');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('907', 'Espaces verts – Environnement – Développement durable', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('908', 'Hygiène et Salubrité', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('909', 'Marchés Publics', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('910', 'Mobiliers urbains', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('911', 'NTIC', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('912', 'Opération d''aménagement', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('913', 'Patrimoine', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('914', 'Problème de voisinage', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('915', 'Propreté', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('916', 'Stationnement et circulation', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('917', 'Transports', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('918', 'Travaux', 'Y', 1, 9, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (10, '10. Urbanisme', 1, '#000000', 'Y');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('1001', 'Alignement', 'Y', 1, 10, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('1002', 'Avis d''urbanisme', 'Y', 1, 10, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('1003', 'Commerces', 'Y', 1, 10, 60, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('1004', 'Numérotation', 'Y', 1, 10, 60, 14, 1, 'NORMAL');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (11, '11. Silence vaut acceptation', 1, '#000000', 'Y');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('1101', 'Autorisation de buvette', 'Y', 1, 11, 60, 14, 1, 'SVA');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('1102', 'Cimetière', 'Y', 1, 11, 60, 14, 1, 'SVA');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('1103', 'Demande de dérogation scolaire', 'Y', 1, 11, 60, 14, 1, 'SVA');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('1104', 'Inscription à la cantine et activités périscolaires ', 'Y', 1, 11, 60, 14, 1, 'SVA');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('1105', 'Inscription toutes petites sections', 'Y', 1, 11, 90, 14, 1, 'SVA');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('1106', 'Travaux ERP', 'Y', 1, 11, 60, 14, 1, 'SVA');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (12, '12. Formulaires', 1, '#000000', 'Y');
-
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (101, 'Abonnements – documentation – archives', 'Y', 1, 1, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (102, 'Convocation', 'Y', 1, 1, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (103, 'Demande de documents', 'Y', 1, 1, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (104, 'Demande de fournitures et matériels', 'Y', 1, 1, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (105, 'Demande de RDV', 'Y', 1, 1, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (106, 'Demande de renseignements', 'Y', 1, 1, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (107, 'Demande mise à jour de fichiers', 'Y', 1, 1, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (108, 'Demande Multi-Objet', 'Y', 1, 1, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (109, 'Installation provisoire dans un équipement ville', 'Y', 1, 1, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (110, 'Invitation', 'Y', 1, 1, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (111, 'Rapport – Compte-rendu – Bilan', 'Y', 1, 1, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (112, 'Réservation d''un local communal et scolaire', 'Y', 1, 1, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (201, 'Pétition', 'Y', 1, 2, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (202, 'Communication', 'Y', 1, 2, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (203, 'Politique', 'Y', 1, 2, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (204, 'Relations et solidarité internationales ', 'Y', 1, 2, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (205, 'Remerciements et félicitations', 'Y', 1, 2, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (206, 'Sécurité', 'Y', 1, 2, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (207, 'Suggestion', 'Y', 1, 2, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (301, 'Culture', 'Y', 1, 3, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (302, 'Demande scolaire hors inscription et dérogation', 'Y', 1, 3, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (303, 'Éducation nationale', 'Y', 1, 3, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (304, 'Jeunesse', 'Y', 1, 3, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (305, 'Lycées et collèges', 'Y', 1, 3, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (306, 'Parentalité', 'Y', 1, 3, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (307, 'Petite Enfance', 'Y', 1, 3, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (308, 'Sport', 'Y', 1, 3, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (401, 'Contestation financière', 'Y', 1, 4, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (402, 'Contrat de prêt', 'Y', 1, 4, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (403, 'Garantie d''emprunt', 'Y', 1, 4, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (404, 'Paiement', 'Y', 1, 4, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (405, 'Quotient familial', 'Y', 1, 4, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (406, 'Subvention', 'Y', 1, 4, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (407, 'Facture ou avoir', 'Y', 1, 4, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (408, 'Proposition financière', 'Y', 1, 4, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (501, 'Hospitalisation d''office', 'Y', 1, 5, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (502, 'Mise en demeure', 'Y', 1, 5, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (503, 'Plainte', 'Y', 1, 5, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (504, 'Recours contentieux', 'Y', 1, 5, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (505, 'Recours gracieux et réclamations', 'Y', 1, 5, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (601, 'Débits de boisson', 'Y', 1, 6, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (602, 'Demande d’État Civil', 'Y', 1, 6, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (603, 'Élections', 'Y', 1, 6, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (604, 'Étrangers', 'Y', 1, 6, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (605, 'Marché', 'Y', 1, 6, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (606, 'Médaille du travail', 'Y', 1, 6, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (607, 'Stationnement taxi', 'Y', 1, 6, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (608, 'Vente au déballage', 'Y', 1, 6, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (701, 'Arrêts de travail et maladie', 'Y', 1, 7, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (702, 'Assurance du personnel', 'Y', 1, 7, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (703, 'Candidature', 'Y', 1, 7, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (704, 'Carrière', 'Y', 1, 7, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (705, 'Conditions de travail santé', 'Y', 1, 7, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (706, 'Congés exceptionnels et concours', 'Y', 1, 7, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (707, 'Formation', 'Y', 1, 7, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (708, 'Instances RH', 'Y', 1, 7, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (709, 'Retraite', 'Y', 1, 7, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (710, 'Stage', 'Y', 1, 7, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (711, 'Syndicats', 'Y', 1, 7, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (801, 'Aide à domicile', 'Y', 1, 8, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (802, 'Aide Financière', 'Y', 1, 8, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (803, 'Animations retraités', 'Y', 1, 8, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (804, 'Domiciliation', 'Y', 1, 8, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (805, 'Dossier de logement', 'Y', 1, 8, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (806, 'Expulsion', 'Y', 1, 8, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (807, 'Foyer', 'Y', 1, 8, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (808, 'Obligation alimentaire', 'Y', 1, 8, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (809, 'RSA', 'Y', 1, 8, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (810, 'Scolarisation à domicile', 'Y', 1, 8, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (901, 'Aire d''accueil des gens du voyage', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (902, 'Assainissement', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (903, 'Assurance et sinistre', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (904, 'Autorisation d''occupation du domaine public', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (905, 'Contrat et convention hors marchés publics', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (906, 'Détention de chiens dangereux', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (907, 'Espaces verts – Environnement – Développement durable', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (908, 'Hygiène et Salubrité', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (909, 'Marchés Publics', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (910, 'Mobiliers urbains', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (911, 'NTIC', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (912, 'Opération d''aménagement', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (913, 'Patrimoine', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (914, 'Problème de voisinage', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (915, 'Propreté', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (916, 'Stationnement et circulation', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (917, 'Transports', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (918, 'Travaux', 'Y', 1, 9, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (1001, 'Alignement', 'Y', 1, 10, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (1002, 'Avis d''urbanisme', 'Y', 1, 10, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (1003, 'Commerces', 'Y', 1, 10, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (1004, 'Numérotation', 'Y', 1, 10, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (1101, 'Autorisation de buvette', 'Y', 1, 11, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (1102, 'Cimetière', 'Y', 1, 11, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (1103, 'Demande de dérogation scolaire', 'Y', 1, 11, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (1104, 'Inscription à la cantine et activités périscolaires ', 'Y', 1, 11, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (1105, 'Inscription toutes petites sections', 'Y', 1, 11, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (1106, 'Travaux ERP', 'Y', 1, 11, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (1201, 'Appel téléphonique', 'Y', 1, 12, 30, 14, 1, 'NORMAL');
-INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES (1202, 'Demande intervention voirie', 'Y', 1, 12, 30, 14, 1, 'NORMAL');
-
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('1201', 'Appel téléphonique', 'Y', 1, 12, 21, 14, 1, 'NORMAL');
+INSERT INTO doctypes (type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, process_delay, delay1, delay2, process_mode) VALUES ('1202', 'Demande intervention voirie', 'Y', 1, 12, 21, 14, 1, 'NORMAL');
 select setval('doctypes_first_level_id_seq', (select max(doctypes_first_level_id)+1 from doctypes_first_level), false);
 select setval('doctypes_second_level_id_seq', (select max(doctypes_second_level_id)+1 from doctypes_second_level), false);
 select setval('doctypes_type_id_seq', (select max(type_id)+1 from doctypes), false);
@@ -496,94 +479,91 @@ INSERT INTO usergroup_content (user_id, group_id, role) VALUES (22, 10, '');
 -- Create ENTITIES and LIST TEMPLATES
 TRUNCATE TABLE entities;
 ALTER SEQUENCE entities_id_seq RESTART WITH 1;
+TRUNCATE TABLE list_templates;
+TRUNCATE TABLE list_templates_items;
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('VILLE', 'Ville de Maarch-les-bains', 'Ville de Maarch-les-bains', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', '', 'Direction');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (1, 'Ville de Maarch-les-bains', 'Ville de Maarch-les-bains', 'diffusionList', 1);
-INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (1, 10, 'user', 'dest', 0);
-
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (1, 15, 'user', 'dest', 0);
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('CAB', 'Cabinet du Maire', 'Cabinet du Maire', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'VILLE', 'Direction');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (2, 'Cabinet du Maire', 'Cabinet du Maire', 'diffusionList', 2);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (2, 7, 'user', 'dest', 0);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (2, 12, 'entity', 'cc', 1);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (2, 10, 'user', 'cc', 2);
-
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (2, 3, 'user', 'cc', 3);
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DGS', 'Direction Générale des Services', 'Direction Générale des Services', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'VILLE', 'Direction');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (3, 'Direction Générale des Services', 'Direction Générale des Services', 'diffusionList', 3);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (3, 1, 'user', 'dest', 0);
-
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (3, 10, 'user', 'cc', 1);
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DGA', 'Direction Générale Adjointe', 'Direction Générale Adjointe', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGS', 'Bureau');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (4, 'Direction Générale Adjointe', 'Direction Générale Adjointe', 'diffusionList', 4);
-INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (4, 8, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (4, 17, 'user', 'dest', 0);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (4, 12, 'entity', 'cc', 1);
-INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (4, 17, 'user', 'cc', 2);
-
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (4, 8, 'user', 'cc', 2);
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PCU', 'Pôle Culturel', 'Pôle Culturel', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGA', 'Service');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (5, 'Pôle Culturel', 'Pôle Culturel', 'diffusionList', 5);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (5, 9, 'user', 'dest', 0);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (5, 12, 'entity', 'cc', 1);
-
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PJS', 'Pôle Jeunesse et Sport', 'Pôle Jeunesse et Sport', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGA', 'Service');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (6, 'Pôle Jeunesse et Sport', 'Pôle Jeunesse et Sport', 'diffusionList', 6);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (6, 19, 'user', 'dest', 0);
-INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (6, 12, 'entity', 'cc', 1);
-
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (6, 1, 'entity', 'cc', 1);
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PE', 'Petite enfance', 'Petite enfance', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'PJS', 'Service');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (7, 'Petite enfance', 'Petite enfance', 'diffusionList', 7);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (7, 15, 'user', 'dest', 0);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (7, 12, 'entity', 'cc', 1);
-
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('SP', 'Sport', 'Sport', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'PJS', 'Service');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (8, 'Sport', 'Sport', 'diffusionList', 8);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (8, 13, 'user', 'dest', 0);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (8, 12, 'entity', 'cc', 1);
-
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PSO', 'Pôle Social', 'Pôle Social', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGA', 'Service');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (9, 'Pôle Social', 'Pôle Social', 'diffusionList', 9);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (9, 4, 'user', 'dest', 0);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (9, 12, 'entity', 'cc', 1);
-
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (1009, 'visa Pôle Social', 'visa Pôle Social', 'visaCircuit', 9);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (1009, 17, 'user', 'visa', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (1009, 10, 'user', 'sign', 1);
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PTE', 'Pôle Technique', 'Pôle Technique', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGA', 'Service');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (10, 'Pôle Technique', 'Pôle Technique', 'diffusionList', 10);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (10, 16, 'user', 'dest', 0);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (10, 12, 'entity', 'cc', 1);
-
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (10, 20, 'entity', 'cc', 2);
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (1010, 'visa Pôle Technique', 'visa Pôle Technique', 'visaCircuit', 10);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (1010, 17, 'user', 'visa', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (1010, 10, 'user', 'sign', 1);
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DRH', 'Direction des Ressources Humaines', 'Direction des Ressources Humaines', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGS', 'Service');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (11, 'Direction des Ressources Humaines', 'Direction des Ressources Humaines', 'diffusionList', 11);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (11, 12, 'user', 'dest', 0);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (11, 12, 'entity', 'cc', 1);
-
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DSG', 'Secrétariat Général', 'Secrétariat Général', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGS', 'Direction');
-
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (12, 'Secrétariat Général', 'Secrétariat Général', 'diffusionList', 12);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (12, 18, 'user', 'dest', 0);
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('COU', 'Service Courrier', 'Service Courrier', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DSG', 'Service');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (13, 'Service Courrier', 'Service Courrier', 'diffusionList', 13);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (13, 21, 'user', 'dest', 0);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (13, 12, 'entity', 'cc', 1);
-
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('COR', 'Correspondants Archive', 'Correspondants Archive', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'COU', 'Service');
-
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (14, 'Correspondants Archive', 'Correspondants Archive', 'diffusionList', 14);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (14, 22, 'user', 'dest', 0);
+INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (14, 14, 'user', 'cc', 1);
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PSF', 'Pôle des Services Fonctionnels', 'Services Fonctionnels', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DSG', 'Service');
-INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (15, 'Pôle des Services Fonctionnels', 'Pôle des Services Fonctionnels', 'diffusionList', 15);
+INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (15, 'Services Fonctionnels', 'Pôle des Services Fonctionnels', 'diffusionList', 15);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (15, 11, 'user', 'dest', 0);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (15, 12, 'entity', 'cc', 1);
-
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('DSI', 'Direction des Systèmes d''Information', 'Direction des Systèmes d''Information', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGS', 'Service');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (16, 'Direction des Systèmes d''Information', 'Direction des Systèmes d''Information', 'diffusionList', 16);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (16, 3, 'user', 'dest', 0);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (16, 12, 'entity', 'cc', 1);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (16, 2, 'user', 'cc', 2);
-
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('FIN', 'Direction des Finances', 'Direction des Finances', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'DGS', 'Service');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (17, 'Direction des Finances', 'Direction des Finances', 'diffusionList', 17);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (17, 14, 'user', 'dest', 0);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (17, 12, 'entity', 'cc', 1);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (17, 6, 'user', 'cc', 2);
-
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('PJU', 'Pôle Juridique', 'Pôle Juridique', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'FIN', 'Service');
 INSERT INTO list_templates (id, title, description, type, entity_id) VALUES (18, 'Pôle Juridique', 'Pôle Juridique', 'diffusionList', 18);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (18, 20, 'user', 'dest', 0);
 INSERT INTO list_templates_items (list_template_id, item_id, item_type, item_mode, sequence) VALUES (18, 12, 'entity', 'cc', 1);
-
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('ELUS', 'Ensemble des élus', 'ELUS:Ensemble des élus', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', 'VILLE', 'Direction');
-
 INSERT INTO entities (entity_id, entity_label, short_label, enabled, adrs_1, adrs_2, adrs_3, zipcode, city, country, email, business_id, parent_entity_id, entity_type) VALUES ('CCAS', 'Centre Communal d''Action Sociale', 'Centre Communal d''Action Sociale', 'Y', '', '', '', '', '', '', 'support@maarch.fr', '', '', 'Direction');
 SELECT setval('list_templates_id_seq', (SELECT max(id)+1 FROM list_templates), false);
 
@@ -768,7 +748,80 @@ INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('
 DELETE FROM security WHERE group_id = 'WEBSERVICE';
 INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('WEBSERVICE', 'letterbox_coll', '1=0', 'Aucun courrier');
 
+-- Create FOLDERS
+TRUNCATE TABLE folders;
+ALTER SEQUENCE folders_id_seq RESTART WITH 1;;
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('compétences fonctionnelles', 'TRUE', 21, NULL, 0);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('vie politique', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('vie citoyenne', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('administration municipale', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('ressources humaines', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('candidatures sur postes ouverts', 'TRUE', 21, 5, 2);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('exercice 2020', 'TRUE', 21, 6, 3);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('refus', 'TRUE', 21, 7, 4);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('retenus pour commissions', 'TRUE', 21, 7, 4);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('candidatures spontanées', 'TRUE', 21, 5, 2);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('exercice 2020', 'TRUE', 21, 10, 3);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('refus', 'TRUE', 21, 11, 4);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('retenus pour commissions', 'TRUE', 21, 11, 4);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('affaires juridiques', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('finances', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('marchés publics', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('informatique', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('communication', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('événements', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('moyens généraux (matériels et logistiques)', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('archives', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('compétences techniques', 'TRUE', 21, NULL, 0);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('population', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('police - ordre public', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('stationnement', 'TRUE', 21, 24, 2);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('politique de la ville', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('urbanisme opérationnel', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('urbanisme réglementaire', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('affaires foncières ', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('développement du territoire ', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('habitat', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('biens communaux (domaine privé)', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('espaces publics urbains (domaine public - voiries -réseaux)', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('éclairage public', 'TRUE', 21, 33, 2);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('ouvrages d''art', 'TRUE', 21, 33, 2);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('hygiène', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('santé publique', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('enseignement', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('sports ', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('centre de loisirs nautiques ', 'TRUE', 21, 39, 2);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('jeunesse', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('culture', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('actions sociales', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('cohésion sociale', 'TRUE', 21, 22, 1);
+
 -- Donnees manuelles
+------------
+--ENTITIES_FOLDERS
+------------
+TRUNCATE TABLE entities_folders;
+INSERT INTO entities_folders (folder_id, entity_id, edition)
+SELECT folders.id, entities.id, false
+FROM folders, entities
+WHERE 1=1; 
+
+------------
+--USERGROUPS_SERVICES
+------------
+UPDATE usergroups_services SET parameters = (
+    cast('{"groups": [' || (
+        SELECT string_agg(cast(id AS VARCHAR), ', ' ORDER BY id) FROM usergroups
+    ) || ']}' AS jsonb)
+    )
+WHERE service_id = 'admin_users';
+
+INSERT INTO usergroups_services (group_id, service_id)
+SELECT distinct(group_id), 'manage_personal_data'
+FROM usergroups_services WHERE group_id IN (
+    SELECT group_id FROM usergroups_services
+    WHERE service_id = 'admin_users'
+);
 ------------
 --DOCSERVERS
 ------------
@@ -1185,19 +1238,19 @@ Select setval('groupbasket_redirect_system_id_seq', (select max(system_id)+1 fro
 --KEYWORDS / TAGS
 ------------
 TRUNCATE TABLE tags;
-INSERT INTO tags (label, entity_id_owner) VALUES ('SEMINAIRE', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('INNOVATION', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('MAARCH', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('ENVIRONNEMENT', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('PARTENARIAT', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('JUMELAGE', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('ECONOMIE', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('ASSOCIATIONS', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('RH', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('BUDGET', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('QUARTIERS', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('LITTORAL', 'COU');
-INSERT INTO tags (label, entity_id_owner) VALUES ('SPORT', 'COU');
+INSERT INTO tags (label) VALUES ('SEMINAIRE');
+INSERT INTO tags (label) VALUES ('INNOVATION');
+INSERT INTO tags (label) VALUES ('MAARCH');
+INSERT INTO tags (label) VALUES ('ENVIRONNEMENT');
+INSERT INTO tags (label) VALUES ('PARTENARIAT');
+INSERT INTO tags (label) VALUES ('JUMELAGE');
+INSERT INTO tags (label) VALUES ('ECONOMIE');
+INSERT INTO tags (label) VALUES ('ASSOCIATIONS');
+INSERT INTO tags (label) VALUES ('RH');
+INSERT INTO tags (label) VALUES ('BUDGET');
+INSERT INTO tags (label) VALUES ('QUARTIERS');
+INSERT INTO tags (label) VALUES ('LITTORAL');
+INSERT INTO tags (label) VALUES ('SPORT');
 
 ------------
 ------------
@@ -1601,33 +1654,28 @@ TRUNCATE TABLE shipping_templates;
 INSERT INTO shipping_templates (id, label, description, options, fee, entities, account) VALUES (1, 'Modèle d''exemple d''envoi postal', 'Modèle d''exemple d''envoi postal', '{"shapingOptions":[],"sendMode":"fast"}', '{"firstPagePrice":0.4,"nextPagePrice":0.5,"postagePrice":0.9}', '["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "17", "18", "16", "19", "20"]', '{"id":"sandbox.562","password":"VPh5AY6i::82f88fe97cead428e0885084f93a684c"}');
 Select setval('shipping_templates_id_seq', (select max(id)+1 from shipping_templates), false);
 
-TRUNCATE TABLE folders;
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('RH', FALSE, 1, 0, 0);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('COMMERCE', FALSE, 1, 0, 0);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('CLIENTS', FALSE, 1, 2, 1);
+/* Champs customs */
+INSERT INTO custom_fields (id, label, type, "values") VALUES (1, 'Date de fin de contrat', 'date', '[]');
 
+/* Modèles d'enregistrement */
 TRUNCATE TABLE indexing_models;
-INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (1, 'incoming', 'Courrier arrivée', TRUE, 23, FALSE, TRUE);
-INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (2, 'outgoing', 'Courrier départ', FALSE, 23, FALSE, TRUE);
-INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (3, 'internal', 'Courrier interne', FALSE, 23, FALSE, TRUE);
-INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (4, 'ged_doc', 'Document ged', FALSE, 23, FALSE, TRUE);
+INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (1, 'incoming', 'Courrier Arrivée', TRUE, 23, FALSE, TRUE);
+INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (2, 'outgoing', 'Courrier Départ', FALSE, 23, FALSE, TRUE);
+INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (3, 'internal', 'Note Interne', FALSE, 23, FALSE, TRUE);
+INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (4, 'ged_doc', 'Document GED', FALSE, 23, FALSE, TRUE);
+INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (5, 'incoming', 'Courrier Arrivée - Formulaire complet', FALSE, 23, FALSE, TRUE);
 Select setval('indexing_models_id_seq', (select max(id)+1 from indexing_models), false);
 
 TRUNCATE TABLE indexing_models_fields;
 /* Arrivée */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'doctype', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'priority', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'confidentiality', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'documentDate', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'arrivalDate', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'arrivalDate', TRUE, '"_TODAY"', 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'subject', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'senders', TRUE, null, 'contact');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'recipients', FALSE, null, 'contact');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'initiator', TRUE, null, 'process');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'senders', TRUE, '[]', 'contact');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'destination', TRUE, null, 'process');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'processLimitDate', TRUE, null, 'process');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'folders', FALSE, null, 'classifying');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (1, 'tags', FALSE, null, 'classifying');
 
 /* Départ */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'doctype', TRUE, null, 'mail');
@@ -1643,20 +1691,16 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'processLimitDate', TRUE, null, 'process');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'folders', FALSE, null, 'classifying');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'tags', FALSE, null, 'classifying');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (2, 'initiator', TRUE, null, 'process');
 
 /* Interne */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'doctype', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'priority', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'confidentiality', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'documentDate', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'documentDate', TRUE, '"_TODAY"', 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'subject', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'senders', FALSE, null, 'contact');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'recipients', FALSE, null, 'contact');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'initiator', TRUE, null, 'process');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'senders', false, '[]', 'contact');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'destination', TRUE, null, 'process');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'processLimitDate', TRUE, null, 'process');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'folders', FALSE, null, 'classifying');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (3, 'tags', FALSE, null, 'classifying');
 
 /* GED */
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'doctype', TRUE, null, 'mail');
@@ -1667,5 +1711,21 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'recipients', FALSE, null, 'contact');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'initiator', TRUE, null, 'process');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'destination', TRUE, null, 'process');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'indexingCustomField_1', FALSE, null, 'process');
+
+/* Arrivée - formulaire complet */
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'doctype', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'priority', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'confidentiality', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'documentDate', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'arrivalDate', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'subject', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'senders', TRUE, null, 'contact');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'recipients', FALSE, null, 'contact');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'initiator', TRUE, null, 'process');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'destination', TRUE, null, 'process');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'processLimitDate', TRUE, null, 'process');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'folders', FALSE, null, 'classifying');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'tags', FALSE, null, 'classifying');
 
 INSERT INTO parameters (id, description, param_value_string) VALUES ('siret', 'Numéro SIRET de l''entreprise', '45239273100025');

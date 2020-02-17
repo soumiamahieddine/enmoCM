@@ -1,5 +1,16 @@
 @import '../../../css/vars.scss';
 
+.loading {
+    display: flex;
+    height: 100%;
+    position: absolute;
+    z-index: 2;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: white;
+}
+
 .mat-dialog-title {
     display: flex;
     align-items: center;
@@ -12,6 +23,7 @@
     min-height: auto;
     height: auto;
     border-radius: 5px;
+    cursor: pointer;
 
     .mat-icon {
         width: auto;
@@ -34,4 +46,19 @@
 
 .attachLabel {
     color: $primary;
+}
+
+.pdfVersion:hover {
+    color: $primary;
+}
+
+::ng-deep.attachListMenu {
+    width: auto;
+    max-width: initial;
+    min-height: auto;
+}
+
+.badFormat {
+    background-color: red;
+    color: white;
 }

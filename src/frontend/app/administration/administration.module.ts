@@ -49,7 +49,7 @@ import { ShippingAdministrationComponent }              from './shipping/shippin
 import { CustomFieldsAdministrationComponent }              from './customField/custom-fields-administration.component';
 import { IndexingModelAdministrationComponent }              from './indexingModel/indexing-model-administration.component';
 import { IndexingModelsAdministrationComponent }              from './indexingModel/indexing-models-administration.component';
-import { ContactsListAdministrationComponent }              from './contact/list/contacts-list-administration.component';
+import { ContactsListAdministrationComponent, ContactsListAdministrationRedirectModalComponent} from './contact/list/contacts-list-administration.component';
 import { ContactsHomeAdministrationComponent }              from './contact/home/contacts-home-administration.component';
 import { ContactsCustomFieldsAdministrationComponent }              from './contact/customField/contacts-custom-fields-administration.component';
 import { ContactsPageAdministrationComponent }              from './contact/page/contacts-page-administration.component';
@@ -114,6 +114,7 @@ import { ContactsPageAdministrationComponent }              from './contact/page
         IndexingModelAdministrationComponent,
         IndexingModelsAdministrationComponent,
         ContactsListAdministrationComponent,
+        ContactsListAdministrationRedirectModalComponent,
         ContactsHomeAdministrationComponent,
         ContactsCustomFieldsAdministrationComponent,
         ContactsPageAdministrationComponent,
@@ -127,6 +128,7 @@ import { ContactsPageAdministrationComponent }              from './contact/page
         BasketAdministrationGroupListModalComponent,
         DoctypesAdministrationRedirectModalComponent,
         TechnicalAdministrationComponent,
+        ContactsListAdministrationRedirectModalComponent,
         ListAdministrationComponent,
         ListAdministrationComponent,
         TemplateAdministrationCheckEntitiesModalComponent,

@@ -17,7 +17,7 @@ foreach ($customs as $custom) {
         $xmlfile = simplexml_load_file($path);
 
         if ($xmlfile) {
-            $xmlfile->indexingModelId = 1;
+            $xmlfile->res_letterbox->indexingModelId = 1;
             unset($xmlfile->contacts_v2);
             unset($xmlfile->contact_addresses);
 

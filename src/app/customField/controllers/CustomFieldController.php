@@ -17,6 +17,7 @@
 
 namespace CustomField\controllers;
 
+use Action\models\ActionModel;
 use CustomField\models\CustomFieldModel;
 use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
@@ -174,6 +175,12 @@ class CustomFieldController
 
         IndexingModelFieldModel::delete(['where' => ['identifier = ?'], 'data' => ['indexingCustomField_' . $args['id']]]);
         ResModel::update(['postSet' => ['custom_fields' => "custom_fields - '{$args['id']}'"], 'where' => ['1 = ?'], 'data' => [1]]);
+
+        ActionModel::update([
+            'postSet' => ['required_fields' => "required_fields - 'indexingCustomField_{$args['id']}'"],
+            'where'   => ["required_fields @> ?"],
+            'data'    => ['"indexingCustomField_'.$args['id'].'"']
+        ]);
 
         CustomFieldModel::delete([
             'where' => ['id = ?'],

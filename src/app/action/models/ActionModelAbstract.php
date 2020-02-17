@@ -71,23 +71,17 @@ abstract class ActionModelAbstract
         return $nextSequenceId;
     }
 
-    public static function update(array $aArgs)
+    public static function update(array $args)
     {
-        ValidatorModel::notEmpty($aArgs, ['id']);
-        ValidatorModel::intVal($aArgs, ['id']);
-        
+        ValidatorModel::notEmpty($args, ['where', 'data']);
+        ValidatorModel::arrayType($args, ['where', 'data']);
+
         DatabaseModel::update([
-            'table'     => 'actions',
-            'set'       => [
-                'keyword'           => $aArgs['keyword'],
-                'label_action'      => $aArgs['label_action'],
-                'id_status'         => $aArgs['id_status'],
-                'action_page'       => $aArgs['action_page'],
-                'component'         => $aArgs['component'],
-                'history'           => $aArgs['history'],
-            ],
-            'where'     => ['id = ?'],
-            'data'      => [$aArgs['id']]
+            'table'   => 'actions',
+            'set'     => !empty($args['set']) ? $args['set'] : [],
+            'postSet' => !empty($args['postSet']) ? $args['postSet'] : [],
+            'where'   => $args['where'],
+            'data'    => $args['data'],
         ]);
 
         return true;

@@ -301,6 +301,7 @@ export class ActionsService {
             filter((data: string) => data === 'success'),
             tap((result: any) => {
                 this.endAction(result);
+                this.router.navigate(['/indexing/' + this.currentGroupId]);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
