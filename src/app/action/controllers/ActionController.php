@@ -104,7 +104,6 @@ class ActionController
             return $response->withStatus(400)->withJson(['errors' => $errors]);
         }
 
-        unset($body['action_page']);
         $actionPages = ActionModel::getActionPages();
         foreach ($actionPages as $actionPage) {
             if ($actionPage['id'] == $body['actionPageId']) {
@@ -115,8 +114,6 @@ class ActionController
         if (empty($body['action_page'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Data actionPageId does not exist']);
         }
-
-        unset($body['actionPageId']);
 
         $requiredFields = [];
         if (!empty($body['requiredFields'])) {
@@ -135,11 +132,17 @@ class ActionController
                     $requiredFields[] = $requiredField;
                 }
             }
-            unset($body['requiredFields']);
         }
-        $body['required_fields'] = json_encode($requiredFields);
 
-        $id = ActionModel::create($body);
+        $id = ActionModel::create([
+            'history'         => $body['history'],
+            'keyword'         => $body['keyword'],
+            'id_status'       => $body['id_status'],
+            'label_action'    => $body['label_action'],
+            'action_page'     => $body['action_page'],
+            'component'       => $body['component'],
+            'required_fields' => json_encode($body['requiredFields'])
+        ]);
         if (!empty($body['actionCategories'])) {
             ActionModel::createCategories(['id' => $id, 'categories' => $body['actionCategories']]);
         }
@@ -170,7 +173,6 @@ class ActionController
             return $response->withStatus(500)->withJson(['errors' => $errors]);
         }
 
-        unset($body['action_page']);
         $actionPages = ActionModel::getActionPages();
         foreach ($actionPages as $actionPage) {
             if ($actionPage['id'] == $body['actionPageId']) {
@@ -199,7 +201,6 @@ class ActionController
                     $requiredFields[] = $requiredField;
                 }
             }
-            unset($body['requiredFields']);
         }
         $body['required_fields'] = json_encode($requiredFields);
 
