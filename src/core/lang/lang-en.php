@@ -227,8 +227,6 @@ define('_NO_CONFIRM_DESC', "Perform the action without confirmation");
 define('_VIEW_DOC', 'See the mail');
 define('_CLOSE_MAIL', 'Close a mail');
 define('_CLOSE_MAIL_DESC', 'Allows you to update the closing date of a mail. ESSENTIAL in order to complete your document workflow.');
-define('_CLOSE_MAIL_WITH_FIELDS', 'Close a mail with custom fields');
-define('_CLOSE_MAIL_WITH_FIELDS_DESC', 'Allows you to update the closing date of a mail. ESSENTIAL in order to complete your document workflow. Chosen fields will be needed to do the action.');
 define('_SET_PERSISTENT_MODE_ON', 'Activate the persistence');
 define('_SET_PERSISTENT_MODE_ON_DESC', 'Keeps a mail in a basket regardless of its state. Insert data in the \'basket_persistent_mode\' table.');
 define('_SET_PERSISTENT_MODE_OFF', 'Deactivate the persistence');

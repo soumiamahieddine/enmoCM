@@ -66,7 +66,6 @@ class ActionMethodController
         'continueOpinionCircuitAction'           => 'continueOpinionCircuit',
         'giveOpinionParallelAction'              => 'giveOpinionParallel',
         'validateParallelOpinionDiffusionAction' => 'validateParallelOpinionDiffusion',
-        'closeWithFieldsAction'                  => 'closeWithFields',
         'noConfirmAction'                        => null
     ];
 
@@ -880,17 +879,6 @@ class ActionMethodController
             'where' => ['res_id = ?'],
             'data'  => [$args['resId']]
         ]);
-
-        return true;
-    }
-
-    public static function closeWithFields(array $args)
-    {
-        ValidatorModel::notEmpty($args, ['resId']);
-        ValidatorModel::intVal($args, ['resId']);
-        ValidatorModel::stringType($args, ['note']);
-
-        ResModel::update(['set' => ['closing_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?', 'closing_date is null'], 'data' => [$args['resId']]]);
 
         return true;
     }
