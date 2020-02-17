@@ -1418,7 +1418,7 @@ class PreProcessActionController
             }
         }
 
-        return $response->withJson(['emptyFields' => $emptyFields, 'canClose' => $canClose]);
+        return $response->withJson(['errors' => $emptyFields, 'success' => $canClose]);
     }
 
     private static function getNonLockedResources(array $args)

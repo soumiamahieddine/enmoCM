@@ -17,7 +17,7 @@ use User\models\UserModel;
 
 class GroupController
 {
-    const INDEXING_ACTIONS = ['confirmAction', 'noConfirmAction', 'closeMailAction', 'sendSignatureBookAction'];
+    const INDEXING_ACTIONS = ['confirmAction', 'noConfirmAction', 'closeMailAction', 'sendSignatureBookAction', 'closeAndIndexAction'];
 
     public function get(Request $request, Response $response)
     {
