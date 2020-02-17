@@ -157,7 +157,7 @@ export class SignatureBookComponent implements OnInit {
                     this.rightContentWidth = "44%";
                     if (this.signatureBook.documents[0]) {
                         this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
-                        if (this.signatureBook.documents[0].category_id == "outgoing") {
+                        if (this.signatureBook.documents[0].inSignatureBook) {
                             this.headerTab = "visaCircuit";
                         }
                     }

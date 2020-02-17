@@ -125,17 +125,19 @@ class SignatureBookController
         $documents = [];
         if (!empty($incomingMail['filename']) && empty($integrations['inSignatureBook'])) {
             $documents[] = [
-                'res_id'        => $incomingMail['res_id'],
-                'alt_id'        => $incomingMail['alt_identifier'],
-                'title'         => $incomingMail['subject'],
-                'category_id'   => $incomingMail['category_id'],
-                'viewerLink'    => "../../rest/resources/{$resId}/content",
-                'thumbnailLink' => "rest/resources/{$resId}/thumbnail"
+                'res_id'          => $incomingMail['res_id'],
+                'alt_id'          => $incomingMail['alt_identifier'],
+                'title'           => $incomingMail['subject'],
+                'category_id'     => $incomingMail['category_id'],
+                'viewerLink'      => "../../rest/resources/{$resId}/content",
+                'thumbnailLink'   => "rest/resources/{$resId}/thumbnail",
+                'inSignatureBook' => false
             ];
         } else {
             $documents[] = [
-                'alt_id' => $incomingMail['alt_identifier'],
-                'title'  => $incomingMail['subject']
+                'alt_id'          => $incomingMail['alt_identifier'],
+                'title'           => $incomingMail['subject'],
+                'inSignatureBook' => true
             ];
         }
 

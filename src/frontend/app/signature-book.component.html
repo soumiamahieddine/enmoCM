@@ -4,7 +4,7 @@
 <div *ngIf="!loading" class='visaContent' style="margin-top: -64px;">
     <div class="titleSignatureBook">
         <div id="tabSignatureBook">
-            <div *ngIf="signatureBook.documents[0] && signatureBook.documents[0].category_id != 'outgoing'" title="{{lang.mail}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 'document'}" (click)="changeSignatureBookLeftContent('document')">
+            <div *ngIf="signatureBook.documents[0] && !signatureBook.documents[0].inSignatureBook" title="{{lang.mail}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 'document'}" (click)="changeSignatureBookLeftContent('document')">
                 <i class="fa fa-file-alt fa-2x"></i>
             </div>
             <div *ngFor="let module of processTool" title="{{module.label}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == module.id}" (click)="changeSignatureBookLeftContent(module.id)">
