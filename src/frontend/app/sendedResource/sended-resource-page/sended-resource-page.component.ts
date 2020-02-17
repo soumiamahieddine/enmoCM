@@ -165,12 +165,23 @@ export class SendedResourcePageComponent implements OnInit {
             this[type].push(
                 {
                     label: value.trim(),
-                    email: value.trim()
+                    email: value.trim(),
+                    badFormat : this.isBadEmailFormat(value.trim())
                 });
         }
 
         if (input) {
             input.value = '';
+        }
+    }
+
+    isBadEmailFormat(email: string) {
+        const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/g;
+
+        if (email.trim().match(regex) !== null) {
+            return false
+        } else {
+            return true;
         }
     }
 
@@ -286,19 +297,22 @@ export class SendedResourcePageComponent implements OnInit {
                     this.recipients = data.recipients.map((item: any) => {
                         return {
                             label: item,
-                            email: item
+                            email: item,
+                            badFormat : this.isBadEmailFormat(item)
                         }
                     });
                     this.copies = data.cc.map((item: any) => {
                         return {
                             label: item,
-                            email: item
+                            email: item,
+                            badFormat : this.isBadEmailFormat(item)
                         }
                     });;
                     this.invisibleCopies = data.cci.map((item: any) => {
                         return {
                             label: item,
-                            email: item
+                            email: item,
+                            badFormat : this.isBadEmailFormat(item)
                         }
                     });
 

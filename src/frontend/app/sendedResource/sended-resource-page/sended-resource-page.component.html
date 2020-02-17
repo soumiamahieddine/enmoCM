@@ -29,7 +29,8 @@
             [cdkDropListConnectedTo]="['copies-list','invcopies-list']" [cdkDropListData]="recipients"
             (cdkDropListDropped)="drop($event)">
             <mat-chip cdkDrag class="recipients" *ngFor="let recipient of recipients" [selectable]="selectable"
-                [removable]="canManageMail()" (removed)="remove(recipient, 'recipients')" [title]="recipient.email">
+                [removable]="canManageMail()" (removed)="remove(recipient, 'recipients')" [title]="recipient.email"
+                [class.badFormat]="recipient.badFormat">
                 {{recipient.label}}
                 <mat-icon matChipRemove class="fa fa-times" *ngIf="canManageMail()"></mat-icon>
             </mat-chip>
@@ -51,7 +52,8 @@
             [cdkDropListConnectedTo]="['recipients-list','invcopies-list']" [cdkDropListData]="copies"
             (cdkDropListDropped)="drop($event)">
             <mat-chip cdkDrag class="copy" *ngFor="let copy of copies" [selectable]="selectable"
-                [removable]="canManageMail()" (removed)="remove(copy, 'copies')" [title]="copy.email">
+                [removable]="canManageMail()" (removed)="remove(copy, 'copies')" [title]="copy.email"
+                [class.badFormat]="copy.badFormat">
                 {{copy.label}}
                 <mat-icon matChipRemove class="fa fa-times" *ngIf="canManageMail()"></mat-icon>
             </mat-chip>
@@ -73,7 +75,8 @@
             [cdkDropListConnectedTo]="['recipients-list','copies-list']" [cdkDropListData]="invisibleCopies"
             (cdkDropListDropped)="drop($event)">
             <mat-chip class="copy" *ngFor="let invCopy of invisibleCopies" [selectable]="selectable"
-                [removable]="canManageMail()" (removed)="remove(invCopy, 'invisibleCopies')" [title]="invCopy.email">
+                [removable]="canManageMail()" (removed)="remove(invCopy, 'invisibleCopies')" [title]="invCopy.email"
+                [class.badFormat]="invCopy.badFormat">
                 {{invCopy.label}}
                 <mat-icon matChipRemove class="fa fa-times" *ngIf="canManageMail()"></mat-icon>
             </mat-chip>
@@ -91,7 +94,8 @@
         </mat-autocomplete>
     </mat-form-field>
     <mat-form-field floatLabel="never">
-        <input matInput [placeholder]="lang.object" [readonly]="!canManageMail()" [(ngModel)]="emailsubject" maxlength="70">
+        <input matInput [placeholder]="lang.object" [readonly]="!canManageMail()" [(ngModel)]="emailsubject"
+            maxlength="70">
         <button mat-icon-button matSuffix *ngFor="let keyVal of emailAttachTool | keyvalue"
             [disabled]="!canManageMail() || emailAttachTool[keyVal.key].list.length === 0"
             [title]="emailAttachTool[keyVal.key].title"
@@ -161,7 +165,9 @@
     </div>
 </mat-dialog-content>
 <div mat-dialog-actions class="actions" *ngIf="!loading">
-    <button mat-raised-button color="primary" style="min-width: auto;width: 40px;padding: 0;" *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail')" [disabled]="recipients.length === 0" [matMenuTriggerFor]="emailActionMenu">
+    <button mat-raised-button color="primary" style="min-width: auto;width: 40px;padding: 0;"
+        *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail')"
+        [disabled]="recipients.length === 0" [matMenuTriggerFor]="emailActionMenu">
         <mat-icon style="height:auto;" class="fas fa-ellipsis-v"></mat-icon>
     </button>
     <mat-menu #emailActionMenu="matMenu" [class]="'attachListMenu'">
@@ -169,8 +175,9 @@
             {{lang.sendInPlainText}}
         </button>
     </mat-menu>
-    <button mat-raised-button color="primary" *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail')"
-        (click)="onSubmit()" [disabled]="recipients.length === 0">{{lang.send}}</button>
+    <button mat-raised-button color="primary"
+        *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail')" (click)="onSubmit()"
+        [disabled]="recipients.length === 0">{{lang.send}}</button>
     <button mat-raised-button color="primary" *ngIf="canManageMail()" (click)="saveDraft()">{{lang.saveDraft}}</button>
     <button mat-raised-button color="warn" (click)="deleteEmail()" *ngIf="data.emailId && data.emailType === 'email'"
         [disabled]="headerService.user.id !== emailCreatorId">{{lang.delete}}</button>
