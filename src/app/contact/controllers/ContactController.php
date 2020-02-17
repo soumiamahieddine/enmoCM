@@ -468,7 +468,9 @@ class ContactController
                     'data'    => [$resourcesContact['res_id'], $queryParams['redirect'], $resourcesContact['mode']],
                     'orderBy' => ['id desc']
                 ]);
-                $toDelete[] = $resContact[0]['id'];
+                if (count($resContact) > 1) {
+                    $toDelete[] = $resContact[0]['id'];
+                }
             }
             if (!empty($toDelete)) {
                 ResourceContactModel::delete([
