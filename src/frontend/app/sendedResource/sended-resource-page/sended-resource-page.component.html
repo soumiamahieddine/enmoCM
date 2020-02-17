@@ -74,7 +74,7 @@
         <mat-chip-list id="invcopies-list" #invCopiesList cdkDropList
             [cdkDropListConnectedTo]="['recipients-list','copies-list']" [cdkDropListData]="invisibleCopies"
             (cdkDropListDropped)="drop($event)">
-            <mat-chip class="copy" *ngFor="let invCopy of invisibleCopies" [selectable]="selectable"
+            <mat-chip cdkDrag class="copy" *ngFor="let invCopy of invisibleCopies" [selectable]="selectable"
                 [removable]="canManageMail()" (removed)="remove(invCopy, 'invisibleCopies')" (click)="remove(invCopy, 'recipients')" [title]="invCopy.email"
                 [class.badFormat]="invCopy.badFormat">
                 {{invCopy.label}}{{invCopy.label !== invCopy.email ? ' (' + invCopy.email + ')' : ''}}
@@ -128,7 +128,7 @@
             [removable]="canManageMail()" (removed)="removeAttachMail(0, 'document')"
             [title]="emailAttach.document.chrono + ' - ' + emailAttach.document.label">
             <i class="fa fa-file attachLabel"></i>&nbsp;{{emailAttach.document.label | shorten: 25: '...'}}&nbsp;<small
-                class="attachLabel">(pdf - {{emailAttach.document.size}})</small>
+                class="attachLabel">({{emailAttach.document.format}} - {{emailAttach.document.size}})</small>
             <mat-icon matChipRemove class="fa fa-times" *ngIf="canManageMail()"></mat-icon>
         </mat-chip>
         <ng-container *ngFor="let keyVal of emailAttach | keyvalue">
