@@ -543,7 +543,7 @@ class AutoCompleteController
         return $response->withJson($data);
     }
 
-    public static function getContactsForGroups(Request $request, Response $response)
+    public static function getContacts(Request $request, Response $response)
     {
         $data = $request->getQueryParams();
 

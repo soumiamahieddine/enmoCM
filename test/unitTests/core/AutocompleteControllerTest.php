@@ -27,7 +27,7 @@ class AutocompleteControllerTest extends TestCase
         ];
         $fullRequest = $request->withQueryParams($aArgs);
 
-        $response     = $autocompleteController->getContactsForGroups($fullRequest, new \Slim\Http\Response());
+        $response     = $autocompleteController->getContacts($fullRequest, new \Slim\Http\Response());
         $responseBody = json_decode((string)$response->getBody());
 
         $this->assertInternalType('array', $responseBody);

@@ -1518,10 +1518,14 @@ export const LANG_NL = {
     "cannotCloseMails" : "Some mails cannot be closed", //_TO_TRANSLATE
     "followingFieldsAreEmpty" : "Following fields are empty", //_TO_TRANSLATE
     "checkEmptyFields" : "Requisite fields to make this action", //_TO_TRANSLATE
+    "contactsReassign" : "Contacts reassign",//_TO_TRANSLATE
     "contactLinkedToMails" : "Contact linked to mails", //_TO_TRANSLATE
     "reaffect" : "Reaffect", //_TO_TRANSLATE
     "reaffectContactRedirect" : "Reaffect to a contact", //_TO_TRANSLATE
     "contactReplacement" : "Replacement contact", //_TO_TRANSLATE
+    "deleteContactwithtoutReassign" : "Delete contact without reassign", //_TO_TRANSLATE
+    "deleteContactInformations" : "Links between contact and resources, attachments or acknowledgement receipts will be deleted.",//_TO_TRANSLATE
+    "reaffectContactInformations" : "Links between contact and resources, attachments or acknowledgement receipts will be reassigned to choosen contact.",//_TO_TRANSLATE
     "availableContacts" : "Available contact", //_TO_TRANSLATE
     "sent" :  "Sent", //_TO_TRANSLATE
     "notSent" :  "Not sent", //_TO_TRANSLATE

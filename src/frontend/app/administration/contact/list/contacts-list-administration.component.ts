@@ -146,7 +146,7 @@ export class ContactsListAdministrationComponent implements OnInit {
             this.dialogRef.afterClosed().subscribe((result: any) => {
                 var queryparams = '';
                 if (result.processMode == 'reaffect') {
-                    queryparams = '?contact=' + result.contactId;
+                    queryparams = '?redirect=' + result.contactId;
                 }
                 this.http.request('DELETE', `../../rest/contacts/${contact.id}${queryparams}`)
                     .subscribe(() => {
