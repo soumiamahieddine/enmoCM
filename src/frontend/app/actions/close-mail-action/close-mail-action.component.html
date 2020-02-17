@@ -4,14 +4,17 @@
         <mat-spinner style="margin:auto;"></mat-spinner>
     </div>
     <div class="row">
-        <div class="col-md-12" *ngIf="mailsWithEmptyFields.length > 0">
-            <div class="alert-message alert-message-danger mailList" role="alert">
+        <div class="col-md-12" *ngIf="emptyMandatoryFields.length > 0">
+            <div *ngIf="data.resIds.length > 0" class="alert-message alert-message-danger mailList" role="alert">
                 <p>{{lang.cannotCloseMails}} :</p>
                 <ul>
-                    <li *ngFor="let emptyFields of mailsWithEmptyFields">
-                        <b>[{{emptyFields.chrono}}]</b> {{lang.followingFieldsAreEmpty}} : {{emptyFields.fields}}
+                    <li *ngFor="let emptyFields of emptyMandatoryFields">
+                        <b>{{emptyFields.chrono}}</b> : {{emptyFields.fields}}
                     </li>
                 </ul>
+            </div>
+            <div *ngIf="data.resIds.length == 0" class="alert-message alert-message-danger mailList" role="alert">
+                <p>{{lang.cannotCloseThisMail}} : {{emptyMandatoryFields[0].fields}}</p>
             </div>
         </div>
         <ng-container *ngIf="data.resIds.length === 0 || canCloseResIds.length > 0">
@@ -31,7 +34,7 @@
     </div>
 </div>
 <div mat-dialog-actions class="actions">
-    <button mat-raised-button mat-button color="primary" [disabled]="loading || (canCloseResIds.length == 0 && data.resIds.length > 0)"
+    <button mat-raised-button mat-button color="primary" [disabled]="loading || canCloseResIds.length == 0"
         (click)="onSubmit()">{{lang.validate}}</button>
     <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.cancel}}</button>
 </div>
