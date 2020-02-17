@@ -457,17 +457,14 @@ class ContactController
                 'data'   => [$args['id']]
             ]);
 
-            // insert result in resources_contacts linking to redirect
-            foreach ($resourcesContacts as $resourcesContact) {
-                ResourceContactModel::create([
-                    'res_id' => $resourcesContact['res_id'],
-                    'item_id' => $queryParams['redirect'],
-                    'type' => 'contact',
-                    'mode' => $resourcesContact['mode']
-                ]);
-            }
+            ResourceContactModel::update([
+                'set'   => ['item_id' => $queryParams['redirect']],
+                'where' => ['item_id = ?', "type = 'contact'"],
+                'data'  => [$args['id']]
+            ]);
 
             // Delete duplicates if needed
+            $toDelete = [];
             foreach ($resourcesContacts as $resourcesContact) {
                 $resContact = ResourceContactModel::get([
                     'select'  => ['id'],
@@ -475,13 +472,13 @@ class ContactController
                     'data'    => [$resourcesContact['res_id'], $queryParams['redirect'], $resourcesContact['mode']],
                     'orderBy' => ['id desc']
                 ]);
-
-                if (count($resContact) > 1) {
-                    ResourceContactModel::delete([
-                        'where' => ['id = ?'],
-                        'data' => [$resContact[0]['id']]
-                    ]);
-                }
+                $toDelete[] = $resContact[0]['id'];
+            }
+            if (!empty($toDelete)) {
+                ResourceContactModel::delete([
+                    'where' => ['id in (?)'],
+                    'data' => [$toDelete]
+                ]);
             }
 
             AcknowledgementReceiptModel::update([

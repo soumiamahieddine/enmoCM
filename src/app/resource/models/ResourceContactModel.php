@@ -70,6 +70,21 @@ class ResourceContactModel
         return true;
     }
 
+    public static function update(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['set', 'where', 'data']);
+        ValidatorModel::arrayType($args, ['set', 'where', 'data']);
+
+        DatabaseModel::update([
+            'table'     => 'resource_contacts',
+            'set'       => $args['set'],
+            'where'     => $args['where'],
+            'data'      => $args['data']
+        ]);
+
+        return true;
+    }
+
     public static function delete(array $args)
     {
         ValidatorModel::notEmpty($args, ['where', 'data']);
