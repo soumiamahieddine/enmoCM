@@ -1551,7 +1551,7 @@ export const LANG_FR = {
     "copieShort" :  "Cc",
     "invisibleCopyShort" :  "Cci",
     "shipping" :  "Envoi maileva",
-    "sendElement" :  "Envoyer un element",
+    "sendElement" :  "Envoyer un élément",
     "pdfVersion" : "Version PDF",
     "emailModel" : "Modèle de courriel",
     "sendInPlainText" : "Envoyer en texte brut",

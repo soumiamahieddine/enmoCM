@@ -5,6 +5,7 @@ import { NotificationService } from '../notification.service';
 import { catchError, tap } from 'rxjs/operators';
 import { HeaderService } from '../../service/header.service';
 import { of } from 'rxjs';
+import { FunctionsService } from '../../service/functions.service';
 
 @Component({
     selector: 'app-note-editor',
@@ -36,7 +37,8 @@ export class NoteEditorComponent implements OnInit {
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
-        public headerService: HeaderService) { }
+        public headerService: HeaderService,
+        public functions: FunctionsService) { }
 
     async ngOnInit() {
         await this.getEntities();
@@ -56,7 +58,7 @@ export class NoteEditorComponent implements OnInit {
         this.http.get(`../../rest/resources/${this.resIds[0]}/fields/destination`).pipe(
             tap((data: any) => {
                 this.entitiesRestriction = this.headerService.user.entities.map((entity: any) => entity.entity_id);
-                if (this.entitiesRestriction.indexOf(data.field) === -1) {
+                if (this.entitiesRestriction.indexOf(data.field) === -1 && !this.functions.empty(data.field)) {
                     this.entitiesRestriction.push(data.field);
                 }
                 this.entities.filter((entity: any) => this.entitiesRestriction.indexOf(entity.id) > -1).forEach((element: any) => {

@@ -29,9 +29,9 @@
             [cdkDropListConnectedTo]="['copies-list','invcopies-list']" [cdkDropListData]="recipients"
             (cdkDropListDropped)="drop($event)">
             <mat-chip cdkDrag class="recipients" *ngFor="let recipient of recipients" [selectable]="selectable"
-                [removable]="canManageMail()" (removed)="remove(recipient, 'recipients')" [title]="recipient.email"
+                [removable]="canManageMail()" (removed)="remove(recipient, 'recipients')" (click)="remove(recipient, 'recipients')" [title]="recipient.email"
                 [class.badFormat]="recipient.badFormat">
-                {{recipient.label}}
+                {{recipient.label}}{{recipient.label !== recipient.email ? ' (' + recipient.email + ')' : ''}}
                 <mat-icon matChipRemove class="fa fa-times" *ngIf="canManageMail()"></mat-icon>
             </mat-chip>
             <input [formControl]="recipientsInput" [matChipInputFor]="recipientsList"
@@ -52,9 +52,9 @@
             [cdkDropListConnectedTo]="['recipients-list','invcopies-list']" [cdkDropListData]="copies"
             (cdkDropListDropped)="drop($event)">
             <mat-chip cdkDrag class="copy" *ngFor="let copy of copies" [selectable]="selectable"
-                [removable]="canManageMail()" (removed)="remove(copy, 'copies')" [title]="copy.email"
+                [removable]="canManageMail()" (removed)="remove(copy, 'copies')" (click)="remove(copycopy, 'recipients')" [title]="copy.email"
                 [class.badFormat]="copy.badFormat">
-                {{copy.label}}
+                {{copy.label}}{{copy.label !== copy.email ? ' (' + copy.email + ')' : ''}}
                 <mat-icon matChipRemove class="fa fa-times" *ngIf="canManageMail()"></mat-icon>
             </mat-chip>
             <input [formControl]="recipientsInput" [matChipInputFor]="copiesList"
@@ -75,9 +75,9 @@
             [cdkDropListConnectedTo]="['recipients-list','copies-list']" [cdkDropListData]="invisibleCopies"
             (cdkDropListDropped)="drop($event)">
             <mat-chip class="copy" *ngFor="let invCopy of invisibleCopies" [selectable]="selectable"
-                [removable]="canManageMail()" (removed)="remove(invCopy, 'invisibleCopies')" [title]="invCopy.email"
+                [removable]="canManageMail()" (removed)="remove(invCopy, 'invisibleCopies')" (click)="remove(invCopy, 'recipients')" [title]="invCopy.email"
                 [class.badFormat]="invCopy.badFormat">
-                {{invCopy.label}}
+                {{invCopy.label}}{{invCopy.label !== invCopy.email ? ' (' + invCopy.email + ')' : ''}}
                 <mat-icon matChipRemove class="fa fa-times" *ngIf="canManageMail()"></mat-icon>
             </mat-chip>
             <input [formControl]="recipientsInput" [matChipInputFor]="invCopiesList"
@@ -97,7 +97,7 @@
         <input matInput [placeholder]="lang.object" [readonly]="!canManageMail()" [(ngModel)]="emailsubject"
             maxlength="70">
         <button mat-icon-button matSuffix *ngFor="let keyVal of emailAttachTool | keyvalue"
-            [disabled]="!canManageMail() || emailAttachTool[keyVal.key].list.length === 0"
+            [disabled]="!canManageMail() || (emailAttachTool[keyVal.key].list.length === 0)"
             [title]="emailAttachTool[keyVal.key].title"
             (click)="$event.stopPropagation();currentEmailAttachTool=keyVal.key;"
             [matMenuTriggerFor]="emailAttachListMenu">
@@ -110,7 +110,7 @@
                 <ng-container *ngIf="keyVal.key === currentEmailAttachTool">
                     <button mat-menu-item style="line-height: normal;" disableRipple
                         *ngFor="let attach of emailAttachTool[keyVal.key].list"
-                        [disabled]="isSelectedAttachMail(attach,keyVal.key)">
+                        [disabled]="isSelectedAttachMail(attach,keyVal.key)" (click)="$event.stopPropagation();">
                         <span (click)="toggleAttachMail(attach,keyVal.key,'original')" [title]="attach.label">
                             <div style="font-size: 10px;opacity: 0.5;">{{attach.chrono}} - {{attach.typeLabel}}
                                 ({{attach.creator}})</div>

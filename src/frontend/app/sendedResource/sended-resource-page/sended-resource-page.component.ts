@@ -277,11 +277,12 @@ export class SendedResourcePageComponent implements OnInit {
     }
 
     remove(item: any, type: string): void {
+        if (this.canManageMail()) {
+            const index = this[type].indexOf(item);
 
-        const index = this[type].indexOf(item);
-
-        if (index >= 0) {
-            this[type].splice(index, 1);
+            if (index >= 0) {
+                this[type].splice(index, 1);
+            }
         }
     }
 
@@ -290,10 +291,7 @@ export class SendedResourcePageComponent implements OnInit {
             this.http.get(`../../rest/emails/${emailId}`).pipe(
                 tap((data: any) => {
                     this.emailCreatorId = data.userId;
-                    this.currentSender = {
-                        label: data.sender.email,
-                        email: data.sender.email
-                    };
+
                     this.recipients = data.recipients.map((item: any) => {
                         return {
                             label: item,
@@ -323,8 +321,16 @@ export class SendedResourcePageComponent implements OnInit {
                     this.emailsubject = data.object;
                     this.emailStatus = data.status;
 
-                    this.emailContent = data.body;
+                    if (!this.canManageMail()) {
+                        this.currentSender = {
+                            label: data.sender.email,
+                            email: data.sender.email,
+                            entityId : data.sender.entityId
+                        };
+                    }
 
+                    this.emailContent = data.body;
+                    console.log(this.emailAttachTool);
                     Object.keys(data.document).forEach(element => {
                         if (['id', 'isLinked', 'original'].indexOf(element) === -1) {
                             data.document[element].forEach((dataAttach: any) => {
@@ -334,7 +340,8 @@ export class SendedResourcePageComponent implements OnInit {
                                         return {
                                             ...item,
                                             format: dataAttach.original || dataAttach.original === undefined ? item.format : 'pdf',
-                                            original: dataAttach.original
+                                            original: dataAttach.original,
+                                            size : dataAttach.original || dataAttach.original === undefined ? item.size : item.convertedDocument.size
                                         }
                                     })
                                 }
@@ -342,8 +349,10 @@ export class SendedResourcePageComponent implements OnInit {
                         } else if (element === 'isLinked' && data.document.isLinked === true) {
                             this.emailAttach.document.isLinked = true;
                             this.emailAttach.document.original = data.document.original;
+                            this.emailAttach.document.size = this.emailAttach.document.original ? this.emailAttachTool.document.list[0].size : this.emailAttachTool.document.list[0].convertedDocument.size
                         }
                     });
+                    
                     resolve(true);
                 }),
                 catchError((err) => {
@@ -460,7 +469,7 @@ export class SendedResourcePageComponent implements OnInit {
             this.http.get(`../../rest/resources/${this.data.resId}/emailsInitialization`).pipe(
                 tap((data: any) => {
                     Object.keys(data).forEach(element => {
-                        if (element === 'resource') {
+                        if (element === 'resource') {  
                             this.emailAttachTool.document.list = [data[element]];
                         } else {
                             this.emailAttachTool[element].list = data[element].map((item: any) => {
@@ -656,13 +665,15 @@ export class SendedResourcePageComponent implements OnInit {
             if (this.emailAttach.document.isLinked === false) {
                 this.emailAttach.document.isLinked = true;
                 this.emailAttach.document.original = mode === 'pdf' ? false : true;
+                this.emailAttach.document.size = mode === 'pdf' ? item.convertedDocument.size : item.size;
             }
         } else {
             if (this.emailAttach[type].filter((attach: any) => attach.id === item.id).length === 0) {
                 this.emailAttach[type].push({
                     ...item,
                     format: mode !== 'pdf' ? item.format : 'pdf',
-                    original: mode === 'pdf' ? false : true
+                    original: mode === 'pdf' ? false : true,
+                    size : mode === 'pdf' ? item.convertedDocument.size : item.size
                 });
             }
         }
