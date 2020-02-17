@@ -330,7 +330,6 @@ export class SendedResourcePageComponent implements OnInit {
                     }
 
                     this.emailContent = data.body;
-                    console.log(this.emailAttachTool);
                     Object.keys(data.document).forEach(element => {
                         if (['id', 'isLinked', 'original'].indexOf(element) === -1) {
                             data.document[element].forEach((dataAttach: any) => {
