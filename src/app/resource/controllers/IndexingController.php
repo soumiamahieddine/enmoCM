@@ -14,12 +14,12 @@
 
 namespace Resource\controllers;
 
+use Action\controllers\ActionController;
 use Action\controllers\ActionMethodController;
 use Action\models\ActionModel;
 use Doctype\models\DoctypeModel;
 use Entity\models\EntityModel;
 use Group\models\GroupModel;
-use IndexingModel\models\IndexingModelFieldModel;
 use Parameter\models\ParameterModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
@@ -98,21 +98,9 @@ class IndexingController
         $body['note'] = empty($body['note']) ? null : $body['note'];
 
         if (!empty($actionRequiredFields)) {
-            $resource = ResModel::getById(['resId' => $body['resource'], 'select' => ['model_id', 'custom_fields']]);
-            $model = $resource['model_id'];
-            $resourceCustomFields = json_decode($resource['custom_fields'], true);
-            $modelFields = IndexingModelFieldModel::get([
-                'select' => ['identifier'],
-                'where'  => ['model_id = ?', "identifier LIKE 'indexingCustomField_%'"],
-                'data'   => [$model]
-            ]);
-            $modelFields = array_column($modelFields, 'identifier');
-
-            foreach ($actionRequiredFields as $actionRequiredField) {
-                $idCustom = explode("_", $actionRequiredField)[1];
-                if (in_array($actionRequiredField, $modelFields) && empty($resourceCustomFields[$idCustom])) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Missing required custom field to do action']);
-                }
+            $requiredFieldsValid = ActionController::checkRequiredFields(['resId' => $body['resource'], 'actionRequiredFields' => $actionRequiredFields]);
+            if (!empty($requiredFieldsValid['errors'])) {
+                return $response->withStatus(400)->withJson($requiredFieldsValid);
             }
         }
 

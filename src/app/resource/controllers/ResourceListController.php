@@ -14,6 +14,7 @@
 
 namespace Resource\controllers;
 
+use Action\controllers\ActionController;
 use Action\controllers\ActionMethodController;
 use Action\models\ActionModel;
 use Attachment\models\AttachmentModel;
@@ -26,7 +27,6 @@ use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Folder\models\FolderModel;
 use Group\models\GroupModel;
-use IndexingModel\models\IndexingModelFieldModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
@@ -438,21 +438,9 @@ class ResourceListController
         $methodResponses = [];
         foreach ($resourcesForAction as $key => $resId) {
             if (!empty($actionRequiredFields)) {
-                $resource = ResModel::getById(['resId' => $resId, 'select' => ['model_id', 'custom_fields']]);
-                $model = $resource['model_id'];
-                $resourceCustomFields = json_decode($resource['custom_fields'], true);
-                $modelFields = IndexingModelFieldModel::get([
-                    'select' => ['identifier'],
-                    'where'  => ['model_id = ?', "identifier LIKE 'indexingCustomField_%'"],
-                    'data'   => [$model]
-                ]);
-                $modelFields = array_column($modelFields, 'identifier');
-
-                foreach ($actionRequiredFields as $actionRequiredField) {
-                    $idCustom = explode("_", $actionRequiredField)[1];
-                    if (in_array($actionRequiredField, $modelFields) && empty($resourceCustomFields[$idCustom])) {
-                        return $response->withStatus(400)->withJson(['errors' => 'Missing required custom field to do action']);
-                    }
+                $requiredFieldsValid = ActionController::checkRequiredFields(['resId' => $resId, 'actionRequiredFields' => $actionRequiredFields]);
+                if (!empty($requiredFieldsValid['errors'])) {
+                    return $response->withStatus(400)->withJson($requiredFieldsValid);
                 }
             }
 

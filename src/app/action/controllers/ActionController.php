@@ -18,9 +18,11 @@ use Group\controllers\GroupController;
 use Group\controllers\PrivilegeController;
 use Group\models\GroupModel;
 use History\controllers\HistoryController;
+use IndexingModel\models\IndexingModelFieldModel;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
 use Action\models\ActionModel;
+use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -344,5 +346,29 @@ class ActionController
             }
         }
         return $request;
+    }
+
+    public static function checkRequiredFields(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['resId', 'actionRequiredFields']);
+        ValidatorModel::intVal($args, ['resId']);
+
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['model_id', 'custom_fields']]);
+        $model = $resource['model_id'];
+        $resourceCustomFields = json_decode($resource['custom_fields'], true);
+        $modelFields = IndexingModelFieldModel::get([
+            'select' => ['identifier'],
+            'where'  => ['model_id = ?', "identifier LIKE 'indexingCustomField_%'"],
+            'data'   => [$model]
+        ]);
+        $modelFields = array_column($modelFields, 'identifier');
+
+        foreach ($args['actionRequiredFields'] as $actionRequiredField) {
+            $idCustom = explode("_", $actionRequiredField)[1];
+            if (in_array($actionRequiredField, $modelFields) && empty($resourceCustomFields[$idCustom])) {
+                return ['errors' => 'Missing required custom field to do action'];
+            }
+        }
+        return ['success' => true];
     }
 }
