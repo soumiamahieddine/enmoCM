@@ -364,8 +364,8 @@ export class SendedResourcePageComponent implements OnInit {
                         email: data.acknowledgementReceipt.userLabel
                     };
                     this.recipients = [{
-                        label: this.contactService.formatContact(data.acknowledgementReceipt.contact),
-                        email: data.acknowledgementReceipt.contact.email
+                        label: !this.functions.empty(data.acknowledgementReceipt.contact) ? this.contactService.formatContact(data.acknowledgementReceipt.contact) : this.lang.contactDeleted,
+                        email: !this.functions.empty(data.acknowledgementReceipt.contact.email) ? data.acknowledgementReceipt.contact.email : this.lang.contactDeleted
                     }];
 
                     this.emailsubject = this.lang.shipping;

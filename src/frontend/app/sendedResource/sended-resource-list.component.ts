@@ -74,10 +74,23 @@ export class SendedResourceListComponent implements OnInit {
             this.http.get(`../../rest/resources/${this.resId}/acknowledgementReceipts?type=ar`).pipe(
                 map((data: any) => {
                     data = data.map((item: any) => {
+                        let email;
+                        if (!this.functions.empty(item.contact.email)) {
+                            email = item.contact.email;
+                        } else {
+                            email = this.lang.contactDeleted;
+                        }
+                        let name;
+                        if (!this.functions.empty(item.contact.firstname) && !this.functions.empty(item.contact.lastname)) {
+                            name = `${item.contact.firstname} ${item.contact.lastname}`
+                        } else {
+                            name = this.lang.contactDeleted;
+                        }
+
                         return {
                             id: item.id,
                             sender: false,
-                            recipients: item.format === 'html' ? item.contact.email : `${item.contact.firstname} ${item.contact.lastname}`,
+                            recipients: item.format === 'html' ? email : name,
                             creationDate: item.creationDate,
                             sendDate: item.sendDate,
                             type: 'acknowledgementReceipt',

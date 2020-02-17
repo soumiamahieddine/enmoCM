@@ -1523,5 +1523,6 @@ export const LANG_EN = {
     "draftSaved" : "Draft saved",
     "draftUpdated" : "Draft updated",
     "sendingEmail" : "Sending email...",
-    "restrictions" : "Restrictions",   
+    "restrictions" : "Restrictions",
+    "contactDeleted" : "Contact deleted"
 };
