@@ -19,7 +19,7 @@ export class NotesListComponent implements OnInit {
 
     lang: any = LANG;
     notes: any[] = [];
-    loading: boolean = false;
+    loading: boolean = true;
     resIds : number[] = [];
 
     @Input('injectDatas') injectDatas: any;
