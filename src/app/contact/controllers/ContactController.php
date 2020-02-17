@@ -433,6 +433,81 @@ class ContactController
             return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
         }
 
+        $queryParams = $request->getQueryParams();
+
+        if (!empty($queryParams['redirect'])) {
+            if (!Validator::intVal()->validate($queryParams['redirect'])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Query param redirect is not an integer']);
+            }
+
+            if ($queryParams['redirect'] == $args['id']) {
+                return $response->withStatus(400)->withJson(['errors' => 'Cannot redirect to contact you are deleting']);
+            }
+
+            $contactRedirect = ContactModel::getById(['id' => $queryParams['redirect'], 'select' => [1]]);
+            if (empty($contactRedirect)) {
+                return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
+            }
+
+            // Replace contact with redirect
+            // get all res_id linked to contact args['id']
+            $resourcesContacts = ResourceContactModel::get([
+                'select' => ['res_id', 'mode'],
+                'where'  => ['item_id = ?', "type = 'contact'"],
+                'data'   => [$args['id']]
+            ]);
+
+            // insert result in resources_contacts linking to redirect
+            foreach ($resourcesContacts as $resourcesContact) {
+                ResourceContactModel::create([
+                    'res_id' => $resourcesContact['res_id'],
+                    'item_id' => $queryParams['redirect'],
+                    'type' => 'contact',
+                    'mode' => $resourcesContact['mode']
+                ]);
+            }
+
+            // Delete duplicates if needed
+            foreach ($resourcesContacts as $resourcesContact) {
+                $resContact = ResourceContactModel::get([
+                    'select'  => ['id'],
+                    'where'   => ['res_id = ?', 'item_id = ?', 'mode = ?', "type = 'contact'"],
+                    'data'    => [$resourcesContact['res_id'], $queryParams['redirect'], $resourcesContact['mode']],
+                    'orderBy' => ['id desc']
+                ]);
+
+                if (count($resContact) > 1) {
+                    ResourceContactModel::delete([
+                        'where' => ['id = ?'],
+                        'data' => [$resContact[0]['id']]
+                    ]);
+                }
+            }
+
+            AcknowledgementReceiptModel::update([
+                'set'   => ['contact_id' => $queryParams['redirect']],
+                'where' => ['contact_id = ?'],
+                'data'  => [$args['id']]
+            ]);
+
+            AttachmentModel::update([
+                'set'   => ['recipient_id' => $queryParams['redirect']],
+                'where' => ['recipient_id = ?', "recipient_type = 'contact'"],
+                'data'  => [$args['id']]
+            ]);
+        }
+
+        AttachmentModel::update([
+            'set'   => ['recipient_id' => null, 'recipient_type' => null],
+            'where' => ['recipient_id = ?', "recipient_type = 'contact'"],
+            'data'  => [$args['id']]
+        ]);
+
+        ResourceContactModel::delete([
+            'where' => ['item_id = ?', "type = 'contact'"],
+            'data' => [$args['id']]
+        ]);
+
         ContactModel::delete([
             'where' => ['id = ?'],
             'data'  => [$args['id']]
@@ -441,13 +516,13 @@ class ContactController
         ContactGroupModel::deleteByContactId(['contactId' => $args['id']]);
 
         $historyInfoContact = '';
-        if (!empty($contact[0]['firstname']) || !empty($contact[0]['lastname'])) {
-            $historyInfoContact .= $contact[0]['firstname'] . ' ' . $contact[0]['lastname'];
+        if (!empty($contact['firstname']) || !empty($contact['lastname'])) {
+            $historyInfoContact .= $contact['firstname'] . ' ' . $contact['lastname'];
         }
-        if (!empty($historyInfoContact) && !empty($contact[0]['company'])) {
-            $historyInfoContact .= ' (' . $contact[0]['company'] . ')';
+        if (!empty($historyInfoContact) && !empty($contact['company'])) {
+            $historyInfoContact .= ' (' . $contact['company'] . ')';
         } else {
-            $historyInfoContact .= $contact[0]['company'];
+            $historyInfoContact .= $contact['company'];
         }
 
         HistoryController::add([
