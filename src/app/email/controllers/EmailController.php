@@ -313,7 +313,7 @@ class EmailController
             } elseif ($queryParams['type'] == 'm2m') {
                 $where[] = 'message_exchange_id is not null';
             } elseif ($queryParams['type'] == 'email') {
-                $where[] = "object NOT LIKE '[AR]%'";
+                $where[] = "(object NOT LIKE '[AR]%' OR object is null)";
                 $where[] = 'message_exchange_id is null';
             }
         }
@@ -512,7 +512,7 @@ class EmailController
                     'label'     => $rawNote['note_text'],
                     'typeLabel' => 'note',
                     'creator'   => UserModel::getLabelledUserById(['id' => $rawNote['user_id']]),
-                    'format'    => 'html',
+                    'format'    => 'pdf',
                     'size'      => null
                 ];
             }

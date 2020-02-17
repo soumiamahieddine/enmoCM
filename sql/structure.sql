@@ -1108,6 +1108,7 @@ document_type character varying(255) NOT NULL,
 options json DEFAULT '{}',
 fee FLOAT NOT NULL,
 recipient_entity_id INTEGER NOT NULL,
+recipients jsonb DEFAULT '[]',
 account_id character varying(64) NOT NULL,
 creation_date timestamp without time zone NOT NULL,
 CONSTRAINT shippings_pkey PRIMARY KEY (id)

@@ -468,8 +468,11 @@ export class SendedResourcePageComponent implements OnInit {
             this.http.get(`../../rest/resources/${this.data.resId}/emailsInitialization`).pipe(
                 tap((data: any) => {
                     Object.keys(data).forEach(element => {
-                        if (element === 'resource') {  
-                            this.emailAttachTool.document.list = [data[element]];
+                        if (element === 'resource') {
+                            this.emailAttachTool.document.list = [];
+                            if (!this.functions.empty(data[element])) {
+                                this.emailAttachTool.document.list = [data[element]];
+                            }
                         } else {
                             this.emailAttachTool[element].list = data[element].map((item: any) => {
                                 return {
