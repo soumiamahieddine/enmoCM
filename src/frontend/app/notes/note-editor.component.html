@@ -1,11 +1,3 @@
-<div style="overflow: auto;max-height: 75px;">
-    <ng-container *ngFor="let entity of entities | sortBy: 'entity_label';let i=index;">
-        <span *ngIf="entitiesRestriction.indexOf(entity.id) > -1" class="label label-default noteRestriction"
-            (click)="removeEntityRestriction(entitiesRestriction.indexOf(entity.id), i)"
-            title="{{lang.restrictedEntity}}"><i class="fa fa-sitemap"></i>
-            {{entity.entity_label}}&nbsp;<i class="fa fa-times" style="cursor: pointer;"></i></span>
-    </ng-container>
-</div>
 <mat-form-field appearance="outline" class="noteEditorContent">
     <textarea matInput placeholder="{{title}}" [(ngModel)]="content"></textarea>
     <button matSuffix color="primary" mat-icon-button title="{{lang.options}}" [matMenuTriggerFor]="menuMain">
@@ -53,3 +45,11 @@
         <mat-icon fontSet="far" fontIcon="fa-paper-plane fa-2x"></mat-icon>
     </button>
 </mat-form-field>
+<div style="overflow: auto;max-height: 75px;">
+    <ng-container *ngFor="let entity of entities | sortBy: 'entity_label';let i=index;">
+        <span *ngIf="entitiesRestriction.indexOf(entity.id) > -1" class="label label-default noteRestriction"
+            (click)="removeEntityRestriction(entitiesRestriction.indexOf(entity.id), i)"
+            title="{{lang.restrictedEntity}}"><i class="fa fa-sitemap"></i>
+            {{entity.entity_label}}&nbsp;<i class="fa fa-times" style="cursor: pointer;"></i></span>
+    </ng-container>
+</div>

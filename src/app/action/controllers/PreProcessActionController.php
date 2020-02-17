@@ -1409,7 +1409,6 @@ class PreProcessActionController
                         'chrono' => $resource['alt_identifier'],
                         'fields' => !empty($fieldsList) ? implode(", ", $fieldsList) : ''
                     ];
-
                 } else {
                     $canClose[] = $resId;
                 }

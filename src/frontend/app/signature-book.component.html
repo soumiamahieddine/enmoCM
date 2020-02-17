@@ -114,7 +114,7 @@
                 <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showLeftPanel"></i>
                 <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showLeftPanel"></i>
             </div>
-            <div *ngIf="signatureBook.hasWorkflow" class="contentShow">
+            <div class="contentShow">
                 <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && !showAttachmentPanel" style="height:100%;overflow: auto;">
                     <div [ngStyle]="{'display': showTopRightPanel ? 'block' : 'none'}" class="pjDetails">
                         <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
@@ -204,14 +204,14 @@
                     (reloadBadgeAttachments)="refreshAttachments()" (afterActionAttachment)="refreshAttachments()">
                 </app-attachments-list>
             </div>
-            <div *ngIf="!signatureBook.hasWorkflow" class="visaNoWorkflowWarning">
+            <div class="visaNoWorkflowWarning">
                 <div style="margin-top:200px;" [innerHTML]="noVisaWorkflowNoSignature"></div>
             </div>
-            <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" class="visaNoPjWarning">
+            <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail]" class="visaNoPjWarning">
                 <div style="margin-top:200px;" [innerHTML]="noAttachmentClickToAddOne"></div>
             </div>
         </div>
-        <div *ngIf="signatureBook.hasWorkflow" class="panelRight">
+        <div class="panelRight">
             <div *ngIf="signatureBook.attachments" id="rightPanelContent" class="panelRightContent">
                 <div title="[{{attachment.attachment_type}}] {{attachment.title}}" style="position: relative;" class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail && !showAttachmentPanel}">
                     <span class="fa-stack fa-lg">

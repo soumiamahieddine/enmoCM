@@ -132,6 +132,11 @@ class SignatureBookController
                 'viewerLink'    => "../../rest/resources/{$resId}/content",
                 'thumbnailLink' => "rest/resources/{$resId}/thumbnail"
             ];
+        } else {
+            $documents[] = [
+                'alt_id' => $incomingMail['alt_identifier'],
+                'title'  => $incomingMail['subject']
+            ];
         }
 
         $incomingMailAttachments = AttachmentModel::get([
@@ -196,8 +201,7 @@ class SignatureBookController
             'orderBy'   => [$orderBy]
         ]);
 
-        $canModify = PrivilegeController::hasPrivilege(['privilegeId' => 'modify_attachments', 'userId' => $args['userId']]);
-        $canDelete = PrivilegeController::hasPrivilege(['privilegeId' => 'delete_attachments', 'userId' => $args['userId']]);
+        $canManageAttachment = PrivilegeController::hasPrivilege(['privilegeId' => 'manage_attachments', 'userId' => $args['userId']]);
 
         foreach ($attachments as $key => $value) {
             if ($value['attachment_type'] == 'converted_pdf' || ($value['attachment_type'] == 'signed_response' && !empty($value['origin']))) {
@@ -251,12 +255,12 @@ class SignatureBookController
                 $attachments[$key]['typist'] = UserModel::getLabelledUserById(['login' => $value['typist']]);
             }
 
+            $rawUser = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+
             $attachments[$key]['canModify'] = false;
             $attachments[$key]['canDelete'] = false;
-            if ($canModify || $value['typist'] == $args['userId']) {
+            if ($canManageAttachment || $value['typist'] == $rawUser['user_id']) {
                 $attachments[$key]['canModify'] = true;
-            }
-            if ($canDelete || $value['typist'] == $args['userId']) {
                 $attachments[$key]['canDelete'] = true;
             }
 
