@@ -311,6 +311,9 @@ $app->get('/roles', \Entity\controllers\ListTemplateController::class . ':getRol
 $app->get('/availableCircuits', \Entity\controllers\ListTemplateController::class . ':getAvailableCircuits');
 $app->put('/circuits/{type}', \Entity\controllers\ListInstanceController::class . ':updateCircuits');
 
+//MessageExchanges
+$app->get('/messageExchanges/{id}', \MessageExchange\controllers\MessageExchangeController::class . ':getById');
+
 //Notes
 $app->post('/notes', \Note\controllers\NoteController::class . ':create');
 $app->get('/notes/{id}', \Note\controllers\NoteController::class . ':getById');
@@ -365,17 +368,17 @@ $app->get('/resources/{resId}/visaCircuit', \Entity\controllers\ListInstanceCont
 $app->get('/resources/{resId}/opinionCircuit', \Entity\controllers\ListInstanceController::class . ':getOpinionCircuitByResId');
 $app->get('/resources/{resId}/parallelOpinion', \Entity\controllers\ListInstanceController::class . ':getParallelOpinionByResId');
 $app->get('/resources/{resId}/defaultCircuit', \Entity\controllers\ListTemplateController::class . ':getDefaultCircuitByResId');
-$app->delete('/resources/{resId}/circuits/{type}', \Entity\controllers\ListInstanceController::class . ':deleteCircuit');
 $app->get('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':getLinkedResources');
 $app->post('/resources/{resId}/linkedResources', \Resource\controllers\LinkController::class . ':linkResources');
-$app->delete('/resources/{resId}/linkedResources/{id}', \Resource\controllers\LinkController::class . ':unlinkResources');
 $app->put('/resources/{resId}/sign', \SignatureBook\controllers\SignatureBookController::class . ':signResource');
 $app->put('/resources/{resId}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignResource');
 $app->get('/resources/{resId}/acknowledgementReceipts', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getByResId');
 $app->get('/resources/{resId}/shippings', \Shipping\controllers\ShippingController::class . ':getByResId');
 $app->get('/resources/{resId}/messageExchanges', \MessageExchange\controllers\MessageExchangeController::class . ':getByResId');
 $app->get('/resources/{resId}/emailsInitialization', \Email\controllers\EmailController::class . ':getInitializationByResId');
-$app->get('/messageExchanges/{id}', \MessageExchange\controllers\MessageExchangeController::class . ':getById');
+$app->get('/resources/{resId}/fields/{fieldId}', \Resource\controllers\ResController::class . ':getField');
+$app->delete('/resources/{resId}/linkedResources/{id}', \Resource\controllers\LinkController::class . ':unlinkResources');
+$app->delete('/resources/{resId}/circuits/{type}', \Entity\controllers\ListInstanceController::class . ':deleteCircuit');
 
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');

@@ -438,9 +438,7 @@ class ContactController
         if (!empty($queryParams['redirect'])) {
             if (!Validator::intVal()->validate($queryParams['redirect'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Query param redirect is not an integer']);
-            }
-
-            if ($queryParams['redirect'] == $args['id']) {
+            } elseif ($queryParams['redirect'] == $args['id']) {
                 return $response->withStatus(400)->withJson(['errors' => 'Cannot redirect to contact you are deleting']);
             }
 
@@ -449,8 +447,6 @@ class ContactController
                 return $response->withStatus(400)->withJson(['errors' => 'Contact does not exist']);
             }
 
-            // Replace contact with redirect
-            // get all res_id linked to contact args['id']
             $resourcesContacts = ResourceContactModel::get([
                 'select' => ['res_id', 'mode'],
                 'where'  => ['item_id = ?', "type = 'contact'"],
@@ -459,8 +455,8 @@ class ContactController
 
             ResourceContactModel::update([
                 'set'   => ['item_id' => $queryParams['redirect']],
-                'where' => ['item_id = ?', "type = 'contact'"],
-                'data'  => [$args['id']]
+                'where' => ['item_id = ?', 'type = ?'],
+                'data'  => [$args['id'], 'contact']
             ]);
 
             // Delete duplicates if needed
@@ -502,7 +498,7 @@ class ContactController
 
         ResourceContactModel::delete([
             'where' => ['item_id = ?', "type = 'contact'"],
-            'data' => [$args['id']]
+            'data'  => [$args['id']]
         ]);
 
         ContactModel::delete([

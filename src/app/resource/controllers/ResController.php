@@ -814,6 +814,28 @@ class ResController extends ResourceControlController
         return $response->withStatus(204);
     }
 
+    public function getField(Request $request, Response $response, array $args)
+    {
+        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $authorizedFields = ['destination', 'status'];
+        if (!in_array($args['fieldId'], $authorizedFields)) {
+            return $response->withStatus(403)->withJson(['errors' => 'Field out of perimeter']);
+        }
+
+        $resource = ResModel::getById([
+            'select'    => [$args['fieldId']],
+            'resId'     => $args['resId']
+        ]);
+        if (empty($resource)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
+        }
+
+        return $response->withJson(['field' => $resource[$args['fieldId']]]);
+    }
+
     public static function getEncodedDocument(array $aArgs)
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
