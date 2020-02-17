@@ -891,7 +891,9 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     margin-left: 5px;
 }
 
-#consigne {
-    height: 22px !important;
-    margin-top: 2px !important;
+.inputConsigne {
+    height: 22px; 
+    margin-top: 2px; 
+    color: black; 
+    font-weight: normal;
 }

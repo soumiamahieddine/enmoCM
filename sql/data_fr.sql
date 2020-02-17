@@ -1653,6 +1653,7 @@ Select setval('shipping_templates_id_seq', (select max(id)+1 from shipping_templ
 
 /* Champs customs */
 INSERT INTO custom_fields (id, label, type, "values") VALUES (1, 'Date de fin de contrat', 'date', '[]');
+SELECT setval('custom_fields_id_seq', (select max(id)+1 from custom_fields), false);
 
 /* Modèles d'enregistrement */
 TRUNCATE TABLE indexing_models;

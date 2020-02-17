@@ -447,7 +447,7 @@ define("_AVIS_SENT", "Avis donné");
 define("_BY", "par");
 define("_TO_AVIS", "POUR AVIS");
 define("_VALIDATE_BY", "Validé par");
-
+define('_MAIN_DOCUMENT', 'Document principal');
 define("_UPDATE_LISTINSTANCE", "Liste de diffusion mise à jour");
 define("_UPDATE_VISA_CIRCUIT", "Circuit de visa mis à jour");
 define("_UPDATE_AVIS_CIRCUIT", "Circuit d'avis mis à jour");

@@ -453,7 +453,7 @@ define('_AVIS_SENT', 'Gegeven bericht');
 define('_BY', 'door');
 define('_TO_AVIS', 'VOOR BERICHT');
 define('_VALIDATE_BY', 'Gevalideerd door');
-
+define('_MAIN_DOCUMENT', 'Hoofddocument');
 define("_UPDATE_LISTINSTANCE", "Diffusion list updated"); //TO TRANSLATE
 define("_UPDATE_VISA_CIRCUIT", "Visa workflow updated"); //TO TRANSLATE
 define("_UPDATE_AVIS_CIRCUIT", "Opinion workflow updated"); //TO TRANSLATE

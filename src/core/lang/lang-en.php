@@ -447,7 +447,7 @@ define("_AVIS_SENT", "Notice given");
 define("_BY", "by");
 define("_TO_AVIS", "For recommendation");
 define("_VALIDATE_BY", "Validate by");
-
+define('_MAIN_DOCUMENT', 'Main document');
 define("_UPDATE_LISTINSTANCE", "Diffusion list updated");
 define("_UPDATE_VISA_CIRCUIT", "Visa workflow updated");
 define("_UPDATE_AVIS_CIRCUIT", "Opinion workflow updated");

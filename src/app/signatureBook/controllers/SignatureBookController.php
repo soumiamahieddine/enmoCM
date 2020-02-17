@@ -323,8 +323,17 @@ class SignatureBookController
         if (!empty($resource['filename']) && !empty($integrations['inSignatureBook'])) {
             array_unshift($attachments, $resource);
             $attachments[0]['isResource'] = true;
+            $attachments[0]['attachment_type'] = _MAIN_DOCUMENT;
+            $attachments[0]['title'] = $attachments[0]['subject'];
             $attachments[0]['sign'] = true;
             $attachments[0]['viewerLink'] = "../../rest/resources/{$args['resId']}/content?".rand();
+
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['resId' => $attachments[0]['res_id'], 'collId' => 'letterbox_coll']);
+            if (empty($convertedAttachment['errors'])) {
+                $attachments[0]['isConverted'] = true;
+            } else {
+                $attachments[0]['isConverted'] = false;
+            }
         }
 
         return $attachments;
