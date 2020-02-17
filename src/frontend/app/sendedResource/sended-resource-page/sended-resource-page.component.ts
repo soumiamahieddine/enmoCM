@@ -553,19 +553,22 @@ export class SendedResourcePageComponent implements OnInit {
     onSubmit(textMode: string = 'html') {
         this.emailStatus = 'WAITING';
         if (this.data.emailId === null) {
-            if (this.emailsubject === '') {
-                const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: 'Vous allez envoyer un courriel sans sujet, continuer ?' } });
-
-                dialogRef.afterClosed().pipe(
-                    filter((data: string) => data === 'ok'),
-                    tap(() => {
-                        this.createEmail(textMode, true);
-                    })
-                ).subscribe();
+            if (!this.isAllEmailRightFormat()) {
+                this.notify.error(this.lang.badEmailsFormat);
             } else {
-                this.createEmail(textMode, true);
+                if (this.emailsubject === '') {
+                    const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.warnEmptySubject } });
+    
+                    dialogRef.afterClosed().pipe(
+                        filter((data: string) => data === 'ok'),
+                        tap(() => {
+                            this.createEmail(textMode, true);
+                        })
+                    ).subscribe();
+                } else {
+                    this.createEmail(textMode, true);
+                }
             }
-
         } else {
             this.updateEmail(textMode, true);
         }
@@ -599,7 +602,7 @@ export class SendedResourcePageComponent implements OnInit {
             filter((data: string) => data === 'ok'),
             exhaustMap(() => this.http.delete(`../../rest/emails/${this.data.emailId}`)),
             tap(() => {
-                this.notify.success("Courriel supprimé");
+                this.notify.success(this.lang.emailDeleted);
                 this.closeModal('success');
             }),
             catchError((err) => {
@@ -733,5 +736,18 @@ export class SendedResourcePageComponent implements OnInit {
             this.recipientsInput.disable();
             return false;
         }
+    }
+
+    isAllEmailRightFormat() {
+        let state  = true;
+        const allEmail = this.recipients.concat(this.copies).concat(this.invisibleCopies);
+        
+        allEmail.map(item => item.email).forEach(email => {
+            if (this.isBadEmailFormat(email)) {
+                state = false;
+            }
+        });
+
+        return state;
     }
 }

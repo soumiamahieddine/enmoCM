@@ -1563,5 +1563,8 @@ export const LANG_FR = {
     "draftUpdated" : "Brouillon modifié",
     "sendingEmail" : "Email en cours d'envoi...",
     "restrictions" : "Restrictions",
-    "contactDeleted" : "Contact supprimé"
+    "contactDeleted" : "Contact supprimé",
+    "badEmailsFormat" : "Certaines adresses de courriel ne sont pas correctes",    
+    "warnEmptySubject" : "Vous allez envoyer un courriel sans sujet, continuer ?",    
+    "emailDeleted" : "Courriel supprimé",    
 };

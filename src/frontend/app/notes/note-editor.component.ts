@@ -53,15 +53,15 @@ export class NoteEditorComponent implements OnInit {
 
     setDefaultRestriction() {
         this.entitiesRestriction = [];
-        this.http.get(`../../rest/resources/${this.resIds[0]}?light=true`).pipe(
+        this.http.get(`../../rest/resources/${this.resIds[0]}/fields/destination`).pipe(
             tap((data: any) => {
                 this.entitiesRestriction = this.headerService.user.entities.map((entity: any) => entity.entity_id);
+                if (this.entitiesRestriction.indexOf(data.field) === -1) {
+                    this.entitiesRestriction.push(data.field);
+                }
                 this.entities.filter((entity: any) => this.entitiesRestriction.indexOf(entity.id) > -1).forEach((element: any) => {
                     element.selected = true;
                 });
-                if (this.entitiesRestriction.indexOf(data.destination) === -1) {
-                    this.entitiesRestriction.push(data.destination);
-                }
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);

@@ -1524,5 +1524,8 @@ export const LANG_EN = {
     "draftUpdated" : "Draft updated",
     "sendingEmail" : "Sending email...",
     "restrictions" : "Restrictions",
-    "contactDeleted" : "Contact deleted"
+    "contactDeleted" : "Contact deleted",
+    "badEmailsFormat" : "Some email address are not correct",
+    "warnEmptySubject" : "You will send an email without subject, continue ?",  
+    "emailDeleted" : "Email deleted",  
 };
