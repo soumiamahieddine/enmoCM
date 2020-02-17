@@ -2,54 +2,54 @@
 TRUNCATE TABLE res_letterbox;
 ALTER SEQUENCE res_id_mlb_seq restart WITH 1;
 -- to sign documents
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date,  doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (1, 'Demande de dérogation carte scolaire', 305, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_derogation.pdf', '0', 24942, 'ATT_MP', 'PJS', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'bbain', 'incoming', 'MAARCH/2019A/1', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date,  doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (2, 'Demande de travaux route 66', 918, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'sva_route_66.pdf', '0', 24877, 'ATT_MP', 'PTE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ccharles', 'incoming', 'MAARCH/2019A/2', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (3, 'Plainte voisin chien bruyant', 503, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'svr_route_chien_bruyant.pdf', '0', 24877, 'ATT_MP', 'DGS', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'rrenaud', 'incoming', 'MAARCH/2019A/3', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (4, 'Invitation pour échanges journées des sports', 110, 'pdf', 19, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'empty.pdf', '0', 111108, 'ATT_MP', 'PJS', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'PJS', 'bbain', 'outgoing', 'MAARCH/2019D/4', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (5, 'Demande de place en creche', 307, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_place_creche.pdf', '0', 24877, 'ATT_MP', 'PE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ssaporta', 'incoming', 'MAARCH/2019A/4', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (6, 'Relance place en creche', 307, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'relance_place_creche.pdf', '0', 24877, 'ATT_MP', 'PE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ssaporta', 'incoming', 'MAARCH/2019A/5', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date,  doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (1, 'Demande de dérogation carte scolaire', 305, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_derogation.pdf', '0', 24942, 'ATT_MP', 'PJS', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'bbain', 'incoming', 'MAARCH/2019A/1', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date,  doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (2, 'Demande de travaux route 66', 918, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'sva_route_66.pdf', '0', 24877, 'ATT_MP', 'PTE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ccharles', 'incoming', 'MAARCH/2019A/2', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (3, 'Plainte voisin chien bruyant', 503, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'svr_route_chien_bruyant.pdf', '0', 24877, 'ATT_MP', 'DGS', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'rrenaud', 'incoming', 'MAARCH/2019A/3', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (4, 'Invitation pour échanges journées des sports', 110, 'pdf', 19, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'empty.pdf', '0', 111108, 'ATT_MP', 'PJS', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'PJS', 'bbain', 'outgoing', 'MAARCH/2019D/4', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (5, 'Demande de place en creche', 307, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_place_creche.pdf', '0', 24877, 'ATT_MP', 'PE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ssaporta', 'incoming', 'MAARCH/2019A/4', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (6, 'Relance place en creche', 307, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'relance_place_creche.pdf', '0', 24877, 'ATT_MP', 'PE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ssaporta', 'incoming', 'MAARCH/2019A/5', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
 
 -- to annotate documents
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (7, 'Pétition pour la survie du square Carré', 201, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'petition_square_carre.pdf', '0', 24877, 'ATT_MP', 'DGS', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'rrenaud', '{"signatureBookId": "7"}', 'incoming', 'MAARCH/2019A/6', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (8, 'Félicitations élections', 205, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'felicitations.pdf', '0', 24877, 'ATT_MP', 'DGS', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'rrenaud', '{"signatureBookId": "8"}', 'incoming', 'MAARCH/2019A/7', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (9, 'Demande place creche', 307, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'formulaire_place_creche.pdf', '0', 24877, 'ATT_MP', 'PE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ssaporta', '{"signatureBookId": "9"}', 'incoming', 'MAARCH/2019A/8', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (10, 'Demande subvention jokkolabs', 406, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_subvention.pdf', '0', 24877, 'ATT_MP', 'DGS', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'rrenaud', '{"signatureBookId": "10"}', 'incoming', 'MAARCH/2019A/9', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (11, 'Facture Maarch', 407, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'facture.pdf', '0', 24877, 'ATT_MP', 'FIN', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'sstar', '{"signatureBookId": "11"}', 'incoming', 'MAARCH/2019A/10', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (12, 'Demande état civil', 602, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'etat_civil.pdf', '0', 24877, 'ATT_MP', 'DGS', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'rrenaud', '{"signatureBookId": "12"}', 'incoming', 'MAARCH/2019A/11', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (13, 'Arret maladie vide', 701, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'arret_maladie.pdf', '0', 24877, 'ATT_MP', 'DRH', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ppruvost', '{"signatureBookId": "13"}', 'incoming', 'MAARCH/2019A/12', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (14, 'Inscription école', 307, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'inscription_ecole.pdf', '0', 24877, 'ATT_MP', 'PE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ssaporta', '{"signatureBookId": "14"}', 'incoming', 'MAARCH/2019A/13', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (7, 'Pétition pour la survie du square Carré', 201, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'petition_square_carre.pdf', '0', 24877, 'ATT_MP', 'DGS', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'rrenaud', '{"signatureBookId": "7"}', 'incoming', 'MAARCH/2019A/6', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (8, 'Félicitations élections', 205, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'felicitations.pdf', '0', 24877, 'ATT_MP', 'DGS', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'rrenaud', '{"signatureBookId": "8"}', 'incoming', 'MAARCH/2019A/7', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (9, 'Demande place creche', 307, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'formulaire_place_creche.pdf', '0', 24877, 'ATT_MP', 'PE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ssaporta', '{"signatureBookId": "9"}', 'incoming', 'MAARCH/2019A/8', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (10, 'Demande subvention jokkolabs', 406, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_subvention.pdf', '0', 24877, 'ATT_MP', 'DGS', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'rrenaud', '{"signatureBookId": "10"}', 'incoming', 'MAARCH/2019A/9', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (11, 'Facture Maarch', 407, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'facture.pdf', '0', 24877, 'ATT_MP', 'FIN', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'sstar', '{"signatureBookId": "11"}', 'incoming', 'MAARCH/2019A/10', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (12, 'Demande état civil', 602, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'etat_civil.pdf', '0', 24877, 'ATT_MP', 'DGS', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'rrenaud', '{"signatureBookId": "12"}', 'incoming', 'MAARCH/2019A/11', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (13, 'Arret maladie vide', 701, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'arret_maladie.pdf', '0', 24877, 'ATT_MP', 'DRH', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ppruvost', '{"signatureBookId": "13"}', 'incoming', 'MAARCH/2019A/12', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, external_id, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (14, 'Inscription école', 307, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'inscription_ecole.pdf', '0', 24877, 'ATT_MP', 'PE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ssaporta', '{"signatureBookId": "14"}', 'incoming', 'MAARCH/2019A/13', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
 -- to qualify document
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (15, 'Demande intervention à qualifier', 505, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_intervention.pdf', '0', 24877, 'INIT', 'PTE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ccharles', 'incoming', 'MAARCH/2019A/14', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (15, 'Demande intervention à qualifier', 505, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_intervention.pdf', '0', 24877, 'INIT', 'PTE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ccharles', 'incoming', 'MAARCH/2019A/14', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
 -- to validate document
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (16, 'Demande intervention à valider', 505, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_intervention.pdf', '0', 24877, 'VAL', 'PTE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ccharles', 'incoming', 'MAARCH/2019A/15', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (16, 'Demande intervention à valider', 505, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_intervention.pdf', '0', 24877, 'VAL', 'PTE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ccharles', 'incoming', 'MAARCH/2019A/15', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
 -- to process document ccharles
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (17, 'Demande intervention à traiter', 505, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_intervention.pdf', '0', 24877, 'NEW', 'PTE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ccharles', 'incoming', 'MAARCH/2019A/16', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (17, 'Demande intervention à traiter', 505, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_intervention.pdf', '0', 24877, 'NEW', 'PTE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ccharles', 'incoming', 'MAARCH/2019A/16', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
 -- to process document nnataly
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (18, 'Demande intervention à envoyer au parapheur', 505, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_intervention.pdf', '0', 24877, 'NEW', 'PSO', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'nnataly', 'incoming', 'MAARCH/2019A/17', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (18, 'Demande intervention à envoyer au parapheur', 505, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_intervention.pdf', '0', 24877, 'NEW', 'PSO', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'nnataly', 'incoming', 'MAARCH/2019A/17', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
 -- to paraph document ppetit
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (19, 'Demande intervention à signer', 505, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_intervention.pdf', '0', 24877, 'ATT_MP', 'PTE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ccharles', 'incoming', 'MAARCH/2019A/18', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (19, 'Demande intervention à signer', 505, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_intervention.pdf', '0', 24877, 'ATT_MP', 'PTE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ccharles', 'incoming', 'MAARCH/2019A/18', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
 -- to archive document ggrand
-INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id)
-VALUES (20, 'Demande intervention à archiver', 505, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_intervention.pdf', '0', 24877, 'END', 'PTE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ccharles', 'incoming', 'MAARCH/2019A/19', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1);
+INSERT INTO res_letterbox (res_id, subject, type_id, format, typist, creation_date, modification_date, doc_date, docserver_id, path, filename, fingerprint, filesize, status, destination, work_batch, origin, priority, policy_id, cycle_id, initiator, dest_user, category_id, alt_identifier, admission_date, process_limit_date, closing_date, alarm1_date, alarm2_date, flag_alarm1, flag_alarm2, model_id, version)
+VALUES (20, 'Demande intervention à archiver', 505, 'pdf', 21, NOW(), NOW(), CURRENT_DATE, 'FASTHD_MAN', 'tests#', 'demande_intervention.pdf', '0', 24877, 'END', 'PTE', NULL, NULL, 'poiuytre1357nbvc', NULL, NULL, 'COU', 'ccharles', 'incoming', 'MAARCH/2019A/19', CURRENT_DATE, CURRENT_DATE + 21, NULL, NULL, NULL, 'N', 'N', 1, 1);
 
 Select setval('res_id_mlb_seq', (select max(res_id)+1 from res_letterbox), false);
 
@@ -79,94 +79,94 @@ Select setval('resource_contacts_id_seq', (select max(id)+1 from resource_contac
 TRUNCATE TABLE adr_letterbox;
 ALTER SEQUENCE adr_letterbox_id_seq restart WITH 1;
 -- to sign documents
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (1, 1, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_derogation.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (2, 2, 'PDF', 'CONVERT_MLB', 'tests#', 'sva_route_66.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (3, 3, 'PDF', 'CONVERT_MLB', 'tests#', 'svr_route_chien_bruyant.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (4, 4, 'PDF', 'CONVERT_MLB', 'tests#', 'emtpy.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (5, 5, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_place_creche.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (6, 6, 'PDF', 'CONVERT_MLB', 'tests#', 'relance_place_creche.pdf', '0');
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (1, 1, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_derogation.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (2, 2, 'PDF', 'CONVERT_MLB', 'tests#', 'sva_route_66.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (3, 3, 'PDF', 'CONVERT_MLB', 'tests#', 'svr_route_chien_bruyant.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (4, 4, 'PDF', 'CONVERT_MLB', 'tests#', 'emtpy.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (5, 5, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_place_creche.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (6, 6, 'PDF', 'CONVERT_MLB', 'tests#', 'relance_place_creche.pdf', '0', 1);
 -- to annotate documents
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (7, 7, 'PDF', 'CONVERT_MLB', 'tests#', 'petition_square_carre.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (8, 8, 'PDF', 'CONVERT_MLB', 'tests#', 'felicitations.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (9, 9, 'PDF', 'CONVERT_MLB', 'tests#', 'formulaire_place_creche.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (10, 10, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_subvention.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (11, 11, 'PDF', 'CONVERT_MLB', 'tests#', 'facture.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (12, 12, 'PDF', 'CONVERT_MLB', 'tests#', 'etat_civil.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (13, 13, 'PDF', 'CONVERT_MLB', 'tests#', 'arret_maladie.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (14, 14, 'PDF', 'CONVERT_MLB', 'tests#', 'inscription_ecole.pdf', '0');
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (7, 7, 'PDF', 'CONVERT_MLB', 'tests#', 'petition_square_carre.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (8, 8, 'PDF', 'CONVERT_MLB', 'tests#', 'felicitations.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (9, 9, 'PDF', 'CONVERT_MLB', 'tests#', 'formulaire_place_creche.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (10, 10, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_subvention.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (11, 11, 'PDF', 'CONVERT_MLB', 'tests#', 'facture.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (12, 12, 'PDF', 'CONVERT_MLB', 'tests#', 'etat_civil.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (13, 13, 'PDF', 'CONVERT_MLB', 'tests#', 'arret_maladie.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (14, 14, 'PDF', 'CONVERT_MLB', 'tests#', 'inscription_ecole.pdf', '0', 1);
 -- thumbnails
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (15, 1, 'TNL', 'TNL_MLB', 'tests#', 'demande_derogation.png', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (16, 2, 'TNL', 'TNL_MLB', 'tests#', 'sva_route_66.png', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (17, 3, 'TNL', 'TNL_MLB', 'tests#', 'svr_route_chien_bruyant.png', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (18, 4, 'TNL', 'TNL_MLB', 'tests#', 'invitation.png', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (19, 5, 'TNL', 'TNL_MLB', 'tests#', 'demande_place_creche.png', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (20, 6, 'TNL', 'TNL_MLB', 'tests#', 'relance_place_creche.png', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (21, 7, 'TNL', 'TNL_MLB', 'tests#', 'petition_square_carre.png', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (22, 8, 'TNL', 'TNL_MLB', 'tests#', 'felicitations.png', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (23, 9, 'TNL', 'TNL_MLB', 'tests#', 'formulaire_place_creche.png', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (24, 10, 'TNL', 'TNL_MLB', 'tests#', 'demande_subvention.png', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (25, 11, 'TNL', 'TNL_MLB', 'tests#', 'facture.png', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (26, 12, 'TNL', 'TNL_MLB', 'tests#', 'etat_civil.png', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (27, 13, 'TNL', 'TNL_MLB', 'tests#', 'arret_maladie.png', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (28, 14, 'TNL', 'TNL_MLB', 'tests#', 'inscription_ecole.png', '0');
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (15, 1, 'TNL', 'TNL_MLB', 'tests#', 'demande_derogation.png', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (16, 2, 'TNL', 'TNL_MLB', 'tests#', 'sva_route_66.png', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (17, 3, 'TNL', 'TNL_MLB', 'tests#', 'svr_route_chien_bruyant.png', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (18, 4, 'TNL', 'TNL_MLB', 'tests#', 'invitation.png', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (19, 5, 'TNL', 'TNL_MLB', 'tests#', 'demande_place_creche.png', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (20, 6, 'TNL', 'TNL_MLB', 'tests#', 'relance_place_creche.png', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (21, 7, 'TNL', 'TNL_MLB', 'tests#', 'petition_square_carre.png', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (22, 8, 'TNL', 'TNL_MLB', 'tests#', 'felicitations.png', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (23, 9, 'TNL', 'TNL_MLB', 'tests#', 'formulaire_place_creche.png', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (24, 10, 'TNL', 'TNL_MLB', 'tests#', 'demande_subvention.png', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (25, 11, 'TNL', 'TNL_MLB', 'tests#', 'facture.png', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (26, 12, 'TNL', 'TNL_MLB', 'tests#', 'etat_civil.png', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (27, 13, 'TNL', 'TNL_MLB', 'tests#', 'arret_maladie.png', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (28, 14, 'TNL', 'TNL_MLB', 'tests#', 'inscription_ecole.png', '0', 1);
 -- to qualify documents
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (29, 15, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (30, 15, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0');
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (29, 15, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (30, 15, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0', 1);
 -- to validate documents
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (31, 16, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (32, 16, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0');
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (31, 16, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (32, 16, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0', 1);
 -- to process documents ccharles
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (33, 17, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (34, 17, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0');
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (33, 17, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (34, 17, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0', 1);
 -- to process documents nnataly
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (35, 18, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (36, 18, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0');
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (35, 18, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (36, 18, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0', 1);
 -- to paraph documents ppetit
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (37, 19, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (38, 19, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0');
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (37, 19, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (38, 19, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0', 1);
 -- to archive documents ggrand
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (39, 20, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0');
-INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint)
-VALUES (40, 20, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0');
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (39, 20, 'PDF', 'CONVERT_MLB', 'tests#', 'demande_intervention.pdf', '0', 1);
+INSERT INTO adr_letterbox (id, res_id, type, docserver_id, path, filename, fingerprint, version)
+VALUES (40, 20, 'TNL', 'TNL_MLB', 'tests#', 'demande_intervention.png', '0', 1);
 
 Select setval('adr_letterbox_id_seq', (select max(id)+1 from adr_letterbox), false);
 
@@ -311,9 +311,9 @@ VALUES (1, 10, 'ppetit.jpeg', '0000#', 'ppetit.jpeg', NULL);
 Select setval('user_signatures_id_seq', (select max(id)+1 from user_signatures), false);
 
 --update parameters for chrono
-DELETE FROM parameters WHERE id = 'chrono_incoming_2019' OR  id = 'chrono_outgoing_2019';
+DELETE FROM parameters WHERE id = 'chrono_incoming_2020' OR  id = 'chrono_outgoing_2020';
 INSERT INTO parameters (id, description, param_value_string, param_value_int, param_value_date) 
-VALUES ('chrono_incoming_2019', NULL, NULL, 100, NULL);
+VALUES ('chrono_incoming_2020', NULL, NULL, 100, NULL);
 INSERT INTO parameters (id, description, param_value_string, param_value_int, param_value_date) 
-VALUES ('chrono_outgoing_2019', NULL, NULL, 100, NULL);
+VALUES ('chrono_outgoing_2020', NULL, NULL, 100, NULL);
 
