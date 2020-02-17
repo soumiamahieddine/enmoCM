@@ -11,6 +11,7 @@ import { MatDialogRef, MatDialog } from '@angular/material';
 import { AttachmentCreateComponent } from './attachments/attachment-create/attachment-create.component';
 import { FunctionsService } from '../service/functions.service';
 import { AttachmentPageComponent } from './attachments/attachments-page/attachment-page.component';
+import { VisaWorkflowComponent } from './visa/visa-workflow.component';
 
 declare function lockDocument(resId: number) : void;
 declare function unlockDocument(resId: number) : void;
@@ -97,6 +98,8 @@ export class SignatureBookComponent implements OnInit {
             count: 0
         }
     ];
+
+    @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
 
     constructor(
         public http: HttpClient, 
@@ -531,6 +534,10 @@ export class SignatureBookComponent implements OnInit {
                 })
             ).subscribe();
         }
+    }
+
+    saveVisaWorkflow() {
+        this.appVisaWorkflow.saveVisaWorkflow();
     }
 
 }

@@ -95,6 +95,12 @@
             <div *ngIf="headerTab == 'visaCircuit'" class="contentShow" style="width:98%;overflow-x: hidden;">
                 <app-visa-workflow #appVisaWorkflow [resId]="resId"
                     [adminMode]="privilegeService.hasCurrentUserPrivilege('config_visa_workflow')"></app-visa-workflow>
+                <div style="position: sticky;bottom: 0px;text-align:right;">
+                    <button mat-fab [title]="lang.saveModifications" *ngIf="appVisaWorkflow !== undefined && appVisaWorkflow.isModified()" (click)="saveVisaWorkflow()"
+                        color="accent">
+                        <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
+                    </button>
+                </div>
             </div>
             <div *ngIf="headerTab == 'history'" class="contentShow" style="width:98%;">
                 <app-history-list #appHistoryList [resId]="resId"></app-history-list>
