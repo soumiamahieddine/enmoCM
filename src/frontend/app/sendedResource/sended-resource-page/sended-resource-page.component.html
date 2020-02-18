@@ -110,7 +110,7 @@
                 <ng-container *ngIf="keyVal.key === currentEmailAttachTool">
                     <button mat-menu-item style="line-height: normal;" disableRipple
                         *ngFor="let attach of emailAttachTool[keyVal.key].list"
-                        [disabled]="isSelectedAttachMail(attach,keyVal.key)" (click)="$event.stopPropagation();">
+                        [disabled]="isSelectedAttachMail(attach,keyVal.key)" (click)="$event.stopPropagation();toggleAttachMail(attach,keyVal.key,'original');">
                         <span (click)="toggleAttachMail(attach,keyVal.key,'original')" [title]="attach.label">
                             <div style="font-size: 10px;opacity: 0.5;">{{attach.chrono}} - {{attach.typeLabel}}
                                 ({{attach.creator}})</div>

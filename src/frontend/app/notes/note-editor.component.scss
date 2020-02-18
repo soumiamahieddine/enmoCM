@@ -1,3 +1,5 @@
+@import '../../css/vars.scss';
+
 .noteEditorContent {
     .mat-icon-button:disabled {
         opacity: 0.5;
@@ -5,6 +7,10 @@
 
     ::ng-deep.mat-form-field-flex {
         align-items: flex-start;
+    }
+
+    ::ng-deep.mat-form-field-wrapper {
+        padding-bottom: 0;
     }
 }
 
@@ -21,6 +27,14 @@
 
 .noteRestriction {
     background-color: rgba(0, 0, 0, 0.4);
+    white-space: normal;
+    display: inline-block;
+    margin: 5px !important;
+    cursor: pointer;
+}
+
+.noNoteRestriction {
+    background-color: $primary;
     white-space: normal;
     display: inline-block;
     margin: 5px !important;

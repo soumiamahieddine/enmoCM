@@ -45,7 +45,9 @@
         <mat-icon fontSet="far" fontIcon="fa-paper-plane fa-2x"></mat-icon>
     </button>
 </mat-form-field>
-<div style="overflow: auto;max-height: 75px;margin-top: -15px;margin-bottom: 10px;">
+<div style="overflow: auto;max-height: 75px;background:white;">
+    <div style="font-size: 11px;position: sticky;top: 0px;">Annotation visible par :</div> 
+    <span *ngIf="entitiesRestriction.length === 0" class="label label-default noNoteRestriction">{{lang.all}}</span>
     <ng-container *ngFor="let entity of entities | sortBy: 'entity_label';let i=index;">
         <span *ngIf="entitiesRestriction.indexOf(entity.id) > -1" class="label label-default noteRestriction"
             (click)="removeEntityRestriction(entitiesRestriction.indexOf(entity.id), i)"

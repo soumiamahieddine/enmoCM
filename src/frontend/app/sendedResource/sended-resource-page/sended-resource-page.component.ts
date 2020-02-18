@@ -5,7 +5,7 @@ import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { Observable, of } from 'rxjs';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatChipInputEvent } from '@angular/material';
-import { switchMap, map, catchError, filter, exhaustMap, tap, debounceTime } from 'rxjs/operators';
+import { switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, startWith, distinctUntilChanged } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { FunctionsService } from '../../../service/functions.service';
 import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
@@ -505,6 +505,7 @@ export class SendedResourcePageComponent implements OnInit {
                 }
             }),
             filter(value => value.length > 2),
+            distinctUntilChanged(),
             switchMap(data => this.http.get('../../rest/autocomplete/correspondents', { params: { "search": data, "searchEmails": 'true' } })),
             tap((data: any) => {
                 data = data.filter((contact: any) => !this.functions.empty(contact.email) || contact.type === 'contactGroup').map((contact: any) => {
