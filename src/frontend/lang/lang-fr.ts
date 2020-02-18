@@ -565,6 +565,7 @@ export const LANG_FR = {
     "missingBasket"                         : "Sélectionner les bannettes pour lesquelles vous souhaitez supprimer la redirection :",
     "missingChoose"                         : "Souhaitez-vous réactiver votre compte ?",
     "missingMailevaConfig"                  : "La configuration Maileva n'existe pas",
+    "disabledMailevaConfig"                 : "La configuration Maileva est désactivé",
     "modelUpdated"                          : "Le Modèle a été mis à jour",
     "modificationSaved"                     : "Modification enregistrée",
     "modifiedBy"                            : "Modifié par",

@@ -632,6 +632,8 @@ class PreProcessActionController
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
         if (empty($mailevaConfig)) {
             return $response->withStatus(400)->withJson(['errors' => 'Maileva configuration does not exist', 'errorLang' => 'missingMailevaConfig']);
+        } elseif (!$mailevaConfig['enabled']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Maileva configuration is disabled', 'errorLang' => 'disabledMailevaConfig']);
         }
 
         $data = $request->getParsedBody();

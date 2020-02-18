@@ -555,6 +555,7 @@ export const LANG_NL = {
     "missingBasket"                         : "_TO_TRANSLATE",
     "missingChoose"                         : "Wenst u uw account opnieuw te activeren?",
     "missingMailevaConfig"                  : "Maileva configuration does not exist _TO_TRANSLATE",
+    "disabledMailevaConfig"                 : "Maileva configuration is disabled",//TRANSLATE
     "modelUpdated"                          : "Het model werd bijgewerkt",
     "modificationSaved"                     : "Wijziging bewaard",
     "modifiedBy"                            : "Modified by", //_TO_TRANSLATE

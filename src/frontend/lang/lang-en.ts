@@ -539,6 +539,7 @@ export const LANG_EN = {
     "missingBasket"                         : "Select the baskets wish you want to delete the redirection.",
     "missingChoose"                         : "Do you want to reactivate your account ?",
     "missingMailevaConfig"                  : "Maileva configuration does not exist",
+    "disabledMailevaConfig"                 : "Maileva configuration is disabled",
     "modelUpdated"                          : "Model updated",
     "modificationSaved"                     : "Modification has been saved",
     "modifiedBy"                            : "Modified by",
