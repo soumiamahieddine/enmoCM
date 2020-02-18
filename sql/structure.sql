@@ -1164,6 +1164,7 @@ SELECT r.res_id,
        r.priority,
        r.locker_user_id,
        r.locker_time,
+       r.custom_fields,
        en.entity_label,
        en.entity_type AS entitytype
 FROM doctypes d,
