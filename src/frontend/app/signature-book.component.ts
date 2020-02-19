@@ -440,8 +440,7 @@ export class SignatureBookComponent implements OnInit {
     backToDetails() {
         this.http.put('../../rest/resourcesList/users/' + this.userId + '/groups/' + this.groupId + '/baskets/' + this.basketId + '/unlock', { resources: [this.resId] })
             .subscribe((data: any) => {
-                location.hash = "";
-                location.search = "?page=details&dir=indexing_searching&id=" + this.resId;
+                this.router.navigate([`/resources/${this.resId}`]);
             }, (err: any) => { });
         
     }

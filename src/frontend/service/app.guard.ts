@@ -52,7 +52,7 @@ export class AppGuard implements CanActivate {
 })
 export class AfterProcessGuard implements CanDeactivate<ProcessComponent> {
     canDeactivate(component: ProcessComponent): boolean {
-        if (!component.isActionEnded()) {
+        if (!component.isActionEnded() && !component.detailMode) {
             component.unlockResource();
         }
         if (component.currentTool === 'info' && component.indexingForm.isResourceModified()) {

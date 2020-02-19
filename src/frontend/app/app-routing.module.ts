@@ -36,6 +36,7 @@ import {FollowedDocumentListComponent} from "./home/followed-list/followed-docum
             { path: 'forgot-password', component: ForgotPasswordComponent },
             { path: 'update-password', component: UpdatePasswordComponent },
             { path: 'followed', canActivate: [AppGuard], component: FollowedDocumentListComponent },
+            { path: 'resources/:detailResId', canActivate: [AppGuard], canDeactivate: [AfterProcessGuard], component: ProcessComponent },
             { path: '**',  redirectTo: 'home', pathMatch: 'full' },
         ], { useHash: true }),
     ],

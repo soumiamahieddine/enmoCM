@@ -1585,4 +1585,5 @@ export const LANG_FR = {
     "tagMerged" : "Mot-clé fusionné",
     "mergeWith" : "Fusionner avec",
     "willBeTransferedToNewTag" : "seront transférés au mot clé sélectionné",
+    "detailDoc" : "Fiche détaillé",
 };

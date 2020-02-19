@@ -210,7 +210,7 @@ export class FollowedDocumentListComponent implements OnInit {
     }
 
     goToDetail(row: any) {
-        location.href = "index.php?page=details&dir=indexing_searching&id=" + row.resId;
+        this.router.navigate([`/resources/${row.resId}`]);
     }
 
     togglePanel(mode: string, row: any) {

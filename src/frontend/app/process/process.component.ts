@@ -42,6 +42,9 @@ export class ProcessComponent implements OnInit {
 
     loading: boolean = false;
 
+    detailMode: boolean = false;
+    navButton: any = null;
+
     currentResourceLock: any = null;
 
     actionsList: any[] = [];
@@ -186,25 +189,116 @@ export class ProcessComponent implements OnInit {
         this.headerService.setHeader(this.lang.eventProcessDoc);
 
         this.route.params.subscribe(params => {
-            this.currentUserId = params['userSerialId'];
-            this.currentGroupId = params['groupSerialId'];
-            this.currentBasketId = params['basketId'];
-
-            this.currentResourceInformations = {
-                resId: params['resId'],
-                mailtracking: false
-            };
-
-            this.lockResource();
-            this.loadBadges();
-            this.loadResource();
-
-            if (this.appService.getViewMode()) {
-                setTimeout(() => {
-                    this.sidenavLeft.open();
-                }, 800);
+            if (typeof params['detailResId'] !== "undefined") {
+                this.initDetailPage(params);
+            } else {
+                this.initProcessPage(params);
             }
+            console.log(params);
+        }, (err: any) => {
+            this.notify.handleErrors(err);
+        });
+    }
 
+    initProcessPage(params: any) {
+        this.detailMode = false;
+
+        this.currentUserId = params['userSerialId'];
+        this.currentGroupId = params['groupSerialId'];
+        this.currentBasketId = params['basketId'];
+
+        this.currentResourceInformations = {
+            resId: params['resId'],
+            mailtracking: false
+        };
+
+        this.navButton = { 
+            icon: 'fa fa-inbox', 
+            label: this.lang.backBasket, 
+            route: `/basketList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}`
+        }
+
+        this.lockResource();
+        this.loadBadges();
+        this.loadResource();
+
+        if (this.appService.getViewMode()) {
+            setTimeout(() => {
+                this.sidenavLeft.open();
+            }, 800);
+        }
+
+        this.http.get(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/actions?resId=${this.currentResourceInformations.resId}`).pipe(
+            map((data: any) => {
+                data.actions = data.actions.map((action: any, index: number) => {
+                    return {
+                        id: action.id,
+                        label: action.label,
+                        component: action.component,
+                        categoryUse: action.categories
+                    }
+                });
+                return data;
+            }),
+            tap((data: any) => {
+                this.selectedAction = data.actions[0];
+                this.actionsList = data.actions;
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    initDetailPage(params: any) {
+        this.detailMode = true;
+        this.currentResourceInformations = {
+            resId: params['detailResId'],
+            mailtracking: false
+        };
+        this.navButton = { 
+            icon: 'fas fa-arrow-left', 
+            label: this.lang.back, 
+            route: `__GOBACK`
+        }
+
+        this.loadBadges();
+        this.loadResource();
+
+        if (this.appService.getViewMode()) {
+            setTimeout(() => {
+                this.sidenavLeft.open();
+            }, 800);
+        }
+    }
+
+    isActionEnded() {
+        return this.actionEnded;
+    }
+
+    loadResource() {
+        this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}?light=true`).pipe(
+            tap((data: any) => {
+                this.currentResourceInformations = data;
+                this.resourceFollowed = data.followed;
+                this.loadSenders();
+                this.setEditDataPrivilege();
+                this.loadAvaibleIntegrations(data.integrations);
+                this.headerService.setHeader(this.detailMode ? this.lang.detailDoc : this.lang.eventProcessDoc, this.lang[this.currentResourceInformations.categoryId]);
+            }),
+            finalize(() => this.loading = false),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
+
+    setEditDataPrivilege() {
+        if (this.detailMode) {
+            this.canEditData =  this.privilegeService.hasCurrentUserPrivilege('edit_resource') && this.currentResourceInformations.statusAlterable;
+        } else {
             this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/processingData`).pipe(
                 tap((data: any) => {
                     if (data.listEventData !== null) {
@@ -219,53 +313,7 @@ export class ProcessComponent implements OnInit {
                     return of(false);
                 })
             ).subscribe();
-
-            this.http.get(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/actions?resId=${this.currentResourceInformations.resId}`).pipe(
-                map((data: any) => {
-                    data.actions = data.actions.map((action: any, index: number) => {
-                        return {
-                            id: action.id,
-                            label: action.label,
-                            component: action.component,
-                            categoryUse: action.categories
-                        }
-                    });
-                    return data;
-                }),
-                tap((data: any) => {
-                    this.selectedAction = data.actions[0];
-                    this.actionsList = data.actions;
-                }),
-                catchError((err: any) => {
-                    this.notify.handleErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-
-        }, (err: any) => {
-            this.notify.handleErrors(err);
-        });
-    }
-
-    isActionEnded() {
-        return this.actionEnded;
-    }
-
-    loadResource() {
-        this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}?light=true`).pipe(
-            tap((data: any) => {
-                this.currentResourceInformations = data;
-                this.resourceFollowed = data.followed;
-                this.loadSenders();
-                this.loadAvaibleIntegrations(data.integrations);
-                this.headerService.setHeader(this.lang.eventProcessDoc, this.lang[this.currentResourceInformations.categoryId]);
-            }),
-            finalize(() => this.loading = false),
-            catchError((err: any) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+        }
     }
 
     loadAvaibleIntegrations(integrationsData: any) {
@@ -276,7 +324,8 @@ export class ProcessComponent implements OnInit {
                 Object.keys(data.connection).filter(connectionId => connectionId !== 'maarchParapheur').forEach(connectionId => {
                     if (connectionId === 'maileva') {
                         this.integrationsInfo['inShipping'] = {
-                            icon: 'fas fa-shipping-fast'                        }
+                            icon: 'fas fa-shipping-fast'
+                        }
                     }
                 });
             }),
@@ -288,10 +337,10 @@ export class ProcessComponent implements OnInit {
     }
 
     toggleIntegration(integrationId: string) {
-        this.http.put(`../../rest/resourcesList/integrations`, {resources : [this.currentResourceInformations.resId],integrations : { [integrationId] : !this.currentResourceInformations.integrations[integrationId]}}).pipe(
+        this.http.put(`../../rest/resourcesList/integrations`, { resources: [this.currentResourceInformations.resId], integrations: { [integrationId]: !this.currentResourceInformations.integrations[integrationId] } }).pipe(
             tap(() => {
                 this.currentResourceInformations.integrations[integrationId] = !this.currentResourceInformations.integrations[integrationId];
-                this.notify.success(this.lang.actionDone); 
+                this.notify.success(this.lang.actionDone);
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
@@ -561,7 +610,7 @@ export class ProcessComponent implements OnInit {
         }, 400);
     }
 
-    refreshBadge(nbRres: any, id: string) {        
+    refreshBadge(nbRres: any, id: string) {
         this.processTool.filter(tool => tool.id === id)[0].count = nbRres;
     }
 

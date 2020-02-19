@@ -67,8 +67,8 @@
                 </div>
             </mat-cell>
         </ng-container>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" (mouseenter)="viewThumbnail(row);"
-            (mouseleave)="closeThumbnail();"></mat-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" routerLink="/resources/{{row.resId}}" (mouseenter)="viewThumbnail(row);"
+            (mouseleave)="closeThumbnail();" style="cursor: pointer;"></mat-row>
     </mat-table>
     <button *ngIf="privilegeService.hasCurrentUserPrivilege('add_links')" mat-fab class="linkRes" color="primary" [title]="lang.linkResource" (click)="openSearchResourceModal()">
         <mat-icon class="fa fa-link" style="height:auto;"></mat-icon>

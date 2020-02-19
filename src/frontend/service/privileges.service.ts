@@ -315,12 +315,6 @@ export class PrivilegeService {
             "unit": 'application'
         },
         {
-            "id": "delete_document_in_detail",
-            "label": this.lang.deleteDocumentInDetail,
-            "comment": this.lang.deleteDocumentInDetail,
-            "unit": 'application'
-        },
-        {
             "id": "manage_tags_application",
             "label": this.lang.manageTagsInApplication,
             "comment": this.lang.manageTagsInApplicationDesc,

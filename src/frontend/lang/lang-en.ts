@@ -1546,4 +1546,5 @@ export const LANG_EN = {
     "tagMerged" : "Tag merged",
     "mergeWith" : "Merge with",
     "willBeTransferedToNewTag" : "will be transfered to selected tag",
+    "detailDoc" : "Detail page",
 };
