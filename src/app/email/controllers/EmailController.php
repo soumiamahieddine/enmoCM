@@ -791,11 +791,12 @@ class EmailController
                     if (!Validator::intVal()->notEmpty()->validate($note)) {
                         return ['errors' => 'Data document[notes] errors', 'code' => 400];
                     }
-                    $checkNote = NoteModel::getById(['id' => $note, 'select' => ['identifier']]);
+                    $checkNote = NoteModel::getById(['id' => $note, 'select' => ['identifier', 'user_id']]);
                     if (empty($checkNote) || $checkNote['identifier'] != $args['data']['document']['id']) {
                         return ['errors' => 'Note out of perimeter', 'code' => 403];
+                    } elseif ($checkNote['user_id'] == $args['userId']) {
+                        continue;
                     }
-
                     $rawUserEntities = EntityModel::getByLogin(['login' => $user['user_id'], 'select' => ['entity_id']]);
                     $userEntities = [];
                     foreach ($rawUserEntities as $rawUserEntity) {

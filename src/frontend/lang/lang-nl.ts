@@ -1120,6 +1120,7 @@ export const LANG_NL = {
     "owner" : "Owner", //_TO_TRANSLATE
     "privateFolder" : "Private folder", //_TO_TRANSLATE
     "visibleBy" : "Visible by", //_TO_TRANSLATE
+    "noteVisibleBy" : "Note visible by :", //TRANSLATE
     "folderInformations" : "Folder Informations", //_TO_TRANSLATE
     "process" : "Process", //_TO_TRANSLATE
     "modelName" : "Model name", //_TO_TRANSLATE

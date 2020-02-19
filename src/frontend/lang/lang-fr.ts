@@ -1132,6 +1132,7 @@ export const LANG_FR = {
     "owner" : "Propriétaire",
     "privateFolder" : "Dossier privé",
     "visibleBy" : "Visible par",
+    "noteVisibleBy" : "Annotation visible par :",
     "folderInformations" : "Informations du dossier",
     "process" : "Traitement",
     "modelName" : "Nom du modèle",

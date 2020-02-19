@@ -1094,6 +1094,7 @@ export const LANG_EN = {
     "owner" : "Owner",
     "privateFolder" : "Private folder",
     "visibleBy" : "Visible by",
+    "noteVisibleBy" : "Note visible by :",
     "folderInformations" : "Folder Informations",
     "process" : "Process",
     "modelName" : "Model name",

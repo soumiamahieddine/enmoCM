@@ -8,7 +8,7 @@
             <span>{{lang.noteTemplates}}</span>
         </button>
         <button mat-menu-item [matMenuTriggerFor]="menuEntities">
-            <span>{{lang.restrictions}}</span>
+            <span>{{lang.visibleBy}}</span>
         </button>
     </mat-menu>
 
@@ -46,7 +46,7 @@
     </button>
 </mat-form-field>
 <div style="overflow: auto;max-height: 75px;background:white;">
-    <div style="font-size: 11px;position: sticky;top: 0px;">Annotation visible par :</div> 
+    <div style="font-size: 11px;position: sticky;top: 0px;">{{lang.noteVisibleBy}}</div>
     <span *ngIf="entitiesRestriction.length === 0" class="label label-default noNoteRestriction">{{lang.all}}</span>
     <ng-container *ngFor="let entity of entities | sortBy: 'entity_label';let i=index;">
         <span *ngIf="entitiesRestriction.indexOf(entity.id) > -1" class="label label-default noteRestriction"
