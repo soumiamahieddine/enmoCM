@@ -53,7 +53,7 @@
                         <button mat-menu-item (click)="deleteNode(node)"
                             [disabled]="!node.canDelete">{{lang.delete}}</button>
                         <button mat-menu-item (click)="openFolderAdmin(node)"
-                            [disabled]="!node.edition">{{lang.update}}</button>
+                            [disabled]="!node.edition">{{lang.properties}}</button>
                     </mat-menu>
                 </a>
             </mat-tree-node>
@@ -111,7 +111,7 @@
                         <button mat-menu-item (click)="deleteNode(node)"
                             [disabled]="!node.canDelete">{{lang.delete}}</button>
                         <button mat-menu-item (click)="openFolderAdmin(node)"
-                            [disabled]="!node.edition">{{lang.update}}</button>
+                            [disabled]="!node.edition">{{lang.properties}}</button>
                     </mat-menu>
                 </a>
             </mat-tree-node>

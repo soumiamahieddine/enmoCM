@@ -1555,4 +1555,5 @@ export const LANG_NL = {
     "badEmailsFormat" : "Some email address are not correct", //_TO_TRANSLATE
     "warnEmptySubject" : "You will send an email without subject, continue ?", //_TO_TRANSLATE
     "emailDeleted" : "Email deleted", //_TO_TRANSLATE
+    "properties" : "Properties", //_TO_TRANSLATE
 };

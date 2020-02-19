@@ -396,6 +396,8 @@ define("_FOLDER_SHARING_MODIFICATION", "Partage de dossier modifié");
 define("_FOLDER_RESOURCES_ADDED", "Ressource(s) ajoutée(s)");
 define("_FOLDER_RESOURCES_REMOVED", "Ressource(s) retirée(s)");
 define("_FOLDER_TO_FOLDER", "au dossier");
+define("_ADDED_TO_FOLDER", "Ajouté au dossier");
+define("_REMOVED_TO_FOLDER", "Retiré du dossier");
 
 define("_NOT_EXISTS", "n'existe pas");
 

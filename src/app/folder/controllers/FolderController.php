@@ -618,11 +618,26 @@ class FolderController
             ResourceFolderModel::create(['folder_id' => $args['id'], 'res_id' => $value]);
         }
 
+        $folders             = FolderModel::getById(['select' => ['label'], 'id' => $args['id']]);
+        $resourcesInfo       = ResModel::get(['select' => ['alt_identifier'], 'where' => ['res_id in (?)'], 'data' => [$resourcesToClassify]]);
+        $resourcesIdentifier = array_column($resourcesInfo, 'alt_identifier');
+
+        foreach ($resourcesToClassify as $resource) {
+            HistoryController::add([
+                'tableName' => 'res_letterbox',
+                'recordId'  => $resource,
+                'eventType' => 'UP',
+                'info'      => _ADDED_TO_FOLDER . " \"" . $folders['label'] . "\"",
+                'moduleId'  => 'resource',
+                'eventId'   => 'resourceModification',
+            ]);
+        }
+
         HistoryController::add([
             'tableName' => 'resources_folders',
             'recordId'  => $args['id'],
             'eventType' => 'ADD',
-            'info'      => _FOLDER_RESOURCES_ADDED . " : " . implode(", ", $resourcesToClassify) . " " . _FOLDER_TO_FOLDER . " " . $args['id'],
+            'info'      => _FOLDER_RESOURCES_ADDED . " : " . implode(", ", $resourcesIdentifier) . " " . _FOLDER_TO_FOLDER . " \"" . $folders['label'] . "\"",
             'moduleId'  => 'folder',
             'eventId'   => 'folderResourceAdded',
         ]);
@@ -661,11 +676,26 @@ class FolderController
             ResourceFolderModel::delete(['where' => ['folder_id = ?', 'res_id = ?'], 'data' => [$args['id'], $value]]);
         }
 
+        $folders             = FolderModel::getById(['select' => ['label'], 'id' => $args['id']]);
+        $resourcesInfo       = ResModel::get(['select' => ['alt_identifier'], 'where' => ['res_id in (?)'], 'data' => [$resourcesToUnclassify]]);
+        $resourcesIdentifier = array_column($resourcesInfo, 'alt_identifier');
+
+        foreach ($resourcesToUnclassify as $resource) {
+            HistoryController::add([
+                'tableName' => 'res_letterbox',
+                'recordId'  => $resource,
+                'eventType' => 'UP',
+                'info'      => _REMOVED_TO_FOLDER . " \"" . $folders['label'] . "\"",
+                'moduleId'  => 'resource',
+                'eventId'   => 'resourceModification',
+            ]);
+        }
+
         HistoryController::add([
             'tableName' => 'resources_folders',
             'recordId'  => $args['id'],
             'eventType' => 'DEL',
-            'info'      => _FOLDER_RESOURCES_REMOVED . " : " . implode(", ", $resourcesToUnclassify) . " " . _FOLDER_TO_FOLDER . " " . $args['id'],
+            'info'      => _FOLDER_RESOURCES_REMOVED . " : " . implode(", ", $resourcesIdentifier) . " " . _FOLDER_TO_FOLDER . " \"" . $folders['label'] . "\"",
             'moduleId'  => 'folder',
             'eventId'   => 'folderResourceRemoved',
         ]);

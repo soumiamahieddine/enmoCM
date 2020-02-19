@@ -1529,5 +1529,6 @@ export const LANG_EN = {
     "contactDeleted" : "Contact deleted",
     "badEmailsFormat" : "Some email address are not correct",
     "warnEmptySubject" : "You will send an email without subject, continue ?",  
-    "emailDeleted" : "Email deleted",  
+    "emailDeleted" : "Email deleted",
+    "properties" : "Properties",  
 };
