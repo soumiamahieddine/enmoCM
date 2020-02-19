@@ -1214,8 +1214,10 @@ export const LANG_NL = {
     "manageTagsInApplicationDesc" : "Create tags while indexing, processing and in details", //_TO_TRANSLATE
     "updateDiffusionWhileIndexing" : "Update all parts of diffusion list when indexing.", //_TO_TRANSLATE
     "updateDiffusionExceptRecipientWhileIndexing" : "Update diffusion list except Assignee when indexing.", //_TO_TRANSLATE
-    "updateDiffusionWhileDetails" : "Update all parts of diffusion list when processing.", //_TO_TRANSLATE
-    "updateDiffusionExceptRecipientWhileDetails" : "Update diffusion list except Assignee when processing.", //_TO_TRANSLATE
+    "updateDiffusionWhileProcess" : "Update all parts of diffusion list when processing.", //_TO_TRANSLATE
+    "updateDiffusionExceptRecipientWhileProcess" : "Update diffusion list except Assignee when processing.", //_TO_TRANSLATE
+    "updateDiffusionWhileDetails" : "Update all parts of diffusion list when in details.", //_TO_TRANSLATE
+    "updateDiffusionExceptRecipientWhileDetails" : "Update diffusion list except Assignee when in details.", //_TO_TRANSLATE
     "useMailServices" : "De e-mails van zijn diensten gebruiken als verzender",
     "viewDocumentsWithNotes": "View mail with notes", //_TO_TRANSLATE
     "viewDocumentsWithNotesDesc": "View attachment of 'document_with_notes' type", //_TO_TRANSLATE
