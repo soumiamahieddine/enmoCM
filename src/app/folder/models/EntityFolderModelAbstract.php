@@ -53,16 +53,18 @@ class EntityFolderModelAbstract
 
     public static function create(array $args)
     {
-        ValidatorModel::notEmpty($args, ['folder_id', 'entity_id']);
+        ValidatorModel::notEmpty($args, ['folder_id']);
         ValidatorModel::intVal($args, ['entity_id', 'folder_id']);
         ValidatorModel::boolType($args, ['edition']);
+        ValidatorModel::stringType($args, ['keyword']);
 
         DatabaseModel::insert([
             'table'     => 'entities_folders',
             'columnsValues' => [
-                'folder_id'  => $args['folder_id'],
-                'entity_id'  => $args['entity_id'],
-                'edition'    => empty($args['edition']) ? 'false' : 'true'
+                'folder_id' => $args['folder_id'],
+                'entity_id' => $args['entity_id'] ?? null,
+                'edition'   => empty($args['edition']) ? 'false' : 'true',
+                'keyword'   => $args['keyword'] ?? null
             ]
         ]);
 

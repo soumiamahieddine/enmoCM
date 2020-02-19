@@ -283,12 +283,14 @@ class FolderController
         if (!Validator::boolType()->validate($data['public'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body public is empty or not a boolean']);
         }
-        if ($data['public'] && !isset($data['sharing']['entities'])) {
+        if ($data['public'] && !isset($data['sharing']['entities']) && !isset($data['sharing']['keywords'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body sharing/entities does not exists']);
         }
 
+        $keywords = $data['sharing']['keywords'] ?? [];
+
         $entitiesBefore = EntityFolderModel::getByFolderId(['select' => ['entities_folders.entity_id, edition'], 'folder_id' => $args['id']]);
-        $entitiesAfter = $data['sharing']['entities'];
+        $entitiesAfter = $data['sharing']['entities'] ?? [];
 
         $entitiesToRemove = array_udiff($entitiesBefore, $entitiesAfter, function ($a, $b) {
             if ($a['entity_id'] == $b['entity_id'] && $a['edition'] != $b['edition']) {
@@ -317,7 +319,13 @@ class FolderController
         });
 
         DatabaseModel::beginTransaction();
-        $sharing = FolderController::folderSharing(['folderId' => $args['id'], 'public' => $data['public'], 'remove' => $entitiesToRemove, 'add' => $entitiesToAdd]);
+        $sharing = FolderController::folderSharing([
+            'folderId' => $args['id'],
+            'public'   => $data['public'],
+            'remove'   => $entitiesToRemove,
+            'add'      => $entitiesToAdd,
+            'keywords' => $keywords
+        ]);
         if (!$sharing) {
             DatabaseModel::rollbackTransaction();
             return $response->withStatus(400)->withJson(['errors' => 'Cannot share/unshare folder because at least one folder is out of your perimeter']);
@@ -347,11 +355,11 @@ class FolderController
         $entitiesToRemove = array_column($args['remove'], 'entity_id');
 
         FolderModel::update([
-            'set' => [
+            'set'   => [
                 'public' => empty($args['public']) ? 'false' : 'true',
             ],
             'where' => ['id = ?'],
-            'data' => [$args['folderId']]
+            'data'  => [$args['folderId']]
         ]);
 
         $entitiesToAdd = array_column($args['add'], 'entity_id');
@@ -373,35 +381,65 @@ class FolderController
             }
         }
 
+        if (!empty($args['keywords'])) {
+            $folderKeywords = EntityFolderModel::get([
+                'select' => ['id'],
+                'where'  => ['folder_id = ?', 'entity_id is null', 'keyword is not null'],
+                'data'   => [$args['folderId']]
+            ]);
+            $folderKeywords = array_column($folderKeywords, 'id');
+
+            if (!empty($folderKeywords)) {
+                EntityFolderModel::delete([
+                    'where' => ['id in (?)'],
+                    'data'  => [$folderKeywords]
+                ]);
+            }
+
+            foreach ($args['keywords'] as $keyword) {
+                EntityFolderModel::create([
+                    'folder_id' => $args['folderId'],
+                    'entity_id' => null,
+                    'edition'   => $keyword['edition'],
+                    'keyword'   => $keyword['keyword']
+                ]);
+            }
+        } else {
+            EntityFolderModel::delete([
+                'where' => ['folder_id = ?', 'entity_id is null', 'keyword is not null'],
+                'data'  => [$args['folderId']]
+            ]);
+        }
+
         $entitiesOfFolder = EntityFolderModel::getByFolderId([
-            'select' => ['entities.entity_id'],
+            'select'    => ['entities.entity_id'],
             'folder_id' => $args['folderId']
         ]);
         $entitiesOfFolder = array_column($entitiesOfFolder, 'entity_id');
 
         $users = UserPinnedFolderModel::get([
             'select' => ['user_id'],
-            'where' => ['folder_id = ?'],
-            'data' => [$args['folderId']]
+            'where'  => ['folder_id = ?'],
+            'data'   => [$args['folderId']]
         ]);
 
         if (!empty($users) && empty($entitiesOfFolder)) {
             UserPinnedFolderModel::delete([
                 'where' => ['folder_id = ?', 'user_id != ?'],
-                'data' => [$args['folderId'], $folder[0]['user_id']]
+                'data'  => [$args['folderId'], $folder[0]['user_id']]
             ]);
         } else {
             foreach ($users as $user) {
                 if ($user['user_id'] != $folder[0]['user_id']) {
                     $inEntities = UserEntityModel::getWithUsers([
                         'select' => ['users.id'],
-                        'where' => ['users.id = ?', 'entity_id in (?)'],
-                        'data' => [$user['user_id'], $entitiesOfFolder]
+                        'where'  => ['users.id = ?', 'entity_id in (?)'],
+                        'data'   => [$user['user_id'], $entitiesOfFolder]
                     ]);
                     if (empty($inEntities)) {
                         UserPinnedFolderModel::delete([
                             'where' => ['folder_id = ?', 'user_id = ?'],
-                            'data' => [$args['folderId'], $user['user_id']]
+                            'data'  => [$args['folderId'], $user['user_id']]
                         ]);
                     }
                 }
@@ -411,7 +449,13 @@ class FolderController
         $folderChild = FolderModel::getChild(['id' => $args['folderId'], 'select' => ['id']]);
         if (!empty($folderChild)) {
             foreach ($folderChild as $child) {
-                FolderController::folderSharing(['folderId' => $child['id'], 'public' => $args['public'], 'remove' => $args['remove'], 'add' => $args['add']]);
+                FolderController::folderSharing([
+                    'folderId' => $child['id'],
+                    'public'   => $args['public'],
+                    'remove'   => $args['remove'],
+                    'add'      => $args['add'],
+                    'keywords' => $args['keywords']
+                ]);
             }
         }
 

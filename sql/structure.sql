@@ -519,9 +519,9 @@ CREATE TABLE entities_folders
   folder_id INTEGER NOT NULL,
   entity_id INTEGER,
   edition boolean NOT NULL,
-  keywords jsonb NOT NULL DEFAULT '[]',
+  keyword character varying(255),
   CONSTRAINT entities_folders_pkey PRIMARY KEY (id),
-  CONSTRAINT entities_folders_unique_key UNIQUE (folder_id, entity_id, keywords)
+  CONSTRAINT entities_folders_unique_key UNIQUE (folder_id, entity_id, keyword)
 )
 WITH (OIDS=FALSE);
 
