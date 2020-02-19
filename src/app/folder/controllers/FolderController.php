@@ -857,6 +857,9 @@ class FolderController
             'data'   => $data
         ]);
         $folderKeywords = array_column($folderKeywords, 'folder_id');
+        if (empty($folderKeywords)) {
+            $folderKeywords = [0];
+        }
 
         $user = UserModel::getByLogin(['login' => $login, 'select' => ['id']]);
 
