@@ -122,10 +122,16 @@ class FolderController
 
         $folder['sharing']['entities'] = [];
         if ($folder['public']) {
-            $entitiesFolder = EntityFolderModel::getByFolderId(['folder_id' => $args['id'], 'select' => ['entities_folders.entity_id', 'entities_folders.edition', 'entities.entity_label']]);
+            $entitiesFolder = EntityFolderModel::getEntitiesByFolderId(['folder_id' => $args['id'], 'select' => ['entities_folders.entity_id', 'entities_folders.edition', 'entities.entity_label']]);
             foreach ($entitiesFolder as $value) {
                 $canDelete = FolderController::areChildrenInPerimeter(['folderId' => $args['id']]);
                 $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition'], 'canDelete' => $canDelete, 'label' => $value['entity_label']];
+            }
+
+            $keywordsFolder = EntityFolderModel::getKeywordsByFolderId(['folder_id' => $args['id'], 'select' => ['edition', 'keyword']]);
+            foreach ($keywordsFolder as $value) {
+                $canDelete = FolderController::areChildrenInPerimeter(['folderId' => $args['id']]);
+                $folder['sharing']['keywords'][] = ['keyword' => $value['keyword'], 'edition' => $value['edition'], 'canDelete' => $canDelete];
             }
         }
 
@@ -179,7 +185,7 @@ class FolderController
         ]);
 
         if ($public && !empty($data['parent_id'])) {
-            $entitiesSharing = EntityFolderModel::getByFolderId(['folder_id' => $data['parent_id'], 'select' => ['entities.id', 'entities_folders.edition']]);
+            $entitiesSharing = EntityFolderModel::getEntitiesByFolderId(['folder_id' => $data['parent_id'], 'select' => ['entities.id', 'entities_folders.edition']]);
             foreach ($entitiesSharing as $entity) {
                 EntityFolderModel::create([
                     'folder_id' => $id,
@@ -289,7 +295,7 @@ class FolderController
 
         $keywords = $data['sharing']['keywords'] ?? [];
 
-        $entitiesBefore = EntityFolderModel::getByFolderId(['select' => ['entities_folders.entity_id, edition'], 'folder_id' => $args['id']]);
+        $entitiesBefore = EntityFolderModel::getEntitiesByFolderId(['select' => ['entities_folders.entity_id, edition'], 'folder_id' => $args['id']]);
         $entitiesAfter = $data['sharing']['entities'] ?? [];
 
         $entitiesToRemove = array_udiff($entitiesBefore, $entitiesAfter, function ($a, $b) {
@@ -411,7 +417,7 @@ class FolderController
             ]);
         }
 
-        $entitiesOfFolder = EntityFolderModel::getByFolderId([
+        $entitiesOfFolder = EntityFolderModel::getEntitiesByFolderId([
             'select'    => ['entities.entity_id'],
             'folder_id' => $args['folderId']
         ]);

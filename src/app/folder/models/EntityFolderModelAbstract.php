@@ -35,7 +35,7 @@ class EntityFolderModelAbstract
         return $entitiesFolder;
     }
 
-    public static function getByFolderId(array $args)
+    public static function getEntitiesByFolderId(array $args)
     {
         ValidatorModel::notEmpty($args, ['folder_id']);
         ValidatorModel::intVal($args, ['folder_id']);
@@ -44,7 +44,22 @@ class EntityFolderModelAbstract
             'select'    => empty($args['select']) ? ['*'] : $args['select'],
             'table'     => ['entities_folders', 'entities'],
             'left_join' => ['entities_folders.entity_id = entities.id'],
-            'where'     => ['folder_id = ?'],
+            'where'     => ['folder_id = ?', 'entities_folders.entity_id is not null', 'keyword is null'],
+            'data'      => [$args['folder_id']]
+        ]);
+
+        return $entitiesFolder;
+    }
+
+    public static function getKeywordsByFolderId(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['folder_id']);
+        ValidatorModel::intVal($args, ['folder_id']);
+
+        $entitiesFolder = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['entities_folders'],
+            'where'     => ['folder_id = ?', 'entity_id is null', 'keyword is not null'],
             'data'      => [$args['folder_id']]
         ]);
 
