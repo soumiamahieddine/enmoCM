@@ -15,7 +15,6 @@
     }
 
     .pinnedFolderItem {
-        color: rgb(102, 102, 102);
         font-weight: bold;
         font-size: 12px;
         width: 90%;
@@ -84,4 +83,9 @@ button:disabled {
     font-size: 13px;
     opacity: 0.5;
     font-style: italic;
+}
+
+.treeLabel {
+    white-space: pre;
+    color: rgb(102, 102, 102);
 }

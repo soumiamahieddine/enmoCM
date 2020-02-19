@@ -23,8 +23,8 @@
     </mat-form-field>
     <div class="itemList">
         <mat-chip-list *ngIf="controlAutocomplete.value.length > 0" class="mat-chip-list-stacked itemChip" color="default">
-            <mat-chip *ngFor="let item of controlAutocomplete.value;let i=index" class="activeListAutocomplete"
-                color="default" [removable]="!controlAutocomplete.disabled" (removed)="removeItem(i)">
+            <mat-chip *ngFor="let item of controlAutocomplete.value;let i=index"
+                color="default" [removable]="!controlAutocomplete.disabled" (removed)="removeItem(i)" class="listAutocomplete">
                 <span style="display: flex;flex: 1;align-items: center;" [title]="this.valuesToDisplay[item]">
                     <i class="fa fa-folder-open" style="padding-right:5px;"></i>&nbsp;{{this.valuesToDisplay[item]}}
                 </span>
