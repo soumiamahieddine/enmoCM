@@ -23,6 +23,7 @@ import { FolderActionListComponent } from '../folder-action-list/folder-action-l
 import { FiltersListService } from '../../../service/filtersList.service';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { FoldersService } from '../folders.service';
+import { FunctionsService } from '../../../service/functions.service';
 
 
 declare function $j(selector: any): any;
@@ -118,7 +119,8 @@ export class FolderDocumentListComponent implements OnInit {
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
         public appService: AppService,
-        private foldersService: FoldersService) {
+        private foldersService: FoldersService,
+        public functions: FunctionsService) {
 
         $j("link[href='merged_css.php']").remove();
 
@@ -146,12 +148,22 @@ export class FolderDocumentListComponent implements OnInit {
 
             this.http.get('../../rest/folders/' + params['folderId'])
                 .subscribe((data: any) => {
+                    let keywordEntities = [{
+                        keyword: 'ALL_ENTITIES',
+                        text: this.lang.allEntities,
+                    }];
                     this.folderInfo =
                         {
                             'id': params['folderId'],
                             'label': data.folder.label,
                             'ownerDisplayName': data.folder.ownerDisplayName,
-                            'entitiesSharing': data.folder.sharing.entities.map((entity: any) => entity.label),
+                            'entitiesSharing': data.folder.sharing.entities.map((entity: any) => {
+                                if (!this.functions.empty(entity.label)) {
+                                    return entity.label;
+                                } else {
+                                    return keywordEntities.filter((element: any) => element.keyword == entity.keyword)[0].text
+                                }
+                            }),
                         };
                     this.foldersService.setFolder(this.folderInfo);
                     this.headerService.setHeader(this.folderInfo.label, '', 'fa fa-folder-open');

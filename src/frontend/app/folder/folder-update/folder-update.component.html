@@ -27,7 +27,7 @@
                             <div class="formType-title">
                                 {{lang.parameters}}
                             </div>
-                            <ng-container *ngFor="let entity of entities | sortBy : 'entity_label'">
+                            <ng-container *ngFor="let entity of entities">
                                 <mat-expansion-panel class="selectedEntities" *ngIf="checkSelectedFolder(entity)"
                                     opened>
                                     <mat-expansion-panel-header>
