@@ -14,6 +14,7 @@ namespace Action\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Action\models\ActionModel;
+use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketRedirectModel;
@@ -485,7 +486,10 @@ class PreProcessActionController
                         if (!$hasSignableAttachment && empty($integratedResource)) {
                             $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noSignableAttachmentInSignatoryBook'];
                         } else {
-                            $additionalsInfos['attachments'][] = ['res_id' => $resId];
+                            $statuses = array_column($attachments, 'status');
+                            $mailing = in_array('SEND_MASS', $statuses);
+
+                            $additionalsInfos['attachments'][] = ['res_id' => $resId, 'alt_identifier' => $noAttachmentsResource['alt_identifier'], 'mailing' => $mailing];
                         }
                     }
                 }
@@ -537,7 +541,10 @@ class PreProcessActionController
                                 break;
                             }
                         }
-                        $additionalsInfos['attachments'][] = ['res_id' => $resId];
+                        $statuses = array_column($attachments, 'status');
+                        $mailing = in_array('SEND_MASS', $statuses);
+
+                        $additionalsInfos['attachments'][] = ['res_id' => $resId, 'alt_identifier' => $noAttachmentsResource['alt_identifier'], 'mailing' => $mailing];
                     }
                 }
             }
@@ -942,21 +949,35 @@ class PreProcessActionController
                 $resource['alt_identifier'] = _UNDEFINED;
             }
 
-            $integrations = json_decode($resource['integrations'], true);
-            if (!empty($integrations['inSignatureBook'])) {
-                $resourcesInformations['success'][] = ['res_id' => $resId];
-            } else {
-                $attachments = AttachmentModel::get([
-                    'select'    => [1],
-                    'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
-                    'data'      => [$resId, $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
-                ]);
+            $circuit = ListInstanceModel::get([
+                'select'    => ['requested_signature'],
+                'where'     => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
+                'data'      => [$resId, 'VISA_CIRCUIT'],
+                'orderBy'   => ['listinstance_id'],
+                'limit'     => 1
+            ]);
+            if (empty($circuit)) {
+                $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noCircuitAvailable'];
+                continue;
+            }
 
-                if (empty($attachments)) {
-                    $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
+            $attachments = AttachmentModel::get([
+                'select'    => ['status'],
+                'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
+                'data'      => [$resId, $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
+            ]);
+
+            if (empty($attachments)) {
+                $integrations = json_decode($resource['integrations'], true);
+                if (!empty($integrations['inSignatureBook'])) {
+                    $resourcesInformations['success'][] = ['res_id' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'mailing' => false];
                 } else {
-                    $resourcesInformations['success'][] = ['res_id' => $resId];
+                    $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
                 }
+            } else {
+                $statuses = array_column($attachments, 'status');
+                $mailing = in_array('SEND_MASS', $statuses);
+                $resourcesInformations['success'][] = ['res_id' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'mailing' => $mailing];
             }
         }
 
@@ -1008,7 +1029,18 @@ class PreProcessActionController
             } elseif ($isSignatory[0]['requested_signature'] && !$isSignatory[0]['signatory']) {
                 $resourcesInformations['warning'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'userHasntSigned'];
             } else {
-                $resourcesInformations['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId];
+                $attachments = AttachmentModel::get([
+                    'select'    => ['status'],
+                    'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
+                    'data'      => [$resId, $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
+                ]);
+
+                $mailing = false;
+                if (!empty($attachments)) {
+                    $statuses = array_column($attachments, 'status');
+                    $mailing = in_array('SEND_MASS', $statuses);
+                }
+                $resourcesInformations['success'][] = ['res_id' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'mailing' => $mailing];
             }
         }
 

@@ -18,6 +18,7 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
     lang: any = LANG;
     loading: boolean = true;
 
+    resourcesMailing: any[] = [];
     resourcesError: any[] = [];
 
     noResourceToProcess: boolean = null;
@@ -89,6 +90,13 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
                         this.resourcesError = data.resourcesInformations.error;
                     }
                     this.noResourceToProcess = this.data.resIds.length === this.resourcesError.length;
+                    if (data.resourcesInformations.success) {
+                        data.resourcesInformations.success.forEach((value: any) => {
+                            if (value.mailing) {
+                                this.resourcesMailing.push(value);
+                            }
+                        });
+                    }
                     resolve(true);
                 }, (err: any) => {
                     this.notify.handleSoftErrors(err);
@@ -130,7 +138,6 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
     }
 
     executeAction(realResSelected: number[]) {
-
         this.http.put(this.data.processActionRoute, { resources: realResSelected, note: this.noteEditor.getNoteContent() }).pipe(
             tap((data: any) => {
                 if (!data) {
@@ -168,10 +175,6 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
     }
 
     isValidAction() {
-        if (!this.noResourceToProcess && this.appVisaWorkflow !== undefined && !this.appVisaWorkflow.emptyWorkflow() && !this.appVisaWorkflow.workflowEnd()) {
-            return true;
-        } else {
-            return false;
-        }
+        return !this.noResourceToProcess && this.appVisaWorkflow !== undefined && !this.appVisaWorkflow.emptyWorkflow() && !this.appVisaWorkflow.workflowEnd();
     }
 }

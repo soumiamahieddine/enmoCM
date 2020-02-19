@@ -1555,5 +1555,7 @@ export const LANG_NL = {
     "badEmailsFormat" : "Some email address are not correct", //_TO_TRANSLATE
     "warnEmptySubject" : "You will send an email without subject, continue ?", //_TO_TRANSLATE
     "emailDeleted" : "Email deleted", //_TO_TRANSLATE
+    "mailingActionInformations" : "Following mails contain mailing attachments, if next person in visa circuit is signatory then mailing will be activate :", //_TO_TRANSLATE
+    "mailingActionInformations2" : "Following mails contain mailing attachments, mailing will be activate :", //TRANSLATE
     "properties" : "Properties", //_TO_TRANSLATE
 };

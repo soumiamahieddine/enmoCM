@@ -1568,6 +1568,8 @@ export const LANG_FR = {
     "contactDeleted" : "Contact supprimé",
     "badEmailsFormat" : "Certaines adresses de courriel ne sont pas correctes",    
     "warnEmptySubject" : "Vous allez envoyer un courriel sans objet, continuer ?",    
-    "emailDeleted" : "Courriel supprimé",    
+    "emailDeleted" : "Courriel supprimé",
+    "mailingActionInformations" : "Les courriers suivants contiennent des pièces-jointes pour publipostage, si la prochaine personne du circuit de visa est signataire alors le publipostage s'effectuera dès la validation de cette action :",
+    "mailingActionInformations2" : "Les courriers suivants contiennent des pièces-jointes pour publipostage, celui-ci s'effectuera dès la validation de cette action :",
     "properties" : "Propriétés",
 };
