@@ -152,10 +152,11 @@ CREATE TABLE entities_folders
 (
   id serial NOT NULL,
   folder_id INTEGER NOT NULL,
-  entity_id INTEGER NOT NULL,
+  entity_id INTEGER,
   edition boolean NOT NULL,
+  keywords jsonb NOT NULL DEFAULT '[]',
   CONSTRAINT entities_folders_pkey PRIMARY KEY (id),
-  CONSTRAINT entities_folders_unique_key UNIQUE (folder_id, entity_id)
+  CONSTRAINT entities_folders_unique_key UNIQUE (folder_id, entity_id, keywords)
 )
 WITH (OIDS=FALSE);
 
