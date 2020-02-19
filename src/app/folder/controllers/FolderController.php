@@ -124,13 +124,15 @@ class FolderController
         if ($folder['public']) {
             $entitiesFolder = EntityFolderModel::getEntitiesByFolderId(['folder_id' => $args['id'], 'select' => ['entities_folders.entity_id', 'entities_folders.edition', 'entities.entity_label']]);
             foreach ($entitiesFolder as $value) {
-                $canDelete = FolderController::areChildrenInPerimeter(['folderId' => $args['id']]);
+                $canDelete = FolderController::areChildrenInPerimeter(['folderId' => $args['id'], 'entityId' => $value['entity_id']]);
+                $canDelete = $canDelete && $value['edition'] == true;
                 $folder['sharing']['entities'][] = ['entity_id' => $value['entity_id'], 'edition' => $value['edition'], 'canDelete' => $canDelete, 'label' => $value['entity_label']];
             }
 
             $keywordsFolder = EntityFolderModel::getKeywordsByFolderId(['folder_id' => $args['id'], 'select' => ['edition', 'keyword']]);
             foreach ($keywordsFolder as $value) {
-                $canDelete = FolderController::areChildrenInPerimeter(['folderId' => $args['id']]);
+                $canDelete = FolderController::areChildrenInPerimeter(['folderId' => $args['id'], 'keyword' => $value['keyword']]);
+                $canDelete = $canDelete && $value['edition'] == true;
                 $folder['sharing']['entities'][] = ['keyword' => $value['keyword'], 'edition' => $value['edition'], 'canDelete' => $canDelete];
             }
         }
@@ -482,6 +484,12 @@ class FolderController
             return $response->withStatus(400)->withJson(['errors' => 'Query id is empty or not an integer']);
         }
 
+        $canDelete = FolderController::areChildrenInPerimeter(['folderId' => $aArgs['id']]);
+
+        if (!$canDelete) {
+            return $response->withStatus(400)->withJson(['errors' => 'Cannot delete because at least one folder is out of your perimeter']);
+        }
+
         $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['id'], 'edition' => true]);
         
         DatabaseModel::beginTransaction();
@@ -528,25 +536,49 @@ class FolderController
         return true;
     }
 
-    public static function areChildrenInPerimeter(array $aArgs = [])
+    public static function areChildrenInPerimeter(array $args = [])
     {
-        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['folderId'], 'edition' => true]);
+        ValidatorModel::notEmpty($args, ['folderId']);
+        ValidatorModel::intVal($args, ['folderId', 'entityId']);
+        ValidatorModel::stringType($args, ['keyword']);
+
+        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $args['folderId'], 'edition' => true]);
         if (empty($folder[0])) {
             return false;
         }
 
+        $where = ['parent_id = ?'];
+        $data = [$args['folderId']];
+
+        if (!empty($args['entityId'])) {
+            $where[] = 'entity_id = ?';
+            $data[] = $args['entityId'];
+        } else if (!empty($args['keyword'])) {
+            $where[] = 'keyword = ?';
+            $data[] = $args['keyword'];
+        }
+
         $children = FolderModel::getWithEntities([
-            'select' =>  ['distinct (folders.id), edition'],
-            'where'  =>  ['parent_id = ?'],
-            'data'   =>  [$aArgs['folderId']]
+            'select' => ['distinct (folders.id)', 'edition', 'user_id', 'keyword'],
+            'where'  => $where,
+            'data'   => $data
         ]);
+
+        $allEntitiesCanDelete = false;
+        foreach ($children as $key => $child) {
+            if ($child['keyword'] == 'ALL_ENTITIES') {
+                $allEntitiesCanDelete = true;
+                unset($children[$key]);
+            }
+        }
+
 
         if (!empty($children)) {
             foreach ($children as $child) {
-                if ($child['edition'] == false or $child['edition'] == null) {
+                if ($child['user_id'] != $GLOBALS['id'] && ($child['edition'] == false || $child['edition'] == null) && !$allEntitiesCanDelete) {
                     return false;
                 }
-                if (!FolderController::areChildrenInPerimeter(['folderId' => $child['id']])) {
+                if (!FolderController::areChildrenInPerimeter(['folderId' => $child['id'], 'entityId' => $args['entityId'], 'keyword' => $args['keyword']])) {
                     return false;
                 }
             }
@@ -843,8 +875,14 @@ class FolderController
             $userEntities = 0;
         }
 
-        $where = ['keyword = ?'];
-        $data = ['ALL_ENTITIES'];
+        if ($args['edition']) {
+            $edition = [1];
+        } else {
+            $edition = [0, 1, null];
+        }
+
+        $where = ['keyword = ?', 'entities_folders.edition in (?)'];
+        $data = ['ALL_ENTITIES', $edition];
 
         if (!empty($args['folderId'])) {
             $where[] = 'folder_id = ?';
@@ -862,12 +900,6 @@ class FolderController
         }
 
         $user = UserModel::getByLogin(['login' => $login, 'select' => ['id']]);
-
-        if ($args['edition']) {
-            $edition = [1];
-        } else {
-            $edition = [0, 1, null];
-        }
 
         $where = ['(user_id = ? OR (entity_id in (?) AND entities_folders.edition in (?)) OR folders.id in (?))'];
         $data = [$user['id'], $userEntities, $edition, $folderKeywords];
