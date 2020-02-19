@@ -131,7 +131,7 @@ class FolderController
             $keywordsFolder = EntityFolderModel::getKeywordsByFolderId(['folder_id' => $args['id'], 'select' => ['edition', 'keyword']]);
             foreach ($keywordsFolder as $value) {
                 $canDelete = FolderController::areChildrenInPerimeter(['folderId' => $args['id']]);
-                $folder['sharing']['keywords'][] = ['keyword' => $value['keyword'], 'edition' => $value['edition'], 'canDelete' => $canDelete];
+                $folder['sharing']['entities'][] = ['keyword' => $value['keyword'], 'edition' => $value['edition'], 'canDelete' => $canDelete];
             }
         }
 
@@ -289,14 +289,22 @@ class FolderController
         if (!Validator::boolType()->validate($data['public'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body public is empty or not a boolean']);
         }
-        if ($data['public'] && !isset($data['sharing']['entities']) && !isset($data['sharing']['keywords'])) {
+        if ($data['public'] && !isset($data['sharing']['entities'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body sharing/entities does not exists']);
         }
 
-        $keywords = $data['sharing']['keywords'] ?? [];
+        $keywords = [];
+        $entities = [];
+        foreach ($data['sharing']['entities'] as $item) {
+            if (isset($item['entity_id'])) {
+                $entities[] = $item;
+            } else if (isset($item['keyword'])) {
+                $keywords[] = $item;
+            }
+        }
 
         $entitiesBefore = EntityFolderModel::getEntitiesByFolderId(['select' => ['entities_folders.entity_id, edition'], 'folder_id' => $args['id']]);
-        $entitiesAfter = $data['sharing']['entities'] ?? [];
+        $entitiesAfter = $entities;
 
         $entitiesToRemove = array_udiff($entitiesBefore, $entitiesAfter, function ($a, $b) {
             if ($a['entity_id'] == $b['entity_id'] && $a['edition'] != $b['edition']) {
@@ -825,9 +833,9 @@ class FolderController
     // login (string) : Login of user connected
     // folderId (integer) : Check specific folder
     // edition (boolean) : whether user can edit or not
-    public static function getScopeFolders(array $aArgs)
+    public static function getScopeFolders(array $args)
     {
-        $login = $aArgs['login'];
+        $login = $args['login'];
         $userEntities = EntityModel::getWithUserEntities(['select'  => ['entities.id'], 'where' => ['user_id = ?'], 'data' => [$login]]);
 
         $userEntities = array_column($userEntities, 'id');
@@ -835,20 +843,35 @@ class FolderController
             $userEntities = 0;
         }
 
+        $where = ['keyword = ?'];
+        $data = ['ALL_ENTITIES'];
+
+        if (!empty($args['folderId'])) {
+            $where[] = 'folder_id = ?';
+            $data[]  = $args['folderId'];
+        }
+
+        $folderKeywords = EntityFolderModel::get([
+            'select' => ['folder_id'],
+            'where'  => $where,
+            'data'   => $data
+        ]);
+        $folderKeywords = array_column($folderKeywords, 'folder_id');
+
         $user = UserModel::getByLogin(['login' => $login, 'select' => ['id']]);
 
-        if ($aArgs['edition']) {
+        if ($args['edition']) {
             $edition = [1];
         } else {
             $edition = [0, 1, null];
         }
 
-        $where = ['(user_id = ? OR (entity_id in (?) AND entities_folders.edition in (?)))'];
-        $data = [$user['id'], $userEntities, $edition];
+        $where = ['(user_id = ? OR (entity_id in (?) AND entities_folders.edition in (?)) OR folders.id in (?))'];
+        $data = [$user['id'], $userEntities, $edition, $folderKeywords];
 
-        if (!empty($aArgs['folderId'])) {
+        if (!empty($args['folderId'])) {
             $where[] = 'folders.id = ?';
-            $data[]  = $aArgs['folderId'];
+            $data[]  = $args['folderId'];
         }
 
         $folders = FolderModel::getWithEntities([
