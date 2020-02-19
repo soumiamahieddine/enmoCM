@@ -215,7 +215,7 @@ class ResController extends ResourceControlController
             ]);
             $entities = array_column($entities, 'id');
             $folders = FolderModel::getWithEntitiesAndResources([
-                'select'    => ['resources_folders.folder_id'],
+                'select'    => ['distinct(resources_folders.folder_id)'],
                 'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
                 'data'      => [$args['resId'], $entities, $GLOBALS['id']]
             ]);
