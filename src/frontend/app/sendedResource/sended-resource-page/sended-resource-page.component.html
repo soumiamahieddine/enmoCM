@@ -165,14 +165,17 @@
     </div>
 </mat-dialog-content>
 <div mat-dialog-actions class="actions" *ngIf="!loading">
-    <button mat-raised-button color="primary" style="min-width: auto;width: 40px;padding: 0;"
+    <button mat-raised-button color="primary" style="min-width: auto;width: 30px;padding: 0;background-color: white; color: grey;"
         *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail')"
-        [disabled]="recipients.length === 0" [matMenuTriggerFor]="emailActionMenu">
+        [matMenuTriggerFor]="emailActionMenu">
         <mat-icon style="height:auto;" class="fas fa-ellipsis-v"></mat-icon>
     </button>
     <mat-menu #emailActionMenu="matMenu" [class]="'attachListMenu'">
-        <button mat-menu-item (click)="onSubmit('brut')">
-            {{lang.sendInPlainText}}
+        <button mat-menu-item (click)="swithEditionMode()" *ngIf="htmlMode">
+            {{lang.switchInPlainText}}
+        </button>
+        <button mat-menu-item (click)="swithEditionMode()" *ngIf="!htmlMode">
+            {{lang.switchInHtml}}
         </button>
     </mat-menu>
     <button mat-raised-button color="primary"

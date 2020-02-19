@@ -1546,7 +1546,9 @@ export const LANG_NL = {
     "sendElement" :  "Send an element", //_TO_TRANSLATE
     "pdfVersion" : "PDF version", //_TO_TRANSLATE
     "emailModel" : "Email modele", //_TO_TRANSLATE
-    "sendInPlainText" : "Send in plain text", //_TO_TRANSLATE
+    "switchInPlainText" : "Switch in plain text", //_TO_TRANSLATE
+    "switchInHtml" : "Switch in HTML", //_TO_TRANSLATE
+    "confirmSwitchInPlanText": "Text formatting will be removed. Would you like to continue ?", //_TO_TRANSLATE
     "saveDraft" : "Save draft", //_TO_TRANSLATE
     "attachMainDocument" : "Link main document", //_TO_TRANSLATE
     "attachNote" : "Link a note", //_TO_TRANSLATE

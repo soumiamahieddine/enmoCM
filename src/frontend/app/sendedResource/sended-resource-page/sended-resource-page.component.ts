@@ -15,6 +15,7 @@ import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { PrivilegeService } from '../../../service/privileges.service';
 import { HeaderService } from '../../../service/header.service';
 
+declare function $j(selector: any): any;
 declare var tinymce: any;
 
 @Component({
@@ -88,6 +89,7 @@ export class SendedResourcePageComponent implements OnInit {
 
     canManage: boolean = false;
     pdfMode: boolean = false;
+    htmlMode: boolean = true;
 
     constructor(
         public http: HttpClient,
@@ -242,6 +244,9 @@ export class SendedResourcePageComponent implements OnInit {
                 } else {
                     tinymce.get('emailSignature').setContent(`${tinymce.get('emailSignature').getContent()}${data.mergedDocument}`);
                 }
+                if (!this.htmlMode) {
+                    tinymce.get('emailSignature').setContent(tinymce.get('emailSignature').getContent({ format: 'text' }));
+                }
             }),
             catchError((err) => {
                 this.notify.handleSoftErrors(err);
@@ -267,6 +272,9 @@ export class SendedResourcePageComponent implements OnInit {
                     tinymce.get('emailSignature').setContent(`${div.innerHTML}<div class="signature">${data.emailSignature.content}</div>`);
                 } else {
                     tinymce.get('emailSignature').setContent(`${tinymce.get('emailSignature').getContent()}<div class="signature">${data.emailSignature.content}</div>`);
+                }
+                if (!this.htmlMode) {
+                    tinymce.get('emailSignature').setContent(tinymce.get('emailSignature').getContent({ format: 'text' }));
                 }
             }),
             catchError((err) => {
@@ -562,7 +570,7 @@ export class SendedResourcePageComponent implements OnInit {
         this.filteredEmails = of([]);
     }
 
-    onSubmit(textMode: string = 'html') {
+    onSubmit() {
         this.emailStatus = 'WAITING';
         if (this.data.emailId === null) {
             if (!this.isAllEmailRightFormat()) {
@@ -574,20 +582,20 @@ export class SendedResourcePageComponent implements OnInit {
                     dialogRef.afterClosed().pipe(
                         filter((data: string) => data === 'ok'),
                         tap(() => {
-                            this.createEmail(textMode, true);
+                            this.createEmail(true);
                         })
                     ).subscribe();
                 } else {
-                    this.createEmail(textMode, true);
+                    this.createEmail(true);
                 }
             }
         } else {
-            this.updateEmail(textMode, true);
+            this.updateEmail(true);
         }
     }
 
-    createEmail(textMode: string = 'html', closeModal: boolean = true) {
-        this.http.post(`../../rest/emails`, this.formatEmail(textMode)).pipe(
+    createEmail(closeModal: boolean = true) {
+        this.http.post(`../../rest/emails`, this.formatEmail()).pipe(
             tap(() => {
                 if (this.emailStatus === 'DRAFT') {
                     this.notify.success(this.lang.draftSaved);
@@ -624,7 +632,7 @@ export class SendedResourcePageComponent implements OnInit {
         ).subscribe();
     }
 
-    updateEmail(textMode: string = 'html', closeModal: boolean = true) {
+    updateEmail(closeModal: boolean = true) {
         this.http.put(`../../rest/emails/${this.data.emailId}`, this.formatEmail()).pipe(
             tap(() => {
                 if (this.emailStatus === 'DRAFT') {
@@ -691,7 +699,28 @@ export class SendedResourcePageComponent implements OnInit {
         }
     }
 
-    formatEmail(textMode: string = 'html') {
+    swithEditionMode() {
+        this.htmlMode = !this.htmlMode;
+        if (this.htmlMode) {
+            $j('.tox-editor-header').show()
+            tinymce.get('emailSignature').setContent(tinymce.get('emailSignature').getContent());
+        } else {
+            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.switchInPlainText, msg: this.lang.confirmSwitchInPlanText } });
+            dialogRef.afterClosed().pipe(
+                tap((data: string) => {
+                    if (data === 'ok') {
+                        $j('.tox-editor-header').hide();
+                        tinymce.get('emailSignature').setContent(tinymce.get('emailSignature').getContent({ format: 'text' }));
+                    } else {
+                        this.htmlMode = !this.htmlMode;
+                    }
+                })
+            ).subscribe();
+            
+        }
+    }
+
+    formatEmail() {
         let objAttach: any = {}
         Object.keys(this.emailAttach).forEach(element => {
             if (!this.functions.empty(this.emailAttach[element])) {
@@ -726,7 +755,7 @@ export class SendedResourcePageComponent implements OnInit {
             cc: this.showCopies ? this.copies.map(copy => copy.email) : [],
             cci: this.showInvisibleCopies ? this.invisibleCopies.map((invCopy => invCopy.email)) : [],
             object: this.emailsubject,
-            body: textMode === 'html' ? tinymce.get('emailSignature').getContent() : tinymce.get('emailSignature').getContent({ format: 'text' }),
+            body: this.htmlMode ? tinymce.get('emailSignature').getContent() : tinymce.get('emailSignature').getContent({ format: 'text' }),
             isHtml: true,
             status: this.emailStatus
         };
