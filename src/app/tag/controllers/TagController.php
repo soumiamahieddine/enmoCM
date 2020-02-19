@@ -26,7 +26,7 @@ class TagController
 {
     public function get(Request $request, Response $response)
     {
-        $tags = TagModel::get(['orderBy' => ['id']]);
+        $tags = TagModel::get(['orderBy' => ['label']]);
 
         $ids = array_column($tags, 'id');
 
@@ -323,13 +323,15 @@ class TagController
         ]);
         $tagResMaster = array_column($tagResMaster, 'res_id');
 
-        ResourceTagModel::update([
-           'set'    => [
-               'tag_id' => $tagMaster['id']
-           ],
-           'where'  => ['tag_id = ?', 'res_id not in (?)'],
-           'data'   => [$tagMerge['id'], $tagResMaster]
-        ]);
+        if (!empty($tagResMaster)) {
+            ResourceTagModel::update([
+                'set'   => [
+                    'tag_id' => $tagMaster['id']
+                ],
+                'where' => ['tag_id = ?', 'res_id not in (?)'],
+                'data'  => [$tagMerge['id'], $tagResMaster]
+            ]);
+        }
 
         ResourceTagModel::delete([
            'where'  => ['tag_id = ?'],
