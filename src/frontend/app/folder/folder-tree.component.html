@@ -66,6 +66,9 @@
                             [disabled]="itemValue.value === ''">
                             <mat-icon class="fa fa-check" color="accent" [title]="lang.add"></mat-icon>
                         </button>
+                        <button type="button" matSuffix mat-icon-button (click)="removeTemporaryNode(node)">
+                            <mat-icon class="fa fa-times" style="color:#8e3e52" [title]="lang.delete"></mat-icon>
+                        </button>
                     </mat-form-field>
                 </form>
             </mat-tree-node>
