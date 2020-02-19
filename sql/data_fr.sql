@@ -759,7 +759,7 @@ INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('
 
 -- Create FOLDERS
 TRUNCATE TABLE folders;
-ALTER SEQUENCE folders_id_seq RESTART WITH 1;;
+ALTER SEQUENCE folders_id_seq RESTART WITH 1;
 INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('compétences fonctionnelles', 'TRUE', 21, NULL, 0);
 INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('vie politique', 'TRUE', 21, 1, 1);
 INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('vie citoyenne', 'TRUE', 21, 1, 1);
