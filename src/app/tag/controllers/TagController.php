@@ -40,6 +40,7 @@ class TagController
 
         foreach ($tags as $key => $tag) {
             $tags[$key]['countResources'] = $countResources[$tag['id']] ?? 0;
+            $tags[$key]['links'] = json_decode($tags[$key]['links'], true);
         }
 
         return $response->withJson(['tags' => $tags]);
@@ -62,6 +63,7 @@ class TagController
            'data'   => [$args['id']]
         ]);
         $tag['countResources'] = $countResources[0]['count'];
+        $tag['links'] = json_decode($tag['links'], true);
 
         return $response->withJson($tag);
     }
