@@ -91,10 +91,10 @@ export class PrivilegeService {
             "id": "admin_tag",
             "label": this.lang.tags,
             "comment": this.lang.adminTagsDesc,
-            "route": "index.php?page=manage_tag_list_controller&module=tags",
+            "route": "/administration/tags",
             "unit": "classement",
             "style": "fa fa-tags",
-            "angular" : false,
+            "angular" : true,
             "hasParams" : false
         },
         {

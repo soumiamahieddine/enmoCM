@@ -514,6 +514,7 @@ export const LANG_NL = {
     "maarchApplication"                     : "Maarch Applicatie",
     "maarchLicence"                         : "Maarch Courrier wordt verspreid onder de voorwaarden van de",
     "mail"                                  : "Brief",
+    "mails"                                  : "mails", //_TO_TRANSLATE
     "mailAttachments"                       : "bijkomend(e) stuk(ken)",
     "mailDate"                              : "_TO_TRANSLATE",
     "mailEntitiesList"                      : "List of entities attached to mails", //_TO_TRANSLATE
@@ -1560,5 +1561,12 @@ export const LANG_NL = {
     "emailDeleted" : "Email deleted", //_TO_TRANSLATE
     "mailingActionInformations" : "Following mails contain mailing attachments, if next person in visa circuit is signatory then mailing will be activate :", //_TO_TRANSLATE
     "mailingActionInformations2" : "Following mails contain mailing attachments, mailing will be activate :", //TRANSLATE
-    "properties" : "Properties", //_TO_TRANSLATE
+    "properties" : "Properties",  //_TO_TRANSLATE
+    "tagCreation" : "Tag creation", //_TO_TRANSLATE
+    "tagModification" : "Tag modification", //_TO_TRANSLATE
+    "usage" : "Used for", //_TO_TRANSLATE
+    "tagUpdated" : "Tag updated", //_TO_TRANSLATE
+    "tagMerged" : "Tag merged", //_TO_TRANSLATE
+    "mergeWith" : "Merge with", //_TO_TRANSLATE
+    "willBeTransferedToNewTag" : "will be transfered to selected tag", //_TO_TRANSLATE
 };
