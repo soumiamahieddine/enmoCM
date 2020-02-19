@@ -1256,6 +1256,7 @@ export const LANG_EN = {
     "noRole" : "No role",
     "diffListPrivilegeMsgIndexing" : "In indexing page, modify user in roles: ",
     "diffListPrivilegeMsgProcess" : "In process page, modify user in roles: ",
+    "diffListPrivilegeMsgDetails" : "In details page, modify user in roles: ",
     "recordMail" : "Record a mail",
     "closed" : "Closed",
     "manageAttachments": "Update or delete attachments",

@@ -353,13 +353,13 @@ export class PrivilegeService {
         {
             "id": "update_diffusion_process",
             "label": this.lang.allRoles,
-            "comment": this.lang.updateDiffusionWhileDetails,
+            "comment": this.lang.updateDiffusionWhileProcess,
             "unit": 'diffusionList'
         },
         {
             "id": "update_diffusion_except_recipient_process",
             "label": this.lang.rolesExceptAssignee,
-            "comment": this.lang.updateDiffusionExceptRecipientWhileDetails,
+            "comment": this.lang.updateDiffusionExceptRecipientWhileProcess,
             "unit": 'diffusionList'
         },
         {

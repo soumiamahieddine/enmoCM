@@ -1281,6 +1281,7 @@ export const LANG_NL = {
     "noRole" : "No role", //_TO_TRANSLATE
     "diffListPrivilegeMsgIndexing" : "In indexing page, modify user in roles: ", //_TO_TRANSLATE
     "diffListPrivilegeMsgProcess" : "In process page, modify user in roles: ", //_TO_TRANSLATE
+    "diffListPrivilegeMsgDetails" : "In details page, modify user in roles: ",//TRANSLATE
     "recordMail" : "Record a mail", //_TO_TRANSLATE
     "closed" : "Closed", //_TO_TRANSLATE
     "manageAttachments": "Update or delete attachments", //_TO_TRANSLATE

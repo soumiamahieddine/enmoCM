@@ -1294,6 +1294,7 @@ export const LANG_FR = {
     "noRole" : "Aucun rôle",
     "diffListPrivilegeMsgIndexing" : "Lors de l'<b>enregistrement du courrier</b>, modifier les personnes des rôles suivants : ",
     "diffListPrivilegeMsgProcess" : "Lors du <b>traitement du courrier</b>, modifier les personnes des rôles suivants : ",
+    "diffListPrivilegeMsgDetails" : "Sur la <b>fiche détaillé du courrier</b>, modifier les personnes des rôles suivants : ",
     "recordMail" : "Enregistrer un courrier",
     "closed" : "Clôturé",
     "manageAttachments": "Modifier ou supprimer des pièces jointes",
