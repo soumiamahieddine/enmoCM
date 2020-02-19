@@ -274,12 +274,22 @@ export class FolderDocumentListComponent implements OnInit {
     refreshFolderInformations() {
         this.http.get('../../rest/folders/' + this.folderInfo.id)
             .subscribe((data: any) => {
+                let keywordEntities = [{
+                    keyword: 'ALL_ENTITIES',
+                    text: this.lang.allEntities,
+                }];
                 this.folderInfo =
                     {
                         'id': data.folder.id,
                         'label': data.folder.label,
                         'ownerDisplayName': data.folder.ownerDisplayName,
-                        'entitiesSharing': data.folder.sharing.entities.map((entity: any) => entity.label),
+                        'entitiesSharing': data.folder.sharing.entities.map((entity: any) => {
+                            if (!this.functions.empty(entity.label)) {
+                                return entity.label;
+                            } else {
+                                return keywordEntities.filter((element: any) => element.keyword == entity.keyword)[0].text
+                            }
+                        }),
                     };
                 this.headerService.setHeader(this.folderInfo.label, '', 'fa fa-folder-open');
             });
