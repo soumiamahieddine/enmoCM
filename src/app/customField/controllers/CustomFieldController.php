@@ -177,8 +177,8 @@ class CustomFieldController
         ResModel::update(['postSet' => ['custom_fields' => "custom_fields - '{$args['id']}'"], 'where' => ['1 = ?'], 'data' => [1]]);
 
         ActionModel::update([
-            'postSet' => ['required_fields' => "required_fields - 'indexingCustomField_{$args['id']}'"],
-            'where'   => ["required_fields @> ?"],
+            'postSet' => ['parameters' => "jsonb_set(parameters, '{parameters}', (parameters->'requiredFields') - 'indexingCustomField_{$args['id']}')"],
+            'where'   => ["parameters->'requiredFields' @> ?"],
             'data'    => ['"indexingCustomField_'.$args['id'].'"']
         ]);
 

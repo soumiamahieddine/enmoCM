@@ -1396,11 +1396,12 @@ class PreProcessActionController
         }
         $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
 
-        $action = ActionModel::getById(['id' => $args['actionId'], 'select' => ['required_fields']]);
+        $action = ActionModel::getById(['id' => $args['actionId'], 'select' => ['parameters']]);
         if (empty($action)) {
             return $response->withStatus(400)->withJson(['errors' => 'Action does not exist']);
         }
-        $actionRequiredFields = json_decode($action['required_fields']);
+        $parameters = json_decode($action['parameters']);
+        $actionRequiredFields = $parameters['requiredFields'] ?? [];
 
         $canClose = [];
         $emptyFields = [];

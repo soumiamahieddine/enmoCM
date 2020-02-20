@@ -389,14 +389,15 @@ class ResourceListController
             return $response->withStatus(400)->withJson(['errors' => 'Action is not linked to this group basket']);
         }
 
-        $action = ActionModel::getById(['id' => $aArgs['actionId'], 'select' => ['component', 'required_fields']]);
+        $action = ActionModel::getById(['id' => $aArgs['actionId'], 'select' => ['component', 'parameters']]);
         if (empty($action['component'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Action component does not exist']);
         }
         if (!array_key_exists($action['component'], ActionMethodController::COMPONENTS_ACTIONS)) {
             return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
         }
-        $actionRequiredFields = json_decode($action['required_fields']);
+        $parameters = json_decode($action['parameters'], true);
+        $actionRequiredFields = $parameters['requiredFields'] ?? [];
 
         $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);

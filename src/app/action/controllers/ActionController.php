@@ -38,8 +38,7 @@ class ActionController
         $actions = ActionModel::get();
 
         foreach ($actions as $key => $action) {
-            $actions[$key]['requiredFields'] = json_decode($action['required_fields'], true);
-            unset($actions[$key]['required_fields']);
+            $actions[$key]['parameters'] = json_decode($action['parameters'], true);
         }
 
         return $response->withJson(['actions' => $actions]);
@@ -84,8 +83,7 @@ class ActionController
             }
         }
 
-        $action['action']['requiredFields'] = json_decode($action['action']['required_fields'], true);
-        unset($action['action']['required_fields']);
+        $action['action']['parameters'] = json_decode($action['action']['parameters'], true);
 
         return $response->withJson($action);
     }
@@ -116,32 +114,38 @@ class ActionController
         }
 
         $requiredFields = [];
-        if (!empty($body['requiredFields'])) {
-            if (!Validator::arrayType()->validate($body['requiredFields'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Data required_fields is not an array']);
-            }
-            $customFields = CustomFieldModel::get(['select' => ['id']]);
-            $customFields = array_column($customFields, 'id');
-            foreach ($body['requiredFields'] as $requiredField) {
-                if (strpos($requiredField, 'indexingCustomField_') !== false) {
-                    $idCustom = explode("_", $requiredField);
-                    $idCustom = $idCustom[1];
-                    if (!in_array($idCustom, $customFields)) {
-                        return $response->withStatus(400)->withJson(['errors' => 'Data custom field does not exist']);
-                    }
-                    $requiredFields[] = $requiredField;
+        $parameters = [];
+        if (!empty($body['parameters'])) {
+            $parameters = $body['parameters'];
+
+            if (!empty($parameters['requiredFields'])) {
+                if (!Validator::arrayType()->validate($parameters['requiredFields'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Data parameter requiredFields is not an array']);
                 }
+                $customFields = CustomFieldModel::get(['select' => ['id']]);
+                $customFields = array_column($customFields, 'id');
+                foreach ($parameters['requiredFields'] as $requiredField) {
+                    if (strpos($requiredField, 'indexingCustomField_') !== false) {
+                        $idCustom = explode("_", $requiredField);
+                        $idCustom = $idCustom[1];
+                        if (!in_array($idCustom, $customFields)) {
+                            return $response->withStatus(400)->withJson(['errors' => 'Data custom field does not exist']);
+                        }
+                        $requiredFields[] = $requiredField;
+                    }
+                }
+                $parameters['requiredFields'] = $requiredFields;
             }
         }
 
         $id = ActionModel::create([
-            'history'         => $body['history'],
-            'keyword'         => $body['keyword'],
-            'id_status'       => $body['id_status'],
-            'label_action'    => $body['label_action'],
-            'action_page'     => $body['action_page'],
-            'component'       => $body['component'],
-            'required_fields' => json_encode($body['requiredFields'])
+            'history'      => $body['history'],
+            'keyword'      => $body['keyword'],
+            'id_status'    => $body['id_status'],
+            'label_action' => $body['label_action'],
+            'action_page'  => $body['action_page'],
+            'component'    => $body['component'],
+            'parameters'   => json_encode($parameters, true)
         ]);
         if (!empty($body['actionCategories'])) {
             ActionModel::createCategories(['id' => $id, 'categories' => $body['actionCategories']]);
@@ -185,37 +189,42 @@ class ActionController
         }
 
         $requiredFields = [];
-        if (!empty($body['requiredFields'])) {
-            if (!Validator::arrayType()->validate($body['requiredFields'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Data required_fields is not an array']);
-            }
-            $customFields = CustomFieldModel::get(['select' => ['id']]);
-            $customFields = array_column($customFields, 'id');
-            foreach ($body['requiredFields'] as $requiredField) {
-                if (strpos($requiredField, 'indexingCustomField_') !== false) {
-                    $idCustom = explode("_", $requiredField);
-                    $idCustom = $idCustom[1];
-                    if (!in_array($idCustom, $customFields)) {
-                        return $response->withStatus(400)->withJson(['errors' => 'Data custom field does not exist']);
-                    }
-                    $requiredFields[] = $requiredField;
+        $parameters = [];
+        if (!empty($body['parameters'])) {
+            $parameters = $body['parameters'];
+
+            if (!empty($parameters['requiredFields'])) {
+                if (!Validator::arrayType()->validate($parameters['requiredFields'])) {
+                    return $response->withStatus(400)->withJson(['errors' => 'Data parameter requiredFields is not an array']);
                 }
+                $customFields = CustomFieldModel::get(['select' => ['id']]);
+                $customFields = array_column($customFields, 'id');
+                foreach ($parameters['requiredFields'] as $requiredField) {
+                    if (strpos($requiredField, 'indexingCustomField_') !== false) {
+                        $idCustom = explode("_", $requiredField);
+                        $idCustom = $idCustom[1];
+                        if (!in_array($idCustom, $customFields)) {
+                            return $response->withStatus(400)->withJson(['errors' => 'Data custom field does not exist']);
+                        }
+                        $requiredFields[] = $requiredField;
+                    }
+                }
+                $parameters['requiredFields'] = $requiredFields;
             }
         }
-        $body['required_fields'] = json_encode($requiredFields);
 
         ActionModel::update([
             'set'   => [
-                'keyword'         => $body['keyword'],
-                'label_action'    => $body['label_action'],
-                'id_status'       => $body['id_status'],
-                'action_page'     => $body['action_page'],
-                'component'       => $body['component'],
-                'history'         => $body['history'],
-                'required_fields' => $body['required_fields'],
+                'keyword'      => $body['keyword'],
+                'label_action' => $body['label_action'],
+                'id_status'    => $body['id_status'],
+                'action_page'  => $body['action_page'],
+                'component'    => $body['component'],
+                'history'      => $body['history'],
+                'parameters'   => json_encode($parameters),
             ],
-            'where'   => ['id = ?'],
-            'data'    => [$body['id']]
+            'where' => ['id = ?'],
+            'data'  => [$body['id']]
         ]);
         ActionModel::deleteCategories(['id' => $args['id']]);
         if (!empty($body['actionCategories'])) {

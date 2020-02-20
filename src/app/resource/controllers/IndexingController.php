@@ -78,14 +78,15 @@ class IndexingController
             return $response->withStatus(400)->withJson(['errors' => 'Action is not linked to this group']);
         }
 
-        $action = ActionModel::getById(['id' => $args['actionId'], 'select' => ['component', 'required_fields']]);
+        $action = ActionModel::getById(['id' => $args['actionId'], 'select' => ['component', 'parameters']]);
         if (empty($action['component'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Action component does not exist']);
         }
         if (!array_key_exists($action['component'], ActionMethodController::COMPONENTS_ACTIONS)) {
             return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
         }
-        $actionRequiredFields = json_decode($action['required_fields']);
+        $parameters = json_decode($action['parameters']);
+        $actionRequiredFields = $parameters['requiredFields'] ?? [];
 
         $resource = ResModel::getById(['resId' => $body['resource'], 'select' => ['status']]);
         if (empty($resource)) {
