@@ -134,7 +134,7 @@ where
         from entities_folders
             left join entities on entities_folders.entity_id = entities.id
             left join users_entities on entities.entity_id = users_entities.entity_id
-        where users_entities.user_id = :user_id_folders
+        where users_entities.user_id = :user_id_folders OR entities_folders.keyword = 'ALL_ENTITIES'
     )";
 
                             $whereFollowed = "select res_id from users_followed_resources where user_id = :user_id_followed";
