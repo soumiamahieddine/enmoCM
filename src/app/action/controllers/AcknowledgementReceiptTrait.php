@@ -41,6 +41,10 @@ trait AcknowledgementReceiptTrait
             return [];
         }
 
+        $contentToSend = $args['data']['content'] ?? null;
+        $subjectResource = $resource['subject'] ?? '';
+        $subjectToSend = !empty($args['data']['subject']) ? $args['data']['subject'] : $subjectResource;
+
         $contactsToProcess = ResourceContactModel::get([
             'select' => ['item_id'],
             'where' => ['res_id = ?', 'type = ?', 'mode = ?'],
@@ -89,25 +93,34 @@ trait AcknowledgementReceiptTrait
             }
 
             if (!empty($contact['email'])) {
-                if (empty($template[0]['template_content'])) {
+                if (empty($template[0]['template_content']) && empty($contentToSend)) {
                     DatabaseModel::rollbackTransaction();
                     return [];
                 }
-                $mergedDocument = MergeController::mergeDocument([
-                    'content'   => $template[0]['template_content'],
-                    'data'      => ['resId' => $args['resId'], 'senderId' => $contactToProcess, 'senderType' => 'contact', 'userId' => $currentUser['id']]
-                ]);
+                if (empty($contentToSend)) {
+                    $mergedDocument = MergeController::mergeDocument([
+                        'content' => $template[0]['template_content'],
+                        'data'    => ['resId' => $args['resId'], 'senderId' => $contactToProcess, 'senderType' => 'contact', 'userId' => $currentUser['id']]
+                    ]);
+                } else {
+                    $mergedDocument['encodedDocument'] = base64_encode($contentToSend);
+                }
                 $format = 'html';
             } else {
-                if (!file_exists($pathToDocument) || !is_file($pathToDocument)) {
-                    DatabaseModel::rollbackTransaction();
-                    return [];
+                if (empty($contentToSend)) {
+                    if (!file_exists($pathToDocument) || !is_file($pathToDocument)) {
+                        DatabaseModel::rollbackTransaction();
+                        return [];
+                    }
+
+                    $mergedDocument = MergeController::mergeDocument([
+                        'path' => $pathToDocument,
+                        'data' => ['resId' => $args['resId'], 'senderId' => $contactToProcess, 'senderType' => 'contact', 'userId' => $currentUser['id']]
+                    ]);
+                    $encodedDocument = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $mergedDocument['encodedDocument']]);
+                } else {
+                    $encodedDocument = ConvertPdfController::convertFromEncodedResource(['encodedResource' => base64_encode($contentToSend)]);
                 }
-                $mergedDocument = MergeController::mergeDocument([
-                    'path'  => $pathToDocument,
-                    'data'  => ['resId' => $args['resId'], 'senderId' => $contactToProcess, 'senderType' => 'contact', 'userId' => $currentUser['id']]
-                ]);
-                $encodedDocument = ConvertPdfController::convertFromEncodedResource(['encodedResource' => $mergedDocument['encodedDocument']]);
                 $mergedDocument['encodedDocument'] = $encodedDocument["encodedResource"];
                 $format = 'pdf';
 
@@ -159,7 +172,7 @@ trait AcknowledgementReceiptTrait
                 'data'      => [
                     'sender'        => empty($entity['email']) ? ['email' => $currentUser['mail']] : ['email' => $entity['email'], 'entityId' => $entity['id']],
                     'recipients'    => [$email['email']],
-                    'object'        => '[AR] ' . (empty($resource['subject']) ? '' : substr($resource['subject'], 0, 100)),
+                    'object'        => '[AR] ' . substr($subjectToSend, 0, 100),
                     'body'          => base64_decode($email['encodedHtml']),
                     'document'      => ['id' => $args['resId'], 'isLinked' => false, 'original' => true],
                     'isHtml'        => true,
