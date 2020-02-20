@@ -920,7 +920,7 @@ class ResController extends ResourceControlController
         $entities = array_column($entities, 'id');
 
         $foldersClause = 'res_id in (select res_id from folders LEFT JOIN entities_folders ON folders.id = entities_folders.folder_id LEFT JOIN resources_folders ON folders.id = resources_folders.folder_id ';
-        $foldersClause .= 'WHERE entities_folders.entity_id in (?) OR folders.user_id = ?)';
+        $foldersClause .= "WHERE entities_folders.entity_id in (?) OR folders.user_id = ? OR keyword = 'ALL_ENTITIES')";
         $whereClause .= " OR ({$foldersClause})";
 
         $groups = UserModel::getGroupsByLogin(['login' => $user['user_id'], 'select' => ['where_clause']]);
