@@ -51,7 +51,7 @@ class StoreController
                     $uniqueId = CoreConfigModel::uniqueId();
                     $tmpFilename = "storeTmp_{$GLOBALS['id']}_{$uniqueId}.{$args['format']}";
                     file_put_contents($tmpPath . $tmpFilename, $fileContent);
-                    $fileContent = MergeController::mergeChronoDocument(['chrono' => $data['alt_identifier'], 'path' => $tmpPath . $tmpFilename]);
+                    $fileContent = MergeController::mergeChronoDocument(['chrono' => $data['alt_identifier'], 'path' => $tmpPath . $tmpFilename, 'type' => 'resource']);
                     $fileContent = base64_decode($fileContent['encodedDocument']);
                     unlink($tmpPath . $tmpFilename);
                 }
@@ -103,7 +103,7 @@ class StoreController
                     $uniqueId = CoreConfigModel::uniqueId();
                     $tmpFilename = "storeTmp_{$GLOBALS['id']}_{$uniqueId}.{$args['format']}";
                     file_put_contents($tmpPath . $tmpFilename, $fileContent);
-                    $fileContent = MergeController::mergeChronoDocument(['chrono' => $data['identifier'], 'path' => $tmpPath . $tmpFilename]);
+                    $fileContent = MergeController::mergeChronoDocument(['chrono' => $data['identifier'], 'path' => $tmpPath . $tmpFilename, 'type' => 'attachment']);
                     $fileContent = base64_decode($fileContent['encodedDocument']);
                     unlink($tmpPath . $tmpFilename);
                 }

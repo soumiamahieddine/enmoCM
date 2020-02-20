@@ -615,7 +615,7 @@ export class DocumentViewerComponent implements OnInit {
     editTemplate(templateId: number) {
         let confirmMsg = '';
         if (this.mode == 'attachment') {
-            confirmMsg = this.lang.editionAttachmentConfirmFirst;
+            confirmMsg = this.lang.editionAttachmentConfirmFirst + '<br><br>' + this.lang.editionAttachmentConfirmThird;
         } else {
             confirmMsg = this.lang.editionAttachmentConfirmFirst + '<br><br>' + this.lang.editionAttachmentConfirmSecond;
         }

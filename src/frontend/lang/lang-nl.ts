@@ -1309,6 +1309,7 @@ export const LANG_NL = {
     "newVersionAdded" : "New version added", //_TO_TRANSLATE
     "editionAttachmentConfirmFirst" : "All merge variables will be replaced taking into account what you entered in the form on the left.", //_TO_TRANSLATE
     "editionAttachmentConfirmSecond" : "Only <b> chrono number </b> ([res_letterbox.alt_identifier]) will be replaced after mail registration", //_TO_TRANSLATE
+    "editionAttachmentConfirmThird" : "Only <b> chrono number </b> ([res_letterbox.alt_identifier]) and <b>barcode</b> will be replaced after mail registration",//TRANSLATE
     "othersInfos" : "Other(s) information(s)", //_TO_TRANSLATE
     "contactDetails" : "Details", //_TO_TRANSLATE
     "contactsFillingRate" : "Filling rate", //_TO_TRANSLATE

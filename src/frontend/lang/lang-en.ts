@@ -1284,6 +1284,7 @@ export const LANG_EN = {
     "newVersionAdded" : "New version added",
     "editionAttachmentConfirmFirst" : "All merge variables will be replaced taking into account what you entered in the form on the left.",
     "editionAttachmentConfirmSecond" : "Only <b> chrono number </b> ([res_letterbox.alt_identifier]) will be replaced after mail registration",
+    "editionAttachmentConfirmThird" : "Only <b> chrono number </b> ([res_letterbox.alt_identifier]) and <b>barcode</b> will be replaced after mail registration",
     "othersInfos" : "Other(s) information(s)",
     "contactDetails" : "Details",
     "contactsFillingRate" : "Filling rate",
