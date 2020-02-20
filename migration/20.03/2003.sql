@@ -567,6 +567,7 @@ DELETE FROM usergroups_services WHERE service_id = 'param_templates_doctypes';
 DELETE FROM usergroups_services WHERE service_id = 'doctype_template_use';
 DELETE FROM usergroups_services WHERE service_id = 'search_contacts';
 DELETE FROM usergroups_services WHERE service_id = 'use_date_in_signBlock';
+DELETE FROM usergroups_services WHERE service_id = 'delete_document_in_detail';
 UPDATE usergroups_services SET service_id = 'manage_numeric_package' WHERE service_id = 'save_numeric_package';
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'manage_numeric_package'
