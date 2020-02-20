@@ -38,7 +38,6 @@ foreach ($customs as $custom) {
             'level'     => 0
         ]);
 
-        $GLOBALS['entities'] = \Entity\models\EntityModel::get(['select' => ['id']]);
         fillEntities($masterFolderId);
 
         $aFolderIdMap = [];
@@ -92,13 +91,12 @@ foreach ($customs as $custom) {
 
 function fillEntities($folderId)
 {
-    foreach ($GLOBALS['entities'] as $entity) {
-        \Folder\models\EntityFolderModel::create([
-            'folder_id' => $folderId,
-            'entity_id' => $entity['id'],
-            'edition'   => true,
-        ]);
-    }
+    \Folder\models\EntityFolderModel::create([
+        'folder_id' => $folderId,
+        'entity_id' => null,
+        'edition'   => true,
+        'keyword'   => 'ALL_ENTITIES'
+    ]);
 }
 
 function fillResources($folderId, $folderSystemId)
