@@ -107,7 +107,7 @@ class IndexingController
 
         $method = ActionMethodController::COMPONENTS_ACTIONS[$action['component']];
         if (!empty($method)) {
-            $methodResponse = ActionMethodController::$method(['resId' => $body['resource'], 'data' => $body['data'], 'note' => $body['note']]);
+            $methodResponse = ActionMethodController::$method(['resId' => $body['resource'], 'data' => $body['data'], 'note' => $body['note'], 'parameters' => $parameters]);
         }
         if (!empty($methodResponse['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $methodResponse['errors'][0]]);

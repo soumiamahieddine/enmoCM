@@ -41,9 +41,15 @@ trait AcknowledgementReceiptTrait
             return [];
         }
 
-        $contentToSend = $args['data']['content'] ?? null;
         $subjectResource = $resource['subject'] ?? '';
-        $subjectToSend = !empty($args['data']['subject']) ? $args['data']['subject'] : $subjectResource;
+
+        if (!empty($args['parameters']['canEdit'])) {
+            $contentToSend = $args['data']['content'] ?? null;
+            $subjectToSend = !empty($args['data']['subject']) ? $args['data']['subject'] : $subjectResource;
+        } else {
+            $contentToSend = null;
+            $subjectToSend = $subjectResource;
+        }
 
         $contactsToProcess = ResourceContactModel::get([
             'select' => ['item_id'],
