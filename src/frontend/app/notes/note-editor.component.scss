@@ -40,3 +40,19 @@
     margin: 5px !important;
     cursor: pointer;
 }
+
+.labelFolder {
+    color: rgb(102, 102, 102);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.smallInput {
+    font-size: 11px;
+    padding-left: 20px;
+    padding-right: 20px;
+    ::ng-deep.mat-form-field-infix {
+        padding : 0px;
+        padding-bottom: 5px;
+    }
+}

@@ -30,10 +30,18 @@
             style="z-index:1;position: sticky;top: 0px;text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;">
             {{lang.entities}}
         </div>
-        <button mat-menu-item *ngFor="let entity of entities" [disabled]="entity.selected" [title]="entity.entity_label"
-            (click)="$event.stopPropagation();selectEntity(entity)">
-            <span>{{entity.entity_label}}</span>
-        </button>
+        <ng-template matMenuContent>
+            <mat-form-field floatLabel="never" appearance="outline" class="smallInput" (click)="$event.stopPropagation();" style="margin-bottom: -15px;">
+                <input matInput id="searchTerm" placeholder="{{lang.searchEntities}}" [formControl]="searchTerm"
+                    autocomplete="off" (click)="$event.stopPropagation();" (keydown)="$event.stopPropagation()">
+            </mat-form-field>
+            <ng-container>
+                <button mat-menu-item *ngFor="let entity of entitiesList" class="labelFolder" [disabled]="entity.selected"
+                    (click)="$event.stopPropagation();selectEntity(entity)" [title]="entity.entity_label">
+                    {{entity.entity_label}}
+                </button>
+            </ng-container>
+        </ng-template>
     </mat-menu>
 
     <button *ngIf="addMode" color="primary" matSuffix mat-icon-button title="{{lang.add}}" (click)="addNote()"
