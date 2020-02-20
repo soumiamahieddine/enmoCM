@@ -217,8 +217,8 @@ class ResController extends ResourceControlController
             $entities = array_column($entities, 'id');
             $folders = FolderModel::getWithEntitiesAndResources([
                 'select'    => ['distinct(resources_folders.folder_id)'],
-                'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
-                'data'      => [$args['resId'], $entities, $GLOBALS['id']]
+                'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ? OR keyword = ?)'],
+                'data'      => [$args['resId'], $entities, $GLOBALS['id'], 'ALL_ENTITIES']
             ]);
             $formattedData['folders'] = array_column($folders, 'folder_id');
 
@@ -1044,8 +1044,8 @@ class ResController extends ResourceControlController
         $entities = array_column($entities, 'id');
         $idToDelete = FolderModel::getWithEntitiesAndResources([
             'select'    => ['resources_folders.id'],
-            'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
-            'data'      => [$args['resId'], $entities, $GLOBALS['id']]
+            'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ? OR keyword = ?)'],
+            'data'      => [$args['resId'], $entities, $GLOBALS['id'], 'ALL_ENTITIES']
         ]);
         $idToDelete = array_column($idToDelete, 'id');
         if (!empty($idToDelete)) {

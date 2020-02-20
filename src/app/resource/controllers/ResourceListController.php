@@ -740,8 +740,8 @@ class ResourceListController
 
         $folders = FolderModel::getWithEntitiesAndResources([
             'select'    => ['DISTINCT(folders.id)', 'folders.label'],
-            'where'     => ['res_id = ?', '(user_id = ? OR entity_id in (?))'],
-            'data'      => [$args['resId'], $args['userId'], $entities]
+            'where'     => ['res_id = ?', '(user_id = ? OR entity_id in (?) OR keyword = ?)'],
+            'data'      => [$args['resId'], $args['userId'], $entities, 'ALL_ENTITIES']
         ]);
 
         return $folders;
@@ -1155,8 +1155,8 @@ class ResourceListController
 
         $rawFolders = FolderModel::getWithEntitiesAndResources([
             'select'  => ['folders.id', 'folders.label', 'count(resources_folders.res_id) as count'],
-            'where'   => ['resources_folders.res_id in (?)', '(folders.user_id = ? OR entities_folders.entity_id in (?))'],
-            'data'    => [$resIds, $GLOBALS['id'], $userEntities],
+            'where'   => ['resources_folders.res_id in (?)', '(folders.user_id = ? OR entities_folders.entity_id in (?) or keyword = ?)'],
+            'data'    => [$resIds, $GLOBALS['id'], $userEntities, 'ALL_ENTITIES'],
             'groupBy' => ['folders.id', 'folders.label']
         ]);
         foreach ($rawFolders as $key => $value) {
