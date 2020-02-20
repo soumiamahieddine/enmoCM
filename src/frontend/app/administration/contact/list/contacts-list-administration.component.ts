@@ -11,7 +11,6 @@ import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, t
 import { ConfirmComponent } from '../../../../plugins/modal/confirm.component';
 import { FormControl } from '@angular/forms';
 import { FunctionsService } from '../../../../service/functions.service';
-import {UserAdministrationRedirectModalComponent} from "../../user/user-administration.component";
 
 @Component({
     selector: 'contact-list',
@@ -131,7 +130,7 @@ export class ContactsListAdministrationComponent implements OnInit {
             element.formatedAddress = tmpFormatedAddress.filter(address => !this.isEmptyValue(address)).join(' ');
         });
 
-        if (!this.functions.empty(data.contacts[0].filling)) {
+        if (!this.functions.empty(data.contacts[0]) && !this.functions.empty(data.contacts[0].filling)) {
             this.displayedColumnsContact = ['filling', 'firstname', 'lastname', 'company', 'formatedAddress', 'actions'];
         } else {
             this.displayedColumnsContact = ['firstname', 'lastname', 'company', 'formatedAddress', 'actions'];

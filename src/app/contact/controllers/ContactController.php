@@ -98,6 +98,9 @@ class ContactController
             'limit'     => $queryParams['limit']
         ]);
         $count = $contacts[0]['count'] ?? 0;
+        if (empty($contacts)) {
+            return $response->withJson(['contacts' => $contacts, 'count' => $count]);
+        }
 
         $contactIds = array_column($contacts, 'id');
         $contactsUsed = ContactController::isContactUsed(['ids' => $contactIds]);
