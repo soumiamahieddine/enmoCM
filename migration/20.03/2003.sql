@@ -530,7 +530,7 @@ DO $$ BEGIN
     DELETE FROM actions_groupbaskets WHERE id_action in (SELECT id FROM actions WHERE enabled = 'N');
     DELETE FROM groupbasket_redirect WHERE action_id in (SELECT id FROM actions WHERE enabled = 'N');
     DELETE FROM actions WHERE enabled = 'N';
-    ALTER TABLE actions ADD COLUMN required_fields jsonb NOT NULL DEFAULT '[]';
+    ALTER TABLE actions ADD COLUMN parameters jsonb NOT NULL DEFAULT '{}';
   END IF;
 END$$;
 
