@@ -554,11 +554,9 @@ DELETE FROM usergroups_services WHERE service_id = 'put_in_validation';
 DELETE FROM usergroups_services WHERE service_id = 'print_details';
 DELETE FROM usergroups_services WHERE service_id = 'print_doc_details_from_list';
 DELETE FROM usergroups_services WHERE service_id = 'view_attachments';
-DELETE FROM usergroups_services WHERE service_id = 'manage_attachments';
 DELETE FROM usergroups_services WHERE service_id = 'index_attachment';
 DELETE FROM usergroups_services WHERE service_id = 'display_basket_list';
 DELETE FROM usergroups_services WHERE service_id = 'choose_entity';
-DELETE FROM usergroups_services WHERE service_id = 'export_seda_view';
 DELETE FROM usergroups_services WHERE service_id = 'manage_notes_doc';
 DELETE FROM usergroups_services WHERE service_id = 'notes_restriction';
 DELETE FROM usergroups_services WHERE service_id = 'graphics_reports';
@@ -605,7 +603,7 @@ DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details'
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
 UPDATE usergroups_services SET service_id = 'edit_resource' WHERE service_id = 'edit_document_in_detail';
 
-UPDATE usergroups_services SET service_id = 'manage_own_attachments_in_details' WHERE service_id = 'edit_attachments_from_detail';
+DELETE FROM usergroups_services WHERE service_id = 'edit_attachments_from_detail';
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'manage_attachments'
 FROM usergroups_services WHERE group_id IN (
