@@ -40,7 +40,7 @@ function validNotesForm(path, form_id) {
             eval("response = "+answer.responseText);
             if(response.status == 0){
                 if (typeof window.parent['angularSignatureBookComponent'] != "undefined") {
-                    window.parent.angularSignatureBookComponent.componentAfterNotes();
+                    // window.parent.angularSignatureBookComponent.componentAfterNotes();
                 }
                 destroyModal('form_notes');
                 var modInfo = $j('<div class="info" id="main_info" onclick="this.remove();">'+response.msg_result+'</div>');

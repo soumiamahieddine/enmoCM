@@ -847,7 +847,7 @@ function close_action(id_action, page, path_manage_script, mode_req, res_id_valu
         } else {
             if (page != '' && page != NaN && page && page != null) {
                 if (typeof window['angularSignatureBookComponent'] != "undefined") {
-                    window.angularSignatureBookComponent.componentAfterAction();
+                    // window.angularSignatureBookComponent.componentAfterAction();
                 } else {
                     do_nothing = false;
                     window.top.location.href = page;
@@ -855,7 +855,7 @@ function close_action(id_action, page, path_manage_script, mode_req, res_id_valu
 
             } else if (do_nothing == false) {
                 if (typeof window['angularSignatureBookComponent'] != "undefined") {
-                    window.angularSignatureBookComponent.componentAfterAction();
+                    // window.angularSignatureBookComponent.componentAfterAction();
                 } else {
                     window.top.location.hash = "";
                     window.top.location.reload();
@@ -1281,13 +1281,13 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                     var cur_url = window.top.location.href;
                     if (cur_url.indexOf("&directLinkToAction") != -1) {
                         if (typeof window['angularSignatureBookComponent'] != "undefined") {
-                            window.angularSignatureBookComponent.componentAfterAction();
+                            // window.angularSignatureBookComponent.componentAfterAction();
                         } else {
                             window.top.location = cur_url.replace("&directLinkToAction", "");
                         }
                     } else {
                         if (typeof window['angularSignatureBookComponent'] != "undefined") {
-                            window.angularSignatureBookComponent.componentAfterAction();
+                            // window.angularSignatureBookComponent.componentAfterAction();
                         } else {
                             
                             var arr = window.top.location.href.split('&');
@@ -1779,7 +1779,7 @@ function addLinks(path_manage_script, child, parent, action, tableHist) {
                 eval("response = " + answer.responseText);
                 if (response.status == 0 || response.status == 1) {
                     if (typeof window.parent['angularSignatureBookComponent'] != "undefined") {
-                        window.parent.angularSignatureBookComponent.componentAfterLinks();
+                        // window.parent.angularSignatureBookComponent.componentAfterLinks();
                     }
                     if (response.status == 0) {
                         $(divName).innerHTML = response.links;
@@ -2842,7 +2842,7 @@ function setSendAttachment(id) {
         },
         success: function (answer) {
             if (typeof window.parent['angularSignatureBookComponent'] !== "undefined") {
-                window.parent.angularSignatureBookComponent.componentAfterAttach("left");
+                // window.parent.angularSignatureBookComponent.componentAfterAttach("left");
             }
         },
         error: function (err) {

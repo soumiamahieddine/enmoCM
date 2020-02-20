@@ -194,7 +194,6 @@ export class ProcessComponent implements OnInit {
             } else {
                 this.initProcessPage(params);
             }
-            console.log(params);
         }, (err: any) => {
             this.notify.handleErrors(err);
         });

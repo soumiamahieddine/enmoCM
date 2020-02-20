@@ -67,41 +67,6 @@ function changeLocationToAngular(locationToGo) {
     location.href = locationToGo;
 }
 
-function lockDocument(resId) {
-    $j.ajax({
-        url: 'index.php?display=true&dir=actions&page=docLocker',
-        type: 'POST',
-        data: {
-            AJAX_CALL: true,
-            lock: true,
-            res_id: resId
-        },
-        success: function (result) {}
-    });
-}
-
-function intervalLockDocument(resId){
-    lockInterval = setInterval(function() {lockDocument(resId);}, 50000);
-}
-
-function unlockDocument(resId) {
-    $j.ajax({
-        url: 'index.php?display=true&dir=actions&page=docLocker',
-        type: 'POST',
-        data: {
-            AJAX_CALL: true,
-            unlock: true,
-            res_id: resId
-        },
-        success: function (result) {}
-    });
-}
-
-function intervalUnlockDocument(resId){
-    clearInterval(lockInterval);
-    unlockDocument(resId);
-}
-
 function islockForSignatureBook(resId, basketId, groupId) {
     $j.ajax({
         url: 'index.php?display=true&dir=actions&page=docLocker',
@@ -144,23 +109,12 @@ function setAttachmentInSignatureBook(id) {
         },
         success: function (answer) {
             if (typeof window.parent['angularSignatureBookComponent'] !== "undefined") {
-                window.parent.angularSignatureBookComponent.componentAfterAttach("left");
+                // window.parent.angularSignatureBookComponent.componentAfterAttach("left");
             }
         },
         error: function (err) {
             alert("Une erreur s'est produite : " + err.responseJSON.exception[0].message);
         }
-    });
-}
-
-function setSessionForSignatureBook(resId) {
-    $j.ajax({
-        url: 'index.php?display=true&dir=actions&page=setSession',
-        type: 'POST',
-        data: {
-            resId: resId
-        },
-        success: function (result) {}
     });
 }
 
