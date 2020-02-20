@@ -159,6 +159,13 @@ class PreProcessActionController
 
     public function checkAcknowledgementReceipt(Request $request, Response $response, array $args)
     {
+        $action = ActionModel::getById(['id' => $args['actionId'], 'select' => ['parameters']]);
+        if (empty($action)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action does not exist']);
+        }
+        $parameters = json_decode($action['parameters'], true);
+        $mode = $parameters['mode'] ?? 'auto';
+
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
         $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $currentUser['id']]);
@@ -355,7 +362,7 @@ class PreProcessActionController
             }
         }
 
-        return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'sendList' => $sendList,  'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
+        return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'sendList' => $sendList,  'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated, 'mode' => $mode]);
     }
 
     public function checkExternalSignatoryBook(Request $request, Response $response, array $aArgs)

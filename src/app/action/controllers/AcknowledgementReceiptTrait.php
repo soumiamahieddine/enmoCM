@@ -43,7 +43,7 @@ trait AcknowledgementReceiptTrait
 
         $subjectResource = $resource['subject'] ?? '';
 
-        if (!empty($args['parameters']['canEdit'])) {
+        if (!empty($args['parameters']['mode']) && ($args['parameters']['mode'] == 'both' || $args['parameters']['mode'] == 'manual')) {
             $contentToSend = $args['data']['content'] ?? null;
             $subjectToSend = !empty($args['data']['subject']) ? $args['data']['subject'] : $subjectResource;
         } else {

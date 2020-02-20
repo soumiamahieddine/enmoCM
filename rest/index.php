@@ -402,7 +402,7 @@ $app->get('/resourcesList/summarySheets', \Resource\controllers\SummarySheetCont
 $app->put('/resourcesList/integrations', \Resource\controllers\ResController::class . ':setInIntegrations');
 
 //PreProcess
-$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkAcknowledgementReceipt', \Action\controllers\PreProcessActionController::class . ':checkAcknowledgementReceipt');
+$app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/actions/{actionId}/checkAcknowledgementReceipt', \Action\controllers\PreProcessActionController::class . ':checkAcknowledgementReceipt');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkExternalSignatoryBook', \Action\controllers\PreProcessActionController::class . ':checkExternalSignatoryBook');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkExternalNoteBook', \Action\controllers\PreProcessActionController::class . ':checkExternalNoteBook');
 $app->post('/resourcesList/users/{userId}/groups/{groupId}/baskets/{basketId}/checkInitiatorEntity', \Action\controllers\PreProcessActionController::class . ':checkInitiatorEntity');
