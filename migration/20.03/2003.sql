@@ -250,6 +250,8 @@ DO $$ BEGIN
       ALTER TABLE tags DROP COLUMN IF EXISTS usage;
       ALTER TABLE tags ADD COLUMN usage TEXT;
 
+      ALTER TABLE tags ADD CONSTRAINT tags_id_pkey PRIMARY KEY (id);
+
       DROP TABLE IF EXISTS resources_tags;
       ALTER TABLE tag_res ADD COLUMN id serial NOT NULL;
       ALTER TABLE tag_res RENAME TO resources_tags;
