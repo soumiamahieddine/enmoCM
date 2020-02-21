@@ -181,7 +181,7 @@ class StoreController
         if (!empty($args['customFields'])) {
             foreach ($args['customFields'] as $key => $value) {
                 $customField = CustomFieldModel::getById(['id' => $key, 'select' => ['type']]);
-                if ($customField['type'] == 'date') {
+                if ($customField['type'] == 'date' && !empty($value)) {
                     $date = new \DateTime($value);
                     $value = $date->format('Y-m-d');
                     $args['customFields'][$key] = $value;
@@ -271,7 +271,7 @@ class StoreController
         if (!empty($args['customFields'])) {
             foreach ($args['customFields'] as $key => $value) {
                 $customField = CustomFieldModel::getById(['id' => $key, 'select' => ['type']]);
-                if ($customField['type'] == 'date') {
+                if ($customField['type'] == 'date' && !empty($value)) {
                     $date = new \DateTime($value);
                     $value = $date->format('Y-m-d');
                     $args['customFields'][$key] = $value;
