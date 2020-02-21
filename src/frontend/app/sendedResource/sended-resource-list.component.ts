@@ -266,6 +266,9 @@ export class SendedResourceListComponent implements OnInit {
                 filter((data: string) => data === 'success'),
                 tap(() => {
                     this.loadList();
+                    setTimeout(() => {
+                        this.loadList(); 
+                    }, 3000);
                 }),
                 catchError((err: any) => {
                     this.notify.handleSoftErrors(err);
