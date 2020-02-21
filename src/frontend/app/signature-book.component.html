@@ -4,7 +4,7 @@
 <div *ngIf="!loading" class='visaContent' style="margin-top: -64px;">
     <div class="titleSignatureBook">
         <div id="tabSignatureBook">
-            <div *ngIf="signatureBook.documents[0] && signatureBook.documents[0].category_id != 'outgoing'" title="{{lang.mail}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 'document'}" (click)="changeSignatureBookLeftContent('document')">
+            <div *ngIf="signatureBook.documents[0] && !signatureBook.documents[0].inSignatureBook" title="{{lang.mail}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == 'document'}" (click)="changeSignatureBookLeftContent('document')">
                 <i class="fa fa-file-alt fa-2x"></i>
             </div>
             <div *ngFor="let module of processTool" title="{{module.label}}" class="item" [ngClass]="{'activeTabSignatureBook': headerTab == module.id}" (click)="changeSignatureBookLeftContent(module.id)">
@@ -25,7 +25,7 @@
         </div>
         <div class="others" *ngIf="!functions.empty(signatureBook.consigne)">
             <span id="consigne">
-                <input type="text" value="{{signatureBook.consigne}}" title="{{signatureBook.consigne}}" readonly="readonly">
+                <input type="text" value="{{signatureBook.consigne}}" title="{{signatureBook.consigne}}" readonly="readonly" class="inputConsigne">
             </span>
         </div>
     </div>
@@ -95,6 +95,12 @@
             <div *ngIf="headerTab == 'visaCircuit'" class="contentShow" style="width:98%;overflow-x: hidden;">
                 <app-visa-workflow #appVisaWorkflow [resId]="resId"
                     [adminMode]="privilegeService.hasCurrentUserPrivilege('config_visa_workflow')"></app-visa-workflow>
+                <div style="position: sticky;bottom: 0px;text-align:right;">
+                    <button mat-fab [title]="lang.saveModifications" *ngIf="appVisaWorkflow !== undefined && appVisaWorkflow.isModified()" (click)="saveVisaWorkflow()"
+                        color="accent">
+                        <mat-icon style="height:auto;font-size:20px;" class="fas fa-check"></mat-icon>
+                    </button>
+                </div>
             </div>
             <div *ngIf="headerTab == 'history'" class="contentShow" style="width:98%;">
                 <app-history-list #appHistoryList [resId]="resId"></app-history-list>
@@ -114,7 +120,7 @@
                 <i class="fa fa-chevron-left" aria-hidden="true" *ngIf="showLeftPanel"></i>
                 <i class="fa fa-chevron-right" aria-hidden="true" *ngIf="!showLeftPanel"></i>
             </div>
-            <div *ngIf="signatureBook.hasWorkflow" class="contentShow">
+            <div class="contentShow">
                 <div *ngIf="signatureBook.attachments[rightSelectedThumbnail] && !showAttachmentPanel" style="height:100%;overflow: auto;">
                     <div [ngStyle]="{'display': showTopRightPanel ? 'block' : 'none'}" class="pjDetails">
                         <div class="infoPj" title="{{signatureBook.attachments[rightSelectedThumbnail].attachment_type}}">
@@ -204,14 +210,14 @@
                     (reloadBadgeAttachments)="refreshAttachments()" (afterActionAttachment)="refreshAttachments()">
                 </app-attachments-list>
             </div>
-            <div *ngIf="!signatureBook.hasWorkflow" class="visaNoWorkflowWarning">
+            <div class="visaNoWorkflowWarning">
                 <div style="margin-top:200px;" [innerHTML]="noVisaWorkflowNoSignature"></div>
             </div>
-            <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail] && signatureBook.hasWorkflow" class="visaNoPjWarning">
+            <div *ngIf="!signatureBook.attachments[rightSelectedThumbnail]" class="visaNoPjWarning">
                 <div style="margin-top:200px;" [innerHTML]="noAttachmentClickToAddOne"></div>
             </div>
         </div>
-        <div *ngIf="signatureBook.hasWorkflow" class="panelRight">
+        <div class="panelRight">
             <div *ngIf="signatureBook.attachments" id="rightPanelContent" class="panelRightContent">
                 <div title="[{{attachment.attachment_type}}] {{attachment.title}}" style="position: relative;" class="item" *ngFor="let attachment of signatureBook.attachments; let i = index" (click)="changeRightViewer(i)" [ngClass]="{'panelSelectedThumbnail': i == rightSelectedThumbnail && !showAttachmentPanel}">
                     <span class="fa-stack fa-lg">

@@ -49,6 +49,8 @@ trait ShippingTrait
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
         if (empty($mailevaConfig)) {
             return ['errors' => ['Maileva configuration does not exist']];
+        } elseif (!$mailevaConfig['enabled']) {
+            return ['errors' => ['Maileva configuration is disabled']];
         }
         $shippingTemplate = ShippingTemplateModel::getById(['id' => $args['data']['shippingTemplateId']]);
         if (empty($shippingTemplate)) {

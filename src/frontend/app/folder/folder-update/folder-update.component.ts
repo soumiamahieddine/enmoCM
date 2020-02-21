@@ -5,6 +5,7 @@ import { map, tap, catchError, exhaustMap, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FunctionsService } from '../../../service/functions.service';
 
 declare function $j(selector: any): any;
 
@@ -37,6 +38,7 @@ export class FolderUpdateComponent implements OnInit {
         public http: HttpClient,
         private notify: NotificationService,
         public dialogRef: MatDialogRef<FolderUpdateComponent>,
+        public functions: FunctionsService,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) { }
 
@@ -49,9 +51,24 @@ export class FolderUpdateComponent implements OnInit {
             tap((data: any) => this.folder = data.folder),
             exhaustMap(() => this.http.get('../../rest/entities')),
             map((data: any) => {
+                let keywordEntities = {
+                    serialId: 'ALL_ENTITIES',
+                    keyword: 'ALL_ENTITIES',
+                    parent: '#',
+                    icon: 'fa fa-hashtag',
+                    allowed: true,
+                    text: this.lang.allEntities,
+                    state: { "opened": false, "selected": false },
+                    parent_entity_id: '',
+                    id: 'ALL_ENTITIES',
+                    entity_label: this.lang.allEntities
+                };
+                data.entities.unshift(keywordEntities);
+
                 this.entities = data.entities;
                 data.entities.forEach((element: any) => {
-                    if (this.folder.sharing.entities.map((data: any) => data.entity_id).indexOf(element.serialId) > -1) {
+                    if (this.folder.sharing.entities.map((data: any) => data.entity_id).indexOf(element.serialId) > -1 
+                        || this.folder.sharing.entities.map((data: any) => data.keyword).indexOf(element.serialId) > -1) {
                         element.state.selected = true;
                     }
                     element.state.allowed = true;
@@ -172,18 +189,33 @@ export class FolderUpdateComponent implements OnInit {
     }
 
     selectEntity(newEntity: any) {
-        this.folder.sharing.entities.push(
-            {
-                entity_id: newEntity.serialId,
-                edition: false
-            }
-        );
+        if (!this.functions.empty(newEntity.keyword)) {
+            this.folder.sharing.entities.push(
+                {
+                    keyword: newEntity.keyword,
+                    edition: false
+                }
+            );
+        } else {
+            this.folder.sharing.entities.push(
+                {
+                    entity_id: newEntity.serialId,
+                    edition: false
+                }
+            );
+        }
     }
 
     deselectEntity(entity: any) {
-
         let index = this.folder.sharing.entities.map((data: any) => data.entity_id).indexOf(entity.serialId);
-        this.folder.sharing.entities.splice(index, 1);
+        if (index > -1) {
+            this.folder.sharing.entities.splice(index, 1);
+        } else {
+            index = this.folder.sharing.entities.map((data: any) => data.keyword).indexOf(entity.serialId)
+            if (index > -1) {
+                this.folder.sharing.entities.splice(index, 1);
+            }
+        }
     }
 
     onSubmit(): void {
@@ -207,7 +239,8 @@ export class FolderUpdateComponent implements OnInit {
     }
 
     checkSelectedFolder(entity: any) {
-        if (this.folder.sharing.entities.map((data: any) => data.entity_id).indexOf(entity.serialId) > -1) {
+        if (this.folder.sharing.entities.map((data: any) => data.entity_id).indexOf(entity.serialId) > -1
+            || this.folder.sharing.entities.map((data: any) => data.keyword).indexOf(entity.serialId) > -1) {
             return true;
         } else {
             return false;
@@ -221,12 +254,28 @@ export class FolderUpdateComponent implements OnInit {
     }
 
     toggleAdmin(entity: any, ev: any) {
-        const index = this.folder.sharing.entities.map((data: any) => data.entity_id).indexOf(entity.serialId);
-        this.folder.sharing.entities[index].edition = ev.checked;
+        let index = this.folder.sharing.entities.map((data: any) => data.entity_id).indexOf(entity.serialId);
+        if (index > -1) {
+            this.folder.sharing.entities[index].edition = ev.checked;
+        } else {
+            index = this.folder.sharing.entities.map((data: any) => data.keyword).indexOf(entity.serialId)
+            if (index > -1) {
+                this.folder.sharing.entities[index].edition = ev.checked;
+            }
+        }
     }
 
     isAdminEnabled(entity: any) {
-        const index = this.folder.sharing.entities.map((data: any) => data.entity_id).indexOf(entity.serialId);
-        return this.folder.sharing.entities[index].edition;
+        let index = this.folder.sharing.entities.map((data: any) => data.entity_id).indexOf(entity.serialId);
+        if (index > -1) {
+            return this.folder.sharing.entities[index].edition;
+        } else {
+            index = this.folder.sharing.entities.map((data: any) => data.keyword).indexOf(entity.serialId)
+            if (index > -1) {
+                return this.folder.sharing.entities[index].edition;
+            }
+        }
+
+        return false;
     }
 }

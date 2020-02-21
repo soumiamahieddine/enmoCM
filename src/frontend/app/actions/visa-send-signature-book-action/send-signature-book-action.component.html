@@ -25,6 +25,14 @@
                     </li>
                 </ul>
             </div>
+            <div *ngIf="resourcesMailing.length > 0" class="alert-message alert-message-info" role="alert">
+                <p>{{lang.mailingActionInformations}}</p>
+                <ul>
+                    <li *ngFor="let ressource of resourcesMailing">
+                        <b>{{ressource.alt_identifier}}</b>
+                    </li>
+                </ul>
+            </div>
             <app-visa-workflow *ngIf="data.resIds.length <= 1 || (!noResourceToProcess && data.resIds.length > 1)" [adminMode]="true" #appVisaWorkflow>
             </app-visa-workflow>
             <div style="padding-top: 10px;">

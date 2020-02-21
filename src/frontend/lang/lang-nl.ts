@@ -514,6 +514,7 @@ export const LANG_NL = {
     "maarchApplication"                     : "Maarch Applicatie",
     "maarchLicence"                         : "Maarch Courrier wordt verspreid onder de voorwaarden van de",
     "mail"                                  : "Brief",
+    "mails"                                  : "mails", //_TO_TRANSLATE
     "mailAttachments"                       : "bijkomend(e) stuk(ken)",
     "mailDate"                              : "_TO_TRANSLATE",
     "mailEntitiesList"                      : "List of entities attached to mails", //_TO_TRANSLATE
@@ -555,6 +556,7 @@ export const LANG_NL = {
     "missingBasket"                         : "_TO_TRANSLATE",
     "missingChoose"                         : "Wenst u uw account opnieuw te activeren?",
     "missingMailevaConfig"                  : "Maileva configuration does not exist _TO_TRANSLATE",
+    "disabledMailevaConfig"                 : "Maileva configuration is disabled",//TRANSLATE
     "modelUpdated"                          : "Het model werd bijgewerkt",
     "modificationSaved"                     : "Wijziging bewaard",
     "modifiedBy"                            : "Modified by", //_TO_TRANSLATE
@@ -1119,6 +1121,7 @@ export const LANG_NL = {
     "owner" : "Owner", //_TO_TRANSLATE
     "privateFolder" : "Private folder", //_TO_TRANSLATE
     "visibleBy" : "Visible by", //_TO_TRANSLATE
+    "noteVisibleBy" : "Note visible by :", //TRANSLATE
     "folderInformations" : "Folder Informations", //_TO_TRANSLATE
     "process" : "Process", //_TO_TRANSLATE
     "modelName" : "Model name", //_TO_TRANSLATE
@@ -1212,8 +1215,10 @@ export const LANG_NL = {
     "manageTagsInApplicationDesc" : "Create tags while indexing, processing and in details", //_TO_TRANSLATE
     "updateDiffusionWhileIndexing" : "Update all parts of diffusion list when indexing.", //_TO_TRANSLATE
     "updateDiffusionExceptRecipientWhileIndexing" : "Update diffusion list except Assignee when indexing.", //_TO_TRANSLATE
-    "updateDiffusionWhileDetails" : "Update all parts of diffusion list when processing.", //_TO_TRANSLATE
-    "updateDiffusionExceptRecipientWhileDetails" : "Update diffusion list except Assignee when processing.", //_TO_TRANSLATE
+    "updateDiffusionWhileProcess" : "Update all parts of diffusion list when processing.", //_TO_TRANSLATE
+    "updateDiffusionExceptRecipientWhileProcess" : "Update diffusion list except Assignee when processing.", //_TO_TRANSLATE
+    "updateDiffusionWhileDetails" : "Update all parts of diffusion list when in details.", //_TO_TRANSLATE
+    "updateDiffusionExceptRecipientWhileDetails" : "Update diffusion list except Assignee when in details.", //_TO_TRANSLATE
     "useMailServices" : "De e-mails van zijn diensten gebruiken als verzender",
     "viewDocumentsWithNotes": "View mail with notes", //_TO_TRANSLATE
     "viewDocumentsWithNotesDesc": "View attachment of 'document_with_notes' type", //_TO_TRANSLATE
@@ -1277,6 +1282,7 @@ export const LANG_NL = {
     "noRole" : "No role", //_TO_TRANSLATE
     "diffListPrivilegeMsgIndexing" : "In indexing page, modify user in roles: ", //_TO_TRANSLATE
     "diffListPrivilegeMsgProcess" : "In process page, modify user in roles: ", //_TO_TRANSLATE
+    "diffListPrivilegeMsgDetails" : "In details page, modify user in roles: ",//TRANSLATE
     "recordMail" : "Record a mail", //_TO_TRANSLATE
     "closed" : "Closed", //_TO_TRANSLATE
     "manageAttachments": "Update or delete attachments", //_TO_TRANSLATE
@@ -1303,6 +1309,7 @@ export const LANG_NL = {
     "newVersionAdded" : "New version added", //_TO_TRANSLATE
     "editionAttachmentConfirmFirst" : "All merge variables will be replaced taking into account what you entered in the form on the left.", //_TO_TRANSLATE
     "editionAttachmentConfirmSecond" : "Only <b> chrono number </b> ([res_letterbox.alt_identifier]) will be replaced after mail registration", //_TO_TRANSLATE
+    "editionAttachmentConfirmThird" : "Only <b> chrono number </b> ([res_letterbox.alt_identifier]) and <b>barcode</b> will be replaced after mail registration",//TRANSLATE
     "othersInfos" : "Other(s) information(s)", //_TO_TRANSLATE
     "contactDetails" : "Details", //_TO_TRANSLATE
     "contactsFillingRate" : "Filling rate", //_TO_TRANSLATE
@@ -1540,7 +1547,9 @@ export const LANG_NL = {
     "sendElement" :  "Send an element", //_TO_TRANSLATE
     "pdfVersion" : "PDF version", //_TO_TRANSLATE
     "emailModel" : "Email modele", //_TO_TRANSLATE
-    "sendInPlainText" : "Send in plain text", //_TO_TRANSLATE
+    "switchInPlainText" : "Switch in plain text", //_TO_TRANSLATE
+    "switchInHtml" : "Switch in HTML", //_TO_TRANSLATE
+    "confirmSwitchInPlanText": "Text formatting will be removed. Would you like to continue ?", //_TO_TRANSLATE
     "saveDraft" : "Save draft", //_TO_TRANSLATE
     "attachMainDocument" : "Link main document", //_TO_TRANSLATE
     "attachNote" : "Link a note", //_TO_TRANSLATE
@@ -1553,4 +1562,20 @@ export const LANG_NL = {
     "badEmailsFormat" : "Some email address are not correct", //_TO_TRANSLATE
     "warnEmptySubject" : "You will send an email without subject, continue ?", //_TO_TRANSLATE
     "emailDeleted" : "Email deleted", //_TO_TRANSLATE
+    "mailingActionInformations" : "Following mails contain mailing attachments, if next person in visa circuit is signatory then mailing will be activate :", //_TO_TRANSLATE
+    "mailingActionInformations2" : "Following mails contain mailing attachments, mailing will be activate :", //TRANSLATE
+    "properties" : "Properties",  //_TO_TRANSLATE
+    "generateARMode" : "Acknowledgement receipt mode allowed", //_TO_TRANSLATE
+    "autoAR" : "Automatic", //_TO_TRANSLATE
+    "manualAR" : "Manual", //_TO_TRANSLATE
+    "bothAR" : "Automatic et manual", //_TO_TRANSLATE
+    "tagCreation" : "Tag creation", //_TO_TRANSLATE
+    "tagModification" : "Tag modification", //_TO_TRANSLATE
+    "usage" : "Used for", //_TO_TRANSLATE
+    "tagUpdated" : "Tag updated", //_TO_TRANSLATE
+    "tagMerged" : "Tag merged", //_TO_TRANSLATE
+    "mergeWith" : "Merge with", //_TO_TRANSLATE
+    "willBeTransferedToNewTag" : "will be transfered to selected tag", //_TO_TRANSLATE
+    "detailDoc" : "Detail page", //_TO_TRANSLATE
+    "emptySubject" : "Empty subject", //_TO_TRANSLATE
 };

@@ -18,6 +18,7 @@ use History\controllers\HistoryController;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\models\ValidatorModel;
 use Tag\models\TagModel;
 use Tag\models\ResourceTagModel;
 
@@ -25,7 +26,7 @@ class TagController
 {
     public function get(Request $request, Response $response)
     {
-        $tags = TagModel::get(['orderBy' => ['id']]);
+        $tags = TagModel::get(['orderBy' => ['label']]);
 
         $ids = array_column($tags, 'id');
 
@@ -39,6 +40,7 @@ class TagController
 
         foreach ($tags as $key => $tag) {
             $tags[$key]['countResources'] = $countResources[$tag['id']] ?? 0;
+            $tags[$key]['links'] = json_decode($tags[$key]['links'], true);
         }
 
         return $response->withJson(['tags' => $tags]);
@@ -61,6 +63,7 @@ class TagController
            'data'   => [$args['id']]
         ]);
         $tag['countResources'] = $countResources[0]['count'];
+        $tag['links'] = json_decode($tag['links'], true);
 
         return $response->withJson($tag);
     }
@@ -179,14 +182,9 @@ class TagController
             if ($parent == $args['id']) {
                 return $response->withStatus(400)->withJson(['errors' => 'Tag cannot be its own parent']);
             }
-
-            $children = TagModel::get([
-                'select' => ['id'],
-                'where'  => ['parent_id = ?'],
-                'data'   => [$args['id']]
-            ]);
-            $children = array_column($children, 'id');
-            if (in_array($parent, $children)) {
+            
+            $parentIsChildren = TagController::tagIsInChildren(['idToFind' => $parent, 'parentId' => $args['id']]);
+            if ($parentIsChildren) {
                 return $response->withStatus(400)->withJson(['errors' => 'Parent tag cannot also be a children']);
             }
         }
@@ -325,13 +323,15 @@ class TagController
         ]);
         $tagResMaster = array_column($tagResMaster, 'res_id');
 
-        ResourceTagModel::update([
-           'set'    => [
-               'tag_id' => $tagMaster['id']
-           ],
-           'where'  => ['tag_id = ?', 'res_id not in (?)'],
-           'data'   => [$tagMerge['id'], $tagResMaster]
-        ]);
+        if (!empty($tagResMaster)) {
+            ResourceTagModel::update([
+                'set'   => [
+                    'tag_id' => $tagMaster['id']
+                ],
+                'where' => ['tag_id = ?', 'res_id not in (?)'],
+                'data'  => [$tagMerge['id'], $tagResMaster]
+            ]);
+        }
 
         ResourceTagModel::delete([
            'where'  => ['tag_id = ?'],
@@ -462,5 +462,29 @@ class TagController
         ]);
 
         return $response->withStatus(204);
+    }
+
+    private static function tagIsInChildren(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['idToFind', 'parentId']);
+        ValidatorModel::intVal($args, ['idToFind', 'parentId']);
+
+        $children = TagModel::get([
+            'select' => ['id'],
+            'where'  => ['parent_id = ?'],
+            'data'   => [$args['parentId']]
+        ]);
+        $children = array_column($children, 'id');
+        if (in_array($args['idToFind'], $children)) {
+            return true;
+        }
+
+        foreach ($children as $child) {
+            $inChildren = TagController::tagIsInChildren(['idToFind' => $args['idToFind'], 'parentId' => $child]);
+            if ($inChildren) {
+                return true;
+            }
+        }
+        return false;
     }
 }

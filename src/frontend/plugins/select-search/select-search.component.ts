@@ -25,7 +25,7 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
 
     @Input('formControlSelect') formControlSelect: FormControl = new FormControl();
 
-    @Input('datas') datas: any;
+    @Input('datas') datas: any = [];
 
     @Input('label') label: string;
 
@@ -48,6 +48,7 @@ export class PluginSelectSearchComponent implements OnInit, OnDestroy, AfterView
      * Catch external event after select an element in autocomplete
      */
     @Output('afterSelected') afterSelected = new EventEmitter();
+    @Output('afterOpened') afterOpened = new EventEmitter();
 
     /** Reference to the search input field */
     @ViewChild('searchSelectInput', { read: ElementRef, static: true }) searchSelectInput: ElementRef;

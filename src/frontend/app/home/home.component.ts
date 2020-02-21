@@ -9,6 +9,7 @@ import { NotificationService } from '../notification.service';
 import { HeaderService }        from '../../service/header.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { AppService } from '../../service/app.service';
+import { Router } from '@angular/router';
 
 declare function $j(selector: any): any;
 
@@ -44,7 +45,8 @@ export class HomeComponent implements OnInit {
         private sanitizer: DomSanitizer, 
         private notify: NotificationService, 
         private headerService: HeaderService,
-        public appService: AppService
+        public appService: AppService,
+        private router: Router
         ) {
         $j("link[href='merged_css.php']").remove();
         (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
@@ -101,7 +103,7 @@ export class HomeComponent implements OnInit {
         this.http.get("../../rest/resources/" + row.res_id + "/isAllowed")
             .subscribe((data: any) => {
                 if (data['isAllowed']) {
-                    location.href = "index.php?page=details&dir=indexing_searching&id=" + row.res_id;
+                    this.router.navigate([`/resources/${row.res_id}`]);
                 } else {
                     this.notify.error(this.lang.documentOutOfPerimeter);
                 }

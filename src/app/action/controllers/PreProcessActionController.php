@@ -14,6 +14,7 @@ namespace Action\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Action\models\ActionModel;
+use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketRedirectModel;
@@ -158,6 +159,13 @@ class PreProcessActionController
 
     public function checkAcknowledgementReceipt(Request $request, Response $response, array $args)
     {
+        $action = ActionModel::getById(['id' => $args['actionId'], 'select' => ['parameters']]);
+        if (empty($action)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Action does not exist']);
+        }
+        $parameters = json_decode($action['parameters'], true);
+        $mode = $parameters['mode'] ?? 'auto';
+
         $currentUser = UserModel::getByLogin(['login' => $GLOBALS['userId'], 'select' => ['id']]);
 
         $errors = ResourceListController::listControl(['groupId' => $args['groupId'], 'userId' => $args['userId'], 'basketId' => $args['basketId'], 'currentUserId' => $currentUser['id']]);
@@ -354,7 +362,7 @@ class PreProcessActionController
             }
         }
 
-        return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'sendList' => $sendList,  'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated]);
+        return $response->withJson(['sendEmail' => $sendEmail, 'sendPaper' => $sendPaper, 'sendList' => $sendList,  'noSendAR' => $noSendAR, 'alreadySend' => $alreadySend, 'alreadyGenerated' => $alreadyGenerated, 'mode' => $mode]);
     }
 
     public function checkExternalSignatoryBook(Request $request, Response $response, array $aArgs)
@@ -485,7 +493,10 @@ class PreProcessActionController
                         if (!$hasSignableAttachment && empty($integratedResource)) {
                             $additionalsInfos['noAttachment'][] = ['alt_identifier' => $noAttachmentsResource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noSignableAttachmentInSignatoryBook'];
                         } else {
-                            $additionalsInfos['attachments'][] = ['res_id' => $resId];
+                            $statuses = array_column($attachments, 'status');
+                            $mailing = in_array('SEND_MASS', $statuses);
+
+                            $additionalsInfos['attachments'][] = ['res_id' => $resId, 'alt_identifier' => $noAttachmentsResource['alt_identifier'], 'mailing' => $mailing];
                         }
                     }
                 }
@@ -537,7 +548,10 @@ class PreProcessActionController
                                 break;
                             }
                         }
-                        $additionalsInfos['attachments'][] = ['res_id' => $resId];
+                        $statuses = array_column($attachments, 'status');
+                        $mailing = in_array('SEND_MASS', $statuses);
+
+                        $additionalsInfos['attachments'][] = ['res_id' => $resId, 'alt_identifier' => $noAttachmentsResource['alt_identifier'], 'mailing' => $mailing];
                     }
                 }
             }
@@ -632,6 +646,8 @@ class PreProcessActionController
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
         if (empty($mailevaConfig)) {
             return $response->withStatus(400)->withJson(['errors' => 'Maileva configuration does not exist', 'errorLang' => 'missingMailevaConfig']);
+        } elseif (!$mailevaConfig['enabled']) {
+            return $response->withStatus(400)->withJson(['errors' => 'Maileva configuration is disabled', 'errorLang' => 'disabledMailevaConfig']);
         }
 
         $data = $request->getParsedBody();
@@ -940,21 +956,35 @@ class PreProcessActionController
                 $resource['alt_identifier'] = _UNDEFINED;
             }
 
-            $integrations = json_decode($resource['integrations'], true);
-            if (!empty($integrations['inSignatureBook'])) {
-                $resourcesInformations['success'][] = ['res_id' => $resId];
-            } else {
-                $attachments = AttachmentModel::get([
-                    'select'    => [1],
-                    'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
-                    'data'      => [$resId, $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
-                ]);
+            $circuit = ListInstanceModel::get([
+                'select'    => ['requested_signature'],
+                'where'     => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
+                'data'      => [$resId, 'VISA_CIRCUIT'],
+                'orderBy'   => ['listinstance_id'],
+                'limit'     => 1
+            ]);
+            if (empty($circuit)) {
+                $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noCircuitAvailable'];
+                continue;
+            }
 
-                if (empty($attachments)) {
-                    $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
+            $attachments = AttachmentModel::get([
+                'select'    => ['status'],
+                'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
+                'data'      => [$resId, $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
+            ]);
+
+            if (empty($attachments)) {
+                $integrations = json_decode($resource['integrations'], true);
+                if (!empty($integrations['inSignatureBook'])) {
+                    $resourcesInformations['success'][] = ['res_id' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'mailing' => false];
                 } else {
-                    $resourcesInformations['success'][] = ['res_id' => $resId];
+                    $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noAttachmentInSignatoryBook'];
                 }
+            } else {
+                $statuses = array_column($attachments, 'status');
+                $mailing = in_array('SEND_MASS', $statuses);
+                $resourcesInformations['success'][] = ['res_id' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'mailing' => $mailing];
             }
         }
 
@@ -1006,7 +1036,18 @@ class PreProcessActionController
             } elseif ($isSignatory[0]['requested_signature'] && !$isSignatory[0]['signatory']) {
                 $resourcesInformations['warning'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'userHasntSigned'];
             } else {
-                $resourcesInformations['success'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId];
+                $attachments = AttachmentModel::get([
+                    'select'    => ['status'],
+                    'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],
+                    'data'      => [$resId, $signableAttachmentsTypes, true, ['OBS', 'DEL', 'FRZ']]
+                ]);
+
+                $mailing = false;
+                if (!empty($attachments)) {
+                    $statuses = array_column($attachments, 'status');
+                    $mailing = in_array('SEND_MASS', $statuses);
+                }
+                $resourcesInformations['success'][] = ['res_id' => $resId, 'alt_identifier' => $resource['alt_identifier'], 'mailing' => $mailing];
             }
         }
 
@@ -1362,11 +1403,12 @@ class PreProcessActionController
         }
         $body['resources'] = PreProcessActionController::getNonLockedResources(['resources' => $body['resources'], 'userId' => $GLOBALS['id']]);
 
-        $action = ActionModel::getById(['id' => $args['actionId'], 'select' => ['required_fields']]);
+        $action = ActionModel::getById(['id' => $args['actionId'], 'select' => ['parameters']]);
         if (empty($action)) {
             return $response->withStatus(400)->withJson(['errors' => 'Action does not exist']);
         }
-        $actionRequiredFields = json_decode($action['required_fields']);
+        $parameters = json_decode($action['parameters']);
+        $actionRequiredFields = $parameters['requiredFields'] ?? [];
 
         $canClose = [];
         $emptyFields = [];
@@ -1409,7 +1451,6 @@ class PreProcessActionController
                         'chrono' => $resource['alt_identifier'],
                         'fields' => !empty($fieldsList) ? implode(", ", $fieldsList) : ''
                     ];
-
                 } else {
                     $canClose[] = $resId;
                 }
@@ -1418,7 +1459,7 @@ class PreProcessActionController
             }
         }
 
-        return $response->withJson(['emptyFields' => $emptyFields, 'canClose' => $canClose]);
+        return $response->withJson(['errors' => $emptyFields, 'success' => $canClose]);
     }
 
     private static function getNonLockedResources(array $args)

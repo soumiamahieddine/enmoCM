@@ -130,10 +130,16 @@ class ListInstanceController
 
     public function update(Request $request, Response $response)
     {
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'update_diffusion_details', 'userId' => $GLOBALS['id']])
-            && !PrivilegeController::hasPrivilege(['privilegeId' => 'update_diffusion_except_recipient_details', 'userId' => $GLOBALS['id']])
-            && !PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']])) {
-            return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+        $fullRight = false;
+
+        if (PrivilegeController::hasPrivilege(['privilegeId' => 'admin_users', 'userId' => $GLOBALS['id']]) || PrivilegeController::hasPrivilege(['privilegeId' => 'update_diffusion_details', 'userId' => $GLOBALS['id']])) {
+            $fullRight = true;
+        } else {
+            if (!PrivilegeController::hasPrivilege(['privilegeId' => 'update_diffusion_except_recipient_details', 'userId' => $GLOBALS['id']])
+                && !PrivilegeController::hasPrivilege(['privilegeId' => 'update_diffusion_process', 'userId' => $GLOBALS['id']])
+                && !PrivilegeController::hasPrivilege(['privilegeId' => 'update_diffusion_except_recipient_process', 'userId' => $GLOBALS['id']])) {
+                return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
+            }
         }
 
         $body = $request->getParsedBody();
@@ -141,7 +147,7 @@ class ListInstanceController
             return $response->withStatus(400)->withJson(['errors' => 'Body is not set or not an array']);
         }
 
-        $controller = ListInstanceController::updateListInstance(['data' => $body, 'userId' => $GLOBALS['id']]);
+        $controller = ListInstanceController::updateListInstance(['data' => $body, 'userId' => $GLOBALS['id'], 'fullRight' => $fullRight]);
         if (!empty($controller['errors'])) {
             return $response->withStatus($controller['code'])->withJson(['errors' => $controller['errors']]);
         }
@@ -178,7 +184,7 @@ class ListInstanceController
                 return ['errors' => 'resId is empty', 'code' => 400];
             }
 
-            if (!Validator::intVal()->validate($ListInstanceByRes['resId']) || !ResController::hasRightByResId(['resId' => [$ListInstanceByRes['resId']], 'userId' => $GLOBALS['id']])) {
+            if (!Validator::intVal()->validate($ListInstanceByRes['resId']) || !ResController::hasRightByResId(['resId' => [$ListInstanceByRes['resId']], 'userId' => $args['userId']])) {
                 DatabaseModel::rollbackTransaction();
                 return ['errors' => 'Document out of perimeter', 'code' => 403];
             }
@@ -192,10 +198,6 @@ class ListInstanceController
                 'where'     => ['res_id = ?', 'difflist_type = ?'],
                 'data'      => [$ListInstanceByRes['resId'], 'entity_id']
             ]);
-            ListInstanceModel::delete([
-                'where' => ['res_id = ?', 'difflist_type = ?'],
-                'data'  => [$ListInstanceByRes['resId'], 'entity_id']
-            ]);
 
             $recipientFound = false;
             foreach ($ListInstanceByRes['listInstances'] as $instance) {
@@ -204,8 +206,14 @@ class ListInstanceController
                 }
             }
             if (!$recipientFound) {
+                DatabaseModel::rollbackTransaction();
                 return ['errors' => 'Dest is missing', 'code' => 403];
             }
+
+            ListInstanceModel::delete([
+                'where' => ['res_id = ?', 'difflist_type = ?'],
+                'data'  => [$ListInstanceByRes['resId'], 'entity_id']
+            ]);
 
             foreach ($ListInstanceByRes['listInstances'] as $key => $instance) {
                 $listControl = ['item_id', 'item_type', 'item_mode'];
@@ -243,6 +251,22 @@ class ListInstanceController
                 } else {
                     DatabaseModel::rollbackTransaction();
                     return ['errors' => 'item_type does not exist', 'code' => 400];
+                }
+
+                if ($instance['item_mode'] == 'dest' && !$args['fullRight']) {
+                    foreach ($listInstances as $listInstance) {
+                        if ($listInstance['item_mode'] == 'dest') {
+                            if ($listInstance['item_type'] != $instance['item_type'] || $listInstance['item_id'] != $instance['item_id']) {
+                                if (!PrivilegeController::hasPrivilege(['privilegeId' => 'update_diffusion_process', 'userId' => $args['userId']])) {
+                                    DatabaseModel::rollbackTransaction();
+                                    return ['errors' => 'Privilege forbidden : update assignee', 'code' => 403];
+                                } elseif (!PrivilegeController::isResourceInProcess(['userId' => $args['userId'], 'resId' => $ListInstanceByRes['resId']])) {
+                                    DatabaseModel::rollbackTransaction();
+                                    return ['errors' => 'Privilege forbidden : update assignee', 'code' => 403];
+                                }
+                            }
+                        }
+                    }
                 }
 
                 ListInstanceModel::create([

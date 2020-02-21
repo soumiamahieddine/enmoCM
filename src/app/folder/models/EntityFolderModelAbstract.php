@@ -35,7 +35,7 @@ class EntityFolderModelAbstract
         return $entitiesFolder;
     }
 
-    public static function getByFolderId(array $args)
+    public static function getEntitiesByFolderId(array $args)
     {
         ValidatorModel::notEmpty($args, ['folder_id']);
         ValidatorModel::intVal($args, ['folder_id']);
@@ -44,7 +44,22 @@ class EntityFolderModelAbstract
             'select'    => empty($args['select']) ? ['*'] : $args['select'],
             'table'     => ['entities_folders', 'entities'],
             'left_join' => ['entities_folders.entity_id = entities.id'],
-            'where'     => ['folder_id = ?'],
+            'where'     => ['folder_id = ?', 'entities_folders.entity_id is not null', 'keyword is null'],
+            'data'      => [$args['folder_id']]
+        ]);
+
+        return $entitiesFolder;
+    }
+
+    public static function getKeywordsByFolderId(array $args)
+    {
+        ValidatorModel::notEmpty($args, ['folder_id']);
+        ValidatorModel::intVal($args, ['folder_id']);
+
+        $entitiesFolder = DatabaseModel::select([
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
+            'table'     => ['entities_folders'],
+            'where'     => ['folder_id = ?', 'entity_id is null', 'keyword is not null'],
             'data'      => [$args['folder_id']]
         ]);
 
@@ -53,16 +68,18 @@ class EntityFolderModelAbstract
 
     public static function create(array $args)
     {
-        ValidatorModel::notEmpty($args, ['folder_id', 'entity_id']);
+        ValidatorModel::notEmpty($args, ['folder_id']);
         ValidatorModel::intVal($args, ['entity_id', 'folder_id']);
         ValidatorModel::boolType($args, ['edition']);
+        ValidatorModel::stringType($args, ['keyword']);
 
         DatabaseModel::insert([
             'table'     => 'entities_folders',
             'columnsValues' => [
-                'folder_id'  => $args['folder_id'],
-                'entity_id'  => $args['entity_id'],
-                'edition'    => empty($args['edition']) ? 'false' : 'true'
+                'folder_id' => $args['folder_id'],
+                'entity_id' => $args['entity_id'] ?? null,
+                'edition'   => empty($args['edition']) ? 'false' : 'true',
+                'keyword'   => $args['keyword'] ?? null
             ]
         ]);
 

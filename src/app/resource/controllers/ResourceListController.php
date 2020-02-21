@@ -14,6 +14,7 @@
 
 namespace Resource\controllers;
 
+use Action\controllers\ActionController;
 use Action\controllers\ActionMethodController;
 use Action\models\ActionModel;
 use Attachment\models\AttachmentModel;
@@ -26,7 +27,6 @@ use Entity\models\EntityModel;
 use Entity\models\ListInstanceModel;
 use Folder\models\FolderModel;
 use Group\models\GroupModel;
-use IndexingModel\models\IndexingModelFieldModel;
 use Note\models\NoteModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
@@ -389,14 +389,15 @@ class ResourceListController
             return $response->withStatus(400)->withJson(['errors' => 'Action is not linked to this group basket']);
         }
 
-        $action = ActionModel::getById(['id' => $aArgs['actionId'], 'select' => ['component', 'required_fields']]);
+        $action = ActionModel::getById(['id' => $aArgs['actionId'], 'select' => ['component', 'parameters']]);
         if (empty($action['component'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Action component does not exist']);
         }
         if (!array_key_exists($action['component'], ActionMethodController::COMPONENTS_ACTIONS)) {
             return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
         }
-        $actionRequiredFields = json_decode($action['required_fields']);
+        $parameters = json_decode($action['parameters'], true);
+        $actionRequiredFields = $parameters['requiredFields'] ?? [];
 
         $user   = UserModel::getById(['id' => $aArgs['userId'], 'select' => ['user_id']]);
         $whereClause = PreparedClauseController::getPreparedClause(['clause' => $basket['basket_clause'], 'login' => $user['user_id']]);
@@ -438,26 +439,14 @@ class ResourceListController
         $methodResponses = [];
         foreach ($resourcesForAction as $key => $resId) {
             if (!empty($actionRequiredFields)) {
-                $resource = ResModel::getById(['resId' => $resId, 'select' => ['model_id', 'custom_fields']]);
-                $model = $resource['model_id'];
-                $resourceCustomFields = json_decode($resource['custom_fields'], true);
-                $modelFields = IndexingModelFieldModel::get([
-                    'select' => ['identifier'],
-                    'where'  => ['model_id = ?', "identifier LIKE 'indexingCustomField_%'"],
-                    'data'   => [$model]
-                ]);
-                $modelFields = array_column($modelFields, 'identifier');
-
-                foreach ($actionRequiredFields as $actionRequiredField) {
-                    $idCustom = explode("_", $actionRequiredField)[1];
-                    if (in_array($actionRequiredField, $modelFields) && empty($resourceCustomFields[$idCustom])) {
-                        return $response->withStatus(400)->withJson(['errors' => 'Missing required custom field to do action']);
-                    }
+                $requiredFieldsValid = ActionController::checkRequiredFields(['resId' => $resId, 'actionRequiredFields' => $actionRequiredFields]);
+                if (!empty($requiredFieldsValid['errors'])) {
+                    return $response->withStatus(400)->withJson($requiredFieldsValid);
                 }
             }
 
             if (!empty($method)) {
-                $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data'], 'note' => $body['note']]);
+                $methodResponse = ActionMethodController::$method(['resId' => $resId, 'data' => $body['data'], 'note' => $body['note'], 'parameters' => $parameters]);
 
                 if (!empty($methodResponse['errors'])) {
                     if (empty($methodResponses['errors'])) {
@@ -752,8 +741,8 @@ class ResourceListController
 
         $folders = FolderModel::getWithEntitiesAndResources([
             'select'    => ['DISTINCT(folders.id)', 'folders.label'],
-            'where'     => ['res_id = ?', '(user_id = ? OR entity_id in (?))'],
-            'data'      => [$args['resId'], $args['userId'], $entities]
+            'where'     => ['res_id = ?', '(user_id = ? OR entity_id in (?) OR keyword = ?)'],
+            'data'      => [$args['resId'], $args['userId'], $entities, 'ALL_ENTITIES']
         ]);
 
         return $folders;
@@ -1167,8 +1156,8 @@ class ResourceListController
 
         $rawFolders = FolderModel::getWithEntitiesAndResources([
             'select'  => ['folders.id', 'folders.label', 'count(resources_folders.res_id) as count'],
-            'where'   => ['resources_folders.res_id in (?)', '(folders.user_id = ? OR entities_folders.entity_id in (?))'],
-            'data'    => [$resIds, $GLOBALS['id'], $userEntities],
+            'where'   => ['resources_folders.res_id in (?)', '(folders.user_id = ? OR entities_folders.entity_id in (?) or keyword = ?)'],
+            'data'    => [$resIds, $GLOBALS['id'], $userEntities, 'ALL_ENTITIES'],
             'groupBy' => ['folders.id', 'folders.label']
         ]);
         foreach ($rawFolders as $key => $value) {

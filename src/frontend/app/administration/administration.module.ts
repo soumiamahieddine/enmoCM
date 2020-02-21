@@ -53,6 +53,8 @@ import { ContactsListAdministrationComponent, ContactsListAdministrationRedirect
 import { ContactsHomeAdministrationComponent }              from './contact/home/contacts-home-administration.component';
 import { ContactsCustomFieldsAdministrationComponent }              from './contact/customField/contacts-custom-fields-administration.component';
 import { ContactsPageAdministrationComponent }              from './contact/page/contacts-page-administration.component';
+import { TagsAdministrationComponent }              from './tag/tags-administration.component';
+import { TagAdministrationComponent }              from './tag/tag-administration.component';
 
 @NgModule({
     imports:      [
@@ -118,6 +120,8 @@ import { ContactsPageAdministrationComponent }              from './contact/page
         ContactsHomeAdministrationComponent,
         ContactsCustomFieldsAdministrationComponent,
         ContactsPageAdministrationComponent,
+        TagsAdministrationComponent,
+        TagAdministrationComponent
     ],
     entryComponents: [
         UsersAdministrationRedirectModalComponent,

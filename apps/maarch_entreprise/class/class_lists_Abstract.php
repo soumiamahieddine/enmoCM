@@ -1181,10 +1181,9 @@ abstract class lists_Abstract extends Database
     {
         $return = '';
         //Show details button
-
+        $linkToDetail = "triggerAngular('#/resources/".array_column($resultTheLine, 'res_id')[0]."');";
         $href = $this->_buildMyLink($this->params['viewDetailsLink'], $resultTheLine, $listKey);
-        $return .= '<div align="center"><a href="javascript://" onClick="javascript:window.top.location=\''
-                .$href.'\'; return false;" title="'._DETAILS.'"><i class="fa fa-info-circle fa-2x" title="'._DETAILS.'"></i></a></div>';
+        $return .= '<div align="center"><a href="javascript://" onClick="javascript:'.$linkToDetail.'return false;" title="'._DETAILS.'"><i class="fa fa-info-circle fa-2x" title="'._DETAILS.'"></i></a></div>';
 
         return $return;
     }

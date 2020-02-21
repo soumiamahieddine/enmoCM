@@ -18,6 +18,7 @@ export class ContinueVisaCircuitActionComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = false;
 
+    resourcesMailing: any[] = [];
     resourcesWarnings: any[] = [];
     resourcesErrors: any[] = [];
 
@@ -54,6 +55,13 @@ export class ContinueVisaCircuitActionComponent implements OnInit {
                     this.resourcesErrors = data.resourcesInformations.error;
                     this.noResourceToProcess = this.resourcesErrors.length === this.data.resIds.length;
                 }
+                if (data.resourcesInformations.success) {
+                    data.resourcesInformations.success.forEach((value: any) => {
+                        if (value.mailing) {
+                            this.resourcesMailing.push(value);
+                        }
+                    });
+                }
                 resolve(true);
             }, (err: any) => {
                 this.notify.handleSoftErrors(err);
@@ -86,10 +94,6 @@ export class ContinueVisaCircuitActionComponent implements OnInit {
     }
 
     isValidAction() {
-        if (!this.noResourceToProcess) {
-            return true;
-        } else {
-            return false; 
-        }
+        return !this.noResourceToProcess;
     }
 }

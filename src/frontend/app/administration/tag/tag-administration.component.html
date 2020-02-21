@@ -1,0 +1,49 @@
+<mat-sidenav-container autosize class="maarch-container">
+    <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
+        [opened]="appService.getViewMode() ? false : true">
+        <header-panel [snavLeft]="snav"></header-panel>
+        <menu-shortcut></menu-shortcut>
+        <menu-nav></menu-nav>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="bg-head">
+            <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
+                <div class="bg-head-title-label">
+                    <header-left [snavLeft]="snav"></header-left>
+                </div>
+                <div class="bg-head-title-tool">
+                    <header-right></header-right>
+                </div>
+            </div>
+            <div class="bg-head-content" [class.fullContainer]="appService.getViewMode()">
+            </div>
+        </div>
+        <div class="container" [class.fullContainer]="appService.getViewMode()">
+            <div class="container-content">
+                <div style="height:90%;overflow:auto;position:absolute;width:100%;">
+                    <form style="padding: 20px;" (ngSubmit)="onSubmit()">
+                        <mat-form-field>
+                            <input matInput type="text" [formControl]="tag.label" [placeholder]="lang.label"
+                                maxlength="128" required>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <textarea matInput type="text" [formControl]="tag.description"
+                                [placeholder]="lang.description"></textarea>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <input matInput type="text" [formControl]="tag.usage" [placeholder]="lang.usage">
+                        </mat-form-field>
+                        <plugin-select-search *ngIf="!loadingTags" [label]="'Fusionner le mot-clé avec'" [placeholderLabel]="'Fusionner le mot-clé avec'"
+                                [formControlSelect]="selectMergeTag" [datas]="tags" (afterOpened)="getTags()"
+                                (afterSelected)="mergeTag($event)" style="width:100%;">
+                         </plugin-select-search>
+                        <div class="text-center">
+                            <button mat-raised-button [disabled]="!tagFormGroup.valid"
+                                color="primary">{{lang.validate}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

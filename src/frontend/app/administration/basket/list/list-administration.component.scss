@@ -232,4 +232,8 @@
   background: $primary;
   margin: 5px;
   font-size: 8px;
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

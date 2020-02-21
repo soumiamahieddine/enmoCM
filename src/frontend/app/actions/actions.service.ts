@@ -32,6 +32,7 @@ import { ContinueAvisCircuitActionComponent } from './avis-continue-circuit-acti
 import { SendAvisParallelComponent } from './avis-parallel-send-action/send-avis-parallel-action.component';
 import { GiveAvisParallelActionComponent } from './avis-give-parallel-action/give-avis-parallel-action.component';
 import { ValidateAvisParallelComponent } from './avis-parallel-validate-action/validate-avis-parallel-action.component';
+import { HeaderService } from '../../service/header.service';
 
 @Injectable()
 export class ActionsService {
@@ -62,6 +63,7 @@ export class ActionsService {
         public dialog: MatDialog,
         private notify: NotificationService,
         private router: Router,
+        public headerService: HeaderService
     ) {
     }
 
@@ -301,7 +303,20 @@ export class ActionsService {
             filter((data: string) => data === 'success'),
             tap((result: any) => {
                 this.endAction(result);
-                this.router.navigate(['/indexing/' + this.currentGroupId]);
+                let firstGroup: number = 0;
+                this.headerService.user.groups.filter((group: any) => group.can_index === true).forEach((group: any) => {
+                    if (firstGroup == 0) {
+                        firstGroup = group.id;
+                    }
+                    if (group.id == this.currentGroupId) {
+                        this.router.navigate(['/indexing/' + this.currentGroupId]);
+                    }
+                });
+                if (firstGroup == 0) {
+                    this.router.navigate(['/home']);
+                } else {
+                    this.router.navigate(['/indexing/' + firstGroup]);
+                }
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {

@@ -112,9 +112,9 @@ class ResController extends ResourceControlController
 
         $queryParams = $request->getQueryParams();
 
-        $select = ['model_id', 'category_id', 'priority', 'subject', 'alt_identifier', 'process_limit_date', 'closing_date', 'creation_date', 'modification_date', 'integrations'];
+        $select = ['model_id', 'category_id', 'priority', 'status', 'subject', 'alt_identifier', 'process_limit_date', 'closing_date', 'creation_date', 'modification_date', 'integrations'];
         if (empty($queryParams['light'])) {
-            $select = array_merge($select, ['type_id', 'typist', 'status', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date', 'departure_date', 'barcode', 'custom_fields']);
+            $select = array_merge($select, ['type_id', 'typist', 'destination', 'initiator', 'confidentiality', 'doc_date', 'admission_date', 'departure_date', 'barcode', 'custom_fields']);
         }
 
         $document = ResModel::getById([
@@ -130,6 +130,7 @@ class ResController extends ResourceControlController
             'modelId'           => $document['model_id'],
             'categoryId'        => $document['category_id'],
             'chrono'            => $document['alt_identifier'],
+            'status'            => $document['status'],
             'closingDate'       => $document['closing_date'],
             'creationDate'      => $document['creation_date'],
             'modificationDate'  => $document['modification_date'],
@@ -145,7 +146,6 @@ class ResController extends ResourceControlController
                 'doctype'           => $document['type_id'],
                 'typist'            => $document['typist'],
                 'typistLabel'       => UserModel::getLabelledUserById(['id' => $document['typist']]),
-                'status'            => $document['status'],
                 'destination'       => $document['destination'],
                 'initiator'         => $document['initiator'],
                 'confidentiality'   => $document['confidentiality'] == 'Y',
@@ -181,8 +181,9 @@ class ResController extends ResourceControlController
             $formattedData['initiatorLabel'] = $entity['entity_label'];
         }
         if (!empty($formattedData['status'])) {
-            $status = StatusModel::getById(['id' => $formattedData['status'], 'select' => ['label_status']]);
+            $status = StatusModel::getById(['id' => $formattedData['status'], 'select' => ['label_status', 'can_be_modified']]);
             $formattedData['statusLabel'] = $status['label_status'];
+            $formattedData['statusAlterable'] = $status['can_be_modified'] == 'Y';
         }
         if (!empty($formattedData['priority'])) {
             $priority = PriorityModel::getById(['id' => $formattedData['priority'], 'select' => ['label', 'color']]);
@@ -215,9 +216,9 @@ class ResController extends ResourceControlController
             ]);
             $entities = array_column($entities, 'id');
             $folders = FolderModel::getWithEntitiesAndResources([
-                'select'    => ['resources_folders.folder_id'],
-                'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
-                'data'      => [$args['resId'], $entities, $GLOBALS['id']]
+                'select'    => ['distinct(resources_folders.folder_id)'],
+                'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ? OR keyword = ?)'],
+                'data'      => [$args['resId'], $entities, $GLOBALS['id'], 'ALL_ENTITIES']
             ]);
             $formattedData['folders'] = array_column($folders, 'folder_id');
 
@@ -919,7 +920,7 @@ class ResController extends ResourceControlController
         $entities = array_column($entities, 'id');
 
         $foldersClause = 'res_id in (select res_id from folders LEFT JOIN entities_folders ON folders.id = entities_folders.folder_id LEFT JOIN resources_folders ON folders.id = resources_folders.folder_id ';
-        $foldersClause .= 'WHERE entities_folders.entity_id in (?) OR folders.user_id = ?)';
+        $foldersClause .= "WHERE entities_folders.entity_id in (?) OR folders.user_id = ? OR keyword = 'ALL_ENTITIES')";
         $whereClause .= " OR ({$foldersClause})";
 
         $groups = UserModel::getGroupsByLogin(['login' => $user['user_id'], 'select' => ['where_clause']]);
@@ -1043,8 +1044,8 @@ class ResController extends ResourceControlController
         $entities = array_column($entities, 'id');
         $idToDelete = FolderModel::getWithEntitiesAndResources([
             'select'    => ['resources_folders.id'],
-            'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ?)'],
-            'data'      => [$args['resId'], $entities, $GLOBALS['id']]
+            'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ? OR keyword = ?)'],
+            'data'      => [$args['resId'], $entities, $GLOBALS['id'], 'ALL_ENTITIES']
         ]);
         $idToDelete = array_column($idToDelete, 'id');
         if (!empty($idToDelete)) {

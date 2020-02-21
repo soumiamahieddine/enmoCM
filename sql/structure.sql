@@ -23,7 +23,7 @@ CREATE TABLE actions
   action_page character varying(255),
   component CHARACTER VARYING (128),
   history character(1) NOT NULL DEFAULT 'N'::bpchar,
-  required_fields jsonb NOT NULL DEFAULT '[]',
+  parameters jsonb NOT NULL DEFAULT '{}',
   CONSTRAINT actions_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
@@ -517,10 +517,11 @@ CREATE TABLE entities_folders
 (
   id serial NOT NULL,
   folder_id INTEGER NOT NULL,
-  entity_id INTEGER NOT NULL,
+  entity_id INTEGER,
   edition boolean NOT NULL,
+  keyword character varying(255),
   CONSTRAINT entities_folders_pkey PRIMARY KEY (id),
-  CONSTRAINT entities_folders_unique_key UNIQUE (folder_id, entity_id)
+  CONSTRAINT entities_folders_unique_key UNIQUE (folder_id, entity_id, keyword)
 )
 WITH (OIDS=FALSE);
 
@@ -1108,6 +1109,7 @@ document_type character varying(255) NOT NULL,
 options json DEFAULT '{}',
 fee FLOAT NOT NULL,
 recipient_entity_id INTEGER NOT NULL,
+recipients jsonb DEFAULT '[]',
 account_id character varying(64) NOT NULL,
 creation_date timestamp without time zone NOT NULL,
 CONSTRAINT shippings_pkey PRIMARY KEY (id)
@@ -1163,6 +1165,7 @@ SELECT r.res_id,
        r.priority,
        r.locker_user_id,
        r.locker_time,
+       r.custom_fields,
        en.entity_label,
        en.entity_type AS entitytype
 FROM doctypes d,

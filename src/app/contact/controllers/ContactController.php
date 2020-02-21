@@ -98,12 +98,18 @@ class ContactController
             'limit'     => $queryParams['limit']
         ]);
         $count = $contacts[0]['count'] ?? 0;
+        if (empty($contacts)) {
+            return $response->withJson(['contacts' => $contacts, 'count' => $count]);
+        }
+
+        $contactIds = array_column($contacts, 'id');
+        $contactsUsed = ContactController::isContactUsed(['ids' => $contactIds]);
 
         foreach ($contacts as $key => $contact) {
             unset($contacts[$key]['count']);
             $filling = ContactController::getFillingRate(['contactId' => $contact['id']]);
 
-            $contacts[$key]['isUsed'] = ContactController::isContactUsed(['id' => $contact['id']]);
+            $contacts[$key]['isUsed'] = $contactsUsed[$contact['id']];
 
             $contacts[$key]['filling'] = $filling;
         }
@@ -1312,30 +1318,36 @@ class ContactController
 
     private static function isContactUsed(array $args)
     {
-        ValidatorModel::notEmpty($args, ['id']);
-        ValidatorModel::intVal($args, ['id']);
+        ValidatorModel::notEmpty($args, ['ids']);
+        ValidatorModel::arrayType($args, ['ids']);
+
+        $contactsUsed = array_fill_keys($args['ids'], false);
 
         $inResources = ResourceContactModel::get([
-            'select' => ['count(1)'],
+            'select' => ['item_id'],
             'where'  => ['item_id = ?', "type = 'contact'"],
             'data'   => [$args['id']]
         ]);
-        $inResources = $inResources[0]['count'] > 0;
+        $inResources = array_column($inResources, 'item_id');
 
         $inAcknowledgementReceipts = AcknowledgementReceiptModel::get([
-            'select' => ['count(1)'],
+            'select' => ['contact_id'],
             'where'  => ['contact_id = ?'],
             'data'   => [$args['id']]
         ]);
-        $inAcknowledgementReceipts = $inAcknowledgementReceipts[0]['count'] > 0;
+        $inAcknowledgementReceipts = array_column($inAcknowledgementReceipts, 'contact_id');
 
         $inAttachments = AttachmentModel::get([
-            'select' => ['count(1)'],
+            'select' => ['recipient_id'],
             'where'  => ['recipient_id = ?', "recipient_type = 'contact'"],
             'data'   => [$args['id']]
         ]);
-        $inAttachments = $inAttachments[0]['count'] > 0;
+        $inAttachments = array_column($inAttachments, 'recipient_id');
 
-        return $inResources || $inAcknowledgementReceipts || $inAttachments;
+        foreach ($contactsUsed as $id => $item) {
+            $contactsUsed[$id] = in_array($id, $inResources) || in_array($id, $inAcknowledgementReceipts) || in_array($id, $inAttachments);
+        }
+
+        return $contactsUsed;
     }
 }

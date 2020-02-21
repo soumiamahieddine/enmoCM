@@ -125,12 +125,19 @@ class SignatureBookController
         $documents = [];
         if (!empty($incomingMail['filename']) && empty($integrations['inSignatureBook'])) {
             $documents[] = [
-                'res_id'        => $incomingMail['res_id'],
-                'alt_id'        => $incomingMail['alt_identifier'],
-                'title'         => $incomingMail['subject'],
-                'category_id'   => $incomingMail['category_id'],
-                'viewerLink'    => "../../rest/resources/{$resId}/content",
-                'thumbnailLink' => "rest/resources/{$resId}/thumbnail"
+                'res_id'          => $incomingMail['res_id'],
+                'alt_id'          => $incomingMail['alt_identifier'],
+                'title'           => $incomingMail['subject'],
+                'category_id'     => $incomingMail['category_id'],
+                'viewerLink'      => "../../rest/resources/{$resId}/content",
+                'thumbnailLink'   => "rest/resources/{$resId}/thumbnail",
+                'inSignatureBook' => false
+            ];
+        } else {
+            $documents[] = [
+                'alt_id'          => $incomingMail['alt_identifier'],
+                'title'           => $incomingMail['subject'],
+                'inSignatureBook' => true
             ];
         }
 
@@ -196,8 +203,7 @@ class SignatureBookController
             'orderBy'   => [$orderBy]
         ]);
 
-        $canModify = PrivilegeController::hasPrivilege(['privilegeId' => 'modify_attachments', 'userId' => $args['userId']]);
-        $canDelete = PrivilegeController::hasPrivilege(['privilegeId' => 'delete_attachments', 'userId' => $args['userId']]);
+        $canManageAttachment = PrivilegeController::hasPrivilege(['privilegeId' => 'manage_attachments', 'userId' => $args['userId']]);
 
         foreach ($attachments as $key => $value) {
             if ($value['attachment_type'] == 'converted_pdf' || ($value['attachment_type'] == 'signed_response' && !empty($value['origin']))) {
@@ -251,12 +257,12 @@ class SignatureBookController
                 $attachments[$key]['typist'] = UserModel::getLabelledUserById(['login' => $value['typist']]);
             }
 
+            $rawUser = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
+
             $attachments[$key]['canModify'] = false;
             $attachments[$key]['canDelete'] = false;
-            if ($canModify || $value['typist'] == $args['userId']) {
+            if ($canManageAttachment || $value['typist'] == $rawUser['user_id']) {
                 $attachments[$key]['canModify'] = true;
-            }
-            if ($canDelete || $value['typist'] == $args['userId']) {
                 $attachments[$key]['canDelete'] = true;
             }
 
@@ -319,8 +325,17 @@ class SignatureBookController
         if (!empty($resource['filename']) && !empty($integrations['inSignatureBook'])) {
             array_unshift($attachments, $resource);
             $attachments[0]['isResource'] = true;
+            $attachments[0]['attachment_type'] = _MAIN_DOCUMENT;
+            $attachments[0]['title'] = $attachments[0]['subject'];
             $attachments[0]['sign'] = true;
             $attachments[0]['viewerLink'] = "../../rest/resources/{$args['resId']}/content?".rand();
+
+            $convertedAttachment = ConvertPdfController::getConvertedPdfById(['resId' => $attachments[0]['res_id'], 'collId' => 'letterbox_coll']);
+            if (empty($convertedAttachment['errors'])) {
+                $attachments[0]['isConverted'] = true;
+            } else {
+                $attachments[0]['isConverted'] = false;
+            }
         }
 
         return $attachments;

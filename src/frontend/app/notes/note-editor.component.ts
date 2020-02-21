@@ -2,10 +2,11 @@ import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, debounceTime, filter } from 'rxjs/operators';
 import { HeaderService } from '../../service/header.service';
 import { of } from 'rxjs';
 import { FunctionsService } from '../../service/functions.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-note-editor',
@@ -34,6 +35,9 @@ export class NoteEditorComponent implements OnInit {
     @Input('defaultRestriction') defaultRestriction: boolean;
     @Output('refreshNotes') refreshNotes = new EventEmitter<string>();
 
+    searchTerm: FormControl = new FormControl();
+    entitiesList: any[] = [];
+
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
@@ -51,6 +55,26 @@ export class NoteEditorComponent implements OnInit {
             this.content = this.noteContent;
             this.entitiesRestriction = this.entitiesNoteRestriction;
         }
+
+        this.entitiesList = this.entities;
+
+        this.searchTerm.valueChanges.pipe(
+            debounceTime(300),
+            //distinctUntilChanged(),
+            tap((data: any) => {
+                if (data.length > 0) {
+                    this.entitiesList = this.entities.filter( (it: any) => {
+                        return (it.entity_label.toLowerCase().includes(data) || it.entity_id.toLowerCase().includes(data));
+                    });
+                } else {
+                    this.entitiesList = this.entities;
+                }
+            }),
+            catchError((err) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     setDefaultRestriction() {

@@ -18,12 +18,14 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = false;
+
     additionalsInfos: any = {
         destinationId: '',
         users: [],
         attachments: [],
         noAttachment: []
     };
+    resourcesMailing: any[] = [];
     signatoryBookEnabled: string = '';
 
     externalSignatoryBookDatas: any = {
@@ -93,7 +95,12 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
                     this.additionalsInfos = data.additionalsInfos;
                     if (this.additionalsInfos.attachments.length > 0) {
                         this.signatoryBookEnabled = data.signatureBookEnabled;
-                    }  
+                        data.additionalsInfos.attachments.forEach((value: any) => {
+                            if (value.mailing) {
+                                this.resourcesMailing.push(value);
+                            }
+                        });
+                    }
                     this.errors = data.errors;
                     resolve(true);
                 }),

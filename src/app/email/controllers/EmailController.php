@@ -313,7 +313,7 @@ class EmailController
             } elseif ($queryParams['type'] == 'm2m') {
                 $where[] = 'message_exchange_id is not null';
             } elseif ($queryParams['type'] == 'email') {
-                $where[] = "object NOT LIKE '[AR]%'";
+                $where[] = "(object NOT LIKE '[AR]%' OR object is null)";
                 $where[] = 'message_exchange_id is null';
             }
         }
@@ -336,67 +336,13 @@ class EmailController
         return $response->withJson(['emails' => $emails]);
     }
 
-    public static function getAvailableEmails(Request $request, Response $response)
+    public function getAvailableEmails(Request $request, Response $response)
     {
-        $emails = [];
+        $availableEmails = EmailController::getAvailableEmailsByUserId(['userId' => $GLOBALS['id']]);
 
-        $currentUser = UserModel::getById(['select' => ['firstname', 'lastname', 'mail'], 'id' => $GLOBALS['id']]);
-
-        $emails[] = [
-            'entityId'  => null,
-            'label'     => $currentUser['firstname'] . ' ' . $currentUser['lastname'],
-            'email'     => $currentUser['mail']
-        ];
-
-        if (PrivilegeController::hasPrivilege(['privilegeId' => 'use_mail_services', 'userId' => $GLOBALS['id']])) {
-            $entities = EntityModel::getWithUserEntities([
-                'select' => ['entities.entity_label', 'entities.email', 'entities.entity_id', 'entities.id'],
-                'where'  => ['users_entities.user_id = ?'],
-                'data'   => [$GLOBALS['userId']]
-            ]);
-
-            foreach ($entities as $entity) {
-                if (!empty($entity['email'])) {
-                    $emails[] = [
-                        'entityId'  => $entity['id'],
-                        'label'     => $entity['entity_label'],
-                        'email'     => $entity['email']
-                    ];
-                }
-            }
-
-            $emailsEntities = CoreConfigModel::getXmlLoaded(['path' => 'modules/sendmail/xml/externalMailsEntities.xml']);
-            if (!empty($emailsEntities)) {
-                $userEntities = array_column($entities, 'entity_id');
-                foreach ($emailsEntities->externalEntityMail as $entityMail) {
-                    $entityId = (string)$entityMail->targetEntityId;
-
-                    if (empty($entityId)) {
-                        $emails[] = [
-                            'entityId'  => null,
-                            'label'     => (string)$entityMail->defaultName,
-                            'email'     => (string)$entityMail->EntityMail
-                        ];
-                    } elseif (in_array($entityId, $userEntities)) {
-                        $entity = EntityModel::getByEntityId([
-                            'select'   => ['entity_label', 'id'],
-                            'entityId' => $entityId
-                        ]);
-
-                        if (!empty($entity)) {
-                            $emails[] = [
-                                'entityId'  => $entity['id'],
-                                'label'     => $entity['entity_label'],
-                                'email'     => (string)$entityMail->EntityMail
-                            ];
-                        }
-                    }
-                }
-            }
-        }
-
-        return $response->withJson(['emails' => $emails]);
+        return $response->withJson(['emails' => $availableEmails]);
     }
+
     public static function getInitializationByResId(Request $request, Response $response, array $args)
     {
         if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
@@ -512,7 +458,7 @@ class EmailController
                     'label'     => $rawNote['note_text'],
                     'typeLabel' => 'note',
                     'creator'   => UserModel::getLabelledUserById(['id' => $rawNote['user_id']]),
-                    'format'    => 'html',
+                    'format'    => 'pdf',
                     'size'      => null
                 ];
             }
@@ -716,6 +662,68 @@ class EmailController
         return ['success' => 'success'];
     }
 
+    private static function getAvailableEmailsByUserId(array $args)
+    {
+        $currentUser = UserModel::getById(['select' => ['firstname', 'lastname', 'mail', 'user_id'], 'id' => $args['userId']]);
+
+        $availableEmails = [
+            [
+            'entityId'  => null,
+            'label'     => $currentUser['firstname'] . ' ' . $currentUser['lastname'],
+            'email'     => $currentUser['mail']
+            ]
+        ];
+
+        if (PrivilegeController::hasPrivilege(['privilegeId' => 'use_mail_services', 'userId' => $args['userId']])) {
+            $entities = EntityModel::getWithUserEntities([
+                'select' => ['entities.entity_label', 'entities.email', 'entities.entity_id', 'entities.id'],
+                'where'  => ['users_entities.user_id = ?'],
+                'data'   => [$currentUser['user_id']]
+            ]);
+
+            foreach ($entities as $entity) {
+                if (!empty($entity['email'])) {
+                    $availableEmails[] = [
+                        'entityId'  => $entity['id'],
+                        'label'     => $entity['entity_label'],
+                        'email'     => $entity['email']
+                    ];
+                }
+            }
+
+            $emailsEntities = CoreConfigModel::getXmlLoaded(['path' => 'modules/sendmail/xml/externalMailsEntities.xml']);
+            if (!empty($emailsEntities)) {
+                $userEntities = array_column($entities, 'entity_id');
+                foreach ($emailsEntities->externalEntityMail as $entityMail) {
+                    $entityId = (string)$entityMail->targetEntityId;
+
+                    if (empty($entityId)) {
+                        $availableEmails[] = [
+                            'entityId'  => null,
+                            'label'     => (string)$entityMail->defaultName,
+                            'email'     => trim((string)$entityMail->EntityMail)
+                        ];
+                    } elseif (in_array($entityId, $userEntities)) {
+                        $entity = EntityModel::getByEntityId([
+                            'select'   => ['entity_label', 'id'],
+                            'entityId' => $entityId
+                        ]);
+
+                        if (!empty($entity)) {
+                            $availableEmails[] = [
+                                'entityId'  => $entity['id'],
+                                'label'     => $entity['entity_label'],
+                                'email'     => trim((string)$entityMail->EntityMail)
+                            ];
+                        }
+                    }
+                }
+            }
+        }
+
+        return $availableEmails;
+    }
+
     private static function controlCreateEmail(array $args)
     {
         ValidatorModel::notEmpty($args, ['userId']);
@@ -730,6 +738,21 @@ class EmailController
             return ['errors' => 'Data recipients is not an array or empty', 'code' => 400];
         } elseif (!Validator::boolType()->validate($args['data']['isHtml'])) {
             return ['errors' => 'Data isHtml is not a boolean or empty', 'code' => 400];
+        }
+
+        if (!empty($args['data']['sender']['email'])) {
+            $availableEmails = EmailController::getAvailableEmailsByUserId(['userId' => $args['userId']]);
+
+            $emails = array_column($availableEmails, 'email');
+            if (!in_array($args['data']['sender']['email'], $emails)) {
+                return ['errors' => 'Data sender email is not allowed', 'code' => 400];
+            }
+            if (!empty($args['data']['sender']['entityId'])) {
+                $entities = array_column($availableEmails, 'entityId');
+                if (!in_array($args['data']['sender']['entityId'], $entities)) {
+                    return ['errors' => 'Data sender entityId is not allowed', 'code' => 400];
+                }
+            }
         }
 
         $user = UserModel::getById(['id' => $args['userId'], 'select' => ['user_id']]);
@@ -768,11 +791,12 @@ class EmailController
                     if (!Validator::intVal()->notEmpty()->validate($note)) {
                         return ['errors' => 'Data document[notes] errors', 'code' => 400];
                     }
-                    $checkNote = NoteModel::getById(['id' => $note, 'select' => ['identifier']]);
+                    $checkNote = NoteModel::getById(['id' => $note, 'select' => ['identifier', 'user_id']]);
                     if (empty($checkNote) || $checkNote['identifier'] != $args['data']['document']['id']) {
                         return ['errors' => 'Note out of perimeter', 'code' => 403];
+                    } elseif ($checkNote['user_id'] == $args['userId']) {
+                        continue;
                     }
-
                     $rawUserEntities = EntityModel::getByLogin(['login' => $user['user_id'], 'select' => ['entity_id']]);
                     $userEntities = [];
                     foreach ($rawUserEntities as $rawUserEntity) {

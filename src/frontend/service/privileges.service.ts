@@ -91,10 +91,10 @@ export class PrivilegeService {
             "id": "admin_tag",
             "label": this.lang.tags,
             "comment": this.lang.adminTagsDesc,
-            "route": "index.php?page=manage_tag_list_controller&module=tags",
+            "route": "/administration/tags",
             "unit": "classement",
             "style": "fa fa-tags",
-            "angular" : false,
+            "angular" : true,
             "hasParams" : false
         },
         {
@@ -315,12 +315,6 @@ export class PrivilegeService {
             "unit": 'application'
         },
         {
-            "id": "delete_document_in_detail",
-            "label": this.lang.deleteDocumentInDetail,
-            "comment": this.lang.deleteDocumentInDetail,
-            "unit": 'application'
-        },
-        {
             "id": "manage_tags_application",
             "label": this.lang.manageTagsInApplication,
             "comment": this.lang.manageTagsInApplicationDesc,
@@ -348,6 +342,18 @@ export class PrivilegeService {
             "id": "update_diffusion_except_recipient_indexing",
             "label": this.lang.rolesExceptAssignee,
             "comment": this.lang.updateDiffusionExceptRecipientWhileIndexing,
+            "unit": 'diffusionList'
+        },
+        {
+            "id": "update_diffusion_process",
+            "label": this.lang.allRoles,
+            "comment": this.lang.updateDiffusionWhileProcess,
+            "unit": 'diffusionList'
+        },
+        {
+            "id": "update_diffusion_except_recipient_process",
+            "label": this.lang.rolesExceptAssignee,
+            "comment": this.lang.updateDiffusionExceptRecipientWhileProcess,
             "unit": 'diffusionList'
         },
         {

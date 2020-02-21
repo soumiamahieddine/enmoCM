@@ -284,6 +284,19 @@ export class FolderTreeComponent implements OnInit {
         ).subscribe();
     }
 
+    removeTemporaryNode(node: any) {
+        const parentNode = this.getParentNode(node);
+        const index = parentNode.children.map(node => node.id).indexOf(node.id);
+
+        if (index !== -1) {
+            parentNode.children.splice(index, 1);
+        }
+        
+        this.flatNodeMap.delete(node);
+        this.dataChange.next(this.data);
+        this.createItemNode = false;
+    }
+
     createFolderRoot() {
         this.http.post("../../rest/folders", { label: this.autocomplete.getValue() }).pipe(
             tap(() => {

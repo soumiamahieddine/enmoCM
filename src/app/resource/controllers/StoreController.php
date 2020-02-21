@@ -51,7 +51,7 @@ class StoreController
                     $uniqueId = CoreConfigModel::uniqueId();
                     $tmpFilename = "storeTmp_{$GLOBALS['id']}_{$uniqueId}.{$args['format']}";
                     file_put_contents($tmpPath . $tmpFilename, $fileContent);
-                    $fileContent = MergeController::mergeChronoDocument(['chrono' => $data['alt_identifier'], 'path' => $tmpPath . $tmpFilename]);
+                    $fileContent = MergeController::mergeChronoDocument(['chrono' => $data['alt_identifier'], 'path' => $tmpPath . $tmpFilename, 'type' => 'resource']);
                     $fileContent = base64_decode($fileContent['encodedDocument']);
                     unlink($tmpPath . $tmpFilename);
                 }
@@ -103,7 +103,7 @@ class StoreController
                     $uniqueId = CoreConfigModel::uniqueId();
                     $tmpFilename = "storeTmp_{$GLOBALS['id']}_{$uniqueId}.{$args['format']}";
                     file_put_contents($tmpPath . $tmpFilename, $fileContent);
-                    $fileContent = MergeController::mergeChronoDocument(['chrono' => $data['identifier'], 'path' => $tmpPath . $tmpFilename]);
+                    $fileContent = MergeController::mergeChronoDocument(['chrono' => $data['identifier'], 'path' => $tmpPath . $tmpFilename, 'type' => 'attachment']);
                     $fileContent = base64_decode($fileContent['encodedDocument']);
                     unlink($tmpPath . $tmpFilename);
                 }
@@ -181,7 +181,7 @@ class StoreController
         if (!empty($args['customFields'])) {
             foreach ($args['customFields'] as $key => $value) {
                 $customField = CustomFieldModel::getById(['id' => $key, 'select' => ['type']]);
-                if ($customField['type'] == 'date') {
+                if ($customField['type'] == 'date' && !empty($value)) {
                     $date = new \DateTime($value);
                     $value = $date->format('Y-m-d');
                     $args['customFields'][$key] = $value;
@@ -271,7 +271,7 @@ class StoreController
         if (!empty($args['customFields'])) {
             foreach ($args['customFields'] as $key => $value) {
                 $customField = CustomFieldModel::getById(['id' => $key, 'select' => ['type']]);
-                if ($customField['type'] == 'date') {
+                if ($customField['type'] == 'date' && !empty($value)) {
                     $date = new \DateTime($value);
                     $value = $date->format('Y-m-d');
                     $args['customFields'][$key] = $value;

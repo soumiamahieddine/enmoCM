@@ -23,11 +23,13 @@ use IndexingModel\models\IndexingModelModel;
 use Note\models\NoteModel;
 use Resource\models\ResModel;
 use Resource\models\ResourceContactModel;
+use SrcCore\models\CoreConfigModel;
 use SrcCore\models\TextFormatModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
 
 include_once('vendor/tinybutstrong/opentbs/tbs_plugin_opentbs.php');
+include_once('vendor/rafikhaceb/pi-barcode/pi_barcode.php');
 
 
 class MergeController
@@ -190,7 +192,6 @@ class MergeController
             'chrono'    => '[attachment.chrono]',
             'title'     => $args['attachment_title'] ?? null
         ];
-        $attachmentRecipient = MergeController::formatPerson(['id' => $args['recipientId'], 'type' => $args['recipientType']]);
 
         //Sender
         $sender = MergeController::formatPerson(['id' => $senders[0]['id'], 'type' => $senders[0]['type']]);
@@ -322,7 +323,7 @@ class MergeController
         $dataToBeMerge['notes']                 = $mergedNote;
         $dataToBeMerge['datetime']              = $datetime;
         if (empty($args['inMailing'])) {
-            $dataToBeMerge['attachmentRecipient']   = $attachmentRecipient;
+            $dataToBeMerge['attachmentRecipient'] = MergeController::formatPerson(['id' => $args['recipientId'], 'type' => $args['recipientType']]);
         }
 
         return $dataToBeMerge;
@@ -330,7 +331,7 @@ class MergeController
 
     public static function mergeChronoDocument(array $args)
     {
-        ValidatorModel::stringType($args, ['path', 'content', 'chrono']);
+        ValidatorModel::stringType($args, ['path', 'content', 'chrono', 'type']);
 
         $tbs = new \clsTinyButStrong();
         $tbs->NoErr = true;
@@ -357,8 +358,23 @@ class MergeController
             }
         }
 
-        $tbs->MergeField('res_letterbox', ['alt_identifier' => $args['chrono']]);
-        $tbs->MergeField('attachment', ['chrono' => $args['chrono']]);
+        if ($args['type'] == 'resource') {
+            $tbs->MergeField('res_letterbox', ['alt_identifier' => $args['chrono']]);
+        } elseif ($args['type'] == 'attachment') {
+            $tbs->MergeField('attachment', ['chrono' => $args['chrono']]);
+
+            $barcodeFile = CoreConfigModel::getTmpPath() . mt_rand() ."_{$args['userId']}_barcode.png";
+            $generator = new \PiBarCode();
+            $generator->setCode($args['chrono']);
+            $generator->setType('C128');
+            $generator->setSize(30, 50);
+            $generator->setText($args['chrono']);
+            $generator->hideCodeType();
+            $generator->setFiletype('PNG');
+            $generator->writeBarcodeFile($barcodeFile);
+
+            $tbs->MergeField('attachments', ['chronoBarCode' => $barcodeFile]);
+        }
 
         if (in_array($extension, MergeController::OFFICE_EXTENSIONS)) {
             $tbs->Show(OPENTBS_STRING);

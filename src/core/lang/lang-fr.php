@@ -154,6 +154,7 @@ define('_TAG_DELETED', 'Mot-clé supprimé');
 define('_TAG_UPDATED', 'Mot-clé modifié');
 define('_TAG_MERGED', 'Mot-clé fusionné');
 define('_LINK_ADDED', 'Liaison ajoutée');
+define('_LINK_DELETED', 'Liaison supprimée');
 define('_DOCUMENT_SIGNED', 'Document signé');
 define('_DOCUMENT_UNSIGNED', 'Document dé-signé');
 define('_LINK_ADDED_TAG', 'Liaison de mot-clé ajoutée');
@@ -227,8 +228,6 @@ define('_NO_CONFIRM_DESC', "Effectue l'action sans confirmation");
 define('_VIEW_DOC', 'Voir le courrier');
 define('_CLOSE_MAIL', 'Clôturer un courrier');
 define('_CLOSE_MAIL_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier. ESSENTIEL afin de terminer votre workflow de courrier.');
-define('_CLOSE_MAIL_WITH_FIELDS', 'Clôturer un courrier avec des champs personnalisés');
-define('_CLOSE_MAIL_WITH_FIELDS_DESC', 'Permet de mettre à jour la date de clôture d\'un courrier. ESSENTIEL afin de terminer votre workflow de courrier. L\'action ne pourra se faire seulement si les champs choisis sont renseignés dans le courrier');
 define('_SET_PERSISTENT_MODE_ON', 'Activer la persistance');
 define('_SET_PERSISTENT_MODE_ON_DESC', 'Permet de conserver un courrier dans une bannette quelque soit son état. Insère la donnée dans la table \'basket_persistent_mode\'.');
 define('_SET_PERSISTENT_MODE_OFF', 'Désactiver la persistance');
@@ -397,6 +396,8 @@ define("_FOLDER_SHARING_MODIFICATION", "Partage de dossier modifié");
 define("_FOLDER_RESOURCES_ADDED", "Ressource(s) ajoutée(s)");
 define("_FOLDER_RESOURCES_REMOVED", "Ressource(s) retirée(s)");
 define("_FOLDER_TO_FOLDER", "au dossier");
+define("_ADDED_TO_FOLDER", "Ajouté au dossier");
+define("_REMOVED_TO_FOLDER", "Retiré du dossier");
 
 define("_NOT_EXISTS", "n'existe pas");
 
@@ -448,7 +449,7 @@ define("_AVIS_SENT", "Avis donné");
 define("_BY", "par");
 define("_TO_AVIS", "POUR AVIS");
 define("_VALIDATE_BY", "Validé par");
-
+define('_MAIN_DOCUMENT', 'Document principal');
 define("_UPDATE_LISTINSTANCE", "Liste de diffusion mise à jour");
 define("_UPDATE_VISA_CIRCUIT", "Circuit de visa mis à jour");
 define("_UPDATE_AVIS_CIRCUIT", "Circuit d'avis mis à jour");

@@ -5,18 +5,16 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from './translate.component';
 import { NotificationService } from './notification.service';
 import { tap, catchError, filter } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { PrivilegeService } from '../service/privileges.service';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { AttachmentCreateComponent } from './attachments/attachment-create/attachment-create.component';
 import { FunctionsService } from '../service/functions.service';
 import { AttachmentPageComponent } from './attachments/attachments-page/attachment-page.component';
+import { VisaWorkflowComponent } from './visa/visa-workflow.component';
+import { ActionsService } from './actions/actions.service';
 
-declare function lockDocument(resId: number) : void;
-declare function unlockDocument(resId: number) : void;
-declare function valid_action_form(a1: string, a2: string, a3: string, a4: number, a5: string, a6: string, a7: string, a8: string, a9: boolean, a10: any) : void;
 declare function $j(selector: string) : any;
-declare function setSessionForSignatureBook(resId: any) : void;
 
 declare var angularGlobals : any;
 
@@ -67,6 +65,9 @@ export class SignatureBookComponent implements OnInit {
     loading                     : boolean   = false;
     loadingSign                 : boolean   = false;
 
+    subscription: Subscription;
+    currentResourceLock: any = null;
+
     leftContentWidth            : string    = "44%";
     rightContentWidth           : string    = "44%";
     dialogRef: MatDialogRef<any>;
@@ -98,6 +99,8 @@ export class SignatureBookComponent implements OnInit {
         }
     ];
 
+    @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
+
     constructor(
         public http: HttpClient, 
         private route: ActivatedRoute, 
@@ -106,13 +109,16 @@ export class SignatureBookComponent implements OnInit {
         private notify: NotificationService,
         public privilegeService: PrivilegeService,
         public dialog: MatDialog,
-        public functions: FunctionsService
+        public functions: FunctionsService,
+        public actionService: ActionsService
     ) {
-        window['angularSignatureBookComponent'] = {
-            componentAfterAttach: (value: string) => this.processAfterAttach(value),
-            componentAfterAction: () => this.processAfterAction()
-        };
         (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
+
+        // Event after process action 
+        this.subscription = this.actionService.catchAction().subscribe(message => {
+            clearInterval(this.currentResourceLock);
+            this.processAfterAction();
+        });
     }
 
     ngOnInit() : void {
@@ -127,8 +133,7 @@ export class SignatureBookComponent implements OnInit {
             this.userId    = params['userId'];
 
             this.signatureBook.resList = []; // This line is added because of manage action behaviour (processAfterAction is called twice)
-            lockDocument(this.resId);
-            setInterval(() => {lockDocument(this.resId)}, 50000);
+            this.lockResource();
             this.http.get("../../rest/signatureBook/users/" + this.userId + "/groups/" + this.groupId + "/baskets/" + this.basketId + "/resources/" + this.resId)
                 .subscribe((data : any) => {
                     if (data.error) {
@@ -154,7 +159,7 @@ export class SignatureBookComponent implements OnInit {
                     this.rightContentWidth = "44%";
                     if (this.signatureBook.documents[0]) {
                         this.leftViewerLink = this.signatureBook.documents[0].viewerLink;
-                        if (this.signatureBook.documents[0].category_id == "outgoing") {
+                        if (this.signatureBook.documents[0].inSignatureBook) {
                             this.headerTab = "visaCircuit";
                         }
                     }
@@ -186,6 +191,35 @@ export class SignatureBookComponent implements OnInit {
                 });
         });
     }
+
+    lockResource() {
+        this.http.put(`../../rest/resourcesList/users/${this.userId}/groups/${this.groupId}/baskets/${this.basketId}/lock`, { resources: [this.resId] }).pipe(
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+
+        this.currentResourceLock = setInterval(() => {
+            this.http.put(`../../rest/resourcesList/users/${this.userId}/groups/${this.groupId}/baskets/${this.basketId}/lock`, { resources: [this.resId] }).pipe(
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }, 50000);
+    }
+
+    unlockResource() {
+        clearInterval(this.currentResourceLock);
+
+        this.http.put(`../../rest/resourcesList/users/${this.userId}/groups/${this.groupId}/baskets/${this.basketId}/unlock`, { resources: [this.resId] }).pipe(
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
     
     loadActions() {
         this.http.get("../../rest/resourcesList/users/" + this.userId + "/groups/" + this.groupId + "/baskets/" + this.basketId + "/actions?resId=" + this.resId)
@@ -194,10 +228,6 @@ export class SignatureBookComponent implements OnInit {
         }, (err) => {
             this.notify.error(err.error.errors);
         });
-    }
-
-    ngOnDestroy() : void {
-        delete window['angularSignatureBookComponent'];
     }
 
     processAfterAttach(mode: string) {
@@ -437,8 +467,7 @@ export class SignatureBookComponent implements OnInit {
     backToDetails() {
         this.http.put('../../rest/resourcesList/users/' + this.userId + '/groups/' + this.groupId + '/baskets/' + this.basketId + '/unlock', { resources: [this.resId] })
             .subscribe((data: any) => {
-                location.hash = "";
-                location.search = "?page=details&dir=indexing_searching&id=" + this.resId;
+                this.router.navigate([`/resources/${this.resId}`]);
             }, (err: any) => { });
         
     }
@@ -459,28 +488,24 @@ export class SignatureBookComponent implements OnInit {
 
     validForm() {
         if ($j("#signatureBookActions option:selected")[0].value != "") {
-            this.sendActionForm();
+            this.processAction();
         } else {
             alert("Aucune action choisie");
         }
     }
 
-    sendActionForm() {
-        unlockDocument(this.resId);
-
-        setSessionForSignatureBook(this.resId);
-        valid_action_form(
-            'empty',
-            'index.php?display=true&page=manage_action&module=core',
-            this.signatureBook.currentAction.id,
-            this.resId,
-            'res_letterbox',
-            'null',
-            'letterbox_coll',
-            'page',
-            false,
-            [$j("#signatureBookActions option:selected")[0].value]
-        );
+    processAction() {
+        this.http.get(`../../rest/resources/${this.resId}?light=true`).pipe(
+            tap((data: any) => {
+                let actionId = $j("#signatureBookActions option:selected")[0].value;
+                let selectedAction = this.signatureBook.actions.filter((action: any) => action.id == actionId)[0];
+                this.actionService.launchAction(selectedAction, this.userId, this.groupId, this.basketId, [this.resId], data, false);
+            }),
+            catchError((err: any) => {
+                this.notify.handleErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     refreshBadge(nbRres: any, id: string) {
@@ -531,6 +556,10 @@ export class SignatureBookComponent implements OnInit {
                 })
             ).subscribe();
         }
+    }
+
+    saveVisaWorkflow() {
+        this.appVisaWorkflow.saveVisaWorkflow();
     }
 
 }

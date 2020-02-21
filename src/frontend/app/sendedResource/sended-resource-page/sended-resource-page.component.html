@@ -74,7 +74,7 @@
         <mat-chip-list id="invcopies-list" #invCopiesList cdkDropList
             [cdkDropListConnectedTo]="['recipients-list','copies-list']" [cdkDropListData]="invisibleCopies"
             (cdkDropListDropped)="drop($event)">
-            <mat-chip class="copy" *ngFor="let invCopy of invisibleCopies" [selectable]="selectable"
+            <mat-chip cdkDrag class="copy" *ngFor="let invCopy of invisibleCopies" [selectable]="selectable"
                 [removable]="canManageMail()" (removed)="remove(invCopy, 'invisibleCopies')" (click)="remove(invCopy, 'recipients')" [title]="invCopy.email"
                 [class.badFormat]="invCopy.badFormat">
                 {{invCopy.label}}{{invCopy.label !== invCopy.email ? ' (' + invCopy.email + ')' : ''}}
@@ -110,7 +110,7 @@
                 <ng-container *ngIf="keyVal.key === currentEmailAttachTool">
                     <button mat-menu-item style="line-height: normal;" disableRipple
                         *ngFor="let attach of emailAttachTool[keyVal.key].list"
-                        [disabled]="isSelectedAttachMail(attach,keyVal.key)" (click)="$event.stopPropagation();">
+                        [disabled]="isSelectedAttachMail(attach,keyVal.key)" (click)="$event.stopPropagation();toggleAttachMail(attach,keyVal.key,'original');">
                         <span (click)="toggleAttachMail(attach,keyVal.key,'original')" [title]="attach.label">
                             <div style="font-size: 10px;opacity: 0.5;">{{attach.chrono}} - {{attach.typeLabel}}
                                 ({{attach.creator}})</div>
@@ -128,7 +128,7 @@
             [removable]="canManageMail()" (removed)="removeAttachMail(0, 'document')"
             [title]="emailAttach.document.chrono + ' - ' + emailAttach.document.label">
             <i class="fa fa-file attachLabel"></i>&nbsp;{{emailAttach.document.label | shorten: 25: '...'}}&nbsp;<small
-                class="attachLabel">(pdf - {{emailAttach.document.size}})</small>
+                class="attachLabel">({{emailAttach.document.format}} - {{emailAttach.document.size}})</small>
             <mat-icon matChipRemove class="fa fa-times" *ngIf="canManageMail()"></mat-icon>
         </mat-chip>
         <ng-container *ngFor="let keyVal of emailAttach | keyvalue">
@@ -165,14 +165,17 @@
     </div>
 </mat-dialog-content>
 <div mat-dialog-actions class="actions" *ngIf="!loading">
-    <button mat-raised-button color="primary" style="min-width: auto;width: 40px;padding: 0;"
+    <button mat-raised-button color="primary" style="min-width: auto;width: 30px;padding: 0;background-color: white; color: grey;"
         *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail')"
-        [disabled]="recipients.length === 0" [matMenuTriggerFor]="emailActionMenu">
+        [matMenuTriggerFor]="emailActionMenu">
         <mat-icon style="height:auto;" class="fas fa-ellipsis-v"></mat-icon>
     </button>
     <mat-menu #emailActionMenu="matMenu" [class]="'attachListMenu'">
-        <button mat-menu-item (click)="onSubmit('brut')">
-            {{lang.sendInPlainText}}
+        <button mat-menu-item (click)="swithEditionMode()" *ngIf="htmlMode">
+            {{lang.switchInPlainText}}
+        </button>
+        <button mat-menu-item (click)="swithEditionMode()" *ngIf="!htmlMode">
+            {{lang.switchInHtml}}
         </button>
     </mat-menu>
     <button mat-raised-button color="primary"

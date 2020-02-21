@@ -108,7 +108,7 @@ export class GroupAdministrationComponent implements OnInit {
                                 ...admin,
                                 checked : this.group.privileges.indexOf(admin.id) > -1
                             }
-                        })
+                        });
 
                         this.privilegeService.getUnitsPrivileges().forEach(element => {
                             let services: any[] = this.privilegeService.getPrivilegesByUnit(element);
@@ -124,6 +124,12 @@ export class GroupAdministrationComponent implements OnInit {
                                     {
                                         "id": "process_diffList",
                                         "label": this.lang.diffListPrivilegeMsgProcess,
+                                        "current": this.group.privileges.filter((priv: any) => ['update_diffusion_process', 'update_diffusion_except_recipient_process'].indexOf(priv) > -1)[0] !== undefined ? this.group.privileges.filter((priv: any) => ['update_diffusion_process', 'update_diffusion_except_recipient_process'].indexOf(priv) > -1)[0] : '',
+                                        "services": this.privilegeService.getPrivileges(['update_diffusion_process', 'update_diffusion_except_recipient_process'])
+                                    },
+                                    {
+                                        "id": "details_diffList",
+                                        "label": this.lang.diffListPrivilegeMsgDetails,
                                         "current": this.group.privileges.filter((priv: any) => ['update_diffusion_details', 'update_diffusion_except_recipient_details'].indexOf(priv) > -1)[0] !== undefined ? this.group.privileges.filter((priv: any) => ['update_diffusion_details', 'update_diffusion_except_recipient_details'].indexOf(priv) > -1)[0] : '',
                                         "services": this.privilegeService.getPrivileges(['update_diffusion_details', 'update_diffusion_except_recipient_details'])
                                     }
@@ -173,27 +179,26 @@ export class GroupAdministrationComponent implements OnInit {
     changeDifflistPrivilege(ev: any, mode: string) {
         if (mode === 'indexing_diffList') {
             if (ev.value === 'update_diffusion_indexing') {
-
                 this.manageServices(['update_diffusion_indexing', 'update_diffusion_except_recipient_indexing']);
-
             } else if (ev.value === 'update_diffusion_except_recipient_indexing') {
-
                 this.manageServices(['update_diffusion_except_recipient_indexing', 'update_diffusion_indexing']);
-
             } else {
                 this.manageServices(['update_diffusion_indexing', 'update_diffusion_except_recipient_indexing'], 'deleteAll');
             }
+        } else if (mode === 'process_diffList') {
+            if (ev.value === 'update_diffusion_process') {
+                this.manageServices(['update_diffusion_process', 'update_diffusion_except_recipient_process']);
+            } else if (ev.value === 'update_diffusion_except_recipient_process') {
+                this.manageServices(['update_diffusion_except_recipient_process', 'update_diffusion_process']);
+            } else {
+                this.manageServices(['update_diffusion_process', 'update_diffusion_except_recipient_process'], 'deleteAll');
+            }
         } else {
             if (ev.value === 'update_diffusion_details') {
-
                 this.manageServices(['update_diffusion_details', 'update_diffusion_except_recipient_details']);
-
             } else if (ev.value === 'update_diffusion_except_recipient_details') {
-
                 this.manageServices(['update_diffusion_except_recipient_details', 'update_diffusion_details']);
-
             } else {
-
                 this.manageServices(['update_diffusion_details', 'update_diffusion_except_recipient_details'], 'deleteAll');
 
             }

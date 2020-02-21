@@ -803,11 +803,13 @@ class AutoCompleteController
         }
 
         $scopedFolders = FolderController::getScopeFolders(['login' => $GLOBALS['userId']]);
+        if (empty($scopedFolders)) {
+            return $response->withJson([]);
+        }
 
         $arrScopedFoldersIds = array_column($scopedFolders, 'id');
 
-        $fields = ['label'];
-        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => ['label']]);
 
         $selectedFolders = FolderModel::get([
             'where'    => ["{$fields} AND id in (?)"],

@@ -227,8 +227,6 @@ define('_NO_CONFIRM_DESC', "Perform the action without confirmation");
 define('_VIEW_DOC', 'See the mail');
 define('_CLOSE_MAIL', 'Close a mail');
 define('_CLOSE_MAIL_DESC', 'Allows you to update the closing date of a mail. ESSENTIAL in order to complete your document workflow.');
-define('_CLOSE_MAIL_WITH_FIELDS', 'Close a mail with custom fields');
-define('_CLOSE_MAIL_WITH_FIELDS_DESC', 'Allows you to update the closing date of a mail. ESSENTIAL in order to complete your document workflow. Chosen fields will be needed to do the action.');
 define('_SET_PERSISTENT_MODE_ON', 'Activate the persistence');
 define('_SET_PERSISTENT_MODE_ON_DESC', 'Keeps a mail in a basket regardless of its state. Insert data in the \'basket_persistent_mode\' table.');
 define('_SET_PERSISTENT_MODE_OFF', 'Deactivate the persistence');
@@ -398,6 +396,8 @@ define("_FOLDER_SHARING_MODIFICATION", "Folder sharing modification");
 define("_FOLDER_RESOURCES_ADDED", "Added resources");
 define("_FOLDER_RESOURCES_REMOVED", "Removed resources");
 define("_FOLDER_TO_FOLDER", "to folder");
+define("_ADDED_TO_FOLDER", "Added to folder");
+define("_REMOVED_TO_FOLDER", "Removed from folder");
 
 define('_NOT_EXISTS', "doesn't exist");
 
@@ -449,7 +449,7 @@ define("_AVIS_SENT", "Notice given");
 define("_BY", "by");
 define("_TO_AVIS", "For recommendation");
 define("_VALIDATE_BY", "Validate by");
-
+define('_MAIN_DOCUMENT', 'Main document');
 define("_UPDATE_LISTINSTANCE", "Diffusion list updated");
 define("_UPDATE_VISA_CIRCUIT", "Visa workflow updated");
 define("_UPDATE_AVIS_CIRCUIT", "Opinion workflow updated");

@@ -228,8 +228,6 @@ define('_NO_CONFIRM_DESC', "Perform the action without confirmation"); //_TO_TRA
 define('_VIEW_DOC', 'Het brief bekijken');
 define('_CLOSE_MAIL', 'Een brief afsluiten');
 define('_CLOSE_MAIL_DESC', 'Om de afsluitingsdatum van een brief bij te werken. ESSENTIEEL om uw documentworkflow af te sluiten.');
-define('_CLOSE_MAIL_WITH_FIELDS', 'Close a mail with custom fields'); //_TO_TRANSLATE
-define('_CLOSE_MAIL_WITH_FIELDS_DESC', 'Allows you to update the closing date of a mail. ESSENTIAL in order to complete your document workflow. Chosen fields will be needed to do the action.'); //_TO_TRANSLATE
 define('_SET_PERSISTENT_MODE_ON', 'De persistentie activeren');
 define('_SET_PERSISTENT_MODE_ON_DESC', 'Om een biref in een bakje te bewaren ongeacht zijn status. Voegt het gegeven in de tabel \basket_persistent_mode\.');
 define('_SET_PERSISTENT_MODE_OFF', 'De persistentie uitschakelen');
@@ -403,6 +401,8 @@ define("_FOLDER_SHARING_MODIFICATION", "Folder sharing modification_TO_TRANSLATE
 define("_FOLDER_RESOURCES_ADDED", "Added resources_TO_TRANSLATE");
 define("_FOLDER_RESOURCES_REMOVED", "Removed resources_TO_TRANSLATE");
 define("_FOLDER_TO_FOLDER", "to folder_TO_TRANSLATE");
+define("_ADDED_TO_FOLDER", "Added to folder"); //TO TRANSLATE
+define("_REMOVED_TO_FOLDER", "Removed from folder"); //TO TRANSLATE
 
 define('_NOT_EXISTS', 'bestaat niet');
 
@@ -455,7 +455,7 @@ define('_AVIS_SENT', 'Gegeven bericht');
 define('_BY', 'door');
 define('_TO_AVIS', 'VOOR BERICHT');
 define('_VALIDATE_BY', 'Gevalideerd door');
-
+define('_MAIN_DOCUMENT', 'Hoofddocument');
 define("_UPDATE_LISTINSTANCE", "Diffusion list updated"); //TO TRANSLATE
 define("_UPDATE_VISA_CIRCUIT", "Visa workflow updated"); //TO TRANSLATE
 define("_UPDATE_AVIS_CIRCUIT", "Opinion workflow updated"); //TO TRANSLATE

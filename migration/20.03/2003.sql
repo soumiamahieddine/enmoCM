@@ -103,6 +103,7 @@ UPDATE actions SET component = 'continueOpinionCircuitAction' WHERE action_page 
 UPDATE actions SET component = 'giveOpinionParallelAction' WHERE action_page = 'avis_workflow_simple';
 UPDATE actions SET component = 'sendToParallelOpinion' WHERE action_page = 'send_docs_to_recommendation';
 UPDATE actions SET component = 'validateParallelOpinionDiffusionAction' WHERE action_page = 'validate_recommendation';
+UPDATE actions SET component = 'createAcknowledgementReceiptsAction', parameters = '{"mode": "manual"}' WHERE action_page in ('send_attachments_to_contact', 'send_to_contact_with_mandatory_attachment');
 
 DELETE FROM actions_groupbaskets WHERE id_action IN (SELECT id FROM actions WHERE action_page = 'put_in_copy');
 DELETE FROM actions_categories WHERE action_id IN (SELECT id FROM actions WHERE action_page = 'put_in_copy');
@@ -152,10 +153,11 @@ CREATE TABLE entities_folders
 (
   id serial NOT NULL,
   folder_id INTEGER NOT NULL,
-  entity_id INTEGER NOT NULL,
+  entity_id INTEGER,
   edition boolean NOT NULL,
+  keyword character varying(255),
   CONSTRAINT entities_folders_pkey PRIMARY KEY (id),
-  CONSTRAINT entities_folders_unique_key UNIQUE (folder_id, entity_id)
+  CONSTRAINT entities_folders_unique_key UNIQUE (folder_id, entity_id, keyword)
 )
 WITH (OIDS=FALSE);
 
@@ -529,7 +531,7 @@ DO $$ BEGIN
     DELETE FROM actions_groupbaskets WHERE id_action in (SELECT id FROM actions WHERE enabled = 'N');
     DELETE FROM groupbasket_redirect WHERE action_id in (SELECT id FROM actions WHERE enabled = 'N');
     DELETE FROM actions WHERE enabled = 'N';
-    ALTER TABLE actions ADD COLUMN required_fields jsonb NOT NULL DEFAULT '[]';
+    ALTER TABLE actions ADD COLUMN parameters jsonb NOT NULL DEFAULT '{}';
   END IF;
 END$$;
 
@@ -553,11 +555,9 @@ DELETE FROM usergroups_services WHERE service_id = 'put_in_validation';
 DELETE FROM usergroups_services WHERE service_id = 'print_details';
 DELETE FROM usergroups_services WHERE service_id = 'print_doc_details_from_list';
 DELETE FROM usergroups_services WHERE service_id = 'view_attachments';
-DELETE FROM usergroups_services WHERE service_id = 'manage_attachments';
 DELETE FROM usergroups_services WHERE service_id = 'index_attachment';
 DELETE FROM usergroups_services WHERE service_id = 'display_basket_list';
 DELETE FROM usergroups_services WHERE service_id = 'choose_entity';
-DELETE FROM usergroups_services WHERE service_id = 'export_seda_view';
 DELETE FROM usergroups_services WHERE service_id = 'manage_notes_doc';
 DELETE FROM usergroups_services WHERE service_id = 'notes_restriction';
 DELETE FROM usergroups_services WHERE service_id = 'graphics_reports';
@@ -566,6 +566,7 @@ DELETE FROM usergroups_services WHERE service_id = 'param_templates_doctypes';
 DELETE FROM usergroups_services WHERE service_id = 'doctype_template_use';
 DELETE FROM usergroups_services WHERE service_id = 'search_contacts';
 DELETE FROM usergroups_services WHERE service_id = 'use_date_in_signBlock';
+DELETE FROM usergroups_services WHERE service_id = 'delete_document_in_detail';
 UPDATE usergroups_services SET service_id = 'manage_numeric_package' WHERE service_id = 'save_numeric_package';
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'manage_numeric_package'
@@ -586,6 +587,13 @@ SELECT distinct(group_id), 'update_diffusion_except_recipient_details'
 FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 
 INSERT INTO usergroups_services (group_id, service_id)
+SELECT distinct(group_id), 'update_diffusion_process'
+FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
+INSERT INTO usergroups_services (group_id, service_id)
+SELECT distinct(group_id), 'update_diffusion_except_recipient_process'
+FROM usergroups_services WHERE group_id not in (SELECT distinct(group_id) FROM usergroups_services WHERE service_id = 'edit_recipient_in_process');
+
+INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'update_diffusion_except_recipient_indexing'
 FROM usergroups_services WHERE group_id NOT IN (
 SELECT group_id FROM usergroups_services
@@ -596,7 +604,7 @@ DELETE FROM usergroups_services WHERE service_id = 'update_list_diff_in_details'
 DELETE FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
 UPDATE usergroups_services SET service_id = 'edit_resource' WHERE service_id = 'edit_document_in_detail';
 
-UPDATE usergroups_services SET service_id = 'manage_own_attachments_in_details' WHERE service_id = 'edit_attachments_from_detail';
+DELETE FROM usergroups_services WHERE service_id = 'edit_attachments_from_detail';
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'manage_attachments'
 FROM usergroups_services WHERE group_id IN (

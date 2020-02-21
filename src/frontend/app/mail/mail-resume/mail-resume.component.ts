@@ -4,6 +4,7 @@ import { LANG } from '../../translate.component';
 import { catchError, tap, finalize, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
+import {FunctionsService} from "../../../service/functions.service";
 
 
 @Component({
@@ -28,6 +29,7 @@ export class MailResumeComponent implements OnInit {
     constructor(
         public http: HttpClient,
         private notify: NotificationService,
+        public functions: FunctionsService
     ) {
     }
 
@@ -43,10 +45,10 @@ export class MailResumeComponent implements OnInit {
                 data.elementsSend = data.elementsSend.map((elem: any) => {
                     let object = elem.object;
                     let type = elem.type;
-                    if (elem.object === '') {
+                    if (elem.type == 'aknowledgement_receipt' && this.functions.empty(elem.object)) {
                         object = this.lang.ARPaper;
                         type = 'aknowledgement_receipt';
-                    } else if (elem.object.startsWith("[AR]")) {
+                    } else if (elem.type == 'aknowledgement_receipt' && elem.object.startsWith("[AR]")) {
                         object = this.lang.ARelectronic;
                         type = 'aknowledgement_receipt';
                     }

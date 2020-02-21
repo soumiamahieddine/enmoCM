@@ -46,6 +46,8 @@ import { ContactsListAdministrationComponent }        from './contact/list/conta
 import { ContactsHomeAdministrationComponent }        from './contact/home/contacts-home-administration.component';
 import { ContactsCustomFieldsAdministrationComponent } from './contact/customField/contacts-custom-fields-administration.component';
 import { ContactsPageAdministrationComponent } from './contact/page/contacts-page-administration.component';
+import { TagsAdministrationComponent } from './tag/tags-administration.component';
+import { TagAdministrationComponent } from './tag/tag-administration.component';
 
 @NgModule({
     imports: [
@@ -108,6 +110,9 @@ import { ContactsPageAdministrationComponent } from './contact/page/contacts-pag
             { path: 'administration/indexingModels', canActivate: [AppGuard], component: IndexingModelsAdministrationComponent },
             { path: 'administration/indexingModels/new', canActivate: [AppGuard], component: IndexingModelAdministrationComponent },
             { path: 'administration/indexingModels/:id', canActivate: [AppGuard], component: IndexingModelAdministrationComponent },
+            { path: 'administration/tags', canActivate: [AppGuard], component: TagsAdministrationComponent },
+            { path: 'administration/tags/new', canActivate: [AppGuard], component: TagAdministrationComponent },
+            { path: 'administration/tags/:id', canActivate: [AppGuard], component: TagAdministrationComponent },
         ]),
     ],
     exports: [

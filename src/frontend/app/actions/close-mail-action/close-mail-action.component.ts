@@ -45,7 +45,7 @@ export class CloseMailActionComponent implements OnInit {
     checkIndexingClose() {
         this.http.get(`../../rest/actions/${this.data.action.id}`).pipe(
             tap((data: any) => {
-                this.requiredFields = data.action.requiredFields;
+                this.requiredFields = data.action.parameters;
             }),
             exhaustMap(() => this.http.get(`../../rest/customFields`)),
             tap((data: any) => this.customFields = data.customFields),
@@ -75,8 +75,8 @@ export class CloseMailActionComponent implements OnInit {
     checkClose() {
         this.http.post(`../../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/checkCloseWithFieldsAction`, { resources: this.data.resIds }).pipe(
             tap((data: any) => {
-                this.emptyMandatoryFields = data.emptyFields;
-                this.canCloseResIds = data.canClose;
+                this.emptyMandatoryFields = data.errors;
+                this.canCloseResIds = data.success;
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
