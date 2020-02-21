@@ -33,7 +33,10 @@
                         <mat-form-field>
                             <input matInput type="text" [formControl]="tag.usage" [placeholder]="lang.usage">
                         </mat-form-field>
-                        <plugin-select-search *ngIf="!loadingTags" [label]="'Fusionner le mot-clé avec'" [placeholderLabel]="'Fusionner le mot-clé avec'"
+                        <div *ngIf="!tag.canMerge" class="alert-message alert-message-danger">
+                            {{this.lang.cannotMergeTags}}
+                        </div>
+                        <plugin-select-search *ngIf="!loadingTags && tag.canMerge" [label]="this.lang.mergeTagWith" [placeholderLabel]="this.lang.mergeTagWith"
                                 [formControlSelect]="selectMergeTag" [datas]="tags" (afterOpened)="getTags()"
                                 (afterSelected)="mergeTag($event)" style="width:100%;">
                          </plugin-select-search>

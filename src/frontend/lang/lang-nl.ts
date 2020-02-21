@@ -1580,4 +1580,6 @@ export const LANG_NL = {
     "emptySubject" : "Empty subject", //_TO_TRANSLATE
     "editAcknowledgementReceipt" : "Edit the acknowledgement receipt", //_TO_TRANSLATE
     "insufficientPrivilege" : "Privilege insuffisant", //TRANSLATE
+    "cannotMergeTags" : "This tag has a parent or children : impossible to merge tags",//_TO_TRANSLATE
+    "mergeTagWith" : "Merge this tag with",//_TO_TRANSLATE
 };

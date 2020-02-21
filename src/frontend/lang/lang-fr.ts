@@ -1594,4 +1594,6 @@ export const LANG_FR = {
     "emptySubject" : "Objet vide",
     "editAcknowledgementReceipt" : "Editer l'accusé de réception",
     "insufficientPrivilege" : "Privilège insuffisant",
+    "cannotMergeTags" : "Ce mot-clé possède un parent ou des enfants : impossible de le fusionner avec un autre mot clé.",
+    "mergeTagWith" : "Fusionner le mot-clé avec",
 };
