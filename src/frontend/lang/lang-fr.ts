@@ -1592,4 +1592,5 @@ export const LANG_FR = {
     "willBeTransferedToNewTag" : "seront transférés au mot clé sélectionné",
     "detailDoc" : "Fiche détaillé",
     "emptySubject" : "Objet vide", 
+    "editAcknowledgementReceipt" : "Editer l'accusé de réception", 
 };

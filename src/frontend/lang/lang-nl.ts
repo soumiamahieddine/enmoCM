@@ -1578,4 +1578,5 @@ export const LANG_NL = {
     "willBeTransferedToNewTag" : "will be transfered to selected tag", //_TO_TRANSLATE
     "detailDoc" : "Detail page", //_TO_TRANSLATE
     "emptySubject" : "Empty subject", //_TO_TRANSLATE
+    "editAcknowledgementReceipt" : "Edit the acknowledgement receipt", //_TO_TRANSLATE
 };
