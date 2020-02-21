@@ -37,6 +37,7 @@ export class ActionAdministrationComponent implements OnInit {
     selectedFieldsValue: Array<any> = [];
     selectedFieldsId: Array<any> = [];
     selectedValue: any;
+    arMode: any;
 
     constructor(
         public http: HttpClient, 
@@ -87,15 +88,19 @@ export class ActionAdministrationComponent implements OnInit {
                         this.headerService.setHeader(this.lang.actionCreation, data.action.label_action);
                         await this.getCustomFields();
                         this.loading = false;
-                        this.customFieldsFormControl = new FormControl({ value: this.action.requiredFields, disabled: false });
-                        this.selectedFieldsId = this.action.requiredFields;
-                        this.selectedFieldsId.forEach((element: any) => {
-                            this.availableCustomFields.forEach((availableElement: any) => {
-                                if (availableElement.id == element) {
-                                    this.selectedFieldsValue.push(availableElement.label);
-                                }
+                        this.customFieldsFormControl = new FormControl({ value: this.action.parameters, disabled: false });
+                        if (this.action.actionPageId=='close_mail') {
+                            this.selectedFieldsId = this.action.parameters;
+                            this.selectedFieldsId.forEach((element: any) => {
+                                this.availableCustomFields.forEach((availableElement: any) => {
+                                    if (availableElement.id == element) {
+                                        this.selectedFieldsValue.push(availableElement.label);
+                                    }
+                                });
                             });
-                        });
+                        } else if (this.action.actionPageId=='create_acknowledgement_receipt') {
+                            this.arMode = this.action.parameters;
+                        }
                     });
             }
         });
@@ -142,7 +147,11 @@ export class ActionAdministrationComponent implements OnInit {
     }
 
     onSubmit() {
-        this.action.requiredFields = this.selectedFieldsId;
+        if (this.action.actionPageId=='close_mail') {
+            this.action.parameters = this.selectedFieldsId;
+        } else if (this.action.actionPageId=='create_acknowledgement_receipt') {
+            this.action.parameters = this.arMode;
+        }
         if (this.creationMode) {
             this.http.post('../../rest/actions', this.action)
                 .subscribe(() => {

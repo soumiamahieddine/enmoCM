@@ -1565,6 +1565,10 @@ export const LANG_NL = {
     "mailingActionInformations" : "Following mails contain mailing attachments, if next person in visa circuit is signatory then mailing will be activate :", //_TO_TRANSLATE
     "mailingActionInformations2" : "Following mails contain mailing attachments, mailing will be activate :", //TRANSLATE
     "properties" : "Properties",  //_TO_TRANSLATE
+    "generateARMode" : "Acknowledgement receipt mode allowed", //_TO_TRANSLATE
+    "autoAR" : "Automatic", //_TO_TRANSLATE
+    "manualAR" : "Manual", //_TO_TRANSLATE
+    "bothAR" : "Automatic et manual", //_TO_TRANSLATE
     "tagCreation" : "Tag creation", //_TO_TRANSLATE
     "tagModification" : "Tag modification", //_TO_TRANSLATE
     "usage" : "Used for", //_TO_TRANSLATE

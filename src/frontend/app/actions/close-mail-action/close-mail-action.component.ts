@@ -45,7 +45,7 @@ export class CloseMailActionComponent implements OnInit {
     checkIndexingClose() {
         this.http.get(`../../rest/actions/${this.data.action.id}`).pipe(
             tap((data: any) => {
-                this.requiredFields = data.action.requiredFields;
+                this.requiredFields = data.action.parameters;
             }),
             exhaustMap(() => this.http.get(`../../rest/customFields`)),
             tap((data: any) => this.customFields = data.customFields),
