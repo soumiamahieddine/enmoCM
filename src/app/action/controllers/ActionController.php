@@ -145,7 +145,7 @@ class ActionController
             'label_action' => $body['label_action'],
             'action_page'  => $body['action_page'],
             'component'    => $body['component'],
-            'parameters'   => json_encode($parameters, true)
+            'parameters'   => !empty($parameters) ? json_encode($parameters) : '{}'
         ]);
         if (!empty($body['actionCategories'])) {
             ActionModel::createCategories(['id' => $id, 'categories' => $body['actionCategories']]);
@@ -221,7 +221,7 @@ class ActionController
                 'action_page'  => $body['action_page'],
                 'component'    => $body['component'],
                 'history'      => $body['history'],
-                'parameters'   => json_encode($parameters),
+                'parameters'   => !empty($parameters) ? json_encode($parameters) : '{}'
             ],
             'where' => ['id = ?'],
             'data'  => [$body['id']]
