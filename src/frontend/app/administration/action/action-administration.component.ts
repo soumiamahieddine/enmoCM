@@ -148,9 +148,9 @@ export class ActionAdministrationComponent implements OnInit {
 
     onSubmit() {
         if (this.action.actionPageId=='close_mail') {
-            this.action.parameters = this.selectedFieldsId;
+            this.action.parameters = { requiredFields: this.selectedFieldsId};
         } else if (this.action.actionPageId=='create_acknowledgement_receipt') {
-            this.action.parameters = this.arMode;
+            this.action.parameters = { mode: this.arMode};
         }
         if (this.creationMode) {
             this.http.post('../../rest/actions', this.action)
