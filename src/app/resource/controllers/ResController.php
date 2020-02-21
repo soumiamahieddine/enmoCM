@@ -918,6 +918,9 @@ class ResController extends ResourceControlController
 
         $entities = UserModel::getEntitiesByLogin(['login' => $user['user_id'], 'select' => ['id']]);
         $entities = array_column($entities, 'id');
+        if (empty($entities)) {
+            $entities = [0];
+        }
 
         $foldersClause = 'res_id in (select res_id from folders LEFT JOIN entities_folders ON folders.id = entities_folders.folder_id LEFT JOIN resources_folders ON folders.id = resources_folders.folder_id ';
         $foldersClause .= "WHERE entities_folders.entity_id in (?) OR folders.user_id = ? OR keyword = 'ALL_ENTITIES')";

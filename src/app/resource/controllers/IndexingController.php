@@ -85,7 +85,7 @@ class IndexingController
         if (!array_key_exists($action['component'], ActionMethodController::COMPONENTS_ACTIONS)) {
             return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
         }
-        $parameters = json_decode($action['parameters']);
+        $parameters = json_decode($action['parameters'], true);
         $actionRequiredFields = $parameters['requiredFields'] ?? [];
 
         $resource = ResModel::getById(['resId' => $body['resource'], 'select' => ['status']]);

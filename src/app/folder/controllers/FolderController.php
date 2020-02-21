@@ -862,7 +862,7 @@ class FolderController
 
         $userEntities = array_column($userEntities, 'id');
         if (empty($userEntities)) {
-            $userEntities = 0;
+            $userEntities = [0];
         }
 
         if ($args['edition']) {
