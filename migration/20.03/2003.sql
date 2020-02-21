@@ -103,6 +103,7 @@ UPDATE actions SET component = 'continueOpinionCircuitAction' WHERE action_page 
 UPDATE actions SET component = 'giveOpinionParallelAction' WHERE action_page = 'avis_workflow_simple';
 UPDATE actions SET component = 'sendToParallelOpinion' WHERE action_page = 'send_docs_to_recommendation';
 UPDATE actions SET component = 'validateParallelOpinionDiffusionAction' WHERE action_page = 'validate_recommendation';
+UPDATE actions SET component = 'createAcknowledgementReceiptsAction', parameters = '{"mode": "manual"}' WHERE action_page in ('send_attachments_to_contact', 'send_to_contact_with_mandatory_attachment');
 
 DELETE FROM actions_groupbaskets WHERE id_action IN (SELECT id FROM actions WHERE action_page = 'put_in_copy');
 DELETE FROM actions_categories WHERE action_id IN (SELECT id FROM actions WHERE action_page = 'put_in_copy');

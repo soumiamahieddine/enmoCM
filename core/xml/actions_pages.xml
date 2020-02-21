@@ -174,32 +174,6 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>send_attachments_to_contact</ID>
-        <LABEL>_SEND_ATTACHMENTS_TO_CONTACT</LABEL>
-        <NAME>send_attachments_to_contact</NAME>
-        <DESC>_SEND_ATTACHMENTS_TO_CONTACT_DESC</DESC>
-        <component>v1Action</component>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>send_to_contact_with_mandatory_attachment</ID>
-        <LABEL>_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT</LABEL>
-        <NAME>send_to_contact_with_mandatory_attachment</NAME>
-        <DESC>_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC</DESC>
-        <component>v1Action</component>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
 	<ACTIONPAGE>
         <ID>visa_workflow</ID>
         <LABEL>_PROCEED_WORKFLOW</LABEL>
