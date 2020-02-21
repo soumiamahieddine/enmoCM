@@ -48,9 +48,7 @@
                             </div>
                         </span>
                     </div>
-                    <div class="desc">
-                        {{row.desc}}
-                    </div>
+                    <div class="desc" [innerHTML]="row.desc"></div>
                     <div class="contact">
                         <span *ngIf="row.sender" style="white-space: pre;overflow: hidden;text-overflow: ellipsis;" [title]="row.sender">
                             {{lang.senderShort}} : {{row.sender}}

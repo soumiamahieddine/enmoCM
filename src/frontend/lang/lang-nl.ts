@@ -1577,4 +1577,5 @@ export const LANG_NL = {
     "mergeWith" : "Merge with", //_TO_TRANSLATE
     "willBeTransferedToNewTag" : "will be transfered to selected tag", //_TO_TRANSLATE
     "detailDoc" : "Detail page", //_TO_TRANSLATE
+    "emptySubject" : "Empty subject", //_TO_TRANSLATE
 };

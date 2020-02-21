@@ -132,7 +132,7 @@ export class SendedResourceListComponent implements OnInit {
                             sendDate: item.send_date,
                             type: 'email',
                             typeColor: '#5bc0de',
-                            desc: item.object,
+                            desc: !this.functions.empty(item.object) ? item.object : `<i>${this.lang.emptySubject}<i>`,
                             status: item.status,
                             hasAttach: !this.functions.empty(item.document.attachments),
                             hasNote: !this.functions.empty(item.document.notes),

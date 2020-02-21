@@ -1552,4 +1552,5 @@ export const LANG_EN = {
     "mergeWith" : "Merge with",
     "willBeTransferedToNewTag" : "will be transfered to selected tag",
     "detailDoc" : "Detail page",
+    "emptySubject" : "Empty subject",
 };
