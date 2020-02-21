@@ -134,7 +134,7 @@ export class NoteEditorComponent implements OnInit {
     getTemplatesNote() {
         if (this.templatesNote.length == 0) {
             let params = {};
-            if (this.resIds.length == 1) {
+            if (!this.functions.empty(this.resIds) && this.resIds.length == 1) {
                 params['resId'] = this.resIds[0];
             }
             this.http.get("../../rest/notesTemplates", { params: params })
@@ -149,7 +149,7 @@ export class NoteEditorComponent implements OnInit {
         return new Promise((resolve, reject) => {
             if (this.entities.length == 0) {
                 let params = {};
-                if (this.resIds.length == 1) {
+                if (!this.functions.empty(this.resIds) && this.resIds.length == 1) {
                     params['resId'] = this.resIds[0];
                 }
                 this.http.get("../../rest/entities").pipe(

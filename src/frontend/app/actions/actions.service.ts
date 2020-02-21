@@ -304,15 +304,18 @@ export class ActionsService {
             tap((result: any) => {
                 this.endAction(result);
                 let firstGroup: number = 0;
+                let redirectAfterClose = '';
                 this.headerService.user.groups.filter((group: any) => group.can_index === true).forEach((group: any) => {
                     if (firstGroup == 0) {
                         firstGroup = group.id;
                     }
                     if (group.id == this.currentGroupId) {
-                        this.router.navigate(['/indexing/' + this.currentGroupId]);
+                        redirectAfterClose = '/indexing/' + this.currentGroupId;
                     }
                 });
-                if (firstGroup == 0) {
+                if (redirectAfterClose != '') {
+                    this.router.navigate([redirectAfterClose]);
+                } else if (firstGroup == 0) {
                     this.router.navigate(['/home']);
                 } else {
                     this.router.navigate(['/indexing/' + firstGroup]);
