@@ -519,7 +519,11 @@ export class SendedResourcePageComponent implements OnInit {
                 data = data.filter((contact: any) => !this.functions.empty(contact.email) || contact.type === 'contactGroup').map((contact: any) => {
                     let label = '';
                     if (contact.type === 'user' || contact.type === 'contact') {
-                        label = `${contact.firstname} ${contact.lastname}`;
+                        if (!this.functions.empty(contact.firstname) || !this.functions.empty(contact.lastname)) {
+                            label = contact.firstname + ' ' + contact.lastname;
+                        } else {
+                            label = contact.company;
+                        }
                     } else if (contact.type === 'contactGroup') {
                         label = `${contact.firstname} ${contact.lastname}`;
                     } else {
