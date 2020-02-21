@@ -130,6 +130,56 @@ foreach ($customs as $custom) {
         ]);
     }
 
+    // Get all empty tags
+    $emptyTags = TagModel::get([
+        'select'  => ['id', 'links', 'parent_id'],
+        'where'   => ["replace(label, ' ', '') = ''"],
+        'orderBy' => ['id desc']
+    ]);
 
-    printf("Migration du thesaurus dans la table tags (CUSTOM {$custom}) : " . $migrated . " termes migrés. ($parentMigrated liens de parentés migrés, $parentNotMigrated non migrés, $linksMigrated associations migrés, $linksNotMigrated non migrés)\n");
+    // Remove resources links + tag links
+    foreach ($emptyTags as $emptyTag) {
+        ResourceTagModel::delete([
+            'where' => ['tag_id = ?'],
+            'data'  => [$emptyTag['id']]
+        ]);
+
+        $links = json_decode($emptyTag['links'], true);
+        foreach ($links as $link) {
+            TagModel::update([
+                'postSet' => ['links' => "links - '{$emptyTag['id']}'"],
+                'where'   => ['id = ?'],
+                'data'    => [$link]
+            ]);
+            TagModel::update([
+                'postSet' => ['links' => "links - '{$link}'"],
+                'where'   => ['id = ?'],
+                'data'    => [$emptyTag['id']]
+            ]);
+        }
+
+        $parentId = TagModel::getById([
+            'select' => ['parent_id'],
+            'id'     => $emptyTag['id']
+        ]);
+        $parentId = $parentId['parent_id'];
+
+        TagModel::update([
+            'set'   => ['parent_id' => $parentId],
+            'where' => ['parent_id = ?'],
+            'data'  => [$emptyTag['id']]
+        ]);
+    }
+
+    // Delete tags
+    $emptyTags = array_column($emptyTags, 'id');
+    $nbEmptyTags = count($emptyTags);
+    if (!empty($emptyTags)) {
+        TagModel::delete([
+            'where' => ['id in (?)'],
+            'data'  => [$emptyTags]
+        ]);
+    }
+
+    printf("Migration du thesaurus dans la table tags (CUSTOM {$custom}) : " . $migrated . " termes migrés. ($parentMigrated liens de parentés migrés, $parentNotMigrated non migrés, $linksMigrated associations migrés, $linksNotMigrated non migrés, $nbEmptyTags tag(s) vide supprimé(s))\n");
 }
