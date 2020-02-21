@@ -1325,22 +1325,22 @@ class ContactController
 
         $inResources = ResourceContactModel::get([
             'select' => ['item_id'],
-            'where'  => ['item_id = ?', "type = 'contact'"],
-            'data'   => [$args['id']]
+            'where'  => ['item_id in (?)', 'type = ?'],
+            'data'   => [$args['ids'], 'contact']
         ]);
         $inResources = array_column($inResources, 'item_id');
 
         $inAcknowledgementReceipts = AcknowledgementReceiptModel::get([
             'select' => ['contact_id'],
-            'where'  => ['contact_id = ?'],
-            'data'   => [$args['id']]
+            'where'  => ['contact_id in (?)'],
+            'data'   => [$args['ids']]
         ]);
         $inAcknowledgementReceipts = array_column($inAcknowledgementReceipts, 'contact_id');
 
         $inAttachments = AttachmentModel::get([
             'select' => ['recipient_id'],
-            'where'  => ['recipient_id = ?', "recipient_type = 'contact'"],
-            'data'   => [$args['id']]
+            'where'  => ['recipient_id in (?)', 'recipient_type = ?'],
+            'data'   => [$args['ids'], 'contact']
         ]);
         $inAttachments = array_column($inAttachments, 'recipient_id');
 

@@ -141,19 +141,21 @@ export class ContactsListAdministrationComponent implements OnInit {
     deleteContact(contact: any) {
 
         if (contact.isUsed) {
-            this.dialogRef = this.dialog.open(ContactsListAdministrationRedirectModalComponent, {});
+            this.dialogRef = this.dialog.open(ContactsListAdministrationRedirectModalComponent, {autoFocus: false});
             this.dialogRef.afterClosed().subscribe((result: any) => {
-                var queryparams = '';
-                if (result.processMode == 'reaffect') {
-                    queryparams = '?redirect=' + result.contactId;
+                if (typeof result != "undefined" && result != '') {
+                    var queryparams = '';
+                    if (result.processMode == 'reaffect') {
+                        queryparams = '?redirect=' + result.contactId;
+                    }
+                    this.http.request('DELETE', `../../rest/contacts/${contact.id}${queryparams}`)
+                        .subscribe(() => {
+                            this.refreshDao();
+                            this.notify.success(this.lang.contactDeleted);
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
                 }
-                this.http.request('DELETE', `../../rest/contacts/${contact.id}${queryparams}`)
-                    .subscribe(() => {
-                        this.refreshDao();
-                        this.notify.success(this.lang.contactDeleted);
-                    }, (err) => {
-                        this.notify.error(err.error.errors);
-                    });
                 this.dialogRef = null;
             });
         } else {

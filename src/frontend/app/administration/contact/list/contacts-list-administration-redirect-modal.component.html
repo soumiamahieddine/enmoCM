@@ -26,6 +26,7 @@
         <mat-dialog-actions>
             <button mat-raised-button color="primary" type="submit" [disabled]="!this.redirectContact && this.processMode == 'reaffect'"
                 (click)="dialogRef.close({contactId:this.redirectContact, processMode:this.processMode})">{{lang.delete}}</button>
+            <button class="actions" color="" mat-raised-button (click)="dialogRef.close('')">{{lang.cancel}}</button>
         </mat-dialog-actions>
     </form>
 </mat-dialog-content>
