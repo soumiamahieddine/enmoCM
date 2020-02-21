@@ -8,7 +8,7 @@
         {{lang.noNote}}
     </div>
     <mat-card *ngFor="let note of notes" style="margin-top: 10px;"
-        [ngStyle]="{'background-color': note.entities_restriction ? 'rgba(255, 165, 0, 0.2)' : 'white'}">
+        [ngStyle]="{'background-color': note.entities_restriction ? '#FFEDCC' : 'white'}">
         <mat-card-header>
             <div mat-card-avatar><i color="primary" class="fa fa-user"></i></div>
             <mat-card-title>{{note.firstname}} {{note.lastname}}</mat-card-title>
