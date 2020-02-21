@@ -28,7 +28,7 @@
         <mat-chip-list id="recipients-list" #recipientsList cdkDropList
             [cdkDropListConnectedTo]="['copies-list','invcopies-list']" [cdkDropListData]="recipients"
             (cdkDropListDropped)="drop($event)">
-            <mat-chip cdkDrag class="recipients" *ngFor="let recipient of recipients" [selectable]="selectable"
+            <mat-chip cdkDrag [cdkDragDisabled]="emailStatus == 'SENT' || emailStatus == 'ERROR'" class="recipients" *ngFor="let recipient of recipients" [selectable]="selectable"
                 [removable]="canManageMail()" (removed)="remove(recipient, 'recipients')" (click)="remove(recipient, 'recipients')" [title]="recipient.email"
                 [class.badFormat]="recipient.badFormat">
                 {{recipient.label}}{{recipient.label !== recipient.email ? ' (' + recipient.email + ')' : ''}}
@@ -51,7 +51,7 @@
         <mat-chip-list id="copies-list" #copiesList cdkDropList
             [cdkDropListConnectedTo]="['recipients-list','invcopies-list']" [cdkDropListData]="copies"
             (cdkDropListDropped)="drop($event)">
-            <mat-chip cdkDrag class="copy" *ngFor="let copy of copies" [selectable]="selectable"
+            <mat-chip cdkDrag [cdkDragDisabled]="emailStatus == 'SENT' || emailStatus == 'ERROR'" class="copy" *ngFor="let copy of copies" [selectable]="selectable"
                 [removable]="canManageMail()" (removed)="remove(copy, 'copies')" (click)="remove(copycopy, 'recipients')" [title]="copy.email"
                 [class.badFormat]="copy.badFormat">
                 {{copy.label}}{{copy.label !== copy.email ? ' (' + copy.email + ')' : ''}}
@@ -74,7 +74,7 @@
         <mat-chip-list id="invcopies-list" #invCopiesList cdkDropList
             [cdkDropListConnectedTo]="['recipients-list','copies-list']" [cdkDropListData]="invisibleCopies"
             (cdkDropListDropped)="drop($event)">
-            <mat-chip cdkDrag class="copy" *ngFor="let invCopy of invisibleCopies" [selectable]="selectable"
+            <mat-chip cdkDrag [cdkDragDisabled]="emailStatus == 'SENT' || emailStatus == 'ERROR'" class="copy" *ngFor="let invCopy of invisibleCopies" [selectable]="selectable"
                 [removable]="canManageMail()" (removed)="remove(invCopy, 'invisibleCopies')" (click)="remove(invCopy, 'recipients')" [title]="invCopy.email"
                 [class.badFormat]="invCopy.badFormat">
                 {{invCopy.label}}{{invCopy.label !== invCopy.email ? ' (' + invCopy.email + ')' : ''}}
