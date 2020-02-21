@@ -314,11 +314,11 @@ export class ActionsService {
                     }
                 });
                 if (redirectAfterClose != '') {
-                    this.router.navigate([redirectAfterClose]);
+                    this.router.navigate([redirectAfterClose], { queryParams: {refresh: new Date().getTime()} });
                 } else if (firstGroup == 0) {
                     this.router.navigate(['/home']);
                 } else {
-                    this.router.navigate(['/indexing/' + firstGroup]);
+                    this.router.navigate(['/indexing/' + firstGroup], { queryParams: {refresh: new Date().getTime()} });
                 }
             }),
             finalize(() => this.loading = false),

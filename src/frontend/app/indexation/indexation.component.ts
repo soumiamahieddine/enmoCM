@@ -5,7 +5,7 @@ import { NotificationService } from '../notification.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
 
@@ -85,8 +85,27 @@ export class IndexationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.loading = false;
+        // Use to clean data after navigate on same url
+        this._activatedRoute.queryParamMap.subscribe((paramMap: ParamMap) => {
+            const refresh = paramMap.get('refresh');
+            if (refresh) {
+                this.appDocumentViewer.templateListForm.reset();
+                this.appDocumentViewer.file = {
+                    name: '',
+                    type: '',
+                    content: null,
+                    src: null
+                };
+                this.appDocumentViewer.triggerEvent.emit('cleanFile');
+                this.loadIndexingModel(this.indexingModels[0]);
+            }
+        });
 
+        this.fetchData();
+    }
+
+    fetchData() {
+        this.loading = false;
         this.headerService.setHeader("Enregistrement d'un courrier");
 
         this.route.params.subscribe(params => {
