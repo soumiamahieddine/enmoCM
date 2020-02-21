@@ -105,7 +105,7 @@ class ActionController
         $actionPages = ActionModel::getActionPages();
         foreach ($actionPages as $actionPage) {
             if ($actionPage['id'] == $body['actionPageId']) {
-                $body['action_page'] = $actionPage['name'];
+                $body['action_page'] = $actionPage['id'];
                 $body['component'] = $actionPage['component'];
             }
         }
