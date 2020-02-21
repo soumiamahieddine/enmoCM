@@ -65,6 +65,14 @@ class TagController
         $tag['countResources'] = $countResources[0]['count'];
         $tag['links'] = json_decode($tag['links'], true);
 
+        $childTags = TagModel::get([
+            'select' => ['count(1)'],
+            'where'  => ['parent_id = ?'],
+            'data'   => [$tag['id']]
+        ]);
+
+        $tag['canMerge'] = empty($tag['parent_id']) && $childTags[0]['count'] == 0;
+
         return $response->withJson($tag);
     }
 
