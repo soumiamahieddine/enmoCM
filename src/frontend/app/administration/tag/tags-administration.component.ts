@@ -76,7 +76,7 @@ export class TagsAdministrationComponent implements OnInit {
             exhaustMap(() => this.http.delete(`../../rest/tags/${item.id}`)),
             tap(() => {
                 this.loadList();
-                this.notify.success(this.lang.contactDeleted);
+                this.notify.success(this.lang.tagDeleted);
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
