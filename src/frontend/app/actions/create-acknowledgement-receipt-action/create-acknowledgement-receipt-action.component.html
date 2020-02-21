@@ -7,10 +7,33 @@
         <div class="col-md-12">
             <p *ngIf="acknowledgement.sendEmail || acknowledgement.sendPaper">{{lang.makeActionOn}}
                 <b *ngIf="data.resIds.length === 0" color="primary" class="highlight">{{lang.currentIndexingMail}}</b>
-                <b *ngIf="data.resIds.length == 1" color="primary"
-                    class="highlight">{{data.resource.chrono}}</b>
+                <b *ngIf="data.resIds.length == 1" color="primary" class="highlight">{{data.resource.chrono}}</b>
                 <b *ngIf="data.resIds.length > 1" color="primary" class="highlight">{{data.resIds.length}}
                     {{lang.elements}}</b> ?
+                <div *ngIf="arMode !== 'manual' && arMode !== 'auto'">
+                    <mat-slide-toggle [(ngModel)]="manualAR" color="primary" (change)="toggleArManual($event.checked)">
+                        {{lang.editAcknowledgementReceipt}}</mat-slide-toggle>
+                </div>
+                <div *ngIf="manualAR">
+                    <mat-form-field floatLabel="never">
+                        <span matPrefix class="attachLabel">{{lang.object}}&nbsp;:&nbsp;</span>
+                        <input matInput [(ngModel)]="emailsubject" maxlength="100">
+                    </mat-form-field>
+                    <div class="models">
+                        <plugin-select-search *ngIf="availableEmailModels.length > 0" [label]="lang.emailModel"
+                            [placeholderLabel]="lang.emailModel" [datas]="availableEmailModels"
+                            [formControlSelect]="templateEmailListForm" (afterSelected)="mergeEmailTemplate($event)">
+                        </plugin-select-search>
+
+                        <plugin-select-search #templateList *ngIf="availableSignEmailModels.length > 0"
+                            [label]="lang.emailSignatures" [placeholderLabel]="lang.emailSignatures"
+                            [datas]="availableSignEmailModels" [formControlSelect]="emailSignListForm"
+                            (afterSelected)="mergeSignEmailTemplate($event)">
+                        </plugin-select-search>
+                    </div>
+                    <textarea style="padding-top: 10px;" name="emailSignature" id="emailSignature"
+                        [(ngModel)]="emailContent"></textarea>
+                </div>
                 <div *ngIf="acknowledgement.alreadySend.number">
                     <div class="alert-message alert-message-info acknowledgementList" role="alert">
                         <p>
