@@ -50,9 +50,9 @@
                                         <plugin-autocomplete [labelPlaceholder]="lang.addUser" [labelList]="lang.availableUsers" [routeDatas]="diffusionModel.type == 'visaCircuit' ? ['/rest/autocomplete/users/circuit'] : ['/rest/autocomplete/users/circuit?circuit=opinion']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelVisa($event)"></plugin-autocomplete>
                                         <mat-list>
                                             <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="diffusionModel.items">
-                                                <mat-list-item disableRipple="true" *ngFor="let template of diffusionModel.items; let i = index" title="{{lang.move}}"
+                                                <mat-list-item disableRipple="true" *ngFor="let template of diffusionModel.items; let i = index" [title]="template.hasPrivilege ? lang.move : lang.insufficientPrivilege"
                                                     dnd-sortable [sortableIndex]="i" (onDropSuccess)="updateDiffListVisa(template)">
-                                                    <mat-icon color="primary" [class]="template.item_mode == 'sign' ? 'fa fa-certificate' : 'fa fa-user'" mat-list-icon></mat-icon>
+                                                    <mat-icon [class]="template.item_mode == 'sign' ? 'fa fa-certificate' : 'fa fa-user'" [class.primaryColor]="template.hasPrivilege" [class.redColor]="!template.hasPrivilege" mat-list-icon></mat-icon>
                                                     <p mat-line>{{template.idToDisplay}}
                                                         <small style="opacity:0.5;">{{template.descriptionToDisplay}}</small>
                                                     </p>

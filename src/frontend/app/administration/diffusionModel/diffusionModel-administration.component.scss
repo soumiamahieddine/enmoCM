@@ -1,3 +1,5 @@
+@import '../../../css/vars.scss';
+
 .mat-list-item[draggable="false"]:hover{
     background: inherit;
 }
@@ -12,4 +14,12 @@
 
 .mat-list-item[draggable="true"] mat-icon{
     cursor: move;
+}
+
+.primaryColor {
+    color: $primary;
+}
+
+.redColor {
+    color: #e4342b;
 }

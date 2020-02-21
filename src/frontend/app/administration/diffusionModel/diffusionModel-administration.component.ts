@@ -11,7 +11,7 @@ declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "diffusionModel-administration.component.html",
-    styleUrls: ['diffusionModel-administration.component.css'],
+    styleUrls: ['diffusionModel-administration.component.scss'],
     providers: [NotificationService, AppService]
 })
 export class DiffusionModelAdministrationComponent implements OnInit {

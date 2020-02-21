@@ -1593,4 +1593,5 @@ export const LANG_FR = {
     "detailDoc" : "Fiche détaillée",
     "emptySubject" : "Objet vide",
     "editAcknowledgementReceipt" : "Editer l'accusé de réception",
+    "insufficientPrivilege" : "Privilège insuffisant",
 };

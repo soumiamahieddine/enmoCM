@@ -1553,5 +1553,6 @@ export const LANG_EN = {
     "willBeTransferedToNewTag" : "will be transfered to selected tag",
     "detailDoc" : "Detail page",
     "emptySubject" : "Empty subject",
-    "editAcknowledgementReceipt" : "Edit the acknowledgement receipt", 
+    "editAcknowledgementReceipt" : "Edit the acknowledgement receipt",
+    "insufficientPrivilege" : "Privilege insuffisant",
 };

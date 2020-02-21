@@ -956,18 +956,6 @@ class PreProcessActionController
                 $resource['alt_identifier'] = _UNDEFINED;
             }
 
-            $circuit = ListInstanceModel::get([
-                'select'    => ['requested_signature'],
-                'where'     => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
-                'data'      => [$resId, 'VISA_CIRCUIT'],
-                'orderBy'   => ['listinstance_id'],
-                'limit'     => 1
-            ]);
-            if (empty($circuit)) {
-                $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noCircuitAvailable'];
-                continue;
-            }
-
             $attachments = AttachmentModel::get([
                 'select'    => ['status'],
                 'where'     => ['res_id_master = ?', 'attachment_type in (?)', 'in_signature_book = ?', 'status not in (?)'],

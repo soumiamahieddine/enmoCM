@@ -62,6 +62,12 @@ class ListTemplateController
                 $listTemplateItems[$key]['idToDisplay'] = UserModel::getLabelledUserById(['id' => $value['item_id']]);
                 $listTemplateItems[$key]['descriptionToDisplay'] = UserModel::getPrimaryEntityById(['id' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
             }
+            $listTemplateItems[$key]['hasPrivilege'] = true;
+            if ($listTemplate['type'] == 'visaCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'visa_documents', 'userId' => $value['item_id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $value['item_id']])) {
+                $listTemplateItems[$key]['hasPrivilege'] = false;
+            } elseif ($listTemplate['type'] == 'opinionCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'avis_documents', 'userId' => $value['item_id']])) {
+                $listTemplateItems[$key]['hasPrivilege'] = false;
+            }
         }
 
         $roles = EntityModel::getRoles();

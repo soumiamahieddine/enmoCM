@@ -1579,4 +1579,5 @@ export const LANG_NL = {
     "detailDoc" : "Detail page", //_TO_TRANSLATE
     "emptySubject" : "Empty subject", //_TO_TRANSLATE
     "editAcknowledgementReceipt" : "Edit the acknowledgement receipt", //_TO_TRANSLATE
+    "insufficientPrivilege" : "Privilege insuffisant", //TRANSLATE
 };
