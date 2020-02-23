@@ -3,7 +3,10 @@
     <div *ngIf="loading" class="loading" style="display:flex;height:100%;">
         <mat-spinner style="margin:auto;"></mat-spinner>
     </div>
-    <div *ngIf="shippings.length == 0" class="alert-message alert-message-danger mailList" role="alert">
+    <div *ngIf="!functions.empty(fatalError)" class="alert-message alert-message-danger mailList" role="alert">
+        {{lang[fatalError.reason]}}
+    </div>
+    <div *ngIf="functions.empty(fatalError) && shippings.length == 0" class="alert-message alert-message-danger mailList" role="alert">
         {{lang.noShippingTemplate}} :<br />
         <div class="mailList">
             <ul>

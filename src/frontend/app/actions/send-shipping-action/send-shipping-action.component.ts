@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
 import { catchError, finalize, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { FunctionsService } from '../../../service/functions.service';
 
 @Component({
     templateUrl: "send-shipping-action.component.html",
@@ -43,10 +44,16 @@ export class SendShippingActionComponent implements OnInit {
             icon: 'fas fa-shipping-fast'
         }
     };
+    fatalError: any[] = [];
 
     @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
 
-    constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendShippingActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        public dialogRef: MatDialogRef<SendShippingActionComponent>, 
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        public functions: FunctionsService) { }
 
     ngOnInit(): void {
         this.loading = true;
@@ -84,10 +91,15 @@ export class SendShippingActionComponent implements OnInit {
     checkShipping() {
         this.http.post(`../../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/checkShippings`, { resources: this.data.resIds }).pipe(
             tap((data: any) => {
-                this.shippings = data.shippingTemplates;
-                this.mailsNotSend = data.canNotSend;
-                this.entitiesList = data.entities;
-                this.attachList = data.resources;
+                if (!this.functions.empty(data.fatalError)) {
+                    this.fatalError = data;
+                    this.shippings = [];
+                } else {
+                    this.shippings    = data.shippingTemplates;
+                    this.mailsNotSend = data.canNotSend;
+                    this.entitiesList = data.entities;
+                    this.attachList   = data.resources;
+                }
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {

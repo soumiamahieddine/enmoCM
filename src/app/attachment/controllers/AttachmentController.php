@@ -672,9 +672,6 @@ class AttachmentController
             'where'     => ['res_id = ?', 'type = ?', 'mode = ?'],
             'data'      => [$attachment['res_id_master'], 'contact', $mode]
         ]);
-        if (empty($recipients)) {
-            return true;
-        }
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $attachment['docserver_id'], 'select' => ['path_template']]);
         if (empty($docserver['path_template']) || !is_dir($docserver['path_template'])) {
@@ -685,12 +682,10 @@ class AttachmentController
             return ['errors' => 'Attachment not found on docserver'];
         }
 
-        foreach ($recipients as $key => $recipient) {
-            $chrono = $attachment['identifier'] . '-' . ($key+1);
-
+        if (empty($recipients)) {
             $mergedDocument = MergeController::mergeDocument([
                 'path'  => $pathToAttachment,
-                'data'  => ['userId' => $args['userId'], 'recipientId' => $recipient['item_id'], 'recipientType' => 'contact']
+                'data'  => ['userId' => $args['userId']]
             ]);
 
             $data = [
@@ -698,7 +693,7 @@ class AttachmentController
                 'encodedFile'       => $mergedDocument['encodedDocument'],
                 'format'            => $attachment['format'],
                 'resIdMaster'       => $attachment['res_id_master'],
-                'chrono'            => $chrono,
+                'chrono'            => $attachment['identifier'],
                 'type'              => $attachment['attachment_type'],
                 'recipientId'       => $recipient['item_id'],
                 'recipientType'     => 'contact',
@@ -708,6 +703,30 @@ class AttachmentController
             $isStored = StoreController::storeAttachment($data);
             if (!empty($isStored['errors'])) {
                 return ['errors' => $isStored['errors']];
+            }
+        } else {
+            foreach ($recipients as $key => $recipient) {
+                $mergedDocument = MergeController::mergeDocument([
+                    'path'  => $pathToAttachment,
+                    'data'  => ['userId' => $args['userId'], 'recipientId' => $recipient['item_id'], 'recipientType' => 'contact']
+                ]);
+    
+                $data = [
+                    'title'             => $attachment['title'],
+                    'encodedFile'       => $mergedDocument['encodedDocument'],
+                    'format'            => $attachment['format'],
+                    'resIdMaster'       => $attachment['res_id_master'],
+                    'chrono'            => $attachment['identifier'] . '-' . ($key+1),
+                    'type'              => $attachment['attachment_type'],
+                    'recipientId'       => $recipient['item_id'],
+                    'recipientType'     => 'contact',
+                    'inSignatureBook'   => true
+                ];
+    
+                $isStored = StoreController::storeAttachment($data);
+                if (!empty($isStored['errors'])) {
+                    return ['errors' => $isStored['errors']];
+                }
             }
         }
 

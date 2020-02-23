@@ -7,6 +7,7 @@ import { HeaderService } from '../../service/header.service';
 import { of } from 'rxjs';
 import { FunctionsService } from '../../service/functions.service';
 import { FormControl } from '@angular/forms';
+import { LatinisePipe } from 'ngx-pipes';
 
 @Component({
     selector: 'app-note-editor',
@@ -42,7 +43,8 @@ export class NoteEditorComponent implements OnInit {
         public http: HttpClient,
         private notify: NotificationService,
         public headerService: HeaderService,
-        public functions: FunctionsService) { }
+        public functions: FunctionsService,
+        private latinisePipe: LatinisePipe) { }
 
     async ngOnInit() {
         await this.getEntities();
@@ -63,8 +65,12 @@ export class NoteEditorComponent implements OnInit {
             //distinctUntilChanged(),
             tap((data: any) => {
                 if (data.length > 0) {
-                    this.entitiesList = this.entities.filter( (it: any) => {
-                        return (it.entity_label.toLowerCase().includes(data) || it.entity_id.toLowerCase().includes(data));
+                    let filterValue = this.latinisePipe.transform(data.toLowerCase());
+                    this.entitiesList = this.entities.filter( (item: any) => {
+                        return (
+                            this.latinisePipe.transform(item.entity_label.toLowerCase()).includes(filterValue) 
+                                || this.latinisePipe.transform(item.entity_id.toLowerCase()).includes(filterValue)
+                            );
                     });
                 } else {
                     this.entitiesList = this.entities;

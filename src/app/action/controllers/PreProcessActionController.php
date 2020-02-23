@@ -14,7 +14,6 @@ namespace Action\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Action\models\ActionModel;
-use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketRedirectModel;
@@ -645,9 +644,9 @@ class PreProcessActionController
     {
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
         if (empty($mailevaConfig)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Maileva configuration does not exist', 'lang' => 'missingMailevaConfig']);
+            return $response->withJson(['fatalError' => 'Maileva configuration does not exist', 'reason' => 'missingMailevaConfig']);
         } elseif (!$mailevaConfig['enabled']) {
-            return $response->withStatus(400)->withJson(['errors' => 'Maileva configuration is disabled', 'lang' => 'disabledMailevaConfig']);
+            return $response->withJson(['fatalError' => 'Maileva configuration is disabled', 'reason' => 'disabledMailevaConfig']);
         }
 
         $data = $request->getParsedBody();

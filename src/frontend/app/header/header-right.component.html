@@ -4,7 +4,7 @@
         <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple">
         <input type="hidden" name="meta[]" value="welcome#welcome#welcome">
         <input type="hidden" name="baskets_clause" value="true">
-        <mat-form-field floatLabel="never" style="width:100%;margin-top: -3px;margin-left:-13px;font-size: 12px;">
+        <mat-form-field floatLabel="never" style="width:100%;margin-top: -3px;margin-left:-13px;font-size: 12px;" *ngIf="privilegeService.hasCurrentUserPrivilege('adv_search_mlb')">
             <input #searchInput="matInput" matInput type="text" (blur)="hideSearch = !hideSearch" name="welcome" title="{{lang.searchMails}}"  placeholder="{{lang.searchMails}}">
             <button mat-icon-button matSuffix *ngIf="!appService.getViewMode()" style="opacity:0.5;">
                 <mat-icon class="fa fa-search" style="font-size:22px;"></mat-icon>
@@ -13,7 +13,8 @@
         <input #searchHome type="submit" name="submit" value="" style="display:none;">
     </form>
 
-    <button title="{{lang.quickSearchInfo + ' : '+ lang.quickSearchTarget}}" (click)="showSearchInput()" mat-icon-button *ngIf="hideSearch" style="opacity:0.5;">
+    <button title="{{lang.quickSearchInfo + ' : '+ lang.quickSearchTarget}}" (click)="showSearchInput()" mat-icon-button *ngIf="hideSearch && privilegeService.hasCurrentUserPrivilege('adv_search_mlb')" 
+            style="opacity:0.5;">
         <mat-icon class="fa fa-search" style="font-size:22px;"></mat-icon>
     </button>
 
@@ -28,6 +29,9 @@
                 <br />{{shortcut.label}}
             </button>
         </ng-container>
+        <div *ngIf="functions.empty(menus)" class="noAvailableMenu">
+            {{lang.noAvailableMenu}}
+        </div>
     </mat-menu>
     <button *ngIf="!appService.getViewMode()" mat-button [matMenuTriggerFor]="menu">
         <mat-icon mat-list-icon class="fa fa-user fa-2x" style="color:white; margin:0px 12px 8px 0px;"></mat-icon>
