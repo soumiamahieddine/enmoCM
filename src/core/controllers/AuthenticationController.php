@@ -150,7 +150,7 @@ class AuthenticationController
         EmailController::createEmail([
             'userId'    => $args['userId'],
             'data'      => [
-                'sender'        => ['email' => 'Notification'],
+                'sender'        => ['email' => $args['userEmail']],
                 'recipients'    => [$args['userEmail']],
                 'object'        => _NOTIFICATIONS_USER_CREATION_SUBJECT,
                 'body'          => _NOTIFICATIONS_USER_CREATION_BODY . '<a href="' . $url . '">'._CLICK_HERE.'</a>' . _NOTIFICATIONS_USER_CREATION_FOOTER,

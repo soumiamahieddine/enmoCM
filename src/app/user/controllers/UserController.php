@@ -1644,10 +1644,10 @@ class UserController
         UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$user['id']]]);
 
         $url = UrlController::getCoreUrl() . 'apps/maarch_entreprise/index.php?display=true&page=login&update-password-token=' . $resetToken;
-        EmailController::createEmail([
+        $email = EmailController::createEmail([
             'userId'    => $user['id'],
             'data'      => [
-                'sender'        => ['email' => 'Notification'],
+                'sender'        => ['email' => $user['mail']],
                 'recipients'    => [$user['mail']],
                 'object'        => _NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT,
                 'body'          => _NOTIFICATIONS_FORGOT_PASSWORD_BODY . '<a href="' . $url . '">'._CLICK_HERE.'</a>' . _NOTIFICATIONS_FORGOT_PASSWORD_FOOTER,
@@ -1656,12 +1656,17 @@ class UserController
             ]
         ]);
 
+        if (!empty($email['errors'])) {
+            $historyMessage = $email['errors'];
+        } else {
+            $historyMessage = _PASSWORD_REINIT_SENT;
+        }
         HistoryController::add([
             'tableName'    => 'users',
             'recordId'     => $body['login'],
             'eventType'    => 'RESETPSW',
             'eventId'      => 'userModification',
-            'info'         => _PASSWORD_REINIT_SENT
+            'info'         => $historyMessage
         ]);
 
         return $response->withStatus(204);
