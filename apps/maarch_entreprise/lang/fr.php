@@ -39,18 +39,6 @@ if (!defined('_PLEASE_CHOOSE_AN_ATTACHMENT')) {
 if (!defined('_ADD_ATTACHMENT_TO_SEND_TO_CONTACT')) {
     define('_ADD_ATTACHMENT_TO_SEND_TO_CONTACT', "Veuillez ajouter une pièce jointe avant d'envoyer ce courrier au contact");
 }
-if (!defined('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT')) {
-    define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Envoyer au contact avec une pièce jointe obligatoire et accusé de réception');
-}
-if (!defined('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC')) {
-    define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', "Ouvre une modal d'envoi de mail avec l'email du contact associé au document en tant que destinataire, présence OBLIGATOIRE de pièce(s) jointe(s) à l'envoi.");
-}
-if (!defined('_SEND_ATTACHMENTS_TO_CONTACT')) {
-    define('_SEND_ATTACHMENTS_TO_CONTACT', 'Envoyer au contact avec accusé de réception');
-}
-if (!defined('_SEND_ATTACHMENTS_TO_CONTACT_DESC')) {
-    define('_SEND_ATTACHMENTS_TO_CONTACT_DESC', "Ouvre une modal d'envoi de mail avec l'email du contact associé au document en tant que destinataire.");
-}
 if (!defined('_PROCESSING_MODE')) {
     define('_PROCESSING_MODE', 'Mode de traitement');
 }
@@ -403,13 +391,6 @@ if (!defined('_DEFINITIVE_ACTION')) {
 }
 if (!defined('_AND')) {
     define('_AND', ' et ');
-}
-//if (!defined("_PLEASE_CHECK_LISTDIFF")) define("_PLEASE_CHECK_LISTDIFF", " est dans une ou des listes de diffusion. Veuillez le remplacer dans la ou les listes de ");
-if (!defined('_PLEASE_CHECK_LISTDIFF')) {
-    define('_PLEASE_CHECK_LISTDIFF', "L'utilisateur est présent en tant que destinataire d'un ou plusieurs modèle(s) de liste de diffusion, veuillez le remplacer par un autre utilisateur.");
-}
-if (!defined('_THE_USER_JS')) {
-    define('_THE_USER_JS', "L\'utilisateur ");
 }
 
 /************** Divers **************/
@@ -1415,30 +1396,6 @@ if (!defined('_DIFFLIST_NEVER_MODIFIED')) {
     define('_DIFFLIST_NEVER_MODIFIED', "La liste de diffusion n'a jamais été modifiée");
 }
 
-//BITMASK
-if (!defined('_BITMASK_VALUE_ALREADY_EXIST')) {
-    define('_BITMASK_VALUE_ALREADY_EXIST', 'Bitmask déjà utilisé dans un autre type');
-}
-
-if (!defined('_ASSISTANT_MODE')) {
-    define('_ASSISTANT_MODE', 'Mode assisstant');
-}
-if (!defined('_EDIT_WITH_ASSISTANT')) {
-    define('_EDIT_WITH_ASSISTANT', 'Cliquez ici pour éditer la clause where avec le mode assistant');
-}
-if (!defined('_VALID_THE_WHERE_CLAUSE')) {
-    define('_VALID_THE_WHERE_CLAUSE', 'Cliquez ici pour VALIDER la clause where');
-}
-if (!defined('_MUST_CHOOSE_COLLECTION_FIRST')) {
-    define('_MUST_CHOOSE_COLLECTION_FIRST', 'Vous devez choisir une collection');
-}
-if (!defined('_CANTCHANGECOLL')) {
-    define('_CANTCHANGECOLL', 'Vous ne pouvez pas changer la collection');
-}
-if (!defined('_DOCUMENTS_EXISTS_FOR_COUPLE_FOLDER_TYPE_COLLECTION')) {
-    define('_DOCUMENTS_EXISTS_FOR_COUPLE_FOLDER_TYPE_COLLECTION', 'courriers existent pour le couple type de dossier/collection');
-}
-
 if (!defined('_NO_RIGHT')) {
     define('_NO_RIGHT', 'Erreur');
 }
@@ -1492,13 +1449,6 @@ if (!defined('_CHOOSE_ONE_DOC')) {
 if (!defined('_CHOOSE_ONE_OBJECT')) {
     define('_CHOOSE_ONE_OBJECT', 'Choisissez au moins un élément');
 }
-
-if (!defined('_CLICK_LINE_TO_CHECK_INVOICE')) {
-    define('_CLICK_LINE_TO_CHECK_INVOICE', 'Cliquer sur une ligne pour vérifier une facture');
-}
-if (!defined('_FOUND_INVOICES')) {
-    define('_FOUND_INVOICES', ' facture(s) trouvée(s)');
-}
 if (!defined('_SIMPLE_CONFIRM')) {
     define('_SIMPLE_CONFIRM', 'Confirmation simple');
 }
@@ -1517,18 +1467,6 @@ if (!defined('_NO_STRUCTURE_ATTACHED')) {
 }
 
 ///// Credits
-if (!defined('_MAARCH_CREDITS')) {
-    define('_MAARCH_CREDITS', 'A propos de Maarch ');
-}
-if (!defined('_THANKS_TO_EXT_DEV')) {
-    define('_THANKS_TO_EXT_DEV', "Maarch s'appuie sur quelques composants externes. Merci à leurs développeurs !");
-}
-if (!defined('_PROCESSING_DATE')) {
-    define('_PROCESSING_DATE', 'Date limite de traitement');
-}
-if (!defined('_PROCESS_NUM')) {
-    define('_PROCESS_NUM', 'Traitement du courrier n°');
-}
 if (!defined('_PROCESS_LIMIT_DATE')) {
     define('_PROCESS_LIMIT_DATE', 'Date limite de traitement');
 }
@@ -1678,12 +1616,6 @@ if (!defined('_PROCESS_DATE')) {
 if (!defined('_CHOOSE_STATUS')) {
     define('_CHOOSE_STATUS', 'Choisissez un statut');
 }
-if (!defined('_PROCESS_RECEIPT')) {
-    define('_PROCESS_RECEIPT', 'Destinataire(s) pour traitement');
-}
-if (!defined('_CHOOSE_RECEIPT')) {
-    define('_CHOOSE_RECEIPT', 'Choisissez un destinataire');
-}
 if (!defined('_TO_CC')) {
     define('_TO_CC', 'En copie');
 }
@@ -1782,7 +1714,7 @@ if (!defined('_MULTI_FIELD')) {
     define('_MULTI_FIELD', 'Multi-champs');
 }
 if (!defined('_MULTI_FIELD_HELP')) {
-    define('_MULTI_FIELD_HELP', 'Objet, description, titre, Num GED, Num chrono, annotations de traitement...');
+    define('_MULTI_FIELD_HELP', 'Objet, code à barres, Num GED, Num chrono, annotations de traitement');
 }
 if (!defined('_SAVE_QUERY')) {
     define('_SAVE_QUERY', 'Enregistrer ma recherche');
@@ -1866,18 +1798,6 @@ if (!defined('_MAIL_DATE')) {
 if (!defined('_DOC_HISTORY')) {
     define('_DOC_HISTORY', 'Historique');
 }
-if (!defined('_DONE_ANSWERS')) {
-    define('_DONE_ANSWERS', 'Réponses effectuées');
-}
-if (!defined('_MUST_DEFINE_ANSWER_TYPE')) {
-    define('_MUST_DEFINE_ANSWER_TYPE', 'Vous devez préciser le type de réponse');
-}
-if (!defined('_MUST_CHECK_ONE_BOX')) {
-    define('_MUST_CHECK_ONE_BOX', 'Vous devez cocher au moins une case');
-}
-if (!defined('_ANSWER_TYPE')) {
-    define('_ANSWER_TYPE', 'Type(s) de réponse');
-}
 if (!defined('_CHOOSE_FILE')) {
     define('_CHOOSE_FILE', 'Choisissez le fichier');
 }
@@ -1915,9 +1835,6 @@ if (!defined('_ATTACHMENTS_VERS_COLL')) {
 }
 if (!defined('_APA_COLL')) {
     define('_APA_COLL', "Collection de l'archivage physique");
-}
-if (!defined('_REDIRECT_TO_ACTION')) {
-    define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');
 }
 if (!defined('_DOCUMENTS_LIST')) {
     define('_DOCUMENTS_LIST', 'Liste');
@@ -2601,9 +2518,6 @@ if (!defined('_WORK_BATCH')) {
 if (!defined('_DONE')) {
     define('_DONE', 'Actions effectuées');
 }
-if (!defined('_ANSWER_TYPES_DONE')) {
-    define('_ANSWER_TYPES_DONE', 'Type(s) de réponses effectuées');
-}
 if (!defined('_CLOSING_DATE')) {
     define('_CLOSING_DATE', 'Date de clôture');
 }
@@ -2782,15 +2696,6 @@ if (!defined('_PROJECT')) {
 }
 if (!defined('_MARKET')) {
     define('_MARKET', 'Sous-dossier');
-}
-if (!defined('_SEARCH_CUSTOMER')) {
-    define('_SEARCH_CUSTOMER', 'Consultation Dossiers Sous-dossiers');
-}
-if (!defined('_SEARCH_CUSTOMER_TITLE')) {
-    define('_SEARCH_CUSTOMER_TITLE', 'Recherche Dossiers Sous-dossiers');
-}
-if (!defined('_TO_SEARCH_DEFINE_A_SEARCH_ADV')) {
-    define('_TO_SEARCH_DEFINE_A_SEARCH_ADV', 'Pour lancer une recherche vous devez saisir un n° de dossier ou un nom de Dossier ou de Sous-dossier');
 }
 if (!defined('_DAYS')) {
     define('_DAYS', 'jours');

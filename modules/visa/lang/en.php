@@ -37,9 +37,6 @@ if (!defined('_NO_VISA')) {
 if (!defined('_NO_RESPONSE_PROJECT_VISA')) {
     define('_NO_RESPONSE_PROJECT_VISA', 'Please, integrate at least one attachment to signature book');
 }
-if (!defined('_MAIL_HAS_NO_RESPONSE_PROJECT')) {
-    define('_MAIL_HAS_NO_RESPONSE_PROJECT', 'These mails have no attachments in signatory book');
-}
 if (!defined('_NO_CONVERTED_PDF_VISA')) {
     define('_NO_CONVERTED_PDF_VISA', 'Please edit your attachment(s)');
 }

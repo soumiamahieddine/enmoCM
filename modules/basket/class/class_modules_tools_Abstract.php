@@ -263,34 +263,6 @@ abstract class basket_Abstract extends Database
         }
     }
 
-    public function translates_actions_to_json($actions = array())
-    {
-        $jsonActions = '{';
-
-        if (count($actions) > 0) {
-            for ($i = 0; $i < count($actions); $i ++) {
-                $jsonActions .= "'"  . $actions[$i]['ID'] . "' : { 'where' : '"
-                . addslashes($actions[$i]['WHERE']) . "',";
-                $jsonActions .= "'id_status' : '" . $actions[$i]['ID_STATUS']
-                . "', 'confirm' : '" ;
-                if (isset($actions[$i]['CONFIRM'])) {
-                    $jsonActions .= $actions[$i]['CONFIRM'];
-                } else {
-                    $jsonActions .= 'false';
-                }
-                $jsonActions .= "', ";
-                $jsonActions .= "'id_action_page' : '"
-                . $actions[$i]['ACTION_PAGE'] . "'}, ";
-            }
-            $jsonActions = preg_replace('/, $/', '}', $jsonActions);
-        }
-
-        if ($jsonActions == '{') {
-            $jsonActions = '{}';
-        }
-        return $jsonActions;
-    }
-
     /**
      * Returns in an array all the data of a basket for a user
      *(checks if the basket is a redirected one and then if already a virtual one)
