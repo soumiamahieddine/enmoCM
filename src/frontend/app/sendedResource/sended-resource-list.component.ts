@@ -267,7 +267,31 @@ export class SendedResourceListComponent implements OnInit {
                 tap(() => {
                     this.loadList();
                     setTimeout(() => {
-                        this.loadList(); 
+                        this.sendedResources.map((draftElement: any) => {
+                            if (draftElement.status == 'WAITING' && draftElement.type == 'email') {
+                                this.http.get(`../../rest/emails/${draftElement.id}`).pipe(
+                                    tap((data: any) => {
+                                        if (data.status == 'SENT' || data.status == 'ERROR') {
+                                            if (data.status == 'SENT') {
+                                                this.notify.success(this.lang.emailSent);
+                                            } else {
+                                                this.notify.error(this.lang.emailCannotSent);
+                                            }
+                                            this.sendedResources.map((element: any, key: number) => {
+                                                if (element.id == draftElement.id && element.type == 'email') {
+                                                    this.sendedResources[key].status = data.status;
+                                                    this.sendedResources[key].sendDate = data.sendDate;
+                                                }
+                                            });
+                                        }
+                                    })
+                                ).subscribe();
+                            }
+                        });
+                        setTimeout(() => {
+                            this.dataSource = new MatTableDataSource(this.sendedResources);
+                            this.dataSource.sort = this.sort;
+                        }, 0);
                     }, 3000);
                 }),
                 catchError((err: any) => {

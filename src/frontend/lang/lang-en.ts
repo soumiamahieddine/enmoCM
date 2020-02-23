@@ -1554,6 +1554,7 @@ export const LANG_EN = {
     "emptySubject" : "Empty subject",
     "noAvailableMenu" : "No available menu",
     "emailSent" : "Email sent",
+    "emailCannotSent" : "Error during sending email",
     "editAcknowledgementReceipt" : "Edit the acknowledgement receipt",
     "insufficientPrivilege" : "Privilege insuffisant",
     "cannotMergeTags" : "This tag has a parent or children : impossible to merge tags",
