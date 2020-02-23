@@ -755,7 +755,7 @@ export const LANG_NL = {
     "quickSearchInfo"                       : "Target search ", //_TO_TRANSLATE
     "inSignatureBook"                       : "In signature Book", //_TO_TRANSLATE
     "inShipping"                            : "In shipping", //_TO_TRANSLATE
-    "quickSearchTarget"                     : "subject (mail / attachment), chrono number (courrier / attachment), reference mail, notes content, barcode, attachment contact (society / lastanme / firstname)", //_TO_TRANSLATE
+    "quickSearchTarget"                     : "subject (mail / attachment), chrono number (courrier / attachment), notes content, barcode, EDM number (mail)", //_TO_TRANSLATE
     "quota"                                 : "Quota",
     "quotaExceeded"                         : "Quota overschreden",
     "reactivateUserDeleted"                 : "De ingevoerde gebruikersnaam is toegekend aan een verwijderde gebruiker. Wilt u deze opnieuw activeren?",
@@ -1562,8 +1562,7 @@ export const LANG_NL = {
     "badEmailsFormat" : "Some email address are not correct", //_TO_TRANSLATE
     "warnEmptySubject" : "You will send an email without subject, continue ?", //_TO_TRANSLATE
     "emailDeleted" : "Email deleted", //_TO_TRANSLATE
-    "mailingActionInformations" : "Following mails contain mailing attachments, if next person in visa circuit is signatory then mailing will be activate :", //_TO_TRANSLATE
-    "mailingActionInformations2" : "Following mails contain mailing attachments, mailing will be activate :", //TRANSLATE
+    "mailingActionInformations" : "Following mails contain mailing attachments, mailing will be activate :", //TRANSLATE
     "properties" : "Properties",  //_TO_TRANSLATE
     "generateARMode" : "Acknowledgement receipt mode allowed", //_TO_TRANSLATE
     "autoAR" : "Automatic", //_TO_TRANSLATE
@@ -1578,6 +1577,8 @@ export const LANG_NL = {
     "willBeTransferedToNewTag" : "will be transfered to selected tag", //_TO_TRANSLATE
     "detailDoc" : "Detail page", //_TO_TRANSLATE
     "emptySubject" : "Empty subject", //_TO_TRANSLATE
+    "noAvailableMenu" : "No available menu", //_TO_TRANSLATE
+    "emailSent" : "Email sent", //_TO_TRANSLATE
     "editAcknowledgementReceipt" : "Edit the acknowledgement receipt", //_TO_TRANSLATE
     "insufficientPrivilege" : "Privilege insuffisant", //TRANSLATE
     "cannotMergeTags" : "This tag has a parent or children : impossible to merge tags",//_TO_TRANSLATE

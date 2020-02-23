@@ -91,11 +91,7 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
                     }
                     this.noResourceToProcess = this.data.resIds.length === this.resourcesError.length;
                     if (data.resourcesInformations.success) {
-                        data.resourcesInformations.success.forEach((value: any) => {
-                            if (value.mailing) {
-                                this.resourcesMailing.push(value);
-                            }
-                        });
+                        this.resourcesMailing = data.resourcesInformations.success.filter((element: any) => element.mailing);
                     }
                     resolve(true);
                 }, (err: any) => {
