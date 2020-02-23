@@ -32,20 +32,6 @@ abstract class avis_controler_Abstract
     //# send avis
     //####################################
 
-    public function processAvis($resId, $opinionLimitDate = '')
-    {
-        //define avis limit date
-        $db = new Database();
-
-        if ($opinionLimitDate != '') {
-            $query = 'UPDATE res_letterbox SET opinion_limit_date = ? where res_id = ?';
-            $db->query($query, array($opinionLimitDate, $resId));
-        }
-
-        $query = 'UPDATE res_letterbox SET modification_date = '.$db->current_datetime().' where res_id = ?';
-        $db->query($query, array($resId));
-    }
-
     public function getList($res_id, $coll_id, $bool_modif = false, $typeList, $isAvisStep = false, $fromDetail = '')
     {
         $circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
@@ -264,122 +250,11 @@ abstract class avis_controler_Abstract
         );
     }
 
-    public function getCurrentStepAvis($res_id, $coll_id, $listDiffType)
-    {
-        $db = new Database();
-        if ($listDiffType == 'entity_id') {
-            $order = 'DESC';
-        } else {
-            $order = 'ASC';
-        }
-        $where = 'res_id= ? and coll_id = ? and difflist_type = ? and process_date IS NULL';
-        $order = 'ORDER by listinstance_id '.$order;
-        $query = $db->limit_select(0, 1, 'sequence, item_mode', 'listinstance', $where, '', '', $order);
-
-        $stmt = $db->query($query, array($res_id, $coll_id, $listDiffType));
-        $res = $stmt->fetchObject();
-        /* if ($res->item_mode == 'avis'){
-          return $this->nbAvis($res_id, $coll_id);
-          } */
-        return $res->sequence;
-    }
-
-    public function getStepDetailsAvis($res_id, $coll_id, $listDiffType, $sequence)
-    {
-        $stepDetails = array();
-        $db = new Database();
-        $where = 'res_id= ? and coll_id = ? and difflist_type = ? and sequence = ?';
-        $order = ' ORDER by listinstance_id ASC';
-        $query = $db->limit_select(0, 1, '*', 'listinstance', $where, '', '', $order);
-        $stmt = $db->query($query, array($res_id, $coll_id, $listDiffType, $sequence));
-        $res = $stmt->fetchObject();
-        $stepDetails['listinstance_id'] = $res->listinstance_id;
-        $stepDetails['coll_id'] = $res->coll_id;
-        $stepDetails['res_id'] = $res->res_id;
-        $stepDetails['sequence'] = $res->sequence;
-        $stepDetails['item_id'] = $res->item_id;
-        $stepDetails['item_type'] = $res->item_type;
-        $stepDetails['item_mode'] = $res->item_mode;
-        $stepDetails['added_by_user'] = $res->added_by_user;
-        $stepDetails['visible'] = $res->visible;
-        $stepDetails['viewed'] = $res->viewed;
-        $stepDetails['difflist_type'] = $res->difflist_type;
-        $stepDetails['process_date'] = $res->process_date;
-        $stepDetails['process_comment'] = $res->process_comment;
-
-        return $stepDetails;
-    }
-
     public function nbAvis($res_id, $coll_id)
     {
         $db = new Database();
         $stmt = $db->query("SELECT listinstance_id from listinstance WHERE res_id= ? and coll_id = ? and item_mode = ? and difflist_type = 'AVIS_CIRCUIT'", array($res_id, $coll_id, 'avis'));
 
         return $stmt->rowCount();
-    }
-
-    //####################################
-    //# add note on a resource
-    //####################################
-
-    public function UpdateNoteAvis($resId, $collId, $noteContent)
-    {
-        $status = 'ok';
-        $error = '';
-        //control parameters
-        if (isset($resId) && empty($resId)) {
-            $status = 'ko';
-            $error = 'resId empty ';
-        }
-        if (isset($collId) && empty($collId)) {
-            $status = 'ko';
-            $error = 'collId empty ';
-        }
-        if (isset($noteContent) && empty($noteContent)) {
-            $status = 'ko';
-            $error .= 'noteContent empty ';
-        }
-        //process
-        if ($status == 'ok') {
-            require_once 'core/class/class_security.php';
-            require_once 'modules/notes/notes_tables.php';
-            $security = new security();
-            $view = $security->retrieve_view_from_coll_id($collId);
-            $table = $security->retrieve_table_from_coll($collId);
-            $db = new Database();
-            $query = 'SELECT res_id FROM '.$view.' WHERE res_id = ?';
-            $stmt = $db->query($query, array($resId));
-            if ($stmt->rowCount() == 0) {
-                $status = 'ko';
-                $error .= 'resId not exists';
-            } else {
-                $query = 'UPDATE '.NOTES_TABLE
-                        .' SET note_text = ?'
-                        .', creation_date = CURRENT_TIMESTAMP'
-                        .' WHERE identifier = ?'
-                        ." AND note_text LIKE '[POUR AVIS]%'";
-
-                $stmt = $db->query($query, array($noteContent, $resId));
-
-                $hist = new history();
-                $hist->add(
-                        $view,
-                    $resId,
-                    'UP',
-                    'resup',
-                    _AVIS_UPDATED
-                        ._ON_DOC_NUM.$resId.' '._BY.' '.$_SESSION['user']['UserId'],
-                    $_SESSION['config']['databasetype'],
-                    'notes'
-                );
-            }
-        }
-        $returnArray = array(
-            'status' => $status,
-            'value' => $id,
-            'error' => $error,
-        );
-
-        return $returnArray;
     }
 }

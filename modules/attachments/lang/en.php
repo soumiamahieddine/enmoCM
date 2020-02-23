@@ -178,29 +178,12 @@ if(!defined('_CHOOSE_ATTACH'))
     define('_CHOOSE_ATTACH','Please choose a document to attach the attachment');
 if(!defined('_NO_DEST_INFOS'))
     define('_NO_DEST_INFOS','Please enter a recipient manually');
-
-/************** POPUP **************/
-
-if(!defined('_ERROR_EMPTY_RES_ID'))
-    define('_ERROR_EMPTY_RES_ID', 'No mail was selected. Please select at least one mail');
-if(!defined('_MULTIPLE_RES_ID_ERROR'))
-    define('_MULTIPLE_RES_ID_ERROR','The selection of multiple mail to rattach the attachments isn\'t permitted. Please select just one mail');
-if(!defined('_ATTACH_TO_EMPTY_ERROR'))
-    define('_ATTACH_TO_EMPTY_ERROR', ' The  selection of a mail without project response isn\'t permitter. Please select a mail with one or more project response');
-if(!defined('_SAME_RES_ID_ERROR'))
-    define('_SAME_RES_ID_ERROR', 'One of the selected document is the same as the current. Please un-check it');
-
 /************** INTERFACE ***********/
 
 if(!defined('_GENERATE_CHRONO_NUMBER'))
     define('_GENERATE_CHRONO_NUMBER','Generate a chrono number');
 if(!defined('_CLOSE_INCOMING'))
     define('_CLOSE_INCOMING','Close the incoming mail');
-if(!defined('_PLEASE_GENERATE_CHRONO_NUMBER'))
-    define ('_PLEASE_GENERATE_CHRONO_NUMBER','Please, generate a new chrono number');
-if(!defined('_CHOOSE_CHRONO_NUMBER'))
-    define('_CHOOSE_CHRONO_NUMBER','Please choose a chrono number');
-
 if (!defined('_MAILING_INFO_1')) {
     define('_MAILING_INFO_1', '<b>Mailing is enabled</b> : ');
 }

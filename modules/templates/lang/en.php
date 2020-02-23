@@ -148,9 +148,6 @@ if (!defined('_GENERATED_FILE')) {
 if (!defined('_MUST_CHOOSE_TEMPLATE')) {
     define('_MUST_CHOOSE_TEMPLATE', 'You have too choose a template');
 }
-if (!defined('_GENERATE_ANSWER')) {
-    define('_GENERATE_ANSWER', 'Generate an attachment');
-}
 if (!defined('_GENERATE')) {
     define('_GENERATE', 'Generate an attachment');
 }

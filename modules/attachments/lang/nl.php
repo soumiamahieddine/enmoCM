@@ -224,29 +224,11 @@ if (!defined('_CHOOSE_ATTACH')) {
 if (!defined('_NO_DEST_INFOS')) {
     define('_NO_DEST_INFOS', 'Geef een bestemmeling manueel in');
 }
-if (!defined('_MULTIPLE_RES_ID_ERROR')) {
-    define('_MULTIPLE_RES_ID_ERROR', 'Selectie van meerdere brieven waaraan de bijlage gekoppeld moet worden is niet toegelaten. Selecteer slechts een enkele brief');
-}
-if (!defined('_ATTACH_TO_EMPTY_ERROR')) {
-    define('_ATTACH_TO_EMPTY_ERROR', 'De selectie van een brief zonder antwoordontwerp is niet toegelaten. Selecteer een brief die een antwoordontwerp bevat');
-}
-if (!defined('_ERROR_EMPTY_RES_ID')) {
-    define('_ERROR_EMPTY_RES_ID', 'Er werd geen enkele brief geselecteerd, selecteer minstens een brief');
-}
-if (!defined('_SAME_RES_ID_ERROR')) {
-    define('_SAME_RES_ID_ERROR', 'Eén van de geselecteerde brieven is dezelfde als het huidige document maak de selectie ervan ongedaan');
-}
 if (!defined('_GENERATE_CHRONO_NUMBER')) {
     define('_GENERATE_CHRONO_NUMBER', 'Een chrononummer aanmaken');
 }
 if (!defined('_CLOSE_INCOMING')) {
     define('_CLOSE_INCOMING', 'Doelpost(en) sluiten');
-}
-if (!defined('_PLEASE_GENERATE_CHRONO_NUMBER')) {
-    define('_PLEASE_GENERATE_CHRONO_NUMBER', 'Maak een chrononummer aan');
-}
-if (!defined('_CHOOSE_CHRONO_NUMBER')) {
-    define('_CHOOSE_CHRONO_NUMBER', 'Kies een chrononummer');
 }
 if (!defined('_MAILING_INFO_1')) {
     define('_MAILING_INFO_1', '<b>Publipostage geactiveerd</b>');

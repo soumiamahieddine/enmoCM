@@ -18,38 +18,6 @@ function endAttachment()
     window.close();
 }
 
-function showDiv(divName, spanNb, divCreate, path_manage_script)
-{
-    new Ajax.Request(path_manage_script,
-    {
-        method:'post',
-        parameters: {res_id : 'test'},
-            onSuccess: function(answer){
-            eval("response = "+answer.responseText);
-            if(response.status == 0 || response.status == 1) {
-                if(response.status == 0) {
-                    if ($(divName)) {
-                        $(divName).innerHTML = response.list;
-                        $(spanNb).innerHTML = response.nb;
-                        $(divCreate).innerHTML = response.create;
-                    } else {
-                        window.opener.$(divName).innerHTML = response.list;
-                        window.opener.$(spanNb).innerHTML = response.nb;
-                        window.opener.$(divCreate).innerHTML = response.create;
-                    }
-                } else {
-                    //
-                }
-            } else {
-                try {
-                    //$(divName).innerHTML = response.error_txt;
-                }
-                catch(e){}
-            }
-        }
-    });
-}
-
 function checkEditingDoc(elem, userId) {
 
     if ($j('#'+elem.id).parent().parent().find('[name=attachNum\\[\\]]').length) {
@@ -152,71 +120,4 @@ function checkEditingDoc(elem, userId) {
 
     });
 
-}
-
-function showAppletLauncher(target, resId, objectTable, objectType, mode) {
-
-    if (mode == 'template') {
-        var path = 'index.php?display=true&module=content_management&page=applet_modal_launcher&uniqueId=0&objectType=' + objectType + '&objectId=' + resId + '&objectTable=' + objectTable;
-    
-    } else {
-        //Num of Attachment
-        var attachNum = $j('#'+target.id).parent().parent().find('[name=attachNum\\[\\]]').val();
-        //Only add mode
-        if (objectType == 'attachmentVersion') {
-            var templateOffice = $j('#'+target.id).parent().parent().find('[name=templateOffice\\[\\]]').val();
-        } else {
-            var templateOffice = $j('#'+target.id).parent().parent().find('#res_id').val();
-        }
-        var attachment_types = $j('#'+target.id).parent().parent().find('[name=attachment_types\\[\\]]').val();
-
-        if (attachment_types == 'transmission') {
-            var contactidAttach = $j('#formAttachment [name=contactidAttach\\[\\]]').first().val();
-            var addressidAttach = $j('#formAttachment [name=addressidAttach\\[\\]]').first().val();
-        } else {
-            var contactidAttach = $j('#'+target.id).parent().parent().find('[name=contactidAttach\\[\\]]').val();
-            var addressidAttach = $j('#'+target.id).parent().parent().find('[name=addressidAttach\\[\\]]').val();
-        }
-        
-        var chrono = $j('#'+target.id).parent().parent().find('[name=chrono\\[\\]]').val();
-        var title = cleanTitle($j('#'+target.id).parent().parent().find('[name=title\\[\\]]').val());
-        var back_date = $j('#'+target.id).parent().parent().find('[name=back_date\\[\\]]').val();
-        if (typeof back_date === "undefined") {
-            back_date = '';
-        }
-        var backDateStatus = $j('#'+target.id).parent().parent().find('[name=backDateStatus\\[\\]]').val();
-        if (objectType == 'attachmentVersion' && $j('#selectContactIdRes').val() == 'mailing') {
-            objectType = 'attachmentMailing';
-        }
-        var path = 'index.php?display=true&module=content_management&page=applet_modal_launcher&uniqueId='+attachNum+'&objectType='+objectType+'&objectId='+templateOffice+'&attachType='+attachment_types+'&objectTable=' + objectTable + '&contactId='+contactidAttach+'&addressId='+addressidAttach+'&chronoAttachment='+chrono+'&titleAttachment='+title+'&backDateStatus='+backDateStatus+'&back_date='+back_date+'&resMaster=' + resId
-    }
-    
-
-    /*console.log('attach number : '+attachNum);
-    console.log('template_id : '+templateOffice);
-    console.log('attachment type : '+attachment_types);
-    console.log('contact_id : '+contactidAttach);
-    console.log('address_id : '+addressidAttach);
-    console.log('chrono : '+chrono);
-    console.log('title : '+title);
-    console.log('back date : '+back_date);
-    console.log('path : '+path);*/
-    
-    new Ajax.Request(path,
-    {
-        method:'post',
-        parameters: { url : path
-                    },  
-        onSuccess: function(answer) {
-            
-            eval("response = "+answer.responseText);
-            
-            if(response.status == 0){
-                var modal_content = convertToTextVisibleNewLine(response.content);
-                createModal(modal_content, 'CMApplet', 300, 300); 
-            } else {
-                window.top.$('main_error').innerHTML = response.error;
-            }
-        }
-    });
 }

@@ -35,7 +35,3 @@ if (! defined('NOTES_TABLE')) {
 if (! defined('NOTE_ENTITIES_TABLE')) {
     define('NOTE_ENTITIES_TABLE', 'note_entities');
 }
-
-if (! defined('NOTE_ENTITIES_SEQ')) {
-    define('NOTE_ENTITIES_SEQ', 'notes_entities_id_seq');
-}

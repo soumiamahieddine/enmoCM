@@ -35,11 +35,6 @@
 		<parameter name="templateId" type="integer" />
 	</validationRule>
 
-	<validationRule name="select_templates" extends="standardForm" mode="error">
-		<parameter name="attachment_type" type="identifier" />
-		<parameter name="module" type="identifier" />
-	</validationRule>
-
 	<validationRule name="admin_change_templates" extends="standardForm" mode="error">
 		<parameter name="template_style" type="string" />
 		<parameter name="module" type="identifier" />

@@ -254,7 +254,6 @@ define('_VISA_MAIL', 'De e-mail goedkeuren');
 define('_CREATE_ATTACHMENTS_FROM_DETAILS', 'Bijlagen vanuit de detailfiche aanmaken');
 define('_MODIFY_ATTACHMENTS', 'De bijlagen wijzigen');
 define('_DELETE_ATTACHMENTS', 'De bijlagen verwijderen');
-define('_VIEW_BASKETS_DESC', 'Mijn bakjes');
 define('_SEND_DOCS_TO_RECOMMENDATION', 'Een (parallelle) berichtenvraag verzenden');
 define('_SEND_DOCS_TO_RECOMMENDATION_DESC', 'Opent een modaliteit die toelaat personen in het bericht, in de verdelingslijst toe te voegen of te verwijderen.');
 define('_VALIDATE_RECOMMENDATION', 'Een (parallelle) berichtenvraag bevestigen');

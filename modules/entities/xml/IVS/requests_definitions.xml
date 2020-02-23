@@ -9,11 +9,6 @@
 		<parameter name="display" value="true"/>
 		<parameter name="module" value="entities"/>
     </requestDefinition>
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="set_primary_entity" >
-		<parameter name="page" value="set_primary_entity"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="save_list_diff" >
 		<parameter name="page" value="save_list_diff"/>
 		<parameter name="display" value="true"/>
@@ -60,11 +55,6 @@
 		<parameter name="module" value="entities"/>
     </requestDefinition>
 
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="get_tree_childs" >
-		<parameter name="page" value="get_tree_childs"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
     <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="admin_difflist_types" >
 		<parameter name="page" value="admin_difflist_types"/>
 		<parameter name="module" value="entities"/>
@@ -182,60 +172,6 @@
 		<parameter name="module" value="entities"/>
     </requestDefinition>
 
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="manage_user_entities">
-		<parameter name="page" value="manage_user_entities"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-
-    <!--requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="param_index_difflist_types">
-		<parameter name="page" value="param_index_difflist_types"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="param_index_difflist_types">
-		<parameter name="page" value="param_index_difflist_types"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition-->
-
-    <!--requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="param_index_difflist_types">
-		<parameter name="page" value="param_index_entities"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="param_index_difflist_types">
-		<parameter name="page" value="param_index_entities"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition-->
-
-    <!--requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="param_index_difflist_types">
-		<parameter name="page" value="param_redirect_entities"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="param_index_difflist_types">
-		<parameter name="page" value="param_redirect_entities"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition-->
-
-
-    <!--requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="param_index_difflist_types">
-		<parameter name="page" value="param_workflow"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="param_index_difflist_types">
-		<parameter name="page" value="param_workflow"/>
-		<parameter name="display" value="true"/>
-		<parameter name="module" value="entities"/>
-    </requestDefinition-->
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="entities_list_by_label">
 		<parameter name="page" value="entities_list_by_label"/>
 		<parameter name="display" value="true"/>

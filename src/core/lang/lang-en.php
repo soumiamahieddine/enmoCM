@@ -254,7 +254,6 @@ define('_VISA_MAIL', 'Aim the mail');
 define("_CREATE_ATTACHMENTS_FROM_DETAILS", "Create attachments from details card");
 define("_MODIFY_ATTACHMENTS", "Modify attachments");
 define("_DELETE_ATTACHMENTS", "Delete attachments");
-define("_VIEW_BASKETS_DESC", "My baskets");
 define("_SEND_DOCS_TO_RECOMMENDATION", "Sent a recommendation request (parallel)");
 define("_SEND_DOCS_TO_RECOMMENDATION_DESC", "Opens a modal to add or remove people to the opinion diffusion list.");
 define("_VALIDATE_RECOMMENDATION", 'Validate the recommendation request (parallel)');

@@ -144,9 +144,6 @@ if (!defined('_GENERATED_FILE')) {
 if (!defined('_MUST_CHOOSE_TEMPLATE')) {
     define('_MUST_CHOOSE_TEMPLATE', 'U moet een model kiezen');
 }
-if (!defined('_GENERATE_ANSWER')) {
-    define('_GENERATE_ANSWER', 'Een bijlage aanmaken');
-}
 if (!defined('_GENERATE')) {
     define('_GENERATE', 'Bijlage genereren');
 }

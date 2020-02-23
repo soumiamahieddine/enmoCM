@@ -255,7 +255,6 @@ define('_VISA_MAIL', 'Viser le courrier');
 define("_CREATE_ATTACHMENTS_FROM_DETAILS", "Créer des pièces jointes depuis la fiche détail");
 define("_MODIFY_ATTACHMENTS", "Modifier les pièces jointes");
 define("_DELETE_ATTACHMENTS", "Supprimer les pièces jointes");
-define("_VIEW_BASKETS_DESC", "Mes bannettes");
 define('_SEND_DOCS_TO_RECOMMENDATION', 'Envoyer une demande d\'avis (parallèle)');
 define('_SEND_DOCS_TO_RECOMMENDATION_DESC', 'Ouvre une modal permettant d\'ajouter ou de supprimer des personnes en avis dans la liste de diffusion.');
 define('_VALIDATE_RECOMMENDATION', 'Valider la demande d\'avis (parallèle)');
