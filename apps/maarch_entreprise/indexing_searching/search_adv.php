@@ -35,7 +35,6 @@ require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_secur
 require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_status.php';
 require_once 'core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'usergroups_controler.php';
 require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_indexing_searching_app.php';
-require_once 'apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_types.php';
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
@@ -49,7 +48,6 @@ if (isset($_REQUEST['fromValidateMail'])) {
     $_SESSION['fromValidateMail'] = '';
 }
 
-$type = new types();
 $func = new functions();
 $conn = new Database();
 
