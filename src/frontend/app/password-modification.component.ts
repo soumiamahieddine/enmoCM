@@ -65,13 +65,8 @@ export class PasswordModificationComponent implements OnInit {
         $j("link[href='merged_css.php']").remove();
         $j('#footer').remove();
         $j('#inner_content').remove();
-        $j('#inner_content_contact').parent('div').remove();
-        $j('#inner_content_contact').remove();
         $j('#menunav').hide();
         $j('#divList').remove();
-        $j('#magicContactsTable').remove();
-        $j('#manageBasketsOrderTable').remove();
-        $j('#controlParamTechnicTable').remove();
         $j('#container').width("99%");
         if ($j('#content h1')[0] && $j('#content h1')[0] != $j('my-app h1')[0]) {
             $j('#content h1')[0].remove();

@@ -176,7 +176,6 @@ define('_NOTIFICATIONS', 'Meldingen');
 define('_TEMPLATES', 'Documentmodellen');
 
 //SERVICES
-define('_REDIRECT_TO_ACTION', 'Doorsturen naar een andere actie');
 define('_ADV_SEARCH_MLB', 'Opzoeken');
 define('_INDEXING_MLB', 'Een brief/doc bewaren');
 define('_SEARCH_CONTACTS', 'Een contact zoeken');
@@ -252,10 +251,6 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Werkt de datum bij van de huidige goedkeurde
 define('_PROCEED_WORKFLOW', 'Het goedkeuringscircuit verderzetten');
 define('_PROCEED_WORKFLOW_DESC', 'Werkt de datum bij van de huidige goedkeurder / ondertekenaar die in het goedkeuringscircuit van het brief aanwezig is (\process_date\ van de tabel listinstance).');
 define('_VISA_MAIL', 'De e-mail goedkeuren');
-define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Verzenden naar het contact met een bijlage verplicht');
-define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', 'Opent een mailverzendingsmodaliteit met de e-mail van het aan het document gekoppelde contact als bestemmeling, VERPLICHTE aanwezigheid van bijlage(n) aan de verzending.');
-define('_SEND_ATTACHMENTS_TO_CONTACT', 'Verzenden aan het contact');
-define('_SEND_ATTACHMENTS_TO_CONTACT_DESC', 'Opent een mailverzendingsmodaliteit met de e-mail van het aan het document gekoppelde contact als bestemmeling.');
 define('_CREATE_ATTACHMENTS_FROM_DETAILS', 'Bijlagen vanuit de detailfiche aanmaken');
 define('_MODIFY_ATTACHMENTS', 'De bijlagen wijzigen');
 define('_DELETE_ATTACHMENTS', 'De bijlagen verwijderen');

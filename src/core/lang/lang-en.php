@@ -175,7 +175,6 @@ define('_NOTIFICATIONS', 'Notifications');
 define('_TEMPLATES', 'Templates');
 
 // SERVICES
-define('_REDIRECT_TO_ACTION', 'Redirect to an action');
 define('_ADV_SEARCH_MLB', 'Search');
 define('_INDEXING_MLB', 'Save a mail/document');
 define('_SEARCH_CONTACTS', 'Search a contact');
@@ -252,10 +251,6 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Update visa date of current supervisor / sig
 define('_PROCEED_WORKFLOW', 'continue the visa flow');
 define('_PROCEED_WORKFLOW_DESC', 'Update visa date of current supervisor / signatory in visa circuit of mail (\'process_date\' of listinstance table).');
 define('_VISA_MAIL', 'Aim the mail');
-define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Send to the contact with a mandatory attachment');
-define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', 'Open sendmail modal with email of contact linked to document in recipient, attachment is MANDATORY.');
-define('_SEND_ATTACHMENTS_TO_CONTACT', 'Send to the contact');
-define('_SEND_ATTACHMENTS_TO_CONTACT_DESC', 'Open sendmail modal with email of contact linked to document in recipient.');
 define("_CREATE_ATTACHMENTS_FROM_DETAILS", "Create attachments from details card");
 define("_MODIFY_ATTACHMENTS", "Modify attachments");
 define("_DELETE_ATTACHMENTS", "Delete attachments");
