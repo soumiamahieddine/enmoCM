@@ -424,7 +424,7 @@ class ActionMethodController
             }
 
             $processingUserInfo = MaarchParapheurController::getUserById(['config' => $config, 'id' => $args['data']['processingUser']]);
-            $sendedInfo = MaarchParapheurController::sendDatas([
+            $sentInfo = MaarchParapheurController::sendDatas([
                 'config'          => $config,
                 'resIdMaster'     => $args['resId'],
                 'processingUser'  => $args['data']['processingUser'],
@@ -432,10 +432,10 @@ class ActionMethodController
                 'userId'          => $GLOBALS['userId'],
                 'note'            => $args['note'] ?? null
             ]);
-            if (!empty($sendedInfo['error'])) {
-                return ['errors' => [$sendedInfo['error']]];
+            if (!empty($sentInfo['error'])) {
+                return ['errors' => [$sentInfo['error']]];
             } else {
-                $attachmentToFreeze = $sendedInfo['sended'];
+                $attachmentToFreeze = $sentInfo['sended'];
             }
 
             $historyInfo = ' (à ' . $processingUserInfo['firstname'] . ' ' . $processingUserInfo['lastname'] . ')';

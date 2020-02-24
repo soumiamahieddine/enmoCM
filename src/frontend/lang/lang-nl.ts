@@ -1004,7 +1004,7 @@ export const LANG_NL = {
     "warnLockRes2"                          : "\n\nThis action will process ONLY mails which are NOT locked", //_TO_TRANSLATE
     "warnLockResInProgress"                 : "This mail is in progress by", //_TO_TRANSLATE
     "warnMaxDataList"                       : "Maximum of displayed datas is reached", //_TO_TRANSLATE
-    "warnShapingOption"                     : "<b>Be carefull !</b> The address will be setted in the first page of sended documents", //_TO_TRANSLATE
+    "warnShapingOption"                     : "<b>Be carefull !</b> The address will be setted in the first page of sent documents", //_TO_TRANSLATE
     "warnTooMuchSelect"                     : "only 500 elements can be processed with an action", //_TO_TRANSLATE
     "webserviceAccount"                     : "Webservice-account",
     "webserviceAccountDesc"                 : "Indien ingeschakeld zal deze account niet gebruikt kunnen worden om zich grafisch met de applicatie te verbinden.",
@@ -1576,7 +1576,7 @@ export const LANG_NL = {
     "tagUpdated" : "Tag updated", //_TO_TRANSLATE
     "tagMerged" : "Tag merged", //_TO_TRANSLATE
     "mergeWith" : "Merge with", //_TO_TRANSLATE
-    "willBeTransferedToNewTag" : "will be transfered to selected tag", //_TO_TRANSLATE
+    "willBeTransferredToNewTag" : "will be transferred to tag ", //_TO_TRANSLATE
     "detailDoc" : "Detail page", //_TO_TRANSLATE
     "emptySubject" : "Empty subject", //_TO_TRANSLATE
     "noAvailableMenu" : "No available menu", //_TO_TRANSLATE
@@ -1591,4 +1591,6 @@ export const LANG_NL = {
     "mainDocument" : "Main document", //_TO_TRANSLATE
     "attachSummarySheet" : "Attach the summary sheet", //_TO_TRANSLATE
     "generateSeparators" : "Generate separators for each elements", //_TO_TRANSLATE
+    "theTag" : "The tag",//_TO_TRANSLATE
+    "willBeDeletedAndMerged" : "will be deleted and merged with the tag",//_TO_TRANSLATE
 };

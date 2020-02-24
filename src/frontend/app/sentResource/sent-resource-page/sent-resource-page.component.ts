@@ -5,7 +5,7 @@ import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { Observable, of } from 'rxjs';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatChipInputEvent } from '@angular/material';
-import { switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, startWith, distinctUntilChanged } from 'rxjs/operators';
+import { switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { FunctionsService } from '../../../service/functions.service';
 import { CdkDragDrop, transferArrayItem } from '@angular/cdk/drag-drop';
@@ -19,12 +19,12 @@ declare function $j(selector: any): any;
 declare var tinymce: any;
 
 @Component({
-    selector: 'app-sended-resource-page',
-    templateUrl: "sended-resource-page.component.html",
-    styleUrls: ['sended-resource-page.component.scss'],
+    selector: 'app-sent-resource-page',
+    templateUrl: "sent-resource-page.component.html",
+    styleUrls: ['sent-resource-page.component.scss'],
     providers: [ContactService, AppService],
 })
-export class SendedResourcePageComponent implements OnInit {
+export class SentResourcePageComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = true;
@@ -44,19 +44,12 @@ export class SendedResourcePageComponent implements OnInit {
 
     invisibleCopies: any[] = [];
 
-    fruits: any[] = [];
-
     recipientsInput: FormControl = new FormControl();
 
     emailSignListForm = new FormControl();
     templateEmailListForm = new FormControl();
 
-    tinymceInput: string = '';
-
     filteredEmails: Observable<string[]>;
-    emailsList: any[] = [];
-
-    currentSelected: any = null;
 
     showCopies: boolean = false;
     showInvisibleCopies: boolean = false;
@@ -85,7 +78,6 @@ export class SendedResourcePageComponent implements OnInit {
         },
     };
     emailAttach: any = {};
-    lastClicked: any = Date.now();
 
     canManage: boolean = false;
     pdfMode: boolean = false;
@@ -96,7 +88,7 @@ export class SendedResourcePageComponent implements OnInit {
         private notify: NotificationService,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialog: MatDialog,
-        public dialogRef: MatDialogRef<SendedResourcePageComponent>,
+        public dialogRef: MatDialogRef<SentResourcePageComponent>,
         public functions: FunctionsService,
         private contactService: ContactService,
         public privilegeService: PrivilegeService,
@@ -180,11 +172,7 @@ export class SendedResourcePageComponent implements OnInit {
     isBadEmailFormat(email: string) {
         const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/g;
 
-        if (email.trim().match(regex) !== null) {
-            return false
-        } else {
-            return true;
-        }
+        return email.trim().match(regex) === null;
     }
 
     closeModal(state: string = '') {
@@ -313,7 +301,7 @@ export class SendedResourcePageComponent implements OnInit {
                             email: item,
                             badFormat : this.isBadEmailFormat(item)
                         }
-                    });;
+                    });
                     this.invisibleCopies = data.cci.map((item: any) => {
                         return {
                             label: item,
@@ -329,13 +317,11 @@ export class SendedResourcePageComponent implements OnInit {
                     this.emailsubject = data.object;
                     this.emailStatus = data.status;
 
-                    if (!this.canManageMail()) {
-                        this.currentSender = {
-                            label: data.sender.email,
-                            email: data.sender.email,
-                            entityId : data.sender.entityId
-                        };
-                    }
+                    this.currentSender = {
+                        entityId : data.sender.entityId,
+                        label: data.sender.label,
+                        email: data.sender.email
+                    };
 
                     this.emailContent = data.body;
                     Object.keys(data.document).forEach(element => {
@@ -679,7 +665,7 @@ export class SendedResourcePageComponent implements OnInit {
         if (type === 'document') {
             if (this.emailAttach.document.isLinked === false) {
                 this.emailAttach.document.isLinked = true;
-                this.emailAttach.document.original = mode === 'pdf' ? false : true;
+                this.emailAttach.document.original = mode !== 'pdf';
                 this.emailAttach.document.size = mode === 'pdf' ? item.convertedDocument.size : item.size;
             }
         } else {
@@ -687,7 +673,7 @@ export class SendedResourcePageComponent implements OnInit {
                 this.emailAttach[type].push({
                     ...item,
                     format: mode !== 'pdf' ? item.format : 'pdf',
-                    original: mode === 'pdf' ? false : true,
+                    original: mode !== 'pdf',
                     size : mode === 'pdf' ? item.convertedDocument.size : item.size
                 });
             }
@@ -703,10 +689,10 @@ export class SendedResourcePageComponent implements OnInit {
         }
     }
 
-    swithEditionMode() {
+    switchEditionMode() {
         this.htmlMode = !this.htmlMode;
         if (this.htmlMode) {
-            $j('.tox-editor-header').show()
+            $j('.tox-editor-header').show();
             tinymce.get('emailSignature').setContent(tinymce.get('emailSignature').getContent());
         } else {
             const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.switchInPlainText, msg: this.lang.confirmSwitchInPlanText } });
@@ -725,7 +711,7 @@ export class SendedResourcePageComponent implements OnInit {
     }
 
     formatEmail() {
-        let objAttach: any = {}
+        let objAttach: any = {};
         Object.keys(this.emailAttach).forEach(element => {
             if (!this.functions.empty(this.emailAttach[element])) {
                 if (element === 'document') {
@@ -752,19 +738,17 @@ export class SendedResourcePageComponent implements OnInit {
             entityId: !this.functions.empty(this.currentSender.entityId) ? this.currentSender.entityId : null
         };
 
-        const data = {
+        return {
             document: objAttach,
             sender: formatSender,
             recipients: this.recipients.map(recipient => recipient.email),
             cc: this.showCopies ? this.copies.map(copy => copy.email) : [],
             cci: this.showInvisibleCopies ? this.invisibleCopies.map((invCopy => invCopy.email)) : [],
             object: this.emailsubject,
-            body: this.htmlMode ? tinymce.get('emailSignature').getContent() : tinymce.get('emailSignature').getContent({ format: 'text' }),
+            body: this.htmlMode ? tinymce.get('emailSignature').getContent() : tinymce.get('emailSignature').getContent({format: 'text'}),
             isHtml: true,
             status: this.emailStatus
         };
-
-        return data;
     }
 
     isSelectedAttachMail(item: any, type: string) {
@@ -796,5 +780,9 @@ export class SendedResourcePageComponent implements OnInit {
         });
 
         return state;
+    }
+
+    compareSenders(sender1: any, sender2: any) {
+        return (sender1.label === sender2.label || ((sender1.label === null || sender2.label === null) && (sender1.entityId === null || sender2.entityId === null))) && sender1.entityId === sender2.entityId && sender1.email === sender2.email;
     }
 }

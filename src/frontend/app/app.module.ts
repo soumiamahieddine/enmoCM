@@ -110,8 +110,8 @@ import { LinkedResourceListComponent } from './linkedResource/linked-resource-li
 import { LinkResourceModalComponent } from './linkedResource/linkResourceModal/link-resource-modal.component';
 
 import { DocumentViewerModalComponent } from './viewer/modal/document-viewer-modal.component';
-import { SendedResourceListComponent } from './sendedResource/sended-resource-list.component';
-import { SendedResourcePageComponent } from './sendedResource/sended-resource-page/sended-resource-page.component';
+import { SentResourceListComponent } from './sentResource/sent-resource-list.component';
+import { SentResourcePageComponent } from './sentResource/sent-resource-page/sent-resource-page.component';
 
 
 
@@ -210,8 +210,8 @@ import { SendedResourcePageComponent } from './sendedResource/sended-resource-pa
         LinkedResourceListComponent,
         LinkResourceModalComponent,
         DocumentViewerModalComponent,
-        SendedResourceListComponent,
-        SendedResourcePageComponent,
+        SentResourceListComponent,
+        SentResourcePageComponent,
         PrintedFolderModalComponent
     ],
     entryComponents: [
@@ -259,7 +259,7 @@ import { SendedResourcePageComponent } from './sendedResource/sended-resource-pa
         AddAvisModelModalComponent,
         LinkResourceModalComponent,
         DocumentViewerModalComponent,
-        SendedResourcePageComponent,
+        SentResourcePageComponent,
         PrintedFolderModalComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],

@@ -216,40 +216,6 @@ class CoreConfigModel
         return $mailevaConfig;
     }
 
-    public static function getOzwilloConfiguration(array $aArgs = [])
-    {
-        ValidatorModel::stringType($aArgs, ['customId']);
-
-        $customId = CoreConfigModel::getCustomId();
-        if (empty($aArgs['customId'])) {
-        } else {
-            $customId = $aArgs['customId'];
-        }
-
-        if (file_exists("custom/{$customId}/apps/maarch_entreprise/xml/ozwilloConfig.xml")) {
-            $path = "custom/{$customId}/apps/maarch_entreprise/xml/ozwilloConfig.xml";
-        } else {
-            $path = 'apps/maarch_entreprise/xml/ozwilloConfig.xml';
-        }
-
-        $ozwilloConfig = [];
-        if (file_exists($path)) {
-            $loadedXml = simplexml_load_file($path);
-            if ($loadedXml) {
-                $ozwilloConfig['instanceUri']           = (string)$loadedXml->INSTANCE_URI;
-                $ozwilloConfig['instantiationSecret']   = (string)$loadedXml->INSTANTIATION_SECRET;
-                $ozwilloConfig['destructionSecret']     = (string)$loadedXml->DESTRUCTION_SECRET;
-                $ozwilloConfig['uri']                   = (string)$loadedXml->URI;
-                $ozwilloConfig['clientId']              = (string)$loadedXml->CLIENT_ID;
-                $ozwilloConfig['clientSecret']          = (string)$loadedXml->CLIENT_SECRET;
-                $ozwilloConfig['groupId']               = (string)$loadedXml->GROUP_ID;
-                $ozwilloConfig['entityId']              = (string)$loadedXml->ENTITY_ID;
-            }
-        }
-
-        return $ozwilloConfig;
-    }
-
     public static function getXmlLoaded(array $args)
     {
         ValidatorModel::notEmpty($args, ['path']);

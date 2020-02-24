@@ -280,19 +280,19 @@ class PreProcessActionController
             ]);
 
             if (!empty($acknowledgements)) {
-                $sended = 0;
+                $sent = 0;
                 $generated = 0;
 
                 foreach ($acknowledgements as $acknowledgement) {
                     if (!empty($acknowledgement['creation_date']) && !empty($acknowledgement['send_date'])) {
-                        $sended += 1;
+                        $sent += 1;
                     } elseif (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
                         $generated += 1;
                     }
                 }
 
-                if ($sended > 0) {
-                    $alreadySend['number'] += $sended;
+                if ($sent > 0) {
+                    $alreadySend['number'] += $sent;
                     $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier']];
                 }
 

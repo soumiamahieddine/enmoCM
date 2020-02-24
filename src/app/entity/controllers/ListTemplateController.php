@@ -497,9 +497,13 @@ class ListTemplateController
             $serviceRecipient = 'update_diffusion_indexing';
             $serviceRoles = 'update_diffusion_except_recipient_indexing';
             $triggerContext = true;
+        } elseif ($data['context'] == 'process') {
+            $serviceRecipient = 'update_diffusion_process';
+            $serviceRoles = 'update_diffusion_except_recipient_process';
+            $triggerContext = true;
         } elseif ($data['context'] == 'details') {
-            $serviceRecipient = 'update_diffusion_indexing';
-            $serviceRoles = 'update_diffusion_except_recipient_indexing';
+            $serviceRecipient = 'update_diffusion_details';
+            $serviceRoles = 'update_diffusion_except_recipient_details';
             $triggerContext = true;
         }
 

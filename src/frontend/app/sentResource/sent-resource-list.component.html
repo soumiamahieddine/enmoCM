@@ -6,7 +6,7 @@
 <ng-template #elseLoading>
     <div class="row" style="margin: 0px;">
         <div class="col-md-12" style="padding-bottom: 10px;">
-            <mat-button-toggle-group *ngIf="sendedResources.length > 0" class="filterTypes" (change)="filterType($event)">
+            <mat-button-toggle-group *ngIf="sentResources.length > 0" class="filterTypes" (change)="filterType($event)">
                 <mat-button-toggle [checked]="currentFilter === ''" [value]="''">{{lang.all}}</mat-button-toggle>
                 <mat-button-toggle *ngFor="let type of filterTypes | sortBy : 'label'"
                     [checked]="currentFilter === type.id" [value]="type.id">{{type.label}}
@@ -62,7 +62,7 @@
         </ng-container>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
-    <button mat-fab *ngIf="privilegeService.hasCurrentUserPrivilege('sendmail')" class="addSendedResource" color="primary" [title]="lang.sendElement" (click)="openPromptMail()">
+    <button mat-fab *ngIf="privilegeService.hasCurrentUserPrivilege('sendmail')" class="addSentResource" color="primary" [title]="lang.sendElement" (click)="openPromptMail()">
         <mat-icon style="height: auto;width: auto;" class="fa fa-plus"></mat-icon>
     </button>
 </ng-template>
