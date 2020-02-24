@@ -25,8 +25,10 @@
             <ng-container *ngIf="currentTool === 'dashboard'">
                 <div
                     style="display: flex;align-items: center;justify-content: flex-end;margin-top: 10px;margin-bottom: -20px;">
-                    <button mat-button color="primary" [title]="lang.generateAndDownloadPrintedFolder" (click)="openPrintedFolderPrompt()">
-                        <mat-icon class="fa fa-print" style="height:auto"></mat-icon> {{lang.generateAndDownloadPrintedFolder}}
+                    <button mat-button color="primary" [title]="lang.generateAndDownloadPrintedFolder"
+                        (click)="openPrintedFolderPrompt()">
+                        <mat-icon class="fa fa-print" style="height:auto"></mat-icon>
+                        {{lang.generateAndDownloadPrintedFolder}}
                     </button>
                 </div>
                 <div class="banner" [style.borderColor]="currentPriorityColor">
@@ -84,7 +86,8 @@
                     (reloadBadgeLinkedResources)="refreshBadge($event,'linkedResources')">
                 </app-linked-resource-list>
                 <app-diffusions-list *ngIf="currentTool === 'diffusionList' && !loading" #appDiffusionsList
-                    [adminMode]="false" [resId]="currentResourceInformations.resId" [expanded]="true">
+                    [adminMode]="true" [target]="detailMode ? 'details': 'process'"
+                    [resId]="currentResourceInformations.resId" [expanded]="true">
                 </app-diffusions-list>
                 <app-sended-resource-list *ngIf="currentTool === 'emails' && !loading" #appSendedResource
                     [resId]="currentResourceInformations.resId"
@@ -278,8 +281,8 @@
         <app-linked-resource-list *ngIf="modal.id === 'linkedResources' && !loading" #appLinkedResourceList
             [resId]="currentResourceInformations.resId"
             (reloadBadgeLinkedResources)="refreshBadge($event,'linkedResources')"></app-linked-resource-list>
-        <app-diffusions-list *ngIf="modal.id === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="false"
-            [resId]="currentResourceInformations.resId" [expanded]="true">
+        <app-diffusions-list *ngIf="modal.id === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="true"
+            [target]="detailMode ? 'details': 'process'" [resId]="currentResourceInformations.resId" [expanded]="true">
         </app-diffusions-list>
         <app-sended-resource-list *ngIf="modal.id === 'emails' && !loading" #appSendedResource
             [resId]="currentResourceInformations.resId" (reloadBadgeSendedResource)="refreshBadge($event,'emails')">
