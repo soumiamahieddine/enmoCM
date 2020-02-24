@@ -12,7 +12,7 @@
     <mat-form-field>
         <span matPrefix class="attachLabel">{{lang.senderShort}}&nbsp;:&nbsp;</span>
         <input *ngIf="!canManageMail()" matInput [value]="currentSender.email" readonly>
-        <mat-select *ngIf="canManageMail()" [(ngModel)]="currentSender">
+        <mat-select *ngIf="canManageMail()" [compareWith]="this.compareSenders" [(ngModel)]="currentSender">
             <mat-option *ngFor="let email of availableSenders | sortBy: 'label'" [value]="email">
                 {{email.label}} ({{email.email}})
             </mat-option>
@@ -171,10 +171,10 @@
         <mat-icon style="height:auto;" class="fas fa-ellipsis-v"></mat-icon>
     </button>
     <mat-menu #emailActionMenu="matMenu" [class]="'attachListMenu'">
-        <button mat-menu-item (click)="swithEditionMode()" *ngIf="htmlMode">
+        <button mat-menu-item (click)="switchEditionMode()" *ngIf="htmlMode">
             {{lang.switchInPlainText}}
         </button>
-        <button mat-menu-item (click)="swithEditionMode()" *ngIf="!htmlMode">
+        <button mat-menu-item (click)="switchEditionMode()" *ngIf="!htmlMode">
             {{lang.switchInHtml}}
         </button>
     </mat-menu>
