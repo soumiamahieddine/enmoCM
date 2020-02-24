@@ -50,9 +50,11 @@ class FastParapheurController
                 ]);
 
                 $isError    = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body;
-                if (!empty($isError ->Fault[0])) {
-                    // TODO gestion des erreurs
+                if (!empty($isError ->Fault[0]) && !empty($value->res_id_master)) {
                     echo 'PJ n° ' . $resId . ' et document original n° ' . $value->res_id_master . ' : ' . (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
+                    continue;
+                } elseif (!empty($isError ->Fault[0])) {
+                    echo 'Document principal n° ' . $resId . ' : ' . (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
                     continue;
                 }
 
@@ -102,8 +104,10 @@ class FastParapheurController
             'data'   => [$aArgs['resIdMaster']]
         ]);
 
-        $letterboxPath = DocserverModel::getByDocserverId(['docserverId' => $annexes['letterbox'][0]['docserver_id'], 'select' => ['path_template']]);
-        $annexes['letterbox'][0]['filePath'] = $letterboxPath['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $annexes['letterbox'][0]['path']) . $annexes['letterbox'][0]['filename'];
+        if (!empty($annexes['letterbox'][0]['docserver_id'])) {
+            $letterboxPath = DocserverModel::getByDocserverId(['docserverId' => $annexes['letterbox'][0]['docserver_id'], 'select' => ['path_template']]);
+            $annexes['letterbox'][0]['filePath'] = $letterboxPath['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $annexes['letterbox'][0]['path']) . $annexes['letterbox'][0]['filename'];
+        }
 
         $attachments = AttachmentModel::get([
             'select'    => [
@@ -140,7 +144,9 @@ class FastParapheurController
                 'config'       => $aArgs['config']
             ]);
 
-            if (!empty($curlReturn['error'])) {
+            if ($curlReturn['infos']['http_code'] == 404) {
+                return ['error' => 'Erreur 404 : ' . $curlReturn['raw']];
+            } elseif (!empty($curlReturn['error'])) {
                 return ['error' => $curlReturn['error']];
             } elseif (!empty($curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0])) {
                 $error = (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
@@ -152,33 +158,37 @@ class FastParapheurController
         }
 
         // Send main document if in signature book
-        $mainDocumentIntegration = json_decode($annexes['letterbox'][0]['integrations'], true);
-        $externalId              = json_decode($annexes['letterbox'][0]['external_id'], true);
-        // $externalId              = empty($externalId) ? [] : $externalId;
-        if ($mainDocumentIntegration['inSignatureBook'] && empty($externalId['signatureBookId'])) {
-            $resId  = $annexes['letterbox'][0]['res_id'];
-            $collId = 'letterbox_coll';
-            unset($annexes['letterbox']);
-
-            $curlReturn = FastParapheurController::uploadFile([
-                'resId'        => $resId,
-                'collId'       => $collId,
-                'resIdMaster'  => $aArgs['resIdMaster'],
-                'annexes'      => $annexes,
-                'circuitId'    => $circuitId,
-                'label'        => $label,
-                'subscriberId' => $subscriberId,
-                'config'       => $aArgs['config']
-            ]);
-
-            if (!empty($curlReturn['error'])) {
-                return ['error' => $curlReturn['error']];
-            } elseif (!empty($curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0])) {
-                $error = (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
-                return ['error' => $error];
-            } else {
-                $documentId = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children('http://sei.ws.fast.cdc.com/')->uploadResponse->children();
-                $attachmentToFreeze[$collId][$resId] = (string) $documentId;
+        if (!empty($annexes['letterbox'][0])) {
+            $mainDocumentIntegration = json_decode($annexes['letterbox'][0]['integrations'], true);
+            $externalId              = json_decode($annexes['letterbox'][0]['external_id'], true);
+            // $externalId              = empty($externalId) ? [] : $externalId;
+            if ($mainDocumentIntegration['inSignatureBook'] && empty($externalId['signatureBookId'])) {
+                $resId  = $annexes['letterbox'][0]['res_id'];
+                $collId = 'letterbox_coll';
+                unset($annexes['letterbox']);
+    
+                $curlReturn = FastParapheurController::uploadFile([
+                    'resId'        => $resId,
+                    'collId'       => $collId,
+                    'resIdMaster'  => $aArgs['resIdMaster'],
+                    'annexes'      => $annexes,
+                    'circuitId'    => $circuitId,
+                    'label'        => $label,
+                    'subscriberId' => $subscriberId,
+                    'config'       => $aArgs['config']
+                ]);
+    
+                if ($curlReturn['infos']['http_code'] == 404) {
+                    return ['error' => 'Erreur 404 : ' . $curlReturn['raw']];
+                } elseif (!empty($curlReturn['error'])) {
+                    return ['error' => $curlReturn['error']];
+                } elseif (!empty($curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0])) {
+                    $error = (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
+                    return ['error' => $error];
+                } else {
+                    $documentId = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children('http://sei.ws.fast.cdc.com/')->uploadResponse->children();
+                    $attachmentToFreeze[$collId][$resId] = (string) $documentId;
+                }
             }
         }
 
@@ -274,14 +284,12 @@ class FastParapheurController
 
         $isError = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body;
         if (!empty($isError ->Fault[0])) {
-            // TODO gestion des erreurs
             echo (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
             return false;
         } else {
             $response = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->children('http://sei.ws.fast.cdc.com/')->downloadResponse->children()->return;
             $returnedDocumentId = (string) $response->documentId;
             if ($aArgs['documentId'] !== $returnedDocumentId) {
-                // TODO gestion d'une potentiel erreur
                 return false;
             } else {
                 $b64FileContent = $response->content;
