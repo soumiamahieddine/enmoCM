@@ -4,16 +4,16 @@ TRUNCATE TABLE usergroups;
 TRUNCATE TABLE usergroups_services;
 DELETE FROM usergroups WHERE group_id = 'COURRIER';
 DELETE FROM usergroups_services WHERE group_id = 'COURRIER';
-INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (1, 'COURRIER', 'Opérateur de numérisation', True, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (1, 'COURRIER', 'Opérateur de numérisation', True, '{"actions":["2", "20"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'AGENT';
 DELETE FROM usergroups_services WHERE group_id = 'AGENT';
-INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (2, 'AGENT', 'Utilisateur', True, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (2, 'AGENT', 'Utilisateur', True, '{"actions":["2", "20"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'RESP_COURRIER';
 DELETE FROM usergroups_services WHERE group_id = 'RESP_COURRIER';
-INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (3, 'RESP_COURRIER', 'Superviseur Courrier', True, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (3, 'RESP_COURRIER', 'Superviseur Courrier', True, '{"actions":["2", "20"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'RESPONSABLE';
 DELETE FROM usergroups_services WHERE group_id = 'RESPONSABLE';
-INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (4, 'RESPONSABLE', 'Manager', True, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (4, 'RESPONSABLE', 'Manager', True, '{"actions":["2", "20"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 DELETE FROM usergroups WHERE group_id = 'ADMINISTRATEUR_N1';
 DELETE FROM usergroups_services WHERE group_id = 'ADMINISTRATEUR_N1';
 INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (5, 'ADMINISTRATEUR_N1', 'Admin. Fonctionnel N1', False, '{"actions" : [], "entities" : [], "keywords" : []}');
@@ -40,7 +40,7 @@ DELETE FROM usergroups_services WHERE group_id = 'SERVICE';
 INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (12, 'SERVICE', 'Service', False, '{"actions" : [], "entities" : [], "keywords" : []}');
 DELETE FROM usergroups WHERE group_id = 'WEBSERVICE';
 DELETE FROM usergroups_services WHERE group_id = 'WEBSERVICE';
-INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (13, 'WEBSERVICE', 'Utilisateurs de WebService', True, '{"actions":["21"], "entities":[], "keywords":["ALL_ENTITIES"]}');
+INSERT INTO usergroups (id, group_id, group_desc, can_index, indexation_parameters) VALUES (13, 'WEBSERVICE', 'Utilisateurs de WebService', True, '{"actions":["2", "20"], "entities":[], "keywords":["ALL_ENTITIES"]}');
 select setval('usergroups_id_seq', (select max(id)+1 from usergroups), false);
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'admin');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'adv_search_mlb');
@@ -800,6 +800,11 @@ INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('cohésio
 
 -- Donnees manuelles
 ------------
+--USERGROUPS
+------------
+UPDATE usergroups set indexation_parameters = '{"actions":["21", "2"], "entities":[], "keywords":["ALL_ENTITIES"]}' where group_id IN ('COURRIER', 'RESP_COURRIER');
+
+------------
 --ENTITIES_FOLDERS
 ------------
 TRUNCATE TABLE entities_folders;
@@ -1040,7 +1045,7 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_pag
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (18, 'redirect', 'Qualifier le courrier', 'NEW', 'N', 'redirect', 'Y', 'redirectAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (19, '', 'Traiter courrier', 'COU', 'N', 'confirm_status', 'N', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (20, '', 'Cloturer', 'END', 'N', 'close_mail', 'Y', 'closeMailAction');
-INSERT INTO actions (id, label_action, id_status, is_system, history, component) VALUES (21, 'Enregistrer le courrier', 'INIT', 'N', 'Y', 'confirmAction');
+INSERT INTO actions (id, label_action, id_status, is_system, history, component) VALUES (21, 'Envoyer le courrier en validation', 'INIT', 'N', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (22, '', 'Attribuer au service', 'NEW', 'N', 'confirm_status', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (23, 'indexing', 'Attribuer au(x) service(s)', 'NEW', 'N', 'confirm_status', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (24, 'indexing', 'Remettre en validation', 'VAL', 'N', 'confirm_status', 'Y', 'confirmAction');
@@ -1081,7 +1086,7 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_pag
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (529, '', 'Envoyer un pli postal Maileva', '_NOSTATUS_', 'N', 'send_shipping', 'Y', 'sendShippingAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (530, '', 'Re-Générér les accusés de réception papier si pb impression', '_NOSTATUS_', 'N', 'create_acknowledgement_receipt', 'Y', 'createAcknowledgementReceiptsAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (531, '', 'Envoyer pour annotation sur la tablette (Maarch Parapheur)', 'ATT_MP', 'N', 'sendToExternalSignatureBook', 'Y', 'sendExternalSignatoryBookAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component, required_fields) VALUES (532, '', 'Cloturer intervention', 'END', 'N', 'close_mail', 'Y', 'closeMailAction','["indexingCustomField_2"]');
+--INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component, required_fields) VALUES (532, '', 'Cloturer intervention', 'END', 'N', 'close_mail', 'Y', 'closeMailAction','["indexingCustomField_2"]');
 Select setval('actions_id_seq', (select max(id)+1 from actions), false);
 ------------
 -- BANNETTES SECONDAIRES
