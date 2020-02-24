@@ -803,6 +803,7 @@ INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('cohésio
 --USERGROUPS
 ------------
 UPDATE usergroups set indexation_parameters = '{"actions":["21", "2"], "entities":[], "keywords":["ALL_ENTITIES"]}' where group_id IN ('COURRIER', 'RESP_COURRIER');
+UPDATE usergroups set indexation_parameters = '{"actions":["2", "414", "20"], "entities":[], "keywords":["ALL_ENTITIES"]}' where group_id IN ('AGENT');
 
 ------------
 --ENTITIES_FOLDERS
@@ -1062,7 +1063,7 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_pag
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (407, '', 'Renvoyer pour traitement', 'COU', 'N', 'confirm_status', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (408, '', 'Refuser le visa et remonter le circuit', '_NOSTATUS_', 'N',  'rejection_visa_previous', 'N', 'rejectVisaBackToPreviousAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (410, '', 'Transmettre la réponse signée', 'EENV', 'N', 'interrupt_visa', 'Y', 'interruptVisaAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (414, '', 'Envoyer au parapheur', '_NOSTATUS_', 'N', 'send_to_visa', 'Y', 'sendSignatureBookAction');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (414, '', 'Envoyer au parapheur', 'EVIS', 'N', 'send_to_visa', 'Y', 'sendSignatureBookAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (416, '', 'Valider et poursuivre le circuit', '_NOSTATUS_', 'N', 'visa_workflow', 'Y', 'continueVisaCircuitAction');
 --INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component, parameters) VALUES (417, '', 'Envoyer l''AR', 'SVX', 'N', 'send_to_contact_with_mandatory_attachment', 'Y', 'createAcknowledgementReceiptsAction', '{"mode": "manual"}');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (420, '', 'Classer sans suite', 'SSUITE', 'N', 'confirm_status', 'Y', 'confirmAction');
