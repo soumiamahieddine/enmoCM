@@ -276,7 +276,7 @@ class AttachmentController
         $attachments = AttachmentModel::get([
             'select'    => [
                 'res_id as "resId"', 'identifier as chrono', 'title', 'typist', 'modified_by as "modifiedBy"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"',
-                'relation', 'status', 'attachment_type as type', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
+                'relation', 'status', 'attachment_type as type', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"', 'format'
             ],
             'where'     => ['res_id_master = ?', 'status not in (?)', 'attachment_type not in (?)'],
             'data'      => [$args['resId'], ['DEL', 'OBS'], $excludeAttachmentTypes],
@@ -309,6 +309,9 @@ class AttachmentController
                     $attachments[$key]['signDate'] = $signedResponse[0]['creation_date'];
                 }
             }
+
+            $attachments[$key]['canConvert'] = ConvertPdfController::canConvert(['extension' => $attachments[$key]['format']]);
+            unset($attachments[$key]['format']);
         }
 
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
