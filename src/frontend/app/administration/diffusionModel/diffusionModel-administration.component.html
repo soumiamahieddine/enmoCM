@@ -30,7 +30,7 @@
                                     matTextareaAutosize matAutosizeMinRows="1" matAutosizeMaxRows="5" maxlength="255"></textarea>
                             </mat-form-field>
                             <div class="col-md-12 text-center" style="padding:10px;">
-                                <button mat-raised-button (click)="saveDiffListVisa()" [disabled]="!diffusionModelForm.form.valid || diffusionModel.items.length == 0" color="primary">{{lang.save}}</button>
+                                <button mat-raised-button (click)="saveDiffListVisa()" [disabled]="!diffusionModelForm.form.valid || diffusionModel.items.length == 0 || !canSaveListTemplate()" color="primary">{{lang.save}}</button>
                                 <button mat-raised-button color="default" (click)="loadDiffList()" [disabled]="!this.listDiffModified || creationMode">{{lang.cancel}}</button>
                             </div>
                         </form>
@@ -62,12 +62,6 @@
                                                 </mat-list-item>
                                             </span>
                                         </mat-list>
-                                    </div>
-                                    <div class="form-group" *ngIf="diffusionModel.entity_id">
-                                        <div class="col-md-12 text-center" style="padding:10px;">
-                                            <button mat-raised-button color="primary" (click)="saveDiffListVisa()" [disabled]="!this.listDiffModified || (diffusionModel.listTemplate.dest.length == 0 && diffusionModel.listTemplate.cc.length > 0)">{{lang.save}}</button>
-                                            <button mat-raised-button color="default" (click)="loadEntity(this.diffusionModel.entity_id)" [disabled]="!this.listDiffModified">{{lang.cancel}}</button>
-                                        </div>
                                     </div>
                                 </div>
                             </mat-tab>
