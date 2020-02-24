@@ -121,7 +121,7 @@ export class AttachmentCreateComponent implements OnInit {
 
                     this.attachFormGroup.push(new FormGroup(this.attachments[0]));
 
-                    if (data.senders.length > 1) {
+                    if (!this.functions.empty(data.senders) && data.senders.length > 1) {
                         this.toggleSendMass();
                     }
 
