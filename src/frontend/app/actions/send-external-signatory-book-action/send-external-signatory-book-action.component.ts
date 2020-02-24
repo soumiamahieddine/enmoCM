@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
 import { XParaphComponent } from './x-paraph/x-paraph.component';
 import { MaarchParaphComponent } from './maarch-paraph/maarch-paraph.component';
+import { FastParaphComponent } from './fast-paraph/fast-paraph.component';
 import { tap, finalize, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
@@ -45,6 +46,7 @@ export class SendExternalSignatoryBookActionComponent implements OnInit {
     
     @ViewChild('xParaph', { static: false }) xParaph: XParaphComponent;
     @ViewChild('maarchParapheur', { static: false }) maarchParapheur: MaarchParaphComponent;
+    @ViewChild('fastParapheur', { static: false }) fastParapheur: FastParaphComponent;
 
     constructor(
         public http: HttpClient,

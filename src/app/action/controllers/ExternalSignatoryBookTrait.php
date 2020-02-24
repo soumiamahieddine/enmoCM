@@ -14,6 +14,7 @@ namespace Action\controllers;
 
 use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
+use ExternalSignatoryBook\controllers\FastParapheurController;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use ExternalSignatoryBook\controllers\XParaphController;
 use Resource\models\ResModel;
@@ -62,9 +63,7 @@ trait ExternalSignatoryBookTrait
                 // TODO
             } elseif ($config['id'] == 'iParapheur') {
                 // TODO
-            } elseif ($config['id'] == 'fastParapheur') {
-                // TODO
-            } elseif ($config['id'] == 'maarchParapheur') {
+            } elseif (in_array($config['id'], ['maarchParapheur', 'fastParapheur'])) {
                 $integratedResource = ResModel::get([
                     'select' => [1],
                     'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_id->>\'signatureBookId\' is null', 'res_id = ?'],
@@ -76,14 +75,25 @@ trait ExternalSignatoryBookTrait
                     return ['errors' => ['No attachment for this mail : ' . $noAttachmentsResource['alt_identifier']]];
                 }
 
-                $sendedInfo = MaarchParapheurController::sendDatas([
-                    'config'      => $config,
-                    'resIdMaster' => $args['resId'],
-                    'objectSent'  => 'attachment',
-                    'userId'      => $GLOBALS['userId'],
-                    'steps'       => $args['data']['steps'],
-                    'note'        => $args['note'] ?? null
-                ]);
+                if ($config['id'] == 'maarchParapheur') {
+                    $sendedInfo = MaarchParapheurController::sendDatas([
+                        'config'      => $config,
+                        'resIdMaster' => $args['resId'],
+                        'objectSent'  => 'attachment',
+                        'userId'      => $GLOBALS['userId'],
+                        'steps'       => $args['data']['steps'],
+                        'note'        => $args['note'] ?? null
+                    ]);
+                } else {
+                    $sendedInfo = FastParapheurController::sendDatas([
+                        'config'      => $config,
+                        'resIdMaster' => $args['resId'],
+                        'objectSent'  => 'attachment',
+                        'userId'      => $GLOBALS['userId'],
+                        'steps'       => $args['data']['steps'],
+                        'note'        => $args['note'] ?? null
+                    ]);
+                }
                 if (!empty($sendedInfo['error'])) {
                     return ['errors' => [$sendedInfo['error']]];
                 } else {

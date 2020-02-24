@@ -1596,6 +1596,7 @@ export const LANG_FR = {
     "noAvailableMenu" : "Aucun menu disponible",
     "emailSent" : "Courriel envoyé",
     "emailCannotSent" : "Erreur lors de l'envoi du courriel",
+    "sentToFastParapheur" : "Envoyer à fastParapheur",
     "editAcknowledgementReceipt" : "Editer l'accusé de réception",
     "insufficientPrivilege" : "Privilège insuffisant",
     "cannotMergeTags" : "Ce mot-clé possède un parent ou des enfants : impossible de le fusionner avec un autre mot clé.",
