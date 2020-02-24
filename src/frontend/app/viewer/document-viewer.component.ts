@@ -545,7 +545,6 @@ export class DocumentViewerComponent implements OnInit {
             );
         } else {            
             await this.loadMainDocumentSubInformations();
-            console.log(this.file.subinfos.mainDocVersions.length);
             if (this.file.subinfos.mainDocVersions.length > 0) {
                 this.requestWithLoader(`../../rest/resources/${resId}/content?mode=base64`).subscribe(
                     (data: any) => {
