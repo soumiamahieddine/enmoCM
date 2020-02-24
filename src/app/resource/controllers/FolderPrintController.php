@@ -38,7 +38,7 @@ use SrcCore\models\ValidatorModel;
 use Status\models\StatusModel;
 use User\models\UserModel;
 
-class ResourceDataExportController
+class FolderPrintController
 {
     public static function generateFile(Request $request, Response $response)
     {
@@ -106,7 +106,7 @@ class ResourceDataExportController
                     $units = $unitsSummarySheet;
                 }
 
-                $documentPaths[] = ResourceDataExportController::getSummarySheet(['units' => $units, 'resId' => $resource['resId']]);
+                $documentPaths[] = FolderPrintController::getSummarySheet(['units' => $units, 'resId' => $resource['resId']]);
             }
 
             if (!empty($resource['document'])) {
@@ -122,7 +122,7 @@ class ResourceDataExportController
                     return $response->withStatus(400)->withJson(['errors' => 'Document has no file']);
                 }
 
-                $path = ResourceDataExportController::getDocumentFilePath(['document' => $document, 'collId' => 'letterbox_coll']);
+                $path = FolderPrintController::getDocumentFilePath(['document' => $document, 'collId' => 'letterbox_coll']);
                 if (!empty($path['errors'])) {
                     return $response->withStatus($path['code'])->withJson(['errors' => $path['errors']]);
                 }
@@ -132,15 +132,15 @@ class ResourceDataExportController
 
             if (!empty($resource['attachments'])) {
                 if (is_array($resource['attachments'])) {
-                    foreach ($resource['attachments'] as $note) {
-                        if (!Validator::intVal()->validate($note)) {
+                    foreach ($resource['attachments'] as $attachment) {
+                        if (!Validator::intVal()->validate($attachment)) {
                             return $response->withStatus(400)->withJson(['errors' => 'Attachment id is not an integer']);
                         }
                     }
 
                     $attachments = AttachmentModel::get([
                         'select'  => ['res_id', 'res_id_master', 'recipient_type', 'recipient_id', 'typist', 'status', 'attachment_type',
-                                      'creation_date', 'identifier', 'title', 'format', 'docserver_id'],
+                                      'creation_date', 'identifier', 'title', 'format', 'docserver_id', 'origin'],
                         'where'   => ['res_id in (?)', 'status not in (?)'],
                         'data'    => [$resource['attachments'], ['DEL', 'OBS']],
                         'orderBy' => ['creation_date desc']
@@ -152,7 +152,7 @@ class ResourceDataExportController
                 } else {
                     $attachments = AttachmentModel::get([
                         'select'  => ['res_id', 'res_id_master', 'recipient_type', 'recipient_id', 'typist', 'status', 'attachment_type',
-                                      'creation_date', 'identifier', 'title', 'format', 'docserver_id'],
+                                      'creation_date', 'identifier', 'title', 'format', 'docserver_id', 'origin'],
                         'where'   => ['res_id_master = ?', 'status not in (?)'],
                         'data'    => [$resource['resId'], ['DEL', 'OBS']],
                         'orderBy' => ['creation_date desc']
@@ -163,19 +163,39 @@ class ResourceDataExportController
                     $chronoResource = ResModel::getById(['select' => ['alt_identifier'], 'resId' => $resource['resId']]);
                     $chronoResource = $chronoResource['alt_identifier'];
 
+                    $attachmentsIds = array_column($attachments, 'res_id');
+
                     foreach ($attachments as $attachment) {
                         if ($attachment['res_id_master'] != $resource['resId']) {
                             return $response->withStatus(400)->withJson(['errors' => 'Attachment not linked to resource']);
                         }
 
+                        $originAttachment = AttachmentModel::get([
+                            'select' => [
+                                'res_id', 'res_id_master', 'recipient_type', 'recipient_id', 'typist', 'status', 'attachment_type',
+                                'creation_date', 'identifier', 'title', 'format', 'docserver_id', 'origin'
+                            ],
+                            'where'  => ['origin = ?'],
+                            'data'   => [$attachment['res_id'] . ',res_attachments']
+                        ]);
+
+                        if (!empty($originAttachment[0])) {
+                            $originAttachment = $originAttachment[0];
+                            if (in_array($originAttachment['res_id'], $attachmentsIds)) {
+                                continue;
+                            }
+
+                            $attachment = $originAttachment;
+                        }
+
                         if ($withSeparators) {
-                            $documentPaths[] = ResourceDataExportController::getAttachmentSeparator([
+                            $documentPaths[] = FolderPrintController::getAttachmentSeparator([
                                 'attachment'     => $attachment,
                                 'chronoResource' => $chronoResource
                             ]);
                         }
 
-                        $path = ResourceDataExportController::getDocumentFilePath(['document' => $attachment, 'collId' => 'attachments_coll']);
+                        $path = FolderPrintController::getDocumentFilePath(['document' => $attachment, 'collId' => 'attachments_coll']);
 
                         if (!empty($path['errors'])) {
                             return $response->withStatus($path['code'])->withJson(['errors' => $path['errors']]);
@@ -188,8 +208,8 @@ class ResourceDataExportController
 
             if (!empty($resource['notes'])) {
                 if (is_array($resource['notes'])) {
-                    foreach ($resource['notes'] as $note) {
-                        if (!Validator::intVal()->validate($note)) {
+                    foreach ($resource['notes'] as $attachment) {
+                        if (!Validator::intVal()->validate($attachment)) {
                             return $response->withStatus(400)->withJson(['errors' => 'Note id is not an integer']);
                         }
                     }
@@ -204,17 +224,17 @@ class ResourceDataExportController
                     $userEntities = array_column($userEntities, 'entity_id');
 
                     $notes = [];
-                    foreach ($allNotes as $note) {
+                    foreach ($allNotes as $attachment) {
                         $allowed = false;
 
-                        if ($note['user_id'] == $GLOBALS['id']) {
+                        if ($attachment['user_id'] == $GLOBALS['id']) {
                             $allowed = true;
                         }
 
-                        $noteEntities = NoteEntityModel::getWithEntityInfo(['select' => ['item_id', 'short_label'], 'where' => ['note_id = ?'], 'data' => [$note['id']]]);
+                        $noteEntities = NoteEntityModel::getWithEntityInfo(['select' => ['item_id', 'short_label'], 'where' => ['note_id = ?'], 'data' => [$attachment['id']]]);
                         if (!empty($noteEntities)) {
                             foreach ($noteEntities as $noteEntity) {
-                                $note['entities_restriction'][] = ['short_label' => $noteEntity['short_label'], 'item_id' => [$noteEntity['item_id']]];
+                                $attachment['entities_restriction'][] = ['short_label' => $noteEntity['short_label'], 'item_id' => [$noteEntity['item_id']]];
 
                                 if (in_array($noteEntity['item_id'], $userEntities)) {
                                     $allowed = true;
@@ -225,7 +245,7 @@ class ResourceDataExportController
                         }
 
                         if ($allowed) {
-                            $notes[] = $note;
+                            $notes[] = $attachment;
                         }
                     }
 
@@ -241,7 +261,7 @@ class ResourceDataExportController
                 }
 
                 if (!empty($notes)) {
-                    $noteFilePath = ResourceDataExportController::getNotesFilePath(['notes' => $notes, 'resId' => $resource['resId']]);
+                    $noteFilePath = FolderPrintController::getNotesFilePath(['notes' => $notes, 'resId' => $resource['resId']]);
 
                     if (!empty($noteFilePath['errors'])) {
                         return $response->withStatus($noteFilePath['code'])->withJson(['errors' => $noteFilePath['errors']]);
@@ -288,12 +308,12 @@ class ResourceDataExportController
                         }
 
                         if ($withSeparators) {
-                            $documentPaths[] = ResourceDataExportController::getAcknowledgementReceiptSeparator(['acknowledgementReceipt' => $acknowledgementReceipt]);
+                            $documentPaths[] = FolderPrintController::getAcknowledgementReceiptSeparator(['acknowledgementReceipt' => $acknowledgementReceipt]);
                         }
-                        $path = ResourceDataExportController::getDocumentFilePath(['document' => $acknowledgementReceipt]);
+                        $path = FolderPrintController::getDocumentFilePath(['document' => $acknowledgementReceipt]);
 
                         if ($acknowledgementReceipt['format'] == 'html') {
-                            $path = ResourceDataExportController::getPathConvertedAcknowledgementReceipt([
+                            $path = FolderPrintController::getPathConvertedAcknowledgementReceipt([
                                 'acknowledgementReceipt' => $acknowledgementReceipt,
                                 'pathHtml'               => $path
                             ]);
@@ -335,7 +355,7 @@ class ResourceDataExportController
                         if (!empty($emailDocument['id']) && $emailDocument['id'] != $resource['resId']) {
                             return $response->withStatus(400)->withJson(['errors' => 'Email not linked to resource']);
                         }
-                        $emailFilePath = ResourceDataExportController::getEmailFilePath(['email' => $email, 'resId' => $resource['resId']]);
+                        $emailFilePath = FolderPrintController::getEmailFilePath(['email' => $email, 'resId' => $resource['resId']]);
 
                         if (file_exists($emailFilePath)) {
                             $documentPaths[] = $emailFilePath;

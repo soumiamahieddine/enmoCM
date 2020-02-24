@@ -196,7 +196,7 @@ export class PrintedFolderModalComponent {
     }
 
     onSubmit() {
-        this.http.post(`../../rest/resources/exportData`, this.formatPrintedFolder(), { responseType: "blob" }).pipe(
+        this.http.post(`../../rest/resources/folderPrint`, this.formatPrintedFolder(), { responseType: "blob" }).pipe(
             tap((data: any) => {
                 let downloadLink = document.createElement('a');
                     downloadLink.href = window.URL.createObjectURL(data);
