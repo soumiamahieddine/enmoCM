@@ -34,7 +34,7 @@ export class HeaderRightComponent implements OnInit {
         public appService: AppService,
         public headerService: HeaderService,
         public functions: FunctionsService,
-        private privilegeService: PrivilegeService) {}
+        public privilegeService: PrivilegeService) {}
 
     ngOnInit(): void {
         this.menus = this.privilegeService.getCurrentUserMenus();

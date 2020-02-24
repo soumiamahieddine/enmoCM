@@ -73,7 +73,7 @@ class AuthenticationController
             if (!in_array($aArgs['currentRoute'], ['/passwordRules', '/users/{id}/password'])) {
                 $loggingMethod = CoreConfigModel::getLoggingMethod();
 
-                if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'])) {
+                if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'keycloak', 'shibboleth'])) {
 
                     $passwordRules = PasswordModel::getEnabledRules();
                     if (!empty($passwordRules['renewal'])) {
