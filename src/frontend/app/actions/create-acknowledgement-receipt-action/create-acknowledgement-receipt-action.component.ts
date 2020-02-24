@@ -167,7 +167,7 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit, OnDe
         if (state) {
             this.manualAR = true;
 
-            this.emailsubject = `[AR] ${this.data.resource.subject}`;
+            this.emailsubject = this.data.resource.subject;
             this.emailsubject = this.emailsubject.substring(0, 100)
             this.initEmailModelsList();
             this.initSignEmailModelsList();
