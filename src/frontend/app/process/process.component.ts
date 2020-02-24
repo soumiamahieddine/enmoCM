@@ -25,6 +25,7 @@ import { VisaWorkflowComponent } from '../visa/visa-workflow.component';
 import { PrivilegeService } from '../../service/privileges.service';
 import { AvisWorkflowComponent } from '../avis/avis-workflow.component';
 import { FunctionsService } from '../../service/functions.service';
+import { PrintedFolderModalComponent } from '../printedFolder/printed-folder-modal.component';
 
 
 
@@ -713,5 +714,9 @@ export class ProcessComponent implements OnInit {
         } else {
             return true;
         }
+    }
+
+    openPrintedFolderPrompt() {
+        this.dialog.open(PrintedFolderModalComponent, { data: { resId: this.currentResourceInformations.resId } });
     }
 }

@@ -34,6 +34,8 @@ import { FolderActionListComponent }                 from './folder/folder-actio
 import { FollowedDocumentListComponent }                 from './home/followed-list/followed-document-list.component';
 import { FollowedActionListComponent }                 from './home/followed-action-list/followed-action-list.component';
 
+import { PrintedFolderModalComponent }                 from './printedFolder/printed-folder-modal.component';
+
 /*ACTIONS PAGES */
 import { ConfirmActionComponent }               from './actions/confirm-action/confirm-action.component';
 import { DisabledBasketPersistenceActionComponent } from './actions/disabled-basket-persistence-action/disabled-basket-persistence-action.component';
@@ -207,7 +209,8 @@ import { SendedResourcePageComponent } from './sendedResource/sended-resource-pa
         LinkResourceModalComponent,
         DocumentViewerModalComponent,
         SendedResourceListComponent,
-        SendedResourcePageComponent
+        SendedResourcePageComponent,
+        PrintedFolderModalComponent
     ],
     entryComponents: [
         ConfirmModalComponent,
@@ -254,7 +257,8 @@ import { SendedResourcePageComponent } from './sendedResource/sended-resource-pa
         AddAvisModelModalComponent,
         LinkResourceModalComponent,
         DocumentViewerModalComponent,
-        SendedResourcePageComponent
+        SendedResourcePageComponent,
+        PrintedFolderModalComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],
     bootstrap: [ AppComponent ]

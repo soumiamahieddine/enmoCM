@@ -55,14 +55,15 @@
         </div>
     </div>
 </div>
-<div *ngIf="data.selectedRes.length > 500" mat-dialog-actions class="actions">
+<div *ngIf="!functions.empty(data.selectedRes) && data.selectedRes.length > 500 && !paramMode" mat-dialog-actions class="actions">
     <span style="color: #d24747; font-style: italic">{{lang.firstSummarySheetsGenerated}}</span>
 </div>
 <div style="padding: 10px">
     <span class="alert-message alert-message-info">{{lang.arGenWithModelMessage}}</span>
 </div>
 <div mat-dialog-actions class="actions">
-    <button mat-raised-button mat-button color="primary" (click)="genSummarySheets();">{{lang.genSummarySheets}}</button>
+    <button *ngIf="paramMode" mat-raised-button mat-button color="primary" (click)="closeModalWithParams();">{{lang.validate}}</button>
+    <button *ngIf="!paramMode" mat-raised-button mat-button color="primary" (click)="genSummarySheets();">{{lang.genSummarySheets}}</button>
     <button mat-raised-button mat-button [mat-dialog-close]="">{{lang.cancel}}</button>
     <button mat-mini-fab color="primary" (click)="addCustomUnit()" style="position: absolute;right: 30px;" title="{{lang.addCustomUnit}}">
         <mat-icon fontSet="fas" fontIcon="fa-plus" style="height: auto;"></mat-icon>

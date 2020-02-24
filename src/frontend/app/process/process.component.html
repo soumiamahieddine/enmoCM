@@ -25,6 +25,9 @@
             <ng-container *ngIf="currentTool === 'dashboard'">
                 <div
                     style="display: flex;align-items: center;justify-content: flex-end;margin-top: 10px;margin-bottom: -20px;">
+                    <button mat-button color="primary" [title]="lang.generateAndDownloadPrintedFolder" (click)="openPrintedFolderPrompt()">
+                        <mat-icon class="fa fa-print" style="height:auto"></mat-icon> {{lang.generateAndDownloadPrintedFolder}}
+                    </button>
                 </div>
                 <div class="banner" [style.borderColor]="currentPriorityColor">
                     <div class="title" (click)="currentTool = 'history'">

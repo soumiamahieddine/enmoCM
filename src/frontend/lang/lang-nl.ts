@@ -11,6 +11,7 @@ export const LANG_NL = {
     "accountAdded"                          : "Account added", //_TO_TRANSLATE
     "accountDeleted"                        : "Account deleted", //_TO_TRANSLATE
     "acknowledgementReceipt"                : "Acknowledgement of receipt", //_TO_TRANSLATE
+    "acknowledgementReceipts"                : "Acknowledgement of receipts", //_TO_TRANSLATE
     "acknowledgementReceiptType"            : "Type of acknowledgement of receipt", //_TO_TRANSLATE
     "acknowledgementSendDate"               : "Acknowledgement send date", //_TO_TRANSLATE
     "action"                                : "Actie",
@@ -336,6 +337,7 @@ export const LANG_NL = {
     "electronicTemplate"                    : "Electronic template", //_TO_TRANSLATE
     "elements"                              : "element(s)", //_TO_TRANSLATE
     "email"                                 : "E-mail",
+    "emails"                                : "E-mails",
     "emailSendFailed"                       : "_TO_TRANSLATE",
     "emailSendInProgress"                   : "_TO_TRANSLATE",
     "emailSendSuccess"                      : "_TO_TRANSLATE",
@@ -1584,4 +1586,8 @@ export const LANG_NL = {
     "insufficientPrivilege" : "Privilege insuffisant", //TRANSLATE
     "cannotMergeTags" : "This tag has a parent or children : impossible to merge tags",//_TO_TRANSLATE
     "mergeTagWith" : "Merge this tag with",//_TO_TRANSLATE
+    "generateAndDownloadPrintedFolder" : "Generate the printed folder", //_TO_TRANSLATE
+    "mainDocument" : "Main document", //_TO_TRANSLATE
+    "attachSummarySheet" : "Attach the summary sheet", //_TO_TRANSLATE
+    "generateSeparators" : "Generate separators for each elements", //_TO_TRANSLATE
 };
