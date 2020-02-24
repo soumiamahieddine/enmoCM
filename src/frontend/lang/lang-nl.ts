@@ -1576,7 +1576,7 @@ export const LANG_NL = {
     "tagUpdated" : "Tag updated", //_TO_TRANSLATE
     "tagMerged" : "Tag merged", //_TO_TRANSLATE
     "mergeWith" : "Merge with", //_TO_TRANSLATE
-    "willBeTransferedToNewTag" : "will be transfered to selected tag", //_TO_TRANSLATE
+    "willBeTransferredToNewTag" : "will be transferred to tag ", //_TO_TRANSLATE
     "detailDoc" : "Detail page", //_TO_TRANSLATE
     "emptySubject" : "Empty subject", //_TO_TRANSLATE
     "noAvailableMenu" : "No available menu", //_TO_TRANSLATE
@@ -1590,4 +1590,6 @@ export const LANG_NL = {
     "mainDocument" : "Main document", //_TO_TRANSLATE
     "attachSummarySheet" : "Attach the summary sheet", //_TO_TRANSLATE
     "generateSeparators" : "Generate separators for each elements", //_TO_TRANSLATE
+    "theTag" : "The tag",//_TO_TRANSLATE
+    "willBeDeletedAndMerged" : "will be deleted and merged with the tag",//_TO_TRANSLATE
 };

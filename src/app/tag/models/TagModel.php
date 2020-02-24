@@ -19,18 +19,19 @@ use SrcCore\models\DatabaseModel;
 
 class TagModel
 {
-    public static function get(array $aArgs = [])
+    public static function get(array $args = [])
     {
-        ValidatorModel::arrayType($aArgs, ['select', 'where', 'data', 'orderBy']);
-        ValidatorModel::intType($aArgs, ['limit']);
+        ValidatorModel::arrayType($args, ['select', 'where', 'data', 'orderBy']);
+        ValidatorModel::intType($args, ['limit']);
 
         $tags = DatabaseModel::select([
-            'select'    => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+            'select'    => empty($args['select']) ? ['*'] : $args['select'],
             'table'     => ['tags'],
-            'where'     => empty($aArgs['where']) ? [] : $aArgs['where'],
-            'data'      => empty($aArgs['data']) ? [] : $aArgs['data'],
-            'order_by'  => empty($aArgs['orderBy']) ? [] : $aArgs['orderBy'],
-            'limit'     => empty($aArgs['limit']) ? 0 : $aArgs['limit']
+            'where'     => empty($args['where']) ? [] : $args['where'],
+            'data'      => empty($args['data']) ? [] : $args['data'],
+            'order_by'  => empty($args['orderBy']) ? [] : $args['orderBy'],
+            'groupBy'   => empty($args['groupBy']) ? [] : $args['groupBy'],
+            'limit'     => empty($args['limit']) ? 0 : $args['limit']
         ]);
 
         return $tags;

@@ -1551,7 +1551,7 @@ export const LANG_EN = {
     "tagUpdated" : "Tag updated",
     "tagMerged" : "Tag merged",
     "mergeWith" : "Merge with",
-    "willBeTransferedToNewTag" : "will be transfered to selected tag",
+    "willBeTransferredToNewTag" : "will be transferred to tag",
     "detailDoc" : "Detail page",
     "emptySubject" : "Empty subject",
     "noAvailableMenu" : "No available menu",
@@ -1564,5 +1564,7 @@ export const LANG_EN = {
     "generateAndDownloadPrintedFolder" : "Generate the printed folder",
     "mainDocument" : "Main document",
     "attachSummarySheet" : "Attach the summary sheet",
-    "generateSeparators" : "Generate separators for each elements", 
+    "generateSeparators" : "Generate separators for each elements",
+    "theTag" : "The tag",
+    "willBeDeletedAndMerged" : "will be deleted and merged with the tag",
 };
