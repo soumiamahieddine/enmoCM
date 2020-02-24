@@ -2,20 +2,19 @@ import { Component, OnInit, ViewChild, EventEmitter, ElementRef, Input, Output }
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
-import { Observable, merge, Subject, of as observableOf, of } from 'rxjs';
-import { MatPaginator, MatSort, MatDialog, MatTableDataSource } from '@angular/material';
-import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
-import { FormControl } from '@angular/forms';
+import { of } from 'rxjs';
+import { MatSort, MatDialog, MatTableDataSource } from '@angular/material';
+import { map, catchError, filter, tap } from 'rxjs/operators';
 import { FunctionsService } from '../../service/functions.service';
 import { PrivilegeService } from '../../service/privileges.service';
-import { SendedResourcePageComponent } from './sended-resource-page/sended-resource-page.component';
+import { SentResourcePageComponent } from './sent-resource-page/sent-resource-page.component';
 
 @Component({
-    selector: 'app-sended-resource-list',
-    templateUrl: "sended-resource-list.component.html",
-    styleUrls: ['sended-resource-list.component.scss'],
+    selector: 'app-sent-resource-list',
+    templateUrl: "sent-resource-list.component.html",
+    styleUrls: ['sent-resource-list.component.scss'],
 })
-export class SendedResourceListComponent implements OnInit {
+export class SentResourceListComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = true;
@@ -26,7 +25,7 @@ export class SendedResourceListComponent implements OnInit {
     dataSource: any;
     displayedColumns: string[] = ['creationDate'];
 
-    sendedResources: any[] = [];
+    sentResources: any[] = [];
 
     resultsLength = 0;
 
@@ -36,7 +35,7 @@ export class SendedResourceListComponent implements OnInit {
 
     @Input('resId') resId: number = null;
 
-    @Output() reloadBadgeSendedResource = new EventEmitter<string>();
+    @Output() reloadBadgeSentResource = new EventEmitter<string>();
 
     @ViewChild(MatSort, { static: false }) sort: MatSort;
 
@@ -52,18 +51,18 @@ export class SendedResourceListComponent implements OnInit {
     }
 
     async loadList() {
-        this.sendedResources = [];
+        this.sentResources = [];
         this.loading = true;
         await this.initAcknowledgementReceipList();
         await this.initEmailList();
         await this.initMessageExchange();
         await this.initShippings();
-        this.reloadBadgeSendedResource.emit(`${this.sendedResources.length}`);
+        this.reloadBadgeSentResource.emit(`${this.sentResources.length}`);
 
         this.initFilter();
 
         setTimeout(() => {
-            this.dataSource = new MatTableDataSource(this.sendedResources);
+            this.dataSource = new MatTableDataSource(this.sentResources);
             this.dataSource.sort = this.sort;
         }, 0);
         this.loading = false;
@@ -102,11 +101,11 @@ export class SendedResourceListComponent implements OnInit {
                             hasMainDoc: false,
                             canManage: true
                         }
-                    })
+                    });
                     return data;
                 }),
                 tap((data: any) => {
-                    this.sendedResources = this.sendedResources.concat(data);
+                    this.sentResources = this.sentResources.concat(data);
 
                     resolve(true);
                 }),
@@ -139,11 +138,11 @@ export class SendedResourceListComponent implements OnInit {
                             hasMainDoc: item.document.isLinked,
                             canManage: true
                         }
-                    })
+                    });
                     return data.emails;
                 }),
                 tap((data: any) => {
-                    this.sendedResources = this.sendedResources.concat(data);
+                    this.sentResources = this.sentResources.concat(data);
 
                     resolve(true);
                 }),
@@ -177,11 +176,11 @@ export class SendedResourceListComponent implements OnInit {
                             hasMainDoc: false,
                             canManage: false
                         }
-                    })
+                    });
                     return data.messageExchanges;
                 }),
                 tap((data: any) => {
-                    this.sendedResources = this.sendedResources.concat(data);
+                    this.sentResources = this.sentResources.concat(data);
 
                     resolve(true);
                 }),
@@ -218,7 +217,7 @@ export class SendedResourceListComponent implements OnInit {
                     return data;
                 }),
                 tap((data: any) => {
-                    this.sendedResources = this.sendedResources.concat(data);
+                    this.sentResources = this.sentResources.concat(data);
 
                     resolve(true);
                 }),
@@ -232,7 +231,7 @@ export class SendedResourceListComponent implements OnInit {
     }
 
     initFilter() {
-        this.sendedResources.forEach((element: any) => {
+        this.sentResources.forEach((element: any) => {
             if (this.filterTypes.filter(type => type.id === element.type).length === 0) {
                 this.filterTypes.push({
                     id: element.type,
@@ -260,14 +259,14 @@ export class SendedResourceListComponent implements OnInit {
         }
 
         if (row.canManage || row.id === null) {
-            const dialogRef = this.dialog.open(SendedResourcePageComponent, { maxWidth: '90vw', width: '750px', minHeight:'500px', disableClose: true, data: { title: title, resId: this.resId, emailId: row.id, emailType: row.type } });
+            const dialogRef = this.dialog.open(SentResourcePageComponent, { maxWidth: '90vw', width: '750px', minHeight:'500px', disableClose: true, data: { title: title, resId: this.resId, emailId: row.id, emailType: row.type } });
 
             dialogRef.afterClosed().pipe(
                 filter((data: string) => data === 'success'),
                 tap(() => {
                     this.loadList();
                     setTimeout(() => {
-                        this.sendedResources.map((draftElement: any) => {
+                        this.sentResources.map((draftElement: any) => {
                             if (draftElement.status == 'WAITING' && draftElement.type == 'email') {
                                 this.http.get(`../../rest/emails/${draftElement.id}`).pipe(
                                     tap((data: any) => {
@@ -277,10 +276,10 @@ export class SendedResourceListComponent implements OnInit {
                                             } else {
                                                 this.notify.error(this.lang.emailCannotSent);
                                             }
-                                            this.sendedResources.map((element: any, key: number) => {
+                                            this.sentResources.map((element: any, key: number) => {
                                                 if (element.id == draftElement.id && element.type == 'email') {
-                                                    this.sendedResources[key].status = data.status;
-                                                    this.sendedResources[key].sendDate = data.sendDate;
+                                                    this.sentResources[key].status = data.status;
+                                                    this.sentResources[key].sendDate = data.sendDate;
                                                 }
                                             });
                                         }
@@ -289,7 +288,7 @@ export class SendedResourceListComponent implements OnInit {
                             }
                         });
                         setTimeout(() => {
-                            this.dataSource = new MatTableDataSource(this.sendedResources);
+                            this.dataSource = new MatTableDataSource(this.sentResources);
                             this.dataSource.sort = this.sort;
                         }, 0);
                     }, 3000);

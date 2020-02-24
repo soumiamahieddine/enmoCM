@@ -19,12 +19,12 @@ declare function $j(selector: any): any;
 declare var tinymce: any;
 
 @Component({
-    selector: 'app-sended-resource-page',
-    templateUrl: "sended-resource-page.component.html",
-    styleUrls: ['sended-resource-page.component.scss'],
+    selector: 'app-sent-resource-page',
+    templateUrl: "sent-resource-page.component.html",
+    styleUrls: ['sent-resource-page.component.scss'],
     providers: [ContactService, AppService],
 })
-export class SendedResourcePageComponent implements OnInit {
+export class SentResourcePageComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = true;
@@ -96,7 +96,7 @@ export class SendedResourcePageComponent implements OnInit {
         private notify: NotificationService,
         @Inject(MAT_DIALOG_DATA) public data: any,
         public dialog: MatDialog,
-        public dialogRef: MatDialogRef<SendedResourcePageComponent>,
+        public dialogRef: MatDialogRef<SentResourcePageComponent>,
         public functions: FunctionsService,
         private contactService: ContactService,
         public privilegeService: PrivilegeService,

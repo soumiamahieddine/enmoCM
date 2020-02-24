@@ -1004,7 +1004,7 @@ export const LANG_NL = {
     "warnLockRes2"                          : "\n\nThis action will process ONLY mails which are NOT locked", //_TO_TRANSLATE
     "warnLockResInProgress"                 : "This mail is in progress by", //_TO_TRANSLATE
     "warnMaxDataList"                       : "Maximum of displayed datas is reached", //_TO_TRANSLATE
-    "warnShapingOption"                     : "<b>Be carefull !</b> The address will be setted in the first page of sended documents", //_TO_TRANSLATE
+    "warnShapingOption"                     : "<b>Be carefull !</b> The address will be setted in the first page of sent documents", //_TO_TRANSLATE
     "warnTooMuchSelect"                     : "only 500 elements can be processed with an action", //_TO_TRANSLATE
     "webserviceAccount"                     : "Webservice-account",
     "webserviceAccountDesc"                 : "Indien ingeschakeld zal deze account niet gebruikt kunnen worden om zich grafisch met de applicatie te verbinden.",

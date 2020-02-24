@@ -89,10 +89,10 @@
                     [adminMode]="true" [target]="detailMode ? 'details': 'process'"
                     [resId]="currentResourceInformations.resId" [expanded]="true">
                 </app-diffusions-list>
-                <app-sended-resource-list *ngIf="currentTool === 'emails' && !loading" #appSendedResource
+                <app-sent-resource-list *ngIf="currentTool === 'emails' && !loading" #appSentResource
                     [resId]="currentResourceInformations.resId"
-                    (reloadBadgeSendedResource)="refreshBadge($event,'emails')">
-                </app-sended-resource-list>
+                    (reloadBadgeSentResource)="refreshBadge($event,'emails')">
+                </app-sent-resource-list>
                 <app-visa-workflow *ngIf="currentTool === 'visaCircuit' && !loading" #appVisaWorkflow
                     [resId]="currentResourceInformations.resId"
                     [adminMode]="detailMode ? privilegeService.hasCurrentUserPrivilege('config_visa_workflow_in_detail') : privilegeService.hasCurrentUserPrivilege('config_visa_workflow')">
@@ -284,9 +284,9 @@
         <app-diffusions-list *ngIf="modal.id === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="true"
             [target]="detailMode ? 'details': 'process'" [resId]="currentResourceInformations.resId" [expanded]="true">
         </app-diffusions-list>
-        <app-sended-resource-list *ngIf="modal.id === 'emails' && !loading" #appSendedResource
-            [resId]="currentResourceInformations.resId" (reloadBadgeSendedResource)="refreshBadge($event,'emails')">
-        </app-sended-resource-list>
+        <app-sent-resource-list *ngIf="modal.id === 'emails' && !loading" #appSentResource
+            [resId]="currentResourceInformations.resId" (reloadBadgeSentResource)="refreshBadge($event,'emails')">
+        </app-sent-resource-list>
         <app-visa-workflow *ngIf="modal.id === 'visaCircuit' && !loading"
             [adminMode]="detailMode ? privilegeService.hasCurrentUserPrivilege('config_visa_workflow_in_detail') : privilegeService.hasCurrentUserPrivilege('config_visa_workflow')"
             #appVisaWorkflow [resId]="currentResourceInformations.resId">

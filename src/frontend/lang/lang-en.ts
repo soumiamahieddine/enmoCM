@@ -977,7 +977,7 @@ export const LANG_EN = {
     "warnLockRes2"                          : "\n\nThis action will process ONLY mails which are NOT locked",
     "warnLockResInProgress"                 : "This mail is in progress by",
     "warnMaxDataList"                       : "Maximum of displayed datas is reached",
-    "warnShapingOption"                     : "<b>Be carefull !</b> The address will be setted in the first page of sended documents",
+    "warnShapingOption"                     : "<b>Be carefull !</b> The address will be setted in the first page of sent documents",
     "warnTooMuchSelect"                     : "only 500 elements can be processed with an action",
     "webserviceAccount"                     : "Webservice account",
     "webserviceAccountDesc"                 : "If enabled, this account cannot be used to login in application (in graphic mode).",
