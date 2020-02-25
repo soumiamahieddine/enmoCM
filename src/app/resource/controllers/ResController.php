@@ -198,7 +198,7 @@ class ResController extends ResourceControlController
                 'data'      => [$args['resId'], 'sender']
             ]);
         }
-        if (in_array('recipients', $modelFields) && empty($queryParams['light'])) {
+        if (in_array('recipients', $modelFields)) {
             $formattedData['recipients'] = ResourceContactModel::get([
                 'select'    => ['item_id as id', 'type'],
                 'where'     => ['res_id = ?', 'mode = ?'],
