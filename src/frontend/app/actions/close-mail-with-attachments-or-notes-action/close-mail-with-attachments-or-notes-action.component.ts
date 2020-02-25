@@ -46,7 +46,7 @@ export class closeMailWithAttachmentsOrNotesActionComponent implements OnInit {
 
     checkNote () {
         if (this.noteEditor) {
-            if (this.noteEditor.getNote()) {
+            if (this.noteEditor.getNoteContent()) {
                 return true;
             }
         }
