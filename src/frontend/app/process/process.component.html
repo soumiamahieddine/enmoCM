@@ -102,7 +102,7 @@
                     [adminMode]="detailMode ? privilegeService.hasCurrentUserPrivilege('config_avis_workflow_in_detail') : privilegeService.hasCurrentUserPrivilege('config_avis_workflow')">
                 </app-avis-workflow>
                 <app-attachments-list *ngIf="currentTool === 'attachments' && !loading" #appAttachmentsList
-                    [resId]="currentResourceInformations.resId" [target]="'process'"
+                    [resId]="currentResourceInformations.resId" [autoOpenCreation]="isMailing" [target]="'process'"
                     (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
                 </app-attachments-list>
                 <app-indexing-form *ngIf="currentTool === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
@@ -296,7 +296,7 @@
             [adminMode]="detailMode ? privilegeService.hasCurrentUserPrivilege('config_avis_workflow_in_detail') : privilegeService.hasCurrentUserPrivilege('config_avis_workflow')">
         </app-avis-workflow>
         <app-attachments-list *ngIf="modal.id === 'attachments'  && !loading" #appAttachmentsList
-            [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
+            [resId]="currentResourceInformations.resId" [autoOpenCreation]="isMailing" (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
         </app-attachments-list>
         <app-indexing-form *ngIf="modal.id === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
             [indexingFormId]="currentResourceInformations.modelId" [resId]="currentResourceInformations.resId"

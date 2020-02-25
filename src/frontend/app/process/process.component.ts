@@ -5,7 +5,7 @@ import { NotificationService } from '../notification.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
 
@@ -45,6 +45,7 @@ export class ProcessComponent implements OnInit {
 
     detailMode: boolean = false;
     navButton: any = null;
+    isMailing: boolean = false;
 
     currentResourceLock: any = null;
 
@@ -189,7 +190,7 @@ export class ProcessComponent implements OnInit {
 
         this.headerService.setHeader(this.lang.eventProcessDoc);
 
-        this.route.params.subscribe(params => {
+        this.route.params.subscribe(params => {            
             if (typeof params['detailResId'] !== "undefined") {
                 this.initDetailPage(params);
             } else {
@@ -201,6 +202,7 @@ export class ProcessComponent implements OnInit {
     }
 
     initProcessPage(params: any) {
+        
         this.detailMode = false;
 
         this.currentUserId = params['userSerialId'];
@@ -252,6 +254,11 @@ export class ProcessComponent implements OnInit {
     }
 
     initDetailPage(params: any) {
+        this._activatedRoute.queryParamMap.subscribe((paramMap: ParamMap) => {
+            this.isMailing = !this.functions.empty(paramMap.get('isMailing')) ;
+        });
+        console.log(this.isMailing);
+        
         this.detailMode = true;
         this.currentResourceInformations = {
             resId: params['detailResId'],
@@ -298,6 +305,9 @@ export class ProcessComponent implements OnInit {
     setEditDataPrivilege() {
         if (this.detailMode) {
             this.canEditData =  this.privilegeService.hasCurrentUserPrivilege('edit_resource') && this.currentResourceInformations.statusAlterable;
+            if (this.isMailing && this.isToolEnabled('attachments')) {
+                this.currentTool = 'attachments';
+            }
         } else {
             this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/processingData`).pipe(
                 tap((data: any) => {

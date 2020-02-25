@@ -154,7 +154,7 @@ export class AttachmentPageComponent implements OnInit {
                 this.attachment.encodedFile.setValue(data.content);
                 this.attachment.format.setValue(data.format);
                 if (this.functions.empty(this.attachment.encodedFile.value)) {
-                    this.notify.error("Vous devez d'abord éditer la pièce jointe");
+                    this.notify.error(this.lang.mustEditAttachmentFirst);
                     this.sendingData = false;
                 }
             }),

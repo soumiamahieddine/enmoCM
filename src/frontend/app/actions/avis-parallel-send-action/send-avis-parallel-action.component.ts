@@ -90,7 +90,7 @@ export class SendAvisParallelComponent implements AfterViewInit {
         this.http.put(this.data.processActionRoute, { resources: realResSelected, note: noteContent, data: { opinionLimitDate: this.functions.formatDateObjectToDateString(this.opinionLimitDate, true, 'yyyy-mm-dd'), opinionCircuit : this.appAvisWorkflow.getWorkflow() } }).pipe(
             tap((data: any) => {
                 if (!data) {
-                    this.dialogRef.close('success');
+                    this.dialogRef.close(realResSelected);
                 }
                 if (data && data.errors != null) {
                     this.notify.error(data.errors);
@@ -98,7 +98,7 @@ export class SendAvisParallelComponent implements AfterViewInit {
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
-                this.notify.handleErrors(err);
+                this.notify.handleSoftErrors(err);
                 return of(false);
             })
         ).subscribe();

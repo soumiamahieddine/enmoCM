@@ -10,7 +10,6 @@ import { of } from 'rxjs';
 @Component({
     templateUrl: "close-mail-with-attachments-or-notes-action.component.html",
     styleUrls: ['close-mail-with-attachments-or-notes-action.component.scss'],
-    providers: [NotificationService],
 })
 export class closeMailWithAttachmentsOrNotesActionComponent implements OnInit {
 
@@ -60,7 +59,7 @@ export class closeMailWithAttachmentsOrNotesActionComponent implements OnInit {
                 if (data && data.errors != null) {
                     this.notify.error(data.errors);
                 }
-                this.dialogRef.close('success');
+                this.dialogRef.close(this.data.resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {

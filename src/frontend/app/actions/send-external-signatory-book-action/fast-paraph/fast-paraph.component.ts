@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { LANG } from '../../../translate.component';
 import { NotificationService } from '../../../notification.service';
 import { HttpClient } from '@angular/common/http';
@@ -9,7 +9,6 @@ declare function $j(selector: any): any;
     selector: 'app-fast-paraph',
     templateUrl: "fast-paraph.component.html",
     styleUrls: ['fast-paraph.component.scss'],
-    providers: [NotificationService],
 })
 export class FastParaphComponent implements OnInit {
 

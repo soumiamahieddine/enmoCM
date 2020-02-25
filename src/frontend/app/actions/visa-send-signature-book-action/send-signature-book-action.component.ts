@@ -96,6 +96,7 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
                     resolve(true);
                 }, (err: any) => {
                     this.notify.handleSoftErrors(err);
+                    this.dialogRef.close();
                 });
         });
     }
@@ -137,7 +138,7 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
         this.http.put(this.data.processActionRoute, { resources: realResSelected, note: this.noteEditor.getNoteContent() }).pipe(
             tap((data: any) => {
                 if (!data) {
-                    this.dialogRef.close('success');
+                    this.dialogRef.close(realResSelected);
                 }
                 if (data && data.errors != null) {
                     this.notify.error(data.errors);

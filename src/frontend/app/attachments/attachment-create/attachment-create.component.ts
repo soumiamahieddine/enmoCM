@@ -106,13 +106,22 @@ export class AttachmentCreateComponent implements OnInit {
         return new Promise((resolve, reject) => {
             this.http.get(`../../rest/resources/${this.data.resIdMaster}?light=true`).pipe(
                 tap(async (data: any) => {
-                    if (!this.functions.empty(data.senders) && data.senders.length > 0) {
-                        await this.getContacts(data.senders);
+                    let contact: any = '';
+                    if (data.categoryId === 'outgoing') {
+                        if (!this.functions.empty(data.recipients) && data.recipients.length > 0) {
+                            await this.getContacts(data.recipients);
+                            contact = !this.functions.empty(data.recipients) ? [{ id: data.recipients[0].id, type: data.recipients[0].type }] : '';
+                        }
+                    } else {
+                        if (!this.functions.empty(data.senders) && data.senders.length > 0) {
+                            await this.getContacts(data.senders);
+                            contact = !this.functions.empty(data.senders) ? [{ id: data.senders[0].id, type: data.senders[0].type }] : '';
+                        }
                     }
 
                     this.attachments.push({
                         title: new FormControl({ value: data.subject, disabled: false }, [Validators.required]),
-                        recipient: new FormControl({ value: !this.functions.empty(data.senders) ? [{ id: data.senders[0].id, type: data.senders[0].type }] : '', disabled: false }),
+                        recipient: new FormControl({ value: contact, disabled: false }),
                         type: new FormControl({ value: '', disabled: false }, [Validators.required]),
                         validationDate: new FormControl({ value: '', disabled: false }),
                         format: new FormControl({ value: '', disabled: false }, [Validators.required]),
@@ -121,8 +130,14 @@ export class AttachmentCreateComponent implements OnInit {
 
                     this.attachFormGroup.push(new FormGroup(this.attachments[0]));
 
-                    if (!this.functions.empty(data.senders) && data.senders.length > 1) {
-                        this.toggleSendMass();
+                    if (data.categoryId === 'outgoing') {
+                        if (!this.functions.empty(data.recipients) && data.recipients.length > 1) {
+                            this.toggleSendMass();
+                        }
+                    } else {
+                        if (!this.functions.empty(data.senders) &&  data.senders.length > 1) {
+                            this.toggleSendMass();
+                        }
                     }
 
                     resolve(true);

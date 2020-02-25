@@ -56,6 +56,7 @@ export class AttachmentsListComponent implements OnInit {
     @Input('injectDatas') injectDatas: any;
     @Input('resId') resId: number = null;
     @Input('target') target: string = 'panel';
+    @Input('autoOpenCreation') autoOpenCreation: boolean = false;
     @Output('reloadBadgeAttachments') reloadBadgeAttachments = new EventEmitter<string>();
 
     @Output() afterActionAttachment = new EventEmitter<string>();
@@ -68,6 +69,9 @@ export class AttachmentsListComponent implements OnInit {
         private privilegeService: PrivilegeService) { }
 
     ngOnInit(): void {
+        if (this.autoOpenCreation) {
+            this.createAttachment();
+        }
         this.checkMaarchParapheurEnabled();
         if (this.resId !== null) {
             this.http.get(`../../rest/resources/${this.resId}/attachments`).pipe(

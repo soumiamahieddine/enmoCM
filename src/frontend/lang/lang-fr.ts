@@ -1614,4 +1614,5 @@ export const LANG_FR = {
     "selectContact" : "Sélectionner un contact",
     "mailingMsg" : "<b>Publipostage activé</b> : <br><br><p>Un attachement <b>maître</b> sera créé sans le champ de fusion <b>contact</b> (attachmentRecipient).</p><p>Si vous cliquez sur Publipostage, les attachements seront générés <b>TOUT DE SUITE</b>.<br><br>Si vous cliquez sur Valider, ils seront générés <b>APRÈS</b> validation des <b>viseurs</b> du circuit de visa.</p><br><p><b>Un</b> attachement sera généré <b>par contact</b> associé au courrier.</p>",
     "attachmentGenerated" : "Pièces jointes générées",
+    "mustEditAttachmentFirst" : "Vous devez d'abord éditer la pièce jointe",
 };

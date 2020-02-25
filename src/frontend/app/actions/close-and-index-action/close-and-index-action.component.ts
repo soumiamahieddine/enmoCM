@@ -10,7 +10,6 @@ import { of } from 'rxjs';
 @Component({
     templateUrl: "close-and-index-action.component.html",
     styleUrls: ['../close-mail-action/close-mail-action.component.scss'],
-    providers: [NotificationService],
 })
 export class CloseAndIndexActionComponent implements OnInit {
 
@@ -40,11 +39,11 @@ export class CloseAndIndexActionComponent implements OnInit {
             }),
             exhaustMap(() => this.http.put(this.data.indexActionRoute, {resource : this.data.resIds[0], note : this.noteEditor.getNoteContent()})),
             tap(() => {
-                this.dialogRef.close('success');
+                this.dialogRef.close(this.data.resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
-                this.notify.handleErrors(err);
+                this.notify.handleSoftErrors(err);
                 return of(false);
             })
         ).subscribe()
@@ -53,11 +52,11 @@ export class CloseAndIndexActionComponent implements OnInit {
     executeAction() {
         this.http.put(this.data.processActionRoute, {resources : this.data.resIds, note : this.noteEditor.getNoteContent()}).pipe(
             tap(() => {
-                this.dialogRef.close('success');
+                this.dialogRef.close(this.data.resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
-                this.notify.handleErrors(err);
+                this.notify.handleSoftErrors(err);
                 return of(false);
             })
         ).subscribe();

@@ -83,7 +83,7 @@ export class ContinueAvisCircuitActionComponent implements OnInit {
         this.http.put(this.data.processActionRoute, {resources : realResSelected, note : noteContent}).pipe(
             tap((data: any) => {
                 if (!data) {
-                    this.dialogRef.close('success');
+                    this.dialogRef.close(realResSelected);
                 }
                 if (data && data.errors != null) {
                     this.notify.error(data.errors);
@@ -91,7 +91,7 @@ export class ContinueAvisCircuitActionComponent implements OnInit {
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
-                this.notify.handleErrors(err);
+                this.notify.handleSoftErrors(err);
                 return of(false);
             })
         ).subscribe();

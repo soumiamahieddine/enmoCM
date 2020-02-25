@@ -60,6 +60,7 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit, OnDe
                 this.arModeInit(this.arMode);
             }, (err) => {
                 this.notify.error(err.error.errors);
+                this.dialogRef.close();
                 this.loadingInit = false;
             });
     }
@@ -75,9 +76,7 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit, OnDe
 
     onSubmit() {
         this.loading = true;
-        if (this.data.resIds.length === 0) {
-            // this.indexDocumentAndExecuteAction();
-        } else {
+        if (this.data.resIds.length > 0) {
             this.executeAction();
         }
     }
@@ -85,24 +84,6 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit, OnDe
     ngOnDestroy(): void {
         tinymce.remove();
     }
-
-    /* indexDocumentAndExecuteAction() {
-            
-            this.http.post('../../rest/resources', this.data.resource).pipe(
-                tap((data: any) => {
-                    this.data.resIds = [data.resId];
-                }),
-                exhaustMap(() => this.http.put(this.data.indexActionRoute, {resource : this.data.resIds[0], note : this.noteEditor.getNoteContent()})),
-                tap(() => {
-                    this.dialogRef.close('success');
-                }),
-                finalize(() => this.loading = false),
-                catchError((err: any) => {
-                    this.notify.handleErrors(err);
-                    return of(false);
-                })
-            ).subscribe()
-        } */
 
     executeAction() {
         let data = null;
@@ -121,11 +102,11 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit, OnDe
                     this.notify.error(data.errors);
                     console.log(data.errors); 
                 }
-                this.dialogRef.close('success');
+                this.dialogRef.close(this.data.resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
-                this.notify.handleErrors(err);
+                this.notify.handleSoftErrors(err);
                 return of(false);
             })
         ).subscribe();

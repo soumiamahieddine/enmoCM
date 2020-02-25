@@ -11,7 +11,6 @@ import { FunctionsService } from '../../../service/functions.service';
 @Component({
     templateUrl: "close-mail-action.component.html",
     styleUrls: ['close-mail-action.component.scss'],
-    providers: [NotificationService],
 })
 export class CloseMailActionComponent implements OnInit {
 
@@ -103,11 +102,11 @@ export class CloseMailActionComponent implements OnInit {
             }),
             exhaustMap(() => this.http.put(this.data.indexActionRoute, {resource : this.data.resIds[0], note : this.noteEditor.getNoteContent()})),
             tap(() => {
-                this.dialogRef.close('success');
+                this.dialogRef.close(this.data.resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
-                this.notify.handleErrors(err);
+                this.notify.handleSoftErrors(err);
                 return of(false);
             })
         ).subscribe()
@@ -116,11 +115,11 @@ export class CloseMailActionComponent implements OnInit {
     executeAction() {
         this.http.put(this.data.processActionRoute, {resources : this.canCloseResIds, note : this.noteEditor.getNoteContent()}).pipe(
             tap(() => {
-                this.dialogRef.close('success');
+                this.dialogRef.close(this.canCloseResIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
-                this.notify.handleErrors(err);
+                this.notify.handleSoftErrors(err);
                 return of(false);
             })
         ).subscribe();

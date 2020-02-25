@@ -15,7 +15,6 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "redirect-action.component.html",
     styleUrls: ['redirect-action.component.scss'],
-    providers: [NotificationService],
 })
 export class RedirectActionComponent implements OnInit {
 
@@ -225,30 +224,10 @@ export class RedirectActionComponent implements OnInit {
 
     onSubmit() {
         this.loading = true;
-        if (this.data.resIds.length === 0) {
-            //this.indexDocumentAndExecuteAction();
-        } else {
+        if (this.data.resIds.length > 0) {
             this.executeAction();
         }
     }
-
-    /* indexDocumentAndExecuteAction() {
-        
-        this.http.post('../../rest/resources', this.data.resource).pipe(
-            tap((data: any) => {
-                this.data.resIds = [data.resId];
-            }),
-            exhaustMap(() => this.http.put(this.data.indexActionRoute, {resource : this.data.resIds[0], note : this.noteEditor.getNoteContent()})),
-            tap(() => {
-                this.dialogRef.close('success');
-            }),
-            finalize(() => this.loading = false),
-            catchError((err: any) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe()
-    } */
 
     executeAction() {
         if (this.redirectMode == 'user') {
@@ -257,11 +236,11 @@ export class RedirectActionComponent implements OnInit {
                     if (data && data.errors != null) {
                         this.notify.error(data.errors);
                     }
-                    this.dialogRef.close('success');
+                    this.dialogRef.close(this.data.resIds);
                 }),
                 finalize(() => this.loading = false),
                 catchError((err: any) => {
-                    this.notify.handleErrors(err);
+                    this.notify.handleSoftErrors(err);
                     return of(false);
                 })
             ).subscribe();
@@ -272,11 +251,11 @@ export class RedirectActionComponent implements OnInit {
                     if (data && data.errors != null) {
                         this.notify.error(data.errors);
                     }
-                    this.dialogRef.close('success');
+                    this.dialogRef.close(this.data.resIds);
                 }),
                 finalize(() => this.loading = false),
                 catchError((err: any) => {
-                    this.notify.handleErrors(err);
+                    this.notify.handleSoftErrors(err);
                     return of(false);
                 })
             ).subscribe();

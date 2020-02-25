@@ -1575,4 +1575,5 @@ export const LANG_EN = {
     "selectContact" : "select a contact",
     "mailingMsg" : "<b>Mailing enbled</b> : <br><br><p>A <b>master</b> attachment will be created without merged field <b>contact</b> (attachmentRecipient).</p><p>If you click on Mailing, the attachmenets will be generated <b>NOW</b>.<br><br>If you click on Validate, They will be generated <b>AFTER</b> <b>approver</b> validation of visa circuit.</p><p><b>One</b> attachment will be generated for <b>each contact</b> linked to the mail.</p>",
     "attachmentGenerated" : "Attachment generated",
+    "mustEditAttachmentFirst" : "You must edit the attachment first",
 };
