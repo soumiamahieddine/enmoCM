@@ -93,7 +93,7 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit, OnDe
                 content : tinymce.get('emailSignature').getContent()
             }
         }
-        this.http.put(this.data.processActionRoute, { resources: this.data.resIds, note: this.noteEditor.getNoteContent(), data }).pipe(
+        this.http.put(this.data.processActionRoute, { resources: this.data.resIds, note: this.noteEditor.getNote(), data }).pipe(
             tap((data: any) => {
                 if (data && data.data != null) {
                     this.downloadAcknowledgementReceipt(data.data);

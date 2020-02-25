@@ -96,7 +96,7 @@ class IndexingController
         }
 
         $body['data'] = empty($body['data']) ? [] : $body['data'];
-        $body['note'] = empty($body['note']) ? null : $body['note'];
+        $body['note'] = empty($body['note']) ? [] : $body['note'];
 
         if (!empty($actionRequiredFields)) {
             $requiredFieldsValid = ActionController::checkRequiredFields(['resId' => $body['resource'], 'actionRequiredFields' => $actionRequiredFields]);

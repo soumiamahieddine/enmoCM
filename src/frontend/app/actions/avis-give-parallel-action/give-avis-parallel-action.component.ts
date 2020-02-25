@@ -79,7 +79,8 @@ export class GiveAvisParallelActionComponent implements OnInit {
 
     executeAction(realResSelected: number[]) {
         const noteContent: string = `[${this.lang.avisUserState}] ${this.noteEditor.getNoteContent()}`;
-        this.http.put(this.data.processActionRoute, { resources: realResSelected, note: noteContent }).pipe(
+        this.noteEditor.setNoteContent(noteContent);
+        this.http.put(this.data.processActionRoute, { resources: realResSelected, note: this.noteEditor.getNote()}).pipe(
             tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close(realResSelected);
@@ -97,10 +98,6 @@ export class GiveAvisParallelActionComponent implements OnInit {
     }
 
     isValidAction() {
-        if (!this.noResourceToProcess && !this.functions.empty(this.noteEditor.getNoteContent())) {
-            return true;
-        } else {
-            return false;
-        }
+        return !this.noResourceToProcess && !this.functions.empty(this.noteEditor.getNoteContent());
     }
 }

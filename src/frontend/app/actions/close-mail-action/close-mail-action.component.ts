@@ -100,7 +100,7 @@ export class CloseMailActionComponent implements OnInit {
             tap((data: any) => {
                 this.data.resIds = [data.resId];
             }),
-            exhaustMap(() => this.http.put(this.data.indexActionRoute, {resource : this.data.resIds[0], note : this.noteEditor.getNoteContent()})),
+            exhaustMap(() => this.http.put(this.data.indexActionRoute, {resource : this.data.resIds[0], note : this.noteEditor.getNote()})),
             tap(() => {
                 this.dialogRef.close(this.data.resIds);
             }),
@@ -113,7 +113,7 @@ export class CloseMailActionComponent implements OnInit {
     }
 
     executeAction() {
-        this.http.put(this.data.processActionRoute, {resources : this.canCloseResIds, note : this.noteEditor.getNoteContent()}).pipe(
+        this.http.put(this.data.processActionRoute, {resources : this.canCloseResIds, note : this.noteEditor.getNote()}).pipe(
             tap(() => {
                 this.dialogRef.close(this.canCloseResIds);
             }),

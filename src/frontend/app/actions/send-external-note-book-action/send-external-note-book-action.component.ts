@@ -68,7 +68,7 @@ export class SendExternalNoteBookActionComponent implements OnInit {
         realResSelected = this.additionalsInfos.mails.map((e: any) => { return e.res_id; });
         datas = this.externalSignatoryBookDatas;
 
-        this.http.put(this.data.processActionRoute, {resources : realResSelected, note : this.noteEditor.getNoteContent(), data: datas}).pipe(
+        this.http.put(this.data.processActionRoute, {resources : realResSelected, note : this.noteEditor.getNote(), data: datas}).pipe(
             tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close(realResSelected);

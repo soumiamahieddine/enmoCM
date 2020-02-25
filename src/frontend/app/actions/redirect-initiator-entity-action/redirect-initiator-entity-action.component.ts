@@ -46,7 +46,7 @@ export class redirectInitiatorEntityActionComponent implements OnInit {
     }
 
     executeAction() {
-        this.http.put(this.data.processActionRoute, { resources: this.resourcesInfo.withEntity, note: this.noteEditor.getNoteContent() }).pipe(
+        this.http.put(this.data.processActionRoute, { resources: this.resourcesInfo.withEntity, note: this.noteEditor.getNote() }).pipe(
             tap((data: any) => {
                 if (data && data.errors != null) {
                     this.notify.error(data.errors);

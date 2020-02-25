@@ -231,7 +231,7 @@ export class RedirectActionComponent implements OnInit {
 
     executeAction() {
         if (this.redirectMode == 'user') {
-            this.http.put(this.data.processActionRoute, { resources: this.data.resIds, data: { onlyRedirectDest: true, listInstances: this.currentDiffusionListDestRedirect }, note: this.noteEditor.getNoteContent() }).pipe(
+            this.http.put(this.data.processActionRoute, { resources: this.data.resIds, data: { onlyRedirectDest: true, listInstances: this.currentDiffusionListDestRedirect }, note: this.noteEditor.getNote() }).pipe(
                 tap((data: any) => {
                     if (data && data.errors != null) {
                         this.notify.error(data.errors);
@@ -246,7 +246,7 @@ export class RedirectActionComponent implements OnInit {
             ).subscribe();
         } else {
 
-            this.http.put(this.data.processActionRoute, { resources: this.data.resIds, data: { listInstances: this.appDiffusionsList.getCurrentListinstance() }, note: this.noteEditor.getNoteContent() }).pipe(
+            this.http.put(this.data.processActionRoute, { resources: this.data.resIds, data: { listInstances: this.appDiffusionsList.getCurrentListinstance() }, note: this.noteEditor.getNote() }).pipe(
                 tap((data: any) => {
                     if (data && data.errors != null) {
                         this.notify.error(data.errors);

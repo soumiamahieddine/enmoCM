@@ -94,7 +94,7 @@ export class SendShippingActionComponent implements OnInit {
 
         realResSelected = realResSelected.concat(this.attachList.filter(attach => attach.type === 'mail').map((e: any) => { return e.res_id; }));
 
-        this.http.put(this.data.processActionRoute, {resources : realResSelected, data: { shippingTemplateId: this.currentShipping.id }, note : this.noteEditor.getNoteContent()}).pipe(
+        this.http.put(this.data.processActionRoute, {resources : realResSelected, data: { shippingTemplateId: this.currentShipping.id }, note : this.noteEditor.getNote()}).pipe(
             tap((data: any) => {
                 if (data && data.errors != null) {
                     this.notify.error(data.errors);

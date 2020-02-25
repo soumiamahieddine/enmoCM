@@ -30,7 +30,7 @@ export class ResMarkAsReadActionComponent implements OnInit {
     }
 
     executeAction() {
-        this.http.put(this.data.processActionRoute, { resources: this.data.resIds, data: { basketId: this.data.basketId }, note: this.noteEditor.getNoteContent() }).pipe(
+        this.http.put(this.data.processActionRoute, { resources: this.data.resIds, data: { basketId: this.data.basketId }, note: this.noteEditor.getNote() }).pipe(
             tap(() => {
                 this.dialogRef.close(this.data.resIds);
             }),

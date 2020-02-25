@@ -135,7 +135,7 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
     }
 
     executeAction(realResSelected: number[]) {
-        this.http.put(this.data.processActionRoute, { resources: realResSelected, note: this.noteEditor.getNoteContent() }).pipe(
+        this.http.put(this.data.processActionRoute, { resources: realResSelected, note: this.noteEditor.getNote() }).pipe(
             tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close(realResSelected);
@@ -154,7 +154,7 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
 
     executeIndexingAction(resId: number) {
 
-        this.http.put(this.data.indexActionRoute, { resource: resId, note: this.noteEditor.getNoteContent() }).pipe(
+        this.http.put(this.data.indexActionRoute, { resource: resId, note: this.noteEditor.getNote() }).pipe(
             tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close('success');

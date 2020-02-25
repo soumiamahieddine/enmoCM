@@ -124,6 +124,15 @@ export class NoteEditorComponent implements OnInit {
         return this.content;
     }
 
+    setNoteContent(content: string) {
+        this.content = content;
+    }
+
+
+    getNote() {
+        return {content: this.content, entities: this.entitiesRestriction};
+    }
+
     selectTemplate(template: any) {
         if (this.content.length > 0) {
             this.content = this.content + ' ' + template.template_content;
