@@ -19,8 +19,9 @@ export class NotificationService {
     constructor(private router: Router, public snackBar: MatSnackBar) {
     }
     success(message: string) {
+        const duration = this.getMessageDuration(message, 2000);
         this.snackBar.openFromComponent(CustomSnackbarComponent, {
-            duration: 2000,
+            duration: duration,
             panelClass: 'success-snackbar',
             verticalPosition : 'top',
             data: { message: message, icon: 'info-circle' }
@@ -28,8 +29,9 @@ export class NotificationService {
     }
 
     error(message: string, url: string = null) {
+        const duration = this.getMessageDuration(message, 4000);
         this.snackBar.openFromComponent(CustomSnackbarComponent, {
-            duration: 4000,
+            duration: duration,
             panelClass: 'error-snackbar',
             verticalPosition : 'top',
             data: { url: url, message: message, icon: 'exclamation-triangle' }
@@ -83,5 +85,10 @@ export class NotificationService {
         } else {
             this.error(err);
         }
+    }
+
+    getMessageDuration(message: string, minimumDuration: number) {
+        const duration = (message.length / 25) * 1000;
+        return duration < minimumDuration ? minimumDuration : duration;
     }
 }
