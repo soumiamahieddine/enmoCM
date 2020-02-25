@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dial
 import { LANG } from '../translate.component';
 import { HttpClient } from '@angular/common/http';
 import { NotificationService } from '../notification.service';
-import { map, tap, catchError } from 'rxjs/operators';
+import { map, tap, catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { FunctionsService } from '../../service/functions.service';
 import { FormControl } from '@angular/forms';
@@ -26,6 +26,7 @@ export class PrintedFolderModalComponent {
     mainDocument: boolean = false;
     summarySheet: boolean = false;
     withSeparator: boolean = false;
+    isLoadingResults: boolean = false;
 
     printedFolderElement: any = {
         attachments: [],
@@ -70,6 +71,7 @@ export class PrintedFolderModalComponent {
                            chrono: !this.functions.empty(attachment.chrono) ? attachment.chrono : this.lang.undefined,
                            type: attachment.typeLabel,
                            creationDate: attachment.creationDate,
+                           canConvert : attachment.canConvert
                         }
                     });
                     return data.attachments;
@@ -98,6 +100,7 @@ export class PrintedFolderModalComponent {
                             recipients: item.recipients,
                             creationDate: item.creation_date,
                             label: !this.functions.empty(item.object) ? item.object : `<i>${this.lang.emptySubject}<i>`,
+                            canConvert : true
                         }
                     })
                     return data.emails;
@@ -126,6 +129,7 @@ export class PrintedFolderModalComponent {
                             creator: `${item.firstname} ${item.lastname}`,
                             creationDate: item.creation_date,
                             label: item.value,
+                            canConvert : true
                         }
                     })
                     return data.notes;
@@ -167,7 +171,8 @@ export class PrintedFolderModalComponent {
                             sender: false,
                             recipients: item.format === 'html' ? email : name,
                             creationDate: item.creationDate,
-                            label: item.format === 'html' ? this.lang.ARelectronic : this.lang.ARPaper
+                            label: item.format === 'html' ? this.lang.ARelectronic : this.lang.ARPaper,
+                            canConvert : true
                         }
                     })
                     return data;
@@ -189,13 +194,15 @@ export class PrintedFolderModalComponent {
     toggleAllElements(state: boolean, type: any) {
 
         if (state) {
-            this.selectedPrintedFolderElement[type].setValue(this.printedFolderElement[type].map((item: any) => item.id));
+            this.selectedPrintedFolderElement[type].setValue(this.printedFolderElement[type].filter((item: any) => item.canConvert).map((item: any) => item.id));
         } else {
             this.selectedPrintedFolderElement[type].setValue([]);
         }
     }
 
     onSubmit() {
+        this.isLoadingResults = true;
+
         this.http.post(`../../rest/resources/folderPrint`, this.formatPrintedFolder(), { responseType: "blob" }).pipe(
             tap((data: any) => {
                 let downloadLink = document.createElement('a');
@@ -221,6 +228,7 @@ export class PrintedFolderModalComponent {
                     document.body.appendChild(downloadLink);
                     downloadLink.click();
             }),
+            finalize(() => this.isLoadingResults = false),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
                 return of(false);
