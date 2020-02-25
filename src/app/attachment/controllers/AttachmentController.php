@@ -148,7 +148,7 @@ class AttachmentController
     public function update(Request $request, Response $response, array $args)
     {
         $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master', 'status', 'typist']]);
-        if (empty($attachment) || !in_array($attachment['status'], ['A_TRA', 'TRA'])) {
+        if (empty($attachment) || !in_array($attachment['status'], ['A_TRA', 'TRA', 'SEND_MASS'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
         }
         if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
