@@ -51,7 +51,7 @@
                                     *ngIf="attachment['title'].valid && !isEmptyField(attachment['title'])"></i>
                             </div>
                         </div>
-                        <div class="attachment-form-item" *ngIf="!functions.empty(attachment['recipient'])">
+                        <div class="attachment-form-item" *ngIf="resourceContacts.length > 1">
                             <plugin-select-search [label]="lang.selectContact"
                                 [placeholderLabel]="lang.selectContact" [datas]="resourceContacts"
                                 [returnValue]="'object'" [formControlSelect]="selectedContact"
