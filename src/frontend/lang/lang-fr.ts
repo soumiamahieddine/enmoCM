@@ -1606,6 +1606,7 @@ export const LANG_FR = {
     "attachSummarySheet" : "Attacher la fiche de liaison",
     "generateSeparators" : "Générer des intercalaires entre les élements",
     "theTag" : "Le mot-clé",
+    "addUsers" : "Ajouter des utilisateurs",
     "willBeDeletedAndMerged" : "sera supprimé et fusionné avec le mot-clé",
     "mailing" : "Publipostage",
     "enableMailing" : "Activer le publipostage",

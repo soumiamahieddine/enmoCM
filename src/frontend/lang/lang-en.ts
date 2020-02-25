@@ -1567,6 +1567,7 @@ export const LANG_EN = {
     "attachSummarySheet" : "Attach the summary sheet",
     "generateSeparators" : "Generate separators for each elements",
     "theTag" : "The tag",
+    "addUsers" : "Add users",
     "willBeDeletedAndMerged" : "will be deleted and merged with the tag",
     "mailing" : "Mailing",
     "enableMailing" : "Enable mailing",
