@@ -1612,7 +1612,7 @@ export const LANG_FR = {
     "enableMailing" : "Activer le publipostage",
     "disableMailing" : "Désactiver le publipostage",
     "selectContact" : "Sélectionner un contact",
-    "mailingMsg" : "<b>Publipostage activé</b> : <br><br><p>Une pièce jointe <b>maître</b> sera créée sans le champ de fusion <b>contact</b> (attachmentRecipient).</p><p>Si vous cliquez sur Publipostage, les pièces jointes seront générées <b>TOUT DE SUITE</b>.<br><br>Si vous cliquez sur Valider, ils seront générés <b>AVANT</b> transmission au premier <b>signataire</b> du circuit de visa.</p><br><p><b>Une</b> pièce jointe sera générée <b>par contact</b> associé au courrier.</p>",
+    "mailingMsg" : "<b>Publipostage activé</b> : <br><br><p>Une pièce jointe <b>maître</b> sera créée sans le champ de fusion <b>contact</b> (attachmentRecipient).</p><p>Si vous cliquez sur Publipostage, les pièces jointes seront générées <b>TOUT DE SUITE</b>.<br><br>Si vous cliquez sur Valider, elles seront générées <b>AVANT</b> transmission au premier <b>signataire</b> du circuit de visa.</p><br><p><b>Une</b> pièce jointe sera générée <b>par contact</b> associé au courrier.</p>",
     "attachmentGenerated" : "Pièces jointes générées",
     "mustEditAttachmentFirst" : "Vous devez d'abord éditer la pièce jointe",
 };
