@@ -202,7 +202,7 @@
                                     {{this.currentResourceInformations.chrono}}</div>
                             </div>
                             <div class="content-item" (click)="openContact()" style="cursor:pointer">
-                                <div>{{lang.senders}} :</div>
+                                <div>{{this.currentResourceInformations.categoryId !== 'outgoing' ? lang.senders : lang.recipient}} :</div>
                                 <div class="content-item-value">{{senderLightInfo.displayName}} <i
                                         *ngIf="this.senderLightInfo.filling" class="fas fa-circle"
                                         style="font-size: 8px" [style.color]="this.senderLightInfo.filling"></i></div>

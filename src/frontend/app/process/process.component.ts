@@ -289,7 +289,11 @@ export class ProcessComponent implements OnInit {
             tap((data: any) => {
                 this.currentResourceInformations = data;
                 this.resourceFollowed = data.followed;
-                this.loadSenders();
+                if (this.currentResourceInformations.categoryId !== 'outgoing') {
+                    this.loadSenders();
+                } else {
+                    this.loadRecipients();
+                }
                 this.setEditDataPrivilege();
                 this.loadAvaibleIntegrations(data.integrations);
                 this.headerService.setHeader(this.detailMode ? this.lang.detailDoc : this.lang.eventProcessDoc, this.lang[this.currentResourceInformations.categoryId]);
@@ -422,6 +426,58 @@ export class ProcessComponent implements OnInit {
         } else if (this.currentResourceInformations.senders.length > 1) {
             this.hasContact = true;
             this.senderLightInfo = { 'displayName': this.currentResourceInformations.senders.length + ' ' + this.lang.senders, 'filling': null };
+        }
+    }
+
+    loadRecipients() {
+
+        if (this.currentResourceInformations.recipients === undefined || this.currentResourceInformations.recipients.length === 0) {
+            this.hasContact = false;
+            this.senderLightInfo = { 'displayName': this.lang.noSelectedContact, 'filling': null };
+        } else if (this.currentResourceInformations.recipients.length == 1) {
+            this.hasContact = true;
+            if (this.currentResourceInformations.recipients[0].type === 'contact') {
+                this.http.get('../../rest/contacts/' + this.currentResourceInformations.recipients[0].id).pipe(
+                    tap((data: any) => {
+                        const arrInfo = [];
+                        if (this.empty(data.firstname) && this.empty(data.lastname)) {
+                            if (!this.functions.empty(data.fillingRate)) {
+                                this.senderLightInfo = { 'displayName': data.company, 'filling': this.contactService.getFillingColor(data.fillingRate.thresholdLevel) };
+                            } else {
+                                this.senderLightInfo = { 'displayName': data.company };
+                            }
+
+                        } else {
+                            arrInfo.push(data.firstname);
+                            arrInfo.push(data.lastname);
+                            if (!this.empty(data.company)) {
+                                arrInfo.push('(' + data.company + ')');
+                            }
+                            if (!this.functions.empty(data.fillingRate)) {
+                                this.senderLightInfo = { 'displayName': arrInfo.filter(info => info !== '').join(' '), 'filling': this.contactService.getFillingColor(data.fillingRate.thresholdLevel) };
+                            } else {
+                                this.senderLightInfo = { 'displayName': arrInfo.filter(info => info !== '').join(' ') };
+                            }
+
+                        }
+                    })
+                ).subscribe();
+            } else if (this.currentResourceInformations.recipients[0].type == 'entity') {
+                this.http.get('../../rest/entities/' + this.currentResourceInformations.recipients[0].id).pipe(
+                    tap((data: any) => {
+                        this.senderLightInfo = { 'displayName': data.entity_label, 'filling': null };
+                    })
+                ).subscribe();
+            } else if (this.currentResourceInformations.recipients[0].type == 'user') {
+                this.http.get('../../rest/users/' + this.currentResourceInformations.recipients[0].id).pipe(
+                    tap((data: any) => {
+                        this.senderLightInfo = { 'displayName': data.firstname + ' ' + data.lastname, 'filling': null };
+                    })
+                ).subscribe();
+            }
+        } else if (this.currentResourceInformations.recipients.length > 1) {
+            this.hasContact = true;
+            this.senderLightInfo = { 'displayName': this.currentResourceInformations.recipients.length + ' ' + this.lang.recipients, 'filling': null };
         }
     }
 
@@ -626,7 +682,7 @@ export class ProcessComponent implements OnInit {
 
     openContact() {
         if (this.hasContact) {
-            this.dialog.open(ContactsListModalComponent, { data: { title: `${this.currentResourceInformations.chrono} - ${this.currentResourceInformations.subject}`, mode: 'senders', resId: this.currentResourceInformations.resId } });
+            this.dialog.open(ContactsListModalComponent, { data: { title: `${this.currentResourceInformations.chrono} - ${this.currentResourceInformations.subject}`, mode: this.currentResourceInformations.categoryId !== 'outgoing' ? 'senders' : 'recipients', resId: this.currentResourceInformations.resId } });
         }
     }
 
