@@ -181,6 +181,23 @@ class FolderController
             'level'     => $level
         ]);
 
+        if (!empty($data['parent_id'])) {
+            $parentSharing = EntityFolderModel::get([
+                'select' => ['entity_id', 'edition', 'keyword'],
+                'where'  => ['folder_id = ?'],
+                'data'   => [$data['parent_id']]
+            ]);
+
+            foreach ($parentSharing as $sharing) {
+                EntityFolderModel::create([
+                    'folder_id' => $id,
+                    'entity_id' => $sharing['entity_id'],
+                    'edition'   => $sharing['edition'],
+                    'keyword'   => $sharing['keyword']
+                ]);
+            }
+        }
+
         UserPinnedFolderModel::create([
             'folder_id' => $id,
             'user_id'   => $GLOBALS['id']
@@ -862,7 +879,7 @@ class FolderController
 
         $userEntities = array_column($userEntities, 'id');
         if (empty($userEntities)) {
-            $userEntities = 0;
+            $userEntities = [0];
         }
 
         if ($args['edition']) {

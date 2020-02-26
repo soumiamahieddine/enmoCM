@@ -88,9 +88,9 @@ export class ActionAdministrationComponent implements OnInit {
                         this.headerService.setHeader(this.lang.actionCreation, data.action.label_action);
                         await this.getCustomFields();
                         this.loading = false;
-                        this.customFieldsFormControl = new FormControl({ value: this.action.parameters, disabled: false });
                         if (this.action.actionPageId=='close_mail') {
-                            this.selectedFieldsId = this.action.parameters;
+                            this.customFieldsFormControl = new FormControl({ value: this.action.parameters.requiredFields, disabled: false });
+                            this.selectedFieldsId = this.action.parameters.requiredFields;
                             this.selectedFieldsId.forEach((element: any) => {
                                 this.availableCustomFields.forEach((availableElement: any) => {
                                     if (availableElement.id == element) {
@@ -99,7 +99,7 @@ export class ActionAdministrationComponent implements OnInit {
                                 });
                             });
                         } else if (this.action.actionPageId=='create_acknowledgement_receipt') {
-                            this.arMode = this.action.parameters;
+                            this.arMode = this.action.parameters.mode;
                         }
                     });
             }

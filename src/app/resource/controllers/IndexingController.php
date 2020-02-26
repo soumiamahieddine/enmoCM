@@ -85,7 +85,7 @@ class IndexingController
         if (!array_key_exists($action['component'], ActionMethodController::COMPONENTS_ACTIONS)) {
             return $response->withStatus(400)->withJson(['errors' => 'Action method does not exist']);
         }
-        $parameters = json_decode($action['parameters']);
+        $parameters = json_decode($action['parameters'], true);
         $actionRequiredFields = $parameters['requiredFields'] ?? [];
 
         $resource = ResModel::getById(['resId' => $body['resource'], 'select' => ['status']]);
@@ -96,7 +96,7 @@ class IndexingController
         }
 
         $body['data'] = empty($body['data']) ? [] : $body['data'];
-        $body['note'] = empty($body['note']) ? null : $body['note'];
+        $body['note'] = empty($body['note']) ? [] : $body['note'];
 
         if (!empty($actionRequiredFields)) {
             $requiredFieldsValid = ActionController::checkRequiredFields(['resId' => $body['resource'], 'actionRequiredFields' => $actionRequiredFields]);

@@ -1,0 +1,68 @@
+<ng-container *ngIf="loading; else elseLoading">
+    <div class="loading">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-container>
+<ng-template #elseLoading>
+    <div class="row" style="margin: 0px;">
+        <div class="col-md-12" style="padding-bottom: 10px;">
+            <mat-button-toggle-group *ngIf="sentResources.length > 0" class="filterTypes" (change)="filterType($event)">
+                <mat-button-toggle [checked]="currentFilter === ''" [value]="''">{{lang.all}}</mat-button-toggle>
+                <mat-button-toggle *ngFor="let type of filterTypes | sortBy : 'label'"
+                    [checked]="currentFilter === type.id" [value]="type.id">{{type.label}}
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+    </div>
+    <mat-table #table [dataSource]="dataSource" matSort matSortActive="creationDate" matSortDirection="desc">
+        <ng-container matColumnDef="creationDate">
+            <mat-cell *matCellDef="let row" class="dataLine" [class.canManage]="row.canManage" style="flex: 1;padding: 0px;flex-direction: column;" (click)="openPromptMail(row)">
+                <div class="subinfo">
+                    <span style="flex:1" [title]="row.creationDate | fullDate">
+                        {{lang.createdAlt}} : <b>{{row.creationDate | timeAgo : 'full'}}</b>
+                    </span>
+                    <span *ngIf="row.sendDate !== null" style="flex:1;color:green" [title]="row.sendDate | fullDate">
+                        {{lang.sent}} : <b>{{row.sendDate | timeAgo : 'full'}}</b>
+                    </span>
+                    <span *ngIf="row.status === 'DRAFT'" style="flex:1;color:orange">
+                        {{lang.draft}}
+                    </span>
+                    <span *ngIf="row.status === 'WAITING'" style="flex:1;color:orange;font-weight: bold;">
+                        En cours d'envoi...
+                    </span>
+                    <span *ngIf="row.status === 'ERROR'" style="flex:1;color:red;font-weight: bold;">
+                        {{lang.notSent}}
+                    </span>
+                    <span style="flex:1" *ngIf="!functions.empty(row.operationDate)" [title]="row.operationDate | fullDate">
+                        {{lang.delivery}} : <b>{{row.operationDate | timeAgo : 'full'}}</b>
+                    </span>
+                </div>
+                <div style="display: grid;grid-template-columns: 100px 1fr 170px;width: 100%;grid-gap: 10px;align-items: center;padding:10px;">
+                    <div class="dateType">
+                        <span class="type">
+                            <span class="badge" [style.background]="row.typeColor" [title]="lang[row.type]">{{lang[row.type]}}</span>
+                            <div class="attach">
+                                <i *ngIf="row.hasMainDoc" class="fas fa-file" title="Document attaché"></i>
+                                <i *ngIf="row.hasAttach" class="fas fa-paperclip" title="Pièce(s) jointe(s) attachée(s)"></i>
+                                <i *ngIf="row.hasNote" class="fas fa-pen-square" title="Note(s) attachée(s)"></i>
+                            </div>
+                        </span>
+                    </div>
+                    <div class="desc" [innerHTML]="row.desc"></div>
+                    <div class="contact">
+                        <span *ngIf="row.sender" style="white-space: pre;overflow: hidden;text-overflow: ellipsis;" [title]="row.sender">
+                            {{lang.senderShort}} : {{row.sender}}
+                        </span>
+                        <span style="white-space: pre;overflow: hidden;text-overflow: ellipsis;" [title]="row.recipients">
+                            {{lang.recipientShort}} : {{row.recipients}}
+                        </span>
+                    </div>
+                </div>
+            </mat-cell>
+        </ng-container>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+    <button mat-fab *ngIf="privilegeService.hasCurrentUserPrivilege('sendmail')" class="addSentResource" color="primary" [title]="lang.sendElement" (click)="openPromptMail()">
+        <mat-icon style="height: auto;width: auto;" class="fa fa-plus"></mat-icon>
+    </button>
+</ng-template>

@@ -103,7 +103,7 @@ abstract class basket_Abstract extends Database
 
         $user = \User\models\UserModel::getByLogin(['login' => $userData['UserId'], 'select' => ['id']]);
 
-        if (isset($userData['primarygroup']) && isset($userData['UserId'])) {
+        if (isset($userData['UserId'])) {
             $db = new Database();
             $stmt = $db->query("SELECT ubp.basket_id, ubp.group_serial_id FROM users_baskets_preferences ubp, baskets WHERE user_serial_id = ? AND ubp.display = TRUE AND ubp.basket_id = baskets.basket_id order by ubp.group_serial_id, baskets.basket_order, baskets.basket_name ", [$user['id']]);
             while ($res = $stmt->fetchObject()) {
@@ -113,7 +113,7 @@ abstract class basket_Abstract extends Database
             }
         }
 
-        if (isset($userData['primarygroup']) && isset($userData['UserId'])) {
+        if (isset($userData['UserId'])) {
             $absBasketsArr = $this->load_basket_abs($userData['UserId']);
             $_SESSION['user']['baskets'] = array_merge(
                $_SESSION['user']['baskets'],
@@ -261,34 +261,6 @@ abstract class basket_Abstract extends Database
             $_SESSION['current_basket']['group_id'] = $_SESSION['user']['baskets'][$ind]['group_id'];
             $_SESSION['current_basket']['group_desc'] = $_SESSION['user']['baskets'][$ind]['group_desc'];
         }
-    }
-
-    public function translates_actions_to_json($actions = array())
-    {
-        $jsonActions = '{';
-
-        if (count($actions) > 0) {
-            for ($i = 0; $i < count($actions); $i ++) {
-                $jsonActions .= "'"  . $actions[$i]['ID'] . "' : { 'where' : '"
-                . addslashes($actions[$i]['WHERE']) . "',";
-                $jsonActions .= "'id_status' : '" . $actions[$i]['ID_STATUS']
-                . "', 'confirm' : '" ;
-                if (isset($actions[$i]['CONFIRM'])) {
-                    $jsonActions .= $actions[$i]['CONFIRM'];
-                } else {
-                    $jsonActions .= 'false';
-                }
-                $jsonActions .= "', ";
-                $jsonActions .= "'id_action_page' : '"
-                . $actions[$i]['ACTION_PAGE'] . "'}, ";
-            }
-            $jsonActions = preg_replace('/, $/', '}', $jsonActions);
-        }
-
-        if ($jsonActions == '{') {
-            $jsonActions = '{}';
-        }
-        return $jsonActions;
     }
 
     /**

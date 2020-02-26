@@ -55,7 +55,7 @@ use User\models\UserSignatureModel;
 
 class UserController
 {
-    const ALTERNATIVES_CONNECTIONS_METHODS = ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'];
+    const ALTERNATIVES_CONNECTIONS_METHODS = ['sso', 'cas', 'ldap', 'keycloak', 'shibboleth'];
 
     public function get(Request $request, Response $response)
     {
@@ -523,8 +523,15 @@ class UserController
             if (!$basket['allowed']) {
                 unset($user['baskets'][$key]);
             }
+            unset($user['baskets'][$key]['basket_clause']);
         }
         $user['baskets'] = array_values($user['baskets']);
+        foreach ($user['groups'] as $key => $group) {
+            unset($user['groups'][$key]['where_clause']);
+        }
+        foreach ($user['assignedBaskets'] as $key => $basket) {
+            unset($user['assignedBaskets'][$key]['basket_clause']);
+        }
 
         return $response->withJson($user);
     }
@@ -1644,10 +1651,10 @@ class UserController
         UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$user['id']]]);
 
         $url = UrlController::getCoreUrl() . 'apps/maarch_entreprise/index.php?display=true&page=login&update-password-token=' . $resetToken;
-        EmailController::createEmail([
+        $email = EmailController::createEmail([
             'userId'    => $user['id'],
             'data'      => [
-                'sender'        => ['email' => 'Notification'],
+                'sender'        => ['email' => $user['mail']],
                 'recipients'    => [$user['mail']],
                 'object'        => _NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT,
                 'body'          => _NOTIFICATIONS_FORGOT_PASSWORD_BODY . '<a href="' . $url . '">'._CLICK_HERE.'</a>' . _NOTIFICATIONS_FORGOT_PASSWORD_FOOTER,
@@ -1656,12 +1663,17 @@ class UserController
             ]
         ]);
 
+        if (!empty($email['errors'])) {
+            $historyMessage = $email['errors'];
+        } else {
+            $historyMessage = _PASSWORD_REINIT_SENT;
+        }
         HistoryController::add([
             'tableName'    => 'users',
             'recordId'     => $body['login'],
             'eventType'    => 'RESETPSW',
             'eventId'      => 'userModification',
-            'info'         => _PASSWORD_REINIT_SENT
+            'info'         => $historyMessage
         ]);
 
         return $response->withStatus(204);

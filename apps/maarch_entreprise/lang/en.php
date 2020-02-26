@@ -50,12 +50,6 @@ if (!defined('_PLEASE_CHOOSE_AN_ATTACHMENT')) {
 if (!defined('_ADD_ATTACHMENT_TO_SEND_TO_CONTACT')) {
     define('_ADD_ATTACHMENT_TO_SEND_TO_CONTACT', 'Please add an attachment before sending this mail to the contact.');
 }
-if (!defined('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT')) {
-    define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Send to the contact with a mandatory attachment');
-}
-if (!defined('_SEND_ATTACHMENTS_TO_CONTACT')) {
-    define('_SEND_ATTACHMENTS_TO_CONTACT', 'Send to the contact');
-}
 if (!defined('_PROCESSING_MODE')) {
     define('_PROCESSING_MODE', 'Handling mode');
 }
@@ -408,12 +402,6 @@ if (!defined('_DEFINITIVE_ACTION')) {
 }
 if (!defined('_AND')) {
     define('_AND', ' and ');
-}
-if (!defined('_PLEASE_CHECK_LISTDIFF')) {
-    define('_PLEASE_CHECK_LISTDIFF', ' is on the diffusion list(s). Please change the recipient in the diffusion list(s) of');
-}
-if (!defined('_THE_USER_JS')) {
-    define('_THE_USER_JS', 'The user ');
 }
 
 /************** Divers **************/
@@ -1407,30 +1395,6 @@ if (!defined('_DIFFLIST_NEVER_MODIFIED')) {
     define('_DIFFLIST_NEVER_MODIFIED', 'The diffusion list has never been modified');
 }
 
-//BIT MASK
-if (!defined('_BITMASK_VALUE_ALREADY_EXIST')) {
-    define('_BITMASK_VALUE_ALREADY_EXIST', 'Bit mask is already used in an other type');
-}
-
-if (!defined('_ASSISTANT_MODE')) {
-    define('_ASSISTANT_MODE', 'Assistant mode');
-}
-if (!defined('_EDIT_WITH_ASSISTANT')) {
-    define('_EDIT_WITH_ASSISTANT', 'Click here to edit the where clause with the assistant mode');
-}
-if (!defined('_VALID_THE_WHERE_CLAUSE')) {
-    define('_VALID_THE_WHERE_CLAUSE', 'Click here to VALIDATE the where clause');
-}
-if (!defined('_MUST_CHOOSE_COLLECTION_FIRST')) {
-    define('_MUST_CHOOSE_COLLECTION_FIRST', 'You have to choose a collection');
-}
-if (!defined('_CANTCHANGECOLL')) {
-    define('_CANTCHANGECOLL', 'You can not change the collection');
-}
-if (!defined('_DOCUMENTS_EXISTS_FOR_COUPLE_FOLDER_TYPE_COLLECTION')) {
-    define('_DOCUMENTS_EXISTS_FOR_COUPLE_FOLDER_TYPE_COLLECTION', 'mails exist for the folder type / collection pair');
-}
-
 if (!defined('_NO_RIGHT')) {
     define('_NO_RIGHT', 'Error');
 }
@@ -1481,13 +1445,6 @@ if (!defined('_CHOOSE_ONE_DOC')) {
 if (!defined('_CHOOSE_ONE_OBJECT')) {
     define('_CHOOSE_ONE_OBJECT', 'Choose an element at least');
 }
-
-if (!defined('_CLICK_LINE_TO_CHECK_INVOICE')) {
-    define('_CLICK_LINE_TO_CHECK_INVOICE', 'Click on a lign to check a bill');
-}
-if (!defined('_FOUND_INVOICES')) {
-    define('_FOUND_INVOICES', ' Found bill(s)');
-}
 if (!defined('_SIMPLE_CONFIRM')) {
     define('_SIMPLE_CONFIRM', 'Simple confirmation');
 }
@@ -1503,18 +1460,6 @@ if (!defined('_NO_STRUCTURE_ATTACHED')) {
 }
 
 ///// Credits
-if (!defined('_MAARCH_CREDITS')) {
-    define('_MAARCH_CREDITS', 'About Maarch ');
-}
-if (!defined('_THANKS_TO_EXT_DEV')) {
-    define('_THANKS_TO_EXT_DEV', 'Maarch depend upon some external components. A thank-you to their developers !');
-}
-if (!defined('_PROCESSING_DATE')) {
-    define('_PROCESSING_DATE', 'Processing deadline');
-}
-if (!defined('_PROCESS_NUM')) {
-    define('_PROCESS_NUM', 'Processing of the mail number ...');
-}
 if (!defined('_PROCESS_LIMIT_DATE')) {
     define('_PROCESS_LIMIT_DATE', 'Processing deadline');
 }
@@ -1660,12 +1605,6 @@ if (!defined('_PROCESS_DATE')) {
 if (!defined('_CHOOSE_STATUS')) {
     define('_CHOOSE_STATUS', 'Choose a status');
 }
-if (!defined('_PROCESS_RECEIPT')) {
-    define('_PROCESS_RECEIPT', 'Recipient(s) for processing');
-}
-if (!defined('_CHOOSE_RECEIPT')) {
-    define('_CHOOSE_RECEIPT', 'Choose a recipient');
-}
 if (!defined('_TO_CC')) {
     define('_TO_CC', 'On copy');
 }
@@ -1760,7 +1699,7 @@ if (!defined('_MULTI_FIELD')) {
     define('_MULTI_FIELD', 'Multi-fields');
 }
 if (!defined('_MULTI_FIELD_HELP')) {
-    define('_MULTI_FIELD_HELP', 'Object, description, title, EDM number, Chrono number, processing notes...');
+    define('_MULTI_FIELD_HELP', 'Object, barcode, EDM number, Chrono number, processing notes');
 }
 if (!defined('_SAVE_QUERY')) {
     define('_SAVE_QUERY', 'Save my search');
@@ -1845,18 +1784,6 @@ if (!defined('_MAIL_DATE')) {
 if (!defined('_DOC_HISTORY')) {
     define('_DOC_HISTORY', 'History');
 }
-if (!defined('_DONE_ANSWERS')) {
-    define('_DONE_ANSWERS', 'Done responses');
-}
-if (!defined('_MUST_DEFINE_ANSWER_TYPE')) {
-    define('_MUST_DEFINE_ANSWER_TYPE', 'You have to clarify the response type');
-}
-if (!defined('_MUST_CHECK_ONE_BOX')) {
-    define('_MUST_CHECK_ONE_BOX', 'You have to tick one case at least');
-}
-if (!defined('_ANSWER_TYPE')) {
-    define('_ANSWER_TYPE', 'Response type(s)');
-}
 if (!defined('_CHOOSE_FILE')) {
     define('_CHOOSE_FILE', 'Choose the file');
 }
@@ -1894,9 +1821,6 @@ if (!defined('_ATTACHMENTS_VERS_COLL')) {
 }
 if (!defined('_APA_COLL')) {
     define('_APA_COLL', 'Collection of the physical archiving');
-}
-if (!defined('_REDIRECT_TO_ACTION')) {
-    define('_REDIRECT_TO_ACTION', 'Redirect to an action');
 }
 if (!defined('_DOCUMENTS_LIST')) {
     define('_DOCUMENTS_LIST', 'List');
@@ -2574,9 +2498,6 @@ if (!defined('_WORK_BATCH')) {
 if (!defined('_DONE')) {
     define('_DONE', 'Made actions');
 }
-if (!defined('_ANSWER_TYPES_DONE')) {
-    define('_ANSWER_TYPES_DONE', 'Type(s) of made responses');
-}
 if (!defined('_CLOSING_DATE')) {
     define('_CLOSING_DATE', 'Closing date');
 }
@@ -2752,15 +2673,6 @@ if (!defined('_PROJECT')) {
 }
 if (!defined('_MARKET')) {
     define('_MARKET', 'Sub-folder');
-}
-if (!defined('_SEARCH_CUSTOMER')) {
-    define('_SEARCH_CUSTOMER', 'Consultation folders/ sub-folders');
-}
-if (!defined('_SEARCH_CUSTOMER_TITLE')) {
-    define('_SEARCH_CUSTOMER_TITLE', 'Search folders / sub-folders');
-}
-if (!defined('_TO_SEARCH_DEFINE_A_SEARCH_ADV')) {
-    define('_TO_SEARCH_DEFINE_A_SEARCH_ADV', 'To start a search, you have to enter a folder number or a folder name or a sub-folder name');
 }
 if (!defined('_DAYS')) {
     define('_DAYS', 'Days');

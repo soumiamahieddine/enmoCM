@@ -262,7 +262,7 @@ export class ExportComponent implements OnInit {
         } else {
             let realIndex = event.previousIndex;
 
-            if (event.container.id == 'cdk-drop-list-1') {
+            if (event.container.id == 'cdk-drop-list-10') {
                 realIndex = 0;
                 if ($j('.available-data .columns')[event.previousIndex] !== undefined) {
                     const fakeIndex = $j('.available-data .columns')[event.previousIndex].id;
@@ -351,7 +351,9 @@ export class ExportComponent implements OnInit {
 
     addAllData() {
         this.exportModel.data = this.exportModel.data.concat(this.dataAvailable);
-        this.dataAvailable = [];
+        while(this.dataAvailable.length > 0) {
+            this.dataAvailable.pop();
+        }
         this.listFilter.nativeElement.value = '';
     }
 

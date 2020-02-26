@@ -11,6 +11,7 @@ export const LANG_NL = {
     "accountAdded"                          : "Account added", //_TO_TRANSLATE
     "accountDeleted"                        : "Account deleted", //_TO_TRANSLATE
     "acknowledgementReceipt"                : "Acknowledgement of receipt", //_TO_TRANSLATE
+    "acknowledgementReceipts"                : "Acknowledgement of receipts", //_TO_TRANSLATE
     "acknowledgementReceiptType"            : "Type of acknowledgement of receipt", //_TO_TRANSLATE
     "acknowledgementSendDate"               : "Acknowledgement send date", //_TO_TRANSLATE
     "action"                                : "Actie",
@@ -336,6 +337,7 @@ export const LANG_NL = {
     "electronicTemplate"                    : "Electronic template", //_TO_TRANSLATE
     "elements"                              : "element(s)", //_TO_TRANSLATE
     "email"                                 : "E-mail",
+    "emails"                                : "E-mails",
     "emailSendFailed"                       : "_TO_TRANSLATE",
     "emailSendInProgress"                   : "_TO_TRANSLATE",
     "emailSendSuccess"                      : "_TO_TRANSLATE",
@@ -755,7 +757,7 @@ export const LANG_NL = {
     "quickSearchInfo"                       : "Target search ", //_TO_TRANSLATE
     "inSignatureBook"                       : "In signature Book", //_TO_TRANSLATE
     "inShipping"                            : "In shipping", //_TO_TRANSLATE
-    "quickSearchTarget"                     : "subject (mail / attachment), chrono number (courrier / attachment), reference mail, notes content, barcode, attachment contact (society / lastanme / firstname)", //_TO_TRANSLATE
+    "quickSearchTarget"                     : "subject (mail / attachment), chrono number (courrier / attachment), notes content, barcode, EDM number (mail)", //_TO_TRANSLATE
     "quota"                                 : "Quota",
     "quotaExceeded"                         : "Quota overschreden",
     "reactivateUserDeleted"                 : "De ingevoerde gebruikersnaam is toegekend aan een verwijderde gebruiker. Wilt u deze opnieuw activeren?",
@@ -1002,7 +1004,7 @@ export const LANG_NL = {
     "warnLockRes2"                          : "\n\nThis action will process ONLY mails which are NOT locked", //_TO_TRANSLATE
     "warnLockResInProgress"                 : "This mail is in progress by", //_TO_TRANSLATE
     "warnMaxDataList"                       : "Maximum of displayed datas is reached", //_TO_TRANSLATE
-    "warnShapingOption"                     : "<b>Be carefull !</b> The address will be setted in the first page of sended documents", //_TO_TRANSLATE
+    "warnShapingOption"                     : "<b>Be carefull !</b> The address will be setted in the first page of sent documents", //_TO_TRANSLATE
     "warnTooMuchSelect"                     : "only 500 elements can be processed with an action", //_TO_TRANSLATE
     "webserviceAccount"                     : "Webservice-account",
     "webserviceAccountDesc"                 : "Indien ingeschakeld zal deze account niet gebruikt kunnen worden om zich grafisch met de applicatie te verbinden.",
@@ -1562,8 +1564,7 @@ export const LANG_NL = {
     "badEmailsFormat" : "Some email address are not correct", //_TO_TRANSLATE
     "warnEmptySubject" : "You will send an email without subject, continue ?", //_TO_TRANSLATE
     "emailDeleted" : "Email deleted", //_TO_TRANSLATE
-    "mailingActionInformations" : "Following mails contain mailing attachments, if next person in visa circuit is signatory then mailing will be activate :", //_TO_TRANSLATE
-    "mailingActionInformations2" : "Following mails contain mailing attachments, mailing will be activate :", //TRANSLATE
+    "mailingActionInformations" : "Following mails contain mailing attachments, mailing will be activate :", //TRANSLATE
     "properties" : "Properties",  //_TO_TRANSLATE
     "generateARMode" : "Acknowledgement receipt mode allowed", //_TO_TRANSLATE
     "autoAR" : "Automatic", //_TO_TRANSLATE
@@ -1575,7 +1576,29 @@ export const LANG_NL = {
     "tagUpdated" : "Tag updated", //_TO_TRANSLATE
     "tagMerged" : "Tag merged", //_TO_TRANSLATE
     "mergeWith" : "Merge with", //_TO_TRANSLATE
-    "willBeTransferedToNewTag" : "will be transfered to selected tag", //_TO_TRANSLATE
+    "willBeTransferredToNewTag" : "will be transferred to tag ", //_TO_TRANSLATE
     "detailDoc" : "Detail page", //_TO_TRANSLATE
     "emptySubject" : "Empty subject", //_TO_TRANSLATE
+    "noAvailableMenu" : "No available menu", //_TO_TRANSLATE
+    "emailSent" : "Email sent", //_TO_TRANSLATE
+    "emailCannotSent" : "Error during sending email", //_TO_TRANSLATE
+    "sentToFastParapheur" : "Send to fastParapheur", //_TO_TRANSLATE
+    "editAcknowledgementReceipt" : "Edit the acknowledgement receipt", //_TO_TRANSLATE
+    "insufficientPrivilege" : "Privilege insuffisant", //TRANSLATE
+    "cannotMergeTags" : "This tag has a parent or children : impossible to merge tags",//_TO_TRANSLATE
+    "mergeTagWith" : "Merge this tag with",//_TO_TRANSLATE
+    "generateAndDownloadPrintedFolder" : "Generate the printed folder", //_TO_TRANSLATE
+    "mainDocument" : "Main document", //_TO_TRANSLATE
+    "attachSummarySheet" : "Attach the summary sheet", //_TO_TRANSLATE
+    "generateSeparators" : "Generate separators for each elements", //_TO_TRANSLATE
+    "theTag" : "The tag",//_TO_TRANSLATE
+    "addUsers" : "Add users", //_TO_TRANSLATE
+    "willBeDeletedAndMerged" : "will be deleted and merged with the tag", //_TO_TRANSLATE
+    "mailing" : "Mailing", //_TO_TRANSLATE
+    "enableMailing" : "Enable mailing",  //_TO_TRANSLATE
+    "disableMailing" : "Disable mailing", //_TO_TRANSLATE
+    "selectContact" : "select a contact", //_TO_TRANSLATE
+    "mailingMsg" : "<b>Mailing enbled</b> : <br><br><p>A <b>master</b> attachment will be created without merged field <b>contact</b> (attachmentRecipient).</p><p>If you click on Mailing, the attachmenets will be generated <b>NOW</b>.<br><br>If you click on Validate, They will be generated <b>BEFORE</b> to send to the first <b>signatory</b> of visa circuit.</p><p><b>One</b> attachment will be generated for <b>each contact</b> linked to the mail.</p>", //_TO_TRANSLATE
+    "attachmentGenerated" : "Attachment generated", //_TO_TRANSLATE
+    "mustEditAttachmentFirst" : "You must edit the attachment first", //_TO_TRANSLATE
 };

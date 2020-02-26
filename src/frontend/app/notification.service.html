@@ -2,6 +2,9 @@
     <div class="notif-container-icon">
         <i class="fa fa-{{data.icon}} fa-2x"></i>
     </div>
+    <button mat-icon-button class="notif-container-close" (click)="dismiss()">
+        <mat-icon class="fa fa-times fa-lg" aria-hidden="true"></mat-icon>
+    </button>
     <div class="notif-container-content">
         <div class="notif-container-content-msg">
             <div [innerHTML]="data.url"></div>

@@ -11,7 +11,7 @@ declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "diffusionModel-administration.component.html",
-    styleUrls: ['diffusionModel-administration.component.css'],
+    styleUrls: ['diffusionModel-administration.component.scss'],
     providers: [NotificationService, AppService]
 })
 export class DiffusionModelAdministrationComponent implements OnInit {
@@ -95,7 +95,8 @@ export class DiffusionModelAdministrationComponent implements OnInit {
             "id": element.id,
             "sequence": this.diffusionModel.items.length,
             "idToDisplay": element.idToDisplay,
-            "descriptionToDisplay": element.descriptionToDisplay
+            "descriptionToDisplay": element.descriptionToDisplay,
+            "hasPrivilege": true
         };
 
         this.diffusionModel.items.push(newElemListModel);
@@ -150,6 +151,20 @@ export class DiffusionModelAdministrationComponent implements OnInit {
             }, () => {
                 location.href = "index.php";
             });
+    }
+
+    canSaveListTemplate() {
+        var canSave = true;
+
+        if (this.diffusionModel.items) {
+            this.diffusionModel.items.forEach((item: any) => {
+                if (!item.hasPrivilege) {
+                    canSave = false;
+                }
+            });
+        }
+
+        return canSave;
     }
 
     saveDiffListVisa() {

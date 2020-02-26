@@ -19,7 +19,7 @@
                     <mat-checkbox color="primary" *ngFor="let inteKey of integrationsInfo | keyvalue" (click)="toggleIntegration(inteKey.key)" [checked]="data.resource.integrations[inteKey.key]">{{lang[inteKey.key+'_doc']}}</mat-checkbox>
                 </div>
                 <div *ngIf="resourcesMailing.length > 0" class="alert-message alert-message-info" role="alert">
-                    <p>{{lang.mailingActionInformations2}}</p>
+                    <p>{{lang.mailingActionInformations}}</p>
                     <ul>
                         <li *ngFor="let ressource of resourcesMailing">
                             <b>{{ressource.alt_identifier}}</b>
@@ -27,6 +27,9 @@
                     </ul>
                 </div>
                 <div>
+                    <app-fast-paraph #fastParapheur *ngIf="signatoryBookEnabled=='fastParapheur'"
+                        [additionalsInfos]="additionalsInfos" [externalSignatoryBookDatas]="externalSignatoryBookDatas">
+                    </app-fast-paraph>
                     <app-maarch-paraph #maarchParapheur *ngIf="signatoryBookEnabled=='maarchParapheur'"
                         [additionalsInfos]="additionalsInfos" [externalSignatoryBookDatas]="externalSignatoryBookDatas">
                     </app-maarch-paraph>

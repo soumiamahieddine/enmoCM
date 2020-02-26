@@ -3,8 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { formatDate } from '@angular/common';
+import { FunctionsService } from '../../../service/functions.service';
 
 declare function $j(selector: any): any;
 
@@ -20,6 +21,8 @@ export class SummarySheetComponent implements OnInit {
     loading: boolean = false;
 
     withQrcode: boolean = true;
+
+    paramMode: boolean = false;
 
     dataAvailable: any[] = [
         {
@@ -111,9 +114,16 @@ export class SummarySheetComponent implements OnInit {
         }
     ];
 
-    constructor(public http: HttpClient, private notify: NotificationService, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        public dialogRef: MatDialogRef<SummarySheetComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        public functions: FunctionsService) { }
 
-    ngOnInit(): void { }
+    ngOnInit(): void { 
+        this.paramMode = !this.functions.empty(this.data.paramMode);
+    }
 
     drop(event: CdkDragDrop<string[]>) {
         if (event.previousContainer === event.container) {
@@ -123,24 +133,9 @@ export class SummarySheetComponent implements OnInit {
 
     genSummarySheets() {
         this.loading = true;
-        let currElemData: any[] = [];
+        
 
-        if (this.withQrcode) {
-            currElemData.push({
-                unit: 'qrcode',
-                label: '',
-            });
-        }
-        this.dataAvailable.forEach((element: any) => {
-            if (element.enabled) {
-                currElemData.push({
-                    unit: element.unit,
-                    label: element.label,
-                });
-            }
-        });
-
-        this.http.post('../../rest/resourcesList/users/' + this.data.ownerId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/summarySheets', { units: currElemData, resources: this.data.selectedRes }, { responseType: "blob" })
+        this.http.post('../../rest/resourcesList/users/' + this.data.ownerId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/summarySheets', { units: this.formatSummarySheet(), resources: this.data.selectedRes }, { responseType: "blob" })
             .subscribe((data) => {
                 if (data.type !== 'text/html') {
                     let downloadLink = document.createElement('a');
@@ -176,6 +171,27 @@ export class SummarySheetComponent implements OnInit {
             });
     }
 
+    formatSummarySheet() {
+        let currElemData: any[] = [];
+
+        if (this.withQrcode) {
+            currElemData.push({
+                unit: 'qrcode',
+                label: '',
+            });
+        }
+        this.dataAvailable.forEach((element: any) => {
+            if (element.enabled) {
+                currElemData.push({
+                    unit: element.unit,
+                    label: element.label,
+                });
+            }
+        });
+
+        return currElemData;
+    }
+
     toggleQrcode() {
         this.withQrcode = !this.withQrcode;
     }
@@ -195,5 +211,9 @@ export class SummarySheetComponent implements OnInit {
 
     removeCustomUnit(i: number) {
         this.dataAvailable.splice(i, 1);
+    }
+
+    closeModalWithParams() {
+        this.dialogRef.close(this.formatSummarySheet());
     }
 }

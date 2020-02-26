@@ -7,6 +7,7 @@ import { HeaderService } from '../../service/header.service';
 import { of } from 'rxjs';
 import { FunctionsService } from '../../service/functions.service';
 import { FormControl } from '@angular/forms';
+import { LatinisePipe } from 'ngx-pipes';
 
 @Component({
     selector: 'app-note-editor',
@@ -33,6 +34,7 @@ export class NoteEditorComponent implements OnInit {
     @Input('entitiesNoteRestriction') entitiesNoteRestriction: string[];
     @Input('noteId') noteId: number;
     @Input('defaultRestriction') defaultRestriction: boolean;
+    @Input('disableRestriction') disableRestriction: boolean = false;
     @Output('refreshNotes') refreshNotes = new EventEmitter<string>();
 
     searchTerm: FormControl = new FormControl();
@@ -42,7 +44,8 @@ export class NoteEditorComponent implements OnInit {
         public http: HttpClient,
         private notify: NotificationService,
         public headerService: HeaderService,
-        public functions: FunctionsService) { }
+        public functions: FunctionsService,
+        private latinisePipe: LatinisePipe) { }
 
     async ngOnInit() {
         await this.getEntities();
@@ -53,6 +56,9 @@ export class NoteEditorComponent implements OnInit {
 
         if (this.upMode) {
             this.content = this.noteContent;
+            if (this.content.startsWith(`[${this.lang.avisUserState}]`) || this.content.startsWith(`[${this.lang.avisUserAsk.toUpperCase()}]`)) {
+                this.disableRestriction = true;
+            }
             this.entitiesRestriction = this.entitiesNoteRestriction;
         }
 
@@ -63,8 +69,12 @@ export class NoteEditorComponent implements OnInit {
             //distinctUntilChanged(),
             tap((data: any) => {
                 if (data.length > 0) {
-                    this.entitiesList = this.entities.filter( (it: any) => {
-                        return (it.entity_label.toLowerCase().includes(data) || it.entity_id.toLowerCase().includes(data));
+                    let filterValue = this.latinisePipe.transform(data.toLowerCase());
+                    this.entitiesList = this.entities.filter( (item: any) => {
+                        return (
+                            this.latinisePipe.transform(item.entity_label.toLowerCase()).includes(filterValue) 
+                                || this.latinisePipe.transform(item.entity_id.toLowerCase()).includes(filterValue)
+                            );
                     });
                 } else {
                     this.entitiesList = this.entities;
@@ -118,6 +128,15 @@ export class NoteEditorComponent implements OnInit {
         return this.content;
     }
 
+    setNoteContent(content: string) {
+        this.content = content;
+    }
+
+
+    getNote() {
+        return {content: this.content, entities: this.entitiesRestriction};
+    }
+
     selectTemplate(template: any) {
         if (this.content.length > 0) {
             this.content = this.content + ' ' + template.template_content;
@@ -134,7 +153,7 @@ export class NoteEditorComponent implements OnInit {
     getTemplatesNote() {
         if (this.templatesNote.length == 0) {
             let params = {};
-            if (this.resIds.length == 1) {
+            if (!this.functions.empty(this.resIds) && this.resIds.length == 1) {
                 params['resId'] = this.resIds[0];
             }
             this.http.get("../../rest/notesTemplates", { params: params })
@@ -149,7 +168,7 @@ export class NoteEditorComponent implements OnInit {
         return new Promise((resolve, reject) => {
             if (this.entities.length == 0) {
                 let params = {};
-                if (this.resIds.length == 1) {
+                if (!this.functions.empty(this.resIds) && this.resIds.length == 1) {
                     params['resId'] = this.resIds[0];
                 }
                 this.http.get("../../rest/entities").pipe(

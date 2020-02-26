@@ -14,7 +14,6 @@ namespace Action\controllers;
 
 use AcknowledgementReceipt\models\AcknowledgementReceiptModel;
 use Action\models\ActionModel;
-use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketRedirectModel;
@@ -281,19 +280,19 @@ class PreProcessActionController
             ]);
 
             if (!empty($acknowledgements)) {
-                $sended = 0;
+                $sent = 0;
                 $generated = 0;
 
                 foreach ($acknowledgements as $acknowledgement) {
                     if (!empty($acknowledgement['creation_date']) && !empty($acknowledgement['send_date'])) {
-                        $sended += 1;
+                        $sent += 1;
                     } elseif (!empty($acknowledgement['creation_date']) && empty($acknowledgement['send_date'])) {
                         $generated += 1;
                     }
                 }
 
-                if ($sended > 0) {
-                    $alreadySend['number'] += $sended;
+                if ($sent > 0) {
+                    $alreadySend['number'] += $sent;
                     $alreadySend['list'][] = ['resId' => $resId, 'alt_identifier' => $resource['alt_identifier']];
                 }
 
@@ -405,9 +404,7 @@ class PreProcessActionController
                 // TODO
             } elseif ($signatureBookEnabled == 'iParapheur') {
                 // TODO
-            } elseif ($signatureBookEnabled == 'fastParapheur') {
-                // TODO
-            } elseif ($signatureBookEnabled == 'maarchParapheur') {
+            } elseif (in_array($signatureBookEnabled, ['maarchParapheur', 'fastParapheur'])) {
                 if (is_array($data['resources']) && count($data['resources']) == 1) {
                     $resDestination = ResModel::getById([
                         'select'   => ['destination'],
@@ -645,9 +642,9 @@ class PreProcessActionController
     {
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
         if (empty($mailevaConfig)) {
-            return $response->withStatus(400)->withJson(['errors' => 'Maileva configuration does not exist', 'errorLang' => 'missingMailevaConfig']);
+            return $response->withJson(['fatalError' => 'Maileva configuration does not exist', 'reason' => 'missingMailevaConfig']);
         } elseif (!$mailevaConfig['enabled']) {
-            return $response->withStatus(400)->withJson(['errors' => 'Maileva configuration is disabled', 'errorLang' => 'disabledMailevaConfig']);
+            return $response->withJson(['fatalError' => 'Maileva configuration is disabled', 'reason' => 'disabledMailevaConfig']);
         }
 
         $data = $request->getParsedBody();
@@ -954,18 +951,6 @@ class PreProcessActionController
             $resource = ResModel::getById(['resId' => $resId, 'select' => ['alt_identifier', 'integrations']]);
             if (empty($resource['alt_identifier'])) {
                 $resource['alt_identifier'] = _UNDEFINED;
-            }
-
-            $circuit = ListInstanceModel::get([
-                'select'    => ['requested_signature'],
-                'where'     => ['res_id = ?', 'difflist_type = ?', 'process_date is null'],
-                'data'      => [$resId, 'VISA_CIRCUIT'],
-                'orderBy'   => ['listinstance_id'],
-                'limit'     => 1
-            ]);
-            if (empty($circuit)) {
-                $resourcesInformations['error'][] = ['alt_identifier' => $resource['alt_identifier'], 'res_id' => $resId, 'reason' => 'noCircuitAvailable'];
-                continue;
             }
 
             $attachments = AttachmentModel::get([

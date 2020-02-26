@@ -62,7 +62,7 @@ class ExportControllerTest extends TestCase
                 ],
                 [
                     "value" => "getDetailLink",
-                    "label" => "Lien page détaillé",
+                    "label" => "Lien page détaillée",
                     "isFunction" => true
                 ],
                 [

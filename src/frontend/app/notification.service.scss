@@ -22,6 +22,12 @@
             flex-direction: column;
         }
     }
+
+    &-close {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+    }
 }
 
 ::ng-deep.mat-snack-bar-container.error-snackbar  {

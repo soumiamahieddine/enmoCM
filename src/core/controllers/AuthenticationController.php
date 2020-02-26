@@ -73,7 +73,7 @@ class AuthenticationController
             if (!in_array($aArgs['currentRoute'], ['/passwordRules', '/users/{id}/password'])) {
                 $loggingMethod = CoreConfigModel::getLoggingMethod();
 
-                if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'])) {
+                if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'keycloak', 'shibboleth'])) {
 
                     $passwordRules = PasswordModel::getEnabledRules();
                     if (!empty($passwordRules['renewal'])) {
@@ -150,7 +150,7 @@ class AuthenticationController
         EmailController::createEmail([
             'userId'    => $args['userId'],
             'data'      => [
-                'sender'        => ['email' => 'Notification'],
+                'sender'        => ['email' => $args['userEmail']],
                 'recipients'    => [$args['userEmail']],
                 'object'        => _NOTIFICATIONS_USER_CREATION_SUBJECT,
                 'body'          => _NOTIFICATIONS_USER_CREATION_BODY . '<a href="' . $url . '">'._CLICK_HERE.'</a>' . _NOTIFICATIONS_USER_CREATION_FOOTER,

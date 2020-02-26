@@ -198,7 +198,7 @@ class ResController extends ResourceControlController
                 'data'      => [$args['resId'], 'sender']
             ]);
         }
-        if (in_array('recipients', $modelFields) && empty($queryParams['light'])) {
+        if (in_array('recipients', $modelFields)) {
             $formattedData['recipients'] = ResourceContactModel::get([
                 'select'    => ['item_id as id', 'type'],
                 'where'     => ['res_id = ?', 'mode = ?'],
@@ -546,13 +546,13 @@ class ResController extends ResourceControlController
         return $response->withJson(['encodedDocument' => base64_encode($fileContent)]);
     }
 
-    public function getOriginalFileContent(Request $request, Response $response, array $aArgs)
+    public function getOriginalFileContent(Request $request, Response $response, array $args)
     {
-        if (!Validator::intVal()->validate($aArgs['resId']) || !ResController::hasRightByResId(['resId' => [$aArgs['resId']], 'userId' => $GLOBALS['id']])) {
+        if (!Validator::intVal()->validate($args['resId']) || !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'category_id'], 'resId' => $aArgs['resId']]);
+        $document = ResModel::getById(['select' => ['docserver_id', 'path', 'filename', 'category_id', 'version'], 'resId' => $args['resId']]);
         if (empty($document)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
         }
@@ -560,6 +560,15 @@ class ResController extends ResourceControlController
         if (empty($document['filename'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Document has no file']);
         }
+
+        $convertedDocument = AdrModel::getDocuments([
+            'select'    => ['docserver_id', 'path', 'filename', 'fingerprint'],
+            'where'     => ['res_id = ?', 'type in (?)', 'version = ?'],
+            'data'      => [$args['resId'], ['SIGN'], $document['version']],
+            'orderBy'   => ["type='SIGN' DESC"],
+            'limit'     => 1
+        ]);
+        $document = $convertedDocument[0] ?? $document;
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $document['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
         if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
@@ -591,9 +600,9 @@ class ResController extends ResourceControlController
 
         HistoryController::add([
             'tableName' => 'res_letterbox',
-            'recordId'  => $aArgs['resId'],
+            'recordId'  => $args['resId'],
             'eventType' => 'VIEW',
-            'info'      => _DOC_DISPLAYING . " : {$aArgs['resId']}",
+            'info'      => _DOC_DISPLAYING . " : {$args['resId']}",
             'moduleId'  => 'res',
             'eventId'   => 'resview',
         ]);
@@ -918,6 +927,9 @@ class ResController extends ResourceControlController
 
         $entities = UserModel::getEntitiesByLogin(['login' => $user['user_id'], 'select' => ['id']]);
         $entities = array_column($entities, 'id');
+        if (empty($entities)) {
+            $entities = [0];
+        }
 
         $foldersClause = 'res_id in (select res_id from folders LEFT JOIN entities_folders ON folders.id = entities_folders.folder_id LEFT JOIN resources_folders ON folders.id = resources_folders.folder_id ';
         $foldersClause .= "WHERE entities_folders.entity_id in (?) OR folders.user_id = ? OR keyword = 'ALL_ENTITIES')";

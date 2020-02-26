@@ -1,3 +1,5 @@
+@import '../../../css/vars.scss';
+
 .highlight {
     font-size: 110%;
 }
@@ -34,4 +36,16 @@
     b {
         font-size: 120%;
     }
+}
+
+.models {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    padding-top: 10px;
+    margin-bottom: 10px;
+}
+
+.attachLabel {
+    color: $primary;
 }

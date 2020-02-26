@@ -37,9 +37,6 @@ if (!defined('_NO_VISA')) {
 if (!defined('_NO_RESPONSE_PROJECT_VISA')) {
     define('_NO_RESPONSE_PROJECT_VISA', 'Gelieve minstens één bijlage in de parafeerder te integreren.');
 }
-if (!defined('_MAIL_HAS_NO_RESPONSE_PROJECT')) {
-    define('_MAIL_HAS_NO_RESPONSE_PROJECT', 'Deze brieven hebben geen bijlage die in de handtekening is geïntegreerd.');
-}
 if (!defined('_NO_CONVERTED_PDF_VISA')) {
     define('_NO_CONVERTED_PDF_VISA', 'Bewerk uw bijlage(n)');
 }

@@ -7,7 +7,7 @@
         <button mat-menu-item [matMenuTriggerFor]="menuTemplates" (menuOpened)="getTemplatesNote()">
             <span>{{lang.noteTemplates}}</span>
         </button>
-        <button mat-menu-item [matMenuTriggerFor]="menuEntities">
+        <button mat-menu-item [matMenuTriggerFor]="menuEntities" *ngIf="!disableRestriction">
             <span>{{lang.visibleBy}}</span>
         </button>
     </mat-menu>
@@ -25,7 +25,7 @@
             <span>{{lang.noTemplate}}</span>
         </button>
     </mat-menu>
-    <mat-menu #menuEntities="matMenu" [class]="'templateNoteListMenu'">
+    <mat-menu #menuEntities="matMenu" [class]="'templateNoteListMenu fixedWidth'">
         <div
             style="z-index:1;position: sticky;top: 0px;text-align: center;font-size: 10px;color: white;background: #135F7F;padding: 5px;font-weight: bold;">
             {{lang.entities}}
@@ -54,7 +54,7 @@
     </button>
 </mat-form-field>
 <div style="overflow: auto;max-height: 75px;">
-    <div style="font-size: 11px;position: sticky;top: 0px;" [style.background]="upMode ? '#FFEDCC' : 'white'">{{lang.noteVisibleBy}}</div>
+    <div style="font-size: 11px;position: sticky;top: 0px;" [style.background]="(upMode && entitiesRestriction.length > 0) ? '#FFEDCC' : 'white'">{{lang.noteVisibleBy}}</div>
     <span *ngIf="entitiesRestriction.length === 0" class="label label-default noNoteRestriction">{{lang.all}}</span>
     <ng-container *ngFor="let entity of entities | sortBy: 'entity_label';let i=index;">
         <span *ngIf="entitiesRestriction.indexOf(entity.id) > -1" class="label label-default noteRestriction"

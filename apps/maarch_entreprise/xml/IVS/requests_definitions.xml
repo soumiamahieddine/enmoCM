@@ -95,44 +95,6 @@
       <parameter name="page" value="documents_list_mlb_search_adv"/>
       <parameter name="display" value="true"/>
     </requestDefinition>
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="document_history" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="document_history"/>
-      <parameter name="display" value="true"/>
-      <parameter name="coll_id"/>
-      <parameter name="id"/>
-      <parameter name="load"/>
-      <parameter name="size"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="document_history" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="document_history"/>
-      <parameter name="display" value="true"/>
-      <parameter name="coll_id"/>
-      <parameter name="id"/>
-      <parameter name="size"/>
-    </requestDefinition>
-
-    <requestDefinition method="GET" path="/apps/maarch_entreprise/index.php" validationRule="document_history" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="document_workflow_history"/>
-      <parameter name="display" value="true"/>
-      <parameter name="coll_id"/>
-      <parameter name="id"/>
-      <parameter name="load"/>
-      <parameter name="size"/>
-    </requestDefinition>
-
-    <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="document_history" >
-      <parameter name="dir" value="indexing_searching"/>
-      <parameter name="page" value="document_workflow_history"/>
-      <parameter name="display" value="true"/>
-      <parameter name="coll_id"/>
-      <parameter name="id"/>
-      <parameter name="size"/>
-    </requestDefinition>
-
     <requestDefinition method="POST" path="/apps/maarch_entreprise/index.php" validationRule="multiLink" >
       <parameter name="dir" value="indexing_searching"/>
       <parameter name="page" value="multiLink"/>

@@ -148,7 +148,7 @@ class AttachmentController
     public function update(Request $request, Response $response, array $args)
     {
         $attachment = AttachmentModel::getById(['id' => $args['id'], 'select' => ['res_id_master', 'status', 'typist']]);
-        if (empty($attachment) || !in_array($attachment['status'], ['A_TRA', 'TRA'])) {
+        if (empty($attachment) || !in_array($attachment['status'], ['A_TRA', 'TRA', 'SEND_MASS'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Attachment does not exist']);
         }
         if (!ResController::hasRightByResId(['resId' => [$attachment['res_id_master']], 'userId' => $GLOBALS['id']])) {
@@ -276,7 +276,7 @@ class AttachmentController
         $attachments = AttachmentModel::get([
             'select'    => [
                 'res_id as "resId"', 'identifier as chrono', 'title', 'typist', 'modified_by as "modifiedBy"', 'creation_date as "creationDate"', 'modification_date as "modificationDate"',
-                'relation', 'status', 'attachment_type as type', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"'
+                'relation', 'status', 'attachment_type as type', 'in_signature_book as "inSignatureBook"', 'in_send_attach as "inSendAttach"', 'format'
             ],
             'where'     => ['res_id_master = ?', 'status not in (?)', 'attachment_type not in (?)'],
             'data'      => [$args['resId'], ['DEL', 'OBS'], $excludeAttachmentTypes],
@@ -309,6 +309,9 @@ class AttachmentController
                     $attachments[$key]['signDate'] = $signedResponse[0]['creation_date'];
                 }
             }
+
+            $attachments[$key]['canConvert'] = ConvertPdfController::canConvert(['extension' => $attachments[$key]['format']]);
+            unset($attachments[$key]['format']);
         }
 
         $mailevaConfig = CoreConfigModel::getMailevaConfiguration();
@@ -672,9 +675,6 @@ class AttachmentController
             'where'     => ['res_id = ?', 'type = ?', 'mode = ?'],
             'data'      => [$attachment['res_id_master'], 'contact', $mode]
         ]);
-        if (empty($recipients)) {
-            return true;
-        }
 
         $docserver = DocserverModel::getByDocserverId(['docserverId' => $attachment['docserver_id'], 'select' => ['path_template']]);
         if (empty($docserver['path_template']) || !is_dir($docserver['path_template'])) {
@@ -685,12 +685,10 @@ class AttachmentController
             return ['errors' => 'Attachment not found on docserver'];
         }
 
-        foreach ($recipients as $key => $recipient) {
-            $chrono = $attachment['identifier'] . '-' . ($key+1);
-
+        if (empty($recipients)) {
             $mergedDocument = MergeController::mergeDocument([
                 'path'  => $pathToAttachment,
-                'data'  => ['userId' => $args['userId'], 'recipientId' => $recipient['item_id'], 'recipientType' => 'contact']
+                'data'  => ['userId' => $args['userId']]
             ]);
 
             $data = [
@@ -698,7 +696,7 @@ class AttachmentController
                 'encodedFile'       => $mergedDocument['encodedDocument'],
                 'format'            => $attachment['format'],
                 'resIdMaster'       => $attachment['res_id_master'],
-                'chrono'            => $chrono,
+                'chrono'            => $attachment['identifier'],
                 'type'              => $attachment['attachment_type'],
                 'recipientId'       => $recipient['item_id'],
                 'recipientType'     => 'contact',
@@ -708,6 +706,30 @@ class AttachmentController
             $isStored = StoreController::storeAttachment($data);
             if (!empty($isStored['errors'])) {
                 return ['errors' => $isStored['errors']];
+            }
+        } else {
+            foreach ($recipients as $key => $recipient) {
+                $mergedDocument = MergeController::mergeDocument([
+                    'path'  => $pathToAttachment,
+                    'data'  => ['userId' => $args['userId'], 'recipientId' => $recipient['item_id'], 'recipientType' => 'contact']
+                ]);
+    
+                $data = [
+                    'title'             => $attachment['title'],
+                    'encodedFile'       => $mergedDocument['encodedDocument'],
+                    'format'            => $attachment['format'],
+                    'resIdMaster'       => $attachment['res_id_master'],
+                    'chrono'            => $attachment['identifier'] . '-' . ($key+1),
+                    'type'              => $attachment['attachment_type'],
+                    'recipientId'       => $recipient['item_id'],
+                    'recipientType'     => 'contact',
+                    'inSignatureBook'   => true
+                ];
+    
+                $isStored = StoreController::storeAttachment($data);
+                if (!empty($isStored['errors'])) {
+                    return ['errors' => $isStored['errors']];
+                }
             }
         }
 

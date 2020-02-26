@@ -8,6 +8,7 @@ import { IndexingGroupModalComponent } from '../menu/menu-shortcut.component';
 import { Router } from '@angular/router';
 import { AppService } from '../../service/app.service';
 import { PrivilegeService } from '../../service/privileges.service';
+import { FunctionsService } from '../../service/functions.service';
 
 @Component({
     selector: 'header-right',
@@ -24,7 +25,7 @@ export class HeaderRightComponent implements OnInit {
 
     hideSearch : boolean = true;
 
-    @ViewChild('searchInput', { static: true }) searchInput: MatInput;
+    @ViewChild('searchInput', { static: false }) searchInput: MatInput;
 
     constructor(
         public http: HttpClient, 
@@ -32,7 +33,8 @@ export class HeaderRightComponent implements OnInit {
         public dialog: MatDialog,
         public appService: AppService,
         public headerService: HeaderService,
-        private privilegeService: PrivilegeService) {}
+        public functions: FunctionsService,
+        public privilegeService: PrivilegeService) {}
 
     ngOnInit(): void {
         this.menus = this.privilegeService.getCurrentUserMenus();

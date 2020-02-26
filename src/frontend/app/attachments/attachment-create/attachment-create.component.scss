@@ -6,6 +6,12 @@
     }
 }
 
+.loading {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
 .attach-container {
     position: relative;
     display: flex;
@@ -100,4 +106,8 @@
     background: $primary;
     overflow: auto;
     color: white;
+}
+
+.active {
+    color: $secondary;
 }

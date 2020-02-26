@@ -327,19 +327,6 @@
       <parameter name="action_form" type="identifier" />
       <parameter name="exclude" type="integer" />
     </validationRule>
-    
-    <validationRule name="document_history" extends="standardForm" mode="error">  
-      <parameter name="coll_id" type="collection_list" />
-      <parameter name="id" type="integer" />
-      <parameter name="load" type="boolean" />
-      <parameter name="dir" type="identifier" />
-      <parameter name="size" type="identifier" />
-      <parameter name="url" type="string" />
-      <parameter name="filter" type="identifier" />
-      <parameter name="history_date_start" type="date" />
-      <parameter name="value" type="string" />
-
-    </validationRule>
 
     <validationRule name="little_details" extends="standardForm" mode="error">  
       <parameter name="value" type="integer" />

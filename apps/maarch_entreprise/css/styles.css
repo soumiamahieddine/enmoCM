@@ -5,17 +5,6 @@ html {
     height: 100%;
 }
 
-.detailsDisplayDiv {
-    background: #fff;
-    border-top: 1px solid #666;
-    clear: both;
-    margin: 0 0 0 -5px;
-    overflow: auto;
-    padding: 5px;
-    height: 93%;
-    width: auto;
-}
-
 .func {
 
   background: #F2F2F2;
@@ -30,110 +19,8 @@ html {
     font-size: 14px;
 }
 
-.detailsTab {
-    background: #F2F2F2;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-    display: block;
-}
-
-.whole-panel{ 
-    background: #135F7F;
-    border: 1px solid #000;
-    display: inline-block;
-    height: 735px;
-    min-width: 995px;
-    margin: 0 auto 1em;
-    padding: 5px 0 0 5px;
-    display: block;
-}
-.technical-infos{
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-   /* display: block;*/
-}
-
 .diffusion-list{
     
-    background: #F2F2F2;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-}
- 
-.print-folder {
-
-
-    background: #F2F2F2;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-}
-
-
-.visa-circuit{
-    background: #F2F2F2;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-}
-
-.opinion-circuit {
-    background: #F2F2F2;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-}
-
-.attached-files {
-    background: #F2F2F2;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-}
-
-.answers-done{
     background: #F2F2F2;
     border: 1px solid #666;
     border-bottom: 0;
@@ -224,13 +111,6 @@ html {
     font-size: 14px;
 }
 
-.border_on {
-    border-style:solid;
-    border-color:#003399;
-    border-width:thin;
-    margin-top: 10px;
-}
-
 body {
     color: #666;
     /*background: white url(static.php?filename=bg_body.gif) top center repeat-y;*/
@@ -314,20 +194,6 @@ a:hover {
 
 #admin_subfolders {
     background:  url(static.php?filename=manage_subfolders.gif) no-repeat 2px top;
-    width: 315px;
-    min-height: 110px;
-    float: left;
-    padding-top: 0px;
-    padding-right: 18px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin: 0px 0px 15px;
-    position: relative;
-    display: block;
-}
-
-#view_tree_types {
-    background:  url(static.php?filename=manage_architecture.gif) no-repeat 2px top;
     width: 315px;
     min-height: 110px;
     float: left;
@@ -2774,19 +2640,6 @@ font-size: 14px;
 height:10px;
 }
 
-.maarch_credits_left_box{
-
-float: left;
-width:680px;
-height:660px;
-}
-
-.credits_list{
-text-align:center;
-float: right;
-width:300px;
-}
-
 .img_credits_maarch_box{
 width:100%;
 position:relative;
@@ -2829,17 +2682,6 @@ div.autocomplete ul li {
 
 div.autocomplete ul li span.informal {
     color: grey;
-}
-
-/* clear search */
-.clearsearch {
-    position:absolute;
-    display:block;
-    margin-left:800px;
-}
-.clearsearch img{
-    vertical-align:middle;
-    margin-right:10px;
 }
 
 /* HR */
@@ -3001,11 +2843,6 @@ hr{
     background-repeat: no-repeat;
     background-position : 2px top;
     /*background:  url(static.php?filename=manage_users.gif) no-repeat 2px top;*/
-}
-
-#view_tree_types {
-    background:  url(static.php?filename=manage_architecture.gif) no-repeat 2px top;
-
 }
 
 .admin_subtitle
@@ -3338,36 +3175,12 @@ a.legend hr
     border: 0.2em gray;
 }
 
-.doctype_level1
-{
-    background-color:#EFECCA;
-}
-
-.doctype_level2
-{
-    color: #002F2F;
-}
-
-.access_info
-{
-    margin-left: 5%;
-    background-color: #EFFAFF;
-    padding:5px;
-}
-
 .task
 {
     background-color: #EFFAFF;
     width:50%;
     float:left;
     height: 41px;
-}
-
-#welcome_table
-{
- width:100%;
- height:95px;
- /*background-image: url(static.php?filename=illustr_home.jpg);*/
 }
 
 #welcome_title
@@ -3378,11 +3191,6 @@ a.legend hr
 .center
 {
     margin: auto auto;
-}
-
-.center_text
-{
-    text-align:center;
 }
 
 .h2_title
@@ -3397,26 +3205,6 @@ a.legend hr
 #myTree
 {
     /*width: 520px;*/
-}
-
-.linkDiv {
-    padding: 5px;
-    padding-left: 15px;
-    margin: 0px;
-    margin-bottom: 5px;
-    border-bottom: 1px solid rgba(28, 153, 197, 1);
-    border-left: 1px solid rgba(28, 153, 197, 1);
-    border-right: 1px solid rgba(28, 153, 197, 1);
-    background-color: rgba(200, 224, 255, 0.1);
-}
-.linkDiv:hover {
-    background-color: rgba(200, 224, 255, 0.6);
-    border-left: 5px solid rgba(28, 153, 197, 1);
-}
-
-.linkDiv .barreLinks {
-    background-color: rgba(0, 0, 0, 0.1);
-    width: 2px;
 }
 
 .listletter {
@@ -3453,42 +3241,10 @@ table.listing  {
 
 /*** NEW WF ***/
 
-.multicontactInput {
-    font: -moz-field;
-    font: -webkit-small-control;
-    margin-top: 2px;
-    padding: 2px 2px;
-    width: 225px;
-    min-height: 13px;
-    overflow: hidden;
-}
-
 .largerList{
     margin: 0;
     min-width: 900px;
     width: 100%;
-}
-
-#inner_content_contact {
-    border-top: none;
-    border-bottom: none;
-    padding: 15px 0px 0px;
-    height: auto;
-    margin-left: 0px;
-}
-
-#post #inner_content_contact {
-    padding: 0 4px 0px 0px;
-}
-
-.multicontact_element {
-    display:inline-block; 
-    margin:3px;
-    padding: 1px 3px 2px 3px;
-    /*color:white;*/
-    font-size: .8em;
-    background-color: #BAD1E2;
-    border-radius: 5px;
 }
 
 /*added by lgi*/
@@ -3560,58 +3316,12 @@ a.actionList {
     color: #070B19;
 }
 
-.closeModale{
-  padding: 0.5em;
-  color: #ffffff;
-  right: 0px;
-  top: -7px;
-  position: absolute;
-}
-
 #nbLines_chosen{
     margin-top: -11px;
 }
 
 input.button {
 width:auto;
-}
-
-.TabSelected{
-    background: #fff !important;
-    margin-top: 0 !important;
-    margin-bottom: -3px !important;
-    padding-bottom: 5px !important;
-    position: relative !important;
-    z-index: 1 !important;
-}
-
-.DetailsTabFunc  {
-    background: #F2F2F2;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 2em;
-    padding-left: 15px;
-    padding-right: 15px;
-    padding-top: 5px;
-}
-
-.detailsTab {
-    background: #F2F2F2;
-    border: 1px solid #666;
-    border-bottom: 0;
-    cursor: pointer;
-    display: inline;
-    float: right;
-    margin: 2px 0 0 -1px;
-    padding: 2px 5px;
-    position: relative;
-    font-size: 14px;
-    display: block;
 }
 
 #frmsearch2 .autocomplete, #frmcontact .autocomplete{

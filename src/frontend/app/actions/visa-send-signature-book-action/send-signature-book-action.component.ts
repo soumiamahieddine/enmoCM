@@ -91,15 +91,12 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
                     }
                     this.noResourceToProcess = this.data.resIds.length === this.resourcesError.length;
                     if (data.resourcesInformations.success) {
-                        data.resourcesInformations.success.forEach((value: any) => {
-                            if (value.mailing) {
-                                this.resourcesMailing.push(value);
-                            }
-                        });
+                        this.resourcesMailing = data.resourcesInformations.success.filter((element: any) => element.mailing);
                     }
                     resolve(true);
                 }, (err: any) => {
                     this.notify.handleSoftErrors(err);
+                    this.dialogRef.close();
                 });
         });
     }
@@ -138,10 +135,10 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
     }
 
     executeAction(realResSelected: number[]) {
-        this.http.put(this.data.processActionRoute, { resources: realResSelected, note: this.noteEditor.getNoteContent() }).pipe(
+        this.http.put(this.data.processActionRoute, { resources: realResSelected, note: this.noteEditor.getNote() }).pipe(
             tap((data: any) => {
                 if (!data) {
-                    this.dialogRef.close('success');
+                    this.dialogRef.close(realResSelected);
                 }
                 if (data && data.errors != null) {
                     this.notify.error(data.errors);
@@ -157,7 +154,7 @@ export class SendSignatureBookActionComponent implements AfterViewInit {
 
     executeIndexingAction(resId: number) {
 
-        this.http.put(this.data.indexActionRoute, { resource: resId, note: this.noteEditor.getNoteContent() }).pipe(
+        this.http.put(this.data.indexActionRoute, { resource: resId, note: this.noteEditor.getNote() }).pipe(
             tap((data: any) => {
                 if (!data) {
                     this.dialogRef.close('success');

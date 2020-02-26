@@ -39,7 +39,8 @@
                     </li>
                 </ul>
             </div>
-            <div *ngIf="resourcesMailing.length > 0" class="alert-message alert-message-info" role="alert">
+            <div *ngIf="resourcesMailing.length > 0 && appVisaWorkflow !== undefined && appVisaWorkflow.getNextVisaUser() !== '' && appVisaWorkflow.getNextVisaUser().requested_signature" 
+                class="alert-message alert-message-info" role="alert">
                 <p>{{lang.mailingActionInformations}}</p>
                 <ul>
                     <li *ngFor="let ressource of resourcesMailing">

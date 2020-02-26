@@ -5,7 +5,7 @@ import { NotificationService } from '../notification.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
 
@@ -25,6 +25,7 @@ import { VisaWorkflowComponent } from '../visa/visa-workflow.component';
 import { PrivilegeService } from '../../service/privileges.service';
 import { AvisWorkflowComponent } from '../avis/avis-workflow.component';
 import { FunctionsService } from '../../service/functions.service';
+import { PrintedFolderModalComponent } from '../printedFolder/printed-folder-modal.component';
 
 
 
@@ -44,6 +45,7 @@ export class ProcessComponent implements OnInit {
 
     detailMode: boolean = false;
     navButton: any = null;
+    isMailing: boolean = false;
 
     currentResourceLock: any = null;
 
@@ -188,7 +190,7 @@ export class ProcessComponent implements OnInit {
 
         this.headerService.setHeader(this.lang.eventProcessDoc);
 
-        this.route.params.subscribe(params => {
+        this.route.params.subscribe(params => {            
             if (typeof params['detailResId'] !== "undefined") {
                 this.initDetailPage(params);
             } else {
@@ -200,6 +202,7 @@ export class ProcessComponent implements OnInit {
     }
 
     initProcessPage(params: any) {
+        
         this.detailMode = false;
 
         this.currentUserId = params['userSerialId'];
@@ -251,6 +254,11 @@ export class ProcessComponent implements OnInit {
     }
 
     initDetailPage(params: any) {
+        this._activatedRoute.queryParamMap.subscribe((paramMap: ParamMap) => {
+            this.isMailing = !this.functions.empty(paramMap.get('isMailing')) ;
+        });
+        console.log(this.isMailing);
+        
         this.detailMode = true;
         this.currentResourceInformations = {
             resId: params['detailResId'],
@@ -281,7 +289,11 @@ export class ProcessComponent implements OnInit {
             tap((data: any) => {
                 this.currentResourceInformations = data;
                 this.resourceFollowed = data.followed;
-                this.loadSenders();
+                if (this.currentResourceInformations.categoryId !== 'outgoing') {
+                    this.loadSenders();
+                } else {
+                    this.loadRecipients();
+                }
                 this.setEditDataPrivilege();
                 this.loadAvaibleIntegrations(data.integrations);
                 this.headerService.setHeader(this.detailMode ? this.lang.detailDoc : this.lang.eventProcessDoc, this.lang[this.currentResourceInformations.categoryId]);
@@ -297,6 +309,9 @@ export class ProcessComponent implements OnInit {
     setEditDataPrivilege() {
         if (this.detailMode) {
             this.canEditData =  this.privilegeService.hasCurrentUserPrivilege('edit_resource') && this.currentResourceInformations.statusAlterable;
+            if (this.isMailing && this.isToolEnabled('attachments')) {
+                this.currentTool = 'attachments';
+            }
         } else {
             this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/processingData`).pipe(
                 tap((data: any) => {
@@ -411,6 +426,58 @@ export class ProcessComponent implements OnInit {
         } else if (this.currentResourceInformations.senders.length > 1) {
             this.hasContact = true;
             this.senderLightInfo = { 'displayName': this.currentResourceInformations.senders.length + ' ' + this.lang.senders, 'filling': null };
+        }
+    }
+
+    loadRecipients() {
+
+        if (this.currentResourceInformations.recipients === undefined || this.currentResourceInformations.recipients.length === 0) {
+            this.hasContact = false;
+            this.senderLightInfo = { 'displayName': this.lang.noSelectedContact, 'filling': null };
+        } else if (this.currentResourceInformations.recipients.length == 1) {
+            this.hasContact = true;
+            if (this.currentResourceInformations.recipients[0].type === 'contact') {
+                this.http.get('../../rest/contacts/' + this.currentResourceInformations.recipients[0].id).pipe(
+                    tap((data: any) => {
+                        const arrInfo = [];
+                        if (this.empty(data.firstname) && this.empty(data.lastname)) {
+                            if (!this.functions.empty(data.fillingRate)) {
+                                this.senderLightInfo = { 'displayName': data.company, 'filling': this.contactService.getFillingColor(data.fillingRate.thresholdLevel) };
+                            } else {
+                                this.senderLightInfo = { 'displayName': data.company };
+                            }
+
+                        } else {
+                            arrInfo.push(data.firstname);
+                            arrInfo.push(data.lastname);
+                            if (!this.empty(data.company)) {
+                                arrInfo.push('(' + data.company + ')');
+                            }
+                            if (!this.functions.empty(data.fillingRate)) {
+                                this.senderLightInfo = { 'displayName': arrInfo.filter(info => info !== '').join(' '), 'filling': this.contactService.getFillingColor(data.fillingRate.thresholdLevel) };
+                            } else {
+                                this.senderLightInfo = { 'displayName': arrInfo.filter(info => info !== '').join(' ') };
+                            }
+
+                        }
+                    })
+                ).subscribe();
+            } else if (this.currentResourceInformations.recipients[0].type == 'entity') {
+                this.http.get('../../rest/entities/' + this.currentResourceInformations.recipients[0].id).pipe(
+                    tap((data: any) => {
+                        this.senderLightInfo = { 'displayName': data.entity_label, 'filling': null };
+                    })
+                ).subscribe();
+            } else if (this.currentResourceInformations.recipients[0].type == 'user') {
+                this.http.get('../../rest/users/' + this.currentResourceInformations.recipients[0].id).pipe(
+                    tap((data: any) => {
+                        this.senderLightInfo = { 'displayName': data.firstname + ' ' + data.lastname, 'filling': null };
+                    })
+                ).subscribe();
+            }
+        } else if (this.currentResourceInformations.recipients.length > 1) {
+            this.hasContact = true;
+            this.senderLightInfo = { 'displayName': this.currentResourceInformations.recipients.length + ' ' + this.lang.recipients, 'filling': null };
         }
     }
 
@@ -615,7 +682,7 @@ export class ProcessComponent implements OnInit {
 
     openContact() {
         if (this.hasContact) {
-            this.dialog.open(ContactsListModalComponent, { data: { title: `${this.currentResourceInformations.chrono} - ${this.currentResourceInformations.subject}`, mode: 'senders', resId: this.currentResourceInformations.resId } });
+            this.dialog.open(ContactsListModalComponent, { data: { title: `${this.currentResourceInformations.chrono} - ${this.currentResourceInformations.subject}`, mode: this.currentResourceInformations.categoryId !== 'outgoing' ? 'senders' : 'recipients', resId: this.currentResourceInformations.resId } });
         }
     }
 
@@ -652,7 +719,7 @@ export class ProcessComponent implements OnInit {
     async saveTool() {
         if (this.currentTool === 'info' && this.indexingForm !== undefined) {
             await this.indexingForm.saveData();
-            this.loadResource();
+            this.loadBadges();
         } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList !== undefined) {
             await this.appDiffusionsList.saveListinstance();
             this.loadBadges();
@@ -713,5 +780,9 @@ export class ProcessComponent implements OnInit {
         } else {
             return true;
         }
+    }
+
+    openPrintedFolderPrompt() {
+        this.dialog.open(PrintedFolderModalComponent, { data: { resId: this.currentResourceInformations.resId } });
     }
 }

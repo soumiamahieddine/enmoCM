@@ -50,13 +50,8 @@ export class AppComponent {
         $j('#loadingAngularContent').remove();
         $j('#header').remove();
         $j('#inner_content').remove();
-        $j('#inner_content_contact').parent('div').remove(); 
-        $j('#inner_content_contact').remove(); 
         $j('#menunav').hide();
         $j('#divList').remove();
-        $j('#magicContactsTable').remove();
-        $j('#manageBasketsOrderTable').remove();
-        $j('#controlParamTechnicTable').remove();
         $j('#container').css({
             "width": "100%", 
             "min-width": "auto"

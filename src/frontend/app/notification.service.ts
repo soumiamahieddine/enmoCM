@@ -10,6 +10,10 @@ import { LANG } from './translate.component';
 })
 export class CustomSnackbarComponent {
     constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) { }
+
+    dismiss() {
+        this.data.close();
+    }
 }
 
 @Injectable()
@@ -19,20 +23,22 @@ export class NotificationService {
     constructor(private router: Router, public snackBar: MatSnackBar) {
     }
     success(message: string) {
-        this.snackBar.openFromComponent(CustomSnackbarComponent, {
-            duration: 2000,
+        const duration = this.getMessageDuration(message, 2000);
+        const snackBar = this.snackBar.openFromComponent(CustomSnackbarComponent, {
+            duration: duration,
             panelClass: 'success-snackbar',
             verticalPosition : 'top',
-            data: { message: message, icon: 'info-circle' }
+            data: { message: message, icon: 'info-circle', close: () => {snackBar.dismiss()} }
         });
     }
 
     error(message: string, url: string = null) {
-        this.snackBar.openFromComponent(CustomSnackbarComponent, {
-            duration: 4000,
+        const duration = this.getMessageDuration(message, 4000);
+        const snackBar = this.snackBar.openFromComponent(CustomSnackbarComponent, {
+            duration: duration,
             panelClass: 'error-snackbar',
             verticalPosition : 'top',
-            data: { url: url, message: message, icon: 'exclamation-triangle' }
+            data: { url: url, message: message, icon: 'exclamation-triangle', close: () => {snackBar.dismiss()} }
         });
     }
 
@@ -47,7 +53,11 @@ export class NotificationService {
         } else {
             if (err.error !== undefined) {
                 if (err.error.errors !== undefined) {
-                    this.error(err.error.errors, err.url);
+                    if (err.error.lang !== undefined) {
+                        this.error('lang.' + err.error.lang, err.url);
+                    } else {
+                        this.error(err.error.errors, err.url);
+                    }
                     if (err.status === 403 || err.status === 404) {
                         this.router.navigate(['/home']);
                     }
@@ -79,5 +89,16 @@ export class NotificationService {
         } else {
             this.error(err);
         }
+    }
+
+    getMessageDuration(message: string, minimumDuration: number) {
+        const duration = (message.length / 25) * 1000;
+        const maxDuration = 10000;
+        if (duration < minimumDuration) {
+            return minimumDuration;
+        } else if (duration > maxDuration) {
+            return maxDuration;
+        }
+        return duration;
     }
 }

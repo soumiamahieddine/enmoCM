@@ -104,18 +104,7 @@ abstract class notes_Abstract
         $_SESSION['history']['noteadd'] = (string) $hist->noteadd;
         $_SESSION['history']['noteup'] = (string) $hist->noteup;
         $_SESSION['history']['notedel'] = (string) $hist->notedel;
-    }
-    
-    /**
-     * 
-     * 
-     * 
-     */
-     public function insertEntities($id)
-     {
-         //echo "RES_ID : ".$id;
-     } 
-    
+    } 
     
     /**
      * Function to get which user can see a note
@@ -249,28 +238,4 @@ abstract class notes_Abstract
         
         return $userNotes;
     }
-	
-	public function isUserNote($noteId, $userId, $userPrimaryEntity)
-    {
-        $query = "SELECT id FROM notes WHERE id in ("
-                  . "SELECT note_id FROM note_entities WHERE (item_id in ("
-                      ."SELECT entity_id FROM users_entities WHERE user_id = ?) and note_id = ?))"
-                  . "or (id = ? and user_id = ?)";
-        $db = new Database();
-        $stmt = $db->query($query, array($userId, $noteId, $noteId, $userId));
-        //$db->show();exit;
-        if ($stmt->rowCount() > 0) {
-            return true;
-         } else {
-            // test if public
-            $query = "SELECT note_id FROM note_entities WHERE note_id = ?";
-            $stmt = $db->query($query, array($noteId));
-            if ($stmt->rowCount() == 0) {
-                return true;
-            } else {
-                return false;
-            }
-         }
-    }
 }
-

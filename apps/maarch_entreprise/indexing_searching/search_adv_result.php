@@ -32,21 +32,17 @@
 require_once('core/class/class_request.php');
 require_once('core/class/class_security.php');
 require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_indexing_searching_app.php');
-require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php');
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->load_lang();
 $is = new indexing_searching_app();
 $func = new functions();
 $req = new request();
-$type = new types();
 $fields = "";
 $orderby = "";
 
 $baskets_clause = '';
 $coll_id = 'letterbox_coll';
-$indexes = $type->get_all_indexes($coll_id);
-//$func->show_array($indexes);
 $_SESSION['error_search'] = '';
 $_SESSION['searching']['comp_query'] = '';
 $_SESSION['save_list']['fromDetail'] = "false";
@@ -245,7 +241,7 @@ where lower(translate(folders.label , 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓ�
             from entities_folders
                 left join entities on entities_folders.entity_id = entities.id
                 left join users_entities on entities.entity_id = users_entities.entity_id
-            where users_entities.user_id = :user_id_folders
+            where users_entities.user_id = :user_id_folders OR entities_folders.keyword = 'ALL_ENTITIES'
         )
     )";
 
@@ -424,10 +420,7 @@ where lower(translate(folders.label , 'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓ�
                     ."or (lower(translate(alt_identifier,'/','')) like lower(:multifieldWelcome) OR lower(alt_identifier) like lower(:multifieldWelcome)) "
                     ."or lower(barcode) LIKE lower(:multifieldWelcome) "
                     ."or res_id in (select identifier from notes where lower(translate(note_text,'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûýýþÿŔŕ','aaaaaaaceeeeiiiidnoooooouuuuybsaaaaaaaceeeeiiiidnoooooouuuyybyRr')) like lower(:multifieldWelcome)) "
-                    ."or res_id in (select res_id_master from res_attachments where (lower(translate(identifier,'/','')) like lower(:multifieldWelcome) OR lower(identifier) like lower(:multifieldWelcome)) AND status NOT IN ('DEL','OBS','TMP')) "
-                    ."or contact_id in (select contact_id from view_contacts where society ilike :multifieldWelcome or contact_firstname ilike :multifieldWelcome or contact_lastname ilike :multifieldWelcome) or (exp_user_id in (select user_id from users where firstname ilike :multifieldWelcome or lastname ilike :multifieldWelcome )))";
-
-                $arrayPDO = array_merge($arrayPDO, array(":multifieldWelcomeReference" => "%".$welcome."%"));
+                    ."or res_id in (select res_id_master from res_attachments where (lower(translate(identifier,'/','')) like lower(:multifieldWelcome) OR lower(identifier) like lower(:multifieldWelcome)) AND status NOT IN ('DEL','OBS','TMP')))";
 
                 $multifieldWelcome = \SrcCore\models\TextFormatModel::normalize(['string' => $welcome]);
                 $multifieldWelcome = preg_replace('/\s+/', ' ', $multifieldWelcome);

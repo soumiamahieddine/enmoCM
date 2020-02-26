@@ -7,10 +7,6 @@
 		<parameter name="module" type="identifier" />
 		<parameter name="id" type="identifier" />
     </validationRule>
-    <validationRule name="set_primary_entity" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="entities" type="ajax_ids" />
-    </validationRule>
     <validationRule name="save_list_diff" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
 		<parameter name="mode" type="entities_table_list" />
@@ -61,12 +57,6 @@
 		<parameter name="type" type="string" />
 		<parameter name="archival_agreement" type="string" />
 		<parameter name="archival_agency" type="string" />
-    </validationRule>
-    <validationRule name="get_tree_childs" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="branch" type="string" />
-		<parameter name="branch_id" type="identifier" />
-		<parameter name="tree_id" type="identifier" />
     </validationRule>
     <validationRule name="admin_difflist_types" extends="standardForm" mode="error">
 		<parameter name="module" type="identifier" />
@@ -203,11 +193,6 @@
 		<parameter name="no_filter" type="string" />
 		<parameter name="objectType" type="identifier" />
 		<parameter name="objectId" type="identifier" />
-    </validationRule>
-
-    <validationRule name="manage_user_entities" extends="standardForm" mode="error">
-		<parameter name="module" type="identifier" />
-		<parameter name="form_values" type="string" />
     </validationRule>
 
     <validationRule name="entities_list_by_label" extends="standardForm" mode="error"/>

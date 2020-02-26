@@ -5,7 +5,7 @@ import { NotificationService } from '../notification.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
 import { FiltersListService } from '../../service/filtersList.service';
 
@@ -19,6 +19,7 @@ import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { AddPrivateIndexingModelModalComponent } from './private-indexing-model/add-private-indexing-model-modal.component';
 import { ActionsService } from '../actions/actions.service';
 import { SortPipe } from '../../plugins/sorting.pipe';
+import { FunctionsService } from '../../service/functions.service';
 
 @Component({
     templateUrl: "indexation.component.html",
@@ -26,7 +27,7 @@ import { SortPipe } from '../../plugins/sorting.pipe';
         'indexation.component.scss',
         'indexing-form/indexing-form.component.scss'
     ],
-    providers: [NotificationService, AppService, ActionsService, SortPipe],
+    providers: [AppService, ActionsService, SortPipe],
 })
 export class IndexationComponent implements OnInit {
 
@@ -58,6 +59,8 @@ export class IndexationComponent implements OnInit {
 
     subscription: Subscription;
 
+    isMailing: boolean = false;
+
     constructor(
         private route: ActivatedRoute,
         private _activatedRoute: ActivatedRoute,
@@ -71,7 +74,8 @@ export class IndexationComponent implements OnInit {
         public appService: AppService,
         public actionService: ActionsService,
         private router: Router,
-        private sortPipe: SortPipe
+        private sortPipe: SortPipe,
+        public functions: FunctionsService
     ) {
 
         _activatedRoute.queryParams.subscribe(
@@ -79,14 +83,36 @@ export class IndexationComponent implements OnInit {
         );
 
         // Event after process action 
-        this.subscription = this.actionService.catchAction().subscribe(message => {
-            this.router.navigate(['/home']);
+        this.subscription = this.actionService.catchAction().subscribe(resIds => {
+            const param = this.isMailing ? {
+                isMailing : true
+            } : null;         
+            this.router.navigate([`/resources/${resIds[0]}`], { queryParams: param });
         });
     }
 
     ngOnInit(): void {
-        this.loading = false;
+        // Use to clean data after navigate on same url
+        this._activatedRoute.queryParamMap.subscribe((paramMap: ParamMap) => {
+            const refresh = paramMap.get('refresh');
+            if (refresh) {
+                this.appDocumentViewer.templateListForm.reset();
+                this.appDocumentViewer.file = {
+                    name: '',
+                    type: '',
+                    content: null,
+                    src: null
+                };
+                this.appDocumentViewer.triggerEvent.emit('cleanFile');
+                this.loadIndexingModel(this.indexingModels[0]);
+            }
+        });
 
+        this.fetchData();
+    }
+
+    fetchData() {
+        this.loading = false;
         this.headerService.setHeader("Enregistrement d'un courrier");
 
         this.route.params.subscribe(params => {
@@ -146,8 +172,8 @@ export class IndexationComponent implements OnInit {
     }
 
     loadIndexingModelsList() {
-        let tmpIndexingModels:any[] = this.sortPipe.transform(this.indexingModels.filter(elem => elem.master === null), 'label');
-        let privateTmpIndexingModels:any[] = this.sortPipe.transform(this.indexingModels.filter(elem => elem.master !== null), 'label');
+        let tmpIndexingModels: any[] = this.sortPipe.transform(this.indexingModels.filter(elem => elem.master === null), 'label');
+        let privateTmpIndexingModels: any[] = this.sortPipe.transform(this.indexingModels.filter(elem => elem.master !== null), 'label');
         this.indexingModels = [];
         tmpIndexingModels.forEach(indexingModel => {
             this.indexingModels.push(indexingModel);
@@ -162,7 +188,7 @@ export class IndexationComponent implements OnInit {
     onSubmit() {
         if (this.indexingForm.isValidForm()) {
             const formatdatas = this.formatDatas(this.indexingForm.getDatas());
-
+            
             formatdatas['modelId'] = this.currentIndexingModel.master !== null ? this.currentIndexingModel.master : this.currentIndexingModel.id;
             formatdatas['chrono'] = true;
 
@@ -170,6 +196,8 @@ export class IndexationComponent implements OnInit {
                 tap((data: any) => {
                     formatdatas['encodedFile'] = data.content;
                     formatdatas['format'] = data.format;
+
+                    this.isMailing = !this.functions.empty(formatdatas.recipients) && formatdatas.recipients.length > 0 && this.currentIndexingModel.category === 'outgoing' && formatdatas['encodedFile'] === null;
 
                     if (formatdatas['encodedFile'] === null) {
                         this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.noFile, msg: this.lang.noFileMsg } });

@@ -176,7 +176,6 @@ define('_NOTIFICATIONS', 'Notifications');
 define('_TEMPLATES', 'Modèles de documents');
 
 // SERVICES
-define('_REDIRECT_TO_ACTION', 'Rediriger vers une action');
 define('_ADV_SEARCH_MLB', 'Rechercher');
 define('_INDEXING_MLB', 'Enregistrer un courrier');
 define('_SEARCH_CONTACTS', 'Rechercher un contact');
@@ -253,14 +252,9 @@ define('_INTERRUPT_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel vis
 define('_PROCEED_WORKFLOW', 'Poursuivre le circuit de visa');
 define('_PROCEED_WORKFLOW_DESC', 'Met à jour la date du visa de l\'actuel viseur / signataire présent dans le circuit de visa du courrier (\'process_date\' de la table listinstance).');
 define('_VISA_MAIL', 'Viser le courrier');
-define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT', 'Envoyer au contact avec une pièce jointe obligatoire et accusé de réception');
-define('_SEND_TO_CONTACT_WITH_MANDATORY_ATTACHMENT_DESC', "Ouvre une modal d'envoi de mail avec l'email du contact associé au courrier en tant que destinataire, présence OBLIGATOIRE de pièce(s) jointe(s) à l'envoi.");
-define('_SEND_ATTACHMENTS_TO_CONTACT', 'Envoyer au contact avec accusé de réception');
-define('_SEND_ATTACHMENTS_TO_CONTACT_DESC', "Ouvre une modal d'envoi de mail avec l'email du contact associé au courrier en tant que destinataire.");
 define("_CREATE_ATTACHMENTS_FROM_DETAILS", "Créer des pièces jointes depuis la fiche détail");
 define("_MODIFY_ATTACHMENTS", "Modifier les pièces jointes");
 define("_DELETE_ATTACHMENTS", "Supprimer les pièces jointes");
-define("_VIEW_BASKETS_DESC", "Mes bannettes");
 define('_SEND_DOCS_TO_RECOMMENDATION', 'Envoyer une demande d\'avis (parallèle)');
 define('_SEND_DOCS_TO_RECOMMENDATION_DESC', 'Ouvre une modal permettant d\'ajouter ou de supprimer des personnes en avis dans la liste de diffusion.');
 define('_VALIDATE_RECOMMENDATION', 'Valider la demande d\'avis (parallèle)');

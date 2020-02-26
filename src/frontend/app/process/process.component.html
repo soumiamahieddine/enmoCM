@@ -25,6 +25,11 @@
             <ng-container *ngIf="currentTool === 'dashboard'">
                 <div
                     style="display: flex;align-items: center;justify-content: flex-end;margin-top: 10px;margin-bottom: -20px;">
+                    <button mat-button color="primary" [title]="lang.generateAndDownloadPrintedFolder"
+                        (click)="openPrintedFolderPrompt()">
+                        <mat-icon class="fa fa-print" style="height:auto"></mat-icon>
+                        {{lang.generateAndDownloadPrintedFolder}}
+                    </button>
                 </div>
                 <div class="banner" [style.borderColor]="currentPriorityColor">
                     <div class="title" (click)="currentTool = 'history'">
@@ -81,12 +86,13 @@
                     (reloadBadgeLinkedResources)="refreshBadge($event,'linkedResources')">
                 </app-linked-resource-list>
                 <app-diffusions-list *ngIf="currentTool === 'diffusionList' && !loading" #appDiffusionsList
-                    [adminMode]="false" [resId]="currentResourceInformations.resId" [expanded]="true">
+                    [adminMode]="true" [target]="detailMode ? 'details': 'process'"
+                    [resId]="currentResourceInformations.resId" [expanded]="true">
                 </app-diffusions-list>
-                <app-sended-resource-list *ngIf="currentTool === 'emails' && !loading" #appSendedResource
+                <app-sent-resource-list *ngIf="currentTool === 'emails' && !loading" #appSentResource
                     [resId]="currentResourceInformations.resId"
-                    (reloadBadgeSendedResource)="refreshBadge($event,'emails')">
-                </app-sended-resource-list>
+                    (reloadBadgeSentResource)="refreshBadge($event,'emails')">
+                </app-sent-resource-list>
                 <app-visa-workflow *ngIf="currentTool === 'visaCircuit' && !loading" #appVisaWorkflow
                     [resId]="currentResourceInformations.resId"
                     [adminMode]="detailMode ? privilegeService.hasCurrentUserPrivilege('config_visa_workflow_in_detail') : privilegeService.hasCurrentUserPrivilege('config_visa_workflow')">
@@ -96,7 +102,7 @@
                     [adminMode]="detailMode ? privilegeService.hasCurrentUserPrivilege('config_avis_workflow_in_detail') : privilegeService.hasCurrentUserPrivilege('config_avis_workflow')">
                 </app-avis-workflow>
                 <app-attachments-list *ngIf="currentTool === 'attachments' && !loading" #appAttachmentsList
-                    [resId]="currentResourceInformations.resId" [target]="'process'"
+                    [resId]="currentResourceInformations.resId" [autoOpenCreation]="isMailing" [target]="'process'"
                     (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
                 </app-attachments-list>
                 <app-indexing-form *ngIf="currentTool === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
@@ -196,7 +202,7 @@
                                     {{this.currentResourceInformations.chrono}}</div>
                             </div>
                             <div class="content-item" (click)="openContact()" style="cursor:pointer">
-                                <div>{{lang.senders}} :</div>
+                                <div>{{this.currentResourceInformations.categoryId !== 'outgoing' ? lang.senders : lang.recipient}} :</div>
                                 <div class="content-item-value">{{senderLightInfo.displayName}} <i
                                         *ngIf="this.senderLightInfo.filling" class="fas fa-circle"
                                         style="font-size: 8px" [style.color]="this.senderLightInfo.filling"></i></div>
@@ -275,12 +281,12 @@
         <app-linked-resource-list *ngIf="modal.id === 'linkedResources' && !loading" #appLinkedResourceList
             [resId]="currentResourceInformations.resId"
             (reloadBadgeLinkedResources)="refreshBadge($event,'linkedResources')"></app-linked-resource-list>
-        <app-diffusions-list *ngIf="modal.id === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="false"
-            [resId]="currentResourceInformations.resId" [expanded]="true">
+        <app-diffusions-list *ngIf="modal.id === 'diffusionList' && !loading" #appDiffusionsList [adminMode]="true"
+            [target]="detailMode ? 'details': 'process'" [resId]="currentResourceInformations.resId" [expanded]="true">
         </app-diffusions-list>
-        <app-sended-resource-list *ngIf="modal.id === 'emails' && !loading" #appSendedResource
-            [resId]="currentResourceInformations.resId" (reloadBadgeSendedResource)="refreshBadge($event,'emails')">
-        </app-sended-resource-list>
+        <app-sent-resource-list *ngIf="modal.id === 'emails' && !loading" #appSentResource
+            [resId]="currentResourceInformations.resId" (reloadBadgeSentResource)="refreshBadge($event,'emails')">
+        </app-sent-resource-list>
         <app-visa-workflow *ngIf="modal.id === 'visaCircuit' && !loading"
             [adminMode]="detailMode ? privilegeService.hasCurrentUserPrivilege('config_visa_workflow_in_detail') : privilegeService.hasCurrentUserPrivilege('config_visa_workflow')"
             #appVisaWorkflow [resId]="currentResourceInformations.resId">
@@ -290,7 +296,7 @@
             [adminMode]="detailMode ? privilegeService.hasCurrentUserPrivilege('config_avis_workflow_in_detail') : privilegeService.hasCurrentUserPrivilege('config_avis_workflow')">
         </app-avis-workflow>
         <app-attachments-list *ngIf="modal.id === 'attachments'  && !loading" #appAttachmentsList
-            [resId]="currentResourceInformations.resId" (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
+            [resId]="currentResourceInformations.resId" [autoOpenCreation]="isMailing" (reloadBadgeAttachments)="refreshBadge($event,'attachments')">
         </app-attachments-list>
         <app-indexing-form *ngIf="modal.id === 'info' && !loading" #indexingForm [groupId]="currentGroupId"
             [indexingFormId]="currentResourceInformations.modelId" [resId]="currentResourceInformations.resId"

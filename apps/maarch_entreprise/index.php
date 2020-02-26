@@ -57,12 +57,6 @@ include_once '../../core/class/class_db_pdo.php';
 include_once '../../core/init.php';
 include 'apps/maarch_entreprise/tools/maarchIVS/MaarchIVS.php';
 
-//Ozwillo
-if (!empty($_REQUEST['code']) && !empty($_REQUEST['state'])) {
-    $_SESSION['ozwillo']['code'] = $_REQUEST['code'];
-    $_SESSION['ozwillo']['state'] = $_REQUEST['state'];
-}
-
 if ($_SESSION['config']['usePHPIDS'] == 'true') {
     include 'apps/maarch_entreprise/phpids_control.php';
 }
@@ -344,7 +338,7 @@ if (!empty($_REQUEST['page']) && empty($_REQUEST['triggerAngular'])) {
     }
 
     $loggingMethod = \SrcCore\models\CoreConfigModel::getLoggingMethod();
-    if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'ozwillo', 'shibboleth'])) {
+    if (!in_array($loggingMethod['id'], ['sso', 'cas', 'ldap', 'keycloak', 'shibboleth'])) {
         $passwordRules = \SrcCore\models\PasswordModel::getEnabledRules();
         if (!empty($passwordRules['renewal'])) {
             $currentDate = new \DateTime();

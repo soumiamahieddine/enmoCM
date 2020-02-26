@@ -6,11 +6,11 @@ import { HttpClient } from '@angular/common/http';
 import { NoteEditorComponent } from '../../notes/note-editor.component';
 import { catchError, finalize, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
+import { FunctionsService } from '../../../service/functions.service';
 
 @Component({
     templateUrl: "send-shipping-action.component.html",
     styleUrls: ['send-shipping-action.component.scss'],
-    providers: [NotificationService],
 })
 export class SendShippingActionComponent implements OnInit {
 
@@ -43,10 +43,16 @@ export class SendShippingActionComponent implements OnInit {
             icon: 'fas fa-shipping-fast'
         }
     };
+    fatalError: any[] = [];
 
     @ViewChild('noteEditor', { static: false }) noteEditor: NoteEditorComponent;
 
-    constructor(public http: HttpClient, private notify: NotificationService, public dialogRef: MatDialogRef<SendShippingActionComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
+    constructor(
+        public http: HttpClient, 
+        private notify: NotificationService, 
+        public dialogRef: MatDialogRef<SendShippingActionComponent>, 
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        public functions: FunctionsService) { }
 
     ngOnInit(): void {
         this.loading = true;
@@ -56,42 +62,28 @@ export class SendShippingActionComponent implements OnInit {
 
     onSubmit() {
         this.loading = true;
-        if ( this.data.resIds.length === 0) {
-            // this.indexDocumentAndExecuteAction();
-        } else {
+        if ( this.data.resIds.length > 0) {
             this.executeAction();
         }
     }
 
-    /* indexDocumentAndExecuteAction() {
-        
-        this.http.post('../../rest/resources', this.data.resource).pipe(
-            tap((data: any) => {
-                this.data.resIds = [data.resId];
-            }),
-            exhaustMap(() => this.http.put(this.data.indexActionRoute, {resource : this.data.resIds[0], note : this.noteEditor.getNoteContent()})),
-            tap(() => {
-                this.dialogRef.close('success');
-            }),
-            finalize(() => this.loading = false),
-            catchError((err: any) => {
-                this.notify.handleErrors(err);
-                return of(false);
-            })
-        ).subscribe()
-    } */
-
     checkShipping() {
         this.http.post(`../../rest/resourcesList/users/${this.data.userId}/groups/${this.data.groupId}/baskets/${this.data.basketId}/actions/${this.data.action.id}/checkShippings`, { resources: this.data.resIds }).pipe(
             tap((data: any) => {
-                this.shippings = data.shippingTemplates;
-                this.mailsNotSend = data.canNotSend;
-                this.entitiesList = data.entities;
-                this.attachList = data.resources;
+                if (!this.functions.empty(data.fatalError)) {
+                    this.fatalError = data;
+                    this.shippings = [];
+                } else {
+                    this.shippings    = data.shippingTemplates;
+                    this.mailsNotSend = data.canNotSend;
+                    this.entitiesList = data.entities;
+                    this.attachList   = data.resources;
+                }
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
+                this.dialogRef.close();
                 return of(false);
             })
         ).subscribe()
@@ -102,17 +94,17 @@ export class SendShippingActionComponent implements OnInit {
 
         realResSelected = realResSelected.concat(this.attachList.filter(attach => attach.type === 'mail').map((e: any) => { return e.res_id; }));
 
-        this.http.put(this.data.processActionRoute, {resources : realResSelected, data: { shippingTemplateId: this.currentShipping.id }, note : this.noteEditor.getNoteContent()}).pipe(
+        this.http.put(this.data.processActionRoute, {resources : realResSelected, data: { shippingTemplateId: this.currentShipping.id }, note : this.noteEditor.getNote()}).pipe(
             tap((data: any) => {
                 if (data && data.errors != null) {
                     this.notify.error(data.errors);
                 } else {
-                    this.dialogRef.close('success');
+                    this.dialogRef.close(realResSelected);
                 }
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
-                this.notify.handleErrors(err);
+                this.notify.handleSoftErrors(err);
                 return of(false);
             })
         ).subscribe();

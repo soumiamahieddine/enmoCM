@@ -34,6 +34,8 @@ import { FolderActionListComponent }                 from './folder/folder-actio
 import { FollowedDocumentListComponent }                 from './home/followed-list/followed-document-list.component';
 import { FollowedActionListComponent }                 from './home/followed-action-list/followed-action-list.component';
 
+import { PrintedFolderModalComponent }                 from './printedFolder/printed-folder-modal.component';
+
 /*ACTIONS PAGES */
 import { ConfirmActionComponent }               from './actions/confirm-action/confirm-action.component';
 import { DisabledBasketPersistenceActionComponent } from './actions/disabled-basket-persistence-action/disabled-basket-persistence-action.component';
@@ -51,6 +53,7 @@ import { SendExternalSignatoryBookActionComponent }   from './actions/send-exter
 import { SendExternalNoteBookActionComponent }   from './actions/send-external-note-book-action/send-external-note-book-action.component';
 import { XParaphComponent }                         from './actions/send-external-signatory-book-action/x-paraph/x-paraph.component';
 import { MaarchParaphComponent }                         from './actions/send-external-signatory-book-action/maarch-paraph/maarch-paraph.component';
+import { FastParaphComponent }                  from './actions/send-external-signatory-book-action/fast-paraph/fast-paraph.component';
 import { ProcessActionComponent }               from './actions/process-action/process-action.component';
 import { ViewDocActionComponent }               from './actions/view-doc-action/view-doc-action.component';
 import { RedirectActionComponent }               from './actions/redirect-action/redirect-action.component';
@@ -107,8 +110,8 @@ import { LinkedResourceListComponent } from './linkedResource/linked-resource-li
 import { LinkResourceModalComponent } from './linkedResource/linkResourceModal/link-resource-modal.component';
 
 import { DocumentViewerModalComponent } from './viewer/modal/document-viewer-modal.component';
-import { SendedResourceListComponent } from './sendedResource/sended-resource-list.component';
-import { SendedResourcePageComponent } from './sendedResource/sended-resource-page/sended-resource-page.component';
+import { SentResourceListComponent } from './sentResource/sent-resource-list.component';
+import { SentResourcePageComponent } from './sentResource/sent-resource-page/sent-resource-page.component';
 
 
 
@@ -160,6 +163,7 @@ import { SendedResourcePageComponent } from './sendedResource/sended-resource-pa
         SendExternalNoteBookActionComponent,
         XParaphComponent,
         MaarchParaphComponent,
+        FastParaphComponent,
         ProcessActionComponent,
         ViewDocActionComponent,
         RedirectActionComponent,
@@ -206,8 +210,9 @@ import { SendedResourcePageComponent } from './sendedResource/sended-resource-pa
         LinkedResourceListComponent,
         LinkResourceModalComponent,
         DocumentViewerModalComponent,
-        SendedResourceListComponent,
-        SendedResourcePageComponent
+        SentResourceListComponent,
+        SentResourcePageComponent,
+        PrintedFolderModalComponent
     ],
     entryComponents: [
         ConfirmModalComponent,
@@ -254,7 +259,8 @@ import { SendedResourcePageComponent } from './sendedResource/sended-resource-pa
         AddAvisModelModalComponent,
         LinkResourceModalComponent,
         DocumentViewerModalComponent,
-        SendedResourcePageComponent
+        SentResourcePageComponent,
+        PrintedFolderModalComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],
     bootstrap: [ AppComponent ]

@@ -95,8 +95,6 @@ UPDATE actions SET component = 'resetVisaAction' WHERE action_page = 'rejection_
 UPDATE actions SET component = 'interruptVisaAction' WHERE action_page = 'interrupt_visa';
 UPDATE actions SET component = 'sendSignatureBookAction' WHERE action_page IN ('send_to_visa', 'send_signed_docs');
 UPDATE actions SET component = 'continueVisaCircuitAction' WHERE action_page = 'visa_workflow';
-UPDATE actions SET component = 'confirmAction', id_status = 'OZWILLOSF' WHERE action_page = 'sendFileWS';
-UPDATE actions SET component = 'confirmAction', id_status = 'OZWILLOSD' WHERE action_page = 'sendDataWS';
 UPDATE actions SET component = 'closeMailWithAttachmentsOrNotesAction' WHERE action_page = 'close_mail_with_attachment';
 UPDATE actions SET component = 'sendToOpinionCircuitAction' WHERE action_page = 'send_to_avis';
 UPDATE actions SET component = 'continueOpinionCircuitAction' WHERE action_page = 'avis_workflow';
@@ -108,13 +106,6 @@ UPDATE actions SET component = 'createAcknowledgementReceiptsAction', parameters
 DELETE FROM actions_groupbaskets WHERE id_action IN (SELECT id FROM actions WHERE action_page = 'put_in_copy');
 DELETE FROM actions_categories WHERE action_id IN (SELECT id FROM actions WHERE action_page = 'put_in_copy');
 DELETE FROM actions WHERE action_page = 'put_in_copy';
-
-DO $$ BEGIN
-  IF (SELECT count(1) FROM actions WHERE action_page = 'sendFileWS') THEN
-	INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('OZWILLOSF', 'Envoyé à Ozwillo', 'N', 'fm-letter-status-inprogress', 'apps', 'Y', 'Y');
-	INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('OZWILLOSD', 'Cloturé Ozwillo', 'N', 'fm-letter-status-end', 'apps', 'Y', 'Y');
-  END IF;
-END$$;
 
 /* FOLDERS */
 DO $$ BEGIN
@@ -249,6 +240,8 @@ DO $$ BEGIN
       ALTER TABLE tags ADD COLUMN links jsonb DEFAULT '[]';
       ALTER TABLE tags DROP COLUMN IF EXISTS usage;
       ALTER TABLE tags ADD COLUMN usage TEXT;
+
+      ALTER TABLE tags ADD CONSTRAINT tags_id_pkey PRIMARY KEY (id);
 
       DROP TABLE IF EXISTS resources_tags;
       ALTER TABLE tag_res ADD COLUMN id serial NOT NULL;

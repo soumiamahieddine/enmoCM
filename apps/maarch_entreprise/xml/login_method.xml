@@ -25,9 +25,9 @@
         <ENABLED>false</ENABLED>
     </METHOD>
     <METHOD>
-        <ID>ozwillo</ID>
-        <NAME>Ozwillo</NAME>
-        <SCRIPT>ozwilloConnect.php</SCRIPT>
+        <ID>keycloak</ID>
+        <NAME>Keycloak</NAME>
+        <SCRIPT>keycloakConnect.php</SCRIPT>
         <ENABLED>false</ENABLED>
     </METHOD>
     <METHOD>

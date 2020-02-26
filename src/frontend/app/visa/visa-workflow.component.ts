@@ -327,10 +327,10 @@ export class VisaWorkflowComponent implements OnInit {
                         'listinstance_id': key,
                         'id': element.userId,
                         'labelToDisplay': element.userDisplay,
-                        'requested_signature': element.mode === 'visa' ? false : true,
+                        'requested_signature': element.mode !== 'visa',
                         'process_date': this.functions.formatFrenchDateToTechnicalDate(element.processDate),
                         'picture': ''
-                    }
+                    };
                     this.visaWorkflow.items.push(user);
                     this.http.get("../../rest/maarchParapheur/user/" + element.userId + "/picture")
                         .subscribe((data: any) => {
@@ -451,7 +451,6 @@ export class VisaWorkflowComponent implements OnInit {
                 this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
             }
             this.searchVisaSignUser.reset();
-            this.searchVisaSignUserInput.nativeElement.blur();
         } else if (item.type === 'user') {
 
 
@@ -470,12 +469,12 @@ export class VisaWorkflowComponent implements OnInit {
                 this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
             }
             this.searchVisaSignUser.reset();
-            this.searchVisaSignUserInput.nativeElement.blur();
         } else if (item.type === 'entity') {
             this.http.get(`../../rest/listTemplates/${item.id}`).pipe(
                 tap((data: any) => {
                     this.visaWorkflow.items = this.visaWorkflow.items.concat(
-                        data.listTemplate.items.map((itemTemplate: any) => {
+
+                        data.listTemplate.items.filter((itemTemplate: any) => itemTemplate.hasPrivilege === true).map((itemTemplate: any) => {
                             return {
                                 item_id: itemTemplate.item_id,
                                 item_type: 'user',
@@ -483,12 +482,11 @@ export class VisaWorkflowComponent implements OnInit {
                                 item_entity: itemTemplate.descriptionToDisplay,
                                 difflist_type: 'VISA_CIRCUIT',
                                 signatory: false,
-                                requested_signature: itemTemplate.item_mode === 'sign' ? true : false
+                                requested_signature: itemTemplate.item_mode === 'sign'
                             }
                         })
                     );
                     this.searchVisaSignUser.reset();
-                    this.searchVisaSignUserInput.nativeElement.blur();
                 })
             ).subscribe();
         }
@@ -503,11 +501,7 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     emptyWorkflow() {
-        if (this.visaWorkflow.items.length === 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.visaWorkflow.items.length === 0;
     }
 
     workflowEnd() {
@@ -570,10 +564,6 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     isModified() {
-        if (this.loading || JSON.stringify(this.visaWorkflow.items) === JSON.stringify(this.visaWorkflowClone)) {
-            return false;
-        } else {
-            return true;
-        }
+        return !(this.loading || JSON.stringify(this.visaWorkflow.items) === JSON.stringify(this.visaWorkflowClone));
     }
 }

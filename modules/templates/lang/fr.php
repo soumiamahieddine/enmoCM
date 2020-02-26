@@ -147,9 +147,6 @@ if (!defined('_GENERATED_FILE')) {
 if (!defined('_MUST_CHOOSE_TEMPLATE')) {
     define('_MUST_CHOOSE_TEMPLATE', 'Vous devez choisir un modèle');
 }
-if (!defined('_GENERATE_ANSWER')) {
-    define('_GENERATE_ANSWER', 'Générer une pièce jointe');
-}
 if (!defined('_GENERATE')) {
     define('_GENERATE', 'Générer PJ');
 }

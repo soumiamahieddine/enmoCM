@@ -160,9 +160,17 @@ class EmailController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
+        $sender = json_decode($rawEmail['sender'], true);
+        $entityLabel = null;
+        if (!empty($sender['entityId'])) {
+            $entityLabel = EntityModel::getById(['select' => ['entity_label'], 'id' => $sender['entityId']]);
+            $entityLabel = $entityLabel['entity_label'];
+        }
+        $sender['label'] = $entityLabel;
+
         $email = [
             'id'            => $rawEmail['id'],
-            'sender'        => json_decode($rawEmail['sender'], true),
+            'sender'        => $sender,
             'recipients'    => json_decode($rawEmail['recipients'], true),
             'cc'            => json_decode($rawEmail['cc'], true),
             'cci'           => json_decode($rawEmail['cci'], true),

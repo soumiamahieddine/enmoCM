@@ -254,19 +254,6 @@ if (!defined('_NO_DEST_INFOS')) {
 
 /************** POPUP **************/
 
-if (!defined('_MULTIPLE_RES_ID_ERROR')) {
-    define('_MULTIPLE_RES_ID_ERROR', 'La selection de plusieurs courriers auquels rattacher la pièce jointe n\'est pas autorisée. Merci de ne selectionner qu\'un courrier');
-}
-if (!defined('_ATTACH_TO_EMPTY_ERROR')) {
-    define('_ATTACH_TO_EMPTY_ERROR', 'La selection d\'un courrier sans projet de réponse n\'est pas autorisé. Merci de selectionner un courrier contenant un projet de réponse');
-}
-if (!defined('_ERROR_EMPTY_RES_ID')) {
-    define('_ERROR_EMPTY_RES_ID', 'Aucun courrier n\'a été selectionné, merci de selectionner au moins un courrier');
-}
-if (!defined('_SAME_RES_ID_ERROR')) {
-    define('_SAME_RES_ID_ERROR', 'L\'Un des courriers sélectionnés est le même que le document courant, veuillez le désélectionner');
-}
-
 if (!defined('_NO_ATTACHMENT_CHRONO')) {
     define('_NO_ATTACHMENT_CHRONO', 'Pas de pièces jointes pour ce numéro de chrono');
 }
@@ -279,12 +266,7 @@ if (!defined('_GENERATE_CHRONO_NUMBER')) {
 if (!defined('_CLOSE_INCOMING')) {
     define('_CLOSE_INCOMING', 'Cloturer le(s) courrier(s) cible(s)');
 }
-if (!defined('_PLEASE_GENERATE_CHRONO_NUMBER')) {
-    define('_PLEASE_GENERATE_CHRONO_NUMBER', 'Merci de générer un numéro de chrono');
-}
-if (!defined('_CHOOSE_CHRONO_NUMBER')) {
-    define('_CHOOSE_CHRONO_NUMBER', 'Merci de choisir un numéro de chrono');
-}
+
 if (!defined('_MAILING_INFO_1')) {
     define('_MAILING_INFO_1', '<b>Publipostage activé</b> : ');
 }
