@@ -1557,7 +1557,7 @@ export const LANG_EN = {
     "noAvailableMenu" : "No available menu",
     "emailSent" : "Email sent",
     "emailCannotSent" : "Error during sending email",
-    "sentToFastParapheur" : "Send to fastParapheur",
+    "sentToFastParapheur" : "Send to FAST-Parapheur",
     "editAcknowledgementReceipt" : "Edit the acknowledgement receipt",
     "insufficientPrivilege" : "Privilege insuffisant",
     "cannotMergeTags" : "This tag has a parent or children : impossible to merge tags",
