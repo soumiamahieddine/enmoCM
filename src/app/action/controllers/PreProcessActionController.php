@@ -1392,7 +1392,7 @@ class PreProcessActionController
         if (empty($action)) {
             return $response->withStatus(400)->withJson(['errors' => 'Action does not exist']);
         }
-        $parameters = json_decode($action['parameters']);
+        $parameters = json_decode($action['parameters'], true);
         $actionRequiredFields = $parameters['requiredFields'] ?? [];
 
         $canClose = [];

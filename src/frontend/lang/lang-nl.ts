@@ -1580,6 +1580,7 @@ export const LANG_NL = {
     "detailDoc" : "Detail page", //_TO_TRANSLATE
     "emptySubject" : "Empty subject", //_TO_TRANSLATE
     "noAvailableMenu" : "No available menu", //_TO_TRANSLATE
+    "mailNotPresentInBasket" : "Mail not present in basket", //_TO_TRANSLATE
     "emailSent" : "Email sent", //_TO_TRANSLATE
     "emailCannotSent" : "Error during sending email", //_TO_TRANSLATE
     "sentToFastParapheur" : "Send to FAST-Parapheur", //_TO_TRANSLATE
@@ -1596,6 +1597,8 @@ export const LANG_NL = {
     "addUsers" : "Add users", //_TO_TRANSLATE
     "willBeDeletedAndMerged" : "will be deleted and merged with the tag", //_TO_TRANSLATE
     "mailing" : "Mailing", //_TO_TRANSLATE
+    "goToBasket" : "Go to basket...", //_TO_TRANSLATE
+    "manualSendingAR" : "Manual sending...", //_TO_TRANSLATE
     "enableMailing" : "Enable mailing",  //_TO_TRANSLATE
     "disableMailing" : "Disable mailing", //_TO_TRANSLATE
     "selectContact" : "select a contact", //_TO_TRANSLATE

@@ -27,6 +27,7 @@ trait ExternalSignatoryBookTrait
     {
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::arrayType($args, ['note']);
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
         $config = [];
@@ -82,16 +83,12 @@ trait ExternalSignatoryBookTrait
                         'objectSent'  => 'attachment',
                         'userId'      => $GLOBALS['userId'],
                         'steps'       => $args['data']['steps'],
-                        'note'        => $args['note'] ?? null
+                        'note'        => $args['note']['content'] ?? null
                     ]);
                 } else {
                     $sentInfo = FastParapheurController::sendDatas([
                         'config'      => $config,
-                        'resIdMaster' => $args['resId'],
-                        'objectSent'  => 'attachment',
-                        'userId'      => $GLOBALS['userId'],
-                        'steps'       => $args['data']['steps'],
-                        'note'        => $args['note'] ?? null
+                        'resIdMaster' => $args['resId']
                     ]);
                 }
                 if (!empty($sentInfo['error'])) {

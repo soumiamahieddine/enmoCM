@@ -46,7 +46,7 @@ class ActionMethodController
         'closeMailAction'                        => 'closeMailAction',
         'closeMailWithAttachmentsOrNotesAction'  => 'closeMailWithAttachmentsOrNotesAction',
         'redirectAction'                         => 'redirect',
-        'closeAndIndexAction'                    => 'closeAndIndexAction',
+        'closeAndIndexAction'                    => 'closeMailAction',
         'updateDepartureDateAction'              => 'updateDepartureDateAction',
         'enabledBasketPersistenceAction'         => 'enabledBasketPersistenceAction',
         'disabledBasketPersistenceAction'        => 'disabledBasketPersistenceAction',
@@ -128,7 +128,6 @@ class ActionMethodController
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::stringType($aArgs, ['note']);
 
         ResModel::update(['set' => ['closing_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?', 'closing_date is null'], 'data' => [$aArgs['resId']]]);
 
@@ -139,7 +138,7 @@ class ActionMethodController
     {
         ValidatorModel::notEmpty($aArgs, ['resId']);
         ValidatorModel::intVal($aArgs, ['resId']);
-        ValidatorModel::stringType($aArgs, ['note']);
+        ValidatorModel::arrayType($aArgs, ['note']);
 
         $attachments = AttachmentModel::get([
             'select' => [1],
@@ -149,23 +148,11 @@ class ActionMethodController
 
         $notes = NoteModel::getByUserIdForResource(['select' => ['user_id', 'id'], 'resId' => $aArgs['resId'], 'userId' => $GLOBALS['id']]);
 
-        if (empty($attachments) && empty($notes) && empty($aArgs['note'])) {
+        if (empty($attachments) && empty($notes) && empty($aArgs['note']['content'])) {
             return ['errors' => ['No attachments or notes']];
         }
 
-        ResModel::update(['set' => ['closing_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?', 'closing_date is null'], 'data' => [$aArgs['resId']]]);
-
-        return true;
-    }
-
-    public static function closeAndIndexAction(array $aArgs)
-    {
-        ValidatorModel::notEmpty($aArgs, ['resId']);
-        ValidatorModel::intVal($aArgs, ['resId']);
-
-        ResModel::update(['set' => ['closing_date' => 'CURRENT_TIMESTAMP'], 'where' => ['res_id = ?', 'closing_date is null'], 'data' => [$aArgs['resId']]]);
-
-        return true;
+        return ActionMethodController::closeMailAction($aArgs);
     }
 
     public static function updateAcknowledgementSendDateAction(array $aArgs)
@@ -416,6 +403,7 @@ class ActionMethodController
     {
         ValidatorModel::notEmpty($args, ['resId']);
         ValidatorModel::intVal($args, ['resId']);
+        ValidatorModel::arrayType($args, ['note']);
 
         $loadedXml = CoreConfigModel::getXmlLoaded(['path' => 'modules/visa/xml/remoteSignatoryBooks.xml']);
         $config = [];
@@ -437,7 +425,7 @@ class ActionMethodController
                 'processingUser'  => $args['data']['processingUser'],
                 'objectSent'      => 'mail',
                 'userId'          => $GLOBALS['userId'],
-                'note'            => $args['note'] ?? null
+                'note'            => $args['note']['content'] ?? null
             ]);
             if (!empty($sentInfo['error'])) {
                 return ['errors' => [$sentInfo['error']]];
