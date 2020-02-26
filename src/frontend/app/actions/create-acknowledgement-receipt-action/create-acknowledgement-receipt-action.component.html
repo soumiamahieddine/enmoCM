@@ -10,7 +10,7 @@
                 <b *ngIf="data.resIds.length == 1" color="primary" class="highlight">{{data.resource.chrono}}</b>
                 <b *ngIf="data.resIds.length > 1" color="primary" class="highlight">{{data.resIds.length}}
                     {{lang.elements}}</b> ?
-                <div *ngIf="arMode !== 'manual' && arMode !== 'auto'">
+                <div *ngIf="arMode !== 'manual' && arMode !== 'auto' && realResSelected.length > 0">
                     <mat-slide-toggle [(ngModel)]="manualAR" color="primary" (change)="toggleArManual($event.checked)">
                         {{lang.editAcknowledgementReceipt}}</mat-slide-toggle>
                 </div>
