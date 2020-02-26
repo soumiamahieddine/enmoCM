@@ -1563,6 +1563,7 @@ export const LANG_EN = {
     "cannotMergeTags" : "This tag has a parent or children : impossible to merge tags",
     "mergeTagWith" : "Merge this tag with",
     "generateAndDownloadPrintedFolder" : "Generate the printed folder",
+    "printedFolder" : "Printed folder",
     "mainDocument" : "Main document",
     "attachSummarySheet" : "Attach the summary sheet",
     "generateSeparators" : "Generate separators for each elements",

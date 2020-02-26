@@ -1588,6 +1588,7 @@ export const LANG_NL = {
     "cannotMergeTags" : "This tag has a parent or children : impossible to merge tags",//_TO_TRANSLATE
     "mergeTagWith" : "Merge this tag with",//_TO_TRANSLATE
     "generateAndDownloadPrintedFolder" : "Generate the printed folder", //_TO_TRANSLATE
+    "printedFolder" : "Printed folder", //_TO_TRANSLATE
     "mainDocument" : "Main document", //_TO_TRANSLATE
     "attachSummarySheet" : "Attach the summary sheet", //_TO_TRANSLATE
     "generateSeparators" : "Generate separators for each elements", //_TO_TRANSLATE

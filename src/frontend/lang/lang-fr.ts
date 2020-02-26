@@ -1602,6 +1602,7 @@ export const LANG_FR = {
     "cannotMergeTags" : "Ce mot-clé possède un parent ou des enfants : impossible de le fusionner avec un autre mot clé.",
     "mergeTagWith" : "Fusionner le mot-clé avec",
     "generateAndDownloadPrintedFolder" : "Générer le dossier d'impression",
+    "printedFolder" : "Dossier d'impression",
     "mainDocument" : "Document principal",
     "attachSummarySheet" : "Attacher la fiche de liaison",
     "generateSeparators" : "Générer des intercalaires entre les éléments",
