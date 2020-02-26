@@ -110,12 +110,12 @@ export class AttachmentCreateComponent implements OnInit {
                     if (data.categoryId === 'outgoing') {
                         if (!this.functions.empty(data.recipients) && data.recipients.length > 0) {
                             await this.getContacts(data.recipients);
-                            contact = !this.functions.empty(data.recipients) ? [{ id: data.recipients[0].id, type: data.recipients[0].type }] : '';
+                            contact = !this.functions.empty(data.recipients) ? [{ id: this.resourceContacts[0].id, type: this.resourceContacts[0].type }] : '';
                         }
                     } else {
                         if (!this.functions.empty(data.senders) && data.senders.length > 0) {
                             await this.getContacts(data.senders);
-                            contact = !this.functions.empty(data.senders) ? [{ id: data.senders[0].id, type: data.senders[0].type }] : '';
+                            contact = !this.functions.empty(data.senders) ? [{ id: this.resourceContacts[0].id, type: this.resourceContacts[0].type }] : '';
                         }
                     }
 
