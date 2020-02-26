@@ -155,7 +155,7 @@ export class TagAdministrationComponent implements OnInit {
         this.selectMergeTag.reset();
         const selectedTag = this.tags.filter(tag => tag.id === tagId)[0];
 
-        const dialogMessage = `${this.lang.confirmAction}<br/><br/>${this.lang.theTag}<b> "${this.tag.label.value}" </b>${this.lang.willBeDeletedAndMerged}<b> "${selectedTag.label}"</b><br/><b>${this.tag.countResources.value}</b>&nbsp;${this.lang.mails} ${this.lang.willBeTransferredToNewTag}<b> "${selectedTag.label}"</b>`;
+        const dialogMessage = `${this.lang.confirmAction}<br/><br/>${this.lang.theTag}<b> "${this.tag.label.value}" </b>${this.lang.willBeDeletedAndMerged}<b> "${selectedTag.label}"</b><br/><br/><b>${this.tag.countResources.value}</b>&nbsp;${this.lang.mails} ${this.lang.willBeTransferredToNewTag}<b> "${selectedTag.label}"</b>`;
 
         const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: `${this.lang.mergeWith}  "${selectedTag.label}"`, msg: dialogMessage } });
         dialogRef.afterClosed().pipe(

@@ -563,9 +563,8 @@ class ResController extends ResourceControlController
 
         $convertedDocument = AdrModel::getDocuments([
             'select'    => ['docserver_id', 'path', 'filename', 'fingerprint'],
-            'where'     => ['res_id = ?', 'type in (?)', 'version = ?'],
-            'data'      => [$args['resId'], ['SIGN'], $document['version']],
-            'orderBy'   => ["type='SIGN' DESC"],
+            'where'     => ['res_id = ?', 'type = ?', 'version = ?'],
+            'data'      => [$args['resId'], 'SIGN', $document['version']],
             'limit'     => 1
         ]);
         $document = $convertedDocument[0] ?? $document;
