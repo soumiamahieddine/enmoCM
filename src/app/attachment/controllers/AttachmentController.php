@@ -698,8 +698,6 @@ class AttachmentController
                 'resIdMaster'       => $attachment['res_id_master'],
                 'chrono'            => $attachment['identifier'],
                 'type'              => $attachment['attachment_type'],
-                'recipientId'       => $recipient['item_id'],
-                'recipientType'     => 'contact',
                 'inSignatureBook'   => true
             ];
 
