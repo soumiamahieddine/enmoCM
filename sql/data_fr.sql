@@ -1661,8 +1661,12 @@ INSERT INTO shipping_templates (id, label, description, options, fee, entities, 
 Select setval('shipping_templates_id_seq', (select max(id)+1 from shipping_templates), false);
 
 /* Champs customs */
+TRUNCATE TABLE custom_fields;
 INSERT INTO custom_fields (id, label, type, "values") VALUES (1, 'Date de fin de contrat', 'date', '[]');
 INSERT INTO custom_fields (id, label, type, "values") VALUES (2, 'Adresse d''intervention', 'banAutocomplete', '[]');
+INSERT INTO custom_fields (id, label, type, values) VALUES (3, 'Nature', 'select', '["Courrier simple", "Courriel", "Courrier suivi", "Courrier avec AR", "Fax", "Chronopost", "Fedex", "Courrier AR", "Coursier", "Pli numérique", "Autre"]');
+INSERT INTO custom_fields (id, label, type, "values") VALUES (4, 'Référence courrier expéditeur', 'string', '[]');
+INSERT INTO custom_fields (id, label, type, "values") VALUES (5, 'Num recommandé', 'string', '[]');
 SELECT setval('custom_fields_id_seq', (select max(id)+1 from custom_fields), false);
 
 /* Modèles d'enregistrement */
@@ -1728,8 +1732,10 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'priority', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'confidentiality', TRUE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'documentDate', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'arrivalDate', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'arrivalDate', TRUE, '"_TODAY"', 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'subject', TRUE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'indexingCustomField_3', FALSE, null, 'mail');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'indexingCustomField_4', FALSE, null, 'mail');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'senders', TRUE, null, 'contact');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'recipients', FALSE, null, 'contact');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'initiator', TRUE, null, 'process');
