@@ -787,6 +787,13 @@ DO $$ BEGIN
 END$$;
 UPDATE baskets set basket_clause = replace(basket_clause, 'nature_id' , 'custom_fields->>''1''');
 
+UPDATE baskets SET basket_clause = replace(basket_clause, 's.attachment_id = r.res_id', 's.document_id = r.res_id AND s.document_type = ''attachment''')
+WHERE basket_clause ILIKE '%s.attachment_id = r.res_id%';
+
+UPDATE baskets SET basket_clause = replace(basket_clause, 'attachment_id', 'document_id')
+WHERE basket_clause ILIKE '%attachment_id%';
+
+
 UPDATE history SET user_id = (select user_id from users order by user_id='superadmin' desc limit 1) where user_id = '';
 
 /* users followed resources */
