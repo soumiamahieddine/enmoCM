@@ -89,6 +89,12 @@ export class NotificationService {
 
     getMessageDuration(message: string, minimumDuration: number) {
         const duration = (message.length / 25) * 1000;
-        return duration < minimumDuration ? minimumDuration : duration;
+        const maxDuration = 10000;
+        if (duration < minimumDuration) {
+            return minimumDuration;
+        } else if (duration > maxDuration) {
+            return maxDuration;
+        }
+        return duration;
     }
 }
