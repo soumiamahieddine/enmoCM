@@ -10,6 +10,10 @@ import { LANG } from './translate.component';
 })
 export class CustomSnackbarComponent {
     constructor(@Inject(MAT_SNACK_BAR_DATA) public data: any) { }
+
+    dismiss() {
+        this.data.close();
+    }
 }
 
 @Injectable()
@@ -20,21 +24,21 @@ export class NotificationService {
     }
     success(message: string) {
         const duration = this.getMessageDuration(message, 2000);
-        this.snackBar.openFromComponent(CustomSnackbarComponent, {
+        const snackBar = this.snackBar.openFromComponent(CustomSnackbarComponent, {
             duration: duration,
             panelClass: 'success-snackbar',
             verticalPosition : 'top',
-            data: { message: message, icon: 'info-circle' }
+            data: { message: message, icon: 'info-circle', close: () => {snackBar.dismiss()} }
         });
     }
 
     error(message: string, url: string = null) {
         const duration = this.getMessageDuration(message, 4000);
-        this.snackBar.openFromComponent(CustomSnackbarComponent, {
+        const snackBar = this.snackBar.openFromComponent(CustomSnackbarComponent, {
             duration: duration,
             panelClass: 'error-snackbar',
             verticalPosition : 'top',
-            data: { url: url, message: message, icon: 'exclamation-triangle' }
+            data: { url: url, message: message, icon: 'exclamation-triangle', close: () => {snackBar.dismiss()} }
         });
     }
 
