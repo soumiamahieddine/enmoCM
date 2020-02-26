@@ -523,8 +523,15 @@ class UserController
             if (!$basket['allowed']) {
                 unset($user['baskets'][$key]);
             }
+            unset($user['baskets'][$key]['basket_clause']);
         }
         $user['baskets'] = array_values($user['baskets']);
+        foreach ($user['groups'] as $key => $group) {
+            unset($user['groups'][$key]['where_clause']);
+        }
+        foreach ($user['assignedBaskets'] as $key => $basket) {
+            unset($user['assignedBaskets'][$key]['basket_clause']);
+        }
 
         return $response->withJson($user);
     }
