@@ -86,7 +86,7 @@ export class IndexationComponent implements OnInit {
         this.subscription = this.actionService.catchAction().subscribe(resIds => {
             const param = this.isMailing ? {
                 isMailing : true
-            } : null;
+            } : null;         
             this.router.navigate([`/resources/${resIds[0]}`], { queryParams: param });
         });
     }
@@ -188,8 +188,6 @@ export class IndexationComponent implements OnInit {
     onSubmit() {
         if (this.indexingForm.isValidForm()) {
             const formatdatas = this.formatDatas(this.indexingForm.getDatas());
-
-            this.isMailing = !this.functions.empty(formatdatas.recipients) && formatdatas.recipients.length > 0 && this.currentIndexingModel.category === 'outgoing';
             
             formatdatas['modelId'] = this.currentIndexingModel.master !== null ? this.currentIndexingModel.master : this.currentIndexingModel.id;
             formatdatas['chrono'] = true;
@@ -198,6 +196,8 @@ export class IndexationComponent implements OnInit {
                 tap((data: any) => {
                     formatdatas['encodedFile'] = data.content;
                     formatdatas['format'] = data.format;
+
+                    this.isMailing = !this.functions.empty(formatdatas.recipients) && formatdatas.recipients.length > 0 && this.currentIndexingModel.category === 'outgoing' && formatdatas['encodedFile'] === null;
 
                     if (formatdatas['encodedFile'] === null) {
                         this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.noFile, msg: this.lang.noFileMsg } });

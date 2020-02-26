@@ -239,10 +239,10 @@ export class ActionsService {
         }
     }
 
-    endAction() {
+    endAction(resIds: any) {
         this.notify.success(this.lang.action + ' : "' + this.currentAction.label + '" ' + this.lang.done);
 
-        this.eventAction.next(this.currentResIds);
+        this.eventAction.next(resIds);
     }
 
     /* OPEN SPECIFIC ACTION */
@@ -259,8 +259,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -281,8 +281,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -303,8 +303,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap((result: any) => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
                 let firstGroup: number = 0;
                 let redirectAfterClose = '';
                 this.headerService.user.groups.filter((group: any) => group.can_index === true).forEach((group: any) => {
@@ -342,8 +342,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -364,8 +364,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -386,8 +386,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -408,8 +408,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -430,8 +430,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -452,8 +452,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -474,8 +474,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -496,8 +496,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -525,8 +525,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -547,8 +547,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -568,8 +568,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -590,8 +590,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -612,8 +612,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -634,8 +634,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -656,8 +656,8 @@ export class ActionsService {
                 exhaustMap(() => this.http.put(dataActionToSend.indexActionRoute, {
                     resource: dataActionToSend.resIds[0]
                 })),
-                tap((result: any) => {
-                    this.endAction();
+                tap((resIds: any) => {
+                    this.endAction(resIds);
                 }),
                 finalize(() => this.loading = false),
                 catchError((err: any) => {
@@ -667,8 +667,8 @@ export class ActionsService {
             ).subscribe();
         } else {
             this.http.put(dataActionToSend.processActionRoute, { resources: this.setDatasActionToSend().resIds }).pipe(
-                tap((result: any) => {
-                    this.endAction();
+                tap((resIds: any) => {
+                    this.endAction(resIds);
                 }),
                 finalize(() => this.loading = false),
                 catchError((err: any) => {
@@ -700,8 +700,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -722,8 +722,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -744,8 +744,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -766,8 +766,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -788,8 +788,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -810,8 +810,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -832,8 +832,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
@@ -854,8 +854,8 @@ export class ActionsService {
                 this.unlockResourceAfterActionModal(resIds);
             }),
             filter((resIds: any) => !this.functions.empty(resIds)),
-            tap(() => {
-                this.endAction();
+            tap((resIds: any) => {
+                this.endAction(resIds);
             }),
             finalize(() => this.loading = false),
             catchError((err: any) => {
