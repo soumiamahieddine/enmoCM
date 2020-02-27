@@ -340,9 +340,6 @@ export class DiffusionsListComponent implements OnInit {
             item_mode = await this.isUserInCurrentEntity(element.serialId) ? 'dest' : 'copy';
         }
 
-        console.log(item_mode);
-        
-
         if (this.diffList["copy"].items.map((e: any) => { return e.item_id; }).indexOf(element.id) == -1) {
             let itemType = '';
             if (element.type == 'user') {
@@ -373,8 +370,6 @@ export class DiffusionsListComponent implements OnInit {
             this.http.get(`../../rest/entities/${this.currentEntityId}/users`).pipe(
                 tap((data: any) => {
                     const state = data.users.filter((user: any) => user.id === userId).length > 0;
-                    console.log(state);
-                    
                     resolve(state);
                 }),
                 catchError((err: any) => {
