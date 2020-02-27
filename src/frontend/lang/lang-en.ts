@@ -1583,5 +1583,6 @@ export const LANG_EN = {
     "mustEditAttachmentFirst" : "You must edit the attachment first",
     "saveAndClose" : "Save and close",
     "opinionCircuit" : "Opinion circuit",    
-    "visaCircuit" : "Visa circuit",   
+    "visaCircuit" : "Visa circuit",
+    "shippingUnavailable" : "<b>Warning </b> Shipping is not activated. Check the configuration file mailevaConfig.xml",
 };

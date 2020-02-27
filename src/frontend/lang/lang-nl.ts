@@ -1609,4 +1609,5 @@ export const LANG_NL = {
     "saveAndClose" : "Save and close", //_TO_TRANSLATE
     "opinionCircuit" : "Opinion circuit", //_TO_TRANSLATE 
     "visaCircuit" : "Visa circuit",  //_TO_TRANSLATE
+    "shippingUnavailable" : "<b>Warning </b> Shipping is not activated. Check the configuration file mailevaConfig.xml", //_TO_TRANSLATE
 };

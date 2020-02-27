@@ -1622,5 +1622,6 @@ export const LANG_FR = {
     "mustEditAttachmentFirst" : "Vous devez d'abord éditer la pièce jointe",
     "saveAndClose" : "Enregistrer et fermer",    
     "opinionCircuit" : "Circuit d'avis",    
-    "visaCircuit" : "Circuit de visa",    
+    "visaCircuit" : "Circuit de visa",
+    "shippingUnavailable" : "<b>Attention !</b> Maileva n'est pas activé. Veuillez vérifier le fichier de configuration mailevaConfig.xml",
 };
