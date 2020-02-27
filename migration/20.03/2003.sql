@@ -88,6 +88,9 @@ DELETE FROM actions_groupbaskets WHERE id_action in (SELECT id FROM actions WHER
 DELETE FROM groupbasket_redirect WHERE action_id in (SELECT id FROM actions WHERE component = 'viewDoc' OR action_page in ('view', 'validate_mail', 'process', 'visa_mail'));
 DELETE FROM actions WHERE component = 'viewDoc' OR action_page in ('view', 'validate_mail', 'process', 'visa_mail');
 
+ALTER TABLE actions DROP COLUMN IF EXISTS parameters;
+ALTER TABLE actions ADD COLUMN parameters jsonb NOT NULL DEFAULT '{}';
+
 UPDATE actions SET component = 'rejectVisaBackToPreviousAction' WHERE action_page = 'rejection_visa_previous';
 UPDATE actions SET component = 'redirectInitiatorEntityAction' WHERE action_page = 'redirect_visa_entity';
 UPDATE actions SET component = 'rejectVisaBackToPreviousAction' WHERE action_page = 'rejection_visa_previous';
@@ -524,7 +527,6 @@ DO $$ BEGIN
     DELETE FROM actions_groupbaskets WHERE id_action in (SELECT id FROM actions WHERE enabled = 'N');
     DELETE FROM groupbasket_redirect WHERE action_id in (SELECT id FROM actions WHERE enabled = 'N');
     DELETE FROM actions WHERE enabled = 'N';
-    ALTER TABLE actions ADD COLUMN parameters jsonb NOT NULL DEFAULT '{}';
   END IF;
 END$$;
 
