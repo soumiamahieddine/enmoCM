@@ -38,6 +38,7 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit, OnDe
     };
 
     realResSelected: number[]= [];
+    currentMode: string = '';
 
     manualAR: boolean = false;
     arMode: 'auto' | 'manual' | 'both' = 'auto';
@@ -54,7 +55,11 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit, OnDe
     ngOnInit(): void {
         this.loadingInit = true;
 
-        this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkAcknowledgementReceipt', { resources: this.data.resIds })
+        this.checkAcknowledgementReceipt();
+    }
+
+    checkAcknowledgementReceipt() {
+        this.http.post('../../rest/resourcesList/users/' + this.data.userId + '/groups/' + this.data.groupId + '/baskets/' + this.data.basketId + '/actions/' + this.data.action.id + '/checkAcknowledgementReceipt?' + this.currentMode, { resources: this.data.resIds })
             .subscribe((data: any) => {
                 this.acknowledgement = data;
                 this.realResSelected = data.sendList;
@@ -90,7 +95,8 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit, OnDe
         if (this.manualAR) {
             data = {
                 subject : this.emailsubject,
-                content : tinymce.get('emailSignature').getContent()
+                content : tinymce.get('emailSignature').getContent(),
+                manual  : true
             }
         }
         this.http.put(this.data.processActionRoute, { resources: this.realResSelected, note: this.noteEditor.getNote(), data }).pipe(
@@ -146,6 +152,8 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit, OnDe
 
     toggleArManual(state: boolean) {
         if (state) {
+            this.currentMode = 'mode=manual';
+            this.checkAcknowledgementReceipt();
             this.manualAR = true;
             if (this.data.resIds.length === 1) {
                 this.emailsubject = this.data.resource.subject;
@@ -156,8 +164,10 @@ export class CreateAcknowledgementReceiptActionComponent implements OnInit, OnDe
             this.initSignEmailModelsList();
             setTimeout(() => {
                 this.initMce();
-            }, 0);
+            }, 800);
         } else {
+            this.currentMode = 'mode=auto';
+            this.checkAcknowledgementReceipt();
             tinymce.remove();
             this.manualAR = false;
         }
