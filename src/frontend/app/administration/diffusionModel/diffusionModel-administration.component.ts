@@ -10,7 +10,6 @@ import { tap, catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { VisaWorkflowComponent } from '../../visa/visa-workflow.component';
 import { AvisWorkflowComponent } from '../../avis/avis-workflow.component';
-import { throwToolbarMixedModesError } from '@angular/material';
 
 @Component({
     templateUrl: "diffusionModel-administration.component.html",
