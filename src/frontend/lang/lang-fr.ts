@@ -1624,4 +1624,5 @@ export const LANG_FR = {
     "opinionCircuit" : "Circuit d'avis",    
     "visaCircuit" : "Circuit de visa",
     "shippingUnavailable" : "<b>Attention !</b> Maileva n'est pas activé. Veuillez vérifier le fichier de configuration mailevaConfig.xml",
+    "diffNoDestmsg" : "Aucun <b>atttributaire</b> défini, modification de la liste <b>impossible</b>.",    
 };

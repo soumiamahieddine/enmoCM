@@ -1610,4 +1610,5 @@ export const LANG_NL = {
     "opinionCircuit" : "Opinion circuit", //_TO_TRANSLATE 
     "visaCircuit" : "Visa circuit",  //_TO_TRANSLATE
     "shippingUnavailable" : "<b>Warning </b> Shipping is not activated. Check the configuration file mailevaConfig.xml", //_TO_TRANSLATE
+    "diffNoDestmsg" : "No <b>assignee</b> defined, you <b>can't</b> modify the diffusion list.", //_TO_TRANSLATE
 };
