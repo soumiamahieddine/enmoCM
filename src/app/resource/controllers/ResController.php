@@ -1232,4 +1232,23 @@ class ResController extends ResourceControlController
 
         return $response->withJson(['listEventData' => $listEventData]);
     }
+
+    public function getResourceFileInformation(Request $request, Response $response, array $args)
+    {
+        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resource = ResModel::getById([
+            'resId'  => $args['resId'],
+            'select' => ['format', 'fingerprint', 'filesize', 'fulltext_result']
+        ]);
+
+        $allowedFiles = StoreController::getAllowedFiles();
+        $allowedFiles = array_column($allowedFiles, 'extension');
+
+        $resource['canConvert'] = in_array(strtoupper($resource['format']), $allowedFiles);
+
+        return $response->withJson(['information' => $resource]);
+    }
 }
