@@ -901,25 +901,29 @@ export class DocumentViewerComponent implements OnInit {
     }
 
     saveMainDocument() {
-        this.getFile().pipe(
-            map((data: any) => {
-                const formatdatas = {
-                    encodedFile: data.content,
-                    format: data.format,
-                    resId: this.resId
-                }
-                return formatdatas;
-            }),
-            exhaustMap((data) => this.http.put(`../../rest/resources/${this.resId}?onlyDocument=true`, data)),
-            tap(() => {
-                this.closeEditor();
-                this.loadRessource(this.resId);
-            }),
-            catchError((err: any) => {
-                this.notify.handleSoftErrors(err);
-                return of(false);
-            })
-        ).subscribe();
+        return new Promise((resolve, reject) => {
+            this.getFile().pipe(
+                map((data: any) => {
+                    const formatdatas = {
+                        encodedFile: data.content,
+                        format: data.format,
+                        resId: this.resId
+                    }
+                    return formatdatas;
+                }),
+                exhaustMap((data) => this.http.put(`../../rest/resources/${this.resId}?onlyDocument=true`, data)),
+                tap(() => {
+                    this.closeEditor();
+                    this.loadRessource(this.resId);
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    resolve(false);
+                    return of(false);
+                })
+            ).subscribe();
+        });        
     }
 
     openResourceVersion(version: number, type: string) {

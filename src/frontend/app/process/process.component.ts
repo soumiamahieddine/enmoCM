@@ -544,7 +544,7 @@ export class ProcessComponent implements OnInit {
         }
     }
 
-    processAction() {
+    async processAction() {
         if (this.indexingForm.isValidForm()) {
             if (this.isToolModified()) {
                 const dialogRef = this.openConfirmModification();
@@ -555,16 +555,22 @@ export class ProcessComponent implements OnInit {
                         }
                     }),
                     filter((data: string) => data === 'ok'),
-                    tap(() => {
+                    tap(async () => {
                         this.saveTool();
+                        if (this.appDocumentViewer.isEditingTemplate()) {
+                            await this.appDocumentViewer.saveMainDocument();
+                        }
                     }),
                     finalize(() => this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false)),
                     catchError((err: any) => {
-                        this.notify.handleErrors(err);
+                        this.notify.handleSoftErrors(err);
                         return of(false);
                     })
                 ).subscribe();
             } else {
+                if (this.appDocumentViewer.isEditingTemplate()) {
+                    await this.appDocumentViewer.saveMainDocument();
+                }
                 this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false);
             }
         } else {
