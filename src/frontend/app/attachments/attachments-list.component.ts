@@ -12,12 +12,13 @@ import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 import { PrivilegeService } from '../../service/privileges.service';
 import { HeaderService } from '../../service/header.service';
 import { VisaWorkflowModalComponent } from '../visa/modal/visa-workflow-modal.component';
+import { AppService } from '../../service/app.service';
 
 @Component({
     selector: 'app-attachments-list',
     templateUrl: 'attachments-list.component.html',
     styleUrls: ['attachments-list.component.scss'],
-    providers: [NotificationService],
+    providers: [AppService],
     animations: [
         trigger(
             'myAnimation',
@@ -65,6 +66,7 @@ export class AttachmentsListComponent implements OnInit {
         public http: HttpClient,
         private notify: NotificationService,
         public dialog: MatDialog,
+        public appService: AppService,
         private headerService: HeaderService,
         private privilegeService: PrivilegeService) { }
 
@@ -174,7 +176,7 @@ export class AttachmentsListComponent implements OnInit {
     }
 
     showAttachment(attachment: any) {
-        this.dialogRef = this.dialog.open(AttachmentPageComponent, { height: '99vh', width: '99vw', panelClass: 'modal-container', disableClose: true, data: { resId: attachment.resId} });
+        this.dialogRef = this.dialog.open(AttachmentPageComponent, { height: '99vh', width: this.appService.getViewMode() ? '99vw' : '90vw', maxWidth: this.appService.getViewMode() ? '99vw' : '90vw', panelClass: 'modal-container', disableClose: true, data: { resId: attachment.resId} });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'success'),
@@ -189,7 +191,7 @@ export class AttachmentsListComponent implements OnInit {
     }
 
     createAttachment() {
-        this.dialogRef = this.dialog.open(AttachmentCreateComponent, { disableClose: true, panelClass: 'modal-container', height: '90vh', width: '90vw', data: { resIdMaster: this.resId } });
+        this.dialogRef = this.dialog.open(AttachmentCreateComponent, { disableClose: true, panelClass: 'modal-container', height: '90vh', width: this.appService.getViewMode() ? '99vw' : '90vw', maxWidth: this.appService.getViewMode() ? '99vw' : '90vw', data: { resIdMaster: this.resId } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'success'),

@@ -22,8 +22,8 @@
                             <mat-icon class="fa fa-minus"></mat-icon>
                         </button></span>
                 </ng-template>
-                <div style="display:flex;height:100%;">
-                    <div class="attachment-form" *ngIf="!loading">
+                <div style="height:100%;overflow: auto;">
+                    <div class="attachment-form col-md-3 col-sm-12" *ngIf="!loading">
                         <div class="attachment-form-item">
                             <plugin-select-search [label]="lang.type" [placeholderLabel]="lang.type"
                                 [formControlSelect]="attachment['type']" [datas]="attachmentsTypes"
@@ -105,7 +105,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="documentContent">
+                    <div class="documentContent col-md-9 col-sm-12">
                         <app-document-viewer #appDocumentViewer style="height:100%;width:100%;position: relative;"
                             [editMode]="true" [mode]="'attachment'" (triggerEvent)="setDatasViewer(i)">
                         </app-document-viewer>
