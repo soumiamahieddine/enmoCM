@@ -215,11 +215,14 @@ class ResController extends ResourceControlController
                 'data'   => [$GLOBALS['userId']]
             ]);
             $entities = array_column($entities, 'id');
-            $folders = FolderModel::getWithEntitiesAndResources([
-                'select'    => ['distinct(resources_folders.folder_id)'],
-                'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ? OR keyword = ?)'],
-                'data'      => [$args['resId'], $entities, $GLOBALS['id'], 'ALL_ENTITIES']
-            ]);
+            $folders = [];
+            if (!empty($entities)) {
+                $folders = FolderModel::getWithEntitiesAndResources([
+                    'select'    => ['distinct(resources_folders.folder_id)'],
+                    'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ? OR keyword = ?)'],
+                    'data'      => [$args['resId'], $entities, $GLOBALS['id'], 'ALL_ENTITIES']
+                ]);
+            }
             $formattedData['folders'] = array_column($folders, 'folder_id');
 
             $tags = ResourceTagModel::get(['select' => ['tag_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
