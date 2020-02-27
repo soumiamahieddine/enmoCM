@@ -8,9 +8,14 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmModalComponent } from '../../confirmModal.component';
 import { NotificationService } from '../../notification.service';
-import { HeaderService }        from '../../../service/header.service';
+import { HeaderService } from '../../../service/header.service';
 import { Router } from '@angular/router';
 import { AppService } from '../../../service/app.service';
+import { DiffusionsListComponent } from '../../diffusions/diffusions-list.component';
+import { tap, catchError, filter, exhaustMap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { FunctionsService } from '../../../service/functions.service';
+import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 
 declare function $j(selector: any): any;
 
@@ -21,39 +26,39 @@ declare function $j(selector: any): any;
 })
 export class EntitiesAdministrationComponent implements OnInit {
     /*HEADER*/
-    titleHeader                              : string;
-    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
+    titleHeader: string;
+    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
+    @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
-    dialogRef                       : MatDialogRef<any>;
+    dialogRef: MatDialogRef<any>;
 
-    lang                            : any       = LANG;
-    loading                         : boolean   = false;
+    lang: any = LANG;
+    loading: boolean = false;
 
-    entities                        : any[]     = [];
-    listTemplateRoles               : any[]     = [];
-    entityTypeList                  : any[]     = [];
-    currentEntity                   : any       = {};
-    isDraggable                     : boolean   = true;
-    newEntity                       : boolean   = false;
-    creationMode                    : boolean   = false;
-    listDiffModified                : boolean   = false;
-    visaCircuitModified             : boolean   = false;
-    opinionCircuitModified          : boolean   = false;
-    idVisaCircuit                   : number;
-    idOpinionCircuit                : number;
-    config                          : any       = {};
+    entities: any[] = [];
+    listTemplateRoles: any[] = [];
+    entityTypeList: any[] = [];
+    currentEntity: any = {};
+    isDraggable: boolean = true;
+    newEntity: boolean = false;
+    creationMode: boolean = false;
+    visaCircuitModified: boolean = false;
+    opinionCircuitModified: boolean = false;
+    idVisaCircuit: number;
+    idOpinionCircuit: number;
+    config: any = {};
 
-    dataSourceUsers             = new MatTableDataSource(this.currentEntity.users);
-    dataSourceTemplates         = new MatTableDataSource(this.currentEntity.templates);
-    displayedColumnsUsers       = ['firstname', 'lastname'];
-    displayedColumnsTemplates   = ['template_label', 'template_target'];
+    dataSourceUsers = new MatTableDataSource(this.currentEntity.users);
+    dataSourceTemplates = new MatTableDataSource(this.currentEntity.templates);
+    displayedColumnsUsers = ['firstname', 'lastname'];
+    displayedColumnsTemplates = ['template_label', 'template_target'];
 
 
     @ViewChild('paginatorUsers', { static: false }) paginatorUsers: MatPaginator;
     @ViewChild('paginatorTemplates', { static: false }) paginatorTemplates: MatPaginator;
     @ViewChild('tableUsers', { static: true }) sortUsers: MatSort;
     @ViewChild('tableTemplates', { static: true }) sortTemplates: MatSort;
+    @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
     applyFilterUsers(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();
@@ -67,15 +72,14 @@ export class EntitiesAdministrationComponent implements OnInit {
     }
 
     constructor(
-        public http: HttpClient, 
-        private notify: NotificationService, 
-        public dialog: MatDialog, 
-        private headerService: HeaderService, 
+        public http: HttpClient,
+        private notify: NotificationService,
+        public dialog: MatDialog,
+        private headerService: HeaderService,
         private router: Router,
-        public appService: AppService
-    ) {
-        $j("link[href='merged_css.php']").remove();
-    }
+        public appService: AppService,
+        public functions: FunctionsService
+    ) { }
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.entities);
@@ -108,7 +112,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                             "three_state": false //no cascade selection
                         },
                         'core': {
-                            force_text : true,
+                            force_text: true,
                             'themes': {
                                 'name': 'proton',
                                 'responsive': true
@@ -193,12 +197,14 @@ export class EntitiesAdministrationComponent implements OnInit {
     }
 
     loadEntity(entity_id: any) {
-        this.listDiffModified = false;
         this.visaCircuitModified = false;
         this.opinionCircuitModified = false;
         this.http.get("../../rest/entities/" + entity_id + '/details')
             .subscribe((data: any) => {
                 this.currentEntity = data['entity'];
+
+                this.appDiffusionsList.loadListModel(this.currentEntity.id);
+
                 if (this.currentEntity.visaCircuit) {
                     this.idVisaCircuit = this.currentEntity.visaCircuit.id;
                 } else {
@@ -230,58 +236,6 @@ export class EntitiesAdministrationComponent implements OnInit {
             });
     }
 
-    addElemListModel(element: any) {
-        this.listDiffModified = true;
-        var inListModel = false;
-        var newElemListModel: any = {};
-
-        if (!this.currentEntity.listTemplate.items) {
-            this.currentEntity.listTemplate.items = [];
-        }
-
-        this.listTemplateRoles.forEach((role: any) => {
-            if (role.available == true) {
-                if (this.currentEntity.listTemplate.items[role.id]) {
-                    this.currentEntity.listTemplate.items[role.id].forEach((listModel: any) => {
-                        if (listModel.id == element.id) {
-                            inListModel = true;
-                        }
-                    });
-                }
-            }
-        });
-        if (!inListModel) {
-            if (!this.currentEntity.listTemplate.items.dest) {
-                this.currentEntity.listTemplate.items.dest = [];
-            }
-            if (this.currentEntity.listTemplate.items.dest.length == 0 && element.type == 'user') {
-                newElemListModel = {
-                    "id": element.serialId,
-                    "type": "user",
-                    "mode": "dest",
-                    "labelToDisplay": element.idToDisplay,
-                    "descriptionToDisplay": element.otherInfo
-                };
-                this.currentEntity.listTemplate.items.dest.unshift(newElemListModel);
-
-            } else {
-                if (!this.currentEntity.listTemplate.items.cc) {
-                    this.currentEntity.listTemplate.items.cc = [];
-                }
-                const itemType = element.type == 'user' ? 'user' : 'entity';
-
-                newElemListModel = {
-                    "id": element.serialId,
-                    "type": itemType,
-                    "mode": "cc",
-                    "labelToDisplay": element.idToDisplay,
-                    "descriptionToDisplay": element.otherInfo
-                };
-                this.currentEntity.listTemplate.items.cc.unshift(newElemListModel);
-            }
-        }
-    }
-
     addElemListModelVisa(element: any) {
         this.visaCircuitModified = true;
         let newElemListModel = {
@@ -297,7 +251,7 @@ export class EntitiesAdministrationComponent implements OnInit {
         }
         this.currentEntity.visaCircuit.items.push(newElemListModel);
         if (this.currentEntity.visaCircuit.items.length > 1) {
-            this.currentEntity.visaCircuit.items[this.currentEntity.visaCircuit.items.length-2].mode = 'visa';
+            this.currentEntity.visaCircuit.items[this.currentEntity.visaCircuit.items.length - 2].mode = 'visa';
         }
     }
 
@@ -338,10 +292,10 @@ export class EntitiesAdministrationComponent implements OnInit {
                         $j('#jstree').jstree(true).settings.core.data = this.entities;
                         $j('#jstree').jstree(true).settings.select_node = this.currentEntity;
                         $j('#jstree').jstree(true).refresh();
-                        $j('#jstree').on("refresh.jstree", (e:any) => {
+                        $j('#jstree').on("refresh.jstree", (e: any) => {
                             $j('#jstree').jstree('deselect_all');
                             $j('#jstree').jstree('select_node', this.currentEntity.entity_id);
-                          });
+                        });
                         this.notify.success(this.lang.entityAdded);
                     }, (err) => {
                         this.notify.error(err.error.errors);
@@ -400,17 +354,17 @@ export class EntitiesAdministrationComponent implements OnInit {
                 if (result) {
                     if (this.currentEntity.listTemplate.id) {
                         this.http.delete("../../rest/listTemplates/" + this.currentEntity.listTemplate.id)
-                        .subscribe((data: any) => {
-                            this.currentEntity.listTemplate.id = data.id;
-                            this.http.get("../../rest/listTemplates/types/entity_id/roles")
-                                .subscribe((data: any) => {
-                                    this.listTemplateRoles = data['roles'];
-                                }, (err) => {
-                                    this.notify.error(err.error.errors);
-                                });
-                        }, (err) => {
-                            this.notify.error(err.error.errors);
-                        });
+                            .subscribe((data: any) => {
+                                this.currentEntity.listTemplate.id = data.id;
+                                this.http.get("../../rest/listTemplates/types/entity_id/roles")
+                                    .subscribe((data: any) => {
+                                        this.listTemplateRoles = data['roles'];
+                                    }, (err) => {
+                                        this.notify.error(err.error.errors);
+                                    });
+                            }, (err) => {
+                                this.notify.error(err.error.errors);
+                            });
                     }
 
                     if (this.idVisaCircuit) {
@@ -421,7 +375,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                                 this.notify.error(err.error.errors);
                             });
                     }
-                    
+
                     this.http.put("../../rest/entities/" + result.entity_id + "/reassign/" + result.redirectEntity, {})
                         .subscribe((data: any) => {
                             this.entities = data['entities'];
@@ -446,17 +400,17 @@ export class EntitiesAdministrationComponent implements OnInit {
             if (r) {
                 if (this.currentEntity.listTemplate.id) {
                     this.http.delete("../../rest/listTemplates/" + this.currentEntity.listTemplate.id)
-                    .subscribe((data: any) => {
-                        this.currentEntity.listTemplate.id = data.id;
-                        this.http.get("../../rest/listTemplates/types/entity_id/roles")
-                            .subscribe((data: any) => {
-                                this.listTemplateRoles = data['roles'];
-                            }, (err) => {
-                                this.notify.error(err.error.errors);
-                            });
-                    }, (err) => {
-                        this.notify.error(err.error.errors);
-                    });
+                        .subscribe((data: any) => {
+                            this.currentEntity.listTemplate.id = data.id;
+                            this.http.get("../../rest/listTemplates/types/entity_id/roles")
+                                .subscribe((data: any) => {
+                                    this.listTemplateRoles = data['roles'];
+                                }, (err) => {
+                                    this.notify.error(err.error.errors);
+                                });
+                        }, (err) => {
+                            this.notify.error(err.error.errors);
+                        });
                 }
 
                 if (this.idVisaCircuit) {
@@ -467,7 +421,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                             this.notify.error(err.error.errors);
                         });
                 }
-                
+
                 this.http.delete("../../rest/entities/" + this.currentEntity.entity_id)
                     .subscribe((data: any) => {
                         this.entities = data['entities'];
@@ -520,84 +474,62 @@ export class EntitiesAdministrationComponent implements OnInit {
             });
     }
 
-    updateDiffList(template: any, role: any): any {
-        this.listDiffModified = true;
-        if (role == 'dest' && this.currentEntity.listTemplate.items.dest.length > 0) {
-            this.currentEntity.listTemplate.items.dest.forEach((listModel: any) => {
-                if (listModel.id != template.id) {
-                    this.currentEntity.listTemplate.items.cc.push(listModel);
-                }
-            });
-            this.currentEntity.listTemplate.items.dest = [template];
-        }
-    }
-
     saveDiffList() {
-        this.listDiffModified = false;
         var newDiffList = {
             "title": this.currentEntity.entity_id,
             "description": this.currentEntity.entity_id,
             "type": "diffusionList",
             "entityId": this.currentEntity.id,
-            "items": Array()
+            "items": this.appDiffusionsList.getCurrentListinstance().map((item: any) => {
+                return {
+                    "id": item.item_id,
+                    "type": item.item_type,
+                    "mode": item.item_mode
+                }
+            })
         };
 
-        this.listTemplateRoles.forEach((role: any) => {
-            if (role.available == true) {
-                if (this.currentEntity.listTemplate.items[role.id]) {
-                    this.currentEntity.listTemplate.items[role.id].forEach((listModel: any) => {
-                        newDiffList.items.push({
-                            "id": listModel.id,
-                            "type": listModel.type,
-                            "mode": role.id
-                        })
-                    });
-                }
-            }
-        });
-
-        if (newDiffList.items.length == 0) {
-            this.http.delete("../../rest/listTemplates/" + this.currentEntity.listTemplate.id)
-                .subscribe((data: any) => {
-                    this.currentEntity.listTemplate.id = null;
-                    this.http.get("../../rest/listTemplates/types/entity_id/roles")
-                        .subscribe((data: any) => {
-                            this.listTemplateRoles = data['roles'];
-                        }, (err) => {
-                            this.notify.error(err.error.errors);
-                        });
-                    this.notify.success(this.lang.diffusionModelDeleted);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
-        } else if (this.currentEntity.listTemplate.id) {
-            this.http.put("../../rest/listTemplates/" + this.currentEntity.listTemplate.id, newDiffList)
-                .subscribe(() => {
-                    this.http.get("../../rest/listTemplates/types/entity_id/roles")
-                        .subscribe((data: any) => {
-                            this.listTemplateRoles = data['roles'];
-                        }, (err) => {
-                            this.notify.error(err.error.errors);
-                        });
+        if (!this.functions.empty(this.currentEntity.listTemplate.id)) {
+            this.http.put(`../../rest/listTemplates/${this.currentEntity.listTemplate.id}`, newDiffList).pipe(
+                tap(() => {
                     this.notify.success(this.lang.diffusionModelUpdated);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
+                    this.appDiffusionsList.loadListModel(this.currentEntity.id);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe()
         } else {
-            this.http.post("../../rest/listTemplates?admin=true", newDiffList)
-                .subscribe((data: any) => {
+            this.http.post(`../../rest/listTemplates?admin=true`, newDiffList).pipe(
+                tap((data: any) => {
                     this.currentEntity.listTemplate.id = data.id;
-                    this.http.get("../../rest/listTemplates/types/entity_id/roles")
-                        .subscribe((data: any) => {
-                            this.listTemplateRoles = data['roles'];
-                        }, (err) => {
-                            this.notify.error(err.error.errors);
-                        });
                     this.notify.success(this.lang.diffusionModelUpdated);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
+                    this.appDiffusionsList.loadListModel(this.currentEntity.id);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe()
         }
+    }
+
+    deleteDiffList() {
+        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+        dialogRef.afterClosed().pipe(
+            filter((data: string) => data === 'ok'),
+            exhaustMap(() => this.http.delete(`../../rest/listTemplates/${this.currentEntity.listTemplate.id}`)),
+            tap(() => {
+                this.currentEntity.listTemplate.id = null;
+                this.notify.success(this.lang.diffusionModelDeleted);
+                this.appDiffusionsList.loadListModel(this.currentEntity.id);
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 
     updateDiffListVisa(template: any): any {
@@ -656,12 +588,12 @@ export class EntitiesAdministrationComponent implements OnInit {
                 });
         } else {
             this.http.delete("../../rest/listTemplates/" + this.idVisaCircuit)
-            .subscribe(() => {
-                this.idVisaCircuit = null;
-                this.notify.success(this.lang.diffusionModelDeleted);
-            }, (err) => {
-                this.notify.error(err.error.errors);
-            });
+                .subscribe(() => {
+                    this.idVisaCircuit = null;
+                    this.notify.success(this.lang.diffusionModelDeleted);
+                }, (err) => {
+                    this.notify.error(err.error.errors);
+                });
         }
     }
 
@@ -700,11 +632,6 @@ export class EntitiesAdministrationComponent implements OnInit {
                     this.notify.error(err.error.errors);
                 });
         }
-    }
-
-    removeDiffList(i: number, role: string): any {
-        this.listDiffModified = true;
-        this.currentEntity.listTemplate.items[role].splice(i, 1);
     }
 
     removeDiffListVisa(template: any, i: number): any {
@@ -767,20 +694,20 @@ export class EntitiesAdministrationComponent implements OnInit {
         }
     }
 
-    linkUser(newUser:any) {
+    linkUser(newUser: any) {
         let entity = {
-            "entityId"  : this.currentEntity.entity_id,
-            "role"      : ''
+            "entityId": this.currentEntity.entity_id,
+            "role": ''
         };
 
         this.http.post("../../rest/users/" + newUser.id + "/entities", entity)
             .subscribe((data: any) => {
                 var displayName = newUser.idToDisplay.split(" ");
                 var user = {
-                    id : newUser.id,
-                    user_id : newUser.otherInfo,
-                    firstname : displayName[0],
-                    lastname : displayName[1]
+                    id: newUser.id,
+                    user_id: newUser.otherInfo,
+                    firstname: displayName[0],
+                    lastname: displayName[1]
                 };
                 this.currentEntity.users.push(user);
                 this.dataSourceUsers = new MatTableDataSource(this.currentEntity.users);
@@ -792,8 +719,8 @@ export class EntitiesAdministrationComponent implements OnInit {
             });
     }
 
-    showTemplate(templateId:any) {
-        if(this.currentEntity.canAdminTemplates) {
+    showTemplate(templateId: any) {
+        if (this.currentEntity.canAdminTemplates) {
             this.router.navigate(['/administration/templates/' + templateId]);
         }
     }

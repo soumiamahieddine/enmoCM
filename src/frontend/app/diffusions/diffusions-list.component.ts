@@ -8,6 +8,7 @@ import { catchError, map, tap, elementAt } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AlertComponent } from '../../plugins/modal/alert.component';
 import { MatDialog } from '@angular/material';
+import { FunctionsService } from '../../service/functions.service';
 
 @Component({
     selector: 'app-diffusions-list',
@@ -43,7 +44,7 @@ export class DiffusionsListComponent implements OnInit {
     /**
      * Entity identifier to load listModel of entity (Incompatible with resId)
      */
-    @Input('entityId') entityId: any;
+    @Input('entityId') entityId: any = null;
 
     /**
      * For manage current loaded list
@@ -82,7 +83,8 @@ export class DiffusionsListComponent implements OnInit {
         public http: HttpClient,
         private notify: NotificationService,
         private renderer: Renderer2,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        public functions: FunctionsService
     ) { }
 
     async ngOnInit(): Promise<void> {
@@ -92,8 +94,6 @@ export class DiffusionsListComponent implements OnInit {
         if (this.resId !== null && this.target !== 'redirect') {
             this.loadListinstance(this.resId);
 
-        } else if (this.entityId !== undefined && this.entityId !== '') {
-            // this.loadListModel(this.entityId);
         }
     }
 
@@ -384,6 +384,10 @@ export class DiffusionsListComponent implements OnInit {
         Object.keys(this.diffList).forEach((element: any) => {
             this.diffList[element].items = [];
         });
+    }
+
+    hasEmptyDest() {
+        return this.diffList["dest"].items.length === 0;
     }
 
     isEmptyList() {
