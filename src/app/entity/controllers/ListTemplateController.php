@@ -145,7 +145,7 @@ class ListTemplateController
             }
         }
 
-        $control = ListTemplateController::controlItems(['items' => $body['items'], 'type' => $body['type']]);
+        $control = ListTemplateController::controlItems(['items' => $body['items'], 'type' => $body['type'], 'entityId' => $body['entityId']]);
         if (!empty($control['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
@@ -211,7 +211,7 @@ class ListTemplateController
             }
         }
 
-        $control = ListTemplateController::controlItems(['items' => $body['items'], 'type' => $listTemplate['type']]);
+        $control = ListTemplateController::controlItems(['items' => $body['items'], 'type' => $listTemplate['type'], 'entityId' => $listTemplate['entityId']]);
         if (!empty($control['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }
@@ -620,10 +620,11 @@ class ListTemplateController
         ValidatorModel::notEmpty($args, ['items', 'type']);
         ValidatorModel::arrayType($args, ['items']);
         ValidatorModel::stringType($args, ['type']);
+        ValidatorModel::intVal($args, ['entityId']);
 
         $destFound = false;
         foreach ($args['items'] as $item) {
-            if ($destFound && $item['item_mode'] == 'dest') {
+            if ($destFound && $item['mode'] == 'dest') {
                 return ['errors' => 'More than one dest not allowed'];
             }
             if (empty($item['id'])) {
@@ -633,8 +634,13 @@ class ListTemplateController
             } elseif (empty($item['mode'])) {
                 return ['errors' => 'mode is empty'];
             }
-            if ($item['item_mode'] == 'dest') {
+            if ($item['mode'] == 'dest') {
                 $destFound = true;
+                $entities = UserModel::getEntitiesById(['id' => $item['id'], 'select' => ['entities.id']]);
+                $entities = array_column($entities, 'id');
+                if (!in_array($args['entityId'], $entities)) {
+                    return ['errors' => 'Dest user is not present in this entity'];
+                }
             }
             if ($args['type'] == 'visaCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'visa_documents', 'userId' => $item['id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $item['id']])) {
                 return ['errors' => 'item has not enough privileges'];
