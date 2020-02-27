@@ -4,7 +4,7 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FunctionsService } from '../../service/functions.service';
-import { tap, exhaustMap, map, startWith, catchError, finalize, filter, debounceTime, switchMap } from 'rxjs/operators';
+import { tap, exhaustMap, map, startWith, catchError, finalize, filter } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { LatinisePipe } from 'ngx-pipes';
 import { Observable, of } from 'rxjs';
@@ -317,7 +317,7 @@ export class AvisWorkflowComponent implements OnInit {
                             difflist_type: 'entity_id'
                         });
                 });
-                this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items))
+                this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items));
                 this.loading = false;
                 resolve(true);
             }, (err: any) => {
@@ -458,7 +458,7 @@ export class AvisWorkflowComponent implements OnInit {
                 this.http.get(`../../rest/listTemplates/${item.id}`).pipe(
                     tap((data: any) => {
                         this.avisWorkflow.items = this.avisWorkflow.items.concat(
-                            data.listTemplate.items.map((itemTemplate: any) => {
+                            data.listTemplate.items.filter((itemTemplate: any) => itemTemplate.hasPrivilege === true).map((itemTemplate: any) => {
                                 return {
                                     item_id: itemTemplate.item_id,
                                     item_type: 'user',
@@ -483,11 +483,7 @@ export class AvisWorkflowComponent implements OnInit {
     }
 
     emptyWorkflow() {
-        if (this.avisWorkflow.items.length === 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.avisWorkflow.items.length === 0;
     }
 
     workflowEnd() {

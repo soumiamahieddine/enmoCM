@@ -108,7 +108,7 @@ export class DiffusionModelAdministrationComponent implements OnInit {
         const item = {
             id: this.diffusionModel.id,
             type: 'entity'
-        }
+        };
 
         setTimeout(async () => {
             this.appVisaWorkflow.resetWorkflow();
@@ -122,7 +122,7 @@ export class DiffusionModelAdministrationComponent implements OnInit {
         const item = {
             id: this.diffusionModel.id,
             type: 'entity'
-        }
+        };
         setTimeout(async () => {
             this.appAvisWorkflow.resetWorkflow();
             await this.appAvisWorkflow.addItemToWorkflow(item);

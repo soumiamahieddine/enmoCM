@@ -4,15 +4,13 @@ import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FunctionsService } from '../../service/functions.service';
-import { tap, exhaustMap, map, startWith, catchError, finalize, filter, debounceTime, switchMap } from 'rxjs/operators';
+import { tap, exhaustMap, map, startWith, catchError, finalize, filter } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { LatinisePipe } from 'ngx-pipes';
 import { Observable, of } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { AddVisaModelModalComponent } from './addVisaModel/add-visa-model-modal.component';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
-
-declare function $j(selector: any): any;
 
 @Component({
     selector: 'app-visa-workflow',
@@ -107,8 +105,6 @@ export class VisaWorkflowComponent implements OnInit {
                 resolve(true);
             });
         });
-
-        
     }
 
     loadVisaSignUsersList() {
