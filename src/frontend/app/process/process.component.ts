@@ -96,16 +96,16 @@ export class ProcessComponent implements OnInit {
             count: 0
         },
         {
+            id: 'emails',
+            icon: 'fas fa-envelope',
+            label: this.lang.mailsSentAlt,
+            count: 0
+        },
+        {
             id: 'diffusionList',
             icon: 'fas fa-share-alt',
             label: this.lang.diffusionList,
             editMode: false,
-            count: 0
-        },
-        {
-            id: 'emails',
-            icon: 'fas fa-envelope',
-            label: this.lang.mailsSentAlt,
             count: 0
         },
         {
