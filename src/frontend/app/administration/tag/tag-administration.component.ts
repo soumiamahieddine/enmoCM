@@ -135,7 +135,7 @@ export class TagAdministrationComponent implements OnInit {
     getTags() {
         this.http.get('../../rest/tags').pipe(
             tap((data: any) => {                
-                this.tags = data.tags.filter((tag: any) => tag.id != this.id && tag.canMerge).map((tag: any) => {
+                this.tags = data.tags.filter((tag: any) => tag.id != this.id).map((tag: any) => {
                     return {
                         id: tag.id,
                         label: tag.label,
