@@ -16,7 +16,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-list>
-                <mat-list-item class="item-diffusion-list"
+                <mat-list-item disableRipple class="item-diffusion-list"
                     *ngFor="let diffusion of diffList[role.id].items;let i=index">
                     <mat-icon mat-list-icon color="primary" class="fa"
                         [class.fa-user]="diffusion.item_type === 'user_id' || diffusion.item_type === 'user'"

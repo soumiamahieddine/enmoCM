@@ -218,7 +218,7 @@
                             </div>
                             <div class="form-group" *ngIf="currentEntity.entity_id">
                                 <div class="col-md-12 text-center" style="padding:10px;">
-                                    <button mat-raised-button color="primary" (click)="saveDiffList()" [disabled]="appDiffusionsList.hasEmptyDest()">{{lang.save}}</button>
+                                    <button mat-raised-button color="primary" (click)="saveDiffList()" [disabled]="appDiffusionsList.hasEmptyDest() || !appDiffusionsList.isModified()">{{lang.save}}</button>
                                     <button mat-raised-button color="default" (click)="appDiffusionsList.loadListModel(currentEntity.id)" [disabled]="!appDiffusionsList.isModified()">{{lang.cancel}}</button>
                                     <button *ngIf="!appDiffusionsList.isEmptyList() && currentEntity.listTemplate.id" mat-raised-button color="warn" (click)="deleteDiffList()">{{lang.delete}}</button>
                                 </div>
@@ -228,26 +228,12 @@
                     <mat-tab label="{{lang.visaWorkflow}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;" id="visaCircuitContent">
                             <div class="col-md-12">
-                                <plugin-autocomplete [labelPlaceholder]="lang.addVisaSignUser" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users/circuit?circuit=visa']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelVisa($event)"></plugin-autocomplete>
-                                <mat-list *ngIf="currentEntity.visaCircuit">
-                                    <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.visaCircuit.items">
-                                        <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.visaCircuit.items; let i = index" title="{{lang.move}}"
-                                            dnd-sortable [sortableIndex]="i" (onDropSuccess)="updateDiffListVisa(template)">
-                                            <mat-icon color="primary" [class]="template.mode == 'visa' ? 'fa fa-user' : 'fa fa-certificate'" mat-list-icon></mat-icon>
-                                            <p mat-line>{{template.idToDisplay}}
-                                                <small style="opacity:0.5;">{{template.descriptionToDisplay}}</small>
-                                            </p>
-                                            <button matTooltip="{{lang.delete}}" mat-icon-button color="warn" (click)="removeDiffListVisa(template,i)">
-                                                <mat-icon class="fa fa-times"></mat-icon>
-                                            </button>
-                                        </mat-list-item>
-                                    </span>
-                                </mat-list>
+                                <app-visa-workflow [adminMode]="true" [showListModels]="false" [showComment]="false" #appVisaWorkflow></app-visa-workflow>
                             </div>
                             <div class="form-group" *ngIf="currentEntity.entity_id">
                                 <div class="col-md-12 text-center" style="padding:10px;">
-                                    <button mat-raised-button color="primary" (click)="saveDiffListVisa()" [disabled]="!this.visaCircuitModified">{{lang.save}}</button>
-                                    <button mat-raised-button color="default" (click)="loadEntity(this.currentEntity.entity_id)" [disabled]="!this.visaCircuitModified">{{lang.cancel}}</button>
+                                    <button mat-raised-button color="primary" (click)="saveDiffListVisa()" [disabled]="!appVisaWorkflow.isModified()">{{lang.save}}</button>
+                                    <button mat-raised-button color="default" (click)="appVisaWorkflow.loadListModel(currentEntity.id)"  [disabled]="!appVisaWorkflow.isModified()">{{lang.cancel}}</button>
                                 </div>
                             </div>
                         </div>
@@ -255,26 +241,12 @@
                     <mat-tab label="{{lang.avis}}" *ngIf="!creationMode">
                         <div class="row" style="margin:0px;" id="opinionCircuitContent">
                             <div class="col-md-12">
-                                <plugin-autocomplete [labelPlaceholder]="lang.addUser" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users/circuit?circuit=opinion']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="addElemListModelOpinion($event)"></plugin-autocomplete>
-                                <mat-list *ngIf="currentEntity.opinionCircuit">
-                                    <span dnd-sortable-container [dropZones]="['boxers-zone']" [sortableData]="currentEntity.opinionCircuit.items">
-                                        <mat-list-item disableRipple="true" *ngFor="let template of currentEntity.opinionCircuit.items; let i = index" title="{{lang.move}}"
-                                            dnd-sortable [sortableIndex]="i">
-                                            <mat-icon color="primary" [class]="'fa fa-user'" mat-list-icon></mat-icon>
-                                            <p mat-line>{{template.idToDisplay}}
-                                                <small style="opacity:0.5;">{{template.descriptionToDisplay}}</small>
-                                            </p>
-                                            <button matTooltip="{{lang.delete}}" mat-icon-button color="warn" (click)="removeDiffListOpinion(template,i)">
-                                                <mat-icon class="fa fa-times"></mat-icon>
-                                            </button>
-                                        </mat-list-item>
-                                    </span>
-                                </mat-list>
+                                <app-avis-workflow [adminMode]="true" [showListModels]="false" #appAvisWorkflow></app-avis-workflow>
                             </div>
                             <div class="form-group" *ngIf="currentEntity.entity_id">
                                 <div class="col-md-12 text-center" style="padding:10px;">
-                                    <button mat-raised-button color="primary" (click)="saveDiffListOpinion()" [disabled]="!this.opinionCircuitModified">{{lang.save}}</button>
-                                    <button mat-raised-button color="default" (click)="loadEntity(this.currentEntity.entity_id)" [disabled]="!this.opinionCircuitModified">{{lang.cancel}}</button>
+                                    <button mat-raised-button color="primary" (click)="saveDiffListOpinion()" [disabled]="!appAvisWorkflow.isModified()">{{lang.save}}</button>
+                                    <button mat-raised-button color="default" (click)="appAvisWorkflow.loadListModel(currentEntity.id)" [disabled]="!appAvisWorkflow.isModified()">{{lang.cancel}}</button>
                                 </div>
                             </div>
                         </div>

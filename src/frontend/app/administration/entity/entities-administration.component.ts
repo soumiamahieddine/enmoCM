@@ -16,6 +16,8 @@ import { tap, catchError, filter, exhaustMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { FunctionsService } from '../../../service/functions.service';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
+import { VisaWorkflowComponent } from '../../visa/visa-workflow.component';
+import { AvisWorkflowComponent } from '../../avis/avis-workflow.component';
 
 declare function $j(selector: any): any;
 
@@ -59,6 +61,8 @@ export class EntitiesAdministrationComponent implements OnInit {
     @ViewChild('tableUsers', { static: true }) sortUsers: MatSort;
     @ViewChild('tableTemplates', { static: true }) sortTemplates: MatSort;
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
+    @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
+    @ViewChild('appAvisWorkflow', { static: false }) appAvisWorkflow: AvisWorkflowComponent;
     applyFilterUsers(filterValue: string) {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();
@@ -81,119 +85,157 @@ export class EntitiesAdministrationComponent implements OnInit {
         public functions: FunctionsService
     ) { }
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.entities);
         window['MainHeaderComponent'].setSnav(this.sidenavLeft);
         window['MainHeaderComponent'].setSnavRight(null);
 
         this.loading = true;
-        this.http.get("../../rest/entityTypes")
-            .subscribe((data: any) => {
-                this.entityTypeList = data['types'];
-            }, (err: any) => {
-                this.notify.error(err.error.errors);
-            });
-        this.http.get("../../rest/listTemplates/types/entity_id/roles")
-            .subscribe((data: any) => {
-                this.listTemplateRoles = data['roles'];
-            }, (err: any) => {
-                this.notify.error(err.error.errors);
-            });
 
-        this.http.get("../../rest/entities")
-            .subscribe((data: any) => {
-                this.entities = data['entities'];
-                this.loading = false;
+        await this.getEntityTypes();
+        await this.getRoles();
+        await this.getEntities();
 
-                setTimeout(() => {
-                    $j('#jstree').jstree({
-                        "checkbox": {
-                            'deselect_all': true,
-                            "three_state": false //no cascade selection
-                        },
-                        'core': {
-                            force_text: true,
-                            'themes': {
-                                'name': 'proton',
-                                'responsive': true
-                            },
-                            'multiple': false,
-                            'data': this.entities,
-                            "check_callback": function (operation: any, node: any, node_parent: any, node_position: any, more: any) {
-                                if (operation == 'move_node') {
-                                    if (node_parent.id == '#') {
-                                        return false;
-                                    } else if (!node_parent.original.allowed) {
-                                        return false;
-                                    } else {
-                                        return true;
-                                    }
-                                }
-                            }
-                        },
-                        "dnd": {
-                            is_draggable: function (nodes: any) {
-                                var i = 0;
-                                var j = nodes.length;
-                                for (; i < j; i++) {
-                                    if (!nodes[i].original.allowed) {
-                                        return false;
-                                    }
-                                }
+        this.loading = false;
+
+        this.initEntitiesTree();
+
+    }
+
+    initEntitiesTree() {
+        setTimeout(() => {
+            $j('#jstree').jstree({
+                "checkbox": {
+                    'deselect_all': true,
+                    "three_state": false //no cascade selection
+                },
+                'core': {
+                    force_text: true,
+                    'themes': {
+                        'name': 'proton',
+                        'responsive': true
+                    },
+                    'multiple': false,
+                    'data': this.entities,
+                    "check_callback": function (operation: any, node: any, node_parent: any, node_position: any, more: any) {
+                        if (operation == 'move_node') {
+                            if (node_parent.id == '#') {
+                                return false;
+                            } else if (!node_parent.original.allowed) {
+                                return false;
+                            } else {
                                 return true;
                             }
-                        },
-                        "plugins": ["checkbox", "search", "dnd", "sort"]
-                    });
-                    $j('#jstree').jstree('select_node', this.entities[0]);
-                    var to: any = false;
-                    $j('#jstree_search').keyup(function () {
-                        if (to) { clearTimeout(to); }
-                        to = setTimeout(function () {
-                            var v = $j('#jstree_search').val();
-                            $j('#jstree').jstree(true).search(v);
-                        }, 250);
-                    });
-                    $j('#jstree')
-                        // listen for event
-                        .on('select_node.jstree', (e: any, data: any) => {
-                            if (this.sidenavRight.opened == false) {
-                                this.sidenavRight.open();
+                        }
+                    }
+                },
+                "dnd": {
+                    is_draggable: function (nodes: any) {
+                        var i = 0;
+                        var j = nodes.length;
+                        for (; i < j; i++) {
+                            if (!nodes[i].original.allowed) {
+                                return false;
                             }
-                            if (this.creationMode == true) {
-                                this.currentEntity.parent_entity_id = data.node.id;
-                            } else {
-                                if (this.newEntity == true) {
-                                    this.loadEntity(this.currentEntity.entity_id);
-                                    this.newEntity = false;
-                                } else {
-                                    this.loadEntity(data.node.id);
-                                }
-                            }
-
-                        }).on('deselect_node.jstree', (e: any, data: any) => {
-
-                            this.sidenavRight.close();
-
-                        }).on('move_node.jstree', (e: any, data: any) => {
-
-
-                            if (this.currentEntity.parent_entity_id != this.currentEntity.entity_id) {
-                                this.currentEntity.parent_entity_id = data.parent;
-                            }
-                            this.moveEntity();
-                        })
-                        // create the instance
-                        .jstree();
-
-                    $j(document).on('dnd_start.vakata', (e: any, data: any) => {
-                        $j('#jstree').jstree('deselect_all');
-                        $j('#jstree').jstree('select_node', data.data.nodes[0]);
-                    });
-                }, 0);
-            }, () => {
-                location.href = "index.php";
+                        }
+                        return true;
+                    }
+                },
+                "plugins": ["checkbox", "search", "dnd", "sort"]
             });
+            $j('#jstree').jstree('select_node', this.entities[0]);
+            var to: any = false;
+            $j('#jstree_search').keyup(function () {
+                if (to) { clearTimeout(to); }
+                to = setTimeout(function () {
+                    var v = $j('#jstree_search').val();
+                    $j('#jstree').jstree(true).search(v);
+                }, 250);
+            });
+            $j('#jstree')
+                // listen for event
+                .on('select_node.jstree', (e: any, data: any) => {
+                    if (this.sidenavRight.opened == false) {
+                        this.sidenavRight.open();
+                    }
+                    if (this.creationMode == true) {
+                        this.currentEntity.parent_entity_id = data.node.id;
+                    } else {
+                        if (this.newEntity == true) {
+                            this.loadEntity(this.currentEntity.entity_id);
+                            this.newEntity = false;
+                        } else {
+                            this.loadEntity(data.node.id);
+                        }
+                    }
+
+                }).on('deselect_node.jstree', (e: any, data: any) => {
+
+                    this.sidenavRight.close();
+
+                }).on('move_node.jstree', (e: any, data: any) => {
+
+
+                    if (this.currentEntity.parent_entity_id != this.currentEntity.entity_id) {
+                        this.currentEntity.parent_entity_id = data.parent;
+                    }
+                    this.moveEntity();
+                })
+                // create the instance
+                .jstree();
+
+            $j(document).on('dnd_start.vakata', (e: any, data: any) => {
+                $j('#jstree').jstree('deselect_all');
+                $j('#jstree').jstree('select_node', data.data.nodes[0]);
+            });
+        }, 0);
+    }
+
+    getEntityTypes() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/entityTypes`).pipe(
+                tap((data: any) => {
+                    this.entityTypeList = data['types'];
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+    }
+
+    getRoles() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/listTemplates/types/entity_id/roles`).pipe(
+                tap((data: any) => {
+                    this.listTemplateRoles = data['roles'];
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+       
+    }
+
+    getEntities() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/entities`).pipe(
+                tap((data: any) => {
+                    this.entities = data['entities'];
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        });
+       
     }
 
     loadEntity(entity_id: any) {
@@ -204,6 +246,8 @@ export class EntitiesAdministrationComponent implements OnInit {
                 this.currentEntity = data['entity'];
 
                 this.appDiffusionsList.loadListModel(this.currentEntity.id);
+                this.appVisaWorkflow.loadListModel(this.currentEntity.id);
+                this.appAvisWorkflow.loadListModel(this.currentEntity.id);
 
                 if (this.currentEntity.visaCircuit) {
                     this.idVisaCircuit = this.currentEntity.visaCircuit.id;
@@ -499,7 +543,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                     this.notify.handleSoftErrors(err);
                     return of(false);
                 })
-            ).subscribe()
+            ).subscribe();
         } else {
             this.http.post(`../../rest/listTemplates?admin=true`, newDiffList).pipe(
                 tap((data: any) => {
@@ -511,7 +555,7 @@ export class EntitiesAdministrationComponent implements OnInit {
                     this.notify.handleSoftErrors(err);
                     return of(false);
                 })
-            ).subscribe()
+            ).subscribe();
         }
     }
 
@@ -532,121 +576,111 @@ export class EntitiesAdministrationComponent implements OnInit {
         ).subscribe();
     }
 
-    updateDiffListVisa(template: any): any {
-        this.visaCircuitModified = true;
-        this.currentEntity.visaCircuit.items.forEach((listModel: any, i: number) => {
-            listModel.sequence = i;
-            if (i == (this.currentEntity.visaCircuit.items.length - 1)) {
-                listModel.mode = "sign";
-            } else {
-                listModel.mode = "visa";
-            }
-        });
-    }
-
     saveDiffListVisa() {
-        this.visaCircuitModified = false;
         const newDiffList = {
             "title": this.currentEntity.entity_id,
             "description": this.currentEntity.entity_id,
             "type": "visaCircuit",
             "entityId": this.currentEntity.id,
-            "items": Array()
+            "items": this.appVisaWorkflow.getWorkflow().map((item: any, index : number) => {
+                return {
+                    "id": item.item_id,
+                    "type": item.item_type,
+                    "mode": item.requested_signature ? 'sign' : 'visa',
+                    "sequence": index
+                }
+            })
         };
-        if (this.idVisaCircuit == null) {
-            this.currentEntity.visaCircuit.items.forEach((listModel: any, i: number) => {
-                listModel.sequence = i;
-                if (i == (this.currentEntity.visaCircuit.items.length - 1)) {
-                    listModel.mode = "sign";
-                } else {
-                    listModel.mode = "visa";
-                }
-                newDiffList.items.push(listModel);
-            });
-            this.http.post("../../rest/listTemplates?admin=true", newDiffList)
-                .subscribe((data: any) => {
-                    this.idVisaCircuit = data.id;
-                    this.notify.success(this.lang.diffusionModelUpdated);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
-        } else if (this.currentEntity.visaCircuit.items.length > 0) {
-            this.currentEntity.visaCircuit.items.forEach((listModel: any, i: number) => {
-                listModel.sequence = i;
-                if (i == (this.currentEntity.visaCircuit.items.length - 1)) {
-                    listModel.mode = "sign";
-                } else {
-                    listModel.mode = "visa";
-                }
-                newDiffList.items.push(listModel);
-            });
-            this.http.put("../../rest/listTemplates/" + this.idVisaCircuit, newDiffList)
-                .subscribe(() => {
-                    this.notify.success(this.lang.diffusionModelUpdated);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
-        } else {
-            this.http.delete("../../rest/listTemplates/" + this.idVisaCircuit)
-                .subscribe(() => {
+
+        if (this.functions.empty(newDiffList.items)) {
+            this.http.delete(`../../rest/listTemplates/${this.idVisaCircuit}`).pipe(
+                tap(() => {
                     this.idVisaCircuit = null;
                     this.notify.success(this.lang.diffusionModelDeleted);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
+                    this.appVisaWorkflow.loadListModel(this.currentEntity.id);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else if (!this.functions.empty(this.idVisaCircuit)) {
+            this.http.put(`../../rest/listTemplates/${this.idVisaCircuit}`, newDiffList).pipe(
+                tap(() => {
+                    this.notify.success(this.lang.diffusionModelUpdated);
+                    this.appVisaWorkflow.loadListModel(this.currentEntity.id);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.http.post(`../../rest/listTemplates?admin=true`, newDiffList).pipe(
+                tap((data: any) => {
+                    this.idVisaCircuit = data.id;
+                    this.notify.success(this.lang.diffusionModelUpdated);
+                    this.appVisaWorkflow.loadListModel(this.currentEntity.id);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
         }
     }
 
     saveDiffListOpinion() {
-        this.opinionCircuitModified = false;
         const newDiffList = {
             "title": this.currentEntity.entity_id,
             "description": this.currentEntity.entity_id,
             "type": "opinionCircuit",
             "entityId": this.currentEntity.id,
-            "items": Array()
+            "items": this.appAvisWorkflow.getWorkflow().map((item: any, index : number) => {
+                return {
+                    "id": item.item_id,
+                    "type": item.item_type,
+                    "mode": 'avis',
+                    "sequence": index
+                }
+            })
         };
-        if (this.idOpinionCircuit == null) {
-            newDiffList.items = this.currentEntity.opinionCircuit.items;
-            this.http.post("../../rest/listTemplates?admin=true", newDiffList)
-                .subscribe((data: any) => {
-                    this.idOpinionCircuit = data.id;
-                    this.notify.success(this.lang.diffusionModelUpdated);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
-        } else if (this.currentEntity.opinionCircuit.items.length > 0) {
-            newDiffList.items = this.currentEntity.opinionCircuit.items;
-            this.http.put("../../rest/listTemplates/" + this.idOpinionCircuit, newDiffList)
-                .subscribe(() => {
-                    this.notify.success(this.lang.diffusionModelUpdated);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
-        } else {
-            this.http.delete("../../rest/listTemplates/" + this.idOpinionCircuit)
-                .subscribe(() => {
+
+        if (this.functions.empty(newDiffList.items)) {
+            this.http.delete(`../../rest/listTemplates/${this.idOpinionCircuit}`).pipe(
+                tap(() => {
                     this.idOpinionCircuit = null;
                     this.notify.success(this.lang.diffusionModelDeleted);
-                }, (err) => {
-                    this.notify.error(err.error.errors);
-                });
-        }
-    }
-
-    removeDiffListVisa(template: any, i: number): any {
-        this.visaCircuitModified = true;
-        this.currentEntity.visaCircuit.items.splice(i, 1);
-
-        if (this.currentEntity.visaCircuit.items.length > 0) {
-            this.currentEntity.visaCircuit.items.forEach((listModel: any, i: number) => {
-                listModel.sequence = i;
-                if (i == (this.currentEntity.visaCircuit.items.length - 1)) {
-                    listModel.mode = "sign";
-                } else {
-                    listModel.mode = "visa";
-                }
-            });
+                    this.appAvisWorkflow.loadListModel(this.currentEntity.id);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else if (!this.functions.empty(this.idOpinionCircuit)) {
+            this.http.put(`../../rest/listTemplates/${this.idOpinionCircuit}`, newDiffList).pipe(
+                tap(() => {
+                    this.notify.success(this.lang.diffusionModelUpdated);
+                    this.appAvisWorkflow.loadListModel(this.currentEntity.id);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.http.post(`../../rest/listTemplates?admin=true`, newDiffList).pipe(
+                tap((data: any) => {
+                    this.idOpinionCircuit = data.id;
+                    this.notify.success(this.lang.diffusionModelUpdated);
+                    this.appAvisWorkflow.loadListModel(this.currentEntity.id);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
         }
     }
 

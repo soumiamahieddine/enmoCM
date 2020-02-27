@@ -43,6 +43,9 @@ export class VisaWorkflowComponent implements OnInit {
     @Input('adminMode') adminMode: boolean;
     @Input('resId') resId: number = null;
 
+    @Input('showListModels') showListModels: boolean = true;
+    @Input('showComment') showComment: boolean = true;
+
     @Input('linkedToMaarchParapheur') linkedToMaarchParapheur: boolean = false;
 
     @ViewChild('searchVisaSignUserInput', { static: false }) searchVisaSignUserInput: ElementRef;
@@ -95,13 +98,14 @@ export class VisaWorkflowComponent implements OnInit {
                             requested_signature: item.item_mode !== 'visa'
                         }
                     });
-                    this.loading = false;
                 }
                 this.visaWorkflow.items.forEach((element: any, key: number) => {
                     if (!this.functions.empty(element['externalId'])) {
                         this.getMaarchParapheurUserAvatar(element.externalId.maarchParapheur, key);
                     }
                 });
+                this.visaWorkflowClone = JSON.parse(JSON.stringify(this.visaWorkflow.items));
+                this.loading = false;
                 resolve(true);
             });
         });
@@ -215,7 +219,9 @@ export class VisaWorkflowComponent implements OnInit {
             if (this.visaModelListNotLoaded) {
                 await this.loadVisaSignUsersList();
 
-                await this.loadVisaModelList();
+                if (this.showListModels) {
+                    await this.loadVisaModelList();
+                }
                 
                 this.searchVisaSignUser.reset();
 
@@ -569,7 +575,7 @@ export class VisaWorkflowComponent implements OnInit {
         }
     }
 
-    isModified() {
+    isModified() {        
         return !(this.loading || JSON.stringify(this.visaWorkflow.items) === JSON.stringify(this.visaWorkflowClone));
     }
 }

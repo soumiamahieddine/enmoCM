@@ -51,9 +51,9 @@
             <mat-nav-list>
                 <mat-tab-group>
                     <mat-tab label="{{lang[diffusionModel.type]}}">
-                        <app-visa-workflow *ngIf="diffusionModel.type === 'visaCircuit'" [adminMode]="true"
+                        <app-visa-workflow *ngIf="diffusionModel.type === 'visaCircuit'" [showListModels]="false" [showComment]="false" [adminMode]="true"
                             #appVisaWorkflow></app-visa-workflow>
-                        <app-avis-workflow *ngIf="diffusionModel.type === 'opinionCircuit'" [adminMode]="true"
+                        <app-avis-workflow *ngIf="diffusionModel.type === 'opinionCircuit'" [showListModels]="false" [adminMode]="true"
                             #appAvisWorkflow></app-avis-workflow>
                     </mat-tab>
                 </mat-tab-group>

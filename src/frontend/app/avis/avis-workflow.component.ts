@@ -45,6 +45,8 @@ export class AvisWorkflowComponent implements OnInit {
     @Input('adminMode') adminMode: boolean;
     @Input('resId') resId: number = null;
 
+    @Input('showListModels') showListModels: boolean = true;
+
     @Input('mode') mode: 'parallel' | 'circuit' = 'circuit';
 
     @ViewChild('searchAvisUserInput', { static: false }) searchAvisUserInput: ElementRef;
@@ -86,7 +88,7 @@ export class AvisWorkflowComponent implements OnInit {
     loadAvisRoles() {
         return new Promise((resolve, reject) => {
             this.http.get(`../../rest/roles`).pipe(
-                tap((data:any) => {
+                tap((data: any) => {
                     this.availableRoles = data.roles.filter((role: any) => ['avis', 'avis_copy', 'avis_info'].indexOf(role.id) > -1).map((role: any) => {
                         return {
                             id: role.id,
@@ -104,7 +106,7 @@ export class AvisWorkflowComponent implements OnInit {
     }
 
     getRoleLabel(id: string) {
-        return this.availableRoles.filter(role => role.id === id) [0].label;
+        return this.availableRoles.filter(role => role.id === id)[0].label;
     }
 
     loadListModel(entityId: number) {
@@ -121,8 +123,9 @@ export class AvisWorkflowComponent implements OnInit {
                             item_entity: item.descriptionToDisplay,
                         }
                     });
-                    this.loading = false;
                 }
+                this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items));
+                this.loading = false;
             });
     }
 
@@ -233,7 +236,9 @@ export class AvisWorkflowComponent implements OnInit {
         if (this.avisModelListNotLoaded) {
             await this.loadAvisUsersList();
 
-            await this.loadAvisModelList();
+            if (this.showListModels) {
+                await this.loadAvisModelList();
+            }
 
             this.searchAvisUser.reset();
 
@@ -300,7 +305,7 @@ export class AvisWorkflowComponent implements OnInit {
                 })
             ).subscribe();
         });
-        
+
     }
 
     loadParallelWorkflow(resId: number) {
@@ -309,22 +314,22 @@ export class AvisWorkflowComponent implements OnInit {
         this.avisWorkflow.items = [];
         return new Promise((resolve, reject) => {
             this.http.get("../../rest/resources/" + resId + "/parallelOpinion")
-            .subscribe((data: any) => {
-                data.forEach((element: any) => {
-                    this.avisWorkflow.items.push(
-                        {
-                            ...element,
-                            difflist_type: 'entity_id'
-                        });
+                .subscribe((data: any) => {
+                    data.forEach((element: any) => {
+                        this.avisWorkflow.items.push(
+                            {
+                                ...element,
+                                difflist_type: 'entity_id'
+                            });
+                    });
+                    this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items));
+                    this.loading = false;
+                    resolve(true);
+                }, (err: any) => {
+                    this.notify.handleErrors(err);
                 });
-                this.avisWorkflowClone = JSON.parse(JSON.stringify(this.avisWorkflow.items));
-                this.loading = false;
-                resolve(true);
-            }, (err: any) => {
-                this.notify.handleErrors(err);
-            });
         });
-        
+
     }
 
     loadDefaultWorkflow(resId: number) {
@@ -364,7 +369,7 @@ export class AvisWorkflowComponent implements OnInit {
         return this.avisWorkflow.items.length;
     }
 
-    changeRole(role: any, i : number) {
+    changeRole(role: any, i: number) {
         this.avisWorkflow.items[i].item_mode = role.id;
     }
 
@@ -417,7 +422,7 @@ export class AvisWorkflowComponent implements OnInit {
                         return of(false);
                     })
                 ).subscribe();
-            } else {     
+            } else {
                 const arrAvis = resIds.map(resId => {
                     return {
                         resId: resId,
@@ -474,8 +479,8 @@ export class AvisWorkflowComponent implements OnInit {
                         resolve(true);
                     })
                 ).subscribe();
-            } 
-        });        
+            }
+        });
     }
 
     resetWorkflow() {
