@@ -448,6 +448,7 @@ export class VisaWorkflowComponent implements OnInit {
                     this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
                 }
                 this.searchVisaSignUser.reset();
+                this.searchVisaSignUserInput.nativeElement.blur();
                 resolve(true);
             } else if (item.type === 'user') {
                 this.visaWorkflow.items.push({
@@ -465,6 +466,7 @@ export class VisaWorkflowComponent implements OnInit {
                     this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
                 }
                 this.searchVisaSignUser.reset();
+                this.searchVisaSignUserInput.nativeElement.blur();
                 resolve(true);
             } else if (item.type === 'entity') {
                 this.http.get(`../../rest/listTemplates/${item.id}`).pipe(
@@ -484,6 +486,7 @@ export class VisaWorkflowComponent implements OnInit {
                             })
                         );
                         this.searchVisaSignUser.reset();
+                        this.searchVisaSignUserInput.nativeElement.blur();
                         resolve(true);
                     })
                 ).subscribe();
