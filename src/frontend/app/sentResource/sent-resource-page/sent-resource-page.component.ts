@@ -378,8 +378,6 @@ export class SentResourcePageComponent implements OnInit {
                         email: !this.functions.empty(data.acknowledgementReceipt.contact.email) ? data.acknowledgementReceipt.contact.email : this.lang.contactDeleted
                     }];
 
-                    this.emailsubject = this.lang.shipping;
-
                     this.emailStatus = 'SENT';
                 }),
                 exhaustMap(() => this.http.get(`../../rest/acknowledgementReceipts/${emailId}/content`)),
@@ -387,9 +385,10 @@ export class SentResourcePageComponent implements OnInit {
                     this.pdfMode = data.format === 'pdf';
 
                     if (this.pdfMode) {
+                        this.emailsubject = this.lang.ARPaper;
                         this.emailContent = data.encodedDocument;
-
                     } else {
+                        this.emailsubject = this.lang.ARelectronic;
                         this.emailContent = atob(data.encodedDocument);
                     }
                     resolve(true);
