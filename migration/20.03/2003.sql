@@ -574,9 +574,11 @@ FROM usergroups_services WHERE group_id IN (
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'update_diffusion_indexing'
 FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
+
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'update_diffusion_details'
 FROM usergroups_services WHERE service_id = 'edit_recipient_outside_process';
+
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'update_diffusion_except_recipient_details'
 FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
@@ -584,9 +586,11 @@ FROM usergroups_services WHERE service_id = 'update_list_diff_in_details';
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'update_diffusion_process'
 FROM usergroups_services WHERE service_id = 'edit_recipient_in_process';
+
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'update_diffusion_except_recipient_process'
-FROM usergroups_services WHERE group_id not in (SELECT distinct(group_id) FROM usergroups_services WHERE service_id = 'edit_recipient_in_process');
+FROM usergroups_services us WHERE group_id NOT IN (SELECT distinct(group_id) FROM usergroups_services WHERE service_id = 'edit_recipient_in_process') 
+AND group_id NOT IN (SELECT group_id FROM usergroups_services us2 WHERE us2.group_id = us.group_id and service_id = 'update_diffusion_except_recipient_process');
 
 INSERT INTO usergroups_services (group_id, service_id)
 SELECT distinct(group_id), 'update_diffusion_except_recipient_indexing'
