@@ -281,6 +281,7 @@ export const LANG_EN = {
     "diffusionModelModification"            : "Diffusion model modification",
     "diffusionModels"                       : "Diffusion models",
     "diffusionModelUpdated"                 : "Diffusion model updated",
+    "diffusionModelAdded"                   : "Diffusion model added",
     "diffusionType"                         : "Diffusion type",
     "disable"                               : "Disable",
     "disableBasket"                         : "Disable basket",
@@ -1581,4 +1582,6 @@ export const LANG_EN = {
     "attachmentGenerated" : "Attachment generated",
     "mustEditAttachmentFirst" : "You must edit the attachment first",
     "saveAndClose" : "Save and close",
+    "opinionCircuit" : "Opinion circuit",    
+    "visaCircuit" : "Visa circuit",   
 };

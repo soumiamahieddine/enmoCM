@@ -295,6 +295,7 @@ export const LANG_FR = {
     "diffusionModelModification"            : "Modification d'un modèle de diffusion",
     "diffusionModels"                       : "Modèles de diffusion",
     "diffusionModelUpdated"                 : "Modèle de diffusion mis à jour",
+    "diffusionModelAdded"                   : "Modèle de diffusion ajouté",
     "diffusionType"                         : "Type de Modèle",
     "DIR"                                   : "Directeur",
     "disable"                               : "Désactiver",
@@ -1620,4 +1621,6 @@ export const LANG_FR = {
     "attachmentGenerated" : "Pièces jointes générées",
     "mustEditAttachmentFirst" : "Vous devez d'abord éditer la pièce jointe",
     "saveAndClose" : "Enregistrer et fermer",    
+    "opinionCircuit" : "Circuit d'avis",    
+    "visaCircuit" : "Circuit de visa",    
 };

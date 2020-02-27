@@ -440,38 +440,46 @@ export class AvisWorkflowComponent implements OnInit {
     }
 
     addItemToWorkflow(item: any) {
-        if (item.type === 'user') {
-            this.avisWorkflow.items.push({
-                item_id: item.id,
-                item_type: 'user',
-                item_entity: item.entity,
-                item_mode: 'avis',
-                labelToDisplay: item.label,
-                externalId: !this.functions.empty(item.externalId) ? item.externalId : null,
-                difflist_type: this.mode === 'circuit' ? 'AVIS_CIRCUIT' : 'entity_id'
-            });
-            this.searchAvisUser.reset();
-            this.searchAvisUserInput.nativeElement.blur();
-        } else if (item.type === 'entity') {
-            this.http.get(`../../rest/listTemplates/${item.id}`).pipe(
-                tap((data: any) => {
-                    this.avisWorkflow.items = this.avisWorkflow.items.concat(
-                        data.listTemplate.items.map((itemTemplate: any) => {
-                            return {
-                                item_id: itemTemplate.item_id,
-                                item_type: 'user',
-                                labelToDisplay: itemTemplate.idToDisplay,
-                                item_entity: itemTemplate.descriptionToDisplay,
-                                item_mode: 'avis',
-                                difflist_type: this.mode === 'circuit' ? 'AVIS_CIRCUIT' : 'entity_id'
-                            }
-                        })
-                    );
-                    this.searchAvisUser.reset();
-                    this.searchAvisUserInput.nativeElement.blur();
-                })
-            ).subscribe();
-        }
+        return new Promise((resolve, reject) => {
+            if (item.type === 'user') {
+                this.avisWorkflow.items.push({
+                    item_id: item.id,
+                    item_type: 'user',
+                    item_entity: item.entity,
+                    item_mode: 'avis',
+                    labelToDisplay: item.label,
+                    externalId: !this.functions.empty(item.externalId) ? item.externalId : null,
+                    difflist_type: this.mode === 'circuit' ? 'AVIS_CIRCUIT' : 'entity_id'
+                });
+                this.searchAvisUser.reset();
+                this.searchAvisUserInput.nativeElement.blur();
+                resolve(true);
+            } else if (item.type === 'entity') {
+                this.http.get(`../../rest/listTemplates/${item.id}`).pipe(
+                    tap((data: any) => {
+                        this.avisWorkflow.items = this.avisWorkflow.items.concat(
+                            data.listTemplate.items.map((itemTemplate: any) => {
+                                return {
+                                    item_id: itemTemplate.item_id,
+                                    item_type: 'user',
+                                    labelToDisplay: itemTemplate.idToDisplay,
+                                    item_entity: itemTemplate.descriptionToDisplay,
+                                    item_mode: 'avis',
+                                    difflist_type: this.mode === 'circuit' ? 'AVIS_CIRCUIT' : 'entity_id'
+                                }
+                            })
+                        );
+                        this.searchAvisUser.reset();
+                        this.searchAvisUserInput.nativeElement.blur();
+                        resolve(true);
+                    })
+                ).subscribe();
+            } 
+        });        
+    }
+
+    resetWorkflow() {
+        this.avisWorkflow.items = [];
     }
 
     emptyWorkflow() {

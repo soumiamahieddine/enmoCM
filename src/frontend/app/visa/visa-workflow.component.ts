@@ -436,60 +436,67 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     addItemToWorkflow(item: any, maarchParapheurMode = false) {
-        if (maarchParapheurMode) {
-            this.visaWorkflow.items.push({
-                item_id: item.id,
-                item_type: 'user',
-                item_entity: item.email,
-                labelToDisplay: item.idToDisplay,
-                externalId: item.externalId,
-                difflist_type: 'VISA_CIRCUIT',
-                signatory: false,
-                requested_signature: false
-            });
-            if (this.linkedToMaarchParapheur) {
-                this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
+        return new Promise((resolve, reject) => {
+            if (maarchParapheurMode) {
+                this.visaWorkflow.items.push({
+                    item_id: item.id,
+                    item_type: 'user',
+                    item_entity: item.email,
+                    labelToDisplay: item.idToDisplay,
+                    externalId: item.externalId,
+                    difflist_type: 'VISA_CIRCUIT',
+                    signatory: !this.functions.empty(item.signatory) ? item.signatory : false,
+                    requested_signature: !this.functions.empty(item.requested_signature) ? item.requested_signature : false,
+                });
+                if (this.linkedToMaarchParapheur) {
+                    this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
+                }
+                this.searchVisaSignUser.reset();
+                resolve(true);
+            } else if (item.type === 'user') {
+                this.visaWorkflow.items.push({
+                    item_id: item.id,
+                    item_type: 'user',
+                    item_entity: item.entity,
+                    labelToDisplay: item.label,
+                    externalId: !this.functions.empty(item.externalId) ? item.externalId : null,
+                    difflist_type: 'VISA_CIRCUIT',
+                    signatory: !this.functions.empty(item.signatory) ? item.signatory : false,
+                    requested_signature: !this.functions.empty(item.requested_signature) ? item.requested_signature : false,
+                });
+    
+                if (this.linkedToMaarchParapheur) {
+                    this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
+                }
+                this.searchVisaSignUser.reset();
+                resolve(true);
+            } else if (item.type === 'entity') {
+                this.http.get(`../../rest/listTemplates/${item.id}`).pipe(
+                    tap((data: any) => {
+                        this.visaWorkflow.items = this.visaWorkflow.items.concat(
+    
+                            data.listTemplate.items.filter((itemTemplate: any) => itemTemplate.hasPrivilege === true).map((itemTemplate: any) => {
+                                return {
+                                    item_id: itemTemplate.item_id,
+                                    item_type: 'user',
+                                    labelToDisplay: itemTemplate.idToDisplay,
+                                    item_entity: itemTemplate.descriptionToDisplay,
+                                    difflist_type: 'VISA_CIRCUIT',
+                                    signatory: false,
+                                    requested_signature: itemTemplate.item_mode === 'sign'
+                                }
+                            })
+                        );
+                        this.searchVisaSignUser.reset();
+                        resolve(true);
+                    })
+                ).subscribe();
             }
-            this.searchVisaSignUser.reset();
-        } else if (item.type === 'user') {
+        });        
+    }
 
-
-            this.visaWorkflow.items.push({
-                item_id: item.id,
-                item_type: 'user',
-                item_entity: item.entity,
-                labelToDisplay: item.label,
-                externalId: !this.functions.empty(item.externalId) ? item.externalId : null,
-                difflist_type: 'VISA_CIRCUIT',
-                signatory: false,
-                requested_signature: false
-            });
-
-            if (this.linkedToMaarchParapheur) {
-                this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
-            }
-            this.searchVisaSignUser.reset();
-        } else if (item.type === 'entity') {
-            this.http.get(`../../rest/listTemplates/${item.id}`).pipe(
-                tap((data: any) => {
-                    this.visaWorkflow.items = this.visaWorkflow.items.concat(
-
-                        data.listTemplate.items.filter((itemTemplate: any) => itemTemplate.hasPrivilege === true).map((itemTemplate: any) => {
-                            return {
-                                item_id: itemTemplate.item_id,
-                                item_type: 'user',
-                                labelToDisplay: itemTemplate.idToDisplay,
-                                item_entity: itemTemplate.descriptionToDisplay,
-                                difflist_type: 'VISA_CIRCUIT',
-                                signatory: false,
-                                requested_signature: itemTemplate.item_mode === 'sign'
-                            }
-                        })
-                    );
-                    this.searchVisaSignUser.reset();
-                })
-            ).subscribe();
-        }
+    resetWorkflow() {
+        this.visaWorkflow.items = [];
     }
 
     isValidWorkflow() {

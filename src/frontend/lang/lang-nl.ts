@@ -286,6 +286,7 @@ export const LANG_NL = {
     "diffusionModelModification"            : "Wijziging van een verdelingsmodel",
     "diffusionModels"                       : "Verdelingsmodellen",
     "diffusionModelUpdated"                 : "Verdelingsmodel bijgewerkt",
+    "diffusionModelAdded"                   : "Diffusion model added", //_TO_TRANSLATE
     "diffusionType"                         : "Modeltype",
     "disable"                               : "Uitschakelen",
     "disableBasket"                         : "Het bakje uitschakelen",
@@ -1606,4 +1607,6 @@ export const LANG_NL = {
     "attachmentGenerated" : "Attachment generated", //_TO_TRANSLATE
     "mustEditAttachmentFirst" : "You must edit the attachment first", //_TO_TRANSLATE
     "saveAndClose" : "Save and close", //_TO_TRANSLATE
+    "opinionCircuit" : "Opinion circuit", //_TO_TRANSLATE 
+    "visaCircuit" : "Visa circuit",  //_TO_TRANSLATE
 };
