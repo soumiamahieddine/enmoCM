@@ -28,6 +28,8 @@ export class PrintedFolderModalComponent {
     withSeparator: boolean = false;
     isLoadingResults: boolean = false;
 
+    mainDocumentInformation: {};
+
     printedFolderElement: any = {
         attachments: [],
         notes: [],
@@ -52,12 +54,36 @@ export class PrintedFolderModalComponent {
             this.selectedPrintedFolderElement[element] = new FormControl({ value: [], disabled: false });
         });
 
+        await this.getMainDocInfo();
         await this.getAttachments();
         await this.getEmails();
         await this.getAcknowledgementReceips();
         await this.getNotes();
 
         this.loading = false;
+    }
+
+    getMainDocInfo() {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/resources/${this.data.resId}/fileInformation`).pipe(
+                map((data: any) => {   
+                    data = {
+                        ...data.information,
+                        id: this.data.resId,
+                    };
+                    return data;
+                }),
+                tap((data) => {
+                   this.mainDocumentInformation = data;
+                   resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    resolve(false);
+                    return of(false);
+                })
+            ).subscribe();
+        });
     }
 
     getAttachments() {
