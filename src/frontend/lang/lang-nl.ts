@@ -1605,4 +1605,5 @@ export const LANG_NL = {
     "mailingMsg" : "<b>Mailing enbled</b> : <br><br><p>A <b>master</b> attachment will be created without merged field <b>contact</b> (attachmentRecipient).</p><p>If you click on Mailing, the attachmenets will be generated <b>NOW</b>.<br><br>If you click on Validate, They will be generated <b>BEFORE</b> to send to the first <b>signatory</b> of visa circuit.</p><p><b>One</b> attachment will be generated for <b>each contact</b> linked to the mail.</p>", //_TO_TRANSLATE
     "attachmentGenerated" : "Attachment generated", //_TO_TRANSLATE
     "mustEditAttachmentFirst" : "You must edit the attachment first", //_TO_TRANSLATE
+    "saveAndClose" : "Save and close", //_TO_TRANSLATE
 };
