@@ -17,6 +17,7 @@ namespace User\controllers;
 use Basket\models\BasketModel;
 use Basket\models\GroupBasketModel;
 use Basket\models\RedirectBasketModel;
+use Configuration\models\ConfigurationModel;
 use ContentManagement\controllers\DocumentEditorController;
 use Docserver\controllers\DocserverController;
 use Docserver\models\DocserverModel;
@@ -1651,10 +1652,17 @@ class UserController
         UserModel::update(['set' => ['reset_token' => $resetToken], 'where' => ['id = ?'], 'data' => [$user['id']]]);
 
         $url = UrlController::getCoreUrl() . 'apps/maarch_entreprise/index.php?display=true&page=login&update-password-token=' . $resetToken;
+        $configuration = ConfigurationModel::getByService(['service' => 'admin_email_server', 'select' => ['value']]);
+        $configuration = json_decode($configuration['value'], true);
+        if (!empty($configuration['from'])) {
+            $sender = $configuration['from'];
+        } else {
+            $sender = $user['mail'];
+        }
         $email = EmailController::createEmail([
             'userId'    => $user['id'],
             'data'      => [
-                'sender'        => ['email' => $user['mail']],
+                'sender'        => ['email' => $sender],
                 'recipients'    => [$user['mail']],
                 'object'        => _NOTIFICATIONS_FORGOT_PASSWORD_SUBJECT,
                 'body'          => _NOTIFICATIONS_FORGOT_PASSWORD_BODY . '<a href="' . $url . '">'._CLICK_HERE.'</a>' . _NOTIFICATIONS_FORGOT_PASSWORD_FOOTER,
