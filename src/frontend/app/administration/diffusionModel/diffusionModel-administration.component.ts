@@ -92,8 +92,6 @@ export class DiffusionModelAdministrationComponent implements OnInit {
         return new Promise((resolve, reject) => {
             this.http.get(`../../rest/listTemplates/${id}`).pipe(
                 tap((data: any) => {
-                    console.log('get');
-
                     this.diffusionModel = data.listTemplate;
                     this.diffusionModel.id = id;
                     resolve(true);
