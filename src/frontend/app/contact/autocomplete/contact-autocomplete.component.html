@@ -126,7 +126,7 @@
                             *ngIf="!empty(this.valuesToDisplay[item.id].company)">
                             ({{this.valuesToDisplay[item.id].company}})</ng-container>
                     </span>
-                    <i class="fa fa-circle" [style.color]="valuesToDisplay[item.id].fillingRate.color" style="font-size: 9px;"></i>
+                    <i *ngIf="!functions.empty(valuesToDisplay[item.id].fillingRate.color)" class="fa fa-circle" [style.color]="valuesToDisplay[item.id].fillingRate.color" style="font-size: 9px;"></i>
                     <mat-icon matChipRemove class="fa fa-times" *ngIf="!controlAutocomplete.disabled"></mat-icon>
                 </mat-chip>
             </ng-container>
