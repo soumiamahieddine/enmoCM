@@ -178,9 +178,11 @@ export class ContactAutocompleteComponent implements OnInit {
                             type: 'contact',
                             firstname: data.firstname,
                             lastname: data.lastname,
-                            company: data.company
+                            company: data.company,
+                            fillingRate: {
+                                color: this.contactService.getFillingColor(data.fillingRate.thresholdLevel)
+                            }
                         };
-
                     }),
                     finalize(() => this.loadingValues = false),
                     catchError((err: any) => {
@@ -195,6 +197,7 @@ export class ContactAutocompleteComponent implements OnInit {
                             type: 'user',
                             firstname: data.firstname,
                             lastname: data.lastname,
+                            filling: ''
                         };
                     }),
                     finalize(() => this.loadingValues = false),
@@ -209,6 +212,7 @@ export class ContactAutocompleteComponent implements OnInit {
                         this.valuesToDisplay[data.id] = {
                             type: 'entity',
                             lastname: data.entity_label,
+                            filling: ''
                         };
                     }),
                     finalize(() => this.loadingValues = false),
@@ -229,7 +233,10 @@ export class ContactAutocompleteComponent implements OnInit {
                         return {
                             id: contact.id,
                             type: contact.type,
-                            lastname: contact.contact
+                            lastname: contact.contact,
+                            fillingRate: {
+                                color: this.contactService.getFillingColor(contact.thresholdLevel)
+                            }
                         }
                     });
                     return contacts;
@@ -264,6 +271,7 @@ export class ContactAutocompleteComponent implements OnInit {
                     id: contact['id']
 
                 });
+            console.log(contact);  
             this.valuesToDisplay[contact['id']] = contact;
             this.controlAutocomplete.setValue(arrvalue);
             this.loadingValues = false;
