@@ -1607,7 +1607,7 @@ export const LANG_FR = {
     "printedFolder" : "Dossier d'impression",
     "mainDocument" : "Document principal",
     "attachSummarySheet" : "Attacher la fiche de liaison",
-    "generateSeparators" : "Générer des intercalaires entre les éléments",
+    "generateSeparators" : "Générer des intercalaires entre les pièces jointes et accusés de réception",
     "theTag" : "Le mot-clé",
     "addUsers" : "Ajouter des utilisateurs",
     "willBeDeletedAndMerged" : "sera supprimé et fusionné avec le mot-clé",

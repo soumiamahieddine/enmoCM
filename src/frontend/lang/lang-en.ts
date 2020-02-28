@@ -1568,7 +1568,7 @@ export const LANG_EN = {
     "printedFolder" : "Printed folder",
     "mainDocument" : "Main document",
     "attachSummarySheet" : "Attach the summary sheet",
-    "generateSeparators" : "Generate separators for each elements",
+    "generateSeparators" : "Generate separators for each attachments and acknowledgement receipt",
     "theTag" : "The tag",
     "addUsers" : "Add users",
     "willBeDeletedAndMerged" : "will be deleted and merged with the tag",

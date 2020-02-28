@@ -539,8 +539,8 @@ class FolderPrintController
         $widthNoMargins = $dimensions['w'] - $dimensions['rm'] - $dimensions['lm'];
         $width          = $widthNoMargins / 2;
 
-        $pdf->SetFont('', 'B', 12);
-        $pdf->Cell($width, 15, _ACKNOWLEDGEMENT_RECEIPT, 0, 1, 'L', false);
+        $pdf->SetFont('', 'B', 32);
+        $pdf->Cell($widthNoMargins, 40, _ACKNOWLEDGEMENT_RECEIPT, 0, 1, 'C', false);
 
         $pdf->SetY($pdf->GetY() + 40);
 
@@ -633,9 +633,10 @@ class FolderPrintController
         $widthNoMargins = $dimensions['w'] - $dimensions['rm'] - $dimensions['lm'];
         $width          = $widthNoMargins / 2;
 
-        $pdf->SetFont('', 'B', 12);
-        $pdf->Cell($width, 15, _ATTACHMENT, 0, 0, 'L', false);
-        $pdf->Cell($width, 15, $attachment['identifier'], 0, 1, 'C', false);
+        $pdf->SetFont('', 'B', 32);
+        $pdf->Cell($widthNoMargins, 40, _ATTACHMENT, 0, 1, 'C', false);
+        $pdf->SetFont('', 'B', 22);
+        $pdf->Cell($widthNoMargins, 40, $attachment['identifier'], 0, 1, 'C', false);
 
         $pdf->SetY($pdf->GetY() + 40);
         $pdf->SetFont('', '', 10);

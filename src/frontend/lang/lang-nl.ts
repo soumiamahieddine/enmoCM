@@ -1593,7 +1593,7 @@ export const LANG_NL = {
     "printedFolder" : "Printed folder", //_TO_TRANSLATE
     "mainDocument" : "Main document", //_TO_TRANSLATE
     "attachSummarySheet" : "Attach the summary sheet", //_TO_TRANSLATE
-    "generateSeparators" : "Generate separators for each elements", //_TO_TRANSLATE
+    "generateSeparators" : "Generate separators for each attachments and acknowledgement receipt", //_TO_TRANSLATE
     "theTag" : "The tag",//_TO_TRANSLATE
     "addUsers" : "Add users", //_TO_TRANSLATE
     "willBeDeletedAndMerged" : "will be deleted and merged with the tag", //_TO_TRANSLATE
