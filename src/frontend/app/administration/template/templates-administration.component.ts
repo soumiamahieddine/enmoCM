@@ -71,6 +71,14 @@ export class TemplatesAdministrationComponent implements OnInit {
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.templates);
                     this.dataSource.paginator = this.paginator;
+                    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: any) => {
+                        if (sortHeaderId === 'template_label' || sortHeaderId === 'template_comment' || sortHeaderId === 'template_target' || sortHeaderId === 'template_type') {
+                            return data[sortHeaderId].toLocaleLowerCase();
+                        }
+                        return data[sortHeaderId];
+                    };
+                    this.sort.active = 'template_label';
+                    this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;
                 }, 0);
             }, (err) => {

@@ -61,6 +61,13 @@ export class TagsAdministrationComponent implements OnInit {
                     this.dataSource = new MatTableDataSource(data.tags);
                     this.resultsLength = data.tags.length;
                     this.dataSource.paginator = this.paginator;
+                    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: any) => {
+                        if (sortHeaderId === 'label') {
+                            return data['label'].toLocaleLowerCase();
+                        }
+                    };
+                    this.sort.active = 'label';
+                    this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;
                 }, 0);
 

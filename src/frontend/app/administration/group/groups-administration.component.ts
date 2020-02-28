@@ -68,6 +68,13 @@ export class GroupsAdministrationComponent implements OnInit {
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.groups);
                     this.dataSource.paginator = this.paginator;
+                    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: any) => {
+                        if (sortHeaderId === 'group_id' || sortHeaderId === 'group_desc') {
+                            return data[sortHeaderId].toLocaleLowerCase();
+                        }
+                    };
+                    this.sort.active = 'group_desc';
+                    this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;
                 }, 0);
             }, () => {

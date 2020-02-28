@@ -92,6 +92,16 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
         setTimeout(() => {
             this.dataSource = new MatTableDataSource(this.listTemplates);
             this.dataSource.paginator = this.paginator;
+            this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: any) => {
+                if (sortHeaderId === 'description' || sortHeaderId === 'typeLabel') {
+                    return data[sortHeaderId].toLocaleLowerCase();
+                }
+                if (sortHeaderId === 'label') {
+                    return data['title'].toLocaleLowerCase();
+                }
+            };
+            this.sort.active = 'label';
+            this.sort.direction = 'asc';
             this.dataSource.sort = this.sort;
         }, 0);
     }

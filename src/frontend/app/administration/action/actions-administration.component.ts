@@ -62,6 +62,16 @@ export class ActionsAdministrationComponent implements OnInit {
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.actions);
                     this.dataSource.paginator = this.paginator;
+                    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: any) => {
+                        if (sortHeaderId === 'label_action' || sortHeaderId === 'history') {
+                            return data[sortHeaderId].toLocaleLowerCase();
+                        }
+                        if (sortHeaderId === 'id') {
+                            return data[sortHeaderId];
+                        }
+                    };
+                    this.sort.active = 'id';
+                    this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;
                 }, 0);
             }, (err) => {

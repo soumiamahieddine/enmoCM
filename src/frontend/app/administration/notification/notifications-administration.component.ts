@@ -79,6 +79,14 @@ export class NotificationsAdministrationComponent implements OnInit {
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.notifications);
                     this.dataSource.paginator = this.paginator;
+                    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: any) => {
+                        if (sortHeaderId === 'notification_id' || sortHeaderId === 'description') {
+                            return data[sortHeaderId].toLocaleLowerCase();
+                        }
+                        return data[sortHeaderId];
+                    };
+                    this.sort.active = 'notification_id';
+                    this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;
                 }, 0);
             }, (err: any) => {

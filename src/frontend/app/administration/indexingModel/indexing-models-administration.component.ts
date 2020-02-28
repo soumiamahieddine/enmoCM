@@ -73,6 +73,14 @@ export class IndexingModelsAdministrationComponent implements OnInit {
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.indexingModels);
                     this.dataSource.paginator = this.paginator;
+                    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: any) => {
+                        if (sortHeaderId === 'category' || sortHeaderId === 'label') {
+                            return data[sortHeaderId].toLocaleLowerCase();
+                        }
+                        return data[sortHeaderId];
+                    };
+                    this.sort.active = 'label';
+                    this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;
                 }, 0);
             }),
