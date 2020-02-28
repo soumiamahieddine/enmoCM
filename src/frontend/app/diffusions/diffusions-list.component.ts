@@ -317,8 +317,8 @@ export class DiffusionsListComponent implements OnInit {
     changeDest(user: any) {
         this.diffList['dest'].items[0] = {
             difflist_type: "entity_id",
-            item_type: "user_id",
-            item_id: user.user_id,
+            item_type: "user",
+            item_id: user.id,
             labelToDisplay: user.labelToDisplay,
             descriptionToDisplay: user.descriptionToDisplay,
             item_mode: "dest"

@@ -191,27 +191,27 @@ class ListTemplateController
         }
 
         $listTemplate = ListTemplateModel::getById(['id' => $args['id'], 'select' => ['entity_id', 'type']]);
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']]) && !empty($listTemplate['entityId'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'manage_entities', 'userId' => $GLOBALS['id']]) && !empty($listTemplate['entity_id'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
 
-        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId' => $GLOBALS['id']]) && empty($listTemplate['entityId'])) {
+        if (!PrivilegeController::hasPrivilege(['privilegeId' => 'admin_listmodels', 'userId' => $GLOBALS['id']]) && empty($listTemplate['entity_id'])) {
             return $response->withStatus(403)->withJson(['errors' => 'Service forbidden']);
         }
         if (empty($listTemplate)) {
             return $response->withStatus(400)->withJson(['errors' => 'List template not found']);
         }
 
-        if (!empty($listTemplate['entityId'])) {
+        if (!empty($listTemplate['entity_id'])) {
             $entities = EntityModel::getAllowedEntitiesByUserId(['userId' => $GLOBALS['userId']]);
             foreach ($entities as $entity) {
-                if ($entity['serialId'] == $listTemplate['entityId'] && $entity['allowed'] == false) {
+                if ($entity['serialId'] == $listTemplate['entity_id'] && $entity['allowed'] == false) {
                     return $response->withStatus(403)->withJson(['errors' => 'Entity out of perimeter']);
                 }
             }
         }
 
-        $control = ListTemplateController::controlItems(['items' => $body['items'], 'type' => $listTemplate['type'], 'entityId' => $listTemplate['entityId']]);
+        $control = ListTemplateController::controlItems(['items' => $body['items'], 'type' => $listTemplate['type'], 'entityId' => $listTemplate['entity_id']]);
         if (!empty($control['errors'])) {
             return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
         }

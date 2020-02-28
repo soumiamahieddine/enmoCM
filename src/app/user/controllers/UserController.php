@@ -341,7 +341,7 @@ class UserController
             if (!in_array($listTemplate['entity_id'], $allEntities)) {
                 $isListTemplateDeletable = false;
             }
-            $listTemplateEntities[] = $listTemplate['object_id'];
+            $listTemplateEntities[] = $listTemplate['entity_id'];
         }
 
         if (!$isListInstanceDeletable || !$isListTemplateDeletable) {
@@ -354,7 +354,7 @@ class UserController
             $formattedLTEntities = [];
             $listTemplateEntities = array_unique($listTemplateEntities);
             foreach ($listTemplateEntities as $listTemplateEntity) {
-                $entity = Entitymodel::getByEntityId(['select' => ['short_label'], 'entityId' => $listTemplateEntity]);
+                $entity = Entitymodel::getById(['select' => ['short_label'], 'id' => $listTemplateEntity]);
                 $formattedLTEntities[] = $entity['short_label'];
             }
 
