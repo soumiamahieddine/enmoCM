@@ -516,7 +516,7 @@ class UserController
         $user['nbFollowedResources'] = $userFollowed[0]['nb'];
 
         $loggingMethod = CoreConfigModel::getLoggingMethod();
-        if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS)) {
+        if (in_array($loggingMethod['id'], self::ALTERNATIVES_CONNECTIONS_METHODS) && $user['user_id'] != 'superadmin') {
             $user['canModifyPassword'] = false;
         }
 
