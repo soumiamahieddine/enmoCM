@@ -1245,9 +1245,10 @@ class ResController extends ResourceControlController
         ]);
 
         $allowedFiles = StoreController::getAllowedFiles();
-        $allowedFiles = array_column($allowedFiles, 'extension');
+        $allowedFiles = array_column($allowedFiles, 'canConvert', 'extension');
 
-        $resource['canConvert'] = in_array(strtoupper($resource['format']), $allowedFiles);
+        $format = strtoupper($resource['format']);
+        $resource['canConvert'] = !empty($allowedFiles[$format]);
 
         return $response->withJson(['information' => $resource]);
     }
