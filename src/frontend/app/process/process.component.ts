@@ -28,20 +28,19 @@ import { FunctionsService } from '../../service/functions.service';
 import { PrintedFolderModalComponent } from '../printedFolder/printed-folder-modal.component';
 
 
-
 @Component({
     templateUrl: "process.component.html",
     styleUrls: [
         'process.component.scss',
         '../indexation/indexing-form/indexing-form.component.scss'
     ],
-    providers: [NotificationService, AppService, ActionsService, ContactService],
+    providers: [AppService, ActionsService, ContactService],
 })
 export class ProcessComponent implements OnInit {
 
     lang: any = LANG;
 
-    loading: boolean = false;
+    loading: boolean = true;
 
     detailMode: boolean = false;
     navButton: any = null;
@@ -201,7 +200,28 @@ export class ProcessComponent implements OnInit {
         });
     }
 
-    initProcessPage(params: any) {
+    checkAccesDocument(resId: number) {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/resources/${resId}/isAllowed`).pipe(
+                tap((data: any) => {
+                    if (data.isAllowed) {
+                        resolve(true);
+                    } else {
+                        this.notify.error(this.lang.documentOutOfPerimeter);
+                        this.router.navigate([`/home`]);
+                    }
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    this.router.navigate([`/home`]);
+                    return of(false);
+                })
+            )
+            .subscribe();
+        });
+    }
+
+    async initProcessPage(params: any) {
         
         this.detailMode = false;
 
@@ -219,6 +239,8 @@ export class ProcessComponent implements OnInit {
             label: this.lang.backBasket, 
             route: `/basketList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}`
         }
+
+        await this.checkAccesDocument(this.currentResourceInformations.resId);
 
         this.lockResource();
         this.loadBadges();
@@ -253,11 +275,10 @@ export class ProcessComponent implements OnInit {
         ).subscribe();
     }
 
-    initDetailPage(params: any) {
+    async initDetailPage(params: any) {
         this._activatedRoute.queryParamMap.subscribe((paramMap: ParamMap) => {
             this.isMailing = !this.functions.empty(paramMap.get('isMailing')) ;
         });
-        console.log(this.isMailing);
         
         this.detailMode = true;
         this.currentResourceInformations = {
@@ -269,6 +290,8 @@ export class ProcessComponent implements OnInit {
             label: this.lang.back, 
             route: `__GOBACK`
         }
+
+        await this.checkAccesDocument(this.currentResourceInformations.resId);
 
         this.loadBadges();
         this.loadResource();
