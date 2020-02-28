@@ -543,26 +543,27 @@ export class DocumentViewerComponent implements OnInit {
                     return of(false);
                 }
             );
-        } else {            
+        } else {
             await this.loadMainDocumentSubInformations();
-            if (this.file.subinfos.mainDocVersions.length > 0) {
+
+            if (this.file.subinfos.mainDocVersions.length === 0) {
+                this.noFile = true;
+                this.loading = false;
+            } else if (!this.file.subinfos.canConvert) {
+                this.file.contentMode = 'route';
+                this.file.content = `../../rest/resources/${resId}/originalContent`;
+                this.noConvertedFound = true;
+                this.loading = false;
+            } else {
                 this.requestWithLoader(`../../rest/resources/${resId}/content?mode=base64`).subscribe(
                     (data: any) => {
-                        this.file.creatorId = data.originalCreatorId;
-                        if (!this.file.subinfos.mainDocPDFVersions) {
+                        if (data.encodedDocument) {
                             this.file.contentMode = 'route';
+                            this.file.format = data.originalFormat;
                             this.file.content = `../../rest/resources/${resId}/originalContent`;
-                            this.noConvertedFound = true;
+                            this.file.contentView = `../../rest/resources/${resId}/content?mode=view`;
+                            this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
                             this.loading = false;
-                        } else {
-                            if (data.encodedDocument) {
-                                this.file.contentMode = 'route';
-                                this.file.format = data.originalFormat;
-                                this.file.content = `../../rest/resources/${resId}/originalContent`;
-                                this.file.contentView = `../../rest/resources/${resId}/content?mode=view`;
-                                this.file.src = this.base64ToArrayBuffer(data.encodedDocument);
-                                this.loading = false;
-                            }
                         }
                     },
                     (err: any) => {
@@ -572,11 +573,7 @@ export class DocumentViewerComponent implements OnInit {
                         return of(false);
                     }
                 );
-            } else {
-                this.noFile = true;
-                this.loading = false;
             }
-            
         }
     }
 
@@ -593,21 +590,24 @@ export class DocumentViewerComponent implements OnInit {
                         commentedDocVersions = data.NOTE.indexOf(data.DOC[data.DOC.length - 1]) > -1 ? true : false;
                         mainDocPDFVersions = data.PDF.indexOf(data.DOC[data.DOC.length - 1]) > -1 ? true : false;
                     }
-                    
+
                     this.file.subinfos = {
                         mainDocVersions: mainDocVersions,
                         signedDocVersions: signedDocVersions,
                         commentedDocVersions: commentedDocVersions,
-                        mainDocPDFVersions : mainDocPDFVersions
+                        mainDocPDFVersions: mainDocPDFVersions
                     };
-                    
+                }),
+                exhaustMap(() => this.http.get(`../../rest/resources/${this.resId}/fileInformation`)),
+                tap((data: any) => {
+                    this.file.subinfos.canConvert = data.information.canConvert;
                     resolve(true);
                 }),
                 catchError((err: any) => {
                     this.notify.handleSoftErrors(err);
                     return of(false);
                 })
-            ).subscribe(); 
+            ).subscribe();
         });
     }
 
@@ -923,11 +923,11 @@ export class DocumentViewerComponent implements OnInit {
                     return of(false);
                 })
             ).subscribe();
-        });        
+        });
     }
 
     openResourceVersion(version: number, type: string) {
-        
+
         const title = type !== 'PDF' ? this.lang[type + '_version'] : `${this.lang.version} ${version}`;
 
         // TO SHOW ORIGINAL DOC (because autoload signed doc)
