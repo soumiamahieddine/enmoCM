@@ -243,7 +243,7 @@ export class ContactAutocompleteComponent implements OnInit {
                             id: contact.id,
                             type: contact.type,
                             lastname: contact.contact,
-                            fillingRate: !this.functions.empty(data.fillingRate) ? {
+                            fillingRate: !this.functions.empty(contact.thresholdLevel) ? {
                                 color: this.contactService.getFillingColor(contact.thresholdLevel)
                             } : ''
                         }
