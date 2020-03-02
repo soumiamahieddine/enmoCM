@@ -379,6 +379,7 @@ $app->get('/resources/{resId}/emailsInitialization', \Email\controllers\EmailCon
 $app->get('/resources/{resId}/fields/{fieldId}', \Resource\controllers\ResController::class . ':getField');
 $app->delete('/resources/{resId}/linkedResources/{id}', \Resource\controllers\LinkController::class . ':unlinkResources');
 $app->delete('/resources/{resId}/circuits/{type}', \Entity\controllers\ListInstanceController::class . ':deleteCircuit');
+$app->get('/resources/{resId}/fileInformation', \Resource\controllers\ResController::class . ':getResourceFileInformation');
 
 $app->put('/res/resource/status', \Resource\controllers\ResController::class . ':updateStatus');
 $app->post('/res/list', \Resource\controllers\ResController::class . ':getList');

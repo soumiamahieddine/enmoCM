@@ -49,7 +49,11 @@ class FastParapheurController
                     ]
                 ]);
 
-                $isError    = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body;
+                if ($curlReturn['infos']['http_code'] == 404) {
+                    return ['error' => 'Erreur 404 : ' . $curlReturn['raw']];
+                }
+
+                $isError = $curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body;
                 if (!empty($isError ->Fault[0]) && !empty($value->res_id_master)) {
                     echo 'PJ n° ' . $resId . ' et document original n° ' . $value->res_id_master . ' : ' . (string)$curlReturn['response']->children('http://schemas.xmlsoap.org/soap/envelope/')->Body->Fault[0]->children()->faultstring . PHP_EOL;
                     continue;
@@ -161,7 +165,6 @@ class FastParapheurController
         if (!empty($annexes['letterbox'][0])) {
             $mainDocumentIntegration = json_decode($annexes['letterbox'][0]['integrations'], true);
             $externalId              = json_decode($annexes['letterbox'][0]['external_id'], true);
-            // $externalId              = empty($externalId) ? [] : $externalId;
             if ($mainDocumentIntegration['inSignatureBook'] && empty($externalId['signatureBookId'])) {
                 $resId  = $annexes['letterbox'][0]['res_id'];
                 $collId = 'letterbox_coll';

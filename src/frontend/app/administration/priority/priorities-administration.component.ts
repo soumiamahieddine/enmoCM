@@ -66,6 +66,14 @@ export class PrioritiesAdministrationComponent implements OnInit {
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.priorities);
                     this.dataSource.paginator = this.paginator;
+                    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: any) => {
+                        if (sortHeaderId === 'id' || sortHeaderId === 'label') {
+                            return data[sortHeaderId].toLocaleLowerCase();
+                        }
+                        return data[sortHeaderId];
+                    };
+                    this.sort.active = 'label';
+                    this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;
                 }, 0);
             }, () => {

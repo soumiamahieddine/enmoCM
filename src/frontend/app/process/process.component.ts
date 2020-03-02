@@ -28,20 +28,19 @@ import { FunctionsService } from '../../service/functions.service';
 import { PrintedFolderModalComponent } from '../printedFolder/printed-folder-modal.component';
 
 
-
 @Component({
     templateUrl: "process.component.html",
     styleUrls: [
         'process.component.scss',
         '../indexation/indexing-form/indexing-form.component.scss'
     ],
-    providers: [NotificationService, AppService, ActionsService, ContactService],
+    providers: [AppService, ActionsService, ContactService],
 })
 export class ProcessComponent implements OnInit {
 
     lang: any = LANG;
 
-    loading: boolean = false;
+    loading: boolean = true;
 
     detailMode: boolean = false;
     navButton: any = null;
@@ -96,16 +95,16 @@ export class ProcessComponent implements OnInit {
             count: 0
         },
         {
+            id: 'emails',
+            icon: 'fas fa-envelope',
+            label: this.lang.mailsSentAlt,
+            count: 0
+        },
+        {
             id: 'diffusionList',
             icon: 'fas fa-share-alt',
             label: this.lang.diffusionList,
             editMode: false,
-            count: 0
-        },
-        {
-            id: 'emails',
-            icon: 'fas fa-envelope',
-            label: this.lang.mailsSentAlt,
             count: 0
         },
         {
@@ -150,7 +149,7 @@ export class ProcessComponent implements OnInit {
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
-    @ViewChild('appDocumentViewer', { static: true }) appDocumentViewer: DocumentViewerComponent;
+    @ViewChild('appDocumentViewer', { static: false }) appDocumentViewer: DocumentViewerComponent;
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
     @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
@@ -201,7 +200,28 @@ export class ProcessComponent implements OnInit {
         });
     }
 
-    initProcessPage(params: any) {
+    checkAccesDocument(resId: number) {
+        return new Promise((resolve, reject) => {
+            this.http.get(`../../rest/resources/${resId}/isAllowed`).pipe(
+                tap((data: any) => {
+                    if (data.isAllowed) {
+                        resolve(true);
+                    } else {
+                        this.notify.error(this.lang.documentOutOfPerimeter);
+                        this.router.navigate([`/home`]);
+                    }
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    this.router.navigate([`/home`]);
+                    return of(false);
+                })
+            )
+            .subscribe();
+        });
+    }
+
+    async initProcessPage(params: any) {
         
         this.detailMode = false;
 
@@ -219,6 +239,8 @@ export class ProcessComponent implements OnInit {
             label: this.lang.backBasket, 
             route: `/basketList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}`
         }
+
+        await this.checkAccesDocument(this.currentResourceInformations.resId);
 
         this.lockResource();
         this.loadBadges();
@@ -253,11 +275,10 @@ export class ProcessComponent implements OnInit {
         ).subscribe();
     }
 
-    initDetailPage(params: any) {
+    async initDetailPage(params: any) {
         this._activatedRoute.queryParamMap.subscribe((paramMap: ParamMap) => {
             this.isMailing = !this.functions.empty(paramMap.get('isMailing')) ;
         });
-        console.log(this.isMailing);
         
         this.detailMode = true;
         this.currentResourceInformations = {
@@ -269,6 +290,8 @@ export class ProcessComponent implements OnInit {
             label: this.lang.back, 
             route: `__GOBACK`
         }
+
+        await this.checkAccesDocument(this.currentResourceInformations.resId);
 
         this.loadBadges();
         this.loadResource();
@@ -544,7 +567,7 @@ export class ProcessComponent implements OnInit {
         }
     }
 
-    processAction() {
+    async processAction() {
         if (this.indexingForm.isValidForm()) {
             if (this.isToolModified()) {
                 const dialogRef = this.openConfirmModification();
@@ -555,16 +578,22 @@ export class ProcessComponent implements OnInit {
                         }
                     }),
                     filter((data: string) => data === 'ok'),
-                    tap(() => {
+                    tap(async () => {
                         this.saveTool();
+                        if (this.appDocumentViewer.isEditingTemplate()) {
+                            await this.appDocumentViewer.saveMainDocument();
+                        }
                     }),
                     finalize(() => this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false)),
                     catchError((err: any) => {
-                        this.notify.handleErrors(err);
+                        this.notify.handleSoftErrors(err);
                         return of(false);
                     })
                 ).subscribe();
             } else {
+                if (this.appDocumentViewer.isEditingTemplate()) {
+                    await this.appDocumentViewer.saveMainDocument();
+                }
                 this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false);
             }
         } else {
@@ -719,7 +748,6 @@ export class ProcessComponent implements OnInit {
     async saveTool() {
         if (this.currentTool === 'info' && this.indexingForm !== undefined) {
             await this.indexingForm.saveData();
-            this.loadBadges();
         } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList !== undefined) {
             await this.appDiffusionsList.saveListinstance();
             this.loadBadges();

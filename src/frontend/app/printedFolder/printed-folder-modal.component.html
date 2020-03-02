@@ -21,17 +21,17 @@
             <mat-slide-toggle color="primary" [(ngModel)]="withSeparator">{{lang.generateSeparators}}</mat-slide-toggle>
         </div>
         <div class="printedFolderContainer">
-            <mat-expansion-panel hideToggle disabled>
+            <mat-expansion-panel *ngIf="mainDocumentInformation.format !== null" hideToggle disabled [title]="!mainDocumentInformation.canConvert ? 'Aucune version pdf trouvé!' : ''">
                 <mat-expansion-panel-header>
                     <mat-panel-title style="color: #135f7f;font-weight: bold;">
-                        <mat-checkbox color="primary" [(ngModel)]="mainDocument" disableRipple>{{lang.mainDocument}}
+                        <mat-checkbox color="primary" [(ngModel)]="mainDocument" [disabled]="!mainDocumentInformation.canConvert" disableRipple>{{lang.mainDocument}}
                         </mat-checkbox>
                     </mat-panel-title>
                 </mat-expansion-panel-header>
             </mat-expansion-panel>
             <ng-container *ngFor="let keyVal of printedFolderElement | keyvalue">
                 <div class="printedFolderElement" *ngIf="printedFolderElement[keyVal.key].length > 0">
-                    <mat-expansion-panel>
+                    <mat-expansion-panel >
                         <mat-expansion-panel-header>
                             <mat-panel-title style="color: #135f7f;font-weight: bold;">
                                 <mat-checkbox color="primary"
@@ -43,7 +43,7 @@
                         </mat-expansion-panel-header>
                         <mat-selection-list [formControl]="selectedPrintedFolderElement[keyVal.key]" color="primary"
                             class="printedFolderElement-content">
-                            <mat-list-option class="printedFolderElement-option" [class.disabled]="!element.canConvert" checkboxPosition="before"
+                            <mat-list-option class="printedFolderElement-option" [title]="!element.canConvert ? 'Aucune version pdf trouvé!' : ''" [class.disabled]="!element.canConvert" checkboxPosition="before"
                                 *ngFor="let element of printedFolderElement[keyVal.key]" [disabled]="!element.canConvert" [value]="element.id">
                                 <div class="printedFolderElement-item {{keyVal.key}}">
                                     <div color="primary" style="flex:1;font-size: 80%;padding-right: 10px;"

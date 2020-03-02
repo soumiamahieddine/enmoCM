@@ -107,18 +107,26 @@ export class SentResourcePageComponent implements OnInit {
                 this.emailAttach[element] = [];
             }
         });
-        this.initEmailModelsList();
-        this.initEmailsList();
-        this.initSignEmailModelsList();
 
         await this.getAttachElements();
-        await this.getResourceData();
-        await this.getUserEmails();
 
         if (this.data.emailId && this.data.emailType === 'email') {
             await this.getEmailData(this.data.emailId);
         } else if (this.data.emailId && this.data.emailType === 'acknowledgementReceipt') {
             await this.getAcknowledgementReceiptData(this.data.emailId);
+        }
+
+        if (this.canManageMail()) {
+            this.initEmailModelsList();
+            this.initEmailsList();
+            this.initSignEmailModelsList();
+
+            await this.getResourceData();
+            await this.getUserEmails();
+
+            if (this.emailStatus !== 'DRAFT') {
+                this.setDefaultInfo();
+            }
         }
         this.loading = false;
         setTimeout(() => {
@@ -160,7 +168,7 @@ export class SentResourcePageComponent implements OnInit {
                 {
                     label: value.trim(),
                     email: value.trim(),
-                    badFormat : this.isBadEmailFormat(value.trim())
+                    badFormat: this.isBadEmailFormat(value.trim())
                 });
         }
 
@@ -292,21 +300,21 @@ export class SentResourcePageComponent implements OnInit {
                         return {
                             label: item,
                             email: item,
-                            badFormat : this.isBadEmailFormat(item)
+                            badFormat: this.isBadEmailFormat(item)
                         }
                     });
                     this.copies = data.cc.map((item: any) => {
                         return {
                             label: item,
                             email: item,
-                            badFormat : this.isBadEmailFormat(item)
+                            badFormat: this.isBadEmailFormat(item)
                         }
                     });
                     this.invisibleCopies = data.cci.map((item: any) => {
                         return {
                             label: item,
                             email: item,
-                            badFormat : this.isBadEmailFormat(item)
+                            badFormat: this.isBadEmailFormat(item)
                         }
                     });
 
@@ -318,7 +326,7 @@ export class SentResourcePageComponent implements OnInit {
                     this.emailStatus = data.status;
 
                     this.currentSender = {
-                        entityId : data.sender.entityId,
+                        entityId: data.sender.entityId,
                         label: data.sender.label,
                         email: data.sender.email
                     };
@@ -334,7 +342,7 @@ export class SentResourcePageComponent implements OnInit {
                                             ...item,
                                             format: dataAttach.original || dataAttach.original === undefined ? item.format : 'pdf',
                                             original: dataAttach.original,
-                                            size : dataAttach.original || dataAttach.original === undefined ? item.size : item.convertedDocument.size
+                                            size: dataAttach.original || dataAttach.original === undefined ? item.size : item.convertedDocument.size
                                         }
                                     })
                                 }
@@ -345,7 +353,7 @@ export class SentResourcePageComponent implements OnInit {
                             this.emailAttach.document.size = this.emailAttach.document.original ? this.emailAttachTool.document.list[0].size : this.emailAttachTool.document.list[0].convertedDocument.size
                         }
                     });
-                    
+
                     resolve(true);
                 }),
                 catchError((err) => {
@@ -370,8 +378,6 @@ export class SentResourcePageComponent implements OnInit {
                         email: !this.functions.empty(data.acknowledgementReceipt.contact.email) ? data.acknowledgementReceipt.contact.email : this.lang.contactDeleted
                     }];
 
-                    this.emailsubject = this.lang.shipping;
-
                     this.emailStatus = 'SENT';
                 }),
                 exhaustMap(() => this.http.get(`../../rest/acknowledgementReceipts/${emailId}/content`)),
@@ -379,9 +385,10 @@ export class SentResourcePageComponent implements OnInit {
                     this.pdfMode = data.format === 'pdf';
 
                     if (this.pdfMode) {
+                        this.emailsubject = this.lang.ARPaper;
                         this.emailContent = data.encodedDocument;
-
                     } else {
+                        this.emailsubject = this.lang.ARelectronic;
                         this.emailContent = atob(data.encodedDocument);
                     }
                     resolve(true);
@@ -400,16 +407,10 @@ export class SentResourcePageComponent implements OnInit {
             this.http.get(`../../rest/resources/${this.data.resId}?light=true`).pipe(
                 tap((data: any) => {
                     this.resourceData = data;
-                    this.emailsubject = `[${this.resourceData.chrono}] ${this.resourceData.subject}`;
-                    this.emailsubject = this.emailsubject.substring(0, 70);
+
                     this.emailAttach.document.chrono = this.resourceData.chrono;
                     this.emailAttach.document.label = this.resourceData.subject;
 
-                    if (!this.functions.empty(this.resourceData.senders)) {
-                        this.resourceData.senders.forEach((sender: any) => {
-                            this.setSender(sender.id);
-                        });
-                    }
                     resolve(true);
                 }),
                 catchError((err) => {
@@ -419,6 +420,17 @@ export class SentResourcePageComponent implements OnInit {
                 })
             ).subscribe();
         });
+    }
+
+    setDefaultInfo() {
+        this.emailsubject = `[${this.resourceData.chrono}] ${this.resourceData.subject}`;
+        this.emailsubject = this.emailsubject.substring(0, 70);
+        this.currentSender = this.availableSenders[0];
+        if (!this.functions.empty(this.resourceData.senders)) {
+            this.resourceData.senders.forEach((sender: any) => {
+                this.setSender(sender.id);
+            });
+        }
     }
 
     setSender(id: number) {
@@ -445,7 +457,6 @@ export class SentResourcePageComponent implements OnInit {
             this.http.get('../../rest/currentUser/availableEmails').pipe(
                 tap((data: any) => {
                     this.availableSenders = data.emails;
-                    this.currentSender = this.availableSenders[0];
                     resolve(true);
                 }),
                 catchError((err) => {
@@ -568,7 +579,7 @@ export class SentResourcePageComponent implements OnInit {
             } else {
                 if (this.emailsubject === '') {
                     const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.warnEmptySubject } });
-    
+
                     dialogRef.afterClosed().pipe(
                         filter((data: string) => data === 'ok'),
                         tap(() => {
@@ -588,7 +599,7 @@ export class SentResourcePageComponent implements OnInit {
         this.http.post(`../../rest/emails`, this.formatEmail()).pipe(
             tap(() => {
                 if (this.emailStatus === 'DRAFT') {
-                    this.notify.success(this.lang.draftSaved);
+                    // this.notify.success(this.lang.draftSaved);
                 } else {
                     this.notify.success(`${this.lang.sendingEmail}...`);
                 }
@@ -626,7 +637,7 @@ export class SentResourcePageComponent implements OnInit {
         this.http.put(`../../rest/emails/${this.data.emailId}`, this.formatEmail()).pipe(
             tap(() => {
                 if (this.emailStatus === 'DRAFT') {
-                    this.notify.success(this.lang.draftUpdated);
+                    // this.notify.success(this.lang.draftUpdated);
                 } else {
                     this.notify.success(`${this.lang.sendingEmail}...`);
                 }
@@ -643,11 +654,19 @@ export class SentResourcePageComponent implements OnInit {
     }
 
     saveDraft() {
-        this.emailStatus = 'DRAFT';
-        if (this.data.emailId === null) {
-            this.createEmail();
+        if (this.canManageMail()) {
+            this.emailStatus = 'DRAFT';
+            if (this.data.emailId === null) {
+                if (!this.functions.empty(tinymce.get('emailSignature').getContent())) {
+                    this.createEmail(true);
+                } else {
+                    this.closeModal();
+                }
+            } else {
+                this.updateEmail(true);
+            }
         } else {
-            this.updateEmail();
+            this.closeModal();
         }
     }
 
@@ -674,7 +693,7 @@ export class SentResourcePageComponent implements OnInit {
                     ...item,
                     format: mode !== 'pdf' ? item.format : 'pdf',
                     original: mode !== 'pdf',
-                    size : mode === 'pdf' ? item.convertedDocument.size : item.size
+                    size: mode === 'pdf' ? item.convertedDocument.size : item.size
                 });
             }
         }
@@ -706,7 +725,7 @@ export class SentResourcePageComponent implements OnInit {
                     }
                 })
             ).subscribe();
-            
+
         }
     }
 
@@ -732,7 +751,7 @@ export class SentResourcePageComponent implements OnInit {
                 }
             }
         });
-        
+
         let formatSender = {
             email: this.currentSender.email,
             entityId: !this.functions.empty(this.currentSender.entityId) ? this.currentSender.entityId : null
@@ -745,7 +764,7 @@ export class SentResourcePageComponent implements OnInit {
             cc: this.showCopies ? this.copies.map(copy => copy.email) : [],
             cci: this.showInvisibleCopies ? this.invisibleCopies.map((invCopy => invCopy.email)) : [],
             object: this.emailsubject,
-            body: this.htmlMode ? tinymce.get('emailSignature').getContent() : tinymce.get('emailSignature').getContent({format: 'text'}),
+            body: this.htmlMode ? tinymce.get('emailSignature').getContent() : tinymce.get('emailSignature').getContent({ format: 'text' }),
             isHtml: true,
             status: this.emailStatus
         };
@@ -770,9 +789,9 @@ export class SentResourcePageComponent implements OnInit {
     }
 
     isAllEmailRightFormat() {
-        let state  = true;
+        let state = true;
         const allEmail = this.recipients.concat(this.copies).concat(this.invisibleCopies);
-        
+
         allEmail.map(item => item.email).forEach(email => {
             if (this.isBadEmailFormat(email)) {
                 state = false;

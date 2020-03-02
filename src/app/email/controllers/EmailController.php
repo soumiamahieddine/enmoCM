@@ -749,9 +749,14 @@ class EmailController
         }
 
         if (!empty($args['data']['sender']['email'])) {
-            $availableEmails = EmailController::getAvailableEmailsByUserId(['userId' => $args['userId']]);
+            $configuration = ConfigurationModel::getByService(['service' => 'admin_email_server', 'select' => ['value']]);
+            $configuration = json_decode($configuration['value'], true);
 
+            $availableEmails = EmailController::getAvailableEmailsByUserId(['userId' => $args['userId']]);
             $emails = array_column($availableEmails, 'email');
+            if (!empty($configuration['from'])) {
+                $emails[] = $configuration['from'];
+            }
             if (!in_array($args['data']['sender']['email'], $emails)) {
                 return ['errors' => 'Data sender email is not allowed', 'code' => 400];
             }

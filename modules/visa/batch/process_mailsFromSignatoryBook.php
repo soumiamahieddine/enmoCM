@@ -310,8 +310,8 @@ foreach ($retrievedMails['noVersion'] as $resId => $value) {
         if (!empty($value->encodedFile)) {
             \SrcCore\models\DatabaseModel::delete([
                 'table' => 'res_attachments',
-                'where' => ['res_id_master = ?', 'status = ?', 'relation = ?'],
-                'data'  => [$value->res_id_master, 'SIGN', $value->relation]
+                'where' => ['res_id_master = ?', 'status = ?', 'relation = ?', 'origin = ?'],
+                'data'  => [$value->res_id_master, 'SIGN', $value->relation, $value->res_id . ',res_attachments']
             ]);
 
             $GLOBALS['logger']->write('Create validated Attachment', 'INFO');

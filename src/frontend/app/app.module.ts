@@ -78,8 +78,6 @@ import { ExportComponent }                      from './list/export/export.compo
 import { NoteEditorComponent }                  from './notes/note-editor.component';
 import { NotesListComponent }                   from './notes/notes.component';
 import { AttachmentsListComponent }             from './attachments/attachments-list.component';
-import { VisaWorkflowComponent }             from './visa/visa-workflow.component';
-import { AvisWorkflowComponent }             from './avis/avis-workflow.component';
 
 import { PrintSeparatorComponent }                        from './separator/print-separator/print-separator.component';
 
@@ -139,8 +137,6 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         NotesListComponent,
         NoteEditorComponent,
         AttachmentsListComponent,
-        VisaWorkflowComponent,
-        AvisWorkflowComponent,
         FiltersListComponent,
         FiltersToolComponent,
         ToolsListComponent,

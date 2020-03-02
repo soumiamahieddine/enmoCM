@@ -215,11 +215,14 @@ class ResController extends ResourceControlController
                 'data'   => [$GLOBALS['userId']]
             ]);
             $entities = array_column($entities, 'id');
-            $folders = FolderModel::getWithEntitiesAndResources([
-                'select'    => ['distinct(resources_folders.folder_id)'],
-                'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ? OR keyword = ?)'],
-                'data'      => [$args['resId'], $entities, $GLOBALS['id'], 'ALL_ENTITIES']
-            ]);
+            $folders = [];
+            if (!empty($entities)) {
+                $folders = FolderModel::getWithEntitiesAndResources([
+                    'select'    => ['distinct(resources_folders.folder_id)'],
+                    'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ? OR keyword = ?)'],
+                    'data'      => [$args['resId'], $entities, $GLOBALS['id'], 'ALL_ENTITIES']
+                ]);
+            }
             $formattedData['folders'] = array_column($folders, 'folder_id');
 
             $tags = ResourceTagModel::get(['select' => ['tag_id'], 'where' => ['res_id = ?'], 'data' => [$args['resId']]]);
@@ -563,9 +566,8 @@ class ResController extends ResourceControlController
 
         $convertedDocument = AdrModel::getDocuments([
             'select'    => ['docserver_id', 'path', 'filename', 'fingerprint'],
-            'where'     => ['res_id = ?', 'type in (?)', 'version = ?'],
-            'data'      => [$args['resId'], ['SIGN'], $document['version']],
-            'orderBy'   => ["type='SIGN' DESC"],
+            'where'     => ['res_id = ?', 'type = ?', 'version = ?'],
+            'data'      => [$args['resId'], 'SIGN', $document['version']],
             'limit'     => 1
         ]);
         $document = $convertedDocument[0] ?? $document;
@@ -1229,5 +1231,25 @@ class ResController extends ResourceControlController
         }
 
         return $response->withJson(['listEventData' => $listEventData]);
+    }
+
+    public function getResourceFileInformation(Request $request, Response $response, array $args)
+    {
+        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $resource = ResModel::getById([
+            'resId'  => $args['resId'],
+            'select' => ['format', 'fingerprint', 'filesize', 'fulltext_result']
+        ]);
+
+        $allowedFiles = StoreController::getAllowedFiles();
+        $allowedFiles = array_column($allowedFiles, 'canConvert', 'extension');
+
+        $format = strtoupper($resource['format']);
+        $resource['canConvert'] = !empty($allowedFiles[$format]);
+
+        return $response->withJson(['information' => $resource]);
     }
 }

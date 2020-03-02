@@ -65,6 +65,13 @@ export class BasketsAdministrationComponent implements OnInit {
                         });
                     this.dataSource = new MatTableDataSource(this.baskets);
                     this.dataSource.paginator = this.paginator;
+                    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: any) => {
+                        if (sortHeaderId === 'basket_name' || sortHeaderId === 'basket_id' || sortHeaderId === 'basket_desc') {
+                            return data[sortHeaderId].toLocaleLowerCase();
+                        }
+                    };
+                    this.sort.active = 'basket_id';
+                    this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;
                 }, 0);
             }, () => {

@@ -261,15 +261,13 @@ export class ExportComponent implements OnInit {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
             let realIndex = event.previousIndex;
-
-            if (event.container.id == 'cdk-drop-list-10') {
+            if (event.container.id == 'selectedElements') {
                 realIndex = 0;
                 if ($j('.available-data .columns')[event.previousIndex] !== undefined) {
                     const fakeIndex = $j('.available-data .columns')[event.previousIndex].id;
                     realIndex = this.dataAvailable.map((dataAv: any) => (dataAv.value)).indexOf(fakeIndex);
                 }
             }
-
 
             transferArrayItem(event.previousContainer.data,
                 event.container.data,

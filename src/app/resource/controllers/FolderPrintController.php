@@ -8,7 +8,7 @@
  */
 
 /**
- * @brief Resource Data Export Controller
+ * @brief Folder Print Controller
  * @author dev@maarch.org
  */
 
@@ -539,8 +539,8 @@ class FolderPrintController
         $widthNoMargins = $dimensions['w'] - $dimensions['rm'] - $dimensions['lm'];
         $width          = $widthNoMargins / 2;
 
-        $pdf->SetFont('', 'B', 12);
-        $pdf->Cell($width, 15, _ACKNOWLEDGEMENT_RECEIPT, 0, 1, 'L', false);
+        $pdf->SetFont('', 'B', 32);
+        $pdf->Cell($widthNoMargins, 40, _ACKNOWLEDGEMENT_RECEIPT, 0, 1, 'C', false);
 
         $pdf->SetY($pdf->GetY() + 40);
 
@@ -633,9 +633,10 @@ class FolderPrintController
         $widthNoMargins = $dimensions['w'] - $dimensions['rm'] - $dimensions['lm'];
         $width          = $widthNoMargins / 2;
 
-        $pdf->SetFont('', 'B', 12);
-        $pdf->Cell($width, 15, _ATTACHMENT, 0, 0, 'L', false);
-        $pdf->Cell($width, 15, $attachment['identifier'], 0, 1, 'C', false);
+        $pdf->SetFont('', 'B', 32);
+        $pdf->Cell($widthNoMargins, 40, _ATTACHMENT, 0, 1, 'C', false);
+        $pdf->SetFont('', 'B', 22);
+        $pdf->Cell($widthNoMargins, 40, $attachment['identifier'], 0, 1, 'C', false);
 
         $pdf->SetY($pdf->GetY() + 40);
         $pdf->SetFont('', '', 10);
@@ -690,6 +691,8 @@ class FolderPrintController
         $sender = json_decode($email['sender'], true);
         $sender = $sender['email'] ?? _UNDEFINED;
 
+        $sender = $sentBy . " ($sender)";
+
         $recipients = json_decode($email['recipients'], true);
         $recipients = implode(", ", $recipients);
         $recipients = !empty($recipients) ? $recipients : _UNDEFINED;
@@ -720,10 +723,8 @@ class FolderPrintController
         $pdf->SetY($pdf->GetY() + 5);
         $pdf->SetFont('', '', 10);
 
-        $pdf->MultiCell($width, 15, '<b>' . _SENT_BY.'</b>', 1, 'C', false, 0, '', '', true, 0, true);
-        $pdf->MultiCell($width, 15, '<b>' . _SENDER.'</b>', 1, 'C', false, 1, '', '', true, 0, true);
-        $pdf->MultiCell($width, 30, $sentBy, 1, 'L', false, 0, '', '', true, 0, true);
-        $pdf->MultiCell($width, 30, $sender, 1, 'L', false, 1, '', '', true, 0, true);
+        $pdf->MultiCell($widthQuarter, 30, '<b>' . _SENDER.'</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($widthThreeQuarter, 30, $sender, 1, 'L', false, 1, '', '', true, 0, true);
 
         $pdf->MultiCell($widthQuarter, 30, '<b>' . _RECIPIENTS . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
         $pdf->MultiCell($widthThreeQuarter, 30, $recipients, 1, 'L', false, 1, '', '', true, 0, true);

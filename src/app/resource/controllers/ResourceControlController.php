@@ -220,6 +220,18 @@ class ResourceControlController
             if (!StoreController::isFileAllowed(['extension' => $body['format'], 'type' => $mimeType])) {
                 return ['errors' => "Format with this mimeType is not allowed : {$body['format']} {$mimeType}"];
             }
+
+            $uploadMaxFilesize = ini_get('upload_max_filesize');
+            $uploadMaxFilesize = StoreController::getBytesSizeFromPhpIni(['size' => $uploadMaxFilesize]);
+            $postMaxSize = ini_get('post_max_size');
+            $postMaxSize = StoreController::getBytesSizeFromPhpIni(['size' => $postMaxSize]);
+            $memoryLimit = ini_get('memory_limit');
+            $memoryLimit = StoreController::getBytesSizeFromPhpIni(['size' => $memoryLimit]);
+
+            $maximumSize = min($uploadMaxFilesize, $postMaxSize, $memoryLimit);
+            if ($maximumSize > 0 && strlen($file) > $maximumSize) {
+                return ['errors' => "Body encodedFile size is over limit"];
+            }
         }
 
         return true;
