@@ -21,7 +21,7 @@ class ExportControler extends ExportFunctions
     public $enclosure = false;
 
     public $object_export = false;
-    public array $array_export = [];
+    public $array_export = [];
     public $pos = 0;
 
     public function __construct()
