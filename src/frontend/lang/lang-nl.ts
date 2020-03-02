@@ -1577,7 +1577,7 @@ export const LANG_NL = {
     "tagUpdated" : "Tag updated", //_TO_TRANSLATE
     "tagMerged" : "Tag merged", //_TO_TRANSLATE
     "mergeWith" : "Merge with", //_TO_TRANSLATE
-    "willBeTransferredToNewTag" : "will be transferred to tag ", //_TO_TRANSLATE
+    "willBeTransferredToNewTag" : "Number of mails that will be transferred to the tag ", //_TO_TRANSLATE
     "detailDoc" : "Detail page", //_TO_TRANSLATE
     "emptySubject" : "Empty subject", //_TO_TRANSLATE
     "noAvailableMenu" : "No available menu", //_TO_TRANSLATE

@@ -1552,7 +1552,7 @@ export const LANG_EN = {
     "tagUpdated" : "Tag updated",
     "tagMerged" : "Tag merged",
     "mergeWith" : "Merge with",
-    "willBeTransferredToNewTag" : "will be transferred to tag",
+    "willBeTransferredToNewTag" : "Number of mails that will be transferred to the tag",
     "detailDoc" : "Detail page",
     "emptySubject" : "Empty subject",
     "noAvailableMenu" : "No available menu",

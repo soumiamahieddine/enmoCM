@@ -1591,7 +1591,7 @@ export const LANG_FR = {
     "tagUpdated" : "Mot-clé modifié",
     "tagMerged" : "Mot-clé fusionné",
     "mergeWith" : "Fusionner avec",
-    "willBeTransferredToNewTag" : "seront transférés au mot-clé ",
+    "willBeTransferredToNewTag" : "Nombre de courriers qui seront transférés au mot-clé ",
     "detailDoc" : "Fiche détaillée",
     "emptySubject" : "Objet vide",
     "noAvailableMenu" : "Aucun menu disponible",
