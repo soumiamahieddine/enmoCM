@@ -149,7 +149,7 @@ export class ProcessComponent implements OnInit {
     @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
-    @ViewChild('appDocumentViewer', { static: true }) appDocumentViewer: DocumentViewerComponent;
+    @ViewChild('appDocumentViewer', { static: false }) appDocumentViewer: DocumentViewerComponent;
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
     @ViewChild('appDiffusionsList', { static: false }) appDiffusionsList: DiffusionsListComponent;
     @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
