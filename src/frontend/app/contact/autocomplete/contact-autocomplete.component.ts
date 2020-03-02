@@ -280,7 +280,6 @@ export class ContactAutocompleteComponent implements OnInit {
                     id: contact['id']
 
                 });
-            console.log(contact);  
             this.valuesToDisplay[contact['id']] = contact;
             this.controlAutocomplete.setValue(arrvalue);
             this.loadingValues = false;
