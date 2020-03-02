@@ -1517,7 +1517,7 @@ export const LANG_FR = {
     "criteriaContactFieldDesc": "Recherche sur l'organisation, le nom, le prénom ou une partie des ces éléments",
     "mailInformations": "Informations du courrier",
     "visaNote": "Consigne",
-    "chooseBAN": "Choisissez une BAN",
+    "chooseBAN": "Choisissez une adresse",
     "click": "Cliquez",
     "removeNote" : "Supprimer l'annotation",
     "editNote" : "Modifier l'annotation",

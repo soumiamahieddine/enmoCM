@@ -1503,7 +1503,7 @@ export const LANG_NL = {
     "criteriaContactFieldDesc": "Search the company, the name, the firstname or a part of these elements", //_TO_TRANSLATE
     "mailInformations": "Mail informations", //_TO_TRANSLATE
     "visaNote": "Order", //_TO_TRANSLATE
-    "chooseBAN": "Choose a BAN", //_TO_TRANSLATE
+    "chooseBAN": "Choose an address", //_TO_TRANSLATE
     "click": "Click", //_TO_TRANSLATE
     "removeNote" : "Remove note", //_TO_TRANSLATE
     "editNote" : "Edit note", //_TO_TRANSLATE
