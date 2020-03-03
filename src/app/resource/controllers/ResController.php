@@ -845,6 +845,12 @@ class ResController extends ResourceControlController
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
         }
 
+        $queryParams = $request->getQueryParams();
+        if ($args['fieldId'] == 'destination' && !empty($queryParams['alt'])) {
+            $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['id']]);
+            $resource['destination'] = $entity['id'];
+        }
+
         return $response->withJson(['field' => $resource[$args['fieldId']]]);
     }
 

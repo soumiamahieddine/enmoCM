@@ -123,7 +123,7 @@ class ResourceControlController
             return ['errors' => 'Body is not set or empty'];
         }
 
-        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status', 'model_id', 'format', 'external_id->>\'signatureBookId\' as signaturebookid']]);
+        $resource = ResModel::getById(['resId' => $args['resId'], 'select' => ['status', 'model_id', 'format', 'initiator', 'external_id->>\'signatureBookId\' as signaturebookid']]);
         if (empty($resource['status'])) {
             return ['errors' => 'Resource status is empty. It can not be modified'];
         }
@@ -171,10 +171,16 @@ class ResourceControlController
         }
 
         if (!empty($body['initiator'])) {
-            $userEntities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
-            $userEntities = array_column($userEntities, 'id');
-            if (!in_array($body['initiator'], $userEntities)) {
-                return ['errors' => "Body initiator does not belong to your entities"];
+            $entity = EntityModel::getById(['id' => $body['initiator'], 'select' => ['entity_id']]);
+            if (empty($entity)) {
+                return ['errors' => "Body initiator does not exist"];
+            }
+            if ($body['initiator'] != $entity['entity_id']) {
+                $userEntities = UserModel::getEntitiesByLogin(['login' => $GLOBALS['userId']]);
+                $userEntities = array_column($userEntities, 'id');
+                if (!in_array($body['initiator'], $userEntities)) {
+                    return ['errors' => "Body initiator does not belong to your entities"];
+                }
             }
         }
 
