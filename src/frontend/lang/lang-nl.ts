@@ -158,6 +158,7 @@ export const LANG_NL = {
     "chooseRedirectGroup"                   : "Kies een vervangingsgroep",
     "chosenDatas"                           : "_TO_TRANSLATE",
     "chosenModel"                           : "Gebruikt model",
+    "loadedFile"                            : "Loaded file", //_TO_TRANSLATE
     "chrono"                                : "Chrono",
     "chronoNumber"                          : "Chrononummer",
     "chronoNumberShort"                     : "Chrono Num", //_TO_TRANSLATE
@@ -810,7 +811,8 @@ export const LANG_NL = {
     "sameLevelMyPrimaryEntity"              : "Same level of my primary entity", //_TO_TRANSLATE
     "saturday"                              : "Zaterdag",
     "save"                                  : "Bewaren",
-    "manageNumericPackage"                    : "Een digitale brief bewaren",
+    "manageNumericPackage"                  : "Een digitale brief bewaren",
+    "saveNumericPackage"                    : "Save numeric package", //_TO_TRANSLATE
     "sbSignatures"                          : "Handtekeningen van de parafeerder",
     "script"                                : "Script",
     "scriptCreated"                         : "Script aangemaakt",
