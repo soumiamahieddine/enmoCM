@@ -9,6 +9,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
+import {FunctionsService} from "../../../service/functions.service";
 
 declare function $j(selector: any): any;
 
@@ -48,7 +49,8 @@ export class GroupsAdministrationComponent implements OnInit {
         private notify: NotificationService, 
         public dialog: MatDialog, 
         private headerService: HeaderService,
-        public appService: AppService
+        public appService: AppService,
+        public functions: FunctionsService
     ) {
         $j("link[href='merged_css.php']").remove();
     }
@@ -68,11 +70,7 @@ export class GroupsAdministrationComponent implements OnInit {
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.groups);
                     this.dataSource.paginator = this.paginator;
-                    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: any) => {
-                        if (sortHeaderId === 'group_id' || sortHeaderId === 'group_desc') {
-                            return data[sortHeaderId].toLocaleLowerCase();
-                        }
-                    };
+                    this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
                     this.sort.active = 'group_desc';
                     this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;
