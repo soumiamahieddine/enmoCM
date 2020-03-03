@@ -362,19 +362,18 @@ class MergeController
             $tbs->MergeField('res_letterbox', ['alt_identifier' => $args['chrono']]);
         } elseif ($args['type'] == 'attachment') {
             $tbs->MergeField('attachment', ['chrono' => $args['chrono']]);
-
-            $barcodeFile = CoreConfigModel::getTmpPath() . mt_rand() ."_{$args['userId']}_barcode.png";
-            $generator = new \PiBarCode();
-            $generator->setCode($args['chrono']);
-            $generator->setType('C128');
-            $generator->setSize(30, 50);
-            $generator->setText($args['chrono']);
-            $generator->hideCodeType();
-            $generator->setFiletype('PNG');
-            $generator->writeBarcodeFile($barcodeFile);
-
-            $tbs->MergeField('attachments', ['chronoBarCode' => $barcodeFile]);
         }
+        $barcodeFile = CoreConfigModel::getTmpPath() . mt_rand() ."_{$args['userId']}_barcode.png";
+        $generator = new \PiBarCode();
+        $generator->setCode($args['chrono']);
+        $generator->setType('C128');
+        $generator->setSize(30, 50);
+        $generator->setText($args['chrono']);
+        $generator->hideCodeType();
+        $generator->setFiletype('PNG');
+        $generator->writeBarcodeFile($barcodeFile);
+
+        $tbs->MergeField('attachments', ['chronoBarCode' => $barcodeFile]);
 
         if (in_array($extension, MergeController::OFFICE_EXTENSIONS)) {
             $tbs->Show(OPENTBS_STRING);
