@@ -399,6 +399,12 @@ class MergeController
                 ]);
                 $postalAddress = ContactController::getContactAfnor($person);
                 unset($postalAddress[0]);
+                foreach ($postalAddress as $key => $value) {
+                    if (empty($value)) {
+                        unset($postalAddress[$key]);
+                    }
+                }
+                $postalAddress = array_values($postalAddress);
                 $person['postal_address'] = implode("\n", $postalAddress);
                 $person['civility'] = ContactModel::getCivilityLabel(['civilityId' => $person['civility']]);
                 $customFields = json_decode($person['custom_fields'], true);
