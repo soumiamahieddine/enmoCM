@@ -332,8 +332,8 @@ class FolderPrintController
                         }
                     }
                     $emails = EmailModel::get([
-                        'select'  => ['id', 'user_id', 'sender', 'recipients', 'cc', 'cci', 'object', 'body', 'document', 'send_date'],
-                        'where'   => ['id in (?)'],
+                        'select'  => ['id', 'user_id', 'sender', 'recipients', 'cc', 'cci', 'object', 'body', 'document', 'send_date', 'status'],
+                        'where'   => ['id in (?)', "object NOT LIKE '[AR]%'"],
                         'data'    => [$resource['emails']],
                         'orderBy' => ['creation_date desc']
                     ]);
@@ -342,8 +342,8 @@ class FolderPrintController
                     }
                 } else {
                     $emails = EmailModel::get([
-                        'select'  => ['id', 'user_id', 'sender', 'recipients', 'cc', 'cci', 'object', 'body', 'document', 'send_date'],
-                        'where'   => ["cast(document->>'id' as INT) = ? "],
+                        'select'  => ['id', 'user_id', 'sender', 'recipients', 'cc', 'cci', 'object', 'body', 'document', 'send_date', 'status'],
+                        'where'   => ["cast(document->>'id' as INT) = ? ", "object NOT LIKE '[AR]%'"],
                         'data'    => [$resource['resId']],
                         'orderBy' => ['creation_date desc']
                     ]);
@@ -684,7 +684,7 @@ class FolderPrintController
         $date = new \DateTime($email['send_date']);
         $date = $date->format('d-m-Y H:i');
 
-        $sentDate = _SENT_DATE . ' ' . $date;
+        $sentDate = _CREATED . ' ' . $date;
 
         $sentBy = UserModel::getLabelledUserById(['id' => $email['user_id']]);
 
@@ -704,6 +704,16 @@ class FolderPrintController
         $recipientsCopyHidden = json_decode($email['cci'], true);
         $recipientsCopyHidden = implode(", ", $recipientsCopyHidden);
         $recipientsCopyHidden = !empty($recipientsCopyHidden) ? $recipientsCopyHidden : _UNDEFINED;
+
+        if ($email['status'] == 'SENT') {
+            $status = _EMAIL_SENT;
+        } else if ($email['status'] == 'DRAFT') {
+            $status = _EMAIL_DRAFT;
+        } else if ($email['status'] == 'WAITING') {
+            $status = _EMAIL_SENDING;
+        } else {
+            $status = _EMAIL_ERROR_SENT;
+        }
 
         $pdf = new Fpdi('P', 'pt');
         $pdf->setPrintHeader(false);
@@ -737,6 +747,9 @@ class FolderPrintController
 
         $pdf->MultiCell($widthQuarter, 30, '<b>' . _SUBJECT . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
         $pdf->MultiCell($widthThreeQuarter, 30, $email['object'] , 1, 'L', false, 1, '', '', true, 0, true);
+
+        $pdf->MultiCell($widthQuarter, 30, '<b>' . _STATUS . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
+        $pdf->MultiCell($widthThreeQuarter, 30, $status , 1, 'L', false, 1, '', '', true, 0, true);
 
         $pdf->SetY($pdf->GetY() + 5);
 

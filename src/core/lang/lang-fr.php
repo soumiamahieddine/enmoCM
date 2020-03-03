@@ -355,6 +355,8 @@ define("_EMAIL_WAIT", "En attente d'envoi");
 define("_EMAIL_SENT", "Envoyé");
 define("_EMAIL_ERROR", "Erreur lors de l'envoi");
 define("_EMAIL_DRAFT_SAVED", "Brouillon enregistré");
+define("_EMAIL_ERROR_SENT", "Non envoyé");
+define("_EMAIL_SENDING", "En cours d'envoi...");
 
 define("_MAILEVA_ADDED", "Envoi postal Maileva ajouté");
 define("_MAILEVA_UPDATED", "Envoi postal Maileva mis à jour");
