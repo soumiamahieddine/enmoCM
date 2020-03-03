@@ -786,7 +786,9 @@ export class IndexingFormComponent implements OnInit {
                         }
 
                         if (field.identifier == 'initiator' && this.mode == 'indexation' && this.functions.empty(field.default_value)) {
-                            field.default_value = this.headerService.user.entities.filter((entity: any) => entity.primary_entity == 'Y')[0].id;
+                            if (this.headerService.user.entities[0]) {
+                                field.default_value = this.headerService.user.entities.filter((entity: any) => entity.primary_entity == 'Y')[0].id;
+                            }
                         }
 
                         if (fieldExist) {
