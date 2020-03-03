@@ -273,7 +273,7 @@ define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', 'Bevestiging en bijwerking van de ver
 define('_NOT_INCOMING_CATEGORY', 'Categorie verschillend van \'Inkomende post\''); //_TO_TRANSLATE
 define('_AR_ALREADY_GENERATED', 'Ontvangstbevestiging gegenereerd maar niet verzonden'); //_TO_TRANSLATE
 define('_NO_CONTACT', 'Geen bijbehorend contact'); //_TO_TRANSLATE
-define('_USER_MISSING_INFORMATIONS', 'Ontbrekende informatie op de contactkaart'); //_TO_TRANSLATE
+define('_USER_MISSING_INFORMATIONS', 'A contact have no email, neither valide postal address'); //_TO_TRANSLATE
 define('_NO_TEMPLATE', 'Geen sjabloon'); //_TO_TRANSLATE
 define('_NO_EMAIL_TEMPLATE', 'Geen elektronisch sjabloon'); //_TO_TRANSLATE
 define('_NO_PAPER_TEMPLATE', 'Geen papieren sjabloon'); //_TO_TRANSLATE

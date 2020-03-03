@@ -273,7 +273,7 @@ define('_RESET_LETTER', 'Remise à zéro du circuit de traitement');
 define('_SIMPLE_CONFIRM_WITH_UPDATE_DATE', 'Confirmation et mise à jour de la date de départ');
 define('_NOT_INCOMING_CATEGORY', 'Catégorie différente de \'Courrier arrivée\'');
 define('_NO_CONTACT', 'Pas de contact associé');
-define('_USER_MISSING_INFORMATIONS', 'Informations incomplètes sur la fiche du contact');
+define('_USER_MISSING_INFORMATIONS', 'Un contact n\'a pas de courriel, ni d\'adresse postale valide');
 define('_NO_TEMPLATE', 'Pas de modèle');
 define('_NO_EMAIL_TEMPLATE', 'Pas de modèle électronique');
 define('_NO_PAPER_TEMPLATE', 'Pas de modèle papier');
