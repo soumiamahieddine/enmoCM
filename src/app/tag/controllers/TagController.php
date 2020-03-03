@@ -71,7 +71,7 @@ class TagController
             'data'   => [$tag['id']]
         ]);
 
-        $tag['canMerge'] = empty($tag['parent_id']) && empty($childTags[0]['count']);
+        $tag['canMerge'] = empty($tag['parent_id']) && empty($childTags);
 
         return $response->withJson($tag);
     }
