@@ -132,32 +132,35 @@ export class ActionsService {
         }
     }
 
-
     launchAction(action: any, userId: number, groupId: number, basketId: number, resIds: number[], datas: any, lockRes: boolean = true) {
         if (this.setActionInformations(action, userId, groupId, basketId, resIds)) {
             this.loading = true;
             this.lockMode = lockRes;
             this.setResourceInformations(datas);
             if (this.lockMode) {
-                this.http.put(`../../rest/resourcesList/users/${userId}/groups/${groupId}/baskets/${basketId}/lock`, { resources: resIds }).pipe(
-                    tap((data: any) => {
-                        if (this.canExecuteAction(data.lockedResources, data.lockers, resIds)) {
-                            try {
-                                this.lockResource();
-                                this[action.component](action.data);
+                if (action.component == 'viewDoc') {
+                    this[action.component](action.data);
+                } else {
+                    this.http.put(`../../rest/resourcesList/users/${userId}/groups/${groupId}/baskets/${basketId}/lock`, { resources: resIds }).pipe(
+                        tap((data: any) => {
+                            if (this.canExecuteAction(data.lockedResources, data.lockers, resIds)) {
+                                try {
+                                    this.lockResource();
+                                    this[action.component](action.data);
+                                }
+                                catch (error) {
+                                    console.log(error);
+                                    console.log(action);
+                                    alert(this.lang.actionNotExist);
+                                }
                             }
-                            catch (error) {
-                                console.log(error);
-                                console.log(action);
-                                alert(this.lang.actionNotExist);
-                            }
-                        }
-                    }),
-                    catchError((err: any) => {
-                        this.notify.handleErrors(err);
-                        return of(false);
-                    })
-                ).subscribe();
+                        }),
+                        catchError((err: any) => {
+                            this.notify.handleErrors(err);
+                            return of(false);
+                        })
+                    ).subscribe();
+                }
             } else {
                 try {
                     this[action.component]();
@@ -168,7 +171,6 @@ export class ActionsService {
                     alert(this.lang.actionNotExist);
                 }
             }
-
         }
     }
 
@@ -189,7 +191,6 @@ export class ActionsService {
             return false;
         }
     }
-
 
     lockResource() {
         this.currentResourceLock = setInterval(() => {
