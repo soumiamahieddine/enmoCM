@@ -783,6 +783,7 @@ export class ProcessComponent implements OnInit {
 
         if (this.resourceFollowed) {
             this.http.post('../../rest/resources/follow', { resources: [this.currentResourceInformations.resId] }).pipe(
+                tap(() => this.headerService.nbResourcesFollowed++),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
@@ -790,6 +791,7 @@ export class ProcessComponent implements OnInit {
             ).subscribe();
         } else {
             this.http.request('DELETE', '../../rest/resources/unfollow', { body: { resources: [this.currentResourceInformations.resId] } }).pipe(
+                tap(() => this.headerService.nbResourcesFollowed--),
                 catchError((err: any) => {
                     this.notify.handleErrors(err);
                     return of(false);
