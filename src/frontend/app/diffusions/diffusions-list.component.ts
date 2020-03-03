@@ -136,7 +136,7 @@ export class DiffusionsListComponent implements OnInit {
         }
         if (this.resId !== null) {
             const listInstance: any = await this.getListinstance(this.resId);
-            
+
             if (listInstance !== undefined) {
                 listInstance.forEach((element: any) => {
                     if (element.item_mode == 'cc') {
@@ -190,6 +190,16 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     async loadListinstance(resId: number) {
+        this.http.get(`../../rest/resources/${resId}/fields/destination?alt=true`).pipe(
+            tap((data: any) => {
+                this.currentEntityId = data.field;
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+
         this.loading = true;
 
         const diffusions: any = await this.getListinstance(resId);
@@ -202,7 +212,7 @@ export class DiffusionsListComponent implements OnInit {
             }
         });
 
-        if (diffusions.filter((elem: any) => elem.item_mode === 'dest').length === 0 && this.adminMode) {
+        if (diffusions.filter((elem: any) => elem.item_mode === 'dest').length === 0 && !this.availableRoles.filter(role => role.id === 'dest')[0].canUpdate && this.adminMode) {
             this.adminMode = false;
             this.hasNoDest = true;
         }
@@ -215,29 +225,33 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     saveListinstance() {
-        return new Promise((resolve, reject) => {
-            const listInstance: any[] = [
-                {
-                    resId: this.resId,
-                    listInstances: this.getCurrentListinstance()
-                }
-            ];
-            this.http.put('../../rest/listinstances', listInstance).pipe(
-                tap((data: any) => {
-                    if (data && data.errors != null) {
-                        this.notify.error(data.errors);
-                    } else {
-                        this.listinstanceClone = JSON.parse(JSON.stringify(this.getCurrentListinstance()));
-                        this.notify.success(this.lang.diffusionListUpdated);
-                        resolve(true);
+        if (!this.hasEmptyDest()) {
+            return new Promise((resolve, reject) => {
+                const listInstance: any[] = [
+                    {
+                        resId: this.resId,
+                        listInstances: this.getCurrentListinstance()
                     }
-                }),
-                catchError((err: any) => {
-                    this.notify.handleErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-        });
+                ];
+                this.http.put('../../rest/listinstances', listInstance).pipe(
+                    tap((data: any) => {
+                        if (data && data.errors != null) {
+                            this.notify.error(data.errors);
+                        } else {
+                            this.listinstanceClone = JSON.parse(JSON.stringify(this.getCurrentListinstance()));
+                            this.notify.success(this.lang.diffusionListUpdated);
+                            resolve(true);
+                        }
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            });
+        } else {
+            this.notify.error(this.lang.noDest);
+        }
     }
 
     initRoles() {
@@ -337,7 +351,7 @@ export class DiffusionsListComponent implements OnInit {
         let item_mode: any = 'copy';
 
         if (this.diffList["dest"].items.length === 0) {
-            item_mode = await this.isUserInCurrentEntity(element.serialId) ? 'dest' : 'copy';
+            item_mode = await this.isUserInCurrentEntity(element.serialId) && this.availableRoles.filter(role => role.id === 'dest')[0].canUpdate ? 'dest' : 'copy';
         }
 
         if (this.diffList["copy"].items.map((e: any) => { return e.item_id; }).indexOf(element.id) == -1) {
@@ -403,6 +417,8 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     changeRole(user: any, oldRole: any, newRole: any) {
+        console.log(newRole);
+        
         if (newRole.id === 'dest') {
             this.switchUserWithOldDest(user, oldRole);
 
@@ -423,6 +439,7 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     switchUserWithOldDest(user: any, oldRole: any) {
+
         this.http.get("../../rest/users/" + user.userId + "/entities").pipe(
             map((data: any) => {
                 data.entities = data.entities.map((entity: any) => entity.id);

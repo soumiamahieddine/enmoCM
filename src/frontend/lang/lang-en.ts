@@ -1587,5 +1587,6 @@ export const LANG_EN = {
     "opinionCircuit" : "Opinion circuit",    
     "visaCircuit" : "Visa circuit",
     "shippingUnavailable" : "<b>Warning </b> Shipping is not activated. Check the configuration file mailevaConfig.xml",
-    "diffNoDestmsg" : "No <b>assignee</b> defined, you <b>can't</b> modify the diffusion list.", 
+    "diffNoDestmsg" : "No <b>assignee</b> defined, you <b>can't</b> modify the diffusion list.",
+    "noDest" : "No <b>assignee</b> defined",    
 };
