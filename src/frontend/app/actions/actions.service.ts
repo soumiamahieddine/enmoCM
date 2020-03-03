@@ -120,6 +120,11 @@ export class ActionsService {
 
         if (this.setActionInformations(action, userId, groupId, null, null)) {
             this.setResourceInformations(datas);
+
+            if (datas['followed']) {
+                this.headerService.nbResourcesFollowed++;
+            }
+
             this.loading = true;
             try {
                 this[action.component]();
@@ -657,8 +662,8 @@ export class ActionsService {
                 exhaustMap(() => this.http.put(dataActionToSend.indexActionRoute, {
                     resource: dataActionToSend.resIds[0]
                 })),
-                tap((resIds: any) => {
-                    this.endAction(resIds);
+                tap(() => {
+                    this.endAction(dataActionToSend.resIds);
                 }),
                 finalize(() => this.loading = false),
                 catchError((err: any) => {
