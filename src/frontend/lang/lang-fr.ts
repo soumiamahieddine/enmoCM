@@ -1150,7 +1150,7 @@ export const LANG_FR = {
     "indexingModelModification" : "Modification du modèle d'enregistrement",
     "mandatoryField" : "Champ obligatoire",
     "optionalField" : "Champ optionnel",
-    "indexingModels" : "Modèle(s) d'enregistrement(s)",
+    "indexingModels" : "Modèles d'enregistrements",
     "perimeter" : "Périmètre",
     "indexingModelDeleted" : "Modèle d'enregistrement supprimé",
     "indexingModelAdded" : "Modèle d'enregistrement ajouté",

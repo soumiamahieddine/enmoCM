@@ -1138,7 +1138,7 @@ export const LANG_NL = {
     "indexingModelModification" : "Indexing model modification", //_TO_TRANSLATE
     "mandatoryField" : "Mandatory field", //_TO_TRANSLATE
     "optionalField" : "Optional field", //_TO_TRANSLATE
-    "indexingModels" : "Indexing model(s)", //_TO_TRANSLATE
+    "indexingModels" : "Indexing models", //_TO_TRANSLATE
     "perimeter" : "Perimeter", //_TO_TRANSLATE
     "indexingModelDeleted" : "Indexing model deleted", //_TO_TRANSLATE
     "indexingModelAdded" : "Indexing model added", //_TO_TRANSLATE

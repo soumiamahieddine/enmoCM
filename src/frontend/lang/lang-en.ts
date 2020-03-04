@@ -1112,7 +1112,7 @@ export const LANG_EN = {
     "indexingModelModification" : "Indexing model modification",
     "mandatoryField" : "Mandatory field",
     "optionalField" : "Optional field",
-    "indexingModels" : "Indexing model(s)",
+    "indexingModels" : "Indexing models",
     "perimeter" : "Perimeter",
     "indexingModelDeleted" : "Indexing model deleted",
     "indexingModelAdded" : "Indexing model added",

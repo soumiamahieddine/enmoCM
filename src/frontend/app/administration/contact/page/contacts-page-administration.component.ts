@@ -33,7 +33,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
         {
             icon: 'fa fa-code',
             route: '/administration/contacts/contactsCustomFields',
-            label : this.lang.customFields,
+            label : this.lang.customFieldsAdmin,
             current: false
         },
         {

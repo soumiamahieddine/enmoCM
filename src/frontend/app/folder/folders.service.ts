@@ -102,11 +102,7 @@ export class FoldersService {
     }
 
     pinFolder(folder: any) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.pinFolder, msg: this.lang.confirmAction } });
-
-        dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.post(`../../rest/folders/${folder.id}/pin`, {})),
+        this.http.post(`../../rest/folders/${folder.id}/pin`, {}).pipe(
             tap(() => {
                 this.getPinnedFolders();
                 this.eventAction.next({type:'refreshFolderPinned', content: {id: folder.id, pinned : true}});
@@ -120,11 +116,7 @@ export class FoldersService {
     }
 
     unpinFolder(folder: any) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.unpinFolder, msg: this.lang.confirmAction } });
-
-        dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.delete(`../../rest/folders/${folder.id}/unpin`)),
+        this.http.delete(`../../rest/folders/${folder.id}/unpin`).pipe(
             tap(() => {
                 this.getPinnedFolders();
                 this.eventAction.next({type:'refreshFolderPinned', content: {id: folder.id, pinned : false}});

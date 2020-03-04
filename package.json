@@ -14,7 +14,7 @@
   },
   "keywords": [],
   "author": "Maarch",
-  "license": "GPL-3.0", 
+  "license": "GPL-3.0",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
     "@tinymce/tinymce-angular": "^3.4.0",
