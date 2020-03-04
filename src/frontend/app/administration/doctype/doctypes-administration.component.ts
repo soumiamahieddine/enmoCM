@@ -368,7 +368,7 @@ export class DoctypesAdministrationComponent implements OnInit {
                         $j('#jstree').jstree('select_node', this.doctypes[0]);
                         this.notify.success(this.lang.documentTypeDeleted);
                     } else {
-                        this.config = { data: {count: data.deleted, types: data.doctypes} };
+                        this.config = { panelClass: 'maarch-modal', data: {count: data.deleted, types: data.doctypes} };
                         this.dialogRef = this.dialog.open(DoctypesAdministrationRedirectModalComponent, this.config);
                         this.dialogRef.afterClosed().subscribe((result: any) => {
                         if (result) {

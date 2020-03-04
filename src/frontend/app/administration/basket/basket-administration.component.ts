@@ -152,7 +152,7 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     openSettings(group: any, action: any) {
-        this.config = { data: { group: group, action: action } };
+        this.config = { panelClass: 'maarch-modal', data: { group: group, action: action } };
         this.dialogRef = this.dialog.open(BasketAdministrationSettingsModalComponent, this.config);
         this.dialogRef.afterClosed().subscribe((result: any) => {
             if (result) {
@@ -261,7 +261,7 @@ export class BasketAdministrationComponent implements OnInit {
     }
 
     linkGroup() {
-        this.config = { data: { basketId: this.basket.id, groups: this.allGroups, linkedGroups: this.basketGroups } };
+        this.config = { panelClass: 'maarch-modal', data: { basketId: this.basket.id, groups: this.allGroups, linkedGroups: this.basketGroups } };
         this.dialogRef = this.dialog.open(BasketAdministrationGroupListModalComponent, this.config);
         this.dialogRef.afterClosed().subscribe((result: any) => {
             if (result) {

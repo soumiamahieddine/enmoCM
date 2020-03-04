@@ -321,6 +321,7 @@ export class TemplateAdministrationComponent implements OnInit {
                 .subscribe((data: any) => {
                     if (data.checkEntities) {
                         this.config = {
+                            panelClass: 'maarch-modal',
                             data: {
                                 entitiesList: data.checkEntities,
                                 template_attachment_type: this.template.template_attachment_type
@@ -342,6 +343,7 @@ export class TemplateAdministrationComponent implements OnInit {
                 .subscribe((data: any) => {
                     if (data.checkEntities) {
                         this.config = {
+                            panelClass: 'maarch-modal',
                             data: {
                                 entitiesList: data.checkEntities,
                                 template_attachment_type: this.template.template_attachment_type

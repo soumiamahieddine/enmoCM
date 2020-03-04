@@ -18,7 +18,7 @@ declare var angularGlobals: any;
 @Component({
     templateUrl: "users-administration.component.html",
     styleUrls: ['users-administration.component.scss'],
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class UsersAdministrationComponent implements OnInit {
 
@@ -146,6 +146,7 @@ export class UsersAdministrationComponent implements OnInit {
 
                     if (response.isDeletable) {
                         this.config = {
+                            panelClass: 'maarch-modal',
                             data: {
                                 userDestRedirect: user,
                                 isDeletable: response.isDeletable,
@@ -155,6 +156,7 @@ export class UsersAdministrationComponent implements OnInit {
                         };
                     } else {
                         this.config = {
+                            panelClass: 'maarch-modal',
                             data: {
                                 userDestRedirect: user,
                                 isDeletable: response.isDeletable,
@@ -417,7 +419,6 @@ export class UsersAdministrationComponent implements OnInit {
 @Component({
     templateUrl: "users-administration-redirect-modal.component.html",
     styleUrls: ['users-administration-redirect-modal.scss'],
-    providers: [NotificationService]
 })
 export class UsersAdministrationRedirectModalComponent {
     lang: any               = LANG;

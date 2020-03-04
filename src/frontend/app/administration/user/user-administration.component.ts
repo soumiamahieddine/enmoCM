@@ -203,7 +203,7 @@ export class UserAdministrationComponent implements OnInit {
     }
 
     linkMaarchParapheurAccount() {
-        const dialogRef = this.dialog.open(AccountLinkComponent, { autoFocus: false, data: { user: this.user } });
+        const dialogRef = this.dialog.open(AccountLinkComponent, { panelClass: 'maarch-modal', autoFocus: false, data: { user: this.user } });
         dialogRef.afterClosed().subscribe(result => {
             if (result) {
                 if (result.inMaarchParapheur) {
@@ -486,7 +486,7 @@ export class UserAdministrationComponent implements OnInit {
                             this.notify.error(err.error.errors);
                         });
                 } else {
-                    this.config = { data: { hasConfidentialityInstances: data['hasConfidentialityInstances'], hasListTemplates: data['hasListTemplates'] } };
+                    this.config = { panelClass: 'maarch-modal', data: { hasConfidentialityInstances: data['hasConfidentialityInstances'], hasListTemplates: data['hasListTemplates'] } };
                     this.dialogRef = this.dialog.open(UserAdministrationRedirectModalComponent, this.config);
                     this.dialogRef.afterClosed().subscribe((result: any) => {
                         this.mode = 'delete';

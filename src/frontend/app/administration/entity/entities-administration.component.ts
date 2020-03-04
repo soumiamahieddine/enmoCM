@@ -392,7 +392,7 @@ export class EntitiesAdministrationComponent implements OnInit {
 
     removeEntity() {
         if (this.currentEntity.documents > 0 || this.currentEntity.redirects > 0 || this.currentEntity.instances > 0 || this.currentEntity.users.length > 0 || this.currentEntity.templates.length > 0) {
-            this.config = { data: { entity: this.currentEntity } };
+            this.config = { panelClass: 'maarch-modal', data: { entity: this.currentEntity } };
             this.dialogRef = this.dialog.open(EntitiesAdministrationRedirectModalComponent, this.config);
             this.dialogRef.afterClosed().subscribe((result: any) => {
                 if (result) {
@@ -778,7 +778,10 @@ export class EntitiesAdministrationComponent implements OnInit {
     }
 }
 @Component({
-    templateUrl: "entities-administration-redirect-modal.component.html"
+    templateUrl: "entities-administration-redirect-modal.component.html",
+    styles: [
+        ".alert-message { max-width: inherit; }"
+    ]
 })
 export class EntitiesAdministrationRedirectModalComponent {
     lang: any = LANG;

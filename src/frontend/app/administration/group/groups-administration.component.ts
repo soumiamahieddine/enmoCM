@@ -97,7 +97,7 @@ export class GroupsAdministrationComponent implements OnInit {
                     this.groupsForAssign.push(tmpGroup);
                 }
             });
-            this.config = { data: { id: group.id, group_desc: group.group_desc, groupsForAssign: this.groupsForAssign, users: group.users } };
+            this.config = { panelClass: 'maarch-modal', data: { id: group.id, group_desc: group.group_desc, groupsForAssign: this.groupsForAssign, users: group.users } };
             this.dialogRef = this.dialog.open(GroupsAdministrationRedirectModalComponent, this.config);
             this.dialogRef.afterClosed().subscribe((result: string) => {
                 if (result) {
