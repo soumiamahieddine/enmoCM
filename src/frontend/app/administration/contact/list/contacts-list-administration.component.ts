@@ -159,7 +159,7 @@ export class ContactsListAdministrationComponent implements OnInit {
                 this.dialogRef = null;
             });
         } else {
-            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+            const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
             dialogRef.afterClosed().pipe(
                 filter((data: string) => data === 'ok'),
                 exhaustMap(() => this.http.delete(`../../rest/contacts/${contact.id}`)),
@@ -176,7 +176,7 @@ export class ContactsListAdministrationComponent implements OnInit {
     }
 
     toggleContact(contact: any) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.suspend, msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.suspend, msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

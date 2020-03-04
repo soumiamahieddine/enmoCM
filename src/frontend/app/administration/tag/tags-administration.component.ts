@@ -78,7 +78,7 @@ export class TagsAdministrationComponent implements OnInit {
     }
 
     deleteTag(item: any) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: `${this.lang.delete} "${item.label}"`, msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: `${this.lang.delete} "${item.label}"`, msg: this.lang.confirmAction } });
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             exhaustMap(() => this.http.delete(`../../rest/tags/${item.id}`)),

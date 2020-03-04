@@ -560,7 +560,7 @@ export class EntitiesAdministrationComponent implements OnInit {
     }
 
     deleteDiffList() {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             exhaustMap(() => this.http.delete(`../../rest/listTemplates/${this.currentEntity.listTemplate.id}`)),
@@ -691,7 +691,7 @@ export class EntitiesAdministrationComponent implements OnInit {
 
     toggleRole(role: any) {
         if (role.usedIn.length > 0) {
-            let dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, data: { title: this.lang.confirmAction, msg: this.lang.roleUsedInTemplateInfo + " : <b>" + role.usedIn.join(', ') + '</b><br/>' + this.lang.roleUsedInTemplateInfo2 } });
+            let dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, data: { title: this.lang.confirmAction, msg: this.lang.roleUsedInTemplateInfo + " : <b>" + role.usedIn.join(', ') + '</b><br/>' + this.lang.roleUsedInTemplateInfo2 } });
 
             dialogRef.afterClosed().subscribe(result => {
                 if (result === "ok") {

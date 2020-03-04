@@ -157,7 +157,7 @@ export class TagAdministrationComponent implements OnInit {
 
         const dialogMessage = `${this.lang.confirmAction}<br/><br/>${this.lang.theTag}<b> "${this.tag.label.value}" </b>${this.lang.willBeDeletedAndMerged}<b> "${selectedTag.label}"</b><br/><br/>${this.lang.willBeTransferredToNewTag}<b> "${selectedTag.label}"</b> : <b>${this.tag.countResources.value}</b>`;
 
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: `${this.lang.mergeWith}  "${selectedTag.label}"`, msg: dialogMessage } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: `${this.lang.mergeWith}  "${selectedTag.label}"`, msg: dialogMessage } });
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
             exhaustMap(() => this.http.put(`../../rest/mergeTags`, { idMaster: selectedTag.id, idMerge: this.id })),

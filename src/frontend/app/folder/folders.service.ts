@@ -6,7 +6,6 @@ import { NotificationService } from '../notification.service';
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { map, tap, filter, exhaustMap, catchError, finalize } from 'rxjs/operators';
-import { ConfirmComponent } from '../../plugins/modal/confirm.component';
 
 
 @Injectable()

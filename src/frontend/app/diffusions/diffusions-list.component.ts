@@ -525,7 +525,7 @@ export class DiffusionsListComponent implements OnInit {
                         this.triggerEvent.emit(allowedEntitiesIds);
                     }
                 } else {
-                    this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.userUnauthorized, msg: "<b>" + user.itemLabel + "</b> " + this.lang.notInAuthorizedEntities } });
+                    this.dialog.open(AlertComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.userUnauthorized, msg: "<b>" + user.itemLabel + "</b> " + this.lang.notInAuthorizedEntities } });
                 }
             }),
         ).subscribe();

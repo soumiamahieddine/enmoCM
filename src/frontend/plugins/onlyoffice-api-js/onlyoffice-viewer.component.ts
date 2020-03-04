@@ -83,7 +83,7 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
     constructor(public http: HttpClient, public dialog: MatDialog, private notify: NotificationService) { }
 
     quit() {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.close, msg: this.lang.confirmCloseEditor } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.close, msg: this.lang.confirmCloseEditor } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

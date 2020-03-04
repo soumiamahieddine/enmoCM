@@ -334,7 +334,7 @@ export class FollowedDocumentListComponent implements OnInit {
     }
 
     unfollowMail(row: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.stopFollowingAlert } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.stopFollowingAlert } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

@@ -112,7 +112,7 @@ export class FolderMenuComponent implements OnInit {
     }
 
     unclassifyDocuments(folder: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.unclassifyQuestion + ' <b>' + this.resIds.length + '</b>&nbsp;' + this.lang.mailsInFolder + ' ?' } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.unclassifyQuestion + ' <b>' + this.resIds.length + '</b>&nbsp;' + this.lang.mailsInFolder + ' ?' } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

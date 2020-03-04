@@ -95,7 +95,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
     delete(indexingModel: any) {
 
         if (!indexingModel.used) {
-            this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+            this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
 
             this.dialogRef.afterClosed().pipe(
                 filter((data: string) => data === 'ok'),
@@ -117,12 +117,12 @@ export class IndexingModelsAdministrationComponent implements OnInit {
                 })
             ).subscribe();
         } else {
-            this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: indexingModel.label, msg: this.lang.canNotDeleteIndexingModel } });
+            this.dialog.open(AlertComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: indexingModel.label, msg: this.lang.canNotDeleteIndexingModel } });
         }
     }
 
     disableIndexingModel(indexingModel: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.disable, msg: this.lang.confirmAction } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.disable, msg: this.lang.confirmAction } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
@@ -143,7 +143,7 @@ export class IndexingModelsAdministrationComponent implements OnInit {
     }
 
     enableIndexingModel(indexingModel: any) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.enable, msg: this.lang.confirmAction } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.enable, msg: this.lang.confirmAction } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

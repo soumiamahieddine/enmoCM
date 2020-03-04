@@ -308,7 +308,7 @@ export class GroupAdministrationComponent implements OnInit {
     toggleService(ev: any, service: any) {
         if (ev.checked) {
             if (service.id === 'admin_groups') {
-                const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirmAction, msg: this.lang.enableGroupMsg } });
+                const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.confirmAction, msg: this.lang.enableGroupMsg } });
 
                 dialogRef.afterClosed().pipe(
                     tap((data: string) => {

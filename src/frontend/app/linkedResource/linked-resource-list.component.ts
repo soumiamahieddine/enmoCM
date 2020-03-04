@@ -107,7 +107,7 @@ export class LinkedResourceListComponent implements OnInit {
     }
 
     unlinkResource(row: any) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.unlink, msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.unlink, msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

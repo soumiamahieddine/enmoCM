@@ -296,7 +296,7 @@ export class AttachmentPageComponent implements OnInit {
 
     setNewVersion() {
         if (!this.newVersion) {
-            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.createNewVersion, msg: this.lang.confirmAction } });
+            const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.createNewVersion, msg: this.lang.confirmAction } });
 
             dialogRef.afterClosed().pipe(
                 filter((data: string) => data === 'ok'),
@@ -313,7 +313,7 @@ export class AttachmentPageComponent implements OnInit {
     }
 
     deleteSignedVersion() {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.deleteSignedVersion, msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.deleteSignedVersion, msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

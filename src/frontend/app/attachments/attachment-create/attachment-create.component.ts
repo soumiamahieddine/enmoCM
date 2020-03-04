@@ -390,7 +390,7 @@ export class AttachmentCreateComponent implements OnInit {
     }
 
     removePj(i: number) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete + ' : PJ n°' + (i + 1), msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete + ' : PJ n°' + (i + 1), msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

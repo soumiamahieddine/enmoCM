@@ -578,7 +578,7 @@ export class SentResourcePageComponent implements OnInit {
                 this.notify.error(this.lang.badEmailsFormat);
             } else {
                 if (this.emailsubject === '') {
-                    const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.warnEmptySubject } });
+                    const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.confirm, msg: this.lang.warnEmptySubject } });
 
                     dialogRef.afterClosed().pipe(
                         filter((data: string) => data === 'ok'),
@@ -617,7 +617,7 @@ export class SentResourcePageComponent implements OnInit {
     }
 
     deleteEmail() {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
@@ -714,7 +714,7 @@ export class SentResourcePageComponent implements OnInit {
             $j('.tox-editor-header').show();
             tinymce.get('emailSignature').setContent(tinymce.get('emailSignature').getContent());
         } else {
-            const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.switchInPlainText, msg: this.lang.confirmSwitchInPlanText } });
+            const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.switchInPlainText, msg: this.lang.confirmSwitchInPlanText } });
             dialogRef.afterClosed().pipe(
                 tap((data: string) => {
                     if (data === 'ok') {

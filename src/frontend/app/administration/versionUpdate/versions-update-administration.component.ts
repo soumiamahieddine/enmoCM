@@ -63,7 +63,7 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
 
     updateVersionAccess() {
 
-        this.dialogRef = this.dialog.open(ConfirmComponent, { data: { title: this.lang.confirm + ' ?', msg: this.lang.updateInfo  } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', data: { title: this.lang.confirm + ' ?', msg: this.lang.updateInfo  } });
         this.dialogRef.afterClosed().pipe(
             filter((data) => {
                 this.dialogRef = null;
@@ -78,7 +78,7 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
             }),
             exhaustMap(() => this.http.put('../../rest/versionsUpdate', {})),
             tap(() => {
-                this.dialogRef = this.dialog.open(AlertComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.updateOk, msg: '' } });
+                this.dialogRef = this.dialog.open(AlertComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.updateOk, msg: '' } });
             }),
             exhaustMap(() => this.dialogRef.afterClosed()),
             tap(() => {
