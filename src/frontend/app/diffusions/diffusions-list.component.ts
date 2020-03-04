@@ -200,7 +200,7 @@ export class DiffusionsListComponent implements OnInit {
                             listinstance_id: item.listinstance_id,
                             item_mode: item.item_mode === 'cc' ? 'copy' : item.item_mode,
                             item_type: item.item_type === 'user_id' ? 'user' : 'entity',
-                            itemSerialId: item.item_type === 'user_id' ? item.userId : null,
+                            itemSerialId: item.itemSerialId,
                             itemId: item.item_id,
                             itemLabel: item.labelToDisplay,
                             itemSubLabel: item.descriptionToDisplay,
@@ -552,7 +552,7 @@ export class DiffusionsListComponent implements OnInit {
             arrValues = arrValues.concat(
                 this.diffList[role].items.map((item: any) => {
                     return {
-                        id: item.itemId,
+                        id: item.itemSerialId,
                         mode: role,
                         type: item.item_type === 'user' ? 'user' : 'entity'
                     }
