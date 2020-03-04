@@ -53,6 +53,9 @@ export class UsersAdministrationComponent implements OnInit {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
+        this.dataSource.filterPredicate = (template, filter: string) => {
+            return this.functions.filterUnSensitive(template, filter, ['id', 'user_id', 'lastname', 'firstname', 'mail']);
+        };
     }
 
     constructor(

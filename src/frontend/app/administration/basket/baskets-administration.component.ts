@@ -36,6 +36,9 @@ export class BasketsAdministrationComponent implements OnInit {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
+        this.dataSource.filterPredicate = (template: any, filter: string) => {
+            return this.functions.filterUnSensitive(template, filter, ['basket_id', 'basket_name', 'basket_desc']);
+        };
     }
 
     constructor(

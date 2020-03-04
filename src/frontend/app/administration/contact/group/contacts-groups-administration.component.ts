@@ -8,6 +8,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AppService } from '../../../../service/app.service';
+import {FunctionsService} from "../../../../service/functions.service";
 
 declare function $j(selector: any): any;
 
@@ -67,13 +68,17 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
+        this.dataSource.filterPredicate = (template, filter: string) => {
+            return this.functions.filterUnSensitive(template, filter, ['label', 'description']);
+        };
     }
 
     constructor(
         public http: HttpClient, 
         private notify: NotificationService, 
         private headerService: HeaderService,
-        public appService: AppService
+        public appService: AppService,
+        public functions: FunctionsService
     ) {
         $j("link[href='merged_css.php']").remove();
     }

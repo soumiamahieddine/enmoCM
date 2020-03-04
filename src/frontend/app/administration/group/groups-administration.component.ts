@@ -42,6 +42,9 @@ export class GroupsAdministrationComponent implements OnInit {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();
         this.dataSource.filter = filterValue;
+        this.dataSource.filterPredicate = (template, filter: string) => {
+            return this.functions.filterUnSensitive(template, filter, ['group_id', 'group_desc']);
+        };
     }
 
     constructor(

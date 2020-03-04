@@ -13,6 +13,8 @@ import { tap } from 'rxjs/internal/operators/tap';
 import { catchError, map, finalize, filter, exhaustMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
+import {FunctionsService} from "../../../service/functions.service";
+import {LatinisePipe} from "ngx-pipes";
 
 @Component({
     templateUrl: "diffusionModels-administration.component.html",
@@ -39,6 +41,18 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();
         this.dataSource.filter = filterValue;
+        this.dataSource.filterPredicate = (template, filter: string) => {
+            let filterReturn = false;
+            filter = this.latinisePipe.transform(filter);
+            this.displayedColumns.forEach((column:any) => {
+                if (column === 'description' || column === 'typeLabel') {
+                    filterReturn = filterReturn || this.latinisePipe.transform(template[column].toLowerCase()).includes(filter);
+                } else if (column === 'label') {
+                    filterReturn = filterReturn || this.latinisePipe.transform(template['title'].toLowerCase()).includes(filter);
+                }
+            });
+            return filterReturn;
+        };
     }
 
     constructor(
@@ -46,7 +60,9 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
         private notify: NotificationService,
         public dialog: MatDialog,
         private headerService: HeaderService,
-        public appService: AppService
+        public appService: AppService,
+        public functions: FunctionsService,
+        private latinisePipe: LatinisePipe
     ) { }
 
     async ngOnInit(): Promise<void> {

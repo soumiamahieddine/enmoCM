@@ -39,13 +39,7 @@ export class TemplatesAdministrationComponent implements OnInit {
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
         this.dataSource.filterPredicate = (template, filter: string) => {
-            var filterReturn = false;
-            this.displayedColumns.forEach(function(column:any) {
-                if (column != 'actions') {
-                    filterReturn = filterReturn || template[column].toLowerCase().includes(filter);
-                }
-            });
-            return filterReturn;
+            return this.functions.filterUnSensitive(template, filter, ['template_label', 'template_comment', 'template_type', 'template_target']);
         };
     }
 
