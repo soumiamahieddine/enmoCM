@@ -796,7 +796,7 @@ INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Cohésio
 ------------
 --USERGROUPS
 ------------
-UPDATE usergroups set indexation_parameters = '{"actions":["21", "2"], "entities":[], "keywords":["ALL_ENTITIES"]}' where group_id IN ('COURRIER', 'RESP_COURRIER');
+UPDATE usergroups set indexation_parameters = '{"actions":["21", "22"], "entities":[], "keywords":["ALL_ENTITIES"]}' where group_id IN ('COURRIER', 'RESP_COURRIER');
 UPDATE usergroups set indexation_parameters = '{"actions":["2", "414", "20"], "entities":[], "keywords":["ALL_ENTITIES"]}' where group_id IN ('AGENT');
 
 ------------
@@ -1258,7 +1258,7 @@ INSERT INTO tags (label) VALUES ('SPORT');
 --TEMPLATES
 ------------
 TRUNCATE TABLE templates;
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (3, 'Appel téléphonique', 'Appel Téléphonique', '', 'OFFICE', '0000#', 'invitation.odt', 'ODT: invitation', 'letterbox_attachment', 'indexingFile', 'all');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (3, 'Appel téléphonique', 'Appel Téléphonique', '', 'OFFICE', '0000#', 'appel_telephonique.docx', 'ODT: invitation', 'letterbox_attachment', 'indexingFile', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
 VALUES (2, '[notification] Notifications événement', 'Notifications des événements système',
 '<p><font face="verdana,geneva" size="1">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
@@ -1396,32 +1396,6 @@ VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvel
 </table>
 <p>&nbsp;</p>
 <p style="font-family: Trebuchet MS, Arial, Helvetica, sans-serif; width: 100%; text-align: center; font-size: 9px; font-style: italic; opacity: 0.5;">Message g&eacute;n&eacute;r&eacute; via l''application MaarchCourrier</p>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes', 'notifications');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (9, 'Demande - Voirie', 'Demande - Voirie', '<h2>Demande Intervention VOIRIE</h2>
-<hr />
-<table style="border: 1pt solid #000000; width: 597px; background-color: #f0f0f0; height: 172px;" border="1" cellspacing="1" cellpadding="5"><caption>&nbsp;</caption>
-<tbody>
-<tr>
-<td style="width: 200px; background-color: #ffffff;"><strong>NOM, PRENOM demandeur</strong></td>
-<td style="width: 200px; background-color: #ffffff;">&nbsp;</td>
-</tr>
-<tr style="background-color: #ffffff;">
-<td style="width: 200px;">Adresse</td>
-<td>&nbsp;</td>
-</tr>
-<tr style="background-color: #ffffff;">
-<td style="width: 200px;"><strong>Contact</strong></td>
-<td>&nbsp;</td>
-</tr>
-<tr style="background-color: #ffffff;">
-<td style="width: 200px;"><strong>Intitul&eacute; demande</strong></td>
-<td>&nbsp;</td>
-</tr>
-<tr style="background-color: #ffffff;">
-<td style="width: 200px;">Compl&eacute;ment</td>
-<td>&nbsp;</td>
-</tr>
-</tbody>
-</table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'indexingFile', 'all');
 INSERT INTO templates VALUES (10, '[maarch mairie] Clôture de demande', '[maarch mairie] Clôture de demande', '<p style="text-align: left;"><span style="font-size: small;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="text-decoration: underline;"><span style="font-size: small;">CLOTURE DEMANDE Maarch Mairie - [res_letterbox.type_label] - [res_letterbox.res_id] </span></span></p>
 <p style="text-align: center;">&nbsp;</p>
 <table style="background-color: #a8c33c; width: 800px; border: #000000 1pt solid;" border="1" cellspacing="1" cellpadding="5">
