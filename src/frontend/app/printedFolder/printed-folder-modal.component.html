@@ -66,6 +66,12 @@
                                         {{element.type}}
                                     </div>
 
+                                    <div *ngIf="!functions.empty(element.status)">
+                                        <div *ngIf="element.status === 'SIGN'" style="color: green">
+                                            {{lang['attachment_' + element.status]}}
+                                        </div>
+                                    </div>
+
                                     <div color="primary" [title]="element.creationDate | fullDate"
                                         style="flex:1;justify-content: flex-end;display: flex;font-size: 80%;">
                                         {{element.creationDate | timeAgo : 'full' | ucfirst}}
