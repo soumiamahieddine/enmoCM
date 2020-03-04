@@ -797,7 +797,7 @@ INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Cohésio
 --USERGROUPS
 ------------
 UPDATE usergroups set indexation_parameters = '{"actions":["21", "22"], "entities":[], "keywords":["ALL_ENTITIES"]}' where group_id IN ('COURRIER', 'RESP_COURRIER');
-UPDATE usergroups set indexation_parameters = '{"actions":["2", "414", "20"], "entities":[], "keywords":["ALL_ENTITIES"]}' where group_id IN ('AGENT');
+UPDATE usergroups set indexation_parameters = '{"actions":["22", "414", "20"], "entities":[], "keywords":["ALL_ENTITIES"]}' where group_id IN ('AGENT');
 
 ------------
 --ENTITIES_FOLDERS
