@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, EventEmitter, ElementRef, Input, Output } from '@angular/core';
+import {Component, OnInit, ViewChild, EventEmitter, Input, Output} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
@@ -18,9 +18,6 @@ export class SentResourceListComponent implements OnInit {
 
     lang: any = LANG;
     loading: boolean = true;
-
-    filtersChange = new EventEmitter();
-
 
     dataSource: any;
     displayedColumns: string[] = ['creationDate'];
@@ -53,7 +50,7 @@ export class SentResourceListComponent implements OnInit {
     async loadList() {
         this.sentResources = [];
         this.loading = true;
-        await this.initAcknowledgementReceipList();
+        await this.initAcknowledgementReceiptList();
         await this.initEmailList();
         await this.initMessageExchange();
         await this.initShippings();
@@ -68,8 +65,8 @@ export class SentResourceListComponent implements OnInit {
         this.loading = false;
     }
 
-    initAcknowledgementReceipList() {
-        return new Promise((resolve, reject) => {
+    initAcknowledgementReceiptList() {
+        return new Promise((resolve) => {
             this.http.get(`../../rest/resources/${this.resId}/acknowledgementReceipts?type=ar`).pipe(
                 map((data: any) => {
                     data = data.map((item: any) => {
@@ -119,7 +116,7 @@ export class SentResourceListComponent implements OnInit {
     }
 
     initEmailList() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this.http.get(`../../rest/resources/${this.resId}/emails?type=email`).pipe(
                 map((data: any) => {
                     data.emails = data.emails.map((item: any) => {
@@ -156,7 +153,7 @@ export class SentResourceListComponent implements OnInit {
     }
 
     initMessageExchange() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this.http.get(`../../rest/resources/${this.resId}/messageExchanges`).pipe(
                 map((data: any) => {
                     data.messageExchanges = data.messageExchanges.map((item: any) => {
@@ -194,7 +191,7 @@ export class SentResourceListComponent implements OnInit {
     }
 
     initShippings() {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             this.http.get(`../../rest/resources/${this.resId}/shippings`).pipe(
                 map((data: any) => {
                     data = data.map((item: any) => {
@@ -241,10 +238,6 @@ export class SentResourceListComponent implements OnInit {
         });
     }
 
-    processPostData(data: any) {
-        return data;
-    }
-
     filterType(ev: any) {
         this.currentFilter = ev.value;
         this.dataSource.filter = ev.value;
@@ -262,9 +255,9 @@ export class SentResourceListComponent implements OnInit {
             const dialogRef = this.dialog.open(SentResourcePageComponent, { maxWidth: '90vw', width: '750px', minHeight:'500px', disableClose: true, data: { title: title, resId: this.resId, emailId: row.id, emailType: row.type } });
 
             dialogRef.afterClosed().pipe(
-                filter((data: string) => data === 'success'),
+                filter((data: any) => data.state === 'success' || data === 'success'),
                 tap(() => {
-                    this.loadList();
+                    this.refreshEmailList();
                     setTimeout(() => {
                         this.refreshWaitingElements();
                     }, 5000);
@@ -303,5 +296,47 @@ export class SentResourceListComponent implements OnInit {
             this.dataSource = new MatTableDataSource(this.sentResources);
             this.dataSource.sort = this.sort;
         }, 0);
+    }
+
+    refreshEmailList() {
+        return new Promise((resolve) => {
+            this.http.get(`../../rest/resources/${this.resId}/emails?type=email`).pipe(
+                map((data: any) => {
+                    data.emails = data.emails.map((item: any) => {
+                        return {
+                            id: item.id,
+                            sender: item.sender.email,
+                            recipients: item.recipients,
+                            creationDate: item.creation_date,
+                            sendDate: item.send_date,
+                            type: 'email',
+                            typeColor: '#5bc0de',
+                            desc: !this.functions.empty(item.object) ? item.object : `<i>${this.lang.emptySubject}<i>`,
+                            status: item.status,
+                            hasAttach: !this.functions.empty(item.document.attachments),
+                            hasNote: !this.functions.empty(item.document.notes),
+                            hasMainDoc: item.document.isLinked,
+                            canManage: true
+                        }
+                    });
+                    return data.emails;
+                }),
+                tap((data: any) => {
+                    const sentResourcesNoEmails = this.sentResources.filter(elem => elem.type !== 'email');
+                    this.sentResources = sentResourcesNoEmails.concat(data);
+                    console.log(this.sentResources);
+                    setTimeout(() => {
+                        this.dataSource = new MatTableDataSource(this.sentResources);
+                        this.dataSource.sort = this.sort;
+                    }, 0);
+                    resolve(true);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    resolve(false);
+                    return of(false);
+                })
+            ).subscribe();
+        });
     }
 }
