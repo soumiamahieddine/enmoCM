@@ -936,7 +936,7 @@ export class DocumentViewerComponent implements OnInit {
         this.http.get(`../../rest/resources/${this.resId}/content/${version}?type=${type}`).pipe(
             tap((data: any) => {
 
-                this.dialog.open(DocumentViewerModalComponent, { autoFocus: false, height: '90vh', width: '90vw', data: { title: `${title}`, base64: data.encodedDocument } });
+                this.dialog.open(DocumentViewerModalComponent, { autoFocus: false, panelClass: 'maarch-full-height-modal', data: { title: `${title}`, base64: data.encodedDocument } });
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);

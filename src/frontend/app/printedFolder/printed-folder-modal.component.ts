@@ -286,7 +286,7 @@ export class PrintedFolderModalComponent {
     openSummarySheet(): void {
 
         const dialogRef = this.dialog.open(SummarySheetComponent, {
-            panelClass: 'summary-sheet-dialog',
+            panelClass: 'maarch-full-height-modal',
             width: '800px',
             data: {
                 paramMode : true

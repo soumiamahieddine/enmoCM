@@ -211,7 +211,6 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
     entryComponents: [
         ConfirmModalComponent,
         InfoChangePasswordModalComponent,
-        AttachmentsListComponent,
         SummarySheetComponent,
         ExportComponent,
         ConfirmActionComponent,

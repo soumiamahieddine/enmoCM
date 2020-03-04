@@ -252,7 +252,7 @@ export class SentResourceListComponent implements OnInit {
         }
 
         if (row.canManage || row.id === null) {
-            const dialogRef = this.dialog.open(SentResourcePageComponent, { maxWidth: '90vw', width: '750px', minHeight:'500px', disableClose: true, data: { title: title, resId: this.resId, emailId: row.id, emailType: row.type } });
+            const dialogRef = this.dialog.open(SentResourcePageComponent, { panelClass: 'maarch-modal', disableClose: true, data: { title: title, resId: this.resId, emailId: row.id, emailType: row.type } });
 
             dialogRef.afterClosed().pipe(
                 filter((data: any) => data.state === 'success' || data === 'success'),

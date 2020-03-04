@@ -500,7 +500,7 @@ export class AvisWorkflowComponent implements OnInit {
     }
 
     openPromptSaveModel() {
-        const dialogRef = this.dialog.open(AddAvisModelModalComponent, { data: { avisWorkflow: this.avisWorkflow.items } });
+        const dialogRef = this.dialog.open(AddAvisModelModalComponent, { panelClass: 'maarch-modal', data: { avisWorkflow: this.avisWorkflow.items } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => !this.functions.empty(data)),

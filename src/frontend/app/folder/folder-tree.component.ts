@@ -373,7 +373,7 @@ export class FolderTreeComponent implements OnInit {
     }
 
     openFolderAdmin(node: any) {
-        this.dialogRef = this.dialog.open(FolderUpdateComponent, { autoFocus: false, data: { folderId: node.id } });
+        this.dialogRef = this.dialog.open(FolderUpdateComponent, { panelClass: 'maarch-modal', autoFocus: false, data: { folderId: node.id } });
 
         this.dialogRef.afterClosed().pipe(
             tap((data) => {

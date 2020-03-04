@@ -484,7 +484,7 @@ export class BasketListComponent implements OnInit {
     }
 
     openContact(row: any, mode: string) {
-        this.dialog.open(ContactsListModalComponent, { data: { title: `${row.chrono} - ${row.subject}`, mode: mode, resId: row.resId } });
+        this.dialog.open(ContactsListModalComponent, { panelClass: 'maarch-modal', data: { title: `${row.chrono} - ${row.subject}`, mode: mode, resId: row.resId } });
     }
 
     viewDocument(row: any) {

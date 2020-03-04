@@ -711,7 +711,7 @@ export class ProcessComponent implements OnInit {
 
     openContact() {
         if (this.hasContact) {
-            this.dialog.open(ContactsListModalComponent, { data: { title: `${this.currentResourceInformations.chrono} - ${this.currentResourceInformations.subject}`, mode: this.currentResourceInformations.categoryId !== 'outgoing' ? 'senders' : 'recipients', resId: this.currentResourceInformations.resId } });
+            this.dialog.open(ContactsListModalComponent, { panelClass: 'maarch-modal', data: { title: `${this.currentResourceInformations.chrono} - ${this.currentResourceInformations.subject}`, mode: this.currentResourceInformations.categoryId !== 'outgoing' ? 'senders' : 'recipients', resId: this.currentResourceInformations.resId } });
         }
     }
 
@@ -813,6 +813,6 @@ export class ProcessComponent implements OnInit {
     }
 
     openPrintedFolderPrompt() {
-        this.dialog.open(PrintedFolderModalComponent, { data: { resId: this.currentResourceInformations.resId } });
+        this.dialog.open(PrintedFolderModalComponent, { panelClass: 'maarch-modal', data: { resId: this.currentResourceInformations.resId } });
     }
 }

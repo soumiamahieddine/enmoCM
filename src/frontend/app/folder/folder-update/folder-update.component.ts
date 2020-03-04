@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, Inject, HostListener } from '@angular/core';
+import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { HttpClient } from '@angular/common/http';
 import { map, tap, catchError, exhaustMap, finalize } from 'rxjs/operators';
@@ -12,7 +12,6 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "folder-update.component.html",
     styleUrls: ['folder-update.component.scss'],
-    providers: [NotificationService],
 })
 export class FolderUpdateComponent implements OnInit {
 

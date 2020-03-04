@@ -270,7 +270,7 @@ export class IndexationComponent implements OnInit {
         }
 
         const masterIndexingModel = this.indexingModels.filter((indexingModel) => indexingModel.id === privateIndexingModel.master)[0];
-        this.dialogRef = this.dialog.open(AddPrivateIndexingModelModalComponent, { autoFocus: true, disableClose: true, data: { indexingModel: privateIndexingModel, masterIndexingModel: masterIndexingModel } });
+        this.dialogRef = this.dialog.open(AddPrivateIndexingModelModalComponent, { panelClass: 'maarch-modal', autoFocus: true, disableClose: true, data: { indexingModel: privateIndexingModel, masterIndexingModel: masterIndexingModel } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: any) => data !== undefined),

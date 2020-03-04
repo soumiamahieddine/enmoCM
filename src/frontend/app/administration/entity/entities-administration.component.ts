@@ -691,8 +691,8 @@ export class EntitiesAdministrationComponent implements OnInit {
 
     toggleRole(role: any) {
         if (role.usedIn.length > 0) {
-            this.config = { data: { msg: this.lang.confirmAction, warn: this.lang.roleUsedInTemplateInfo + " : <b>" + role.usedIn.join(', ') + '</b><br/>' + this.lang.roleUsedInTemplateInfo2 } };
-            let dialogRef = this.dialog.open(ConfirmModalComponent, this.config);
+            let dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, data: { title: this.lang.confirmAction, msg: this.lang.roleUsedInTemplateInfo + " : <b>" + role.usedIn.join(', ') + '</b><br/>' + this.lang.roleUsedInTemplateInfo2 } });
+
             dialogRef.afterClosed().subscribe(result => {
                 if (result === "ok") {
                     role.available = !role.available;
