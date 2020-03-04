@@ -32,6 +32,7 @@ use Resource\models\ResourceContactModel;
 use Respect\Validation\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use SrcCore\controllers\CoreController;
 use SrcCore\models\CoreConfigModel;
 use SrcCore\models\ValidatorModel;
 use User\models\UserModel;
@@ -807,14 +808,8 @@ class AttachmentController
             if (!StoreController::isFileAllowed(['extension' => $body['format'], 'type' => $mimeType])) {
                 return ['errors' => "Format with this mimeType is not allowed : {$body['format']} {$mimeType}"];
             }
-            $uploadMaxFilesize = ini_get('upload_max_filesize');
-            $uploadMaxFilesize = StoreController::getBytesSizeFromPhpIni(['size' => $uploadMaxFilesize]);
-            $postMaxSize = ini_get('post_max_size');
-            $postMaxSize = StoreController::getBytesSizeFromPhpIni(['size' => $postMaxSize]);
-            $memoryLimit = ini_get('memory_limit');
-            $memoryLimit = StoreController::getBytesSizeFromPhpIni(['size' => $memoryLimit]);
 
-            $maximumSize = min($uploadMaxFilesize, $postMaxSize, $memoryLimit);
+            $maximumSize = CoreController::getMaximumAllowedSizeFromPhpIni();
             if ($maximumSize > 0 && strlen($file) > $maximumSize) {
                 return ['errors' => "Body encodedFile size is over limit"];
             }

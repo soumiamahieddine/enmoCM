@@ -26,6 +26,7 @@ use IndexingModel\models\IndexingModelModel;
 use Priority\models\PriorityModel;
 use Resource\models\ResModel;
 use Respect\Validation\Validator;
+use SrcCore\controllers\CoreController;
 use SrcCore\controllers\PreparedClauseController;
 use Status\models\StatusModel;
 use Tag\models\TagModel;
@@ -227,14 +228,7 @@ class ResourceControlController
                 return ['errors' => "Format with this mimeType is not allowed : {$body['format']} {$mimeType}"];
             }
 
-            $uploadMaxFilesize = ini_get('upload_max_filesize');
-            $uploadMaxFilesize = StoreController::getBytesSizeFromPhpIni(['size' => $uploadMaxFilesize]);
-            $postMaxSize = ini_get('post_max_size');
-            $postMaxSize = StoreController::getBytesSizeFromPhpIni(['size' => $postMaxSize]);
-            $memoryLimit = ini_get('memory_limit');
-            $memoryLimit = StoreController::getBytesSizeFromPhpIni(['size' => $memoryLimit]);
-
-            $maximumSize = min($uploadMaxFilesize, $postMaxSize, $memoryLimit);
+            $maximumSize = CoreController::getMaximumAllowedSizeFromPhpIni();
             if ($maximumSize > 0 && strlen($file) > $maximumSize) {
                 return ['errors' => "Body encodedFile size is over limit"];
             }
