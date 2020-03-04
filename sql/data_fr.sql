@@ -459,7 +459,6 @@ INSERT INTO usergroup_content (user_id, group_id, role) VALUES (17, 4, '');
 DELETE FROM usergroup_content WHERE user_id = 18;
 INSERT INTO usergroup_content (user_id, group_id, role) VALUES (18, 1, '');
 INSERT INTO usergroup_content (user_id, group_id, role) VALUES (18, 3, '');
-INSERT INTO usergroup_content (user_id, group_id, role) VALUES (18, 4, '');
 DELETE FROM usergroup_content WHERE user_id = 19;
 INSERT INTO usergroup_content (user_id, group_id, role) VALUES (19, 2, '');
 DELETE FROM usergroup_content WHERE user_id = 20;
@@ -754,50 +753,44 @@ INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('
 -- Create FOLDERS
 TRUNCATE TABLE folders;
 ALTER SEQUENCE folders_id_seq RESTART WITH 1;
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('compétences fonctionnelles', 'TRUE', 21, NULL, 0);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('vie politique', 'TRUE', 21, 1, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('vie citoyenne', 'TRUE', 21, 1, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('administration municipale', 'TRUE', 21, 1, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('ressources humaines', 'TRUE', 21, 1, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('candidatures sur postes ouverts', 'TRUE', 21, 5, 2);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('exercice 2020', 'TRUE', 21, 6, 3);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('refus', 'TRUE', 21, 7, 4);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('retenus pour commissions', 'TRUE', 21, 7, 4);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('candidatures spontanées', 'TRUE', 21, 5, 2);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('exercice 2020', 'TRUE', 21, 10, 3);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('refus', 'TRUE', 21, 11, 4);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('retenus pour commissions', 'TRUE', 21, 11, 4);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('affaires juridiques', 'TRUE', 21, 1, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('finances', 'TRUE', 21, 1, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('marchés publics', 'TRUE', 21, 1, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('informatique', 'TRUE', 21, 1, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('communication', 'TRUE', 21, 1, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('événements', 'TRUE', 21, 1, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('moyens généraux (matériels et logistiques)', 'TRUE', 21, 1, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('archives', 'TRUE', 21, 1, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('compétences techniques', 'TRUE', 21, NULL, 0);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('population', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('police - ordre public', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('stationnement', 'TRUE', 21, 24, 2);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('politique de la ville', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('urbanisme opérationnel', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('urbanisme réglementaire', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('affaires foncières ', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('développement du territoire ', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('habitat', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('biens communaux (domaine privé)', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('espaces publics urbains (domaine public - voiries -réseaux)', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('éclairage public', 'TRUE', 21, 33, 2);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('ouvrages d''art', 'TRUE', 21, 33, 2);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('hygiène', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('santé publique', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('enseignement', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('sports ', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('centre de loisirs nautiques ', 'TRUE', 21, 39, 2);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('jeunesse', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('culture', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('actions sociales', 'TRUE', 21, 22, 1);
-INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('cohésion sociale', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Compétences fonctionnelles', 'TRUE', 21, NULL, 0);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Vie politique', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Vie citoyenne', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Administration municipale', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Ressources humaines', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Candidatures sur postes ouverts', 'TRUE', 21, 5, 2);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Candidatures spontanées', 'TRUE', 21, 5, 2);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Affaires juridiques', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Finances', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Marchés publics', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Informatique', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Communication', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Événements', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Moyens généraux (matériels et logistiques)', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Archives', 'TRUE', 21, 1, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Compétences techniques', 'TRUE', 21, NULL, 0);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Population', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Police - ordre public', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Stationnement', 'TRUE', 21, 24, 2);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Politique de la ville', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Urbanisme opérationnel', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Urbanisme réglementaire', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Affaires foncières ', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Développement du territoire ', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Habitat', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Biens communaux (domaine privé)', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Espaces publics urbains (domaine public - voiries -réseaux)', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Éclairage public', 'TRUE', 21, 33, 2);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Ouvrages d''art', 'TRUE', 21, 33, 2);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Hygiène', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Santé publique', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Enseignement', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Sports', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Centre de loisirs nautiques', 'TRUE', 21, 39, 2);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Jeunesse', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Culture', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Actions sociales', 'TRUE', 21, 22, 1);
+INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Cohésion sociale', 'TRUE', 21, 22, 1);
 
 -- Donnees manuelles
 ------------
@@ -1040,7 +1033,7 @@ INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type
 TRUNCATE TABLE actions;
 TRUNCATE TABLE actions_categories;
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (1,  'redirect', 'Rediriger', 'NEW', 'Y', 'redirect', 'Y', 'redirectAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (2,  '', 'Attribuer au service', 'NEW', 'N', 'confirm_status', 'Y', 'confirmAction');
+--INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (2,  '', 'Attribuer au service', 'NEW', 'N', 'confirm_status', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (3,  '', 'Retourner au service Courrier', 'RET', 'N', 'confirm_status', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (4,  '', 'Enregistrer les modifications', '_NOSTATUS_', 'N', 'confirm_status', 'N', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (5,  '', 'Remettre en traitement', 'COU', 'N', 'confirm_status', 'Y', 'confirmAction');
@@ -1058,7 +1051,7 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_pag
 --INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (101, '', 'Envoyer pour visa', 'VIS', 'N', 'confirm_status', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (114, '', 'Marquer comme lu', '', 'N', 'mark_as_read', 'N', 'resMarkAsReadAction');
 --INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (122, '', 'Attribuer au service', 'NEW', 'N', 'confirm_status', 'Y', 'confirmAction');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (123, 'indexing', 'Attribuer au(x) service(s)', 'NEW', 'N', 'confirm_status', 'Y', 'confirmAction');
+--INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (123, 'indexing', 'Attribuer au(x) service(s)', 'NEW', 'N', 'confirm_status', 'Y', 'confirmAction');
 --INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (210, '', 'Transmettre l''AR signé', 'EENVAR', 'N', 'confirm_status', 'Y', 'confirmAction');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component, parameters) VALUES (400, '', 'Envoyer un AR', '_NOSTATUS_', 'N', 'send_attachments_to_contact', 'Y', 'createAcknowledgementReceiptsAction', '{"mode": "manual"}');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, action_page, history, component) VALUES (405, '', 'Viser le courrier', '_NOSTATUS_', 'N', 'confirm_status', 'Y', 'confirmAction');
@@ -1265,30 +1258,7 @@ INSERT INTO tags (label) VALUES ('SPORT');
 --TEMPLATES
 ------------
 TRUNCATE TABLE templates;
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (3, 'AppelTel', 'Appel téléphonique', '<h2><span style="color: #000000;"><strong>Appel t&eacute;l&eacute;phonique</strong></span></h2>
-<hr />
-<p>&nbsp;</p>
-<p>Bonjour,</p>
-<p>Vous avez re&ccedil;u un appel t&eacute;l&eacute;phonique dont voici les informations :</p>
-<table style="height: 61px; border-color: #f0f0f0;" border="1" width="597"><caption>&nbsp;</caption>
-<tbody>
-<tr>
-<td style="text-align: center;"><strong>Date</strong></td>
-<td style="text-align: center;"><strong>Heure</strong></td>
-<td style="text-align: center;"><strong>Soci&eacute;t&eacute;</strong></td>
-<td style="text-align: center;"><strong>Contact</strong></td>
-</tr>
-<tr>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
-</tr>
-</tbody>
-</table>
-<p>&nbsp;</p>
-<h4>Notes :</h4>
-<p>&nbsp;</p>', 'HTML', NULL, NULL, '', '', 'indexingFile', 'all');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (3, 'Appel téléphonique', 'Appel Téléphonique', '', 'OFFICE', '0000#', 'invitation.odt', 'ODT: invitation', 'letterbox_attachment', 'indexingFile', 'all');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)
 VALUES (2, '[notification] Notifications événement', 'Notifications des événements système',
 '<p><font face="verdana,geneva" size="1">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
@@ -1677,8 +1647,8 @@ INSERT INTO indexing_models (id, category, label, "default", owner, private, ena
 INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (2, 'outgoing', 'Courrier Départ', FALSE, 23, FALSE, TRUE);
 INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (3, 'internal', 'Note Interne', FALSE, 23, FALSE, TRUE);
 INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (4, 'ged_doc', 'Document GED', FALSE, 23, FALSE, TRUE);
-INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (5, 'incoming', 'Courrier Arrivée - Formulaire complet', FALSE, 23, FALSE, TRUE);
-INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (6, 'incoming', 'Allo Mairie – Intervention voirie', FALSE, 23, FALSE, TRUE);
+--INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (5, 'incoming', 'Courrier Arrivée - Formulaire complet', FALSE, 23, FALSE, TRUE);
+--INSERT INTO indexing_models (id, category, label, "default", owner, private, enabled) VALUES (6, 'incoming', 'Allo Mairie – Intervention voirie', FALSE, 23, FALSE, TRUE);
 Select setval('indexing_models_id_seq', (select max(id)+1 from indexing_models), false);
 
 TRUNCATE TABLE indexing_models_fields;
@@ -1729,32 +1699,32 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'indexingCustomField_1', FALSE, null, 'process');
 
 /* Arrivée - formulaire complet */
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'doctype', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'priority', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'confidentiality', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'documentDate', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'arrivalDate', TRUE, '"_TODAY"', 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'subject', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'indexingCustomField_3', FALSE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'indexingCustomField_4', FALSE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'senders', TRUE, null, 'contact');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'recipients', FALSE, null, 'contact');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'initiator', TRUE, null, 'process');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'destination', TRUE, null, 'process');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'processLimitDate', TRUE, null, 'process');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'folders', FALSE, null, 'classifying');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'tags', FALSE, null, 'classifying');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'doctype', TRUE, null, 'mail');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'priority', TRUE, null, 'mail');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'confidentiality', TRUE, null, 'mail');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'documentDate', TRUE, null, 'mail');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'arrivalDate', TRUE, '"_TODAY"', 'mail');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'subject', TRUE, null, 'mail');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'indexingCustomField_3', FALSE, null, 'mail');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'indexingCustomField_4', FALSE, null, 'mail');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'senders', TRUE, null, 'contact');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'recipients', FALSE, null, 'contact');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'initiator', TRUE, null, 'process');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'destination', TRUE, null, 'process');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'processLimitDate', TRUE, null, 'process');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'folders', FALSE, null, 'classifying');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'tags', FALSE, null, 'classifying');
 
 /* Allo Mairie – Demande d'intervention*/
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'doctype', TRUE, '1202', 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'priority', TRUE, null, 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'documentDate', TRUE, '"_TODAY"', 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'arrivalDate', TRUE, '"_TODAY"', 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'subject', TRUE, '"Demande intervention - "', 'mail');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'senders', TRUE, null, 'contact');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'indexingCustomField_2', FALSE, null, 'process');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'destination', TRUE, '10', 'process');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'processLimitDate', TRUE, null, 'process');
-INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'folders', FALSE, '[33]', 'classifying');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'doctype', TRUE, '1202', 'mail');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'priority', TRUE, null, 'mail');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'documentDate', TRUE, '"_TODAY"', 'mail');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'arrivalDate', TRUE, '"_TODAY"', 'mail');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'subject', TRUE, '"Demande intervention - "', 'mail');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'senders', TRUE, null, 'contact');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'indexingCustomField_2', FALSE, null, 'process');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'destination', TRUE, '10', 'process');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'processLimitDate', TRUE, null, 'process');
+--INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (6, 'folders', FALSE, '[33]', 'classifying');
 
 INSERT INTO parameters (id, description, param_value_string) VALUES ('siret', 'Numéro SIRET de l''entreprise', '45239273100025');
