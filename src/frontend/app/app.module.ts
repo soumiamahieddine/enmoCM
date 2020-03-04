@@ -54,7 +54,6 @@ import { SendExternalNoteBookActionComponent }   from './actions/send-external-n
 import { XParaphComponent }                         from './actions/send-external-signatory-book-action/x-paraph/x-paraph.component';
 import { MaarchParaphComponent }                         from './actions/send-external-signatory-book-action/maarch-paraph/maarch-paraph.component';
 import { FastParaphComponent }                  from './actions/send-external-signatory-book-action/fast-paraph/fast-paraph.component';
-import { ProcessActionComponent }               from './actions/process-action/process-action.component';
 import { ViewDocActionComponent }               from './actions/view-doc-action/view-doc-action.component';
 import { RedirectActionComponent }               from './actions/redirect-action/redirect-action.component';
 import { SendShippingActionComponent }               from './actions/send-shipping-action/send-shipping-action.component';
@@ -160,7 +159,6 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         XParaphComponent,
         MaarchParaphComponent,
         FastParaphComponent,
-        ProcessActionComponent,
         ViewDocActionComponent,
         RedirectActionComponent,
         SendShippingActionComponent,
@@ -236,7 +234,6 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         ContinueAvisCircuitActionComponent,
         GiveAvisParallelActionComponent,
         ValidateAvisParallelComponent,
-        ProcessActionComponent,
         RedirectActionComponent,
         SendShippingActionComponent,
         redirectInitiatorEntityActionComponent,
