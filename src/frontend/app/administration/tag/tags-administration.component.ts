@@ -28,7 +28,7 @@ export class TagsAdministrationComponent implements OnInit {
 
     dataSource: any;
     resultsLength: number = 0;
-    displayedColumns = ['label', 'actions'];
+    displayedColumns = ['label', 'description', 'actions'];
 
 
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
@@ -38,7 +38,7 @@ export class TagsAdministrationComponent implements OnInit {
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
         this.dataSource.filterPredicate = (template: any, filter: string) => {
-            return this.functions.filterUnSensitive(template, filter, ['label']);
+            return this.functions.filterUnSensitive(template, filter, ['label', 'description']);
         };
     }
 
