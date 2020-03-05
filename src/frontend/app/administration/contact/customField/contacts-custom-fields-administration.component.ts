@@ -17,7 +17,7 @@ import { SortPipe } from '../../../../plugins/sorting.pipe';
         'contacts-custom-fields-administration.component.scss', 
         '../../../indexation/indexing-form/indexing-form.component.scss'
     ],
-    providers: [NotificationService, AppService, SortPipe]
+    providers: [AppService, SortPipe]
 })
 
 export class ContactsCustomFieldsAdministrationComponent implements OnInit {
@@ -105,8 +105,8 @@ export class ContactsCustomFieldsAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.customFields + ' ' + this.lang.contacts);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+        
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.http.get("../../rest/contactsCustomFields").pipe(
             // TO FIX DATA BINDING SIMPLE ARRAY VALUES

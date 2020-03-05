@@ -85,8 +85,8 @@ export class IndexationComponent implements OnInit {
         // Event after process action 
         this.subscription = this.actionService.catchAction().subscribe(resIds => {
             const param = this.isMailing ? {
-                isMailing : true
-            } : null;         
+                isMailing: true
+            } : null;
             this.router.navigate([`/resources/${resIds[0]}`], { queryParams: param });
         });
     }
@@ -95,6 +95,8 @@ export class IndexationComponent implements OnInit {
         // Use to clean data after navigate on same url
         this._activatedRoute.queryParamMap.subscribe((paramMap: ParamMap) => {
             const refresh = paramMap.get('refresh');
+            this.headerService.sideNavLeft.close();
+            this.headerService.sideNavLeft = this.sidenavLeft;
             if (refresh) {
                 this.appDocumentViewer.templateListForm.reset();
                 this.appDocumentViewer.file = {
@@ -188,7 +190,7 @@ export class IndexationComponent implements OnInit {
     onSubmit() {
         if (this.indexingForm.isValidForm()) {
             const formatdatas = this.formatDatas(this.indexingForm.getDatas());
-            
+
             formatdatas['modelId'] = this.currentIndexingModel.master !== null ? this.currentIndexingModel.master : this.currentIndexingModel.id;
             formatdatas['chrono'] = true;
 

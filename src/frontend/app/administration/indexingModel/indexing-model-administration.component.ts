@@ -20,7 +20,7 @@ declare function $j(selector: any): any;
         'indexing-model-administration.component.scss',
         '../../indexation/indexing-form/indexing-form.component.scss'
     ],
-    providers: [NotificationService, AppService, SortPipe]
+    providers: [AppService, SortPipe]
 })
 
 export class IndexingModelAdministrationComponent implements OnInit {
@@ -64,8 +64,8 @@ export class IndexingModelAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+        
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.route.params.subscribe((params) => {
             if (typeof params['id'] == "undefined") {

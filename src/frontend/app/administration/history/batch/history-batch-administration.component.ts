@@ -7,7 +7,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../../service/app.service';
 import { Observable, merge, Subject, of as observableOf, of } from 'rxjs';
 import { MatPaginator, MatSort, MatDialog } from '@angular/material';
-import { takeUntil, startWith, switchMap, map, catchError, filter, exhaustMap, tap, debounceTime, distinctUntilChanged, finalize } from 'rxjs/operators';
+import { takeUntil, startWith, switchMap, map, catchError, tap, finalize } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { FunctionsService } from '../../../../service/functions.service';
 import { LatinisePipe } from 'ngx-pipes';
@@ -73,6 +73,8 @@ export class HistoryBatchAdministrationComponent implements OnInit {
         private privilegeService: PrivilegeService) { }
 
     ngOnInit(): void {
+        this.headerService.sideNavLeft = this.sidenavLeft;
+
         if (this.privilegeService.hasCurrentUserPrivilege('view_history')) {
             this.subMenus = [
                 {

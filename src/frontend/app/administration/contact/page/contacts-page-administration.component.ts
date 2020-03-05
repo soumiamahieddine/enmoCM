@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../../translate.component';
-import { NotificationService } from '../../../notification.service';
 import { HeaderService } from '../../../../service/header.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../../service/app.service';
@@ -11,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Component({
     templateUrl: "contacts-page-administration.component.html",
     styleUrls: ['contacts-page-administration.component.scss'],
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class ContactsPageAdministrationComponent implements OnInit {
 
@@ -65,17 +64,15 @@ export class ContactsPageAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe((params: any) => {
-            if (typeof params['id'] == "undefined") {
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
+            
+            this.headerService.sideNavLeft = this.sidenavLeft;
 
+            if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.contactCreation);
                 this.creationMode = true;
                 this.loading = false;
 
             } else {
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
                 this.headerService.setHeader(this.lang.contactModification);
 

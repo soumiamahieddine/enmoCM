@@ -51,6 +51,8 @@ export class HistoryAdministrationComponent implements OnInit {
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.history.toLowerCase(), '', '');
 
+        this.headerService.sideNavLeft = this.sidenavLeft;
+        
         if (this.privilegeService.hasCurrentUserPrivilege('view_history_batch')) {
             this.subMenus = [
                 {

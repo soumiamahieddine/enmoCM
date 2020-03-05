@@ -71,8 +71,8 @@ export class UsersAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.users);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+        
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.user = angularGlobals.user;
         this.loading = true;

@@ -6,7 +6,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { ConfirmModalComponent } from '../../confirmModal.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService } from '../../../service/header.service';
 import { Router } from '@angular/router';
@@ -24,7 +23,7 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "entities-administration.component.html",
     styleUrls: ['entities-administration.component.css'],
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class EntitiesAdministrationComponent implements OnInit {
     /*HEADER*/
@@ -87,8 +86,8 @@ export class EntitiesAdministrationComponent implements OnInit {
 
     async ngOnInit(): Promise<void> {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.entities);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+        
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.loading = true;
 

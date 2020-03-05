@@ -82,6 +82,7 @@ export class ContactsListAdministrationComponent implements OnInit {
         public functions: FunctionsService) { }
 
     ngOnInit(): void {
+        this.headerService.sideNavLeft = this.sidenavLeft;
         this.loading = true;
         this.initContactList();
         this.initAutocompleteContacts();

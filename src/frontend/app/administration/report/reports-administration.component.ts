@@ -10,7 +10,7 @@ declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "reports-administration.component.html",
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class ReportsAdministrationComponent implements OnInit {
     /*HEADER*/
@@ -37,8 +37,8 @@ export class ReportsAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.reports);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+        
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.loading = true;
 

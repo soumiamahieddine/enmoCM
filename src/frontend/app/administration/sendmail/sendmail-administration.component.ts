@@ -12,7 +12,7 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "sendmail-administration.component.html",
     styleUrls: ['sendmail-administration.component.scss'],
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class SendmailAdministrationComponent implements OnInit {
 
@@ -93,8 +93,8 @@ export class SendmailAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.sendmailShort);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+        
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.loading = true;
 

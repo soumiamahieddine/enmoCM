@@ -11,7 +11,7 @@ declare var $j: any;
 
 @Component({
     templateUrl: "notification-administration.component.html",
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class NotificationAdministrationComponent implements OnInit {
 
@@ -40,11 +40,12 @@ export class NotificationAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe((params: any) => {
+
+            this.headerService.sideNavLeft = this.sidenavLeft;
+
             if (typeof params['identifier'] == "undefined") {
                 this.headerService.setHeader(this.lang.notificationCreation);
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
-
+                
                 this.creationMode = true;
                 this.http.get('../../rest/administration/notifications/new')
                     .subscribe((data: any) => {
@@ -55,8 +56,6 @@ export class NotificationAdministrationComponent implements OnInit {
                         this.notify.error(err.error.errors);
                     });
             } else {
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
 
                 this.creationMode = false;
                 this.http.get('../../rest/notifications/' + params['identifier'])

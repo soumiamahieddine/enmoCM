@@ -14,7 +14,7 @@ declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "notifications-administration.component.html",
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class NotificationsAdministrationComponent implements OnInit {
 
@@ -72,9 +72,8 @@ export class NotificationsAdministrationComponent implements OnInit {
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.notifications);
 
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
-
+        this.headerService.sideNavLeft = this.sidenavLeft;
+        
         this.loading = true;
 
         this.http.get('../../rest/notifications')

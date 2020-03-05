@@ -22,7 +22,7 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "user-administration.component.html",
     styleUrls: ['user-administration.component.scss'],
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class UserAdministrationComponent implements OnInit {
     @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
@@ -136,9 +136,10 @@ export class UserAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe((params: any) => {
+
+            this.headerService.sideNavLeft = this.sidenavLeft;
+
             if (typeof params['id'] == "undefined") {
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
 
                 this.headerService.setHeader(this.lang.userCreation);
                 this.creationMode = true;
@@ -146,8 +147,6 @@ export class UserAdministrationComponent implements OnInit {
                 this.canManagePersonalDatas = this.privilegeService.hasCurrentUserPrivilege('manage_personal_data');
                 this.loading = false;
             } else {
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
                 this.creationMode = false;
                 this.serialId = params['id'];
@@ -389,14 +388,12 @@ export class UserAdministrationComponent implements OnInit {
                 "role": group.role
             };
             this.http.post("../../rest/users/" + this.serialId + "/groups", groupReq)
-                .subscribe((data: any) => {
+                .subscribe(async (data: any) => {
                     this.user.groups = data.groups;
                     this.user.baskets = data.baskets;
                     if (this.headerService.user.id == this.serialId) {
-                        this.headerService.resfreshCurrentUser();
-                        setTimeout(() => {
-                            this.appShortcut.loadShortcuts();   
-                        }, 200); 
+                        await this.headerService.resfreshCurrentUser();
+                        this.privilegeService.resfreshUserShortcuts();
                     }
                     this.notify.success(this.lang.groupAdded);
                 }, (err) => {
@@ -404,15 +401,13 @@ export class UserAdministrationComponent implements OnInit {
                 });
         } else {
             this.http.delete("../../rest/users/" + this.serialId + "/groups/" + group.group_id)
-                .subscribe((data: any) => {
+                .subscribe(async (data: any) => {
                     this.user.groups = data.groups;
                     this.user.baskets = data.baskets;
                     this.user.redirectedBaskets = data.redirectedBaskets;
                     if (this.headerService.user.id == this.serialId) {
-                        this.headerService.resfreshCurrentUser();
-                        setTimeout(() => {
-                            this.appShortcut.loadShortcuts();   
-                        }, 200); 
+                        await this.headerService.resfreshCurrentUser();
+                        this.privilegeService.resfreshUserShortcuts();
                     }
                     this.notify.success(this.lang.groupDeleted);
                 }, (err) => {

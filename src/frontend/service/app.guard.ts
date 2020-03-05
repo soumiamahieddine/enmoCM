@@ -21,9 +21,16 @@ export class AppGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
         // TO DO : CAN BE REMOVE AFTER FULL V2
         localStorage.setItem('PreviousV2Route', state.url);
-
+        
+        if (route.url.filter((url: any) => url == 'administration').length > 0) {
+            this.headerService.hideSideBar = true;
+            //this.headerService.sideNavLeft.close();
+        } else {
+            this.headerService.hideSideBar = false;
+            this.headerService.resetSideNavSelection();
+        }
+        
         if (this.headerService.user.id === undefined) {
-            
             return this.http.get('../../rest/currentUser/profile')
                 .pipe(
                     map((data: any) => {
@@ -37,7 +44,9 @@ export class AppGuard implements CanActivate {
                             preferences: data.preferences,
                             privileges: data.privileges[0] === 'ALL_PRIVILEGES' ? this.privilegeService.getAllPrivileges() : data.privileges
                         };
+                        
                         this.headerService.nbResourcesFollowed = data.nbFollowedResources;
+                        this.privilegeService.resfreshUserShortcuts();
                         return true;
                     })
                 );
@@ -51,6 +60,8 @@ export class AppGuard implements CanActivate {
     providedIn: 'root'
 })
 export class AfterProcessGuard implements CanDeactivate<ProcessComponent> {
+    constructor() { }
+
     canDeactivate(component: ProcessComponent): boolean {
         if (!component.isActionEnded() && !component.detailMode) {
             component.unlockResource();

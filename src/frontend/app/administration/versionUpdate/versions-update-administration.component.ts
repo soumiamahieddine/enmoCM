@@ -16,7 +16,7 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "versions-update-administration.component.html",
     styleUrls: ['versions-update-administration.component.scss'],
-    providers: [NotificationService, AppService],
+    providers: [AppService],
 })
 export class VersionsUpdateAdministrationComponent implements OnInit {
 
@@ -42,8 +42,8 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.updateVersionControl);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+        
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.loading = true;
 

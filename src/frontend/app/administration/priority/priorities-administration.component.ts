@@ -14,7 +14,7 @@ declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "priorities-administration.component.html",
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class PrioritiesAdministrationComponent implements OnInit {
     /*HEADER*/
@@ -53,8 +53,8 @@ export class PrioritiesAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.priorities);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+        
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.loading = true;
 

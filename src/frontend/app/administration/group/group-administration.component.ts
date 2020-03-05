@@ -13,7 +13,7 @@ import { PrivilegeService } from '../../../service/privileges.service';
 import { tap, catchError, exhaustMap, map, finalize, filter } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { MenuShortcutComponent } from '../../menu/menu-shortcut.component';
-import { MatSelectionList, MatDialog, MatSlideToggle } from '@angular/material';
+import { MatDialog } from '@angular/material';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 
 declare function $j(selector: any): any;
@@ -21,7 +21,7 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "group-administration.component.html",
     styleUrls: ['group-administration.component.scss'],
-    providers: [NotificationService, AppService, PrivilegeService]
+    providers: [AppService, PrivilegeService]
 })
 export class GroupAdministrationComponent implements OnInit {
     /*HEADER*/
@@ -87,14 +87,13 @@ export class GroupAdministrationComponent implements OnInit {
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.groupCreation);
 
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
-
+                this.headerService.sideNavLeft = this.sidenavLeft;
+                
                 this.creationMode = true;
                 this.loading = false;
             } else {
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
+                
+                
 
                 this.creationMode = false;
                 this.http.get("../../rest/groups/" + params['id'] + "/details")
@@ -271,11 +270,9 @@ export class GroupAdministrationComponent implements OnInit {
 
     }
 
-    resfreshShortcut() {
-        this.headerService.resfreshCurrentUser();
-        setTimeout(() => {
-            this.appShortcut.loadShortcuts();
-        }, 200);
+    async resfreshShortcut() {
+        await this.headerService.resfreshCurrentUser();
+        this.privilegeService.resfreshUserShortcuts();
     }
 
     getCurrentPrivListDiff(serviceId: string) {

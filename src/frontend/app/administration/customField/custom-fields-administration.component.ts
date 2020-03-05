@@ -19,7 +19,7 @@ declare function $j(selector: any): any;
         'custom-fields-administration.component.scss', 
         '../../indexation/indexing-form/indexing-form.component.scss'
     ],
-    providers: [NotificationService, AppService, SortPipe]
+    providers: [AppService, SortPipe]
 })
 
 export class CustomFieldsAdministrationComponent implements OnInit {
@@ -84,8 +84,8 @@ export class CustomFieldsAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.customFields);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+        
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.http.get("../../rest/customFields").pipe(
             // TO FIX DATA BINDING SIMPLE ARRAY VALUES

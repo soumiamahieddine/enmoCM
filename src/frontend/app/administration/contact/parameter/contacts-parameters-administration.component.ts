@@ -12,7 +12,7 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "contacts-parameters-administration.component.html",
     styleUrls: ['contacts-parameters-administration.component.scss'],
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class ContactsParametersAdministrationComponent implements OnInit {
 
@@ -84,8 +84,7 @@ export class ContactsParametersAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.headerService.setHeader(this.lang.contactsParameters);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.http.get('../../rest/contactsParameters')
             .subscribe((data: any) => {

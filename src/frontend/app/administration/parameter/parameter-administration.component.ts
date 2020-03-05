@@ -11,7 +11,7 @@ declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "parameter-administration.component.html",
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class ParameterAdministrationComponent implements OnInit {
 
@@ -41,16 +41,15 @@ export class ParameterAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe((params) => {
+
+            this.headerService.sideNavLeft = this.sidenavLeft;
+
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.parameterCreation);
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
 
                 this.creationMode = true;
                 this.loading = false;
             } else {
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
 
                 this.creationMode = false;
                 this.http.get("../../rest/parameters/" + params['id'])

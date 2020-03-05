@@ -20,7 +20,7 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "indexing-models-administration.component.html",
     styleUrls: ['indexing-models-administration.component.scss'],
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 
 export class IndexingModelsAdministrationComponent implements OnInit {
@@ -63,8 +63,8 @@ export class IndexingModelsAdministrationComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+        
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.loading = true;
 

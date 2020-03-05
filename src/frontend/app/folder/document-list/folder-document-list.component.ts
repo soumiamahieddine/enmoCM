@@ -55,7 +55,6 @@ export class FolderDocumentListComponent implements OnInit {
 
     dialogRef: MatDialogRef<any>;
 
-    @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     displayedColumnsBasket: string[] = ['resId'];
@@ -167,17 +166,12 @@ export class FolderDocumentListComponent implements OnInit {
                         };
                     this.foldersService.setFolder(this.folderInfo);
                     this.headerService.setHeader(this.folderInfo.label, '', 'fa fa-folder-open');
-                    setTimeout(() => {
-                        this.basketHome.togglePanel(false);
-                    }, 200);
 
                 });
             this.basketUrl = '../../rest/folders/' + params['folderId'] + '/resources';
             this.filtersListService.filterMode = false;
             this.selectedRes = [];
             this.sidenavRight.close();
-            window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-            window['MainHeaderComponent'].setSnavRight(null);
 
             this.listProperties = this.filtersListService.initListsProperties(this.headerService.user.id, 0, params['folderId'], 'folder');
 

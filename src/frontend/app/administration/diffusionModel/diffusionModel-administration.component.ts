@@ -62,17 +62,16 @@ export class DiffusionModelAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe(async params => {
+
+            this.headerService.sideNavLeft = this.sidenavLeft;
+            
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.diffusionModelCreation);
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
                 this.creationMode = true;
                 this.loading = false;
 
             } else {
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
                 this.creationMode = false;
 

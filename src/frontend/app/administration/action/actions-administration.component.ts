@@ -54,8 +54,8 @@ export class ActionsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+        
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.loading = true;
 

@@ -57,11 +57,11 @@ export class TagAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.loading = true;
-
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
-
+        
         this.route.params.subscribe((params) => {
+
+            this.headerService.sideNavLeft = this.sidenavLeft;
+
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.tagCreation);
                 this.creationMode = true;

@@ -12,7 +12,7 @@ declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "status-administration.component.html",
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class StatusAdministrationComponent implements OnInit {
 
@@ -58,10 +58,11 @@ export class StatusAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe((params: any) => {
+
+            this.headerService.sideNavLeft = this.sidenavLeft;
+
             if (typeof params['identifier'] == "undefined") {
                 this.headerService.setHeader(this.lang.statusCreation);
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
 
                 this.http.get('../../rest/administration/statuses/new')
                     .subscribe((data: any) => {
@@ -74,8 +75,6 @@ export class StatusAdministrationComponent implements OnInit {
                     });
                 this.statusIdAvailable = false;
             } else {
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
 
                 this.creationMode = false;
                 this.statusIdentifier = params['identifier'];

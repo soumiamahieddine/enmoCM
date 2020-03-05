@@ -31,7 +31,7 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "basket-list.component.html",
     styleUrls: ['basket-list.component.scss'],
-    providers: [NotificationService, AppService],
+    providers: [AppService],
 })
 export class BasketListComponent implements OnInit {
 
@@ -52,7 +52,6 @@ export class BasketListComponent implements OnInit {
 
     dragInit: boolean = true;
 
-    @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     displayedColumnsBasket: string[] = ['resId'];
@@ -98,8 +97,6 @@ export class BasketListComponent implements OnInit {
     @ViewChild('actionsListContext', { static: true }) actionsList: ActionsListComponent;
     @ViewChild('filtersTool', { static: true }) filtersTool: FiltersToolComponent;
     @ViewChild('appPanelList', { static: true }) appPanelList: PanelListComponent;
-    @ViewChild('basketHome', { static: true }) basketHome: BasketHomeComponent;
-    @ViewChild('panelFolder', { static: true }) panelFolder: PanelFolderComponent;
 
     currentSelectedChrono: string = '';
 
@@ -133,7 +130,6 @@ export class BasketListComponent implements OnInit {
         });
         this.subscription2 = this.actionService.catchAction().subscribe((message: any) => {
             this.refreshDaoAfterAction();
-            this.panelFolder.refreshFoldersTree();
         });
 
         $j("link[href='merged_css.php']").remove();
@@ -156,11 +152,11 @@ export class BasketListComponent implements OnInit {
                 groupId: params['groupSerialId'],
                 basketId: params['basketId']
             };
+            this.headerService.currentBasketInfo =  this.currentBasketInfo;
+            
             this.filtersListService.filterMode = false;
             this.selectedRes = [];
             this.sidenavRight.close();
-            window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-            window['MainHeaderComponent'].setSnavRight(null);
 
             this.listProperties = this.filtersListService.initListsProperties(this.currentBasketInfo.ownerId, this.currentBasketInfo.groupId, this.currentBasketInfo.basketId, 'basket', this.specificChrono);
 
@@ -273,7 +269,6 @@ export class BasketListComponent implements OnInit {
     refreshDaoAfterAction() {
         this.sidenavRight.close();
         this.refreshDao();
-        this.basketHome.refreshBasketHome();
         const e: any = { checked: false };
         this.toggleAllRes(e);
     }

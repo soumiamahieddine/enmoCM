@@ -54,7 +54,6 @@ export class FollowedDocumentListComponent implements OnInit {
 
     dialogRef: MatDialogRef<any>;
 
-    @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
 
     displayedColumnsBasket: string[] = ['resId'];
@@ -141,8 +140,6 @@ export class FollowedDocumentListComponent implements OnInit {
             this.filtersListService.filterMode = false;
             this.selectedRes = [];
 
-            window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-            window['MainHeaderComponent'].setSnavRight(null);
 
             this.listProperties = this.filtersListService.initListsProperties(this.headerService.user.id, 0, null, 'followed');
 

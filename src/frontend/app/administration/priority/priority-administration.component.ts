@@ -11,7 +11,7 @@ declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "priority-administration.component.html",
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class PriorityAdministrationComponent implements OnInit {
 
@@ -44,16 +44,15 @@ export class PriorityAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe((params) => {
+
+            this.headerService.sideNavLeft = this.sidenavLeft;
+
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.priorityCreation);
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
 
                 this.creationMode = true;
                 this.loading = false;
             } else {
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
 
                 this.creationMode = false;
                 this.id = params['id'];

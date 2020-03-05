@@ -186,7 +186,8 @@ export class ProcessComponent implements OnInit {
 
     ngOnInit(): void {
         this.loading = true;
-
+        this.headerService.sideNavLeft.close();
+        this.headerService.sideNavLeft = this.sidenavLeft;
         this.headerService.setHeader(this.lang.eventProcessDoc);
 
         this.route.params.subscribe(params => {            

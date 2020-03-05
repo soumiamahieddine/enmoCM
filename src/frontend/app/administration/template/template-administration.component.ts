@@ -14,7 +14,7 @@ declare var tinymce: any;
 @Component({
     templateUrl: "template-administration.component.html",
     styleUrls: ['template-administration.component.scss'],
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class TemplateAdministrationComponent implements OnInit {
 
@@ -64,10 +64,11 @@ export class TemplateAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe(params => {
+
+            this.headerService.sideNavLeft = this.sidenavLeft;
+
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.templateCreation);
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
                 this.creationMode = true;
 
@@ -80,8 +81,6 @@ export class TemplateAdministrationComponent implements OnInit {
 
                     });
             } else {
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
 
                 this.creationMode = false;
                 this.http.get('../../rest/templates/' + params['id'] + '/details')

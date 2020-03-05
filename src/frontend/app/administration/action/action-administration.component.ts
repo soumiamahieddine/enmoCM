@@ -55,10 +55,10 @@ export class ActionAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe(params => {
-            if (typeof params['id'] == "undefined") {
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
+            this.headerService.sideNavLeft = this.sidenavLeft;
 
+            if (typeof params['id'] == "undefined") {
+                
                 this.creationMode = true;
 
                 this.http.get('../../rest/initAction')
@@ -81,8 +81,6 @@ export class ActionAdministrationComponent implements OnInit {
                     });
             }
             else {
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
                 
                 this.creationMode = false;
 

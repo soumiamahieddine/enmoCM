@@ -17,7 +17,7 @@ declare function $j(selector: any): any;
     styleUrls: [
         'contacts-groups-administration.component.scss'
     ],
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 
 export class ContactsGroupsAdministrationComponent implements OnInit {
@@ -85,10 +85,8 @@ export class ContactsGroupsAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.contactsGroups);
-
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
-
+        this.headerService.sideNavLeft = this.sidenavLeft;
+        
         this.loading = true;
 
         this.http.get('../../rest/contactsGroups')

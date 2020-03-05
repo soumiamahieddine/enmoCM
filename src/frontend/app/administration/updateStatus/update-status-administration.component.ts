@@ -12,7 +12,7 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "update-status-administration.component.html",
     styleUrls: ['update-status-administration.component.css'],
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class UpdateStatusAdministrationComponent implements OnInit {
 
@@ -40,8 +40,8 @@ export class UpdateStatusAdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.updateStatus);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+        
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.loading = true;
 

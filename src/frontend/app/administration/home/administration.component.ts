@@ -34,8 +34,8 @@ export class AdministrationComponent implements OnInit {
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.loading = true;
 

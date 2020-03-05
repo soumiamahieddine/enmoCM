@@ -15,7 +15,7 @@ declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "groups-administration.component.html",
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class GroupsAdministrationComponent implements OnInit {
     /*HEADER*/
@@ -61,8 +61,7 @@ export class GroupsAdministrationComponent implements OnInit {
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.groups);
 
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.loading = true;
 

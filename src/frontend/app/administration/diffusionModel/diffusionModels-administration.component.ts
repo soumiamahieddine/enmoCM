@@ -67,8 +67,8 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
 
     async ngOnInit(): Promise<void> {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.diffusionModels);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+
+        this.headerService.sideNavLeft = this.sidenavLeft;
 
         this.loading = true;
 

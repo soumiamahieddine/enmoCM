@@ -73,20 +73,16 @@ export class BasketAdministrationComponent implements OnInit {
     ngOnInit(): void {
 
         this.loading = true;
-
+        this.headerService.sideNavLeft = this.sidenavLeft;
+        
         this.route.params.subscribe((params: any) => {
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.basketCreation);
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
-
                 this.creationMode = true;
                 this.basketIdAvailable = false;
                 this.loading = false;
             } else {
-                this.orderColumnsSelected = [];
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
+                this.orderColumnsSelected = [];      
 
                 this.creationMode = false;
                 this.basketIdAvailable = true;

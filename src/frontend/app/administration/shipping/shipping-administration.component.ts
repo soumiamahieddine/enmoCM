@@ -15,7 +15,7 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "shipping-administration.component.html",
     styleUrls: ['shipping-administration.component.scss'],
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class ShippingAdministrationComponent implements OnInit {
 
@@ -79,10 +79,6 @@ export class ShippingAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
-
         this.http.get("../../rest/externalConnectionsEnabled").pipe(
             tap((data: any) => {
                 console.log(data);
@@ -96,6 +92,9 @@ export class ShippingAdministrationComponent implements OnInit {
         ).subscribe();
 
         this.route.params.subscribe(params => {
+
+            this.headerService.sideNavLeft = this.sidenavLeft;
+
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.shippingCreation);
 

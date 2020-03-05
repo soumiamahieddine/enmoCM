@@ -20,7 +20,7 @@ declare function $j(selector: any): any;
     styleUrls: [
         'contacts-group-administration.component.scss'
     ],
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class ContactsGroupAdministrationComponent implements OnInit {
 
@@ -123,18 +123,16 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe(params => {
+            this.headerService.sideNavLeft = this.sidenavLeft;
+
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.contactGroupCreation);
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(null);
-
+                
                 this.creationMode = true;
                 this.contactsGroup.public = false;
                 this.loading = false;
             } else {
-                window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-                window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
-
+                
                 this.creationMode = false;
 
                 this.http.get('../../rest/contactsGroups/' + params['id'])
