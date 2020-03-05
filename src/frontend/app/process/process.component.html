@@ -1,9 +1,5 @@
 <mat-sidenav-container class="maarch-container">
-    <mat-sidenav #snavLeft class="panel-left" #snav [mode]="appService.getViewMode() ? 'over' : 'side'"
-        [fixedInViewport]="appService.getViewMode()" [opened]="appService.getViewMode() ? false : true"
-        autoFocus="false" style="overflow-x:hidden;" [ngStyle]="{'width': appService.getViewMode() ? '95%' : '600px'}">
-        <header-panel [snavLeft]="snav" [navButton]="navButton">
-        </header-panel>
+    <ng-template #adminMenuTemplate>
         <div class="listModels">
             <div class="processTool">
                 <div class="processTool-module jiggle" *ngFor="let module of processTool"
@@ -162,12 +158,12 @@
             </ng-container>
             <div class="emptyAction" *ngIf="actionsList.length === 0" [innerHTML]="lang.noAvailableActionProcess"></div>
         </div>
-    </mat-sidenav>
+    </ng-template>
     <mat-sidenav-content>
         <div class="bg-head">
             <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
                 <div class="bg-head-title-label">
-                    <header-left [snavLeft]="snav"></header-left>
+                    <header-left></header-left>
                 </div>
                 <div class="bg-head-title-tool">
                     <header-right></header-right>
@@ -249,8 +245,7 @@
             <div class="content">
                 <app-document-viewer #appDocumentViewer *ngIf="!loading" style="height:100%;width:100%;" [editMode]="canEditData"
                     [resId]="currentResourceInformations.resId"
-                    [title]="currentResourceInformations.chrono + ' - ' + currentResourceInformations.subject"
-                    [sidenavLeft]="sidenavLeft">
+                    [title]="currentResourceInformations.chrono + ' - ' + currentResourceInformations.subject">
                 </app-document-viewer>
             </div>
         </div>

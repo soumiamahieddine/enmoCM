@@ -1,16 +1,24 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ComponentFactoryResolver, Injector, ApplicationRef, ViewContainerRef, TemplateRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../app/translate.component';
 import { tap, catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { MatSidenav } from '@angular/material';
 import { FoldersService } from '../app/folder/folders.service';
+import { DomPortalHost, TemplatePortal } from '@angular/cdk/portal';
 
 @Injectable()
 export class HeaderService {
-    hideSideBar: boolean = false;
+    sideBarForm: boolean = false;
+    sideBarAdmin: boolean = false;
+
+    showhHeaderPanel: boolean = true;
+    showMenuShortcut: boolean = true;
+    showMenuNav: boolean = true;
+
     sideNavLeft: MatSidenav = null;
-    defaultSideNavLeft: MatSidenav = null;
+    sideBarButton: any = null;
+
     currentBasketInfo: any = {
         ownerId: 0,
         groupId: 0,
@@ -25,9 +33,14 @@ export class HeaderService {
     nbResourcesFollowed: number = 0;
     base64: string = null;
 
+    private portalHost: DomPortalHost;
+    
     constructor(
         public http: HttpClient,
         public foldersService: FoldersService,
+        private componentFactoryResolver: ComponentFactoryResolver,
+        private injector: Injector,
+        private appRef: ApplicationRef,
     ) { }
 
     loadHeader() {
@@ -89,16 +102,51 @@ export class HeaderService {
     }
 
     resetSideNavSelection() { 
-        if (this.defaultSideNavLeft !== undefined) {
-            this.sideNavLeft = this.defaultSideNavLeft;
-            this.sideNavLeft.open();
             this.currentBasketInfo = {
                 ownerId: 0,
                 groupId: 0,
                 basketId: ''
             };
             this.foldersService.setFolder({ id: 0 });
-        }
+            this.sideBarForm = false;
+            this.showhHeaderPanel = true;
+            this.showMenuShortcut = true;
+            this.showMenuNav = true;
+            this.sideBarAdmin = false;
+            this.sideBarButton = null;
+    }
+
+    injectInSideBarLeft(template: TemplateRef<any>, viewContainerRef: ViewContainerRef, id: string = 'adminMenu', mode: string = '') {
         
+
+        if (mode === 'form') {
+            this.sideBarForm = true;
+            this.showhHeaderPanel = true;
+            this.showMenuShortcut = false;
+            this.showMenuNav = false;
+            this.sideBarAdmin = true;
+        } else {
+            this.showhHeaderPanel = true;
+            this.showMenuShortcut = true;
+            this.showMenuNav = true;
+        }
+
+        // Create a portalHost from a DOM element
+        this.portalHost = new DomPortalHost(
+            document.querySelector(`#${id}`),
+            this.componentFactoryResolver,
+            this.appRef,
+            this.injector
+        );
+
+        // Create a template portal
+        const templatePortal = new TemplatePortal(
+            template,
+            viewContainerRef,
+            { $implicit: 'Bob' },
+        );
+
+        // Attach portal to host
+        this.portalHost.attach(templatePortal);
     }
 }

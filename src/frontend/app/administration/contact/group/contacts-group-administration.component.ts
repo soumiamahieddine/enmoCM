@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../../translate.component';
@@ -24,8 +24,8 @@ declare function $j(selector: any): any;
 })
 export class ContactsGroupAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
+    @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     lang: any = LANG;
 
@@ -102,7 +102,8 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         private router: Router, 
         private notify: NotificationService, 
         private headerService: HeaderService,
-        public appService: AppService
+        public appService: AppService,
+        private viewContainerRef: ViewContainerRef
     ) {
         $j("link[href='merged_css.php']").remove();
 
@@ -123,7 +124,7 @@ export class ContactsGroupAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe(params => {
-            this.headerService.sideNavLeft = this.sidenavLeft;
+            this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.contactGroupCreation);

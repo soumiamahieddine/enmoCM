@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
-import { MatSidenav } from '@angular/material/sidenav';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
@@ -18,10 +17,6 @@ import { MatDialog } from '@angular/material';
     providers: [AppService]
 })
 export class TagAdministrationComponent implements OnInit {
-
-    /*HEADER*/
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
-    @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
     id: string;
     creationMode: boolean;
@@ -59,9 +54,6 @@ export class TagAdministrationComponent implements OnInit {
         this.loading = true;
         
         this.route.params.subscribe((params) => {
-
-            this.headerService.sideNavLeft = this.sidenavLeft;
-
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.tagCreation);
                 this.creationMode = true;

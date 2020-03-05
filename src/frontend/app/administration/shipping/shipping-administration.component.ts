@@ -19,7 +19,6 @@ declare function $j(selector: any): any;
 })
 export class ShippingAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
     lang: any = LANG;
@@ -92,9 +91,6 @@ export class ShippingAdministrationComponent implements OnInit {
         ).subscribe();
 
         this.route.params.subscribe(params => {
-
-            this.headerService.sideNavLeft = this.sidenavLeft;
-
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.shippingCreation);
 
@@ -102,7 +98,6 @@ export class ShippingAdministrationComponent implements OnInit {
 
                 this.http.get('../../rest/administration/shippings/new')
                     .subscribe((data: any) => {
-                        console.log(data);
                         this.entities = data['entities'];
                         this.entitiesClone = JSON.parse(JSON.stringify(this.entities));
                         setTimeout(() => {

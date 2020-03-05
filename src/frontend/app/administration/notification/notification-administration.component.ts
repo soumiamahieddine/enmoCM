@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-import { MatSidenav } from '@angular/material/sidenav';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
@@ -15,8 +14,7 @@ declare var $j: any;
 })
 export class NotificationAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
+    @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
     
     creationMode: boolean; 
     notification: any = {
@@ -31,7 +29,8 @@ export class NotificationAdministrationComponent implements OnInit {
         private router: Router, 
         private notify: NotificationService, 
         private headerService: HeaderService,
-        public appService: AppService
+        public appService: AppService,
+        private viewContainerRef: ViewContainerRef
     ) {
         $j("link[href='merged_css.php']").remove();
     }
@@ -41,7 +40,7 @@ export class NotificationAdministrationComponent implements OnInit {
 
         this.route.params.subscribe((params: any) => {
 
-            this.headerService.sideNavLeft = this.sidenavLeft;
+            this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
             if (typeof params['identifier'] == "undefined") {
                 this.headerService.setHeader(this.lang.notificationCreation);

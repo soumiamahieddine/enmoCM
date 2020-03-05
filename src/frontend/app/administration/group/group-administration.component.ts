@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../../translate.component';
@@ -12,7 +12,6 @@ import { AppService } from '../../../service/app.service';
 import { PrivilegeService } from '../../../service/privileges.service';
 import { tap, catchError, exhaustMap, map, finalize, filter } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { MenuShortcutComponent } from '../../menu/menu-shortcut.component';
 import { MatDialog } from '@angular/material';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 
@@ -24,8 +23,7 @@ declare function $j(selector: any): any;
     providers: [AppService]
 })
 export class GroupAdministrationComponent implements OnInit {
-    /*HEADER*/
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
+
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
     lang: any = LANG;
@@ -84,7 +82,6 @@ export class GroupAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe(params => {
-            this.headerService.sideNavLeft = this.sidenavLeft;
             if (typeof params['id'] == "undefined") {
 
                 this.headerService.setHeader(this.lang.groupCreation);

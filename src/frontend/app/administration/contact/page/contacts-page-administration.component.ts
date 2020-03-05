@@ -1,8 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../../translate.component';
 import { HeaderService } from '../../../../service/header.service';
-import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../../service/app.service';
 import { MatDialog } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -14,8 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ContactsPageAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
-    @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
+    @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     lang: any = LANG;
     loading: boolean = false;
@@ -57,7 +55,8 @@ export class ContactsPageAdministrationComponent implements OnInit {
         private router: Router,
         private headerService: HeaderService,
         public appService: AppService,
-        public dialog: MatDialog) { }
+        public dialog: MatDialog,
+        private viewContainerRef: ViewContainerRef) { }
 
     ngOnInit(): void {
 
@@ -65,7 +64,7 @@ export class ContactsPageAdministrationComponent implements OnInit {
 
         this.route.params.subscribe((params: any) => {
             
-            this.headerService.sideNavLeft = this.sidenavLeft;
+            this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.contactCreation);

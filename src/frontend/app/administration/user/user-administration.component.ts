@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, NgZone, ViewChild, Inject, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LANG } from '../../translate.component';
@@ -14,7 +14,6 @@ import { HeaderService } from '../../../service/header.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AccountLinkComponent } from './account-link/account-link.component';
 import { AppService } from '../../../service/app.service';
-import { MenuShortcutComponent } from '../../menu/menu-shortcut.component';
 import { PrivilegeService } from '../../../service/privileges.service';
 
 declare function $j(selector: any): any;
@@ -25,8 +24,9 @@ declare function $j(selector: any): any;
     providers: [AppService]
 })
 export class UserAdministrationComponent implements OnInit {
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
+
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
+    @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     lang: any = LANG;
     loading: boolean = false;
@@ -121,7 +121,8 @@ export class UserAdministrationComponent implements OnInit {
         private headerService: HeaderService, 
         private _formBuilder: FormBuilder,
         public appService: AppService,
-        private privilegeService: PrivilegeService
+        private privilegeService: PrivilegeService,
+        private viewContainerRef: ViewContainerRef
     ) {
         $j("link[href='merged_css.php']").remove();
         window['angularUserAdministrationComponent'] = {
@@ -135,7 +136,7 @@ export class UserAdministrationComponent implements OnInit {
 
         this.route.params.subscribe((params: any) => {
 
-            this.headerService.sideNavLeft = this.sidenavLeft;
+            this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
             if (typeof params['id'] == "undefined") {
 

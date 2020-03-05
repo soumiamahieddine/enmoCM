@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
 import { FormControl, Validators} from '@angular/forms';
-import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../service/app.service';
 
 declare function $j(selector: any): any;
@@ -16,9 +15,6 @@ declare function $j(selector: any): any;
 })
 export class StatusAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
-    
     lang: any = LANG;
 
     creationMode: boolean;
@@ -58,9 +54,6 @@ export class StatusAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe((params: any) => {
-
-            this.headerService.sideNavLeft = this.sidenavLeft;
-
             if (typeof params['identifier'] == "undefined") {
                 this.headerService.setHeader(this.lang.statusCreation);
 

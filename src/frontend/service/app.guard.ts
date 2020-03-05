@@ -21,13 +21,11 @@ export class AppGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | boolean {
         // TO DO : CAN BE REMOVE AFTER FULL V2
         localStorage.setItem('PreviousV2Route', state.url);
-        
-        if (route.url.filter((url: any) => url == 'administration').length > 0) {
-            this.headerService.hideSideBar = true;
-            //this.headerService.sideNavLeft.close();
+        this.headerService.resetSideNavSelection();
+        if (route.url.filter((url: any) => url == 'administration').length > 0) { 
+            this.headerService.sideBarAdmin = true;
         } else {
-            this.headerService.hideSideBar = false;
-            this.headerService.resetSideNavSelection();
+            this.headerService.sideBarAdmin = false;
         }
         
         if (this.headerService.user.id === undefined) {

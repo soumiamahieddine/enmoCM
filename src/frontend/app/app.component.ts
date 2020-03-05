@@ -29,19 +29,19 @@ declare function $j(selector: any): any;
     viewProviders: [MatIconRegistry],
     providers: [
         AppService,
-        {provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults}
+        { provide: MAT_TOOLTIP_DEFAULT_OPTIONS, useValue: myCustomTooltipDefaults }
     ],
 })
 export class AppComponent {
 
     @ViewChild('snavLeft', { static: false }) snavLeft: MatSidenav;
-    
+
     constructor(
-        iconReg: MatIconRegistry, 
-        sanitizer: DomSanitizer, 
+        iconReg: MatIconRegistry,
+        sanitizer: DomSanitizer,
         public appService: AppService,
         public headerService: HeaderService
-        ) {
+    ) {
 
         iconReg.addSvgIcon('maarchLogo', sanitizer.bypassSecurityTrustResourceUrl('static.php?filename=logo_white.svg')).addSvgIcon('maarchLogoOnly', sanitizer.bypassSecurityTrustResourceUrl('img/logo_only_white.svg'));
         iconReg.addSvgIcon('maarchLogoFull', sanitizer.bypassSecurityTrustResourceUrl('static.php?filename=logo.svg')).addSvgIcon('maarchLogoOnlyDefault', sanitizer.bypassSecurityTrustResourceUrl('img/logo.svg'));
@@ -49,7 +49,7 @@ export class AppComponent {
         //this.headerService.loadHeader();
 
         /*REMOVE AFTER FULL MAARCH V2*/
-        $j('my-app').css({"display":"block"});
+        $j('my-app').css({ "display": "block" });
         $j('#maarch_content').remove();
         $j('#loadingAngularContent').remove();
         $j('#header').remove();
@@ -57,7 +57,7 @@ export class AppComponent {
         $j('#menunav').hide();
         $j('#divList').remove();
         $j('#container').css({
-            "width": "100%", 
+            "width": "100%",
             "min-width": "auto"
         });
         $j('#content').css({
@@ -71,11 +71,8 @@ export class AppComponent {
     ngOnInit(): void {
         setTimeout(() => {
             this.headerService.sideNavLeft = this.snavLeft;
-            this.headerService.defaultSideNavLeft = this.snavLeft;
         }, 0);
-       
-        
+
         this.headerService.sideNavLeft = this.snavLeft;
-        this.headerService.defaultSideNavLeft = this.snavLeft;
     }
 }

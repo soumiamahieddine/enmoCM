@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef, TemplateRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSidenav } from '@angular/material/sidenav';
 
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
@@ -35,8 +34,7 @@ export class IndexationComponent implements OnInit {
 
     loading: boolean = false;
 
-    @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
-    @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
+    @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
     @ViewChild('appDocumentViewer', { static: false }) appDocumentViewer: DocumentViewerComponent;
@@ -95,8 +93,8 @@ export class IndexationComponent implements OnInit {
         // Use to clean data after navigate on same url
         this._activatedRoute.queryParamMap.subscribe((paramMap: ParamMap) => {
             const refresh = paramMap.get('refresh');
-            this.headerService.sideNavLeft.close();
-            this.headerService.sideNavLeft = this.sidenavLeft;
+            this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu', 'form');
+            this.headerService.sideBarButton = {icon: 'fa fa-home', label: this.lang.backHome, route : '/home'};
             if (refresh) {
                 this.appDocumentViewer.templateListForm.reset();
                 this.appDocumentViewer.file = {
@@ -133,7 +131,7 @@ export class IndexationComponent implements OnInit {
 
                     if (this.appService.getViewMode()) {
                         setTimeout(() => {
-                            this.sidenavLeft.open();
+                            this.headerService.sideNavLeft.open();
                         }, 400);
                     }
                 }),

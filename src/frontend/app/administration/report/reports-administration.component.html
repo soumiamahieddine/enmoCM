@@ -1,15 +1,9 @@
 <mat-sidenav-container autosize class="maarch-container">
-    <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
-                 [opened]="!appService.getViewMode()" [ngStyle]="{'width': appService.getViewMode() ? '80%' : '350px'}">
-        <header-panel [snavLeft]="snav"></header-panel>
-        <menu-shortcut></menu-shortcut>
-        <menu-nav></menu-nav>
-    </mat-sidenav>
     <mat-sidenav-content>
         <div class="bg-head">
             <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
                 <div class="bg-head-title-label">
-                    <header-left [snavLeft]="snav"></header-left>
+                    <header-left></header-left>
                 </div>
                 <div class="bg-head-title-tool">
                     <header-right></header-right>
@@ -24,17 +18,18 @@
                     <mat-spinner style="margin:auto;"></mat-spinner>
                 </div>
                 <mat-card *ngIf="!loading" class="card-app-content">
-                    <mat-tab-group [(selectedIndex)]="selectedTabIndex_2" *ngIf="!creationMode" (selectedTabChange)="loadReports($event.index)">
+                    <mat-tab-group [(selectedIndex)]="selectedTabIndex_2" *ngIf="!creationMode"
+                        (selectedTabChange)="loadReports($event.index)">
                         <mat-tab *ngFor="let group of groups" label="{{group.group_desc}">
                             <ng-template mat-tab-label>
                                 {{group.group_desc}}
                             </ng-template>
-                            <div *ngIf="loadingOptions">
-                                <mat-spinner style="margin:auto;"></mat-spinner>
-                            </div>
-                            <form>
-                                <mat-list *ngIf="reports.length > 0 && !loadingOptions">
-                                    <!--{{lang.folders}}
+                            <div *ngIf=" loadingOptions">
+                            <mat-spinner style="margin:auto;"></mat-spinner>
+            </div>
+            <form>
+                <mat-list *ngIf="reports.length > 0 && !loadingOptions">
+                    <!--{{lang.folders}}
                                     <mat-divider></mat-divider>
                                     <span *ngFor="let report of reports;let i = index">
                                         <mat-list-item *ngIf="report.module == 'folder'">
@@ -45,34 +40,32 @@
                                         </mat-list-item>
                                     </span>-->
 
-                                    {{lang.entities}}
-                                    <mat-divider></mat-divider>
-                                    <span *ngFor="let report of reports;let i = index">
-                                    <mat-list-item *ngIf="report.module == 'entities'">
-                                        <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}"
-                                                      matTooltip="{{report.desc}}">
-                                            {{report.label}}
-                                        </mat-checkbox>
-                                    </mat-list-item>
-                                </span>
-
-
-                                    {{lang.maarchApplication}}
-                                    <mat-divider></mat-divider>
-                                    <span *ngFor="let report of reports;let i = index">
-                                    <mat-list-item *ngIf="report.module == 'application'">
-                                        <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()" name="report_{{report.module}}_{{i}}"
-                                                      matTooltip="{{report.desc}}">
-                                            {{report.label}}
-                                        </mat-checkbox>
-                                    </mat-list-item>
-                                </span>
-                                </mat-list>
-                            </form>
-                        </mat-tab>
-                    </mat-tab-group>
-                </mat-card>
-            </div>
+                    {{lang.entities}}
+                    <mat-divider></mat-divider>
+                    <span *ngFor="let report of reports;let i = index">
+                        <mat-list-item *ngIf="report.module == 'entities'">
+                            <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()"
+                                name="report_{{report.module}}_{{i}}" matTooltip="{{report.desc}}">
+                                {{report.label}}
+                            </mat-checkbox>
+                        </mat-list-item>
+                    </span>
+                    {{lang.maarchApplication}}
+                    <mat-divider></mat-divider>
+                    <span *ngFor="let report of reports;let i = index">
+                        <mat-list-item *ngIf="report.module == 'application'">
+                            <mat-checkbox color="primary" [(ngModel)]="report.checked" (change)="saveReport()"
+                                name="report_{{report.module}}_{{i}}" matTooltip="{{report.desc}}">
+                                {{report.label}}
+                            </mat-checkbox>
+                        </mat-list-item>
+                    </span>
+                </mat-list>
+            </form>
+            </mat-tab>
+            </mat-tab-group>
+            </mat-card>
+        </div>
         </div>
     </mat-sidenav-content>
 </mat-sidenav-container>

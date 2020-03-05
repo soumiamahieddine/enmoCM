@@ -40,7 +40,6 @@ declare var angularGlobals: any;
 })
 export class ContactsFormComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
 

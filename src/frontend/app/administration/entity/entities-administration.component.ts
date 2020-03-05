@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -28,8 +28,8 @@ declare function $j(selector: any): any;
 export class EntitiesAdministrationComponent implements OnInit {
     /*HEADER*/
     titleHeader: string;
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
+    @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     dialogRef: MatDialogRef<any>;
 
@@ -81,13 +81,14 @@ export class EntitiesAdministrationComponent implements OnInit {
         private headerService: HeaderService,
         private router: Router,
         public appService: AppService,
-        public functions: FunctionsService
+        public functions: FunctionsService,
+        private viewContainerRef: ViewContainerRef
     ) { }
 
     async ngOnInit(): Promise<void> {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.entities);
         
-        this.headerService.sideNavLeft = this.sidenavLeft;
+        this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
         this.loading = true;
 

@@ -20,7 +20,6 @@ declare function $j(selector: any): any;
 })
 export class VersionsUpdateAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
     lang: any = LANG;
@@ -43,8 +42,6 @@ export class VersionsUpdateAdministrationComponent implements OnInit {
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.updateVersionControl);
         
-        this.headerService.sideNavLeft = this.sidenavLeft;
-
         this.loading = true;
 
         this.http.get('../../rest/versionsUpdate').pipe(

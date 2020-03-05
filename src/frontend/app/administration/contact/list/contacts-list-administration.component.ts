@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, EventEmitter, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, Inject, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../../translate.component';
 import { NotificationService } from '../../../notification.service';
@@ -20,8 +20,8 @@ import { FunctionsService } from '../../../../service/functions.service';
 })
 export class ContactsListAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
+    @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     lang: any = LANG;
     loading: boolean = false;
@@ -79,10 +79,12 @@ export class ContactsListAdministrationComponent implements OnInit {
         private headerService: HeaderService,
         public appService: AppService,
         public dialog: MatDialog,
-        public functions: FunctionsService) { }
+        public functions: FunctionsService,
+        private viewContainerRef: ViewContainerRef) { }
+        
 
     ngOnInit(): void {
-        this.headerService.sideNavLeft = this.sidenavLeft;
+        this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
         this.loading = true;
         this.initContactList();
         this.initAutocompleteContacts();

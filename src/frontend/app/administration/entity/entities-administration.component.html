@@ -1,9 +1,5 @@
 <mat-sidenav-container autosize class="maarch-container">
-    <mat-sidenav #snav [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
-                 [opened]="!appService.getViewMode()" [ngStyle]="{'width': appService.getViewMode() ? '80%' : '350px'}">
-        <header-panel [snavLeft]="snav"></header-panel>
-        <menu-shortcut></menu-shortcut>
-        <menu-nav></menu-nav>
+    <ng-template #adminMenuTemplate>
         <mat-nav-list>
             <h3 mat-subheader>{{lang.actions}}</h3>
             <a mat-list-item (click)="snav2.open();prepareEntityAdd()" *ngIf="!creationMode">
@@ -19,7 +15,8 @@
             <ng-container *ngFor="let role of listTemplateRoles">
                 <a mat-list-item disableRipple="true" *ngIf="role.id != 'dest' && role.id != 'cc'">
                     <mat-icon color="primary" mat-list-icon>
-                        <mat-slide-toggle [checked]="role.available" color="primary" (click)="toggleRole(role);false"></mat-slide-toggle>
+                        <mat-slide-toggle [checked]="role.available" color="primary" (click)="toggleRole(role);false">
+                        </mat-slide-toggle>
                     </mat-icon>
                     <p mat-line [ngStyle]="{'opacity': role.available ? '' : '0.5'}" (click)="toggleRole(role);false">
                         {{role.label}}
@@ -27,13 +24,12 @@
                 </a>
             </ng-container>
         </mat-nav-list>
-        <mat-divider></mat-divider>
-    </mat-sidenav>
+    </ng-template>
     <mat-sidenav-content>
         <div class="bg-head">
             <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
                 <div class="bg-head-title-label">
-                    <header-left [snavLeft]="snav"></header-left>
+                    <header-left></header-left>
                 </div>
                 <div class="bg-head-title-tool">
                     <header-right></header-right>
@@ -50,19 +46,22 @@
                 <mat-card *ngIf="!loading" class="card-app-content">
 
                     <mat-form-field>
-                        <input matInput id="jstree_search" name="jstree_search" type="text" placeholder="{{lang.searchEntities}}">
+                        <input matInput id="jstree_search" name="jstree_search" type="text"
+                            placeholder="{{lang.searchEntities}}">
                         <mat-hint *ngIf="!creationMode">{{lang.entityTreeInfo}}</mat-hint>
                         <mat-hint *ngIf="creationMode">{{lang.entityTreeInfoCreation}}</mat-hint>
                     </mat-form-field>
                     <div id="jstree"></div>
-                    <div class="mat-paginator" style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">{{entities.length}} {{lang.entities}}</div>
+                    <div class="mat-paginator"
+                        style="min-height:48px;min-height: 48px;display: flex;justify-content: end;align-items: center;padding-right: 20px;">
+                        {{entities.length}} {{lang.entities}}</div>
                 </mat-card>
             </div>
         </div>
     </mat-sidenav-content>
 
-    <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()" fixedTopGap="56"
-                 position='end' [opened]="false" class="col-md-5 col-xs-11">
+    <mat-sidenav #snav2 [mode]="appService.getViewMode() ? 'over' : 'side'" [fixedInViewport]="appService.getViewMode()"
+        fixedTopGap="56" position='end' [opened]="false" class="col-md-5 col-xs-11">
         <mat-nav-list>
             <mat-tab-group>
                 <mat-tab [label]="creationMode ? lang.createNewEntity : lang.informations">
@@ -70,21 +69,25 @@
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <mat-form-field>
-                                    <mat-select id="parent_entity_id" name="parent_entity_id" title="{{lang.isLinkedTo}}" placeholder="{{lang.isLinkedTo}}" [(ngModel)]="currentEntity.parent_entity_id"
-                                                (selectionChange)="selectParentEntity(currentEntity.parent_entity_id)">
+                                    <mat-select id="parent_entity_id" name="parent_entity_id"
+                                        title="{{lang.isLinkedTo}}" placeholder="{{lang.isLinkedTo}}"
+                                        [(ngModel)]="currentEntity.parent_entity_id"
+                                        (selectionChange)="selectParentEntity(currentEntity.parent_entity_id)">
                                         <mat-option value="">
                                             <i style="opacity:0.5;text-align:center;">- {{lang.noEntity}} -</i>
                                         </mat-option>
                                         <ng-container *ngFor="let entity of entities | sortBy : 'entity_label'">
-                                            <mat-option [value]="entity.entity_id" *ngIf="(!entity.state.disabled && entity.entity_id != currentEntity.entity_id) || currentEntity.parent_entity_id == entity.entity_id">
+                                            <mat-option [value]="entity.entity_id"
+                                                *ngIf="(!entity.state.disabled && entity.entity_id != currentEntity.entity_id) || currentEntity.parent_entity_id == entity.entity_id">
                                                 {{entity.entity_label}}
                                             </mat-option>
                                         </ng-container>
                                     </mat-select>
                                 </mat-form-field>
                                 <mat-form-field>
-                                    <mat-select id="entity_type" name="entity_type" title="{{lang.entityType}}" placeholder="{{lang.entityType}}" [(ngModel)]="currentEntity.entity_type"
-                                                maxlength="32" required>
+                                    <mat-select id="entity_type" name="entity_type" title="{{lang.entityType}}"
+                                        placeholder="{{lang.entityType}}" [(ngModel)]="currentEntity.entity_type"
+                                        maxlength="32" required>
                                         <mat-option *ngFor="let entity_type of entityTypeList" [value]="entity_type.id">
                                             {{entity_type.label}}
                                         </mat-option>
@@ -95,40 +98,45 @@
                         <div class="form-group" *ngIf="!creationMode">
                             <div class="col-sm-12">
                                 <mat-form-field>
-                                    <input matInput [(ngModel)]="currentEntity.id" name="id" id="id" title="{{lang.technicalId}}" type="text"
-                                           placeholder="{{lang.technicalId}}" disabled>
+                                    <input matInput [(ngModel)]="currentEntity.id" name="id" id="id"
+                                        title="{{lang.technicalId}}" type="text" placeholder="{{lang.technicalId}}"
+                                        disabled>
                                 </mat-form-field>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <mat-form-field>
-                                    <input matInput [(ngModel)]="currentEntity.entity_id" required name="entity_id" id="entity_id" title="{{lang.id}}" type="text"
-                                           placeholder="{{lang.id}}" [disabled]="!creationMode" maxlength="32" pattern="^[\w-]*$">
+                                    <input matInput [(ngModel)]="currentEntity.entity_id" required name="entity_id"
+                                        id="entity_id" title="{{lang.id}}" type="text" placeholder="{{lang.id}}"
+                                        [disabled]="!creationMode" maxlength="32" pattern="^[\w-]*$">
                                 </mat-form-field>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <mat-form-field>
-                                    <input matInput [(ngModel)]="currentEntity.entity_label" required name="entity_label" id="entity_label" title="{{lang.label}}"
-                                           type="text" placeholder="{{lang.label}}" maxlength="255">
+                                    <input matInput [(ngModel)]="currentEntity.entity_label" required
+                                        name="entity_label" id="entity_label" title="{{lang.label}}" type="text"
+                                        placeholder="{{lang.label}}" maxlength="255">
                                 </mat-form-field>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <mat-form-field>
-                                    <input matInput [(ngModel)]="currentEntity.short_label" required name="short_label" id="short_label" title="{{lang.shortLabel}}"
-                                           type="text" placeholder="{{lang.shortLabel}}" maxlength="50">
+                                    <input matInput [(ngModel)]="currentEntity.short_label" required name="short_label"
+                                        id="short_label" title="{{lang.shortLabel}}" type="text"
+                                        placeholder="{{lang.shortLabel}}" maxlength="50">
                                 </mat-form-field>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <mat-form-field>
-                                    <input matInput [(ngModel)]="currentEntity.email" name="email" id="email" title="{{lang.email}}" type="text" placeholder="{{lang.email}}"
-                                           maxlength="255" pattern="(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)">
+                                    <input matInput [(ngModel)]="currentEntity.email" name="email" id="email"
+                                        title="{{lang.email}}" type="text" placeholder="{{lang.email}}" maxlength="255"
+                                        pattern="(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)">
                                 </mat-form-field>
                             </div>
                         </div>
@@ -142,61 +150,74 @@
                                 <div class="form-group">
                                     <div class="col-sm-4">
                                         <mat-form-field>
-                                            <input matInput [(ngModel)]="currentEntity.adrs_1" name="adrs_1" id="adrs_1" title="{{lang.address}}1" type="text" placeholder="{{lang.address}}1"
-                                                   maxlength="255">
+                                            <input matInput [(ngModel)]="currentEntity.adrs_1" name="adrs_1" id="adrs_1"
+                                                title="{{lang.address}}1" type="text" placeholder="{{lang.address}}1"
+                                                maxlength="255">
                                         </mat-form-field>
 
                                     </div>
                                     <div class="col-sm-4">
                                         <mat-form-field>
-                                            <input matInput [(ngModel)]="currentEntity.adrs_2" name="adrs_2" id="adrs_2" title="{{lang.address}}2" type="text" placeholder="{{lang.address}}2"
-                                                   maxlength="255">
+                                            <input matInput [(ngModel)]="currentEntity.adrs_2" name="adrs_2" id="adrs_2"
+                                                title="{{lang.address}}2" type="text" placeholder="{{lang.address}}2"
+                                                maxlength="255">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-sm-4">
                                         <mat-form-field>
-                                            <input matInput [(ngModel)]="currentEntity.adrs_3" name="adrs_3" id="adrs_3" title="{{lang.address}}3" type="text" placeholder="{{lang.address}}3"
-                                                   maxlength="255">
+                                            <input matInput [(ngModel)]="currentEntity.adrs_3" name="adrs_3" id="adrs_3"
+                                                title="{{lang.address}}3" type="text" placeholder="{{lang.address}}3"
+                                                maxlength="255">
                                         </mat-form-field>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-4">
                                         <mat-form-field>
-                                            <input matInput [(ngModel)]="currentEntity.zipcode" name="zipcode" id="zipcode" title="{{lang.zipcode}}" type="text" placeholder="{{lang.zipcode}}"
-                                                   maxlength="32">
+                                            <input matInput [(ngModel)]="currentEntity.zipcode" name="zipcode"
+                                                id="zipcode" title="{{lang.zipcode}}" type="text"
+                                                placeholder="{{lang.zipcode}}" maxlength="32">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-sm-4">
                                         <mat-form-field>
-                                            <input matInput [(ngModel)]="currentEntity.city" name="city" id="city" title="{{lang.city}}" type="text" placeholder="{{lang.city}}"
-                                                   maxlength="255">
+                                            <input matInput [(ngModel)]="currentEntity.city" name="city" id="city"
+                                                title="{{lang.city}}" type="text" placeholder="{{lang.city}}"
+                                                maxlength="255">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-sm-4">
                                         <mat-form-field>
-                                            <input matInput [(ngModel)]="currentEntity.country" name="country" id="country" title="{{lang.country}}" type="text" placeholder="{{lang.country}}"
-                                                   maxlength="255">
+                                            <input matInput [(ngModel)]="currentEntity.country" name="country"
+                                                id="country" title="{{lang.country}}" type="text"
+                                                placeholder="{{lang.country}}" maxlength="255">
                                         </mat-form-field>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                         <mat-form-field>
-                                                <textarea matInput [(ngModel)]="currentEntity.entity_full_name" name="entity_full_name" id="entity_full_name" placeholder="{{lang.entityFullName}}"
-                                                          title="{{lang.entityFullName}}" matTextareaAutosize matAutosizeMinRows="1"
-                                                          matAutosizeMaxRows="5"></textarea>
+                                            <textarea matInput [(ngModel)]="currentEntity.entity_full_name"
+                                                name="entity_full_name" id="entity_full_name"
+                                                placeholder="{{lang.entityFullName}}" title="{{lang.entityFullName}}"
+                                                matTextareaAutosize matAutosizeMinRows="1"
+                                                matAutosizeMaxRows="5"></textarea>
                                         </mat-form-field>
                                     </div>
                                 </div>
                                 <div class="form-group" *ngIf="!creationMode">
                                     <div class="col-sm-12">
                                         <mat-form-field>
-                                            <input *ngIf="!currentEntity.canSynchronizeSiret" matInput value="Paramètre SIRET manquant" title="{{lang.siretCode}}" type="text"
-                                                   placeholder="{{lang.siretCode}}" maxlength="255" disabled>
-                                            <input *ngIf="currentEntity.canSynchronizeSiret" matInput [(ngModel)]="currentEntity.business_id" name="business_id" id="business_id" title="{{lang.siretCode}}" type="text"
-                                                   placeholder="{{lang.siretCode}}" maxlength="255" disabled>
-                                            <button *ngIf="currentEntity.canSynchronizeSiret" color="primary" mat-icon-button matSuffix title="Générer un numéro SIRET" (click)="addEntityToAnnuary()">
+                                            <input *ngIf="!currentEntity.canSynchronizeSiret" matInput
+                                                value="Paramètre SIRET manquant" title="{{lang.siretCode}}" type="text"
+                                                placeholder="{{lang.siretCode}}" maxlength="255" disabled>
+                                            <input *ngIf="currentEntity.canSynchronizeSiret" matInput
+                                                [(ngModel)]="currentEntity.business_id" name="business_id"
+                                                id="business_id" title="{{lang.siretCode}}" type="text"
+                                                placeholder="{{lang.siretCode}}" maxlength="255" disabled>
+                                            <button *ngIf="currentEntity.canSynchronizeSiret" color="primary"
+                                                mat-icon-button matSuffix title="Générer un numéro SIRET"
+                                                (click)="addEntityToAnnuary()">
                                                 <mat-icon class="fas fa-compress-arrows-alt"></mat-icon>
                                             </button>
                                         </mat-form-field>
@@ -205,14 +226,18 @@
                                 <div class="form-group">
                                     <div class="col-sm-6">
                                         <mat-form-field>
-                                            <input matInput [(ngModel)]="currentEntity.archival_agency" name="archival_agency" id="archival_agency" title="{{lang.archivalAgency}}"
-                                                   type="text" placeholder="{{lang.archivalAgency}}" maxlength="255">
+                                            <input matInput [(ngModel)]="currentEntity.archival_agency"
+                                                name="archival_agency" id="archival_agency"
+                                                title="{{lang.archivalAgency}}" type="text"
+                                                placeholder="{{lang.archivalAgency}}" maxlength="255">
                                         </mat-form-field>
                                     </div>
                                     <div class="col-sm-6">
                                         <mat-form-field>
-                                            <input matInput [(ngModel)]="currentEntity.archival_agreement" name="archival_agreement" id="archival_agreement" title="{{lang.archivalAgreement}}"
-                                                   type="text" placeholder="{{lang.archivalAgreement}}" maxlength="255">
+                                            <input matInput [(ngModel)]="currentEntity.archival_agreement"
+                                                name="archival_agreement" id="archival_agreement"
+                                                title="{{lang.archivalAgreement}}" type="text"
+                                                placeholder="{{lang.archivalAgreement}}" maxlength="255">
                                         </mat-form-field>
                                     </div>
                                 </div>
@@ -220,10 +245,13 @@
                         </mat-accordion>
                         <div class="form-group">
                             <div class="col-md-12 text-center" style="padding:10px;">
-                                <button mat-raised-button [disabled]="!entityForm.form.valid" color="primary" (click)="saveEntity()">{{lang.save}}</button>
-                                <button mat-raised-button *ngIf="!creationMode" [disabled]="!entityForm.form.valid || this.currentEntity.hasChildren" color="warn"
-                                        (click)="removeEntity()">{{lang.delete}}</button>
-                                <button mat-raised-button *ngIf="creationMode" color="default" (click)="readMode()">{{lang.cancel}}</button>
+                                <button mat-raised-button [disabled]="!entityForm.form.valid" color="primary"
+                                    (click)="saveEntity()">{{lang.save}}</button>
+                                <button mat-raised-button *ngIf="!creationMode"
+                                    [disabled]="!entityForm.form.valid || this.currentEntity.hasChildren" color="warn"
+                                    (click)="removeEntity()">{{lang.delete}}</button>
+                                <button mat-raised-button *ngIf="creationMode" color="default"
+                                    (click)="readMode()">{{lang.cancel}}</button>
                             </div>
                         </div>
                     </form>
@@ -231,13 +259,18 @@
                 <mat-tab label="{{lang.diffusionList}}" *ngIf="!creationMode">
                     <div class="row" style="margin:0px;">
                         <div class="col-md-12">
-                            <app-diffusions-list #appDiffusionsList [adminMode]="true" [target]="'redirect'"></app-diffusions-list>
+                            <app-diffusions-list #appDiffusionsList [adminMode]="true" [target]="'redirect'">
+                            </app-diffusions-list>
                         </div>
                         <div class="form-group" *ngIf="currentEntity.entity_id">
                             <div class="col-md-12 text-center" style="padding:10px;">
-                                <button mat-raised-button color="primary" (click)="saveDiffList()" [disabled]="appDiffusionsList.hasEmptyDest() || !appDiffusionsList.isModified()">{{lang.save}}</button>
-                                <button mat-raised-button color="default" (click)="appDiffusionsList.loadListModel(currentEntity.id)" [disabled]="!appDiffusionsList.isModified()">{{lang.cancel}}</button>
-                                <button *ngIf="!appDiffusionsList.isEmptyList() && currentEntity.listTemplate.id" mat-raised-button color="warn" (click)="deleteDiffList()">{{lang.delete}}</button>
+                                <button mat-raised-button color="primary" (click)="saveDiffList()"
+                                    [disabled]="appDiffusionsList.hasEmptyDest() || !appDiffusionsList.isModified()">{{lang.save}}</button>
+                                <button mat-raised-button color="default"
+                                    (click)="appDiffusionsList.loadListModel(currentEntity.id)"
+                                    [disabled]="!appDiffusionsList.isModified()">{{lang.cancel}}</button>
+                                <button *ngIf="!appDiffusionsList.isEmptyList() && currentEntity.listTemplate.id"
+                                    mat-raised-button color="warn" (click)="deleteDiffList()">{{lang.delete}}</button>
                             </div>
                         </div>
                     </div>
@@ -245,12 +278,16 @@
                 <mat-tab label="{{lang.visaWorkflow}}" *ngIf="!creationMode">
                     <div class="row" style="margin:0px;" id="visaCircuitContent">
                         <div class="col-md-12">
-                            <app-visa-workflow [adminMode]="true" [showListModels]="false" [showComment]="false" #appVisaWorkflow></app-visa-workflow>
+                            <app-visa-workflow [adminMode]="true" [showListModels]="false" [showComment]="false"
+                                #appVisaWorkflow></app-visa-workflow>
                         </div>
                         <div class="form-group" *ngIf="currentEntity.entity_id">
                             <div class="col-md-12 text-center" style="padding:10px;">
-                                <button mat-raised-button color="primary" (click)="saveDiffListVisa()" [disabled]="!appVisaWorkflow.isModified()">{{lang.save}}</button>
-                                <button mat-raised-button color="default" (click)="appVisaWorkflow.loadListModel(currentEntity.id)"  [disabled]="!appVisaWorkflow.isModified()">{{lang.cancel}}</button>
+                                <button mat-raised-button color="primary" (click)="saveDiffListVisa()"
+                                    [disabled]="!appVisaWorkflow.isModified()">{{lang.save}}</button>
+                                <button mat-raised-button color="default"
+                                    (click)="appVisaWorkflow.loadListModel(currentEntity.id)"
+                                    [disabled]="!appVisaWorkflow.isModified()">{{lang.cancel}}</button>
                             </div>
                         </div>
                     </div>
@@ -258,12 +295,16 @@
                 <mat-tab label="{{lang.avis}}" *ngIf="!creationMode">
                     <div class="row" style="margin:0px;" id="opinionCircuitContent">
                         <div class="col-md-12">
-                            <app-avis-workflow [adminMode]="true" [showListModels]="false" #appAvisWorkflow></app-avis-workflow>
+                            <app-avis-workflow [adminMode]="true" [showListModels]="false" #appAvisWorkflow>
+                            </app-avis-workflow>
                         </div>
                         <div class="form-group" *ngIf="currentEntity.entity_id">
                             <div class="col-md-12 text-center" style="padding:10px;">
-                                <button mat-raised-button color="primary" (click)="saveDiffListOpinion()" [disabled]="!appAvisWorkflow.isModified()">{{lang.save}}</button>
-                                <button mat-raised-button color="default" (click)="appAvisWorkflow.loadListModel(currentEntity.id)" [disabled]="!appAvisWorkflow.isModified()">{{lang.cancel}}</button>
+                                <button mat-raised-button color="primary" (click)="saveDiffListOpinion()"
+                                    [disabled]="!appAvisWorkflow.isModified()">{{lang.save}}</button>
+                                <button mat-raised-button color="default"
+                                    (click)="appAvisWorkflow.loadListModel(currentEntity.id)"
+                                    [disabled]="!appAvisWorkflow.isModified()">{{lang.cancel}}</button>
                             </div>
                         </div>
                     </div>
@@ -271,12 +312,16 @@
                 <mat-tab label="{{lang.users}}" *ngIf="!creationMode">
                     <div class="row" style="margin:0px;">
                         <div class="col-md-12" *ngIf="currentEntity.canAdminUsers" style="padding:5px;">
-                            <plugin-autocomplete [labelPlaceholder]="lang.linkUser" [labelList]="lang.availableUsers" [routeDatas]="['/rest/autocomplete/users/administration']" [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'" (triggerEvent)="linkUser($event)"></plugin-autocomplete>
-                            <hr/>
+                            <plugin-autocomplete [labelPlaceholder]="lang.linkUser" [labelList]="lang.availableUsers"
+                                [routeDatas]="['/rest/autocomplete/users/administration']"
+                                [targetSearchKey]="'idToDisplay'" [subInfoKey]="'descriptionToDisplay'"
+                                (triggerEvent)="linkUser($event)"></plugin-autocomplete>
+                            <hr />
                         </div>
                         <div class="col-md-6 col-xs-6">
                             <mat-form-field>
-                                <input matInput (keyup)="applyFilterUsers($event.target.value)" placeholder="{{lang.filterBy}}">
+                                <input matInput (keyup)="applyFilterUsers($event.target.value)"
+                                    placeholder="{{lang.filterBy}}">
                             </mat-form-field>
                         </div>
                         <div class="col-md-6 col-xs-6">
@@ -284,7 +329,8 @@
                             </mat-paginator>
                         </div>
                     </div>
-                    <mat-table #tableUsers="matSort" [dataSource]="dataSourceUsers" matSort matSortActive="lastname" matSortDirection="asc">
+                    <mat-table #tableUsers="matSort" [dataSource]="dataSourceUsers" matSort matSortActive="lastname"
+                        matSortDirection="asc">
                         <ng-container matColumnDef="firstname">
                             <mat-header-cell *matHeaderCellDef mat-sort-header>{{lang.firstname}}</mat-header-cell>
                             <mat-cell *matCellDef="let element"> {{element.firstname}} </mat-cell>
@@ -294,15 +340,17 @@
                             <mat-cell *matCellDef="let element"> {{element.lastname}} </mat-cell>
                         </ng-container>
                         <mat-header-row *matHeaderRowDef="displayedColumnsUsers"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumnsUsers;" routerLink="/administration/users/{{row.id}}" matTooltip="{{lang.view}}"
-                                 style="cursor:pointer;"></mat-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumnsUsers;"
+                            routerLink="/administration/users/{{row.id}}" matTooltip="{{lang.view}}"
+                            style="cursor:pointer;"></mat-row>
                     </mat-table>
                 </mat-tab>
                 <mat-tab label="{{lang.templates}}" *ngIf="!creationMode">
                     <div class="row" style="margin:0px;">
                         <div class="col-md-6 col-xs-6">
                             <mat-form-field>
-                                <input matInput (keyup)="applyFilterTemplates($event.target.value)" placeholder="{{lang.filterBy}}">
+                                <input matInput (keyup)="applyFilterTemplates($event.target.value)"
+                                    placeholder="{{lang.filterBy}}">
                             </mat-form-field>
                         </div>
                         <div class="col-md-6 col-xs-6">
@@ -310,17 +358,24 @@
                             </mat-paginator>
                         </div>
                     </div>
-                    <mat-table #tableTemplates="matSort" [dataSource]="dataSourceTemplates" matSort matSortActive="template_label" matSortDirection="asc">
+                    <mat-table #tableTemplates="matSort" [dataSource]="dataSourceTemplates" matSort
+                        matSortActive="template_label" matSortDirection="asc">
                         <ng-container matColumnDef="template_label">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.templateName}}</mat-header-cell>
-                            <mat-cell *matCellDef="let element" style="flex:2;" matTooltip="{{element.template_comment}}" > {{element.template_label}} </mat-cell>
+                            <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:2;">{{lang.templateName}}
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element" style="flex:2;"
+                                matTooltip="{{element.template_comment}}"> {{element.template_label}} </mat-cell>
                         </ng-container>
                         <ng-container matColumnDef="template_target">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.templateTarget}}</mat-header-cell>
-                            <mat-cell *matCellDef="let element" style="flex:1;"> {{lang[element.template_target]}} </mat-cell>
+                            <mat-header-cell *matHeaderCellDef mat-sort-header style="flex:1;">{{lang.templateTarget}}
+                            </mat-header-cell>
+                            <mat-cell *matCellDef="let element" style="flex:1;"> {{lang[element.template_target]}}
+                            </mat-cell>
                         </ng-container>
                         <mat-header-row *matHeaderRowDef="displayedColumnsTemplates"></mat-header-row>
-                        <mat-row *matRowDef="let row; columns: displayedColumnsTemplates;" (click)="showTemplate(row.template_id);" [ngStyle]="{'cursor': !currentEntity.canAdminTemplates ? 'position' : 'pointer'}"></mat-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumnsTemplates;"
+                            (click)="showTemplate(row.template_id);"
+                            [ngStyle]="{'cursor': !currentEntity.canAdminTemplates ? 'position' : 'pointer'}"></mat-row>
                     </mat-table>
                 </mat-tab>
             </mat-tab-group>

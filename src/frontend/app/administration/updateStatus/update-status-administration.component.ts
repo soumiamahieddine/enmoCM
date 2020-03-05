@@ -16,9 +16,6 @@ declare function $j(selector: any): any;
 })
 export class UpdateStatusAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
-
     lang                            : any       = LANG;
     loading                         : boolean   = false;
 
@@ -41,8 +38,6 @@ export class UpdateStatusAdministrationComponent implements OnInit {
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.updateStatus);
         
-        this.headerService.sideNavLeft = this.sidenavLeft;
-
         this.loading = true;
 
         this.http.get('../../rest/autocomplete/statuses').pipe(

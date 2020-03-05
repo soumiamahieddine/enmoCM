@@ -24,7 +24,6 @@ declare function $j(selector: any): any;
 
 export class CustomFieldsAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
     lang: any = LANG;
@@ -85,8 +84,6 @@ export class CustomFieldsAdministrationComponent implements OnInit {
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.customFields);
         
-        this.headerService.sideNavLeft = this.sidenavLeft;
-
         this.http.get("../../rest/customFields").pipe(
             // TO FIX DATA BINDING SIMPLE ARRAY VALUES
             map((data: any) => {

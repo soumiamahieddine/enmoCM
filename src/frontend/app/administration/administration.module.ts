@@ -3,6 +3,7 @@ import { NgModule }                             from '@angular/core';
 import { SharedModule }                         from '../app-common.module';
 
 import { AdministrationRoutingModule }          from './administration-routing.module';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import { AdministrationComponent }                      from './home/administration.component';
 import { UsersAdministrationComponent, UsersAdministrationRedirectModalComponent }      from './user/users-administration.component';
@@ -56,6 +57,7 @@ import { TagAdministrationComponent }              from './tag/tag-administratio
 @NgModule({
     imports:      [
         SharedModule,
+        NgxChartsModule,
         AdministrationRoutingModule
     ],
     declarations: [

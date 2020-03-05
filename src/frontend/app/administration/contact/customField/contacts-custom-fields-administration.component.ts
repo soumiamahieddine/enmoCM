@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../../translate.component';
 import { NotificationService } from '../../../notification.service';
@@ -22,8 +22,8 @@ import { SortPipe } from '../../../../plugins/sorting.pipe';
 
 export class ContactsCustomFieldsAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
+    @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     lang: any = LANG;
 
@@ -98,7 +98,8 @@ export class ContactsCustomFieldsAdministrationComponent implements OnInit {
         public dialog: MatDialog,
         private headerService: HeaderService,
         public appService: AppService,
-        private sortPipe: SortPipe
+        private sortPipe: SortPipe,
+        private viewContainerRef: ViewContainerRef
     ) {
 
     }
@@ -106,7 +107,7 @@ export class ContactsCustomFieldsAdministrationComponent implements OnInit {
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.customFields + ' ' + this.lang.contacts);
         
-        this.headerService.sideNavLeft = this.sidenavLeft;
+        this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
         this.http.get("../../rest/contactsCustomFields").pipe(
             // TO FIX DATA BINDING SIMPLE ARRAY VALUES

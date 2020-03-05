@@ -25,7 +25,6 @@ declare function $j(selector: any): any;
 
 export class IndexingModelAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
@@ -64,9 +63,6 @@ export class IndexingModelAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        
-        this.headerService.sideNavLeft = this.sidenavLeft;
-
         this.route.params.subscribe((params) => {
             if (typeof params['id'] == "undefined") {
                 this.creationMode = true;

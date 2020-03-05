@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../../translate.component';
 import { NotificationService } from '../../../notification.service';
 import { HeaderService }        from '../../../../service/header.service';
-import { MatSidenav } from '@angular/material/sidenav';
 import { AppService } from '../../../../service/app.service';
 import { MatTableDataSource, MatPaginator, MatSort } from '@angular/material';
 
@@ -16,8 +15,7 @@ declare function $j(selector: any): any;
 })
 export class ContactsParametersAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
-    @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
+    @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     lang: any = LANG;
 
@@ -75,7 +73,8 @@ export class ContactsParametersAdministrationComponent implements OnInit {
         public http: HttpClient, 
         private notify: NotificationService, 
         private headerService: HeaderService,
-        public appService: AppService) {
+        public appService: AppService,
+        private viewContainerRef: ViewContainerRef) {
             $j("link[href='merged_css.php']").remove();
     }
 
@@ -84,7 +83,7 @@ export class ContactsParametersAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.headerService.setHeader(this.lang.contactsParameters);
-        this.headerService.sideNavLeft = this.sidenavLeft;
+        this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
         this.http.get('../../rest/contactsParameters')
             .subscribe((data: any) => {

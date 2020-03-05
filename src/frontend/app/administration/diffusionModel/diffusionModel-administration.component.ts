@@ -18,7 +18,6 @@ import { AvisWorkflowComponent } from '../../avis/avis-workflow.component';
 })
 export class DiffusionModelAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
     lang: any = LANG;
@@ -62,8 +61,6 @@ export class DiffusionModelAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe(async params => {
-
-            this.headerService.sideNavLeft = this.sidenavLeft;
             
             if (typeof params['id'] == "undefined") {
                 this.headerService.setHeader(this.lang.diffusionModelCreation);
