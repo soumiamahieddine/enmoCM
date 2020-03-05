@@ -877,11 +877,21 @@ class AutoCompleteController
 
         $searchItems = explode(' ', $args['search']);
 
-        foreach ($searchItems as $item) {
+        foreach ($searchItems as $keyItem => $item) {
             if (strlen($item) >= 2) {
                 $args['where'][] = $args['fields'];
+
+                $isIncluded = false;
+                foreach ($searchItems as $key => $value) {
+                    if ($keyItem == $key) {
+                        continue;
+                    }
+                    if (strpos($value, $item) === 0) {
+                        $isIncluded = true;
+                    }
+                }
                 for ($i = 0; $i < $args['fieldsNumber']; $i++) {
-                    $args['data'][] = "%{$item}%";
+                    $args['data'][] = ($isIncluded ? "%{$item}" : "%{$item}%");
                 }
             }
         }
