@@ -88,8 +88,6 @@ export class UserAdministrationComponent implements OnInit {
     canViewPersonalDatas: boolean = false;
     canManagePersonalDatas: boolean = false;
 
-    @ViewChild('appShortcut', { static: false }) appShortcut: MenuShortcutComponent;
-
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild(MatSort, { static: false }) sort: MatSort;
     applyFilter(filterValue: string) {

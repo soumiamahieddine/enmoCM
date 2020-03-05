@@ -21,7 +21,7 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "group-administration.component.html",
     styleUrls: ['group-administration.component.scss'],
-    providers: [AppService, PrivilegeService]
+    providers: [AppService]
 })
 export class GroupAdministrationComponent implements OnInit {
     /*HEADER*/
@@ -54,7 +54,7 @@ export class GroupAdministrationComponent implements OnInit {
     @ViewChild('sortBaskets', { static: true }) sortBaskets: MatSort;
     @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
     @ViewChild('sortUsers', { static: true }) sortUsers: MatSort;
-    @ViewChild('appShortcut', { static: false }) appShortcut: MenuShortcutComponent;
+
 
     applyFilter(filterValue: string) {
         filterValue = filterValue.trim();
@@ -84,11 +84,11 @@ export class GroupAdministrationComponent implements OnInit {
         this.loading = true;
 
         this.route.params.subscribe(params => {
+            this.headerService.sideNavLeft = this.sidenavLeft;
             if (typeof params['id'] == "undefined") {
+
                 this.headerService.setHeader(this.lang.groupCreation);
 
-                this.headerService.sideNavLeft = this.sidenavLeft;
-                
                 this.creationMode = true;
                 this.loading = false;
             } else {
@@ -425,6 +425,7 @@ export class GroupAdministrationComponent implements OnInit {
     }
 
     updatePrivilegeParams(paramList: any) {
+        console.log(paramList);
         let obj = {};
         if (this.panelMode === 'admin_users') {
             obj = {
