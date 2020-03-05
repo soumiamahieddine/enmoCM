@@ -48,7 +48,6 @@ import { CustomFieldsAdministrationComponent }              from './customField/
 import { IndexingModelAdministrationComponent }              from './indexingModel/indexing-model-administration.component';
 import { IndexingModelsAdministrationComponent }              from './indexingModel/indexing-models-administration.component';
 import { ContactsListAdministrationComponent, ContactsListAdministrationRedirectModalComponent} from './contact/list/contacts-list-administration.component';
-import { ContactsHomeAdministrationComponent }              from './contact/home/contacts-home-administration.component';
 import { ContactsCustomFieldsAdministrationComponent }              from './contact/customField/contacts-custom-fields-administration.component';
 import { ContactsPageAdministrationComponent }              from './contact/page/contacts-page-administration.component';
 import { TagsAdministrationComponent }              from './tag/tags-administration.component';
@@ -113,7 +112,6 @@ import { TagAdministrationComponent }              from './tag/tag-administratio
         IndexingModelsAdministrationComponent,
         ContactsListAdministrationComponent,
         ContactsListAdministrationRedirectModalComponent,
-        ContactsHomeAdministrationComponent,
         ContactsCustomFieldsAdministrationComponent,
         ContactsPageAdministrationComponent,
         TagsAdministrationComponent,

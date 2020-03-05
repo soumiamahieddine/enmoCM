@@ -2,7 +2,6 @@ import { NgModule }                             from '@angular/core';
 
 import { SharedModule }                         from './app-common.module';
 
-import { ConfirmModalComponent }                from './confirmModal.component';
 import { FiltersListService }                   from '../service/filtersList.service';
 
 import { AppComponent }                         from './app.component';
@@ -85,7 +84,6 @@ import { ForgotPasswordComponent }          from './login/forgotPassword/forgotP
 import { UpdatePasswordComponent }          from './login/updatePassword/updatePassword.component';
 import { HistoryWorkflowResumeComponent }                        from './history/history-workflow-resume/history-workflow-resume.component';
 import { NoteResumeComponent }                        from './notes/note-resume/note-resume.component';
-import { AttachmentShowModalComponent }                        from './attachments/attachment-show-modal/attachment-show-modal.component';
 import { AttachmentsResumeComponent }                        from './attachments/attachments-resume/attachments-resume.component';
 import { AttachmentPageComponent }                        from './attachments/attachments-page/attachment-page.component';
 import { AttachmentCreateComponent }                        from './attachments/attachment-create/attachment-create.component';
@@ -130,7 +128,6 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         SignatureBookComponent,
         SafeUrlPipe,
         SaveNumericPackageComponent,
-        ConfirmModalComponent,
         InfoChangePasswordModalComponent,
         ActivateUserComponent,
         NotesListComponent,
@@ -189,7 +186,6 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         AttachmentPageComponent,
         AttachmentCreateComponent,
         AddPrivateIndexingModelModalComponent,
-        AttachmentShowModalComponent,
         MailResumeComponent,
         ContactsListComponent,
         ContactsListModalComponent,
@@ -209,7 +205,6 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         PrintedFolderModalComponent
     ],
     entryComponents: [
-        ConfirmModalComponent,
         InfoChangePasswordModalComponent,
         SummarySheetComponent,
         ExportComponent,
@@ -243,7 +238,6 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         AddPrivateIndexingModelModalComponent,
         AttachmentPageComponent,
         AttachmentCreateComponent,
-        AttachmentShowModalComponent,
         ContactsListModalComponent,
         ContactModalComponent,
         VisaWorkflowModalComponent,
