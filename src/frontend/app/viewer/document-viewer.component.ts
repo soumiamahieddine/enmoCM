@@ -765,11 +765,7 @@ export class DocumentViewerComponent implements OnInit {
 
     isEditingTemplate() {
         if (this.editor.mode === 'onlyoffice') {
-            if (this.onlyofficeViewer !== undefined) {
-                return true;
-            } else {
-                return false;
-            }
+            return this.onlyofficeViewer === undefined;
         } else {
             return this.editInProgress;
         }
