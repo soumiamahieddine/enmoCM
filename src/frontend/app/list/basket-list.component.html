@@ -4,7 +4,7 @@
             <div class="bg-head">
                 <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
                     <div class="bg-head-title-label">
-                        <header-left [snavLeft]="snav"></header-left>
+                        <header-left></header-left>
                     </div>
                     <div class="bg-head-title-tool">
                        <header-right></header-right>
@@ -46,7 +46,7 @@
                             <span>
                                 <app-actions-list #actionsList (refreshEvent)="refreshDao()"
                                     [contextMode]="false" [totalRes]="allResInBasket.length" [selectedRes]="selectedRes"
-                                    [currentBasketInfo]="currentBasketInfo" [currentResource]="currentResource" (refreshPanelFolders)="panelFolder.refreshFoldersTree()"></app-actions-list>
+                                    [currentBasketInfo]="currentBasketInfo" [currentResource]="currentResource"></app-actions-list>
                             </span>
                         </div>
                     </div>
@@ -198,5 +198,5 @@
         </mat-sidenav>
     </mat-sidenav-container>
     <app-actions-list (refreshEvent)="refreshDao()" (refreshEventAfterAction)="refreshDaoAfterAction()" #actionsListContext [contextMode]="true"
-        [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo" (refreshPanelFolders)="panelFolder.refreshFoldersTree()">
+        [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo">
     </app-actions-list>

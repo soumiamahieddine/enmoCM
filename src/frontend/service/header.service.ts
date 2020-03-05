@@ -89,8 +89,6 @@ export class HeaderService {
     }
 
     resetSideNavSelection() { 
-        console.log(this.defaultSideNavLeft);
-               
         if (this.defaultSideNavLeft !== undefined) {
             this.sideNavLeft = this.defaultSideNavLeft;
             this.sideNavLeft.open();
