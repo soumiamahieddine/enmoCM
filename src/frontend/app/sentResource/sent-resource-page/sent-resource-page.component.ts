@@ -138,13 +138,15 @@ export class SentResourcePageComponent implements OnInit {
         tinymce.init({
             selector: "textarea#emailSignature",
             readonly: this.emailStatus === 'SENT',
+            height : '400',
+            width : '1100',
             suffix: '.min',
             language: this.lang.langISO.replace('-', '_'),
             language_url: `../../node_modules/tinymce-i18n/langs/${this.lang.langISO.replace('-', '_')}.js`,
             menubar: false,
             statusbar: false,
             plugins: [
-                'autolink', 'autoresize'
+                'autolink'
             ],
             external_plugins: {
                 'maarch_b64image': "../../src/frontend/plugins/tinymce/maarch_b64image/plugin.min.js"
