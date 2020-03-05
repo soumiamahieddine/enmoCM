@@ -731,6 +731,58 @@ class AutoCompleteController
         return $response->withJson($unitOrganizations);
     }
 
+    public static function getAvailableContactsForM2M(Request $request, Response $response)
+    {
+        $queryParams = $request->getQueryParams();
+        if (!Validator::stringType()->notEmpty()->validate($queryParams['search'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query params search is empty']);
+        }
+
+        $autocompleteData = [];
+        $searchableParameters = ContactParameterModel::get(['select' => ['identifier'], 'where' => ['searchable = ?'], 'data' => [true]]);
+
+        $fields = [];
+        foreach ($searchableParameters as $searchableParameter) {
+            if (strpos($searchableParameter['identifier'], 'contactCustomField_') !== false) {
+                $customFieldId = explode('_', $searchableParameter['identifier'])[1];
+                $fields[] = "custom_fields->>'{$customFieldId}'";
+            } else {
+                $fields[] = ContactController::MAPPING_FIELDS[$searchableParameter['identifier']];
+            }
+        }
+
+        $fieldsNumber = count($fields);
+        $fields = AutoCompleteController::getUnsensitiveFieldsForRequest(['fields' => $fields]);
+
+        $requestData = AutoCompleteController::getDataForRequest([
+            'search'        => $queryParams['search'],
+            'fields'        => $fields,
+            'where'         => ['enabled = ?', "external_id->>'m2m' is not null", "(communication_means->>'url' is not null OR communication_means->>'email' is not null)"],
+            'data'          => [true],
+            'fieldsNumber'  => $fieldsNumber
+        ]);
+
+        $contacts = ContactModel::get([
+            'select'    => ['id', 'communication_means', 'external_id'],
+            'where'     => $requestData['where'],
+            'data'      => $requestData['data'],
+            'orderBy'   => ['company', 'lastname NULLS FIRST'],
+            'limit'     => self::TINY_LIMIT
+        ]);
+
+        foreach ($contacts as $contact) {
+            $autoContact = ContactController::getAutocompleteFormat(['id' => $contact['id']]);
+
+            $externalId = json_decode($contact['external_id'], true);
+            $communicationMeans = json_decode($contact['communication_means'], true);
+            $autoContact['m2m'] = $externalId['m2m'];
+            $autoContact['communicationMeans'] = $communicationMeans['url'] ?? $communicationMeans['email'];
+            $autocompleteData[] = $autoContact;
+        }
+
+        return $response->withJson($autocompleteData);
+    }
+
     public static function getBusinessIdM2MAnnuary(Request $request, Response $response)
     {
         $data = $request->getQueryParams();
