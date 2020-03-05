@@ -121,10 +121,6 @@ export class ActionsService {
         if (this.setActionInformations(action, userId, groupId, null, null)) {
             this.setResourceInformations(datas);
 
-            if (datas['followed']) {
-                this.headerService.nbResourcesFollowed++;
-            }
-
             this.loading = true;
             try {
                 this[action.component]();
@@ -246,6 +242,10 @@ export class ActionsService {
     }
 
     endAction(resIds: any) {
+        if (!this.functions.empty(this.currentResourceInformations['followed']) && this.currentResourceInformations['followed']) {
+            this.headerService.nbResourcesFollowed++;
+        }
+
         this.notify.success(this.lang.action + ' : "' + this.currentAction.label + '" ' + this.lang.done);
 
         this.eventAction.next(resIds);
