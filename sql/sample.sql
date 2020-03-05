@@ -223,11 +223,11 @@ ALTER SEQUENCE listinstance_id_seq restart WITH 1;
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (1, 1, 0, 'bbain', 'user_id', 'dest', 'bbain', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (2, 1, 0, 'DSG', 'entity_id', 'cc', 'bbain', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (2, 1, 0, 'DSG', 'entity_id', 'copy', 'bbain', 0, 'entity_id', NULL, NULL, false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (3, 2, 0, 'ccharles', 'user_id', 'dest', 'ccharles', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (4, 2, 0, 'DSG', 'entity_id', 'cc', 'ccharles', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (4, 2, 0, 'DSG', 'entity_id', 'copy', 'ccharles', 0, 'entity_id', NULL, NULL, false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (5, 3, 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
@@ -235,11 +235,11 @@ VALUES (6, 4, 0, 'bbain', 'user_id', 'dest', 'bbain', 0, 'entity_id', NULL, '', 
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (7, 5, 0, 'ssaporta', 'user_id', 'dest', 'ssaporta', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (8, 5, 0, 'DSG', 'entity_id', 'cc', 'bbain', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (8, 5, 0, 'DSG', 'entity_id', 'copy', 'bbain', 0, 'entity_id', NULL, NULL, false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (9, 6, 0, 'ssaporta', 'user_id', 'dest', 'ssaporta', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (10, 6, 0, 'DSG', 'entity_id', 'cc', 'bbain', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (10, 6, 0, 'DSG', 'entity_id', 'copy', 'bbain', 0, 'entity_id', NULL, NULL, false, false);
 -- to annotate documents
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (11, 7, 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 0, 'entity_id', NULL, '', false, false);
@@ -248,50 +248,50 @@ VALUES (12, 8, 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 0, 'entity_id', NULL,
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (13, 9, 0, 'ssaporta', 'user_id', 'dest', 'ssaporta', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (14, 9, 0, 'DSG', 'entity_id', 'cc', 'bbain', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (14, 9, 0, 'DSG', 'entity_id', 'copy', 'bbain', 0, 'entity_id', NULL, NULL, false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (15, 10, 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (16, 11, 0, 'sstar', 'user_id', 'dest', 'sstar', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (17, 11, 0, 'DSG', 'entity_id', 'cc', 'sstar', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (17, 11, 0, 'DSG', 'entity_id', 'copy', 'sstar', 0, 'entity_id', NULL, NULL, false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (18, 11, 0, 'jjane', 'user_id', 'cc', 'sstar', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (18, 11, 0, 'jjane', 'user_id', 'copy', 'sstar', 0, 'entity_id', NULL, NULL, false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (19, 12, 0, 'rrenaud', 'user_id', 'dest', 'rrenaud', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (20, 13, 0, 'ppruvost', 'user_id', 'dest', 'bbain', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (21, 13, 0, 'DSG', 'entity_id', 'cc', 'bbain', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (21, 13, 0, 'DSG', 'entity_id', 'copy', 'bbain', 0, 'entity_id', NULL, NULL, false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (22, 14, 0, 'ssaporta', 'user_id', 'dest', 'ssaporta', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (23, 14, 0, 'DSG', 'entity_id', 'cc', 'bbain', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (23, 14, 0, 'DSG', 'entity_id', 'copy', 'bbain', 0, 'entity_id', NULL, NULL, false, false);
 -- to qualify document
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (24, 15, 0, 'ccharles', 'user_id', 'dest', 'ccharles', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (25, 15, 0, 'DSG', 'entity_id', 'cc', 'ccharles', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (25, 15, 0, 'DSG', 'entity_id', 'copy', 'ccharles', 0, 'entity_id', NULL, NULL, false, false);
 -- to validate document
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (26, 16, 0, 'ccharles', 'user_id', 'dest', 'ccharles', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (27, 16, 0, 'DSG', 'entity_id', 'cc', 'ccharles', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (27, 16, 0, 'DSG', 'entity_id', 'copy', 'ccharles', 0, 'entity_id', NULL, NULL, false, false);
 -- to process document ccharles
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (28, 17, 0, 'ccharles', 'user_id', 'dest', 'ccharles', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (29, 17, 0, 'DSG', 'entity_id', 'cc', 'ccharles', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (29, 17, 0, 'DSG', 'entity_id', 'copy', 'ccharles', 0, 'entity_id', NULL, NULL, false, false);
 -- to process document nnataly
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (30, 18, 0, 'nnataly', 'user_id', 'dest', 'nnataly', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (31, 18, 0, 'DSG', 'entity_id', 'cc', 'nnataly', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (31, 18, 0, 'DSG', 'entity_id', 'copy', 'nnataly', 0, 'entity_id', NULL, NULL, false, false);
 -- to paraph document ppetit
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (32, 19, 0, 'ccharles', 'user_id', 'dest', 'ccharles', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (33, 19, 0, 'DSG', 'entity_id', 'cc', 'ccharles', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (33, 19, 0, 'DSG', 'entity_id', 'copy', 'ccharles', 0, 'entity_id', NULL, NULL, false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (34, 19, 0, 'mmanfred', 'user_id', 'visa', 'ccharles', 1, 'VISA_CIRCUIT', CURRENT_DATE, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
@@ -300,7 +300,7 @@ VALUES (35, 19, 0, 'ppetit', 'user_id', 'sign', 'ccharles', 0, 'VISA_CIRCUIT', N
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
 VALUES (36, 20, 0, 'ccharles', 'user_id', 'dest', 'ccharles', 0, 'entity_id', NULL, '', false, false);
 INSERT INTO listinstance (listinstance_id, res_id, sequence, item_id, item_type, item_mode, added_by_user, viewed, difflist_type, process_date, process_comment, signatory, requested_signature)
-VALUES (37, 20, 0, 'DSG', 'entity_id', 'cc', 'ccharles', 0, 'entity_id', NULL, NULL, false, false);
+VALUES (37, 20, 0, 'DSG', 'entity_id', 'copy', 'ccharles', 0, 'entity_id', NULL, NULL, false, false);
 
 Select setval('listinstance_id_seq', (select max(listinstance_id)+1 from listinstance), false);
 
