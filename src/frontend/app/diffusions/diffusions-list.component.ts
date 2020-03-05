@@ -327,21 +327,24 @@ export class DiffusionsListComponent implements OnInit {
 
     getCurrentListinstance() {
         let listInstanceFormatted: any = [];
-
-        Object.keys(this.diffList).forEach(role => {
-            if (this.diffList[role].items.length > 0) {
-                this.diffList[role].items.forEach((element: any) => {
-                    listInstanceFormatted.push({
-                        difflist_type: element.difflist_type,
-                        item_id: element.itemSerialId,
-                        item_mode: role === 'copy' ? 'cc' : role,
-                        item_type: element.item_type,
-                        process_date: element.process_date,
-                        process_comment: element.process_comment,
+        
+        if (this.diffList !== null) {
+            Object.keys(this.diffList).forEach(role => {
+                if (this.diffList[role].items.length > 0) {
+                    this.diffList[role].items.forEach((element: any) => {
+                        listInstanceFormatted.push({
+                            difflist_type: element.difflist_type,
+                            item_id: element.itemSerialId,
+                            item_mode: role === 'copy' ? 'cc' : role,
+                            item_type: element.item_type,
+                            process_date: element.process_date,
+                            process_comment: element.process_comment,
+                        });
                     });
-                });
-            }
-        });
+                }
+            });
+        }
+        
 
         return listInstanceFormatted;
     }

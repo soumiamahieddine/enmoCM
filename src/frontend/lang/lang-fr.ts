@@ -1628,4 +1628,6 @@ export const LANG_FR = {
     "shippingUnavailable" : "<b>Attention !</b> Maileva n'est pas activé. Veuillez vérifier le fichier de configuration mailevaConfig.xml",
     "diffNoDestmsg" : "Aucun <b>atttributaire</b> défini, modification de la liste <b>impossible</b>.",    
     "noDest" : "Aucun <b>atttributaire</b> défini",    
+    "noPrivileges" : "Privilèges insuffisants",    
+    "mustDeleteUsersWithNoPrivileges" : "Veuillez supprimer les personnes dont les privilèges sont insuffisants",    
 };

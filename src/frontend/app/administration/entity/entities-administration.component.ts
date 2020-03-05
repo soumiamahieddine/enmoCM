@@ -590,43 +590,46 @@ export class EntitiesAdministrationComponent implements OnInit {
                 }
             })
         };
-
-        if (this.functions.empty(newDiffList.items)) {
-            this.http.delete(`../../rest/listTemplates/${this.idVisaCircuit}`).pipe(
-                tap(() => {
-                    this.idVisaCircuit = null;
-                    this.notify.success(this.lang.diffusionModelDeleted);
-                    this.appVisaWorkflow.loadListModel(this.currentEntity.id);
-                }),
-                catchError((err: any) => {
-                    this.notify.handleSoftErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-        } else if (!this.functions.empty(this.idVisaCircuit)) {
-            this.http.put(`../../rest/listTemplates/${this.idVisaCircuit}`, newDiffList).pipe(
-                tap(() => {
-                    this.notify.success(this.lang.diffusionModelUpdated);
-                    this.appVisaWorkflow.loadListModel(this.currentEntity.id);
-                }),
-                catchError((err: any) => {
-                    this.notify.handleSoftErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
+        if (!this.appVisaWorkflow.isValidWorkflow()) {
+            this.notify.error(this.appVisaWorkflow.getError());
         } else {
-            this.http.post(`../../rest/listTemplates?admin=true`, newDiffList).pipe(
-                tap((data: any) => {
-                    this.idVisaCircuit = data.id;
-                    this.notify.success(this.lang.diffusionModelUpdated);
-                    this.appVisaWorkflow.loadListModel(this.currentEntity.id);
-                }),
-                catchError((err: any) => {
-                    this.notify.handleSoftErrors(err);
-                    return of(false);
-                })
-            ).subscribe();
-        }
+            if (this.functions.empty(newDiffList.items)) {
+                this.http.delete(`../../rest/listTemplates/${this.idVisaCircuit}`).pipe(
+                    tap(() => {
+                        this.idVisaCircuit = null;
+                        this.notify.success(this.lang.diffusionModelDeleted);
+                        this.appVisaWorkflow.loadListModel(this.currentEntity.id);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleSoftErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else if (!this.functions.empty(this.idVisaCircuit)) {
+                this.http.put(`../../rest/listTemplates/${this.idVisaCircuit}`, newDiffList).pipe(
+                    tap(() => {
+                        this.notify.success(this.lang.diffusionModelUpdated);
+                        this.appVisaWorkflow.loadListModel(this.currentEntity.id);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleSoftErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            } else {
+                this.http.post(`../../rest/listTemplates?admin=true`, newDiffList).pipe(
+                    tap((data: any) => {
+                        this.idVisaCircuit = data.id;
+                        this.notify.success(this.lang.diffusionModelUpdated);
+                        this.appVisaWorkflow.loadListModel(this.currentEntity.id);
+                    }),
+                    catchError((err: any) => {
+                        this.notify.handleSoftErrors(err);
+                        return of(false);
+                    })
+                ).subscribe();
+            }
+        }   
     }
 
     saveDiffListOpinion() {

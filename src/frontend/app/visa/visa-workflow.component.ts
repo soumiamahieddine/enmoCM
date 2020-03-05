@@ -87,9 +87,6 @@ export class VisaWorkflowComponent implements OnInit {
         return new Promise((resolve, reject) => {
             this.http.get(route)
             .subscribe((data: any) => {
-                if (!this.functions.empty(data.itemsRemoved)) {
-                    this.notify.error(this.lang.itemRemovedFromVisaTemplate + ' : ' + data.itemsRemoved.join(', '));
-                }
                 if (data.listTemplates[0]) {
                     this.visaWorkflow.items = data.listTemplates[0].items.map((item: any) => {
                         return {
@@ -121,7 +118,8 @@ export class VisaWorkflowComponent implements OnInit {
                             title: `${user.idToDisplay} (${user.otherInfo})`,
                             label: user.idToDisplay,
                             entity: user.otherInfo,
-                            type: 'user'
+                            type: 'user',
+                            hasPrivilege: true
                         }
                     });
                     return data;
@@ -189,11 +187,6 @@ export class VisaWorkflowComponent implements OnInit {
 
         return new Promise((resolve, reject) => {
             this.http.get(`../../rest/resources/${this.resId}/defaultCircuit?circuit=visa`).pipe(
-                tap((data: any) => {
-                    if (!this.functions.empty(data.itemsRemoved)) {
-                        this.notify.error(this.lang.itemRemovedFromVisaTemplate + ' : ' + data.itemsRemoved.join(', '));
-                    }
-                }),
                 filter((data: any) => !this.functions.empty(data.circuit)),
                 tap((data: any) => {
                     if (!this.functions.empty(data.circuit)) {
@@ -263,11 +256,6 @@ export class VisaWorkflowComponent implements OnInit {
         this.visaWorkflow.items = [];
         return new Promise((resolve, reject) => {
             this.http.get("../../rest/resources/" + resId + "/visaCircuit").pipe(
-                tap((data: any) => {
-                    if (!this.functions.empty(data.itemsRemoved)) {
-                        this.notify.error(this.lang.itemRemovedFromVisaTemplate + ' : ' + data.itemsRemoved.join(', '));
-                    }
-                }),
                 filter((data: any) => !this.functions.empty(data.circuit)),
                 tap((data: any) => {
                     data.circuit.forEach((element: any) => {
@@ -295,11 +283,6 @@ export class VisaWorkflowComponent implements OnInit {
         this.loading = true;
         this.visaWorkflow.items = [];
         this.http.get("../../rest/resources/" + resId + "/defaultCircuit?circuit=visaCircuit").pipe(
-            tap((data: any) => {
-                if (!this.functions.empty(data.itemsRemoved)) {
-                    this.notify.error(this.lang.itemRemovedFromVisaTemplate + ' : ' + data.itemsRemoved.join(', '));
-                }
-            }),
             filter((data: any) => !this.functions.empty(data.circuit)),
             tap((data: any) => {
                 data.circuit.items.forEach((element: any) => {
@@ -431,13 +414,13 @@ export class VisaWorkflowComponent implements OnInit {
                     })
                 ).subscribe();
             } else {
-                this.notify.error(this.lang.signUserRequired);
+                this.notify.error(this.getError());
                 resolve(false);
             }
         });
     }
 
-    addItemToWorkflow(item: any, maarchParapheurMode = false) {
+    addItemToWorkflow(item: any, maarchParapheurMode = false) {        
         return new Promise((resolve, reject) => {
             if (maarchParapheurMode) {
                 this.visaWorkflow.items.push({
@@ -449,6 +432,7 @@ export class VisaWorkflowComponent implements OnInit {
                     difflist_type: 'VISA_CIRCUIT',
                     signatory: !this.functions.empty(item.signatory) ? item.signatory : false,
                     requested_signature: !this.functions.empty(item.requested_signature) ? item.requested_signature : false,
+                    hasPrivilege : true
                 });
                 if (this.linkedToMaarchParapheur) {
                     this.getMaarchParapheurUserAvatar(item.externalId.maarchParapheur, this.visaWorkflow.items.length - 1);
@@ -465,6 +449,7 @@ export class VisaWorkflowComponent implements OnInit {
                     difflist_type: 'VISA_CIRCUIT',
                     signatory: !this.functions.empty(item.signatory) ? item.signatory : false,
                     requested_signature: !this.functions.empty(item.requested_signature) ? item.requested_signature : false,
+                    hasPrivilege : item.hasPrivilege
                 });
     
                 if (this.linkedToMaarchParapheur) {
@@ -486,7 +471,8 @@ export class VisaWorkflowComponent implements OnInit {
                                     item_entity: itemTemplate.descriptionToDisplay,
                                     difflist_type: 'VISA_CIRCUIT',
                                     signatory: false,
-                                    requested_signature: itemTemplate.item_mode === 'sign'
+                                    requested_signature: itemTemplate.item_mode === 'sign',
+                                    hasPrivilege : item.hasPrivilege
                                 }
                             })
                         );
@@ -504,10 +490,18 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     isValidWorkflow() {
-        if (this.visaWorkflow.items.filter((item: any) => item.requested_signature).length > 0 || this.visaWorkflow.items.length === 0) {
+        if ((this.visaWorkflow.items.filter((item: any) => item.requested_signature).length > 0 && this.visaWorkflow.items.filter((item: any) => !item.hasPrivilege).length === 0) || this.visaWorkflow.items.length === 0) {
             return true;
         } else {
             return false;
+        }
+    }
+
+    getError() {
+        if (this.visaWorkflow.items.filter((item: any) => item.requested_signature).length === 0) {
+            return this.lang.signUserRequired;
+        } else if(this.visaWorkflow.items.filter((item: any) => !item.hasPrivilege).length > 0) {
+            return this.lang.mustDeleteUsersWithNoPrivileges;
         }
     }
 
@@ -524,7 +518,7 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     openPromptSaveModel() {
-        const dialogRef = this.dialog.open(AddVisaModelModalComponent, { data: { visaWorkflow: this.visaWorkflow.items } });
+        const dialogRef = this.dialog.open(AddVisaModelModalComponent, { panelClass: 'maarch-modal', data: { visaWorkflow: this.visaWorkflow.items } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => !this.functions.empty(data)),
@@ -546,7 +540,7 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     deletePrivateModel(model: any) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),
