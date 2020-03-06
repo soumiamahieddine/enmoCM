@@ -185,11 +185,24 @@ export class DiffusionModelAdministrationComponent implements OnInit {
         }   
     }
 
+    checkPrivileges(items: any) {
+        var isValid = true;
+
+        items.forEach((item: any) => {
+            if (!item.hasPrivilege) {
+                isValid = false;
+            }
+        });
+        console.log(isValid);
+        console.log(items);
+        return isValid;
+    }
+
     isValidForm() {
         if (this.diffusionModel.type === 'visaCircuit') {
-            return this.appVisaWorkflow !== undefined && this.appVisaWorkflow.getWorkflow().length > 0 && this.diffusionModel.title !== '';
+            return this.appVisaWorkflow !== undefined && this.appVisaWorkflow.getWorkflow().length > 0 && this.diffusionModel.title !== '' && this.checkPrivileges(this.appVisaWorkflow.getWorkflow());
         } else {
-            return this.appAvisWorkflow !== undefined && this.appAvisWorkflow.getWorkflow().length > 0 && this.diffusionModel.title !== '';
+            return this.appAvisWorkflow !== undefined && this.appAvisWorkflow.getWorkflow().length > 0 && this.diffusionModel.title !== '' && this.checkPrivileges(this.appAvisWorkflow.getWorkflow());
         }
     }
 

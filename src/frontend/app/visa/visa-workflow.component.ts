@@ -463,7 +463,7 @@ export class VisaWorkflowComponent implements OnInit {
                     tap((data: any) => {
                         this.visaWorkflow.items = this.visaWorkflow.items.concat(
     
-                            data.listTemplate.items.filter((itemTemplate: any) => itemTemplate.hasPrivilege === true).map((itemTemplate: any) => {
+                            data.listTemplate.items.map((itemTemplate: any) => {
                                 return {
                                     item_id: itemTemplate.item_id,
                                     item_type: 'user',
@@ -472,7 +472,7 @@ export class VisaWorkflowComponent implements OnInit {
                                     difflist_type: 'VISA_CIRCUIT',
                                     signatory: false,
                                     requested_signature: itemTemplate.item_mode === 'sign',
-                                    hasPrivilege : item.hasPrivilege
+                                    hasPrivilege : itemTemplate.hasPrivilege
                                 }
                             })
                         );
