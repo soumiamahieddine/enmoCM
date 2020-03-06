@@ -149,7 +149,7 @@ class ListInstanceController
             return $response->withStatus($controller['code'])->withJson(['errors' => $controller['errors']]);
         }
 
-        $resIds = array_column($body['data'], 'resId');
+        $resIds = array_column($body, 'resId');
         $resIds = array_unique($resIds);
         foreach ($resIds as $resId) {
             HistoryController::add([

@@ -763,7 +763,7 @@ export class DocumentViewerComponent implements OnInit {
 
     isEditingTemplate() {
         if (this.editor.mode === 'onlyoffice') {
-            return this.onlyofficeViewer === undefined;
+            return this.onlyofficeViewer !== undefined;
         } else {
             return this.editInProgress;
         }
@@ -902,7 +902,7 @@ export class DocumentViewerComponent implements OnInit {
                         encodedFile: data.content,
                         format: data.format,
                         resId: this.resId
-                    }
+                    };
                     return formatdatas;
                 }),
                 exhaustMap((data) => this.http.put(`../../rest/resources/${this.resId}?onlyDocument=true`, data)),
