@@ -65,7 +65,7 @@ export class DiffusionModelsAdministrationComponent implements OnInit {
     ) { }
 
     async ngOnInit(): Promise<void> {
-        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.diffusionModels);
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.workflowModels);
 
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
