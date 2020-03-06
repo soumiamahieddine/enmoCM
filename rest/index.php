@@ -312,9 +312,6 @@ $app->get('/roles', \Entity\controllers\ListTemplateController::class . ':getRol
 $app->get('/availableCircuits', \Entity\controllers\ListTemplateController::class . ':getAvailableCircuits');
 $app->put('/circuits/{type}', \Entity\controllers\ListInstanceController::class . ':updateCircuits');
 
-//MessageExchanges
-$app->get('/messageExchanges/{id}', \MessageExchange\controllers\MessageExchangeController::class . ':getById');
-
 //Notes
 $app->post('/notes', \Note\controllers\NoteController::class . ':create');
 $app->get('/notes/{id}', \Note\controllers\NoteController::class . ':getById');
@@ -538,10 +535,13 @@ $app->get('/administration/notifications/new', \Notification\controllers\Notific
 $app->get('/notifications/{id}', \Notification\controllers\NotificationController::class . ':getBySid');
 $app->post('/scriptNotification', \Notification\controllers\NotificationScheduleController::class . ':createScriptNotification');
 
+//External MessageExchanges
+$app->get('/messageExchanges/{id}', \MessageExchange\controllers\MessageExchangeController::class . ':getById');
 $app->post('/saveNumericPackage', \MessageExchange\controllers\ReceiveMessageExchangeController::class . ':saveMessageExchange');
 $app->post('/saveMessageExchangeReturn', \MessageExchange\controllers\ReceiveMessageExchangeController::class . ':saveMessageExchangeReturn');
 $app->post('/saveMessageExchangeReview', \MessageExchange\controllers\MessageExchangeReviewController::class . ':saveMessageExchangeReview');
 $app->post('/resources/{resId}/messageExchange', \MessageExchange\controllers\SendMessageExchangeController::class . ':createMessageExchange');
+$app->get('/messageExchangesInitialization', \MessageExchange\controllers\SendMessageExchangeController::class . ':getInitialization');
 
 //ExternalSignatoryBooks
 $app->get('/maarchParapheur/user/{id}/picture', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':getUserPicture');
