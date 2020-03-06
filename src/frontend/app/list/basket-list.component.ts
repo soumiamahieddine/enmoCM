@@ -314,7 +314,7 @@ export class BasketListComponent implements OnInit {
                     key.event = true;
                     if (key.displayValue.length > 1) {
                         key.displayTitle = key.displayValue.join(' - ');
-                        key.displayValue = '<b>' + key.displayValue.length + '</b> ' + this.lang.contacts;
+                        key.displayValue = '<b>' + key.displayValue.length + '</b> ' + this.lang.contactsAlt;
                     } else {
                         key.displayValue = key.displayValue[0];
                     }

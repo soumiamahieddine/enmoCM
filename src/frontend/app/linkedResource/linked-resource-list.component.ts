@@ -86,7 +86,7 @@ export class LinkedResourceListComponent implements OnInit {
                 
                 if (key === 'senders' && linkeRes[key].length > 1) {
                     if (linkeRes[key].length > 1) {
-                        linkeRes[key] = linkeRes[key].length + ' ' + this.lang.contacts;
+                        linkeRes[key] = linkeRes[key].length + ' ' + this.lang.contactsAlt;
                     } else {
                         linkeRes[key] = linkeRes[key][0];
                     }

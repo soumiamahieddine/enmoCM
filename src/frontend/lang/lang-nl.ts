@@ -194,7 +194,8 @@ export const LANG_NL = {
     "contactGroupCreation"                  : "Aanmaak van een contactgroepering",
     "contactGroupList"                      : "Lijst met contactgroepen",
     "contactInfo"                           : "Contactfiche",
-    "contacts"                              : "Contact(s)", //_TO_TRANSLATE
+    "contacts"                              : "Contacts", //_TO_TRANSLATE
+    "contactsAlt"                              : "Contact(s)",//_TO_TRANSLATE
     "contactsParameters_addressAdditional1"    : "Toren, gebouw, pand, residentie",
     "contactsParameters_addressCountry"       : "Land",
     "contactsParameters_addressNumber"           : "Straatnummer",
@@ -221,6 +222,7 @@ export const LANG_NL = {
     "contactsGroupDesc"                     : "Indien de groepering openbaar is, kunnen alle gebruikers deze gebruiken. Indien deze privé is, kan enkel de maker deze gebruiken",
     "contactsGroupModification"             : "Wijziging van de contactgroepering",
     "contactsGroups"                        : "Contactgroepering(en)",
+    "contactsGroupsAlt"                     : "Contact(s) group(s)",//_TO_TRANSLATE
     "contactsGroupUpdated"                  : "Gewijzigde contactgroepering",
     "content_management"                    : "Versiebeheer van het document",
     "content"                               : "_TO_TRANSLATE",
