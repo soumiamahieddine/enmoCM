@@ -317,7 +317,7 @@ class FolderController
         foreach ($data['sharing']['entities'] as $item) {
             if (isset($item['entity_id'])) {
                 $entities[] = $item;
-            } else if (isset($item['keyword'])) {
+            } elseif (isset($item['keyword'])) {
                 $keywords[] = $item;
             }
         }

@@ -512,7 +512,6 @@ class SummarySheetController
                         $pdf->MultiCell($widthNotes, 30, $label . " : {$value}", 1, 'L', false, $nextLine, '', '', true, 0, true);
                     }
                 }
-
             } elseif ($unit['unit'] == 'senderRecipientInformations') {
                 $senders = null;
                 if (in_array('senders', $fieldsIdentifier)) {
@@ -573,11 +572,11 @@ class SummarySheetController
                     $pdf->Cell($widthMultiCell, 15, _SENDERS, 1, 0, 'C', false);
                     $pdf->Cell($widthCell, 15, '', 0, 0, 'C', false);
                     $pdf->Cell($widthMultiCell, 15, _RECIPIENTS, 1, 1, 'C', false);
-                } else if ($senders !== null && $recipients === null) {
+                } elseif ($senders !== null && $recipients === null) {
                     $correspondents = $senders;
 
                     $pdf->Cell($widthMultiCell, 15, _SENDERS, 1, 1, 'C', false);
-                } else if ($senders === null && $recipients !== null) {
+                } elseif ($senders === null && $recipients !== null) {
                     $correspondents = $recipients;
 
                     $pdf->Cell($widthMultiCell, 15, _RECIPIENTS, 1, 1, 'C', false);
@@ -611,7 +610,6 @@ class SummarySheetController
                         $pdf->MultiCell($widthCell, 40, '', 0, 'L', false, 0, '', '', true, 0, true);
                     }
                 }
-
             } elseif ($unit['unit'] == 'diffusionList') {
                 $assignee    = '';
                 $destination = '';
