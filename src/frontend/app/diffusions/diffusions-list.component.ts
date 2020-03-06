@@ -135,15 +135,11 @@ export class DiffusionsListComponent implements OnInit {
 
             if (listInstance !== undefined) {
                 listInstance.forEach((element: any) => {
-                    if (element.item_mode == 'cc') {
-                        element.item_mode = 'copy';
-                    }
-
                     if (this.keepRoles.indexOf(element.item_mode) > -1 && this.diffList[element.item_mode].items.filter((item: any) => item.itemSerialId === element.itemSerialId && item.item_type === element.item_type).length === 0) {
                         this.diffList[element.item_mode].items.push(element);
                     }
-                    if (this.keepDestForRedirection && element.item_mode == "dest" && this.diffList["copy"].items.filter((item: any) => item.itemSerialId === element.itemSerialId && item.item_type === element.item_type).length === 0) {
-                        this.diffList["copy"].items.push(element);
+                    if (this.keepDestForRedirection && element.item_mode == "dest" && this.diffList["cc"].items.filter((item: any) => item.itemSerialId === element.itemSerialId && item.item_type === element.item_type).length === 0) {
+                        this.diffList["cc"].items.push(element);
                     }
                 });
             }
@@ -165,7 +161,7 @@ export class DiffusionsListComponent implements OnInit {
                         const obj: any = {
                             listmodel_id: item.id,
                             listinstance_id: item.listinstance_id,
-                            item_mode: item.item_mode === 'cc' ? 'copy' : item.item_mode,
+                            item_mode: item.item_mode,
                             item_type: item.item_type,
                             itemSerialId: item.item_id,
                             itemId: '',
@@ -176,7 +172,7 @@ export class DiffusionsListComponent implements OnInit {
                             process_comment: null,
                         };
                         return obj;
-                    }))
+                    }));
                     return data.listTemplates;
                 }),
                 tap((templates: any) => {
@@ -198,7 +194,7 @@ export class DiffusionsListComponent implements OnInit {
 
                         const obj: any = {
                             listinstance_id: item.listinstance_id,
-                            item_mode: item.item_mode === 'cc' ? 'copy' : item.item_mode,
+                            item_mode: item.item_mode,
                             item_type: item.item_type === 'user_id' ? 'user' : 'entity',
                             itemSerialId: item.itemSerialId,
                             itemId: item.item_id,
@@ -207,7 +203,7 @@ export class DiffusionsListComponent implements OnInit {
                             difflist_type: item.difflist_type,
                             process_date: null,
                             process_comment: null,
-                        }
+                        };
                         return obj;
                     });
                     return data.listInstance;
@@ -291,7 +287,7 @@ export class DiffusionsListComponent implements OnInit {
                     data.roles = data.roles.map((role: any) => {
                         return {
                             ...role,
-                            id: role.id === 'cc' ? 'copy' : role.id,
+                            id: role.id,
                         }
                     });
                     return data.roles;
@@ -385,13 +381,13 @@ export class DiffusionsListComponent implements OnInit {
     }
 
     async addElem(element: any) {
-        let item_mode: any = 'copy';
+        let item_mode: any = 'cc';
 
         if (this.diffList["dest"].items.length === 0) {
-            item_mode = await this.isUserInCurrentEntity(element.serialId) && this.availableRoles.filter(role => role.id === 'dest')[0].canUpdate ? 'dest' : 'copy';
+            item_mode = await this.isUserInCurrentEntity(element.serialId) && this.availableRoles.filter(role => role.id === 'dest')[0].canUpdate ? 'dest' : 'cc';
         }
 
-        if (this.diffList["copy"].items.map((e: any) => { return e.itemId; }).indexOf(element.id) == -1) {
+        if (this.diffList["cc"].items.map((e: any) => { return e.itemId; }).indexOf(element.id) == -1) {
             let itemType = '';
             if (element.type == 'user') {
                 itemType = 'user';

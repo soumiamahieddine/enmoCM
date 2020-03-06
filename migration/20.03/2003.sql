@@ -533,6 +533,7 @@ DO $$ BEGIN
   END IF;
 END$$;
 
+UPDATE listinstance SET item_mode = 'cc' WHERE item_mode = 'copy';
 DELETE FROM usergroups_services WHERE service_id = 'admin_fileplan';
 DELETE FROM usergroups_services WHERE service_id = 'put_doc_in_fileplan';
 DELETE FROM usergroups_services WHERE service_id = 'fileplan';
