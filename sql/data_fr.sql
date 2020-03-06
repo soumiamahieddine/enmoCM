@@ -800,6 +800,12 @@ INSERT INTO folders (label, public, user_id, parent_id, level) VALUES ('Cohésio
 ------------
 UPDATE usergroups set indexation_parameters = '{"actions":["21", "22"], "entities":[], "keywords":["ALL_ENTITIES"]}' where group_id IN ('COURRIER', 'RESP_COURRIER');
 UPDATE usergroups set indexation_parameters = '{"actions":["22", "414", "20"], "entities":[], "keywords":["ALL_ENTITIES"]}' where group_id IN ('AGENT');
+------------
+--USERS 
+------------
+UPDATE users set external_id = '{"maarchParapheur": 1}' where user_id = 'jjane';
+UPDATE users set external_id = '{"maarchParapheur": 3}' where user_id = 'mmanfred';
+UPDATE users set external_id = '{"maarchParapheur": 4}' where user_id = 'ppetit';
 
 ------------
 --ENTITIES_FOLDERS
@@ -1600,7 +1606,7 @@ INSERT INTO contacts_filling (enable, first_threshold, second_threshold) VALUES 
 
 /* Configurations */
 TRUNCATE TABLE configurations;
-INSERT INTO configurations (service, value) VALUES ('admin_email_server', '{"type":"smtp","host":"smtp.gmail.com","port":465,"user":"notifications.maarch@gmail.com","password":"NUraUORbrlN2X1oL::a941cfa4de03b52cd5388459d66b5fef","auth":true,"secure":"ssl","from":"notifications.maarch@gmail.com","charset":"utf-8"}');
+INSERT INTO configurations (service, value) VALUES ('admin_email_server', '{"type":"smtp","host":"smtp.gmail.com","port":465,"user":"notifications.maarch@gmail.com","password":"1OkrZQPFNJmI7uY8::7e870f0f61ecc7e9fb6e7065dd31aea5","auth":true,"secure":"ssl","from":"notifications.maarch@gmail.com","charset":"utf-8"}');
 
 /* Modèle d’envois postaux */
 TRUNCATE TABLE shipping_templates;
