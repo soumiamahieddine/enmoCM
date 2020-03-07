@@ -383,36 +383,48 @@ export class DiffusionsListComponent implements OnInit {
     async addElem(element: any) {
         let item_mode: any = 'cc';
 
-        if (this.diffList["dest"].items.length === 0) {
+        if (this.hasEmptyDest() && element.type == 'user') {
             item_mode = await this.isUserInCurrentEntity(element.serialId) && this.availableRoles.filter(role => role.id === 'dest')[0].canUpdate ? 'dest' : 'cc';
         }
 
-        if (this.diffList["cc"].items.map((e: any) => { return e.itemId; }).indexOf(element.id) == -1) {
-            let itemType = '';
-            if (element.type == 'user') {
-                itemType = 'user';
-            } else {
-                itemType = 'entity';
-            }
+        let itemType = '';
+        if (element.type == 'user') {
+            itemType = 'user';
+        } else {
+            itemType = 'entity';
+        }
 
-            const newElemListModel: any = {
-                listinstance_id: null,
-                item_mode: item_mode,
-                item_type: itemType,
-                itemSerialId: element.serialId,
-                itemId: element.id,
-                itemLabel: element.idToDisplay,
-                itemSubLabel: element.descriptionToDisplay,
-                difflist_type: 'entity_id',
-                process_date: null,
-                process_comment: null,
-            };
+        const newElemListModel: any = {
+            listinstance_id: null,
+            item_mode: item_mode,
+            item_type: itemType,
+            itemSerialId: element.serialId,
+            itemId: element.id,
+            itemLabel: element.idToDisplay,
+            itemSubLabel: element.descriptionToDisplay,
+            difflist_type: 'entity_id',
+            process_date: null,
+            process_comment: null,
+        };
+
+        if (!this.isItemInThisRole(newElemListModel, 'cc')) {
             this.diffList[item_mode].items.unshift(newElemListModel);
 
             if (this.diffFormControl !== undefined) {
                 this.setFormValues();
             }
         }
+    }
+
+    isItemInThisRole(element: any, roleId: string) {
+        const result = this.diffList[roleId].items.map((item: any, index: number) => {
+                return {
+                    ...item,
+                    index: index
+                }
+            }).filter((item: any) => item.itemSerialId === element.itemSerialId && item.item_type === element.item_type);
+
+        return result.length > 0;
     }
 
     isUserInCurrentEntity(userId: number) {
@@ -493,10 +505,9 @@ export class DiffusionsListComponent implements OnInit {
                     if (this.diffList['dest'].items.length > 0) {
                         const destUser = this.diffList['dest'].items[0];
 
-                        this.diffList[oldRole.id].items.map((item: any) => item.id).
-                            indexFound = this.diffList[oldRole.id].items.map((item: any) => item.userId).indexOf(destUser.userId);
+                        indexFound = this.diffList[oldRole.id].items.map((item: any) => item.itemSerialId).indexOf(destUser.itemSerialId);
 
-                        if (indexFound === -1) {
+                        if (indexFound === -1 && !this.isItemInThisRole(destUser, oldRole.id)) {
                             destUser.item_mode = oldRole.id;
                             this.diffList[oldRole.id].items.push(destUser);
                         }
@@ -533,13 +544,14 @@ export class DiffusionsListComponent implements OnInit {
     changeUserRole(user: any, oldRole: any, newRole: any) {
         let indexFound: number;
 
-        indexFound = this.diffList[oldRole.id].items.map((item: any) => item.userId).indexOf(user.userId);
-
+        indexFound = this.diffList[oldRole.id].items.map((item: any) => item.itemSerialId).indexOf(user.itemSerialId);
         if (indexFound > -1) {
             this.diffList[oldRole.id].items.splice(indexFound, 1);
         }
-        user.item_mode = newRole.id;
-        this.diffList[newRole.id].items.push(user);
+        if (!this.isItemInThisRole(user, newRole.id)) {
+            user.item_mode = newRole.id;
+            this.diffList[newRole.id].items.push(user);
+        }
         if (this.diffFormControl !== undefined) {
             this.setFormValues();
         }
