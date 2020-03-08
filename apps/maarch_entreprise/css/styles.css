@@ -1582,14 +1582,14 @@ th.ref {
     width: 255px;
 }
 
-#formlogin input {
+/* #formlogin input {
     width: 120px;
 }
 
 #formlogin input.button {
     width: auto;
     margin: 0;
-}
+} */
 
 #formlogin p.buttons,
 #post .forms .buttons {
@@ -1597,9 +1597,9 @@ th.ref {
     margin: 0;
 }
 
-#formlogin select {
+/* #formlogin select {
     width: 140px;
-}
+} */
 
 
 
@@ -3546,6 +3546,9 @@ input.button {
     border-radius: 4px !important;
     font-size: 13px;
     font-weight: 500;
+    width: 100% !important;
+    height: 32px;
+    text-align: center !important;
 }
 
 .submitButton:active {
@@ -3560,4 +3563,13 @@ input.button {
 
 .submitButton::-moz-focus-inner {
     border: 0;
+}
+
+.standardConnectInput {
+    width: 100% !important; 
+    height: 32px; 
+    padding: 6px 12px !important; 
+    font-size: 14px; 
+    border: 1px solid #cccccc !important; 
+    border-radius: 4px;
 }
