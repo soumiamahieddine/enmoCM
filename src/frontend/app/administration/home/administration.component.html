@@ -17,9 +17,12 @@
                 <div class="loading" *ngIf="loading">
                     <mat-spinner style="margin:auto;"></mat-spinner>
                 </div>
-                <div style="display: grid;grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));gap: 20px;padding:20px;">
-                    <mat-card class="countCard" *ngFor="let shortcut of shortcutsAdmin" matRipple (click)="goToSpecifiedAdministration(shortcut)">
-                        <div mat-card-avatar class="{{shortcut.style}} avatarCount">
+                <div
+                    style="display: grid;grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));gap: 20px;padding:20px;">
+                    <mat-card class="countCard" *ngFor="let shortcut of shortcutsAdmin" matRipple
+                        (click)="goToSpecifiedAdministration(shortcut)">
+                        <div mat-card-avatar class="avatarCount">
+                            <i class="{{shortcut.style}}" style="position: absolute;"></i>
                         </div>
                         <span style="font-size: 40px;">{{shortcut.count}}</span>
                         {{shortcut.label}}
@@ -29,10 +32,15 @@
                 <mat-form-field style="padding:10px;font-size: 10px;width: 250px !important;">
                     <input matInput #searchServiceInput [formControl]="searchService" [placeholder]="lang.filterBy">
                 </mat-form-field>
-                <div style="margin: 20px;display: grid;grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));gap: 20px;padding:20px;padding-top:0px;margin-top:0px;">
-                    <button mat-button  *ngFor="let administration of filteredAdministrations | async | sortBy : 'label'" [title]="administration.comment" style="font-size:20px;height:80px;" (click)="goToSpecifiedAdministration(administration)">
+                <div
+                    style="margin: 20px;display: grid;grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));gap: 20px;padding:20px;padding-top:0px;margin-top:0px;">
+                    <button mat-button *ngFor="let administration of filteredAdministrations | async | sortBy : 'label'"
+                        [title]="administration.comment" style="font-size:20px;height:80px;"
+                        (click)="goToSpecifiedAdministration(administration)">
                         <div style="display: flex;align-items: center;gap: 10px;">
-                            <i class="{{administration.style}} fa-4x avatarCount2"></i>
+                            <span>
+                                <i class="avatarCount2 {{administration.style}}"></i>
+                            </span>
                             <span class="countLabel" style="white-space: initial;text-align: left;">
                                 {{administration.label}}
                             </span>
