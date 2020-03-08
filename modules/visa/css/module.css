@@ -48,53 +48,8 @@
 	width:100%;
 }
 
-#modalPIN{
-	padding-top:50px;
-	z-index: 1050;
-	width: 300px;
-	height: 80px;
-	border: 2px solid #000;
-	display: none;
-	position: absolute;
-	background-color: #F2F2F2;
-	left: 40%;
-	top: 40%;
-	text-align: center;
-}
-
-#modalSaveVisaModel{
-	padding-top:20px;
-	z-index: 1050;
-	width: 300px;
-	height: 80px;
-	border: 2px solid #000;
-	display: none;
-	position: absolute;
-	background-color: #F2F2F2;
-	left: 40%;
-	top: 10%;
-	text-align: center;
-}
-
-.listDocsBasket{
-	border-collapse: collapse;
-	height: 96%;
-	width: 100%;
-	overflow-y: scroll;
-}
-
-.listDocsBasket div{
-	width:100%;
-	border-bottom: thin solid black;
-}
-
 .selectedId{
 	background-color:#F99830;
-}
-
-
-.listDocsBasket li{
-	padding:5px;
 }
 
 #tab_visaSetWorkflow td{
