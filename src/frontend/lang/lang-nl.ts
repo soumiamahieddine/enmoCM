@@ -1620,4 +1620,12 @@ export const LANG_NL = {
     "noDest" : "No <b>assignee</b> defined", //_TO_TRANSLATE
     "noPrivileges" : "Insufficient privileges", //_TO_TRANSLATE
     "mustDeleteUsersWithNoPrivileges" : "You must delete users with insufficient privileges", //_TO_TRANSLATE
+    "sendNumericPackage" : "Send a numeric package", //_TO_TRANSLATE
+    "sendNumericPackageInfo" : "You can send mail and attachments between <b> two instances </b> of Maarch Courrier. <br /> <br /> You will receive <b> an acknowledgment of receipt </b> and you will be able <b> follow the progress </b> of the mail at the recipient. (see <a href=\"{0}\" target=\"_blank\"> Maarch2GEC </a> for more information).", //_TO_TRANSLATE
+    "mailSubject" : "Mail subject", //_TO_TRANSLATE
+    "attachItemToNumericPackage" : "Attach an element to sending mail", //_TO_TRANSLATE
+    "note" : "Note", //_TO_TRANSLATE
+    "addNoteToNumericPackage" : "Add a note Ajouter to sending mail", //_TO_TRANSLATE
+    "mainDocNumericPackage" : "Main document of sending mail", //_TO_TRANSLATE
+    "attachmentsNumericPackage" : "Attachments of sending mail", //_TO_TRANSLATE
 };

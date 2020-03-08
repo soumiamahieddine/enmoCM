@@ -8,6 +8,7 @@ import { map, catchError, filter, tap } from 'rxjs/operators';
 import { FunctionsService } from '../../service/functions.service';
 import { PrivilegeService } from '../../service/privileges.service';
 import { SentResourcePageComponent } from './sent-resource-page/sent-resource-page.component';
+import { SentNumericPackagePageComponent } from './sent-numeric-package-page/sent-numeric-package-page.component';
 
 @Component({
     selector: 'app-sent-resource-list',
@@ -169,11 +170,11 @@ export class SentResourceListComponent implements OnInit {
                             type: 'm2m_ARCHIVETRANSFER',
                             typeColor: '#F99830',
                             desc: this.lang.m2m_ARCHIVETRANSFER,
-                            status: item.status,
+                            status: item.status.toUpperCase(),
                             hasAttach: false,
                             hasNote: false,
                             hasMainDoc: false,
-                            canManage: false
+                            canManage: true
                         }
                     });
                     return data.messageExchanges;
@@ -245,6 +246,15 @@ export class SentResourceListComponent implements OnInit {
         this.dataSource.filter = ev.value;
     }
 
+    open(row: any = {id: null, type: null}) {
+
+        if (row.type === 'm2m_ARCHIVETRANSFER') {
+            this.openPromptNumericPackage(row);
+        } else {
+            this.openPromptMail(row);
+        }
+    }
+
     openPromptMail(row: any = {id: null, type: null}) {
 
         let title = this.lang.sendElement;
@@ -254,7 +264,34 @@ export class SentResourceListComponent implements OnInit {
         }
 
         if (row.canManage || row.id === null) {
-            const dialogRef = this.dialog.open(SentResourcePageComponent, { panelClass: 'maarch-modal', disableClose: true, data: { title: title, resId: this.resId, emailId: row.id, emailType: row.type } });
+            const dialogRef = this.dialog.open(SentResourcePageComponent, { panelClass: 'maarch-modal', width:'60vw', disableClose: true, data: { title: title, resId: this.resId, emailId: row.id, emailType: row.type } });
+
+            dialogRef.afterClosed().pipe(
+                filter((data: any) => data.state === 'success' || data === 'success'),
+                tap(() => {
+                    this.refreshEmailList();
+                    setTimeout(() => {
+                        this.refreshWaitingElements();
+                    }, 5000);
+                }),
+                catchError((err: any) => {
+                    this.notify.handleSoftErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        }
+    }
+
+    openPromptNumericPackage(row: any = {id: null, type: null}) {
+
+        let title = this.lang.sendElement;
+
+        if (row.id !== null) {
+            title = this.lang[row.type];
+        }
+
+        if (row.canManage || row.id === null) {
+            const dialogRef = this.dialog.open(SentNumericPackagePageComponent, { panelClass: 'maarch-modal', width:'60vw', disableClose: true, data: { title: title, resId: this.resId, emailId: row.id } });
 
             dialogRef.afterClosed().pipe(
                 filter((data: any) => data.state === 'success' || data === 'success'),

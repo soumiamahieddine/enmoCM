@@ -107,6 +107,7 @@ import { LinkResourceModalComponent } from './linkedResource/linkResourceModal/l
 import { DocumentViewerModalComponent } from './viewer/modal/document-viewer-modal.component';
 import { SentResourceListComponent } from './sentResource/sent-resource-list.component';
 import { SentResourcePageComponent } from './sentResource/sent-resource-page/sent-resource-page.component';
+import { SentNumericPackagePageComponent } from './sentResource/sent-numeric-package-page/sent-numeric-package-page.component';
 
 
 
@@ -202,7 +203,8 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         DocumentViewerModalComponent,
         SentResourceListComponent,
         SentResourcePageComponent,
-        PrintedFolderModalComponent
+        PrintedFolderModalComponent,
+        SentNumericPackagePageComponent,
     ],
     entryComponents: [
         InfoChangePasswordModalComponent,
@@ -246,7 +248,8 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         LinkResourceModalComponent,
         DocumentViewerModalComponent,
         SentResourcePageComponent,
-        PrintedFolderModalComponent
+        PrintedFolderModalComponent,
+        SentNumericPackagePageComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],
     bootstrap: [ AppComponent ]

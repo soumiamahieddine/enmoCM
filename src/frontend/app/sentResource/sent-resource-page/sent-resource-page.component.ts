@@ -128,7 +128,7 @@ export class SentResourcePageComponent implements OnInit {
                 this.setDefaultInfo();
             }
         }
-        this.loading = false;
+        //this.loading = false;
         setTimeout(() => {
             this.initMce();
         }, 0);
@@ -137,9 +137,14 @@ export class SentResourcePageComponent implements OnInit {
     initMce() {
         tinymce.init({
             selector: "textarea#emailSignature",
+            setup: (editor: any) => {
+                editor.on('init', (e: any) => {
+                    console.log('The Editor has initialized.');
+                    this.loading = false;
+                });
+            },
             readonly: this.emailStatus === 'SENT',
-            height : '400',
-            width : '1100',
+            height: '400',
             suffix: '.min',
             language: this.lang.langISO.replace('-', '_'),
             language_url: `../../node_modules/tinymce-i18n/langs/${this.lang.langISO.replace('-', '_')}.js`,
