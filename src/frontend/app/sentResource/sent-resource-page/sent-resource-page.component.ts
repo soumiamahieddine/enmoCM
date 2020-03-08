@@ -377,7 +377,7 @@ export class SentResourcePageComponent implements OnInit {
                     };
                     this.recipients = [{
                         label: !this.functions.empty(data.acknowledgementReceipt.contact) ? this.contactService.formatContact(data.acknowledgementReceipt.contact) : this.lang.contactDeleted,
-                        email: !this.functions.empty(data.acknowledgementReceipt.contact.email) ? data.acknowledgementReceipt.contact.email : this.lang.contactDeleted
+                        email: !this.functions.empty(data.acknowledgementReceipt.contact.email) ? data.acknowledgementReceipt.contact.email : this.lang.withoutEmail
                     }];
 
                     this.emailStatus = 'SENT';

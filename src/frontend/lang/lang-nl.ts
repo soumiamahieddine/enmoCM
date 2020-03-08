@@ -1605,6 +1605,7 @@ export const LANG_NL = {
     "mailing" : "Mailing", //_TO_TRANSLATE
     "goToBasket" : "Go to basket...", //_TO_TRANSLATE
     "manualSendingAR" : "Manual sending...", //_TO_TRANSLATE
+    "withoutEmail" : "Without email", //_TO_TRANSLATE
     "enableMailing" : "Enable mailing",  //_TO_TRANSLATE
     "disableMailing" : "Disable mailing", //_TO_TRANSLATE
     "selectContact" : "select a contact", //_TO_TRANSLATE

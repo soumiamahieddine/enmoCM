@@ -74,11 +74,13 @@ export class SentResourceListComponent implements OnInit {
                         if (!this.functions.empty(item.contact.email)) {
                             email = item.contact.email;
                         } else {
-                            email = this.lang.contactDeleted;
+                            email = this.lang.withoutEmail;
                         }
                         let name;
-                        if (!this.functions.empty(item.contact.firstname) && !this.functions.empty(item.contact.lastname)) {
-                            name = `${item.contact.firstname} ${item.contact.lastname}`
+                        if (!this.functions.empty(item.contact.firstname) || !this.functions.empty(item.contact.lastname)) {
+                            name = item.contact.firstname + ' ' + item.contact.lastname;
+                        } else if (!this.functions.empty(item.contact.company)) {
+                            name = item.contact.company;
                         } else {
                             name = this.lang.contactDeleted;
                         }

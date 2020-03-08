@@ -1580,6 +1580,7 @@ export const LANG_EN = {
     "mailing" : "Mailing",
     "goToBasket" : "Go to basket...",
     "manualSendingAR" : "Manual sending...",
+    "withoutEmail" : "Without email",
     "enableMailing" : "Enable mailing",
     "disableMailing" : "Disable mailing",
     "selectContact" : "select a contact",
