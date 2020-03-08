@@ -85,7 +85,7 @@ export class SecuritiesAdministrationComponent implements OnInit {
         if (!this.passwordRules['lockTime'].enabled && !this.passwordRules['minLength'].enabled && !this.passwordRules['lockAttempts'].enabled && !this.passwordRules['renewal'].enabled && !this.passwordRules['historyLastUse'].enabled) {
             return true;
         } else {
-            false;
+            return false;
         }
     }
 

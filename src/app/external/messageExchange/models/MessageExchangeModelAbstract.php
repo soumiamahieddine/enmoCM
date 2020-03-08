@@ -251,12 +251,11 @@ abstract class MessageExchangeModelAbstract
         ValidatorModel::stringType($args, ['messageId']);
 
         $messages = DatabaseModel::select([
-                'select' => empty($aArgs['select']) ? ['*'] : $aArgs['select'],
+                'select' => empty($args['select']) ? ['*'] : $args['select'],
                 'table'  => ['unit_identifier'],
                 'where'  => ['message_id = ?'],
-                'data'   => [$aArgs['message_id']]
-            ]
-        );
+                'data'   => [$args['message_id']]
+            ]);
 
         return $messages;
     }

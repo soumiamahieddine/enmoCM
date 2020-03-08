@@ -534,7 +534,7 @@ class ResController extends ResourceControlController
 
         $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
         $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
-        if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
+        if (!empty($convertedDocument['fingerprint']) && $convertedDocument['fingerprint'] != $fingerprint) {
             return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
         }
 

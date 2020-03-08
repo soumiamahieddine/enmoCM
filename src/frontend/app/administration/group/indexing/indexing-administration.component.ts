@@ -196,7 +196,7 @@ export class IndexingAdministrationComponent implements OnInit {
             if (index > -1) {
                 this.indexingInfo.actions.push(this.actionList[index]);
                 this.actionList.splice(index, 1);
-            };
+            }
         });
     }
 

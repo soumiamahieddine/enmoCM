@@ -273,7 +273,7 @@ export class SentResourceListComponent implements OnInit {
     }
 
     refreshWaitingElements() {
-        this.sentResources.map((draftElement: any) => {
+        this.sentResources.forEach((draftElement: any) => {
             if (draftElement.status == 'WAITING' && draftElement.type == 'email') {
                 this.http.get(`../../rest/emails/${draftElement.id}`).pipe(
                     tap((data: any) => {
@@ -283,7 +283,7 @@ export class SentResourceListComponent implements OnInit {
                             } else {
                                 this.notify.error(this.lang.emailCannotSent);
                             }
-                            this.sentResources.map((element: any, key: number) => {
+                            this.sentResources.forEach((element: any, key: number) => {
                                 if (element.id == draftElement.id && element.type == 'email') {
                                     this.sentResources[key].status = data.status;
                                     this.sentResources[key].sendDate = data.sendDate;
