@@ -17,38 +17,19 @@
                 <div class="loading" *ngIf="loading">
                     <mat-spinner style="margin:auto;"></mat-spinner>
                 </div>
-                <div style="display: grid;grid-template-columns: repeat(3, 1fr);gap: 20px;padding:20px;">
-                    <mat-card class="countCard" matRipple>
-                        <div mat-card-avatar class="fa fa-user avatarCount">
+                <div style="display: grid;grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));gap: 20px;padding:20px;">
+                    <mat-card class="countCard" *ngFor="let shortcut of shortcutsAdmin" matRipple (click)="goToSpecifiedAdministration(shortcut)">
+                        <div mat-card-avatar class="{{shortcut.style}} avatarCount">
                         </div>
-                        <span style="font-size: 40px;">45</span>
-                        Utlisateurs
-                    </mat-card>
-                    <mat-card class="countCard" matRipple>
-                        <div mat-card-avatar class="fa fa-users avatarCount">
-                        </div>
-                        <span style="font-size: 40px;">8</span>
-                        Groupes
-                    </mat-card>
-                    <mat-card class="countCard" matRipple>
-                        <div mat-card-avatar class="fa fa-sitemap avatarCount">
-                        </div>
-                        <span style="font-size: 40px;">21</span>
-                        Entités
+                        <span style="font-size: 40px;">{{shortcut.count}}</span>
+                        {{shortcut.label}}
                     </mat-card>
                 </div>
                 <mat-divider></mat-divider>
                 <mat-form-field style="padding:10px;font-size: 10px;width: 250px !important;">
                     <input matInput #searchServiceInput [formControl]="searchService" [placeholder]="lang.filterBy">
                 </mat-form-field>
-                <!--<mat-list role="list" style="display: grid;grid-template-columns: repeat(3, 1fr);gap: 20px;">
-                    <mat-list-item role="listitem" *ngFor="let administration of administrations  | sortBy : 'label'">
-                        <mat-icon mat-list-icon class="{{administration.style}}" style="font-size: 30px;"></mat-icon>
-                        <p matLine style="font-size: 24px;">{{administration.label}}</p>
-                    </mat-list-item>
-                </mat-list>-->
-                
-                <div style="margin: 20px;display: grid;grid-template-columns: repeat(4, 1fr);gap: 20px;padding:20px;padding-top:0px;margin-top:0px;">
+                <div style="margin: 20px;display: grid;grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));gap: 20px;padding:20px;padding-top:0px;margin-top:0px;">
                     <button mat-button  *ngFor="let administration of filteredAdministrations | async | sortBy : 'label'" [title]="administration.comment" style="font-size:20px;height:80px;" (click)="goToSpecifiedAdministration(administration)">
                         <div style="display: flex;align-items: center;gap: 10px;">
                             <i class="{{administration.style}} fa-4x avatarCount2"></i>
@@ -58,57 +39,6 @@
                         </div>
                     </button>
                 </div>
-
-
-                <!--<button mat-button *ngFor="let administration of administrations">
-                    <div style="display: flex;flex-direction: column;">
-                        <i class="{{administration.style}} fa-4x"></i>
-                        <span>
-                            {{administration.label}}
-                        </span>
-                        <span>
-                            {{administration.comment}}
-                        </span>
-                    </div>
-
-                </button>-->
-                <!--<div *ngIf="!loading" class="row adminArea">
-                    <div class="col-md-6 col-sm-12 col-xs-12 adminArea_1" *ngIf="organisationServices">
-                        <div class="adminArea-label">{{lang.organization}}</div>
-                        <button class="col-md-4 col-xs-6 adminArea-button"
-                            mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of organisationServices | sortBy : 'label'"
-                            (click)="goToSpecifiedAdministration(modService)">
-                            <i class="{{modService.style}} fa-4x"></i>
-                            <br />{{modService.label}}</button>
-                    </div>
-
-                    <div class="col-md-6 col-sm-12 col-xs-12 adminArea_2" *ngIf="productionServices">
-                        <div class="adminArea-label">{{lang.production}}</div>
-                        <button class="col-md-4 col-xs-6 adminArea-button"
-                            mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of productionServices | sortBy : 'label'"
-                            (click)="goToSpecifiedAdministration(modService)">
-                            <i class="{{modService.style}} fa-4x"></i>
-                            <br />{{modService.label}}</button>
-                    </div>
-                    <div class="col-md-6 col-sm-12 col-xs-12 adminArea_3" *ngIf="classementServices">
-                        <div class="adminArea-label">{{lang.classifying}}</div>
-                        <button class="col-md-4 col-xs-6 adminArea-button"
-                            mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of classementServices | sortBy : 'label'"
-                            (click)="goToSpecifiedAdministration(modService)">
-                            <i class="{{modService.style}} fa-4x"></i>
-                            <br />{{modService.label}}</button>
-                    </div>
-                    <div class="col-md-6 col-sm-12 col-xs-12 adminArea_4" *ngIf="supervisionServices">
-                        <div class="adminArea-label">{{lang.supervision}}</div>
-                        <ng-container>
-                            <button class="col-md-4 col-xs-6 adminArea-button"
-                                mat-button color="primary" matTooltip="{{modService.comment}}" *ngFor="let modService of supervisionServices | sortBy : 'label'"
-                                (click)="goToSpecifiedAdministration(modService)">
-                                <i class="{{modService.style}} fa-4x"></i>
-                                <br />{{modService.label}}</button>
-                        </ng-container>
-                    </div>
-                </div>-->
             </div>
         </div>
     </mat-sidenav-content>

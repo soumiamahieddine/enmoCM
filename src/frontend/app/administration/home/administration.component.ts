@@ -6,10 +6,11 @@ import { MatSidenav } from '@angular/material/sidenav';
 import { HeaderService } from "../../../service/header.service";
 import { AppService } from '../../../service/app.service';
 import { PrivilegeService } from '../../../service/privileges.service';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, tap, catchError, exhaustMap } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
+import { NotificationService } from '../../notification.service';
 
 @Component({
     templateUrl: "administration.component.html",
@@ -21,6 +22,7 @@ export class AdministrationComponent implements OnInit {
     lang: any = LANG;
     loading: boolean = false;
 
+    shortcutsAdmin: any[] = [];
     organisationServices: any[] = [];
     productionServices: any[] = [];
     classementServices: any[] = [];
@@ -40,7 +42,8 @@ export class AdministrationComponent implements OnInit {
         private headerService: HeaderService,
         public appService: AppService,
         private privilegeService: PrivilegeService,
-        private latinisePipe: LatinisePipe) { }
+        private latinisePipe: LatinisePipe,
+        private notify: NotificationService) { }
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration);
@@ -53,7 +56,16 @@ export class AdministrationComponent implements OnInit {
         this.supervisionServices = this.privilegeService.getCurrentUserAdministrationsByUnit('supervision');
 
         this.administrations = this.organisationServices.concat(this.productionServices).concat(this.classementServices).concat(this.supervisionServices);
+        
+        this.shortcutsAdmin = this.administrations.filter(admin => ['admin_users', 'admin_groups', 'manage_entities'].indexOf(admin.id) > -1).map(admin => {
+            return {
+                ...admin,
+                count : 0
+            }
+        });
 
+        this.getNbShortcuts();
+        
         this.filteredAdministrations = this.searchService.valueChanges
             .pipe(
                 startWith(''),
@@ -82,5 +94,25 @@ export class AdministrationComponent implements OnInit {
         } else {
             return this[type];
         }
+    }
+
+    getNbShortcuts() {
+        this.http.get('../../rest/users').pipe(
+            tap((data: any) => {
+                this.shortcutsAdmin.filter(admin => admin.id === 'admin_users')[0].count = data.users.length;
+            }),
+            exhaustMap(() => this.http.get('../../rest/groups')),
+            tap((data: any) => {
+                this.shortcutsAdmin.filter(admin => admin.id === 'admin_groups')[0].count = data.groups.length;
+            }),
+            exhaustMap(() => this.http.get('../../rest/entities')),
+            tap((data: any) => {
+                this.shortcutsAdmin.filter(admin => admin.id === 'manage_entities')[0].count = data.entities.length;
+            }),
+            catchError((err: any) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
     }
 }
