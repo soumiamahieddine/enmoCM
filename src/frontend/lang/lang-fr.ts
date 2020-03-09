@@ -1636,7 +1636,7 @@ export const LANG_FR = {
     "noPrivileges" : "Privilèges insuffisants",    
     "mustDeleteUsersWithNoPrivileges" : "Veuillez supprimer les personnes dont les privilèges sont insuffisants", 
     "sendNumericPackage" : "Envoyer un pli numérique",
-    "sendNumericPackageInfo" : "Vous pouvez envoyer un courrier et des pièces jointes entre <b>deux instances</b> de Maarch Courrier.<br /><br />Vous reçeverez <b>un accusé de réception</b> et vous pourrez <b>suivre l'avancement</b> du    courrier chez le destinataire. (voir <a href=\"{0}\" target=\"_blank\">Maarch2GEC</a> pour plus d'informations).", 
+    "sendNumericPackageInfo" : "Vous pouvez envoyer un courrier et des pièces jointes entre <b>deux instances</b> de Maarch Courrier.<br /><br />Vous recevrez <b>un accusé de réception</b> et vous pourrez <b>suivre l'avancement</b> du courrier chez le destinataire. (voir <a href=\"{0}\" target=\"_blank\">Maarch2GEC</a> pour plus d'informations).", 
     "mailSubject" : "Objet du courrier", 
     "attachItemToNumericPackage" : "Attacher un document / une pièce jointe au courrier à transmettre", 
     "addNoteToNumericPackage" : "Ajouter une annotation au courrier à transmettre", 
