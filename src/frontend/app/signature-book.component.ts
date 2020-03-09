@@ -527,7 +527,7 @@ export class SignatureBookComponent implements OnInit {
     }
 
     createAttachment() {
-        this.dialogRef = this.dialog.open(AttachmentCreateComponent, { disableClose: true, panelClass: 'modal-container', height: '90vh', width: '90vw', data: { resIdMaster: this.resId } });
+        this.dialogRef = this.dialog.open(AttachmentCreateComponent, { disableClose: true, panelClass: 'attachment-modal-container', height: '90vh', width: '90vw', data: { resIdMaster: this.resId } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'success'),

@@ -238,7 +238,10 @@ class StoreController
             $entity = EntityModel::getById(['id' => $args['initiator'], 'select' => ['entity_id']]);
             $preparedData['initiator'] = $entity['entity_id'];
         } else {
-            $preparedData['initiator'] = null;
+            $definedVars = get_defined_vars();
+            if (array_key_exists('initiator', $definedVars['args'])) {
+                $preparedData['initiator'] = null;
+            }
         }
 
         if (isset($args['documentDate'])) {

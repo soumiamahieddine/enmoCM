@@ -12,7 +12,6 @@ declare function $j(selector: any): any;
     selector: 'list-administration',
     templateUrl: "list-administration.component.html",
     styleUrls: ['list-administration.component.scss'],
-    providers: [NotificationService],
 })
 export class ListAdministrationComponent implements OnInit {
 

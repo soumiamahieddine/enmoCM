@@ -534,7 +534,7 @@ class ResController extends ResourceControlController
 
         $docserverType = DocserverTypeModel::getById(['id' => $docserver['docserver_type_id'], 'select' => ['fingerprint_mode']]);
         $fingerprint = StoreController::getFingerPrint(['filePath' => $pathToDocument, 'mode' => $docserverType['fingerprint_mode']]);
-        if (!empty($document['fingerprint']) && $document['fingerprint'] != $fingerprint) {
+        if (!empty($convertedDocument['fingerprint']) && $convertedDocument['fingerprint'] != $fingerprint) {
             return $response->withStatus(400)->withJson(['errors' => 'Fingerprints do not match']);
         }
 
@@ -843,6 +843,12 @@ class ResController extends ResourceControlController
         ]);
         if (empty($resource)) {
             return $response->withStatus(400)->withJson(['errors' => 'Document does not exist']);
+        }
+
+        $queryParams = $request->getQueryParams();
+        if ($args['fieldId'] == 'destination' && !empty($queryParams['alt'])) {
+            $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['id']]);
+            $resource['destination'] = $entity['id'];
         }
 
         return $response->withJson(['field' => $resource[$args['fieldId']]]);
@@ -1235,7 +1241,7 @@ class ResController extends ResourceControlController
 
     public function getResourceFileInformation(Request $request, Response $response, array $args)
     {
-        if (!ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
+        if (!Validator::intVal()->validate($args['resId']) ||  !ResController::hasRightByResId(['resId' => [$args['resId']], 'userId' => $GLOBALS['id']])) {
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 

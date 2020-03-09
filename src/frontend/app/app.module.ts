@@ -2,7 +2,6 @@ import { NgModule }                             from '@angular/core';
 
 import { SharedModule }                         from './app-common.module';
 
-import { ConfirmModalComponent }                from './confirmModal.component';
 import { FiltersListService }                   from '../service/filtersList.service';
 
 import { AppComponent }                         from './app.component';
@@ -54,7 +53,6 @@ import { SendExternalNoteBookActionComponent }   from './actions/send-external-n
 import { XParaphComponent }                         from './actions/send-external-signatory-book-action/x-paraph/x-paraph.component';
 import { MaarchParaphComponent }                         from './actions/send-external-signatory-book-action/maarch-paraph/maarch-paraph.component';
 import { FastParaphComponent }                  from './actions/send-external-signatory-book-action/fast-paraph/fast-paraph.component';
-import { ProcessActionComponent }               from './actions/process-action/process-action.component';
 import { ViewDocActionComponent }               from './actions/view-doc-action/view-doc-action.component';
 import { RedirectActionComponent }               from './actions/redirect-action/redirect-action.component';
 import { SendShippingActionComponent }               from './actions/send-shipping-action/send-shipping-action.component';
@@ -86,7 +84,6 @@ import { ForgotPasswordComponent }          from './login/forgotPassword/forgotP
 import { UpdatePasswordComponent }          from './login/updatePassword/updatePassword.component';
 import { HistoryWorkflowResumeComponent }                        from './history/history-workflow-resume/history-workflow-resume.component';
 import { NoteResumeComponent }                        from './notes/note-resume/note-resume.component';
-import { AttachmentShowModalComponent }                        from './attachments/attachment-show-modal/attachment-show-modal.component';
 import { AttachmentsResumeComponent }                        from './attachments/attachments-resume/attachments-resume.component';
 import { AttachmentPageComponent }                        from './attachments/attachments-page/attachment-page.component';
 import { AttachmentCreateComponent }                        from './attachments/attachment-create/attachment-create.component';
@@ -110,6 +107,7 @@ import { LinkResourceModalComponent } from './linkedResource/linkResourceModal/l
 import { DocumentViewerModalComponent } from './viewer/modal/document-viewer-modal.component';
 import { SentResourceListComponent } from './sentResource/sent-resource-list.component';
 import { SentResourcePageComponent } from './sentResource/sent-resource-page/sent-resource-page.component';
+import { SentNumericPackagePageComponent } from './sentResource/sent-numeric-package-page/sent-numeric-package-page.component';
 
 
 
@@ -131,7 +129,6 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         SignatureBookComponent,
         SafeUrlPipe,
         SaveNumericPackageComponent,
-        ConfirmModalComponent,
         InfoChangePasswordModalComponent,
         ActivateUserComponent,
         NotesListComponent,
@@ -160,7 +157,6 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         XParaphComponent,
         MaarchParaphComponent,
         FastParaphComponent,
-        ProcessActionComponent,
         ViewDocActionComponent,
         RedirectActionComponent,
         SendShippingActionComponent,
@@ -191,7 +187,6 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         AttachmentPageComponent,
         AttachmentCreateComponent,
         AddPrivateIndexingModelModalComponent,
-        AttachmentShowModalComponent,
         MailResumeComponent,
         ContactsListComponent,
         ContactsListModalComponent,
@@ -208,12 +203,11 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         DocumentViewerModalComponent,
         SentResourceListComponent,
         SentResourcePageComponent,
-        PrintedFolderModalComponent
+        PrintedFolderModalComponent,
+        SentNumericPackagePageComponent,
     ],
     entryComponents: [
-        ConfirmModalComponent,
         InfoChangePasswordModalComponent,
-        AttachmentsListComponent,
         SummarySheetComponent,
         ExportComponent,
         ConfirmActionComponent,
@@ -236,7 +230,6 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         ContinueAvisCircuitActionComponent,
         GiveAvisParallelActionComponent,
         ValidateAvisParallelComponent,
-        ProcessActionComponent,
         RedirectActionComponent,
         SendShippingActionComponent,
         redirectInitiatorEntityActionComponent,
@@ -247,7 +240,6 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         AddPrivateIndexingModelModalComponent,
         AttachmentPageComponent,
         AttachmentCreateComponent,
-        AttachmentShowModalComponent,
         ContactsListModalComponent,
         ContactModalComponent,
         VisaWorkflowModalComponent,
@@ -256,7 +248,8 @@ import { SentResourcePageComponent } from './sentResource/sent-resource-page/sen
         LinkResourceModalComponent,
         DocumentViewerModalComponent,
         SentResourcePageComponent,
-        PrintedFolderModalComponent
+        PrintedFolderModalComponent,
+        SentNumericPackagePageComponent
     ],
     providers: [ FiltersListService, FoldersService, ActionsService, PrivilegeService ],
     bootstrap: [ AppComponent ]

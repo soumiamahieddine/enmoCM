@@ -17,8 +17,10 @@ $core = new core_tools();
 $core->load_lang();
 //$name = 'maarch';
 
-$user = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
-\Resource\models\ResModel::update(['set' => ['locker_user_id' => null, 'locker_time' => null], 'where' => ['locker_user_id = ?'], 'data' => [$user['id']]]);
+if (!empty($_SESSION['user']['UserId'])) {
+    $user = \User\models\UserModel::getByLogin(['login' => $_SESSION['user']['UserId'], 'select' => ['id']]);
+    \Resource\models\ResModel::update(['set' => ['locker_user_id' => null, 'locker_time' => null], 'where' => ['locker_user_id = ?'], 'data' => [$user['id']]]);
+}
 $name = $_SESSION['sessionName'];
 
 setcookie($name, "", 1);

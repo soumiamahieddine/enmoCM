@@ -28,6 +28,10 @@ class TagController
     {
         $tags = TagModel::get(['orderBy' => ['label']]);
 
+        if (empty($tags)) {
+            return $response->withJson(['tags' => []]);
+        }
+
         $ids = array_column($tags, 'id');
 
         $countResources = ResourceTagModel::get([
@@ -71,7 +75,7 @@ class TagController
             'data'   => [$tag['id']]
         ]);
 
-        $tag['canMerge'] = empty($tag['parent_id']) && empty($childTags[0]['count']);
+        $tag['canMerge'] = empty($tag['parent_id']) && empty($childTags);
 
         return $response->withJson($tag);
     }

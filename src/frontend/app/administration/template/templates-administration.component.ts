@@ -1,25 +1,24 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSidenav } from '@angular/material/sidenav';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
+import {FunctionsService} from "../../../service/functions.service";
 
 declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "templates-administration.component.html",
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 
 export class TemplatesAdministrationComponent implements OnInit {
-    /*HEADER*/
-    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
-    @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
+
+    @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     lang: any = LANG;
     search: string = null;
@@ -38,13 +37,7 @@ export class TemplatesAdministrationComponent implements OnInit {
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
         this.dataSource.filterPredicate = (template, filter: string) => {
-            var filterReturn = false;
-            this.displayedColumns.forEach(function(column:any) {
-                if (column != 'actions') {
-                    filterReturn = filterReturn || template[column].toLowerCase().includes(filter);
-                }
-            });
-            return filterReturn;
+            return this.functions.filterUnSensitive(template, filter, ['template_label', 'template_comment', 'template_type', 'template_target']);
         };
     }
 
@@ -52,15 +45,17 @@ export class TemplatesAdministrationComponent implements OnInit {
         public http: HttpClient,
         private notify: NotificationService,
         private headerService: HeaderService,
-        public appService: AppService
+        public appService: AppService,
+        public functions: FunctionsService,
+        private viewContainerRef: ViewContainerRef
     ) {
         $j("link[href='merged_css.php']").remove();
     }
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.templates);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+        
+        this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
         this.loading = true;
 
@@ -71,12 +66,7 @@ export class TemplatesAdministrationComponent implements OnInit {
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.templates);
                     this.dataSource.paginator = this.paginator;
-                    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: any) => {
-                        if (sortHeaderId === 'template_label' || sortHeaderId === 'template_comment' || sortHeaderId === 'template_target' || sortHeaderId === 'template_type') {
-                            return data[sortHeaderId].toLocaleLowerCase();
-                        }
-                        return data[sortHeaderId];
-                    };
+                    this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
                     this.sort.active = 'template_label';
                     this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;

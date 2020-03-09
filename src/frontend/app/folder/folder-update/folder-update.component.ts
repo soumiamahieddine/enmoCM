@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, Inject, HostListener } from '@angular/core';
+import { Component, OnInit, Inject, HostListener } from '@angular/core';
 import { LANG } from '../../translate.component';
 import { HttpClient } from '@angular/common/http';
 import { map, tap, catchError, exhaustMap, finalize } from 'rxjs/operators';
@@ -12,7 +12,6 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "folder-update.component.html",
     styleUrls: ['folder-update.component.scss'],
-    providers: [NotificationService],
 })
 export class FolderUpdateComponent implements OnInit {
 
@@ -198,23 +197,24 @@ export class FolderUpdateComponent implements OnInit {
 
     selectEntity(newEntity: any) {
         if (this.holdShift) {
+            $j('#jstree').jstree('deselect_all');
             this.folder.sharing.entities = [];
-        }
-
-        if (!this.functions.empty(newEntity.keyword)) {
-            this.folder.sharing.entities.push(
-                {
-                    keyword: newEntity.keyword,
-                    edition: false
-                }
-            );
         } else {
-            this.folder.sharing.entities.push(
-                {
-                    entity_id: newEntity.serialId,
-                    edition: false
-                }
-            );
+            if (!this.functions.empty(newEntity.keyword)) {
+                this.folder.sharing.entities.push(
+                    {
+                        keyword: newEntity.keyword,
+                        edition: false
+                    }
+                );
+            } else {
+                this.folder.sharing.entities.push(
+                    {
+                        entity_id: newEntity.serialId,
+                        edition: false
+                    }
+                );
+            }
         }
     }
 

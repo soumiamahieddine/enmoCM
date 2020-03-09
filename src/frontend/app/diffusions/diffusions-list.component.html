@@ -22,9 +22,9 @@
                         [class.fa-user]="diffusion.item_type === 'user_id' || diffusion.item_type === 'user'"
                         [class.fa-sitemap]="diffusion.item_type === 'entity_id' || diffusion.item_type === 'entity'"></mat-icon>
                     <div class="item-diffusion">
-                        <p mat-line [title]="diffusion.labelToDisplay">{{diffusion.labelToDisplay}}</p>
-                        <p mat-line class="subInfo" [title]="diffusion.descriptionToDisplay">
-                            {{diffusion.descriptionToDisplay}}</p>
+                        <p mat-line [title]="diffusion.itemLabel">{{diffusion.itemLabel}}</p>
+                        <p mat-line class="subInfo" [title]="diffusion.itemSubLabel">
+                            {{diffusion.itemSubLabel}}</p>
                     </div>
                     <div *ngIf="role.id === 'dest' && target === 'redirect' && adminMode" >
                         <button mat-icon-button (click)="loadDestUserList()" [matMenuTriggerFor]="menuDestUserList"

@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, EventEmitter, Output, Inject, ViewChildren, QueryList, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Inject, ViewChildren, QueryList} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { catchError, tap, finalize, exhaustMap, filter } from 'rxjs/operators';
-import { of, forkJoin, Subject } from 'rxjs';
+import {catchError, tap, filter, distinctUntilChanged} from 'rxjs/operators';
+import { of } from 'rxjs';
 import { NotificationService } from '../../notification.service';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatTabGroup } from '@angular/material';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { AppService } from '../../../service/app.service';
 import { DocumentViewerComponent } from '../../viewer/document-viewer.component';
 import { SortPipe } from '../../../plugins/sorting.pipe';
@@ -252,6 +252,7 @@ export class AttachmentCreateComponent implements OnInit {
 
     onSubmit(mode: string = 'default') {
         this.appDocumentViewer.toArray()[this.indexTab].getFile().pipe(
+            distinctUntilChanged(),
             tap((data) => {
                 this.attachments[this.indexTab].encodedFile.setValue(data.content);
                 this.attachments[this.indexTab].format.setValue(data.format);
@@ -389,7 +390,7 @@ export class AttachmentCreateComponent implements OnInit {
     }
 
     removePj(i: number) {
-        const dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete + ' : PJ n°' + (i + 1), msg: this.lang.confirmAction } });
+        const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete + ' : PJ n°' + (i + 1), msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

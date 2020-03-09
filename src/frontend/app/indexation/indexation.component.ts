@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef, TemplateRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../translate.component';
 import { NotificationService } from '../notification.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSidenav } from '@angular/material/sidenav';
 
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { HeaderService } from '../../service/header.service';
@@ -35,8 +34,7 @@ export class IndexationComponent implements OnInit {
 
     loading: boolean = false;
 
-    @ViewChild('snav', { static: true }) sidenavLeft: MatSidenav;
-    @ViewChild('snav2', { static: true }) sidenavRight: MatSidenav;
+    @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     @ViewChild('indexingForm', { static: false }) indexingForm: IndexingFormComponent;
     @ViewChild('appDocumentViewer', { static: false }) appDocumentViewer: DocumentViewerComponent;
@@ -85,8 +83,8 @@ export class IndexationComponent implements OnInit {
         // Event after process action 
         this.subscription = this.actionService.catchAction().subscribe(resIds => {
             const param = this.isMailing ? {
-                isMailing : true
-            } : null;         
+                isMailing: true
+            } : null;
             this.router.navigate([`/resources/${resIds[0]}`], { queryParams: param });
         });
     }
@@ -95,6 +93,8 @@ export class IndexationComponent implements OnInit {
         // Use to clean data after navigate on same url
         this._activatedRoute.queryParamMap.subscribe((paramMap: ParamMap) => {
             const refresh = paramMap.get('refresh');
+            this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu', 'form');
+            this.headerService.sideBarButton = {icon: 'fa fa-home', label: this.lang.backHome, route : '/home'};
             if (refresh) {
                 this.appDocumentViewer.templateListForm.reset();
                 this.appDocumentViewer.file = {
@@ -131,7 +131,7 @@ export class IndexationComponent implements OnInit {
 
                     if (this.appService.getViewMode()) {
                         setTimeout(() => {
-                            this.sidenavLeft.open();
+                            this.headerService.sideNavLeft.open();
                         }, 400);
                     }
                 }),
@@ -188,7 +188,7 @@ export class IndexationComponent implements OnInit {
     onSubmit() {
         if (this.indexingForm.isValidForm()) {
             const formatdatas = this.formatDatas(this.indexingForm.getDatas());
-            
+
             formatdatas['modelId'] = this.currentIndexingModel.master !== null ? this.currentIndexingModel.master : this.currentIndexingModel.id;
             formatdatas['chrono'] = true;
 
@@ -200,7 +200,7 @@ export class IndexationComponent implements OnInit {
                     this.isMailing = !this.functions.empty(formatdatas.recipients) && formatdatas.recipients.length > 0 && this.currentIndexingModel.category === 'outgoing' && formatdatas['encodedFile'] === null;
 
                     if (formatdatas['encodedFile'] === null) {
-                        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.noFile, msg: this.lang.noFileMsg } });
+                        this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.noFile, msg: this.lang.noFileMsg } });
 
                         this.dialogRef.afterClosed().pipe(
                             filter((data: string) => data === 'ok'),
@@ -270,7 +270,7 @@ export class IndexationComponent implements OnInit {
         }
 
         const masterIndexingModel = this.indexingModels.filter((indexingModel) => indexingModel.id === privateIndexingModel.master)[0];
-        this.dialogRef = this.dialog.open(AddPrivateIndexingModelModalComponent, { autoFocus: true, disableClose: true, data: { indexingModel: privateIndexingModel, masterIndexingModel: masterIndexingModel } });
+        this.dialogRef = this.dialog.open(AddPrivateIndexingModelModalComponent, { panelClass: 'maarch-modal', autoFocus: true, disableClose: true, data: { indexingModel: privateIndexingModel, masterIndexingModel: masterIndexingModel } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: any) => data !== undefined),
@@ -287,7 +287,7 @@ export class IndexationComponent implements OnInit {
     }
 
     deletePrivateIndexingModel(id: number, index: number) {
-        this.dialogRef = this.dialog.open(ConfirmComponent, { autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
+        this.dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
 
         this.dialogRef.afterClosed().pipe(
             filter((data: string) => data === 'ok'),

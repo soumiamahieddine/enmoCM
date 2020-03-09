@@ -55,7 +55,6 @@ export class ActionsListComponent implements OnInit {
     ngOnInit(): void { }
 
     open(x: number, y: number, row: any) {
-
         this.loadActionList();
         // Adjust the menu anchor position
         this.contextMenuPosition.x = x + 'px';

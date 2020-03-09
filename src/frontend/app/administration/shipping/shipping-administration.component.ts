@@ -15,11 +15,10 @@ declare function $j(selector: any): any;
 @Component({
     templateUrl: "shipping-administration.component.html",
     styleUrls: ['shipping-administration.component.scss'],
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class ShippingAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public sidenavLeft: MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight: MatSidenav;
 
     lang: any = LANG;
@@ -79,10 +78,6 @@ export class ShippingAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
-
         this.http.get("../../rest/externalConnectionsEnabled").pipe(
             tap((data: any) => {
                 console.log(data);
@@ -103,7 +98,6 @@ export class ShippingAdministrationComponent implements OnInit {
 
                 this.http.get('../../rest/administration/shippings/new')
                     .subscribe((data: any) => {
-                        console.log(data);
                         this.entities = data['entities'];
                         this.entitiesClone = JSON.parse(JSON.stringify(this.entities));
                         setTimeout(() => {

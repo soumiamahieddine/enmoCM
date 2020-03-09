@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, ViewChild, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { MatPaginator } from '@angular/material/paginator';
@@ -8,17 +8,18 @@ import { MatTableDataSource } from '@angular/material/table';
 import { NotificationService } from '../../notification.service';
 import { HeaderService }        from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
+import {FunctionsService} from "../../../service/functions.service";
 
 declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "notifications-administration.component.html",
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class NotificationsAdministrationComponent implements OnInit {
 
-    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
     @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
+    @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
 
     notifications: any[] = [];
     loading: boolean = false;
@@ -53,13 +54,18 @@ export class NotificationsAdministrationComponent implements OnInit {
         filterValue = filterValue.trim(); // Remove whitespace
         filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
         this.dataSource.filter = filterValue;
+        this.dataSource.filterPredicate = (template, filter: string) => {
+            return this.functions.filterUnSensitive(template, filter, ['notification_id', 'description']);
+        };
     }
 
     constructor(
         public http: HttpClient, 
         private notify: NotificationService, 
         private headerService: HeaderService,
-        public appService: AppService
+        public appService: AppService,
+        public functions: FunctionsService,
+        private viewContainerRef: ViewContainerRef
     ) {
         $j("link[href='merged_css.php']").remove();
     }
@@ -67,9 +73,8 @@ export class NotificationsAdministrationComponent implements OnInit {
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.notifications);
 
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
-
+        this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
+        
         this.loading = true;
 
         this.http.get('../../rest/notifications')
@@ -79,12 +84,7 @@ export class NotificationsAdministrationComponent implements OnInit {
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.notifications);
                     this.dataSource.paginator = this.paginator;
-                    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: any) => {
-                        if (sortHeaderId === 'notification_id' || sortHeaderId === 'description') {
-                            return data[sortHeaderId].toLocaleLowerCase();
-                        }
-                        return data[sortHeaderId];
-                    };
+                    this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
                     this.sort.active = 'notification_id';
                     this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;

@@ -232,6 +232,7 @@ class FastParapheurController
 
         $b64Attachment = base64_encode(file_get_contents($zipFilePath));
         $fileName      = $attachmentFileName . '.zip';
+        $circuitId     = str_replace('.', '-', $aArgs['circuitId']);
 
         $xmlPostString = '<?xml version="1.0" encoding="utf-8"?>
             <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sei="http://sei.ws.fast.cdc.com/">
@@ -241,7 +242,7 @@ class FastParapheurController
                             <label>' . $aArgs['label'] . '</label>
                             <comment></comment>
                             <subscriberId>' . $aArgs['subscriberId'] . '</subscriberId>
-                            <circuitId>' . $aArgs['circuitId'] . '</circuitId>
+                            <circuitId>' . $circuitId . '</circuitId>
                             <dataFileVO>
                                 <dataHandler>' . $b64Attachment . '</dataHandler>
                                 <filename>' . $fileName . '</filename>

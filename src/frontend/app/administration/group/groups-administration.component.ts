@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject } from '@angular/core';
+import { Component, OnInit, ViewChild, Inject, TemplateRef, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 import { NotificationService } from '../../notification.service';
@@ -9,17 +9,18 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { HeaderService } from '../../../service/header.service';
 import { AppService } from '../../../service/app.service';
+import {FunctionsService} from "../../../service/functions.service";
 
 declare function $j(selector: any): any;
 
 @Component({
     templateUrl: "groups-administration.component.html",
-    providers: [NotificationService, AppService]
+    providers: [AppService]
 })
 export class GroupsAdministrationComponent implements OnInit {
-    /*HEADER*/
-    @ViewChild('snav', { static: true }) public  sidenavLeft   : MatSidenav;
+
     @ViewChild('snav2', { static: true }) public sidenavRight  : MatSidenav;
+    @ViewChild('adminMenuTemplate', { static: true }) adminMenuTemplate: TemplateRef<any>;
     
     dialogRef                       : MatDialogRef<any>;
 
@@ -41,6 +42,9 @@ export class GroupsAdministrationComponent implements OnInit {
         filterValue = filterValue.trim();
         filterValue = filterValue.toLowerCase();
         this.dataSource.filter = filterValue;
+        this.dataSource.filterPredicate = (template, filter: string) => {
+            return this.functions.filterUnSensitive(template, filter, ['group_id', 'group_desc']);
+        };
     }
 
     constructor(
@@ -48,7 +52,9 @@ export class GroupsAdministrationComponent implements OnInit {
         private notify: NotificationService, 
         public dialog: MatDialog, 
         private headerService: HeaderService,
-        public appService: AppService
+        public appService: AppService,
+        public functions: FunctionsService,
+        private viewContainerRef: ViewContainerRef
     ) {
         $j("link[href='merged_css.php']").remove();
     }
@@ -56,8 +62,7 @@ export class GroupsAdministrationComponent implements OnInit {
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration + ' ' + this.lang.groups);
 
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(null);
+        this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
         this.loading = true;
 
@@ -68,11 +73,7 @@ export class GroupsAdministrationComponent implements OnInit {
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.groups);
                     this.dataSource.paginator = this.paginator;
-                    this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: any) => {
-                        if (sortHeaderId === 'group_id' || sortHeaderId === 'group_desc') {
-                            return data[sortHeaderId].toLocaleLowerCase();
-                        }
-                    };
+                    this.dataSource.sortingDataAccessor = this.functions.listSortingDataAccessor;
                     this.sort.active = 'group_desc';
                     this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;
@@ -96,7 +97,7 @@ export class GroupsAdministrationComponent implements OnInit {
                     this.groupsForAssign.push(tmpGroup);
                 }
             });
-            this.config = { data: { id: group.id, group_desc: group.group_desc, groupsForAssign: this.groupsForAssign, users: group.users } };
+            this.config = { panelClass: 'maarch-modal', data: { id: group.id, group_desc: group.group_desc, groupsForAssign: this.groupsForAssign, users: group.users } };
             this.dialogRef = this.dialog.open(GroupsAdministrationRedirectModalComponent, this.config);
             this.dialogRef.afterClosed().subscribe((result: string) => {
                 if (result) {

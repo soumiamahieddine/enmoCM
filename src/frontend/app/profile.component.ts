@@ -404,8 +404,8 @@ export class ProfileComponent implements OnInit {
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.myProfile);
-        window['MainHeaderComponent'].setSnav(this.sidenavLeft);
-        window['MainHeaderComponent'].setSnavRight(this.sidenavRight);
+        
+        
 
         this.loading = true;
 

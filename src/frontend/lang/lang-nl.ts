@@ -158,6 +158,7 @@ export const LANG_NL = {
     "chooseRedirectGroup"                   : "Kies een vervangingsgroep",
     "chosenDatas"                           : "_TO_TRANSLATE",
     "chosenModel"                           : "Gebruikt model",
+    "loadedFile"                            : "Loaded file", //_TO_TRANSLATE
     "chrono"                                : "Chrono",
     "chronoNumber"                          : "Chrononummer",
     "chronoNumberShort"                     : "Chrono Num", //_TO_TRANSLATE
@@ -193,7 +194,8 @@ export const LANG_NL = {
     "contactGroupCreation"                  : "Aanmaak van een contactgroepering",
     "contactGroupList"                      : "Lijst met contactgroepen",
     "contactInfo"                           : "Contactfiche",
-    "contacts"                              : "Contact(s)", //_TO_TRANSLATE
+    "contacts"                              : "Contacts", //_TO_TRANSLATE
+    "contactsAlt"                              : "Contact(s)",//_TO_TRANSLATE
     "contactsParameters_addressAdditional1"    : "Toren, gebouw, pand, residentie",
     "contactsParameters_addressCountry"       : "Land",
     "contactsParameters_addressNumber"           : "Straatnummer",
@@ -220,6 +222,7 @@ export const LANG_NL = {
     "contactsGroupDesc"                     : "Indien de groepering openbaar is, kunnen alle gebruikers deze gebruiken. Indien deze privé is, kan enkel de maker deze gebruiken",
     "contactsGroupModification"             : "Wijziging van de contactgroepering",
     "contactsGroups"                        : "Contactgroepering(en)",
+    "contactsGroupsAlt"                     : "Contact(s) group(s)",//_TO_TRANSLATE
     "contactsGroupUpdated"                  : "Gewijzigde contactgroepering",
     "content_management"                    : "Versiebeheer van het document",
     "content"                               : "_TO_TRANSLATE",
@@ -810,7 +813,8 @@ export const LANG_NL = {
     "sameLevelMyPrimaryEntity"              : "Same level of my primary entity", //_TO_TRANSLATE
     "saturday"                              : "Zaterdag",
     "save"                                  : "Bewaren",
-    "manageNumericPackage"                    : "Een digitale brief bewaren",
+    "manageNumericPackage"                  : "Een digitale brief bewaren",
+    "saveNumericPackage"                    : "Save numeric package", //_TO_TRANSLATE
     "sbSignatures"                          : "Handtekeningen van de parafeerder",
     "script"                                : "Script",
     "scriptCreated"                         : "Script aangemaakt",
@@ -1066,6 +1070,7 @@ export const LANG_NL = {
     "indexation" : "Mail indexation", //_TO_TRANSLATE
     "keywordAdded" : "Keyword added", //_TO_TRANSLATE
     "keywordDeleted" : "Keyword deleted", //_TO_TRANSLATE
+    "availableIndexingActions" : "Available actions when indexing",//_TO_TRANSLATE
     "actionsInfo" : "Only actions with \"simple confirmation\", \"close mail\", \"no confirmation\" and \"send to visa\" will be displayed", //_TO_TRANSLATE
     "eventList" : "Open page", //_TO_TRANSLATE
     "folderAdded" : "Folder added", //_TO_TRANSLATE
@@ -1136,7 +1141,7 @@ export const LANG_NL = {
     "indexingModelModification" : "Indexing model modification", //_TO_TRANSLATE
     "mandatoryField" : "Mandatory field", //_TO_TRANSLATE
     "optionalField" : "Optional field", //_TO_TRANSLATE
-    "indexingModels" : "Indexing model(s)", //_TO_TRANSLATE
+    "indexingModels" : "Indexing models", //_TO_TRANSLATE
     "perimeter" : "Perimeter", //_TO_TRANSLATE
     "indexingModelDeleted" : "Indexing model deleted", //_TO_TRANSLATE
     "indexingModelAdded" : "Indexing model added", //_TO_TRANSLATE
@@ -1577,7 +1582,7 @@ export const LANG_NL = {
     "tagUpdated" : "Tag updated", //_TO_TRANSLATE
     "tagMerged" : "Tag merged", //_TO_TRANSLATE
     "mergeWith" : "Merge with", //_TO_TRANSLATE
-    "willBeTransferredToNewTag" : "will be transferred to tag ", //_TO_TRANSLATE
+    "willBeTransferredToNewTag" : "Number of mails that will be transferred to the tag ", //_TO_TRANSLATE
     "detailDoc" : "Detail page", //_TO_TRANSLATE
     "emptySubject" : "Empty subject", //_TO_TRANSLATE
     "noAvailableMenu" : "No available menu", //_TO_TRANSLATE
@@ -1600,6 +1605,7 @@ export const LANG_NL = {
     "mailing" : "Mailing", //_TO_TRANSLATE
     "goToBasket" : "Go to basket...", //_TO_TRANSLATE
     "manualSendingAR" : "Manual sending...", //_TO_TRANSLATE
+    "withoutEmail" : "Without email", //_TO_TRANSLATE
     "enableMailing" : "Enable mailing",  //_TO_TRANSLATE
     "disableMailing" : "Disable mailing", //_TO_TRANSLATE
     "selectContact" : "select a contact", //_TO_TRANSLATE
@@ -1611,4 +1617,15 @@ export const LANG_NL = {
     "visaCircuit" : "Visa circuit",  //_TO_TRANSLATE
     "shippingUnavailable" : "<b>Warning </b> Shipping is not activated. Check the configuration file mailevaConfig.xml", //_TO_TRANSLATE
     "diffNoDestmsg" : "No <b>assignee</b> defined, you <b>can't</b> modify the diffusion list.", //_TO_TRANSLATE
+    "noDest" : "No <b>assignee</b> defined", //_TO_TRANSLATE
+    "noPrivileges" : "Insufficient privileges", //_TO_TRANSLATE
+    "mustDeleteUsersWithNoPrivileges" : "You must delete users with insufficient privileges", //_TO_TRANSLATE
+    "sendNumericPackage" : "Send a numeric package", //_TO_TRANSLATE
+    "sendNumericPackageInfo" : "You can send mail and attachments between <b> two instances </b> of Maarch Courrier. <br /> <br /> You will receive <b> an acknowledgment of receipt </b> and you will be able <b> follow the progress </b> of the mail at the recipient. (see <a href=\"{0}\" target=\"_blank\"> Maarch2GEC </a> for more information).", //_TO_TRANSLATE
+    "mailSubject" : "Mail subject", //_TO_TRANSLATE
+    "attachItemToNumericPackage" : "Attach an element to sending mail", //_TO_TRANSLATE
+    "note" : "Note", //_TO_TRANSLATE
+    "addNoteToNumericPackage" : "Add a note Ajouter to sending mail", //_TO_TRANSLATE
+    "mainDocNumericPackage" : "Main document of sending mail", //_TO_TRANSLATE
+    "attachmentsNumericPackage" : "Attachments of sending mail", //_TO_TRANSLATE
 };

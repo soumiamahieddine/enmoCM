@@ -1,10 +1,5 @@
 @import "../../../css/vars.scss";
 
-::ng-deep.modal-container {
-    ::ng-deep.mat-dialog-container {
-        padding: 0px;
-    }
-}
 
 .attach-container {
     position: relative;
@@ -31,7 +26,6 @@
 .attach-content {
     margin: 0px;
     padding: 0px !important;
-    height: 100%;
     display: block;
     overflow: auto;
     max-height: 100vh !important;
