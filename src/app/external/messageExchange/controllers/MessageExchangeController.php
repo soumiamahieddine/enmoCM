@@ -220,6 +220,11 @@ class MessageExchangeController
 
         $fileContent = file_get_contents($pathToDocument);
 
-        return $response->withJson(['encodedArchive' => base64_encode($fileContent)]);
+        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->buffer($fileContent);
+
+        $response->write($fileContent);
+        $response = $response->withAddedHeader('Content-Disposition', "attachment; filename=maarch.zip");
+        return $response->withHeader('Content-Type', $mimeType);
     }
 }
