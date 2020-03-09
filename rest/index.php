@@ -54,6 +54,11 @@ $app->add(function (\Slim\Http\Request $request, \Slim\Http\Response $response, 
 //Initialize
 $app->get('/initialize', \SrcCore\controllers\CoreController::class . ':initialize');
 
+//Acknowledgement Receipt
+$app->post('/acknowledgementReceipts', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
+$app->get('/acknowledgementReceipts/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getById');
+$app->get('/acknowledgementReceipts/{id}/content', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
+
 //Actions
 $app->get('/actions', \Action\controllers\ActionController::class . ':get');
 $app->get('/initAction', \Action\controllers\ActionController::class . ':initAction');
@@ -62,10 +67,8 @@ $app->post('/actions', \Action\controllers\ActionController::class . ':create');
 $app->put('/actions/{id}', \Action\controllers\ActionController::class . ':update');
 $app->delete('/actions/{id}', \Action\controllers\ActionController::class . ':delete');
 
-//Acknowledgement Receipt
-$app->post('/acknowledgementReceipts', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':createPaperAcknowledgement');
-$app->get('/acknowledgementReceipts/{id}', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getById');
-$app->get('/acknowledgementReceipts/{id}/content', \AcknowledgementReceipt\controllers\AcknowledgementReceiptController::class . ':getAcknowledgementReceipt');
+//Administration
+$app->get('/administration/details', \Administration\controllers\AdministrationController::class . ':getDetails');
 
 //Attachments
 $app->post('/attachments', \Attachment\controllers\AttachmentController::class . ':create');

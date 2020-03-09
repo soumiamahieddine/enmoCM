@@ -79,6 +79,7 @@ return array(
     'Clue\\StreamFilter\\' => array($vendorDir . '/clue/stream-filter/src'),
     'Basket\\' => array($baseDir . '/src/app/basket'),
     'Attachment\\' => array($baseDir . '/src/app/attachment'),
+    'Administration\\' => array($baseDir . '/src/app/administration'),
     'Action\\' => array($baseDir . '/src/app/action'),
     'AcknowledgementReceipt\\' => array($baseDir . '/src/app/acknowledgementReceipt'),
 );
