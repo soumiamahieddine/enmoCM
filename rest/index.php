@@ -537,6 +537,7 @@ $app->post('/scriptNotification', \Notification\controllers\NotificationSchedule
 
 //External MessageExchanges
 $app->get('/messageExchanges/{id}', \MessageExchange\controllers\MessageExchangeController::class . ':getById');
+$app->get('/messageExchanges/{id}/archiveContent', \MessageExchange\controllers\MessageExchangeController::class . ':getArchiveContentById');
 $app->post('/saveNumericPackage', \MessageExchange\controllers\ReceiveMessageExchangeController::class . ':saveMessageExchange');
 $app->post('/saveMessageExchangeReturn', \MessageExchange\controllers\ReceiveMessageExchangeController::class . ':saveMessageExchangeReturn');
 $app->post('/saveMessageExchangeReview', \MessageExchange\controllers\MessageExchangeReviewController::class . ':saveMessageExchangeReview');

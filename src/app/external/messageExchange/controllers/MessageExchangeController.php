@@ -14,6 +14,7 @@
 
 namespace MessageExchange\controllers;
 
+use Docserver\models\DocserverModel;
 use MessageExchange\models\MessageExchangeModel;
 use Resource\controllers\ResController;
 use Respect\Validation\Validator;
@@ -187,5 +188,38 @@ class MessageExchangeController
         ];
 
         return $response->withJson(['messageExchange' => $messageExchange]);
+    }
+
+    public static function getArchiveContentById(Request $request, Response $response, array $args)
+    {
+        if (!Validator::stringType()->validate($args['id'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Query param id is not a string']);
+        }
+
+        $message = MessageExchangeModel::getMessageByIdentifier([
+            'select'    => ['docserver_id', 'path', 'filename', 'res_id_master'],
+            'messageId' => $args['id']
+        ]);
+        if (empty($message)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Message not found']);
+        }
+
+        if (empty($message['res_id_master']) || !ResController::hasRightByResId(['resId' => [$message['res_id_master']], 'userId' => $GLOBALS['id']])) {
+            return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
+        }
+
+        $docserver = DocserverModel::getByDocserverId(['docserverId' => $message['docserver_id'], 'select' => ['path_template', 'docserver_type_id']]);
+        if (empty($docserver['path_template']) || !file_exists($docserver['path_template'])) {
+            return $response->withStatus(400)->withJson(['errors' => 'Docserver does not exist']);
+        }
+
+        $pathToDocument = $docserver['path_template'] . str_replace('#', DIRECTORY_SEPARATOR, $message['path']) . $message['filename'];
+        if (!file_exists($pathToDocument)) {
+            return $response->withStatus(400)->withJson(['errors' => 'Document not found on docserver']);
+        }
+
+        $fileContent = file_get_contents($pathToDocument);
+
+        return $response->withJson(['encodedArchive' => base64_encode($fileContent)]);
     }
 }
