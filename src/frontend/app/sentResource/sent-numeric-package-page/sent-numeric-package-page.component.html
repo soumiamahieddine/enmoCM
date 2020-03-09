@@ -138,7 +138,7 @@
 
             </div>
             <div class="col-md-4">
-                <button mat-button color="primary" style="width: 180px;white-space: initial;line-height: 20px;padding: 10px;">
+                <button mat-button color="primary" style="width: 180px;white-space: initial;line-height: 20px;padding: 10px;" (click)="saveNumericPackageFile()">
                     <i class="fas fa-file-download" style="font-size: 40px;"></i><br/>
                     <span>Télécharger le pli numérique</span>
                 </button>
@@ -151,10 +151,6 @@
                 <textarea matInput [placeholder]="lang.addNoteToNumericPackage" [(ngModel)]="numericPackage.content"
                     matTextareaAutosize style="padding:0" [readonly]="!canManageMail()"></textarea>
             </mat-form-field>
-            <app-document-viewer *ngIf="pdfMode" #appDocumentViewer
-                style="display:block;height:400px;width:100%;overflow: auto;" [editMode]="false"
-                [base64]="emailContent">
-            </app-document-viewer>
         </div>
     </mat-dialog-content>
     <span class="divider-modal"></span>
