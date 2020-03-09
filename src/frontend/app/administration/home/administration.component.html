@@ -21,10 +21,10 @@
                     style="display: grid;grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));gap: 20px;padding:20px;">
                     <mat-card class="countCard" *ngFor="let shortcut of shortcutsAdmin" matRipple
                         (click)="goToSpecifiedAdministration(shortcut)">
-                        <div mat-card-avatar class="avatarCount">
+                        <div mat-card-avatar class="avatarCount" style="margin-right: 10px;">
                             <i class="{{shortcut.style}}" style="position: absolute;"></i>
                         </div>
-                        <span style="font-size: 40px;">{{shortcut.count}}</span>
+                        <span style="font-size: 40px;">{{shortcut.count}}</span>&nbsp;
                         {{shortcut.label}}
                     </mat-card>
                 </div>
@@ -37,8 +37,8 @@
                     <button mat-button *ngFor="let administration of filteredAdministrations | async | sortBy : 'label'"
                         [title]="administration.comment" style="font-size:20px;height:80px;"
                         (click)="goToSpecifiedAdministration(administration)">
-                        <div style="display: flex;align-items: center;gap: 10px;">
-                            <span>
+                        <div style="display: flex;align-items: center;">
+                            <span style="padding-right: 10px;">
                                 <i class="avatarCount2 {{administration.style}}"></i>
                             </span>
                             <span class="countLabel" style="white-space: initial;text-align: left;">
