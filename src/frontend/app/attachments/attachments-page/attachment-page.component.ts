@@ -352,4 +352,11 @@ export class AttachmentPageComponent implements OnInit {
             return true;
         }
     }
+
+    isEditing() {
+        if (this.appAttachmentViewer.editor.async) {
+            return this.appAttachmentViewer.isEditingTemplate();
+        }
+        return !this.appAttachmentViewer.isEditingTemplate();
+    }
 }
