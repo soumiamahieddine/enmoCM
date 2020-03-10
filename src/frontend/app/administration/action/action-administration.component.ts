@@ -100,7 +100,10 @@ export class ActionAdministrationComponent implements OnInit {
                         this.loading = false;
                         if (this.action.actionPageId == 'close_mail') {
                             this.customFieldsFormControl = new FormControl({ value: this.action.parameters.requiredFields, disabled: false });
-                            this.selectedFieldsId = this.action.parameters.requiredFields;
+                            this.selectedFieldsId = [];
+                            if (this.action.parameters.requiredFields) {
+                                this.selectedFieldsId = this.action.parameters.requiredFields;
+                            }
                             this.selectedFieldsId.forEach((element: any) => {
                                 this.availableCustomFields.forEach((availableElement: any) => {
                                     if (availableElement.id == element) {
