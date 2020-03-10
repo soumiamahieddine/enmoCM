@@ -267,7 +267,7 @@
         </button>
     </div>
     <div class="modal-module-content">
-        <app-history-list *ngIf="currentTool === 'history' && !loading" #appHistoryList
+        <app-history-list *ngIf="modal.id === 'history' && !loading" #appHistoryList
             [resId]="currentResourceInformations.resId">
         </app-history-list>
         <app-notes-list *ngIf="modal.id === 'notes' && !loading" #appNotesList [editMode]="true"
