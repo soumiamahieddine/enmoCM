@@ -148,7 +148,7 @@
                     </ng-container>
                 </mat-menu>
                 <button mat-button *ngIf="!appService.getViewMode()"
-                    [disabled]="actionService.loading || selectedAction.id === 0" class="button-form-primary-filled"
+                    [disabled]="actionService.loading || selectedAction.id === 0 || (appDocumentViewer !== undefined && !appDocumentViewer.isEditorLoaded())" class="button-form-primary-filled"
                     style="width: 150px;align-items: center;justify-content: center;text-align: center;display: flex;"
                     (click)="onSubmit()">{{lang.validate}}</button>
                 <button mat-icon-button *ngIf="appService.getViewMode()" class="button-form-primary"
