@@ -17,7 +17,7 @@ export const LANG_NL = {
     "action"                                : "Actie",
     "actionAdded"                           : "Actie toegevoegd",
     "actionAvailable"                       : "Beschikbare acties",
-    "actionCarriedOut"                      : "Uitgevoerde actie",
+    "actionCarriedOut"                      : "System action", //_TO_TRANSLATE
     "actionChosen"                          : "Geselecteerde acties",
     "actionCreation"                        : "Aanmaak van een actie",
     "actionDeleted"                         : "Actie verwijderd",

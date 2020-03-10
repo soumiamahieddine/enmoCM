@@ -15,8 +15,7 @@
             <div class="formType-title">
                 {{lang.availableIndexingActions}}
             </div>
-            <mat-hint class="infoActions">
-                {{lang.actionsInfo}}
+            <mat-hint class="infoActions" [innerHTML]="lang.actionsInfo">
             </mat-hint>
             <plugin-autocomplete [labelPlaceholder]="lang.linkNewAction"  [datas]="actionList" [targetSearchKey]="'label_action'"
                 (triggerEvent)="addAction($event)" appearance="outline"></plugin-autocomplete>

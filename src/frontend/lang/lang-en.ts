@@ -23,7 +23,7 @@ export const LANG_EN = {
     "action"                                : "Action",
     "actionAdded"                           : "Action added",
     "actionAvailable"                       : "Availables actions",
-    "actionCarriedOut"                      : "Action carried out",
+    "actionCarriedOut"                      : "System action",
     "actionChosen"                          : "Action(s) chosen",
     "actionCreation"                        : "Action creation",
     "actionDeleted"                         : "Action deleted",
