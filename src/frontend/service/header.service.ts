@@ -142,8 +142,7 @@ export class HeaderService {
         // Create a template portal
         const templatePortal = new TemplatePortal(
             template,
-            viewContainerRef,
-            { $implicit: 'Bob' },
+            viewContainerRef
         );
 
         // Attach portal to host
