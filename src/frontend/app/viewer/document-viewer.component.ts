@@ -433,9 +433,7 @@ export class DocumentViewerComponent implements OnInit {
             const objFile = JSON.parse(JSON.stringify(this.file));
             objFile.content = objFile.contentMode === 'route' ? null : objFile.content;
 
-            const myObservable = of(objFile);
-
-            return myObservable;
+            return of(objFile);
         }
     }
 

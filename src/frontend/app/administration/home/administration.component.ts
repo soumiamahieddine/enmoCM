@@ -11,6 +11,7 @@ import { FormControl } from '@angular/forms';
 import { startWith, map, tap, catchError, exhaustMap } from 'rxjs/operators';
 import { LatinisePipe } from 'ngx-pipes';
 import { NotificationService } from '../../notification.service';
+import {FunctionsService} from "../../../service/functions.service";
 
 @Component({
     templateUrl: "administration.component.html",
@@ -43,7 +44,8 @@ export class AdministrationComponent implements OnInit {
         public appService: AppService,
         private privilegeService: PrivilegeService,
         private latinisePipe: LatinisePipe,
-        private notify: NotificationService) { }
+        private notify: NotificationService,
+        private functionService: FunctionsService) { }
 
     ngOnInit(): void {
         this.headerService.setHeader(this.lang.administration);
@@ -97,17 +99,17 @@ export class AdministrationComponent implements OnInit {
     }
 
     getNbShortcuts() {
-        this.http.get('../../rest/users').pipe(
+        this.http.get('../../rest/administration/details').pipe(
             tap((data: any) => {
-                this.shortcutsAdmin.filter(admin => admin.id === 'admin_users')[0].count = data.users.length;
-            }),
-            exhaustMap(() => this.http.get('../../rest/groups')),
-            tap((data: any) => {
-                this.shortcutsAdmin.filter(admin => admin.id === 'admin_groups')[0].count = data.groups.length;
-            }),
-            exhaustMap(() => this.http.get('../../rest/entities')),
-            tap((data: any) => {
-                this.shortcutsAdmin.filter(admin => admin.id === 'manage_entities')[0].count = data.entities.length;
+                if (!this.functionService.empty(data.count.users)) {
+                    this.shortcutsAdmin.filter(admin => admin.id === 'admin_users')[0].count = data.count.users;
+                }
+                if (!this.functionService.empty(data.count.groups)) {
+                    this.shortcutsAdmin.filter(admin => admin.id === 'admin_groups')[0].count = data.count.groups;
+                }
+                if (!this.functionService.empty(data.count.entities)) {
+                    this.shortcutsAdmin.filter(admin => admin.id === 'manage_entities')[0].count = data.count.entities;
+                }
             }),
             catchError((err: any) => {
                 this.notify.handleSoftErrors(err);
