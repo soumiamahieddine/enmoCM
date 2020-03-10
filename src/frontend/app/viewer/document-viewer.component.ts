@@ -955,4 +955,12 @@ export class DocumentViewerComponent implements OnInit {
             })
         ).subscribe();
     }
+
+    isEditorLoaded() {
+        if (this.isEditingTemplate()) {
+            return this.isEditingTemplate() && this.isDocModified;
+        } else {
+            return true;
+        }
+    }
 }
