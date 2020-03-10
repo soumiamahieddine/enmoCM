@@ -13,6 +13,8 @@ import { FunctionsService } from '../service/functions.service';
 import { AttachmentPageComponent } from './attachments/attachments-page/attachment-page.component';
 import { VisaWorkflowComponent } from './visa/visa-workflow.component';
 import { ActionsService } from './actions/actions.service';
+import { HeaderService } from '../service/header.service';
+import { AppService } from '../service/app.service';
 
 declare function $j(selector: string) : any;
 
@@ -102,7 +104,8 @@ export class SignatureBookComponent implements OnInit {
     @ViewChild('appVisaWorkflow', { static: false }) appVisaWorkflow: VisaWorkflowComponent;
 
     constructor(
-        public http: HttpClient, 
+        public http: HttpClient,
+        private appService: AppService,
         private route: ActivatedRoute, 
         private router: Router, 
         private zone: NgZone, 
@@ -110,7 +113,8 @@ export class SignatureBookComponent implements OnInit {
         public privilegeService: PrivilegeService,
         public dialog: MatDialog,
         public functions: FunctionsService,
-        public actionService: ActionsService
+        public actionService: ActionsService,
+        public headerService: HeaderService,
     ) {
         (<any>window).pdfWorkerSrc = '../../node_modules/pdfjs-dist/build/pdf.worker.min.js';
 
@@ -122,6 +126,7 @@ export class SignatureBookComponent implements OnInit {
     }
 
     ngOnInit() : void {
+        this.headerService.sideNavLeft.close();
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
@@ -543,7 +548,7 @@ export class SignatureBookComponent implements OnInit {
 
     showAttachment(attachment: any) {
         if (attachment.canModify && attachment.status != "SIGN") {
-            this.dialogRef = this.dialog.open(AttachmentPageComponent, { height: '99vh', width: '99vw', panelClass: 'modal-container', disableClose: true, data: { resId: attachment.res_id} });
+            this.dialogRef = this.dialog.open(AttachmentPageComponent, { height: '99vh', width: this.appService.getViewMode() ? '99vw' : '90vw', maxWidth: this.appService.getViewMode() ? '99vw' : '90vw', panelClass: 'attachment-modal-container', disableClose: true, data: { resId: attachment.res_id} });
     
             this.dialogRef.afterClosed().pipe(
                 filter((data: string) => data === 'success'),
