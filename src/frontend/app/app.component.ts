@@ -69,6 +69,9 @@ export class AppComponent {
     }
 
     ngOnInit(): void {
+
+        this.headerService.hideSideBar = true;
+        
         setTimeout(() => {
             this.headerService.sideNavLeft = this.snavLeft;
         }, 0);

@@ -16,7 +16,7 @@ import { IndexationComponent }              from './indexation/indexation.compon
 import { ForgotPasswordComponent }          from './login/forgotPassword/forgotPassword.component';
 import { UpdatePasswordComponent }          from './login/updatePassword/updatePassword.component';
 import { ProcessComponent }                 from './process/process.component';
-import {FollowedDocumentListComponent}      from "./home/followed-list/followed-document-list.component";
+import { FollowedDocumentListComponent }    from "./home/followed-list/followed-document-list.component";
 
 @NgModule({
     imports: [
