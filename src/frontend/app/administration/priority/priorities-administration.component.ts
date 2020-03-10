@@ -53,7 +53,7 @@ export class PrioritiesAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.priorities);
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.prioritiesAlt);
         
         this.headerService.injectInSideBarLeft(this.adminMenuTemplate, this.viewContainerRef, 'adminMenu');
 
