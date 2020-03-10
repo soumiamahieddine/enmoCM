@@ -137,6 +137,7 @@ export class SentResourcePageComponent implements OnInit {
     initMce() {
         tinymce.init({
             selector: "textarea#emailSignature",
+            base_url: '../../node_modules/tinymce/',
             setup: (editor: any) => {
                 editor.on('init', (e: any) => {
                     console.log('The Editor has initialized.');
