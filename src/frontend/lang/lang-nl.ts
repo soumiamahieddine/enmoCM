@@ -1630,4 +1630,5 @@ export const LANG_NL = {
     "attachmentsNumericPackage" : "Attachments of sending mail", //_TO_TRANSLATE
     "closeSidePanel" : "Close side panel", //_TO_TRANSLATE
     "openSidePanel" : "Open side panel", //_TO_TRANSLATE
+    "saveAsPrivateModel" : "Save as private model", //_TO_TRANSLATE
 };

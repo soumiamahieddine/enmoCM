@@ -37,7 +37,7 @@
             </mat-optgroup>
         </mat-autocomplete>
         <button mat-icon-button matSuffix *ngIf="visaWorkflow.items.length > 0 && showListModels" color="primary"
-            (click)="$event.stopPropagation();openPromptSaveModel()">
+            (click)="$event.stopPropagation();openPromptSaveModel()" title="{{lang.saveAsPrivateModel}}">
             <mat-icon class="fa fa-plus"></mat-icon>
         </button>
     </mat-form-field>

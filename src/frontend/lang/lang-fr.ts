@@ -1644,4 +1644,5 @@ export const LANG_FR = {
     "attachmentsNumericPackage" : "Pièces attachés du courrier à transmettre", 
     "closeSidePanel" : "Fermer le panneau latéral",
     "openSidePanel" : "Ouvrir le panneau latéral",
+    "saveAsPrivateModel" : "Enregistrer en tant que modèle privé",
 };
