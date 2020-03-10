@@ -1642,4 +1642,6 @@ export const LANG_FR = {
     "addNoteToNumericPackage" : "Ajouter une annotation au courrier à transmettre", 
     "mainDocNumericPackage" : "Document principal du courrier à transmettre", 
     "attachmentsNumericPackage" : "Pièces attachés du courrier à transmettre", 
+    "closeSidePanel" : "Fermer le panneau latéral",
+    "openSidePanel" : "Ouvrir le panneau latéral",
 };

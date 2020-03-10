@@ -1603,4 +1603,6 @@ export const LANG_EN = {
     "addNoteToNumericPackage" : "Add a note Ajouter to sending mail",
     "mainDocNumericPackage" : "Main document of sending mail", 
     "attachmentsNumericPackage" : "Attachments of sending mail", 
+    "closeSidePanel" : "Close side panel",
+    "openSidePanel" : "Open side panel",
 };

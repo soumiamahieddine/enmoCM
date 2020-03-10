@@ -1628,4 +1628,6 @@ export const LANG_NL = {
     "addNoteToNumericPackage" : "Add a note Ajouter to sending mail", //_TO_TRANSLATE
     "mainDocNumericPackage" : "Main document of sending mail", //_TO_TRANSLATE
     "attachmentsNumericPackage" : "Attachments of sending mail", //_TO_TRANSLATE
+    "closeSidePanel" : "Close side panel", //_TO_TRANSLATE
+    "openSidePanel" : "Open side panel", //_TO_TRANSLATE
 };
