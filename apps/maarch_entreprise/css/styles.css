@@ -1541,7 +1541,7 @@ th.ref {
     left: 0;
     right: 0;
     margin: auto;
-
+    border-radius: 5px;
     border: 2px #24b0ed solid;
     /*position: absolute;
     margin: auto;*/
