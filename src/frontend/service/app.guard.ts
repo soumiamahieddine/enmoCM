@@ -22,6 +22,11 @@ export class AppGuard implements CanActivate {
         // TO DO : CAN BE REMOVE AFTER FULL V2
         localStorage.setItem('PreviousV2Route', state.url);
         this.headerService.resetSideNavSelection();
+        if (route.url.filter((url: any) => url == 'signatureBook').length > 0) {
+            this.headerService.hideSideBar = true;
+        } else {       
+            this.headerService.hideSideBar = false;
+        }
         if (route.url.filter((url: any) => url == 'administration').length > 0) { 
             this.headerService.sideBarAdmin = true;
         } else {

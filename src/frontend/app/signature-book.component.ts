@@ -126,7 +126,6 @@ export class SignatureBookComponent implements OnInit {
     }
 
     ngOnInit() : void {
-        this.headerService.sideNavLeft.close();
         this.coreUrl = angularGlobals.coreUrl;
 
         this.loading = true;
