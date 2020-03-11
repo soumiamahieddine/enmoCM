@@ -4,7 +4,7 @@
             <i class="fa fa-thumbtack panelIconMenu"></i>&nbsp;{{lang.myPinnedFolder}}
         </mat-panel-title>
     </mat-expansion-panel-header>
-    <folder-pinned></folder-pinned>
+    <folder-pinned [noInit]="true"></folder-pinned>
 </mat-expansion-panel>
 <mat-divider></mat-divider>
 <mat-expansion-panel class="folderList" [expanded]="false">

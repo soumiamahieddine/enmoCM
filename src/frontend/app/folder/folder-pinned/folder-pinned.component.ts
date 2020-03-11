@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 
@@ -15,6 +15,8 @@ export class FolderPinnedComponent implements OnInit {
     lang: any = LANG;
     
     subscription: Subscription;
+
+    @Input('noInit') noInit: boolean = false;
     
     constructor(
         public http: HttpClient,
@@ -28,7 +30,9 @@ export class FolderPinnedComponent implements OnInit {
 
     ngOnInit(): void {
         this.foldersService.initFolder();
-        this.foldersService.getPinnedFolders();
+        if (!this.noInit) {
+            this.foldersService.getPinnedFolders();
+        }
     }
 
     gotToFolder(folder: any) {
