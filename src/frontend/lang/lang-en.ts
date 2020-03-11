@@ -1606,4 +1606,5 @@ export const LANG_EN = {
     "closeSidePanel" : "Close side panel",
     "openSidePanel" : "Open side panel",
     "saveAsPrivateModel" : "Save as private model",
+    "editingDocumentMsg" : "The edition of the document is in progress, do you want to continue ?",
 };

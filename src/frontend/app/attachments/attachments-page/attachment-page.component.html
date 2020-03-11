@@ -219,6 +219,6 @@
             [disabled]="!editMode || isEditing()">{{lang.mailing}}</button>
         <button mat-raised-button color="warn" *ngIf=" !loading && attachment.status.value === 'SIGN' && (privilegeService.hasCurrentUserPrivilege('sign_document') || this.headerService.user.id == attachment.typist.value)"
             (click)="deleteSignedVersion()">{{lang.deleteSignedVersion}}</button>
-        <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.close}}</button>
+        <button mat-raised-button mat-button [disabled]="loading" (click)="closeModal()">{{lang.close}}</button>
     </div>
 </div>

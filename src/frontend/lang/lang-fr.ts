@@ -1645,4 +1645,5 @@ export const LANG_FR = {
     "closeSidePanel" : "Fermer le panneau latéral",
     "openSidePanel" : "Ouvrir le panneau latéral",
     "saveAsPrivateModel" : "Enregistrer en tant que modèle privé",
+    "editingDocumentMsg" : "Le document est en cours d'édition, voulez-vous continuer ?",
 };

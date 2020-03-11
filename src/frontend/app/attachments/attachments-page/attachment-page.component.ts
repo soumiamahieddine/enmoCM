@@ -362,4 +362,24 @@ export class AttachmentPageComponent implements OnInit {
         }
         return !this.appAttachmentViewer.isEditingTemplate();
     }
+
+    closeModal() {
+
+        if (this.appAttachmentViewer.isEditingTemplate()) {
+            const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.close, msg: this.lang.editingDocumentMsg } });
+
+            dialogRef.afterClosed().pipe(
+                filter((data: string) => data === 'ok'),
+                tap(() => {
+                    this.dialogRef.close();
+                }),
+                catchError((err: any) => {
+                    this.notify.handleErrors(err);
+                    return of(false);
+                })
+            ).subscribe();
+        } else {
+            this.dialogRef.close();
+        }
+    }
 }
