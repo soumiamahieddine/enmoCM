@@ -2,17 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
 
-import { NotificationService } from '../../notification.service';
-import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
 import { FoldersService } from '../folders.service';
 
 @Component({
     selector: 'folder-pinned',
     templateUrl: "folder-pinned.component.html",
     styleUrls: ['folder-pinned.component.scss'],
-    providers: [NotificationService],
 })
 export class FolderPinnedComponent implements OnInit {
 
@@ -22,9 +18,6 @@ export class FolderPinnedComponent implements OnInit {
     
     constructor(
         public http: HttpClient,
-        private notify: NotificationService,
-        private dialog: MatDialog,
-        private router: Router,
         public foldersService: FoldersService
     ) {
         // Event after process action 
