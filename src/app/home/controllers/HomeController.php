@@ -147,14 +147,16 @@ class HomeController
             'limit'     => 5,
             'userId'    => $GLOBALS['userId']
         ]);
-        $priorities = array_column($lastResources, 'priority');
-        $priorities = PriorityModel::get(['select' => ['id', 'color'], 'where' => ['id in (?)'], 'data' => [$priorities]]);
+        if (!empty($lastResources)) {
+            $priorities = array_column($lastResources, 'priority');
+            $priorities = PriorityModel::get(['select' => ['id', 'color'], 'where' => ['id in (?)'], 'data' => [$priorities]]);
 
-        foreach ($lastResources as $key => $lastResource) {
-            if (!empty($lastResource['priority'])) {
-                foreach ($priorities as $priority) {
-                    if ($lastResource['priority'] == $priority['id']) {
-                        $lastResources[$key]['priority_color'] = $priority['color'];
+            foreach ($lastResources as $key => $lastResource) {
+                if (!empty($lastResource['priority'])) {
+                    foreach ($priorities as $priority) {
+                        if ($lastResource['priority'] == $priority['id']) {
+                            $lastResources[$key]['priority_color'] = $priority['color'];
+                        }
                     }
                 }
             }
