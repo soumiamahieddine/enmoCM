@@ -750,7 +750,7 @@ INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('
 DELETE FROM security WHERE group_id = 'SERVICE';
 INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('SERVICE', 'letterbox_coll', '1=0', 'Aucun courrier');
 DELETE FROM security WHERE group_id = 'WEBSERVICE';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('WEBSERVICE', 'letterbox_coll', '1=0', 'Aucun courrier');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('WEBSERVICE', 'letterbox_coll', '1=1', 'Tous les courriers');
 
 -- Create FOLDERS
 TRUNCATE TABLE folders;
@@ -888,6 +888,7 @@ INSERT INTO users (user_id, password, firstname, lastname, mail, status, loginmo
 DELETE FROM usergroup_content WHERE user_id = 24;
 INSERT INTO usergroup_content (user_id, group_id, role) VALUES (24, 11, '');
 INSERT INTO usergroup_content (user_id, group_id, role) VALUES (24, 13, '');
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('cchaplin', 'VILLE', '', 'Y');
 
 ------------
 -- CONTACTS
@@ -1678,6 +1679,8 @@ INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_val
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'senders', FALSE, null, 'contact');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'destination', TRUE, null, 'process');
 INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'indexingCustomField_1', FALSE, null, 'process');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'folders', FALSE, null, 'classifying');
+INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (4, 'tags', FALSE, null, 'classifying');
 
 /* Arrivée - formulaire complet */
 --INSERT INTO indexing_models_fields (model_id, identifier, mandatory, default_value, unit) VALUES (5, 'doctype', TRUE, null, 'mail');
