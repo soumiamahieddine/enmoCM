@@ -27,7 +27,7 @@ export class AppGuard implements CanActivate {
         } else {       
             this.headerService.hideSideBar = false;
         }
-        if (route.url.filter((url: any) => url == 'administration').length > 0) { 
+        if (route.url.filter((url: any) => url == 'administration').length > 0 || route.url.filter((url: any) => url == 'profile').length > 0) { 
             this.headerService.sideBarAdmin = true;
         } else {
             this.headerService.sideBarAdmin = false;

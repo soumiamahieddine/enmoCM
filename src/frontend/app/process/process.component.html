@@ -159,7 +159,7 @@
             <div class="emptyAction" *ngIf="actionsList.length === 0" [innerHTML]="lang.noAvailableActionProcess"></div>
         </div>
     </ng-template>
-    <mat-sidenav-content>
+    <mat-sidenav-content class="process-content">
         <div class="bg-head">
             <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
                 <div class="bg-head-title-label">
@@ -249,15 +249,8 @@
                 </app-document-viewer>
             </div>
         </div>
-    </mat-sidenav-content>
-    <mat-sidenav #snav2 [fixedInViewport]="appService.getViewMode()" position='end'
-        [opened]="appService.getViewMode() ? false : false" [mode]="appService.getViewMode() ? 'over' : 'side'"
-        class="panel-right" style="overflow-x:hidden;" [class.docView]="!filtersListService.filterMode"
-        [ngStyle]="{'width': appService.getViewMode() ? '80%' : '30%'}" autoFocus="false">
-    </mat-sidenav>
-</mat-sidenav-container>
-<div class="modal-module {{modal.id}}" cdkDrag *ngFor="let modal of modalModule; let i=index"
-    [class.largeModal]="modal.id === 'info'">
+        <div class="modal-module {{modal.id}}" cdkDrag *ngFor="let modal of modalModule; let i=index"
+    [class.largeModal]="modal.id === 'info'" cdkDragBoundary=".process-content">
     <div class="modal-module-title" cdkDragHandle>
         <span>
             {{modal.label}}
@@ -317,3 +310,10 @@
         </div>
     </div>
 </div>
+    </mat-sidenav-content>
+    <mat-sidenav #snav2 [fixedInViewport]="appService.getViewMode()" position='end'
+        [opened]="appService.getViewMode() ? false : false" [mode]="appService.getViewMode() ? 'over' : 'side'"
+        class="panel-right" style="overflow-x:hidden;" [class.docView]="!filtersListService.filterMode"
+        [ngStyle]="{'width': appService.getViewMode() ? '80%' : '30%'}" autoFocus="false">
+    </mat-sidenav>
+</mat-sidenav-container>
