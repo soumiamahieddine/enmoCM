@@ -48,7 +48,7 @@
                             </mat-icon>
                             <span>{{node.pinned ? lang.unpinFolder : lang.pinFolder}}</span>
                         </button>
-                        <button mat-menu-item [disabled]="createItemNode || !node.canAdd"
+                        <button mat-menu-item [disabled]="createItemNode || !node.canAdd || node.level > 6"
                             (click)="addNewItem(node)">{{lang.addSubFolder}}</button>
                         <button mat-menu-item (click)="deleteNode(node)"
                             [disabled]="!node.canDelete">{{lang.delete}}</button>
@@ -109,7 +109,7 @@
                             <span>{{node.pinned ? lang.unpinFolder : lang.pinFolder}}</span>
                         </button>
 
-                        <button mat-menu-item [disabled]="createItemNode || !node.canAdd"
+                        <button mat-menu-item [disabled]="createItemNode || !node.canAdd || node.level > 6"
                             (click)="addNewItem(node)">{{lang.addSubFolder}}</button>
                         <button mat-menu-item (click)="deleteNode(node)"
                             [disabled]="!node.canDelete">{{lang.delete}}</button>
