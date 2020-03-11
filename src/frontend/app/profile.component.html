@@ -1,4 +1,21 @@
 <mat-sidenav-container autosize class="maarch-container">
+    <ng-template #adminMenuTemplate>
+        <mat-nav-list>
+            <h3 mat-subheader>{{lang.actions}}</h3>
+            <a mat-list-item (click)="askRedirectBasket()">
+                <mat-icon color="warn" mat-list-icon class="fa fa-plane"></mat-icon>
+                <p mat-line>
+                    {{lang.activateMyAbs}}
+                </p>
+            </a>
+            <a *ngIf="user.canModifyPassword" mat-list-item (click)="changePasswd();">
+                <mat-icon color="primary" mat-list-icon class="fa fa-key"></mat-icon>
+                <p mat-line>
+                    {{lang.changeMyPassword}}
+                </p>
+            </a>
+        </mat-nav-list>
+    </ng-template>
     <mat-sidenav-content>
         <div class="bg-head">
             <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
