@@ -523,7 +523,7 @@ export class ActionsService {
 
     viewDoc(options: any = null) {
         this.dialog.open(ViewDocActionComponent, {
-            panelClass: 'maarch-modal no-padding-full-dialog',
+            panelClass: 'maarch-modal',
             data: this.setDatasActionToSend()
         });
     }
