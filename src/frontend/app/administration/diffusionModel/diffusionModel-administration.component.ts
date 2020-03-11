@@ -193,8 +193,6 @@ export class DiffusionModelAdministrationComponent implements OnInit {
                 isValid = false;
             }
         });
-        console.log(isValid);
-        console.log(items);
         return isValid;
     }
 

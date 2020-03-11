@@ -80,9 +80,7 @@ export class ShippingAdministrationComponent implements OnInit {
     ngOnInit(): void {
         this.http.get("../../rest/externalConnectionsEnabled").pipe(
             tap((data: any) => {
-                console.log(data);
                 this.shippingAvailable = data.connection.maileva === true;
-                console.log(this.shippingAvailable)
             }),
             catchError((err: any) => {
                 this.notify.handleErrors(err);
