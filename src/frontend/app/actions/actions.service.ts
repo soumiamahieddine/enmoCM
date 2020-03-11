@@ -242,10 +242,6 @@ export class ActionsService {
     }
 
     endAction(resIds: any) {
-        if (!this.functions.empty(this.currentResourceInformations['followed']) && this.currentResourceInformations['followed']) {
-            this.headerService.nbResourcesFollowed++;
-        }
-
         this.notify.success(this.lang.action + ' : "' + this.currentAction.label + '" ' + this.lang.done);
 
         this.eventAction.next(resIds);
@@ -677,6 +673,9 @@ export class ActionsService {
                     resource: dataActionToSend.resIds[0]
                 })),
                 tap(() => {
+                    if (!this.functions.empty(dataActionToSend.resource['followed']) && dataActionToSend.resource['followed']) {
+                        this.headerService.nbResourcesFollowed++;
+                    }
                     this.endAction(dataActionToSend.resIds);
                 }),
                 finalize(() => this.loading = false),
