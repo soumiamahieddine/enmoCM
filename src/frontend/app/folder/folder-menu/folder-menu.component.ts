@@ -102,6 +102,7 @@ export class FolderMenuComponent implements OnInit {
             tap(() => {
                 this.foldersService.getPinnedFolders();
                 this.refreshList.emit();
+                this.refreshFolders.emit();
                 this.notify.success(this.lang.mailClassified);
             }),
             catchError((err) => {
@@ -121,6 +122,7 @@ export class FolderMenuComponent implements OnInit {
                 this.notify.success(this.lang.removedFromFolder);
                 this.foldersService.getPinnedFolders();
                 this.refreshList.emit();
+                this.refreshFolders.emit();
             })
         ).subscribe();
     }

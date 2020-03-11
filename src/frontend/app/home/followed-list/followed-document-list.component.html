@@ -173,5 +173,5 @@
 </mat-sidenav-container>
 <app-followed-action-list #actionsListContext [contextMode]="true" [currentFolderInfo]="folderInfo"
     [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" (refreshEvent)="refreshDaoAfterAction()"
-    [menuShortcut]="menuShortcut">
+    [menuShortcut]="menuShortcut" (refreshPanelFolders)="foldersService.getFolders()">
 </app-followed-action-list>

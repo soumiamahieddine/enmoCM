@@ -46,7 +46,7 @@
                             <span>
                                 <app-actions-list #actionsList (refreshEvent)="refreshDao()"
                                     [contextMode]="false" [totalRes]="allResInBasket.length" [selectedRes]="selectedRes"
-                                    [currentBasketInfo]="currentBasketInfo" [currentResource]="currentResource"></app-actions-list>
+                                    [currentBasketInfo]="currentBasketInfo" [currentResource]="currentResource" (refreshPanelFolders)="foldersService.getFolders()"></app-actions-list>
                             </span>
                         </div>
                     </div>
@@ -198,5 +198,5 @@
         </mat-sidenav>
     </mat-sidenav-container>
     <app-actions-list (refreshEvent)="refreshDao()" (refreshEventAfterAction)="refreshDaoAfterAction()" #actionsListContext [contextMode]="true"
-        [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo">
+        [totalRes]="allResInBasket.length" [selectedRes]="selectedRes" [currentBasketInfo]="currentBasketInfo" (refreshPanelFolders)="foldersService.getFolders()">
     </app-actions-list>
