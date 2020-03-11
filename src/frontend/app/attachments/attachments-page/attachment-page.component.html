@@ -168,7 +168,7 @@
                         </mat-expansion-panel>
                     </div>
                 </ng-container>
-                <mat-tab-group [selectedIndex]="1" class="pjList" *ngIf="!loading" animationDuration="0" style="height: 100%">
+                <mat-tab-group [selectedIndex]="1" [class.header-less-tabs]="!isEditing()" [class.pjList]="isEditing()" *ngIf="!loading" animationDuration="0" style="height: 100%">
                         <mat-tab label="Document principal" *ngIf="attachment.res_id_master !== null">
                             <ng-template matTabContent>
                                 <app-document-viewer #appDocumentViewer style="display:block;height:100%;width:100%;overflow: auto;" [editMode]="false"
