@@ -319,7 +319,7 @@ class StoreController
         $preparedData = [
             'title'                 => $args['title'] ?? null,
             'identifier'            => $args['chrono'] ?? null,
-            'typist'                => $GLOBALS['userId'],
+            'typist'                => !empty($args['typist']) ? $args['typist'] : $GLOBALS['userId'],
             'status'                => $args['status'] ?? 'A_TRA',
             'relation'              => $relation,
             'origin_id'             => $args['originId'] ?? null,

@@ -325,7 +325,11 @@ class ListTemplateController
                     $user = UserModel::getById(['id' => $value['item_id'], 'select' => ['firstname', 'lastname', 'external_id']]);
 
                     $listTemplateItems[$itemKey]['labelToDisplay'] = "{$user['firstname']} {$user['lastname']}";
-                    $listTemplateItems[$itemKey]['descriptionToDisplay'] = UserModel::getPrimaryEntityById(['id' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
+                    if (empty($queryParams['maarchParapheur'])) {
+                        $listTemplateItems[$itemKey]['descriptionToDisplay'] = UserModel::getPrimaryEntityById(['id' => $value['item_id'], 'select' => ['entity_label']])['entity_label'];
+                    } else {
+                        $listTemplateItems[$itemKey]['descriptionToDisplay'] = '';
+                    }
 
                     $listTemplateItems[$itemKey]['hasPrivilege'] = true;
                     if ($listTemplate['type'] == 'visaCircuit' && !PrivilegeController::hasPrivilege(['privilegeId' => 'visa_documents', 'userId' => $value['item_id']]) && !PrivilegeController::hasPrivilege(['privilegeId' => 'sign_document', 'userId' => $value['item_id']])) {
@@ -339,6 +343,7 @@ class ListTemplateController
                         $userExists = MaarchParapheurController::userExists(['userId' => $externalId['maarchParapheur']]);
                         if (!empty($userExists)) {
                             $listTemplateItems[$itemKey]['externalId']['maarchParapheur'] = $externalId['maarchParapheur'];
+                            $listTemplateItems[$itemKey]['labelToDisplay'] = $userExists['firstname'] . ' ' . $userExists['lastname'];
                         }
                     }
                 }

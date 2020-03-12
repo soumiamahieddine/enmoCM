@@ -165,7 +165,9 @@ function Bt_createNote($aArgs = [])
             $stmt        = $GLOBALS['db']->query($req, []);
             $reqResult   = $stmt->fetchObject();
             $creatorId   = $reqResult->id;
-            $creatorName = $aArgs['creatorName'] . ' : ';
+        }
+        if (!empty($aArgs['creatorName'])) {
+            $creatorName = $aArgs['creatorName'] . ' (Maarch Parapheur) : ';
         }
         $GLOBALS['db']->query(
             "INSERT INTO notes (identifier, user_id, creation_date, note_text) VALUES (?, ?, CURRENT_TIMESTAMP, ?)",
