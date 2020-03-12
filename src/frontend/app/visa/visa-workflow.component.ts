@@ -289,6 +289,7 @@ export class VisaWorkflowComponent implements OnInit {
                     this.visaWorkflow.items.push(
                         {
                             ...element,
+                            requested_signature: element.item_mode !== 'visa',
                             difflist_type: 'VISA_CIRCUIT'
                         });
                 });
