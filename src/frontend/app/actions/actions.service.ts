@@ -708,6 +708,10 @@ export class ActionsService {
         this.router.navigate([`/signatureBook/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/resources/${this.currentResIds}`]);
     }
 
+    documentDetails(options: any = null) {
+        this.router.navigate([`/resources/${this.currentResIds}`]);
+    }
+
     rejectVisaBackToPreviousAction(options: any = null) {
         const dialogRef = this.dialog.open(RejectVisaBackToPrevousActionComponent, {
             panelClass: 'maarch-modal',
