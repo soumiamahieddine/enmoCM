@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { merge, Observable, of as observableOf, Subject } from 'rxjs';
+import {merge, Observable, of as observableOf, Subject, Subscription} from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -91,6 +91,7 @@ export class FollowedDocumentListComponent implements OnInit {
     };
 
     private destroy$ = new Subject<boolean>();
+    subscription: Subscription;
 
     @ViewChild('actionsListContext', { static: true }) actionsList: FollowedActionListComponent;
     @ViewChild('appPanelList', { static: true }) appPanelList: PanelListComponent;
@@ -118,6 +119,13 @@ export class FollowedDocumentListComponent implements OnInit {
         public foldersService: FoldersService) {
 
         $j("link[href='merged_css.php']").remove();
+
+        // Event after process action
+        this.subscription = this.foldersService.catchEvent().subscribe((result: any) => {
+            if (result.type === 'function' && result.content === 'refreshDao') {
+                this.refreshDao();
+            }
+        });
     }
 
     ngOnInit(): void {

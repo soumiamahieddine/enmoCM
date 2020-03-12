@@ -127,6 +127,9 @@ export class FolderDocumentListComponent implements OnInit {
                     this.refreshFolderInformations();
                 }
             }
+            if (result.type === 'function' && result.content === 'refreshDao') {
+                this.refreshDao();
+            }
         });
     }
 
