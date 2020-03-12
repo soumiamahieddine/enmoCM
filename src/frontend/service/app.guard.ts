@@ -65,13 +65,14 @@ export class AppGuard implements CanActivate {
 export class AfterProcessGuard implements CanDeactivate<ProcessComponent> {
     constructor() { }
 
-    canDeactivate(component: ProcessComponent): boolean {
+    async canDeactivate(component: ProcessComponent): Promise<boolean> {
         if (!component.isActionEnded() && !component.detailMode) {
             component.unlockResource();
         }
-        if (component.currentTool === 'info' && component.indexingForm.isResourceModified()) {
+
+        if ((component.isToolModified() && !component.isModalOpen()) || component.appDocumentViewer.isEditingTemplate()) {
             if (confirm(component.lang.saveModifiedData)) {
-                component.confirmModification();
+                await component.saveModificationBeforeClose();
             }
         }
         /*if(component.hasUnsavedData()){

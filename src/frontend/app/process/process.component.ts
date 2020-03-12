@@ -704,6 +704,16 @@ export class ProcessComponent implements OnInit {
         }, 400);
     }
 
+    async saveModificationBeforeClose() {
+        if (this.isToolModified() && !this.isModalOpen()) {
+            await this.saveTool();
+        }
+
+        if (this.appDocumentViewer.isEditingTemplate()) {
+            await this.appDocumentViewer.saveMainDocument();
+        }
+    }
+
     refreshBadge(nbRres: any, id: string) {
         this.processTool.filter(tool => tool.id === id)[0].count = nbRres;
     }
