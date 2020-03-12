@@ -578,12 +578,13 @@ export class ProcessComponent implements OnInit {
                     }),
                     filter((data: string) => data === 'ok'),
                     tap(async () => {
-                        this.saveTool();
+                        await this.saveTool();
                         if (this.appDocumentViewer.isEditingTemplate()) {
                             await this.appDocumentViewer.saveMainDocument();
                         }
+
+                        this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false)
                     }),
-                    finalize(() => this.actionService.launchAction(this.selectedAction, this.currentUserId, this.currentGroupId, this.currentBasketId, [this.currentResourceInformations.resId], this.currentResourceInformations, false)),
                     catchError((err: any) => {
                         this.notify.handleSoftErrors(err);
                         return of(false);
@@ -756,7 +757,9 @@ export class ProcessComponent implements OnInit {
 
     async saveTool() {
         if (this.currentTool === 'info' && this.indexingForm !== undefined) {
+            console.log('saving data...');
             await this.indexingForm.saveData();
+            console.log('data saved !');
         } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList !== undefined) {
             await this.appDiffusionsList.saveListinstance();
             this.loadBadges();
