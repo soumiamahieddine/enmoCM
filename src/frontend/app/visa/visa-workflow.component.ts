@@ -315,7 +315,8 @@ export class VisaWorkflowComponent implements OnInit {
                         'labelToDisplay': element.userDisplay,
                         'requested_signature': element.mode !== 'visa',
                         'process_date': this.functions.formatFrenchDateToTechnicalDate(element.processDate),
-                        'picture': ''
+                        'picture': '',
+                        'hasPrivilege': true
                     };
                     this.visaWorkflow.items.push(user);
                     this.http.get("../../rest/maarchParapheur/user/" + element.userId + "/picture")
