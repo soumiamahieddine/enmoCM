@@ -757,9 +757,7 @@ export class ProcessComponent implements OnInit {
 
     async saveTool() {
         if (this.currentTool === 'info' && this.indexingForm !== undefined) {
-            console.log('saving data...');
             await this.indexingForm.saveData();
-            console.log('data saved !');
         } else if (this.currentTool === 'diffusionList' && this.appDiffusionsList !== undefined) {
             await this.appDiffusionsList.saveListinstance();
             this.loadBadges();
