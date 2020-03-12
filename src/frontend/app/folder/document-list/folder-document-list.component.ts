@@ -114,7 +114,7 @@ export class FolderDocumentListComponent implements OnInit {
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
         public appService: AppService,
-        private foldersService: FoldersService,
+        public foldersService: FoldersService,
         public functions: FunctionsService) {
 
         $j("link[href='merged_css.php']").remove();

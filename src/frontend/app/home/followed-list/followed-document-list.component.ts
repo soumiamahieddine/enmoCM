@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, EventEmitter, ViewContainerRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { LANG } from '../../translate.component';
-import { merge, Observable, of as observableOf, Subject, of, Subscription } from 'rxjs';
+import { merge, Observable, of as observableOf, Subject } from 'rxjs';
 import { NotificationService } from '../../notification.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
@@ -20,7 +20,6 @@ import { BasketHomeComponent } from '../../basket/basket-home.component';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { FollowedActionListComponent } from '../followed-action-list/followed-action-list.component';
 import { FiltersListService } from '../../../service/filtersList.service';
-import { trigger, transition, style, animate } from '@angular/animations';
 import {MenuShortcutComponent} from "../../menu/menu-shortcut.component";
 import { FoldersService } from '../../folder/folders.service';
 
@@ -116,7 +115,7 @@ export class FollowedDocumentListComponent implements OnInit {
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
         public appService: AppService,
-        private foldersService: FoldersService) {
+        public foldersService: FoldersService) {
 
         $j("link[href='merged_css.php']").remove();
     }
