@@ -1484,7 +1484,7 @@ INSERT INTO templates (template_id, template_label, template_comment, template_c
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (910, '[REJET] Anomalie de numérisation', 'Anomalie de numérisation', 'Le courrier présente des anomalies de numérisation', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
 --
 INSERT INTO templates  (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (1000, '[MAIL] AR TYPE Réorientation d’une saisine électronique vers l’autorité compétente', '[MAIL] AR TYPE Réorientation d’une saisine électronique vers l’autorité compétente', '<h2>Ville de Maarch-les-Bains</h2>
-<p><em>[entities.adrs_1]</em><br /><em>[entities.adrs_2]</em><br /><em>[entities.zipcode] [entities.city]<br /></em></p>
+<p><em>[destination.adrs_1]</em><br /><em>[destination.adrs_2]</em><br /><em>[destination.zipcode] [destination.city]<br /></em></p>
 <p>(Veuillez renseigner le numero de telephone de votre service)</p>
 <p>Le [res_letterbox.doc_date], vous avez transmis par voie &eacute;lectronique &agrave; la Ville une demande qui ne rel&egrave;ve pas de sa comp&eacute;tence.</p>
 <p>Votre demande concerne [res_letterbox.subject].</p>
