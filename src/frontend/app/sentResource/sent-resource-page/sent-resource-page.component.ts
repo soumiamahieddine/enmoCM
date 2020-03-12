@@ -397,7 +397,7 @@ export class SentResourcePageComponent implements OnInit {
                         this.emailContent = data.encodedDocument;
                     } else {
                         this.emailsubject = this.lang.ARelectronic;
-                        this.emailContent = atob(data.encodedDocument);
+                        this.emailContent = this.b64DecodeUnicode(data.encodedDocument);
                     }
                     resolve(true);
                 }),
@@ -811,5 +811,13 @@ export class SentResourcePageComponent implements OnInit {
 
     compareSenders(sender1: any, sender2: any) {
         return (sender1.label === sender2.label || ((sender1.label === null || sender2.label === null) && (sender1.entityId === null || sender2.entityId === null))) && sender1.entityId === sender2.entityId && sender1.email === sender2.email;
+    }
+
+
+    b64DecodeUnicode(str: string) {
+        // Going backwards: from bytestream, to percent-encoding, to original string.
+        return decodeURIComponent(atob(str).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
     }
 }
