@@ -266,15 +266,13 @@ export class AttachmentCreateComponent implements OnInit {
                     this.sendingData = true;
                     const attach = this.formatAttachments();
 
-                    
-                    await Promise.all(this.attachments.map(async (element: any, index: number) => {
-                        resId = await this.saveAttachment(attach[index]);
-                    }));
+                    for (const attachment of attach) {
+                        resId = await this.saveAttachment(attachment);
+                    }
 
                     if (this.sendMassMode && resId !== null && mode === 'mailing') {
                         await this.generateMailling(resId);
                     }
-                    
 
                     this.sendingData = false;
                     this.notify.success(this.lang.attachmentAdded);
