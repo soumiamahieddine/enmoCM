@@ -58,6 +58,24 @@
     min-height: auto;
 }
 
+.attachListButton:hover {
+    background: initial !important;
+    cursor: default;
+}
+
+.attachListContainer {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-gap: 10px;
+    align-items: center;
+}
+
+.extensionButton {
+    line-height: 20px;
+    min-width: 50px;
+    padding: 0px;
+}
+
 .badFormat {
     background-color: #d03c3c;
     color: white;
