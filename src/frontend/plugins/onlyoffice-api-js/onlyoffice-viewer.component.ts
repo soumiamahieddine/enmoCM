@@ -15,7 +15,7 @@ import { LANG } from '../../app/translate.component';
 import { ConfirmComponent } from '../modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { NotificationService } from '../../app/notification.service';
-import { HeaderService } from '../../service/header.service.js';
+import { HeaderService } from '../../service/header.service';
 
 declare var DocsAPI: any;
 declare function $j(selector: any): any;
@@ -314,11 +314,13 @@ export class EcplOnlyofficeViewerComponent implements OnInit, AfterViewInit {
                 this.headerService.sideNavLeft.close();
             }
             $j("iframe[name='frameEditor']").css("position", "fixed");
+            $j("iframe[name='frameEditor']").css("z-index", "2");
         } else {
             if (this.headerService.sideNavLeft !== null) {
                 this.headerService.sideNavLeft.open();
             }
             $j("iframe[name='frameEditor']").css("position", "initial");
+            $j("iframe[name='frameEditor']").css("z-index", "1");
         }
         this.fullscreenMode = !this.fullscreenMode;
     }

@@ -88,6 +88,11 @@
     align-items: center;
     justify-content: center;
 
+    span {
+      flex : 1;
+      text-align: center;
+    }
+    
     small {
       color: #F99830; 
     }

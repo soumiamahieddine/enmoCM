@@ -396,7 +396,7 @@ class EmailController
         $attachments = [];
         $attachmentTypes = AttachmentModel::getAttachmentsTypesByXML();
         $rawAttachments = AttachmentModel::get([
-            'select'    => ['res_id', 'title', 'identifier', 'attachment_type', 'typist', 'format', 'filesize'],
+            'select'    => ['res_id', 'title', 'identifier', 'attachment_type', 'typist', 'format', 'filesize', 'status'],
             'where'     => ['res_id_master = ?', 'attachment_type not in (?)', 'status not in (?)'],
             'data'      => [$args['resId'], ['signed_response'], ['DEL', 'OBS']]
         ]);
@@ -435,7 +435,8 @@ class EmailController
                 'convertedDocument' => $convertedDocument,
                 'creator'           => UserModel::getLabelledUserById(['login' => $attachment['typist']]),
                 'format'            => $attachment['format'],
-                'size'              => StoreController::getFormattedSizeFromBytes(['size' => $attachment['filesize']])
+                'size'              => StoreController::getFormattedSizeFromBytes(['size' => $attachment['filesize']]),
+                'status'            => $attachment['status']
             ];
         }
 

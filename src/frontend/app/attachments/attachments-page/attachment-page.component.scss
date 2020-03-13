@@ -71,7 +71,7 @@
 
     ::ng-deep.mat-tab-header {
         position: sticky;
-        z-index: 2;
+        z-index: 1;
         height: 50px;
         background: white;
         top: 0px; 
@@ -132,4 +132,10 @@
 .mat-expansion-panel-header-title {
     font-size: 14px;
     color: #666;
+}
+
+.header-less-tabs {
+    ::ng-deep.mat-tab-header {
+        display: none;
+    }
 }

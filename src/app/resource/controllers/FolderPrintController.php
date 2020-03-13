@@ -342,7 +342,7 @@ class FolderPrintController
                 } else {
                     $emails = EmailModel::get([
                         'select'  => ['id', 'user_id', 'sender', 'recipients', 'cc', 'cci', 'object', 'body', 'document', 'send_date', 'status'],
-                        'where'   => ["cast(document->>'id' as INT) = ? ", "object NOT LIKE '[AR]%'"],
+                        'where'   => ["cast(document->>'id' as INT) = ? ", "(object NOT LIKE '[AR]%' OR object is null)"],
                         'data'    => [$resource['resId']],
                         'orderBy' => ['creation_date desc']
                     ]);
@@ -704,6 +704,8 @@ class FolderPrintController
         $recipientsCopyHidden = implode(", ", $recipientsCopyHidden);
         $recipientsCopyHidden = !empty($recipientsCopyHidden) ? $recipientsCopyHidden : _UNDEFINED;
 
+        $subject = !empty($email['object']) ? $email['object'] : "<i>" . _EMPTY_SUBJECT . "</i>";
+
         if ($email['status'] == 'SENT') {
             $status = _EMAIL_SENT;
         } elseif ($email['status'] == 'DRAFT') {
@@ -745,7 +747,7 @@ class FolderPrintController
         $pdf->MultiCell($widthThreeQuarter, 30, $recipientsCopyHidden, 1, 'L', false, 1, '', '', true, 0, true);
 
         $pdf->MultiCell($widthQuarter, 30, '<b>' . _SUBJECT . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
-        $pdf->MultiCell($widthThreeQuarter, 30, $email['object'], 1, 'L', false, 1, '', '', true, 0, true);
+        $pdf->MultiCell($widthThreeQuarter, 30, $subject, 1, 'L', false, 1, '', '', true, 0, true);
 
         $pdf->MultiCell($widthQuarter, 30, '<b>' . _STATUS . '</b>', 1, 'L', false, 0, '', '', true, 0, true);
         $pdf->MultiCell($widthThreeQuarter, 30, $status, 1, 'L', false, 1, '', '', true, 0, true);

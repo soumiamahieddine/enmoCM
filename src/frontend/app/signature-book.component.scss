@@ -140,9 +140,11 @@
 
 .visaContent{
     position: relative;
-    height:95vh;
-    margin-top: 5px;
     font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
 }
 
 .visaContent h1{
@@ -274,7 +276,7 @@
     border-left: solid 1px;
     text-align: center;
     position: absolute;
-    right: -1px;
+    right: 0px;
     background-color: white;
 }
 
@@ -299,7 +301,7 @@
 
 .panelRight{
     display: inline-block;
-    height: 92vh;
+    height: calc(100% - 38px);
 }
 
 .contentLeft .contentShow{
@@ -495,7 +497,7 @@ img.panelSelectedThumbnail,img:hover.panelSelectedThumbnail{
     border-top: none;
     display: block;
     width: 100%;
-    height:93vh;
+    flex: 1;
     // white-space: nowrap;
     overflow: hidden;
     background-color: #fbfbfb;

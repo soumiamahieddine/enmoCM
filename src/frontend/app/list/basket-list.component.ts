@@ -17,10 +17,8 @@ import { FiltersToolComponent } from './filters/filters-tool.component';
 
 import { ActionsListComponent } from '../actions/actions-list.component';
 import { Overlay } from '@angular/cdk/overlay';
-import { BasketHomeComponent } from '../basket/basket-home.component';
 import { PanelListComponent } from './panel/panel-list.component';
 import { AppService } from '../../service/app.service';
-import { PanelFolderComponent } from '../folder/panel/panel-folder.component';
 import { FoldersService } from '../folder/folders.service';
 import { ActionsService } from '../actions/actions.service';
 import { ContactsListModalComponent } from '../contact/list/modal/contacts-list-modal.component';
@@ -116,7 +114,7 @@ export class BasketListComponent implements OnInit {
         public overlay: Overlay,
         public viewContainerRef: ViewContainerRef,
         public appService: AppService,
-        private foldersService: FoldersService,
+        public foldersService: FoldersService,
         private actionService: ActionsService) {
         _activatedRoute.queryParams.subscribe(
             params => this.specificChrono = params.chrono

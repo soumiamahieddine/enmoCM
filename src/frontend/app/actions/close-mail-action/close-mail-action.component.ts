@@ -7,6 +7,7 @@ import { NoteEditorComponent } from '../../notes/note-editor.component';
 import { tap, exhaustMap, finalize, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { FunctionsService } from '../../../service/functions.service';
+import {HeaderService} from "../../../service/header.service";
 
 @Component({
     templateUrl: "close-mail-action.component.html",
@@ -29,7 +30,8 @@ export class CloseMailActionComponent implements OnInit {
         private notify: NotificationService, 
         public dialogRef: MatDialogRef<CloseMailActionComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any,
-        public functions: FunctionsService
+        public functions: FunctionsService,
+        private headerService: HeaderService
     ) { }
 
     ngOnInit(): void { 
@@ -102,6 +104,9 @@ export class CloseMailActionComponent implements OnInit {
             }),
             exhaustMap(() => this.http.put(this.data.indexActionRoute, {resource : this.data.resIds[0], note : this.noteEditor.getNote()})),
             tap(() => {
+                if (!this.functions.empty(this.data.resource['followed']) && this.data.resource['followed']) {
+                    this.headerService.nbResourcesFollowed++;
+                }
                 this.dialogRef.close(this.data.resIds);
             }),
             finalize(() => this.loading = false),

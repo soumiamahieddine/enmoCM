@@ -295,6 +295,7 @@ class StoreController
             $resource = ResModel::getById(['select' => ['destination', 'type_id'], 'resId' => $args['resIdMaster']]);
             $args['chrono'] = ChronoModel::getChrono(['id' => 'outgoing', 'entityId' => $resource['destination'], 'typeId' => $resource['type_id'], 'resId' => $args['resIdMaster']]);
         }
+        $shouldBeInSignatureBook = $attachmentsTypes[$args['type']]['sign'];
 
         if ($args['type'] == 'signed_response') {
             $linkSign = "{$args['originId']},res_attachments";
@@ -303,9 +304,10 @@ class StoreController
 
         $relation = 1;
         if (!empty($args['originId'])) {
-            $relations = AttachmentModel::get(['select' => ['relation'], 'where' => ['(origin_id = ? or res_id = ?)'], 'data' => [$args['originId'], $args['originId']], 'orderBy' => ['relation DESC'], 'limit' => 1]);
+            $relations = AttachmentModel::get(['select' => ['relation', 'in_signature_book'], 'where' => ['(origin_id = ? or res_id = ?)'], 'data' => [$args['originId'], $args['originId']], 'orderBy' => ['relation DESC'], 'limit' => 1]);
             $relation = $relations[0]['relation'] + 1;
             AttachmentModel::update(['set' => ['status' => 'OBS'], 'where' => ['(origin_id = ? OR res_id = ?)'], 'data' => [$args['originId'], $args['originId']]]);
+            $shouldBeInSignatureBook = $relations[0]['in_signature_book'];
         }
 
         $externalId = '{}';
@@ -313,11 +315,11 @@ class StoreController
             $externalId = json_encode($args['externalId']);
         }
 
-        $inSignatureBook = isset($args['inSignatureBook']) ? $args['inSignatureBook'] : $attachmentsTypes[$args['type']]['sign'];
+        $inSignatureBook = isset($args['inSignatureBook']) ? $args['inSignatureBook'] : $shouldBeInSignatureBook;
         $preparedData = [
             'title'                 => $args['title'] ?? null,
             'identifier'            => $args['chrono'] ?? null,
-            'typist'                => $GLOBALS['userId'],
+            'typist'                => !empty($args['typist']) ? $args['typist'] : $GLOBALS['userId'],
             'status'                => $args['status'] ?? 'A_TRA',
             'relation'              => $relation,
             'origin_id'             => $args['originId'] ?? null,

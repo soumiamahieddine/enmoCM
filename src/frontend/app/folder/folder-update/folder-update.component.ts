@@ -101,7 +101,7 @@ export class FolderUpdateComponent implements OnInit {
                         element['state'].selected = true;
                     }
 
-                    if (element.id === this.folder.id || currentParentId === element.parent_id) {
+                    if (element.id === this.folder.id || currentParentId === element.parent_id || !element.canEdit) {
                         currentParentId = element.id;
                         element['state'].opened = false;
                         element['state'].disabled = true;

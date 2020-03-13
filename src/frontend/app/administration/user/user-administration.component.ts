@@ -161,7 +161,9 @@ export class UserAdministrationComponent implements OnInit {
                             this.canManagePersonalDatas = this.privilegeService.hasCurrentUserPrivilege('manage_personal_data');
                         }
                         
-                        
+                        if (this.canManagePersonalDatas) {
+                            this.canViewPersonalDatas = true;
+                        }
                         if (!this.canViewPersonalDatas) {
                             this.user.phone = '****';
                         }

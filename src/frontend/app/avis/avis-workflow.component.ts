@@ -422,7 +422,7 @@ export class AvisWorkflowComponent implements OnInit {
                         return of(false);
                     })
                 ).subscribe();
-            } else {
+            } else if (this.isValidWorkflow()) {
                 const arrAvis = resIds.map(resId => {
                     return {
                         resId: resId,
@@ -440,6 +440,9 @@ export class AvisWorkflowComponent implements OnInit {
                         return of(false);
                     })
                 ).subscribe();
+            } else {
+                this.notify.error(this.getError());
+                resolve(false);
             }
         });
     }
@@ -487,6 +490,18 @@ export class AvisWorkflowComponent implements OnInit {
 
     resetWorkflow() {
         this.avisWorkflow.items = [];
+    }
+
+    isValidWorkflow() {
+        if (this.avisWorkflow.items.filter((item: any) => !item.hasPrivilege).length === 0 && this.avisWorkflow.items.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    getError() {
+        return this.lang.mustDeleteUsersWithNoPrivileges;
     }
 
     emptyWorkflow() {

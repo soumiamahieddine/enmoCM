@@ -289,6 +289,7 @@ export class VisaWorkflowComponent implements OnInit {
                     this.visaWorkflow.items.push(
                         {
                             ...element,
+                            requested_signature: element.item_mode !== 'visa',
                             difflist_type: 'VISA_CIRCUIT'
                         });
                 });
@@ -314,7 +315,8 @@ export class VisaWorkflowComponent implements OnInit {
                         'labelToDisplay': element.userDisplay,
                         'requested_signature': element.mode !== 'visa',
                         'process_date': this.functions.formatFrenchDateToTechnicalDate(element.processDate),
-                        'picture': ''
+                        'picture': '',
+                        'hasPrivilege': true
                     };
                     this.visaWorkflow.items.push(user);
                     this.http.get("../../rest/maarchParapheur/user/" + element.userId + "/picture")
@@ -490,7 +492,7 @@ export class VisaWorkflowComponent implements OnInit {
     }
 
     isValidWorkflow() {
-        if ((this.visaWorkflow.items.filter((item: any) => item.requested_signature).length > 0 && this.visaWorkflow.items.filter((item: any) => !item.hasPrivilege).length === 0) || this.visaWorkflow.items.length === 0) {
+        if ((this.visaWorkflow.items.filter((item: any) => item.requested_signature).length > 0 && this.visaWorkflow.items.filter((item: any) => !item.hasPrivilege).length === 0) && this.visaWorkflow.items.length > 0) {
             return true;
         } else {
             return false;

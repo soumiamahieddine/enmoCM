@@ -168,7 +168,7 @@
                         </mat-expansion-panel>
                     </div>
                 </ng-container>
-                <mat-tab-group [selectedIndex]="1" class="pjList" *ngIf="!loading" animationDuration="0" style="height: 100%">
+                <mat-tab-group [selectedIndex]="1" [class.header-less-tabs]="!isEditing()" [class.pjList]="isEditing()" *ngIf="!loading" animationDuration="0" style="height: 100%">
                         <mat-tab label="Document principal" *ngIf="attachment.res_id_master !== null">
                             <ng-template matTabContent>
                                 <app-document-viewer #appDocumentViewer style="display:block;height:100%;width:100%;overflow: auto;" [editMode]="false"
@@ -214,11 +214,11 @@
         <button mat-raised-button color="primary" *ngIf="!newVersion && sendMassMode && !loading" (click)="updateAttachment('mailing')"
             [disabled]="!loading && (!editMode || !attachFormGroup.valid)">{{lang.mailing}}</button>
         <button mat-raised-button color="primary" *ngIf="newVersion" (click)="createNewVersion()"
-            [disabled]="!editMode || appAttachmentViewer.isEditingTemplate()">{{lang.createNewVersion}}</button>
+            [disabled]="!editMode || isEditing()">{{lang.createNewVersion}}</button>
         <button mat-raised-button color="primary" *ngIf="newVersion && sendMassMode && !loading" (click)="createNewVersion('mailing')"
-            [disabled]="!editMode || appAttachmentViewer.isEditingTemplate()">{{lang.mailing}}</button>
+            [disabled]="!editMode || isEditing()">{{lang.mailing}}</button>
         <button mat-raised-button color="warn" *ngIf=" !loading && attachment.status.value === 'SIGN' && (privilegeService.hasCurrentUserPrivilege('sign_document') || this.headerService.user.id == attachment.typist.value)"
             (click)="deleteSignedVersion()">{{lang.deleteSignedVersion}}</button>
-        <button mat-raised-button mat-button [disabled]="loading" [mat-dialog-close]="">{{lang.close}}</button>
+        <button mat-raised-button mat-button [disabled]="loading" (click)="closeModal()">{{lang.close}}</button>
     </div>
 </div>

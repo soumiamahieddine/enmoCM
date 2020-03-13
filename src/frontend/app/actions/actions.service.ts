@@ -197,6 +197,9 @@ export class ActionsService {
         this.currentResourceLock = setInterval(() => {
             this.http.put(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/lock`, { resources: this.currentResIds }).pipe(
                 catchError((err: any) => {
+                    if (err.status == 403) {
+                        clearInterval(this.currentResourceLock);
+                    }
                     this.notify.handleErrors(err);
                     return of(false);
                 })
@@ -242,10 +245,6 @@ export class ActionsService {
     }
 
     endAction(resIds: any) {
-        if (!this.functions.empty(this.currentResourceInformations['followed']) && this.currentResourceInformations['followed']) {
-            this.headerService.nbResourcesFollowed++;
-        }
-
         this.notify.success(this.lang.action + ' : "' + this.currentAction.label + '" ' + this.lang.done);
 
         this.eventAction.next(resIds);
@@ -523,7 +522,7 @@ export class ActionsService {
 
     viewDoc(options: any = null) {
         this.dialog.open(ViewDocActionComponent, {
-            panelClass: 'maarch-modal no-padding-full-dialog',
+            panelClass: 'maarch-modal',
             data: this.setDatasActionToSend()
         });
     }
@@ -677,6 +676,9 @@ export class ActionsService {
                     resource: dataActionToSend.resIds[0]
                 })),
                 tap(() => {
+                    if (!this.functions.empty(dataActionToSend.resource['followed']) && dataActionToSend.resource['followed']) {
+                        this.headerService.nbResourcesFollowed++;
+                    }
                     this.endAction(dataActionToSend.resIds);
                 }),
                 finalize(() => this.loading = false),
@@ -707,6 +709,10 @@ export class ActionsService {
 
     signatureBookAction(options: any = null) {
         this.router.navigate([`/signatureBook/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/resources/${this.currentResIds}`]);
+    }
+
+    documentDetails(options: any = null) {
+        this.router.navigate([`/resources/${this.currentResIds}`]);
     }
 
     rejectVisaBackToPreviousAction(options: any = null) {

@@ -17,7 +17,7 @@ export const LANG_NL = {
     "action"                                : "Actie",
     "actionAdded"                           : "Actie toegevoegd",
     "actionAvailable"                       : "Beschikbare acties",
-    "actionCarriedOut"                      : "Uitgevoerde actie",
+    "actionCarriedOut"                      : "System action", //_TO_TRANSLATE
     "actionChosen"                          : "Geselecteerde acties",
     "actionCreation"                        : "Aanmaak van een actie",
     "actionDeleted"                         : "Actie verwijderd",
@@ -1628,4 +1628,8 @@ export const LANG_NL = {
     "addNoteToNumericPackage" : "Add a note Ajouter to sending mail", //_TO_TRANSLATE
     "mainDocNumericPackage" : "Main document of sending mail", //_TO_TRANSLATE
     "attachmentsNumericPackage" : "Attachments of sending mail", //_TO_TRANSLATE
+    "closeSidePanel" : "Close side panel", //_TO_TRANSLATE
+    "openSidePanel" : "Open side panel", //_TO_TRANSLATE
+    "saveAsPrivateModel" : "Save as private model", //_TO_TRANSLATE
+    "editingDocumentMsg" : "The edition of the document is in progress, do you want to continue ?", //_TO_TRANSLATE
 };

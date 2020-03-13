@@ -148,7 +148,7 @@
                     </ng-container>
                 </mat-menu>
                 <button mat-button *ngIf="!appService.getViewMode()"
-                    [disabled]="actionService.loading || selectedAction.id === 0" class="button-form-primary-filled"
+                    [disabled]="actionService.loading || selectedAction.id === 0 || (appDocumentViewer !== undefined && !appDocumentViewer.isEditorLoaded())" class="button-form-primary-filled"
                     style="width: 150px;align-items: center;justify-content: center;text-align: center;display: flex;"
                     (click)="onSubmit()">{{lang.validate}}</button>
                 <button mat-icon-button *ngIf="appService.getViewMode()" class="button-form-primary"
@@ -159,7 +159,7 @@
             <div class="emptyAction" *ngIf="actionsList.length === 0" [innerHTML]="lang.noAvailableActionProcess"></div>
         </div>
     </ng-template>
-    <mat-sidenav-content>
+    <mat-sidenav-content class="process-content">
         <div class="bg-head">
             <div class="bg-head-title" [class.customContainerRight]="appService.getViewMode()">
                 <div class="bg-head-title-label">
@@ -249,15 +249,8 @@
                 </app-document-viewer>
             </div>
         </div>
-    </mat-sidenav-content>
-    <mat-sidenav #snav2 [fixedInViewport]="appService.getViewMode()" position='end'
-        [opened]="appService.getViewMode() ? false : false" [mode]="appService.getViewMode() ? 'over' : 'side'"
-        class="panel-right" style="overflow-x:hidden;" [class.docView]="!filtersListService.filterMode"
-        [ngStyle]="{'width': appService.getViewMode() ? '80%' : '30%'}" autoFocus="false">
-    </mat-sidenav>
-</mat-sidenav-container>
-<div class="modal-module {{modal.id}}" cdkDrag *ngFor="let modal of modalModule; let i=index"
-    [class.largeModal]="modal.id === 'info'">
+        <div class="modal-module {{modal.id}}" cdkDrag *ngFor="let modal of modalModule; let i=index"
+    [class.largeModal]="modal.id === 'info'" cdkDragBoundary=".process-content">
     <div class="modal-module-title" cdkDragHandle>
         <span>
             {{modal.label}}
@@ -267,7 +260,7 @@
         </button>
     </div>
     <div class="modal-module-content">
-        <app-history-list *ngIf="currentTool === 'history' && !loading" #appHistoryList
+        <app-history-list *ngIf="modal.id === 'history' && !loading" #appHistoryList
             [resId]="currentResourceInformations.resId">
         </app-history-list>
         <app-notes-list *ngIf="modal.id === 'notes' && !loading" #appNotesList [editMode]="true"
@@ -317,3 +310,10 @@
         </div>
     </div>
 </div>
+    </mat-sidenav-content>
+    <mat-sidenav #snav2 [fixedInViewport]="appService.getViewMode()" position='end'
+        [opened]="appService.getViewMode() ? false : false" [mode]="appService.getViewMode() ? 'over' : 'side'"
+        class="panel-right" style="overflow-x:hidden;" [class.docView]="!filtersListService.filterMode"
+        [ngStyle]="{'width': appService.getViewMode() ? '80%' : '30%'}" autoFocus="false">
+    </mat-sidenav>
+</mat-sidenav-container>

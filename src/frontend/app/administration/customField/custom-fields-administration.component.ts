@@ -82,7 +82,7 @@ export class CustomFieldsAdministrationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.customFields);
+        this.headerService.setHeader(this.lang.administration + ' ' + this.lang.customFieldsAdmin);
         
         this.http.get("../../rest/customFields").pipe(
             // TO FIX DATA BINDING SIMPLE ARRAY VALUES

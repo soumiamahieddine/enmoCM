@@ -11,7 +11,7 @@ import { FiltersListService } from '../../service/filtersList.service';
 import { Overlay } from '@angular/cdk/overlay';
 import { AppService } from '../../service/app.service';
 import { IndexingFormComponent } from './indexing-form/indexing-form.component';
-import { tap, finalize, catchError, map, filter, exhaustMap } from 'rxjs/operators';
+import { tap, finalize, catchError, map, filter, exhaustMap, take } from 'rxjs/operators';
 import { of, Subscription } from 'rxjs';
 import { DocumentViewerComponent } from '../viewer/document-viewer.component';
 import { ConfirmComponent } from '../../plugins/modal/confirm.component';
@@ -193,6 +193,7 @@ export class IndexationComponent implements OnInit {
             formatdatas['chrono'] = true;
 
             this.appDocumentViewer.getFile().pipe(
+                take(1),
                 tap((data: any) => {
                     formatdatas['encodedFile'] = data.content;
                     formatdatas['format'] = data.format;

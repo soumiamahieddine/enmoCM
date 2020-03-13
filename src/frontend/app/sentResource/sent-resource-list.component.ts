@@ -231,7 +231,9 @@ export class SentResourceListComponent implements OnInit {
     }
 
     initFilter() {
+        console.log(this.sentResources);
         this.sentResources.forEach((element: any) => {
+            console.log(this.filterTypes.filter(type => type.id === element.type).length);
             if (this.filterTypes.filter(type => type.id === element.type).length === 0) {
                 this.filterTypes.push({
                     id: element.type,
@@ -363,11 +365,11 @@ export class SentResourceListComponent implements OnInit {
                 tap((data: any) => {
                     const sentResourcesNoEmails = this.sentResources.filter(elem => elem.type !== 'email');
                     this.sentResources = sentResourcesNoEmails.concat(data);
-                    console.log(this.sentResources);
                     setTimeout(() => {
                         this.dataSource = new MatTableDataSource(this.sentResources);
                         this.dataSource.sort = this.sort;
                     }, 0);
+                    this.initFilter();
                     resolve(true);
                 }),
                 catchError((err: any) => {

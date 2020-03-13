@@ -846,7 +846,7 @@ class ResController extends ResourceControlController
         }
 
         $queryParams = $request->getQueryParams();
-        if ($args['fieldId'] == 'destination' && !empty($queryParams['alt'])) {
+        if ($args['fieldId'] == 'destination' && !empty($queryParams['alt']) && !empty($resource['destination'])) {
             $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['id']]);
             $resource['destination'] = $entity['id'];
         }
@@ -1062,6 +1062,9 @@ class ResController extends ResourceControlController
             'data'   => [$GLOBALS['userId']]
         ]);
         $entities = array_column($entities, 'id');
+        if (empty($entities)) {
+            $entities = [0];
+        }
         $idToDelete = FolderModel::getWithEntitiesAndResources([
             'select'    => ['resources_folders.id'],
             'where'     => ['resources_folders.res_id = ?', '(entities_folders.entity_id in (?) OR folders.user_id = ? OR keyword = ?)'],

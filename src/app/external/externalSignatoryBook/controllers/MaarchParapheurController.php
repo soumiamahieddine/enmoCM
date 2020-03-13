@@ -405,21 +405,14 @@ class MaarchParapheurController
 
         $workflowInfos = [];
         foreach ($workflow as $value) {
-            $userInfos = UserModel::getByExternalId([
-                'select'            => ['firstname', 'lastname'],
-                'externalId'        => $value['userId'],
-                'externalName'      => 'maarchParapheur'
-            ]);
-            if (empty($userInfos)) {
-                $curlResponse = CurlModel::execSimple([
+            $curlResponse = CurlModel::execSimple([
                     'url'           => rtrim($aArgs['config']['data']['url'], '/') . '/rest/users/'.$value['userId'],
                     'basicAuth'     => ['user' => $aArgs['config']['data']['userId'], 'password' => $aArgs['config']['data']['password']],
                     'headers'       => ['content-type:application/json'],
                     'method'        => 'GET'
                 ]);
-                $userInfos['firstname'] = $curlResponse['response']['user']['firstname'];
-                $userInfos['lastname'] = $curlResponse['response']['user']['lastname'];
-            }
+            $userInfos['firstname'] = $curlResponse['response']['user']['firstname'];
+            $userInfos['lastname'] = $curlResponse['response']['user']['lastname'];
             if ($value['mode'] == 'note') {
                 $mode = _NOTE_USER;
             } elseif ($value['mode'] == 'visa') {
@@ -520,8 +513,16 @@ class MaarchParapheurController
                         if (!empty($userInfos)) {
                             $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorId = $userInfos['id'];
                             $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorName = $userInfos['firstname'] . ' ' . $userInfos['lastname'];
-                        } elseif (!empty($state['noteCreatorName'])) {
-                            $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorName = $state['noteCreatorName'];
+                        }
+                    }
+                    if (!empty($state['signatoryUserId'])) {
+                        $signatoryUser = UserModel::getByExternalId([
+                            'select'            => ['user_id'],
+                            'externalId'        => $state['signatoryUserId'],
+                            'externalName'      => 'maarchParapheur'
+                        ]);
+                        if (!empty($signatoryUser['user_id'])) {
+                            $aArgs['idsToRetrieve'][$version][$resId]->typist = $signatoryUser['user_id'];
                         }
                     }
                     $aArgs['idsToRetrieve'][$version][$resId]->workflowInfo = implode(", ", $state['workflowInfo']);
@@ -566,6 +567,7 @@ class MaarchParapheurController
         foreach ($aArgs['workflow'] as $step) {
             if ($step['status'] == 'VAL' && $step['mode'] == 'sign') {
                 $state['workflowInfo'][] = $step['userDisplay'] . ' (Signé le ' . $step['processDate'] . ')';
+                $state['signatoryUserId'] = $step['userId'];
             } elseif ($step['status'] == 'VAL' && $step['mode'] == 'visa') {
                 $state['workflowInfo'][] = $step['userDisplay'] . ' (Visé le ' . $step['processDate'] . ')';
             }
@@ -1052,6 +1054,6 @@ class MaarchParapheurController
             return false;
         }
 
-        return true;
+        return $curlResponse['response']['user'];
     }
 }

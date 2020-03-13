@@ -471,3 +471,4 @@ define("_CHRONO_NUMBER_MASTER", "Resource chrono number");
 define("_SENT_BY", "Sent by");
 define('_TO_CCI', 'On copy hidden');
 define('_PRIMARY_INFORMATION', 'Primary information');
+define("_EMPTY_SUBJECT", "Empty subject");

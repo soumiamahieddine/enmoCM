@@ -11,7 +11,7 @@ import { DomPortalHost, TemplatePortal } from '@angular/cdk/portal';
 export class HeaderService {
     sideBarForm: boolean = false;
     sideBarAdmin: boolean = false;
-
+    hideSideBar: boolean = false;
     showhHeaderPanel: boolean = true;
     showMenuShortcut: boolean = true;
     showMenuNav: boolean = true;
@@ -114,6 +114,7 @@ export class HeaderService {
             this.showMenuNav = true;
             this.sideBarAdmin = false;
             this.sideBarButton = null;
+            this.hideSideBar = false;
     }
 
     injectInSideBarLeft(template: TemplateRef<any>, viewContainerRef: ViewContainerRef, id: string = 'adminMenu', mode: string = '') {
@@ -142,8 +143,7 @@ export class HeaderService {
         // Create a template portal
         const templatePortal = new TemplatePortal(
             template,
-            viewContainerRef,
-            { $implicit: 'Bob' },
+            viewContainerRef
         );
 
         // Attach portal to host

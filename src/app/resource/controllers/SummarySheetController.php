@@ -623,7 +623,14 @@ class SummarySheetController
                     } elseif ($listInstance['res_id'] == $resource['res_id']) {
                         $item = '';
                         if ($listInstance['item_type'] == 'user_id') {
-                            $item = UserModel::getLabelledUserById(['login' => $listInstance['item_id']]);
+                            $user = UserModel::getLabelledUserById(['login' => $listInstance['item_id']]);
+                            $entity = UserModel::getPrimaryEntityByUserId(['userId' => $listInstance['item_id']]);
+
+                            if ($listInstance['item_mode'] == 'dest') {
+                                $item = $user;
+                            } else {
+                                $item = $user . " (" . $entity['entity_label'] . ")";
+                            }
                         } elseif ($listInstance['item_type'] == 'entity_id') {
                             $item = $listInstance['item_id'];
                             $entity = EntityModel::getByEntityId(['entityId' => $listInstance['item_id'], 'select' => ['short_label']]);
@@ -732,8 +739,11 @@ class SummarySheetController
                     if ($found && $listInstance['res_id'] != $resource['res_id']) {
                         break;
                     } elseif ($listInstance['res_id'] == $resource['res_id']) {
+                        $user = UserModel::getLabelledUserById(['login' => $listInstance['item_id']]);
+                        $entity = UserModel::getPrimaryEntityByUserId(['userId' => $listInstance['item_id']]);
+                        $userLabel = $user . " (" . $entity['entity_label'] . ")";
                         $users[] = [
-                            'user'  => UserModel::getLabelledUserById(['login' => $listInstance['item_id']]),
+                            'user'  => $userLabel,
                             'date'  => TextFormatModel::formatDate($listInstance['process_date']),
                         ];
                         unset($args['data']['listInstancesOpinion'][$listKey]);

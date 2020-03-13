@@ -23,7 +23,7 @@ export const LANG_EN = {
     "action"                                : "Action",
     "actionAdded"                           : "Action added",
     "actionAvailable"                       : "Availables actions",
-    "actionCarriedOut"                      : "Action carried out",
+    "actionCarriedOut"                      : "System action",
     "actionChosen"                          : "Action(s) chosen",
     "actionCreation"                        : "Action creation",
     "actionDeleted"                         : "Action deleted",
@@ -1603,4 +1603,8 @@ export const LANG_EN = {
     "addNoteToNumericPackage" : "Add a note Ajouter to sending mail",
     "mainDocNumericPackage" : "Main document of sending mail", 
     "attachmentsNumericPackage" : "Attachments of sending mail", 
+    "closeSidePanel" : "Close side panel",
+    "openSidePanel" : "Open side panel",
+    "saveAsPrivateModel" : "Save as private model",
+    "editingDocumentMsg" : "The edition of the document is in progress, do you want to continue ?",
 };

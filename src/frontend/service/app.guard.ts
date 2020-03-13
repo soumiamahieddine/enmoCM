@@ -22,7 +22,12 @@ export class AppGuard implements CanActivate {
         // TO DO : CAN BE REMOVE AFTER FULL V2
         localStorage.setItem('PreviousV2Route', state.url);
         this.headerService.resetSideNavSelection();
-        if (route.url.filter((url: any) => url == 'administration').length > 0) { 
+        if (route.url.filter((url: any) => url == 'signatureBook').length > 0) {
+            this.headerService.hideSideBar = true;
+        } else {       
+            this.headerService.hideSideBar = false;
+        }
+        if (route.url.filter((url: any) => url == 'administration').length > 0 || route.url.filter((url: any) => url == 'profile').length > 0) { 
             this.headerService.sideBarAdmin = true;
         } else {
             this.headerService.sideBarAdmin = false;
@@ -60,13 +65,14 @@ export class AppGuard implements CanActivate {
 export class AfterProcessGuard implements CanDeactivate<ProcessComponent> {
     constructor() { }
 
-    canDeactivate(component: ProcessComponent): boolean {
+    async canDeactivate(component: ProcessComponent): Promise<boolean> {
         if (!component.isActionEnded() && !component.detailMode) {
             component.unlockResource();
         }
-        if (component.currentTool === 'info' && component.indexingForm.isResourceModified()) {
+
+        if ((component.isToolModified() && !component.isModalOpen()) || component.appDocumentViewer.isEditingTemplate()) {
             if (confirm(component.lang.saveModifiedData)) {
-                component.confirmModification();
+                await component.saveModificationBeforeClose();
             }
         }
         /*if(component.hasUnsavedData()){

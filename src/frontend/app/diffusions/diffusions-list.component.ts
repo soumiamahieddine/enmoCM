@@ -235,7 +235,9 @@ export class DiffusionsListComponent implements OnInit {
         const diffusions: any = await this.getListinstance(resId);
         this.removeAllItems();
         diffusions.forEach((element: any) => {
-            this.diffList[element.item_mode].items.push(element);
+            if (!this.functions.empty(this.diffList[element.item_mode])) {
+                this.diffList[element.item_mode].items.push(element);
+            }
         });
 
         if (diffusions.filter((elem: any) => elem.item_mode === 'dest').length === 0 && !this.availableRoles.filter(role => role.id === 'dest')[0].canUpdate && this.adminMode) {

@@ -89,7 +89,7 @@
                                                     style="padding-left:20px;padding-right:20px;font-size: 11px;">
                                         <input matInput placeholder="{{lang.filterBy}}" #listFilter>
                                     </mat-form-field>
-                                    <mat-expansion-panel *ngFor="let unit of unitPrivileges | sortBy: 'label'" expanded>
+                                    <mat-expansion-panel *ngFor="let unit of unitPrivileges | sortBy: 'label'" expanded [class.emptyExpansionPanel]="(unit.services | filterList:listFilter.value:'label').length == 0">
                                         <mat-expansion-panel-header>
                                             <mat-panel-title>
                                                 {{unit.label}}

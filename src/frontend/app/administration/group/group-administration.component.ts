@@ -422,7 +422,6 @@ export class GroupAdministrationComponent implements OnInit {
     }
 
     updatePrivilegeParams(paramList: any) {
-        console.log(paramList);
         let obj = {};
         if (this.panelMode === 'admin_users') {
             obj = {
