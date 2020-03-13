@@ -120,7 +120,7 @@
                                 (click)="$event.stopPropagation();">
                                 <div class="attachListContainer">
                                     <div>
-                                        <button mat-raised-button class="extensionButton" color="primary"
+                                        <button mat-raised-button class="extensionButton" color="primary" *ngIf="attach.status !== 'SIGN'"
                                             (click)="toggleAttachMail(attach,keyVal.key,'original');">.{{attach.format}}</button><br />
                                         <button mat-raised-button class="extensionButton" color="primary"
                                             *ngIf="!functions.empty(attach.convertedDocument)"
