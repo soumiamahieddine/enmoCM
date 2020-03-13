@@ -231,9 +231,7 @@ export class SentResourceListComponent implements OnInit {
     }
 
     initFilter() {
-        console.log(this.sentResources);
         this.sentResources.forEach((element: any) => {
-            console.log(this.filterTypes.filter(type => type.id === element.type).length);
             if (this.filterTypes.filter(type => type.id === element.type).length === 0) {
                 this.filterTypes.push({
                     id: element.type,
