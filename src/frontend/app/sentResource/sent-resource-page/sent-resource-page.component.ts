@@ -140,7 +140,6 @@ export class SentResourcePageComponent implements OnInit {
             base_url: '../../node_modules/tinymce/',
             setup: (editor: any) => {
                 editor.on('init', (e: any) => {
-                    console.log('The Editor has initialized.');
                     this.loading = false;
                 });
             },
@@ -357,6 +356,7 @@ export class SentResourcePageComponent implements OnInit {
                             });
                         } else if (element === 'isLinked' && data.document.isLinked === true) {
                             this.emailAttach.document.isLinked = true;
+                            this.emailAttach.document.format = data.document.original || data.document.original === undefined ? this.emailAttachTool.document.list[0].format : 'pdf',
                             this.emailAttach.document.original = data.document.original;
                             this.emailAttach.document.size = this.emailAttach.document.original ? this.emailAttachTool.document.list[0].size : this.emailAttachTool.document.list[0].convertedDocument.size
                         }
@@ -692,6 +692,7 @@ export class SentResourcePageComponent implements OnInit {
         if (type === 'document') {
             if (this.emailAttach.document.isLinked === false) {
                 this.emailAttach.document.isLinked = true;
+                this.emailAttach.document.format = mode !== 'pdf' ? item.format : 'pdf',
                 this.emailAttach.document.original = mode !== 'pdf';
                 this.emailAttach.document.size = mode === 'pdf' ? item.convertedDocument.size : item.size;
             }
