@@ -117,7 +117,7 @@
 <button mat-raised-button 
     *ngIf="!isDocModified && mode === 'mainDocument' && resId !== null && !functions.empty(file.subinfos) && file.subinfos.signedDocVersions && (privilegeService.hasCurrentUserPrivilege('sign_document') || this.headerService.user.id == file.creatorId)" 
     color="warn"
-    [title]="lang.unsign" style="position: fixed;z-index: 1;bottom: 30px;right: 70px;"
+    [title]="lang.unsign" style="position: fixed;z-index: 1;bottom: 100px;right: 150px;"
     (click)="unsignMainDocument()">
     {{lang.removeSignature}}
 </button>
