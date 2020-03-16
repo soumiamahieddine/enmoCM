@@ -750,7 +750,7 @@ INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('
 DELETE FROM security WHERE group_id = 'SERVICE';
 INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('SERVICE', 'letterbox_coll', '1=0', 'Aucun courrier');
 DELETE FROM security WHERE group_id = 'WEBSERVICE';
-INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('WEBSERVICE', 'letterbox_coll', '1=1', 'Tous les courriers');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment) VALUES ('WEBSERVICE', 'letterbox_coll', '1=0', 'Tous les courriers');
 
 -- Create FOLDERS
 TRUNCATE TABLE folders;
