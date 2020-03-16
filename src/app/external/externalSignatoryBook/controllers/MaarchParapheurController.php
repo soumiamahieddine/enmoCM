@@ -512,8 +512,8 @@ class MaarchParapheurController
                         ]);
                         if (!empty($userInfos)) {
                             $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorId = $userInfos['id'];
-                            $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorName = $userInfos['firstname'] . ' ' . $userInfos['lastname'];
                         }
+                        $aArgs['idsToRetrieve'][$version][$resId]->noteCreatorName = $state['noteCreatorName'];
                     }
                     if (!empty($state['signatoryUserId'])) {
                         $signatoryUser = UserModel::getByExternalId([
