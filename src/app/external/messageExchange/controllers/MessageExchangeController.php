@@ -92,6 +92,13 @@ class MessageExchangeController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
+        $aMessageReview = [];
+        $messageReview  = MessageExchangeModel::getMessageByReference(['reference' => $message['reference'].'_Notification', 'orderBy' => ['date asc']]);
+        foreach ($messageReview as $review) {
+            $oMessageReview = json_decode($review['data']);
+            $aMessageReview[] = $oMessageReview->Comment[0]->value;
+        }
+
         $type = $message['type'];
         if (!empty($message['receptionDate'])) {
             $reference = $message['reference'] . '_Reply';
@@ -184,7 +191,8 @@ class MessageExchangeController
             'attachments'               => $attachments,
             'resMasterAttached'         => $resMasterAttached,
             'disposition'               => $disposition,
-            'reference'                 => $message['reference']
+            'reference'                 => $message['reference'],
+            'messageReview'             => $aMessageReview
         ];
 
         return $response->withJson(['messageExchange' => $messageExchange]);
