@@ -122,7 +122,7 @@ if (!defined('_GENERAL')) {
     define('_GENERAL', 'General');
 }
 if (!defined('_PHP_VERSION')) {
-    define('_PHP_VERSION', 'Version of PHP (7.0 and 7.1)');
+    define('_PHP_VERSION', 'Version of PHP (7.2, 7.3, or 7.4)');
 }
 if (!defined('_MAARCH_PATH_RIGHTS')) {
     define('_MAARCH_PATH_RIGHTS', 'Rights to Maarch root directory (read/write)');
@@ -176,11 +176,7 @@ if (!defined('_CLITOOLS')) {
     define('_CLITOOLS', 'CLITools');
 }
 if (!defined('_ERROR_REPORTING')) {
-    if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
-        define('_ERROR_REPORTING', 'error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT');
-    } else {
-        define('_ERROR_REPORTING', 'error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED');
-    }
+    define('_ERROR_REPORTING', 'error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT');
 }
 if (!defined('_DISPLAY_ERRORS')) {
     define('_DISPLAY_ERRORS', 'display_errors=On');

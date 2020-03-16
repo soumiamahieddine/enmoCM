@@ -150,7 +150,7 @@ class Install extends functions
 
     public function isPhpVersion()
     {
-        if (version_compare(PHP_VERSION, '7.0') < 0) {
+        if (version_compare(PHP_VERSION, '7.2') < 0) {
             return false;
             exit;
         }
@@ -191,18 +191,10 @@ class Install extends functions
 
     public function isIniErrorRepportingRequirements()
     {
-        if (version_compare(PHP_VERSION, '5.4') >= 0) {
-            if (ini_get('error_reporting') != 22519) {
-                return false;
-            } else {
-                return true;
-            }
+        if (ini_get('error_reporting') != 22519) {
+            return false;
         } else {
-            if (ini_get('error_reporting') != 22519) {
-                return false;
-            } else {
-                return true;
-            }
+            return true;
         }
     }
 
