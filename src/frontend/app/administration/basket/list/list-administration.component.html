@@ -37,11 +37,13 @@
                     placeholder="{{lang.availableDatas}}" [matAutocomplete]="auto">
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addData($event)">
                     <mat-option *ngFor="let item of filteredDataOptions | async" [value]="item" class="dataList">
-                        <span class="dataIcon">
-                            <i color="primary" class="fa {{item.icon}} fa-2x"></i>
-                        </span>
-                        <span class="dataLabel">
-                            {{item.label}}
+                        <span class="optionContent">
+                            <span class="dataIcon">
+                                <i color="primary" class="fa {{item.icon}} fa-2x"></i>
+                            </span>
+                            <span class="dataLabel">
+                                {{item.label}}
+                            </span>
                         </span>
                     </mat-option>
                 </mat-autocomplete>
