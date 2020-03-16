@@ -509,6 +509,8 @@ ALTER TABLE res_letterbox ALTER COLUMN version SET NOT NULL;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS integrations;
 ALTER TABLE res_letterbox ADD COLUMN integrations jsonb DEFAULT '{}' NOT NULL;
 
+ALTER TABLE entities DROP COLUMN IF EXISTS external_id;
+ALTER TABLE entities ADD COLUMN external_id jsonb DEFAULT '{}';
 
 /* REFACTORING DATA */
 DO $$ BEGIN
