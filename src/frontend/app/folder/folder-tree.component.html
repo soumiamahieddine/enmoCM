@@ -50,11 +50,30 @@
                             <span>{{node.pinned ? lang.unpinFolder : lang.pinFolder}}</span>
                         </button>
                         <button mat-menu-item [disabled]="createItemNode || !node.canAdd || node.level > 6"
-                            (click)="addNewItem(node)">{{lang.addSubFolder}}</button>
+                            (click)="addNewItem(node)">
+                            <mat-icon style="width: auto;height: auto;">
+                                <i class="fas fa-folder-plus"></i>
+                            </mat-icon>
+                            <span>{{lang.addSubFolder}}</span>
+                        </button>
                         <button mat-menu-item (click)="deleteNode(node)"
-                            [disabled]="!node.canDelete">{{lang.delete}}</button>
+                            [disabled]="!node.canDelete">
+                            <mat-icon style="width: auto;height: auto;">
+                                <i class="far fa-trash-alt"></i>
+                            </mat-icon>
+                            <span>
+                                {{lang.delete}}
+                            </span>
+                        </button>
                         <button mat-menu-item (click)="openFolderAdmin(node)"
-                            [disabled]="!node.edition">{{lang.properties}}</button>
+                            [disabled]="!node.edition">
+                            <mat-icon style="width: auto;height: auto;">
+                                <i class="fas fa-sliders-h"></i>
+                            </mat-icon>
+                            <span>
+                                {{lang.properties}}
+                            </span>
+                        </button>
                     </mat-menu>
                 </a>
             </mat-tree-node>
