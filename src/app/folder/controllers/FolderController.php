@@ -21,7 +21,6 @@ use Folder\models\EntityFolderModel;
 use Folder\models\FolderModel;
 use Folder\models\ResourceFolderModel;
 use Folder\models\UserPinnedFolderModel;
-use Group\controllers\PrivilegeController;
 use History\controllers\HistoryController;
 use Resource\controllers\ResController;
 use Resource\controllers\ResourceListController;
@@ -229,11 +228,11 @@ class FolderController
         return $response->withJson(['folder' => $id]);
     }
 
-    public function update(Request $request, Response $response, array $aArgs)
+    public function update(Request $request, Response $response, array $args)
     {
         $data = $request->getParams();
 
-        if (!Validator::numeric()->notEmpty()->validate($aArgs['id'])) {
+        if (!Validator::numeric()->notEmpty()->validate($args['id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Query id is empty or not an integer']);
         }
         if (!Validator::stringType()->notEmpty()->validate($data['label'])) {
@@ -242,62 +241,100 @@ class FolderController
         if (!empty($data['parent_id']) && !Validator::intval()->validate($data['parent_id'])) {
             return $response->withStatus(400)->withJson(['errors' => 'Body parent_id is not a numeric']);
         }
-        if ($data['parent_id'] == $aArgs['id']) {
+        if ($data['parent_id'] == $args['id']) {
             return $response->withStatus(400)->withJson(['errors' => 'Parent_id and id can not be the same']);
         }
-        if (!empty($data['parent_id']) && FolderController::isParentFolder(['parent_id' => $data['parent_id'], 'id' => $aArgs['id']])) {
+        if (!empty($data['parent_id']) && FolderController::isParentFolder(['parent_id' => $data['parent_id'], 'id' => $args['id']])) {
             return $response->withStatus(400)->withJson(['errors' => 'parent_id does not exist or Id is a parent of parent_id']);
         }
 
-        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $aArgs['id'], 'edition' => true]);
+        $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $args['id'], 'edition' => true]);
         if (empty($folder[0])) {
             return $response->withStatus(400)->withJson(['errors' => 'Folder not found or out of your perimeter']);
         }
 
+        $folderOwner = $folder[0]['user_id'];
         if (empty($data['parent_id'])) {
             $data['parent_id'] = null;
             $level = 0;
         } else {
-            $folder = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $data['parent_id'], 'edition' => true]);
-            if (empty($folder)) {
-                if (empty($folder[0])) {
-                    return $response->withStatus(400)->withJson(['errors' => 'Parent Folder not found or out of your perimeter']);
-                }
+            $folderParent = FolderController::getScopeFolders(['login' => $GLOBALS['userId'], 'folderId' => $data['parent_id'], 'edition' => true]);
+            if (empty($folderParent[0])) {
+                return $response->withStatus(400)->withJson(['errors' => 'Parent Folder not found or out of your perimeter']);
             }
-            $folderParent = FolderModel::getById(['id' => $data['parent_id'], 'select' => ['folders.id', 'parent_id', 'level']]);
-            $level = $folderParent['level'] + 1;
+            $level = $folderParent[0]['level'] + 1;
+            $folderOwner = $folderParent[0]['user_id'];
         }
 
-        FolderController::updateChildren($aArgs['id'], $level);
+        FolderController::updateChildren($args['id'], $level, $folderOwner);
 
         FolderModel::update([
-            'set' => [
-                'label'      => $data['label']
+            'set'   => [
+                'label' => $data['label']
             ],
             'where' => ['id = ?'],
-            'data' => [$aArgs['id']]
+            'data'  => [$args['id']]
         ]);
 
 
         if ($folder[0]['parent_id'] != $data['parent_id']) {
-            $childrenInPerimeter = FolderController::areChildrenInPerimeter(['folderId' => $aArgs['id']]);
-            if ($childrenInPerimeter || $folder[0]['user_id'] == $GLOBALS['id']) {
-                FolderModel::update([
-                    'set' => [
-                        'parent_id' => $data['parent_id'],
-                        'level' => $level
-                    ],
-                    'where' => ['id = ?'],
-                    'data' => [$aArgs['id']]
-                ]);
-            } else {
+            $childrenInPerimeter = FolderController::areChildrenInPerimeter(['folderId' => $args['id']]);
+            if (!$childrenInPerimeter && $folder[0]['user_id'] != $GLOBALS['id']) {
                 return $response->withStatus(400)->withJson(['errors' => 'Cannot move folder because at least one folder is out of your perimeter']);
             }
+
+            if (!empty($data['parent_id'])) {
+                $parentEntities = EntityFolderModel::get([
+                    'select' => ['entity_id', 'edition'],
+                    'where'  => ['folder_id = ?', 'entity_id is not null'],
+                    'data'   => [$data['parent_id']]
+                ]);
+                $entities = [];
+                foreach ($parentEntities as $entity) {
+                    $entities[] = ['entity_id' => $entity['entity_id'], 'edition' => $entity['edition']];
+                }
+
+                $keywordsList = EntityFolderModel::get([
+                    'select'  => ['keyword', 'edition'],
+                    'where'   => ['folder_id in (?)', 'keyword is not null'],
+                    'data'    => [[$data['parent_id'], $args['id']]],
+                    'groupBy' => ['keyword', 'edition'],
+                    'orderBy' => ['edition DESC']
+                ]);
+                $keywords = [];
+                foreach ($keywordsList as $keyword) {
+                    $keywords[] = ['keyword' => $keyword['keyword'], 'edition' => $keyword['edition']];
+                }
+
+                DatabaseModel::beginTransaction();
+                $sharing = FolderController::folderSharing([
+                    'folderId' => $args['id'],
+                    'public'   => true,
+                    'remove'   => [],
+                    'add'      => $entities,
+                    'keywords' => $keywords
+                ]);
+                if (!$sharing) {
+                    DatabaseModel::rollbackTransaction();
+                    return $response->withStatus(400)->withJson(['errors' => 'Cannot share/unshare folder because at least one folder is out of your perimeter']);
+                }
+                DatabaseModel::commitTransaction();
+            }
+
+            FolderModel::update([
+                'set'   => [
+                    'parent_id' => $data['parent_id'],
+                    'level'     => $level,
+                    'user_id'   => $folderOwner
+                ],
+                'where' => ['id = ?'],
+                'data'  => [$args['id']]
+            ]);
         }
 
         HistoryController::add([
             'tableName' => 'folders',
-            'recordId'  => $aArgs['id'],
+            'recordId'  => $args['id'],
             'eventType' => 'UP',
             'info'      => _FOLDER_MODIFICATION . " : {$data['label']}",
             'moduleId'  => 'folder',
@@ -1068,20 +1105,21 @@ class FolderController
         return false;
     }
 
-    private static function updateChildren($parentId, $levelParent)
+    private static function updateChildren($parentId, $levelParent, $folderOwner)
     {
         $folderChild = FolderModel::getChild(['id' => $parentId]);
         if (!empty($folderChild)) {
+            $level = $levelParent + 1;
             foreach ($folderChild as $child) {
-                $level = $levelParent + 1;
-                FolderController::updateChildren($child['id'], $level);
+                FolderController::updateChildren($child['id'], $level, $folderOwner);
             }
 
             $idsChildren = array_column($folderChild, 'id');
 
             FolderModel::update([
                 'set' => [
-                    'level' => $level
+                    'level' => $level,
+                    'user_id' => $folderOwner
                 ],
                 'where' => ['id in (?)'],
                 'data' => [$idsChildren]
