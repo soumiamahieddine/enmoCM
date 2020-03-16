@@ -309,8 +309,6 @@ define("_ROUTING", "Fiche de circulation");
 define("_OUTGOING_MAIL", "Courrier départ spontané");
 define("_CONVERTED_PDF", "PDF converti par la solution");
 define('_PRINT_FOLDER', 'Dossier');
-define('_SVA', 'SVA');
-define('_SVR', 'SVR');
 define('_REDACTOR', 'Rédacteur');
 define('_ASSIGNEE', 'Attributaire');
 define('_DOCUMENT_WITH_NOTES', 'Document annoté');

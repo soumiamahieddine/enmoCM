@@ -309,8 +309,6 @@ define('_ROUTING', 'Circulatiefiche');
 define('_OUTGOING_MAIL', 'Brief spontaan vertrek');
 define('_CONVERTED_PDF', 'PDF geconverteerd door de oplossing');
 define('_PRINT_FOLDER', 'Map');
-define('_SVA', 'Stilzwijgende aanvaarding');
-define('_SVR', 'Stilzwijgende weigering');
 define('_REDACTOR', 'Opsteller');
 define('_ASSIGNEE', 'Toegekende persoon');
 define('_DOCUMENT_WITH_NOTES', 'Document met opmerkingen');

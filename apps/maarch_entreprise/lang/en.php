@@ -29,12 +29,6 @@ if (!defined('_ID_TO_DISPLAY')) {
 } // value res_id || chrono_number
 
 /************** Administration **************/
-if (!defined('_SVR')) {
-    define('_SVR', 'SVR');
-}
-if (!defined('_SVA')) {
-    define('_SVA', 'SVA');
-}
 if (!defined('_ADDED')) {
     define('_ADDED', 'added');
 }
