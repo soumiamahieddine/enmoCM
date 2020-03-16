@@ -86,6 +86,9 @@ where group_id in (
 UPDATE groupbasket SET list_event_data = '{"defaultTab":"info"}'
 WHERE list_event = 'processDocument' AND (list_event_data IS NULL OR list_event_data::text = '');
 
+UPDATE groupbasket SET list_event = 'documentDetails' WHERE list_event IS NULL;
+ALTER TABLE groupbasket ALTER COLUMN list_event SET NOT NULL;
+
 -- /!\ Do not move : update actions AFTER all updates on groupbasket
 DELETE FROM actions_categories WHERE action_id in (SELECT id FROM actions WHERE component = 'viewDoc' OR action_page in ('view', 'validate_mail', 'process', 'visa_mail'));
 DELETE FROM actions_groupbaskets WHERE id_action in (SELECT id FROM actions WHERE component = 'viewDoc' OR action_page in ('view', 'validate_mail', 'process', 'visa_mail'));
