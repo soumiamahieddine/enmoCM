@@ -309,6 +309,10 @@ class StoreController
             AttachmentModel::update(['set' => ['status' => 'OBS'], 'where' => ['(origin_id = ? OR res_id = ?)'], 'data' => [$args['originId'], $args['originId']]]);
             $shouldBeInSignatureBook = $relations[0]['in_signature_book'];
         }
+        $typist = $GLOBALS['userId'];
+        if (!empty($args['typist']) && !is_numeric($args['typist'])) {
+            $typist = $args['typist'];
+        }
 
         $externalId = '{}';
         if (!empty($args['externalId']) && is_array($args['externalId'])) {
@@ -319,7 +323,7 @@ class StoreController
         $preparedData = [
             'title'                 => $args['title'] ?? null,
             'identifier'            => $args['chrono'] ?? null,
-            'typist'                => !empty($args['typist']) ? $args['typist'] : $GLOBALS['userId'],
+            'typist'                => $typist,
             'status'                => $args['status'] ?? 'A_TRA',
             'relation'              => $relation,
             'origin_id'             => $args['originId'] ?? null,
