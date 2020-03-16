@@ -207,6 +207,9 @@ export class SignatureBookComponent implements OnInit {
         this.currentResourceLock = setInterval(() => {
             this.http.put(`../../rest/resourcesList/users/${this.userId}/groups/${this.groupId}/baskets/${this.basketId}/lock`, { resources: [this.resId] }).pipe(
                 catchError((err: any) => {
+                    if (err.status == 403) {
+                        clearInterval(this.currentResourceLock);
+                    }
                     this.notify.handleErrors(err);
                     return of(false);
                 })

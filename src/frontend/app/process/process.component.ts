@@ -514,6 +514,9 @@ export class ProcessComponent implements OnInit {
         this.currentResourceLock = setInterval(() => {
             this.http.put(`../../rest/resourcesList/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/lock`, { resources: [this.currentResourceInformations.resId] }).pipe(
                 catchError((err: any) => {
+                    if (err.status == 403) {
+                        clearInterval(this.currentResourceLock);
+                    }
                     this.notify.handleErrors(err);
                     return of(false);
                 })

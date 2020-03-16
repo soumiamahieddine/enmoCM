@@ -396,6 +396,7 @@ CREATE TABLE entities
   archival_agency character varying(255),
   archival_agreement character varying(255),
   folder_import character varying(64),
+  external_id jsonb DEFAULT '{}',
   CONSTRAINT entities_pkey PRIMARY KEY (entity_id),
   CONSTRAINT entities_folder_import_unique_key UNIQUE (folder_import)
 )
