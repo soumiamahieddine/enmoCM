@@ -12,6 +12,7 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 use SrcCore\controllers\PreparedClauseController;
 use SrcCore\models\ValidatorModel;
+use User\models\UserEntityModel;
 use User\models\UserGroupModel;
 use User\models\UserModel;
 
@@ -156,6 +157,33 @@ class GroupController
         $group['canAdminBaskets']   = PrivilegeController::hasPrivilege(['privilegeId' => 'admin_baskets', 'userId' => $GLOBALS['id']]);
 
         $group['privileges']         = PrivilegeModel::getPrivilegesByGroupId(['groupId' => $args['id']]);
+
+        if ($GLOBALS['userId'] == 'superadmin') {
+            $allowedUsers = UserModel::get([
+                'select'    => ['id'],
+                'where'     => ['user_id != ?', 'status != ?'],
+                'data'      => ['superadmin', 'DEL']
+            ]);
+            $allowedUsers = array_column($allowedUsers, 'id');
+        } else {
+            $entities = EntityModel::getAllEntitiesByUserId(['userId' => $GLOBALS['userId']]);
+            $allowedUsers = [];
+            if (!empty($entities)) {
+                $allowedUsers = UserEntityModel::getWithUsers([
+                    'select'    => ['DISTINCT users.id'],
+                    'where'     => ['users_entities.entity_id in (?)', 'status != ?'],
+                    'data'      => [$entities, 'DEL']
+                ]);
+            }
+            $usersNoEntities = UserEntityModel::getUsersWithoutEntities(['select' => ['id']]);
+            $allowedUsers = array_merge($allowedUsers, $usersNoEntities);
+            $allowedUsers = array_column($allowedUsers, 'id');
+        }
+
+        foreach ($group['users'] as $key => $user) {
+            $group['users'][$key]['allowed'] = in_array($user['id'], $allowedUsers);
+        }
+
         return $response->withJson(['group' => $group]);
     }
 

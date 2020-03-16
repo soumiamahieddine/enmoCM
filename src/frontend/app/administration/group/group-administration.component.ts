@@ -165,8 +165,8 @@ export class GroupAdministrationComponent implements OnInit {
                             this.basketsDataSource.sort = this.sortBaskets;
                         }, 0);
 
-                    }, () => {
-                        location.href = "index.php";
+                    }, (err) => {
+                        this.notify.handleErrors(err);
                     });
             }
         });
@@ -405,11 +405,7 @@ export class GroupAdministrationComponent implements OnInit {
                 tap((data: any) => {
                     const allowedGroups: any[] = data;
                     this.authorizedGroupsUserParams.forEach(group => {
-                        if (allowedGroups.indexOf(group.id) > -1) {
-                            group.checked = true;
-                        } else {
-                            group.checked = false;
-                        }
+                        group.checked = allowedGroups.indexOf(group.id) > -1;
                     });
                 }),
                 finalize(() => this.paramsLoading = false),
@@ -437,5 +433,11 @@ export class GroupAdministrationComponent implements OnInit {
                 return of(false);
             })
         ).subscribe();
+    }
+
+    goToUserAdmin(user: any) {
+        if (user.allowed) {
+            this.router.navigate(["/administration/users/" + user.id]);
+        }
     }
 }

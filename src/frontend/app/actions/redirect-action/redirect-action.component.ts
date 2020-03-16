@@ -77,8 +77,8 @@ export class RedirectActionComponent implements OnInit {
                     this.loading = false;
                 }
 
-            }, () => {
-                location.href = "index.php";
+            }, (err) => {
+                this.notify.handleErrors(err);
             });
     }
 

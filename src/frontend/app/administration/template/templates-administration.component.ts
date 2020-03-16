@@ -72,8 +72,7 @@ export class TemplatesAdministrationComponent implements OnInit {
                     this.dataSource.sort = this.sort;
                 }, 0);
             }, (err) => {
-                console.log(err);
-                location.href = "index.php";
+                this.notify.handleErrors(err);
             });
     }
 

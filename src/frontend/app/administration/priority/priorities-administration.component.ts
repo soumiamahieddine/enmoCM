@@ -66,8 +66,8 @@ export class PrioritiesAdministrationComponent implements OnInit {
                 this.http.get("../../rest/sortedPriorities")
                     .subscribe((data: any) => {
                         this.prioritiesOrder = data['priorities'];
-                    }, () => {
-                        location.href = "index.php";
+                    }, (err) => {
+                        this.notify.handleErrors(err);
                     });
                 setTimeout(() => {
                     this.dataSource = new MatTableDataSource(this.priorities);
@@ -77,8 +77,8 @@ export class PrioritiesAdministrationComponent implements OnInit {
                     this.sort.direction = 'asc';
                     this.dataSource.sort = this.sort;
                 }, 0);
-            }, () => {
-                location.href = "index.php";
+            }, (err) => {
+                this.notify.handleErrors(err);
             })
     }
 
