@@ -1646,4 +1646,5 @@ export const LANG_FR = {
     "openSidePanel" : "Ouvrir le panneau latéral",
     "saveAsPrivateModel" : "Enregistrer en tant que modèle privé",
     "editingDocumentMsg" : "Le document est en cours d'édition, voulez-vous continuer ?",
+    "createFolder" : "Créer un dossier",
 };

@@ -1632,4 +1632,5 @@ export const LANG_NL = {
     "openSidePanel" : "Open side panel", //_TO_TRANSLATE
     "saveAsPrivateModel" : "Save as private model", //_TO_TRANSLATE
     "editingDocumentMsg" : "The edition of the document is in progress, do you want to continue ?", //_TO_TRANSLATE
+    "createFolder" : "Create a folder", //_TO_TRANSLATE
 };

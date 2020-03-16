@@ -8,6 +8,8 @@ import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { FoldersService } from '../folders.service';
+import { FolderCreateModalComponent } from '../folder-create-modal/folder-create-modal.component';
+import { FunctionsService } from '../../../service/functions.service';
 
 @Component({
     selector: 'folder-menu',
@@ -39,7 +41,8 @@ export class FolderMenuComponent implements OnInit {
         private notify: NotificationService,
         public dialog: MatDialog,
         private renderer: Renderer2,
-        private foldersService: FoldersService
+        private foldersService: FoldersService,
+        private functions: FunctionsService,
     ) { }
 
     ngOnInit(): void {
@@ -123,6 +126,20 @@ export class FolderMenuComponent implements OnInit {
                 this.foldersService.getPinnedFolders();
                 this.refreshList.emit();
                 this.refreshFolders.emit();
+            })
+        ).subscribe();
+    }
+
+    openCreateFolderModal() {
+        this.dialogRef = this.dialog.open(FolderCreateModalComponent, { panelClass: 'maarch-modal', data: { folderName: this.searchTerm.value } });
+        this.dialogRef.afterClosed().pipe(
+            filter((folderId: number) => !this.functions.empty(folderId)),
+            tap((folderId: number) => {
+                this.classifyDocuments({ id: folderId })
+            }),
+            catchError((err) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
             })
         ).subscribe();
     }

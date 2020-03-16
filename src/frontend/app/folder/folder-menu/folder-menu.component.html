@@ -24,6 +24,7 @@
             <button *ngIf="pinnedFolder && foldersList.length === 0" mat-menu-item class="noFolder" disabled>{{lang.noPinnedFolder}}</button>
             <button *ngIf="!pinnedFolder && foldersList.length === 0 && !loading" mat-menu-item class="noFolder"
                 disabled>{{lang.noAvailableFolder}}</button>
+            <button *ngIf="!pinnedFolder && foldersList.length === 0 && !loading" mat-menu-item class="createFolder" (click)="openCreateFolderModal()">Créer un dossier</button>
             <button mat-menu-item *ngFor="let folder of foldersList | sortBy : 'label'" class="labelFolder"
                 (click)="classifyDocuments(folder)" [title]="folder.label"><i class="fa fa-users private"
                     *ngIf="folder.public" title="{{lang.sharedFolder}}"></i> {{folder.label}}</button>
