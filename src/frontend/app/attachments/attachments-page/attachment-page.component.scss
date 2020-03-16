@@ -133,9 +133,3 @@
     font-size: 14px;
     color: #666;
 }
-
-.header-less-tabs {
-    ::ng-deep.mat-tab-header {
-        display: none;
-    }
-}
