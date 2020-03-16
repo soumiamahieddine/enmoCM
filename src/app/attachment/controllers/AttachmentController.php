@@ -733,10 +733,9 @@ class AttachmentController
                 if (!empty($id['errors'])) {
                     return ['errors' => $id['errors']];
                 }
-                ConvertPdfController::convert([
-                    'resId'     => $id,
-                    'collId'    => 'attachments_coll'
-                ]);
+                $customId = CoreConfigModel::getCustomId();
+                $customId = empty($customId) ? 'null' : $customId;
+                exec("php src/app/convert/scripts/ConvertPdfScript.php --customId {$customId} --resId {$id} --type attachment --userId {$GLOBALS['id']} > /dev/null &");
             }
         }
 
