@@ -571,12 +571,14 @@ export class ProcessComponent implements OnInit {
 
     async processAction() {
         if (this.indexingForm.isValidForm()) {
+            this.actionService.loading = true;
             if (this.isToolModified()) {
                 const dialogRef = this.openConfirmModification();
                 dialogRef.afterClosed().pipe(
                     tap((data: string) => {
                         if (data !== 'ok') {
                             this.refreshTool();
+                            this.actionService.loading = false;
                         }
                     }),
                     filter((data: string) => data === 'ok'),
@@ -590,6 +592,7 @@ export class ProcessComponent implements OnInit {
                     }),
                     catchError((err: any) => {
                         this.notify.handleSoftErrors(err);
+                        this.actionService.loading = false;
                         return of(false);
                     })
                 ).subscribe();
