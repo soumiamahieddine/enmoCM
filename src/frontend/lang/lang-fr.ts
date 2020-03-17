@@ -1646,4 +1646,5 @@ export const LANG_FR = {
     "editingDocumentMsg" : "Le document est en cours d'édition, voulez-vous continuer ?",
     "createFolder" : "Créer un dossier",
     "downloadNumericPackage" : "Télécharger le pli numérique",
+    "actionsHistory" : "Historique des actions",
 };

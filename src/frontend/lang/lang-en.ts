@@ -1607,4 +1607,5 @@ export const LANG_EN = {
     "editingDocumentMsg" : "The edition of the document is in progress, do you want to continue ?",
     "createFolder" : "Create a folder",
     "downloadNumericPackage" : "Download the numeric package",
+    "actionsHistory" : "Actions history",
 };

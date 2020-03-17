@@ -135,7 +135,7 @@
         </div>-->
         <div class="row" style="margin: 0;" *ngIf="!canManageMail()">
             <div class="col-md-9">
-                <label class="attachLabel">Historique des actions</label>
+                <label class="attachLabel">{{lang.actionsHistory}}</label>
                 <div class="messageExchangeHistory">
                     <div class="messageExchangeHistoryItem" *ngFor="let item of messageReview">
                         <div class="messageExchangeHistoryDate">

@@ -1632,4 +1632,5 @@ export const LANG_NL = {
     "editingDocumentMsg" : "The edition of the document is in progress, do you want to continue ?", //_TO_TRANSLATE
     "createFolder" : "Create a folder", //_TO_TRANSLATE
     "downloadNumericPackage" : "Download the numeric package", //_TO_TRANSLATE
+    "actionsHistory" : "Actions history", //_TO_TRANSLATE
 };
