@@ -79,7 +79,6 @@ $app->get('/attachments/{id}/content', \Attachment\controllers\AttachmentControl
 $app->get('/attachments/{id}/originalContent', \Attachment\controllers\AttachmentController::class . ':getOriginalFileContent');
 $app->get('/attachments/{id}/thumbnail', \Attachment\controllers\AttachmentController::class . ':getThumbnailContent');
 $app->put('/attachments/{id}/inSendAttachment', \Attachment\controllers\AttachmentController::class . ':setInSendAttachment');
-$app->get('/attachments/{id}/maarchParapheurWorkflow', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':getWorkflow');
 $app->put('/attachments/{id}/inSignatureBook', \Attachment\controllers\AttachmentController::class . ':setInSignatureBook');
 $app->put('/attachments/{id}/sign', \SignatureBook\controllers\SignatureBookController::class . ':signAttachment');
 $app->put('/attachments/{id}/unsign', \SignatureBook\controllers\SignatureBookController::class . ':unsignAttachment');
@@ -548,6 +547,7 @@ $app->post('/resources/{resId}/messageExchange', \MessageExchange\controllers\Se
 $app->get('/messageExchangesInitialization', \MessageExchange\controllers\SendMessageExchangeController::class . ':getInitialization');
 
 //ExternalSignatoryBooks
+$app->get('/documents/{id}/maarchParapheurWorkflow', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':getWorkflow');
 $app->get('/maarchParapheur/user/{id}/picture', \ExternalSignatoryBook\controllers\MaarchParapheurController::class . ':getUserPicture');
 $app->get('/externalSignatureBooks/enabled', \ExternalSignatoryBook\controllers\ExternalSignatureBookController::class . ':getEnabledSignatureBook');
 $app->get('/externalSummary/{resId}', \ExternalSummary\controllers\SummaryController::class . ':getByResId');

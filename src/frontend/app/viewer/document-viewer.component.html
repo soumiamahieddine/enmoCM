@@ -58,6 +58,10 @@
                         <mat-icon color="primary" class="fas fa-external-link-alt"></mat-icon>
                         <span>{{lang.openInExternalModal}}</span>
                     </button>
+                    <button mat-menu-item *ngIf="(file.contentView !== undefined || base64 !== null) && resId != null && mode !== 'attachment' && externalId.signatureBookId" (click)="openMaarchParapheurWorkflow()">
+                        <mat-icon color="primary" class="fas fa-list-ol"></mat-icon>
+                        <span>{{lang.externalVisaWorkflow}}</span>
+                    </button>
                     <button mat-menu-item *ngIf="editMode && resId === null" (click)="docToUpload.click()">
                         <mat-icon color="primary" class="fa fa-file-upload"></mat-icon>
                         <span>{{lang.uploadAnOtherFile}}</span>

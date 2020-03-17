@@ -229,6 +229,6 @@ export class AttachmentsListComponent implements OnInit {
     }
 
     openMaarchParapheurWorkflow(attachment: any) {
-        this.dialog.open(VisaWorkflowModalComponent, { panelClass: 'maarch-modal', data: { attachment: attachment } });
+        this.dialog.open(VisaWorkflowModalComponent, { panelClass: 'maarch-modal', data: { id: attachment.resId, type: 'attachment' } });
     }
 }

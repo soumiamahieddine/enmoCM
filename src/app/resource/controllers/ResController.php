@@ -832,13 +832,18 @@ class ResController extends ResourceControlController
             return $response->withStatus(403)->withJson(['errors' => 'Document out of perimeter']);
         }
 
-        $authorizedFields = ['destination', 'status'];
+        $authorizedFields = ['destination', 'status', 'externalId'];
         if (!in_array($args['fieldId'], $authorizedFields)) {
             return $response->withStatus(403)->withJson(['errors' => 'Field out of perimeter']);
         }
+        $mapping = [
+            'destination'   => 'destination',
+            'status'        => 'status',
+            'externalId'    => 'external_id'
+        ];
 
         $resource = ResModel::getById([
-            'select'    => [$args['fieldId']],
+            'select'    => [$mapping[$args['fieldId']]],
             'resId'     => $args['resId']
         ]);
         if (empty($resource)) {
@@ -849,6 +854,8 @@ class ResController extends ResourceControlController
         if ($args['fieldId'] == 'destination' && !empty($queryParams['alt']) && !empty($resource['destination'])) {
             $entity = EntityModel::getByEntityId(['entityId' => $resource['destination'], 'select' => ['id']]);
             $resource['destination'] = $entity['id'];
+        } elseif ($args['fieldId'] == 'externalId') {
+            $resource['externalId'] = json_decode($resource['external_id'], true);
         }
 
         return $response->withJson(['field' => $resource[$args['fieldId']]]);

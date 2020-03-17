@@ -306,10 +306,10 @@ export class VisaWorkflowComponent implements OnInit {
         ).subscribe();
     }
 
-    loadWorkflowMaarchParapheur(attachmentId: number) {
+    loadWorkflowMaarchParapheur(attachmentId: number, type: string) {
         this.loading = true;
         this.visaWorkflow.items = [];
-        this.http.get(`../../rest/attachments/${attachmentId}/maarchParapheurWorkflow`)
+        this.http.get(`../../rest/documents/${attachmentId}/maarchParapheurWorkflow?type=${type}`)
             .subscribe((data: any) => {
                 data.workflow.forEach((element: any, key: any) => {
                     const user = {
