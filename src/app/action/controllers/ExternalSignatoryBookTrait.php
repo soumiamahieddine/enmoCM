@@ -14,6 +14,7 @@ namespace Action\controllers;
 
 use Attachment\controllers\AttachmentController;
 use Attachment\models\AttachmentModel;
+use ExternalSignatoryBook\controllers\IParapheurController;
 use ExternalSignatoryBook\controllers\FastParapheurController;
 use ExternalSignatoryBook\controllers\MaarchParapheurController;
 use ExternalSignatoryBook\controllers\XParaphController;
@@ -62,9 +63,7 @@ trait ExternalSignatoryBookTrait
 
             if ($config['id'] == 'ixbus') {
                 // TODO
-            } elseif ($config['id'] == 'iParapheur') {
-                // TODO
-            } elseif (in_array($config['id'], ['maarchParapheur', 'fastParapheur'])) {
+            } elseif (in_array($config['id'], ['maarchParapheur', 'fastParapheur', 'iParapheur'])) {
                 $integratedResource = ResModel::get([
                     'select' => [1],
                     'where'  => ['integrations->>\'inSignatureBook\' = \'true\'', 'external_id->>\'signatureBookId\' is null', 'res_id = ?'],
@@ -85,8 +84,13 @@ trait ExternalSignatoryBookTrait
                         'steps'       => $args['data']['steps'],
                         'note'        => $args['note']['content'] ?? null
                     ]);
-                } else {
+                } elseif ($config['id'] == 'fastParapheur') {
                     $sentInfo = FastParapheurController::sendDatas([
+                        'config'      => $config,
+                        'resIdMaster' => $args['resId']
+                    ]);
+                } elseif ($config['id'] == 'iParapheur') {
+                    $sentInfo = IParapheurController::sendDatas([
                         'config'      => $config,
                         'resIdMaster' => $args['resId']
                     ]);
@@ -121,7 +125,7 @@ trait ExternalSignatoryBookTrait
         if (!empty($attachmentToFreeze)) {
             if (!empty($attachmentToFreeze['letterbox_coll'])) {
                 ResModel::update([
-                    'postSet' => ['external_id' => "jsonb_set(external_id, '{signatureBookId}', '{$attachmentToFreeze['letterbox_coll'][$args['resId']]}'::text::jsonb)"],
+                    'postSet' => ['external_id' => "jsonb_set(external_id, '{signatureBookId}', '\"{$attachmentToFreeze['letterbox_coll'][$args['resId']]}\"'::text::jsonb)"],
                     'where'   => ['res_id = ?'],
                     'data'    => [$args['resId']]
                 ]);

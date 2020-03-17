@@ -415,9 +415,7 @@ class PreProcessActionController
             ];
             if ($signatureBookEnabled == 'ixbus') {
                 // TODO
-            } elseif ($signatureBookEnabled == 'iParapheur') {
-                // TODO
-            } elseif (in_array($signatureBookEnabled, ['maarchParapheur', 'fastParapheur'])) {
+            } elseif (in_array($signatureBookEnabled, ['maarchParapheur', 'fastParapheur', 'iParapheur'])) {
                 if (is_array($data['resources']) && count($data['resources']) == 1) {
                     $resDestination = ResModel::getById([
                         'select'   => ['destination'],

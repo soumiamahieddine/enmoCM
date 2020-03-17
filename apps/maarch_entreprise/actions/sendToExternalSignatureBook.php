@@ -61,9 +61,7 @@ function get_form_txt($values, $path_manage_action, $id_action, $table, $module,
 
             $htmlModal = IxbusController::getModal($config);
         } elseif ($config['id'] == 'iParapheur') {
-            include_once 'modules/visa/class/IParapheurController.php';
-
-            $htmlModal = IParapheurController::getModal($config);
+            // Already In V2
         } elseif ($config['id'] == 'fastParapheur') {
             // Already In V2
         } elseif ($config['id'] == 'maarchParapheur') {
@@ -157,8 +155,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     'manSignature'  => $manSignature
                 ]);
             } elseif ($config['id'] == 'iParapheur') {
-                include_once 'modules/visa/class/IParapheurController.php';
-                $attachmentToFreeze = IParapheurController::sendDatas(['config' => $config, 'resIdMaster' => $res_id]);
+                // Already In V2
             } elseif ($config['id'] == 'fastParapheur') {
                 // Already In V2
             } elseif ($config['id'] == 'maarchParapheur') {

@@ -1588,6 +1588,7 @@ export const LANG_NL = {
     "emailSent" : "Email sent", //_TO_TRANSLATE
     "emailCannotSent" : "Error during sending email", //_TO_TRANSLATE
     "sentToFastParapheur" : "Send to FAST-Parapheur", //_TO_TRANSLATE
+    "sentToIParapheur" : "Send to IParapheur", //_TO_TRANSLATE
     "editAcknowledgementReceipt" : "Edit the acknowledgement receipt", //_TO_TRANSLATE
     "insufficientPrivilege" : "Privilege insuffisant", //TRANSLATE
     "cannotMergeTags" : "This tag has a parent or children : impossible to merge tags",//_TO_TRANSLATE

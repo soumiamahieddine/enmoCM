@@ -103,7 +103,7 @@ class FastParapheurController
         // Retrieve the annexes of the attachemnt to sign (other attachment and the original document)
         $annexes = [];
         $annexes['letterbox'] = ResModel::get([
-            'select' => ['res_id', 'path', 'filename', 'docserver_id','format', 'category_id', 'external_id', 'integrations'],
+            'select' => ['res_id', 'path', 'filename', 'docserver_id', 'format', 'category_id', 'external_id', 'integrations'],
             'where'  => ['res_id = ?'],
             'data'   => [$aArgs['resIdMaster']]
         ]);
