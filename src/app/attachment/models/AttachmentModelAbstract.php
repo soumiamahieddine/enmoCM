@@ -108,11 +108,12 @@ abstract class AttachmentModelAbstract
                 foreach ($attachmentTypesXML->type as $value) {
                     $label = defined((string) $value->label) ? constant((string) $value->label) : (string) $value->label;
                     $types[(string) $value->id] = [
-                        'label'     => $label,
-                        'icon'      => (string)$value['icon'],
-                        'sign'      => (empty($value['sign']) || (string)$value['sign'] == 'true') ? true : false,
-                        'chrono'    => (empty($value['with_chrono']) || (string)$value['with_chrono'] == 'true') ? true : false,
-                        'show'      => (empty($value->attributes()->show) || (string)$value->attributes()->show == 'true') ? true : false
+                        'label'         => $label,
+                        'icon'          => (string)$value['icon'],
+                        'sign'          => (empty($value['sign']) || (string)$value['sign'] == 'true') ? true : false,
+                        'chrono'        => (empty($value['with_chrono']) || (string)$value['with_chrono'] == 'true') ? true : false,
+                        'attachInMail'  => (!empty($value['attach_in_mail']) && (string)$value['attach_in_mail'] == 'true') ? true : false,
+                        'show'          => (empty($value->attributes()->show) || (string)$value->attributes()->show == 'true') ? true : false
                     ];
                 }
             }

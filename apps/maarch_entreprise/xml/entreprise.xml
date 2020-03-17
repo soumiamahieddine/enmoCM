@@ -8,52 +8,42 @@
         <type show="true" with_chrono="true" attach_in_mail="true" icon="R" sign="true">
             <id>response_project</id>
             <label>_RESPONSE_PROJECT</label>
-            <process_mode/>
         </type>
         <type show="true" with_chrono="true" with_delay="60" icon="TR" sign="false">
             <id>transmission</id>
             <label>Transmission</label>
-            <process_mode/>
         </type>
 		<type show="false" with_chrono="true" attach_in_mail="true" icon="" sign="false" select_in_reconciliation="true">
             <id>signed_response</id>
             <label>_SIGNED_RESPONSE</label>
-            <process_mode/>
         </type>
         <type show="true" with_chrono="false" icon="PJ" sign="false" select_in_reconciliation="true">
             <id>simple_attachment</id>
             <label>_A_PJ</label>
-            <process_mode/>
         </type>
         <type show="true" with_chrono="false" icon="" sign="false">
             <id>incoming_mail_attachment</id>
             <label>_INCOMING_PJ</label>
-            <process_mode/>
         </type>
         <type show="true" with_chrono="false" get_chrono="response_project" icon="BE" sign="true">
             <id>waybill</id>
             <label>_WAYBILL</label>
-            <process_mode/>
         </type>
 	    <type show="false" with_chrono="true" icon="FC" sign="false">
             <id>routing</id>
             <label>_ROUTING</label>
-            <process_mode/>
         </type>
         <type show="true" with_chrono="true" icon="DS" sign="true">
             <id>outgoing_mail</id>
             <label>_OUTGOING_MAIL</label>
-            <process_mode/>
         </type>
 	    <type show="false" with_chrono="false" icon="" sign="false">
             <id>converted_pdf</id>
             <label>_CONVERTED_PDF</label>
-            <process_mode/>
         </type>
 	    <type show="false" with_chrono="false" icon="" sign="false">
             <id>print_folder</id>
             <label>_PRINT_FOLDER</label>
-            <process_mode/>
         </type>
     </attachment_types>
     <contact_check>
