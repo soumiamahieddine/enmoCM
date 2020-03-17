@@ -136,6 +136,12 @@ if (!defined('_UNOCONV_INSTALLED')) {
 if (!defined('_UNOCONV_NOT_INSTALLED')) {
     define('_UNOCONV_NOT_INSTALLED', "Unoconv not installed");
 }
+if (!defined('_NETCAT_OR_NMAP_INSTALLED')) {
+    define('_NETCAT_OR_NMAP_INSTALLED', "netcat or nmap installed");
+}
+if (!defined('_NETCAT_OR_NMAP_NOT_INSTALLED')) {
+    define('_NETCAT_OR_NMAP_NOT_INSTALLED', "netcat or nmap not installed");
+}
 if (!defined('_PGSQL')) {
     define('_PGSQL', 'pgsql library');
 }

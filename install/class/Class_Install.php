@@ -1124,6 +1124,28 @@ class Install extends functions
     }
 
     /**
+     * test if netcat or nmap is installed.
+     *
+     * @return bool or error message
+     */
+    public function isNetCatOrNmapInstalled()
+    {
+        exec('whereis netcat', $output, $return);
+        $output = explode(':', $output[0]);
+
+        exec('whereis nmap', $output2, $return2);
+        $output2 = explode(':', $output2[0]);
+
+        if (empty($output[1])) {
+            $error .= _NETCAT_OR_NMAP_NOT_INSTALLED;
+        } elseif (empty($output2[1])) {
+            $error .= _NETCAT_OR_NMAP_INSTALLED;
+        } else {
+            return true;
+        }
+    }
+
+    /**
      * test if vendor and node_modules exist.
      *
      * @return bool or error message
