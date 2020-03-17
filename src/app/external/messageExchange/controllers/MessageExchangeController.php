@@ -93,7 +93,7 @@ class MessageExchangeController
         }
 
         $aMessageReview = [];
-        $messageReview  = MessageExchangeModel::getMessageByReference(['reference' => $message['reference'].'_Notification', 'orderBy' => ['date asc']]);
+        $messageReview  = MessageExchangeModel::get(['where' => ['reference = ?'], 'data' => [$message['reference'].'_Notification'], 'orderBy' => ['date asc']]);
         foreach ($messageReview as $review) {
             $oMessageReview = json_decode($review['data']);
             $aMessageReview[] = $oMessageReview->Comment[0]->value;
