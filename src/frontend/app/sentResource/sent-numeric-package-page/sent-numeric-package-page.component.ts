@@ -197,10 +197,7 @@ export class SentNumericPackagePageComponent implements OnInit {
                 tap((data: any) => {
                     this.emailCreatorId = data.userId;
 
-                    this.recipients = [{
-                        label: data.recipent,
-                        m2m: data.recipent
-                    }];
+                    this.recipients = [data.recipient];
 
                     this.currentSender.label = data.sender;
                     this.numericPackage.object = data.object;
@@ -209,27 +206,29 @@ export class SentNumericPackagePageComponent implements OnInit {
                     this.communicationType = data.communicationType;
                     this.reference = data.reference;
 
-                    Object.keys(data.document).forEach(element => {
-                        if (['id', 'isLinked', 'original'].indexOf(element) === -1) {
-                            data.document[element].forEach((dataAttach: any) => {
-                                const elem = this.emailAttachTool[element].list.filter((item: any) => item.id === dataAttach.id || item.id === dataAttach);
-                                if (elem.length > 0) {
-                                    this.emailAttach[element] = elem.map((item: any) => {
-                                        return {
-                                            ...item,
-                                            format: dataAttach.original || dataAttach.original === undefined ? item.format : 'pdf',
-                                            original: dataAttach.original,
-                                            size: dataAttach.original || dataAttach.original === undefined ? item.size : item.convertedDocument.size
-                                        }
-                                    })
-                                }
-                            });
-                        } else if (element === 'isLinked' && data.document.isLinked === true) {
-                            this.emailAttach.document.isLinked = true;
-                            this.emailAttach.document.original = data.document.original;
-                            this.emailAttach.document.size = this.emailAttach.document.original ? this.emailAttachTool.document.list[0].size : this.emailAttachTool.document.list[0].convertedDocument.size
-                        }
-                    });
+                    // TODO : display attachment selected
+
+                    // Object.keys(data.document).forEach(element => {
+                    //     if (['id', 'isLinked', 'original'].indexOf(element) === -1) {
+                    //         data.document[element].forEach((dataAttach: any) => {
+                    //             const elem = this.emailAttachTool[element].list.filter((item: any) => item.id === dataAttach.id || item.id === dataAttach);
+                    //             if (elem.length > 0) {
+                    //                 this.emailAttach[element] = elem.map((item: any) => {
+                    //                     return {
+                    //                         ...item,
+                    //                         format: dataAttach.original || dataAttach.original === undefined ? item.format : 'pdf',
+                    //                         original: dataAttach.original,
+                    //                         size: dataAttach.original || dataAttach.original === undefined ? item.size : item.convertedDocument.size
+                    //                     }
+                    //                 })
+                    //             }
+                    //         });
+                    //     } else if (element === 'isLinked' && data.document.isLinked === true) {
+                    //         this.emailAttach.document.isLinked = true;
+                    //         this.emailAttach.document.original = data.document.original;
+                    //         this.emailAttach.document.size = this.emailAttach.document.original ? this.emailAttachTool.document.list[0].size : this.emailAttachTool.document.list[0].convertedDocument.size
+                    //     }
+                    // });
 
                     resolve(true);
                 }),
@@ -356,7 +355,6 @@ export class SentNumericPackagePageComponent implements OnInit {
         ).subscribe();
     }
 
-
     initEmailModelsList() {
         this.http.get(`../../rest/resources/${this.data.resId}/emailTemplates`).pipe(
             tap((data: any) => {
@@ -423,20 +421,21 @@ export class SentNumericPackagePageComponent implements OnInit {
     }
 
     deleteEmail() {
+	// TODO : useless ? can not delete m2m
         const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
-            filter((data: string) => data === 'ok'),
-            exhaustMap(() => this.http.delete(`../../rest/emails/${this.data.emailId}`)),
-            tap(() => {
-                this.notify.success(this.lang.emailDeleted);
-                this.closeModal('success');
-            }),
-            finalize(() => this.loading = false),
-            catchError((err) => {
-                this.notify.handleSoftErrors(err);
-                return of(false);
-            })
+            // filter((data: string) => data === 'ok'),
+            // exhaustMap(() => this.http.delete(`../../rest/emails/${this.data.emailId}`)),
+            // tap(() => {
+            //     this.notify.success(this.lang.emailDeleted);
+            //     this.closeModal('success');
+            // }),
+            // finalize(() => this.loading = false),
+            // catchError((err) => {
+            //     this.notify.handleSoftErrors(err);
+            //     return of(false);
+            // })
         ).subscribe();
     }
 

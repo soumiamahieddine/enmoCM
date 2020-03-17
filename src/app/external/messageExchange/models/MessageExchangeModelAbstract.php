@@ -254,7 +254,7 @@ abstract class MessageExchangeModelAbstract
                 'select' => empty($args['select']) ? ['*'] : $args['select'],
                 'table'  => ['unit_identifier'],
                 'where'  => ['message_id = ?'],
-                'data'   => [$args['message_id']]
+                'data'   => [$args['messageId']]
             ]);
 
         return $messages;

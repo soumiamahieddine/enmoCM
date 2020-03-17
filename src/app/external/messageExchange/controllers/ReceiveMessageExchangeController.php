@@ -369,25 +369,16 @@ class ReceiveMessageExchangeController
                 $BinaryDataObjectInfo = self::getBinaryDataObjectInfo(["binaryDataObject" => $dataObjectPackage->BinaryDataObject, "binaryDataObjectId" => $attachmentDataObjectId]);
                 $filename             = $BinaryDataObjectInfo->Attachment->filename;
                 $fileFormat           = substr($filename, strrpos($filename, '.') + 1);
-
-                $dataValue = [];
-                array_push($dataValue, ['column' => 'typist',          'value' => 'superadmin',                      'type' => 'string']);
-                array_push($dataValue, ['column' => 'type_id',         'value' => '0',                               'type' => 'integer']);
-                array_push($dataValue, ['column' => 'res_id_master',   'value' => $resIdMaster,                      'type' => 'integer']);
-                array_push($dataValue, ['column' => 'attachment_type', 'value' => $defaultConfig['attachment_type'], 'type' => 'string']);
-                array_push($dataValue, ['column' => 'relation',        'value' => '1',                               'type' => 'integer']);
-                array_push($dataValue, ['column' => 'coll_id',         'value' => 'letterbox_coll',                  'type' => 'string']);
-                array_push($dataValue, ['column' => 'doc_date',        'value' => $attachmentContent->CreatedDate,   'type' => 'date']);
-                array_push($dataValue, ['column' => 'title',           'value' => $attachmentContent->Title[0],      'type' => 'string']);
-
-                $allDatas = [
-                    "encodedFile" => $BinaryDataObjectInfo->Attachment->value,
-                    "data"        => $dataValue,
-                    "version"       => false,
-                    "fileFormat"  => $fileFormat,
-                    "status"      => 'TRA'
-                ];
                 
+                $allDatas = [
+                    'title'        => $attachmentContent->Title[0],
+                    'encodedFile'  => $BinaryDataObjectInfo->Attachment->value,
+                    'format'       => $fileFormat,
+                    'typist'       => 'superadmin',
+                    'resIdMaster'  => $resIdMaster,
+                    'type'         => $defaultConfig['attachment_type']
+                ];
+
                 $resId = StoreController::storeAttachment($allDatas);
                 $countAttachment++;
             }

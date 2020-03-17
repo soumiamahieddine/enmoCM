@@ -212,7 +212,11 @@ class SendMessageExchangeController
                     unset($aAllAttachment[$key]);
                 }
             }
-            $aMergeAttachment = array_merge($firstAttachment, $fileInfo, $aAllAttachment);
+            if (!empty($fileInfo[0]['filename'])) {
+                $aMergeAttachment = array_merge($firstAttachment, $fileInfo, $aAllAttachment);
+            } else {
+                $aMergeAttachment = array_merge($firstAttachment, $aAllAttachment);
+            }
         }
 
         $mainDocument[0]['Title'] = '[CAPTUREM2M]'.$body['object'];
@@ -390,34 +394,36 @@ class SendMessageExchangeController
         $aReturn     = [];
 
         foreach ($aArgs as $key => $value) {
-            if (!empty($value['tablenameExchangeMessage'])) {
-                $binaryDataObjectId = $value['tablenameExchangeMessage'] . "_" . $key . "_" . $value['res_id'];
-            } else {
-                $binaryDataObjectId = $value['res_id'];
+            if (!empty($value['filename'])) {
+                if (!empty($value['tablenameExchangeMessage'])) {
+                    $binaryDataObjectId = $value['tablenameExchangeMessage'] . "_" . $key . "_" . $value['res_id'];
+                } else {
+                    $binaryDataObjectId = $value['res_id'];
+                }
+    
+                $binaryDataObject                           = new \stdClass();
+                $binaryDataObject->id                       = $binaryDataObjectId;
+    
+                $binaryDataObject->MessageDigest            = new \stdClass();
+                $binaryDataObject->MessageDigest->value     = $value['fingerprint'];
+                $binaryDataObject->MessageDigest->algorithm = "sha256";
+    
+                $binaryDataObject->Size                     = $value['filesize'];
+    
+                $uri = str_replace("##", DIRECTORY_SEPARATOR, $value['path']);
+                $uri = str_replace("#", DIRECTORY_SEPARATOR, $uri);
+                
+                $docServers = DocserverModel::getByDocserverId(['docserverId' => $value['docserver_id']]);
+                $binaryDataObject->Attachment           = new \stdClass();
+                $binaryDataObject->Attachment->uri      = '';
+                $binaryDataObject->Attachment->filename = basename($value['filename']);
+                $binaryDataObject->Attachment->value    = base64_encode(file_get_contents($docServers['path_template'] . $uri . '/'. $value['filename']));
+    
+                $binaryDataObject->FormatIdentification           = new \stdClass();
+                $binaryDataObject->FormatIdentification->MimeType = mime_content_type($docServers['path_template'] . $uri . $value['filename']);
+    
+                array_push($aReturn, $binaryDataObject);
             }
-
-            $binaryDataObject                           = new \stdClass();
-            $binaryDataObject->id                       = $binaryDataObjectId;
-
-            $binaryDataObject->MessageDigest            = new \stdClass();
-            $binaryDataObject->MessageDigest->value     = $value['fingerprint'];
-            $binaryDataObject->MessageDigest->algorithm = "sha256";
-
-            $binaryDataObject->Size                     = $value['filesize'];
-
-            $uri = str_replace("##", DIRECTORY_SEPARATOR, $value['path']);
-            $uri = str_replace("#", DIRECTORY_SEPARATOR, $uri);
-            
-            $docServers = DocserverModel::getByDocserverId(['docserverId' => $value['docserver_id']]);
-            $binaryDataObject->Attachment           = new \stdClass();
-            $binaryDataObject->Attachment->uri      = '';
-            $binaryDataObject->Attachment->filename = basename($value['filename']);
-            $binaryDataObject->Attachment->value    = base64_encode(file_get_contents($docServers['path_template'] . $uri . '/'. $value['filename']));
-
-            $binaryDataObject->FormatIdentification           = new \stdClass();
-            $binaryDataObject->FormatIdentification->MimeType = mime_content_type($docServers['path_template'] . $uri . $value['filename']);
-
-            array_push($aReturn, $binaryDataObject);
         }
 
         return $aReturn;
@@ -477,7 +483,12 @@ class SendMessageExchangeController
         $contentObject->DocumentType                           = $aArgs['DocumentType'];
         $contentObject->Status                                 = StatusModel::getById(['id' => $aArgs['Status']])['label_status'];
 
-        $userInfos = UserModel::getById(['id' => $aArgs['Writer']]);
+        if (is_numeric($aArgs['Writer'])) {
+            $userInfos = UserModel::getById(['id' => $aArgs['Writer'], 'select' => ['firstname', 'lastname']]);
+        } else {
+            $userInfos = UserModel::getByLogin(['login' => $aArgs['Writer'], 'select' => ['firstname', 'lastname']]);
+        }
+
         $writer                = new \stdClass();
         $writer->FirstName     = $userInfos['firstname'];
         $writer->BirthName     = $userInfos['lastname'];
@@ -543,14 +554,14 @@ class SendMessageExchangeController
         $TransferringAgencyObject->Identifier        = new \stdClass();
         $TransferringAgencyObject->Identifier->value = $aArgs['TransferringAgency']['EntitiesInformations']['business_id'];
 
-        $TransferringAgencyObject->OrganizationDescriptiveMetadata                      = new \stdClass();
+        $TransferringAgencyObject->OrganizationDescriptiveMetadata = new \stdClass();
 
         $entityRoot = EntityModel::getEntityRootById(['entityId' => $aArgs['TransferringAgency']['EntitiesInformations']['entity_id']]);
         $TransferringAgencyObject->OrganizationDescriptiveMetadata->LegalClassification = $entityRoot['entity_label'];
         $TransferringAgencyObject->OrganizationDescriptiveMetadata->Name                = $aArgs['TransferringAgency']['EntitiesInformations']['entity_label'];
         $TransferringAgencyObject->OrganizationDescriptiveMetadata->UserIdentifier      = $GLOBALS['userId'];
 
-        $traCommunicationObject          = new \stdClass();
+        $traCommunicationObject = new \stdClass();
 
         $aDefaultConfig = ReceiveMessageExchangeController::readXmlConfig();
 

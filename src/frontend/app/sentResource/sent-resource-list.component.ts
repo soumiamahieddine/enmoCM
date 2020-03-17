@@ -296,10 +296,7 @@ export class SentResourceListComponent implements OnInit {
             dialogRef.afterClosed().pipe(
                 filter((data: any) => data.state === 'success' || data === 'success'),
                 tap(() => {
-                    this.refreshEmailList();
-                    setTimeout(() => {
-                        this.refreshWaitingElements();
-                    }, 5000);
+                    this.loadList();
                 }),
                 catchError((err: any) => {
                     this.notify.handleSoftErrors(err);

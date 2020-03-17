@@ -163,16 +163,18 @@ class MessageExchangeController
         $sender = $user . ' (' . $message['sender_org_name'] . ')';
 
         if ($message['status'] == 'S') {
-            $status = 'sent';
+            $status = 'SENT';
         } elseif ($message['status'] == 'E') {
-            $status = 'error';
+            $status = 'ERROR';
         } elseif ($message['status'] == 'W') {
-            $status = 'wait';
+            $status = 'WAIT';
         } else {
-            $status = 'draft';
+            $status = 'DRAFT';
         }
 
+        $userInfo = UserModel::getByLogin(['login' => $message['account_id'], 'select' => ['id']]);
         $messageExchange = [
+            'userId'                    => $userInfo['id'],
             'messageId'                 => $message['message_id'],
             'creationDate'              => $message['date'],
             'type'                      => $messageType,
