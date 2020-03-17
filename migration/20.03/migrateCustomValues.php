@@ -72,6 +72,7 @@ foreach ($customs as $custom) {
             foreach ($columnValues as $columnValue) {
                 $aValues[] = [$columnValue['res_id'], $fieldId, json_encode($columnValue[$migration['id']])];
                 $valueColumn = json_encode($columnValue[$migration['id']]);
+                $valueColumn = str_replace("'", "''", $valueColumn);
                 \Resource\models\ResModel::update([
                     'postSet'   => ['custom_fields' => "jsonb_set(custom_fields, '{{$fieldId}}', '{$valueColumn}')"],
                     'where'     => ['res_id = ?'],

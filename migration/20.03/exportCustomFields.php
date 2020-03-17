@@ -6,6 +6,9 @@ chdir('../..');
 
 $customs =  scandir('custom');
 
+
+ini_set('memory_limit', -1);
+
 foreach ($customs as $custom) {
     if ($custom == 'custom.xml' || $custom == '.' || $custom == '..') {
         continue;

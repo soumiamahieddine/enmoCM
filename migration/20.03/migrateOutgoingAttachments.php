@@ -58,6 +58,10 @@ foreach ($customs as $custom) {
         $integration['inSignatureBook'] = empty($attachmentInfo['in_signature_book']) ?  'false' : 'true';
         $integration['inShipping']      = empty($attachmentInfo['in_send_attach']) ?  'false' : 'true';
 
+        if (empty($attachmentInfo['signaturebookid'])) {
+            $attachmentInfo['signaturebookid'] = 'null';
+        }
+
         ResModel::update([
             'set' => [
                 'docserver_id' => $attachmentInfo['docserver_id'],
@@ -68,7 +72,7 @@ foreach ($customs as $custom) {
                 'version'      => $attachmentInfo['relation'],
                 'integrations' => json_encode($integration)
             ],
-            'postSet' => ['external_id' => "jsonb_set(external_id, '{signatureBookId}', '{$attachmentInfo['signaturebookid']}'::text::jsonb)"],
+            'postSet' => ['external_id' => "jsonb_set(external_id, '{signatureBookId}', to_jsonb('{$attachmentInfo['signaturebookid']}'::text))"],
             'where' => ['res_id = ?'],
             'data'  => [$attachmentInfo['res_id_master']]
         ]);
