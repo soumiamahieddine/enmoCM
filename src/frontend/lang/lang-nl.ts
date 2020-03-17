@@ -1631,4 +1631,5 @@ export const LANG_NL = {
     "saveAsPrivateModel" : "Save as private model", //_TO_TRANSLATE
     "editingDocumentMsg" : "The edition of the document is in progress, do you want to continue ?", //_TO_TRANSLATE
     "createFolder" : "Create a folder", //_TO_TRANSLATE
+    "downloadNumericPackage" : "Download the numeric package", //_TO_TRANSLATE
 };

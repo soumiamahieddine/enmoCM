@@ -1645,4 +1645,5 @@ export const LANG_FR = {
     "saveAsPrivateModel" : "Enregistrer en tant que modèle privé",
     "editingDocumentMsg" : "Le document est en cours d'édition, voulez-vous continuer ?",
     "createFolder" : "Créer un dossier",
+    "downloadNumericPackage" : "Télécharger le pli numérique",
 };

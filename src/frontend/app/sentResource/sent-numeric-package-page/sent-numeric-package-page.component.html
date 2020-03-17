@@ -1,7 +1,7 @@
 <div class="mat-dialog-content-container">
     <h1 mat-dialog-title>
         <span style="flex: 1;">
-            {{lang.sendNumericPackage}}
+            {{functions.empty(reference) ? lang.sendNumericPackage : reference}}
         </span>
         <button [title]="lang.close" mat-icon-button (click)="saveDraft()">
             <mat-icon class="fa fa-times"></mat-icon>
@@ -56,7 +56,7 @@
             <mat-label class="attachLabel">{{lang.mailSubject}}</mat-label>
             <input matInput [readonly]="!canManageMail()" [(ngModel)]="numericPackage.object" maxlength="70" required>
             <button mat-icon-button matSuffix *ngFor="let keyVal of emailAttachTool | keyvalue"
-                [disabled]="!canManageMail()" [title]="emailAttachTool[keyVal.key].title"
+                [disabled]="!canManageMail() || emailAttachTool[keyVal.key].list.length === 0" [title]="emailAttachTool[keyVal.key].title"
                 (click)="$event.stopPropagation();currentEmailAttachTool=keyVal.key;"
                 [matMenuTriggerFor]="emailAttachListMenu">
                 <mat-icon class="{{emailAttachTool[keyVal.key].icon}}"
@@ -133,17 +133,28 @@
                 (afterSelected)="mergeSignEmailTemplate($event)">
             </plugin-select-search>
         </div>-->
-        <ng-container *ngIf="!canManageMail()">
-            <div class="col-md-8">
-
+        <div class="row" style="margin: 0;" *ngIf="!canManageMail()">
+            <div class="col-md-9">
+                <label class="attachLabel">Historique des actions</label>
+                <div class="messageExchangeHistory">
+                    <div class="messageExchangeHistoryItem" *ngFor="let item of messageReview">
+                        <div class="messageExchangeHistoryDate">
+                            {{item.date | timeAgo : 'full'}}
+                        </div>
+                        <div>
+                            {{item.content}}
+                        </div>
+                        
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3 text-center">
                 <button mat-button color="primary" style="width: 180px;white-space: initial;line-height: 20px;padding: 10px;" (click)="saveNumericPackageFile()">
                     <i class="fas fa-file-download" style="font-size: 40px;"></i><br/>
-                    <span>Télécharger le pli numérique</span>
+                    <span>{{lang.downloadNumericPackage}}</span>
                 </button>
             </div>
-        </ng-container>
+        </div>
 
         <div style="padding-top: 10px;">
             <mat-form-field appearance="outline">

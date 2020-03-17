@@ -91,3 +91,25 @@
 .alert-message {
     min-width: 100%;
 }
+
+.messageExchangeHistory {
+    max-height: 300px;
+    overflow: auto;
+
+    &Item {
+        display: grid;
+        grid-template-columns: 130px 1fr;
+        grid-gap: 10px;
+        align-items: center;
+        padding: 10px;
+    }
+
+    &Item:nth-child(odd) {
+        background: rgba(19, 95, 127, 0.1);
+    }
+
+
+    &Date {
+        color: $primary;
+    }
+}

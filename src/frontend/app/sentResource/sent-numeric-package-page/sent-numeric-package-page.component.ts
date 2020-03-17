@@ -13,7 +13,7 @@ import { AppService } from '../../../service/app.service';
 import { ConfirmComponent } from '../../../plugins/modal/confirm.component';
 import { PrivilegeService } from '../../../service/privileges.service';
 import { HeaderService } from '../../../service/header.service';
-import { StripTagsPipe } from 'ngx-pipes';
+import { StripTagsPipe, ReversePipe } from 'ngx-pipes';
 
 declare var angularGlobals: any;
 declare function $j(selector: any): any;
@@ -22,7 +22,7 @@ declare function $j(selector: any): any;
     selector: 'app-sent-numeric-package-page',
     templateUrl: './sent-numeric-package-page.component.html',
     styleUrls: ['./sent-numeric-package-page.component.scss'],
-    providers: [ContactService, AppService, StripTagsPipe],
+    providers: [ContactService, AppService, StripTagsPipe, ReversePipe],
 })
 export class SentNumericPackagePageComponent implements OnInit {
 
@@ -92,6 +92,7 @@ export class SentNumericPackagePageComponent implements OnInit {
 
     communicationType: string = null;
     reference: string = null;
+    messageReview: any[] = [];
 
     maarch2maarchUrl: string = `https://docs.maarch.org/gitbook/html/MaarchCourrier/${angularGlobals.applicationVersion.split('.')[0] + '.' + angularGlobals.applicationVersion.split('.')[1]}/guat/guat_exploitation/maarch2maarch.html`;
 
@@ -108,6 +109,7 @@ export class SentNumericPackagePageComponent implements OnInit {
         public privilegeService: PrivilegeService,
         public headerService: HeaderService,
         private stringPipe: StripTagsPipe,
+        private reversePipe: ReversePipe,
     ) { }
 
     async ngOnInit(): Promise<void> {
@@ -205,30 +207,13 @@ export class SentNumericPackagePageComponent implements OnInit {
                     this.numericPackage.content = data.body;
                     this.communicationType = data.communicationType;
                     this.reference = data.reference;
-
-                    // TODO : display attachment selected
-
-                    // Object.keys(data.document).forEach(element => {
-                    //     if (['id', 'isLinked', 'original'].indexOf(element) === -1) {
-                    //         data.document[element].forEach((dataAttach: any) => {
-                    //             const elem = this.emailAttachTool[element].list.filter((item: any) => item.id === dataAttach.id || item.id === dataAttach);
-                    //             if (elem.length > 0) {
-                    //                 this.emailAttach[element] = elem.map((item: any) => {
-                    //                     return {
-                    //                         ...item,
-                    //                         format: dataAttach.original || dataAttach.original === undefined ? item.format : 'pdf',
-                    //                         original: dataAttach.original,
-                    //                         size: dataAttach.original || dataAttach.original === undefined ? item.size : item.convertedDocument.size
-                    //                     }
-                    //                 })
-                    //             }
-                    //         });
-                    //     } else if (element === 'isLinked' && data.document.isLinked === true) {
-                    //         this.emailAttach.document.isLinked = true;
-                    //         this.emailAttach.document.original = data.document.original;
-                    //         this.emailAttach.document.size = this.emailAttach.document.original ? this.emailAttachTool.document.list[0].size : this.emailAttachTool.document.list[0].convertedDocument.size
-                    //     }
-                    // });
+                    this.messageReview = data.messageReview.map((item: any) => {
+                        return {
+                            date : this.functions.formatFrenchDateToObjectDate(item.substring(1,19),'/'),
+                            content : item.substring(21),
+                        }
+                    });
+                    this.messageReview = this.reversePipe.transform(this.messageReview);
 
                     resolve(true);
                 }),
@@ -541,4 +526,40 @@ export class SentNumericPackagePageComponent implements OnInit {
     compareSenders(sender1: any, sender2: any) {
         return (sender1.label === sender2.label || ((sender1.label === null || sender2.label === null) && (sender1.entityId === null || sender2.entityId === null))) && sender1.entityId === sender2.entityId && sender1.email === sender2.email;
     }
+
+    saveNumericPackageFile() {
+        this.http.get(`../../rest/messageExchanges/${this.data.emailId}/archiveContent`, { responseType: "blob" }).pipe(
+            tap((data: any) => {
+                let downloadLink = document.createElement('a');
+                    downloadLink.href = window.URL.createObjectURL(data);
+
+                    let today: any;
+                    let dd: any;
+                    let mm: any;
+                    let yyyy: any;
+
+                    today = new Date();
+                    dd = today.getDate();
+                    mm = today.getMonth() + 1;
+                    yyyy = today.getFullYear();
+
+                    if (dd < 10) {
+                        dd = '0' + dd;
+                    }
+                    if (mm < 10) {
+                        mm = '0' + mm;
+                    }
+                    today = dd + '-' + mm + '-' + yyyy;
+                    downloadLink.setAttribute('download', this.lang.summarySheetsAlt + "_" + today + ".pdf");
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+            }),
+            catchError((err) => {
+                this.notify.handleSoftErrors(err);
+                return of(false);
+            })
+        ).subscribe();
+    }
 }
+
+
