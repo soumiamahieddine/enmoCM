@@ -642,7 +642,6 @@ export const LANG_FR = {
     "noResult"                              : "Aucun résultat",
     "noSettingsAvailable"                   : "Aucun paramétrage disponible",
     "noShippingTemplate"                    : "Aucun modèle d'envoi Maileva commun disponible pour ces entités",
-    "noTarget"                              : "Pas de cible",
     "noTemplate"                            : "Aucun modèle",
     "notes"                                 : "Annotation(s)",
     "noteTemplates"                         : "Modèles d'annotations",

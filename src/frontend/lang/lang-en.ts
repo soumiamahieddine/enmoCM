@@ -613,7 +613,6 @@ export const LANG_EN = {
     "noReplacement"                         : "No replacement",
     "noSettingsAvailable"                   : "No setting available",
     "noShippingTemplate"                    : "No common shipping Maileva templates available for these entities",
-    "noTarget"                              : "No target",
     "noTemplate"                            : "No template",
     "notes"                                 : "Notes",
     "noteTemplates"                         : "Note Templates",

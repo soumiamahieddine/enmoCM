@@ -634,7 +634,6 @@ export const LANG_NL = {
     "noResult"                              : "Geen resultaat",
     "noSettingsAvailable"                   : "Geen instellingen beschikbaar", //_TO_TRANSLATE
     "noShippingTemplate"                    : "No common shipping Maileva templates available for these entities", //_TO_TRANSLATE
-    "noTarget"                              : "Geen doel",
     "noTemplate"                            : "No template", //_TO_TRANSLATE
     "notes"                                 : "Opmerkingen",
     "noteTemplates"                         : "Note Templates", //_TO_TRANSLATE

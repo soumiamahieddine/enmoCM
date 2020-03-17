@@ -671,6 +671,11 @@ $$ ;
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)AND', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
 UPDATE baskets SET basket_clause = REGEXP_REPLACE(basket_clause, 'coll_id(\s*)=(\s*)''letterbox_coll''(\s*)and', '', 'gmi') WHERE basket_id in ('CopyMailBasket', 'DdeAvisBasket');
 
+
+UPDATE templates SET template_target = 'attachments' WHERE (template_target = '' OR template_target is null) AND template_type = 'OFFICE';
+UPDATE templates SET template_target = 'notes' WHERE (template_target = '' OR template_target is null) AND template_type = 'TXT';
+DELETE FROM templates WHERE template_target = '' OR template_target is null;
+
 /* ListTemplates */
 DROP TABLE IF EXISTS list_templates;
 CREATE TABLE list_templates

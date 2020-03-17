@@ -530,6 +530,7 @@ class TemplateController
 
         $check = Validator::stringType()->notEmpty()->validate($data['template_label']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['template_comment']);
+        $check = $check && Validator::stringType()->notEmpty()->validate($data['template_target']);
         $check = $check && Validator::stringType()->notEmpty()->validate($data['template_type']) && in_array($data['template_type'], $availableTypes);
 
         if ($data['template_type'] == 'HTML' || $data['template_type'] == 'TXT') {
