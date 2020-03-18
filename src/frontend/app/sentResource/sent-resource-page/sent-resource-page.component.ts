@@ -341,17 +341,18 @@ export class SentResourcePageComponent implements OnInit {
                     this.emailContent = data.body;
                     Object.keys(data.document).forEach(element => {
                         if (['id', 'isLinked', 'original'].indexOf(element) === -1) {
+                            this.emailAttach[element] = [];
                             data.document[element].forEach((dataAttach: any) => {
                                 const elem = this.emailAttachTool[element].list.filter((item: any) => item.id === dataAttach.id || item.id === dataAttach);
                                 if (elem.length > 0) {
-                                    this.emailAttach[element] = elem.map((item: any) => {
+                                    this.emailAttach[element] = this.emailAttach[element].concat(elem.map((item: any) => {
                                         return {
                                             ...item,
                                             format: dataAttach.original || dataAttach.original === undefined ? item.format : 'pdf',
                                             original: dataAttach.original,
                                             size: dataAttach.original || dataAttach.original === undefined ? item.size : item.convertedDocument.size
                                         }
-                                    })
+                                    }));
                                 }
                             });
                         } else if (element === 'isLinked' && data.document.isLinked === true) {
@@ -488,6 +489,9 @@ export class SentResourcePageComponent implements OnInit {
                             }
                         } else {
                             this.emailAttachTool[element].list = data[element].map((item: any) => {
+                                if (item.attachInMail) {
+                                    this.toggleAttachMail(item, element, 'original');
+                                }                                
                                 return {
                                     ...item,
                                     original: item.original !== undefined ? item.original : true,
