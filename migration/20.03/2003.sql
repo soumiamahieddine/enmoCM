@@ -44,7 +44,7 @@ ALTER TABLE usergroups ADD COLUMN indexation_parameters jsonb NOT NULL DEFAULT '
 
 /* BASKETS LIST EVENT */
 ALTER TABLE groupbasket DROP COLUMN IF EXISTS list_event;
-ALTER TABLE groupbasket ADD COLUMN list_event character varying(255);
+ALTER TABLE groupbasket ADD COLUMN list_event character varying(255) DEFAULT 'documentDetails' NOT NULL;
 UPDATE groupbasket SET list_event = 'processDocument'
 FROM (
        SELECT basket_id, group_id
@@ -85,9 +85,6 @@ where group_id in (
 
 UPDATE groupbasket SET list_event_data = '{"defaultTab":"info"}'
 WHERE list_event = 'processDocument' AND (list_event_data IS NULL OR list_event_data::text = '');
-
-UPDATE groupbasket SET list_event = 'documentDetails' WHERE list_event IS NULL;
-ALTER TABLE groupbasket ALTER COLUMN list_event SET NOT NULL;
 
 -- /!\ Do not move : update actions AFTER all updates on groupbasket
 DELETE FROM actions_categories WHERE action_id in (SELECT id FROM actions WHERE component = 'viewDoc' OR action_page in ('view', 'validate_mail', 'process', 'visa_mail'));
