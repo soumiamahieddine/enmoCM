@@ -41,7 +41,6 @@ class AutoCompleteController
 
     public static function getUsers(Request $request, Response $response)
     {
-        //TEST
         $data = $request->getQueryParams();
         $check = Validator::stringType()->notEmpty()->validate($data['search']);
         if (!$check) {
