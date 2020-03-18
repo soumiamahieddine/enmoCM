@@ -683,7 +683,7 @@ class AutoCompleteController
             if (isset($control['errors'])) {
                 return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
             } elseif (isset($control['success'])) {
-                return $response->withStatus(400)->withJson(['errors' => $control['success']]);
+                return $response->withJson([]);
             }
         }
 
@@ -797,7 +797,7 @@ class AutoCompleteController
             if (isset($control['errors'])) {
                 return $response->withStatus(400)->withJson(['errors' => $control['errors']]);
             } elseif (isset($control['success'])) {
-                return $response->withStatus(400)->withJson(['errors' => $control['success']]);
+                return $response->withJson([]);
             }
         }
 

@@ -379,7 +379,10 @@ class ContactController
         $body = $args['body'];
         if (!empty($body['externalId']['m2m']) && !empty($body['company']) && empty($body['externalId']['m2m_annuary_id'])) {
             if (empty($body['company']) || (empty($body['communicationMeans']['email']) && empty($body['communicationMeans']['url'])) || empty($body['department'])) {
-                $warning = _CANNOT_SYNCHRONIZE_M2M_ANNUARY;
+                $control = AnnuaryController::getAnnuaries();
+                if (!empty($control['annuaries'])) {
+                    $warning = _CANNOT_SYNCHRONIZE_M2M_ANNUARY;
+                }
             } else {
                 $annuaryInfo = AnnuaryController::addContact([
                     'ouName'             => $body['company'],
