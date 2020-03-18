@@ -22,6 +22,7 @@
         <password></password>
         <url>https://secure-iparapheur-partenaires.libriciel.fr/ws-iparapheur</url>
         <certPath>/var/www/html/maarchdev/modules/visa/xml/serveur_iparapheur.demonstrations.adullact.org.pem</certPath>
+        <certPass></certPass>
         <certType>pem</certType>
         <defaultType>Courrier</defaultType>
         <defaultSousType>signature via service achat</defaultSousType>

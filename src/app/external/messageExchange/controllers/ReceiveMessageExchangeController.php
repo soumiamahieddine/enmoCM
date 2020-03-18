@@ -329,21 +329,23 @@ class ReceiveMessageExchangeController
     {
         $countNote = 0;
         foreach ($aArgs['dataObject']->Comment as $value) {
-            NoteModel::create([
-                "resId" => $aArgs['resId'],
-                "user_id"    => $aArgs['userId'],
-                "note_text"  => $value->value
-            ]);
-
-            HistoryController::add([
-                'tableName' => 'notes',
-                'recordId'  => $aArgs['resId'],
-                'eventType' => 'ADD',
-                'eventId'   => 'noteadd',
-                'info'       => _NOTE_ADDED
-            ]);
-
-            $countNote++;
+            if (!empty($value->value)) {
+                NoteModel::create([
+                    "resId" => $aArgs['resId'],
+                    "user_id"    => $aArgs['userId'],
+                    "note_text"  => $value->value
+                ]);
+    
+                HistoryController::add([
+                    'tableName' => 'notes',
+                    'recordId'  => $aArgs['resId'],
+                    'eventType' => 'ADD',
+                    'eventId'   => 'noteadd',
+                    'info'       => _NOTE_ADDED
+                ]);
+    
+                $countNote++;
+            }
         }
         self::$aComments[] = '['.date("d/m/Y H:i:s") . '] '.$countNote . ' note(s) enregistrée(s)';
         return true;

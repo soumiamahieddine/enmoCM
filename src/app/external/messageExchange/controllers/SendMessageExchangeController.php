@@ -326,17 +326,22 @@ class SendMessageExchangeController
     {
         $aReturn    = [];
 
-        $entityRoot = EntityModel::getEntityRootById(['entityId' => $aArgs['TransferringAgencyInformations']['entity_id']]);
-        $userInfo = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['firstname', 'lastname', 'mail']]);
-        $headerNote = $userInfo['firstname'] . ' ' . $userInfo['lastname'] . ' (' . $entityRoot['entity_label'] . ' - ' . $aArgs['TransferringAgencyInformations']['entity_label'] . ' - ' .$userInfo['mail'].') : ';
-        $oBody        = new \stdClass();
-        $oBody->value = $headerNote . ' ' . $aArgs['body'];
+        if (!empty($aArgs['body'])) {
+            $entityRoot = EntityModel::getEntityRootById(['entityId' => $aArgs['TransferringAgencyInformations']['entity_id']]);
+            $userInfo = UserModel::getById(['id' => $GLOBALS['id'], 'select' => ['firstname', 'lastname', 'mail']]);
+            $headerNote = $userInfo['firstname'] . ' ' . $userInfo['lastname'] . ' (' . $entityRoot['entity_label'] . ' - ' . $aArgs['TransferringAgencyInformations']['entity_label'] . ' - ' .$userInfo['mail'].') : ';
+            $oBody        = new \stdClass();
+            $oBody->value = $headerNote . ' ' . $aArgs['body'];
+        } else {
+            $oBody->value = '';
+        }
         array_push($aReturn, $oBody);
 
         if (!empty($aArgs['notes'])) {
-            $notes     = NoteModel::getByResId([
-                'select' => ['notes.id', 'notes.user_id', 'notes.creation_date', 'notes.note_text', 'users.firstname', 'users.lastname', 'users_entities.entity_id'],
-                'resId' => $aArgs['resId']
+            $notes = NoteModel::getByUserIdForResource([
+                'select' => ['id', 'user_id', 'creation_date', 'note_text'],
+                'resId'  => $aArgs['resId'],
+                'userId' => $GLOBALS['id']
             ]);
 
             if (!empty($notes)) {
@@ -348,12 +353,15 @@ class SendMessageExchangeController
                     $oComment        = new \stdClass();
                     $date            = new \DateTime($value['creation_date']);
                     $additionalUserInfos = '';
-                    if (!empty($value['entity_id'])) {
-                        $entityRoot      = EntityModel::getEntityRootById(['entityId' => $value['entity_id']]);
-                        $userEntity      = EntityModel::getByEntityId(['entityId' => $value['entity_id']]);
-                        $additionalUserInfos = ' ('.$entityRoot['entity_label'].' - '.$userEntity['entity_label'].')';
+                    $userInfo = UserModel::getPrimaryEntityById([
+                        'select' => ['users.firstname', 'users.lastname', 'entities.entity_id', 'entities.entity_label'],
+                        'id'     => $GLOBALS['id']
+                    ]);
+                    if (!empty($userInfo['entity_id'])) {
+                        $entityRoot          = EntityModel::getEntityRootById(['entityId' => $userInfo['entity_id']]);
+                        $additionalUserInfos = ' ('.$entityRoot['entity_label'].' - '.$userInfo['entity_label'].')';
                     }
-                    $oComment->value = $value['firstname'].' '.$value['lastname'].' - '.$date->format('d-m-Y H:i:s'). $additionalUserInfos . ' : '.$value['note_text'];
+                    $oComment->value = $userInfo['firstname'].' '.$userInfo['lastname'].' - '.$date->format('d-m-Y H:i:s'). $additionalUserInfos . ' : '.$value['note_text'];
                     array_push($aReturn, $oComment);
                 }
             }
