@@ -21,26 +21,11 @@
 if (!defined("_RESTRICTED_SERVICES")) {
     define("_RESTRICTED_SERVICES", "Service(s) restricted : ");
 }
-if (!defined("_VISIBLEBY")) {
-    define("_VISIBLEBY", "Visible by");
-}
 if (!defined("_ADD_NOTE")) {
     define("_ADD_NOTE", "Add a note");
 }
 if (!defined("_READ")) {
     define("_READ", "Read");
-}
-if (!defined("_ADDITION_NOTE")) {
-    define("_ADDITION_NOTE", "Note addition");
-}
-if (!defined("_NOTES_ADDED")) {
-    define("_NOTES_ADDED", "Added note");
-}
-if (!defined("_NOTES_DELETED")) {
-    define("_NOTES_DELETED", "Deleted note");
-}
-if (!defined("_NOTES_MODIFIED")) {
-    define("_NOTES_MODIFIED", "Modified note");
 }
 if (!defined("_NOTE_UPDATED")) {
     define("_NOTE_UPDATED", "Modified note");
@@ -56,10 +41,6 @@ if (!defined("_OF")) {
 }
 
 //TEMPLATES FOR NOTES
-if (!defined("_NOTE_TEMPLATE")) {
-    define("_NOTE_TEMPLATE", "Note template");
-}
-
 if (!defined("_NOTE")) {
     define("_NOTE", "Note");
 }

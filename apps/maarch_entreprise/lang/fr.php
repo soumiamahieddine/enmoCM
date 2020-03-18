@@ -10,9 +10,6 @@
 * @author  dev <dev@maarch.org>
 * @ingroup lang
 */
-if (!defined('_MEP_VERSION')) {
-    define('_MEP_VERSION', 'Maarch v19.04');
-}
 
 if (!defined('_ID_TO_DISPLAY')) { // value res_id || chrono_number
     define('_ID_TO_DISPLAY', 'chrono_number');
@@ -838,9 +835,6 @@ if (!defined('_CSS_STYLE')) {
 if (!defined('_CHOOSE_STYLE')) {
     define('_CHOOSE_STYLE', 'Choisissez un style');
 }
-if (!defined('_DEFAULT_STYLE')) {
-    define('_DEFAULT_STYLE', 'Style par défaut');
-}
 
 /********************** colors style ***************************/
 if (!defined('_BLACK')) {
@@ -889,34 +883,6 @@ if (!defined('_PURPLE')) {
 /************** sous-dossiers : Liste + Formulaire**************/
 if (!defined('_SUBFOLDER')) {
     define('_SUBFOLDER', 'sous-chemise');
-}
-
-if (!defined('_ADD_SUBFOLDER')) {
-    define('_ADD_SUBFOLDER', 'Ajouter une nouvelle sous-chemise');
-}
-if (!defined('_THE_SUBFOLDER')) {
-    define('_THE_SUBFOLDER', 'La sous-chemise');
-}
-if (!defined('_SUBFOLDER_MODIF')) {
-    define('_SUBFOLDER_MODIF', 'Modification de la sous-chemise');
-}
-if (!defined('_SUBFOLDER_CREATION')) {
-    define('_SUBFOLDER_CREATION', 'Création de la sous-chemise');
-}
-if (!defined('_SUBFOLDER_ID_PB')) {
-    define('_SUBFOLDER_ID_PB', "Il y a un probleme avec l'identifiant de la sous-chemise");
-}
-if (!defined('_SUBFOLDER_ADDED')) {
-    define('_SUBFOLDER_ADDED', "Ajout d'une nouvelle sous-chemise");
-}
-if (!defined('_NEW_SUBFOLDER')) {
-    define('_NEW_SUBFOLDER', 'Nouvelle sous-chemise');
-}
-if (!defined('_STRUCTURE_MANDATORY')) {
-    define('_STRUCTURE_MANDATORY', 'La chemise est obligatoire');
-}
-if (!defined('_SUBFOLDER_DESC_MISSING')) {
-    define('_SUBFOLDER_DESC_MISSING', 'Il manque la description de la sous-chemise');
 }
 
 if (!defined('_ATTACH_STRUCTURE')) {
@@ -1658,9 +1624,6 @@ if (!defined('_ANSWER')) {
 if (!defined('_DETAILS')) {
     define('_DETAILS', 'Fiche détaillée');
 }
-if (!defined('_VISIBLEBY')) {
-    define('_VISIBLEBY', 'Visible par');
-}
 if (!defined('_DOWNLOAD')) {
     define('_DOWNLOAD', 'Télécharger');
 }
@@ -1799,21 +1762,6 @@ if (!defined('_CHOOSE_TYPE')) {
     define('_CHOOSE_TYPE', 'Choisissez un type');
 }
 
-if (!defined('_FILE_LOADED_BUT_NOT_VISIBLE')) {
-    define('_FILE_LOADED_BUT_NOT_VISIBLE', 'Le fichier est chargé et prêt à être enregistré sur le serveur.<br/>');
-}
-if (!defined('_ONLY_FILETYPES_AUTHORISED')) {
-    define('_ONLY_FILETYPES_AUTHORISED', 'Seuls les fichiers suivants peuvent être affichés dans cette fenêtre');
-}
-if (!defined('_PROBLEM_LOADING_FILE_TMP_DIR')) {
-    define('_PROBLEM_LOADING_FILE_TMP_DIR', 'Problème lors du chargement du fichier sur le répertoire temporaire du serveur');
-}
-if (!defined('_NO_FILE_SELECTED')) {
-    define('_NO_FILE_SELECTED', 'Aucun fichier chargé');
-}
-if (!defined('_DOWNLOADED_FILE')) {
-    define('_DOWNLOADED_FILE', 'Fichier chargé');
-}
 if (!defined('_WRONG_FILE_TYPE')) {
     define('_WRONG_FILE_TYPE', "Ce type de fichier n'est pas permis");
 }
@@ -1832,9 +1780,6 @@ if (!defined('_APA_COLL')) {
 }
 if (!defined('_DOCUMENTS_LIST')) {
     define('_DOCUMENTS_LIST', 'Liste');
-}
-if (!defined('_LOGS_LIST')) {
-    define('_LOGS_LIST', 'Liste des logs');
 }
 
 /********* Contacts ************/
@@ -2606,9 +2551,6 @@ if (!defined('_CLEAR_FORM')) {
     define('_CLEAR_FORM', 'Effacer le formulaire');
 }
 
-if (!defined('_MAX_SIZE_UPLOAD_REACHED')) {
-    define('_MAX_SIZE_UPLOAD_REACHED', 'Taille maximum de fichier dépassée');
-}
 if (!defined('_NOT_ALLOWED')) {
     define('_NOT_ALLOWED', 'interdit');
 }

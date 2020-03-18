@@ -10,7 +10,6 @@
 * @author  dev <dev@maarch.org>
 * @ingroup lang
 */
-if (!defined('_MEP_VERSION')) { define('_MEP_VERSION', 'Maarch v19.04');}
 if (!defined('_ID_TO_DISPLAY')) { define('_ID_TO_DISPLAY', 'chrono_number');}
 if (!defined('_ADDED')) { define('_ADDED', 'toegevoegd');}
 if (!defined('_UPDATED')) { define('_UPDATED', 'gewijzigd');}
@@ -271,7 +270,6 @@ if (!defined('_FONT_COLOR')) { define('_FONT_COLOR', 'Kleur van het lettertype')
 if (!defined('_FONT_SIZE')) { define('_FONT_SIZE', 'Grootte van het lettertype');}
 if (!defined('_CSS_STYLE')) { define('_CSS_STYLE', 'Stijl');}
 if (!defined('_CHOOSE_STYLE')) { define('_CHOOSE_STYLE', 'Kies een stijl');}
-if (!defined('_DEFAULT_STYLE')) { define('_DEFAULT_STYLE', 'Standaardstijl');}
 if (!defined('_BLACK')) { define('_BLACK', 'Zwart');}
 if (!defined('_BEIGE')) { define('_BEIGE', 'Beige');}
 if (!defined('_BLUE')) { define('_BLUE', 'Blauw');}
@@ -287,15 +285,6 @@ if (!defined('_RED')) { define('_RED', 'Rood');}
 if (!defined('_GREEN')) { define('_GREEN', 'Groen');}
 if (!defined('_PURPLE')) { define('_PURPLE', 'Paars');}
 if (!defined('_SUBFOLDER')) { define('_SUBFOLDER', 'submap');}
-if (!defined('_ADD_SUBFOLDER')) { define('_ADD_SUBFOLDER', 'Een nieuwe submap toevoegen');}
-if (!defined('_THE_SUBFOLDER')) { define('_THE_SUBFOLDER', 'De submap');}
-if (!defined('_SUBFOLDER_MODIF')) { define('_SUBFOLDER_MODIF', 'Submap wijzigen');}
-if (!defined('_SUBFOLDER_CREATION')) { define('_SUBFOLDER_CREATION', 'Submap aanmaken');}
-if (!defined('_SUBFOLDER_ID_PB')) { define('_SUBFOLDER_ID_PB', 'Er is een probleem met de gebruikersnaam van de submap');}
-if (!defined('_SUBFOLDER_ADDED')) { define('_SUBFOLDER_ADDED', 'Een nieuwe submap toevoegen');}
-if (!defined('_NEW_SUBFOLDER')) { define('_NEW_SUBFOLDER', 'Nieuwe submap');}
-if (!defined('_STRUCTURE_MANDATORY')) { define('_STRUCTURE_MANDATORY', 'De map is verplicht');}
-if (!defined('_SUBFOLDER_DESC_MISSING')) { define('_SUBFOLDER_DESC_MISSING', 'Beschrijving van de submap ontbreekt');}
 if (!defined('_ATTACH_STRUCTURE')) { define('_ATTACH_STRUCTURE', 'Aan een map koppelen');}
 if (!defined('_CHOOSE_STRUCTURE')) { define('_CHOOSE_STRUCTURE', 'Een map kiezen');}
 if (!defined('_DEL_SUBFOLDER')) { define('_DEL_SUBFOLDER', 'Submap verwijderen');}
@@ -526,7 +515,6 @@ if (!defined('_DIRECT_CONTACT')) { define('_DIRECT_CONTACT', 'Rechtstreekse cont
 if (!defined('_NO_ANSWER')) { define('_NO_ANSWER', 'Geen antwoord');}
 if (!defined('_ANSWER')) { define('_ANSWER', 'Antwoord');}
 if (!defined('_DETAILS')) { define('_DETAILS', 'Gedetailleerde fiche');}
-if (!defined('_VISIBLEBY')) { define('_VISIBLEBY', 'Zichtbaar door');}
 if (!defined('_DOWNLOAD')) { define('_DOWNLOAD', 'Downloaden');}
 if (!defined('_SEARCH_RESULTS')) { define('_SEARCH_RESULTS', 'Resultaat van de opzoeking');}
 if (!defined('_MAIL_PRIORITY')) { define('_MAIL_PRIORITY', 'Prioriteit van de brief');}
@@ -572,18 +560,12 @@ if (!defined('_MAIL_DATE')) { define('_MAIL_DATE', 'Datum van de brief');}
 if (!defined('_DOC_HISTORY')) { define('_DOC_HISTORY', 'Geschiedenis');}
 if (!defined('_CHOOSE_FILE')) { define('_CHOOSE_FILE', 'Kies het bestand');}
 if (!defined('_CHOOSE_TYPE')) { define('_CHOOSE_TYPE', 'Kies een type');}
-if (!defined('_FILE_LOADED_BUT_NOT_VISIBLE')) { define('_FILE_LOADED_BUT_NOT_VISIBLE', 'Het bestand is geladen en is klaar om bewaard te worden op de server.<br/>');}
-if (!defined('_ONLY_FILETYPES_AUTHORISED')) { define('_ONLY_FILETYPES_AUTHORISED', 'Enkel de volgende bestanden kunnen in dit venster weergegeven worden');}
-if (!defined('_PROBLEM_LOADING_FILE_TMP_DIR')) { define('_PROBLEM_LOADING_FILE_TMP_DIR', 'Probleem bij het uploaden van het bestand naar de tijdelijke directory van de server');}
-if (!defined('_NO_FILE_SELECTED')) { define('_NO_FILE_SELECTED', 'Geen bestand geladen');}
-if (!defined('_DOWNLOADED_FILE')) { define('_DOWNLOADED_FILE', 'Bestand geladen');}
 if (!defined('_WRONG_FILE_TYPE')) { define('_WRONG_FILE_TYPE', 'Dit bestandstype is niet toegelaten');}
 if (!defined('_LETTERBOX')) { define('_LETTERBOX', 'Verzameling van de brieven');}
 if (!defined('_ATTACHMENTS_COLL')) { define('_ATTACHMENTS_COLL', 'Verzameling van de bijlagen');}
 if (!defined('_ATTACHMENTS_VERS_COLL')) { define('_ATTACHMENTS_VERS_COLL', 'Verzameling van de bijlageversies');}
 if (!defined('_APA_COLL')) { define('_APA_COLL', 'Verzameling van de fysieke archivering');}
 if (!defined('_DOCUMENTS_LIST')) { define('_DOCUMENTS_LIST', 'Lijst');}
-if (!defined('_LOGS_LIST')) { define('_LOGS_LIST', 'Logslijst');}
 if (!defined('_ADMIN_CONTACTS')) { define('_ADMIN_CONTACTS', 'Contacten');}
 if (!defined('_ADMIN_CONTACTS_DESC')) { define('_ADMIN_CONTACTS_DESC', 'Contactenbeheer');}
 if (!defined('_CONTACTS_LIST')) { define('_CONTACTS_LIST', 'Contactenlijst');}
@@ -826,7 +808,6 @@ if (!defined('_NUMERO_GED')) { define('_NUMERO_GED', 'GED-nummer heeft het verke
 if (!defined('_APPS_COMMENT')) { define('_APPS_COMMENT', 'Maarch Applicatie');}
 if (!defined('_CORE_COMMENT')) { define('_CORE_COMMENT', 'Kern van het Framework');}
 if (!defined('_CLEAR_FORM')) { define('_CLEAR_FORM', 'Het formulier wissen');}
-if (!defined('_MAX_SIZE_UPLOAD_REACHED')) { define('_MAX_SIZE_UPLOAD_REACHED', 'Maximumgrootte van het bestand overschreden');}
 if (!defined('_NOT_ALLOWED')) { define('_NOT_ALLOWED', 'verboden');}
 if (!defined('_CHOOSE_TITLE')) { define('_CHOOSE_TITLE', 'Kies een aanspreking');}
 if (!defined('_INDEXING_STATUSES')) { define('_INDEXING_STATUSES', 'Indexeren naar de statussen');}

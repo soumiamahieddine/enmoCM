@@ -33,8 +33,6 @@ $core_tools->load_lang();
 $db = new Database();
 $req = new request();
 $tmp = false;
-// var_dump($_POST['action']);
-// var_dump($_POST['name']);
 
 if ($_POST['action'] == 'creation') {
     if (isset($_POST['name']) && !empty($_POST['name'])) {
@@ -50,22 +48,22 @@ if ($_POST['action'] == 'creation') {
             $tmp = $db->query(
                 'INSERT INTO ' . $_SESSION['tablename']['saved_queries']
                 . ' (user_id, query_name, creation_date, created_by, '
-                . " query_type, query_txt) VALUES (?, ?, CURRENT_TIMESTAMP, ?, 'my_search', ? )", 
+                . " query_type, query_txt) VALUES (?, ?, CURRENT_TIMESTAMP, ?, 'my_search', ? )",
                 array($_SESSION['user']['UserId'], $_POST['name'], $_SESSION['user']['UserId'], $_SESSION['current_search_query']), true
             );
         } else {
-            if($stmt->rowCount() >= 1){
+            if ($stmt->rowCount() >= 1) {
                 //si il existe déjà une ligne dans la base avec les mêmes infos, on va demander confirmation
                 $_SESSION['seekName'] = $_POST['name'];
                 echo '{status : 4}';
-                exit(); 
+                exit();
             }
             $res = $stmt->fetchObject();
             $id = $res->query_id;
             $tmp = $db->query(
                 'UPDATE ' . $_SESSION['tablename']['saved_queries']
                 . " SET query_txt = ?, last_modification_date = CURRENT_TIMESTAMP WHERE user_id = ? and query_name= ?"
-                , array($_SESSION['current_search_query'], $_SESSION['user']['UserId'], $_POST['name']), true
+                , array ($_SESSION['current_search_query'], $_SESSION['user']['UserId'], $_POST['name']), true
             );
         }
         if (!$tmp) {
@@ -78,7 +76,7 @@ if ($_POST['action'] == 'creation') {
     } else {
         echo '{status : 3}';
     }
-} else if ($_POST['action'] == 'load') {
+} elseif ($_POST['action'] == 'load') {
     if (isset($_POST['id']) && !empty($_POST['id'])) {
         $tmp = $db->query(
             'SELECT query_txt FROM ' . $_SESSION['tablename']['saved_queries']
@@ -91,7 +89,7 @@ if ($_POST['action'] == 'creation') {
         $res = $tmp->fetchObject();
         echo "{'status' : 0, 'query':".$res->query_txt."}";
     }
-} else if($_POST['action'] == 'delete') {
+} elseif ($_POST['action'] == 'delete') {
     if (isset($_POST['id']) && !empty($_POST['id'])) {
         $tmp = $db->query(
             'DELETE FROM ' . $_SESSION['tablename']['saved_queries']
@@ -103,16 +101,16 @@ if ($_POST['action'] == 'creation') {
     } else {
         echo "{'status' : 0}";
     }
-} else if($_POST['action'] == 'creation_ok') {
+} elseif ($_POST['action'] == 'creation_ok') {
 
             $tmp = $db->query(
                 'UPDATE ' . $_SESSION['tablename']['saved_queries']
                 . " SET query_txt = ?, last_modification_date = CURRENT_TIMESTAMP WHERE user_id = ? and query_name= ?"
                 , array($_SESSION['current_search_query'], $_SESSION['user']['UserId'], $_SESSION['seekName']), true
             );
-          $_SESSION['seekName'] = null;  
+          $_SESSION['seekName'] = null;
         echo "{'status' : 0}";
 } else {
     echo "{status : 1}";
- }
+}
 exit();

@@ -21,26 +21,11 @@
 if (!defined("_RESTRICTED_SERVICES")) {
     define("_RESTRICTED_SERVICES", "Restreint au(x) entité(s): ");
 }
-if (!defined("_VISIBLEBY")) {
-    define("_VISIBLEBY", "Visible by");
-}
 if (!defined("_ADD_NOTE")) {
     define("_ADD_NOTE", "Ajouter une annotation");
 }
 if (!defined("_READ")) {
     define("_READ", "Lire");
-}
-if (!defined("_ADDITION_NOTE")) {
-    define("_ADDITION_NOTE", "Ajout d'une annotation");
-}
-if (!defined("_NOTES_ADDED")) {
-    define("_NOTES_ADDED", "Annotation ajoutée");
-}
-if (!defined("_NOTES_DELETED")) {
-    define("_NOTES_DELETED", "Annotation supprimée");
-}
-if (!defined("_NOTES_MODIFIED")) {
-    define("_NOTES_MODIFIED", "Annotation modifiée");
 }
 if (!defined("_NOTE_UPDATED")) {
     define("_NOTE_UPDATED", "Annotation modifiée");
@@ -56,10 +41,6 @@ if (!defined("_OF")) {
 }
 
 //TEMPLATES FOR NOTES
-if (!defined("_NOTE_TEMPLATE")) {
-    define("_NOTE_TEMPLATE", "Modèle d'annotation");
-}
-
 if (!defined("_NOTE")) {
     define("_NOTE", "Annotation");
 }

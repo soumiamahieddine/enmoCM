@@ -1,8 +1,4 @@
 <validationRules>
-	<validationRule name="load_listmodel_Avis" extends="standardForm" mode="error">
-    	<parameter name="objectType" type="identifier" />
-		<parameter name="objectId" type="identifier" />
-    </validationRule>
     <validationRule name="update_AvisPage" extends="standardForm" mode="error">
     	<parameter name="res_id" type="integer" />
     	<parameter name="coll_id" type="collection_list" />

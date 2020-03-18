@@ -34,12 +34,6 @@ if (!defined('_AVIS_USER_COPY')) {
 if (!defined('_AVIS_USER_INFO')) {
     define('_AVIS_USER_INFO', 'Ter informatie (bericht)');
 }
-if (!defined('_RECOMMENDATION_USER')) {
-    define('_RECOMMENDATION_USER', 'Persoon voor bericht');
-}
-if (!defined('_RECOMMENDATION_NOTE')) {
-    define('_RECOMMENDATION_NOTE', 'Woord');
-}
 if (!defined('_OPINION_LIMIT_DATE')) {
     define('_OPINION_LIMIT_DATE', 'Berichtendeadline');
 }
@@ -55,9 +49,6 @@ if (!defined('_SEND_TO_AVIS_WF')) {
 if (!defined('_SEND_TO_AVIS_WF_DESC')) {
     define('_SEND_TO_AVIS_WF_DESC', 'Opent een modaliteit die een berichtencircuit voor het brief kan configureren.');
 }
-if (!defined('_WAITING_FOR_AVIS')) {
-    define('_WAITING_FOR_AVIS', 'In afwachting van bericht');
-}
 if (!defined('_PROCEED_WORKFLOW_AVIS')) {
     define('_PROCEED_WORKFLOW_AVIS', 'Een bericht uitzenden (sequentieel)');
 }
@@ -70,42 +61,15 @@ if (!defined('_PROCEED_WORKFLOW_AVIS_SIMPLE')) {
 if (!defined('_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC')) {
     define('_PROCEED_WORKFLOW_AVIS_SIMPLE_DESC', 'Werkt de uitgiftedatum bij van het bericht van de gebruiker die aanwezig is in het bericht in de verdelingslijst van het brief (\'process_date\' van de tabel listinstance).');
 }
-if (!defined('_EMPTY_AVIS_WORKFLOW')) {
-    define('_EMPTY_AVIS_WORKFLOW', 'Geen ingesteld berichtencircuit');
-}
 if (!defined('_AVIS_SENT')) {
     define('_AVIS_SENT', 'Gegeven bericht');
-}
-if (!defined('_AVIS_NB')) {
-    define('_AVIS_NB', 'Bericht nr.');
-}
-if (!defined('_NB_AVIS')) {
-    define('_NB_AVIS', 'Aantal berichten');
 }
 if (!defined('_DOCUMENTS_LIST_WITH_AVIS')) {
     define('_DOCUMENTS_LIST_WITH_AVIS', 'Lijst van de brieven met berichten');
 }
-if (!defined('_NB_AVIS_SENT')) {
-    define('_NB_AVIS_SENT', 'Gegeven bericht(en)');
-}
 if (!defined('_WRITTEN_BY')) {
     define('_WRITTEN_BY', 'Opgesteld door');
 }
-if (!defined('_AVIS_NOTE')) {
-    define('_AVIS_NOTE', 'Beschrijving van de vraag');
-}
 if (!defined('_VALIDATE_BY')) {
     define('_VALIDATE_BY', 'Gevalideerd door');
-}
-if (!defined('_AVIS_ROLE_UNAVAILABLE')) {
-    define('_AVIS_ROLE_UNAVAILABLE', 'De rol \voor bericht\ is niet beschikbaar in de verdelingslijst');
-}
-if (!defined('_ADD_AVIS_ROLE')) {
-    define('_ADD_AVIS_ROLE', 'Een consultant toevoegen');
-}
-if (!defined('_ADD_AVIS_MODEL')) {
-    define('_ADD_AVIS_MODEL', 'Een berichtencircuitmodel gebruiken');
-}
-if (!defined('_AVIS_BY')) {
-    define('_AVIS_BY', 'Bericht gegeven door');
 }

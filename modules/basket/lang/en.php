@@ -80,45 +80,13 @@ if (!defined("_BASKET_VIEW"))
     define("_BASKET_VIEW", "View on the table");
 if (!defined("_MODIFY_BASKET"))
     define("_MODIFY_BASKET", "Modify the basket");
-if (!defined("_ADD_A_NEW_BASKET"))
-    define("_ADD_A_NEW_BASKET", "Create a new basket");
-if (!defined("_ADD_A_GROUP_TO_BASKET"))
-    define("_ADD_A_GROUP_TO_BASKET", "Associate a new group to the basket");
 if (!defined("_DEL_GROUPS"))
     define("_DEL_GROUPS", "Delete group(s)");
 if (!defined("_BASKET_NOT_USABLE"))
     define("_BASKET_NOT_USABLE", "No associated group (the basket is unusable for now)");
-if (!defined("_ASSOCIATED_GROUP"))
-    define("_ASSOCIATED_GROUP", "Groups list associated to the basket");
-if (!defined("_TITLE_GROUP_BASKET"))
-    define("_TITLE_GROUP_BASKET", "Associated the basket to a group");
 if (!defined("_ADD_TO_BASKET"))
     define("_ADD_TO_BASKET", "Associate the basket");
-if (!defined("_TO_THE_GROUP"))
-    define("_TO_THE_GROUP", "To a group");
-if (!defined("_ALLOWED_ACTIONS"))
-    define("_ALLOWED_ACTIONS", "Authorized actions");
-if (!defined("_SERVICES_BASKETS"))
-    define("_SERVICES_BASKETS", "Services baskets");
-if (!defined("_USERGROUPS_BASKETS"))
-    define("_USERGROUPS_BASKETS", "Baskets in the users groups");
-if (!defined("_BASKET_RESULT_PAGE"))
-    define("_BASKET_RESULT_PAGE", "Results list");
-if (!defined("_ADD_THIS_GROUP"))
-    define("_ADD_THIS_GROUP", "Add the group");
-if (!defined("_MODIFY_THIS_GROUP"))
-    define("_MODIFY_THIS_GROUP", "Modify the group");
-if (!defined("_DEFAULT_ACTION_LIST"))
-    define("_DEFAULT_ACTION_LIST", "Default action on the lign");
-if (!defined("_NO_ACTION_DEFINED"))
-    define("_NO_ACTION_DEFINED", "No defined action");
 //BASKETS
-if (!defined("_WAITING_VAL_LIST"))
-    define("_WAITING_VAL_LIST", "Validation files list on hold");
-if (!defined("_WAITING_QUAL_LIST"))
-    define("_WAITING_QUAL_LIST", "Files list on hold of title");
-if (!defined("_WAITING_DISTRIB_LIST"))
-    define("_WAITING_DISTRIB_LIST", "Mails list on hold of distribution");
 if (!defined("_NO_REDIRECT_RIGHT"))
     define("_NO_REDIRECT_RIGHT", "You haven't the right to redirect in this basket");
 
@@ -187,8 +155,6 @@ if (!defined("_COPY_LIST"))
     define("_COPY_LIST", "Mails list on copy");
 if (!defined("_PROCESS_LIST"))
     define("_PROCESS_LIST", "Mails list to process");
-if (!defined("_CLICK_LINE_TO_VIEW"))
-    define("_CLICK_LINE_TO_VIEW", "Click on a lign to view");
 if (!defined("_CLICK_LINE_TO_PROCESS"))
     define("_CLICK_LINE_TO_PROCESS", "Click on a lign to process");
 if (!defined("_REDIRECT_TO_SENDER_ENTITY"))
@@ -201,40 +167,18 @@ if (!defined("_ENTITY_UPDATE"))
 // USER ABS
 if (!defined("_MY_ABS"))
     define("_MY_ABS", "Manage my absences");
-if (!defined("_MY_ABS_TXT"))
-    define("_MY_ABS_TXT", "Allows to redirect your baskets in case of time off departure.");
-if (!defined("_MY_ABS_REDIRECT"))
-    define("_MY_ABS_REDIRECT", "your mails are currently redirected to");
-if (!defined("_MY_ABS_DEL"))
-    define("_MY_ABS_DEL", "To delete the redirection, click here to stop");
 if (!defined("_ADMIN_ABS"))
     define("_ADMIN_ABS", "Manage the absences.");
-if (!defined("_ADMIN_ABS_TXT"))
-    define("_ADMIN_ABS_TXT", "Allows to redirect the user's mail on hold in case of time off departure.");
-if (!defined("_ADMIN_ABS_REDIRECT"))
-    define("_ADMIN_ABS_REDIRECT", "Absence redirection on progress.");
-if (!defined("_ADMIN_ABS_FIRST_PART"))
-    define("_ADMIN_ABS_FIRST_PART", "The mails of");
-if (!defined("_ADMIN_ABS_SECOND_PART"))
-    define("_ADMIN_ABS_SECOND_PART", "are currently redirected to ");
-if (!defined("_ADMIN_ABS_THIRD_PART"))
-    define("_ADMIN_ABS_THIRD_PART", "Click here to delete the redirection.");
 if (!defined("_ACTIONS_DONE"))
     define("_ACTIONS_DONE", "Actions done on ");
 if (!defined("_PROCESSED_MAIL"))
     define("_PROCESSED_MAIL", "Processed mails");
 if (!defined("_INDEXED_MAIL"))
     define("_INDEXED_MAIL", "Indexed mails");
-if (!defined("_REDIRECTED_MAIL"))
-    define("_REDIRECTED_MAIL", "Redirected mails");
-if (!defined("_PROCESS_MAIL_OF"))
-    define("_PROCESS_MAIL_OF", "Mail to process from");
 if (!defined("_MISSING"))
     define("_MISSING", "Absent");
 if (!defined("_BACK_FROM_VACATION"))
     define("_BACK_FROM_VACATION", "Back from his/her absence");
-if (!defined("_MISSING_CHOOSE"))
-    define("_MISSING_CHOOSE"," Do you want to continue ?");
 if (!defined("_CHOOSE_PERSON_TO_REDIRECT"))
     define("_CHOOSE_PERSON_TO_REDIRECT", "Choose the person toward who you would like to redirect this mail in the list below");
 if (!defined("_TO_SELECT_USER"))
@@ -259,16 +203,8 @@ if (!defined("_CONFIG"))
     define("_CONFIG", "(configure)");
 if (!defined("_CONFIG_ACTION"))
     define("_CONFIG_ACTION", "Action configuration");
-if (!defined("_WHERE_CLAUSE_ACTION_TEXT"))
-    define("_WHERE_CLAUSE_ACTION_TEXT", "Define one condition of the action appearance in the page by a where clause (optional) : ");
 if (!defined("_IN_ACTION"))
     define("_IN_ACTION", " in the action");
-if (!defined("_TO_ENTITIES"))
-    define("_TO_ENTITIES", "To departments");
-if (!defined("_TO_USERGROUPS"))
-    define("_TO_USERGROUPS", "To users groups");
-if (!defined("_USE_IN_MASS"))
-    define("_USE_IN_MASS", "Available action in the list");
 if (!defined("_USE_ONE"))
     define("_USE_ONE", "Available action on the home page");
 if (!defined("_MUST_CHOOSE_WHERE_USE_ACTION"))
@@ -279,10 +215,6 @@ if (!defined("_MUST_CHOOSE_USER"))
     define("_MUST_CHOOSE_USER", "You have to select an user!");
 if (!defined("_REDIRECT_TO_DEP_OK"))
     define("_REDIRECT_TO_DEP_OK", "Redirection to a department is done");
-if (!defined("_REDIRECT_TO_USER_OK"))
-    define("_REDIRECT_TO_USER_OK", "Redirection to an user is done");
-if (!defined("_SAVE_CHANGES"))
-    define("_SAVE_CHANGES", "Save the modifications");
 if (!defined("_VIEW_BASKETS"))
     define("_VIEW_BASKETS", "My baskets");
 if (!defined("_VIEW_BASKETS_DESC"))

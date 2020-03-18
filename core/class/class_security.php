@@ -57,7 +57,6 @@ require_once 'core/class/ServiceControler.php';
 
 $core = new core_tools();
 $core->load_lang();
-//require_once('lib/FirePHP/Init.php');
 
 class security extends Database
 {
@@ -313,25 +312,6 @@ class security extends Database
     }
 
     /**
-     * Returns a script related to a collection.
-     *
-     * @param  $coll_id  string Collection identifier
-     * @param  $script_name  string Script name "script_add", "script_search", "script_search_result", "script_details"
-     *
-     * @return string Script name or empty string if not found
-     */
-    public function get_script_from_coll($coll_id, $script_name)
-    {
-        for ($i = 0; $i < count($_SESSION['collections']); ++$i) {
-            if (trim($_SESSION['collections'][$i]['id']) == trim($coll_id)) {
-                return trim($_SESSION['collections'][$i][$script_name]);
-            }
-        }
-
-        return '';
-    }
-
-    /**
      * Returns the collection identifier from a table.
      *
      * @param  $table  string Tablename
@@ -368,60 +348,6 @@ class security extends Database
         for ($i = 0; $i < count($_SESSION['collections']); ++$i) {
             if ($_SESSION['collections'][$i]['id'] == $collId) {
                 return $_SESSION['collections'][$i]['version_table'];
-            }
-        }
-
-        return '';
-    }
-
-    /**
-     * Returns the adr table from a table.
-     *
-     * @param  $table string Tablename
-     *
-     * @return string adr table or empty string if not found
-     */
-    public function retrieve_adr_table_from_table($table)
-    {
-        for ($i = 0; $i < count($_SESSION['collections']); ++$i) {
-            if ($_SESSION['collections'][$i]['table'] == $table) {
-                return $_SESSION['collections'][$i]['adr'];
-            }
-        }
-
-        return '';
-    }
-
-    /**
-     * Returns the collection table from a view.
-     *
-     * @param  $view string View
-     *
-     * @return string Collection table or empty string if not found
-     */
-    public function retrieve_coll_table_from_view($view)
-    {
-        for ($i = 0; $i < count($_SESSION['collections']); ++$i) {
-            if ($_SESSION['collections'][$i]['view'] == $view) {
-                return $_SESSION['collections'][$i]['table'];
-            }
-        }
-
-        return '';
-    }
-
-    /**
-     * Returns the collection identifier from a view.
-     *
-     * @param  $view string View
-     *
-     * @return string Collection identifier or empty string if not found
-     */
-    public function retrieve_coll_id_from_view($view)
-    {
-        for ($i = 0; $i < count($_SESSION['collections']); ++$i) {
-            if ($_SESSION['collections'][$i]['view'] == $view) {
-                return $_SESSION['collections'][$i]['id'];
             }
         }
 
@@ -483,147 +409,6 @@ class security extends Database
     }
 
     /**
-     * Returns the adr table of the collection from the collection identifier.
-     *
-     * @param string $collId Collection identifier
-     *
-     * @return string adr table name or empty string if not found
-     */
-    public function retrieveAdrFromColl($collId)
-    {
-        for ($i = 0; $i < count($_SESSION['collections']); ++$i) {
-            if ($_SESSION['collections'][$i]['id'] == $collId) {
-                return $_SESSION['collections'][$i]['adr'];
-            }
-        }
-
-        return '';
-    }
-
-    /**
-     * Returns the table of the collection from the view of the collection.
-     *
-     * @param string $view View
-     *
-     * @return string Table name or empty string if not found
-     */
-    public function retrieve_table_from_view($view)
-    {
-        for ($i = 0; $i < count($_SESSION['collections']); ++$i) {
-            if ($_SESSION['collections'][$i]['view'] == $view) {
-                return $_SESSION['collections'][$i]['table'];
-            }
-        }
-
-        return '';
-    }
-
-    /**
-     * Returns the collection  label from the table of the collection.
-     *
-     * @param string $table Tablename
-     *
-     * @return string Collection label or empty string if not found
-     */
-    public function retrieve_coll_label_from_table($table)
-    {
-        for ($i = 0; $i < count($_SESSION['collections']); ++$i) {
-            if ($_SESSION['collections'][$i]['table'] == $table) {
-                return $_SESSION['collections'][$i]['label'];
-            }
-        }
-
-        return '';
-    }
-
-    /**
-     * Returns the collection  label from the collection identifier.
-     *
-     * @param string $coll_id Collection identifier
-     *
-     * @return string Collection label or empty string if not found
-     */
-    public function retrieve_coll_label_from_coll_id($coll_id)
-    {
-        for ($i = 0; $i < count($_SESSION['collections']); ++$i) {
-            if ($_SESSION['collections'][$i]['id'] == $coll_id) {
-                return $_SESSION['collections'][$i]['label'];
-            }
-        }
-
-        return '';
-    }
-
-    ////////////////USER RELATED
-
-    /**
-     * Returns the collection identifier for the current user from the collection table (using $_SESSION['user']['security']).
-     *
-     * @param  $table  string Tablename
-     *
-     * @return string Collection identifier or empty string if not found
-     */
-    /*
-        public function retrieve_user_coll_id($table)
-        {
-
-            foreach(array_keys($_SESSION['user']['security']) as $coll_id)
-            {
-                if($_SESSION['user']['security'][$coll_id]['DOC']['table'] == $table)
-                {
-                    return $coll_id;
-                }
-            }
-            return false;
-        }
-    */
-
-    //////////////////////// A REFAIRE
-
-    /**
-     * Return all collections where the current user can insert new documents (with table).
-     *
-     * @return array Array of all collections where the current user can insert new documents
-     */
-    public function retrieve_user_insert_coll()
-    {
-        $arr = array();
-        for ($i = 0; $i < count($_SESSION['user']['security']); ++$i) {
-            if (isset($_SESSION['user']['security'][$i]['table']) && !empty($_SESSION['user']['security'][$i]['table'])) {
-                $ind = $this->get_ind_collection($_SESSION['user']['security'][$i]['coll_id']);
-                array_push($arr, array('coll_id' => $_SESSION['user']['security'][$i]['coll_id'], 'label_coll' => $_SESSION['collections'][$ind]['label'], 'table' => $_SESSION['user']['security'][$i]['table']));
-            }
-        }
-
-        return $arr;
-    }
-
-    /**
-     * Checks if the current user can do the action on the collection.
-     *
-     * @param string $coll_id Collection identifier
-     *
-     * @return true if the user can do the action on the collection, False otherwise
-     */
-    public function collection_user_right($coll_id, $action)
-    {
-        if (!isset($coll_id)) {
-            return false;
-        }
-        $func = new functions();
-        $flag = false;
-        for ($i = 0; $i < count($_SESSION['user']['security']); ++$i) {
-            if ((isset($_SESSION['user']['security'][$i]['coll_id']) && $_SESSION['user']['security'][$i]['coll_id'] == $coll_id) && $_SESSION['user']['security'][$i][$action] == 'Y') {
-                $flag = true;
-            }
-        }
-
-        return $flag;
-    }
-
-    /////////////////////////////
-
-    /**
      * Returns where clause of the collection for the current user from the collection identifier.
      *
      * @param  $coll_id string Collection identifier
@@ -673,55 +458,6 @@ class security extends Database
         $whereRequest = '('.$collectionWhereClause.' or '.$basketWhereClause.')';
 
         return $whereRequest;
-    }
-
-    /**
-     * Returns where clause of the collection for the current user from the collection view.
-     *
-     * @param  $view string View
-     *
-     * @return string Collection where clause or empty string if not found or the where clause is empty
-     */
-    public function get_where_clause_from_view($view)
-    {
-        foreach (array_keys($_SESSION['user']['security']) as $coll_id) {
-            if ($_SESSION['user']['security'][$coll_id]['DOC']['view'] == $view) {
-                return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
-            }
-        }
-
-        return '';
-    }
-
-    /**
-     * Returns the collection table for the current user from the collection view (using $_SESSION['user']['security']).
-     *
-     * @param  $table  string Tablename
-     *
-     * @return string Table name or False if not found
-     */
-    public function retrieve_user_coll_table($view)
-    {
-        foreach (array_keys($_SESSION['user']['security']) as $coll_id) {
-            if ($_SESSION['user']['security'][$coll_id]['DOC']['view'] == $view) {
-                return $_SESSION['user']['security'][$coll_id]['DOC']['where'];
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @return array
-     */
-    public function getEntitiesForCurrentUser()
-    {
-        $entitiesTab = [];
-        foreach ($_SESSION['user']['entities'] as $tmp) {
-            $entitiesTab[] = $tmp['ENTITY_ID'];
-        }
-
-        return $entitiesTab;
     }
 
     /**
