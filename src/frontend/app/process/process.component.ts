@@ -333,6 +333,11 @@ export class ProcessComponent implements OnInit {
             this.canEditData =  this.privilegeService.hasCurrentUserPrivilege('edit_resource') && this.currentResourceInformations.statusAlterable;
             if (this.isMailing && this.isToolEnabled('attachments')) {
                 this.currentTool = 'attachments';
+
+                // Avoid auto open if the user click one more time on tab attachments
+                setTimeout(() => {
+                    this.isMailing = false;
+                }, 200);
             }
         } else {
             this.http.get(`../../rest/resources/${this.currentResourceInformations.resId}/users/${this.currentUserId}/groups/${this.currentGroupId}/baskets/${this.currentBasketId}/processingData`).pipe(
