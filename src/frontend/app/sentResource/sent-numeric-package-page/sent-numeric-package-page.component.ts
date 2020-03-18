@@ -445,26 +445,8 @@ export class SentNumericPackagePageComponent implements OnInit {
         ).subscribe();
     }
 
-    saveDraft() {
-        this.closeModal();
-        /*if (this.canManageMail()) {
-          this.emailStatus = 'DRAFT';
-          if (this.data.emailId === null) {
-            if (!this.functions.empty(tinymce.get('emailSignature').getContent())) {
-              this.createEmail(true);
-            } else {
-              this.closeModal();
-            }
-          } else {
-            this.updateEmail(true);
-          }
-        } else {
-          this.closeModal();
-        }*/
-    }
-
     toggleAttach(item: any, type: string, mode: string) {
-        if (this.numericPackage.mainExchangeDoc === null) {
+        if (this.numericPackage.mainExchangeDoc === null && type !== 'notes') {
             this.numericPackage.mainExchangeDoc = {
                 ...item,
                 typeLabel: item.typeLabel !== undefined ? item.typeLabel : this.lang.mainDocument,

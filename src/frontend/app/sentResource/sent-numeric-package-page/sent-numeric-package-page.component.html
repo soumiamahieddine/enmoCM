@@ -3,7 +3,7 @@
         <span style="flex: 1;">
             {{functions.empty(reference) ? lang.sendNumericPackage : reference}}
         </span>
-        <button [title]="lang.close" mat-icon-button (click)="saveDraft()">
+        <button [title]="lang.close" mat-icon-button (click)="closeModal()">
             <mat-icon class="fa fa-times"></mat-icon>
         </button></h1>
     <mat-dialog-content class="modal-container">
@@ -167,10 +167,10 @@
     <span class="divider-modal"></span>
     <div mat-dialog-actions class="actions">
         <button mat-raised-button color="primary"
-            *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail')" (click)="onSubmit()"
+            *ngIf="canManageMail() && privilegeService.hasCurrentUserPrivilege('sendmail') && emailStatus !== 'ERROR'" (click)="onSubmit()"
             [disabled]="recipients.length === 0 || numericPackage.mainExchangeDoc === null || loading">{{lang.send}}</button>
         <button mat-raised-button color="warn" (click)="deleteEmail()"
-            *ngIf="data.emailId && !loading"
+            *ngIf="data.emailId && !loading && emailStatus === 'ERROR'"
             [disabled]="headerService.user.id !== emailCreatorId">{{lang.delete}}</button>
     </div>
 </div>
