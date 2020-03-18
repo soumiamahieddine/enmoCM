@@ -746,7 +746,6 @@ class ResController extends ResourceControlController
 
     public function updateExternalInfos(Request $request, Response $response)
     {
-        //TODO Revoir cette fonction
         $data = $request->getParams();
 
         if (empty($data['externalInfos'])) {
@@ -763,9 +762,6 @@ class ResController extends ResourceControlController
             if (!Validator::StringType()->notEmpty()->validate($mail['external_id'])) {
                 return $response->withStatus(400)->withJson(['errors' => 'Bad Request: invalid external_id for element : '.$mail['res_id']]);
             }
-            if (!Validator::StringType()->notEmpty()->validate($mail['external_link'])) {
-                return $response->withStatus(400)->withJson(['errors' => 'Bad Request:  invalid external_link for element'.$mail['res_id']]);
-            }
         }
 
         foreach ($data['externalInfos'] as $mail) {
@@ -778,7 +774,7 @@ class ResController extends ResourceControlController
             }
             $externalId = json_decode($document['external_id'], true);
             $externalId['publikId'] = $mail['external_id'];
-            ResModel::update(['set' => ['external_id' => json_encode($externalId), 'external_link' => $mail['external_link'], 'status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
+            ResModel::update(['set' => ['external_id' => json_encode($externalId), 'status' => $data['status']], 'where' => ['res_id = ?'], 'data' => [$document['res_id']]]);
         }
 
         return $response->withJson(['success' => 'success']);

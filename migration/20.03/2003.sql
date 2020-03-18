@@ -385,6 +385,7 @@ END$$;
 
 /* RES_LETTERBOX */
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS department_number_id;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS external_link;
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS model_id;
 ALTER TABLE res_letterbox ADD COLUMN model_id INTEGER;
 UPDATE res_letterbox set model_id = 2 WHERE category_id = 'outgoing';
