@@ -1354,6 +1354,7 @@ export const LANG_FR = {
     "signedAlt": "Signée",
     "deleteResource": "Supprimer le document",
     "viewResource": "Voir le document",
+    "noDocument": "Aucun document",
     "addAttachment": "Ajouter une pièce jointe",
     "dateAgo": "Il y a",
     "dateTo": "Le",

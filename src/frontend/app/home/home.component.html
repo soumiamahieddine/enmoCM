@@ -106,7 +106,7 @@
                                     <div>
                                         <button mat-icon-button (click)="$event.stopPropagation();viewDocument(row);"
                                             (mouseenter)="viewThumbnail(row);" (mouseleave)="closeThumbnail();"
-                                            [disabled]="!row.hasDocument">
+                                            [disabled]="!row.hasDocument" title="{{row.hasDocument ? lang.viewResource : lang.noDocument}}">
                                             <mat-icon color="primary" class="fa" [ngClass]="[row.hasDocument ? 'fa-eye' : 'fa-eye-slash']"></mat-icon>
                                         </button>
                                     </div>

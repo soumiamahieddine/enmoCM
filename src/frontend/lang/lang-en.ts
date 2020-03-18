@@ -1314,6 +1314,7 @@ export const LANG_EN = {
     "signedAlt"   : "Signed",
     "deleteResource"   : "Delete document",
     "viewResource"   : "View document",
+    "noDocument": "No document",
     "addAttachment"   : "Add an attachment",
     "dateAgo"   : "Since",
     "dateTo"   : "The",
