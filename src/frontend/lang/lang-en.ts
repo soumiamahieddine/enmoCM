@@ -424,7 +424,7 @@ export const LANG_EN = {
     "groupAdded"                            : "Group added",
     "groupCreation"                         : "Create group",
     "groupDeleted"                          : "Group deleted",
-    "groupeCompany"                         : ", Archiveco group company",
+    "groupeCompany"                         : ", Xelians group company",
     "grouping"                              : "Grouping",
     "groupModification"                     : "Modify group",
     "groupRedirect"                         : "Group change",

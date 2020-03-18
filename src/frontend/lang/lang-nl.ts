@@ -433,7 +433,7 @@ export const LANG_NL = {
     "groupAdded"                            : "Toegevoegde groep",
     "groupCreation"                         : "Aanmaak van een groep",
     "groupDeleted"                          : "Verwijderde groep",
-    "groupeCompany"                         : "vennootschap van de Archiveco groep",
+    "groupeCompany"                         : "vennootschap van de Xelians groep",
     "grouping"                              : "Grouping", //_TO_TRANSLATE
     "groupModification"                     : "Wijziging van een groep",
     "groupRedirect"                         : "Groepswijziging",
