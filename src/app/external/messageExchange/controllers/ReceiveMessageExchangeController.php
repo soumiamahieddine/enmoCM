@@ -17,6 +17,7 @@ namespace MessageExchange\controllers;
 
 use Basket\models\BasketModel;
 use Contact\models\ContactModel;
+use Convert\controllers\ConvertPdfController;
 use Entity\models\EntityModel;
 use ExportSeda\controllers\SendMessageController;
 use Group\controllers\PrivilegeController;
@@ -260,6 +261,17 @@ class ReceiveMessageExchangeController
 
         $storeResource = StoreController::storeResource($dataValue);
         if (empty($storeResource['errors'])) {
+            if (!empty($dataValue['encodedFile'])) {
+                ConvertPdfController::convert([
+                    'resId'     => $storeResource,
+                    'collId'    => 'letterbox_coll',
+                    'version'   => 1
+                ]);
+    
+                $customId = CoreConfigModel::getCustomId();
+                $customId = empty($customId) ? 'null' : $customId;
+                exec("php src/app/convert/scripts/FullTextScript.php --customId {$customId} --resId {$resId} --collId letterbox_coll --userId {$GLOBALS['id']} > /dev/null &");
+            }
             ResourceContactModel::create(['res_id' => $storeResource, 'item_id' => $aArgs['contact']['id'], 'type' => 'contact', 'mode' => 'sender']);
         }
 
@@ -382,6 +394,10 @@ class ReceiveMessageExchangeController
                 ];
 
                 $resId = StoreController::storeAttachment($allDatas);
+                ConvertPdfController::convert([
+                    'resId'  => $resId,
+                    'collId' => 'attachments_coll'
+                ]);
                 $countAttachment++;
             }
         }
