@@ -1626,8 +1626,10 @@ export const LANG_NL = {
     "attachItemToNumericPackage" : "Attach an element to sending mail", //_TO_TRANSLATE
     "note" : "Note", //_TO_TRANSLATE
     "addNoteToNumericPackage" : "Add a note Ajouter to sending mail", //_TO_TRANSLATE
-    "mainDocNumericPackage" : "Main document of sending mail", //_TO_TRANSLATE
-    "attachmentsNumericPackage" : "Attachments of sending mail", //_TO_TRANSLATE
+    "mainDocNumericPackage" : "Main document of sent mail", //_TO_TRANSLATE
+    "attachmentsNumericPackage" : "Attachments of sent mail", //_TO_TRANSLATE
+    "mainDocNumericPackageToSend" : "Main document of sending mail", //_TO_TRANSLATE
+    "attachmentsNumericPackageToSend" : "Attachments of sending mail", //_TO_TRANSLATE
     "closeSidePanel" : "Close side panel", //_TO_TRANSLATE
     "openSidePanel" : "Open side panel", //_TO_TRANSLATE
     "saveAsPrivateModel" : "Save as private model", //_TO_TRANSLATE
@@ -1635,4 +1637,5 @@ export const LANG_NL = {
     "createFolder" : "Create a folder", //_TO_TRANSLATE
     "downloadNumericPackage" : "Download the numeric package", //_TO_TRANSLATE
     "actionsHistory" : "Actions history", //_TO_TRANSLATE
+    "noActionProcessed": "No action processed", //_TO_TRANSLATE
 };

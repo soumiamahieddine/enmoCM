@@ -209,11 +209,41 @@ export class SentNumericPackagePageComponent implements OnInit {
                     this.reference = data.reference;
                     this.messageReview = data.messageReview.map((item: any) => {
                         return {
-                            date : this.functions.formatFrenchDateToObjectDate(item.substring(1,19),'/'),
-                            content : item.substring(21),
+                            date: this.functions.formatFrenchDateToObjectDate(item.substring(1, 19), '/'),
+                            content: item.substring(21),
                         }
                     });
                     this.messageReview = this.reversePipe.transform(this.messageReview);
+
+
+                    console.log(this.emailAttachTool);
+
+                    if (data.disposition.tablename === 'res_letterbox') {
+                        this.numericPackage.mainExchangeDoc = {
+                            ...this.emailAttachTool['document'].list[0],
+                            typeLabel: this.lang.mainDocument,
+                            type: 'document'
+                        }
+                        
+                        this.emailAttach = this.emailAttach.concat(this.emailAttachTool['attachments'].list.filter((item: any) => data.attachments.indexOf(item.id.toString()) > -1));
+                    } else {
+                        this.numericPackage.mainExchangeDoc = {
+                            ...this.emailAttachTool['attachments'].list.filter((item: any) => item.id == data.disposition.res_id)[0],
+                            type: 'attachments'
+                        }
+                        this.emailAttach = this.emailAttach.concat(this.emailAttachTool['attachments'].list.filter((item: any) => data.attachments.indexOf(item.id.toString()) > -1 && item.id != data.disposition.res_id));
+
+                    }
+
+                    if (data.resMasterAttached && data.disposition.tablename !== 'res_letterbox') {
+                        this.emailAttach.push({
+                            ...this.emailAttachTool['document'].list[0],
+                            typeLabel: this.lang.mainDocument,
+                            type: 'document'
+                        });
+                    }
+
+                    this.emailAttach = this.emailAttach.concat(this.emailAttachTool['notes'].list.filter((item: any) => data.notes.indexOf(item.id.toString()) > -1));
 
                     resolve(true);
                 }),
@@ -406,7 +436,7 @@ export class SentNumericPackagePageComponent implements OnInit {
     }
 
     deleteEmail() {
-	// TODO : useless ? can not delete m2m
+        // TODO : useless ? can not delete m2m
         const dialogRef = this.dialog.open(ConfirmComponent, { panelClass: 'maarch-modal', autoFocus: false, disableClose: true, data: { title: this.lang.delete, msg: this.lang.confirmAction } });
 
         dialogRef.afterClosed().pipe(
@@ -513,28 +543,28 @@ export class SentNumericPackagePageComponent implements OnInit {
         this.http.get(`../../rest/messageExchanges/${this.data.emailId}/archiveContent`, { responseType: "blob" }).pipe(
             tap((data: any) => {
                 let downloadLink = document.createElement('a');
-                    downloadLink.href = window.URL.createObjectURL(data);
+                downloadLink.href = window.URL.createObjectURL(data);
 
-                    let today: any;
-                    let dd: any;
-                    let mm: any;
-                    let yyyy: any;
+                let today: any;
+                let dd: any;
+                let mm: any;
+                let yyyy: any;
 
-                    today = new Date();
-                    dd = today.getDate();
-                    mm = today.getMonth() + 1;
-                    yyyy = today.getFullYear();
+                today = new Date();
+                dd = today.getDate();
+                mm = today.getMonth() + 1;
+                yyyy = today.getFullYear();
 
-                    if (dd < 10) {
-                        dd = '0' + dd;
-                    }
-                    if (mm < 10) {
-                        mm = '0' + mm;
-                    }
-                    today = dd + '-' + mm + '-' + yyyy;
-                    downloadLink.setAttribute('download', this.lang.summarySheetsAlt + "_" + today + ".pdf");
-                    document.body.appendChild(downloadLink);
-                    downloadLink.click();
+                if (dd < 10) {
+                    dd = '0' + dd;
+                }
+                if (mm < 10) {
+                    mm = '0' + mm;
+                }
+                today = dd + '-' + mm + '-' + yyyy;
+                downloadLink.setAttribute('download', this.lang.summarySheetsAlt + "_" + today + ".pdf");
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
             }),
             catchError((err) => {
                 this.notify.handleSoftErrors(err);

@@ -1601,8 +1601,10 @@ export const LANG_EN = {
     "attachItemToNumericPackage" : "Attach an element to sending mail",
     "note" : "Note",
     "addNoteToNumericPackage" : "Add a note Ajouter to sending mail",
-    "mainDocNumericPackage" : "Main document of sending mail", 
-    "attachmentsNumericPackage" : "Attachments of sending mail", 
+    "mainDocNumericPackage" : "Main document of sent mail", 
+    "attachmentsNumericPackage" : "Attachments of sent mail", 
+    "mainDocNumericPackageToSend" : "Main document of sending mail", 
+    "attachmentsNumericPackageToSend" : "Attachments of sending mail", 
     "closeSidePanel" : "Close side panel",
     "openSidePanel" : "Open side panel",
     "saveAsPrivateModel" : "Save as private model",
@@ -1610,4 +1612,5 @@ export const LANG_EN = {
     "createFolder" : "Create a folder",
     "downloadNumericPackage" : "Download the numeric package",
     "actionsHistory" : "Actions history",
+    "noActionProcessed": "No action processed",
 };

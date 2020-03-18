@@ -92,14 +92,14 @@
         </div>
         <div style="overflow: auto;max-height: 300px;">
             <mat-list *ngIf="numericPackage.mainExchangeDoc !== null">
-                <h3 mat-subheader class="attachLabel">{{lang.mainDocNumericPackage}}</h3>
+                <h3 mat-subheader class="attachLabel">{{canManageMail() ? lang.mainDocNumericPackageToSend : lang.mainDocNumericPackage}}</h3>
                 <mat-list-item class="numericPackageAttach" *ngIf="numericPackage.mainExchangeDoc !== null">
                     <p mat-line class="numericPackageAttachItem">
                         <span
                             style="overflow: hidden;text-overflow: ellipsis;">{{numericPackage.mainExchangeDoc.label}}</span>
                         <span class="badge">{{numericPackage.mainExchangeDoc.typeLabel}}</span>
                         <span class="subInfo">.{{numericPackage.mainExchangeDoc.format}}</span>
-                        <button mat-icon-button color="warn" (click)="numericPackage.mainExchangeDoc=null">
+                        <button mat-icon-button *ngIf="canManageMail()" color="warn" (click)="numericPackage.mainExchangeDoc=null">
                             <mat-icon class="fa fa-trash"></mat-icon>
                         </button>
                     </p>
@@ -107,14 +107,14 @@
             </mat-list>
             <mat-divider *ngIf="emailAttach.length > 0"></mat-divider>
             <mat-list *ngIf="emailAttach.length > 0">
-                <h3 mat-subheader class="attachLabel">{{lang.attachmentsNumericPackage}}</h3>
+                <h3 mat-subheader class="attachLabel">{{canManageMail() ? lang.attachmentsNumericPackageToSend : lang.attachmentsNumericPackage}}</h3>
                 <mat-list-item class="numericPackageAttach" *ngFor="let attach of emailAttach; let i=index">
                     <p mat-line class="numericPackageAttachItem">
                         <span style="overflow: hidden;text-overflow: ellipsis;"
                             [title]="attach.label">{{attach.label}}</span>
                         <span class="badge">{{attach.typeLabel}}</span>
                         <span class="subInfo">.{{attach.format}}</span>
-                        <button mat-icon-button color="warn" (click)="removeAttach(i)">
+                        <button mat-icon-button *ngIf="canManageMail()" color="warn" (click)="removeAttach(i)">
                             <mat-icon class="fa fa-trash"></mat-icon>
                         </button>
                     </p>
@@ -133,7 +133,8 @@
                 (afterSelected)="mergeSignEmailTemplate($event)">
             </plugin-select-search>
         </div>-->
-        <div class="row" style="margin: 0;" *ngIf="!canManageMail()">
+        <mat-divider></mat-divider>
+        <div class="row" style="margin: 0;padding-top: 10px;" *ngIf="!canManageMail()">
             <div class="col-md-9">
                 <label class="attachLabel">{{lang.actionsHistory}}</label>
                 <div class="messageExchangeHistory">
@@ -146,6 +147,7 @@
                         </div>
                         
                     </div>
+                    <div *ngIf="messageReview.length === 0" class="noAction">{{lang.noActionProcessed}}</div>
                 </div>
             </div>
             <div class="col-md-3 text-center">
