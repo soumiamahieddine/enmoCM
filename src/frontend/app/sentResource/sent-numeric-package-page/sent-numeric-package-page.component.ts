@@ -58,7 +58,6 @@ export class SentNumericPackagePageComponent implements OnInit {
     emailCreatorId: number = null;
     emailId: number = null;
     emailStatus: string = 'WAITING';
-    emailContent: string = '';
     currentEmailAttachTool: string = '';
     emailAttachTool: any = {
         document: {
@@ -156,7 +155,7 @@ export class SentNumericPackagePageComponent implements OnInit {
             tap((data: any) => {
                 var textArea = document.createElement('textarea');
                 textArea.innerHTML = data.mergedDocument;
-                this.emailContent += this.stringPipe.transform(textArea.value);
+                this.numericPackage.content += this.stringPipe.transform(textArea.value);
             }),
             catchError((err) => {
                 this.notify.handleSoftErrors(err);
@@ -172,8 +171,8 @@ export class SentNumericPackagePageComponent implements OnInit {
         this.http.get(`../../rest/currentUser/emailSignatures/${templateId}`).pipe(
             tap((data: any) => {
                 var textArea = document.createElement('textarea');
-                textArea.innerHTML = data.mergedDocument;
-                this.emailContent += this.stringPipe.transform(textArea.value);
+                textArea.innerHTML = data.emailSignature.content;
+                this.numericPackage.content += this.stringPipe.transform(textArea.value);
             }),
             catchError((err) => {
                 this.notify.handleSoftErrors(err);

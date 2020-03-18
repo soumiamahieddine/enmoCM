@@ -121,7 +121,7 @@
                 </mat-list-item>
             </mat-list>
         </div>
-        <!--<div class="models" *ngIf="canManageMail()">
+        <div class="models" *ngIf="canManageMail()">
             <plugin-select-search *ngIf="availableEmailModels.length > 0" [label]="lang.emailModel"
                 [placeholderLabel]="lang.emailModel" [datas]="availableEmailModels"
                 [formControlSelect]="templateEmailListForm" (afterSelected)="mergeEmailTemplate($event)">
@@ -132,7 +132,7 @@
                 [datas]="availableSignEmailModels" [formControlSelect]="emailSignListForm"
                 (afterSelected)="mergeSignEmailTemplate($event)">
             </plugin-select-search>
-        </div>-->
+        </div>
         <mat-divider></mat-divider>
         <div class="row" style="margin: 0;padding-top: 10px;" *ngIf="!canManageMail()">
             <div class="col-md-9">
