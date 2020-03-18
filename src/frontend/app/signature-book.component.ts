@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform, Component, OnInit, NgZone, ViewChild, HostListener } from '@angular/core';
+import { Pipe, PipeTransform, Component, OnInit, NgZone, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -235,10 +235,6 @@ export class SignatureBookComponent implements OnInit {
             }, (err) => {
                 this.notify.error(err.error.errors);
             });
-    }
-
-    processAfterAttach(mode: string) {
-        this.zone.run(() => this.refreshAttachments(mode));
     }
 
     processAfterAction() {
