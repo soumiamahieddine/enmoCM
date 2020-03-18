@@ -23,7 +23,7 @@ foreach ($customs as $custom) {
     $migrated = 0;
     $attachmentsInfo = \SrcCore\models\DatabaseModel::select([
         'select' => ['l.category_id', 'a.res_id', 'a.relation', 'a.docserver_id', 'a.path', 'a.filename', 'a.filesize', 'a.format', 'a.res_id_master', 'a.in_signature_book',
-                        'a.in_send_attach', 'a.external_id->>\'signatureBookId\' as signaturebookid', 'a.origin_id'],
+                        'a.in_send_attach', 'a.external_id->>\'signatureBookId\' as signaturebookid', 'a.origin_id', 'a.fingerprint'],
         'table'  => ['res_attachments a, res_letterbox l'],
         'where'  => ['attachment_type = ?', 'a.status not in (?)', 'a.res_id_master = l.res_id', 'category_id = ?'],
         'data'   => ['outgoing_mail', ['DEL', 'TMP', 'OBS'], 'outgoing'],
@@ -40,6 +40,47 @@ foreach ($customs as $custom) {
 
     $tmpPath = CoreConfigModel::getTmpPath();
 
+
+    $resIdsMaster = array_column($attachmentsInfo, 'res_id_master', 'res_id');
+
+    $resIdsUniqueMaster = array_column($attachmentsInfo, 'res_id_master', 'res_id');
+    $resIdsUniqueMaster = array_unique($resIdsUniqueMaster);
+    $resIdsUniqueMaster = array_keys($resIdsUniqueMaster);
+
+    if (!empty($resIdsMaster)) {
+        \SrcCore\models\DatabaseModel::delete([
+            'table' => 'adr_letterbox',
+            'where' => ['res_id in (?)'],
+            'data'  => [$resIdsMaster]
+        ]);
+
+        $convertedDocuments = \SrcCore\models\DatabaseModel::select([
+            'select'    => ['docserver_id','path', 'filename', 'fingerprint', 'res_id'],
+            'table'     => ['adr_attachments'],
+            'where'     => ['res_id in (?)', 'type = ?'],
+            'data'      => [$resIdsUniqueMaster, 'PDF'],
+        ]);
+        $convertedDocuments = array_column($convertedDocuments, null, 'res_id');
+
+        $outgoingMailsSigned = \SrcCore\models\DatabaseModel::select([
+            'select'  => ['res_id', 'relation', 'docserver_id', 'path', 'filename', 'format', 'res_id_master'],
+            'table'   => ['res_attachments'],
+            'where'   => ['attachment_type = ?', 'res_id_master in (?)', 'status not in (?)'],
+            'data'    => ['outgoing_mail_signed', $resIdsMaster, ['DEL']],
+            'orderBy' => ['res_id desc']
+        ]);
+        $outgoingMailsSigned = array_column($outgoingMailsSigned, null, 'res_id');
+
+        $signedResponses = \SrcCore\models\DatabaseModel::select([
+            'select'  => ['res_id', 'relation', 'docserver_id', 'path', 'filename', 'format', 'res_id_master'],
+            'table'   => ['res_attachments'],
+            'where'   => ['attachment_type = ?', 'origin = ?', 'status not in (?)'],
+            'data'    => ['signed_response', $resIdsMaster.',res_attachments', ['DEL']],
+            'orderBy' => ['res_id desc']
+        ]);
+        $signedResponses = array_column($signedResponses, null, 'res_id');
+    }
+
     $previousResId = 0;
     $attachmentToDelete = [];
     foreach ($attachmentsInfo as $attachmentInfo) {
@@ -47,12 +88,6 @@ foreach ($customs as $custom) {
             continue;
         }
         $previousResId = $attachmentInfo['res_id_master'];
-
-        \SrcCore\models\DatabaseModel::delete([
-            'table' => 'adr_letterbox',
-            'where' => ['res_id = ?'],
-            'data'  => [$attachmentInfo['res_id_master']]
-        ]);
 
         $integration = [];
         $integration['inSignatureBook'] = empty($attachmentInfo['in_signature_book']) ?  'false' : 'true';
@@ -77,21 +112,17 @@ foreach ($customs as $custom) {
             'data'  => [$attachmentInfo['res_id_master']]
         ]);
 
-        $convertedDocument = \SrcCore\models\DatabaseModel::select([
-            'select'    => ['docserver_id','path', 'filename', 'fingerprint'],
-            'table'     => ['adr_attachments'],
-            'where'     => ['res_id = ?', 'type = ?'],
-            'data'      => [$attachmentInfo['res_id'], 'PDF'],
-        ]);
-        if (!empty($convertedDocument)) {
+        if (!empty($convertedDocuments[$attachmentInfo['res_id']])) {
+            $convertedDocument = $convertedDocuments[$attachmentInfo['res_id']];
+
             AdrModel::createDocumentAdr([
                 'resId'         => $attachmentInfo['res_id_master'],
                 'type'          => 'PDF',
-                'docserverId'   => $convertedDocument[0]['docserver_id'],
-                'path'          => $convertedDocument[0]['path'],
-                'filename'      => $convertedDocument[0]['filename'],
+                'docserverId'   => $convertedDocument['docserver_id'],
+                'path'          => $convertedDocument['path'],
+                'filename'      => $convertedDocument['filename'],
                 'version'       => $attachmentInfo['relation'],
-                'fingerprint'   => $convertedDocument[0]['fingerprint']
+                'fingerprint'   => $convertedDocument['fingerprint']
             ]);
         }
     
@@ -139,35 +170,22 @@ foreach ($customs as $custom) {
                 $attachmentToDelete[] = $attachmentVersion['res_id'];
             }
         }
-        $outgoingMailSigned = \SrcCore\models\DatabaseModel::select([
-            'select'  => ['res_id', 'relation', 'docserver_id', 'path', 'filename', 'format', 'res_id_master'],
-            'table'   => ['res_attachments'],
-            'where'   => ['attachment_type = ?', 'res_id_master = ?', 'status not in (?)'],
-            'data'    => ['outgoing_mail_signed', $attachmentInfo['res_id_master'], ['DEL']],
-            'orderBy' => ['res_id desc'],
-            'limit'   => 1
-        ]);
-        if (!empty($outgoingMailSigned)) {
+
+        if (!empty($outgoingMailsSigned[$attachmentInfo['res_id']])) {
+            $outgoingMailSigned = $outgoingMailsSigned[$attachmentInfo['res_id']];
             // Version signée outgoing_mail_signed
-            $outgoingMailSigned[0]['adrType'] = 'SIGN';
-            $outgoingMailSigned[0]['relation'] = $attachmentInfo['relation'];
-            addOutgoingMailSignedInAdr($outgoingMailSigned[0]);
-            $attachmentToDelete[] = $outgoingMailSigned[0]['res_id'];
+            $outgoingMailSigned['adrType'] = 'SIGN';
+            $outgoingMailSigned['relation'] = $attachmentInfo['relation'];
+            addOutgoingMailSignedInAdr($outgoingMailSigned);
+            $attachmentToDelete[] = $outgoingMailSigned['res_id'];
         } else {
-            $signedResponse = \SrcCore\models\DatabaseModel::select([
-                'select'  => ['res_id', 'relation', 'docserver_id', 'path', 'filename', 'format', 'res_id_master'],
-                'table'   => ['res_attachments'],
-                'where'   => ['attachment_type = ?', 'origin = ?', 'status not in (?)'],
-                'data'    => ['signed_response', $attachmentInfo['res_id_master'].',res_attachments', ['DEL']],
-                'orderBy' => ['res_id desc'],
-                'limit'   => 1
-            ]);
-            if (!empty($signedResponse)) {
+            if (!empty($signedResponses[$attachmentInfo['res_id']])) {
+                $signedResponse = $signedResponses[$attachmentInfo['res_id']];
                 // Réponse signée signed_response
-                $signedResponse[0]['adrType'] = 'SIGN';
-                $signedResponse[0]['relation'] = $attachmentInfo['relation'];
-                addOutgoingMailSignedInAdr($signedResponse[0]);
-                $attachmentToDelete[] = $signedResponse[0]['res_id'];
+                $signedResponse['adrType'] = 'SIGN';
+                $signedResponse['relation'] = $attachmentInfo['relation'];
+                addOutgoingMailSignedInAdr($signedResponse);
+                $attachmentToDelete[] = $signedResponse['res_id'];
             }
         }
             
